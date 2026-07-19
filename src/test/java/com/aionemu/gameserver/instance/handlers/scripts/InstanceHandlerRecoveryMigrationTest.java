@@ -22,6 +22,8 @@ class InstanceHandlerRecoveryMigrationTest {
 				"crucible.bonus_spawning_done");
 		assertMigrated("LinkgateFoundryInstance", "scheduleDeadline(\"expire\"",
 				"linkgate.expire_deadline");
+		assertMigrated("DrakenseerLairInstance", "scheduleDeadline(\"expire\"",
+				"drakenseer.enhancers");
 	}
 
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {
