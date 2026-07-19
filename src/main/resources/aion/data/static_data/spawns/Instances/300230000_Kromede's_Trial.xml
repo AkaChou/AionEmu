@@ -407,9 +407,6 @@
     <spawn npc_id="216996">
       <spot x="586.752014" y="640.252563" z="208.44672" h="90" walker_id="NPCPathIDCromede_02Up19"/>
     </spawn>
-    <spawn npc_id="217006" respawn_time="60">
-      <spot x="668.567871" y="774.373657" z="216.88036" h="60"/>
-    </spawn>
     <spawn npc_id="217119" respawn_time="60">
       <spot x="669.214172" y="774.387268" z="216.88036" h="60"/>
     </spawn>

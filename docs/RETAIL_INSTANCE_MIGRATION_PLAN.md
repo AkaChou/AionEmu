@@ -1194,6 +1194,7 @@ REGISTERED
 - Drakenseer 批次验证通过：`mvn -q -DskipTests compile`、`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest` 和生成器 `--check`。
 - 完成 Right Wing Chamber 15 分钟宝箱截止时间、15 分 10 秒退出截止时间、剩余倒计时、134 个古代宝箱和两段消失消息恢复；删除按玩家重复创建的任务、两个私有 `Future` 和固定索引清理，剩余含 `Future` 的生产 handler 文件降至 52。
 - Right Wing 批次验证通过：`mvn -q -DskipTests compile`、`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest` 和生成器 `--check`。
+- 清理 18 份副本刷怪资源中的旧重生语义：阶段/一次性 NPC 删除 `respawn_time`，handler 或真端 AI 动态生成的重复 NPC 从静态 spawn 删除；不保留静态重生兼容路径。
 - 修复真端 NPC 点位迁移的副本重生语义：`generate_retail_npc_spawns.py` 不再把副本内 `npc_type="ATTACKABLE"` 的 `spawn_time` 写成 AionEmu `respawn_time`，非攻击型机关仍保留原刷新配置。
 - 使用修正后的迁移器重生成钢铁钩爪号、德拉乌尼尔洞穴、阿德玛城寨、阿图拉姆、活动阿图拉姆和黑暗普埃塔，删除 159 个攻击型组的 `respawn_time`，点位数量不变且二次生成字节一致。
 - 删除 18 个已由副本 handler 动态创建和控制的 Boss 静态 spawn，避免初始双刷以及死亡后被静态刷新器重新创建。

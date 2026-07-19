@@ -423,9 +423,6 @@
 		<spawn npc_id="206095" respawn_time="1">
 		  <spot x="528.200012" y="759.520020" z="199.46678"/>
 		</spawn>
-		<spawn npc_id="215136" respawn_time="1">
-		  <spot x="526.401001" y="845.379883" z="199.39537" h="90"/>
-		</spawn>
 		<spawn npc_id="700540" respawn_time="1">
 		  <spot x="576.463379" y="837.337402" z="199.37367" h="56"/>
 		</spawn>
