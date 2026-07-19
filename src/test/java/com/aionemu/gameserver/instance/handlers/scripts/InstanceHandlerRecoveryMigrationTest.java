@@ -55,6 +55,9 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertMigrated("ShugoVaultTimeAttackInstance", "scheduleDeadline(\"expire\"", "idsweep.");
 		assertSourceContains("ShugoVaultTimeAttackInstance", "RetailConditionSpawnEngine.setVariable");
 		assertSourceContains("ShugoVaultTimeAttackInstance", "S_REWARD_VARIABLE");
+		assertSourceContains("ShugoVaultTimeAttackInstance", "consumeConditionSpawnDeath");
+		assertSourceContains("ShugoVaultTimeAttackInstance", "getRespawnTime() > 0");
+		assertSourceContains("ShugoVaultTimeAttackInstance", "Float.floatToIntBits");
 		assertSourceExcludes("ShugoVaultTimeAttackInstance", "GameThreadPoolServices");
 		assertNoFuture("TheShugoEmperorVaultInstance");
 		assertNoFuture("EmperorTrillirunerkSafeInstance");

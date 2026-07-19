@@ -204,6 +204,19 @@ class RetailConditionSpawnEngineTest {
 		}
 	}
 
+	@Test
+	void exposesConditionSpawnRespawnModeBeforeHandlerConsumesIt() throws ReflectiveOperationException {
+		try (TestContext context = new TestContext(conditionNpc(0, 20))) {
+			RetailConditionSpawnEngine.initialize(context.instance);
+			Npc npc = (Npc) context.world.object;
+
+			RetailConditionSpawnEngine.onDie(context.instance, npc);
+
+			assertEquals(Boolean.TRUE, RetailConditionSpawnEngine.consumeConditionSpawnDeath(npc));
+			assertNull(RetailConditionSpawnEngine.consumeConditionSpawnDeath(npc));
+		}
+	}
+
 	private static RetailAiData retailAiData() {
 		return retailAiData(conditionNpc(0, 0));
 	}

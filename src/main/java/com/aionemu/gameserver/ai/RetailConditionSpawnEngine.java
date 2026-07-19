@@ -128,6 +128,18 @@ public final class RetailConditionSpawnEngine {
 		onDie(npc.getPosition().getWorldMapInstance(), npc);
 	}
 
+	/** Returns and consumes the condition-spawn death mode captured before respawn state is cleared. */
+	public static Boolean consumeConditionSpawnDeath(Npc npc) {
+		WorldMapInstance instance = npc.getPosition().getWorldMapInstance();
+		State state = instance == null ? null : instance.getTransientState(State.class);
+		if (state == null) {
+			return null;
+		}
+		synchronized (state) {
+			return state.conditionSpawnDeaths.remove(npc.getObjectId());
+		}
+	}
+
 	static void onDie(WorldMapInstance instance, Npc npc) {
 		State state = instance.getTransientState(State.class);
 		if (state == null) {
@@ -137,6 +149,8 @@ public final class RetailConditionSpawnEngine {
 			for (ActiveSpawn active : state.active.values()) {
 				Spawned spawned = active.spawns.remove(npc.getSpawn());
 				if (spawned != null) {
+					state.conditionSpawnDeaths.put(npc.getObjectId(),
+						spawned.npc().respawnTime() > 0 || spawned.npc().respawnTimeExtra() > 0);
 					if (spawned.npc().respawnTime() == 0 && spawned.npc().respawnTimeExtra() == 0) {
 						state.runtime.put(spawned.key() + "dead", true);
 					} else {
@@ -368,6 +382,7 @@ public final class RetailConditionSpawnEngine {
 		private final Map<String, Integer> variables = new HashMap<>();
 		private final Set<String> flags = new HashSet<>();
 		private final Map<Integer, ActiveSpawn> active = new HashMap<>();
+		private final Map<Integer, Boolean> conditionSpawnDeaths = new HashMap<>();
 
 		private State(InstanceRuntimeState runtime, List<ConditionSpawn> conditions) {
 			this.runtime = runtime;

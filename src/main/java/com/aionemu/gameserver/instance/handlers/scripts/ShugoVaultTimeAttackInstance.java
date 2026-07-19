@@ -79,6 +79,7 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 
 	@Override
 	public void onDie(Npc npc) {
+		Boolean conditionRespawn = RetailConditionSpawnEngine.consumeConditionSpawnDeath(npc);
 		var score = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getNpcScore(npc.getNpcId());
 		if (score == null) {
 			return;
@@ -86,7 +87,7 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 		if (score.scoreApplyType() != 0 || score.equalizingScore() != 0) {
 			throw new IllegalStateException("Unsupported IDSweep NPC score for " + npc.getNpcId());
 		}
-		KillEvent kill = recordKill(npc, score.value());
+		KillEvent kill = recordKill(npc, score.value(), conditionRespawn);
 		delete(npc);
 		if (kill.newlyCounted()) {
 			sendScore(npc.getObjectTemplate().getNameId(), score.value());
@@ -236,8 +237,8 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 		}
 	}
 
-	private KillEvent recordKill(Npc npc, int retailScore) {
-		String key = state("kill." + npc.getObjectId());
+	private KillEvent recordKill(Npc npc, int retailScore, Boolean conditionRespawn) {
+		String key = killKey(npc, conditionRespawn);
 		String existing = runtimeState().get(key);
 		if (existing != null) {
 			return KillEvent.decode(existing).duplicate();
@@ -275,6 +276,21 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 			}
 		}
 		return result;
+	}
+
+	private String killKey(Npc npc, Boolean conditionRespawn) {
+		if (Boolean.TRUE.equals(conditionRespawn)
+				|| (conditionRespawn == null && npc.getSpawn().getRespawnTime() > 0)) {
+			return state("kill.object." + npc.getObjectId());
+		}
+		return state("kill." + npc.getNpcId() + '.' + positionKey(npc.getSpawn().getX(), npc.getSpawn().getY(),
+				npc.getSpawn().getZ()));
+	}
+
+	private static String positionKey(float x, float y, float z) {
+		return Integer.toUnsignedString(Float.floatToIntBits(x)) + '_'
+				+ Integer.toUnsignedString(Float.floatToIntBits(y)) + '_'
+				+ Integer.toUnsignedString(Float.floatToIntBits(z));
 	}
 
 	private void despawnScoredNpcs() {
