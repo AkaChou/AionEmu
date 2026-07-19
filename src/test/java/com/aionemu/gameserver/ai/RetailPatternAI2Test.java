@@ -15,6 +15,7 @@ import com.aionemu.gameserver.dataholders.RetailAiData.Operation;
 import com.aionemu.gameserver.dataholders.RetailAiData.Pattern;
 import com.aionemu.gameserver.dataholders.RetailAiData.Rule;
 import com.aionemu.gameserver.dataholders.SkillData;
+import com.aionemu.gameserver.dataholders.WalkerData;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -43,8 +44,11 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
+import jakarta.xml.bind.JAXBContext;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -62,15 +66,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RetailPatternAI2Test {
 	@Test
-	void divineTowerRetailPatternsUseCompleteConditionVariables() {
+	void retailInstancePatternsUseCompleteConditionVariables() throws Exception {
 		String previousDefinitions = System.getProperty("aion.game.definitions.dir");
 		RetailAiData previous = DataManager.RETAIL_AI_DATA;
 		NpcSkillData previousNpcSkills = DataManager.NPC_SKILL_DATA;
+		WalkerData previousWalkers = DataManager.WALKER_DATA;
 		try {
 			System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
 			XmlDataLoader loader = new XmlDataLoader();
 			DataManager.RETAIL_AI_DATA = loader.loadRetailAiData();
 			DataManager.NPC_SKILL_DATA = loader.loadNpcSkillData();
+			DataManager.WALKER_DATA = (WalkerData) JAXBContext.newInstance(WalkerData.class).createUnmarshaller()
+				.unmarshal(Path.of("src/main/resources/aion/definitions/compact/ai/ai-waypoints.xml").toFile());
 			for (int worldId : new int[] { 310160000, 320160000 }) {
 				for (int npcId : new int[] { 248025, 248401, 248404, 248405, 248406, 248407, 248440, 248441, 248442, 248443 }) {
 					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
@@ -82,9 +89,21 @@ class RetailPatternAI2Test {
 						worldId + ":" + npcId);
 				}
 			}
+			for (int npcId : new int[] { 216238, 216239, 216245, 216246, 216250, 216263, 216264,
+					216583, 216584, 216585, 216586, 216739, 216740 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 300170000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.skillList = new NpcSkillList(npc);
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"300170000:" + npcId);
+			}
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
 			DataManager.NPC_SKILL_DATA = previousNpcSkills;
+			DataManager.WALKER_DATA = previousWalkers;
 			if (previousDefinitions == null) {
 				System.clearProperty("aion.game.definitions.dir");
 			} else {

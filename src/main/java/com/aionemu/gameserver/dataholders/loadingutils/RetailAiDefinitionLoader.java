@@ -361,6 +361,7 @@ final class RetailAiDefinitionLoader {
 			XMLStreamReader reader = factory.createXMLStreamReader(stream);
 			int worldId = 0;
 			int conditionId = 0;
+			int pageStart = 0, pageEnd = 255;
 			String expression = null;
 			String groupMode = null;
 			boolean despawnAtOther = false;
@@ -390,6 +391,8 @@ final class RetailAiDefinitionLoader {
 						case "condition" -> {
 							conditionId = Integer.parseInt(attribute(reader, "id"));
 							expression = attribute(reader, "expression");
+							pageStart = Integer.parseInt(attribute(reader, "page_start"));
+							pageEnd = Integer.parseInt(attribute(reader, "page_end"));
 							despawnAtOther = Boolean.parseBoolean(attribute(reader, "despawn_at_other"));
 							groupMode = attribute(reader, "group_mode");
 							groups = new ArrayList<>();
@@ -454,8 +457,8 @@ final class RetailAiDefinitionLoader {
 						}
 						case "slot" -> slots.add(List.copyOf(slot));
 						case "group" -> groups.add(new ConditionSpawnGroup(groupProbability, slots));
-						case "condition" -> worldSpawns.add(new ConditionSpawn(conditionId, expression, despawnAtOther,
-							groupMode, groups));
+						case "condition" -> worldSpawns.add(new ConditionSpawn(conditionId, expression, pageStart, pageEnd,
+							despawnAtOther, groupMode, groups));
 						case "world" -> spawns.put(worldId, List.copyOf(worldSpawns));
 					}
 				}

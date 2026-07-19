@@ -177,9 +177,16 @@ public final class RetailConditionSpawnEngine {
 	}
 
 	private static State state(WorldMapInstance instance) {
+		int spawnPage = instance.getDynamicInstance() == null ? 0 : instance.getDynamicInstance().getSpawnPage();
 		return instance.getOrCreateTransientState(State.class, () -> new State(instance.getRuntimeState(),
 			DataManager.RETAIL_AI_DATA == null ? List.of()
-				: DataManager.RETAIL_AI_DATA.getConditionSpawns(instance.getMapId())));
+				: conditionsForPage(DataManager.RETAIL_AI_DATA.getConditionSpawns(instance.getMapId()), spawnPage)));
+	}
+
+	static List<ConditionSpawn> conditionsForPage(List<ConditionSpawn> conditions, int spawnPage) {
+		return conditions.stream()
+			.filter(condition -> spawnPage >= condition.pageStart() && spawnPage <= condition.pageEnd())
+			.toList();
 	}
 
 	private static void evaluate(WorldMapInstance instance, State state) {

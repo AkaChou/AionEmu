@@ -20,24 +20,6 @@
 		<spawn npc_id="831990">
             <spot x="1476.967" y="258.07303" z="243.78447" h="30"/>
         </spawn>
-		<!-- Warrior Monument -->
-        <spawn npc_id="216739">
-            <spot x="1022.1863" y="221.12654" z="232.71616" entity_id="368"/>
-			<spot x="1061.9246" y="172.03473" z="235.43903" entity_id="450"/>
-			<spot x="1034.1472" y="130.49316" z="233.87767" entity_id="451"/>
-			<spot x="1167.2343" y="84.522629" z="227.97726" entity_id="537"/>
-			<spot x="1151.4235" y="133.88620" z="226.06825" entity_id="538"/>
-			<spot x="1164.6725" y="163.34079" z="230.03868" entity_id="539"/>
-			<spot x="1134.7632" y="226.37187" z="224.73825" entity_id="540"/>
-			<spot x="1052.4556" y="422.90079" z="224.77843" entity_id="541"/>
-			<spot x="1019.5921" y="472.71869" z="230.07857" entity_id="574"/>
-			<spot x="1035.2589" y="515.01288" z="226.10843" entity_id="576"/>
-			<spot x="1019.6027" y="562.80756" z="227.76865" entity_id="577"/>
-			<spot x="1151.6198" y="570.65125" z="233.87790" entity_id="578"/>
-			<spot x="1152.2943" y="523.56635" z="233.87790" entity_id="579"/>
-			<spot x="1125.9268" y="477.42514" z="235.39658" entity_id="582"/>
-			<spot x="1167.1302" y="424.17914" z="232.73920" entity_id="583"/>
-        </spawn>
 		<!-- Power Wardstone -->
 		<spawn npc_id="700607">
 			<spot x="1384.1399" y="97.402473" z="246.48598" entity_id="394"/>
@@ -57,18 +39,6 @@
 		<!-- Beshmundir Temple Exit -->
 		<spawn npc_id="730286">
 			<spot x="1583.0000" y="1523.0000" z="304.14001" entity_id="468"/>
-		</spawn>
-		<!-- Entrance Of Oracular Chamber -->
-		<spawn npc_id="730288">
-			<spot x="1356.5499" y="324.57892" z="249.04219" entity_id="472"/>
-		</spawn>
-		<!-- Forgotten Storeroom Entrance -->
-		<spawn npc_id="730289">
-			<spot x="1229.7887" y="401.40836" z="240.25276" entity_id="495"/>
-		</spawn>
-		<!-- Entrance Of Blue Flame Incinerator -->
-		<spawn npc_id="730290">
-			<spot x="1450.0195" y="1102.5166" z="291.13333" entity_id="517"/>
 		</spawn>
 		<!-- Sorcery Wardstone -->
 		<spawn npc_id="700637">
@@ -169,28 +139,12 @@
 			<spot x="1215.6" y="773.991" z="262.209" h="89"/>
 			<spot x="1102.67" y="133.664" z="231.586" h="30"/>
 		</spawn>
-		<!-- Brutal Soulwatcher -->
-		<spawn npc_id="216585">
-			<spot x="816.611" y="277.502" z="220.194"/>
-		</spawn>
-		<!-- Brutal Soulwatcher -->
-		<spawn npc_id="216584">
-			<spot x="788.985" y="442.963" z="220.961"/>
-		</spawn>
-		<!-- Brutal Soulwatcher -->
-		<spawn npc_id="216583">
-			<spot x="935.522" y="445.489" z="221.311"/>
-		</spawn>
 		<!-- Burial Chamber Of The Hero -->
 		<spawn npc_id="281392">
 			<spot x="1215.29" y="596.953" z="246.231"/>
 			<spot x="1214.92" y="506.924" z="246.231"/>
 			<spot x="1215.41" y="626.668" z="246.717"/>
 			<spot x="1215.17" y="536.924" z="246.231"/>
-		</spawn>
-		<!-- Summon Brigade General NPC -->
-		<spawn npc_id="281696">
-			<spot x="979.343" y="135.742" z="241.796"/>
 		</spawn>
 		<!-- Bhemah -->
 		<spawn npc_id="799505">
@@ -350,10 +304,6 @@
 			<spot x="1210.89" y="1235.84" z="284.704" h="74"/>
 			<spot x="1143.9" y="1202.04" z="284.504" h="3"/>
 			<spot x="1197.54" y="1038.55" z="277.25" h="23"/>
-		</spawn>
-		<!-- Thurzon The Undying -->
-		<spawn npc_id="216525">
-			<spot x="1398.88" y="532.729" z="241.232" h="60"/>
 		</spawn>
 		<!-- Nightshade Crusader -->
 		<spawn npc_id="216228">
@@ -631,10 +581,6 @@
 			<spot x="1454.64" y="1527.9" z="328.836"/>
 			<spot x="1423.52" y="1455.49" z="307.793"/>
 		</spawn>
-		<!-- Captain Lakhara -->
-		<spawn npc_id="216238">
-			<spot x="1342.94" y="288.048" z="244.977"/>
-		</spawn>
 		<!-- Nightshade Healer -->
 		<spawn npc_id="216232">
 			<spot x="1193.47" y="1206.63" z="284.119"/>
@@ -742,20 +688,6 @@
 		<spawn npc_id="216192">
 			<spot x="1215.48" y="468.818" z="246.781" h="90"/>
 		</spawn>
-		<!-- Elyos Spiritblade -->
-		<spawn npc_id="216206">
-			<spot x="812.385" y="471.651" z="221.62" random_walk="3"/>
-			<spot x="927.274" y="467.304" z="224.306" random_walk="3"/>
-			<spot x="786.983" y="276.813" z="221.525" random_walk="3"/>
-			<spot x="954.945" y="478.03" z="222.625" random_walk="3"/>
-			<spot x="781.808" y="283.016" z="221.232" random_walk="3"/>
-			<spot x="805.703" y="450.536" z="220.87" random_walk="3"/>
-		</spawn>
-		<!-- Elyos Spiritmage -->
-		<spawn npc_id="216207">
-			<spot x="954.758" y="467.617" z="220.605" random_walk="3"/>
-			<spot x="952.839" y="456.028" z="220.932" random_walk="3"/>
-		</spawn>
 		<!-- Vehala Eidolon -->
 		<spawn npc_id="216202">
 			<spot x="1088" y="246.044" z="230.289" h="30"/>
@@ -792,45 +724,6 @@
 			<spot x="1243.44" y="629.754" z="249.399" h="60"/>
 			<spot x="1243.45" y="569.639" z="249.399" h="60"/>
 			<spot x="1243.39" y="599.708" z="249.399" h="60"/>
-		</spawn>
-		<!-- Asmodian Soulmedic -->
-		<spawn npc_id="216213">
-			<spot x="777.574" y="270.933" z="221.501" random_walk="3"/>
-			<spot x="916.427" y="476.936" z="226.556" random_walk="3"/>
-			<spot x="796.485" y="469.257" z="220.982" random_walk="3"/>
-		</spawn>
-		<!-- Asmodian Soulranger -->
-		<spawn npc_id="216212">
-			<spot x="793.005" y="459.788" z="221.742" random_walk="3"/>
-			<spot x="781.337" y="271.483" z="221.821" random_walk="3"/>
-			<spot x="951.464" y="490.469" z="224.462" random_walk="3"/>
-			<spot x="790.757" y="267.384" z="222.588" random_walk="3"/>
-		</spawn>
-		<!-- Asmodian Soulspell -->
-		<spawn npc_id="216211">
-			<spot x="806.876" y="472.326" z="221.595" random_walk="3"/>
-			<spot x="954.686" y="444.773" z="220.794" random_walk="3"/>
-			<spot x="931.683" y="468.915" z="224.343" random_walk="3"/>
-		</spawn>
-		<!-- Asmodian Soulsword -->
-		<spawn npc_id="216210">
-			<spot x="934.73" y="475.015" z="224.155" random_walk="3"/>
-			<spot x="795.007" y="306.216" z="220.483" random_walk="3"/>
-			<spot x="939.781" y="469.39" z="223.403" random_walk="3"/>
-			<spot x="793.566" y="261.632" z="223.08" random_walk="3"/>
-		</spawn>
-		<!-- Elyos Spiritsalve -->
-		<spawn npc_id="216209">
-			<spot x="794.533" y="284.055" z="220.446" random_walk="3"/>
-			<spot x="766.898" y="276.233" z="221.8" random_walk="3"/>
-			<spot x="786.215" y="451.325" z="222.551" random_walk="3"/>
-			<spot x="917.903" y="474.549" z="226.403" random_walk="3"/>
-		</spawn>
-		<!-- Elyos Spiritbow -->
-		<spawn npc_id="216208">
-			<spot x="801.354" y="273.683" z="221.492" random_walk="3"/>
-			<spot x="949.323" y="466.665" z="221.45" random_walk="3"/>
-			<spot x="811.061" y="474.271" z="221.641" random_walk="3"/>
 		</spawn>
 		<!-- Bluethicket Sparkle -->
 		<spawn npc_id="216223">
@@ -995,38 +888,14 @@
         <spawn npc_id="216163">
             <spot x="1042.79" y="81.730003" z="233.84" entity_id="342"/>
         </spawn>
-		<!-- Flarestorm -->
-		<spawn npc_id="216168">
-			<spot x="1511.69" y="1048.16" z="273.441" h="42"/>
-		</spawn>
 		<!-- The Soulcaller -->
 	    <spawn npc_id="216240">
 		    <spot x="1357.25" y="388.925" z="249.261" h="90"/>        
-        </spawn>
-		<!-- Manadar -->
-	    <spawn npc_id="216241">
-		    <spot x="1086.1499" y="621.0919" z="234.15215" h="90"/>        
-        </spawn>
-		<!-- Macunbello -->
-	    <spawn npc_id="216245">
-		    <spot x="980.9427" y="134.60326" z="241.74876" h="31"/>
-	    </spawn>
-		<!-- The Great Virhana -->
-	    <spawn npc_id="216246">
-		    <spot x="1215.36" y="660.362" z="250.238" h="90"/>
         </spawn>
 		<!-- Taros Lifebane -->
 	    <spawn npc_id="216248">
 		    <spot x="1369.5013" y="1292.1421" z="304.13388" h="100" walker_id="TAROSLIFEBANEBESHMUNDIRTEMPLEGARDENOFDEA"/>
 	    </spawn>
-		<!-- Dorakiki The Bold -->
-	    <spawn npc_id="216250">
-		    <spot x="1170.37" y="1214.75" z="283.576" h="106"/>       
-        </spawn>
-		<!-- Isbariya The Resolute -->
-	    <spawn npc_id="216263">
-		    <spot x="1602.4944" y="1591.6042" z="307.0335" h="72"/>        
-        </spawn>
 		<!-- Temadaro -->
 	    <spawn npc_id="216586">
 		    <spot x="939.025" y="245.078" z="226.623" h="30"/>
@@ -1090,33 +959,6 @@
 	    </spawn>
 	    <spawn npc_id="216285" respawn_time="120">
 	      <spot x="1104.763794" y="91.053780" z="231.61694"/>
-	    </spawn>
-	    <spawn npc_id="216287" respawn_time="120">
-	      <spot x="781.808350" y="283.015869" z="221.23209"/>
-	      <spot x="927.273926" y="467.304291" z="224.30643"/>
-	    </spawn>
-	    <spawn npc_id="216288" respawn_time="120">
-	      <spot x="954.757751" y="467.617432" z="220.60547"/>
-	      <spot x="792.305908" y="314.635223" z="220.20284"/>
-	    </spawn>
-	    <spawn npc_id="216289" respawn_time="120">
-	      <spot x="949.322998" y="466.664673" z="221.44992"/>
-	    </spawn>
-	    <spawn npc_id="216290" respawn_time="120">
-	      <spot x="917.902893" y="474.549133" z="226.40314"/>
-	    </spawn>
-	    <spawn npc_id="216291" respawn_time="120">
-	      <spot x="795.006592" y="306.216064" z="220.48328"/>
-	      <spot x="793.566345" y="261.632233" z="223.07994"/>
-	    </spawn>
-	    <spawn npc_id="216293" respawn_time="120">
-	      <spot x="790.757324" y="267.383667" z="222.58841"/>
-	      <spot x="793.005066" y="459.787811" z="221.74161"/>
-	    </spawn>
-	    <spawn npc_id="216294" respawn_time="120">
-	      <spot x="916.426514" y="476.936218" z="226.55609"/>
-	      <spot x="796.484863" y="469.256927" z="220.9815"/>
-	      <spot x="777.574097" y="270.932953" z="221.5008"/>
 	    </spawn>
 	    <spawn npc_id="216301" respawn_time="120">
 	      <spot x="1295.169434" y="475.507660" z="240.24548" h="66"/>
@@ -1225,15 +1067,6 @@
 	    </spawn>
 	    <spawn npc_id="216309" respawn_time="120">
 	      <spot x="1221.444580" y="1184.706909" z="284.12115" h="93"/>
-	    </spawn>
-	    <spawn npc_id="216587" respawn_time="120">
-	      <spot x="935.521606" y="445.488983" z="221.31126"/>
-	    </spawn>
-	    <spawn npc_id="216588" respawn_time="120">
-	      <spot x="788.985291" y="442.963348" z="220.96126"/>
-	    </spawn>
-	    <spawn npc_id="216589" respawn_time="120">
-	      <spot x="816.610779" y="277.501648" z="220.19385"/>
 	    </spawn>
 	    <spawn npc_id="281646" respawn_time="4">
 	      <spot x="1502.552734" y="1038.010010" z="272.38693" h="104"/>

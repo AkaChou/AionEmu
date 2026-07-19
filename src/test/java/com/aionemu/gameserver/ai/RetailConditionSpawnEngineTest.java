@@ -95,8 +95,18 @@ class RetailConditionSpawnEngineTest {
 		assertEquals(-2, RetailConditionSpawnEngine.nextValue(3, 0, -5));
 		assertTrue(RetailConditionSpawnEngine.evaluate("wave >= 3 && (race == 1 || race == 2)",
 			Map.of("wave", 3, "race", 2)));
+		assertTrue(RetailConditionSpawnEngine.evaluate("SpecialServer_Cond == 0", Map.of()));
 		assertFalse(RetailConditionSpawnEngine.evaluate("wave >= 3 && race != 2",
 			Map.of("wave", 3, "race", 2)));
+	}
+
+	@Test
+	void filtersRetailConditionsBySpawnPage() {
+		ConditionSpawn normal = condition(1, 1);
+		ConditionSpawn hard = condition(2, 2);
+
+		assertEquals(List.of(normal), RetailConditionSpawnEngine.conditionsForPage(List.of(normal, hard), 1));
+		assertEquals(List.of(hard), RetailConditionSpawnEngine.conditionsForPage(List.of(normal, hard), 2));
 	}
 
 	@Test
@@ -208,12 +218,20 @@ class RetailConditionSpawnEngineTest {
 	}
 
 	private static RetailAiData retailAiData(ConditionSpawnNpc npc) {
-		ConditionSpawnChoice choice = new ConditionSpawnChoice(10_000, null, List.of(npc));
-		ConditionSpawnGroup group = new ConditionSpawnGroup(1_000, List.of(List.of(choice)));
-		ConditionSpawn condition = new ConditionSpawn(1, "wave == 0", true, "all", List.of(group));
+		ConditionSpawn condition = condition(0, 255, npc);
 		return new RetailAiData(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
 			Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(WORLD_ID, List.of(condition)),
 			Map.of(WORLD_ID, Set.of("wave")), Map.of(), Map.of());
+	}
+
+	private static ConditionSpawn condition(int pageStart, int pageEnd) {
+		return condition(pageStart, pageEnd, conditionNpc(0, 0));
+	}
+
+	private static ConditionSpawn condition(int pageStart, int pageEnd, ConditionSpawnNpc npc) {
+		ConditionSpawnChoice choice = new ConditionSpawnChoice(10_000, null, List.of(npc));
+		ConditionSpawnGroup group = new ConditionSpawnGroup(1_000, List.of(List.of(choice)));
+		return new ConditionSpawn(1, "wave == 0", pageStart, pageEnd, true, "all", List.of(group));
 	}
 
 	private static NpcData npcData() throws ReflectiveOperationException {

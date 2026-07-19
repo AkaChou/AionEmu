@@ -526,7 +526,7 @@ public final class RetailAiData {
 		}
 	}
 
-	public record ConditionSpawn(int id, String expression, boolean despawnAtOther, String groupMode,
+	public record ConditionSpawn(int id, String expression, int pageStart, int pageEnd, boolean despawnAtOther, String groupMode,
 			List<ConditionSpawnGroup> groups) {
 		public ConditionSpawn {
 			groups = List.copyOf(groups);

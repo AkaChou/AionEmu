@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 39% | 2026-07-20 | 139 图行为闭包；32 个 handler 移除私有关键任务，剩余 39 个含 `Future` 文件 |
+| 阶段 4：handler 状态迁移 | 进行中 | 40% | 2026-07-20 | 139 图行为闭包；33 个 handler 移除私有关键任务，剩余 38 个含 `Future` 文件 |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1232,3 +1232,8 @@ REGISTERED
 - 任务 `10032`/`20032` 的入口恢复成对发放真端 work item，使用批量背包预检；传送失败时回滚两件任务物品，成功后才推进 `2 -> 3`。handler 不再清理任务 work item，继续由任务死亡、登出和离图流程负责。
 - 删除与 `IDElim_3F_Heal_Plant_Giant == 50` 条件刷新重复的静态 `700941`，并移除一次性巨型虫卵 `700738` 的旧 `respawn_time`。434/438/463/464 在真端 AI/XML 和恢复 DLL 中均未发现替代触发，客户端 `idelim` 关卡为当前工具链无法解包的专用 PAK，因此按证据边界保留最小入口/区域触发，不保留关联私服消息或编排。
 - Taloc's Hollow 批次验证通过：`mvn -q -DskipTests compile`、`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,TalocsHollowQuestMigrationTest,RetailAiDefinitionLoaderTest,RetailConditionSpawnEngineTest,RetailPatternAI2Test test` 和相关文件 `git diff --check`。
+- 完成 Beshmundir Temple（`300170000`）真端单轨替换：以 `idcatacombs/world_N.xml`、`NpcAIPatterns_IDCatacombs_hue.xml`、`NpcAIPatterns_IDCatacombsHardNamed_hue.xml` 及真端 NPC/技能/掉落/任务数据为权威，Retail AI 与条件刷新接管普通/困难 Boss、门、消息、技能、召唤、电影、阶段对象和掉落。
+- 条件刷新新增显式 `spawn_page` 范围，普通服只读变量 `SpecialServer_Cond` 固定按 `0` 求值；所有 5,080 条条件均显式写入页码，其中既有条件为 `0..255`，贝斯蒙迪尔 67 条条件保留真端 page 1/2。普通与困难阿巴纳分别由 `IDCT_SpecterN_Spawn`、`IDCT_SpecterH_Spawn` 在 10 座纪念碑后生成，不再沿用旧 handler 的错误 15 座计数。
+- 为会写条件变量的页码初始 NPC 生成生产者刷新：page 1 包含 15 个 `216739`、`216287..216294` 与 `216587..216589`，page 2 包含 15 个 `216740`、`216206..216213` 与 `216583..216585`；马昆贝洛 `debufflich` 阶段链、船夫钥匙链和难度专属初始 Boss 均按真端页码运行。孤立但真实写入的 `DOORWALL_SPAWN` 保留为可持久化变量，不放宽被拒绝条件链。
+- 删除所有与条件刷新重复的旧静态点；`216586` 因真端没有页码初始条件继续保留。旧 635 行 handler 缩减为 61 行，只保留任务油召唤、焚化炉钥匙交互和离本/登出清理 `185000091..185000096`；删除私服掉落、错误钥匙映射、Boss 死亡编排、错误技能链、电影/门兼容、线程任务和 `Future`。剩余含 `Future` 的生产 handler 文件降至 38。
+- Beshmundir Temple 批次验证通过：转换器 16 项测试和窄重生成 SHA-256 幂等检查；`mvn -q -DskipTests compile`；`RetailConditionSpawnEngineTest,RetailConditionSpawnPartyLoaderTest,RetailAiDefinitionLoaderTest,RetailPatternAI2Test,BeshmundirTempleInstanceTest,InstanceHandlerRecoveryMigrationTest`；`condition-spawns.xml` 对新版 XSD 校验及相关文件 `git diff --check`。

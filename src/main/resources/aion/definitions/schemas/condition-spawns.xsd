@@ -30,6 +30,8 @@
                   </xs:sequence>
                   <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
                   <xs:attribute name="expression" type="xs:string" use="required"/>
+                  <xs:attribute name="page_start" type="xs:unsignedByte" use="required"/>
+                  <xs:attribute name="page_end" type="xs:unsignedByte" use="required"/>
                   <xs:attribute name="despawn_at_other" type="xs:boolean" use="required"/>
                   <xs:attribute name="group_mode" use="required">
                     <xs:simpleType><xs:restriction base="xs:string"><xs:enumeration value="all"/><xs:enumeration value="one"/></xs:restriction></xs:simpleType>
