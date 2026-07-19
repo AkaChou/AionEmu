@@ -210,7 +210,7 @@ public class BanditService {
 		player.getObserveController().notifyDeathObservers(player);
 		player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 		player.getEffectController().removeEffectByDispelCat(DispelCategoryType.ALL, SkillTargetSlot.DEBUFF, 100, 2,
-				100, false);
+				100);
 		player.setTarget(null);
 		PacketSendUtility.sendPacket(player, new SM_TARGET_SELECTED(player));
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

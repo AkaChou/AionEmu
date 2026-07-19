@@ -833,7 +833,7 @@ public abstract class Battleground {
 		} else {
 			pl.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 			pl.getEffectController().removeEffectByDispelCat(DispelCategoryType.ALL, SkillTargetSlot.DEBUFF, 100, 2,
-					100, false);
+					100);
 			pl.setTarget(null);
 			PacketSendUtility.sendPacket(pl, new SM_TARGET_SELECTED(pl));
 			scheduleAnnouncement(pl, "The match begin's!!!", time);
@@ -1181,7 +1181,7 @@ public abstract class Battleground {
 		player.getObserveController().notifyDeathObservers(player);
 		player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 		player.getEffectController().removeEffectByDispelCat(DispelCategoryType.ALL, SkillTargetSlot.DEBUFF, 100, 3,
-				100, false);
+				100);
 		player.setTarget(null);
 		PacketSendUtility.sendPacket(player, new SM_TARGET_SELECTED(player));
 		if (lastAttacker instanceof Player && lastAttacker.getObjectId() != player.getObjectId()) {

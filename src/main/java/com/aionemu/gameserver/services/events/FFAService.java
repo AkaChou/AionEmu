@@ -405,7 +405,7 @@ public class FFAService {
 		player.setState(CreatureState.DEAD);
 		player.getObserveController().notifyDeathObservers(player);
 		player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
-		player.getEffectController().removeEffectByDispelCat(DispelCategoryType.ALL, SkillTargetSlot.DEBUFF, 100, 2, 100, false);
+		player.getEffectController().removeEffectByDispelCat(DispelCategoryType.ALL, SkillTargetSlot.DEBUFF, 100, 2, 100);
 		player.setTarget(null);
 		PacketSendUtility.sendPacket(player, new SM_TARGET_SELECTED(player));
 		if (lastAttacker instanceof Player) {
