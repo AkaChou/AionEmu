@@ -13,11 +13,23 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SkillSpelledEventTest {
+
+	@Test
+	void pointSkillDoesNotNotifyThroughANullCreatureTarget() {
+		SkillTemplate template = skillTemplate(1234);
+		TestCreature caster = new ObjenesisStd().newInstance(TestCreature.class);
+		Skill skill = new Skill(template, caster, 3, null, null);
+		Effect effect = new Effect(caster, null, template, 3, 0);
+		effect.addSucessEffect(new NoOpEffect());
+
+		assertDoesNotThrow(() -> skill.applyEffect(List.of(effect)));
+	}
 
 	@Test
 	void notifiesNpcOnceForMultipleSuccessfulEffects() {

@@ -1543,7 +1543,7 @@ public class Skill {
 				Npc npc = (Npc) effect.getEffected();
 				npc.getAggroList().addDamage(effector, 0, effect.getAttackStatus());
 			}
-			if (!effect.getSuccessEffect().isEmpty()) {
+			if (!effect.getSuccessEffect().isEmpty() && effect.getEffected() != null) {
 				Creature effected = effect.getEffected();
 				if (eventTarget == null) {
 					eventTarget = effected;

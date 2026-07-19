@@ -1372,7 +1372,7 @@ public class Effect implements StatOwner {
 	 * observer
 	 */
 	public ActionObserver getActionObserver(int i) {
-		return actionObserver[i - 1];
+		return actionObserver != null ? actionObserver[i - 1] : null;
 	}
 	/**
 	 * 设置动作观察者。
