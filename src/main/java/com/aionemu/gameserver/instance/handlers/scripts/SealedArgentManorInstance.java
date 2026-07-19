@@ -29,8 +29,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 
 @InstanceID(301510000)
 public class SealedArgentManorInstance extends GeneralInstanceHandler {
-	private static final long PREPARE_DURATION = 60_000L;
-	private static final long INSTANCE_DURATION = 15 * 60_000L;
 	private static final long SETTLEMENT_DELAY = 3_000L;
 	private static final float BOSS_X = 819.55664f;
 	private static final float BOSS_Y = 1420.614f;
@@ -173,7 +171,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 		}
 		long deadline = runtimeState().getLong("sealed.prepare_deadline", 0);
 		if (deadline == 0) {
-			deadline = System.currentTimeMillis() + PREPARE_DURATION;
+			deadline = System.currentTimeMillis() + InstanceSettlementService.timeAttackWaitSeconds(mapId) * 1000L;
 			runtimeState().put("sealed.prepare_deadline", deadline);
 		}
 		long prepareDeadline = deadline;
@@ -186,7 +184,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 			return;
 		}
 		cancelDeadline("prepare");
-		long deadline = startAt + INSTANCE_DURATION;
+		long deadline = startAt + InstanceSettlementService.timeAttackLimitSeconds(mapId) * 1000L;
 		runtimeState().put("sealed.start_at", startAt);
 		runtimeState().put("sealed.expire_deadline", deadline);
 		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
@@ -216,8 +214,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 			finishAt = runtimeState().getLong("sealed.expire_deadline", System.currentTimeMillis());
 			runtimeState().put("sealed.finish_at", finishAt);
 		}
-		int rank = InstanceSettlementService.timeAttackRank(mapId, instanceReward.getPoints(),
-				Math.max(0, finishAt - startAt) / 1000);
+		int rank = checkRank(instanceReward.getPoints(), startAt, finishAt);
 		instanceReward.setRank(rank);
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		runtimeState().put("sealed.rank", rank);
@@ -428,6 +425,11 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 		}
 		return runtimeState().getLong("sealed.start_at", 0) > 0
 				? InstanceScoreType.START_PROGRESS : InstanceScoreType.PREPARING;
+	}
+
+	private int checkRank(int totalPoints, long startAt, long finishAt) {
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+				Math.max(0, finishAt - startAt) / 1000);
 	}
 
 	private int getTime() {

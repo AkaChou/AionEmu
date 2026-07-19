@@ -1,620 +1,527 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.SmolderingReward;
 import com.aionemu.gameserver.model.instance.playerreward.SmolderingPlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
-import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-
-/**
- * 闷燃火焰神殿副本事件处理器。
- * Instance event handler for Smoldering Fire Temple.
- *
- * @author Encom
- */
 
 @InstanceID(302000000)
-public class SmolderingFireTempleInstance extends GeneralInstanceHandler
-{
-	/** 开始时间 / start time */
-	private long startTime;
-	/** vengeful obscura / vengeful obscura */
-		private int vengefulObscura;
-	/** 准备计时器 / timer prepare */
-		private Future<?> timerPrepare;
-	/** 副本计时器 / timer instance */
-		private Future<?> timerInstance;
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	private boolean isInstanceDestroyed;
-	/** 门映射 / door map */
-	private Map<Integer, StaticDoor> doors;
-	/** 副本奖励对象 / instance reward object */
+public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
+	private static final long SETTLEMENT_DELAY = 3_000L;
+	private static final float BOSS_X = 416.1324f;
+	private static final float BOSS_Y = 97.165924f;
+	private static final float BOSS_Z = 117.19401f;
+	private static final byte BOSS_HEADING = 50;
+	private static final int[] SCORE_NPCS = {
+			244084, 244085, 244086, 244087, 244088, 244089, 244091, 244092,
+			244093, 244094, 244095, 244096, 244097, 244098, 244099, 244100
+	};
+
 	private SmolderingReward instanceReward;
-	// 准备时间。 / Preparation Time.
-	/** 准备计时秒数 / prepare timer seconds */
-		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
-	// 副本持续计时。 / Duration Instance Time.
-	/** 副本计时秒数 / instance timer seconds */
-		private int instanceTimerSeconds = 600000; //...10Min
-	/** smoldering 任务 / smoldering task */
-		private final List<Future<?>> smolderingTask = new ArrayList<Future<?>>();
-	/**
-	 * 返回玩家奖励记录。
-	 * Return the player's reward record.
-	 *
-	 * visible object
-	 * result
-	 */
-	
-	protected SmolderingPlayerReward getPlayerReward(Integer object) {
-		return (SmolderingPlayerReward) instanceReward.getPlayerReward(object);
+
+	@Override
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		instanceReward = new SmolderingReward(mapId, instanceId);
+		restoreScore();
+		instanceReward.setInstanceScoreType(scoreType());
+		restoreKilledNpcs();
+		reconcileProgress();
+		if (runtimeState().getBoolean("smolder.completed", false)) {
+			despawnScoredNpcs();
+		}
+		restoreDeadline();
 	}
-	
-	/**
-	 * 处理 addPlayerReward。
-	 * Handle addPlayerReward.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addPlayerReward(Player player) {
-		instanceReward.addPlayerReward(new SmolderingPlayerReward(player.getObjectId()));
-	}
-	
-	private boolean containPlayer(Integer object) {
-		return instanceReward.containPlayer(object);
-	}
-	
-	/**
-	 * 返回本副本奖励对象。
-	 * Return this instance's reward object.
-	 *
-	 * result
-	 */
+
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
-	/**
-	 * NPC 掉落表注册时处理。
-	 * Handle NPC drop-table registration.
-	 *
-	 * npc
-	 */
-	
+
+	@Override
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> drops = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-		switch (npcId) {
-			case 244435: //Potion Chest.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002085, 2)); //Hero GM’s Secret Remedy Of Recovery.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002086, 2)); //Hero GM’s Quality Secret Remedy Of Recovery.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002087, 2)); //Hero GM’s Secret Remedy Of DP Recovery.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002088, 2)); //Hero GM’s Quality Secret Remedy Of DP Recovery.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002089, 2)); //Hero GM’s Secret Remedy Of Recovery.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002090, 2)); //Hero GM’s Quality Secret Remedy Of Recovery.
-					}
+		if (npcId == 244435) {
+			int index = drops.size() + 1;
+			for (Player player : instance.getPlayersInside()) {
+				if (!player.isOnline()) {
+					continue;
 				}
-			break;
-			case 834058: //Smoldering Fire Temple Treasure Chest.
-			case 834059: //Smoldering Fire Temple Premium Treasure Chest.
-			case 834060: //Smoldering Fire Temple Treasure Chest.
-			case 834061: //Smoldering Fire Temple Quality Treasure Chest.
-				switch (Rnd.get(1, 4)) {
-					case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054631, 1)); //Middle Grade Reward Bundle.
-				    break;
-					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054632, 1)); //Low Grade Reward Bundle.
-				    break;
-					case 3:
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054629, 1)); //Highest Grade Reward Bundle.
-					break;
-					case 4:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054630, 1)); //High Grade Reward Bundle.
-					break;
+				for (int itemId = 162002085; itemId <= 162002090; itemId++) {
+					drops.add(GameWorldServices.dropRegistrationService()
+							.regDropItem(index++, player.getObjectId(), npcId, itemId, 2));
 				}
-			break;
+			}
+			return;
 		}
+		if (npcId < 834058 || npcId > 834061) {
+			return;
+		}
+		String key = "smolder.chest_drop." + positionKey(npc.getSpawn().getX(), npc.getSpawn().getY(), npc.getSpawn().getZ());
+		int roll = runtimeState().getInt(key, 0);
+		if (roll == 0) {
+			roll = Rnd.get(1, 4);
+			runtimeState().put(key, roll);
+		}
+		int itemId = switch (roll) {
+			case 1 -> 188054631;
+			case 2 -> 188054632;
+			case 3 -> 188054629;
+			default -> 188054630;
+		};
+		drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, itemId, 1));
 	}
-	
-	private void removeItems(Player player) {
-		Storage storage = player.getInventory();
-		storage.decreaseByItemId(185000270, storage.getItemCountByItemId(185000270)); //Nostalgic Fire Temple Treasure Chest Key.
-		storage.decreaseByItemId(162002031, storage.getItemCountByItemId(162002085)); //Hero GM’s Secret Remedy Of Recovery.
-		storage.decreaseByItemId(162002032, storage.getItemCountByItemId(162002086)); //Hero GM’s Quality Secret Remedy Of Recovery.
-		storage.decreaseByItemId(162002033, storage.getItemCountByItemId(162002087)); //Hero GM’s Secret Remedy Of DP Recovery.
-		storage.decreaseByItemId(162002034, storage.getItemCountByItemId(162002088)); //Hero GM’s Quality Secret Remedy Of DP Recovery.
-		storage.decreaseByItemId(162002035, storage.getItemCountByItemId(162002089)); //Hero GM’s Secret Remedy Of Recovery.
-		storage.decreaseByItemId(162002036, storage.getItemCountByItemId(162002090)); //Hero GM’s Quality Secret Remedy Of Recovery.
-	}
-	
-	/**
-	 * 处理死亡事件。
-	 * Handle a death event.
-	 *
-	 * npc
-	 */
+
 	@Override
 	public void onDie(Npc npc) {
-		int points = 0;
-		int npcId = npc.getNpcId();
-		Player player = npc.getAggroList().getMostPlayerDamage();
-		switch (npc.getObjectTemplate().getTemplateId()) {
-			case 244084: //Flame Spirit.
-			case 244085: //Fire Spirit.
-			case 244091: //Flame Spirit.
-				points = 180;
-				despawnNpc(npc);
-			break;
-			case 244086: //Kalgolem.
-			case 244092: //Fire Spirit.
-				points = 160;
-				despawnNpc(npc);
-			break;
-			case 244087: //Enhanced Kalgolem.
-			case 244088: //Vengeful Obscura.
-				points = 250;
-				despawnNpc(npc);
-			break;
-			case 244093: //Vengeful Obscura.
-				points = 250;
-				despawnNpc(npc);
-				vengefulObscura++;
-				if (vengefulObscura == 12) {
-					spawn(244097, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Temple Guardian.
-				}
-			break;
-			case 244089: //Vengeful Obscura.
-				points = 660;
-				despawnNpc(npc);
-			break;
-			case 244094: //Enhanced Orange Crystal Molgat.
-				points = 1740;
-				despawnNpc(npc);
-			break;
-			case 244095: //Enhanced Silver Blade Rotan.
-				points = 2040;
-				despawnNpc(npc);
-				doors.get(8).setOpen(true);
-			break;
-			case 244096: //Enhanced Tough Sipus.
-				points = 12000;
-				despawnNpc(npc);
-				spawn(834067, 292.34671f, 166.54131f, 119.53692f, (byte) 0, 40);
-			break;
-			case 244097: //Temple Guardian.
-				points = 14400;
-				despawnNpc(npc);
-				spawn(834066, 169.24069f, 417.35110f, 140.77321f, (byte) 0, 3);
-				spawn(244098, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Enraged Lady Angerr.
-			break;
-			case 244098: //Enraged Lady Angerr.
-				points = 48000;
-				despawnNpc(npc);
-				spawn(244099, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Enraged Judge Kaliga.
-			break;
-			case 244099: //Enraged Judge Kaliga.
-				points = 272000;
-				despawnNpc(npc);
-				spawn(244100, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Enraged Kromede.
-			break;
-			case 244100: //Enraged Kromede.
-				points = 500000;
-				despawnNpc(npc);
-				spawn(834068, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Old Fire Temple Fortune Server.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
-						    }
-					    });
-					}
-				}, 3000);
-			break;
-		} if (instanceReward.getInstanceScoreType().isStartProgress()) {
-			instanceReward.addNpcKill();
-			instanceReward.addPoints(points);
-			sendPacket(npc.getObjectTemplate().getNameId(), points);
+		var score = DataManager.RETAIL_AI_DATA.getNpcScore(npc.getNpcId());
+		if (score == null) {
+			return;
+		}
+		if (score.scoreApplyType() != 0 || score.equalizingScore() != 0) {
+			throw new IllegalStateException("Unsupported Smoldering Fire Temple NPC score for " + npc.getNpcId());
+		}
+		KillEvent kill = recordKill(npc, score.value());
+		delete(npc);
+		switch (npc.getNpcId()) {
+			case 244095 -> setDoorState(8, true);
+			case 244100 -> startSettlement(kill.killedAt());
+			default -> { }
+		}
+		reconcileProgress();
+		if (kill.newlyCounted()) {
+			sendScore(npc.getObjectTemplate().getNameId(), score.value());
 		}
 	}
-	
-	/**
-	 * 玩家对 NPC 使用物品完成时处理。
-	 * Handle item-use finish on an NPC.
-	 *
-	 * 玩家 / player
-	 * npc
-	 */
+
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
-		PlayerEffectController effectController = player.getEffectController();
+		PlayerEffectController effects = player.getEffectController();
 		switch (npc.getNpcId()) {
-			case 834055: //GM Stomper.
-				if (player.getCommonData().getRace() == Race.ELYOS) {
-				    effectController.removeEffect(21376);
-				    effectController.removeEffect(21377);
-				    GameEngineServices.skillEngine().getSkill(npc, 21375, 1, player).useNoAnimationSkill();
-				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					effectController.removeEffect(21379);
-				    effectController.removeEffect(21380);
-				    GameEngineServices.skillEngine().getSkill(npc, 21378, 1, player).useNoAnimationSkill();
-				}
-			break;
-			case 834056: //GM Shine.
-			    if (player.getCommonData().getRace() == Race.ELYOS) {
-				    effectController.removeEffect(21375);
-				    effectController.removeEffect(21377);
-				    GameEngineServices.skillEngine().getSkill(npc, 21376, 1, player).useNoAnimationSkill();
-				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-				    effectController.removeEffect(21378);
-				    effectController.removeEffect(21380);
-				    GameEngineServices.skillEngine().getSkill(npc, 21379, 1, player).useNoAnimationSkill();
-				}
-			break;
-			case 834057: //GM Iris.
-			    if (player.getCommonData().getRace() == Race.ELYOS) {
-				    effectController.removeEffect(21375);
-				    effectController.removeEffect(21376);
-				    GameEngineServices.skillEngine().getSkill(npc, 21377, 1, player).useNoAnimationSkill();
-				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-				    effectController.removeEffect(21378);
-				    effectController.removeEffect(21379);
-				    GameEngineServices.skillEngine().getSkill(npc, 21380, 1, player).useNoAnimationSkill();
-				}
-			break;
+			case 834055 -> useTransformation(player, npc, effects, 21375, 21378);
+			case 834056 -> useTransformation(player, npc, effects, 21376, 21379);
+			case 834057 -> useTransformation(player, npc, effects, 21377, 21380);
 		}
 	}
-	
-	private void removeEffects(Player player) {
-		PlayerEffectController effectController = player.getEffectController();
-		effectController.removeEffect(21375);
-		effectController.removeEffect(21376);
-		effectController.removeEffect(21377);
-		effectController.removeEffect(21378);
-		effectController.removeEffect(21379);
-		effectController.removeEffect(21380);
+
+	@Override
+	public void onOpenDoor(Player player, int doorId) {
+		if (doorId != 2) {
+			return;
+		}
+		setDoorState(2, true);
+		sendSystemMessage(1401181);
+		if (runtimeState().getLong("smolder.start_at", 0) == 0
+				&& !runtimeState().getBoolean("smolder.completed", false)) {
+			startMainTimer(System.currentTimeMillis());
+		}
 	}
-	
-	/**
-	 * 玩家离开副本时处理。
-	 * Handle a player leaving the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
+
+	@Override
+	public void onEnterInstance(Player player) {
+		SmolderingPlayerReward reward = getOrCreatePlayerReward(player.getObjectId());
+		if (runtimeState().getBoolean("smolder.completed", false)) {
+			if (!reward.isRewarded()) {
+				doReward(player);
+			}
+			sendScore(0, 0);
+			return;
+		}
+		startPrepareTimer();
+		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), instanceReward, null));
+	}
+
+	@Override
+	public void doReward(Player player) {
+		if (!runtimeState().getBoolean("smolder.completed", false)) {
+			return;
+		}
+		SmolderingPlayerReward reward = getOrCreatePlayerReward(player.getObjectId());
+		if (reward.isRewarded()) {
+			return;
+		}
+		RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, instanceReward.getRank());
+		reward.setSmolderingKey(Math.toIntExact(plan.itemCount(185000270)));
+		InstanceSettlementService.settleTimeAttack(instance, player, instanceReward.getRank());
+		reward.setRewarded();
+		runtimeState().put(playerRewardKey(player.getObjectId()), true);
+	}
+
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 		removeEffects(player);
-		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
-	
-	/**
-	 * 玩家从该副本登出时处理。
-	 * Handle a player logging out from this instance.
-	 *
-	 * @param player 玩家 / player
-	 */
+
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 		removeEffects(player);
 	}
-	
-	private int getTime() {
-		long result = (int) (System.currentTimeMillis() - startTime);
-		return instanceTimerSeconds - (int) result;
-	}
-	
-	private void sendPacket(final int nameId, final int point) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				if (nameId != 0) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(nameId * 2 + 1), point));
-				}
-				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), instanceReward, null));
-			}
-		});
-	}
-	
-	private int checkRank(int totalPoints) {
-		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
-				Math.max(0, System.currentTimeMillis() - startTime) / 1000);
-	}
-	/**
-	 * 启动副本计时/任务。
-	 * Start instance timer/tasks.
-	 */
-	
-	protected void startInstanceTask() {
-		smolderingTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
-					    stopInstance(player);
-				    }
-			    });
-            }
-        }, 600000));
-    }
-	
-	/**
-	 * 玩家打开门时处理。
-	 * Handle a player opening a door.
-	 *
-	 * 玩家 / player
-	 * doorId
-	 */
-	@Override
-	public void onOpenDoor(Player player, int doorId) {
-		if (doorId == 2) {
-			startInstanceTask();
-			doors.get(2).setOpen(true);
-			// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
-			sendMsgByRace(1401181, Race.PC_ALL, 0);
-			// 玩家有 1 分钟准备！！！【红色计时】 / The player has 1 min to prepare !!! [Timer Red]
-			if ((timerPrepare != null) && (!timerPrepare.isDone() || !timerPrepare.isCancelled())) {
-				// 开始副本计时！！！【白色计时】 / Start the instance time !!! [Timer White]
-				startMainInstanceTimer();
-			}
-		}
-	}
-	
-	/**
-	 * 玩家进入副本时处理。
-	 * Handle a player entering the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onEnterInstance(final Player player) {
-		if (!instanceReward.containPlayer(player.getObjectId())) {
-			addPlayerReward(player);
-		}
-		SmolderingPlayerReward playerReward = getPlayerReward(player.getObjectId());
-		if (playerReward.isRewarded()) {
-			doReward(player);
-		}
-		startPrepareTimer();
-	}
-	
-	private void startPrepareTimer() {
-		if (timerPrepare == null) {
-			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					startMainInstanceTimer();
-				}
-			}, prepareTimerSeconds);
-		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(prepareTimerSeconds, instanceReward, null));
-			}
-		});
-	}
-	
-	private void startMainInstanceTimer() {
-		if (!timerPrepare.isDone()) {
-			timerPrepare.cancel(false);
-		}
-		startTime = System.currentTimeMillis();
-		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-		sendPacket(0, 0);
-	}
-	/**
-	 * 停止副本并结算。
-	 * Stop the instance and settle.
-	 *
-	 * @param player 玩家 / player
-	 */
-	
-	protected void stopInstance(Player player) {
-        stopInstanceTask();
-        instanceReward.setRank(6);
-		instanceReward.setRank(checkRank(instanceReward.getPoints()));
-		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-		doReward(player);
-		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Smoldering Fire Temple>");
-		sendPacket(0, 0);
-	}
-	
-	private void rewardGroup() {
-		for (Player p: instance.getPlayersInside()) {
-			doReward(p);
-		}
-	}
-	
-	/**
-	 * 结算并发放奖励。
-	 * Settle and grant rewards.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void doReward(Player player) {
-		SmolderingPlayerReward playerReward = getPlayerReward(player.getObjectId());
-		if (!playerReward.isRewarded()) {
-			int smolderingRank = instanceReward.getRank();
-			RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, smolderingRank);
-			playerReward.setSmolderingKey(Math.toIntExact(plan.itemCount(185000270)));
-			InstanceSettlementService.settleTimeAttack(instance, player, smolderingRank);
-			playerReward.setRewarded();
-		}
-	}
-	
-	/**
-	 * 副本创建时初始化逻辑。
-	 * Initialize logic when the instance is created.
-	 *
-	 * @param instance 世界地图实例 / world-map instance
-	 */
-	@Override
-	public void onInstanceCreate(WorldMapInstance instance) {
-		super.onInstanceCreate(instance);
-		instanceReward = new SmolderingReward(mapId, instanceId);
-		instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
-		doors = instance.getDoors();
-	}
-	
-	private void stopInstanceTask() {
-        for (Future<?> task : smolderingTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
-	
-	/**
-	 * 副本销毁时清理资源。
-	 * Clean up resources when the instance is destroyed.
-	 */
+
 	@Override
 	public void onInstanceDestroy() {
-		if (timerInstance != null) {
-			timerInstance.cancel(false);
-		} if (timerPrepare != null) {
-			timerPrepare.cancel(false);
+		if (instanceReward != null) {
+			instanceReward.clear();
 		}
-		stopInstanceTask();
-		isInstanceDestroyed = true;
-		instanceReward.clear();
-		doors.clear();
 	}
-	/**
-	 * 移除指定 NPC。
-	 * Despawn the given NPC.
-	 *
-	 * npc
-	 */
-	
-	protected void despawnNpc(Npc npc) {
-        if (npc != null) {
-            npc.getController().onDelete();
-        }
-    }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
+
+	private void startPrepareTimer() {
+		if (runtimeState().getLong("smolder.start_at", 0) > 0) {
+			return;
+		}
+		long deadline = runtimeState().getLong("smolder.prepare_deadline", 0);
+		if (deadline == 0) {
+			deadline = System.currentTimeMillis() + InstanceSettlementService.timeAttackWaitSeconds(mapId) * 1000L;
+			runtimeState().put("smolder.prepare_deadline", deadline);
+		}
+		long prepareDeadline = deadline;
+		scheduleDeadline("prepare", deadline, () -> startMainTimer(prepareDeadline));
 	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+
+	private synchronized void startMainTimer(long startAt) {
+		if (runtimeState().getLong("smolder.start_at", 0) > 0
+				|| runtimeState().getBoolean("smolder.completed", false)) {
+			return;
+		}
+		cancelDeadline("prepare");
+		long deadline = startAt + InstanceSettlementService.timeAttackLimitSeconds(mapId) * 1000L;
+		runtimeState().put("smolder.start_at", startAt);
+		runtimeState().put("smolder.expire_deadline", deadline);
+		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+		sendScore(0, 0);
+		scheduleDeadline("expire", deadline, this::completeInstance);
+	}
+
+	private void startSettlement(long finishAt) {
+		if (runtimeState().getLong("smolder.settle_deadline", 0) > 0) {
+			return;
+		}
+		runtimeState().put("smolder.finish_at", finishAt);
+		long deadline = finishAt + SETTLEMENT_DELAY;
+		runtimeState().put("smolder.settle_deadline", deadline);
+		scheduleDeadline("settle", deadline, this::completeInstance);
+	}
+
+	private synchronized void completeInstance() {
+		if (runtimeState().getBoolean("smolder.completed", false)) {
+			return;
+		}
+		long startAt = runtimeState().getLong("smolder.start_at", 0);
+		long finishAt = runtimeState().getLong("smolder.finish_at", 0);
+		if (finishAt == 0) {
+			finishAt = runtimeState().getLong("smolder.expire_deadline", System.currentTimeMillis());
+			runtimeState().put("smolder.finish_at", finishAt);
+		}
+		int rank = checkRank(instanceReward.getPoints(), startAt, finishAt);
+		instanceReward.setRank(rank);
+		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
+		runtimeState().put("smolder.rank", rank);
+		runtimeState().put("smolder.completed", true);
+		cancelDeadline("prepare");
+		cancelDeadline("expire");
+		cancelDeadline("settle");
+		despawnScoredNpcs();
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
+		sendScore(0, 0);
+	}
+
+	private void restoreDeadline() {
+		if (runtimeState().getBoolean("smolder.completed", false)) {
+			return;
+		}
+		long finalBossKilledAt = killTime(244100, BOSS_X, BOSS_Y, BOSS_Z);
+		if (finalBossKilledAt > 0) {
+			long settlement = runtimeState().getLong("smolder.settle_deadline", 0);
+			if (settlement == 0) {
+				settlement = finalBossKilledAt + SETTLEMENT_DELAY;
+				runtimeState().put("smolder.finish_at", finalBossKilledAt);
+				runtimeState().put("smolder.settle_deadline", settlement);
 			}
-		}, time);
+			scheduleDeadline("settle", settlement, this::completeInstance);
+			return;
+		}
+		long expire = runtimeState().getLong("smolder.expire_deadline", 0);
+		if (runtimeState().getLong("smolder.start_at", 0) > 0 && expire > 0) {
+			scheduleDeadline("expire", expire, this::completeInstance);
+			return;
+		}
+		long prepare = runtimeState().getLong("smolder.prepare_deadline", 0);
+		if (prepare > 0) {
+			scheduleDeadline("prepare", prepare, () -> startMainTimer(prepare));
+		}
+	}
+
+	private void restoreKilledNpcs() {
+		for (Npc npc : npcs()) {
+			if (hasKillEvent(npc)) {
+				delete(npc);
+			}
+		}
+	}
+
+	private void reconcileProgress() {
+		if (killCount(244095) > 0) {
+			setDoorState(8, true);
+		}
+		if (killCount(244096) > 0) {
+			spawnOnce(834067, 292.34671f, 166.54131f, 119.53692f, (byte) 0, 40);
+		}
+		if (killCount(244097) > 0) {
+			spawnOnce(834066, 169.24069f, 417.3511f, 140.77321f, (byte) 0, 3);
+		}
+		if (killCount(244100) > 0) {
+			spawnOnce(834068, BOSS_X, BOSS_Y, BOSS_Z, BOSS_HEADING, 0);
+		}
+		if (runtimeState().getBoolean("smolder.completed", false) || !guardianUnlocked()) {
+			return;
+		}
+		if (killCount(244097) == 0) {
+			spawnBoss(244097);
+		} else if (killCount(244098) == 0) {
+			spawnBoss(244098);
+		} else if (killCount(244099) == 0) {
+			spawnBoss(244099);
+		} else if (killCount(244100) == 0) {
+			spawnBoss(244100);
+		}
+	}
+
+	private boolean guardianUnlocked() {
+		return killCount(244093) >= 12 || runtimeState().getLong("smolder.guardian_unlocked_at", 0) > 0;
+	}
+
+	private void spawnBoss(int npcId) {
+		for (int bossId = 244097; bossId <= 244100; bossId++) {
+			if (getNpc(bossId) != null) {
+				return;
+			}
+		}
+		spawn(npcId, BOSS_X, BOSS_Y, BOSS_Z, BOSS_HEADING);
+	}
+
+	private void spawnOnce(int npcId, float x, float y, float z, byte heading, int entityId) {
+		if (getNpc(npcId) != null) {
+			return;
+		}
+		if (entityId > 0) {
+			spawn(npcId, x, y, z, heading, entityId);
+		} else {
+			spawn(npcId, x, y, z, heading);
+		}
+	}
+
+	private void restoreScore() {
+		int points = 0;
+		int kills = 0;
+		for (String value : runtimeState().snapshot("smolder.kill.").values()) {
+			KillEvent event = KillEvent.decode(value);
+			points = Math.addExact(points, event.score());
+			if (event.wasCounted()) {
+				kills++;
+			}
+		}
+		instanceReward.restore(points, kills, runtimeState().getInt("smolder.rank", 7));
+	}
+
+	private KillEvent recordKill(Npc npc, int retailScore) {
+		String key = killKey(npc);
+		String existing = runtimeState().get(key);
+		if (existing != null) {
+			return KillEvent.decode(existing).duplicate();
+		}
+		boolean counted = instanceReward.getInstanceScoreType().isStartProgress();
+		KillEvent event = new KillEvent(counted ? retailScore : 0, counted, System.currentTimeMillis(), true, counted);
+		runtimeState().put(key, event.encode());
+		if (npc.getNpcId() == 244093 && killCount(244093) >= 12) {
+			runtimeState().put("smolder.guardian_unlocked_at", event.killedAt());
+		}
+		if (counted) {
+			instanceReward.addPoints(retailScore);
+			instanceReward.addNpcKill();
+		}
+		return event;
+	}
+
+	private int killCount(int npcId) {
+		return runtimeState().snapshot("smolder.kill." + npcId + '.').size();
+	}
+
+	private long killTime(int npcId, float x, float y, float z) {
+		String value = runtimeState().get(killKey(npcId, x, y, z));
+		return value == null ? 0 : KillEvent.decode(value).killedAt();
+	}
+
+	private boolean hasKillEvent(Npc npc) {
+		return runtimeState().get(killKey(npc)) != null;
+	}
+
+	private void despawnScoredNpcs() {
+		for (Npc npc : npcs()) {
+			for (int scoreNpc : SCORE_NPCS) {
+				if (npc.getNpcId() == scoreNpc) {
+					delete(npc);
+					break;
+				}
+			}
+		}
+	}
+
+	private List<Npc> npcs() {
+		List<Npc> result = new ArrayList<>();
+		for (var iterator = instance.objectIterator(); iterator.hasNext();) {
+			VisibleObject object = iterator.next();
+			if (object instanceof Npc npc) {
+				result.add(npc);
+			}
+		}
+		return result;
+	}
+
+	private SmolderingPlayerReward getOrCreatePlayerReward(int playerId) {
+		SmolderingPlayerReward reward = (SmolderingPlayerReward) instanceReward.getPlayerReward(playerId);
+		if (reward == null) {
+			reward = new SmolderingPlayerReward(playerId);
+			if (runtimeState().getBoolean(playerRewardKey(playerId), false)) {
+				reward.setRewarded();
+				reward.setSmolderingKey(Math.toIntExact(InstanceSettlementService
+						.timeAttackPlan(mapId, instanceReward.getRank()).itemCount(185000270)));
+			}
+			instanceReward.addPlayerReward(reward);
+		}
+		return reward;
+	}
+
+	private InstanceScoreType scoreType() {
+		if (runtimeState().getBoolean("smolder.completed", false)) {
+			return InstanceScoreType.END_PROGRESS;
+		}
+		return runtimeState().getLong("smolder.start_at", 0) > 0
+				? InstanceScoreType.START_PROGRESS : InstanceScoreType.PREPARING;
+	}
+
+	private int checkRank(int totalPoints, long startAt, long finishAt) {
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+				Math.max(0, finishAt - startAt) / 1000);
+	}
+
+	private int getTime() {
+		if (runtimeState().getBoolean("smolder.completed", false)) {
+			return 0;
+		}
+		long deadline = runtimeState().getLong("smolder.start_at", 0) > 0
+				? runtimeState().getLong("smolder.expire_deadline", 0)
+				: runtimeState().getLong("smolder.prepare_deadline", 0);
+		return (int) Math.max(0, deadline - System.currentTimeMillis());
+	}
+
+	private void sendScore(int nameId, int points) {
+		for (Player player : instance.getPlayersInside()) {
+			if (nameId != 0) {
+				PacketSendUtility.sendPacket(player,
+						new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(nameId * 2 + 1), points));
+			}
+			PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), instanceReward, null));
+		}
+	}
+
+	private void sendSystemMessage(int messageId) {
+		for (Player player : instance.getPlayersInside()) {
+			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(messageId));
+		}
+	}
+
+	private static void useTransformation(Player player, Npc npc, PlayerEffectController effects,
+			int elyosSkill, int asmodianSkill) {
+		removeEffects(player);
+		int skillId = player.getRace() == Race.ELYOS ? elyosSkill : asmodianSkill;
+		GameEngineServices.skillEngine().getSkill(npc, skillId, 1, player).useNoAnimationSkill();
+	}
+
+	private static void removeItems(Player player) {
+		Storage inventory = player.getInventory();
+		for (int itemId = 162002085; itemId <= 162002090; itemId++) {
+			inventory.decreaseByItemId(itemId, inventory.getItemCountByItemId(itemId));
+		}
+		inventory.decreaseByItemId(185000270, inventory.getItemCountByItemId(185000270));
+	}
+
+	private static void removeEffects(Player player) {
+		PlayerEffectController effects = player.getEffectController();
+		for (int skillId = 21375; skillId <= 21380; skillId++) {
+			effects.removeEffect(skillId);
+		}
+	}
+
+	private static String playerRewardKey(int playerId) {
+		return "smolder.player." + playerId + ".rewarded";
+	}
+
+	private static String killKey(Npc npc) {
+		return killKey(npc.getNpcId(), npc.getSpawn().getX(), npc.getSpawn().getY(), npc.getSpawn().getZ());
+	}
+
+	private static String killKey(int npcId, float x, float y, float z) {
+		return "smolder.kill." + npcId + '.' + positionKey(x, y, z);
+	}
+
+	private static String positionKey(float x, float y, float z) {
+		return Integer.toUnsignedString(Float.floatToIntBits(x)) + '_'
+				+ Integer.toUnsignedString(Float.floatToIntBits(y)) + '_'
+				+ Integer.toUnsignedString(Float.floatToIntBits(z));
+	}
+
+	private static void delete(Npc npc) {
+		if (npc != null) {
+			npc.getController().onDelete();
+		}
+	}
+
+	private record KillEvent(int score, boolean wasCounted, long killedAt, boolean newlyRecorded,
+			boolean newlyCounted) {
+		private String encode() {
+			return score + ":" + wasCounted + ":" + killedAt;
+		}
+
+		private KillEvent duplicate() {
+			return new KillEvent(score, wasCounted, killedAt, false, false);
+		}
+
+		private static KillEvent decode(String value) {
+			String[] parts = value.split(":", -1);
+			if (parts.length != 3) {
+				throw new IllegalStateException("Invalid Smoldering Fire Temple kill event");
+			}
+			return new KillEvent(Integer.parseInt(parts[0]), Boolean.parseBoolean(parts[1]),
+					Long.parseLong(parts[2]), false, false);
+		}
 	}
 }

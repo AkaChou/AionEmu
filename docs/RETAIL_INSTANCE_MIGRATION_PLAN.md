@@ -968,7 +968,7 @@ REGISTERED
 
 任务：
 
-- [ ] 将剩余 45 个含任务字段的生产 handler 迁移到 deadline；
+- [ ] 将剩余 44 个含任务字段的生产 handler 迁移到 deadline；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 33% | 2026-07-19 | 139 图行为闭包；26 个 handler 移除私有关键任务，剩余 45 个含 `Future` 文件 |
+| 阶段 4：handler 状态迁移 | 进行中 | 34% | 2026-07-19 | 139 图行为闭包；27 个 handler 移除私有关键任务，剩余 44 个含 `Future` 文件 |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1210,3 +1210,7 @@ REGISTERED
 - 完成 Sealed Argent Manor 真端 60 秒准备、15 分钟挑战和 Boss 死亡后 3 秒结算的绝对 deadline 恢复；持久化积分、击杀数、排名、门 14、随机元素抗性、职业 Zadra 选择及死亡、随机 Boss 掉落、已消耗 Drained Hetgolem、一次性计分怪死亡和玩家结算标记，重启不会重抽、重复刷 Boss、重复耗材、复活已清理计分怪或重复发奖。
 - Sealed Argent Manor 删除三个私有任务容器、直接线程池调度、内存开始时间、门缓存和失效销毁字段；积分改用已生成的真端 `npc-scores.xml` 数值，奖励继续由幂等 `InstanceSettlementService` 接管，剩余含 `Future` 的生产 handler 文件降至 45。
 - Sealed Argent Manor 批次验证通过：`mvn -q -DskipTests compile`、`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest test`；正式生成器 `--check` 仍仅被工作树 `limits.xml` 的外部末尾换行阻断，本批不修改或提交该文件。
+- 完成 Smoldering Fire Temple 真端时间攻击恢复：删除旧 60 秒准备和 600 秒挑战硬编码，统一读取 `world_timeattack` 的 100 秒准备与 480 秒挑战；Sealed Argent Manor 同步改为读取同一真端时间字段，避免后续 handler 再复制计时常量。
+- Smoldering Fire Temple 持久化每个稳定点位的击杀事件、积分、击杀数、排名、门 2/8、12 只 Vengeful Obscura 解锁、Temple Guardian 至 Enraged Kromede 四段动态 Boss、三处阶段传送对象、随机宝箱掉落和玩家结算标记；重启不会重复计分、漏掉 Boss 阶段、重复刷传送对象或重复发奖。
+- Smoldering Fire Temple 计分改用真端 `npc-scores.xml`，修正旧代码对 244091/244092/244093 的错误积分；离本清理改为删除实际掉落的 `162002085` 至 `162002090`，不再用错误的 `162002031` 至 `162002036` 物品 ID。删除三个私有任务容器、直接线程池调度、内存计数/开始时间、门缓存和失效销毁字段，剩余含 `Future` 的生产 handler 文件降至 44。
+- Smoldering Fire Temple 批次验证通过：`mvn -q -DskipTests compile`、`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest,InstanceSettlementServiceTest test`；正式生成器 `--check` 仍仅被工作树 `limits.xml` 的外部末尾换行阻断，本批不修改或提交该文件。

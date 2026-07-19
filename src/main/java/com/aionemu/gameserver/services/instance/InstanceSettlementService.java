@@ -68,6 +68,14 @@ public final class InstanceSettlementService {
 		return TIME_ATTACK_GRADES.length;
 	}
 
+	public static int timeAttackWaitSeconds(int worldId) {
+		return timeAttackRow(worldId).requiredInt("wait_time");
+	}
+
+	public static int timeAttackLimitSeconds(int worldId) {
+		return timeAttackRow(worldId).requiredInt("time_limit");
+	}
+
 	public static RewardPlan timeAttackPlan(int worldId, int rank) {
 		Row row = timeAttackRow(worldId);
 		String grade = TIME_ATTACK_GRADES[Math.max(0, Math.min(rank - 1, TIME_ATTACK_GRADES.length - 1))];

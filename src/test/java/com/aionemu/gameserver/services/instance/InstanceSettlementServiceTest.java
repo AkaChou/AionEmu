@@ -26,7 +26,8 @@ import com.aionemu.gameserver.services.instance.InstanceSettlementService.Reward
 
 class InstanceSettlementServiceTest {
 	private static final Pattern CHECK_RANK = Pattern.compile(
-			"private int checkRank\\(int totalPoints\\) \\{(.*?)\\n\\s*}", Pattern.DOTALL);
+			"private int checkRank\\(int totalPoints(?:, long startAt, long finishAt)?\\) \\{(.*?)\\n\\s*}",
+			Pattern.DOTALL);
 	private static final List<String> TIME_ATTACK_HANDLERS = List.of(
 			"SealedArgentManorInstance.java",
 			"TheEternalBastionInstance.java",
@@ -71,6 +72,14 @@ class InstanceSettlementServiceTest {
 		assertEquals(2, InstanceSettlementService.timeAttackRank(301510000, 16_000, 780));
 		assertEquals(3, InstanceSettlementService.timeAttackRank(301510000, 11_500, 840));
 		assertEquals(6, InstanceSettlementService.timeAttackRank(301510000, 8_099, 1));
+	}
+
+	@Test
+	void loadsTimeAttackDurationsFromRetailTable() {
+		assertEquals(60, InstanceSettlementService.timeAttackWaitSeconds(301510000));
+		assertEquals(900, InstanceSettlementService.timeAttackLimitSeconds(301510000));
+		assertEquals(100, InstanceSettlementService.timeAttackWaitSeconds(302000000));
+		assertEquals(480, InstanceSettlementService.timeAttackLimitSeconds(302000000));
 	}
 
 	@Test
