@@ -896,10 +896,6 @@
 		<spawn npc_id="702748" respawn_time="295">
 			<spot x="2823.1006" y="2659.5422" z="495.92657" h="73"/>
 		</spawn>
-		<!-- Aerolink To Pandaemonium -->
-		<spawn npc_id="730221" respawn_time="295">
-			<spot x="1892.33" y="2838.64" z="554.779" entity_id="1057"/>
-		</spawn>
 		<!-- Detachment Elite -->
 		<spawn npc_id="209301" respawn_time="295">
 			<spot x="1033.69" y="2798.83" z="387.052"/>
@@ -3767,10 +3763,6 @@
 		<!-- Rhonnam -->
 		<spawn npc_id="799326" respawn_time="295">
 			<spot x="923.527" y="1649.04" z="360.125" h="46"/>
-		</spawn>
-		<!-- Talocs Guardian -->
-		<spawn npc_id="799325" respawn_time="295">
-			<spot x="981.114" y="2565.74" z="241.704" h="114"/>
 		</spawn>
 		<!-- Eroding Kalgolem -->
 		<spawn npc_id="216014" respawn_time="295">
@@ -7852,10 +7844,6 @@
         <spawn npc_id="802210" respawn_time="295">
             <spot x="1861.4805" y="2953.5298" z="556.29297" h="51"/>
         </spawn>
-		<!-- Silentera Eastgate -->
-		<spawn npc_id="730260" respawn_time="295">
-			<spot x="1449.2313" y="903.72229" z="302.2702" entity_id="1254"/>
-		</spawn>
 		<!-- Nerthuas -->
         <spawn npc_id="804510" respawn_time="295">
             <spot x="1863.4802" y="2957.8467" z="556.29297" h="51"/>

@@ -6299,6 +6299,7 @@
       <spot x="1527.945801" y="1910.400757" z="312.48172" h="43"/>
     </spawn>
     <spawn npc_id="296444" respawn_time="3600">
+      <spot x="2515.521729" y="823.095093" z="412.73132" h="18"/>
     </spawn>
     <spawn npc_id="248172" respawn_time="259200">
       <spot x="1426.651123" y="1917.377197" z="307.75" h="76" walker_id="NPCPathLF4_Named_Mob1"/>
