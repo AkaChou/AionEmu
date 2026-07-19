@@ -968,7 +968,7 @@ REGISTERED
 
 任务：
 
-- [ ] 将剩余 58 个含任务字段的生产 handler 迁移到 deadline；
+- [ ] 将剩余 57 个含任务字段的生产 handler 迁移到 deadline；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 20% | 2026-07-19 | 139 图行为闭包；13 个 handler 批次移除私有关键任务，剩余 58 个含 `Future` 文件 |
+| 阶段 4：handler 状态迁移 | 进行中 | 21% | 2026-07-19 | 139 图行为闭包；14 个 handler 批次移除私有关键任务，剩余 57 个含 `Future` 文件 |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1182,3 +1182,5 @@ REGISTERED
 - 完成 Adma Stronghold 的可疑罐、Lannok/Reaper 链和完成出口恢复；完成 Padmarashka Cave 的九段警告、两小时驱逐、守护者/卵计数和动画状态恢复。
 - 完成 Cradle of Eternity 与 Transidium Annex 的首阶段 deadline、阵营、关键计数、门状态和完成对象恢复；含 `Future` 的生产 handler 文件由 62 降至 58。
 - 新增 `InstanceHandlerRecoveryMigrationTest`；`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest test` 和 `mvn -q -DskipTests compile` 通过。
+- 完成 Theobomos Lab 的随机宝箱选择、元素封印石、Silikor 守卫计数、Triroan/Ifrit 延迟阶段和完成出口恢复；剩余含 `Future` 的生产 handler 文件降至 57。
+- `mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest test` 再次通过。

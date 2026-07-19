@@ -14,13 +14,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 西奥博莫斯实验室副本事件处理器。
@@ -34,12 +28,6 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 {
 	/** silikor guard / silikor guard */
 		private int silikorGuard;
-	/** 是否启动计时器 / is start timer */
-		private boolean isStartTimer = false;
-	/** elementsealingstone 任务 / element sealing stone task */
-		private Future<?> elementSealingStoneTask;
-	/** element sealing stone / element sealing stone */
-		private List<Npc> elementSealingStone = new ArrayList<Npc>();
 	
 	/**
 	 * NPC 掉落表注册时处理。
@@ -177,8 +165,17 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
-		spawn(237250, 616.169f, 488.758f, 196.015f, (byte) 62); //Sealed Unstable Triroan.
-		switch (Rnd.get(1, 3)) {
+		silikorGuard = runtimeState().getInt("theobomos.silikor_guard", 0);
+		if (!runtimeState().getBoolean("theobomos.triroan_dead", false)
+				&& !runtimeState().getBoolean("theobomos.complete", false)) {
+			spawn(237250, 616.169f, 488.758f, 196.015f, (byte) 62);
+		}
+		int chest = runtimeState().getInt("theobomos.chest", 0);
+		if (chest == 0) {
+			chest = Rnd.get(1, 3);
+			runtimeState().put("theobomos.chest", chest);
+		}
+		switch (chest) {
 			case 1:
 				spawn(237119, 455.78845f, 774.0474f, 157.89963f, (byte) 0); //Antique Treasure Chest.
 			break;
@@ -188,6 +185,18 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 			case 3:
 				spawn(237121, 455.78845f, 774.0474f, 157.89963f, (byte) 0); //Antique Treasure Chest.
 			break;
+		}
+		long stoneDeadline = runtimeState().getLong("theobomos.stone_deadline", 0);
+		if (stoneDeadline > 0 && !runtimeState().getBoolean("theobomos.stone_removed", false)) {
+			spawn(237253, 477.88632f, 230.60364f, 173.06987f, (byte) 90);
+			scheduleDeadline("stone", stoneDeadline, this::expireStone);
+		}
+		long ifritDeadline = runtimeState().getLong("theobomos.ifrit_deadline", 0);
+		if (ifritDeadline > 0 && !runtimeState().getBoolean("theobomos.ifrit_spawned", false)) {
+			scheduleDeadline("ifrit", ifritDeadline, this::spawnIfrit);
+		}
+		if (runtimeState().getBoolean("theobomos.complete", false)) {
+			spawnExit();
 		}
 	}
 	
@@ -199,26 +208,20 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onEnterInstance(final Player player) {
-		super.onInstanceCreate(instance);
-		// 元素封印石已出现。将在 3 分钟后消失。 / The Element Sealing Stone has appeared. The Element Sealing Stone will disappear in 3 minutes.
-		sendMsgByRace(1403061, Race.PC_ALL, 2000);
-		if (!isStartTimer) {
-			isStartTimer = true;
-			System.currentTimeMillis();
-			elementSealingStone.add((Npc) spawn(237253, 477.88632f, 230.60364f, 173.06987f, (byte) 90)); //Fiery Sealing Stone.
-			elementSealingStoneTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					// 元素封印石已消失。 / The Element Sealing Stone has disappeared.
-					sendMsg(1403062);
-					elementSealingStone.get(0).getController().onDelete();
-				}
-			}, 180000);
+		if (runtimeState().getLong("theobomos.stone_deadline", 0) == 0
+				&& !runtimeState().getBoolean("theobomos.stone_removed", false)) {
+			sendMsgByRace(1403061, Race.PC_ALL, 2000);
+			spawn(237253, 477.88632f, 230.60364f, 173.06987f, (byte) 90);
+			long deadline = System.currentTimeMillis() + 180_000;
+			runtimeState().put("theobomos.stone_deadline", deadline);
+			scheduleDeadline("stone", deadline, this::expireStone);
 		}
+	}
+
+	private void expireStone() {
+		runtimeState().put("theobomos.stone_removed", true);
+		sendMsg(1403062);
+		deleteNpc(237253);
 	}
 	
     /**
@@ -232,7 +235,8 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 237253: //Fiery Sealing Stone.
-				elementSealingStoneTask.cancel(true);
+				runtimeState().put("theobomos.stone_removed", true);
+				cancelDeadline("stone");
 				// 若未按正确顺序举行仪式，辉煌元素将失去力量。 / If you do not perform the proper order of the ritual, the Brilliant Elemental will lose its power.
 				sendMsgByRace(1403039, Race.PC_ALL, 4000);
 				// 辉煌元素正朝记忆硅石所在的元素核心生成室发出光束。 / The Brilliant Elemental is beaming towards the researcher's lounge where Queen Arachne is located.
@@ -258,6 +262,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 			case 280971: //First Silikor Guard.
 			case 280972: //Second Silikor Guard.
 				silikorGuard ++;
+				runtimeState().put("theobomos.silikor_guard", silikorGuard);
 				if (silikorGuard == 1) {
 				} else if (silikorGuard == 2) {
 					spawn(237248, 392.5771f, 744.2743f, 189.38637f, (byte) 41); //Watcher Silikor Of Memory.
@@ -265,18 +270,10 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
             break;
 			case 237250: //Sealed Unstable Triroan.
 				despawnNpc(npc);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						// 破碎元素领主已出现。 / Fractured Elemental Lord has appeared.
-						sendMsgByRace(1403026, Race.PC_ALL, 0);
-						spawn(237251, 616.169f, 488.758f, 196.015f, (byte) 62); //Corrupted Ifrit.
-				    }
-			    }, 3000);
+				runtimeState().put("theobomos.triroan_dead", true);
+				long deadline = System.currentTimeMillis() + 3_000;
+				runtimeState().put("theobomos.ifrit_deadline", deadline);
+				scheduleDeadline("ifrit", deadline, this::spawnIfrit);
 			break;
 			case 237251: //Corrupted Ifrit.
 			    //sendMsg("Congratulation]: you finish <Theobomos Lab>");
@@ -288,8 +285,29 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 					    spawn(702659, 602.04486f, 488.82837f, 196.01512f, (byte) 60); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				} */
-				spawn(730178, 637.3241f, 475.9548f, 195.96295f, (byte) 0, 244); //Unstable Exit Fragment.
+				runtimeState().put("theobomos.complete", true);
+				spawnExit();
 			break;
+		}
+	}
+
+	private void spawnIfrit() {
+		if (runtimeState().getBoolean("theobomos.ifrit_spawned", false)) {
+			return;
+		}
+		runtimeState().put("theobomos.ifrit_spawned", true);
+		sendMsgByRace(1403026, Race.PC_ALL, 0);
+		spawn(237251, 616.169f, 488.758f, 196.015f, (byte) 62);
+	}
+
+	private void spawnExit() {
+		spawn(730178, 637.3241f, 475.9548f, 195.96295f, (byte) 0, 244);
+	}
+
+	private void deleteNpc(int npcId) {
+		Npc npc = getNpc(npcId);
+		if (npc != null) {
+			npc.getController().onDelete();
 		}
 	}
 	
