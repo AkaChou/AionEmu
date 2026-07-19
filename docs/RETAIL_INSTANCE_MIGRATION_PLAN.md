@@ -1103,7 +1103,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 45% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma 等旧 handler 已删除，剩余 35 个声明 `Future`、62 个直接使用 `GameThreadPoolServices` 的生产 handler |
+| 阶段 4：handler 状态迁移 | 进行中 | 46% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma 等旧 handler 已删除，Nochsana 已清除私服掉落并收缩为最小真端交互；剩余 35 个声明 `Future`、62 个直接使用 `GameThreadPoolServices` 的生产 handler |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1263,3 +1263,6 @@ REGISTERED
 - 删除 `InfinityShardInstance`、`HyperionAI2`、`IdeResonatorAI2` 三条旧 Java 路径，清除手工 `284437` 护盾、护盾死亡计数、`730842`/`802184` 手工生成、Hyperion/奖励箱私服掉落和线程池系统消息；静态出生不含旧 `284437`，出口由 `cSetIdPortal == 1` 条件出生生成。
 - 重新生成 `coverage.xml`/`manifest.xml`，300800000 归类为真端 `MATCHMAKER`（`matchmaker.xml:324`），同时消除已删除 Haramel/Adma handler 的陈旧 coverage 引用；大小写差异经加载器验证为不影响绑定，未引入无行为收益的名称改动。
 - Infinity Shard 批次验证通过：`mvn -q -Dtest=RetailAiDefinitionLoaderTest,RetailPatternAI2Test,InstanceHandlerRecoveryMigrationTest test`；Pattern 231073 支持校验、18 条条件出生、关键变量/出口/护盾断言及旧文件删除断言均通过。
+- 完成诺克萨纳训练营（`300030000`）真端单轨收缩：以 `idab1_minicastle/world_N.xml`、`NpcAIPatterns_IDMini_01.xml`、真端 NPC/技能/掉落数据为权威，静态出生、Boss/门/出口和 NPC AI 继续由真端数据接管。
+- 删除 `NochsanaTrainingCampInstance` 的私服支援包 `188053787`、活动宝箱 `188051138` 注入、旧死亡/手刷出口注释和无效辅助方法；保留当前 Retail AI 运行时无法直接派发的神器 `700437` 物品交互，使用真端 NPC 技能 `276`，不保留兼容掉落或重复出口生成。
+- Nochsana 批次验证通过：`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest test`、`mvn -q -DskipTests compile`、副本静态出生 XML 与 `git diff --check`。

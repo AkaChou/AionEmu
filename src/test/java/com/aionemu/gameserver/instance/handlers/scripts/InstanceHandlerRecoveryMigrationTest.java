@@ -164,6 +164,25 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void nochsanaUsesRetailWorldFlowWithoutPrivateDrops() throws Exception {
+		String handler = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/NochsanaTrainingCampInstance.java"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertFalse(handler.contains("188053787"));
+		assertFalse(handler.contains("188051138"));
+		assertTrue(handler.contains("npc.getNpcId() == 700437"));
+		assertTrue(handler.contains("getSkill(npc, 276, 10, player)"));
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/300030000_Nochsana_Training_Camp.xml"));
+		assertTrue(staticSpawns.contains("npc_id=\"700437\""));
+		assertTrue(staticSpawns.contains("npc_id=\"700438\""));
+		assertTrue(Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_019.xml"))
+			.contains("npc_id=\"256693\""));
+	}
+
+	@Test
 	void infinityShardUsesRetailPatternAndConditionSpawnsWithoutLegacyPath() throws Exception {
 		Path conditions = Path.of("src/main/resources/aion/definitions/compact/ai/condition-spawns.xml");
 		String world = worldBlock(Files.readString(conditions), "300800000");
