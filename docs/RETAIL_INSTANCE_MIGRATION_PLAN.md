@@ -968,13 +968,14 @@ REGISTERED
 
 任务：
 
-- [ ] 将剩余 37 个含 `Future` 的生产 handler 迁移到 deadline 或真端 Retail AI；
+- [ ] 将剩余 35 个含 `Future` 的生产 handler 迁移到 deadline 或真端 Retail AI；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
 - [x] 对 18 个无 handler 地图确认数据驱动覆盖；
 - [x] 完成 Sulfur、Carpus、Hamate、Treasure Island、Danuar 三变体、Adma、Padmarashka、Cradle 和 Transidium 的首批恢复迁移；
 - [x] 完成 Infinity Shard（`300800000`）真端 Retail AI/条件出生接管，删除旧 handler、Hyperion/Ide Resonator Java AI、手工护盾/出口/奖励和私服掉落；
+- [x] 完成 Nochsana 与 Alquimia 的真端掉落收口，删除重复钥匙、私服奖励和无业务价值 handler；
 - [ ] 删除只提供重复通用逻辑的 handler。
 
 验收：
@@ -1103,7 +1104,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 46% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma 等旧 handler 已删除，Nochsana 已清除私服掉落并收缩为最小真端交互；剩余 35 个声明 `Future`、62 个直接使用 `GameThreadPoolServices` 的生产 handler |
+| 阶段 4：handler 状态迁移 | 进行中 | 47% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma、Alquimia 等旧 handler 已删除，Nochsana 已清除私服掉落并收缩为最小真端交互；剩余 35 个声明 `Future`、62 个直接使用 `GameThreadPoolServices` 的生产 handler |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1266,3 +1267,5 @@ REGISTERED
 - 完成诺克萨纳训练营（`300030000`）真端单轨收缩：以 `idab1_minicastle/world_N.xml`、`NpcAIPatterns_IDMini_01.xml`、真端 NPC/技能/掉落数据为权威，静态出生、Boss/门/出口和 NPC AI 继续由真端数据接管。
 - 删除 `NochsanaTrainingCampInstance` 的私服支援包 `188053787`、活动宝箱 `188051138` 注入、旧死亡/手刷出口注释和无效辅助方法；保留当前 Retail AI 运行时无法直接派发的神器 `700437` 物品交互，使用真端 NPC 技能 `276`，不保留兼容掉落或重复出口生成。
 - Nochsana 批次验证通过：`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest test`、`mvn -q -DskipTests compile`、副本静态出生 XML 与 `git diff --check`。
+- 完成阿尔奎米亚研究所（`320110000`）真端单轨替换：现有 `AlquimiaResearchCenterInstance` 只重复注册 `214027 -> 185000006`、`214034 -> 185000007` 两把已在真端 `npc_drops` 中以 100% 定义的钥匙，并向 `214028` 注入真端掉落表不存在的私服烙印包 `188053787`，因此完整删除该 handler。
+- 320110000 的静态刷怪、NPC Pattern、钥匙、出口和掉落继续由真端数据负责；覆盖重新生成为 `MATCHMAKER`，来源 `matchmaker.xml:323,407`。行为闭包调整为 104 张 `HANDLER`、3 张 `MATCHMAKER`，总数仍为 139。

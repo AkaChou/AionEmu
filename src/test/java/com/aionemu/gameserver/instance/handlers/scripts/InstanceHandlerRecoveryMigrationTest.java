@@ -183,6 +183,23 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void alquimiaUsesRetailDropsWithoutLegacyHandler() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AlquimiaResearchCenterInstance.java")));
+
+		String drops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_004.xml"));
+		assertTrue(npcDropBlock(drops, "214027").contains("item_id=\"185000006\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(drops, "214034").contains("item_id=\"185000007\" chance=\"100.00\""));
+		assertFalse(npcDropBlock(drops, "214028").contains("item_id=\"188053787\""));
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(coverage.contains("behavior=\"MATCHMAKER\" behavior_source=\"matchmaker.xml:323,matchmaker.xml:407\""
+			+ " classification=\"standard\" cooltime_id=\"5\" creation_ids=\"28,217,236\" id=\"320110000\""));
+	}
+
+	@Test
 	void infinityShardUsesRetailPatternAndConditionSpawnsWithoutLegacyPath() throws Exception {
 		Path conditions = Path.of("src/main/resources/aion/definitions/compact/ai/condition-spawns.xml");
 		String world = worldBlock(Files.readString(conditions), "300800000");
@@ -237,6 +254,13 @@ class InstanceHandlerRecoveryMigrationTest {
 	private static String worldBlock(String source, String worldId) {
 		var matcher = Pattern.compile("<world id=\\\"" + worldId + "\\\".*?</world>", Pattern.DOTALL)
 				.matcher(source);
+		assertTrue(matcher.find());
+		return matcher.group();
+	}
+
+	private static String npcDropBlock(String source, String npcId) {
+		var matcher = Pattern.compile("<npc_drop npc_id=\\\"" + npcId + "\\\".*?</npc_drop>", Pattern.DOTALL)
+			.matcher(source);
 		assertTrue(matcher.find());
 		return matcher.group();
 	}
