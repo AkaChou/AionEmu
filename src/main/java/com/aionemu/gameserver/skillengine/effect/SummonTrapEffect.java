@@ -41,7 +41,7 @@ public class SummonTrapEffect extends SummonEffect {
 		float y = effect.getY();
 		float z = effect.getZ();
 		if (x == 0 && y == 0) {
-			Creature effected = effect.getEffected();
+			Creature effected = getPositionReference(effect);
 			x = effected.getX() + (float) (Math.cos(radian) * 2);
 			y = effected.getY() + (float) (Math.sin(radian) * 2);
 			z = effected.getZ();

@@ -102,7 +102,7 @@ public class EffectController {
 	 *
 	 * @param nextEffect 待添加的效果 / effect to add
 	 */
-	public void addEffect(Effect nextEffect) {
+	public boolean addEffect(Effect nextEffect) {
 		Map<String, Effect> mapToUpdate = getMapForEffect(nextEffect);
 
 		lock.lock();
@@ -113,13 +113,13 @@ public class EffectController {
 				if (existingEffect != null && existingEffect.isPassive()) {
 					// 检查堆叠等级 / check stack level
 					if (existingEffect.getSkillStackLvl() > nextEffect.getSkillStackLvl()) {
-						return;
+						return false;
 					}
 
 					// 检查技能等级（堆叠等级相同时） / check skill level (when stack level same)
 					if (existingEffect.getSkillStackLvl() == nextEffect.getSkillStackLvl()
 							&& existingEffect.getSkillLevel() > nextEffect.getSkillLevel()) {
-						return;
+						return false;
 					}
 					existingEffect.endEffect();
 					useEffectId = false;
@@ -141,7 +141,7 @@ public class EffectController {
 									}
 									if (et.getEffectid() == et2.getEffectid()) {
 										if (et.getBasicLvl() > et2.getBasicLvl()) {
-											return;
+											return false;
 										} else {
 											effect.endEffect();
 										}
@@ -191,7 +191,7 @@ public class EffectController {
 			}
 			if (!nextEffect.isPassive()) {
 				if (searchConflict(nextEffect)) {
-					return;
+					return false;
 				}
 				checkEffectCooldownId(nextEffect);
 			}
@@ -212,6 +212,7 @@ public class EffectController {
 		if (!nextEffect.isPassive()) {
 			broadCastEffects();
 		}
+		return true;
 	}
 
 	/**
