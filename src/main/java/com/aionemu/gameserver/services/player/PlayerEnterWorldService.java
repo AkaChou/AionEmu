@@ -142,6 +142,7 @@ import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.gmservice.GmSpecialSkills;
 import com.aionemu.gameserver.services.instance.InstanceService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -423,6 +424,7 @@ public final class PlayerEnterWorldService {
 			GameCreativityServices.creativityEssenceService().onLogin(player);
 			VipService.applyBenefits(player);
 			sendItemInfos(client, player);
+			InstanceSettlementService.retryPending(player);
 			if (!player.getEquipmentSettingList().getEquipmentSetting().isEmpty()) {
 				client.sendPacket(new SM_EQUIPMENT_SETTING(player.getEquipmentSettingList().getEquipmentSetting()));
 			}

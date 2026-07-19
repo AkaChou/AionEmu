@@ -39,6 +39,7 @@ import com.aionemu.gameserver.dao.PlayerEffectsDAO;
 import com.aionemu.gameserver.dao.PlayerEmotionListDAO;
 import com.aionemu.gameserver.dao.PlayerEquipmentSettingDAO;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
+import com.aionemu.gameserver.dao.PlayerInstanceLimitsDAO;
 import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
@@ -54,7 +55,6 @@ import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
-import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.dataholders.PlayerInitialData.LocationData;
@@ -167,7 +167,7 @@ public class PlayerService {
 		}
 		DAOManager.getDAO(ItemStoneListDAO.class).save(player);
 		DAOManager.getDAO(MailDAO.class).storeMailbox(player);
-		DAOManager.getDAO(PortalCooldownsDAO.class).storePortalCooldowns(player);
+		DAOManager.getDAO(PlayerInstanceLimitsDAO.class).store(player);
 		DAOManager.getDAO(CraftCooldownsDAO.class).storeCraftCooldowns(player);
 		DAOManager.getDAO(PlayerNpcFactionsDAO.class).storeNpcFactions(player);
 		DAOManager.getDAO(PlayerLunaShopDAO.class).store(player);
@@ -287,7 +287,7 @@ public class PlayerService {
 		DAOManager.getDAO(PlayerEffectsDAO.class).loadPlayerEffects(player);
 		DAOManager.getDAO(PlayerCooldownsDAO.class).loadPlayerCooldowns(player);
 		DAOManager.getDAO(ItemCooldownsDAO.class).loadItemCooldowns(player);
-		DAOManager.getDAO(PortalCooldownsDAO.class).loadPortalCooldowns(player);
+		DAOManager.getDAO(PlayerInstanceLimitsDAO.class).load(player);
 		DAOManager.getDAO(HouseObjectCooldownsDAO.class).loadHouseObjectCooldowns(player);
 		DAOManager.getDAO(PlayerBindPointDAO.class).loadBindPoint(player);
 		DAOManager.getDAO(CraftCooldownsDAO.class).loadCraftCooldowns(player);

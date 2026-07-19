@@ -212,7 +212,7 @@ public class Player extends Creature {
 	private int abyssRankListUpdateMask = 0;
 	private BindPointPosition bindPoint;
 	private Map<Integer, ItemCooldown> itemCoolDowns;
-	private PortalCooldownList portalCooldownList;
+	private PlayerInstanceLimits instanceLimits;
 	private CraftCooldownList craftCooldownList;
 	private HouseObjectCooldownList houseObjectCooldownList;
 	private long nextSkillUse;
@@ -313,9 +313,6 @@ public class Player extends Creature {
 	private int banditKillStreak = 0;
 	private boolean isAfk;
 	private boolean isFFA = false;
-	private int hallOfTenacityCoupleId = 0;
-	private int hallOfTenacityVSId = 0;
-	private int hallOfTenacityOpponentId = 0;
 
 	private boolean isInDuel;
 	/**
@@ -374,7 +371,7 @@ public class Player extends Creature {
 		this.questStateList = new QuestStateList();
 		this.titleList = new TitleList();
 		this.equipmentSettingList = new EquipmentSettingList(this);
-		this.portalCooldownList = new PortalCooldownList(this);
+		this.instanceLimits = new PlayerInstanceLimits();
 		this.craftCooldownList = new CraftCooldownList(this);
 		houseObjectCooldownList = new HouseObjectCooldownList(this);
 		this.toyPetList = new PetList(this);
@@ -1785,11 +1782,8 @@ public class Player extends Creature {
 		return isInTeam() ? getCurrentTeam().getTeamId() : 0;
 	}
 
-	/**
-	 * @return portal cooldown list
-	 */
-	public PortalCooldownList getPortalCooldownList() {
-		return portalCooldownList;
+	public PlayerInstanceLimits getInstanceLimits() {
+		return instanceLimits;
 	}
 
 	public CraftCooldownList getCraftCooldownList() {
@@ -3187,36 +3181,6 @@ public class Player extends Creature {
 	/** 返回 floor / Returns the floor */
 	public int getFloor() {
 		return getCommonData().getFloor();
-	}
-
-	/** 设置 hot couple id / Sets the hot couple id */
-	public void setHOTCoupleId(int id) {
-		hallOfTenacityCoupleId = id;
-	}
-
-	/** 返回 hot couple id / Returns the hot couple id */
-	public int getHOTCoupleId() {
-		return hallOfTenacityCoupleId;
-	}
-
-	/** 设置 hotvs id / Sets the hotvs id */
-	public void setHOTVSId(int id) {
-		hallOfTenacityVSId = id;
-	}
-
-	/** 返回 hotvs id / Returns the hotvs id */
-	public int getHOTVSId() {
-		return hallOfTenacityVSId;
-	}
-
-	/** 设置 hot my opponent obj id / Sets the hot my opponent obj id */
-	public void setHOTMyOpponentObjId(int id) {
-		hallOfTenacityOpponentId = id;
-	}
-
-	/** 返回 hot my opponent obj id / Returns the hot my opponent obj id */
-	public int getHOTMyOpponentObjId() {
-		return hallOfTenacityOpponentId;
 	}
 
 	// 竞赛活动部分 / competiton event part

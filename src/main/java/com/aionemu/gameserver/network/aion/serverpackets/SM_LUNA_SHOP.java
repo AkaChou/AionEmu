@@ -27,6 +27,7 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	private int craftItemCount;
 	// 塔基的冒险 / Taki's Adventure
 	private int indun_id;
+	private int indunResult;
 	// 穆尼伦克的宝藏 / Munirunerk's Treasure
 	private HashMap<Integer, Long> munirunerk_treasure;
 
@@ -73,6 +74,12 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	public SM_LUNA_SHOP(int actionId, int indun_id) {
 		this.actionId = actionId;
 		this.indun_id = indun_id;
+	}
+
+	public static SM_LUNA_SHOP lunaInstanceResult(int dungeonId, int result) {
+		SM_LUNA_SHOP packet = new SM_LUNA_SHOP(0, dungeonId);
+		packet.indunResult = result;
+		return packet;
 	}
 
 	/**
@@ -152,7 +159,7 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 		writeC(actionId);
 		switch (actionId) {
 		case 0:
-			writeC(0);
+			writeC(indunResult);
 			writeD(indun_id);
 			break;
 		case 2:

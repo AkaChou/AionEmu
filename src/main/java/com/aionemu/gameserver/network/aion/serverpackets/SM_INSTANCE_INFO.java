@@ -1,15 +1,15 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.RetailInstanceData.Row;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.PortalCooldownList;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
-import com.aionemu.gameserver.model.templates.InstanceCooltime;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.services.instance.InstanceLimitService;
+import com.aionemu.gameserver.services.instance.InstanceLimitService.LimitStatus;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * 向客户端同步玩家副本冷却与进入次数信息的服务端包。
@@ -50,9 +50,7 @@ public class SM_INSTANCE_INFO extends AionServerPacket {
 		this.isAnswer = false;
 		this.playerTeam = null;
 		this.worldId = instanceId;
-		this.cooldownId = DataManager.INSTANCE_COOLTIME_DATA.getInstanceCooltimeByWorldId(instanceId) != null
-				? DataManager.INSTANCE_COOLTIME_DATA.getInstanceCooltimeByWorldId(instanceId).getId()
-				: 0;
+		this.cooldownId = InstanceLimitService.clientCooldownId(instanceId);
 	}
 
 	@Override
@@ -64,43 +62,29 @@ public class SM_INSTANCE_INFO extends AionServerPacket {
 		writeH(0x01);
 		if (cooldownId == 0) {
 			writeD(player.getObjectId());
-			writeH(DataManager.INSTANCE_COOLTIME_DATA.size());
-			PortalCooldownList cooldownList = player.getPortalCooldownList();
-			for (Map.Entry<Integer, InstanceCooltime> e : DataManager.INSTANCE_COOLTIME_DATA.getAllInstances().entrySet()) {
-				writeD(e.getValue().getId());
-				writeD(0x00);
-				if (cooldownList.getPortalCooldown(e.getValue().getWorldId()) == 0) {
-					writeD(0x00);
-				} else {
-					writeD((int) (cooldownList.getPortalCooldown(e.getValue().getWorldId())
-							- System.currentTimeMillis()) / 1000);
-				}
-				writeD(DataManager.INSTANCE_COOLTIME_DATA.getInstanceEntranceCountByWorldId(e.getKey()));
-				writeD(cooldownList.getPortalCooldownItem(e.getValue().getWorldId()) != null
-						? cooldownList.getPortalCooldownItem(e.getValue().getWorldId()).getEntryCount() * -1
-						: 0);
-				writeD(0x00);
-				writeD(0x00);
-				writeD(0x01);
-				writeC(0x01);
+			List<Row> rules = DataManager.RETAIL_INSTANCE_DATA.limits().stream().toList();
+			writeH(rules.size());
+			for (Row rule : rules) {
+				writeStatus(InstanceLimitService.status(player, rule.requiredInt("world_id")));
 			}
 			writeS(player.getName());
 		} else {
 			writeD(player.getObjectId());
 			writeH(0x01);
-			writeD(cooldownId);
-			writeD(0x00);
-			long time = player.getPortalCooldownList().getPortalCooldown(worldId);
-			writeD((time == 0 ? 0 : ((int) (time - System.currentTimeMillis()) / 1000)));
-			writeD(DataManager.INSTANCE_COOLTIME_DATA.getInstanceEntranceCountByWorldId(worldId));
-			writeD(player.getPortalCooldownList().getPortalCooldownItem(worldId) != null
-					? player.getPortalCooldownList().getPortalCooldownItem(worldId).getEntryCount() * -1
-					: 0);
-			writeD(0x00);
-			writeD(0x00);
-			writeD(0x01);
-			writeC(0x01);
+			writeStatus(InstanceLimitService.status(player, worldId));
 			writeS(player.getName());
 		}
+	}
+
+	private void writeStatus(LimitStatus status) {
+		writeD(status.clientCooldownId());
+		writeD(0x00);
+		writeD((int) Math.min(Integer.MAX_VALUE, status.remainingSeconds(System.currentTimeMillis())));
+		writeD(status.maxEntries());
+		writeD(-status.usedEntries());
+		writeD(status.purchasedCount());
+		writeD(0x00);
+		writeD(0x01);
+		writeC(0x01);
 	}
 }

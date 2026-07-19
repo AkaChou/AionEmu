@@ -99,8 +99,7 @@ public class PlayerLeaveWorldService {
 	public static final void startLeaveWorld(Player player) {
 		log.info(I18n.get("log.6e504269f536", player.getName(), (player.getClientConnection() != null ? player.getClientConnection().getAccount().getName()
 						: "Disconnected")));
-		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+		GameRuntimeServices.findGroupService().onLogout(player);
 		player.onLoggedOut();
 		GameFeatureServices.petService().onPlayerLogout(player);
 		GameRuntimeServices.brokerService().removePlayerCache(player);

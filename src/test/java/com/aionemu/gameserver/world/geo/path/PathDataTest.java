@@ -529,6 +529,19 @@ class PathDataTest {
 				map.searchAStar(0.25f, 0.25f, 1, 1.25f, 0.25f, 21, 10, (x, y) -> Float.NaN, null).status());
 	}
 
+	@Test
+	void rejectsNearVerticalRetailEdges() throws Exception {
+		Path path = directory.resolve("1.path");
+		Path index = directory.resolve("1.idx");
+		byte[] data = layeredComplexPath(100, 500);
+		Files.write(path, data);
+		Files.write(index, index(data, 16, 16, 33, 169, 0, 169));
+		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+
+		assertEquals(PathData.SearchStatus.NO_PATH,
+				map.searchAStar(0.25f, 0.25f, 1, 1.25f, 0.25f, 5, 10, (x, y) -> Float.NaN, null).status());
+	}
+
 	private static byte[] flatLinkedPath() {
 		return flatLinkedPath((byte) 0xfe);
 	}

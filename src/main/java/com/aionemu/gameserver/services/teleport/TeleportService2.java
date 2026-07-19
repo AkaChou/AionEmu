@@ -66,6 +66,8 @@ import com.aionemu.gameserver.services.DisputeLandService;
 import com.aionemu.gameserver.services.DuelService;
 import com.aionemu.gameserver.services.PrivateStoreService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.services.instance.InstanceAdmissionService;
+import com.aionemu.gameserver.services.instance.InstanceAdmissionService.Admission;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -377,6 +379,32 @@ public class TeleportService2 {
 		return teleportTo(player, worldId, instanceId, x, y, z, h, animation);
 	}
 
+	public static boolean teleportToInstance(Player player, int worldId, float x, float y, float z) {
+		return teleportToInstance(player, worldId, x, y, z, player.getHeading(), TeleportAnimation.BEAM_ANIMATION);
+	}
+
+	public static boolean teleportToInstance(Player player, int worldId, float x, float y, float z, byte heading) {
+		return teleportToInstance(player, worldId, x, y, z, heading, TeleportAnimation.BEAM_ANIMATION);
+	}
+
+	public static boolean teleportToInstance(Player player, int worldId, float x, float y, float z, byte heading,
+			TeleportAnimation animation) {
+		Admission admission = InstanceAdmissionService.admitPersonal(player, worldId);
+		if (admission == null) {
+			return false;
+		}
+		try {
+			if (teleportTo(player, worldId, admission.instance().getInstanceId(), x, y, z, heading, animation)) {
+				return true;
+			}
+			admission.rollback();
+			return false;
+		} catch (RuntimeException | Error e) {
+			admission.rollback();
+			throw e;
+		}
+	}
+
 	/**
 	 * 传送到指定世界/实例坐标（默认光束动画）。
 	 * Teleports to world/instance coordinates (default beam animation).
@@ -661,15 +689,8 @@ public class TeleportService2 {
 
 		SpawnSpotTemplate spot = searchResult.getSpot();
 		WorldMapTemplate worldTemplate = DataManager.WORLD_MAPS_DATA.getTemplate(searchResult.getWorldId());
-		WorldMapInstance newInstance = null;
-
 		if (worldTemplate.isInstance()) {
-			newInstance = InstanceService.getNextAvailableInstance(searchResult.getWorldId());
-		}
-
-		if (newInstance != null) {
-			InstanceService.registerPlayerWithInstance(newInstance, player);
-			teleportTo(player, searchResult.getWorldId(), newInstance.getInstanceId(), spot.getX(), spot.getY(), spot.getZ());
+			teleportToInstance(player, searchResult.getWorldId(), spot.getX(), spot.getY(), spot.getZ());
 		} else {
 			teleportTo(player, searchResult.getWorldId(), spot.getX(), spot.getY(), spot.getZ());
 		}

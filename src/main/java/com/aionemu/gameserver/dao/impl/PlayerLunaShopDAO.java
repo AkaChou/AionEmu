@@ -21,13 +21,14 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
 
 
     /** 插入露娜商店记录 SQL / Insert Luna shop record SQL */
-    private static final String ADD_QUERY = "INSERT INTO `player_luna_shop` (`player_id`, `free_under`, `free_munition`, `free_chest`) VALUES (?,?,?,?)";
+    private static final String ADD_QUERY = "INSERT INTO `player_luna_shop` (`player_id`, `free_chest`) VALUES (?,?) "
+            + "ON DUPLICATE KEY UPDATE `free_chest`=VALUES(`free_chest`)";
     /** 查询露娜商店 SQL / Select Luna shop SQL */
     private static final String SELECT_QUERY = "SELECT * FROM `player_luna_shop` WHERE `player_id`=?";
     /** 删除全部露娜商店 SQL / Delete all Luna shop SQL */
-    private static final String DELETE_QUERY = "DELETE FROM `player_luna_shop`";
+    private static final String RESET_QUERY = "UPDATE `player_luna_shop` SET `free_chest`=1";
     /** 更新露娜商店 SQL / Update Luna shop SQL */
-    private static final String UPDATE_QUERY = "UPDATE player_luna_shop SET `free_under`=?, `free_munition`=?, `free_chest`=? WHERE `player_id`=?";
+    private static final String UPDATE_QUERY = "UPDATE `player_luna_shop` SET `free_chest`=? WHERE `player_id`=?";
 
     /**
      * 加载玩家 Luna 商店数据。
@@ -44,11 +45,9 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
 
             try (ResultSet rset = stmt.executeQuery()) {
                 if (rset.next()) {
-                    boolean under = rset.getBoolean("free_under");
-                    boolean factory = rset.getBoolean("free_munition");
                     boolean chest = rset.getBoolean("free_chest");
 
-                    PlayerLunaShop pls = new PlayerLunaShop(under, factory, chest);
+                    PlayerLunaShop pls = new PlayerLunaShop(chest);
                     pls.setPersistentState(PersistentState.UPDATED);
                     player.setPlayerLunaShop(pls);
                 }
@@ -69,14 +68,12 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      * whether succeeded
      */
     @Override
-    public boolean add(final int playerId, final boolean freeUnderpath, final boolean freeFactory, final boolean freeChest) {
+    public boolean add(final int playerId, final boolean freeChest) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(ADD_QUERY)) {
 
             stmt.setInt(1, playerId);
-            stmt.setBoolean(2, freeUnderpath);
-            stmt.setBoolean(3, freeFactory);
-            stmt.setBoolean(4, freeChest);
+            stmt.setBoolean(2, freeChest);
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -92,9 +89,9 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      * whether succeeded
      */
     @Override
-    public boolean delete() {
+    public boolean resetFreeChest() {
         try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
+             PreparedStatement stmt = con.prepareStatement(RESET_QUERY)) {
 
             stmt.executeUpdate();
             return true;
@@ -156,42 +153,13 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
                 return false;
             }
 
-            stmt.setBoolean(1, lr.isFreeUnderpath());
-            stmt.setBoolean(2, lr.isFreeFactory());
-            stmt.setBoolean(3, lr.isFreeChest());
-            stmt.setInt(4, player.getObjectId());
+            stmt.setBoolean(1, lr.isFreeChest());
+            stmt.setInt(2, player.getObjectId());
 
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
             log.error(I18n.get("log.500d6b5a68a9", player.getObjectId(), e));
-            return false;
-        }
-    }
-
-    /**
-     * 按对象 ID 设置 Luna 商店数据。
-     * Sets Luna shop data by object id.
-     *
-     * @param obj 玩家对象 ID / player object id
-     * @param freeUnderpath 免费地下通道 / free underpath
-     * free factory
-     * free chest
-     * whether succeeded
-     */
-    @Override
-    public boolean setLunaShopByObjId(int obj, final boolean freeUnderpath, final boolean freeFactory, final boolean freeChest) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
-
-            stmt.setBoolean(1, freeUnderpath);
-            stmt.setBoolean(2, freeFactory);
-            stmt.setBoolean(3, freeChest);
-            stmt.setInt(4, obj);
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            log.error(I18n.get("log.a8a27eb03080", obj, e));
             return false;
         }
     }

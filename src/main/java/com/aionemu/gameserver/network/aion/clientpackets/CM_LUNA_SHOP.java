@@ -4,13 +4,10 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
-import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LUNA_SHOP_LIST;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -101,18 +98,7 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 		}
 		switch (actionId) {
 		case 0:
-			if (player.getLevel() <= 9) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
-				return;
-			} else if (player.isInGroup2()) {
-				PacketSendUtility.broadcastPacket(player,
-						new SM_MESSAGE(player, "You must leave your group or alliance to enter <Luna Instance>",
-								ChatType.BRIGHT_YELLOW_CENTER),
-						true);
-				return;
-			} else {
-				GameEventBootstrapServices.lunaShopService().takiAdventureTeleport(player, indun_unk, indun_id);
-			}
+			GameEventBootstrapServices.lunaShopService().takiAdventureTeleport(player, indun_unk, indun_id);
 			break;
 		case 2: // Karunerk's Workshop
 			GameEventBootstrapServices.lunaShopService().specialDesign(player, recipe_id);

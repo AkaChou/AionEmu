@@ -11,17 +11,15 @@ import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.RetailInstanceData.Row;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.instance.DynamicInstance;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.siege.FortressLocation;
-import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceService;
-import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
-import com.aionemu.gameserver.model.team2.league.League;
-import com.aionemu.gameserver.model.templates.InstanceCooltime;
 import com.aionemu.gameserver.model.templates.portal.ItemReq;
 import com.aionemu.gameserver.model.templates.portal.PortalLoc;
 import com.aionemu.gameserver.model.templates.portal.PortalPath;
@@ -31,10 +29,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.services.SiegeService;
-import com.aionemu.gameserver.services.instance.InstanceService;
+import com.aionemu.gameserver.services.instance.InstanceAdmissionService;
+import com.aionemu.gameserver.services.instance.InstanceAdmissionService.Admission;
+import com.aionemu.gameserver.services.instance.InstanceLimitService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -68,11 +66,9 @@ public class PortalService {
 		boolean instanceQuestReq = false;
 		boolean instanceGroupReq = false;
 		boolean instanceItemReq = false;
-		int instanceCooldownRate = 0;
 		int mapId = loc.getWorldId();
 		int playerSize = portalPath.getPlayerCount();
 		boolean isInstance = portalPath.isInstance();
-		InstanceCooltime clt = DataManager.INSTANCE_COOLTIME_DATA.getInstanceCooltimeByWorldId(mapId);
 		if (player.getAccessLevel() < AdminConfig.INSTANCE_REQ) {
 			instanceTitleReq = !player.havePermission(MembershipConfig.INSTANCES_TITLE_REQ);
 			instanceLevelReq = !player.havePermission(MembershipConfig.INSTANCES_LEVEL_REQ);
@@ -80,7 +76,6 @@ public class PortalService {
 			instanceQuestReq = !player.havePermission(MembershipConfig.INSTANCES_QUEST_REQ);
 			instanceGroupReq = !player.havePermission(MembershipConfig.INSTANCES_GROUP_REQ);
 			instanceItemReq = !player.havePermission(MembershipConfig.INSTANCES_ITEM_REQ);
-			instanceCooldownRate = InstanceService.getInstanceRate(player, loc.getWorldId());
 		}
 		if (instanceRaceReq && !checkRace(player, portalPath.getRace())) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MOVE_PORTAL_ERROR_INVALID_RACE);
@@ -102,7 +97,7 @@ public class PortalService {
 			if (instanceQuestReq && !checkQuestsReq(player, npcObjectId, portalReq.getQuestReq())) {
 				return;
 			}
-			if (instanceItemReq && !checkItemReq(player, npcObjectId, portalReq.getItemReq())) {
+			if (!isInstance && instanceItemReq && !checkItemReq(player, npcObjectId, portalReq.getItemReq())) {
 				return;
 			}
 			int titleId = portalReq.getTitleId();
@@ -112,202 +107,33 @@ public class PortalService {
 					return;
 				}
 			}
-			if (!checkKinah(player, portalReq.getKinahReq())) {
+			if (!isInstance && !checkKinah(player, portalReq.getKinahReq())) {
 				return;
 			}
 		}
-		boolean reenter = false;
-		int useDelay = 0;
-		int instanceCooldown = 0;
-		if (clt != null) {
-			instanceCooldown = clt.getEntCoolTime();
+		if (!isInstance) {
+			if (InstanceAdmissionService.chargeNonInstancePortal(portalPath, player)) {
+				easyTransfer(player, loc);
+			}
+			return;
 		}
-		if (instanceCooldownRate > 0) {
-			useDelay = instanceCooldown / instanceCooldownRate;
+		Admission admission = InstanceAdmissionService.admit(portalPath, loc, player);
+		if (admission == null) {
+			return;
 		}
-		WorldMapInstance instance = null;
-		if (player.getPortalCooldownList().isPortalUseDisabled(mapId) && useDelay > 0) {
-			switch (playerSize) {
-			case 0:
-				instance = InstanceService.getRegisteredInstance(mapId, player.getObjectId());
-				break;
-			case 3:
-				if (player.getPlayerGroup2() != null) {
-					instance = InstanceService.getRegisteredInstance(mapId, player.getPlayerGroup2().getTeamId());
-				}
-				break;
-			case 6:
-				if (player.getPlayerGroup2() != null) {
-					instance = InstanceService.getRegisteredInstance(mapId, player.getPlayerGroup2().getTeamId());
-				}
-				break;
-			default:
-				if (player.isInAlliance2()) {
-					if (player.isInLeague()) {
-						instance = InstanceService.getRegisteredInstance(mapId,
-								player.getPlayerAlliance2().getLeague().getObjectId());
-					} else {
-						instance = InstanceService.getRegisteredInstance(mapId,
-								player.getPlayerAlliance2().getObjectId());
-					}
-				}
-				break;
+		try {
+			if (!transfer(player, loc, admission.instance(), admission.reentry())) {
+				admission.rollback();
 			}
-			if (instance == null) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_MAKE_INSTANCE_COOL_TIME);
-				return;
-			} else {
-				if (!instance.isRegistered(player.getObjectId())) {
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_MAKE_INSTANCE_COOL_TIME);
-					return;
-				} else {
-					reenter = true;
-					log.debug(player.getName() + "has been in intance and also have cd, can reenter.");
-				}
-			}
-		} else {
-			log.debug(player.getName()
-					+ "doesn't have cd of this instance, can enter and will be registed to this intance");
-		}
-		PlayerGroup group = player.getPlayerGroup2();
-		switch (playerSize) {
-		case 0:
-			if (group != null && !instanceGroupReq) {
-				instance = InstanceService.getRegisteredInstance(mapId, group.getTeamId());
-			} else {
-				instance = InstanceService.getRegisteredInstance(mapId, player.getObjectId());
-			}
-			if (instance == null && group != null && !instanceGroupReq) {
-				for (Player member : group.getMembers()) {
-					instance = InstanceService.getRegisteredInstance(mapId, member.getObjectId());
-					if (instance != null) {
-						break;
-					}
-				}
-				if (instance == null && isInstance) {
-					instance = registerGroup(group, mapId);
-				}
-			}
-			if (instance != null) {
-				if (loc.getWorldId() != player.getWorldId()) {
-					reenter = true;
-					transfer(player, loc, instance, reenter);
-					return;
-				}
-			}
-			port(player, loc, reenter, isInstance);
-			break;
-		case 3:
-			if (group != null || !instanceGroupReq) {
-				if (group != null) {
-					instance = InstanceService.getRegisteredInstance(mapId, group.getTeamId());
-				} else {
-					instance = InstanceService.getRegisteredInstance(mapId, player.getObjectId());
-				}
-				if (instance == null && group != null && !instanceGroupReq) {
-					for (Player member : group.getMembers()) {
-						instance = InstanceService.getRegisteredInstance(mapId, member.getObjectId());
-						if (instance != null) {
-							break;
-						}
-					}
-					if (instance == null) {
-						instance = registerGroup(group, mapId);
-					}
-				} else if (instance == null && instanceGroupReq) {
-					instance = registerGroup(group, mapId);
-				} else if (instance == null && !instanceGroupReq && group == null) {
-					instance = InstanceService.getNextAvailableInstance(mapId);
-				}
-				transfer(player, loc, instance, reenter);
-			}
-			break;
-		case 6:
-			if (group != null || !instanceGroupReq) {
-				if (group != null) {
-					instance = InstanceService.getRegisteredInstance(mapId, group.getTeamId());
-				} else {
-					instance = InstanceService.getRegisteredInstance(mapId, player.getObjectId());
-				}
-				if (instance == null && group != null && !instanceGroupReq) {
-					for (Player member : group.getMembers()) {
-						instance = InstanceService.getRegisteredInstance(mapId, member.getObjectId());
-						if (instance != null) {
-							break;
-						}
-					}
-					if (instance == null) {
-						instance = registerGroup(group, mapId);
-					}
-				} else if (instance == null && instanceGroupReq) {
-					instance = registerGroup(group, mapId);
-				} else if (instance == null && !instanceGroupReq && group == null) {
-					instance = InstanceService.getNextAvailableInstance(mapId);
-				}
-				transfer(player, loc, instance, reenter);
-			}
-			break;
-		default:
-			PlayerAlliance allianceGroup = player.getPlayerAlliance2();
-			if (allianceGroup != null || !instanceGroupReq) {
-				Integer allianceId = player.getObjectId();
-				League league = null;
-				if (allianceGroup != null) {
-					league = allianceGroup.getLeague();
-					if (player.isInLeague()) {
-						allianceId = league.getObjectId();
-					} else {
-						allianceId = allianceGroup.getObjectId();
-						instance = InstanceService.getRegisteredInstance(mapId, allianceId);
-					}
-				} else {
-					instance = InstanceService.getRegisteredInstance(mapId, allianceId);
-				}
-				if (instance == null && allianceGroup != null && !instanceGroupReq) {
-					if (league != null) {
-						for (PlayerAlliance alliance : allianceGroup.getLeague().getMembers()) {
-							for (Player member : alliance.getMembers()) {
-								instance = InstanceService.getRegisteredInstance(mapId, member.getObjectId());
-								if (instance != null) {
-									break;
-								}
-							}
-						}
-					} else {
-						for (Player member : allianceGroup.getMembers()) {
-							instance = InstanceService.getRegisteredInstance(mapId, member.getObjectId());
-							if (instance != null) {
-								break;
-							}
-						}
-					}
-					if (instance == null) {
-						if (league != null) {
-							instance = registerLeague(league, mapId);
-						} else {
-							instance = registerAlliance(allianceGroup, mapId);
-						}
-					}
-				} else if (instance == null && instanceGroupReq) {
-					if (league != null) {
-						instance = registerLeague(league, mapId);
-					} else {
-						instance = registerAlliance(allianceGroup, mapId);
-					}
-				} else if (instance == null && !instanceGroupReq && allianceGroup == null) {
-					instance = InstanceService.getNextAvailableInstance(mapId);
-				}
-				if (instance.getPlayersInside().size() < playerSize) {
-					transfer(player, loc, instance, reenter);
-				}
-			}
-			break;
+		} catch (RuntimeException | Error e) {
+			admission.rollback();
+			throw e;
 		}
 	}
 
 	private static boolean checkKinah(Player player, int kinah) {
 		Storage inventory = player.getInventory();
-		if (!inventory.tryDecreaseKinah(kinah)) {
+		if (inventory.getKinah() < kinah) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_KINA(kinah));
 			return false;
 		}
@@ -316,15 +142,21 @@ public class PortalService {
 
 	private static boolean checkEnterLevel(Player player, int mapId, PortalReq portalReq, int npcObjectId) {
 		int enterMinLvl = portalReq.getMinLevel();
-		InstanceCooltime instancecooltime = DataManager.INSTANCE_COOLTIME_DATA.getInstanceCooltimeByWorldId(mapId);
-		if (instancecooltime != null && player.isMentor()) {
-			if (!instancecooltime.getCanEnterMentor()) {
+		int enterMaxLvl = 0;
+		Row rule = InstanceLimitService.rule(mapId);
+		if (rule != null) {
+			String suffix = player.getRace() == Race.ELYOS ? "light" : "dark";
+			enterMinLvl = rule.intValue("enter_min_level_" + suffix, enterMinLvl);
+			enterMaxLvl = rule.intValue("enter_max_level_" + suffix, 0);
+		}
+		if (rule != null && player.isMentor()) {
+			if (!rule.booleanValue("can_enter_mentor")) {
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_MENTOR_CANT_ENTER(com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).getName()));
 				return false;
 			}
 		}
-		if (player.getLevel() < enterMinLvl) {
+		if (player.getLevel() < enterMinLvl || enterMaxLvl > 0 && player.getLevel() > enterMaxLvl) {
 			int errDialog = portalReq.getErrLevel();
 			if (errDialog != 0) {
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(npcObjectId, errDialog));
@@ -423,105 +255,32 @@ public class PortalService {
 					return false;
 				}
 			}
-			for (ItemReq item : itemReq) {
-				inventory.decreaseByItemId(item.getItemId(), item.getItemCount());
-			}
 		}
 		return true;
 	}
 
-	private static void port(Player requester, PortalLoc loc, boolean reenter, boolean isInstance) {
-		WorldMapInstance instance = null;
-		if (isInstance) {
-			instance = InstanceService.getNextAvailableInstance(loc.getWorldId(), requester.getObjectId());
-			InstanceService.registerPlayerWithInstance(instance, requester);
-			transfer(requester, loc, instance, reenter);
-		} else {
-			easyTransfer(requester, loc);
-		}
-	}
-
-	private static WorldMapInstance registerGroup(PlayerGroup group, int mapId) {
-		WorldMapInstance instance = InstanceService.getNextAvailableInstance(mapId);
-		InstanceService.registerGroupWithInstance(instance, group);
-		return instance;
-	}
-
-	private static WorldMapInstance registerAlliance(PlayerAlliance group, int mapId) {
-		WorldMapInstance instance = InstanceService.getNextAvailableInstance(mapId);
-		InstanceService.registerAllianceWithInstance(instance, group);
-		return instance;
-	}
-
-	private static WorldMapInstance registerLeague(League group, int mapId) {
-		WorldMapInstance instance = InstanceService.getNextAvailableInstance(mapId);
-		InstanceService.registerLeagueWithInstance(instance, group);
-		return instance;
-	}
-
-	private static void transfer(Player player, PortalLoc loc, WorldMapInstance instance, boolean reenter) {
+	private static boolean transfer(Player player, PortalLoc loc, WorldMapInstance instance, boolean reenter) {
 		player.setInstanceStartPos(loc.getX(), loc.getY(), loc.getZ());
-		InstanceService.registerPlayerWithInstance(instance, player);
-		TeleportService2.teleportTo(player, loc.getWorldId(), instance.getInstanceId(), loc.getX(), loc.getY(),
-				loc.getZ(), loc.getH(), TeleportAnimation.FIRE_ANIMATION);
-		if (!reenter) {
-			if (player.getPortalCooldownList().getPortalCooldownItem(loc.getWorldId()) == null) {
-				player.getPortalCooldownList().addPortalCooldown(loc.getWorldId(), 1,
-						DataManager.INSTANCE_COOLTIME_DATA.getInstanceEntranceCooltime(player, loc.getWorldId()));
-			} else {
-				player.getPortalCooldownList().addEntry(loc.getWorldId());
-				// 你已成功进入该区域，消耗一次允许进入次数。 / You have successfully entered the area, consuming one of your permitted
-				// 条目。 / entries.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_DUNGEON_COUNT_USE);
-			}
+		if (!TeleportService2.teleportTo(player, loc.getWorldId(), instance.getInstanceId(), loc.getX(), loc.getY(),
+				loc.getZ(), loc.getH(), TeleportAnimation.FIRE_ANIMATION)) {
+			return false;
 		}
-		// 若为单人/任务副本，则从“小队/联盟”移除玩家。 / Remove player from "Group/Alliance" if "Instance Solo/Quest Zone"
-		switch (loc.getWorldId()) {
-		case 300190000: // Taloc's Hollow.
-		case 300200000: // Haramel.
-		case 300230000: // Kromede Trial.
-		case 300240000: // Aturam Sky Fortress.
-		case 300241000: // [Opportunity] Aturam Sky Fortress.
-		case 300320000: // Crucible Challenge.
-		case 300460000: // Steel Rake Cabin.
-		case 300480000: // Sealed Danuar Mysticarium.
-		case 300610000: // Raksang Ruins.
-		case 301270000: // Linkgate Foundry.
-		case 301340000: // [Quest] Linkgate Foundry.
-		case 301510000: // Sealed Argent Manor.
-		case 301520000: // [Quest] Drakenspire Depths.
-		case 301570000: // [Quest] Archives Of Eternity.
-		case 301580000: // [Quest] Sanctuary Dungeon.
-		case 301630000: // Contaminated Underpath.
-		case 301631000: // [Event] Contaminated Underpath.
-		case 301632000: // 험난한 오염된 지하 통로.
-		case 301640000: // Secret Munitions Factory.
-		case 301690000: // [Quest] Aether Mine.
-		case 301720000: // Mirash Sanctuary.
-		case 302100000: // Fissure Of Oblivion.
-		case 302110000: // [Opportunity] Fissure Of Oblivion.
-		case 302330000: // Kumuki Cave.
-		case 302400000: // Crucible Spire.
-			// 任务与使命 / Quest & Mission
-		case 310010000: // Karamatis A.
-		case 310030000: // Aerdina.
-		case 310040000: // Geranaia.
-		case 310070000: // Sliver Of Darkness.
-		case 310080000: // Sanctum Underground Arena.
-		case 310120000: // Ataxiar A.
-		case 320020000: // Ataxiar C.
-		case 320030000: // Bregirun.
-		case 320040000: // Nidalber.
-		case 320070000: // Space Of Destiny.
-		case 320090000: // Triniel Underground Arena.
-		case 320120000: // Shadow Court Dungeon.
-		case 320140000: // Ataxiar D.
+		if (!reenter) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_DUNGEON_COUNT_USE);
+		}
+		DynamicInstance dynamic = instance.getDynamicInstance();
+		if (dynamic == null) {
+			throw new IllegalStateException("Instance has no retail dynamic state: " + loc.getWorldId());
+		}
+		Row definition = dynamic.getCreationId() == 0 ? null
+				: DataManager.RETAIL_INSTANCE_DATA.definition(dynamic.getCreationId());
+		if (dynamic.getOwnerType() == DynamicInstance.OWNER_PLAYER
+				|| definition != null && definition.value("type").contains("PRIVATE")) {
 			PlayerGroupService.removePlayer(player);
 			PlayerAllianceService.removePlayer(player);
-			// 此副本小队已无空位。 / This Instance Group has no more openings.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401718));
-			break;
 		}
+		return true;
 	}
 
 	private static void easyTransfer(Player player, PortalLoc loc) {

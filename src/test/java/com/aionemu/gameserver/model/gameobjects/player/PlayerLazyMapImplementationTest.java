@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.gameobjects.player;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
@@ -42,13 +41,6 @@ class PlayerLazyMapImplementationTest {
 		assertHashMap(motions, "activeMotions");
 	}
 
-	@Test
-	void portalCooldownsExposeJdkMapInterface() throws Exception {
-		assertEquals(Map.class, PortalCooldownList.class.getDeclaredField("portalCooldowns").getType());
-		assertEquals(Map.class, PortalCooldownList.class.getDeclaredMethod("getPortalCoolDowns").getReturnType());
-		assertEquals(Map.class, portalCooldownSetterParameterType());
-	}
-
 	private void assertHashMap(Object target, String fieldName) throws Exception {
 		Field field = target.getClass().getDeclaredField(fieldName);
 		field.setAccessible(true);
@@ -56,12 +48,4 @@ class PlayerLazyMapImplementationTest {
 		assertEquals(HashMap.class, field.get(target).getClass());
 	}
 
-	private Class<?> portalCooldownSetterParameterType() {
-		for (java.lang.reflect.Method method : PortalCooldownList.class.getDeclaredMethods()) {
-			if (method.getName().equals("setPortalCoolDowns")) {
-				return method.getParameterTypes()[0];
-			}
-		}
-		throw new AssertionError("setPortalCoolDowns is missing");
-	}
 }

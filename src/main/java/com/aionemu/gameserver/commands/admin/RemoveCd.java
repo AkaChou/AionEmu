@@ -4,10 +4,10 @@ import com.aionemu.gameserver.model.gameobjects.HouseObject;
 import com.aionemu.gameserver.model.gameobjects.UseableItemObject;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.PortalCooldownItem;
 import com.aionemu.gameserver.model.items.ItemCooldown;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_COOLDOWN;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_COOLDOWN;
+import com.aionemu.gameserver.services.instance.InstanceLimitService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
@@ -87,20 +87,9 @@ public class RemoveCd extends AdminCommand {
 				}
 			}
 			else if (params[0].contains("instance")) {
-				if (player.getPortalCooldownList() == null || player.getPortalCooldownList().getPortalCoolDowns() == null)
-					return;
 				if (params.length >= 2) {
 					if (params[1].equalsIgnoreCase("all")) {
-						List<Integer> mapIds = new ArrayList<Integer>();
-                        for (Entry<Integer, PortalCooldownItem> mapId : player.getPortalCooldownList().getPortalCoolDowns().entrySet()) {
-                            mapIds.add(mapId.getKey());
-                        }
-
-                        for (Integer id : mapIds) {
-                            player.getPortalCooldownList().addPortalCooldown(id, 0, 0);
-                        }
-
-						mapIds.clear();
+						InstanceLimitService.clearAll(player);
 						if (player.equals(admin))
 							PacketSendUtility.sendMessage(admin, "Your instance cooldowns were removed");
 						else {
@@ -119,8 +108,8 @@ public class RemoveCd extends AdminCommand {
 							return;
 						}
 
-						if (player.getPortalCooldownList().isPortalUseDisabled(worldId)) {
-							player.getPortalCooldownList().addPortalCooldown(worldId, 0, 0);
+						if (!InstanceLimitService.status(player, worldId).allowed()) {
+							InstanceLimitService.clear(player, worldId);
 
 							if (player.equals(admin))
 								PacketSendUtility.sendMessage(admin, "Your instance cooldown worldId: " + worldId + " was removed");

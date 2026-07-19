@@ -3,13 +3,13 @@ package com.aionemu.gameserver.model.templates.item.actions;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
-import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.instance.InstanceLimitService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -33,8 +33,8 @@ public class InstanceTimeClear extends AbstractItemAction {
 
 	/** 执行 / act. */
 	public void act(final Player player, final Item parentItem, final int SelectedSyncId) {
-		int mapid = DataManager.INSTANCE_COOLTIME_DATA.getWorldId(SelectedSyncId);
-		if (player.getPortalCooldownList().getPortalCooldown(mapid) == 0) {
+		if (player.getInstanceLimits().get(SelectedSyncId) == null
+				|| player.getInstanceLimits().get(SelectedSyncId).getUsed() == 0) {
 			player.getController().cancelTask(TaskId.ITEM_USE);
 			player.removeItemCoolDown(parentItem.getItemTemplate().getUseLimits().getDelayId());
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_COOL_TIME_INIT);
@@ -66,8 +66,7 @@ public class InstanceTimeClear extends AbstractItemAction {
 				} else {
 					player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1);
 				}
-				int mapid = DataManager.INSTANCE_COOLTIME_DATA.getWorldId(SelectedSyncId);
-				player.getPortalCooldownList().reduceEntry(mapid);
+				InstanceLimitService.restoreEntry(player, SelectedSyncId);
 				PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 						parentItem.getObjectId(), parentItem.getItemId(), 0, 1, 0));
 			}

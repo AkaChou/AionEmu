@@ -40,7 +40,7 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 * free chest
 	 * 若 successful 则为 true / true if successful
 	 */
-	public abstract boolean add(final int playerId, boolean freeUnderpath, boolean freeFactory, boolean freeChest);
+	public abstract boolean add(int playerId, boolean freeChest);
 
 	/**
 	 * 删除月神商店数据。
@@ -48,7 +48,7 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 *
 	 * 若 successful 则为 true / true if successful
 	 */
-	public abstract boolean delete();
+	public abstract boolean resetFreeChest();
 
 	/**
 	 * 持久化玩家月神商店数据。
@@ -59,16 +59,4 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 */
 	public abstract boolean store(Player player);
 
-	/**
-	 * 按对象 ID 设置月神商店免费状态。
-	 * Sets Luna Shop free flags by object ID.
-	 *
-	 * object id
-	 * free underpath
-	 * free factory
-	 * free chest
-	 * 若 successful 则为 true / true if successful
-	 */
-	public abstract boolean setLunaShopByObjId(final int obj, boolean freeUnderpath, boolean freeFactory,
-			boolean freeChest);
 }

@@ -94,9 +94,14 @@ public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 	 * cost id
 	 */
 	public SM_LUNA_SHOP_LIST(int actionId, int tableId, int costId) {
+		this(actionId, tableId, costId, 1);
+	}
+
+	public SM_LUNA_SHOP_LIST(int actionId, int tableId, int costId, int entryCount) {
 		this.actionId = actionId;
 		this.tableId = tableId;
 		this.costId = costId;
+		this.entryCount = entryCount;
 	}
 
 	@Override
@@ -110,7 +115,7 @@ public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 		case 1:// taki advanture update
 			writeH(tableId);// size?
 			writeD(costId);
-			writeD(1);
+			writeD(entryCount);
 			break;
 		case 2:
 			writeC(tableId);// tabId
