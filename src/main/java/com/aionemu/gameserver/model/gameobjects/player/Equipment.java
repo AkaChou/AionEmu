@@ -194,7 +194,8 @@ public class Equipment {
 			return item.getItemTemplate().getItemSlot();
 		default:
 			long itemSlotMask = item.getItemTemplate().getItemSlot();
-			if (item.getItemTemplate().getArmorType() == ArmorType.SHARD) {
+			if (item.getItemTemplate().getArmorType() == ArmorType.SHARD
+					&& requestedSlot == ItemSlot.POWER_SHARD_RIGHT.getSlotIdMask()) {
 				return itemSlotMask;
 			}
 			return isRequestedSingleSlot(requestedSlot, itemSlotMask) ? requestedSlot : itemSlotMask;

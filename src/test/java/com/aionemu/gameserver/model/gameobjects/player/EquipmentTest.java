@@ -66,6 +66,15 @@ class EquipmentTest {
 		assertEquals(ItemSlot.SHARD_RIGHT_OR_LEFT.getSlotIdMask(), slotMask);
 	}
 
+	@Test
+	void powerShardUsesExplicitLeftSlot() {
+		Item powerShard = new Item(2001, new TestPowerShardTemplate());
+
+		long slotMask = Equipment.itemSlotMaskForEquip(powerShard, ItemSlot.POWER_SHARD_LEFT.getSlotIdMask());
+
+		assertEquals(ItemSlot.POWER_SHARD_LEFT.getSlotIdMask(), slotMask);
+	}
+
 	private static final class TestWeaponTemplate extends ItemTemplate {
 		private final boolean twoHandWeapon;
 
