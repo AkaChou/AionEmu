@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.items.ItemSlot;
+import com.aionemu.gameserver.model.templates.item.ArmorType;
 import com.aionemu.gameserver.model.templates.item.EquipType;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
@@ -56,6 +57,15 @@ class EquipmentTest {
 		assertEquals(ItemSlot.RING_RIGHT.getSlotIdMask(), slotMask);
 	}
 
+	@Test
+	void powerShardKeepsBothCandidateSlots() {
+		Item powerShard = new Item(2001, new TestPowerShardTemplate());
+
+		long slotMask = Equipment.itemSlotMaskForEquip(powerShard, ItemSlot.POWER_SHARD_RIGHT.getSlotIdMask());
+
+		assertEquals(ItemSlot.SHARD_RIGHT_OR_LEFT.getSlotIdMask(), slotMask);
+	}
+
 	private static final class TestWeaponTemplate extends ItemTemplate {
 		private final boolean twoHandWeapon;
 
@@ -83,6 +93,18 @@ class EquipmentTest {
 		@Override
 		public int getItemSlot() {
 			return (int) ItemSlot.RING_RIGHT_OR_LEFT.getSlotIdMask();
+		}
+	}
+
+	private static final class TestPowerShardTemplate extends ItemTemplate {
+		@Override
+		public int getItemSlot() {
+			return (int) ItemSlot.SHARD_RIGHT_OR_LEFT.getSlotIdMask();
+		}
+
+		@Override
+		public ArmorType getArmorType() {
+			return ArmorType.SHARD;
 		}
 	}
 }
