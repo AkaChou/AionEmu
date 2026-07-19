@@ -277,6 +277,52 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void steelRakeCabinUsesRetailPartyPatternsAndDropsWithoutLegacyPaths() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/steelRake/SteelRakeCabineInstance.java")));
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/ai/instance/steelRakeCabin/AnikikiAI2.java")));
+
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = worldBlock(conditions, "300460000");
+		assertTrue(world.contains("<variable name=\"lever_ver30\"/>"));
+		assertEquals(1, count(world, "<condition "));
+		assertEquals(2, count(world, "<party probability=\"4500\""));
+		assertEquals(2, count(world, "<party probability=\"500\""));
+		assertEquals(2, count(world, "npc id=\"219032\""));
+		assertEquals(2, count(world, "npc id=\"219039\""));
+		assertEquals(4, count(world, "npc id=\"219003\""));
+		assertEquals(4, count(world, "x=\"463.124115\" y=\"512.749939\" z=\"953.665344\""));
+		assertEquals(4, count(world, "x=\"502.858521\" y=\"548.550232\" z=\"953.665344\""));
+
+		String walkers = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/npc_walker/custom_npc_walker.xml"));
+		assertFalse(walkers.contains("route_id=\"3004600001\""));
+		String retailWalkers = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/npc_walker/300100000_Steel Rake_Walkers.xml"));
+		assertTrue(retailWalkers.contains("route_id=\"IDShip_FShulackWiBreeder_42_Ae_Path\""));
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/300460000_Steel_Rake_Cabin.xml"));
+		assertTrue(staticSpawns.contains("npc_id=\"219040\""));
+		assertTrue(staticSpawns.contains("walker_id=\"IDShip_FShulackWiBreeder_42_Ae_Path\""));
+		assertFalse(staticSpawns.contains("npc_id=\"219032\""));
+		assertFalse(staticSpawns.contains("npc_id=\"219039\""));
+
+		String npcAi = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npc-ai.xml"));
+		for (String mapping : new String[] {
+			"id=\"219033\" name=\"IDShip_ManduriGiantNmd_43_Ah_ver30\" ai=\"IDSShip_KK\"",
+			"id=\"219040\" name=\"IDShip_FShulackWiBreeder_42_Ae_ver30\" ai=\"IDSlk_Extra1\"",
+			"id=\"701386\" name=\"IDshulackship_Lever_A_ver30\" ai=\"IDSShip_LeverA\"",
+			"id=\"701387\" name=\"IDshulackship_Lever_B_ver30\" ai=\"IDSShip_LeverB\""
+		}) {
+			assertTrue(npcAi.contains(mapping));
+		}
+	}
+
+	@Test
 	void aetherMineUsesRetailConditionFlowWithoutLegacySpawns() throws Exception {
 		assertFalse(Files.exists(Path.of(
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AetherMineQInstance.java")));

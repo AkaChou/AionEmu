@@ -36,6 +36,7 @@ import com.aionemu.gameserver.model.stats.container.NpcLifeStats;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplateType;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplate;
+import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.walker.RouteStep;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -78,6 +79,9 @@ class RetailPatternAI2Test {
 			DataManager.NPC_SKILL_DATA = loader.loadNpcSkillData();
 			DataManager.WALKER_DATA = (WalkerData) JAXBContext.newInstance(WalkerData.class).createUnmarshaller()
 				.unmarshal(Path.of("src/main/resources/aion/definitions/compact/ai/ai-waypoints.xml").toFile());
+			DataManager.WALKER_DATA.merge((WalkerData) JAXBContext.newInstance(WalkerData.class).createUnmarshaller()
+				.unmarshal(Path.of("src/main/resources/aion/data/static_data/npc_walker/300100000_Steel Rake_Walkers.xml")
+					.toFile()));
 			for (int worldId : new int[] { 310160000, 320160000 }) {
 				for (int npcId : new int[] { 248025, 248401, 248404, 248405, 248406, 248407, 248440, 248441, 248442, 248443 }) {
 					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
@@ -99,6 +103,20 @@ class RetailPatternAI2Test {
 				npc.skillList = new NpcSkillList(npc);
 				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 					"300170000:" + npcId);
+			}
+			for (int npcId : new int[] { 219033, 219040, 701386, 701387 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 300460000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				if (npcId == 219040) {
+					npc.spawnTemplate.setWalkerId("IDShip_FShulackWiBreeder_42_Ae_Path");
+				}
+				npc.skillList = new NpcSkillList(npc);
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"300460000:" + npcId);
 			}
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
@@ -1795,6 +1813,7 @@ class RetailPatternAI2Test {
 		private int npcId;
 		private int worldId;
 		private NpcTemplate objectTemplate;
+		private SpawnTemplate spawnTemplate;
 		private RecordingNpcController controller;
 		private NpcSkillList skillList;
 
@@ -1820,6 +1839,11 @@ class RetailPatternAI2Test {
 		@Override
 		public NpcTemplate getObjectTemplate() {
 			return objectTemplate;
+		}
+
+		@Override
+		public SpawnTemplate getSpawn() {
+			return spawnTemplate;
 		}
 
 		@Override

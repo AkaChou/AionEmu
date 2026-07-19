@@ -53852,4 +53852,29 @@
       </group>
     </condition>
   </world>
+  <world id="300460000" name="idshulackship_solo">
+    <variable name="lever_ver30"/>
+    <condition id="5771" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship_solo/world_N.xml#unconditional-party-1">
+      <group probability="1000">
+        <slot>
+          <party probability="4500" token="idshulackship_solo/world_N.xml#unconditional-party-1:g1:s1:p1">
+            <npc id="219032" probability="10000" x="463.124115" y="512.749939" z="953.665344" heading="1" initial_delay="1" initial_delay_extra="1"/>
+            <npc id="219003" probability="10000" x="502.858521" y="548.550232" z="953.665344" heading="260" initial_delay="1" initial_delay_extra="1"/>
+          </party>
+          <party probability="500" token="idshulackship_solo/world_N.xml#unconditional-party-1:g1:s1:p2">
+            <npc id="219039" probability="10000" x="463.124115" y="512.749939" z="953.665344" heading="1" initial_delay="1" initial_delay_extra="1"/>
+            <npc id="219003" probability="10000" x="502.858521" y="548.550232" z="953.665344" heading="260" initial_delay="1" initial_delay_extra="1"/>
+          </party>
+          <party probability="4500" token="idshulackship_solo/world_N.xml#unconditional-party-1:g1:s1:p3">
+            <npc id="219032" probability="10000" x="502.858521" y="548.550232" z="953.665344" heading="260" initial_delay="1" initial_delay_extra="1"/>
+            <npc id="219003" probability="10000" x="463.124115" y="512.749939" z="953.665344" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          </party>
+          <party probability="500" token="idshulackship_solo/world_N.xml#unconditional-party-1:g1:s1:p4">
+            <npc id="219039" probability="10000" x="502.858521" y="548.550232" z="953.665344" heading="260" initial_delay="1" initial_delay_extra="1"/>
+            <npc id="219003" probability="10000" x="463.124115" y="512.749939" z="953.665344" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+  </world>
 </condition_spawns>

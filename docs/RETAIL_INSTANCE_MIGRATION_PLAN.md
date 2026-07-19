@@ -1109,7 +1109,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 52% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma、Alquimia、Aether Mine、Indratu、Shadow Court 等旧 handler 已删除，Nochsana、Theobomos Test Chamber、Aetherogenetics Lab 已收缩为真端数据未表达的最小交互；剩余 35 个声明 `Future`、61 个直接使用 `GameThreadPoolServices` 的生产 handler |
+| 阶段 4：handler 状态迁移 | 进行中 | 53% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma、Alquimia、Aether Mine、Indratu、Shadow Court、Steel Rake Cabin 等旧 handler 已删除，Nochsana、Theobomos Test Chamber、Aetherogenetics Lab 已收缩为真端数据未表达的最小交互；剩余 35 个声明 `Future`、61 个直接使用 `GameThreadPoolServices` 的生产 handler |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1291,3 +1291,7 @@ REGISTERED
 - 完成奥德遗传实验室（`310050000`，真端 `IDLF3LP`）真端单轨收缩：钥匙来源恢复为 `212341 -> 185000001`、`212175 -> 185000002`、`212196 -> 185000003`、`212193 -> 185000004`、`212342 -> 185000005`，均使用生成的真端 100% 掉落；删除旧 handler 对 `212193` 的错误随机钥匙 3/4、对 `212202` 的错误钥匙 5 注入，以及 `212211 -> 188053787` 私服烙印包。
 - `AetherogeneticsLabInstance` 从 142 行缩减为 29 行，只保留玩家离本或登出时清理五把副本钥匙；删除未使用门字段、空死亡分支、随机数、掉落注册和无调用消息方法，不保留兼容掉落。
 - 奥德遗传实验室批次验证通过：`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest test`、`mvn -q -DskipTests compile`、正式副本生成器 `--check`、静态出生/真端掉落 XML 解析及 `git diff --check`。
+- 完成钢铁钩号船舱（`300460000`，真端 `IDShulackShip_Solo`）旧 handler 单轨替换：以 `world_N.xml`、`NpcAIPatterns_IDShulackShip_KJS.xml`、真端 NPC/任务/掉落和正式静态 walker 为权威，条件出生新增 `lever_ver30` 世界及酒馆四组互斥 Party；两处点位按 `45% 219032 + 219003`、`5% 219039 + 219003` 对称交换，总概率严格为 100%。静态出生没有 `219032/219039`，不产生重复 Boss。
+- 删除 `SteelRakeCabineInstance` 和船舱版 `AnikikiAI2`：移除手工随机 Boss、`219040` 错误任务掉落、`219033/215489/700553/700554` 私服掉落、错误 `730766` 出口、重复死亡删除和线程池技能注入。任务 `3203/4203` 的 `182209084/182209099` 继续由真端定义的 `219037` 100% 掉落负责；`219033`、`215489`、`700553`、`700554` 继续使用生成的真端掉落。
+- `219033`、`219040`、`701386`、`701387` 分别由 `IDSShip_KK`、`IDSlk_Extra1`、`IDSShip_LeverA`、`IDSShip_LeverB` 接管；`219040` 使用正式静态路径 `IDShip_FShulackWiBreeder_42_Ae_Path`，删除仅供旧 AI 使用的 `3004600001` walker。`730766` 在真端属于 `IDShulackShip_02` 且本图无出生，旧分支随手刷出口删除后不可达；`730199` 的真端 Pattern 源文件当前缺失，因此保留现有独立门内传送交互，不把它计作本次兼容层。
+- 覆盖重新生成为 100 张 `HANDLER`、17 张 `RETAIL_AI_QUEST`，139 张图总数不变；生产 handler 仍有 35 个声明 `Future`、61 个直接使用 `GameThreadPoolServices`。钢铁钩号船舱批次验证通过：转换器 21 项测试；`RetailPatternAI2Test` 在合并正式静态 walker 后确认四个关键对象可选择真端 Pattern；`InstanceHandlerRecoveryMigrationTest` 校验四组概率、点位和旧路径删除；条件/静态 walker XML、正式副本生成器 `--check`、编译及 `git diff --check`。

@@ -65,23 +65,6 @@
 		<routestep step="13" x="630.9508" y="521.95953" z="936.0345" rest_time="8000"/>
 	</walker_template>
 	
-	<!-- STEEL RAKE CABIN -->
-	<walker_template route_id="3004600001" pool="1">
-		<routestep step="1" x="611.6527" y="544.30304" z="937.1711"/>
-		<routestep step="2" x="611.6549" y="544.38745" z="937.1686"/>
-		<routestep step="3" x="611.65564" y="544.45654" z="937.16644"/>
-		<routestep step="4" x="611.7056" y="543.8486" z="936.368"/>
-		<routestep step="5" x="611.72644" y="539.78345" z="937.1849"/>
-		<routestep step="6" x="612.02203" y="533.3089" z="936.06995"/>
-		<routestep step="7" x="613.5739" y="526.19366" z="936.0477"/>
-		<routestep step="8" x="616.85535" y="522.3851" z="936.0358"/>
-		<routestep step="9" x="621.3158" y="522.1789" z="936.03516"/>
-		<routestep step="10" x="625.80225" y="527.5569" z="936.05194"/>
-		<routestep step="11" x="628.2794" y="526.7915" z="936.04956"/>
-		<routestep step="12" x="630.9508" y="521.95953" z="936.0345"/>
-		<routestep step="13" x="630.9508" y="521.95953" z="936.0345" rest_time="8000"/>
-	</walker_template>
-	
 	<!-- FALLEN POETA 5.1 -->
 	<walker_template route_id="3016600001" pool="1">
 		<routestep step="1" z="112.08798" y="996.1053" x="285.19708"/>
