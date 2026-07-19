@@ -109,10 +109,10 @@ public class _1929A_Sliver_Of_Darkness extends QuestHandler {
                         }
                         case STEP_TO_3: {
                             if (var == 2) {
-                                changeQuestStep(env, 2, 93, false);
-                                WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(310070000);
-                                InstanceService.registerPlayerWithInstance(newInstance, player);
-                                TeleportService2.teleportTo(player, 310070000, newInstance.getInstanceId(), 338, 101, 1191);
+								if (!TeleportService2.teleportToInstance(player, 310070000, 338, 101, 1191)) {
+									return false;
+								}
+								changeQuestStep(env, 2, 93, false);
                                 return closeDialogWindow(env);
                             }
                         }

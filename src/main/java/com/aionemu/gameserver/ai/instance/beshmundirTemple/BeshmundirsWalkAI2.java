@@ -6,7 +6,7 @@ import com.aionemu.gameserver.ai2.AI2Request;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
-import com.aionemu.gameserver.model.autogroup.AutoGroupType;
+import com.aionemu.gameserver.model.autogroup.MatchDefinition;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.portal.PortalPath;
@@ -42,7 +42,7 @@ public class BeshmundirsWalkAI2 extends ActionItemNpcAI2
 		};
 		switch (dialogId) {
 			case 105:
-				AutoGroupType agt = AutoGroupType.getAutoGroup(player.getLevel(), getNpcId());
+				MatchDefinition agt = MatchDefinition.forNpc(player.getLevel(), getNpcId());
 				if (agt != null) {
 					PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(0x1A, agt.getInstanceMapId()));
 				}

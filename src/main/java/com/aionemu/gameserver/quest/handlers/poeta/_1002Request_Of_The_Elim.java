@@ -128,8 +128,9 @@ public class _1002Request_Of_The_Elim extends QuestHandler
 								return sendQuestDialog(env, 2461);
 							}
 						} case STEP_TO_5: {
-							WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(310010000);
-							TeleportService2.teleportTo(player, 310010000, newInstance.getInstanceId(), 52, 174, 229);
+							if (!TeleportService2.teleportToInstance(player, 310010000, 52, 174, 229)) {
+								return false;
+							}
 							changeQuestStep(env, 13, 20, false);
 							return closeDialogWindow(env);
 						} case STEP_TO_6: {

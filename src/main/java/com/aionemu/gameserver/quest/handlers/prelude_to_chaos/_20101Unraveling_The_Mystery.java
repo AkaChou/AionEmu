@@ -90,9 +90,10 @@ public class _20101Unraveling_The_Mystery extends QuestHandler
                             }
                         } case STEP_TO_2: {
 							if (var == 1 && player.getInventory().getItemCountByItemId(182215523) == 1) {
-								WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(301340000);
-								InstanceService.registerPlayerWithInstance(newInstance, player);
-								TeleportService2.teleportTo(player, 301340000, newInstance.getInstanceId(), 243, 333, 392, (byte) 91, TeleportAnimation.BEAM_ANIMATION);
+								if (!TeleportService2.teleportToInstance(player, 301340000, 243, 333, 392, (byte) 91,
+										TeleportAnimation.BEAM_ANIMATION)) {
+									return false;
+								}
 								changeQuestStep(env, 1, 2, false, 0);
 								return sendQuestDialog(env, 10000);
 							} else {

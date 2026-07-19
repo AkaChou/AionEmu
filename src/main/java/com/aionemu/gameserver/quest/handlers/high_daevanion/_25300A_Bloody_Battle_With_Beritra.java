@@ -120,9 +120,9 @@ public class _25300A_Bloody_Battle_With_Beritra extends QuestHandler {
 							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403080));
 							return true;
 						} else {
-							WorldMapInstance drakenspireDepthsQ = InstanceService.getNextAvailableInstance(301520000);
-							InstanceService.registerPlayerWithInstance(drakenspireDepthsQ, player);
-							TeleportService2.teleportTo(player, 301520000, drakenspireDepthsQ.getInstanceId(), 326, 183, 1687);
+							if (!TeleportService2.teleportToInstance(player, 301520000, 326, 183, 1687)) {
+								return false;
+							}
 							changeQuestStep(env, 2, 3, false);
 							return closeDialogWindow(env);
 						}

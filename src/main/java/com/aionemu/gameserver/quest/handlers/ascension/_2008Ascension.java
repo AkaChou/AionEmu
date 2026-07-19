@@ -152,12 +152,12 @@ public class _2008Ascension extends QuestHandler {
 						return true;
 					case STEP_TO_5:
 						if (var == 4) {
+							if (!TeleportService2.teleportToInstance(player, 320020000, 457.65f, 426.8f, 230.4f)) {
+								return false;
+							}
 							qs.setQuestVar(99);
 							updateQuestStatus(env);
 							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(env.getVisibleObject().getObjectId(), 0));
-							WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(320020000);
-							InstanceService.registerPlayerWithInstance(newInstance, player);
-							TeleportService2.teleportTo(player, 320020000, newInstance.getInstanceId(), 457.65f, 426.8f, 230.4f);
 							return true;
 						}
 					case STEP_TO_6:

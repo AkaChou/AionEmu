@@ -98,9 +98,9 @@ public class _1006Ascension extends QuestHandler {
 								}
 							}
 						} case STEP_TO_3: {
-							WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(310010000);
-							InstanceService.registerPlayerWithInstance(newInstance, player);
-							TeleportService2.teleportTo(player, 310010000, newInstance.getInstanceId(), 52, 174, 229);
+							if (!TeleportService2.teleportToInstance(player, 310010000, 52, 174, 229)) {
+								return false;
+							}
 							qs.setQuestVar(99);
 							updateQuestStatus(env);
 							removeQuestItem(env, 182200009, 1);

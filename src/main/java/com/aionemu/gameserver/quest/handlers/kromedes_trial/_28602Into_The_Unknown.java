@@ -121,9 +121,10 @@ public class _28602Into_The_Unknown extends QuestHandler {
 				if (env.getDialog() == QuestDialog.START_DIALOG) {
 					return sendQuestDialog(env, 1011);
 				} else if (env.getDialog() == QuestDialog.STEP_TO_1) {
-					WorldMapInstance kromedeTrial = InstanceService.getNextAvailableInstance(300230000);
-					InstanceService.registerPlayerWithInstance(kromedeTrial, player);
-					TeleportService2.teleportTo(player, 300230000, kromedeTrial.getInstanceId(), 244.98566f, 244.14162f, 189.52058f, (byte) 30);
+					if (!TeleportService2.teleportToInstance(player, 300230000, 244.98566f, 244.14162f,
+							189.52058f, (byte) 30)) {
+						return false;
+					}
 					changeQuestStep(env, 0, 1, false);
 					return closeDialogWindow(env);
 				}

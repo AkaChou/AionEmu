@@ -87,9 +87,10 @@ public class _24046The_Shadow_Calls extends QuestHandler {
                     if (dialog == QuestDialog.START_DIALOG && var == 3) {
                         return sendQuestDialog(env, 2034);
                     } if (dialog == QuestDialog.STEP_TO_4) {
-                        WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(320120000); //Shadow Court Dungeon.
-                        InstanceService.registerPlayerWithInstance(newInstance, player);
-                        TeleportService2.teleportTo(player, 320120000, newInstance.getInstanceId(), 591.47894f, 420.20865f, 202.97754f, (byte) 0, TeleportAnimation.BEAM_ANIMATION);
+						if (!TeleportService2.teleportToInstance(player, 320120000, 591.47894f, 420.20865f,
+								202.97754f, (byte) 0, TeleportAnimation.BEAM_ANIMATION)) {
+							return false;
+						}
 						changeQuestStep(env, 3, 5, false);
                         return closeDialogWindow(env);
                     }

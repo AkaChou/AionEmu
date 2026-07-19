@@ -175,10 +175,10 @@ public class _20520Lost_Destiny extends QuestHandler {
 	public boolean onMovieEndEvent(QuestEnv env, int movieId) {
 		Player player = env.getPlayer();
 		if (movieId == 867) {
+			if (!TeleportService2.teleportToInstance(player, 301580000, 431, 491, 99)) {
+				return false;
+			}
 			changeQuestStep(env, 4, 5, false);
-			WorldMapInstance SanctuaryDungeon = InstanceService.getNextAvailableInstance(301580000);
-			InstanceService.registerPlayerWithInstance(SanctuaryDungeon, player);
-			TeleportService2.teleportTo(player, 301580000, SanctuaryDungeon.getInstanceId(), 431, 491, 99);
 			return true;
 		}
 		return false;

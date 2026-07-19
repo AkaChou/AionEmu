@@ -4,7 +4,7 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.model.autogroup.AutoGroupType;
+import com.aionemu.gameserver.model.autogroup.MatchDefinition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
@@ -63,7 +63,7 @@ public class Otherworldly_PucasAI2 extends GeneralNpcAI2
 				case 831546:
 				case 831547:
 				case 831548:
-				    AutoGroupType agt = AutoGroupType.getAutoGroup(player.getLevel(), getNpcId());
+				    MatchDefinition agt = MatchDefinition.forNpc(player.getLevel(), getNpcId());
 					if (agt != null) {
 					    PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(0x1A, agt.getInstanceMapId()));
 					}

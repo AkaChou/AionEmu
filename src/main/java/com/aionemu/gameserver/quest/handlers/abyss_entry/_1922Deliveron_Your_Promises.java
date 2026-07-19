@@ -95,9 +95,10 @@ public class _1922Deliveron_Your_Promises extends QuestHandler {
 								return sendQuestDialog(env, 2034);
 							}
 						} case STEP_TO_3: {
-							WorldMapInstance sanctumUndergroundArena = InstanceService.getNextAvailableInstance(310080000); //Sanctum Underground Arena.
-						    InstanceService.registerPlayerWithInstance(sanctumUndergroundArena, player);
-						    TeleportService2.teleportTo(player, 310080000, sanctumUndergroundArena.getInstanceId(), 275.6234f, 291.29333f, 162.53488f, (byte) 90, TeleportAnimation.BEAM_ANIMATION);
+							if (!TeleportService2.teleportToInstance(player, 310080000, 275.6234f, 291.29333f, 162.53488f,
+									(byte) 90, TeleportAnimation.BEAM_ANIMATION)) {
+								return false;
+							}
 							changeQuestStep(env, 4, 5, false);
 							return closeDialogWindow(env);
 						} case STEP_TO_4: {

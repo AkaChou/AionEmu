@@ -141,10 +141,10 @@ public class _2900No_Escaping_Destiny extends QuestHandler {
                         }
                         case STEP_TO_5: {
                             if (var == 4) {
-                                changeQuestStep(env, 4, 95, false);
-                                WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(320070000);
-                                InstanceService.registerPlayerWithInstance(newInstance, player);
-                                TeleportService2.teleportTo(player, 320070000, newInstance.getInstanceId(), 242f, 248f, 125f);
+								if (!TeleportService2.teleportToInstance(player, 320070000, 242f, 248f, 125f)) {
+									return false;
+								}
+								changeQuestStep(env, 4, 95, false);
                                 return closeDialogWindow(env);
                             }
                         }

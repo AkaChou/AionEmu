@@ -137,10 +137,8 @@ public class _20034Rescue_The_Reians extends QuestHandler {
                     }
 				} case STEP_TO_3: {
                     if (var == 2) {
-                        WorldMapInstance IDTempleUp = InstanceService.getNextAvailableInstance(300150000);
-                        InstanceService.registerPlayerWithInstance(IDTempleUp, player);
-                        TeleportService2.teleportTo(player, 300150000, IDTempleUp.getInstanceId(), 561.8651f, 221.91483f, 134.53333f, (byte) 90);
-                        return true;
+                        return TeleportService2.teleportToInstance(player, 300150000, 561.8651f, 221.91483f,
+								134.53333f, (byte) 90);
                     }
 				}
             }

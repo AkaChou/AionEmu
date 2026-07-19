@@ -83,9 +83,9 @@ public class _2947Following_Through extends QuestHandler {
 								return sendQuestDialog(env, 2034);
 							}
 						} case STEP_TO_3: {
-							WorldMapInstance trinielUndergroundArena = InstanceService.getNextAvailableInstance(320090000); //Triniel Underground Arena.
-							InstanceService.registerPlayerWithInstance(trinielUndergroundArena, player);
-							TeleportService2.teleportTo(player, 320090000, trinielUndergroundArena.getInstanceId(), 276, 294, 163, (byte) 90);
+							if (!TeleportService2.teleportToInstance(player, 320090000, 276, 294, 163, (byte) 90)) {
+								return false;
+							}
 							changeQuestStep(env, 4, 5, false);
 							return closeDialogWindow(env);
 						} case STEP_TO_4: {

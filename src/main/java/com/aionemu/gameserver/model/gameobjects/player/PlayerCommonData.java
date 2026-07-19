@@ -463,6 +463,19 @@ public double getExpMultiplier() {
 		}
 	}
 
+	public long capExp(long requestedExp) {
+		long maxExp = DataManager.PLAYER_EXPERIENCE_TABLE
+				.getStartExpForLevel(DataManager.PLAYER_EXPERIENCE_TABLE.getMaxLevel());
+		if (getPlayerClass() != null && !getPlayerClass().isStartingClass() && getLevel() == 65 && !isArchDaeva()
+				&& getPlayer() != null) {
+			int questId = getPlayer().getRace() == Race.ELYOS ? 10520 : 20520;
+			if (!getPlayer().isCompleteQuest(questId)) {
+				maxExp = 2066885620;
+			}
+		}
+		return Math.min(requestedExp, maxExp);
+	}
+
 	private void upgradePlayerData() {
 		Player player = getPlayer();
 		if (player != null) {

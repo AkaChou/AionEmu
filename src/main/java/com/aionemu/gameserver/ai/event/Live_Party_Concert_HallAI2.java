@@ -9,10 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
  * 活动事件 NPC AI：Live Party Concert Hall（@AIName "lpch"），继承 NpcAI2。
@@ -35,9 +33,8 @@ public class Live_Party_Concert_HallAI2 extends NpcAI2
 					if (!decisionTaken) {
 						switch (getNpcId()) {
 							case 831592: //Live Party Concert Hall 4.3
-								WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(600080000);
-								InstanceService.registerPlayerWithInstance(newInstance, responder);
-								TeleportService2.teleportTo(responder, 600080000, newInstance.getInstanceId(), 1507.4276f, 1484.457f, 565.8799f, (byte) 16, TeleportAnimation.BEAM_ANIMATION);
+								TeleportService2.teleportToInstance(responder, 600080000, 1507.4276f, 1484.457f,
+										565.8799f, (byte) 16, TeleportAnimation.BEAM_ANIMATION);
 							break;
 						}
 						decisionTaken = true;

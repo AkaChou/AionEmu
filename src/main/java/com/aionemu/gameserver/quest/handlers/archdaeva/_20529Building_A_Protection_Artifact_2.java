@@ -136,10 +136,10 @@ public class _20529Building_A_Protection_Artifact_2 extends QuestHandler {
 							return sendQuestDialog(env, 2035);
 						}
 					} case STEP_TO_4: {
+						if (!TeleportService2.teleportToInstance(player, 301690000, 323, 267, 259)) {
+							return false;
+						}
 						changeQuestStep(env, 3, 4, false);
-						WorldMapInstance AetherMine = InstanceService.getNextAvailableInstance(301690000); //.
-						InstanceService.registerPlayerWithInstance(AetherMine, player);
-						TeleportService2.teleportTo(player, 301690000, AetherMine.getInstanceId(), 323, 267, 259);
 						return closeDialogWindow(env);
 					} case CHECK_COLLECTED_ITEMS: {
 						return checkQuestItems(env, 2, 3, false, 10000, 10001);

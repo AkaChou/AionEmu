@@ -71,9 +71,9 @@ public class _4200A_Suspicious_Call extends QuestHandler {
 					} case SELECT_ACTION_1011: {
 						return sendQuestDialog(env, 1011);
 					} case STEP_TO_1: {
-						WorldMapInstance steelRake = InstanceService.getNextAvailableInstance(300100000); //Steel Rake.
-						InstanceService.registerPlayerWithInstance(steelRake, player);
-						TeleportService2.teleportTo(player, 300100000, steelRake.getInstanceId(), 403.55f, 508.11f, 885.77f);
+						if (!TeleportService2.teleportToInstance(player, 300100000, 403.55f, 508.11f, 885.77f)) {
+							return false;
+						}
 						qs.setQuestVarById(0, var + 1);
 						updateQuestStatus(env);
 						return true;

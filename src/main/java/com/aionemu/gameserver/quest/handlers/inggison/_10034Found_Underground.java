@@ -138,10 +138,11 @@ public class _10034Found_Underground extends QuestHandler
 						} case STEP_TO_4: {
 							if (var == 3) {
 								if (player.getInventory().getItemCountByItemId(182215627) > 0) {
+									if (!TeleportService2.teleportToInstance(player, 300160000, 795.28143f, 918.806f,
+											149.80243f, (byte) 73)) {
+										return false;
+									}
 									removeQuestItem(env, 182215627, 1);
-									WorldMapInstance IDTempleLow = InstanceService.getNextAvailableInstance(300160000);
-									InstanceService.registerPlayerWithInstance(IDTempleLow, player);
-									TeleportService2.teleportTo(player, 300160000, IDTempleLow.getInstanceId(), 795.28143f, 918.806f, 149.80243f, (byte) 73);
 									return true;
 								} else {
 									return sendQuestDialog(env, 10001);

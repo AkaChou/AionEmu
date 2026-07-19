@@ -319,9 +319,9 @@ public class _20521Recovered_Destiny extends QuestHandler {
             }  
 		}
 		if (movieId == 871) {
-			WorldMapInstance ArchivesOfEternity = InstanceService.getNextAvailableInstance(301570000);
-			InstanceService.registerPlayerWithInstance(ArchivesOfEternity, player);
-			TeleportService2.teleportTo(player, 301570000, ArchivesOfEternity.getInstanceId(), 737, 512, 469);
+			if (!TeleportService2.teleportToInstance(player, 301570000, 737, 512, 469)) {
+				return false;
+			}
 			changeQuestStep(env, 2, 3, false);
 			return true;
 		}

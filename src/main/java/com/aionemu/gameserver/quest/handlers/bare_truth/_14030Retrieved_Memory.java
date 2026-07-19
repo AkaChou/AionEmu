@@ -102,10 +102,7 @@ public class _14030Retrieved_Memory extends QuestHandler
                     break;
                 } case 700551: {
                     if (env.getDialog() == QuestDialog.USE_OBJECT && var == 4) {
-                        WorldMapInstance AtaxiarA = InstanceService.getNextAvailableInstance(310120000);
-                        InstanceService.registerPlayerWithInstance(AtaxiarA, player);
-                        TeleportService2.teleportTo(player, 310120000, AtaxiarA.getInstanceId(), 52, 174, 229);
-                        return true;
+                        return TeleportService2.teleportToInstance(player, 310120000, 52, 174, 229);
                     }
                     break;
                 } case 205119: {

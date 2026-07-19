@@ -120,10 +120,7 @@ public class _24030Showdown_With_Destiny extends QuestHandler
                     break;
                 } case 700551: {
                     if (env.getDialog() == QuestDialog.USE_OBJECT && var == 5) {
-                        WorldMapInstance AtaxiarD = InstanceService.getNextAvailableInstance(320140000);
-                        InstanceService.registerPlayerWithInstance(AtaxiarD, player);
-                        TeleportService2.teleportTo(player, 320140000, AtaxiarD.getInstanceId(), 52, 174, 229);
-                        return true;
+                        return TeleportService2.teleportToInstance(player, 320140000, 52, 174, 229);
                     }
                     break;
                 } case 205020: {
