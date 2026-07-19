@@ -927,8 +927,8 @@ REGISTERED
 - [x] 实现 `DynamicInstanceManager` 基础生命周期；
 - [x] 增加 `instanceUid`；
 - [x] 实现创建、公共状态保存、实例恢复和销毁；
-- [ ] 实现稳定对象键；
-- [ ] 实现 deadline 调度；
+- [x] 实现稳定对象键；
+- [x] 实现 deadline 调度；
 - [ ] 将 Retail AI 实例状态迁入公共状态；
 - [ ] 删除对应静态状态 Map 和旧空本任务所有权逻辑。
 
@@ -947,7 +947,7 @@ REGISTERED
 
 - [x] 实现 `InstanceAdmissionService` 基础事务与补偿；
 - [x] 实现 `InstanceLimitService`；
-- [ ] Portal、Luna 已接入；AutoGroup、任务和直接创建路径仍需统一接入；
+- [x] Portal、Quest、Luna、普通匹配、Team Match 和 Tournament 生产进入路径统一接入；
 - [x] 离线迁移并删除 `portal_cooldowns`；
 - [x] 实现同步组、F2P、累计和购买次数；
 - [x] Portal 和 Luna 创建、扣费、次数及传送失败补偿；
@@ -968,11 +968,12 @@ REGISTERED
 
 任务：
 
-- [ ] 将 71 个含任务字段的 handler 迁移到 deadline；
+- [ ] 将剩余 58 个含任务字段的生产 handler 迁移到 deadline；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
 - [x] 对 18 个无 handler 地图确认数据驱动覆盖；
+- [x] 完成 Sulfur、Carpus、Hamate、Treasure Island、Danuar 三变体、Adma、Padmarashka、Cradle 和 Transidium 的首批恢复迁移；
 - [ ] 删除只提供重复通用逻辑的 handler。
 
 验收：
@@ -1015,7 +1016,7 @@ REGISTERED
 - [x] 接入开放时段、职业配额、阵营侧、shuffle 池扩展、准备超时和迟到补位；
 - [x] 自动匹配创建、成员预留、次数消费、取消补偿和传送均接入统一准入；
 - [x] 接入主动取消、准备超时、队伍变化和惩罚区分；
-- [ ] `AutoGroupType` 和旧 auto_group 数据已删除；继续删除 `MatchDefinition.getAutoInstance()` 的剩余专用 switch。
+- [x] 删除 `AutoGroupType`、旧 auto_group 数据和 `MatchDefinition.getAutoInstance()` 专用 switch，适配器类名由真端定义生成。
 
 验收：
 
@@ -1099,11 +1100,11 @@ REGISTERED
 | 方案和现状审计 | 完成 | 100% | 2026-07-19 | 本文档 |
 | 阶段 0：证据和版本冻结 | 完成 | 100% | 2026-07-19 | `manifest.xml`、`coverage.xml`、生成器 `--check` |
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
-| 阶段 2：动态实例和状态持久化 | 进行中 | 55% | 2026-07-19 | 四张表、`instanceUid`、公共状态、创建/恢复/销毁、成员资格 |
-| 阶段 3：统一进入、冷却和次数 | 进行中 | 90% | 2026-07-19 | 真端次数/冷却/购买次数、Portal/Luna 统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 10% | 2026-07-19 | 139 图唯一行为分类、18 张无 handler 地图所有权闭包 |
+| 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
+| 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
+| 阶段 4：handler 状态迁移 | 进行中 | 20% | 2026-07-19 | 139 图行为闭包；13 个 handler 批次移除私有关键任务，剩余 58 个含 `Future` 文件 |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
-| 阶段 6：完整匹配 | 进行中 | 85% | 2026-07-19 | 158+1 条定义、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
+| 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
 
 ### 19.2 更新规则
@@ -1176,3 +1177,8 @@ REGISTERED
 - 完成 139 图行为闭包：108 张 `HANDLER`、13 张 `RETAIL_AI_QUEST`、8 张 `TOURNAMENT`、4 张 `EVENT`、2 张 `HOUSING`、2 张 `DATA_ONLY`、2 张 `EXCLUDED_NON_PRODUCTION`、0 张 `MATCHMAKER`；每张图均生成唯一 `behavior` 与 `behavior_source`。
 - 行为闭包生成修改 `scripts/generate_retail_instance_data.py`、`coverage.xml`、`manifest.xml`、`RetailInstanceData` 和 `RetailInstanceDataTest`；加载器会校验 139 条、合法分类、来源非空和 manifest 分类计数一致。
 - 本批次验证通过：`mvn -q -DskipTests compile`；`RetailMatchSessionTest,RetailMatchPlannerTest,FindGroupServiceTest,FindGroupProtocolTest,MatchDefinitionTest,InstanceAdmissionRoutingTest,LocalizedLogCallsTest`；生成器生成与 `--check`；`RetailInstanceDataTest,FindGroupProtocolTest,LocalizedLogCallsTest`。
+- 完成匹配适配器数据化：生成数据写入适配器类名，`MatchDefinition.getAutoInstance()` 删除地图/类别专用 switch；159 条非 Tournament/Team Match 定义由测试闭包。
+- 完成 Danuar Reliquary、Lucky Danuar Reliquary、Infernal Danuar Reliquary 的击杀计数、死亡 Idean、炸弹 deadline、完成、过期、出口和 Boss 阶段恢复。
+- 完成 Adma Stronghold 的可疑罐、Lannok/Reaper 链和完成出口恢复；完成 Padmarashka Cave 的九段警告、两小时驱逐、守护者/卵计数和动画状态恢复。
+- 完成 Cradle of Eternity 与 Transidium Annex 的首阶段 deadline、阵营、关键计数、门状态和完成对象恢复；含 `Future` 的生产 handler 文件由 62 降至 58。
+- 新增 `InstanceHandlerRecoveryMigrationTest`；`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest test` 和 `mvn -q -DskipTests compile` 通过。

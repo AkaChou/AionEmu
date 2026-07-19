@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -12,22 +11,18 @@ import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 超质附件副本事件处理器。
@@ -39,18 +34,12 @@ import java.util.concurrent.Future;
 @InstanceID(400030000)
 public class TransidiumAnnexInstance extends GeneralInstanceHandler
 {
-    /** 开始时间 / start time */
-    private long startTime;
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
 	/** hangar barricade / hangar barricade */
 		private int hangarBarricade;
-	/** 副本计时器 / instance timer */
-		private Future<?> instanceTimer;
 	/** transidium annex base / transidium annex base */
 		private int transidiumAnnexBase;
-	/** 门映射 / door map */
-	private Map<Integer, StaticDoor> doors;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 	/**
@@ -91,10 +80,22 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
-		doors = instance.getDoors();
+		hangarBarricade = runtimeState().getInt("transidium.hangar_barricade", 0);
+		transidiumAnnexBase = runtimeState().getInt("transidium.base", 0);
+		String race = runtimeState().get("transidium.race");
+		spawnRace = race == null ? null : Race.valueOf(race);
 		Npc npc = instance.getNpc(277224); //Ahserion.
-		if (npc != null) {
+		if (npc != null && hangarBarricade < 4) {
 			GameEngineServices.skillEngine().getSkill(npc, 21571, 60, npc).useNoAnimationSkill(); //Ereshkigal's Reign.
+		}
+		long deadline = runtimeState().getLong("transidium.start_deadline", 0);
+		if (runtimeState().getBoolean("transidium.start_open", false)) {
+			openFirstDoors();
+		} else if (deadline > 0) {
+			scheduleDeadline("start", deadline, this::openStart);
+		}
+		if (runtimeState().getBoolean("transidium.complete", false)) {
+			spawnCompletion();
 		}
 	}
 	
@@ -106,9 +107,11 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onEnterInstance(final Player player) {
-		super.onInstanceCreate(instance);
-		if (instanceTimer == null) {
-			startTime = System.currentTimeMillis();
+		if (spawnRace == null) {
+			spawnRace = player.getRace();
+			runtimeState().put("transidium.race", spawnRace.name());
+		}
+		if (runtimeState().getLong("transidium.start_deadline", 0) == 0) {
 			// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
 			sendMsgByRace(1402252, Race.PC_ALL, 10000);
 			// 进阶走廊护盾已激活。 / The Advance Corridor Shield has been activated.
@@ -118,19 +121,17 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			sendMsgByRace(1401181, Race.PC_ALL, 50000);
 			// 特兰西迪姆附楼效果削弱了机库路障。 / The effect of the Transidium Annex has weakened the Hangar Barricade.
 			sendMsgByRace(1402638, Race.PC_ALL, 1200000);
-			instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					openFirstDoors();
-					sendMsg(1401838);
-					sendQuestionWindow();
-				}
-			}, 60000);
+			long deadline = System.currentTimeMillis() + 60_000;
+			runtimeState().put("transidium.start_deadline", deadline);
+			scheduleDeadline("start", deadline, this::openStart);
 		}
+	}
+
+	private void openStart() {
+		runtimeState().put("transidium.start_open", true);
+		openFirstDoors();
+		sendMsg(1401838);
+		sendQuestionWindow();
 	}
 	
 	/**
@@ -148,9 +149,10 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			transidiumAnnexBase = 2;
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("IGNUS_ENGINE_HANGAR_1_400030000")) {
             transidiumAnnexBase = 3;
-	    } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("IGNUS_ENGINE_HANGAR_2_400030000")) {
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("IGNUS_ENGINE_HANGAR_2_400030000")) {
 			transidiumAnnexBase = 4;
 		}
+		runtimeState().put("transidium.base", transidiumAnnexBase);
     }
 	
 	/**
@@ -366,6 +368,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			case 277229: //Hangar Barricade.
 				Npc ahserion = instance.getNpc(277224); //Ereshkigal's Reign.
 				hangarBarricade++;
+				runtimeState().put("transidium.hangar_barricade", hangarBarricade);
 				if (ahserion != null) {
 				    if (hangarBarricade == 1) {
 				    } else if (hangarBarricade == 2) {
@@ -378,10 +381,15 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			break;
 			case 277224: //Ahserion.
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Transidium Annex>");
-				final int Pasha = spawnRace == Race.ASMODIANS ? 804750 : 804749;
-				spawn(Pasha, 499.92294f, 512.67365f, 675.0881f, (byte) 0);
+				runtimeState().put("transidium.complete", true);
+				spawnCompletion();
             break;
 		}
+	}
+
+	private void spawnCompletion() {
+		int pasha = spawnRace == Race.ASMODIANS ? 804750 : 804749;
+		spawn(pasha, 499.92294f, 512.67365f, 675.0881f, (byte) 0);
 	}
 	
 	private void sendQuestionWindow() {
@@ -406,10 +414,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 */
 	
 	protected void openDoor(int doorId) {
-        StaticDoor door = doors.get(doorId);
-        if (door != null) {
-            door.setOpen(true);
-        }
+		setDoorState(doorId, true);
     }
 	/**
 	 * 处理 openFirstDoors。
@@ -542,7 +547,6 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
-		doors.clear();
 	}
 	
 	private void sendMsg(final String str) {

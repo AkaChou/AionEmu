@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -21,12 +20,8 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 永恒摇篮副本事件处理器。
@@ -40,18 +35,12 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 {
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	/** 开始时间 / start time */
-	private long startTime;
 	/** covetous fallen / covetous fallen */
 		private int covetousFallen;
-	/** 副本计时器 / instance timer */
-		private Future<?> instanceTimer;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	/** 对象 / objects */
-		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	/**
 	 * NPC 掉落表注册时处理。
@@ -118,13 +107,31 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		doors = instance.getDoors();
-		SpawnTemplate IDEternity02Shield1 = SpawnEngine.addNewSingleTimeSpawn(301550000, 834123, 1462.8610f, 774.33978f, 1035.3840f, (byte) 0);
-		IDEternity02Shield1.setEntityId(725);
-		objects.put(834123, SpawnEngine.spawnObject(IDEternity02Shield1, instanceId));
+		covetousFallen = runtimeState().getInt("cradle.covetous_fallen", 0);
+		String race = runtimeState().get("cradle.race");
+		spawnRace = race == null ? null : Race.valueOf(race);
+		if (!runtimeState().getBoolean("cradle.start_unlocked", false)) {
+			SpawnTemplate shield = SpawnEngine.addNewSingleTimeSpawn(301550000, 834123, 1462.8610f, 774.33978f, 1035.3840f, (byte) 0);
+			shield.setEntityId(725);
+			SpawnEngine.spawnObject(shield, instanceId);
+		}
 		//****//
-		SpawnTemplate IDEternity02Shield2 = SpawnEngine.addNewSingleTimeSpawn(301550000, 703026, 307.59805f, 1471.2153f, 919.05554f, (byte) 0);
-		IDEternity02Shield2.setEntityId(272);
-		objects.put(703026, SpawnEngine.spawnObject(IDEternity02Shield2, instanceId));
+		SpawnTemplate shield = SpawnEngine.addNewSingleTimeSpawn(301550000, 703026, 307.59805f, 1471.2153f, 919.05554f, (byte) 0);
+		shield.setEntityId(272);
+		SpawnEngine.spawnObject(shield, instanceId);
+		long deadline = runtimeState().getLong("cradle.start_deadline", 0);
+		if (deadline > 0 && !runtimeState().getBoolean("cradle.start_unlocked", false)) {
+			scheduleDeadline("start", deadline, this::unlockStart);
+		}
+		if (spawnRace != null) {
+			SpawnIDEternity02Race();
+		}
+		if (runtimeState().getBoolean("cradle.covetous_complete", false)) {
+			spawnCovetousCompletion();
+		}
+		if (runtimeState().getBoolean("cradle.complete", false)) {
+			spawnCompletion();
+		}
 	}
 	
 	/**
@@ -135,25 +142,21 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onEnterInstance(Player player) {
-		super.onInstanceCreate(instance);
-		if (instanceTimer == null) {
-			startTime = System.currentTimeMillis();
-		    instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					deleteNpc(834123);
-					// 敌人来了。全部消灭。 / The enemies are coming. Kill them all.
-				    sendMsgByRace(1403547, Race.PC_ALL, 0);
-				}
-			}, 60000);
+		if (runtimeState().getLong("cradle.start_deadline", 0) == 0) {
+			long deadline = System.currentTimeMillis() + 60_000;
+			runtimeState().put("cradle.start_deadline", deadline);
+			scheduleDeadline("start", deadline, this::unlockStart);
 		} if (spawnRace == null) {
 			spawnRace = player.getRace();
+			runtimeState().put("cradle.race", spawnRace.name());
 			SpawnIDEternity02Race();
 		}
+	}
+
+	private void unlockStart() {
+		runtimeState().put("cradle.start_unlocked", true);
+		deleteNpc(834123);
+		sendMsgByRace(1403547, Race.PC_ALL, 0);
 	}
 	
 	/**
@@ -171,20 +174,19 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			case 220472: //Covetous Fallen Guardian.
 			case 220594: //Covetous Fallen Guardian.
 			    covetousFallen++;
+				runtimeState().put("cradle.covetous_fallen", covetousFallen);
 			    if (covetousFallen == 1) {
 				} else if (covetousFallen == 2) {
 				} else if (covetousFallen == 3) {
 				} else if (covetousFallen == 4) {
 				} else if (covetousFallen == 5) {
+					runtimeState().put("cradle.covetous_complete", true);
 				    // 你已击杀残酷守护者。 / Youve killed the Cruel Protector.
 					// 仍有进阶单位魔法士兵需要帮助。 / There are still Advance unit Magical Soldiers who need help.
 				    sendMsgByRace(1403542, Race.PC_ALL, 0);
 					// 你已击杀全部残酷守护者。 / Youve killed all Cruel Protectors.
 					sendMsgByRace(1403545, Race.PC_ALL, 8000);
-					spawn(281446, 1477.0033f, 774.52344f, 1036.7559f, (byte) 0);
-					spawn(806036, 1477.0033f, 774.52344f, 1036.7559f, (byte) 0); //Geodesic "Walking Path"
-					spawn(834014, 976.31232f, 774.7804f, 1043.3522f, (byte) 0); //The Walking Path's.
-					spawn(834015, 713.17285f, 1191.156f, 1036.5265f, (byte) 0); //The Garden Temple's.
+					spawnCovetousCompletion();
 				}
 			break;
 			case 220480: //Fallen Jotun Warrior.
@@ -210,12 +212,8 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403530, Race.PC_ALL, 0);
 			break;
 			case 220540: //Typhon.
-			    final int Peregrine_Viola = spawnRace == Race.ASMODIANS ? 806290 : 806285;
-				spawn(Peregrine_Viola, 595.3497f, 540.4742f, 509.43015f, (byte) 22);
-				final int CradleToTrials = spawnRace == Race.ASMODIANS ? 806058 : 806056;
-				spawn(CradleToTrials, 595.58984f, 536.9435f, 509.43015f, (byte) 8);
-				spawn(834005, 601.02045f, 534.01807f, 509.43015f, (byte) 32); //Cradle Exit.
-				spawn(834090, 604.9655f, 536.7014f, 509.43015f, (byte) 24); //密码背包。 / Cryptograph Cube.
+				runtimeState().put("cradle.complete", true);
+				spawnCompletion();
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Cradle Of Eternity>");
 			break;
 			case 220541: //Vile Typhon.
@@ -223,13 +221,29 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403529, Race.PC_ALL, 0);
 			break;
 			case 220597: //Locked Door To The Vile Library.
-				doors.get(509).setOpen(true);
+				setDoorState(509, true);
 				// 你可使用风道到达全知之树中心。 / You can use a Wind Road to get to the center of the All-knowing Tree.
 				sendMsgByRace(1403520, Race.PC_ALL, 5000);
 				// 格莱昂已出现。 / Glyon has appeared.
 				sendMsgByRace(1403533, Race.PC_ALL, 10000);
 			break;
 		}
+	}
+
+	private void spawnCovetousCompletion() {
+		spawn(281446, 1477.0033f, 774.52344f, 1036.7559f, (byte) 0);
+		spawn(806036, 1477.0033f, 774.52344f, 1036.7559f, (byte) 0);
+		spawn(834014, 976.31232f, 774.7804f, 1043.3522f, (byte) 0);
+		spawn(834015, 713.17285f, 1191.156f, 1036.5265f, (byte) 0);
+	}
+
+	private void spawnCompletion() {
+		int peregrineViola = spawnRace == Race.ASMODIANS ? 806290 : 806285;
+		spawn(peregrineViola, 595.3497f, 540.4742f, 509.43015f, (byte) 22);
+		int cradleToTrials = spawnRace == Race.ASMODIANS ? 806058 : 806056;
+		spawn(cradleToTrials, 595.58984f, 536.9435f, 509.43015f, (byte) 8);
+		spawn(834005, 601.02045f, 534.01807f, 509.43015f, (byte) 32);
+		spawn(834090, 604.9655f, 536.7014f, 509.43015f, (byte) 24);
 	}
 	
 	/**
@@ -290,9 +304,9 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			break;
 			case 834008: //Bridge Activation Device.
 				despawnNpc(npc);
-				doors.get(112).setOpen(true);
-				doors.get(114).setOpen(true);
-				doors.get(115).setOpen(true);
+				setDoorState(112, true);
+				setDoorState(114, true);
+				setDoorState(115, true);
 			break;
 		}
 	}
