@@ -27377,6 +27377,7 @@
       <quest_work_item item_id="182213038" count="1"/>
     </quest_work_items>
   </quest>
+  <quest id="11295" name="动画播放用隐藏任务" nameId="1129656" minlevel_permitted="50" max_repeat_count="255" cannot_share="true" cannot_giveup="false" race_permitted="ELYOS" category="QUEST"/>
   <quest id="11304" name="The Remaining Faithful" nameId="1141747" minlevel_permitted="55" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
       <collect_item item_id="182215336" count="1"/>
