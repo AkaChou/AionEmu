@@ -5232,461 +5232,1567 @@
     </condition>
   </world>
   <world id="302330000" name="IDEvent_Solo">
+    <variable name="chase_on"/>
     <variable name="con_bakaki_die"/>
     <variable name="con_remove_all"/>
     <variable name="con_time_attack"/>
-    <condition id="693" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#2">
+    <variable name="idevent_solo_rush"/>
+    <variable name="time_attack_spawn01"/>
+    <variable name="time_attack_spawn02"/>
+    <variable name="time_attack_spawn03"/>
+    <variable name="time_attack_spawn04"/>
+    <variable name="tog_spawn_mob"/>
+    <condition id="5081" expression="tog_spawn_mob == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <npc id="246324" probability="10000" x="257.008301" y="424.380646" z="145.054413" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="693" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#2">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="228.512741" y="360.040771" z="145.272079" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="694" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#3">
+    <condition id="694" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#3">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="329.750122" y="296.447845" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="695" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#4">
+    <condition id="695" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#4">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="224.25473" y="160.048843" z="138.949493" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="696" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#5">
+    <condition id="696" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#5">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="224.841766" y="206.820602" z="140.649567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="697" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#7">
+    <condition id="5082" expression="tog_spawn_mob == 2" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#6">
+      <group probability="1000">
+        <slot>
+          <npc id="246372" probability="10000" x="232.330963" y="356.471741" z="144.712952" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="697" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#7">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="332.914215" y="268.287476" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="698" expression="con_bakaki_die == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#8">
+    <condition id="698" expression="con_bakaki_die == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#8">
       <group probability="1000">
         <slot>
           <npc id="246378" probability="10000" x="223.225342" y="293.742584" z="145.504715" heading="90" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="699" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#10">
+    <condition id="5083" expression="tog_spawn_mob == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#9">
+      <group probability="1000">
+        <slot>
+          <npc id="246325" probability="10000" x="239.059784" y="404.757446" z="145.054413" heading="190" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="699" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#10">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="229.386597" y="244.488617" z="122.249184" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="700" expression="con_time_attack == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#11">
+    <condition id="700" expression="con_time_attack == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#11">
       <group probability="1000">
         <slot>
           <npc id="835104" probability="10000" x="149.474213" y="69.36657" z="144.092957" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="701" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#14">
+    <condition id="5084" expression="tog_spawn_mob == 2" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="246373" probability="10000" x="234.881729" y="358.805847" z="145.054413" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5085" expression="time_attack_spawn03 == 1" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#13">
+      <group probability="1000">
+        <slot>
+          <npc id="246335" probability="10000" x="223.680923" y="298.139404" z="144.49498" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_74"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="701" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#14">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="310.709808" y="229.644821" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="702" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#15">
+    <condition id="702" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#15">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="353.398468" y="312.247681" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="703" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#18">
+    <condition id="5086" expression="tog_spawn_mob == 2" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#16">
+      <group probability="1000">
+        <slot>
+          <npc id="246372" probability="10000" x="230.777267" y="358.709442" z="145.054413" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5087" expression="tog_spawn_mob == 2" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#17">
+      <group probability="1000">
+        <slot>
+          <npc id="246376" probability="10000" x="234.881729" y="358.805847" z="145.054413" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="703" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#18">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="165.072617" y="102.710083" z="145.832809" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="704" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#19">
+    <condition id="704" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#19">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="296.765869" y="256.398071" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="705" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#20">
+    <condition id="705" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#20">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="316.735382" y="275.078003" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="706" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#21">
+    <condition id="706" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#21">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="356.919189" y="343.828064" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="707" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#26">
+    <condition id="5088" expression="idevent_solo_rush == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#22">
+      <group probability="1000">
+        <slot>
+          <npc id="246324" probability="10000" x="321.962616" y="400.43219" z="92.378525" heading="270" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_mob_67"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5089" expression="time_attack_spawn02 == 1" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#23">
+      <group probability="1000">
+        <slot>
+          <npc id="246336" probability="10000" x="223.802826" y="340.958557" z="144.364563" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_29"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5090" expression="time_attack_spawn01 == 1" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#24">
+      <group probability="1000">
+        <slot>
+          <npc id="246301" probability="10000" x="223.717636" y="341.116089" z="145.406723" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_54"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5091" expression="idevent_solo_rush == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#25">
+      <group probability="1000">
+        <slot>
+          <npc id="246291" probability="10000" x="323.080139" y="400.852142" z="92.378525" heading="270" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_mob_66"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="707" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#26">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="353.990692" y="358.272461" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="708" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#28">
+    <condition id="5092" expression="time_attack_spawn02 == 1" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#27">
+      <group probability="1000">
+        <slot>
+          <npc id="246303" probability="10000" x="223.802826" y="340.958557" z="144.364563" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_29"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="708" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#28">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="322.716614" y="390.903656" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="709" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#30">
+    <condition id="5093" expression="chase_on == 4" page_start="1" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#29">
+      <group probability="1000">
+        <slot>
+          <npc id="835105" probability="10000" x="242.983063" y="330.17038" z="145.614471" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="709" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#30">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="86.245789" y="102.684563" z="140.04158" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="710" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#32">
+    <condition id="5094" expression="idevent_solo_rush == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#31">
+      <group probability="1000">
+        <slot>
+          <npc id="246324" probability="10000" x="319.755585" y="400.266571" z="92.378525" heading="270" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_mob_23"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="710" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#32">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="238.391083" y="404.039459" z="145.272079" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="711" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#33">
+    <condition id="711" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#33">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="311.213013" y="248.237732" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="712" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#37">
+    <condition id="5095" expression="chase_on == 5" page_start="1" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#34">
+      <group probability="1000">
+        <slot>
+          <npc id="835105" probability="10000" x="242.983063" y="330.17038" z="145.739471" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5096" expression="tog_spawn_mob == 2" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#35">
+      <group probability="1000">
+        <slot>
+          <npc id="246367" probability="10000" x="220.27504" y="380.847565" z="86.48069" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_mob_44"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5097" expression="idevent_solo_rush == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#36">
+      <group probability="1000">
+        <slot>
+          <npc id="246324" probability="10000" x="323.080139" y="400.852142" z="92.378525" heading="270" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_mob_66"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="712" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#37">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="311.496429" y="281.411224" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="713" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#38">
+    <condition id="713" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#38">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="221.150406" y="232.346191" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="714" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#39">
+    <condition id="714" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#39">
       <group probability="1000">
         <slot>
           <npc id="835130" probability="10000" x="141.281021" y="19.798904" z="146.314682" heading="0" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="715" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#40">
+    <condition id="715" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#40">
       <group probability="1000">
         <slot>
           <npc id="835131" probability="10000" x="145.611679" y="24.493073" z="146.291885" heading="0" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="716" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#42">
+    <condition id="5098" expression="tog_spawn_mob == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#41">
+      <group probability="1000">
+        <slot>
+          <npc id="246291" probability="10000" x="236.366531" y="403.647949" z="144.712952" heading="30" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="716" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#42">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="297.376526" y="288.751923" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="717" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#43">
+    <condition id="717" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#43">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="318.888397" y="301.093567" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="718" expression="con_bakaki_die == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#44">
+    <condition id="718" expression="con_bakaki_die == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#44">
       <group probability="1000">
         <slot>
           <npc id="835057" probability="10000" x="224.57486" y="338.842682" z="143.868149" heading="270" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="719" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#45">
+    <condition id="719" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#45">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="365.919891" y="331.553497" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="720" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#48">
+    <condition id="5099" expression="tog_spawn_mob == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#46">
+      <group probability="1000">
+        <slot>
+          <npc id="246324" probability="10000" x="223.811554" y="351.240845" z="145.054413" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5100" expression="chase_on == 6" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#47">
+      <group probability="1000">
+        <slot>
+          <npc id="246301" probability="10000" x="223.767792" y="341.088837" z="144.983673" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_54"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="720" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#48">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="334.179108" y="364.990082" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="721" expression="con_bakaki_die ==1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#49">
+    <condition id="721" expression="con_bakaki_die ==1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#49">
       <group probability="1000">
         <slot>
           <npc id="246377" probability="10000" x="223.225342" y="293.742584" z="145.504715" heading="90" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="722" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#51">
+    <condition id="5101" expression="idevent_solo_rush == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#50">
+      <group probability="1000">
+        <slot>
+          <npc id="246291" probability="10000" x="317.708527" y="400.073456" z="92.378525" heading="270" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_mob_24"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="722" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#51">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="299.58783" y="301.32901" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="723" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#52">
+    <condition id="723" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#52">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="224.327301" y="354.953888" z="145.272079" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="724" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#55">
+    <condition id="5102" expression="chase_on == 10" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#53">
+      <group probability="1000">
+        <slot>
+          <npc id="246302" probability="10000" x="223.697449" y="298.190338" z="144.164917" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_74"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5103" expression="tog_spawn_mob == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#54">
+      <group probability="1000">
+        <slot>
+          <npc id="246292" probability="10000" x="239.059784" y="404.757446" z="145.054413" heading="190" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="724" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#55">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="228.144623" y="194.567459" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="725" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#57">
+    <condition id="5104" expression="chase_on == 10" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#56">
+      <group probability="1000">
+        <slot>
+          <npc id="246335" probability="10000" x="223.697449" y="298.190338" z="144.164917" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_74"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="725" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#57">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="225.404877" y="222.595123" z="140.649567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="726" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#60">
+    <condition id="5105" expression="idevent_solo_rush == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#58">
+      <group probability="1000">
+        <slot>
+          <npc id="246324" probability="10000" x="317.708527" y="400.073456" z="92.378525" heading="270" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_mob_24"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5106" expression="tog_spawn_mob == 2" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#59">
+      <group probability="1000">
+        <slot>
+          <npc id="246375" probability="10000" x="232.791656" y="360.972473" z="145.054413" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="726" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#60">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="311.968964" y="293.727753" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="727" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#61">
+    <condition id="727" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#61">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="149.474213" y="69.36657" z="144.663971" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="728" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#62">
+    <condition id="728" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#62">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="214.214188" y="210.603867" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="729" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#63">
+    <condition id="729" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#63">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="196.076813" y="145.714188" z="140.774368" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="730" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#65">
+    <condition id="5107" expression="idevent_solo_rush == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#64">
+      <group probability="1000">
+        <slot>
+          <npc id="246291" probability="10000" x="321.962616" y="400.43219" z="92.378525" heading="270" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_mob_67"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="730" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#65">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="378.203064" y="322.936707" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="731" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#68">
+    <condition id="5108" expression="tog_spawn_mob == 2" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#66">
+      <group probability="1000">
+        <slot>
+          <npc id="246368" probability="10000" x="220.27504" y="380.847565" z="86.48069" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_mob_44"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5109" expression="chase_on == 6" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#67">
+      <group probability="1000">
+        <slot>
+          <npc id="246334" probability="10000" x="223.767792" y="341.088837" z="144.983673" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_54"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="731" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#68">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="257.459412" y="424.36203" z="145.272079" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="732" expression="con_bakaki_die == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#70">
+    <condition id="5110" expression="tog_spawn_mob == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#69">
+      <group probability="1000">
+        <slot>
+          <npc id="246291" probability="10000" x="223.811554" y="351.240845" z="145.054413" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="732" expression="con_bakaki_die == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#70">
       <group probability="1000">
         <slot>
           <npc id="835123" probability="10000" x="225.998306" y="300.366974" z="145.890869" heading="90" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="733" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#75">
+    <condition id="5111" expression="time_attack_spawn01 == 1" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#71">
+      <group probability="1000">
+        <slot>
+          <npc id="246334" probability="10000" x="223.717636" y="341.116089" z="145.406723" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_54"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5112" expression="time_attack_spawn04 == 1" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#72">
+      <group probability="1000">
+        <slot>
+          <npc id="246337" probability="10000" x="223.725403" y="298.193878" z="145.685394" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_75"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5113" expression="time_attack_spawn03 == 1" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#73">
+      <group probability="1000">
+        <slot>
+          <npc id="246302" probability="10000" x="223.680923" y="298.139404" z="144.49498" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_74"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5114" expression="tog_spawn_mob == 2" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#74">
+      <group probability="1000">
+        <slot>
+          <npc id="246372" probability="10000" x="232.791656" y="360.972473" z="145.054413" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="733" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#75">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="217.122574" y="146.399445" z="138.949493" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="734" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#76">
+    <condition id="734" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#76">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="309.134338" y="215.787094" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="735" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#78">
+    <condition id="5115" expression="tog_spawn_mob == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#77">
+      <group probability="1000">
+        <slot>
+          <npc id="246324" probability="10000" x="236.366531" y="403.647949" z="144.712952" heading="30" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="735" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#78">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="291.884857" y="267.153442" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="736" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#79">
+    <condition id="736" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#79">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="203.460022" y="222.672272" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="737" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#80">
+    <condition id="737" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#80">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="148.761673" y="92.656464" z="145.832809" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="738" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#81">
+    <condition id="738" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#81">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="340.771881" y="280.771667" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="739" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#82">
+    <condition id="739" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#82">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="242.365875" y="216.763229" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="740" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#83">
+    <condition id="740" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#83">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="129.193619" y="76.194435" z="145.832809" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="741" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#86">
+    <condition id="5116" expression="(tog_spawn_mob == 2) &amp;&amp; (SpecialServer_Cond == 0)" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#84">
+      <group probability="1000">
+        <slot>
+          <npc id="246300" probability="10000" x="232.818039" y="358.794159" z="144.822113" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5117" expression="time_attack_spawn04 == 1" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#85">
+      <group probability="1000">
+        <slot>
+          <npc id="246304" probability="10000" x="223.725403" y="298.193878" z="145.685394" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_75"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="741" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#86">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="350.828217" y="320.585754" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="742" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#87">
+    <condition id="742" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#87">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="287.259552" y="279.941528" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="743" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#88">
+    <condition id="743" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#88">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="154.818726" y="143.512421" z="145.832809" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="744" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#91">
+    <condition id="5118" expression="idevent_solo_rush == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#89">
+      <group probability="1000">
+        <slot>
+          <npc id="246291" probability="10000" x="319.755585" y="400.266571" z="92.378525" heading="270" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_mob_23"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5119" expression="tog_spawn_mob == 2" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#90">
+      <group probability="1000">
+        <slot>
+          <npc id="246375" probability="10000" x="232.330963" y="356.471741" z="144.712952" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="744" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#91">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="175.702393" y="80.41256" z="145.832809" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="745" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#93">
+    <condition id="5120" expression="chase_on == 8" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#92">
+      <group probability="1000">
+        <slot>
+          <npc id="246336" probability="10000" x="223.804611" y="340.8927" z="144.164917" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_29"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="745" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#93">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="377.913666" y="289.210846" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="746" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#94">
+    <condition id="746" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#94">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="223.688507" y="183.988495" z="138.949493" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="747" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#95">
+    <condition id="747" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#95">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="366.651581" y="305.336548" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="748" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#96">
+    <condition id="748" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#96">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="218.98436" y="213.064728" z="127.441116" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="749" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#98">
+    <condition id="5121" expression="chase_on == 12" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#97">
+      <group probability="1000">
+        <slot>
+          <npc id="246337" probability="10000" x="223.704254" y="298.203979" z="145.268356" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_75"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="749" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#98">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="341.934296" y="333.586029" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="750" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#99">
+    <condition id="750" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#99">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="363.921265" y="355.179932" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="751" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#100">
+    <condition id="751" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#100">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="378.269562" y="310.550781" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="752" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#101">
+    <condition id="752" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#101">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="206.519852" y="208.81163" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="753" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#102">
+    <condition id="753" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#102">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="133.568893" y="100.989029" z="145.832809" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="754" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#104">
+    <condition id="5122" expression="(tog_spawn_mob == 2) &amp;&amp; (SpecialServer_Cond == 1)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#103">
+      <group probability="1000">
+        <slot>
+          <npc id="246333" probability="10000" x="232.818039" y="358.794159" z="144.822113" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="754" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#104">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="87.301422" y="82.351822" z="143.018356" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="755" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#108">
+    <condition id="5123" expression="chase_on == 8" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#105">
+      <group probability="1000">
+        <slot>
+          <npc id="246303" probability="10000" x="223.804611" y="340.8927" z="144.164917" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_29"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5124" expression="tog_spawn_mob == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#106">
+      <group probability="1000">
+        <slot>
+          <npc id="246291" probability="10000" x="257.008301" y="424.380646" z="145.054413" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5125" expression="tog_spawn_mob == 2" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#107">
+      <group probability="1000">
+        <slot>
+          <npc id="246375" probability="10000" x="230.777267" y="358.709442" z="145.054413" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="755" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#108">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="351.087891" y="329.887299" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="756" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#109">
+    <condition id="756" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#109">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="361.114746" y="288.675598" z="92.464035" heading="1" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
-    <condition id="757" expression="con_remove_all == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#110">
+    <condition id="757" expression="con_remove_all == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="IDEvent_Solo/world_N.xml#110">
       <group probability="1000">
         <slot>
           <npc id="835106" probability="10000" x="285.688538" y="213.802261" z="90.634567" heading="1" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5126" expression="chase_on == 12" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#111">
+      <group probability="1000">
+        <slot>
+          <npc id="246304" probability="10000" x="223.704254" y="298.203979" z="145.268356" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_75"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5127" expression="1" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#producer-page-1-1">
+      <group probability="1000">
+        <slot>
+          <npc id="246279" probability="10000" x="244.83371" y="332.479828" z="144" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246280" probability="10000" x="202.193375" y="332.280396" z="144" heading="340" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246281" probability="10000" x="244.539413" y="306.904541" z="144" heading="220" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246282" probability="10000" x="202.272308" y="306.978424" z="143.999619" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246283" probability="10000" x="97.819351" y="109.461037" z="140" heading="1" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246283" probability="10000" x="127.385078" y="56.281651" z="146" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246283" probability="10000" x="130.366577" y="55.071468" z="146" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246283" probability="10000" x="175.21669" y="63.643543" z="144.971619" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246283" probability="10000" x="175.467224" y="101.842438" z="145.267288" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246284" probability="10000" x="123.606033" y="80.625214" z="146.103943" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_design30"/>
+        </slot>
+        <slot>
+          <npc id="246284" probability="10000" x="154.453583" y="81.330429" z="145.75" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246284" probability="10000" x="162.870178" y="60.083736" z="146.103943" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="75.3228" y="93.772484" z="143.155609" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="87.214874" y="79.99324" z="144.080658" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="95.167671" y="101.659431" z="141.149887" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="123.584312" y="104.511337" z="148.324448" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="128.746552" y="69.602722" z="145.230621" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="131.00882" y="96.027222" z="146.007599" heading="120" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="137.645569" y="104.291748" z="146.291885" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="149.521332" y="57.329372" z="146" heading="290" initial_delay="2" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="150.60321" y="102.187683" z="146.007599" heading="90" initial_delay="5" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_design29"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="162.876572" y="87.601372" z="146.291885" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_design21"/>
+        </slot>
+        <slot>
+          <npc id="246285" probability="10000" x="162.902023" y="75.670326" z="146.291885" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_design27"/>
+        </slot>
+        <slot>
+          <npc id="246286" probability="10000" x="224.583542" y="209.263031" z="140.135925" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246286" probability="10000" x="333.160461" y="342.442566" z="90.112488" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_11"/>
+        </slot>
+        <slot>
+          <npc id="246287" probability="10000" x="294.215851" y="291.006897" z="90.66098" heading="320" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_5"/>
+        </slot>
+        <slot>
+          <npc id="246287" probability="10000" x="296.339874" y="267.147705" z="91.029358" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246287" probability="10000" x="297.314789" y="304.915527" z="90.66098" heading="210" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246287" probability="10000" x="310.8255" y="276.563843" z="91.617661" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246287" probability="10000" x="321.204956" y="274.352722" z="91.59269" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246287" probability="10000" x="321.505524" y="283.944824" z="91.59269" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246287" probability="10000" x="330.016846" y="300.953094" z="91.59269" heading="150" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_design37"/>
+        </slot>
+        <slot>
+          <npc id="246287" probability="10000" x="330.245453" y="267.904114" z="91.617661" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="196.907303" y="225.858505" z="89.96331" heading="160" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="208.574219" y="205.161606" z="89.587212" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="217.645691" y="234.318817" z="89.099083" heading="160" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidnovice_mob_51"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="234.273178" y="213.405899" z="90.414795" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="288.213257" y="286.338043" z="90.66098" heading="320" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_4"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="291.536957" y="275.652191" z="91.029358" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="293.530304" y="263.361206" z="91.029358" heading="320" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_51"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="297.572296" y="251.171936" z="91.340164" heading="30" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="312.519348" y="275.162018" z="91.617661" heading="150" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_50"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="314.783173" y="297.383514" z="91.59269" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_6"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="321.254211" y="263.443298" z="89.733902" heading="250" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="331.939301" y="266.502289" z="91.617661" heading="150" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246288" probability="10000" x="339.914124" y="280.605011" z="91.617661" heading="180" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_73"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="283.015289" y="214.97789" z="89.733902" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_17"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="330.724182" y="331.500916" z="89.538475" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="339.082581" y="326.627106" z="89.538475" heading="30" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="339.82254" y="314.233368" z="89.538475" heading="30" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="351.284454" y="362.075043" z="92.513062" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="351.938385" y="325.254395" z="89.538475" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="351.960175" y="333.059601" z="88.876488" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="351.960175" y="335.469818" z="88.876488" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="361.105438" y="349.921661" z="89.538475" heading="30" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="362.562653" y="336.110138" z="88.947334" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_9"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="364.279724" y="360.557648" z="92.513062" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="368.713989" y="327.018951" z="89.538475" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="377.361664" y="331.58197" z="89.538475" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="377.853882" y="341.450073" z="89.538475" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="377.919159" y="294.131592" z="91.283501" heading="120" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="379.83725" y="293.867188" z="91.283501" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="380.967468" y="310.320892" z="89.538475" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="382.942413" y="310.306915" z="89.538475" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="382.942749" y="324.956085" z="89.538475" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="384.715668" y="286.668854" z="91.283501" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246289" probability="10000" x="384.917694" y="324.942108" z="89.538475" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246290" probability="10000" x="70.904907" y="99.980049" z="140.193069" heading="120" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246290" probability="10000" x="77.345062" y="98.080765" z="141.220871" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246290" probability="10000" x="88.862434" y="78.136719" z="142.894348" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246290" probability="10000" x="307.634735" y="213.791885" z="89.434898" heading="60" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246290" probability="10000" x="310.353424" y="213.959152" z="89.434898" heading="120" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246292" probability="10000" x="196.517395" y="143.921967" z="142.419907" heading="300" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_design33"/>
+        </slot>
+        <slot>
+          <npc id="246292" probability="10000" x="307.83371" y="217.514999" z="89.776352" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246292" probability="10000" x="310.552399" y="217.682266" z="89.776352" heading="240" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246293" probability="10000" x="181.13884" y="81.239708" z="146.113159" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246293" probability="10000" x="227.08728" y="244.798523" z="122.008598" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246293" probability="10000" x="283.063873" y="275.719147" z="91.43972" heading="350" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246299" probability="10000" x="220.27504" y="380.847565" z="85.371689" heading="240" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_46"/>
+        </slot>
+        <slot>
+          <npc id="246305" probability="10000" x="223.23172" y="289.334595" z="145.504715" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="147.13208" y="96.724556" z="146.579132" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="149.596878" y="94.790512" z="146.579132" heading="150" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="150.671768" y="54.978436" z="146.579132" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="151.565399" y="146.34729" z="147.366547" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="151.671951" y="57.397392" z="146.579132" heading="250" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="154.104568" y="72.709419" z="146.579132" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="189.895004" y="142.531067" z="142.003784" heading="300" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_design25"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="193.127625" y="142.581223" z="142.419907" heading="300" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_design32"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="199.619247" y="142.582397" z="142.419907" heading="300" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_design34"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="202.409714" y="142.454529" z="142.419907" heading="300" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_design35"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="208.721298" y="219.919312" z="90.082687" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="221.887589" y="153.812744" z="138.887772" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_14"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="229.828781" y="191.033188" z="88.443619" heading="180" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathmain1"/>
+        </slot>
+        <slot>
+          <npc id="246361" probability="10000" x="242.542282" y="207.555435" z="88.237595" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="217.266235" y="213.479965" z="90.082687" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="222.753998" y="208.700287" z="127.699806" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="224.177261" y="186.049301" z="138.99147" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_world_5.1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="224.738083" y="225.614731" z="140.43869" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_15"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="241.494904" y="223.169846" z="88.443619" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="299.266144" y="252.208206" z="91.340164" heading="190" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="306.196045" y="258.071259" z="91.59269" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_60"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="306.756439" y="267.066193" z="91.59269" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_61"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="308.192627" y="292.027863" z="91.59269" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_63"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="308.322845" y="284.405365" z="91.59269" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_62"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="315.239777" y="300.210815" z="91.251236" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="325.769989" y="250.710007" z="91.45903" heading="130" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidnovice_mob_52"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="330.654846" y="276.599365" z="91.59269" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_64"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="342.368317" y="320.355621" z="88.874306" heading="60" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="343.329193" y="349.001434" z="89.72802" heading="330" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="356.189667" y="314.106506" z="89.72802" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="363.950104" y="308.845367" z="88.874306" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="367.536163" y="308.942017" z="88.874306" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246362" probability="10000" x="374.123962" y="321.074554" z="88.874306" heading="240" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5128" expression="1" page_start="1" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#producer-page-1-2">
+      <group probability="1000">
+        <slot>
+          <npc id="246384" probability="10000" x="149.615021" y="46.188408" z="146.579132" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="703425" probability="10000" x="155.822021" y="112.57016" z="146.291885" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="703426" probability="10000" x="344.894592" y="280.571655" z="90.136139" heading="199" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="703427" probability="10000" x="218.008942" y="351.768311" z="142.411011" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="703428" probability="10000" x="151.564407" y="39.560146" z="146.291885" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835026" probability="10000" x="91.170479" y="103.124687" z="144.97583" heading="190" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835026" probability="10000" x="120.619461" y="79.271133" z="144.97583" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="140.709229" y="61.057037" z="146.065857" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="157.592285" y="100.664871" z="146.065857" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="200.046173" y="151.026062" z="141.219986" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="218.615616" y="151.84198" z="141.219986" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="298.018951" y="281.062653" z="90.136139" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="313.82782" y="288.447479" z="90.136139" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="313.896973" y="263.352081" z="90.136139" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="315.414001" y="224.094574" z="90.136139" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="317.458466" y="241.058899" z="90.136139" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="321.589355" y="302.317261" z="90.136139" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="327.481049" y="366.212372" z="90.136139" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835028" probability="10000" x="337.778015" y="375.131073" z="91.897163" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835071" probability="10000" x="351.960144" y="338.805054" z="90.344795" heading="130" initial_delay="1" initial_delay_extra="1" respawn_time="20" respawn_time_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835071" probability="10000" x="360.821472" y="297.812347" z="90.344795" heading="130" initial_delay="1" initial_delay_extra="1" respawn_time="20" respawn_time_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835071" probability="10000" x="366.68927" y="326.814972" z="90.344795" heading="130" initial_delay="1" initial_delay_extra="1" respawn_time="20" respawn_time_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835088" probability="10000" x="320.386536" y="389.658875" z="92.678726" heading="1" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835089" probability="10000" x="149.242493" y="20.707439" z="145.811981" heading="1" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835090" probability="10000" x="102.089233" y="79.783875" z="144.092957" heading="1" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835091" probability="10000" x="376.569641" y="331.649323" z="90.4869" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835092" probability="10000" x="149.242493" y="20.707439" z="146.058365" heading="1" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835093" probability="10000" x="141.485443" y="24.833092" z="146.058365" heading="1" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="835107" probability="10000" x="163.342285" y="106.414871" z="146.065857" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5129" expression="1" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="IDEvent_Solo/world_N.xml#producer-page-2-2">
+      <group probability="1000">
+        <slot>
+          <npc id="246312" probability="10000" x="244.83371" y="332.479828" z="144.164917" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246313" probability="10000" x="202.193375" y="332.280396" z="144.235077" heading="340" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246314" probability="10000" x="244.539413" y="306.904541" z="144.17215" heading="220" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246315" probability="10000" x="202.272308" y="306.978424" z="144.39267" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246316" probability="10000" x="97.819351" y="109.461037" z="140.2957" heading="1" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246316" probability="10000" x="127.385078" y="56.281651" z="146.579132" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246316" probability="10000" x="130.366577" y="55.071468" z="146.579132" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246316" probability="10000" x="162.870178" y="60.083736" z="146.103943" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246316" probability="10000" x="175.21669" y="63.643543" z="145.267288" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246316" probability="10000" x="175.467224" y="101.842438" z="145.267288" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246317" probability="10000" x="123.606033" y="80.625214" z="146.103943" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_design30"/>
+        </slot>
+        <slot>
+          <npc id="246317" probability="10000" x="154.453583" y="81.330429" z="146.103943" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="75.3228" y="93.772484" z="143.155609" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="87.214874" y="79.99324" z="144.080658" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="95.167671" y="101.659431" z="141.149887" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="123.584312" y="104.511337" z="148.324448" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="128.746552" y="69.602722" z="145.514908" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="131.00882" y="96.027222" z="146.007599" heading="120" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="137.645569" y="104.291748" z="146.291885" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="149.514343" y="57.329887" z="146.579132" heading="290" initial_delay="2" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="150.60321" y="102.187683" z="146.007599" heading="90" initial_delay="5" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_design29"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="162.876572" y="87.601372" z="146.291885" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_design21"/>
+        </slot>
+        <slot>
+          <npc id="246318" probability="10000" x="162.902023" y="75.670326" z="146.291885" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_design27"/>
+        </slot>
+        <slot>
+          <npc id="246319" probability="10000" x="224.583542" y="209.263031" z="140.341949" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246319" probability="10000" x="333.160461" y="342.442566" z="90.112488" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_11"/>
+        </slot>
+        <slot>
+          <npc id="246320" probability="10000" x="294.215851" y="291.006897" z="90.66098" heading="320" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_5"/>
+        </slot>
+        <slot>
+          <npc id="246320" probability="10000" x="296.339874" y="267.147705" z="91.029358" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246320" probability="10000" x="297.314789" y="304.915527" z="90.66098" heading="210" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246320" probability="10000" x="310.8255" y="276.563843" z="91.617661" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246320" probability="10000" x="321.204956" y="274.352722" z="91.59269" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246320" probability="10000" x="321.505524" y="283.944824" z="91.59269" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246320" probability="10000" x="330.016846" y="300.953094" z="91.59269" heading="150" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_design37"/>
+        </slot>
+        <slot>
+          <npc id="246320" probability="10000" x="330.245453" y="267.904114" z="91.617661" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="196.907303" y="225.858505" z="89.96331" heading="160" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="208.574219" y="205.161606" z="89.96331" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="217.645691" y="234.318817" z="89.099083" heading="160" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidnovice_mob_51"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="234.273178" y="213.405899" z="90.414795" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="288.213257" y="286.338043" z="91.029358" heading="320" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_4"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="291.536957" y="275.652191" z="91.029358" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="293.530304" y="263.361206" z="91.029358" heading="320" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_51"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="297.572296" y="251.171936" z="91.340164" heading="30" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="312.519348" y="275.162018" z="91.617661" heading="150" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_50"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="314.783173" y="297.383514" z="91.59269" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_6"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="321.254211" y="263.443298" z="89.733902" heading="250" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="331.939301" y="266.502289" z="91.617661" heading="150" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246321" probability="10000" x="339.914124" y="280.605011" z="91.617661" heading="180" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_73"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="283.015289" y="214.97789" z="90.075356" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_17"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="330.724182" y="331.500916" z="89.538475" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="339.082581" y="326.627106" z="89.538475" heading="30" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="339.82254" y="314.233368" z="89.538475" heading="30" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="351.284454" y="362.075043" z="92.513062" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="351.938385" y="325.254395" z="89.538475" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="351.960175" y="333.059601" z="88.876488" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="351.960175" y="335.469818" z="88.876488" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="361.105438" y="349.921661" z="89.538475" heading="30" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="362.562653" y="336.110138" z="88.947334" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_9"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="364.279724" y="360.557648" z="92.513062" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="368.713989" y="327.018951" z="89.538475" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="377.361664" y="331.58197" z="89.538475" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="377.853882" y="341.450073" z="89.538475" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="377.919159" y="294.131592" z="91.283501" heading="120" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="379.83725" y="293.867188" z="91.283501" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="380.967468" y="310.320892" z="89.538475" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="382.942413" y="310.306915" z="89.538475" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="382.942749" y="324.956085" z="89.538475" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="384.715668" y="286.668854" z="91.283501" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246322" probability="10000" x="384.917694" y="324.942108" z="89.538475" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246323" probability="10000" x="70.904907" y="99.980049" z="140.460312" heading="120" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246323" probability="10000" x="77.345062" y="98.080765" z="141.220871" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246323" probability="10000" x="88.862434" y="78.136719" z="143.155609" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246323" probability="10000" x="307.634735" y="213.791885" z="89.776352" heading="60" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246323" probability="10000" x="310.353424" y="213.959152" z="89.776352" heading="120" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246325" probability="10000" x="196.517395" y="143.921967" z="142.419907" heading="300" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_design33"/>
+        </slot>
+        <slot>
+          <npc id="246325" probability="10000" x="307.83371" y="217.514999" z="89.776352" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246325" probability="10000" x="310.552399" y="217.682266" z="89.776352" heading="240" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246326" probability="10000" x="181.13884" y="81.239708" z="146.474991" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246326" probability="10000" x="227.08728" y="244.798523" z="122.008598" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246326" probability="10000" x="283.063873" y="275.719147" z="91.737679" heading="350" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246332" probability="10000" x="220.27504" y="380.847565" z="85.371689" heading="240" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_46"/>
+        </slot>
+        <slot>
+          <npc id="246338" probability="10000" x="223.23172" y="289.334595" z="145.890869" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="147.13208" y="96.724556" z="146.579132" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="149.596878" y="94.790512" z="146.579132" heading="150" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="150.671768" y="54.978436" z="146.579132" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="151.565399" y="146.34729" z="147.366547" heading="300" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="151.671951" y="57.397392" z="146.579132" heading="250" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="154.104568" y="72.709419" z="146.579132" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="189.895004" y="142.531067" z="142.003784" heading="300" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_design25"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="193.127625" y="142.581223" z="142.419907" heading="300" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_design32"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="199.619247" y="142.582397" z="142.419907" heading="300" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_design34"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="202.409714" y="142.454529" z="142.419907" heading="300" initial_delay="0" initial_delay_extra="0" walker="retail:302330000:npcpathidevent_solo_design35"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="208.721298" y="219.919312" z="90.082687" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="221.887589" y="153.986526" z="139.303894" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_14"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="229.828781" y="191.033188" z="88.443619" heading="180" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathmain1"/>
+        </slot>
+        <slot>
+          <npc id="246359" probability="10000" x="242.542282" y="207.555435" z="88.237595" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="217.266235" y="213.479965" z="90.082687" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="222.753998" y="208.700287" z="127.699806" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="224.177261" y="186.049301" z="138.575348" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_world_5.1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="224.738083" y="225.614731" z="140.43869" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_15"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="241.494904" y="223.169846" z="88.443619" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="299.266144" y="252.208206" z="91.340164" heading="190" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="306.196045" y="258.071259" z="91.59269" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_60"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="306.756439" y="267.066193" z="91.59269" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_61"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="308.192627" y="292.027863" z="91.59269" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_63"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="308.322845" y="284.405365" z="91.59269" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_62"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="315.239777" y="300.210815" z="91.251236" heading="270" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="325.769989" y="250.710007" z="91.700905" heading="130" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidnovice_mob_52"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="330.654846" y="276.599365" z="91.59269" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:302330000:npcpathidevent_solo_mob_64"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="342.368317" y="320.355621" z="88.874306" heading="60" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="343.329193" y="349.001434" z="89.72802" heading="330" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="356.189667" y="314.106506" z="89.72802" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="363.950104" y="308.845367" z="88.874306" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="367.536163" y="308.942017" z="88.874306" heading="180" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+        <slot>
+          <npc id="246360" probability="10000" x="374.123962" y="321.074554" z="88.874306" heading="240" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>

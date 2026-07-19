@@ -115,7 +115,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(5080, data.conditionSpawnCount());
+		assertEquals(5129, data.conditionSpawnCount());
 		assertEquals(40, data.sensoryAreaCount());
 		var sensoryArea = data.findSensoryArea(301550000, 220582, 980.914185f, 774.380676f, 1046.33447f);
 		assertNotNull(sensoryArea);
@@ -258,7 +258,7 @@ class RetailAiDefinitionLoaderTest {
 			Path.of("src/main/resources/aion/definitions/compact/ai/ai-waypoints.xml").toFile(),
 			Path.of("src/main/resources/aion/definitions/schemas/ai-waypoints.xsd").toFile());
 
-		assertEquals(3042, data.size());
+		assertEquals(3073, data.size());
 		var rudra = data.getWalkerTemplate("retail:300170000:npcpathpath_rudrawindc1");
 		assertNotNull(rudra);
 		assertEquals(557.167297f, rudra.getRouteSteps().get(0).getX());

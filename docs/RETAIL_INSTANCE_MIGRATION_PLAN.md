@@ -968,7 +968,7 @@ REGISTERED
 
 任务：
 
-- [ ] 将剩余 39 个含任务字段的生产 handler 迁移到 deadline；
+- [ ] 将剩余 37 个含 `Future` 的生产 handler 迁移到 deadline 或真端 Retail AI；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 40% | 2026-07-20 | 139 图行为闭包；33 个 handler 移除私有关键任务，剩余 38 个含 `Future` 文件 |
+| 阶段 4：handler 状态迁移 | 进行中 | 41% | 2026-07-20 | 139 图行为闭包；34 个 handler 移除私有关键任务，剩余 37 个含 `Future` 文件 |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1237,3 +1237,8 @@ REGISTERED
 - 为会写条件变量的页码初始 NPC 生成生产者刷新：page 1 包含 15 个 `216739`、`216287..216294` 与 `216587..216589`，page 2 包含 15 个 `216740`、`216206..216213` 与 `216583..216585`；马昆贝洛 `debufflich` 阶段链、船夫钥匙链和难度专属初始 Boss 均按真端页码运行。孤立但真实写入的 `DOORWALL_SPAWN` 保留为可持久化变量，不放宽被拒绝条件链。
 - 删除所有与条件刷新重复的旧静态点；`216586` 因真端没有页码初始条件继续保留。旧 635 行 handler 缩减为 61 行，只保留任务油召唤、焚化炉钥匙交互和离本/登出清理 `185000091..185000096`；删除私服掉落、错误钥匙映射、Boss 死亡编排、错误技能链、电影/门兼容、线程任务和 `Future`。剩余含 `Future` 的生产 handler 文件降至 38。
 - Beshmundir Temple 批次验证通过：转换器 16 项测试和窄重生成 SHA-256 幂等检查；`mvn -q -DskipTests compile`；`RetailConditionSpawnEngineTest,RetailConditionSpawnPartyLoaderTest,RetailAiDefinitionLoaderTest,RetailPatternAI2Test,BeshmundirTempleInstanceTest,InstanceHandlerRecoveryMigrationTest`；`condition-spawns.xml` 对新版 XSD 校验及相关文件 `git diff --check`。
+- 完成 Kumuki Cave（`302330000`）真端单轨替换：以 `IDEvent_Solo/world_N.xml`、`NpcAIPatterns_IDEvent_Solo_JSM.xml`、`NpcAIPatterns_IDEvent_Solo_YDY.xml` 及真端 NPC/技能/掉落数据为权威，Retail AI 与条件刷新接管两套等级页、Porgus 营救、15 分钟计时链、Boss/召唤、机关、电影 951、消息、变身、奖励箱和完成出口。
+- 条件刷新保持 10 个变量、111 条真端条件与 3 条页级初始托管条件，共 114 条、366 个槽位：page 1、page 1-2、page 2 分别为 113、29、113 个初始演员；补齐两套 8 只 Porgus、三处人参、四个机关、伪装物和电影/计时观察器。库穆基真端路径由 9 条补齐为 40 条，所有条件 NPC 的 `walker` 均有对应路径。
+- 删除与真端页级条件托管重叠的 22 个旧静态 NPC 组，旧静态点与条件托管 NPC 已无交集；保留真端 Pattern 数据无法表达的 `703424` 铁栅钥匙交互，以及真端钥匙箱 `246294`。钥匙只由 `246294` 按真端掉落 `185000295`，删除旧 handler 对 `246327`、`246328`、`246381`、`246377`、`246379` 的私服掉落注册。
+- 旧 639 行 handler 缩减为 45 行：删除手工 Porgus/Boss/奖励箱/出口/机关生成、门映射、电影、消息、倒计时、死亡编排、私有任务列表和 `Future`；只保留 `703424` 消耗 `185000295` 后删门、缺钥匙提示，以及离本/登出清理 4 件副本道具和 4 个副本效果。剩余含 `Future` 的生产 handler 文件降至 37。
+- Kumuki Cave 批次验证通过：转换器条件/路径 20 项测试；`mvn -q -DskipTests compile`；`RetailConditionSpawnEngineTest,RetailConditionSpawnPartyLoaderTest,RetailAiDefinitionLoaderTest,RetailPatternAI2Test,KumukiCaveInstanceTest,InstanceHandlerRecoveryMigrationTest` 共 97 项测试；条件与路径 XSD、静态出生 XML、窄重生成 SHA-256 `06081c0c1e29ba1589d3fa5a6aacba074a0ce2330469b85f2aefe6e618cf758e` 字节幂等及 `git diff --check` 均通过。

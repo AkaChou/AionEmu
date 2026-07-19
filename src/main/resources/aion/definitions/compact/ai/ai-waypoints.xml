@@ -44570,6 +44570,96 @@
     <routestep step="1" x="955.75531" y="1529.65393" z="236.71962"/>
     <routestep step="2" x="967.68335" y="1518.43787" z="242.04483"/>
   </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_design21" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="162.990524" y="87.200455" z="146.346298"/>
+    <routestep step="2" x="162.968353" y="82.277" z="146.346298" rest_time="3000"/>
+    <routestep step="3" x="162.965271" y="93.298393" z="146.346298" rest_time="3000"/>
+    <routestep step="4" x="162.983246" y="87.996513" z="146.346298"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_design25" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="189.972153" y="142.895508" z="142.519913"/>
+    <routestep step="2" x="189.96434" y="143.27272" z="142.519913" rest_time="3000"/>
+    <routestep step="3" x="189.98732" y="141.780838" z="142.519913" rest_time="6000"/>
+    <routestep step="4" x="189.983856" y="142.007416" z="142.519913"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_design27" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="162.937164" y="76.065262" z="146.346298"/>
+    <routestep step="2" x="162.959335" y="80.988716" z="146.346298" rest_time="3000"/>
+    <routestep step="3" x="162.975449" y="70.145874" z="146.346298" rest_time="3000"/>
+    <routestep step="4" x="162.944443" y="75.269203" z="146.346298"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_design29" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="150.717163" y="101.786766" z="146.346298"/>
+    <routestep step="2" x="150.694992" y="96.863312" z="146.346298" rest_time="3000"/>
+    <routestep step="3" x="150.710571" y="104.402092" z="146.346298" rest_time="3000"/>
+    <routestep step="4" x="150.709885" y="102.582825" z="146.346298"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_design30" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="123.602615" y="80.221329" z="146.346298"/>
+    <routestep step="2" x="123.592445" y="78.784821" z="146.346298" rest_time="3000"/>
+    <routestep step="3" x="123.596016" y="82.086647" z="146.346298" rest_time="3000"/>
+    <routestep step="4" x="123.595337" y="81.017387" z="146.346298"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_design32" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="193.204773" y="142.945663" z="142.519913"/>
+    <routestep step="2" x="193.19696" y="143.322876" z="142.519913" rest_time="3000"/>
+    <routestep step="3" x="193.21994" y="141.830994" z="142.519913" rest_time="6000"/>
+    <routestep step="4" x="193.216476" y="142.057571" z="142.519913"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_design33" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="196.594543" y="144.286407" z="142.519913"/>
+    <routestep step="2" x="196.586731" y="144.66362" z="142.519913" rest_time="6000"/>
+    <routestep step="3" x="196.609711" y="143.171738" z="142.519913" rest_time="3000"/>
+    <routestep step="4" x="196.606247" y="143.398315" z="142.519913"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_design34" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="199.696396" y="142.946838" z="142.519913"/>
+    <routestep step="2" x="199.688583" y="143.324051" z="142.519913" rest_time="3000"/>
+    <routestep step="3" x="199.711563" y="141.832169" z="142.519913" rest_time="6000"/>
+    <routestep step="4" x="199.708099" y="142.058746" z="142.519913"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_design35" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="202.486862" y="142.81897" z="142.519913"/>
+    <routestep step="2" x="202.47905" y="143.196182" z="142.519913" rest_time="3000"/>
+    <routestep step="3" x="202.502029" y="141.7043" z="142.519913" rest_time="6000"/>
+    <routestep step="4" x="202.498566" y="141.930878" z="142.519913"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_design37" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="330.028687" y="300.626587" z="91.692688"/>
+    <routestep step="2" x="329.15036" y="301.440521" z="91.692688" rest_time="5000"/>
+    <routestep step="3" x="331.517365" y="299.35614" z="91.692688" rest_time="5000"/>
+    <routestep step="4" x="330.308624" y="300.426514" z="91.692688"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_11" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="333.301636" y="342.992065" z="90.212486"/>
+    <routestep step="2" x="329.458374" y="349.397675" z="90.212486"/>
+    <routestep step="3" x="327.432922" y="348.616608" z="90.212486"/>
+    <routestep step="4" x="329.550323" y="349.453674" z="90.212486"/>
+    <routestep step="5" x="333.581207" y="342.112732" z="90.112488"/>
+    <routestep step="6" x="341.15976" y="338.647369" z="90.212486"/>
+    <routestep step="7" x="339.985687" y="331.697083" z="90.212486"/>
+    <routestep step="8" x="341.145813" y="338.745972" z="90.212486"/>
+    <routestep step="9" x="333.663391" y="342.062744" z="90.212486"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_14" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="221.99437" y="153.902771" z="139.4039"/>
+    <routestep step="2" x="222.095627" y="146.595398" z="139.4039" rest_time="2000"/>
+    <routestep step="3" x="217.634201" y="146.571625" z="139.4039" rest_time="6000"/>
+    <routestep step="4" x="222.075562" y="146.576263" z="139.4039"/>
+    <routestep step="5" x="221.987244" y="157.975861" z="139.4039" rest_time="3000"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_15" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="225.116501" y="225.705124" z="140.74472"/>
+    <routestep step="2" x="227.131058" y="225.70874" z="140.74472" rest_time="3000"/>
+    <routestep step="3" x="220.746033" y="225.666504" z="140.74472" rest_time="3000"/>
+    <routestep step="4" x="224.317245" y="225.700607" z="140.74472"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_17" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="282.88028" y="215.652359" z="89.977699"/>
+    <routestep step="2" x="282.862823" y="218.319748" z="90.032837" rest_time="4000"/>
+    <routestep step="3" x="282.878937" y="213.817322" z="89.946838" rest_time="3000"/>
+    <routestep step="4" x="282.88028" y="214.740326" z="90.167351"/>
+  </walker_template>
   <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_23" pool="1"><!-- IDEvent_Solo -->
     <routestep step="1" x="319.66983" y="400.709198" z="92.293327"/>
     <routestep step="2" x="330.813843" y="370.924957" z="92.193329"/>
@@ -44590,6 +44680,14 @@
     <routestep step="3" x="208.187241" y="331.945801" z="144.264923"/>
     <routestep step="4" x="203.216843" y="332.16745" z="144.264923"/>
   </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_4" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="288.048859" y="286.508636" z="91.175514"/>
+    <routestep step="2" x="285.788391" y="287.352722" z="91.175514"/>
+    <routestep step="3" x="281.043213" y="289.270966" z="91.175514" rest_time="3000"/>
+    <routestep step="4" x="285.809753" y="287.338531" z="91.175514"/>
+    <routestep step="5" x="292.066162" y="284.835815" z="91.175514" rest_time="3000"/>
+    <routestep step="6" x="288.427826" y="286.340576" z="91.175514"/>
+  </walker_template>
   <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_44" pool="1"><!-- IDEvent_Solo -->
     <routestep step="1" x="220.785645" y="381.30835" z="86.792625"/>
     <routestep step="2" x="224.022079" y="383.003876" z="86.792625"/>
@@ -44599,11 +44697,95 @@
     <routestep step="6" x="244.138" y="398.109467" z="87.683632"/>
     <routestep step="7" x="276.989197" y="419.90625" z="93.245155"/>
   </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_46" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="220.561874" y="381.186432" z="85.471687"/>
+    <routestep step="2" x="222.903732" y="381.177704" z="85.471687" rest_time="3000"/>
+    <routestep step="3" x="216.770584" y="381.11557" z="85.471687" rest_time="3000"/>
+    <routestep step="4" x="220.374161" y="381.170685" z="85.371689"/>
+    <routestep step="5" x="220.50853" y="378.646942" z="85.471687" rest_time="3000"/>
+    <routestep step="6" x="220.342392" y="384.249146" z="85.471687" rest_time="3000"/>
+    <routestep step="7" x="220.426575" y="381.236145" z="85.471687"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_5" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="294.052094" y="291.29657" z="91.129356"/>
+    <routestep step="2" x="291.54425" y="292.674835" z="91.129356" rest_time="3000"/>
+    <routestep step="3" x="290.512451" y="295.601898" z="91.129356"/>
+    <routestep step="4" x="291.691193" y="297.956543" z="91.129356"/>
+    <routestep step="5" x="294.050903" y="298.909271" z="91.129356"/>
+    <routestep step="6" x="296.209076" y="297.860413" z="91.129356" rest_time="3000"/>
+    <routestep step="7" x="297.46637" y="296.041901" z="91.129356"/>
+    <routestep step="8" x="297.398895" y="293.934692" z="91.129356"/>
+    <routestep step="9" x="296.457397" y="292.043823" z="91.129356"/>
+    <routestep step="10" x="294.7388" y="291.26535" z="91.129356"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_50" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="312.876526" y="274.566589" z="91.717659" rest_time="3000"/>
+    <routestep step="2" x="314.014618" y="273.046021" z="91.717659" rest_time="3000"/>
+    <routestep step="3" x="312.917755" y="274.468964" z="91.717659" rest_time="3000"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_51" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="293.365906" y="263.531799" z="91.175514"/>
+    <routestep step="2" x="290.953796" y="263.593964" z="91.175514"/>
+    <routestep step="3" x="289.062531" y="263.688232" z="91.175507" rest_time="3000"/>
+    <routestep step="4" x="290.978607" y="263.587494" z="91.175514"/>
+    <routestep step="5" x="295.70108" y="263.375519" z="91.175499" rest_time="3000"/>
+    <routestep step="6" x="293.778931" y="263.496277" z="91.175514"/>
+  </walker_template>
   <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_54" pool="1"><!-- IDEvent_Solo -->
     <routestep step="1" x="223.929352" y="340.383514" z="144.264923" rest_time="1000"/>
     <routestep step="2" x="227.261307" y="331.891418" z="144.264923"/>
     <routestep step="3" x="237.956802" y="331.968536" z="144.264923"/>
     <routestep step="4" x="243.836472" y="331.967743" z="144.264923"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_6" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="314.4552" y="297.453918" z="91.175514"/>
+    <routestep step="2" x="312.043121" y="297.38974" z="91.175514"/>
+    <routestep step="3" x="309.051758" y="297.362793" z="91.175514" rest_time="3000"/>
+    <routestep step="4" x="312.068237" y="297.384613" z="91.175514"/>
+    <routestep step="5" x="321.213806" y="297.489624" z="91.175514" rest_time="2000"/>
+    <routestep step="6" x="314.869537" y="297.440063" z="91.175514"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_60" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="305.904205" y="258.100006" z="91.175514"/>
+    <routestep step="2" x="303.492126" y="258.035828" z="91.175514"/>
+    <routestep step="3" x="300.500763" y="258.008881" z="91.175514" rest_time="3000"/>
+    <routestep step="4" x="303.517242" y="258.030701" z="91.175514"/>
+    <routestep step="5" x="312.662811" y="258.135712" z="91.175514" rest_time="2000"/>
+    <routestep step="6" x="306.318542" y="258.086151" z="91.175514"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_61" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="306.4646" y="267.09494" z="91.175514"/>
+    <routestep step="2" x="308.876678" y="267.159119" z="91.175514"/>
+    <routestep step="3" x="311.868042" y="267.186066" z="91.175514" rest_time="3000"/>
+    <routestep step="4" x="308.851563" y="267.164246" z="91.175514"/>
+    <routestep step="5" x="299.705994" y="267.059235" z="91.175514" rest_time="2000"/>
+    <routestep step="6" x="306.050262" y="267.108795" z="91.175514"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_62" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="308.031006" y="284.434113" z="91.175514"/>
+    <routestep step="2" x="305.618927" y="284.369934" z="91.175514"/>
+    <routestep step="3" x="300.82663" y="284.371613" z="91.175514" rest_time="3000"/>
+    <routestep step="4" x="305.644043" y="284.364807" z="91.175514"/>
+    <routestep step="5" x="314.789612" y="284.469818" z="91.175514" rest_time="2000"/>
+    <routestep step="6" x="308.445343" y="284.420258" z="91.175514"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_63" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="307.900787" y="292.05661" z="91.175514"/>
+    <routestep step="2" x="310.312866" y="292.120789" z="91.175514"/>
+    <routestep step="3" x="313.30423" y="292.147736" z="91.175514" rest_time="3000"/>
+    <routestep step="4" x="310.28775" y="292.125916" z="91.175514"/>
+    <routestep step="5" x="302.633728" y="292.098907" z="91.175514" rest_time="2000"/>
+    <routestep step="6" x="307.48645" y="292.070465" z="91.175514"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_64" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="330.363007" y="276.628113" z="91.175514"/>
+    <routestep step="2" x="330.342957" y="274.215271" z="91.175514"/>
+    <routestep step="3" x="330.265503" y="271.224792" z="91.175514" rest_time="3000"/>
+    <routestep step="4" x="330.348969" y="274.240204" z="91.175514"/>
+    <routestep step="5" x="330.518829" y="282.114899" z="91.075531"/>
+    <routestep step="6" x="339.728516" y="287.299866" z="91.175522" rest_time="2000"/>
+    <routestep step="7" x="330.592896" y="282.174133" z="91.075523"/>
+    <routestep step="8" x="330.391327" y="277.041718" z="91.175514"/>
   </walker_template>
   <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_66" pool="1"><!-- IDEvent_Solo -->
     <routestep step="1" x="322.994385" y="401.294769" z="92.293327"/>
@@ -44621,6 +44803,11 @@
     <routestep step="5" x="326.945953" y="387.948395" z="92.293327"/>
     <routestep step="6" x="322.428131" y="399.226166" z="92.293327"/>
   </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_73" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="341.556" y="281.771637" z="91.717659" rest_time="3000"/>
+    <routestep step="2" x="336.68396" y="280.177429" z="91.717659" rest_time="3000"/>
+    <routestep step="3" x="338.78476" y="280.86911" z="91.717659" rest_time="3000"/>
+  </walker_template>
   <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_74" pool="1"><!-- IDEvent_Solo -->
     <routestep step="1" x="223.745224" y="298.479553" z="144.264923" rest_time="1000"/>
     <routestep step="2" x="226.591446" y="307.168213" z="144.264923"/>
@@ -44632,6 +44819,59 @@
     <routestep step="2" x="220.641998" y="307.184387" z="144.264923"/>
     <routestep step="3" x="207.962006" y="307.522522" z="144.264923"/>
     <routestep step="4" x="204.05722" y="307.509949" z="144.264923"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_mob_9" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="362.120453" y="335.548065" z="89.047333"/>
+    <routestep step="2" x="359.714417" y="335.586731" z="89.047333"/>
+    <routestep step="3" x="356.078308" y="335.543732" z="89.047333"/>
+    <routestep step="4" x="355.669281" y="338.291779" z="89.047333"/>
+    <routestep step="5" x="358.159393" y="338.277405" z="89.047333"/>
+    <routestep step="6" x="361.496765" y="338.243835" z="89.047333"/>
+    <routestep step="7" x="364.803131" y="338.125214" z="89.047333"/>
+    <routestep step="8" x="369.539795" y="333.057983" z="89.047333"/>
+    <routestep step="9" x="367.549072" y="331.131989" z="89.047333"/>
+    <routestep step="10" x="366.253601" y="332.615723" z="89.047333"/>
+    <routestep step="11" x="363.089722" y="335.739624" z="89.047333"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidevent_solo_world_5.1" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="223.875" y="186.125" z="139.100006"/>
+    <routestep step="2" x="220.875" y="186.25" z="139.100006" rest_time="3000"/>
+    <routestep step="3" x="227.625" y="186.125" z="139.100006" rest_time="3000"/>
+    <routestep step="4" x="224.25" y="186.125" z="139.100006"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidnovice_mob_51" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="222.39769" y="235.520477" z="88.80201"/>
+    <routestep step="2" x="226.431091" y="236.331558" z="88.80201"/>
+    <routestep step="3" x="231.598831" y="235.843307" z="88.80201"/>
+    <routestep step="4" x="234.984192" y="234.658142" z="88.80201" rest_time="3000"/>
+    <routestep step="5" x="231.592453" y="235.909439" z="88.80201"/>
+    <routestep step="6" x="226.608475" y="236.30809" z="88.80201"/>
+    <routestep step="7" x="222.379303" y="235.586472" z="88.80201"/>
+    <routestep step="8" x="214.458771" y="233.496597" z="88.80201"/>
+    <routestep step="9" x="211.404648" y="232.255753" z="88.80201" rest_time="3000"/>
+    <routestep step="10" x="214.281662" y="233.421783" z="88.80201"/>
+    <routestep step="11" x="217.041534" y="234.257172" z="88.80201"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathidnovice_mob_52" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="325.816864" y="254.053116" z="91.448952"/>
+    <routestep step="2" x="326.888397" y="256.738464" z="91.448952"/>
+    <routestep step="3" x="328.485657" y="259.591034" z="91.448952" rest_time="3000"/>
+    <routestep step="4" x="326.968201" y="256.678101" z="91.451027"/>
+    <routestep step="5" x="325.783295" y="253.929199" z="91.448952"/>
+    <routestep step="6" x="325.770325" y="248.125397" z="91.348953" rest_time="2000"/>
+    <routestep step="7" x="325.770172" y="250.19603" z="91.448952"/>
+  </walker_template>
+  <walker_template route_id="retail:302330000:npcpathmain1" pool="1"><!-- IDEvent_Solo -->
+    <routestep step="1" x="229.409805" y="191.0289" z="87.784843"/>
+    <routestep step="2" x="225.283112" y="190.880783" z="87.783836"/>
+    <routestep step="3" x="220.060196" y="190.91626" z="87.784081"/>
+    <routestep step="4" x="214.075043" y="193.088898" z="87.787407" rest_time="3000"/>
+    <routestep step="5" x="220.105484" y="190.980301" z="87.784508"/>
+    <routestep step="6" x="225.308701" y="191.037216" z="87.784897"/>
+    <routestep step="7" x="229.53392" y="191.04541" z="87.684845"/>
+    <routestep step="8" x="232.365265" y="192.674149" z="87.789932"/>
+    <routestep step="9" x="235.016113" y="194.582428" z="87.794868" rest_time="3000"/>
+    <routestep step="10" x="230.040497" y="191.236938" z="87.787704"/>
   </walker_template>
   <walker_template route_id="retail:302340000:npcpath1st_direction_npc01" pool="1"><!-- IDAb1_Ere -->
     <routestep step="1" x="1117.8457" y="728.102173" z="397.129639"/>

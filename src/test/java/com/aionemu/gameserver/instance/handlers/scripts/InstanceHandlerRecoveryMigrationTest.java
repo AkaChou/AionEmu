@@ -49,6 +49,7 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertNoFuture("TwilightBattlefieldStoreroomInstance");
 		assertNoFuture("TalocsHollowInstance");
 		assertNoFuture("BeshmundirTempleInstance");
+		assertNoFuture("KumukiCaveInstance");
 	}
 
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {
