@@ -2,7 +2,7 @@ package com.aionemu.gameserver.ai.portals;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.model.autogroup.AutoGroupType;
+import com.aionemu.gameserver.model.autogroup.MatchDefinition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
@@ -45,7 +45,7 @@ public class Panesterra_CommandersAI2 extends GeneralNpcAI2
 			switch (getNpcId()) {
 			    case 730940: //Advance Corridor For Commanders
 			    case 730941: //Advance Corridor For Commanders
-				    AutoGroupType agt = AutoGroupType.getAutoGroup(player.getLevel(), getNpcId());
+				    MatchDefinition agt = MatchDefinition.forNpc(player.getLevel(), getNpcId());
 					if (agt != null) {
 					    PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(0x1A, agt.getInstanceMapId()));
 					}

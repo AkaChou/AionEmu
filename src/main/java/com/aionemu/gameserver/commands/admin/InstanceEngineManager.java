@@ -11,14 +11,13 @@ import java.util.concurrent.CountDownLatch;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
- * 管理员副本引擎管理命令：加载/关闭/重启 InstanceEngine，或开启 HOT/Kamar 报名。
- * Admin instance-engine manager: load/stop/restart InstanceEngine, or start HOT/Kamar registration.
+ * 管理员副本引擎管理命令：加载/关闭/重启 InstanceEngine，或开启 Kamar 报名。
+ * Admin instance-engine manager: load/stop/restart InstanceEngine, or start Kamar registration.
  */
 public class InstanceEngineManager extends AdminCommand {
 
@@ -26,7 +25,6 @@ public class InstanceEngineManager extends AdminCommand {
 	private static final String COMMAND_STOP = "stop";
 	private static final String COMMAND_RESTART = "restart";
 
-	private static final String COMMAND_STARTHOT = "hot";
 	private static final String COMMAND_STARTKAR = "karma";
 
 	public InstanceEngineManager() {
@@ -34,8 +32,8 @@ public class InstanceEngineManager extends AdminCommand {
 	}
 
 	/**
-	 * 处理 start/stop/restart/hot/karma 子命令。
-	 * Handle start/stop/restart/hot/karma subcommands.
+	 * 处理 start/stop/restart/karma 子命令。
+	 * Handle start/stop/restart/karma subcommands.
 	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 * Subcommand
@@ -48,7 +46,7 @@ public class InstanceEngineManager extends AdminCommand {
 			showHelp(player);
 			return;
 		}
-		if (COMMAND_STOP.equalsIgnoreCase(params[0]) || COMMAND_START.equalsIgnoreCase(params[0]) || COMMAND_RESTART.equalsIgnoreCase(params[0]) || COMMAND_STARTHOT.equalsIgnoreCase(params[0]) || COMMAND_STARTKAR.equalsIgnoreCase(params[0])) {
+		if (COMMAND_STOP.equalsIgnoreCase(params[0]) || COMMAND_START.equalsIgnoreCase(params[0]) || COMMAND_RESTART.equalsIgnoreCase(params[0]) || COMMAND_STARTKAR.equalsIgnoreCase(params[0])) {
 			if (COMMAND_START.equalsIgnoreCase(params[0])) {
 				GameEngineServices.instanceEngine().load(progressLatch);
 				PacketSendUtility.sendMessage(player, "InstanceEngine loaded successfully!");
@@ -66,9 +64,6 @@ public class InstanceEngineManager extends AdminCommand {
 						PacketSendUtility.sendMessage(player, "InstanceEngine reloaded successfully!");
 					}
 				}, 5000);
-			}
-			if (COMMAND_STARTHOT.equalsIgnoreCase(params[0])) {
-				GameBattlefieldServices.hallOfTenacityService().startHallOfTenacityRegistration();
 			}
 			if (COMMAND_STARTKAR.equalsIgnoreCase(params[0])) {
 				GameBattlefieldServices.kamarBattlefieldService().startKamarRegistration();

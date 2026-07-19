@@ -1,47 +1,27 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
-
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
-import com.aionemu.gameserver.services.FindGroupService;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/**
- * 查找队伍/申请组队相关操作的客户端包。
- * Client packet for find-group recruit and apply operations.
- *
- * @author cura, MrPoke
- */
-@Slf4j
+/** 5.8 查找队伍与跨服副本队伍客户端协议。 */
 public class CM_FIND_GROUP extends AionClientPacket {
-
-
 	private int action;
-	private int playerObjId;
+	private int playerOrTeamId;
+	private int bannedPlayerId;
 	private String message;
 	private int groupType;
-	@SuppressWarnings("unused")
 	private int classId;
-	@SuppressWarnings("unused")
 	private int level;
-	private int unk;
-	private int instanceId;
+	private byte serverId;
+	private byte unk1;
+	private byte unk2;
+	private byte unk3;
+	private int instanceMaskId;
 	private int minMembers;
+	private byte applicationReply;
 
-	/**
-	 * 构造客户端包实例。
-	 * Constructs a new client packet instance.
-	 *
-	 * packet opcode
-	 * @param state 连接状态 / connection state
-	 * @param restStates 其余允许状态 / additional allowed states
-	 */
 	public CM_FIND_GROUP(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -49,82 +29,80 @@ public class CM_FIND_GROUP extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		action = readC();
-
 		switch (action) {
-		case 0x00: // recruit list
-			break;
-		case 0x01: // offer delete
-			playerObjId = readD();
-			unk = readD(); // unk(65557)
-			break;
-		case 0x02: // send offer
-			playerObjId = readD();
-			message = readS();
-			groupType = readC();
-			break;
-		case 0x03: // recruit update
-			playerObjId = readD();
-			unk = readD(); // unk(65557)
-			message = readS();
-			groupType = readC();
-			break;
-		case 0x04: // apply list
-			break;
-		case 0x05: // post delete
-			playerObjId = readD();
-			break;
-		case 0x06: // apply create
-		case 0x07: // apply update
-			playerObjId = readD();
-			message = readS();
-			groupType = readC();
-			classId = readC();
-			level = readC();
-			break;
-		case 0x08: // register InstanceGroup
-			instanceId = readD();
-			groupType = readC();// need to be tested
-			message = readS();// text
-			minMembers = readC();// minMembers chosen by writer
-			break;
-		case 0x0A:
-			break;
-		default:
-			// log.error(I18n.get("log.8239177b4631", // Integer.toHexString(action).toUpperCase()));
-			break;
+			case 0x00, 0x04, 0x0A, 0x0D, 0x14 -> { }
+			case 0x01, 0x03 -> {
+				playerOrTeamId = readD();
+				serverId = (byte) readC();
+				unk1 = (byte) readC();
+				unk2 = (byte) readC();
+				unk3 = (byte) readC();
+				if (action == 0x03) {
+					message = readS();
+					groupType = readC();
+				}
+			}
+			case 0x02 -> {
+				playerOrTeamId = readD();
+				message = readS();
+				groupType = readC();
+			}
+			case 0x05 -> playerOrTeamId = readD();
+			case 0x06, 0x07 -> {
+				playerOrTeamId = readD();
+				message = readS();
+				groupType = readC();
+				classId = readC();
+				level = readC();
+			}
+			case 0x08 -> {
+				instanceMaskId = readD();
+				readC();
+				message = readS();
+				minMembers = readC();
+			}
+			case 0x09, 0x0B, 0x0F -> {
+				playerOrTeamId = readD();
+				instanceMaskId = readD();
+			}
+			case 0x0C -> {
+				playerOrTeamId = readD();
+				applicationReply = (byte) readC();
+			}
+			case 0x11 -> {
+				playerOrTeamId = readD();
+				instanceMaskId = readD();
+				message = readS();
+			}
+			case 0x19 -> {
+				playerOrTeamId = readD();
+				instanceMaskId = readD();
+				bannedPlayerId = readD();
+			}
+			default -> { }
 		}
 	}
 
 	@Override
 	protected void runImpl() {
-		final Player player = this.getConnection().getActivePlayer();
+		Player player = getConnection().getActivePlayer();
+		var service = GameRuntimeServices.findGroupService();
 		switch (action) {
-		case 0x00:
-		case 0x04:
-			GameRuntimeServices.findGroupService().sendFindGroups(player, action);
-			break;
-		case 0x01:
-		case 0x05:
-			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), action - 1, playerObjId);
-			break;
-		case 0x02:
-		case 0x06:
-			GameRuntimeServices.findGroupService().addFindGroupList(player, action, message, groupType);
-			break;
-		case 0x03:
-		case 0x07:
-			GameRuntimeServices.findGroupService().updateFindGroupList(player, action, message, playerObjId);
-			break;
-		case 0x08:
-			GameRuntimeServices.findGroupService().registerInstanceGroup(player, 0x0E, instanceId, message, minMembers,
-					groupType);
-			break;
-		case 0x0A:
-			GameRuntimeServices.findGroupService().sendFindGroups(player, action);
-			break;
-		default:
-			PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(action, playerObjId, unk));
-			break;
+			case 0x00, 0x04 -> service.sendFindGroups(player, action);
+			case 0x01, 0x05 -> service.removeFindGroup(player.getRace(), action - 1, playerOrTeamId);
+			case 0x02, 0x06 -> service.addFindGroupList(player, action, message, groupType);
+			case 0x03, 0x07 -> service.updateFindGroupList(player, action, message, playerOrTeamId);
+			case 0x08 -> service.registerInstanceGroup(player, 0x0E, instanceMaskId, message, minMembers, groupType);
+			case 0x09 -> service.removeInstanceGroup(player);
+			case 0x0A -> service.sendFindGroups(player, action);
+			case 0x0B -> service.applyToInstanceGroup(player, playerOrTeamId, instanceMaskId);
+			case 0x0C -> service.replyInstanceGroupApplication(player, playerOrTeamId, applicationReply);
+			case 0x0D -> service.quickApply(player);
+			case 0x0F -> service.sendInstanceGroupMembers(player, playerOrTeamId, instanceMaskId);
+			case 0x11 -> service.updateInstanceGroup(player, message);
+			case 0x14 -> service.enterTeamMatch(player);
+			case 0x19 -> service.banInstanceGroupMember(player, playerOrTeamId, instanceMaskId, bannedPlayerId);
+			default -> { }
 		}
 	}
 }

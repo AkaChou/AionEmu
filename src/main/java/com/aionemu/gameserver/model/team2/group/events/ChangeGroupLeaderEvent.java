@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.model.team2.group.events;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.common.events.ChangeLeaderEvent;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
@@ -34,6 +35,7 @@ public class ChangeGroupLeaderEvent extends ChangeLeaderEvent<PlayerGroup> {
 			changeLeaderTo(eventPlayer);
 		}
 		checkLeaderChanged(oldLeader);
+		GameRuntimeServices.findGroupService().onTeamChanged(team);
 	}
 
 	@Override

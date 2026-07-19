@@ -2,33 +2,36 @@ package com.aionemu.gameserver.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.autogroup.AutoGroupType;
+import com.aionemu.gameserver.model.autogroup.EntryRequestType;
+import com.aionemu.gameserver.model.autogroup.MatchDefinition;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.FindGroup;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
+import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceService;
 import com.aionemu.gameserver.model.team2.alliance.callback.AddPlayerToAllianceCallback;
 import com.aionemu.gameserver.model.team2.alliance.callback.PlayerAllianceCreateCallback;
 import com.aionemu.gameserver.model.team2.alliance.callback.PlayerAllianceDisbandCallback;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
+import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.model.team2.group.callback.AddPlayerToGroupCallback;
 import com.aionemu.gameserver.model.team2.group.callback.PlayerGroupCreateCallback;
 import com.aionemu.gameserver.model.team2.group.callback.PlayerGroupDisbandCallback;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * 寻找队伍服务：维护天族/魔族的招募与申请列表，并在组队/联盟变更时自动清理过期条目。
@@ -40,13 +43,16 @@ public class FindGroupService {
 
 	private static volatile ObjectProvider<FindGroupService> instanceProvider;
 	/** 天族招募列表。 / Elyos recruit listings. */
-	private Map<Integer, FindGroup> elyosRecruitFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private Map<Integer, FindGroup> elyosRecruitFindGroups = new ConcurrentHashMap<Integer, FindGroup>();
 	/** 天族申请列表。 / Elyos apply listings. */
-	private Map<Integer, FindGroup> elyosApplyFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private Map<Integer, FindGroup> elyosApplyFindGroups = new ConcurrentHashMap<Integer, FindGroup>();
 	/** 魔族招募列表。 / Asmodian recruit listings. */
-	private Map<Integer, FindGroup> asmodianRecruitFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private Map<Integer, FindGroup> asmodianRecruitFindGroups = new ConcurrentHashMap<Integer, FindGroup>();
 	/** 魔族申请列表。 / Asmodian apply listings. */
-	private Map<Integer, FindGroup> asmodianApplyFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private Map<Integer, FindGroup> asmodianApplyFindGroups = new ConcurrentHashMap<Integer, FindGroup>();
+	private final Map<Integer, FindGroup> instanceGroups = new ConcurrentHashMap<>();
+	private final Map<Integer, Integer> instanceApplications = new ConcurrentHashMap<>();
+	private final Set<Integer> queuedInstanceGroups = ConcurrentHashMap.newKeySet();
 
 	/**
 	 * 注册组队/联盟变更回调，用于自动维护寻找队伍列表。
@@ -154,7 +160,7 @@ public class FindGroupService {
 			case 0x04:
 				return new ArrayList<FindGroup>(elyosApplyFindGroups.values());
 			case 0xA:
-				return Collections.emptyList();
+				return instanceGroups.values().stream().filter(group -> group.getRace() == race).toList();
 			}
 			break;
 		case ASMODIANS:
@@ -164,7 +170,7 @@ public class FindGroupService {
 			case 0x04:
 				return new ArrayList<FindGroup>(asmodianApplyFindGroups.values());
 			case 0xA:
-				return Collections.emptyList();
+				return instanceGroups.values().stream().filter(group -> group.getRace() == race).toList();
 			}
 			break;
 		}
@@ -184,10 +190,24 @@ public class FindGroupService {
 	 */
 	public void registerInstanceGroup(Player player, int action, int instanceId, String message, int minMembers,
 			int groupType) {
-		AutoGroupType agt = AutoGroupType.getAGTByMaskId(instanceId);
-		if (agt != null) {
-			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceId, 1, 0, player.getName()));
+		MatchDefinition definition = MatchDefinition.getByMaskId(instanceId);
+		if (definition == null || !definition.isOpen() || !definition.hasRegisterGroup()
+				|| !definition.hasLevelPermit(player.getLevel())) {
+			return;
 		}
+		if (player.getCurrentTeam() != null && !player.getCurrentTeam().isLeader(player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_NOT_LEADER);
+			return;
+		}
+		int required = Math.max(definition.getMinimumPlayersPerSide(), minMembers);
+		if (required > definition.getPlayersPerSide()) {
+			return;
+		}
+		removeInstanceGroup(player.getObjectId(), true, false);
+		FindGroup group = new FindGroup(player, instanceId, required, message == null ? "" : message);
+		instanceGroups.put(player.getObjectId(), group);
+		PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(action, group));
+		queueInstanceGroup(group);
 	}
 
 	/**
@@ -200,6 +220,155 @@ public class FindGroupService {
 	public void sendFindGroups(Player player, int action) {
 		PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(action, (int) (System.currentTimeMillis() / 1000),
 				getFindGroups(player.getRace(), action)));
+	}
+
+	public void removeInstanceGroup(Player player) {
+		removeInstanceGroup(player.getObjectId(), true, true);
+	}
+
+	private void removeInstanceGroup(int entryId, boolean unregister, boolean penalty) {
+		FindGroup group = instanceGroups.remove(entryId);
+		if (group == null) {
+			return;
+		}
+		queuedInstanceGroups.remove(group.getObjectId());
+		if (unregister && GameCoreGameplayServices.autoGroupService() instanceof RetailMatchmakingService matchmaking) {
+			matchmaking.unregisterLooking(group.getRecruiter(), group.getInstanceId(), penalty);
+		}
+		instanceApplications.values().removeIf(applicationEntryId -> applicationEntryId == group.getObjectId());
+		PacketSendUtility.sendPacket(group.getRecruiter(), new SM_FIND_GROUP(0x0A,
+				(int) (System.currentTimeMillis() / 1000), getFindGroups(group.getRace(), 0x0A)));
+	}
+
+	public int instanceGroupEntryId(Player recruiter, int instanceId) {
+		FindGroup group = instanceGroups.get(recruiter.getObjectId());
+		return group != null && group.getInstanceId() == instanceId ? group.getObjectId() : 0;
+	}
+
+	public void removeMatchedInstanceGroups(Collection<Integer> entryIds) {
+		for (int entryId : entryIds) {
+			removeInstanceGroup(entryId, false, false);
+		}
+	}
+
+	public void applyToInstanceGroup(Player applicant, int entryId, int instanceId) {
+		FindGroup group = instanceGroups.get(entryId);
+		if (group == null || group.getInstanceId() != instanceId || group.getRace() != applicant.getRace()
+				|| group.isBanned(applicant.getObjectId()) || group.isLeader(applicant)) {
+			return;
+		}
+		instanceApplications.put(applicant.getObjectId(), entryId);
+		PacketSendUtility.sendPacket(group.getRecruiter(), new SM_FIND_GROUP(applicant));
+	}
+
+	public void replyInstanceGroupApplication(Player responder, int applicantId, byte reply) {
+		Integer entryId = instanceApplications.remove(applicantId);
+		FindGroup group = entryId == null ? null : instanceGroups.get(entryId);
+		Player applicant = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(applicantId);
+		if (group == null || applicant == null || group.getRecruiter() != responder) {
+			return;
+		}
+		if (reply != 1 || group.isBanned(applicantId)) {
+			PacketSendUtility.sendPacket(applicant, new SM_SYSTEM_MESSAGE(1400217));
+			return;
+		}
+		if (group.getMinMembers() <= 6) {
+			PlayerGroupService.inviteToGroup(responder, applicant);
+		} else {
+			PlayerAllianceService.inviteToAlliance(responder, applicant);
+		}
+	}
+
+	public void quickApply(Player player) {
+		FindGroup group = instanceGroups.values().stream()
+				.filter(entry -> entry.getRace() == player.getRace() && !entry.isLeader(player)
+						&& !entry.isBanned(player.getObjectId()))
+				.sorted(java.util.Comparator.comparingInt(FindGroup::getLastUpdate)).findFirst().orElse(null);
+		if (group != null) {
+			applyToInstanceGroup(player, group.getObjectId(), group.getInstanceId());
+		}
+		sendFindGroups(player, 0x0A);
+	}
+
+	public void sendInstanceGroupMembers(Player player, int entryId, int instanceId) {
+		FindGroup group = instanceGroups.get(entryId);
+		if (group != null && group.getInstanceId() == instanceId) {
+			PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(0x10, group));
+		}
+	}
+
+	public void updateInstanceGroup(Player player, String message) {
+		FindGroup group = instanceGroups.get(player.getObjectId());
+		if (group != null) {
+			group.setMessage(message == null ? "" : message);
+			PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(0x0A,
+					(int) (System.currentTimeMillis() / 1000), getFindGroups(player.getRace(), 0x0A)));
+		}
+	}
+
+	public void enterTeamMatch(Player player) {
+		if (GameCoreGameplayServices.autoGroupService() instanceof RetailMatchmakingService matchmaking) {
+			matchmaking.pressEnterTeamMatch(player);
+		}
+	}
+
+	public void banInstanceGroupMember(Player player, int entryId, int instanceId, int bannedPlayerId) {
+		FindGroup group = instanceGroups.get(entryId);
+		if (group != null && group.getInstanceId() == instanceId && group.getRecruiter() == player) {
+			group.ban(bannedPlayerId);
+			instanceApplications.remove(bannedPlayerId, entryId);
+		}
+	}
+
+	public void onTeamChanged(TemporaryPlayerTeam<?> team) {
+		if (team == null || team.getLeaderObject() == null) {
+			return;
+		}
+		if (GameCoreGameplayServices.autoGroupService() instanceof RetailMatchmakingService matchmaking) {
+			matchmaking.onTeamChanged(team);
+		}
+		for (FindGroup group : new ArrayList<>(instanceGroups.values())) {
+			if (group.getTeamId() != team.getTeamId() && group.getRecruiter() != team.getLeaderObject()) {
+				continue;
+			}
+			Player oldRecruiter = group.getRecruiter();
+			int oldEntryId = group.getObjectId();
+			boolean queued = queuedInstanceGroups.remove(oldEntryId);
+			if (queued && GameCoreGameplayServices.autoGroupService() instanceof RetailMatchmakingService matchmaking) {
+				matchmaking.refreshLooking(oldRecruiter, group.getInstanceId());
+			}
+			group.setRecruiter(team.getLeaderObject());
+			if (oldEntryId != group.getObjectId()) {
+				instanceGroups.remove(oldEntryId, group);
+				instanceGroups.put(group.getObjectId(), group);
+				instanceApplications.replaceAll((playerId, entryId) -> entryId == oldEntryId ? group.getObjectId() : entryId);
+			}
+			PacketSendUtility.sendPacket(group.getRecruiter(), new SM_FIND_GROUP(0x0E, group));
+			queueInstanceGroup(group);
+		}
+	}
+
+	private void queueInstanceGroup(FindGroup group) {
+		if (group.getSize() < group.getMinMembers() || !queuedInstanceGroups.add(group.getObjectId())) {
+			return;
+		}
+		GameCoreGameplayServices.autoGroupService().startLooking(group.getRecruiter(), group.getInstanceId(),
+				EntryRequestType.GROUP_ENTRY);
+	}
+
+	public void onLogout(Player player) {
+		removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+		removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+		removeInstanceGroup(player.getObjectId(), true, false);
+		instanceApplications.remove(player.getObjectId());
+	}
+
+	private void removeInstanceGroups(Collection<Player> members) {
+		for (Player member : members) {
+			if (instanceGroups.containsKey(member.getObjectId())) {
+				removeInstanceGroup(member);
+			}
+		}
 	}
 
 	/**
@@ -256,6 +425,14 @@ public class FindGroupService {
 		cleanMap(elyosApplyFindGroups, Race.ELYOS, 0x04);
 		cleanMap(asmodianRecruitFindGroups, Race.ASMODIANS, 0x00);
 		cleanMap(asmodianApplyFindGroups, Race.ASMODIANS, 0x04);
+		long now = System.currentTimeMillis() / 1000;
+		for (FindGroup group : new ArrayList<>(instanceGroups.values())) {
+			MatchDefinition definition = MatchDefinition.getByMaskId(group.getInstanceId());
+			long lifetime = definition == null ? 0 : definition.getTime() / 1000L;
+			if (lifetime > 0 && group.getLastUpdate() + lifetime <= now) {
+				removeInstanceGroup(group.getObjectId(), true, false);
+			}
+		}
 	}
 
 	/**
@@ -318,6 +495,7 @@ public class FindGroupService {
 
 		@Override
 		public void onAfterPlayerAddToGroup(PlayerGroup group, Player player) {
+			GameRuntimeServices.findGroupService().onTeamChanged(group);
 			if (group.isFull()) {
 				GameRuntimeServices.findGroupService().removeFindGroup(group.getRace(), 0, group.getObjectId());
 			}
@@ -332,6 +510,7 @@ public class FindGroupService {
 
 		@Override
 		public void onBeforeGroupDisband(PlayerGroup group) {
+			GameRuntimeServices.findGroupService().removeInstanceGroups(group.getMembers());
 			GameRuntimeServices.findGroupService().removeFindGroup(group.getRace(), 0, group.getTeamId());
 		}
 
@@ -362,6 +541,7 @@ public class FindGroupService {
 				GameRuntimeServices.findGroupService().addFindGroupList(player, 0x02, inviterFindGroup.getMessage(),
 						inviterFindGroup.getGroupType());
 			}
+			GameRuntimeServices.findGroupService().onTeamChanged(player.getCurrentTeam());
 		}
 	}
 
@@ -373,6 +553,7 @@ public class FindGroupService {
 
 		@Override
 		public void onBeforeAllianceDisband(PlayerAlliance alliance) {
+			GameRuntimeServices.findGroupService().removeInstanceGroups(alliance.getMembers());
 			GameRuntimeServices.findGroupService().removeFindGroup(alliance.getRace(), 0, alliance.getTeamId());
 		}
 
@@ -403,6 +584,7 @@ public class FindGroupService {
 				GameRuntimeServices.findGroupService().addFindGroupList(player, 0x02, inviterFindGroup.getMessage(),
 						inviterFindGroup.getGroupType());
 			}
+			GameRuntimeServices.findGroupService().onTeamChanged(player.getCurrentTeam());
 		}
 	}
 
@@ -420,6 +602,7 @@ public class FindGroupService {
 
 		@Override
 		public void onAfterPlayerAddToAlliance(PlayerAlliance alliance, Player player) {
+			GameRuntimeServices.findGroupService().onTeamChanged(alliance);
 			if (alliance.isFull()) {
 				GameRuntimeServices.findGroupService().removeFindGroup(alliance.getRace(), 0, alliance.getObjectId());
 			}

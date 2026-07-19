@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.ai.portals;
 
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.model.autogroup.AutoGroupType;
+import com.aionemu.gameserver.model.autogroup.MatchDefinition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
@@ -34,7 +34,7 @@ public class ArenaPortalAI2 extends PortalDialogAI2
 				worldId = 300570000;
 			break;
 		}
-		AutoGroupType agt = AutoGroupType.getAutoGroupByWorld(player.getLevel(), worldId);
+		MatchDefinition agt = MatchDefinition.forWorld(player.getLevel(), worldId);
 		if (agt != null) {
 			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(agt.getInstanceMaskId()));
 		}

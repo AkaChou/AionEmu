@@ -204,31 +204,6 @@ public class AutoGroupConfig {
 	public static String IDGEL_DOME_LANDMARK_SCHEDULE_MIDNIGHT;
 
 	/**
-	 * 坚韧殿堂计时器（分钟，5.3）。
-	 * Hall of Tenacity timer in minutes (5.3).
-	 */
-	@Property(key = "gameserver.hall.of.tenacity.timer", defaultValue = "360")
-	public static long HALL_OF_TENACITY_TIMER;
-	/**
-	 * 是否启用坚韧殿堂。
-	 * Whether Hall of Tenacity is enabled.
-	 */
-	@Property(key = "gameserver.hall.of.tenacity.enable", defaultValue = "true")
-	public static boolean HALL_OF_TENACITY_ENABLED;
-	/**
-	 * 坚韧殿堂上午开放 Cron。
-	 * Hall of Tenacity morning open Cron schedule.
-	 */
-	@Property(key = "gameserver.hall.of.tenacity.schedule.morning", defaultValue = "0 0 9 ? * SAT,SUN *")
-	public static String HALL_OF_TENACITY_SCHEDULE_MORNING;
-	/**
-	 * 坚韧殿堂晚间开放 Cron。
-	 * Hall of Tenacity evening open Cron schedule.
-	 */
-	@Property(key = "gameserver.hall.of.tenacity.schedule.evening", defaultValue = "0 0 18 ? * MON,WED,TUE,THU,FRI, *")
-	public static String HALL_OF_TENACITY_SCHEDULE_EVENING;
-
-	/**
 	 * 大竞技场训练营计时器（分钟，5.6）。
 	 * Grand Arena Training Camp timer in minutes (5.6).
 	 */

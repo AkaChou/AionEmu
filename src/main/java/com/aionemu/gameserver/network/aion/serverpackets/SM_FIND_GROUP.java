@@ -1,185 +1,271 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
+import java.util.List;
 
+import com.aionemu.gameserver.configs.network.NetworkConfig;
+import com.aionemu.gameserver.model.autogroup.RetailMatchSession;
 import com.aionemu.gameserver.model.gameobjects.FindGroup;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
-/**
- * 寻找队伍/实例组列表包：按动作类型同步招募条目的增删改查。
- * instance-group list packet: CRUD of recruitment entries by action type.
- *
- * @author cura, MrPoke
- */
+/** 5.8 查找队伍与跨服副本队伍协议。 */
 public class SM_FIND_GROUP extends AionServerPacket {
-
-	private int action;
+	private final int action;
 	private int lastUpdate;
-	private Collection<FindGroup> findGroups;
-	private int groupSize;
 	private int unk;
-	private int instanceId;
+	private Collection<FindGroup> findGroups = List.of();
+	private Player applicant;
+	private boolean showEnterMessage;
+	private List<Integer> instanceMaskIds = List.of();
+	private int instanceGroupEntryId;
+	private int instanceMaskId;
+	private List<RetailMatchSession.Member> matchMembers = List.of();
 
-	/**
-	 * 列表类动作：写入招募条目集合。
-	 * List-style action: writes a collection of recruitment entries.
-	 */
 	public SM_FIND_GROUP(int action, int lastUpdate, Collection<FindGroup> findGroups) {
-		this.lastUpdate = lastUpdate;
 		this.action = action;
-		this.findGroups = findGroups;
-		this.groupSize = findGroups.size();
+		this.lastUpdate = lastUpdate;
+		this.findGroups = findGroups == null ? List.of() : findGroups;
 	}
 
-	/**
-	 * 单条更新/删除类动作。
-	 * Single-entry update/delete style action.
-	 */
 	public SM_FIND_GROUP(int action, int lastUpdate, int unk) {
 		this.action = action;
 		this.lastUpdate = lastUpdate;
 		this.unk = unk;
 	}
 
-	/**
-	 * 实例相关动作。
-	 * Instance-related action.
-	 */
-	public SM_FIND_GROUP(int action, int instanceId) {
+	public SM_FIND_GROUP(int action, int instanceMaskId) {
 		this.action = action;
-		this.instanceId = instanceId;
+		this.instanceMaskIds = List.of(instanceMaskId);
+	}
+
+	public SM_FIND_GROUP(Player applicant) {
+		this.action = 0x0B;
+		this.applicant = applicant;
+	}
+
+	public SM_FIND_GROUP(int action, FindGroup group) {
+		this(action, (int) (System.currentTimeMillis() / 1000), List.of(group));
+	}
+
+	public SM_FIND_GROUP(int action, FindGroup group, boolean showEnterMessage) {
+		this(action, group);
+		this.showEnterMessage = showEnterMessage;
+	}
+
+	public SM_FIND_GROUP(int action, int instanceGroupEntryId, int instanceMaskId, boolean showEnterMessage) {
+		this.action = action;
+		this.instanceGroupEntryId = instanceGroupEntryId;
+		this.instanceMaskId = instanceMaskId;
+		this.showEnterMessage = showEnterMessage;
+	}
+
+	public SM_FIND_GROUP(int action, int instanceGroupEntryId, int instanceMaskId,
+			List<RetailMatchSession.Member> matchMembers) {
+		this(action, instanceGroupEntryId, instanceMaskId, false);
+		this.matchMembers = List.copyOf(matchMembers);
+	}
+
+	public SM_FIND_GROUP(List<Integer> instanceMaskIds) {
+		this.action = 0x1A;
+		this.instanceMaskIds = List.copyOf(instanceMaskIds);
 	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {
 		writeC(action);
 		switch (action) {
-		case 0x00:
-		case 0x02:
-			writeH(groupSize); // groupSize
-			writeH(groupSize); // groupSize
-			writeD(lastUpdate); // objId?
-			for (FindGroup findGroup : findGroups) {
-				writeD(findGroup.getObjectId()); // player object id
-				writeD(findGroup.getUnk()); // unk (0 or 65557)
-				writeC(findGroup.getGroupType()); // 0:group, 1:alliance
-				writeS(findGroup.getMessage()); // text
-				writeS(findGroup.getName()); // writer name
-				writeC(findGroup.getSize()); // members count
-				writeC(findGroup.getMinLevel()); // members // level
-				writeC(findGroup.getMaxLevel()); // members // level
-				writeD(findGroup.getLastUpdate()); // objId?
+			case 0x00, 0x02 -> writeRecruitments();
+			case 0x01, 0x03 -> writeRecruitmentRemoval();
+			case 0x04, 0x06 -> writeApplications();
+			case 0x05 -> writeD(lastUpdate);
+			case 0x0A -> writeInstanceGroups();
+			case 0x0B -> writeApplication();
+			case 0x0E -> writeRegisteredInstanceGroups();
+			case 0x10 -> writeInstanceGroupMembers();
+			case 0x12, 0x16 -> writePrepareWindow();
+			case 0x17 -> writeDestroyPrepareWindow();
+			case 0x18 -> writePrepareWindowMembers();
+			case 0x1A -> writeInstanceRegistrationOptions();
+		}
+	}
+
+	private void writeRecruitments() {
+		writeH(findGroups.size());
+		writeH(findGroups.size());
+		writeD(lastUpdate);
+		for (FindGroup group : findGroups) {
+			writeD(group.getObjectId());
+			writeC(NetworkConfig.GAMESERVER_ID);
+			writeC(0);
+			writeC(0);
+			writeC(group.getUnk() == 65557 ? 16 : 0);
+			writeC(group.getGroupType());
+			writeS(group.getMessage());
+			writeS(group.getName());
+			writeC(group.getSize());
+			writeC(group.getMinLevel());
+			writeC(group.getMaxLevel());
+			writeD(group.getLastUpdate());
+		}
+	}
+
+	private void writeRecruitmentRemoval() {
+		writeD(lastUpdate);
+		writeC(NetworkConfig.GAMESERVER_ID);
+		writeC(0);
+		writeC(0);
+		writeC(unk == 65557 ? 16 : 0);
+	}
+
+	private void writeApplications() {
+		writeH(findGroups.size());
+		writeH(findGroups.size());
+		writeD(lastUpdate);
+		for (FindGroup group : findGroups) {
+			writeD(group.getObjectId());
+			writeC(group.getGroupType());
+			writeS(group.getMessage());
+			writeS(group.getName());
+			writeC(group.getClassId());
+			writeC(group.getMinLevel());
+			writeD(group.getLastUpdate());
+		}
+	}
+
+	private void writeInstanceGroups() {
+		writeH(findGroups.size());
+		writeH(findGroups.size());
+		writeD(lastUpdate);
+		for (FindGroup group : findGroups) {
+			writeD(group.getObjectId());
+			writeD(group.getInstanceId());
+			writeD(1);
+			writeC(group.getSize());
+			writeC(group.getMinMembers());
+			writeH(0);
+			writeD(group.getObjectId());
+			writeD(1);
+			writeD(0);
+			writeC(group.getMinLevel());
+			writeC(group.getMaxLevel());
+			writeH(0);
+			writeD(group.getLastUpdate());
+			writeD(0);
+			writeS(group.getName());
+			writeS(group.getMessage());
+		}
+	}
+
+	private void writeApplication() {
+		writeD(applicant.getObjectId());
+		writeD(0);
+		writeD(0);
+		writeH(0);
+		writeC(0);
+		writeC(applicant.getPlayerClass().getClassId());
+		writeD(applicant.getLevel());
+		writeS(applicant.getName());
+	}
+
+	private void writeRegisteredInstanceGroups() {
+		writeC(1);
+		for (FindGroup group : findGroups) {
+			writeD(group.getObjectId());
+			writeD(group.getInstanceId());
+			writeD(1);
+			writeC(group.getSize());
+			writeC(group.getMinMembers());
+			writeH(0);
+			writeD(group.getObjectId());
+			writeC(1);
+			writeC(0);
+			writeD(1);
+			writeH(0);
+			writeC(group.getMinLevel());
+			writeC(group.getMaxLevel());
+			writeH(0);
+			writeD(group.getLastUpdate());
+			writeD(0);
+			writeS(group.getName());
+			writeS(group.getMessage());
+		}
+	}
+
+	private void writeInstanceGroupMembers() {
+		List<Player> members = findGroups.iterator().next().getMembers();
+		writeH(members.size());
+		writeH(members.size());
+		writeD(lastUpdate);
+		for (Player member : members) {
+			writeD(0);
+			writeD(member.getWorldId());
+			writeD(member.getObjectId());
+			writeD(member.getLevel());
+			writeD(member.getPlayerClass().getClassId());
+			writeH(1);
+			writeC(0);
+			writeC(0);
+			writeS(member.getName());
+		}
+	}
+
+	private void writePrepareWindow() {
+		if (findGroups.isEmpty()) {
+			writeD(instanceGroupEntryId);
+			writeD(instanceMaskId);
+		} else {
+			FindGroup group = findGroups.iterator().next();
+			writeD(group.getObjectId());
+			writeD(group.getInstanceId());
+		}
+	}
+
+	private void writeDestroyPrepareWindow() {
+		writePrepareWindow();
+		writeC(showEnterMessage ? 1 : 0);
+	}
+
+	private void writePrepareWindowMembers() {
+		if (!matchMembers.isEmpty()) {
+			writeD(instanceGroupEntryId);
+			writeD(instanceMaskId);
+			writeC(matchMembers.size());
+			for (RetailMatchSession.Member member : matchMembers) {
+				writeD(0);
+				writeD(0);
+				writeD(member.playerId());
+				writeD(member.level());
+				writeD(member.classId());
+				writeH(0);
+				writeC(1);
+				writeC(member.online() ? 1 : 0);
+				writeS(member.name());
 			}
-			break;
-		case 0x01:
-		case 0x03:
-			writeD(lastUpdate); // player object id
-			writeD(unk); // unk (0 or 65557)
-			break;
-		case 0x04:
-		case 0x06:
-			writeH(groupSize); // groupSize
-			writeH(groupSize); // groupSize
-			writeD(lastUpdate); // objId?
-			for (FindGroup findGroup : findGroups) {
-				writeD(findGroup.getObjectId()); // player object id
-				writeC(findGroup.getGroupType()); // 0:group, 1:alliance
-				writeS(findGroup.getMessage()); // text
-				writeS(findGroup.getName()); // writer name
-				writeC(findGroup.getClassId()); // player class id
-				writeC(findGroup.getMinLevel()); // player level
-				writeD(findGroup.getLastUpdate()); // objId?
-			}
-			break;
-		case 0x05:
-			writeD(lastUpdate); // player object id
-			break;
-		case 0x0A: // registered Groups
-			writeH(groupSize);// size
-			writeH(groupSize);// size
-			writeD(lastUpdate);
-			for (FindGroup findGroup : findGroups) {
-				writeD(0);// groupregisteredId
-				writeD(findGroup.getInstanceId());// instanceId
-				writeD(1);// 未知 / unk
-				writeC(findGroup.getSize());// currentMembers
-				writeC(findGroup.getMinMembers());// minMembers
-				writeH(0);// unk maybe spacer
-				writeD(findGroup.getObjectId());// playerObjId
-				writeD(1);// 未知 / unk
-				writeD(0);// 未知 / unk
-				writeC(findGroup.getMinLevel());// playerLevel
-				writeC(findGroup.getMaxLevel());// playerLevel
-				writeH(0);// unk maybe spacer?
-				writeD(findGroup.getLastUpdate());// lastUpdate
-				writeD(0);// 未知 / unk
-				writeS(findGroup.getName());// writerName
-				writeS(findGroup.getMessage());// Message
-			}
-			break;
-		case 0x0E: // register new InstanceGroup
-			writeC(1);// packetNumber 0 || 1 || 2
-			for (FindGroup findGroup : findGroups) {
-				writeD(0);// entryId? counts forwards every entry
-				writeD(findGroup.getInstanceId());// instanceId
-				writeD(1);// position?
-				writeC(findGroup.getSize());// Maybe Members in Group?
-				writeC(findGroup.getMinMembers());// min members to enter Instance(writer choose it)
-				writeH(0);// unk maybe spacer
-				writeD(findGroup.getObjectId());// playerObjId leader ID?
-				writeC(1);// 未知 / unk
-				writeC(0);// unkGroupType?
-				writeD(1);// 未知 / unk
-				writeH(0);// 未知 / unk
-				writeC(findGroup.getMinLevel());// player level
-				writeC(findGroup.getMaxLevel());// player level
-				writeH(0);// 未知 / unk
-				writeD(findGroup.getLastUpdate());// timestamp
-				writeD(0);// 未知 / unk
-				writeS(findGroup.getName());// writer name
-				writeS(findGroup.getMessage());// register message
-			}
-			break;
-		case 0x10:
-			writeH(groupSize);// size
-			writeH(groupSize);// size
-			writeD(lastUpdate);// systemcurrentimemillis
-			for (FindGroup findGroup : findGroups) {
-				writeD(0);// groupId?
-				writeD(findGroup.getInstanceId());// instanceId
-				writeD(findGroup.getObjectId());// playerObjId
-				writeD(findGroup.getMinLevel());// playerLevel
-				writeD(1);// 未知 / unk
-				writeH(1);// 未知 / unk
-				writeC(findGroup.getGroupType());// groupType?
-				writeC(findGroup.getClassId());// classId?
-				writeS(findGroup.getName());// writerName
-			}
-		case 0x16:
-			writeD(0);// GroupEntryId
-			writeD(0);// instanceId
-			break;
-		case 0x18:
-			writeD(0);// GroupObjId
-			writeD(0);// instanceId
-			writeC(0);// classId?
-			for (FindGroup findGroup : findGroups) {
-				writeD(0);// GroupRegisteredId
-				writeD(findGroup.getInstanceId());// instanceId
-				writeD(findGroup.getObjectId());// playerObjId
-				writeD(findGroup.getMinLevel());// playerLevel
-				writeD(1);// 未知 / unk
-				writeH(1);// 未知 / unk
-				writeC(findGroup.getGroupType());// groupType?
-				writeC(findGroup.getClassId());// classId?
-				writeS(findGroup.getName());// writerName
-			}
-			break;
-		case 0x1A:
-			writeH(1);// 未知 / unk
-			writeD(instanceId);
-			break;
+			return;
+		}
+		FindGroup group = findGroups.iterator().next();
+		writeD(group.getObjectId());
+		writeD(group.getInstanceId());
+		writeC(group.getMembers().size());
+		for (Player member : group.getMembers()) {
+			writeD(0);
+			writeD(0);
+			writeD(member.getObjectId());
+			writeD(member.getLevel());
+			writeD(member.getPlayerClass().getClassId());
+			writeH(0);
+			writeC(1);
+			writeC(member.isOnline() ? 1 : 0);
+			writeS(member.getName());
+		}
+	}
+
+	private void writeInstanceRegistrationOptions() {
+		writeH(instanceMaskIds.size());
+		for (int instanceMaskId : instanceMaskIds) {
+			writeD(instanceMaskId);
 		}
 	}
 }

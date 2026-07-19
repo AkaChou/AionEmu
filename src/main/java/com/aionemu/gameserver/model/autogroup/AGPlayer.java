@@ -13,17 +13,26 @@ public class AGPlayer {
 	private Integer objectId;
 	private Race race;
 	private PlayerClass playerClass;
+	private byte matchSide;
 	private String name;
 	private boolean isInInstance;
 	private boolean isOnline;
 	private boolean isPressEnter;
 
 	public AGPlayer(Player player) {
-		objectId = player.getObjectId();
-		race = player.getRace();
-		playerClass = player.getPlayerClass();
-		name = player.getName();
-		isOnline = true;
+		this(player.getObjectId(), player.getRace(), player.getPlayerClass(), player.getName(), (byte) -1, false, true, false);
+	}
+
+	public AGPlayer(int objectId, Race race, PlayerClass playerClass, String name, byte matchSide,
+			boolean inInstance, boolean online, boolean pressedEnter) {
+		this.objectId = objectId;
+		this.race = race;
+		this.playerClass = playerClass;
+		this.name = name;
+		this.matchSide = matchSide;
+		this.isInInstance = inInstance;
+		this.isOnline = online;
+		this.isPressEnter = pressedEnter;
 	}
 
 	/** 返回对象 ID / Returns the object id */
@@ -44,6 +53,14 @@ public class AGPlayer {
 	/** 获取玩家职业。 / Returns the player class. */
 	public PlayerClass getPlayerClass() {
 		return playerClass;
+	}
+
+	public byte getMatchSide() {
+		return matchSide;
+	}
+
+	public void setMatchSide(byte matchSide) {
+		this.matchSide = matchSide;
 	}
 
 	/** 设置实例 / Sets the in instance*/

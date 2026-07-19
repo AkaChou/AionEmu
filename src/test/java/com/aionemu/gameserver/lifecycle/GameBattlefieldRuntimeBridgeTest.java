@@ -22,7 +22,6 @@ class GameBattlefieldRuntimeBridgeTest {
         ProviderUsedException ironWallProviderUsed = new ProviderUsedException();
         ProviderUsedException idgelDomeProviderUsed = new ProviderUsedException();
         ProviderUsedException idgelDomeLandmarkProviderUsed = new ProviderUsedException();
-        ProviderUsedException hallOfTenacityProviderUsed = new ProviderUsedException();
         ProviderUsedException grandArenaProviderUsed = new ProviderUsedException();
         ProviderUsedException idRunProviderUsed = new ProviderUsedException();
         GameBattlefieldRuntimeBridge runtimeBridge = new GameBattlefieldRuntimeBridge();
@@ -33,7 +32,6 @@ class GameBattlefieldRuntimeBridgeTest {
         runtimeBridge.setIronWallWarfrontServiceProvider(throwingProvider(ironWallProviderUsed));
         runtimeBridge.setIdgelDomeServiceProvider(throwingProvider(idgelDomeProviderUsed));
         runtimeBridge.setIdgelDomeLandmarkServiceProvider(throwingProvider(idgelDomeLandmarkProviderUsed));
-        runtimeBridge.setHallOfTenacityServiceProvider(throwingProvider(hallOfTenacityProviderUsed));
         runtimeBridge.setGrandArenaTrainingCampServiceProvider(throwingProvider(grandArenaProviderUsed));
         runtimeBridge.setIdRunServiceProvider(throwingProvider(idRunProviderUsed));
 
@@ -43,7 +41,6 @@ class GameBattlefieldRuntimeBridgeTest {
         assertSame(ironWallProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::ironWallWarfrontService));
         assertSame(idgelDomeProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::idgelDomeService));
         assertSame(idgelDomeLandmarkProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::idgelDomeLandmarkService));
-        assertSame(hallOfTenacityProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::hallOfTenacityService));
         assertSame(grandArenaProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::grandArenaTrainingCampService));
         assertSame(idRunProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::idRunService));
     }
@@ -58,7 +55,6 @@ class GameBattlefieldRuntimeBridgeTest {
         assertFalse(source.contains("IronWallWarfrontService.getInstance()"));
         assertFalse(source.contains("IdgelDomeService.getInstance()"));
         assertFalse(source.contains("IdgelDomeLandmarkService.getInstance()"));
-        assertFalse(source.contains("HallOfTenacityService.getInstance()"));
         assertFalse(source.contains("GrandArenaTrainingCampService.getInstance()"));
         assertFalse(source.contains("IDRunService.getInstance()"));
     }
@@ -85,7 +81,6 @@ class GameBattlefieldRuntimeBridgeTest {
             assertFalse(content.contains("IronWallWarfrontService.getInstance()"), source.toString());
             assertFalse(content.contains("IdgelDomeService.getInstance()"), source.toString());
             assertFalse(content.contains("IdgelDomeLandmarkService.getInstance()"), source.toString());
-            assertFalse(content.contains("HallOfTenacityService.getInstance()"), source.toString());
             assertFalse(content.contains("GrandArenaTrainingCampService.getInstance()"), source.toString());
             assertFalse(content.contains("IDRunService.getInstance()"), source.toString());
         }

@@ -1,19 +1,16 @@
 package com.aionemu.gameserver.ai.portals;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
-
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.DialogAction;
-import com.aionemu.gameserver.model.autogroup.AutoGroupType;
+import com.aionemu.gameserver.model.autogroup.MatchDefinition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -27,7 +24,8 @@ public class MatchMakerAI2 extends GeneralNpcAI2
 {
 	@Override
 	protected void handleDialogStart(Player player) {
-		if (player.getLevel() >= 46) {
+		MatchDefinition type = MatchDefinition.forNpc(player.getLevel(), getNpcId());
+		if (type != null && type.isOpen()) {
 		    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
 		} else {
             // 有这么多志愿者真令人振奋！真想立刻送你们上战舰。 / It's refreshing to have so many volunteers! I wish I could send you to the Dredgion right now.
@@ -43,14 +41,12 @@ public class MatchMakerAI2 extends GeneralNpcAI2
 		env.setExtendedRewardIndex(extendedRewardIndex);
 		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
 			return true;
-		} if (dialogId == DialogAction.MATCH_MAKER.id()) { //Infiltrate the Dredgion.
-			if (GameFeatureServices.dredgionService().isDredgionAvailable()) {
-				AutoGroupType agt = AutoGroupType.getAutoGroup(player.getLevel(), getNpcId());
-				if (agt != null && agt.isDredgion()) {
-					PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(agt.getInstanceMaskId()));
-				}
-				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
+		} if (dialogId == DialogAction.MATCH_MAKER.id()) {
+			MatchDefinition type = MatchDefinition.forNpc(player.getLevel(), getNpcId());
+			if (type != null && type.isOpen()) {
+				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(type.getInstanceMaskId()));
 			}
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
 		}

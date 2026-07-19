@@ -1,5 +1,11 @@
 package com.aionemu.gameserver.model.gameobjects;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
@@ -15,13 +21,21 @@ public class FindGroup {
 
 	private AionObject object;
 	private String message;
-	private int groupType, minMembers, instanceId;
+	private int groupType, minMembers, instanceId, teamId;
 	private int lastUpdate = (int) (System.currentTimeMillis() / 1000);
+	private final Set<Integer> bannedPlayers = ConcurrentHashMap.newKeySet();
 
 	public FindGroup(AionObject object, String message, int groupType) {
 		this.object = object;
 		this.message = message;
 		this.groupType = groupType;
+	}
+
+	public FindGroup(Player recruiter, int instanceId, int minMembers, String message) {
+		this(recruiter, message, 0);
+		this.instanceId = instanceId;
+		this.minMembers = minMembers;
+		this.teamId = recruiter.getCurrentTeamId();
 	}
 
 	/** 获取消息。 / Returns the message. */
@@ -63,6 +77,9 @@ public class FindGroup {
 
 	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
+		if (instanceId != 0) {
+			return getMembers().stream().mapToInt(Player::getLevel).min().orElse(1);
+		}
 		if (object instanceof Player) {
 			return ((Player) (object)).getLevel();
 		} else if (object instanceof PlayerAlliance) {
@@ -84,6 +101,9 @@ public class FindGroup {
 
 	/** 获取最大等级。 / Returns the max level. */
 	public int getMaxLevel() {
+		if (instanceId != 0) {
+			return getMembers().stream().mapToInt(Player::getLevel).max().orElse(1);
+		}
 		if (object instanceof Player) {
 			return ((Player) (object)).getLevel();
 		} else if (object instanceof PlayerAlliance) {
@@ -135,6 +155,9 @@ public class FindGroup {
 
 	/** 返回大小 / Returns the size*/
 	public int getSize() {
+		if (instanceId != 0) {
+			return getMembers().size();
+		}
 		if (object instanceof Player) {
 			return 1;
 		} else if (object instanceof PlayerAlliance) {
@@ -149,5 +172,50 @@ public class FindGroup {
 	public void setMessage(String message) {
 		lastUpdate = (int) (System.currentTimeMillis() / 1000);
 		this.message = message;
+	}
+
+	public void setGroupType(int groupType) {
+		this.groupType = groupType;
+	}
+
+	public Player getRecruiter() {
+		return object instanceof Player player ? player : null;
+	}
+
+	public int getTeamId() {
+		return teamId;
+	}
+
+	public void setRecruiter(Player recruiter) {
+		object = recruiter;
+		teamId = recruiter.getCurrentTeamId();
+		lastUpdate = (int) (System.currentTimeMillis() / 1000);
+	}
+
+	public Race getRace() {
+		Player recruiter = getRecruiter();
+		return recruiter == null ? Race.PC_ALL : recruiter.getRace();
+	}
+
+	public List<Player> getMembers() {
+		Player recruiter = getRecruiter();
+		if (recruiter == null) {
+			return List.of();
+		}
+		TemporaryPlayerTeam<?> team = recruiter.getCurrentTeam();
+		return team == null ? List.of(recruiter) : new ArrayList<>(team.getOnlineMembers());
+	}
+
+	public boolean isLeader(Player player) {
+		Player recruiter = getRecruiter();
+		return recruiter == player;
+	}
+
+	public void ban(int playerId) {
+		bannedPlayers.add(playerId);
+	}
+
+	public boolean isBanned(int playerId) {
+		return bannedPlayers.contains(playerId);
 	}
 }

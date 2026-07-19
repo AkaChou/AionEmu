@@ -2,7 +2,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.aionemu.gameserver.model.autogroup.AutoGroupType;
+import com.aionemu.gameserver.model.autogroup.MatchDefinition;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
@@ -30,7 +30,7 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 	 */
 	public SM_AUTO_GROUP(int instanceMaskId) {
 		this.isBG = false;
-		AutoGroupType agt = AutoGroupType.getAGTByMaskId(instanceMaskId);
+		MatchDefinition agt = MatchDefinition.getByMaskId(instanceMaskId);
 		this.instanceMaskId = instanceMaskId;
 		this.messageId = agt.getNameId();
 		this.titleId = agt.getTitleId();

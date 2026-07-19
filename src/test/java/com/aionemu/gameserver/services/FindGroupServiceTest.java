@@ -31,6 +31,7 @@ class FindGroupServiceTest {
 		setField(service, "elyosApplyFindGroups", new LinkedHashMap<Integer, FindGroup>());
 		setField(service, "asmodianRecruitFindGroups", new LinkedHashMap<Integer, FindGroup>());
 		setField(service, "asmodianApplyFindGroups", new LinkedHashMap<Integer, FindGroup>());
+		setField(service, "instanceGroups", new LinkedHashMap<Integer, FindGroup>());
 
 		assertDoesNotThrow(service::clean);
 		assertTrue(groups.isEmpty());

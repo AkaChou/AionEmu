@@ -21,5 +21,5 @@ public @interface InstanceID {
 	 *
 	 * map id
 	 */
-	int value();
+	int[] value();
 }

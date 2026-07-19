@@ -100,7 +100,6 @@ import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.IDRunService;
 import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
 import com.aionemu.gameserver.services.instance.IdgelDomeService;
@@ -260,7 +259,6 @@ class GameServiceProviderCompatibilityTest {
         IronWallWarfrontService ironWallWarfrontService = instance(IronWallWarfrontService.class);
         IdgelDomeService idgelDomeService = instance(IdgelDomeService.class);
         IdgelDomeLandmarkService idgelDomeLandmarkService = instance(IdgelDomeLandmarkService.class);
-        HallOfTenacityService hallOfTenacityService = instance(HallOfTenacityService.class);
         GrandArenaTrainingCampService grandArenaTrainingCampService = instance(GrandArenaTrainingCampService.class);
         IDRunService idRunService = instance(IDRunService.class);
         CreativityEssenceService creativityEssenceService = instance(CreativityEssenceService.class);
@@ -373,7 +371,6 @@ class GameServiceProviderCompatibilityTest {
             IronWallWarfrontService.setInstanceProvider(provider(IronWallWarfrontService.class, ironWallWarfrontService));
             IdgelDomeService.setInstanceProvider(provider(IdgelDomeService.class, idgelDomeService));
             IdgelDomeLandmarkService.setInstanceProvider(provider(IdgelDomeLandmarkService.class, idgelDomeLandmarkService));
-            HallOfTenacityService.setInstanceProvider(provider(HallOfTenacityService.class, hallOfTenacityService));
             GrandArenaTrainingCampService.setInstanceProvider(provider(GrandArenaTrainingCampService.class, grandArenaTrainingCampService));
             IDRunService.setInstanceProvider(provider(IDRunService.class, idRunService));
             CreativityEssenceService.setInstanceProvider(provider(CreativityEssenceService.class, creativityEssenceService));
@@ -494,7 +491,6 @@ class GameServiceProviderCompatibilityTest {
             assertSame(ironWallWarfrontService, IronWallWarfrontService.getInstance());
             assertSame(idgelDomeService, IdgelDomeService.getInstance());
             assertSame(idgelDomeLandmarkService, IdgelDomeLandmarkService.getInstance());
-            assertSame(hallOfTenacityService, HallOfTenacityService.getInstance());
             assertSame(grandArenaTrainingCampService, GrandArenaTrainingCampService.getInstance());
             assertSame(idRunService, IDRunService.getInstance());
             assertSame(creativityEssenceService, CreativityEssenceService.getInstance());
@@ -619,7 +615,6 @@ class GameServiceProviderCompatibilityTest {
             IronWallWarfrontService.setInstanceProvider(null);
             IdgelDomeService.setInstanceProvider(null);
             IdgelDomeLandmarkService.setInstanceProvider(null);
-            HallOfTenacityService.setInstanceProvider(null);
             GrandArenaTrainingCampService.setInstanceProvider(null);
             IDRunService.setInstanceProvider(null);
             CreativityEssenceService.setInstanceProvider(null);
@@ -1327,7 +1322,6 @@ class GameServiceProviderCompatibilityTest {
         IronWallWarfrontService ironWallWarfrontService = instance(IronWallWarfrontService.class);
         IdgelDomeService idgelDomeService = instance(IdgelDomeService.class);
         IdgelDomeLandmarkService idgelDomeLandmarkService = instance(IdgelDomeLandmarkService.class);
-        HallOfTenacityService hallOfTenacityService = instance(HallOfTenacityService.class);
         GrandArenaTrainingCampService grandArenaTrainingCampService = instance(GrandArenaTrainingCampService.class);
         IDRunService idRunService = instance(IDRunService.class);
         GameBattlefieldServices battlefieldServices = new GameBattlefieldServices(
@@ -1337,7 +1331,6 @@ class GameServiceProviderCompatibilityTest {
                 provider(IronWallWarfrontService.class, ironWallWarfrontService),
                 provider(IdgelDomeService.class, idgelDomeService),
                 provider(IdgelDomeLandmarkService.class, idgelDomeLandmarkService),
-                provider(HallOfTenacityService.class, hallOfTenacityService),
                 provider(GrandArenaTrainingCampService.class, grandArenaTrainingCampService),
                 provider(IDRunService.class, idRunService));
 
@@ -1348,7 +1341,6 @@ class GameServiceProviderCompatibilityTest {
             assertSame(ironWallWarfrontService, GameBattlefieldServices.ironWallWarfrontService());
             assertSame(idgelDomeService, GameBattlefieldServices.idgelDomeService());
             assertSame(idgelDomeLandmarkService, GameBattlefieldServices.idgelDomeLandmarkService());
-            assertSame(hallOfTenacityService, GameBattlefieldServices.hallOfTenacityService());
             assertSame(grandArenaTrainingCampService, GameBattlefieldServices.grandArenaTrainingCampService());
             assertSame(idRunService, GameBattlefieldServices.idRunService());
         } finally {
@@ -1359,7 +1351,6 @@ class GameServiceProviderCompatibilityTest {
             assertProviderCleared(IronWallWarfrontService.class);
             assertProviderCleared(IdgelDomeService.class);
             assertProviderCleared(IdgelDomeLandmarkService.class);
-            assertProviderCleared(HallOfTenacityService.class);
             assertProviderCleared(GrandArenaTrainingCampService.class);
             assertProviderCleared(IDRunService.class);
         }

@@ -22,33 +22,7 @@ public class AutoEngulfedOphidanBridgeInstance extends AutoInstance {
 	/** 添加玩家。 / Adds player. */
 	@Override
 	public AGQuestion addPlayer(Player player, SearchInstance searchInstance) {
-		super.writeLock();
-		try {
-			if (!satisfyTime(searchInstance) || (players.size() >= agt.getPlayerSize())) {
-				return AGQuestion.FAILED;
-			}
-			EntryRequestType ert = searchInstance.getEntryRequestType();
-			List<AGPlayer> playersByRace = getAGPlayersByRace(player.getRace());
-			if (ert.isGroupEntry()) {
-				if (searchInstance.getMembers().size() + playersByRace.size() > 2) {
-					return AGQuestion.FAILED;
-				}
-				for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
-					if (searchInstance.getMembers().contains(member.getObjectId())) {
-						players.put(member.getObjectId(), new AGPlayer(player));
-					}
-				}
-			} else {
-				if (playersByRace.size() >= 2) {
-					return AGQuestion.FAILED;
-				}
-				players.put(player.getObjectId(), new AGPlayer(player));
-			}
-			return instance != null ? AGQuestion.ADDED
-					: (players.size() == agt.getPlayerSize() ? AGQuestion.READY : AGQuestion.ADDED);
-		} finally {
-			super.writeUnlock();
-		}
+		return addSidedPlayers(player, searchInstance);
 	}
 
 	/** 进入副本 / On Enter Instance*/
@@ -75,9 +49,10 @@ public class AutoEngulfedOphidanBridgeInstance extends AutoInstance {
 	/** 按下回车时 / on Press Enter. */
 	@Override
 	public void onPressEnter(Player player) {
-		super.onPressEnter(player);
-		GameBattlefieldServices.engulfedOphidanBridgeService().addCoolDown(player);
-		((EngulfedOphidanBridgeReward) instance.getInstanceHandler().getInstanceReward()).portToPosition(player);
+		enter(player, () -> {
+			((EngulfedOphidanBridgeReward) instance.getInstanceHandler().getInstanceReward()).portToPosition(player);
+			return true;
+		});
 	}
 
 	/** 离开副本 / On Leave Instance*/

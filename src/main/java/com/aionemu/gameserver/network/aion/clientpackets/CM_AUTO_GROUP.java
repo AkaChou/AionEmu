@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
-
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -10,21 +8,13 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.PvPModConfig;
 import com.aionemu.gameserver.model.autogroup.EntryRequestType;
+import com.aionemu.gameserver.model.autogroup.MatchDefinition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.events.LadderService;
-import com.aionemu.gameserver.services.instance.AsyunatarService;
-import com.aionemu.gameserver.services.instance.DredgionService2;
-import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
-import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
-import com.aionemu.gameserver.services.instance.IDRunService;
-import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
-import com.aionemu.gameserver.services.instance.IdgelDomeService;
-import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
-import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
-import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
+import com.aionemu.gameserver.services.RetailMatchmakingService;
+import com.aionemu.gameserver.services.instance.TournamentService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -34,7 +24,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 
 public class CM_AUTO_GROUP extends AionClientPacket {
-	private byte instanceMaskId;
+	private int instanceMaskId;
 	private byte windowId;
 	private byte entryRequestId;
 
@@ -44,7 +34,7 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		instanceMaskId = (byte) readD();
+		instanceMaskId = readD();
 		windowId = (byte) readC();
 		entryRequestId = (byte) readC();
 	}
@@ -56,39 +46,48 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			PacketSendUtility.sendMessage(player, "Auto Group is disabled");
 			return;
 		}
+		MatchDefinition definition = MatchDefinition.getByMaskId(instanceMaskId);
+		boolean tournament = definition != null && definition.isTournament();
+		RetailMatchmakingService matchmaking = (RetailMatchmakingService) GameCoreGameplayServices.autoGroupService();
 		switch (windowId) {
 		case 100:
 			EntryRequestType ert = EntryRequestType.getTypeById(entryRequestId);
 			if (ert == null) {
 				return;
 			}
-			GameCoreGameplayServices.autoGroupService().startLooking(player, instanceMaskId, ert);
+			if (tournament) {
+				TournamentService.startLooking(player, definition, ert);
+			} else {
+				matchmaking.startLooking(player, instanceMaskId, ert);
+			}
 			break;
 		case 101:
-			GameCoreGameplayServices.autoGroupService().unregisterLooking(player, instanceMaskId);
+			if (tournament) {
+				TournamentService.unregister(player, instanceMaskId);
+			} else {
+				matchmaking.unregisterLooking(player, instanceMaskId);
+			}
 			break;
 		case 102:
-			GameCoreGameplayServices.autoGroupService().pressEnter(player, instanceMaskId);
+			if (tournament) {
+				TournamentService.pressEnter(player, instanceMaskId);
+			} else {
+				matchmaking.pressEnter(player, instanceMaskId);
+			}
 			break;
 		case 103:
-			GameCoreGameplayServices.autoGroupService().cancelEnter(player, instanceMaskId);
+			if (tournament) {
+				TournamentService.cancelEnter(player, instanceMaskId);
+			} else {
+				matchmaking.cancelEnter(player, instanceMaskId);
+			}
 			break;
 		case 104:
-			GameFeatureServices.dredgionService().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.kamarBattlefieldService().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.engulfedOphidanBridgeService().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.ironWallWarfrontService().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.idgelDomeService().showWindow(player, instanceMaskId);
-			// 版本 5.1 / Ver. 5.1
-			GameFeatureServices.asyunatarService().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.idgelDomeLandmarkService().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.suspiciousOphidanBridgeService().showWindow(player, instanceMaskId);
-			// 版本 5.3 / Ver. 5.3
-			GameBattlefieldServices.hallOfTenacityService().showWindow(player, instanceMaskId);
-			// 版本 5.6 / Ver. 5.6
-			GameBattlefieldServices.grandArenaTrainingCampService().showWindow(player, instanceMaskId);
-			// 版本 5.8 / Ver. 5.8
-			GameBattlefieldServices.idRunService().showWindow(player, instanceMaskId);
+			if (tournament) {
+				TournamentService.showWindow(player, definition);
+				break;
+			}
+			matchmaking.showWindow(player, definition);
 			break;
 		case 105:
 			break;

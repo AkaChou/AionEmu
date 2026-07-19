@@ -2,7 +2,6 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.IDRunService;
 import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
 import com.aionemu.gameserver.services.instance.IdgelDomeService;
@@ -84,16 +83,6 @@ final class GameBattlefieldFallbacks {
     }
 
     /**
-     * 坚韧殿堂服务回退实例。
-     * Hall of Tenacity service fallback instance.
-     *
-     * Service instance
-     */
-    static HallOfTenacityService hallOfTenacityService() {
-        return HallOfTenacityServiceFallback.INSTANCE;
-    }
-
-    /**
      * 大竞技场训练营服务回退实例。
      * Grand Arena Training Camp service fallback instance.
      *
@@ -159,14 +148,6 @@ final class GameBattlefieldFallbacks {
      */
     private static final class IdgelDomeLandmarkServiceFallback {
         private static final IdgelDomeLandmarkService INSTANCE = IdgelDomeLandmarkService.getInstance();
-    }
-
-    /**
-     * {@link HallOfTenacityService} 懒加载单例持有者。
-     * Lazy singleton holder for {@link HallOfTenacityService}.
-     */
-    private static final class HallOfTenacityServiceFallback {
-        private static final HallOfTenacityService INSTANCE = HallOfTenacityService.getInstance();
     }
 
     /**

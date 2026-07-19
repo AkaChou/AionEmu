@@ -42,7 +42,6 @@ import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.IDRunService;
 import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
 import com.aionemu.gameserver.services.instance.IdgelDomeService;
@@ -415,18 +414,6 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public IdgelDomeLandmarkService idgelDomeLandmarkService() {
         return new IdgelDomeLandmarkService();
-    }
-
-    /**
-     * 提供懒加载的 HallOfTenacityService Bean。
-     * Provides a lazy HallOfTenacityService bean.
-     *
-     * HallOfTenacityService instance
-     */
-    @Bean
-    @Lazy
-    public HallOfTenacityService hallOfTenacityService() {
-        return new HallOfTenacityService();
     }
 
     /**
@@ -1884,7 +1871,7 @@ public class GameLegacyServiceBridgeConfiguration {
      */
     @Bean
     public AutoGroupService autoGroupService() {
-        return new AutoGroupService();
+        return new RetailMatchmakingService();
     }
 
     /**

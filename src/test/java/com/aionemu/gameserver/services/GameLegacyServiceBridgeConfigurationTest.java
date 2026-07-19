@@ -42,7 +42,6 @@ import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.IDRunService;
 import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
 import com.aionemu.gameserver.services.instance.IdgelDomeService;
@@ -263,7 +262,6 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("ironWallWarfrontService"));
             assertTrue(context.containsBeanDefinition("idgelDomeService"));
             assertTrue(context.containsBeanDefinition("idgelDomeLandmarkService"));
-            assertTrue(context.containsBeanDefinition("hallOfTenacityService"));
             assertTrue(context.containsBeanDefinition("grandArenaTrainingCampService"));
             assertTrue(context.containsBeanDefinition("idRunService"));
             assertEquals(KamarBattlefieldService.class, context.getType("kamarBattlefieldService"));
@@ -272,7 +270,6 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(IronWallWarfrontService.class, context.getType("ironWallWarfrontService"));
             assertEquals(IdgelDomeService.class, context.getType("idgelDomeService"));
             assertEquals(IdgelDomeLandmarkService.class, context.getType("idgelDomeLandmarkService"));
-            assertEquals(HallOfTenacityService.class, context.getType("hallOfTenacityService"));
             assertEquals(GrandArenaTrainingCampService.class, context.getType("grandArenaTrainingCampService"));
             assertEquals(IDRunService.class, context.getType("idRunService"));
             assertLazy(context.getBeanFactory(), "kamarBattlefieldService");
@@ -281,7 +278,6 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "ironWallWarfrontService");
             assertLazy(context.getBeanFactory(), "idgelDomeService");
             assertLazy(context.getBeanFactory(), "idgelDomeLandmarkService");
-            assertLazy(context.getBeanFactory(), "hallOfTenacityService");
             assertLazy(context.getBeanFactory(), "grandArenaTrainingCampService");
             assertLazy(context.getBeanFactory(), "idRunService");
         }
@@ -296,7 +292,6 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertNotSame(IronWallWarfrontService.getInstance(), context.getBean(IronWallWarfrontService.class));
             assertNotSame(IdgelDomeService.getInstance(), context.getBean(IdgelDomeService.class));
             assertNotSame(IdgelDomeLandmarkService.getInstance(), context.getBean(IdgelDomeLandmarkService.class));
-            assertNotSame(HallOfTenacityService.getInstance(), context.getBean(HallOfTenacityService.class));
             assertNotSame(GrandArenaTrainingCampService.getInstance(), context.getBean(GrandArenaTrainingCampService.class));
             assertNotSame(IDRunService.getInstance(), context.getBean(IDRunService.class));
         }
@@ -761,7 +756,7 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(DropService.class, context.getType("dropService"));
             assertEquals(MailService.class, context.getType("mailService"));
             assertEquals(PvpService.class, context.getType("pvpService"));
-            assertEquals(AutoGroupService.class, context.getType("autoGroupService"));
+			assertEquals(RetailMatchmakingService.class, context.getType("autoGroupService"));
             assertEquals(AbyssRankingCache.class, context.getType("abyssRankingCache"));
             assertEager(context.getBeanFactory(), "dropService");
             assertEager(context.getBeanFactory(), "mailService");

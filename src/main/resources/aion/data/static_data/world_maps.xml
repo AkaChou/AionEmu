@@ -251,8 +251,8 @@
 	<map id="900180000" name="Test Server Art" death_level="0" water_level="16" world_size="3072" flags="RECALL"/>
 	<map id="900190000" name="Test Tag Match" death_level="0" water_level="16" world_size="3072" flags="RECALL"/>
 	<map id="900200000" name="Test Time Attack" death_level="0" water_level="16" world_size="3072" flags="RECALL"/>
-	<map id="900210000" name="Tournament Stage Test" death_level="0" water_level="16" world_size="3072" flags="RECALL"/>
 	<map id="900220000" name="System Basic" death_level="0" water_level="16" world_size="3072" flags="RECALL"/>
-	<map id="900230000" name="Tournament Lobby Test" death_level="0" water_level="16" world_size="3072" flags="RECALL"/>
 	-->
+	<map id="900210000" name="Tournament Stage Test" instance="true" death_level="0" water_level="16" world_size="3072" flags="RECALL"/>
+	<map id="900230000" name="Tournament Lobby Test" instance="true" death_level="0" water_level="16" world_size="3072" flags="RECALL"/>
 </world_maps>

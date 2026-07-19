@@ -5,7 +5,7 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DialogAction;
-import com.aionemu.gameserver.model.autogroup.AutoGroupType;
+import com.aionemu.gameserver.model.autogroup.MatchDefinition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.portal.PortalPath;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
@@ -49,7 +49,7 @@ public class Specialize01PortalAI2 extends PortalAI2
 		if (questId > 0 && GameEngineServices.questEngine().onDialog(env)) {
 			return true;
 		} if (dialogId == DialogAction.INSTANCE_PARTY_MATCH.id()) {
-			AutoGroupType agt = AutoGroupType.getAutoGroup(player.getLevel(), getNpcId());
+			MatchDefinition agt = MatchDefinition.forNpc(player.getLevel(), getNpcId());
 			if (agt != null) {
 				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(agt.getInstanceMaskId()));
 			}

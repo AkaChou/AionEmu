@@ -2,7 +2,6 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.IDRunService;
 import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
 import com.aionemu.gameserver.services.instance.IdgelDomeService;
@@ -55,12 +54,6 @@ public class GameBattlefieldGateway {
      * Idgel Dome Landmark service provider.
      */
     private ObjectProvider<IdgelDomeLandmarkService> idgelDomeLandmarkServiceProvider;
-
-    /**
-     * 坚韧殿堂服务提供者。
-     * Hall of Tenacity service provider.
-     */
-    private ObjectProvider<HallOfTenacityService> hallOfTenacityServiceProvider;
 
     /**
      * 大竞技场训练营服务提供者。
@@ -147,17 +140,6 @@ public class GameBattlefieldGateway {
     }
 
     /**
-     * 可选注入坚韧殿堂服务 {@link ObjectProvider}。
-     * Optionally inject the {@link ObjectProvider} of Hall of Tenacity service.
-     *
-     * @param hallOfTenacityServiceProvider 服务提供者 / Service provider
-     */
-    @Autowired(required = false)
-    void setHallOfTenacityServiceProvider(ObjectProvider<HallOfTenacityService> hallOfTenacityServiceProvider) {
-        this.hallOfTenacityServiceProvider = hallOfTenacityServiceProvider;
-    }
-
-    /**
      * 可选注入大竞技场训练营服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Grand Arena Training Camp service.
      *
@@ -202,7 +184,6 @@ public class GameBattlefieldGateway {
         runIfAutoGroupEnabled(() -> ironWallWarfrontService().initIronWallWarfront());
         runIfAutoGroupEnabled(() -> idgelDomeService().initIdgelDome());
         runIfAutoGroupEnabled(() -> idgelDomeLandmarkService().initLandmark());
-        runIfAutoGroupEnabled(() -> hallOfTenacityService().initHallOfTenacity());
         runIfAutoGroupEnabled(() -> grandArenaTrainingCampService().initGrandArenaTrainingCamp());
         runIfAutoGroupEnabled(() -> idRunService().initIDRun());
     }
@@ -283,19 +264,6 @@ public class GameBattlefieldGateway {
             return runtimeBridge().idgelDomeLandmarkService();
         }
         return idgelDomeLandmarkServiceProvider.getIfAvailable(() -> runtimeBridge().idgelDomeLandmarkService());
-    }
-
-    /**
-     * 解析坚韧殿堂服务。
-     * Resolve Hall of Tenacity service.
-     *
-     * Service instance
-     */
-    private HallOfTenacityService hallOfTenacityService() {
-        if (hallOfTenacityServiceProvider == null) {
-            return runtimeBridge().hallOfTenacityService();
-        }
-        return hallOfTenacityServiceProvider.getIfAvailable(() -> runtimeBridge().hallOfTenacityService());
     }
 
     /**

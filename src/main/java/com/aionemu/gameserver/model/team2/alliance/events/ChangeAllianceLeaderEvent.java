@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.team2.alliance.events;
 
 import java.util.Collection;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceMember;
@@ -51,6 +52,7 @@ public class ChangeAllianceLeaderEvent extends ChangeLeaderEvent<PlayerAlliance>
 		if (eventPlayer != null) {
 			PlayerAllianceService.changeViceCaptain(oldLeader, AssignType.DEMOTE_CAPTAIN_TO_VICECAPTAIN);
 		}
+		GameRuntimeServices.findGroupService().onTeamChanged(team);
 	}
 
 	@Override

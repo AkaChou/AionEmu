@@ -102,22 +102,10 @@ public class cmd_siege extends PlayerCommand {
     private static void goTo(final Player player, int worldId, float x, float y, float z) {
         WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
         if (destinationMap.isInstanceType()) {
-            TeleportService2.teleportTo(player, worldId, getInstanceId(worldId, player), x, y, z);
+            TeleportService2.teleportToInstance(player, worldId, x, y, z);
         } else {
             TeleportService2.teleportTo(player, worldId, x, y, z);
         }
-    }
-
-    private static int getInstanceId(int worldId, Player player) {
-        if (player.getWorldId() == worldId) {
-            WorldMapInstance registeredInstance = InstanceService.getRegisteredInstance(worldId, player.getObjectId());
-            if (registeredInstance != null) {
-                return registeredInstance.getInstanceId();
-            }
-        }
-        WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(worldId);
-        InstanceService.registerPlayerWithInstance(newInstance, player);
-        return newInstance.getInstanceId();
     }
 
     private void giveSiegeWelcomeMsg(Player player, String SiegeMap){

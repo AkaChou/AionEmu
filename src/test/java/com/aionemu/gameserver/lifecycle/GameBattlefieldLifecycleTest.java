@@ -23,7 +23,6 @@ class GameBattlefieldLifecycleTest {
         "ironWall",
         "idgel",
         "landmark",
-        "tenacity",
         "grandArena",
         "idRun"
     );
@@ -41,7 +40,6 @@ class GameBattlefieldLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "ironWallWarfrontServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "idgelDomeServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "idgelDomeLandmarkServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "hallOfTenacityServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "grandArenaTrainingCampServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "idRunServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "runtimeBridgeProvider"));
@@ -56,7 +54,7 @@ class GameBattlefieldLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("section", "kamar", "ophidan", "suspicious", "ironWall", "idgel", "landmark", "tenacity", "grandArena", "idRun"), events);
+        assertEquals(List.of("section", "kamar", "ophidan", "suspicious", "ironWall", "idgel", "landmark", "grandArena", "idRun"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -83,8 +81,8 @@ class GameBattlefieldLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(9, reads.get());
-        assertEquals(List.of("section", "kamar", "suspicious", "idgel", "tenacity", "idRun"), events);
+        assertEquals(8, reads.get());
+        assertEquals(List.of("section", "kamar", "suspicious", "idgel", "grandArena"), events);
     }
 
     @Test

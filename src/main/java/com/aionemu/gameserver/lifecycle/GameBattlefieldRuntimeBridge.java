@@ -4,7 +4,6 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.IDRunService;
 import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
 import com.aionemu.gameserver.services.instance.IdgelDomeService;
@@ -58,12 +57,6 @@ public class GameBattlefieldRuntimeBridge {
      * Idgel Dome Landmark service provider.
      */
     private ObjectProvider<IdgelDomeLandmarkService> idgelDomeLandmarkServiceProvider;
-
-    /**
-     * 坚韧殿堂服务提供者。
-     * Hall of Tenacity service provider.
-     */
-    private ObjectProvider<HallOfTenacityService> hallOfTenacityServiceProvider;
 
     /**
      * 大竞技场训练营服务提供者。
@@ -141,17 +134,6 @@ public class GameBattlefieldRuntimeBridge {
     @Autowired(required = false)
     void setIdgelDomeLandmarkServiceProvider(ObjectProvider<IdgelDomeLandmarkService> idgelDomeLandmarkServiceProvider) {
         this.idgelDomeLandmarkServiceProvider = idgelDomeLandmarkServiceProvider;
-    }
-
-    /**
-     * 可选注入坚韧殿堂服务 {@link ObjectProvider}。
-     * Optionally inject the {@link ObjectProvider} of Hall of Tenacity service.
-     *
-     * @param hallOfTenacityServiceProvider 服务提供者 / Service provider
-     */
-    @Autowired(required = false)
-    void setHallOfTenacityServiceProvider(ObjectProvider<HallOfTenacityService> hallOfTenacityServiceProvider) {
-        this.hallOfTenacityServiceProvider = hallOfTenacityServiceProvider;
     }
 
     /**
@@ -270,19 +252,6 @@ public class GameBattlefieldRuntimeBridge {
             return GameBattlefieldFallbacks.idgelDomeLandmarkService();
         }
         return idgelDomeLandmarkServiceProvider.getIfAvailable(GameBattlefieldFallbacks::idgelDomeLandmarkService);
-    }
-
-    /**
-     * 解析坚韧殿堂服务。
-     * Resolve Hall of Tenacity service.
-     *
-     * Service instance
-     */
-    public HallOfTenacityService hallOfTenacityService() {
-        if (hallOfTenacityServiceProvider == null) {
-            return GameBattlefieldFallbacks.hallOfTenacityService();
-        }
-        return hallOfTenacityServiceProvider.getIfAvailable(GameBattlefieldFallbacks::hallOfTenacityService);
     }
 
     /**

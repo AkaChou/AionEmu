@@ -43,83 +43,13 @@ public class SearchInstance {
 		return (int) (System.currentTimeMillis() - registrationTime) / 1000 * 256;
 	}
 
+	public long getRegistrationTime() {
+		return registrationTime;
+	}
+
 	/** 获取条目请求类型。 / Returns the entry request type. */
 	public EntryRequestType getEntryRequestType() {
 		return ert;
 	}
 
-	/** 是否为无畏舰。 / Whether dredgion. */
-	public boolean isDredgion() {
-		return instanceMaskId == 1 || instanceMaskId == 2 || instanceMaskId == 3;
-	}
-
-	/**
-	 * @return 是否为 Kamar 类型。 / Whether kamar
-	  */
-	public boolean isKamar() {
-		return instanceMaskId == 107;
-	}
-
-	/**
-	 * @return Whether ophidan
-	 */
-	public boolean isOphidan() {
-		return instanceMaskId == 108;
-	}
-
-	/**
-	 * @return Whether bastion
-	 */
-	public boolean isBastion() {
-		return instanceMaskId == 109;
-	}
-
-	/**
-	 * @return Whether idgel dome
-	 */
-	public boolean isIdgelDome() {
-		return instanceMaskId == 111;
-	}
-
-	/**
-	 * @return Whether asyunatar
-	 */
-	public boolean isAsyunatar() {
-		return instanceMaskId == 121;
-	}
-
-	/**
-	 * @return Whether suspicious ophidan
-	 */
-	public boolean isSuspiciousOphidan() {
-		return instanceMaskId == 122;
-	}
-
-	/**
-	 * @return Whether idgel dome landmark
-	 */
-	public boolean isIdgelDomeLandmark() {
-		return instanceMaskId == 123;
-	}
-
-	/**
-	 * @return 是否为黄金神庙训练所。 / Whether hall of tenacity
-	  */
-	public boolean isHallOfTenacity() {
-		return instanceMaskId == 125;
-	}
-
-	/**
-	 * @return Whether grand arena training camp
-	 */
-	public boolean isGrandArenaTrainingCamp() {
-		return instanceMaskId == 127;
-	}
-
-	/**
-	 * @return 是否为 IDRun 类型。 / Whether id run
-	  */
-	public boolean isIDRun() {
-		return instanceMaskId == 131;
-	}
 }

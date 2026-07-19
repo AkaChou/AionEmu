@@ -173,7 +173,6 @@ class ModelCollectionImplementationTest {
 		List<String> instanceScripts = List.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TrialsOfEternityInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EngulfedOphidanBridgeInstance.java",
-				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ArenaOfTenacityInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DarkPoetaInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DivineTowerInstanceL.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KumukiCaveInstance.java",
@@ -194,7 +193,6 @@ class ModelCollectionImplementationTest {
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SmolderingFireTempleInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheEternalBastionInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FissureOfOblivionInstance.java",
-				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/HallOfTenacityInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UnstableAbyssalSplinterInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgionDefense/SanctumInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/luna/ContaminatedUnderpathInstance.java",

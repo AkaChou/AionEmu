@@ -14,7 +14,6 @@ import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.IDRunService;
 import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
 import com.aionemu.gameserver.services.instance.IdgelDomeService;
@@ -48,7 +47,6 @@ class ServiceCollectionImplementationTest {
 		assertFieldType(DredgionService2.class, "playersWithCooldown", List.class);
 		assertFieldType(EngulfedOphidanBridgeService.class, "playersWithCooldown", List.class);
 		assertFieldType(GrandArenaTrainingCampService.class, "playersWithCooldown", List.class);
-		assertFieldType(HallOfTenacityService.class, "playersWithCooldown", List.class);
 		assertFieldType(IDRunService.class, "playersWithCooldown", List.class);
 		assertFieldType(IdgelDomeLandmarkService.class, "playersWithCooldown", List.class);
 		assertFieldType(IdgelDomeService.class, "playersWithCooldown", List.class);
@@ -62,7 +60,6 @@ class ServiceCollectionImplementationTest {
 		assertArrayList(new AsyunatarService(), "playersWithCooldown");
 		assertArrayList(new EngulfedOphidanBridgeService(), "playersWithCooldown");
 		assertArrayList(new GrandArenaTrainingCampService(), "playersWithCooldown");
-		assertArrayList(new HallOfTenacityService(), "playersWithCooldown");
 		assertArrayList(new IDRunService(), "playersWithCooldown");
 		assertArrayList(new IdgelDomeLandmarkService(), "playersWithCooldown");
 		assertArrayList(new IdgelDomeService(), "playersWithCooldown");

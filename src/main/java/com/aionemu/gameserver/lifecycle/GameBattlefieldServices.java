@@ -2,7 +2,6 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.IDRunService;
 import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
 import com.aionemu.gameserver.services.instance.IdgelDomeService;
@@ -57,12 +56,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     private static volatile ObjectProvider<IdgelDomeLandmarkService> idgelDomeLandmarkServiceProvider;
 
     /**
-     * 坚韧殿堂服务提供者静态缓存。
-     * Static cache of Hall of Tenacity service provider.
-     */
-    private static volatile ObjectProvider<HallOfTenacityService> hallOfTenacityServiceProvider;
-
-    /**
      * 大竞技场训练营服务提供者静态缓存。
      * Static cache of Grand Arena Training Camp service provider.
      */
@@ -84,7 +77,6 @@ public final class GameBattlefieldServices implements DisposableBean {
      * @param ironWallWarfrontServiceProvider 铁壁前线服务提供者 / Iron Wall Warfront service provider
      * @param idgelDomeServiceProvider 伊迪尔穹顶服务提供者 / Idgel Dome service provider
      * @param idgelDomeLandmarkServiceProvider 伊迪尔穹顶地标服务提供者 / Idgel Dome Landmark service provider
-     * @param hallOfTenacityServiceProvider 坚韧殿堂服务提供者 / Hall of Tenacity service provider
      * @param grandArenaTrainingCampServiceProvider 大竞技场训练营服务提供者 / Grand Arena Training Camp service provider
      * @param idRunServiceProvider IDRun 服务提供者 / IDRun service provider
      */
@@ -94,7 +86,6 @@ public final class GameBattlefieldServices implements DisposableBean {
             ObjectProvider<IronWallWarfrontService> ironWallWarfrontServiceProvider,
             ObjectProvider<IdgelDomeService> idgelDomeServiceProvider,
             ObjectProvider<IdgelDomeLandmarkService> idgelDomeLandmarkServiceProvider,
-            ObjectProvider<HallOfTenacityService> hallOfTenacityServiceProvider,
             ObjectProvider<GrandArenaTrainingCampService> grandArenaTrainingCampServiceProvider,
             ObjectProvider<IDRunService> idRunServiceProvider) {
         GameBattlefieldServices.kamarBattlefieldServiceProvider = kamarBattlefieldServiceProvider;
@@ -103,7 +94,6 @@ public final class GameBattlefieldServices implements DisposableBean {
         GameBattlefieldServices.ironWallWarfrontServiceProvider = ironWallWarfrontServiceProvider;
         GameBattlefieldServices.idgelDomeServiceProvider = idgelDomeServiceProvider;
         GameBattlefieldServices.idgelDomeLandmarkServiceProvider = idgelDomeLandmarkServiceProvider;
-        GameBattlefieldServices.hallOfTenacityServiceProvider = hallOfTenacityServiceProvider;
         GameBattlefieldServices.grandArenaTrainingCampServiceProvider = grandArenaTrainingCampServiceProvider;
         GameBattlefieldServices.idRunServiceProvider = idRunServiceProvider;
         KamarBattlefieldService.setInstanceProvider(kamarBattlefieldServiceProvider);
@@ -112,7 +102,6 @@ public final class GameBattlefieldServices implements DisposableBean {
         IronWallWarfrontService.setInstanceProvider(ironWallWarfrontServiceProvider);
         IdgelDomeService.setInstanceProvider(idgelDomeServiceProvider);
         IdgelDomeLandmarkService.setInstanceProvider(idgelDomeLandmarkServiceProvider);
-        HallOfTenacityService.setInstanceProvider(hallOfTenacityServiceProvider);
         GrandArenaTrainingCampService.setInstanceProvider(grandArenaTrainingCampServiceProvider);
         IDRunService.setInstanceProvider(idRunServiceProvider);
     }
@@ -202,20 +191,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     }
 
     /**
-     * 获取坚韧殿堂服务。
-     * Obtain the Hall of Tenacity service.
-     *
-     * Service instance
-     */
-    public static HallOfTenacityService hallOfTenacityService() {
-        ObjectProvider<HallOfTenacityService> provider = hallOfTenacityServiceProvider;
-        if (provider == null) {
-            return HallOfTenacityService.getInstance();
-        }
-        return provider.getIfAvailable(HallOfTenacityService::getInstance);
-    }
-
-    /**
      * 获取大竞技场训练营服务。
      * Obtain the Grand Arena Training Camp service.
      *
@@ -261,8 +236,6 @@ public final class GameBattlefieldServices implements DisposableBean {
         IdgelDomeService.setInstanceProvider(null);
         idgelDomeLandmarkServiceProvider = null;
         IdgelDomeLandmarkService.setInstanceProvider(null);
-        hallOfTenacityServiceProvider = null;
-        HallOfTenacityService.setInstanceProvider(null);
         grandArenaTrainingCampServiceProvider = null;
         GrandArenaTrainingCampService.setInstanceProvider(null);
         idRunServiceProvider = null;

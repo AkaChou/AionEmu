@@ -75,8 +75,6 @@ public class Info extends AdminCommand {
 				+ "\nParry: " + player.getGameStats().getParry().getCurrent()
 				+ "\nEvasion: " + player.getGameStats().getEvasion().getCurrent()
 				+ "\nMagic Resist: " + player.getGameStats().getMResist().getCurrent()
-				+ "\nHall Of Tenacity CoupleId: "+ player.getHOTCoupleId()
-				+ "\nHall Of Tenacity VersusId: "+ player.getHOTVSId()
 				);
 
 			for (int i = 0; i < 2; i++) {

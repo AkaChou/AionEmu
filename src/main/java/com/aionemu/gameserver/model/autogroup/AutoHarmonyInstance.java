@@ -29,8 +29,14 @@ public class AutoHarmonyInstance extends AutoInstance {
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		HarmonyArenaReward reward = (HarmonyArenaReward) instance.getInstanceHandler().getInstanceReward();
-		reward.addHarmonyGroup(new HarmonyGroupReward(1, 12000, (byte) 7, group1));
-		reward.addHarmonyGroup(new HarmonyGroupReward(2, 12000, (byte) 7, group2));
+		reward.addHarmonyGroup(new HarmonyGroupReward(1, reward.getArenaRow(), group1));
+		reward.addHarmonyGroup(new HarmonyGroupReward(2, reward.getArenaRow(), group2));
+	}
+
+	@Override
+	public void restorePlayer(AGPlayer player) {
+		super.restorePlayer(player);
+		(player.getMatchSide() == 0 ? group1 : group2).add(player);
 	}
 
 	/** 添加玩家。 / Adds player. */
@@ -62,17 +68,10 @@ public class AutoHarmonyInstance extends AutoInstance {
 	/** 按下回车时 / on Press Enter. */
 	@Override
 	public void onPressEnter(Player player) {
-		super.onPressEnter(player);
-		if (agt.isTrainingHarmonyArena() || agt.isHarmonyArena()) {
-			players.remove(player.getObjectId());
-			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceMaskId, 5));
-			if (players.isEmpty()) {
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance.getInstanceId());
-			}
-			return;
-		}
-		((HarmonyArenaReward) instance.getInstanceHandler().getInstanceReward()).portToPosition(player);
-		instance.register(player.getObjectId());
+		enter(player, () -> {
+			((HarmonyArenaReward) instance.getInstanceHandler().getInstanceReward()).portToPosition(player);
+			return true;
+		});
 	}
 
 	/** 进入副本 / On Enter Instance*/
@@ -105,7 +104,12 @@ public class AutoHarmonyInstance extends AutoInstance {
 	/** 离开副本 / On Leave Instance*/
 	@Override
 	public void onLeaveInstance(Player player) {
-		unregister(player);
+		AGPlayer matchPlayer = players.get(player.getObjectId());
+		if (matchPlayer != null) {
+			matchPlayer.setInInstance(false);
+			matchPlayer.setOnline(false);
+		}
+		super.unregister(player);
 		PlayerGroupService.removePlayer(player);
 	}
 
@@ -162,11 +166,12 @@ public class AutoHarmonyInstance extends AutoInstance {
 				return AGQuestion.FAILED;
 			}
 		}
-		if (group.size() + searchInstance.getMembers().size() <= 2) {
+		if (group.size() + searchInstance.getMembers().size() <= agt.getPlayersPerSide()) {
 			for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
 				Integer obj = member.getObjectId();
 				if (searchInstance.getMembers().contains(obj)) {
 					AGPlayer agp = new AGPlayer(member);
+					agp.setMatchSide((byte) (group == group1 ? 0 : 1));
 					group.add(agp);
 					players.put(obj, agp);
 				}
@@ -180,7 +185,8 @@ public class AutoHarmonyInstance extends AutoInstance {
 	private AGQuestion canAddPlayer(List<AGPlayer> group, Player player) {
 		Integer obj = player.getObjectId();
 		AGPlayer agp = new AGPlayer(player);
-		if (group.size() < 2) {
+		agp.setMatchSide((byte) (group == group1 ? 0 : 1));
+		if (group.size() < agt.getPlayersPerSide()) {
 			if (group.isEmpty()) {
 				group.add(agp);
 				players.put(obj, agp);

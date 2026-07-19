@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.model.team2.group.events;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.common.events.PlayerLeavedEvent;
 import com.aionemu.gameserver.model.team2.common.legacy.GroupEvent;
@@ -64,6 +64,7 @@ public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember,
 			PacketSendUtility.sendPacket(leavedPlayer, SM_SYSTEM_MESSAGE.STR_PARTY_IS_DISPERSED);
 			break;
 		}
+		GameRuntimeServices.findGroupService().onTeamChanged(team);
 
 		if (leavedPlayer.isInInstance()) {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
