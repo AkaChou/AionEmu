@@ -8,7 +8,6 @@ import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
@@ -18,13 +17,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 阿德玛要塞副本事件处理器。
@@ -36,14 +29,6 @@ import java.util.concurrent.Future;
 @InstanceID(320130000)
 public class AdmaStrongholdInstance extends GeneralInstanceHandler
 {
-	/** 是否启动计时器 / is start timer */
-		private boolean isStartTimer = false;
-	/** suspiciouspot 任务 / suspicious pot task */
-		private Future<?> suspiciousPotTask;
-	/** suspicious pot / suspicious pot */
-		private List<Npc> suspiciousPot = new ArrayList<Npc>();
-	/** 对象 / objects */
-		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -148,14 +133,33 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
-		spawn(237244, 606.483f, 745.0968f, 197.72092f, (byte) 61); //Enthralled Lannok.
-		switch (Rnd.get(1, 2)) {
+		if (!runtimeState().getBoolean("adma.lannok_dead", false)) {
+			spawn(237244, 606.483f, 745.0968f, 197.72092f, (byte) 61); //Enthralled Lannok.
+		}
+		int gutorumPosition = runtimeState().getInt("adma.gutorum_position", 0);
+		if (gutorumPosition == 0) {
+			gutorumPosition = Rnd.get(1, 2);
+			runtimeState().put("adma.gutorum_position", gutorumPosition);
+		}
+		switch (gutorumPosition) {
 		    case 1:
 				spawn(237240, 378.346f, 222.61f, 164.007f, (byte) 65); //Enthralled Gutorum.
 			break;
 			case 2:
 				spawn(237240, 525.4f, 222.724f, 164.007f, (byte) 88); //Enthralled Gutorum.
 			break;
+		}
+		if (runtimeState().getBoolean("adma.complete", false)) {
+			spawnExit();
+		}
+		long potDeadline = runtimeState().getLong("adma.pot_deadline", 0);
+		if (potDeadline > 0 && !runtimeState().getBoolean("adma.pot_removed", false)) {
+			spawn(237245, 451.54147f, 276.3691f, 170.08488f, (byte) 90);
+			scheduleDeadline("pot", potDeadline, this::expirePot);
+		}
+		long reaperDeadline = runtimeState().getLong("adma.reaper_deadline", 0);
+		if (reaperDeadline > 0 && !runtimeState().getBoolean("adma.reaper_spawned", false)) {
+			scheduleDeadline("reaper", reaperDeadline, this::spawnReaper);
 		}
     }
 	
@@ -167,26 +171,21 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onEnterInstance(final Player player) {
-		super.onInstanceCreate(instance);
 		// 可疑罐子将在 3 分钟后消失。 / The Suspicious Pot will disappear in 3 minutes.
-		sendMsgByRace(1403059, Race.PC_ALL, 2000);
-		if (!isStartTimer) {
-			isStartTimer = true;
-			System.currentTimeMillis();
-			suspiciousPot.add((Npc) spawn(237245, 451.54147f, 276.3691f, 170.08488f, (byte) 90)); //Suspicious Pot.
-			suspiciousPotTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					// 可疑罐子已消失。 / The Suspicious Pot has disappeared.
-					sendMsg(1403060);
-					suspiciousPot.get(0).getController().onDelete();
-				}
-			}, 180000);
+		if (runtimeState().getLong("adma.pot_deadline", 0) == 0
+				&& !runtimeState().getBoolean("adma.pot_removed", false)) {
+			sendMsgByRace(1403059, Race.PC_ALL, 2000);
+			spawn(237245, 451.54147f, 276.3691f, 170.08488f, (byte) 90); //Suspicious Pot.
+			long deadline = System.currentTimeMillis() + 180_000;
+			runtimeState().put("adma.pot_deadline", deadline);
+			scheduleDeadline("pot", deadline, this::expirePot);
 		}
+	}
+
+	private void expirePot() {
+		runtimeState().put("adma.pot_removed", true);
+		sendMsg(1403060);
+		deleteNpc(237245);
 	}
 	
     /**
@@ -200,7 +199,8 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 237245: //Suspicious Pot.
-				suspiciousPotTask.cancel(true);
+				runtimeState().put("adma.pot_removed", true);
+				cancelDeadline("pot");
 				// 须按正确顺序摧毁暗影幽魂，否则它们会保留力量。 / Destroy the Shadow Specters in the proper order or they will retain their power.
 				sendMsgByRace(1403038, Race.PC_ALL, 4000);
 				// 暗影幽魂正前往仓库，寻找仓库管理员古托伦。 / The Shadow Specter is moving towards the storehouse, to look for Warehouse Manager Gutorum.
@@ -232,18 +232,10 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
             break;
 			case 237244: //Enthralled Lannok.
 				despawnNpc(npc);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						// 死亡收割者出现在崩塌观察哨。 / The Death Reaper appeared at the Collapsed Observation Post.
-						sendMsgByRace(1403019, Race.PC_ALL, 0);
-						spawn(237239, 606.483f, 745.0968f, 197.72092f, (byte) 61); //Death Reaper.
-				    }
-			    }, 3000);
+				runtimeState().put("adma.lannok_dead", true);
+				long deadline = System.currentTimeMillis() + 3_000;
+				runtimeState().put("adma.reaper_deadline", deadline);
+				scheduleDeadline("reaper", deadline, this::spawnReaper);
             break;
 			case 237239: //Death Reaper.
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Adma Stronghold>");
@@ -255,12 +247,33 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 					    spawn(702659, 614.9905f, 745.60156f, 198.75998f, (byte) 60); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				} */
-				SpawnTemplate wreckOfUnstableExit = SpawnEngine.addNewSingleTimeSpawn(320130000, 730176, 627.72888f, 745.44885f, 199.8019f, (byte) 0);
-			    wreckOfUnstableExit.setEntityId(66);
-			    objects.put(730176, SpawnEngine.spawnObject(wreckOfUnstableExit, instanceId));
+				runtimeState().put("adma.complete", true);
+				spawnExit();
             break;
 		}
     }
+
+	private void spawnReaper() {
+		if (runtimeState().getBoolean("adma.reaper_spawned", false)) {
+			return;
+		}
+		runtimeState().put("adma.reaper_spawned", true);
+		sendMsgByRace(1403019, Race.PC_ALL, 0);
+		spawn(237239, 606.483f, 745.0968f, 197.72092f, (byte) 61);
+	}
+
+	private void spawnExit() {
+		SpawnTemplate exit = SpawnEngine.addNewSingleTimeSpawn(320130000, 730176, 627.72888f, 745.44885f, 199.8019f, (byte) 0);
+		exit.setEntityId(66);
+		SpawnEngine.spawnObject(exit, instanceId);
+	}
+
+	private void deleteNpc(int npcId) {
+		Npc npc = getNpc(npcId);
+		if (npc != null) {
+			npc.getController().onDelete();
+		}
+	}
 	/**
 	 * 移除相关物品。
 	 * Remove related items.

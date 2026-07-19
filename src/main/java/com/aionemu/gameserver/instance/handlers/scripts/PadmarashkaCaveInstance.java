@@ -21,10 +21,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 帕德玛拉什卡洞穴副本事件处理器。
@@ -40,10 +37,6 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 		private int dramataEgg55;
 	/** dramata fi55ae / dramata fi55ae */
 		private int dramataFi55Ae;
-	/** dramata 任务 / dramata task */
-		private Future<?> dramataTask;
-	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
 	
 	/**
 	 * 玩家进入副本时处理。
@@ -53,9 +46,12 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public void onEnterInstance(Player player) {
-		super.onInstanceCreate(instance);
 		// 须在时限内击败守护者以唤醒处于防护沉眠的帕德玛拉什卡。 / You must defeat the protector within the time limit to wake Padmarashka from the Protective Slumber.
 		sendMsgByRace(1400711, Race.PC_ALL, 10000);
+		if (runtimeState().getLong("padma.deadline", 0) == 0
+				&& !runtimeState().getBoolean("padma.complete", false)) {
+			startPadmarashkaTimer();
+		}
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
 			 * 处理 visit。
@@ -66,8 +62,8 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					startPadmarashkaTimer();
-					PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 7200)); //2Hrs.
+					long remaining = Math.max(0, runtimeState().getLong("padma.deadline", 0) - System.currentTimeMillis());
+					PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, (int) (remaining / 1000)));
 				}
 			}
 		});
@@ -82,11 +78,15 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
+		dramataEgg55 = runtimeState().getInt("padma.eggs", 0);
+		dramataFi55Ae = runtimeState().getInt("padma.protectors", 0);
 		Npc npc = instance.getNpc(218756); //Padmarashka.
-		if (npc != null) {
+		if (npc != null && dramataFi55Ae < 4 && !runtimeState().getBoolean("padma.complete", false)
+				&& !runtimeState().getBoolean("padma.expired", false)) {
 			npc.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
 			GameEngineServices.skillEngine().getSkill(npc, 19186, 60, npc).useNoAnimationSkill(); //Protective Slumber.
 		}
+		restorePadmarashkaTimer();
 	}
 	
 	/**
@@ -172,7 +172,8 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 218756: //Padmarashka.
-			    dramataTask.cancel(true);
+				runtimeState().put("padma.complete", true);
+				cancelPadmarashkaTimer();
 				// 帕德玛拉什卡已死亡。30 分钟后将离开其洞穴。 / Padmarashka has died. You will be removed from Padmarashka's Cave in 30 minutes.
 				sendMsgByRace(1400675, Race.PC_ALL, 10000);
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Padmarashka Cave>");
@@ -194,6 +195,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			case 282613: //Padmarashka's Eggs.
 			case 282614: //Huge Padmarashka's Eggs.
 			    dramataEgg55++;
+				runtimeState().put("padma.eggs", dramataEgg55);
 				if (dramataEgg55 == 2) {
 					// 帕德玛拉什卡即将产卵。 / Padmarashka is about to lay eggs.
 					sendMsgByRace(1400526, Race.PC_ALL, 0);
@@ -208,6 +210,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			case 218674: //Padmarashka's Chief Medic.
 				Npc dramata55Al = instance.getNpc(218756); //Padmarashka.
 				dramataFi55Ae++;
+				runtimeState().put("padma.protectors", dramataFi55Ae);
 				if (dramata55Al != null) {
 					if (dramataFi55Ae == 1) {
 					} else if (dramataFi55Ae == 2) {
@@ -226,37 +229,39 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	private void startPadmarashkaTimer() {
         // 帕德玛拉什卡施放防御魔法。2 小时后将离开其洞穴。 / Padmarashka has cast defensive magic. You will be removed from Padmarashka's Cave in 2 hours.
 		sendMsg(1400506);
-		// 你将在 1 小时 30 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 1 hour and 30 minutes.
-        this.sendMessage(1400507, 30 * 60 * 1000);
-		// 你将在 1 小时后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 1 hour.
-		this.sendMessage(1400508, 60 * 60 * 1000);
-		// 你将在 30 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 30 minutes.
-		this.sendMessage(1400509, 90 * 60 * 1000);
-		// 你将在 15 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 15 minutes.
-		this.sendMessage(1400510, 105 * 60 * 1000);
-		// 你将在 10 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 10 minutes.
-		this.sendMessage(1400511, 110 * 60 * 1000);
-		// 你将在 5 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 5 minutes.
-		this.sendMessage(1400512, 115 * 60 * 1000);
-		// 你将在 3 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 3 minutes.
-		this.sendMessage(1400513, 117 * 60 * 1000);
-		// 你将在 2 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 2 minutes.
-		this.sendMessage(1400514, 118 * 60 * 1000);
-		// 你将在 1 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 1 minute.
-		this.sendMessage(1400515, 119 * 60 * 1000);
-        dramataTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-				// 你被帕德玛拉什卡的防御魔法强制移出洞穴。 / You have been forcibly removed from Padmarashka's Cave by Padmarashka's defensive magic.
-				sendMsgByRace(1400524, Race.PC_ALL, 0);
-				deleteNpc(218756); //Padmarashka.
-            }
-        }, 7200000);
+		long deadline = System.currentTimeMillis() + 7_200_000;
+		runtimeState().put("padma.deadline", deadline);
+		restorePadmarashkaTimer();
     }
+
+	private void restorePadmarashkaTimer() {
+		long deadline = runtimeState().getLong("padma.deadline", 0);
+		if (deadline == 0 || runtimeState().getBoolean("padma.complete", false)
+				|| runtimeState().getBoolean("padma.expired", false)) {
+			return;
+		}
+		int[] messages = { 1400507, 1400508, 1400509, 1400510, 1400511, 1400512, 1400513, 1400514, 1400515 };
+		int[] remainingMinutes = { 90, 60, 30, 15, 10, 5, 3, 2, 1 };
+		for (int i = 0; i < messages.length; i++) {
+			int message = messages[i];
+			scheduleDeadline("warning_" + remainingMinutes[i], deadline - remainingMinutes[i] * 60_000L,
+					() -> sendMsg(message));
+		}
+		scheduleDeadline("expire", deadline, this::expirePadmarashka);
+	}
+
+	private void expirePadmarashka() {
+		runtimeState().put("padma.expired", true);
+		sendMsgByRace(1400524, Race.PC_ALL, 0);
+		deleteNpc(218756);
+	}
+
+	private void cancelPadmarashkaTimer() {
+		for (int remaining : new int[] { 90, 60, 30, 15, 10, 5, 3, 2, 1 }) {
+			cancelDeadline("warning_" + remaining);
+		}
+		cancelDeadline("expire");
+	}
 	
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
@@ -330,8 +335,9 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	}
 	
 	private void sendMovie(Player player, int movie) {
-        if (!movies.contains(movie)) {
-            movies.add(movie);
+		String key = "padma.movie." + movie;
+        if (!runtimeState().getBoolean(key, false)) {
+			runtimeState().put(key, true);
             PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
@@ -356,6 +362,5 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public void onInstanceDestroy() {
-		movies.clear();
     }
 }
