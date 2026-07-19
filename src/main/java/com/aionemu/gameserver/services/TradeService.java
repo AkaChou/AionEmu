@@ -8,6 +8,7 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -68,10 +69,6 @@ public class TradeService {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
 		}
-		if (player.getInventory().isFull()) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
-			return false;
-		}
 		if (!validateBuyItems(npc, tradeList, player)) {
 			PacketSendUtility.sendMessage(player, "Some items are not allowed to be sold by this npc.");
 			return false;
@@ -84,67 +81,31 @@ public class TradeService {
 		if (!tradeList.calculateRewardBuyListPrice(player)) {
 			return false;
 		}
-		int freeSlots = inventory.getFreeSlots();
-		if (freeSlots < tradeList.size()) {
+		if (!hasInventorySpace(inventory, tradeList)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 			return false;
 		}
 		long tradeListPrice = tradeList.getRequiredKinah();
-		LimitedItem item = null;
-		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			item = GameRuntimeServices.limitedItemTradeService().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
-			if (item != null) {
-				if (item.getBuyLimit() == 0 && item.getDefaultSellLimit() != 0) {
-					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
-					if (item.getSellLimit() - tradeItem.getCount() < 0) {
-						return false;
-					}
-					item.setSellLimit(item.getSellLimit() - (int) tradeItem.getCount());
-				} else if (item.getBuyLimit() != 0 && item.getDefaultSellLimit() == 0) {
-					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
-					if (item.getBuyLimit() - tradeItem.getCount() < 0) {
-						return false;
-					}
-					if (item.getBuyCount().containsKey(player.getObjectId())) {
-						if (item.getBuyCount().get(player.getObjectId()) < item.getBuyLimit()) {
-							item.getBuyCount().put(player.getObjectId(),
-									item.getBuyCount().get(player.getObjectId()) + (int) tradeItem.getCount());
-						} else {
-							return false;
-						}
-					}
-				} else if (item.getBuyLimit() != 0 && item.getDefaultSellLimit() != 0) {
-					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
-					if (item.getBuyLimit() - tradeItem.getCount() < 0
-							|| item.getSellLimit() - tradeItem.getCount() < 0) {
-						return false;
-					}
-					if (item.getBuyCount().containsKey(player.getObjectId())) {
-						if (item.getBuyCount().get(player.getObjectId()) < item.getBuyLimit()) {
-							item.getBuyCount().put(player.getObjectId(),
-									item.getBuyCount().get(player.getObjectId()) + (int) tradeItem.getCount());
-						} else {
-							return false;
-						}
-					}
-					item.setSellLimit(item.getSellLimit() - (int) tradeItem.getCount());
-				}
+		LimitedItemTradeService limitedItemService = GameRuntimeServices.limitedItemTradeService();
+		synchronized (limitedItemService) {
+			Map<LimitedItem, Long> limitedItems = getLimitedItems(limitedItemService, npc.getNpcId(), tradeList);
+			if (limitedItems == null || !canPurchaseLimitedItems(player, limitedItems)) {
+				return false;
 			}
-			Map<Integer, Long> requiredItems = tradeList.getRequiredItems();
-			for (Integer itemId : requiredItems.keySet()) {
-				if (!player.getInventory().decreaseByItemId(itemId, requiredItems.get(itemId))) {
-					AuditLogger.info(player, "Possible hack. Not " + "removed items on buy in shop.");
+			if (!decreaseRequiredItems(player, tradeList, "Possible hack. Not removed items on buy in shop.")) {
+				return false;
+			}
+			inventory.decreaseKinah(tradeListPrice);
+			applyLimitedItems(player, limitedItems);
+			for (TradeItem tradeItem : tradeList.getTradeItems()) {
+				long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
+				if (count != 0) {
+					log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
+							tradeItem.getCount(), count));
 					return false;
 				}
 			}
-			long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
-			if (count != 0) {
-			log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
-					tradeItem.getCount(), count));
-				inventory.decreaseKinah(tradeListPrice);
-				return false;
-			}
 		}
-		inventory.decreaseKinah(tradeListPrice);
 		return true;
 	}
 
@@ -161,16 +122,11 @@ public class TradeService {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
 		}
-		if (player.getInventory().isFull()) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
-			return false;
-		}
 		if (!validateBuyItems(npc, tradeList, player)) {
 			PacketSendUtility.sendMessage(player, "Some items are not allowed to be selled from this npc");
 			return false;
 		}
 		Storage inventory = player.getInventory();
-		int freeSlots = inventory.getFreeSlots();
 		if (!tradeList.calculateAbyssBuyListPrice(player)) {
 			return false;
 		}
@@ -179,70 +135,35 @@ public class TradeService {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300927));
 			return false;
 		}
-		if (freeSlots < tradeList.size()) {
+		if (!hasInventorySpace(inventory, tradeList)) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300762));
 			return false;
 		}
-		AbyssPointsService.addAp(player, -tradeList.getRequiredAp());
-		LimitedItem item = null;
-		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			item = GameRuntimeServices.limitedItemTradeService().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
-			if (item != null) {
-				if (item.getBuyLimit() == 0 && item.getDefaultSellLimit() != 0) {
-					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
-					if (item.getSellLimit() - tradeItem.getCount() < 0) {
-						return false;
-					}
-					item.setSellLimit(item.getSellLimit() - (int) tradeItem.getCount());
-				} else if (item.getBuyLimit() != 0 && item.getDefaultSellLimit() == 0) {
-					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
-					if (item.getBuyLimit() - tradeItem.getCount() < 0) {
-						return false;
-					}
-					if (item.getBuyCount().containsKey(player.getObjectId())) {
-						if (item.getBuyCount().get(player.getObjectId()) < item.getBuyLimit()) {
-							item.getBuyCount().put(player.getObjectId(),
-									item.getBuyCount().get(player.getObjectId()) + (int) tradeItem.getCount());
-						} else {
-							return false;
-						}
-					}
-				} else if (item.getBuyLimit() != 0 && item.getDefaultSellLimit() != 0) {
-					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
-					if (item.getBuyLimit() - tradeItem.getCount() < 0
-							|| item.getSellLimit() - tradeItem.getCount() < 0) {
-						return false;
-					}
-					if (item.getBuyCount().containsKey(player.getObjectId())) {
-						if (item.getBuyCount().get(player.getObjectId()) < item.getBuyLimit()) {
-							item.getBuyCount().put(player.getObjectId(),
-									item.getBuyCount().get(player.getObjectId()) + (int) tradeItem.getCount());
-						} else {
-							return false;
-						}
-					}
-					item.setSellLimit(item.getSellLimit() - (int) tradeItem.getCount());
-				}
-			}
-			Map<Integer, Long> requiredItems = tradeList.getRequiredItems();
-			for (Integer itemId : requiredItems.keySet()) {
-				if (!player.getInventory().decreaseByItemId(itemId, requiredItems.get(itemId))) {
-					AuditLogger.info(player, "Possible hack. Not removed items on buy in abyss shop.");
-					return false;
-				}
-			}
-			long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
-			if (count != 0) {
-			log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
-					tradeItem.getCount(), count));
+		LimitedItemTradeService limitedItemService = GameRuntimeServices.limitedItemTradeService();
+		synchronized (limitedItemService) {
+			Map<LimitedItem, Long> limitedItems = getLimitedItems(limitedItemService, npc.getNpcId(), tradeList);
+			if (limitedItems == null || !canPurchaseLimitedItems(player, limitedItems)) {
 				return false;
 			}
-			if (tradeItem.getCount() > 1) {
-				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300785,
-						new DescriptionId(tradeItem.getItemTemplate().getNameId()), tradeItem.getCount()));
-			} else {
-				PacketSendUtility.sendPacket(player,
-						new SM_SYSTEM_MESSAGE(1300784, new DescriptionId(tradeItem.getItemTemplate().getNameId())));
+			if (!decreaseRequiredItems(player, tradeList, "Possible hack. Not removed items on buy in abyss shop.")) {
+				return false;
+			}
+			AbyssPointsService.addAp(player, -tradeList.getRequiredAp());
+			applyLimitedItems(player, limitedItems);
+			for (TradeItem tradeItem : tradeList.getTradeItems()) {
+				long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
+				if (count != 0) {
+					log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
+							tradeItem.getCount(), count));
+					return false;
+				}
+				if (tradeItem.getCount() > 1) {
+					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300785,
+							new DescriptionId(tradeItem.getItemTemplate().getNameId()), tradeItem.getCount()));
+				} else {
+					PacketSendUtility.sendPacket(player,
+							new SM_SYSTEM_MESSAGE(1300784, new DescriptionId(tradeItem.getItemTemplate().getNameId())));
+				}
 			}
 		}
 		return true;
@@ -260,70 +181,103 @@ public class TradeService {
 	public static boolean performBuyFromRewardShop(Npc npc, Player player, TradeList tradeList) {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
-		} if (player.getInventory().isFull()) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
-			return false;
 		} if (!validateBuyItems(npc, tradeList, player)) {
 			PacketSendUtility.sendMessage(player, "Some items are not allowed to be selled from this npc");
 			return false;
 		}
 		Storage inventory = player.getInventory();
-		int freeSlots = inventory.getFreeSlots();
 		if (!tradeList.calculateRewardBuyListPrice(player)) {
 			return false;
-		} if (freeSlots < tradeList.size()) {
+		} if (!hasInventorySpace(inventory, tradeList)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 			return false;
 		}
-		LimitedItem item = null;
-		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			item = GameRuntimeServices.limitedItemTradeService().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
-			if (item != null) {
-				if (item.getBuyLimit() == 0 && item.getDefaultSellLimit() != 0) {
-					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
-					if (item.getSellLimit() - tradeItem.getCount() < 0) {
-						return false;
-					}
-					item.setSellLimit(item.getSellLimit() - (int) tradeItem.getCount());
-				} else if (item.getBuyLimit() != 0 && item.getDefaultSellLimit() == 0) {
-					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
-					if (item.getBuyLimit() - tradeItem.getCount() < 0) {
-						return false;
-					} if (item.getBuyCount().containsKey(player.getObjectId())) {
-						if (item.getBuyCount().get(player.getObjectId()) < item.getBuyLimit()) {
-							item.getBuyCount().put(player.getObjectId(), item.getBuyCount().get(player.getObjectId()) + (int) tradeItem.getCount());
-						} else {
-							return false;
-						}
-					}
-				} else if (item.getBuyLimit() != 0 && item.getDefaultSellLimit() != 0) {
-					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
-					if (item.getBuyLimit() - tradeItem.getCount() < 0 || item.getSellLimit() - tradeItem.getCount() < 0) {
-						return false;
-					} if (item.getBuyCount().containsKey(player.getObjectId())) {
-						if (item.getBuyCount().get(player.getObjectId()) < item.getBuyLimit()) {
-							item.getBuyCount().put(player.getObjectId(), item.getBuyCount().get(player.getObjectId()) + (int) tradeItem.getCount());
-						} else {
-							return false;
-						}
-					}
-					item.setSellLimit(item.getSellLimit() - (int) tradeItem.getCount());
-				}
+		LimitedItemTradeService limitedItemService = GameRuntimeServices.limitedItemTradeService();
+		synchronized (limitedItemService) {
+			Map<LimitedItem, Long> limitedItems = getLimitedItems(limitedItemService, npc.getNpcId(), tradeList);
+			if (limitedItems == null || !canPurchaseLimitedItems(player, limitedItems)) {
+				return false;
 			}
-			Map<Integer, Long> requiredItems = tradeList.getRequiredItems();
-			for (Integer itemId : requiredItems.keySet()) {
-				if (!player.getInventory().decreaseByItemId(itemId, requiredItems.get(itemId))) {
-					AuditLogger.info(player, "Possible hack. Not removed items on buy in rewardshop.");
+			if (!decreaseRequiredItems(player, tradeList, "Possible hack. Not removed items on buy in rewardshop.")) {
+				return false;
+			}
+			applyLimitedItems(player, limitedItems);
+			for (TradeItem tradeItem : tradeList.getTradeItems()) {
+				long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
+				if (count != 0) {
+					log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
+							tradeItem.getCount(), count));
 					return false;
 				}
 			}
-			long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
-			if (count != 0) {
-			log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
-					tradeItem.getCount(), count));
+		}
+		return true;
+	}
+
+	static boolean hasInventorySpace(Storage inventory, TradeList tradeList) {
+		Map<Integer, Long> requestedCounts = new HashMap<>();
+		Map<Integer, ItemTemplate> templates = new HashMap<>();
+		for (TradeItem tradeItem : tradeList.getTradeItems()) {
+			requestedCounts.merge(tradeItem.getItemId(), tradeItem.getCount(), Long::sum);
+			templates.put(tradeItem.getItemId(), tradeItem.getItemTemplate());
+		}
+
+		return ItemService.canAddItems(inventory, requestedCounts, templates);
+	}
+
+	private static boolean decreaseRequiredItems(Player player, TradeList tradeList, String auditMessage) {
+		if (!ItemService.decreaseItems(player, tradeList.getRequiredItems())) {
+			AuditLogger.info(player, auditMessage);
+			return false;
+		}
+		return true;
+	}
+
+	private static Map<LimitedItem, Long> getLimitedItems(LimitedItemTradeService service, int npcId,
+			TradeList tradeList) {
+		Map<LimitedItem, Long> limitedItems = new HashMap<>();
+		try {
+			for (TradeItem tradeItem : tradeList.getTradeItems()) {
+				LimitedItem limitedItem = service.getLimitedItem(tradeItem.getItemId(), npcId);
+				if (limitedItem != null) {
+					limitedItems.merge(limitedItem, tradeItem.getCount(), Math::addExact);
+				}
+			}
+		} catch (ArithmeticException e) {
+			return null;
+		}
+		return limitedItems;
+	}
+
+	static boolean canPurchaseLimitedItems(Player player, Map<LimitedItem, Long> limitedItems) {
+		for (Map.Entry<LimitedItem, Long> entry : limitedItems.entrySet()) {
+			LimitedItem item = entry.getKey();
+			long count = entry.getValue();
+			if (count < 1 || count > Integer.MAX_VALUE) {
+				return false;
+			}
+			if (item.getDefaultSellLimit() != 0 && item.getSellLimit() < count) {
+				return false;
+			}
+			long bought = item.getBuyCount().getOrDefault(player.getObjectId(), 0);
+			if (item.getBuyLimit() != 0 && bought + count > item.getBuyLimit()) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	private static void applyLimitedItems(Player player, Map<LimitedItem, Long> limitedItems) {
+		for (Map.Entry<LimitedItem, Long> entry : limitedItems.entrySet()) {
+			LimitedItem item = entry.getKey();
+			int count = entry.getValue().intValue();
+			if (item.getDefaultSellLimit() != 0) {
+				item.setSellLimit(item.getSellLimit() - count);
+			}
+			if (item.getBuyLimit() != 0) {
+				item.getBuyCount().merge(player.getObjectId(), count, Integer::sum);
+			}
+		}
 	}
 
 	private static boolean validateBuyItems(Npc npc, TradeList tradeList, Player player) {
@@ -415,8 +369,7 @@ public class TradeService {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
 		}
-		if (player.getInventory().isFull()) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
+		if (count < 1) {
 			return false;
 		}
 		VisibleObject visibleObject = player.getKnownList().getObject(npcObjectId);
@@ -441,27 +394,35 @@ public class TradeService {
 			return false;
 		}
 		ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(itemId);
-		if (itemTemplate.getMaxStackCount() < count) {
+		if (itemTemplate == null || !ItemService.canAddItem(player, itemId, count)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 			return false;
 		}
+		Map<Integer, Long> requiredItems = new HashMap<>();
 		try {
 			for (TradeinItem treadInList : itemTemplate.getTradeinList().getTradeinItem()) {
-				if (player.getInventory().getItemCountByItemId(treadInList.getId()) < SafeMath
-						.multSafe(treadInList.getPrice(), count)) {
-					return false;
-				}
-			}
-			for (TradeinItem treadInList : itemTemplate.getTradeinList().getTradeinItem()) {
-				if (!player.getInventory().decreaseByItemId(treadInList.getId(),
-						SafeMath.multSafe(treadInList.getPrice(), count))) {
-					return false;
-				}
+				requiredItems.merge(treadInList.getId(), (long) SafeMath.multSafe(treadInList.getPrice(), count), Math::addExact);
 			}
 		} catch (OverfowException e) {
 			AuditLogger.info(player, "OverfowException using tradeInTrade " + e.getMessage());
 			return false;
+		} catch (ArithmeticException e) {
+			return false;
 		}
-		ItemService.addItem(player, itemId, count);
+		if (!ItemService.decreaseItems(player, requiredItems)) {
+			return false;
+		}
+		long remaining = ItemService.addItem(player, itemId, count);
+		if (remaining != 0) {
+			long granted = count - remaining;
+			if (granted > 0) {
+				player.getInventory().decreaseByItemId(itemId, granted);
+			}
+			for (Map.Entry<Integer, Long> entry : requiredItems.entrySet()) {
+				ItemService.addItem(player, entry.getKey(), entry.getValue());
+			}
+			return false;
+		}
 		return true;
 	}
 

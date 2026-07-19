@@ -194,12 +194,16 @@ public class CraftingTask extends AbstractCraftTask {
 			if (critCount > 0 && this.checkCrit()) {
 				PacketSendUtility.broadcastPacket(requestor, new SM_CRAFT_ANIMATION(requestor.getObjectId(), responder.getObjectId(), 0, 2), true);
 				PacketSendUtility.sendPacket(requestor, new SM_CRAFT_UPDATE(recipeTemplate.getSkillid(), itemTemplateReal, currentSuccessValue, currentFailureValue, 5));
-				CraftService.finishCrafting(requestor, recipeTemplate, critCount, bonus);
+				if (!CraftService.finishCrafting(requestor, recipeTemplate, critCount, bonus)) {
+					return true;
+				}
 				return finishCraftAttempt();
 			}
 			PacketSendUtility.broadcastPacket(requestor, new SM_CRAFT_ANIMATION(requestor.getObjectId(), responder.getObjectId(), 0, 2), true);
 			PacketSendUtility.sendPacket(requestor, new SM_CRAFT_UPDATE(recipeTemplate.getSkillid(), itemTemplateReal, currentSuccessValue, currentFailureValue, 5));
-			CraftService.finishCrafting(requestor, recipeTemplate, critCount, bonus);
+			if (!CraftService.finishCrafting(requestor, recipeTemplate, critCount, bonus)) {
+				return true;
+			}
 			return finishCraftAttempt();
 		}
 	}

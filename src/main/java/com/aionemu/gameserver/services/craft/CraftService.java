@@ -5,6 +5,9 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -49,17 +52,11 @@ public class CraftService {
 	 * @param critCount 暴击次数（决定连击产物） / Crit count (selects combo product)
 	 * @param bonus 经验加成百分比 / Experience bonus percent
 	 */
-	public static void finishCrafting(final Player player, RecipeTemplate recipetemplate, int critCount, int bonus) {
-		if (recipetemplate.getMaxProductionCount() != null) {
-			player.getRecipeList().deleteRecipe(player, recipetemplate.getId());
-			if (critCount == 0) {
-				GameEngineServices.questEngine().onFailCraft(new QuestEnv(null, player, 0, 0), recipetemplate.getComboProduct(1) == null ? 0 : recipetemplate.getComboProduct(1));
-			}
-		}
+	public static boolean finishCrafting(final Player player, RecipeTemplate recipetemplate, int critCount, int bonus) {
 		int xpReward = (int) ((0.008 * (recipetemplate.getSkillpoint() + 100) * (recipetemplate.getSkillpoint() + 100) + 60));
 		xpReward = xpReward + (xpReward * bonus / 100);
 		int productItemId = critCount > 0 ? recipetemplate.getComboProduct(critCount) : recipetemplate.getProductid();
-		ItemService.addItem(player, productItemId, recipetemplate.getQuantity(), new ItemUpdatePredicate() {
+		long remaining = ItemService.addItem(player, productItemId, recipetemplate.getQuantity(), new ItemUpdatePredicate() {
 			@Override
 			public boolean changeItem(Item item) {
 				if (item.getItemTemplate().isWeapon() || item.getItemTemplate().isArmor()) {
@@ -82,6 +79,16 @@ public class CraftService {
 				return true;
 			}
 		});
+		if (remaining != 0) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
+			return false;
+		}
+		if (recipetemplate.getMaxProductionCount() != null) {
+			player.getRecipeList().deleteRecipe(player, recipetemplate.getId());
+			if (critCount == 0) {
+				GameEngineServices.questEngine().onFailCraft(new QuestEnv(null, player, 0, 0), recipetemplate.getComboProduct(1) == null ? 0 : recipetemplate.getComboProduct(1));
+			}
+		}
 		ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(productItemId);
 		int gainedCraftExp = (int) RewardType.CRAFTING.calcReward(player, xpReward);
 		int skillId = recipetemplate.getSkillid();
@@ -104,6 +111,7 @@ public class CraftService {
 		if (recipetemplate.getCraftDelayId() != null) {
 			player.getCraftCooldownList().addCraftCooldown(recipetemplate.getCraftDelayId(), recipetemplate.getCraftDelayTime());
 		}
+		return true;
 	}
 
 	/**
@@ -203,7 +211,13 @@ public class CraftService {
 			@Override
 			public void run() {
 				int xpReward = (int) ((2 * (recipeTemplate.getSkillpoint() + 100) * (recipeTemplate.getSkillpoint() + 100) + 60));
-				ItemService.addItem(player, recipeTemplate.getProductid(), (long) recipeTemplate.getQuantity() * productCount, new ItemUpdatePredicate(ItemAddType.AETHERFORGING, ItemUpdateType.INC_ITEM_COLLECT));
+				long remaining = ItemService.addItem(player, recipeTemplate.getProductid(), (long) recipeTemplate.getQuantity() * productCount, new ItemUpdatePredicate(ItemAddType.AETHERFORGING, ItemUpdateType.INC_ITEM_COLLECT));
+				if (remaining != 0) {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
+					player.getObserveController().removeObserver(observer);
+					PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 1), true);
+					return;
+				}
 				if (Rnd.get(1, 10) == 10 && player.getSkillList().getSkillLevel(40011) != 300) {
 					player.getObserveController().removeObserver(observer);
 					player.getCommonData().addExp(xpReward, RewardType.CRAFTING);
@@ -217,55 +231,59 @@ public class CraftService {
 	}
 
 	/**
-	 * 按配方校验并扣除指定材料（单次）。
-	 * Validate recipe and consume the specified material once.
+	 * 按客户端请求匹配完整材料面板，并按统一制作次数一次扣料。
+	 * Matches a complete component panel and consumes all materials for one uniform craft count.
 	 *
 	 * 玩家 / Player
 	 * Recipe id
-	 * Material item id
-	 * @param materialsCount 材料数量参数（保留） / Material count parameter (reserved)
-	 */
-	public static void checkComponents(Player player, int recipeId, int itemId, int materialsCount) {
-		RecipeTemplate recipeTemplate = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
-		if (recipeTemplate.getComponent() != null) {
-			for (Component a : recipeTemplate.getComponent()) {
-				for (ComponentElement b : a.getComponents()) {
-					if (b.getItemid().equals(itemId)) {
-						player.getInventory().decreaseByItemId(itemId, b.getQuantity());
-						return;
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * 按请求数量校验并扣除材料，返回可制作次数。
-	 * Validate and consume materials by requested quantity; return craftable count.
-	 *
-	 * 玩家 / Player
-	 * Recipe id
-	 * Material item id
-	 * Requested quantity
+	 * Requested material quantities
 	 *
 	 * @return 可制作次数，失败返回 0 / Craftable count, or 0 on failure
 	 */
-	public static int checkComponents(Player player, int recipeId, int itemId, long requestedCount) {
+	public static int consumeComponents(Player player, int recipeId, Map<Integer, Long> requestedComponents) {
 		RecipeTemplate recipeTemplate = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
-		if (recipeTemplate.getComponent() != null) {
-			for (Component a : recipeTemplate.getComponent()) {
-				for (ComponentElement b : a.getComponents()) {
-					if (b.getItemid().equals(itemId)) {
-						int craftCount = getCraftCount(b.getQuantity(), requestedCount);
-						if (craftCount > 0 && player.getInventory().decreaseByItemId(itemId, (long) b.getQuantity() * craftCount)) {
-							return craftCount;
-						}
-						return 0;
-					}
+		if (recipeTemplate == null || recipeTemplate.getComponent() == null || requestedComponents == null) {
+			return 0;
+		}
+		for (Component panel : recipeTemplate.getComponent()) {
+			Map<Integer, Integer> requirements = new HashMap<>();
+			try {
+				for (ComponentElement component : panel.getComponents()) {
+					requirements.merge(component.getItemid(), component.getQuantity(), Math::addExact);
 				}
+			} catch (ArithmeticException e) {
+				return 0;
 			}
+			int craftCount = getCraftCount(requirements, requestedComponents);
+			if (craftCount < 1 || !canStoreCraftProducts(player, recipeTemplate, craftCount)) {
+				continue;
+			}
+			Map<Integer, Long> consumedItems = new HashMap<>();
+			for (Map.Entry<Integer, Integer> entry : requirements.entrySet()) {
+				consumedItems.put(entry.getKey(), (long) entry.getValue() * craftCount);
+			}
+			return ItemService.decreaseItems(player, consumedItems) ? craftCount : 0;
 		}
 		return 0;
+	}
+
+	private static boolean canStoreCraftProducts(Player player, RecipeTemplate recipeTemplate, int craftCount) {
+		long productCount;
+		try {
+			productCount = Math.multiplyExact((long) recipeTemplate.getQuantity(), craftCount);
+		} catch (ArithmeticException e) {
+			return false;
+		}
+		if (!ItemService.canAddItem(player, recipeTemplate.getProductid(), productCount)) {
+			return false;
+		}
+		for (int i = 1; i <= recipeTemplate.getComboProductSize(); i++) {
+			Integer comboProduct = recipeTemplate.getComboProduct(i);
+			if (comboProduct != null && !ItemService.canAddItem(player, comboProduct, productCount)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -282,6 +300,21 @@ public class CraftService {
 		}
 		long count = requestedQuantity / requiredQuantity;
 		return count > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) count;
+	}
+
+	static int getCraftCount(Map<Integer, Integer> requirements, Map<Integer, Long> requestedComponents) {
+		if (requirements.isEmpty() || !requirements.keySet().equals(requestedComponents.keySet())) {
+			return 0;
+		}
+		int craftCount = Integer.MAX_VALUE;
+		for (Map.Entry<Integer, Integer> entry : requirements.entrySet()) {
+			Long requestedCount = requestedComponents.get(entry.getKey());
+			if (requestedCount == null) {
+				return 0;
+			}
+			craftCount = Math.min(craftCount, getCraftCount(entry.getValue(), requestedCount));
+		}
+		return craftCount;
 	}
 
 	/**

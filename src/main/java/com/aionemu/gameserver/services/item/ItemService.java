@@ -8,7 +8,9 @@ import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
@@ -100,6 +102,108 @@ public class ItemService {
 	 */
 	public static long addItem(Player player, int itemId, long count) {
 		return addItem(player, itemId, count, DEFAULT_UPDATE_PREDICATE);
+	}
+
+	/**
+	 * 判断单种物品能否完整放入玩家背包。
+	 * Checks whether one item type can be added to the player's inventory in full.
+	 */
+	public static boolean canAddItem(Player player, int itemId, long count) {
+		return canAddItems(player, Map.of(itemId, count));
+	}
+
+	/**
+	 * 判断一组物品能否完整放入玩家背包。
+	 * Checks whether all requested items can be added to the player's inventory in full.
+	 */
+	public static boolean canAddItems(Player player, Map<Integer, Long> itemCounts) {
+		Map<Integer, ItemTemplate> templates = new HashMap<>();
+		for (Integer itemId : itemCounts.keySet()) {
+			templates.put(itemId, DataManager.ITEM_DATA.getItemTemplate(itemId));
+		}
+		return canAddItems(player.getInventory(), itemCounts, templates, 0, 0);
+	}
+
+	/**
+	 * 判断一组物品能否完整放入指定背包。
+	 * Checks whether all requested items can be added to the given storage in full.
+	 */
+	public static boolean canAddItems(Storage inventory, Map<Integer, Long> itemCounts,
+			Map<Integer, ItemTemplate> templates) {
+		return canAddItems(inventory, itemCounts, templates, 0, 0);
+	}
+
+	/**
+	 * 判断交换物品后是否有足够空间；可计入即将释放的普通/特殊背包格。
+	 * Checks capacity after an exchange, including regular/special slots that will be released.
+	 */
+	public static boolean canAddItems(Storage inventory, Map<Integer, Long> itemCounts,
+			Map<Integer, ItemTemplate> templates, int releasedRegularSlots, int releasedSpecialSlots) {
+		long regularSlots = Math.max(0, releasedRegularSlots) + (long) inventory.getFreeSlots();
+		long specialSlots = Math.max(0, releasedSpecialSlots) + (long) inventory.getSpecialCubeFreeSlots();
+		for (Map.Entry<Integer, Long> entry : itemCounts.entrySet()) {
+			long remainingCount = entry.getValue() == null ? 0 : entry.getValue();
+			if (remainingCount < 0) {
+				return false;
+			}
+			if (remainingCount == 0) {
+				continue;
+			}
+			ItemTemplate template = templates.get(entry.getKey());
+			if (template == null) {
+				return false;
+			}
+			if (template.isKinah()) {
+				continue;
+			}
+			long maxStackCount = template.getMaxStackCount();
+			if (maxStackCount < 1) {
+				return false;
+			}
+			if (template.isStackable()) {
+				for (Item item : inventory.getItemsByItemId(entry.getKey())) {
+					remainingCount -= Math.min(remainingCount, Math.max(0, maxStackCount - item.getItemCount()));
+					if (remainingCount == 0) {
+						break;
+					}
+				}
+			}
+			long requiredSlots = remainingCount == 0 ? 0 : 1 + (remainingCount - 1) / maxStackCount;
+			if (template.getExtraInventoryId() > 0) {
+				specialSlots -= requiredSlots;
+				if (specialSlots < 0) {
+					return false;
+				}
+			} else {
+				regularSlots -= requiredSlots;
+				if (regularSlots < 0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 原子式校验并扣除一组背包物品，避免中途失败造成部分材料损失。
+	 * Validates and consumes a group of inventory items atomically to avoid partial loss.
+	 */
+	public static boolean decreaseItems(Player player, Map<Integer, Long> itemCounts) {
+		Storage inventory = player.getInventory();
+		synchronized (inventory) {
+			for (Map.Entry<Integer, Long> entry : itemCounts.entrySet()) {
+				Long count = entry.getValue();
+				if (count == null || count < 0 || inventory.getItemCountByItemId(entry.getKey()) < count) {
+					return false;
+				}
+			}
+			for (Map.Entry<Integer, Long> entry : itemCounts.entrySet()) {
+				if (entry.getValue() > 0 && !inventory.decreaseByItemId(entry.getKey(), entry.getValue())) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**

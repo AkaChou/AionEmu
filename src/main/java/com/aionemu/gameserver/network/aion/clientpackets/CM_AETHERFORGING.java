@@ -7,6 +7,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_AETHERFORGING_PLAYER
 import com.aionemu.gameserver.services.craft.CraftService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 奥德锻造：开始或停止制作的客户端包。
  * Client packet to start or stop aetherforging craft.
@@ -14,16 +17,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author Ranastic
  */
 public class CM_AETHERFORGING extends AionClientPacket {
-	private int itemID;
-	@SuppressWarnings("unused")
-	private long itemCount;
 	private int actionId;
 	private int targetTemplateId;
 	private int recipeId;
 	private int targetObjId;
 	private int materialsCount;
 	private int craftType;
-	private int craftCount = 1;
+	private final Map<Integer, Long> requestedComponents = new HashMap<>();
 	private boolean componentsOk = true;
 
 	public CM_AETHERFORGING(int opcode, State state, State... restStates) {
@@ -32,7 +32,6 @@ public class CM_AETHERFORGING extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		Player player = getConnection().getActivePlayer();
 		actionId = readC();
 		switch (actionId) {
 		case 0:
@@ -43,7 +42,7 @@ public class CM_AETHERFORGING extends AionClientPacket {
 			craftType = readC();
 			break;
 		case 1:
-			craftCount = 0;
+			requestedComponents.clear();
 			componentsOk = true;
 			targetTemplateId = readD();
 			recipeId = readD();
@@ -51,13 +50,16 @@ public class CM_AETHERFORGING extends AionClientPacket {
 			materialsCount = readH();
 			craftType = readC();
 			for (int i = 0; i < materialsCount; i++) {
-				itemID = readD();
-				itemCount = readQ();
-				int materialCraftCount = CraftService.checkComponents(player, recipeId, itemID, itemCount);
-				if (materialCraftCount < 1) {
+				int itemId = readD();
+				long itemCount = readQ();
+				if (itemCount < 1) {
 					componentsOk = false;
-				} else {
-					craftCount = craftCount == 0 ? materialCraftCount : Math.min(craftCount, materialCraftCount);
+					continue;
+				}
+				try {
+					requestedComponents.merge(itemId, itemCount, Math::addExact);
+				} catch (ArithmeticException e) {
+					componentsOk = false;
 				}
 			}
 			break;
@@ -79,7 +81,8 @@ public class CM_AETHERFORGING extends AionClientPacket {
 			PacketSendUtility.sendPacket(player, new SM_AETHERFORGING_PLAYER(player, actionId));
 			break;
 		case 1:
-			if (!componentsOk || craftCount < 1) {
+			int craftCount;
+			if (!componentsOk || (craftCount = CraftService.consumeComponents(player, recipeId, requestedComponents)) < 1) {
 				return;
 			}
 			CraftService.startAetherforging(player, recipeId, craftType, craftCount);
