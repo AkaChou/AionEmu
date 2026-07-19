@@ -6811,6 +6811,7 @@
     <variable name="boss_summon"/>
     <variable name="boss_summon_check"/>
     <variable name="end_boss_die"/>
+    <variable name="sub_boss_die"/>
     <condition id="759" expression="boss_summon == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Adma/world_N.xml#1">
       <group probability="1000">
         <slot>

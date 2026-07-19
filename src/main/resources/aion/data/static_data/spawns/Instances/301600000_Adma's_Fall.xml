@@ -56,10 +56,6 @@
 		<spawn npc_id="220418">
 		   <spot x="447.50778" y="540.23517" z="175.07236" h="0"/>
 	    </spawn>
-		<!-- IDF6_Adma_EvilSpirit_67_Ah -->
-		<spawn npc_id="220427">
-		    <spot x="521.611" y="503.438" z="197.72092" h="45"/>
-		</spawn>
 		<!-- IDF6_Adma_Out_Portal_StartPoint -->
 	    <spawn npc_id="806222">
 			<spot x="495.39050" y="468.34970" z="173.14999" entity_id="27"/>

@@ -120,6 +120,26 @@ class InstanceHandlerRecoveryMigrationTest {
 		}
 	}
 
+	@Test
+	void admaFallUsesRetailConditionClosureAndRemovesLegacyHandlerSpawns() throws Exception {
+		String conditions = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String adma = worldBlock(conditions, "301600000");
+		assertTrue(adma.contains("<variable name=\"sub_boss_die\"/>"));
+		assertTrue(adma.contains("boss_summon == 1"));
+		assertTrue(adma.contains("boss_summon_check == 4"));
+		assertTrue(adma.contains("boss_summon == 2"));
+		assertTrue(adma.contains("End_Boss_Die == 1"));
+		assertEquals(6, count(adma, "<condition "));
+
+		String staticSpawns = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/spawns/Instances/301600000_Adma's_Fall.xml"));
+		assertFalse(staticSpawns.contains("npc_id=\"220427\""));
+		assertTrue(staticSpawns.contains("npc_id=\"248974\""));
+		assertFalse(Files.exists(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AdmaFallInstance.java")));
+	}
+
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {
 		String source = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + className + ".java"));
