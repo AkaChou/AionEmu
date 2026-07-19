@@ -1,6 +1,6 @@
 # 真端 Quest 数据同步技术方案
 
-> 状态：阶段 0/1、共有 Quest 的 `cannot_share` / `can_report` 同步、`can_report` 运行能力、首批 18 个 Quest 静态发布、第二批 6 个要塞自动领奖 Quest、第三批 10 个普通生产 Quest、第四批 `2585`、第五批 `21224`、C batch 01 `1871/2871`、C batch 02 `15098/25099`、C batch 03 `14210/24210`、C batch 04 `1867/1868/1869/2868`、D batch 01 `18604/28604`、D batch 02 `30810`、D batch 03 `18744/28744`、D batch 04 `11295` 运行闭包、D batch 05 `10070-10073/20070-20073`、D batch 06 `14080/14081/14090/14091/24080/24081/24090/24091` 与 D batch 07 `2010/9510/9615/9652/12999/15097/20015` 隔离终审、护送/保护/动态生成 AI 审计，以及 `18412/28412`、`41600-41614`、`80315/80321` 隔离终审均已完成（2026-07-19）。当前已发布 52 个 Quest，42 个 Quest 已有明确隔离结论，生产 D 类未决为 0，AI 生产阻断为 0。本文方案仅涉及服务端 Quest 模板和服务端行为同步，不修改、生成或重新打包客户端 Quest.pak；真实入口与实际运行验收状态单独列出。
+> 状态：阶段 0/1、共有 Quest 的 `cannot_share` / `can_report` 同步、`can_report` 运行能力、首批 18 个 Quest 静态发布、第二批 6 个要塞自动领奖 Quest、第三批 10 个普通生产 Quest、第四批 `2585`、第五批 `21224`、C batch 01 `1871/2871`、C batch 02 `15098/25099`、C batch 03 `14210/24210`、C batch 04 `1867/1868/1869/2868`、D batch 01 `18604/28604`、D batch 02 `30810`、D batch 03 `18744/28744`、D batch 04 `11295` 运行闭包、D batch 05 `10070-10073/20070-20073`、D batch 06 `14080/14081/14090/14091/24080/24081/24090/24091` 与 D batch 07 `2010/9510/9615/9652/12999/15097/20015` 隔离终审、护送/保护/动态生成 AI 审计，以及 `18412/28412`、`41600-41614`、`80315/80321` 隔离终审均已完成（2026-07-19）。当前已发布 52 个 Quest，42 个 Quest 已有明确隔离结论，生产 D 类未决为 0，AI 生产阻断为 0。Quest XML/XSD 已从 `aion/data/static_data` 单路径迁移到 `aion/definitions`，旧目录已删除；本文方案不修改、生成或重新打包客户端 Quest.pak，真实入口与实际运行验收状态单独列出。
 
 ## 1. 结论
 
@@ -13,7 +13,7 @@
         │
         ├── 字段归一、名称转 ID、版本过滤、冲突分类
         ├── QuestTemplate 输出
-        ├── quest_script_data / Java handler 行为闭包
+        ├── definitions/compact/quests/scripts / Java handler 行为闭包
         ├── 护送、保护、动态生成 AI 事件闭包审计
         └── 固定客户端兼容性报告（只读，不生成客户端产物）
         │
@@ -35,6 +35,7 @@ AionEmu 当前 Quest 格式和现有 Quest 引擎
 - 固定客户端共有 217 个 `can_report=true` Quest；当前服务端已存在其中 188 个，全部与客户端一致，待同步为 0。服务端支持客户端动作 `108` 和 `110-124` 的无 NPC 领奖协议；第二批 6 个要塞任务通过现有 `monster_hunt reward="true"` 在击杀后进入 `REWARD`，无需新增 Quest handler。
 - AI 与 Quest 按事件链结合，不把 NPC AI 模板直接合并进 Quest。当前 18 个使用 `defaultStartFollowEvent` 的护送 handler 为 18/18 `closed`；保护类保留 1 条 `no_evidence` 信息状态；真端 57 条动态生成动作中生产范围 46 条全部 `closed`、等级 999 范围 11 条为 `isolated`；第二批要塞自动领奖击杀链为 `siege_report_hunt closed=6`，第三批 10/10、第四批 1/1、第五批 1/1、前三个 C 批次各 2/2、C batch 04 为 6/6、D batch 01 为 2/2、D batch 02 为 1/1、D batch 03 为 2/2、D batch 04 为 1/1 Quest 运行闭包 `closed`，生产阻断为 0。D batch 01 不涉及护送、保护或动态生成，但尸体恢复 AI 已审计为“必须有 `18604/28604` 任务记录且物品缺失”，旧的无任务发物品路径已删除；D batch 02/03/04 只含角色状态、进世界和电影结束事件，AI 生命周期为 `not_applicable`。D batch 05/06 各 8 条世界绑定任务均为 `isolated`；D batch 07 的 7 条任务没有可发布的护送、保护或动态生成行为，AI 生命周期均为 `not_applicable`、生产阻断为 0；若未来补齐任一被隔离任务，必须重新完成触发、生命周期、归属、清理、失败恢复和 Quest 推进闭包审计。
 - 服务端完整补全必须同时处理 Quest 模板、服务端 Quest 行为、接取/交付 NPC 的实际出生路径。固定客户端缺少地图、怪物标记或寻路数据时只记录兼容限制，不通过修改客户端修复。
+- Quest 模板、挑战任务和 XML 行为现统一位于 `src/main/resources/aion/definitions/compact/quests/`，Schema 位于 `src/main/resources/aion/definitions/schemas/`；`static_data.xml/xsd` 继续作为唯一合并和校验入口，未新增第二套加载器。
 
 因此，建议采用“离线转换器 + 差异报告 + 分批发布”方案，保持现有运行时模型和 Quest 引擎不变。
 
@@ -66,12 +67,29 @@ AionEmu 当前 Quest 格式和现有 Quest 引擎
 
 当前 Quest 由三个彼此独立但必须一致的数据层组成。
 
+资源目录已统一为：
+
+```text
+aion/definitions/compact/quests/
+  quest_data.xml
+  challenge_tasks.xml
+  limited-quests.xml
+  scripts/*.xml
+aion/definitions/schemas/
+  quest_data.xsd
+  quest_script_data.xsd
+  challenge_tasks.xsd
+  limited-quests.xsd
+```
+
+`aion/data/static_data/static_data.xml` 通过相对路径导入这些文件，`static_data.xsd` 引用 definitions Schema；Quest 热重载使用相同 definitions 路径。旧 `quest_data/` 和 `quest_script_data/` 不保留，避免双路径和重复加载。
+
 ### 3.1 Quest 模板层
 
 主要文件和模型：
 
-- `src/main/resources/aion/data/static_data/quest_data/quest_data.xml`
-- `src/main/resources/aion/data/static_data/quest_data/quest_data.xsd`
+- `src/main/resources/aion/definitions/compact/quests/quest_data.xml`
+- `src/main/resources/aion/definitions/schemas/quest_data.xsd`
 - `src/main/java/com/aionemu/gameserver/model/templates/QuestTemplate.java`
 - `DataManager.QUEST_DATA`
 
@@ -81,8 +99,8 @@ AionEmu 当前 Quest 格式和现有 Quest 引擎
 
 主要实现：
 
-- `src/main/resources/aion/data/static_data/quest_script_data/*.xml`
-- `src/main/resources/aion/data/static_data/quest_script_data/quest_script_data.xsd`
+- `src/main/resources/aion/definitions/compact/quests/scripts/*.xml`
+- `src/main/resources/aion/definitions/schemas/quest_script_data.xsd`
 - `src/main/java/com/aionemu/gameserver/questEngine/handlers/**`
 
 该层负责接取、对话、击杀、收集、使用物品、变量推进、完成和领奖。Quest 模板存在不代表行为已经存在。
@@ -135,10 +153,10 @@ data/Quest/Quest.pak
 | 真端制作任务 | `/Users/mc/IdeaProjects/58Server/Map/XML/Quest_CombineTask.xml` | UTF-16 XML |
 | 真端数据驱动行为 | `/Users/mc/IdeaProjects/58Server/Map/XML/data_driven_quest.xml` | UTF-16 XML |
 | 真端挑战任务 | `/Users/mc/IdeaProjects/58Server/Map/XML/challenge_task.xml` | UTF-16 XML |
-| 当前 Quest 模板 | `src/main/resources/aion/data/static_data/quest_data/quest_data.xml` | UTF-8 XML |
-| 当前行为 Schema | `src/main/resources/aion/data/static_data/quest_script_data/quest_script_data.xsd` | UTF-8 XSD |
-| 当前挑战任务 | `src/main/resources/aion/data/static_data/quest_data/challenge_tasks.xml` | UTF-8 XML |
-| 当前制作任务 | `src/main/resources/aion/data/static_data/quest_script_data/work_order.xml` | UTF-8 XML |
+| 当前 Quest 模板 | `src/main/resources/aion/definitions/compact/quests/quest_data.xml` | UTF-8 XML |
+| 当前行为 Schema | `src/main/resources/aion/definitions/schemas/quest_script_data.xsd` | UTF-8 XSD |
+| 当前挑战任务 | `src/main/resources/aion/definitions/compact/quests/challenge_tasks.xml` | UTF-8 XML |
+| 当前制作任务 | `src/main/resources/aion/definitions/compact/quests/scripts/work_order.xml` | UTF-8 XML |
 | 固定客户端启动参数 | `/Users/mc/IdeaProjects/5.8客户端/单机启动.bat` | `-cc:5 -lang:chs`，只读 |
 | 固定客户端基础 Quest | `/Users/mc/IdeaProjects/5.8客户端/data/Quest/Quest.pak` | Aion PAK，只读 |
 | 固定客户端 China 覆盖 | `/Users/mc/IdeaProjects/5.8客户端/data/China/Quest/quest.pak` | Aion PAK，只读 |
@@ -166,8 +184,9 @@ data/Quest/Quest.pak
 | D batch 02 发布后当前 `quest_data.xml` | `25310d5d6c93fc4152710fc4053072440c3354cea80b7705c8c2ef962df52d26` |
 | D batch 03 发布后当前 `quest_data.xml` | `b51cbba1e3ebc65a6d8f483544e7dce206020a5e22d91c145bacbb15b543d4e8` |
 | D batch 04 发布后当前 `quest_data.xml` | `396c2dba28a34ba8c65c0c5711a818b3b8731c3f7bc53a04da8da3c3d6a5f24e` |
-| 当前 `quest_data.xsd` | `8b654bd4e2e5705780b43ad2cdf611abaaf0fabc907efd8176595f4d85509e4b` |
-| 当前 `quest_script_data.xsd` | `f4772168f81989251c3fa4efd59701b263ff5ab36a4d1dda4d7a844eb8f2a484` |
+| definitions 目录迁移后当前 `quest_data.xml` | `a9a06f60a620d11d02a4002511aa840409da638335798254806548d49d1eaaad` |
+| 当前 `quest_data.xsd` | `e1bda40d671e1c36911b670daac0f97425fa0b18201bec500422bb4fd3b8e5f9` |
+| 当前 `quest_script_data.xsd` | `8c13e3334cd9f35727a2b648878462e1aae6c325eca9bb24d503e9b136f94aa2` |
 
 实施时必须为全部输入生成一份 manifest，包含路径、大小、SHA-256、编码、客户端启动参数和转换器版本。启动参数、基础 PAK、China 覆盖 PAK或服务端输入任一摘要变化后，旧差异报告和生成结果全部失效，禁止增量复用。
 
@@ -1390,7 +1409,7 @@ CSV 固定字段为 `quest_id, scope, kind, source, evidence, status, blocker`�
 | D batch 06 隔离 Quest / 正式模板 / Java handler / XML 行为 | 8 / 0 / 0 / 0 |
 | D batch 07 隔离 Quest / 正式模板 / Java handler / XML 行为 | 7 / 0 / 0 / 0 |
 | D batch 07 后正式隔离 / 生产 D 类剩余 / AI 阻断 | 42 / 0 / 0 |
-| v21 受管输出 / 残留旧输出 | 56 / 0 |
+| v22 受管文件 / 残留旧输出 | 56 / 0 |
 | 活动物品任务明确隔离 | 2 |
 | `reward_repeat_count` 条件兼容 / 独立语义 | 221 / 44 |
 | `bm_restrict_category` 固定客户端 / 真端 | `3477 / 3477`，值域均为 `{1}` |
@@ -1418,6 +1437,8 @@ CSV 固定字段为 `quest_id, scope, kind, source, evidence, status, blocker`�
 2026-07-19 D batch 06 复核：迁移器 v20 语法检查、自检和连续两次完整审计通过；受管允许清单为 15 个 Quest XML、6 个行为 XML、34 个报告，共 55 个文件，残留旧输出为 0。完整审计结果保持 `6476 / 6462 / 3573 / 81`，`14080/14081/14090/14091/24080/24081/24090/24091` 为 `8/8 isolated`，正式模板、Java handler、XML 行为均为 0，AI 生产阻断为 0。基础/China 10 个链节点、`14071/24071` 等级 999、客户端 3 条掉落记录和 6 条脚本目标、13 个 NPC/对象、5 个任务物品、9 个真端行为 XML 零覆盖、恢复源码语义命中 `0/26/2/2/0/31/2/2`、DLL 原始 32 位命中 `952/29/2/2/0/34/2/2`、8 个旧社区空壳、固定客户端 Level/PathFind 缺失、AionEmu world/GEO/spawn map 和目标 spawn 缺失均已冻结。旧“剩余 17”去掉已隔离的 `18412/28412` 后，本批前实际未决 15、本批后剩余 7。D batch 06 报告和发布清单 SHA-256 分别为 `74d4e0b52bb5258db93fd2f2ef0a5049924a4b6befe662a2f449d0faf0e2190b`、`529db5df96e017a0031f9e7c5dd56a8a347c1c54d3c9f1e4f2455226ba1ea619`，两次复跑一致。
 
 2026-07-19 D batch 07 复核：迁移器 v21 语法检查、自检和连续两次完整审计通过；受管允许清单为 15 个 Quest XML、6 个行为 XML、35 个报告，共 56 个文件，残留旧输出为 0。完整审计结果保持 `6476 / 6462 / 3573 / 81`，`2010/9510/9615/9652/12999/15097/20015` 为 `7/7 isolated`，正式模板、Java handler、XML 行为均为 0，AI 生产阻断为 0，正式隔离总数为 42，生产 D 类剩余 0。基础/China 7 个节点、客户端 3 个行为源和真端 9 个通用行为 XML 零覆盖、恢复源码语义命中 `9/0/2/0/0/0/0`、DLL 原始 32 位命中 `1/0/7/0/0/0/0`、`9615` 两个未知引擎调用与四个数据块交叉引用、NPCServer `12999` 加载期 AddQuest 特例、社区 `2010` UNUSED/`9510` 冲突/`20015` TODO，以及电影 `18/19/32` 存在但无 Quest 绑定均已冻结。D batch 07 报告和发布清单 SHA-256 分别为 `489264a90c1478665d99c527d99bea63cb31406fb40d8309c432962816be3c92`、`3af9529a8e331511b7a1bdfa3027f2a56b2c80e977782dcf478cb87118b8e08b`，两次复跑一致。
+
+2026-07-19 definitions 目录迁移复核：Quest 模板、挑战任务、82 个 XML 行为和 3 个 XSD 已迁移到 `aion/definitions`，旧 static_data Quest 模板/行为目录删除；`static_data.xml/xsd` 仍是唯一启动加载入口，管理员 Quest 热重载改用 `Config.definitionFile`。82/82 行为 XML 和挑战任务通过新 Schema 路径校验；全量 `quest_data.xml` 仍只被既有第 3396、3399 行两处 `exp="581250 "` 尾空格阻断。干净 HEAD 副本上的 JDK 25 `XmlDataLoaderTest`、4 个 Quest 专项测试和 `GameServerTest` 合计 44/44 通过。迁移器 v22 自检及连续两次完整审计通过，覆盖保持 `6476 / 6462 / 3573 / 81`、AI 阻断 0、受管文件 56、残留旧输出 0，发布清单 SHA-256 两次均为 `23d2b7e5f457854ae2d3e6870a9847571b99659074fbff1d6454616ea5860daa`。
 
 ### 16.4 运行测试矩阵
 
@@ -1561,7 +1582,8 @@ CSV 固定字段为 `quest_id, scope, kind, source, evidence, status, blocker`�
 - [x] 已发布批次的候选 Quest XML、候选行为 XML、`event.xml` 和正式行为 XML 通过 XSD；当前 Quest 总数为 6,476，第二批新增行为 6 条、第三批新增行为 2 条、第四和第五批复用现有行为，C batch 01 复用 `report_to_many`，C batch 02/03 复用 `report_to`，C batch 04 新增 4 个具体 Java handler、2 条 `monster_hunt` 和 8 个区域，D batch 01 新增 1 个共享基类与 2 个薄 handler，D batch 02 新增 1 个独立 Java handler，D batch 03 新增 1 个共享基类与 2 个薄 handler，D batch 04 新增 1 个独立 Java handler；已发布的四个 D 批次均不新增 XML 行为，D batch 05/06/07 不生成任何正式资源。
 - [x] JDK 25 下 `mvn -DskipTests compile` 通过；`XmlDataLoaderTest` 20/20、`RetailPatternAI2Test` 76/76、`QuestReportEligibilityTest` 2/2、`ReportToTest` 1/1，共 99/99 成功。
 - [x] C batch 04 在 JDK 25 下复跑 `ReshantaQuestMigrationTest` 2/2、`XmlDataLoaderTest` 20/20；迁移器自检与两次完整审计均通过，关键生成物摘要一致。
-- [x] 迁移器 v21 清理自检通过；生成前删除被替代的旧 Quest XML、Quest 行为 XML 和报告，不删除历史取证目录；PAK 临时证据只进系统临时目录；受管允许清单 56 个文件全部存在、残留旧输出为 0，连续两次完整审计摘要一致。
+- [x] 迁移器 v22 清理自检通过；生成前删除被替代的旧 Quest XML、Quest 行为 XML 和报告，不删除历史取证目录；PAK 临时证据只进系统临时目录；受管文件 56 个、残留旧输出为 0，连续两次完整审计摘要一致。
+- [x] Quest XML/XSD 已单路径迁移到 `aion/definitions`；旧 Quest 目录不存在，启动合并、Schema、热重载、专项测试和迁移审计均引用新路径。
 - [x] 已发布批次的生成 Quest 模板、生成行为、`event.xml` 和 `reshanta.xml` 通过对应 XSD；正式全量 `quest_data.xml` 仅被 `HEAD` 已存在的第 3396、3399 行两处 `exp="581250 "` 尾空格阻断，本轮未修改该历史数据，`XmlDataLoaderTest` 已证明当前运行加载通过。
 - [x] 相同输入重复生成得到相同输出摘要。
 - [x] `41600-41614` 完成 LDF4b 隔离终审；固定客户端世界 ID、关卡资产、目标覆盖和服务端 world/GEO/spawn 证据已固化。

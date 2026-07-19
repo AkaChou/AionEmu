@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest_scripts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../schemas/quest_script_data.xsd">
+	<report_to id="14210" start_npc_ids="802464 802660 802661 802662" end_npc_ids="802465 802663 802664 802665"/>
+	<report_to id="24210" start_npc_ids="802464 802660 802661 802662" end_npc_ids="802465 802663 802664 802665"/>
+</quest_scripts>

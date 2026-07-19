@@ -20,7 +20,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 class PetrifiedRotanQuestMigrationTest {
 
-	private static final Path QUEST_DATA = Path.of("src/main/resources/aion/data/static_data/quest_data/quest_data.xml");
+	private static final Path QUEST_DATA = Path.of("src/main/resources/aion/definitions/compact/quests/quest_data.xml");
 	private static final Path QUEST_ZONES = Path.of("src/main/resources/aion/data/static_data/zones/zones_quest.xml");
 
 	@Test

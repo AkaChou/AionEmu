@@ -84,9 +84,9 @@
 	<pet_feed>
 		<import file="pets/pet_feed.xml" skipRoot="true"/>
 	</pet_feed>
-	<import file="quest_data/quest_data.xml"/>
+	<import file="../../definitions/compact/quests/quest_data.xml"/>
 	<quest_scripts>
-		<import file="quest_script_data" skipRoot="true"/>
+		<import file="../../definitions/compact/quests/scripts" skipRoot="true"/>
 	</quest_scripts>
 	<import file="recipe/recipe_templates.xml"/>
 	<import file="luna/luna_templates.xml"/>
@@ -144,7 +144,7 @@
 	<import file="curing_objects/curing_objects.xml"/>
 	<import file="spring_objects/spring_objects.xml"/>
 	<import file="mail_templates.xml"/>
-	<import file="quest_data/challenge_tasks.xml"/>
+	<import file="../../definitions/compact/quests/challenge_tasks.xml"/>
 	<town_spawns_data>
 		<import file="town_spawns" skipRoot="true"/>
 	</town_spawns_data>

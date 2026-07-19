@@ -58,8 +58,8 @@ public class Reload extends AdminCommand {
 			return;
 		}
 		if (params[0].equals("quest")) {
-			File xml = Config.dataFile("./data/static_data/quest_data/quest_data.xml");
-			File dir = Config.dataFile("./data/static_data/quest_script_data");
+			File xml = Config.definitionFile("compact/quests/quest_data.xml");
+			File dir = Config.definitionFile("compact/quests/scripts");
 			try {
 				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
 				Unmarshaller un = jc.createUnmarshaller();

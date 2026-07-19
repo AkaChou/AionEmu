@@ -22,8 +22,8 @@
 	<xs:include schemaLocation="pet_skills/pet_skills.xsd"/>
 	<xs:include schemaLocation="pets/pets.xsd"/>
 	<xs:include schemaLocation="pets/pet_feed.xsd"/>
-	<xs:include schemaLocation="quest_data/quest_data.xsd"/>
-	<xs:include schemaLocation="quest_script_data/quest_script_data.xsd"/>
+	<xs:include schemaLocation="../../definitions/schemas/quest_data.xsd"/>
+	<xs:include schemaLocation="../../definitions/schemas/quest_script_data.xsd"/>
 	<xs:include schemaLocation="recipe/recipe_templates.xsd"/>
 	<xs:include schemaLocation="luna/luna_templates.xsd"/>
 	<xs:include schemaLocation="roads/roads.xsd"/>
@@ -68,7 +68,7 @@
 	<xs:include schemaLocation="curing_objects/curing_objects.xsd"/>
 	<xs:include schemaLocation="spring_objects/spring_objects.xsd"/>
 	<xs:include schemaLocation="mail_templates.xsd"/>
-	<xs:include schemaLocation="quest_data/challenge_tasks.xsd"/>
+	<xs:include schemaLocation="../../definitions/schemas/challenge_tasks.xsd"/>
 	<xs:include schemaLocation="town_spawns/town_spawns.xsd"/>
 	<xs:include schemaLocation="../../definitions/schemas/charge_skills.xsd"/>
 	<xs:include schemaLocation="abyss_bonusattr/abyss_bonusattr.xsd"/>

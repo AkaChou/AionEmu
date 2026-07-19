@@ -19,9 +19,9 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 class RaksangIntroQuestMigrationTest {
 
-	private static final Path QUEST_DATA = Path.of("src/main/resources/aion/data/static_data/quest_data/quest_data.xml");
+	private static final Path QUEST_DATA = Path.of("src/main/resources/aion/definitions/compact/quests/quest_data.xml");
 	private static final Path HANDLERS = Path.of("src/main/java/com/aionemu/gameserver/quest/handlers");
-	private static final Path QUEST_SCRIPTS = Path.of("src/main/resources/aion/data/static_data/quest_script_data");
+	private static final Path QUEST_SCRIPTS = Path.of("src/main/resources/aion/definitions/compact/quests/scripts");
 
 	@Test
 	void keepsFixedClientTemplatesAndSharing() throws Exception {
