@@ -202,29 +202,26 @@
         <spawn npc_id="799516">
             <spot h="67" z="134.34929" y="226.16125" x="586.9908"/>
         </spawn>
-		<!-- Vallakhan -->
-		<spawn npc_id="215782">
-			<spot x="775.713" y="271.453" z="140" h="29"/>
-		</spawn>
-		<!-- Nexus -->
-		<spawn npc_id="215783">
-			<spot x="508.314" y="370.685" z="137" h="30"/>
-		</spawn>
 		<!-- Vida The Protector -->
 		<spawn npc_id="215789">
-			<spot x="764.823" y="484.256" z="136" h="2"/>
+			<spot x="764.822693" y="484.256134" z="136"/>
 		</spawn>
 		<!-- Tala The Protector -->
 		<spawn npc_id="215790">
-			<spot x="747.985" y="409.136" z="134.018" h="119"/>
+			<spot x="747.984558" y="409.136353" z="134.017563"/>
+		</spawn>
+		<!-- Cota The Gatekeeper -->
+		<spawn npc_id="215787" pool="1">
+			<spot x="778.536682" y="661.277710" z="134"/>
+			<spot x="689.528625" y="669.004517" z="134"/>
+		</spawn>
+		<!-- Kiya The Protector -->
+		<spawn npc_id="215788">
+			<spot x="807.570984" y="560.611877" z="133" h="60"/>
 		</spawn>
 		<!-- Agra The Guide -->
 		<spawn npc_id="215791">
 			<spot x="578.359" y="680.307" z="131" h="86"/>
-		</spawn>
-		<!-- Devoted Anurati -->
-		<spawn npc_id="215793">
-			<spot x="636.641" y="439.788" z="138" h="30"/>
 		</spawn>
 		<!-- Kura Stormgaze -->
 	    <spawn npc_id="216592">
@@ -383,18 +380,6 @@
 		<!-- Ancient Dragonbound Document -->
 		<spawn npc_id="700750">
 			<spot x="774.79773" y="485.6145" z="135.09157" entity_id="425"/>
-		</spawn>
-		<!-- Balaur's Order -->
-		<spawn npc_id="730217">
-			<spot x="638.51361" y="441.6297" z="138.56612" entity_id="117"/>
-		</spawn>
-		<!-- Rebirthing Chamber Exit -->
-		<spawn npc_id="700706">
-			<spot x="561.85376" y="180.2854" z="136.30590" entity_id="213"/>
-		</spawn>
-		<!-- Udas Temple Exit -->
-		<spawn npc_id="730272">
-			<spot x="636.82410" y="659.6725" z="133.69518" entity_id="158"/>
 		</spawn>
 		<spawn npc_id="215808" respawn_time="120">
 		  <spot x="527.282227" y="503.964264" z="132.000000" h="60"/>

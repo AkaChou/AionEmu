@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 41% | 2026-07-20 | 139 图行为闭包；34 个 handler 移除私有关键任务，剩余 37 个含 `Future` 文件 |
+| 阶段 4：handler 状态迁移 | 进行中 | 42% | 2026-07-20 | 139 图行为闭包；35 个 handler 移除私有关键任务，剩余 35 个声明 `Future`、65 个直接使用 `GameThreadPoolServices` 的生产 handler |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1124,7 +1124,7 @@ REGISTERED
 
 ### 19.3 下一步
 
-唯一下一步：迁移生产 handler 的 `Future`、阶段、门、关键对象 ID 和截止时间到公共可恢复状态，并同步删除旧字段与调度逻辑。
+唯一下一步：继续迁移仍含私有阶段、门、关键对象 ID 或线程池调度的生产 handler，并在每张图完成时同步删除旧字段、旧静态出生和旧掉落逻辑。
 
 ## 20. 实施日志
 
@@ -1247,3 +1247,8 @@ REGISTERED
 - IDSweep 条件闭包重新生成：转换器将由副本核心写入的 `IDSweep_Reward`、`IDSweep_Reward_S` 纳入只读变量，输出 `5715` 条条件、`7286` 个槽位、`958` 个受支持变量；其中 `301400000` 为 `221` 条、`301590000` 为 `410` 条。闭包包含 `1STAGE_2START`、`1STAGE_START`、`2STAGE_ING`、`3STAGE_START`、`4STAGE_PHASE`、`4STAGE_ELITE`、保险箱 `SpecialServer_Cond == 0/1` Live/Master 分支、页级 AI 演员、奖励箱、出口和 `832932` 管家条件对象。奖励完成时通过 `RetailConditionSpawnEngine.setVariable` 持久化真端变量：宝库写 `IDSweep_Reward`，保险箱 S 级写 `IDSweep_Reward_S`，A-F 级写 `IDSweep_Reward`；不恢复旧 handler 手工刷奖励 NPC。
 - 清理旧资源：删除保险箱静态出生文件中的全部 `235xxx` 战斗出生，仅保留真端静态入口、宝箱和 NPC 点；条件刷新接管动态战斗和结算对象。未对宝库按 NPC ID 整组删除，因其静态 `235xxx` 同时包含无条件常驻和条件波次，避免误删真端常驻点。
 - IDSweep 批次验证通过：转换器 `test_generate_retail_condition_spawns.py` 19 项；`mvn -q -DskipTests compile`；`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest,InstanceSettlementServiceTest,RetailAiDefinitionLoaderTest,RetailConditionSpawnEngineTest,RetailConditionSpawnPartyLoaderTest,RetailPatternAI2Test`；`condition-spawns.xsd` 和保险箱静态 XML 校验；`git diff --check`。当前剩余风险仅为 `SpecialServer_Cond` 的服务器环境值：真端由动态世界创建时注入，AionEmu 普通服条件引擎缺省为 `0`，因此默认运行 Live 分支；两套分支数据均已保留，若部署 Master 数据源需在实例创建入口接入同一环境变量。
+
+- 完成乌达斯神殿上层（`300150000`）真端单轨替换：以 `IDTemple_Up/world_N.xml`、`NpcAIPatterns_IDTemple_hue.xml` 和真端 NPC/掉落数据为权威，Retail AI/条件刷新接管 Live/Master 初始 NPC、钥匙怪、三段钥匙死亡链、门控、出口、传送对象和条件 Boss；删除旧 handler 的随机手写出生、私服掉落、死亡消息、门控制和线程池调度，仅保留离本/掉线清理 `185000083..185000085`。
+- 乌达斯上层条件闭包使用 `--base --world 300150000 --alternative-world 300150000` 定向生成，保留原条件 ID `1738`，补入 `5716..5728`，共 `14` 条条件、`14` 个槽位、`3` 个副本变量；`SpecialServer_Cond` 的 Live/Master 分支、`FanaticElNBoss` 和 `Teleporter_Spawn` 均由真端表达式驱动，生成文件与窄重生成字节一致。
+- 静态出生按真端清理：删除条件托管的 `215782`、`215783`、`215793`、`730217`、`700706`、`730272`，补回 `215787` 的两点 `pool=1` 随机组和 `215788` 固定点，并校正 `215789`/`215790` 的真端点位；不保留旧 handler 兼容出生。
+- 乌达斯上层批次验证通过：`mvn -q -DskipTests compile`；`InstanceHandlerRecoveryMigrationTest`、`RetailAiDefinitionLoaderTest`、`RetailConditionSpawnEngineTest`、`RetailConditionSpawnPartyLoaderTest`、`RetailPatternAI2Test` 共 96 项；`condition-spawns.xsd`、静态出生 XML、窄重生成字节比对和 `git diff --check` 均通过。

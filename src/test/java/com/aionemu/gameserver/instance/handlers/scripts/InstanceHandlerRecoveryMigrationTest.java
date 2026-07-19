@@ -89,6 +89,37 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertFalse(staticSpawns.matches("(?s).*npc_id=\"235[0-9]+\".*"));
 	}
 
+	@Test
+	void udasUsesRetailConditionClosureAndRemovesStaticConditionSpawns() throws Exception {
+		String conditions = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String udas = worldBlock(conditions, "300150000");
+		assertTrue(udas.contains("<variable name=\"fanaticelnboss\"/>"));
+		assertTrue(udas.contains("<variable name=\"teleporter_spawn\"/>"));
+		assertTrue(udas.contains("SpecialServer_Cond == 0"));
+		assertTrue(udas.contains("SpecialServer_Cond == 1"));
+		assertTrue(udas.contains("FanaticElNBoss == 1"));
+		assertTrue(udas.contains("Teleporter_Spawn == 1"));
+		assertEquals(14, count(udas, "<condition "));
+
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UdasTempleInstance.java"));
+		assertFalse(handler.contains("GameThreadPoolServices"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertFalse(handler.contains("onDie"));
+
+		String staticSpawns = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/spawns/Instances/300150000_Udas_Temple.xml"));
+		assertTrue(staticSpawns.contains("<spawn npc_id=\"215787\" pool=\"1\">"));
+		assertTrue(staticSpawns.contains("x=\"778.536682\" y=\"661.277710\""));
+		assertTrue(staticSpawns.contains("x=\"689.528625\" y=\"669.004517\""));
+		assertTrue(staticSpawns.contains("<spawn npc_id=\"215788\">"));
+		assertTrue(staticSpawns.contains("x=\"807.570984\" y=\"560.611877\""));
+		for (String npcId : new String[] { "215782", "215783", "215793", "730217", "700706", "730272" }) {
+			assertFalse(staticSpawns.contains("npc_id=\"" + npcId + "\""));
+		}
+	}
+
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {
 		String source = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + className + ".java"));

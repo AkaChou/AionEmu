@@ -19335,11 +19335,104 @@
     </condition>
   </world>
   <world id="300150000" name="IDTemple_Up">
+    <variable name="fanaticelnboss"/>
     <variable name="idct_boss_spectre_noshown1"/>
+    <variable name="teleporter_spawn"/>
+    <condition id="5716" expression="SpecialServer_Cond == 0" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <npc id="730217" probability="10000" x="638.724731" y="441.300995" z="140" heading="70" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5717" expression="SpecialServer_Cond == 0" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="215782" probability="10000" x="775.713013" y="271.452972" z="140" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5718" expression="SpecialServer_Cond == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="246005" probability="10000" x="775.713013" y="271.452972" z="140" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5719" expression="SpecialServer_Cond == 0" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#3">
+      <group probability="1000">
+        <slot>
+          <npc id="700706" probability="10000" x="562.112915" y="181.276367" z="137" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
     <condition id="1738" expression="IDCT_Boss_Spectre_noShown1 == 3" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#4">
       <group probability="1000">
         <slot>
           <npc id="281655" probability="10000" x="775.754333" y="329.932861" z="138" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5720" expression="SpecialServer_Cond == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#5">
+      <group probability="1000">
+        <slot>
+          <npc id="836181" probability="10000" x="562.112915" y="181.276367" z="138.266922" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5721" expression="(FanaticElNBoss == 1) &amp;&amp; (SpecialServer_Cond == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#6">
+      <group probability="1000">
+        <slot>
+          <npc id="246016" probability="10000" x="636.640991" y="439.788483" z="138" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5722" expression="(FanaticElNBoss == 1) &amp;&amp; (SpecialServer_Cond == 0)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#6">
+      <group probability="1000">
+        <slot>
+          <npc id="215793" probability="10000" x="636.640991" y="439.788483" z="138" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5723" expression="SpecialServer_Cond == 0" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#7">
+      <group probability="1000">
+        <slot>
+          <npc id="215783" probability="10000" x="508.313843" y="370.684692" z="137" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5724" expression="SpecialServer_Cond == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#7">
+      <group probability="1000">
+        <slot>
+          <npc id="246006" probability="10000" x="508.313843" y="370.684692" z="137" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5725" expression="SpecialServer_Cond == 0" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#8">
+      <group probability="1000">
+        <slot>
+          <npc id="730272" probability="10000" x="636.69043" y="658.749756" z="135" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5726" expression="SpecialServer_Cond == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#8">
+      <group probability="1000">
+        <slot>
+          <npc id="834502" probability="10000" x="636.69043" y="658.749756" z="135" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5727" expression="(Teleporter_Spawn == 1) &amp;&amp; (SpecialServer_Cond == 0)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#9">
+      <group probability="1000">
+        <slot>
+          <npc id="730255" probability="10000" x="508.360657" y="362.717407" z="137" heading="90" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5728" expression="(Teleporter_Spawn == 1) &amp;&amp; (SpecialServer_Cond == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTemple_Up/world_N.xml#9">
+      <group probability="1000">
+        <slot>
+          <npc id="834501" probability="10000" x="508.360657" y="362.717407" z="137" heading="90" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
