@@ -37,6 +37,8 @@ public enum ObserverType {
 	EQUIP_UNEQUIP(EQUIP.observerMask | UNEQUIP.observerMask),
 	/** 攻击或防御 / Attack or defend */
 	ATTACK_DEFEND(ATTACK.observerMask | ATTACKED.observerMask),
+	/** 受到直接或持续伤害 / Direct or periodic damage received */
+	ATTACKED_OR_DOT(ATTACKED.observerMask | DOT_ATTACKED.observerMask),
 	/** 移动或死亡 / Move or die */
 	MOVE_OR_DIE(MOVE.observerMask | DEATH.observerMask),
 	/** 全部事件 / All events */

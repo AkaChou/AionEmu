@@ -36,7 +36,6 @@ import com.aionemu.gameserver.model.templates.InstanceCooltime;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
-import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
 import com.aionemu.gameserver.services.instance.HallOfTenacityService;
@@ -324,12 +323,7 @@ public class AutoGroupService {
 	 * logging-in player
 	 */
 	public void onPlayerLogin(Player player) {
-		if (GameFeatureServices.dredgionService().isDredgionAvailable() && player.getLevel() > DredgionService2.minLevel
-				&& player.getLevel() < DredgionService2.capLevel
-				&& !GameFeatureServices.dredgionService().hasCoolDown(player)) {
-			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(
-					GameFeatureServices.dredgionService().getInstanceMaskId(player), SM_AUTO_GROUP.wnd_EntryIcon));
-		}
+		GameFeatureServices.dredgionService().updateEntryIcon(player);
 		if (GameFeatureServices.asyunatarService().isAsyunatarAvailable() && player.getLevel() > AsyunatarService.minLevel
 				&& player.getLevel() < AsyunatarService.capLevel
 				&& !GameFeatureServices.asyunatarService().hasCoolDown(player)) {

@@ -3,6 +3,7 @@ package com.aionemu.gameserver.configs.main;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -28,6 +29,7 @@ class SkillConfigTest {
 		properties.setProperty("gameserver.skill.cooldown.multiplier", "0.01");
 		properties.setProperty("gameserver.skill.dp.consume", "false");
 		properties.setProperty("gameserver.magicboost.cap", "4000");
+		properties.setProperty("gameserver.skill.root.break.on.dot", "true");
 
 		ConfigurableProcessor.process(SkillConfig.class, properties);
 		SkillConfig.refresh();
@@ -35,6 +37,7 @@ class SkillConfigTest {
 		assertEquals(30, SkillConfig.scaleCooldown(3000));
 		assertFalse(SkillConfig.CONSUME_DP);
 		assertEquals(4000, SkillConfig.MAGICBOOST_CAP);
+		assertTrue(SkillConfig.ROOT_BREAK_ON_DOT);
 	}
 
 	@Test
@@ -55,5 +58,6 @@ class SkillConfigTest {
 		assertEquals("1", properties.getProperty("gameserver.skill.cooldown.multiplier"));
 		assertEquals("true", properties.getProperty("gameserver.skill.dp.consume"));
 		assertEquals("6500", properties.getProperty("gameserver.magicboost.cap"));
+		assertEquals("false", properties.getProperty("gameserver.skill.root.break.on.dot"));
 	}
 }

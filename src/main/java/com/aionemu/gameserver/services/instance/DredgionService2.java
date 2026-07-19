@@ -104,13 +104,7 @@ public class DredgionService2 {
 				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeC);
 				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 				while (iter.hasNext()) {
-					Player player = iter.next();
-					if (player.getLevel() > minLevel) {
-						int instanceMaskId = getInstanceMaskId(player);
-						if (instanceMaskId > 0) {
-							PacketSendUtility.sendPacket(player, DredgionService2.this.autoGroupUnreg[instanceMaskId]);
-						}
-					}
+					updateEntryIcon(iter.next());
 				}
 			}
 		}, AutoGroupConfig.DREDGION_TIMER * 60 * 1000);
@@ -122,26 +116,36 @@ public class DredgionService2 {
 		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
-			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {
-				int instanceMaskId = getInstanceMaskId(player);
-				if (instanceMaskId > 0) {
-					PacketSendUtility.sendPacket(player, this.autoGroupReg[instanceMaskId]);
-					switch (instanceMaskId) {
-					case maskLvlGradeC:
-						// 进入战舰的渗透路线已开放。 / An infiltration route into the Dredgion is open.
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDAB1_DREADGION);
-						break;
-					case maskLvlGradeB:
-						// 进入钱特拉战舰的渗透通道已开启。 / An infiltration passage into the Chantra Dredgion has opened.
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDDREADGION_02);
-						break;
-					case maskLvlGradeA:
-						// 进入特拉斯战舰的渗透通道已开启。 / An infiltration passage into the Terath Dredgion has opened.
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDDREADGION_03);
-						break;
-					}
+			int instanceMaskId = getInstanceMaskId(player);
+			updateEntryIcon(player);
+			if (instanceMaskId > 0) {
+				switch (instanceMaskId) {
+				case maskLvlGradeC:
+					// 进入战舰的渗透路线已开放。 / An infiltration route into the Dredgion is open.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDAB1_DREADGION);
+					break;
+				case maskLvlGradeB:
+					// 进入钱特拉战舰的渗透通道已开启。 / An infiltration passage into the Chantra Dredgion has opened.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDDREADGION_02);
+					break;
+				case maskLvlGradeA:
+					// 进入特拉斯战舰的渗透通道已开启。 / An infiltration passage into the Terath Dredgion has opened.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDDREADGION_03);
+					break;
 				}
 			}
+		}
+	}
+
+	public void updateEntryIcon(Player player) {
+		int activeMaskId = registerAvailable && !hasCoolDown(player) ? getInstanceMaskId(player) : 0;
+		for (byte maskId = maskLvlGradeC; maskId <= maskLvlGradeA; maskId++) {
+			if (maskId != activeMaskId) {
+				PacketSendUtility.sendPacket(player, this.autoGroupUnreg[maskId]);
+			}
+		}
+		if (activeMaskId > 0) {
+			PacketSendUtility.sendPacket(player, this.autoGroupReg[activeMaskId]);
 		}
 	}
 

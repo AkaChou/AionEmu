@@ -115,6 +115,22 @@
 	<zone mapid="300100000" name="IDShulack_ItemUseArea_Q3200" area_type="SPHERE" zone_type="SUB">
         <sphere x="405.27905" y="506.47733" z="885.7603" r="10.0"/>
     </zone>
+	<!-- Kromede's Trial -->
+	<zone mapid="300230000" name="IDCROMEDE_SENSORYAREA_Q18604_300230000" area_type="POLYGON" zone_type="SUB">
+		<points top="185.814651" bottom="165.814651">
+			<point x="438.712433" y="322.185089"/>
+			<point x="425.309204" y="341.497498"/>
+			<point x="431.659515" y="360.352539"/>
+			<point x="444.443787" y="375.940948"/>
+			<point x="465.173889" y="386.596375"/>
+			<point x="478.553131" y="391.850922"/>
+			<point x="497.470459" y="383.569153"/>
+			<point x="513.166870" y="363.375946"/>
+			<point x="501.188080" y="326.227295"/>
+			<point x="476.068573" y="310.793915"/>
+			<point x="456.712494" y="322.712097"/>
+		</points>
+	</zone>
 	<!-- Missions -->
 	<zone mapid="210010000" name="LF1_USE_ITEM_AREA_Q14031" area_type="SPHERE" zone_type="SUB">
         <sphere x="293.9192" y="1017.04285" z="132.1664" r="10.0"/>

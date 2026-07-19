@@ -33382,6 +33382,11 @@
       <finished quest_id="1527"/>
     </start_conditions>
   </quest>
+  <quest id="18604" name="[副本]和罗坦的会面" nameId="1117004" minlevel_permitted="37" max_repeat_count="1" cannot_share="true" cannot_giveup="false" race_permitted="ELYOS" category="NON_COUNT">
+    <rewards exp="150">
+      <reward_item item_id="164000141" count="1"/>
+    </rewards>
+  </quest>
   <quest id="18605" name="Dreams Of The Dungeon" nameId="1117005" minlevel_permitted="37" max_repeat_count="10" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
     <rewards gold="2950" exp="3921386">
       <reward_item item_id="186000004" count="5"/>
@@ -43816,6 +43821,11 @@
       <finished quest_id="28601"/>
     </start_conditions>
   </quest>
+  <quest id="28604" name="[副本]和罗坦的会面" nameId="1117054" minlevel_permitted="37" max_repeat_count="1" cannot_share="true" cannot_giveup="false" race_permitted="ASMODIANS" category="NON_COUNT">
+    <rewards exp="150">
+      <reward_item item_id="164000141" count="1"/>
+    </rewards>
+  </quest>
   <quest id="28605" name="Seeking Slumber" nameId="1117055" minlevel_permitted="37" max_repeat_count="10" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards gold="2950" exp="3921386">
       <reward_item item_id="186000009" count="5"/>
@@ -49423,6 +49433,7 @@
       <quest_work_item item_id="182216169" count="1"/>
     </quest_work_items>
   </quest>
+  <quest id="30810" name="艾莱休奇卡之复活与深层进击" nameId="1803754" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" cannot_giveup="false" race_permitted="PC_ALL" category="QUEST"/>
   <quest id="35007" name="[Daily] Chasing A Memory" nameId="1126007" minlevel_permitted="30" maxlevel_permitted="39" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="FACTION" npcfaction_id="2" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182210002" count="1"/>

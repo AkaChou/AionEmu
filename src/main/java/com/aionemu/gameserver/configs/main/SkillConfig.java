@@ -3,8 +3,8 @@ package com.aionemu.gameserver.configs.main;
 import com.aionemu.commons.configuration.Property;
 
 /**
- * 技能冷却、DP 消耗与魔增上限配置。
- * Skill cooldown, DP consumption and magic boost cap configuration.
+ * 技能冷却、DP 消耗、魔增上限与束缚行为配置。
+ * Skill cooldown, DP consumption, magic boost cap and root behavior configuration.
  */
 public class SkillConfig {
 
@@ -16,6 +16,9 @@ public class SkillConfig {
 
 	@Property(key = "gameserver.magicboost.cap", defaultValue = "6500")
 	public static int MAGICBOOST_CAP = 6500;
+
+	@Property(key = "gameserver.skill.root.break.on.dot", defaultValue = "false")
+	public static boolean ROOT_BREAK_ON_DOT = false;
 
 	public static void refresh() {
 		if (COOLDOWN_MULTIPLIER < 0.01 || COOLDOWN_MULTIPLIER > 1) {
