@@ -121,20 +121,16 @@
 		<spawn npc_id="281905">
             <spot x="361.01865" y="742.06659" z="197.38216" entity_id="54"/>
         </spawn>
-		<!-- Unstable Abyssal Splinter Exit -->
-        <spawn npc_id="730828">
-		    <spot x="709.81561" y="160.09514" z="453.43399" entity_id="84"/>
-        </spawn>
 		<!-- Unstable Artifact Of Protection -->
 		<spawn npc_id="700856">
 		    <spot x="327.89014" y="770.41431" z="201.64903" entity_id="58"/>
 		</spawn>
-		<spawn npc_id="219545" respawn_time="120">
+		<spawn npc_id="219545">
 		  <spot x="650.081604" y="217.279663" z="456.74258" h="93"/>
 		  <spot x="644.488098" y="282.001678" z="462.87115" h="83"/>
 		  <spot x="641.295471" y="243.603973" z="462.52924" h="106"/>
 		</spawn>
-		<spawn npc_id="219546" respawn_time="120">
+		<spawn npc_id="219546">
 		  <spot x="644.431641" y="221.023682" z="458.5358" h="100"/>
 		  <spot x="641.109924" y="285.960236" z="463.09137" h="100"/>
 		  <spot x="636.863342" y="246.341415" z="462.9286" h="100"/>
@@ -145,10 +141,10 @@
 		<spawn npc_id="219564" respawn_time="38">
 		  <spot x="611.144165" y="539.669495" z="423.24808"/>
 		</spawn>
-		<spawn npc_id="219582" respawn_time="38">
+		<spawn npc_id="219582">
 		  <spot x="663.191162" y="556.468201" z="424.27554"/>
 		</spawn>
-		<spawn npc_id="219583" respawn_time="38">
+		<spawn npc_id="219583">
 		  <spot x="643.953430" y="524.201721" z="423.08118"/>
 		</spawn>
 		<spawn npc_id="219591" respawn_time="120">
@@ -163,7 +159,7 @@
 		<spawn npc_id="282013" respawn_time="120">
 		  <spot x="447.267029" y="695.373901" z="433.22873" h="113"/>
 		</spawn>
-		<spawn npc_id="282066" respawn_time="120">
+		<spawn npc_id="282066">
 		  <spot x="705.984924" y="415.983002" z="462.55725" h="96"/>
 		</spawn>
 	</spawn_map>

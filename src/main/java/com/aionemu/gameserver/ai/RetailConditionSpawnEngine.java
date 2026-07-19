@@ -137,14 +137,14 @@ public final class RetailConditionSpawnEngine {
 			for (ActiveSpawn active : state.active.values()) {
 				Spawned spawned = active.spawns.remove(npc.getSpawn());
 				if (spawned != null) {
-					if (spawned.npc().respawnTime() == 0) {
+					if (spawned.npc().respawnTime() == 0 && spawned.npc().respawnTimeExtra() == 0) {
 						state.runtime.put(spawned.key() + "dead", true);
 					} else {
 						String deadlineKey = spawned.key() + "respawn_deadline";
 						if (state.runtime.getLong(deadlineKey, 0) != 0) {
 							return;
 						}
-						long deadline = System.currentTimeMillis() + (long) spawned.npc().respawnTime() * 1000;
+						long deadline = System.currentTimeMillis() + (long) respawnDelaySeconds(spawned.npc()) * 1000;
 						state.runtime.put(deadlineKey, deadline);
 						npc.getSpawn().setRespawnTime(0);
 						scheduleRespawn(instance, state, active, spawned, deadline);
@@ -157,6 +157,10 @@ public final class RetailConditionSpawnEngine {
 
 	static int nextValue(int current, int set, int modify) {
 		return modify == 0 ? set : current + modify;
+	}
+
+	static int respawnDelaySeconds(ConditionSpawnNpc npc) {
+		return npc.respawnTime() + Rnd.get(0, npc.respawnTimeExtra());
 	}
 
 	static boolean evaluate(String expression, Map<String, Integer> variables) {

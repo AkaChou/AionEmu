@@ -42,6 +42,8 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertSourceExcludes("SmolderingFireTempleInstance", "GameThreadPoolServices");
 		assertNoFuture("DivineTowerInstanceL");
 		assertNoFuture("DivineTowerInstanceD");
+		assertNoFuture("AbyssalSplinterInstance");
+		assertNoFuture("UnstableAbyssalSplinterInstance");
 		assertNoFuture("GraveOfSteelStoreroomInstance");
 		assertNoFuture("IsleOfRootsStoreroomInstance");
 		assertNoFuture("TwilightBattlefieldStoreroomInstance");

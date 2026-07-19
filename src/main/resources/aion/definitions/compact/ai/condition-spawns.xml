@@ -24166,9 +24166,14 @@
     <variable name="artifact_despawn"/>
     <variable name="artifact_light_spawn"/>
     <variable name="artifactcore_die"/>
+    <variable name="lightdark_spawn"/>
     <variable name="nmda_boxspawn"/>
     <variable name="nmdb_boxspawn"/>
     <variable name="nmdc_boxspawn"/>
+    <variable name="nmdd_spawn"/>
+    <variable name="nmdd_spawn_hard"/>
+    <variable name="nmdde_boxspawn"/>
+    <variable name="nmddh_boxspawn"/>
     <condition id="2363" expression="NmdC_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#1">
       <group probability="1000">
         <slot>
@@ -24246,6 +24251,20 @@
         </slot>
       </group>
     </condition>
+    <condition id="4992" expression="NmdDE_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="730317" probability="10000" x="308.310364" y="756.255737" z="198.853775" heading="200" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="4993" expression="NmdDH_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="730317" probability="10000" x="308.310364" y="756.255737" z="198.853775" heading="200" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
     <condition id="2374" expression="NmdB_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#13">
       <group probability="1000">
         <slot>
@@ -24289,6 +24308,20 @@
         </slot>
       </group>
     </condition>
+    <condition id="4994" expression="NmdD_Spawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#19">
+      <group probability="1000">
+        <slot>
+          <npc id="216952" probability="10000" x="329.693726" y="733.863831" z="199.192001" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="4995" expression="NmdD_Spawn_Hard == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#19">
+      <group probability="1000">
+        <slot>
+          <npc id="216960" probability="10000" x="329.693726" y="733.863831" z="199.192001" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
     <condition id="2380" expression="NmdC_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#20">
       <group probability="1000">
         <slot>
@@ -24296,10 +24329,62 @@
         </slot>
       </group>
     </condition>
+    <condition id="4996" expression="NmdDE_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#21">
+      <group probability="1000">
+        <slot>
+          <npc id="700937" probability="10000" x="330.890991" y="733.294312" z="198.552856" heading="340" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="4997" expression="NmdDH_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#21">
+      <group probability="1000">
+        <slot>
+          <npc id="700938" probability="10000" x="330.890991" y="733.294312" z="198.552856" heading="340" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="4998" expression="LightDark_Spawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#22">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="idabre_core/world_N.xml#22:g1:s1:p1">
+            <npc id="216949" probability="10000" x="455.310974" y="703.983704" z="440.992981" heading="340" initial_delay="1" initial_delay_extra="1" respawn_time="172800" respawn_time_extra="1"/>
+            <npc id="216948" probability="10000" x="447.363403" y="681.674744" z="440.992981" heading="340" initial_delay="1" initial_delay_extra="1" respawn_time="172800" respawn_time_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
     <condition id="2381" expression="NmdA_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#23">
       <group probability="1000">
         <slot>
           <npc id="700955" probability="10000" x="669.999207" y="333.80545" z="467.723602" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="4999" expression="NmdDE_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#24">
+      <group probability="1000">
+        <slot>
+          <npc id="700934" probability="10000" x="329.846191" y="738.41095" z="198.467957" heading="10" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5000" expression="NmdDH_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#24">
+      <group probability="1000">
+        <slot>
+          <npc id="700934" probability="10000" x="329.846191" y="738.41095" z="198.467957" heading="10" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5001" expression="NmdDE_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#25">
+      <group probability="1000">
+        <slot>
+          <npc id="700934" probability="10000" x="326.977997" y="729.84137" z="198.467957" heading="50" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5002" expression="NmdDH_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#25">
+      <group probability="1000">
+        <slot>
+          <npc id="700934" probability="10000" x="326.977997" y="729.84137" z="198.467957" heading="50" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
@@ -24352,6 +24437,20 @@
         </slot>
       </group>
     </condition>
+    <condition id="5003" expression="NmdDE_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#33">
+      <group probability="1000">
+        <slot>
+          <npc id="700934" probability="10000" x="326.529602" y="735.13324" z="198.467957" heading="200" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5004" expression="NmdDH_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#33">
+      <group probability="1000">
+        <slot>
+          <npc id="700934" probability="10000" x="326.529602" y="735.13324" z="198.467957" heading="200" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
     <condition id="2389" expression="NmdA_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core/world_N.xml#34">
       <group probability="1000">
         <slot>
@@ -24400,9 +24499,14 @@
     <variable name="artifact_despawn"/>
     <variable name="artifact_light_spawn"/>
     <variable name="artifactcore_die"/>
+    <variable name="lightdark_spawn"/>
     <variable name="nmda_boxspawn"/>
     <variable name="nmdb_boxspawn"/>
     <variable name="nmdc_boxspawn"/>
+    <variable name="nmdd_spawn"/>
+    <variable name="nmdd_spawn_hard"/>
+    <variable name="nmdde_boxspawn"/>
+    <variable name="nmddh_boxspawn"/>
     <condition id="2395" expression="NmdC_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#1">
       <group probability="1000">
         <slot>
@@ -24480,6 +24584,20 @@
         </slot>
       </group>
     </condition>
+    <condition id="5005" expression="NmdDE_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="730828" probability="10000" x="308.310364" y="756.255737" z="198.853775" heading="200" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5006" expression="NmdDH_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="730828" probability="10000" x="308.310364" y="756.255737" z="198.853775" heading="200" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
     <condition id="2406" expression="NmdB_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#13">
       <group probability="1000">
         <slot>
@@ -24522,6 +24640,20 @@
         </slot>
       </group>
     </condition>
+    <condition id="5007" expression="NmdD_Spawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#19">
+      <group probability="1000">
+        <slot>
+          <npc id="219555" probability="10000" x="329.693726" y="733.863831" z="199.192001" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5008" expression="NmdD_Spawn_Hard == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#19">
+      <group probability="1000">
+        <slot>
+          <npc id="219563" probability="10000" x="329.693726" y="733.863831" z="199.192001" heading="100" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
     <condition id="2412" expression="NmdC_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#20">
       <group probability="1000">
         <slot>
@@ -24529,10 +24661,62 @@
         </slot>
       </group>
     </condition>
+    <condition id="5009" expression="NmdDE_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#21">
+      <group probability="1000">
+        <slot>
+          <npc id="701579" probability="10000" x="330.890991" y="733.294312" z="198.552856" heading="340" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5010" expression="NmdDH_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#21">
+      <group probability="1000">
+        <slot>
+          <npc id="701580" probability="10000" x="330.890991" y="733.294312" z="198.552856" heading="340" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5011" expression="LightDark_Spawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#22">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="idabre_core_02/world_N.xml#22:g1:s1:p1">
+            <npc id="219552" probability="10000" x="455.310974" y="703.983704" z="440.992981" heading="340" initial_delay="1" initial_delay_extra="1" respawn_time="172800" respawn_time_extra="1"/>
+            <npc id="219551" probability="10000" x="447.363403" y="681.674744" z="440.992981" heading="340" initial_delay="1" initial_delay_extra="1" respawn_time="172800" respawn_time_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
     <condition id="2413" expression="NmdA_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#23">
       <group probability="1000">
         <slot>
           <npc id="701588" probability="10000" x="669.999207" y="333.80545" z="467.723602" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5012" expression="NmdDE_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#24">
+      <group probability="1000">
+        <slot>
+          <npc id="701576" probability="10000" x="329.846191" y="738.41095" z="198.467957" heading="10" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5013" expression="NmdDH_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#24">
+      <group probability="1000">
+        <slot>
+          <npc id="701576" probability="10000" x="329.846191" y="738.41095" z="198.467957" heading="10" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5014" expression="NmdDE_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#25">
+      <group probability="1000">
+        <slot>
+          <npc id="701576" probability="10000" x="326.977997" y="729.84137" z="198.467957" heading="50" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5015" expression="NmdDH_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#25">
+      <group probability="1000">
+        <slot>
+          <npc id="701576" probability="10000" x="326.977997" y="729.84137" z="198.467957" heading="50" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>
@@ -24582,6 +24766,20 @@
       <group probability="1000">
         <slot>
           <npc id="701588" probability="10000" x="452.897064" y="692.36084" z="433.968384" heading="20" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5016" expression="NmdDE_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#33">
+      <group probability="1000">
+        <slot>
+          <npc id="701576" probability="10000" x="326.529602" y="735.13324" z="198.467957" heading="200" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5017" expression="NmdDH_BoxSpawn == 1" despawn_at_other="false" group_mode="all" source="idabre_core_02/world_N.xml#33">
+      <group probability="1000">
+        <slot>
+          <npc id="701576" probability="10000" x="326.529602" y="735.13324" z="198.467957" heading="200" initial_delay="1" initial_delay_extra="1"/>
         </slot>
       </group>
     </condition>

@@ -140,20 +140,17 @@
         <spawn npc_id="282013" respawn_time="120">
           <spot x="447.267029" y="695.373901" z="433.22873" h="113"/>
         </spawn>
-        <spawn npc_id="282054" respawn_time="38">
+        <spawn npc_id="282054">
           <spot x="628.405579" y="585.448120" z="424.31757"/>
         </spawn>
-        <spawn npc_id="282055" respawn_time="38">
+        <spawn npc_id="282055">
           <spot x="663.191162" y="556.468201" z="424.27554"/>
         </spawn>
-        <spawn npc_id="282056" respawn_time="38">
+        <spawn npc_id="282056">
           <spot x="643.953430" y="524.201721" z="423.08118"/>
         </spawn>
-        <spawn npc_id="282066" respawn_time="120">
+        <spawn npc_id="282066">
           <spot x="705.984924" y="415.983002" z="462.55725" h="96"/>
-        </spawn>
-        <spawn npc_id="730317" respawn_time="120">
-          <spot x="708.977722" y="160.172852" z="453.5694" h="100"/>
         </spawn>
 	</spawn_map>
 </spawns>

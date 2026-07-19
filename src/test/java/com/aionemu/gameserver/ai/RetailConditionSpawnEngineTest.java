@@ -100,6 +100,15 @@ class RetailConditionSpawnEngineTest {
 	}
 
 	@Test
+	void appliesRetailRespawnRandomWindow() {
+		ConditionSpawnNpc npc = conditionNpc(0, 120, 30);
+		for (int i = 0; i < 100; i++) {
+			int delay = RetailConditionSpawnEngine.respawnDelaySeconds(npc);
+			assertTrue(delay >= 120 && delay <= 150);
+		}
+	}
+
+	@Test
 	void appliesCaseInsensitiveWorldFlagGates() {
 		HashSet<String> flags = new HashSet<>();
 
@@ -190,7 +199,12 @@ class RetailConditionSpawnEngineTest {
 	}
 
 	private static ConditionSpawnNpc conditionNpc(int life, int respawnTime) {
-		return new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null, life, respawnTime);
+		return conditionNpc(life, respawnTime, 0);
+	}
+
+	private static ConditionSpawnNpc conditionNpc(int life, int respawnTime, int respawnTimeExtra) {
+		return new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null, life, respawnTime,
+			respawnTimeExtra);
 	}
 
 	private static RetailAiData retailAiData(ConditionSpawnNpc npc) {

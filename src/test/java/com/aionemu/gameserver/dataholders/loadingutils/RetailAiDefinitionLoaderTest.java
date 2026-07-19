@@ -115,7 +115,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(4991, data.conditionSpawnCount());
+		assertEquals(5017, data.conditionSpawnCount());
 		assertEquals(40, data.sensoryAreaCount());
 		var sensoryArea = data.findSensoryArea(301550000, 220582, 980.914185f, 774.380676f, 1046.33447f);
 		assertNotNull(sensoryArea);
@@ -192,6 +192,13 @@ class RetailAiDefinitionLoaderTest {
 			.flatMap(spawn -> spawn.groups().stream()).flatMap(group -> group.slots().stream())
 			.flatMap(java.util.List::stream).flatMap(choice -> choice.members().stream())
 			.filter(npc -> npc.id() == 806731).findFirst().orElseThrow().respawnTime());
+		for (int worldId : new int[] { 300220000, 300600000 }) {
+			for (String variable : new String[] { "lightdark_spawn", "nmdd_spawn", "nmdd_spawn_hard", "nmdde_boxspawn", "nmddh_boxspawn" }) {
+				assertTrue(data.supportsConditionVariable(worldId, variable), worldId + ":" + variable);
+			}
+			assertEquals(13, data.getConditionSpawns(worldId).stream()
+				.filter(spawn -> spawn.expression().contains("NmdD") || spawn.expression().contains("LightDark")).count());
+		}
 		assertEquals("SKILLCTG_HEAL", data.getSkillCategory(245));
 		assertEquals(1250, data.getNpcScore(232855).value());
 		assertTrue(data.supportsConditionVariable(300320000, "Condition_S4B"));

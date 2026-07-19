@@ -74,6 +74,7 @@
     <xs:attribute name="walker" type="xs:string"/>
     <xs:attribute name="life" type="xs:positiveInteger"/>
     <xs:attribute name="respawn_time" type="xs:positiveInteger"/>
+    <xs:attribute name="respawn_time_extra" type="xs:positiveInteger"/>
   </xs:complexType>
   <xs:complexType name="partyType">
     <xs:sequence>
