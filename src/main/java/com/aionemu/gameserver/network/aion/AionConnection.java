@@ -121,7 +121,7 @@ public class AionConnection extends AConnection {
 	 * connection transport
 	 */
 	public AionConnection(ConnectionTransport transport) {
-		super(transport, 8192 * 2, 8192 * 2);
+		super(transport, 8192 * 2, 0xFFFF);
 		initialize();
 	}
 
