@@ -1,10 +1,11 @@
 package com.aionemu.gameserver.quest.handlers.gelkmaros;
 
-import com.aionemu.gameserver.model.ChatType;
+import java.util.List;
+
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
+import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
@@ -12,10 +13,9 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.services.instance.InstanceService;
+import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
  * 格尔克马洛斯任务脚本：All About Abnormal Aether（任务 ID 20032）。
@@ -27,6 +27,8 @@ public class _20032All_About_Abnormal_Aether extends QuestHandler
 {
 	private final static int questId = 20032;
 	private final static int[] npc_ids = {799247, 799250, 799325, 799503, 799258, 799239};
+	private static final int TEARS = 182215592;
+	private static final int FRUIT = 182215593;
 	
 	public _20032All_About_Abnormal_Aether() {
 		super(questId);
@@ -118,25 +120,25 @@ public class _20032All_About_Abnormal_Aether extends QuestHandler
 					if (var == 2) {
 						return sendQuestDialog(env, 1694);
 					}
-				} case STEP_TO_3: {
-					if (player.isInGroup2()) {
+					} case STEP_TO_3: {
+						if (player.isInGroup2()) {
 						// 须离开小队或联盟才能进入。 / You must leave your group or alliance to enter.
-						PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403080));
-						return true;
-					} else {
-						//if (giveQuestItem(env, 182215592, 1) && giveQuestItem(env, 182215593, 1)) {
-						if (var == 2) { //detele if you want return giveitem 
+							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403080));
+							return true;
+						} else {
+							if (!ItemService.addQuestItems(player,
+									List.of(new QuestItems(TEARS, 1), new QuestItems(FRUIT, 1)))) {
+								return sendQuestSelectionDialog(env);
+							}
 							if (!TeleportService2.teleportToInstance(player, 300190000, 202.26694f, 226.0532f,
 									1098.236f, (byte) 30)) {
+								removeQuestItem(env, TEARS, 1);
+								removeQuestItem(env, FRUIT, 1);
 								return false;
 							}
 							changeQuestStep(env, 2, 3, false);
 							return closeDialogWindow(env);
-						} else {
-							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_WAREHOUSE_FULL_INVENTORY);
-							return sendQuestSelectionDialog(env);
 						}
-					}
 				} case FINISH_DIALOG: {
 					return sendQuestSelectionDialog(env);
 				}

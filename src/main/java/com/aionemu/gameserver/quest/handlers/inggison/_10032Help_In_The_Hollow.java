@@ -1,22 +1,19 @@
 package com.aionemu.gameserver.quest.handlers.inggison;
 
-import com.aionemu.gameserver.model.ChatType;
-import com.aionemu.gameserver.model.TeleportAnimation;
+import java.util.List;
+
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.services.instance.InstanceService;
+import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
  * 因吉森任务脚本：Help In The Hollow（任务 ID 10032）。
@@ -27,6 +24,8 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 public class _10032Help_In_The_Hollow extends QuestHandler
 {
 	private final static int questId = 10032;
+	private static final int FRUIT = 182215618;
+	private static final int TEARS = 182215619;
 
 	public _10032Help_In_The_Hollow() {
 		super(questId);
@@ -110,18 +109,18 @@ public class _10032Help_In_The_Hollow extends QuestHandler
 							if (player.isInGroup2()) {
 								return sendQuestDialog(env, 1864);
 							} else {
-								//if (giveQuestItem(env, 182215618, 1) && giveQuestItem(env, 182215619, 1)) {
-						        if (var == 2) { //detele if you want return giveitem 
-							        if (!TeleportService2.teleportToInstance(player, 300190000, 202.26694f, 226.0532f,
-											1098.236f, (byte) 30)) {
-									return false;
-							        }
-							        changeQuestStep(env, 2, 3, false);
-									return closeDialogWindow(env);
-								} else {
-									PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_WAREHOUSE_FULL_INVENTORY);
+								if (!ItemService.addQuestItems(player,
+										List.of(new QuestItems(FRUIT, 1), new QuestItems(TEARS, 1)))) {
 									return sendQuestStartDialog(env);
 								}
+								if (!TeleportService2.teleportToInstance(player, 300190000, 202.26694f, 226.0532f,
+										1098.236f, (byte) 30)) {
+									removeQuestItem(env, FRUIT, 1);
+									removeQuestItem(env, TEARS, 1);
+									return false;
+								}
+								changeQuestStep(env, 2, 3, false);
+								return closeDialogWindow(env);
 							}
 						}
 						default:

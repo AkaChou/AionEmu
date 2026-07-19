@@ -968,7 +968,7 @@ REGISTERED
 
 任务：
 
-- [ ] 将剩余 40 个含任务字段的生产 handler 迁移到 deadline；
+- [ ] 将剩余 39 个含任务字段的生产 handler 迁移到 deadline；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 38% | 2026-07-20 | 139 图行为闭包；31 个 handler 移除私有关键任务，剩余 40 个含 `Future` 文件 |
+| 阶段 4：handler 状态迁移 | 进行中 | 39% | 2026-07-20 | 139 图行为闭包；32 个 handler 移除私有关键任务，剩余 39 个含 `Future` 文件 |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1227,3 +1227,8 @@ REGISTERED
 - 两个约 400 行旧 handler 删除手写 Boss/门/宝箱/掉落、线程任务、错误 `19283` Abyssal Blessing 和静态出口兼容逻辑，只保留离本/登出删除真端副本钥匙 `185000104`；Unstable handler 复用同一清理逻辑。掉落表已含该钥匙，不再由 handler 重复注册。
 - 删除两张图静态完成出口，并移除由真端条件/AI 控制的一次性攻击怪旧 `respawn_time`。剩余含 `Future` 的生产 handler 文件降至 40。
 - Abyssal Splinter 批次验证通过：转换器 9 项测试、正式窄重生成字节比对、`mvn -q -DskipTests compile`、`RetailAiDefinitionLoaderTest,RetailConditionSpawnPartyLoaderTest,RetailConditionSpawnEngineTest,RetailPatternAI2Test,InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest`、`condition-spawns.xsd` 校验和相关文件 `git diff --check`。
+- 完成 Taloc's Hollow（`300190000`）真端单轨替换：以 `idelim/world_N.xml`、`NpcAIPatterns_IDElim_OSY.xml`、`instance_creation.xml` 和恢复后的 `Elim_HealtoPC01/02` 真端脚本为权威，Retail AI/条件刷新接管 Boss 技能、消息、电影 435/437、门、阶段对象、风柱和巨型治疗植物生成。
+- 旧 503 行 handler 缩减为 83 行：删除手工 Boss 死亡编排、门/对象缓存、条件生成、私服掉落与奖励、任务道具无条件发放、HTML 提示、线程任务和 `Future`；只保留无真端替代来源的 434/438/463/464 电影触发、离本力量石/变身/召唤物清理，以及治疗植物交互。治疗植物不再直接改 HP/MP，改由 NPC 施放真端技能 `19229`（HP 20000、MP 10000）和 `19230`（HP 30000、180 秒持续恢复）。剩余含 `Future` 的生产 handler 文件降至 39。
+- 任务 `10032`/`20032` 的入口恢复成对发放真端 work item，使用批量背包预检；传送失败时回滚两件任务物品，成功后才推进 `2 -> 3`。handler 不再清理任务 work item，继续由任务死亡、登出和离图流程负责。
+- 删除与 `IDElim_3F_Heal_Plant_Giant == 50` 条件刷新重复的静态 `700941`，并移除一次性巨型虫卵 `700738` 的旧 `respawn_time`。434/438/463/464 在真端 AI/XML 和恢复 DLL 中均未发现替代触发，客户端 `idelim` 关卡为当前工具链无法解包的专用 PAK，因此按证据边界保留最小入口/区域触发，不保留关联私服消息或编排。
+- Taloc's Hollow 批次验证通过：`mvn -q -DskipTests compile`、`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,TalocsHollowQuestMigrationTest,RetailAiDefinitionLoaderTest,RetailConditionSpawnEngineTest,RetailPatternAI2Test test` 和相关文件 `git diff --check`。
