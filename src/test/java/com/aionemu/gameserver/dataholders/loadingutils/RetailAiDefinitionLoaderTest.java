@@ -115,8 +115,8 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(4430, data.conditionSpawnCount());
-		assertEquals(39, data.sensoryAreaCount());
+		assertEquals(4991, data.conditionSpawnCount());
+		assertEquals(40, data.sensoryAreaCount());
 		var sensoryArea = data.findSensoryArea(301550000, 220582, 980.914185f, 774.380676f, 1046.33447f);
 		assertNotNull(sensoryArea);
 		assertTrue(sensoryArea.isInside3D(980, 774, 1046));
@@ -175,6 +175,23 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(94.626068f, darkHeroesEnd.get(0).x());
 		assertTrue(RetailPatternAI2.supports(data.getPattern(806731)));
 		assertTrue(RetailPatternAI2.supports(data.getPattern(806732)));
+		for (int worldId : new int[] { 310160000, 320160000 }) {
+			for (String variable : new String[] { "1st_door", "2nd_door", "3rd_door", "4th_door", "boss_die" }) {
+				assertTrue(data.supportsConditionVariable(worldId, variable), worldId + ":" + variable);
+			}
+			assertEquals(9, data.getConditionSpawns(worldId).stream()
+				.filter(spawn -> spawn.expression().contains("door") || spawn.expression().contains("boss_die")).count());
+		}
+		assertEquals(20, data.getConditionSpawns(310160000).stream()
+			.filter(spawn -> spawn.expression().equals("boss_die == 1"))
+			.flatMap(spawn -> spawn.groups().stream()).flatMap(group -> group.slots().stream())
+			.flatMap(java.util.List::stream).flatMap(choice -> choice.members().stream())
+			.filter(npc -> npc.id() == 806787).findFirst().orElseThrow().life());
+		assertEquals(1, data.getConditionSpawns(310160000).stream()
+			.filter(spawn -> spawn.expression().equals("boss_die == 1"))
+			.flatMap(spawn -> spawn.groups().stream()).flatMap(group -> group.slots().stream())
+			.flatMap(java.util.List::stream).flatMap(choice -> choice.members().stream())
+			.filter(npc -> npc.id() == 806731).findFirst().orElseThrow().respawnTime());
 		assertEquals("SKILLCTG_HEAL", data.getSkillCategory(245));
 		assertEquals(1250, data.getNpcScore(232855).value());
 		assertTrue(data.supportsConditionVariable(300320000, "Condition_S4B"));

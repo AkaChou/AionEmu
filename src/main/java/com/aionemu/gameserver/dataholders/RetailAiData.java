@@ -546,6 +546,6 @@ public final class RetailAiData {
 	}
 
 	public record ConditionSpawnNpc(int id, float x, float y, float z, int heading,
-				int initialDelay, int initialDelayExtra, String walkerId, Area sensoryArea) {
+			int initialDelay, int initialDelayExtra, String walkerId, Area sensoryArea, int life, int respawnTime) {
 	}
 }

@@ -40,6 +40,8 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertMigrated("SmolderingFireTempleInstance", "scheduleDeadline(\"expire\"",
 				"smolder.kill.");
 		assertSourceExcludes("SmolderingFireTempleInstance", "GameThreadPoolServices");
+		assertNoFuture("DivineTowerInstanceL");
+		assertNoFuture("DivineTowerInstanceD");
 		assertNoFuture("GraveOfSteelStoreroomInstance");
 		assertNoFuture("IsleOfRootsStoreroomInstance");
 		assertNoFuture("TwilightBattlefieldStoreroomInstance");

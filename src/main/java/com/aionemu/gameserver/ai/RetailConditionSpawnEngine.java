@@ -8,6 +8,8 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.model.TaskId;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.instance.InstanceRuntimeState;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
@@ -122,6 +124,37 @@ public final class RetailConditionSpawnEngine {
 		instance.getRuntimeState().removePrefix(STATE_PREFIX);
 	}
 
+	public static void onDie(Npc npc) {
+		onDie(npc.getPosition().getWorldMapInstance(), npc);
+	}
+
+	static void onDie(WorldMapInstance instance, Npc npc) {
+		State state = instance.getTransientState(State.class);
+		if (state == null) {
+			return;
+		}
+		synchronized (state) {
+			for (ActiveSpawn active : state.active.values()) {
+				Spawned spawned = active.spawns.remove(npc.getSpawn());
+				if (spawned != null) {
+					if (spawned.npc().respawnTime() == 0) {
+						state.runtime.put(spawned.key() + "dead", true);
+					} else {
+						String deadlineKey = spawned.key() + "respawn_deadline";
+						if (state.runtime.getLong(deadlineKey, 0) != 0) {
+							return;
+						}
+						long deadline = System.currentTimeMillis() + (long) spawned.npc().respawnTime() * 1000;
+						state.runtime.put(deadlineKey, deadline);
+						npc.getSpawn().setRespawnTime(0);
+						scheduleRespawn(instance, state, active, spawned, deadline);
+					}
+					return;
+				}
+			}
+		}
+	}
+
 	static int nextValue(int current, int set, int modify) {
 		return modify == 0 ? set : current + modify;
 	}
@@ -171,7 +204,8 @@ public final class RetailConditionSpawnEngine {
 				ConditionSpawnChoice choice = slot.get(choiceIndex);
 				for (int memberIndex = 0; memberIndex < choice.members().size(); memberIndex++) {
 					ConditionSpawnNpc npc = choice.members().get(memberIndex);
-					String deadlineKey = conditionKey(condition.id()) + "deadline." + groupIndex + '.' + slotIndex + '.' + memberIndex;
+					String spawnKey = conditionKey(condition.id()) + "object." + groupIndex + '.' + slotIndex + '.' + memberIndex + '.';
+					String deadlineKey = spawnKey + "spawn_deadline";
 					long deadline = state.runtime.getLong(deadlineKey, 0);
 					if (deadline == 0) {
 						deadline = System.currentTimeMillis()
@@ -180,12 +214,13 @@ public final class RetailConditionSpawnEngine {
 					}
 					long delay = Math.max(0, deadline - System.currentTimeMillis());
 					if (delay == 0) {
-						spawn(instance, state, condition.id(), active, choice.partyId(), npc);
+						spawn(instance, state, condition.id(), active, choice.partyId(), npc, spawnKey, deadline);
 					} else {
+						long spawnDeadline = deadline;
 						active.tasks.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
 							synchronized (state) {
 								if (instance.getTransientState(State.class) == state && state.active.get(condition.id()) == active) {
-									spawn(instance, state, condition.id(), active, choice.partyId(), npc);
+									spawn(instance, state, condition.id(), active, choice.partyId(), npc, spawnKey, spawnDeadline);
 								}
 							}
 						}, delay));
@@ -238,22 +273,68 @@ public final class RetailConditionSpawnEngine {
 	}
 
 	private static void spawn(WorldMapInstance instance, State state, int conditionId, ActiveSpawn active,
-			String partyId, ConditionSpawnNpc npc) {
-		if (state.active.get(conditionId) != active) {
+			String partyId, ConditionSpawnNpc npc, String spawnKey, long spawnDeadline) {
+		if (state.active.get(conditionId) != active || state.runtime.getBoolean(spawnKey + "dead", false)) {
 			return;
+		}
+		long respawnDeadline = state.runtime.getLong(spawnKey + "respawn_deadline", 0);
+		if (respawnDeadline > System.currentTimeMillis()) {
+			scheduleRespawn(instance, state, active,
+				new Spawned(conditionId, partyId, npc, spawnKey, spawnDeadline), respawnDeadline);
+			return;
+		}
+		state.runtime.remove(spawnKey + "respawn_deadline");
+		long lifeDeadline = 0;
+		if (npc.life() > 0) {
+			lifeDeadline = state.runtime.getLong(spawnKey + "life_deadline", 0);
+			if (lifeDeadline == 0) {
+				lifeDeadline = spawnDeadline + (long) npc.life() * 1000;
+				state.runtime.put(spawnKey + "life_deadline", lifeDeadline);
+			}
+			if (lifeDeadline <= System.currentTimeMillis()) {
+				return;
+			}
 		}
 		SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(instance.getMapId(), npc.id(), npc.x(), npc.y(),
 			npc.z(), MathUtil.convertDegreeToHeading(npc.heading()));
 		template.setWalkerId(npc.walkerId());
 		template.setNpcPartyId(partyId);
 		VisibleObject object = SpawnEngine.spawnObject(template, instance.getInstanceId());
-		active.objects.add(object);
+		active.spawns.put(template, new Spawned(conditionId, partyId, npc, spawnKey, spawnDeadline));
+		if (npc.life() > 0) {
+			long remainingLife = lifeDeadline - System.currentTimeMillis();
+			active.tasks.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				synchronized (state) {
+					if (instance.getTransientState(State.class) == state && object.isSpawned()) {
+						object.getController().onDelete();
+					}
+				}
+			}, remainingLife));
+		}
+	}
+
+	private static void scheduleRespawn(WorldMapInstance instance, State state, ActiveSpawn active,
+			Spawned spawned, long deadline) {
+		active.tasks.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			synchronized (state) {
+				if (instance.getTransientState(State.class) == state
+					&& state.active.get(spawned.conditionId()) == active) {
+					state.runtime.remove(spawned.key() + "respawn_deadline");
+					spawn(instance, state, spawned.conditionId(), active, spawned.partyId(), spawned.npc(),
+						spawned.key(), spawned.spawnDeadline());
+				}
+			}
+		}, Math.max(0, deadline - System.currentTimeMillis())));
 	}
 
 	private static void delete(ActiveSpawn active) {
 		active.tasks.forEach(task -> task.cancel(false));
-		for (VisibleObject object : active.objects) {
-			if (object.isSpawned()) {
+		for (SpawnTemplate template : active.spawns.keySet()) {
+			VisibleObject object = template.getVisibleObject();
+			if (object instanceof Npc npc) {
+				npc.getController().cancelTask(TaskId.RESPAWN);
+			}
+			if (object != null && object.isSpawned()) {
 				object.getController().onDelete();
 			}
 		}
@@ -289,7 +370,10 @@ public final class RetailConditionSpawnEngine {
 
 	private static final class ActiveSpawn {
 		private final List<Future<?>> tasks = new ArrayList<>();
-		private final List<VisibleObject> objects = new ArrayList<>();
+		private final Map<SpawnTemplate, Spawned> spawns = new HashMap<>();
+	}
+
+	private record Spawned(int conditionId, String partyId, ConditionSpawnNpc npc, String key, long spawnDeadline) {
 	}
 
 	private static final class Expression {

@@ -10,12 +10,15 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnChoice;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.NpcType;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.npc.NpcRating;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.stats.NpcStatsTemplate;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.World;
@@ -31,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -127,8 +131,69 @@ class RetailConditionSpawnEngineTest {
 		}
 	}
 
+	@Test
+	void doesNotRestoreDeadSingleUseSpawn() throws ReflectiveOperationException {
+		try (TestContext context = new TestContext(conditionNpc(0, 0))) {
+			RetailConditionSpawnEngine.initialize(context.instance);
+			RetailConditionSpawnEngine.onDie(context.instance, (Npc) context.world.object);
+			var restoredState = com.aionemu.gameserver.model.instance.InstanceRuntimeState.decode(
+				context.instance.getRuntimeState().encode());
+			WorldMapInstance restored = OBJENESIS.newInstance(TestWorldMapInstance.class);
+			restored.setDynamicInstance(null, restoredState);
+
+			RetailConditionSpawnEngine.initialize(restored);
+
+			assertEquals(1, context.world.spawnCount);
+			assertTrue(restoredState.getBoolean("retail.condition.spawn.1.object.0.0.0.dead", false));
+			RetailConditionSpawnEngine.clear(restored);
+		}
+	}
+
+	@Test
+	void doesNotRestoreExpiredTimedSpawn() throws ReflectiveOperationException {
+		try (TestContext context = new TestContext(conditionNpc(1, 0))) {
+			context.instance.getRuntimeState().put("retail.condition.spawn.1.object.0.0.0.life_deadline",
+				System.currentTimeMillis() - 1);
+
+			RetailConditionSpawnEngine.initialize(context.instance);
+
+			assertEquals(0, context.world.spawnCount);
+		}
+	}
+
+	@Test
+	void schedulesFixedRespawnOnlyOnce() throws Exception {
+		try (TestContext context = new TestContext(conditionNpc(0, 1))) {
+			RetailConditionSpawnEngine.initialize(context.instance);
+			Npc npc = (Npc) context.world.object;
+
+			RetailConditionSpawnEngine.onDie(context.instance, npc);
+			long deadline = context.instance.getRuntimeState()
+				.getLong("retail.condition.spawn.1.object.0.0.0.respawn_deadline", 0);
+			assertTrue(deadline > 0);
+			TimeUnit.MILLISECONDS.sleep(10);
+			RetailConditionSpawnEngine.onDie(context.instance, npc);
+
+			assertEquals(deadline, context.instance.getRuntimeState()
+				.getLong("retail.condition.spawn.1.object.0.0.0.respawn_deadline", 0));
+			long timeout = System.nanoTime() + TimeUnit.SECONDS.toNanos(2);
+			while (context.world.spawnCount < 2 && System.nanoTime() < timeout) {
+				TimeUnit.MILLISECONDS.sleep(10);
+			}
+			TimeUnit.MILLISECONDS.sleep(100);
+			assertEquals(2, context.world.spawnCount);
+		}
+	}
+
 	private static RetailAiData retailAiData() {
-		ConditionSpawnNpc npc = new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null);
+		return retailAiData(conditionNpc(0, 0));
+	}
+
+	private static ConditionSpawnNpc conditionNpc(int life, int respawnTime) {
+		return new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null, life, respawnTime);
+	}
+
+	private static RetailAiData retailAiData(ConditionSpawnNpc npc) {
 		ConditionSpawnChoice choice = new ConditionSpawnChoice(10_000, null, List.of(npc));
 		ConditionSpawnGroup group = new ConditionSpawnGroup(1_000, List.of(List.of(choice)));
 		ConditionSpawn condition = new ConditionSpawn(1, "wave == 0", true, "all", List.of(group));
@@ -173,7 +238,7 @@ class RetailConditionSpawnEngineTest {
 
 	private static final class TestWorld extends World {
 		private VisibleObject object;
-		private int spawnCount;
+		private volatile int spawnCount;
 		private int despawnCount;
 
 		@Override
@@ -253,6 +318,45 @@ class RetailConditionSpawnEngineTest {
 		@Override
 		public int nextId() {
 			return 1;
+		}
+	}
+
+	private static final class TestContext implements AutoCloseable {
+		private final RetailAiData previousRetailAiData = DataManager.RETAIL_AI_DATA;
+		private final NpcData previousNpcData = DataManager.NPC_DATA;
+		private final NpcSkillData previousNpcSkillData = DataManager.NPC_SKILL_DATA;
+		private final TestWorld world = OBJENESIS.newInstance(TestWorld.class);
+		private final WorldMapInstance instance = OBJENESIS.newInstance(TestWorldMapInstance.class);
+		private final ThreadPoolManager threadPoolManager = new ThreadPoolManager();
+		private final GameThreadPoolServices threadPoolServices;
+		private final GameEngineServices engineServices;
+		private final GameWorldBootstrapServices worldServices;
+
+		private TestContext(ConditionSpawnNpc npc) throws ReflectiveOperationException {
+			DefaultListableBeanFactory beans = new DefaultListableBeanFactory();
+			beans.registerSingleton("threadPoolManager", threadPoolManager);
+			threadPoolServices = new GameThreadPoolServices(beans.getBeanProvider(ThreadPoolManager.class));
+			AI2Engine ai2Engine = new AI2Engine();
+			ai2Engine.registerAI(DummyAI2.class);
+			engineServices = new GameEngineServices(null, null, null, provider(AI2Engine.class, ai2Engine), null);
+			worldServices = new GameWorldBootstrapServices(
+				provider(IDFactory.class, OBJENESIS.newInstance(TestIdFactory.class)), null, null, null,
+				provider(World.class, world));
+			DataManager.NPC_DATA = npcData();
+			DataManager.NPC_SKILL_DATA = new NpcSkillData(List.of());
+			DataManager.RETAIL_AI_DATA = retailAiData(npc);
+		}
+
+		@Override
+		public void close() {
+			RetailConditionSpawnEngine.clear(instance);
+			DataManager.RETAIL_AI_DATA = previousRetailAiData;
+			DataManager.NPC_DATA = previousNpcData;
+			DataManager.NPC_SKILL_DATA = previousNpcSkillData;
+			worldServices.destroy();
+			engineServices.destroy();
+			threadPoolServices.destroy();
+			threadPoolManager.shutdown();
 		}
 	}
 }

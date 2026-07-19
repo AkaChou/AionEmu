@@ -62,6 +62,38 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RetailPatternAI2Test {
 	@Test
+	void divineTowerRetailPatternsUseCompleteConditionVariables() {
+		String previousDefinitions = System.getProperty("aion.game.definitions.dir");
+		RetailAiData previous = DataManager.RETAIL_AI_DATA;
+		NpcSkillData previousNpcSkills = DataManager.NPC_SKILL_DATA;
+		try {
+			System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+			XmlDataLoader loader = new XmlDataLoader();
+			DataManager.RETAIL_AI_DATA = loader.loadRetailAiData();
+			DataManager.NPC_SKILL_DATA = loader.loadNpcSkillData();
+			for (int worldId : new int[] { 310160000, 320160000 }) {
+				for (int npcId : new int[] { 248025, 248401, 248404, 248405, 248406, 248407, 248440, 248441, 248442, 248443 }) {
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = worldId;
+					npc.objectTemplate = new NpcTemplate();
+					npc.skillList = new NpcSkillList(npc);
+					assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+						worldId + ":" + npcId);
+				}
+			}
+		} finally {
+			DataManager.RETAIL_AI_DATA = previous;
+			DataManager.NPC_SKILL_DATA = previousNpcSkills;
+			if (previousDefinitions == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previousDefinitions);
+			}
+		}
+	}
+
+	@Test
 	void executesSpawnedRagnarokPhaseSkillsThroughRetailEventChain() throws ReflectiveOperationException {
 		String previousDefinitions = System.getProperty("aion.game.definitions.dir");
 		SkillData previousSkills = DataManager.SKILL_DATA;
