@@ -192,13 +192,11 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 			writeC(0x00);
 			writeC(slotSize);
 			writeH(itemSize);
-			for (int i = 0; i < itemSize; i++) {
-				for (PlayerWardrobeEntry ce : player.getWardrobe().getAllWardrobe()) {
-					writeC(ce.getSlot());
-					writeD(ce.getItemId());
-					writeD(0x00);
-					writeD(0x01);
-				}
+			for (PlayerWardrobeEntry ce : player.getWardrobe().getAllWardrobe()) {
+				writeC(ce.getSlot());
+				writeD(ce.getItemId());
+				writeD(0x00);
+				writeD(0x01);
 			}
 			break;
 		case 9:
