@@ -968,7 +968,7 @@ REGISTERED
 
 任务：
 
-- [ ] 将剩余 46 个含任务字段的生产 handler 迁移到 deadline；
+- [ ] 将剩余 45 个含任务字段的生产 handler 迁移到 deadline；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 32% | 2026-07-19 | 139 图行为闭包；25 个 handler 移除私有关键任务，剩余 46 个含 `Future` 文件 |
+| 阶段 4：handler 状态迁移 | 进行中 | 33% | 2026-07-19 | 139 图行为闭包；26 个 handler 移除私有关键任务，剩余 45 个含 `Future` 文件 |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1207,3 +1207,6 @@ REGISTERED
 - Lower Udas 批次验证通过：`mvn -q -DskipTests compile`、`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest` 和生成器 `--check`。
 - 合并 Kysis、Krotan、Miren 三个同构深渊宝物库 handler：共享恢复型编排保留三套司库/Boss/钥匙/神器/门/区域差异，持久化随机选择、死亡、四段屏障删除 deadline、12 阶段宝箱和 Boss 停止状态；重启不再重新抽取或复活已死亡动态 Boss，并删除三份私有 `Future`、36 个布尔计时字段和重复线程池逻辑，剩余含 `Future` 的生产 handler 文件降至 46。
 - 深渊宝物库批次通过 `mvn -q -DskipTests compile` 和 `InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest`；生成器临时目录重生成后除工作树 `limits.xml` 的外部末尾换行外全部字节一致，正式 `--check` 被该单一非语义差异阻断，本批未修改或纳入该文件。
+- 完成 Sealed Argent Manor 真端 60 秒准备、15 分钟挑战和 Boss 死亡后 3 秒结算的绝对 deadline 恢复；持久化积分、击杀数、排名、门 14、随机元素抗性、职业 Zadra 选择及死亡、随机 Boss 掉落、已消耗 Drained Hetgolem、一次性计分怪死亡和玩家结算标记，重启不会重抽、重复刷 Boss、重复耗材、复活已清理计分怪或重复发奖。
+- Sealed Argent Manor 删除三个私有任务容器、直接线程池调度、内存开始时间、门缓存和失效销毁字段；积分改用已生成的真端 `npc-scores.xml` 数值，奖励继续由幂等 `InstanceSettlementService` 接管，剩余含 `Future` 的生产 handler 文件降至 45。
+- Sealed Argent Manor 批次验证通过：`mvn -q -DskipTests compile`、`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest test`；正式生成器 `--check` 仍仅被工作树 `limits.xml` 的外部末尾换行阻断，本批不修改或提交该文件。

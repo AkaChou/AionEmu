@@ -34,6 +34,9 @@ class InstanceHandlerRecoveryMigrationTest {
 				"lower_udas.next_deadline");
 		assertMigrated("AbyssStoreroomInstance", "scheduleDeadline(\"barrier_\"",
 				"storeroom.next_deadline");
+		assertMigrated("SealedArgentManorInstance", "scheduleDeadline(\"expire\"",
+				"sealed.resistance_skill");
+		assertSourceExcludes("SealedArgentManorInstance", "GameThreadPoolServices");
 		assertNoFuture("GraveOfSteelStoreroomInstance");
 		assertNoFuture("IsleOfRootsStoreroomInstance");
 		assertNoFuture("TwilightBattlefieldStoreroomInstance");
@@ -48,8 +51,12 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	private static void assertNoFuture(String className) throws Exception {
+		assertSourceExcludes(className, "Future<?>");
+	}
+
+	private static void assertSourceExcludes(String className, String forbidden) throws Exception {
 		String source = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + className + ".java"));
-		assertFalse(source.contains("Future<?>"));
+		assertFalse(source.contains(forbidden));
 	}
 }

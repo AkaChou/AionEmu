@@ -16,6 +16,12 @@ public class SealedArgentManorReward extends InstanceReward<SealedArgentManorPla
 		super(mapId, instanceId);
 	}
 
+	public void restore(int points, int npcKills, int rank) {
+		this.points = points;
+		this.npcKills = npcKills;
+		this.rank = rank;
+	}
+
 	/** 添加点。 / Adds points. */
 	public void addPoints(int points) {
 		this.points += points;
