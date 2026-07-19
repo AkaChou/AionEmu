@@ -1,528 +1,124 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.*;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Future;
-
-/**
- * 左翼密室副本事件处理器。
- * Instance event handler for Left Wing Chamber.
- *
- * @author Encom
- */
 
 @InstanceID(300080000)
-public class LeftWingChamberInstance extends GeneralInstanceHandler
-{
-	/**
-	 * whether timer1 started
-	 */
-		private boolean isStartTimer1 = false;
-	/** 是否启动计时器2 / is start timer2 */
-		private boolean isStartTimer2 = false;
-	/** 是否启动计时器3 / is start timer3 */
-		private boolean isStartTimer3 = false;
-	/** 是否启动计时器4 / is start timer4 */
-		private boolean isStartTimer4 = false;
-	/** 是否启动计时器5 / is start timer5 */
-		private boolean isStartTimer5 = false;
-	/** 是否启动计时器6 / is start timer6 */
-		private boolean isStartTimer6 = false;
-	/** 是否启动计时器7 / is start timer7 */
-		private boolean isStartTimer7 = false;
-	/** 是否启动计时器8 / is start timer8 */
-		private boolean isStartTimer8 = false;
-	/** 是否启动计时器9 / is start timer9 */
-		private boolean isStartTimer9 = false;
-	/** 是否启动计时器10 / is start timer10 */
-		private boolean isStartTimer10 = false;
-	/** 是否启动计时器11 / is start timer11 */
-		private boolean isStartTimer11 = false;
-	/** 是否启动计时器12 / is start timer12 */
-		private boolean isStartTimer12 = false;
-	/** chestleftwing 任务 / chest left wing task */
-		private Future<?> chestLeftWingTask;
-	/** 门映射 / door map */
-	private Map<Integer, StaticDoor> doors;
-	/** left wing treasure box / left wing treasure box */
-		private List<Npc> leftWingTreasureBox = new ArrayList<Npc>();
-	
-    /**
-     * 副本创建时初始化逻辑。
-     * Initialize logic when the instance is created.
-     *
-     * @param instance 世界地图实例 / world-map instance
-     */
-    @Override
-    public void onInstanceCreate(WorldMapInstance instance) {
-        super.onInstanceCreate(instance);
-        doors = instance.getDoors();
-    }
-	
-    /**
-     * 处理死亡事件。
-     * Handle a death event.
-     *
-     * npc
-     */
-    @Override
-    public void onDie(Npc npc) {
-        Player player = npc.getAggroList().getMostPlayerDamage();
-		switch (npc.getObjectTemplate().getTemplateId()) {
-            case 219617: //Balaur Barricade.
-			    despawnNpc(npc);
-			break;
-			case 215424: //Treasurer Nabatma.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Left Wing Chamber>");
-				if (!isStartTimer1) {
-					isStartTimer1 = true;
-					System.currentTimeMillis();
-					instance.doOnAllPlayers(new Visitor<Player>() {
-						/**
-						 * 处理 visit。
-						 * Handle visit.
-						 *
-						 * @param player 玩家 / player
-						 */
-						@Override
-						public void visit(Player player) {
-							if (player.isOnline()) {
-								PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-							}
-						}
-					});
-					leftWingTreasureBox.add((Npc) spawn(700465, 212.09007f, 741.0567f, 366.20367f, (byte) 10));
-					leftWingTreasureBox.add((Npc) spawn(700465, 239.12955f, 755.24274f, 365.43304f, (byte) 102));
-					leftWingTreasureBox.add((Npc) spawn(700465, 210.2166f, 697.1134f, 365.69165f, (byte) 99));
-					leftWingTreasureBox.add((Npc) spawn(700465, 188.26668f, 675.905f, 365.71332f, (byte) 7));
-					leftWingTreasureBox.add((Npc) spawn(700465, 182.42268f, 631.6112f, 366.24146f, (byte) 111));
-					leftWingTreasureBox.add((Npc) spawn(700465, 181.081f, 608.83777f, 365.52753f, (byte) 99));
-					leftWingTreasureBox.add((Npc) spawn(700465, 181.32057f, 561.24915f, 365.01053f, (byte) 113));
-					leftWingTreasureBox.add((Npc) spawn(700465, 181.63654f, 539.41473f, 365.01053f, (byte) 15));
-					leftWingTreasureBox.add((Npc) spawn(700465, 191.39304f, 495.07608f, 366.49414f, (byte) 65));
-					leftWingTreasureBox.add((Npc) spawn(700465, 197.46051f, 471.78418f, 365.32578f, (byte) 82));
-					leftWingTreasureBox.add((Npc) spawn(700465, 223.41487f, 409.03143f, 365.01053f, (byte) 26));
-					leftWingTreasureBox.add((Npc) spawn(700465, 213.39343f, 425.5012f, 366.57892f, (byte) 8));
-					chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						/**
-						 * 处理 run。
-						 * Handle run.
-						 */
-						@Override
-						public void run() {
-							StartTimer2();
-							sendMsg(1400245);
-							leftWingTreasureBox.get(0).getController().onDelete();
-						}
-					}, 300000);
-				}
-			break;
-        }
-    }
-	
-	private void StartTimer2() {
-        if (!isStartTimer2) {
-			isStartTimer2 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					StartTimer3();
-					sendMsg(1400245);
-					leftWingTreasureBox.get(1).getController().onDelete();
-				}
-			}, 300000);
+public class LeftWingChamberInstance extends GeneralInstanceHandler {
+	private static final long CHEST_STAGE_DURATION = 5 * 60_000L;
+	private static final float[][] CHEST_POSITIONS = {
+			{ 212.09007f, 741.0567f, 366.20367f, 10 },
+			{ 239.12955f, 755.24274f, 365.43304f, 102 },
+			{ 210.2166f, 697.1134f, 365.69165f, 99 },
+			{ 188.26668f, 675.905f, 365.71332f, 7 },
+			{ 182.42268f, 631.6112f, 366.24146f, 111 },
+			{ 181.081f, 608.83777f, 365.52753f, 99 },
+			{ 181.32057f, 561.24915f, 365.01053f, 113 },
+			{ 181.63654f, 539.41473f, 365.01053f, 15 },
+			{ 191.39304f, 495.07608f, 366.49414f, 65 },
+			{ 197.46051f, 471.78418f, 365.32578f, 82 },
+			{ 223.41487f, 409.03143f, 365.01053f, 26 },
+			{ 213.39343f, 425.5012f, 366.57892f, 8 }
+	};
+	private final Npc[] treasureBoxes = new Npc[CHEST_POSITIONS.length];
+
+	@Override
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		if (!runtimeState().getBoolean("leftwing.started", false)
+				|| runtimeState().getBoolean("leftwing.complete", false)) {
+			return;
+		}
+		int stage = runtimeState().getInt("leftwing.stage", 0);
+		if (stage >= CHEST_POSITIONS.length) {
+			runtimeState().put("leftwing.complete", true);
+			return;
+		}
+		spawnTreasureBoxes(stage);
+		long deadline = runtimeState().getLong("leftwing.next_deadline", 0);
+		if (deadline > 0) {
+			scheduleDeadline("chest", deadline, this::expireNextChest);
 		}
 	}
-	
-	private void StartTimer3() {
-	    if (!isStartTimer3) {
-			isStartTimer3 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					StartTimer4();
-					sendMsg(1400245);
-					leftWingTreasureBox.get(2).getController().onDelete();
-				}
-			}, 300000);
+
+	@Override
+	public void onEnterInstance(Player player) {
+		long deadline = runtimeState().getLong("leftwing.next_deadline", 0);
+		if (runtimeState().getBoolean("leftwing.started", false)
+				&& !runtimeState().getBoolean("leftwing.complete", false)
+				&& deadline > System.currentTimeMillis()) {
+			PacketSendUtility.sendPacket(player,
+					new SM_QUEST_ACTION(0, (int) ((deadline - System.currentTimeMillis()) / 1000)));
 		}
 	}
-	
-	private void StartTimer4() {
-	    if (!isStartTimer4) {
-			isStartTimer4 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					StartTimer5();
-					sendMsg(1400245);
-					leftWingTreasureBox.get(3).getController().onDelete();
-				}
-			}, 300000);
+
+	@Override
+	public void onDie(Npc npc) {
+		switch (npc.getNpcId()) {
+			case 219617 -> npc.getController().onDelete();
+			case 215424 -> startChestStages();
 		}
 	}
-	
-	private void StartTimer5() {
-	    if (!isStartTimer5) {
-			isStartTimer5 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					StartTimer6();
-					sendMsg(1400245);
-					leftWingTreasureBox.get(4).getController().onDelete();
-				}
-			}, 300000);
+
+	private void startChestStages() {
+		if (runtimeState().getBoolean("leftwing.started", false)) {
+			return;
+		}
+		runtimeState().put("leftwing.started", true);
+		runtimeState().put("leftwing.stage", 0);
+		runtimeState().put("leftwing.complete", false);
+		spawnTreasureBoxes(0);
+		long deadline = System.currentTimeMillis() + CHEST_STAGE_DURATION;
+		runtimeState().put("leftwing.next_deadline", deadline);
+		sendCountdown(deadline);
+		scheduleDeadline("chest", deadline, this::expireNextChest);
+	}
+
+	private void spawnTreasureBoxes(int firstStage) {
+		for (int stage = firstStage; stage < CHEST_POSITIONS.length; stage++) {
+			float[] position = CHEST_POSITIONS[stage];
+			treasureBoxes[stage] = (Npc) spawn(700465, position[0], position[1], position[2], (byte) position[3]);
 		}
 	}
-	
-	private void StartTimer6() {
-	    if (!isStartTimer6) {
-			isStartTimer6 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					StartTimer7();
-					sendMsg(1400245);
-					leftWingTreasureBox.get(5).getController().onDelete();
-				}
-			}, 300000);
+
+	private void expireNextChest() {
+		if (runtimeState().getBoolean("leftwing.complete", false)) {
+			return;
+		}
+		int stage = runtimeState().getInt("leftwing.stage", 0);
+		if (stage >= CHEST_POSITIONS.length) {
+			runtimeState().put("leftwing.complete", true);
+			return;
+		}
+		int nextStage = stage + 1;
+		runtimeState().put("leftwing.stage", nextStage);
+		if (nextStage == CHEST_POSITIONS.length) {
+			runtimeState().put("leftwing.complete", true);
+			sendMsg(1400244);
+		} else {
+			long deadline = runtimeState().getLong("leftwing.next_deadline", 0) + CHEST_STAGE_DURATION;
+			runtimeState().put("leftwing.next_deadline", deadline);
+			sendCountdown(deadline);
+			scheduleDeadline("chest", deadline, this::expireNextChest);
+		}
+		sendMsg(1400245);
+		Npc chest = treasureBoxes[stage];
+		if (chest != null) {
+			chest.getController().onDelete();
+			treasureBoxes[stage] = null;
 		}
 	}
-	
-	private void StartTimer7() {
-	    if (!isStartTimer7) {
-			isStartTimer7 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					StartTimer8();
-					sendMsg(1400245);
-					leftWingTreasureBox.get(6).getController().onDelete();
-				}
-			}, 300000);
+
+	private void sendCountdown(long deadline) {
+		long remaining = deadline - System.currentTimeMillis();
+		if (remaining > 0) {
+			instance.doOnAllPlayers(player -> PacketSendUtility.sendPacket(player,
+					new SM_QUEST_ACTION(0, (int) (remaining / 1000))));
 		}
 	}
-	
-	private void StartTimer8() {
-	    if (!isStartTimer8) {
-			isStartTimer8 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					StartTimer9();
-					sendMsg(1400245);
-					leftWingTreasureBox.get(7).getController().onDelete();
-				}
-			}, 300000);
-		}
-	}
-	
-	private void StartTimer9() {
-	    if (!isStartTimer9) {
-			isStartTimer9 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					StartTimer10();
-					sendMsg(1400245);
-					leftWingTreasureBox.get(8).getController().onDelete();
-				}
-			}, 300000);
-		}
-	}
-	
-	private void StartTimer10() {
-	    if (!isStartTimer10) {
-			isStartTimer10 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					StartTimer11();
-					sendMsg(1400245);
-					leftWingTreasureBox.get(9).getController().onDelete();
-				}
-			}, 300000);
-		}
-	}
-	
-	private void StartTimer11() {
-	    if (!isStartTimer11) {
-			isStartTimer11 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					StartTimer12();
-					sendMsg(1400245);
-					leftWingTreasureBox.get(10).getController().onDelete();
-				}
-			}, 300000);
-		}
-	}
-	
-	private void StartTimer12() {
-	    if (!isStartTimer12) {
-			isStartTimer12 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
-			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					sendMsg(1400244);
-					sendMsg(1400245);
-					leftWingTreasureBox.get(11).getController().onDelete();
-				}
-			}, 300000);
-		}
-	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
-	private void despawnNpc(Npc npc) {
-		if (npc != null) {
-			npc.getController().onDelete();
-		}
-	}
-	
-    /**
-     * 副本销毁时清理资源。
-     * Clean up resources when the instance is destroyed.
-     */
-    @Override
-    public void onInstanceDestroy() {
-        doors.clear();
-    }
 }
