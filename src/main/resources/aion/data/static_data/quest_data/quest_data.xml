@@ -34078,6 +34078,7 @@
       <selectable_reward_item item_id="167000555" count="1"/>
     </rewards>
   </quest>
+  <quest id="18744" name="阿比索提供的勒门图的情报" nameId="1800942" minlevel_permitted="60" max_repeat_count="1" cannot_share="false" cannot_giveup="false" race_permitted="ELYOS" category="QUEST"/>
   <quest id="18745" name="[Instance] Steal from the Stealers" nameId="1801980" minlevel_permitted="60" max_repeat_count="10" use_class_reward="2" race_permitted="ELYOS" category="IMPORTANT">
     <collect_items>
       <collect_item item_id="182215943" count="1"/>
@@ -44519,6 +44520,7 @@
       <selectable_reward_item item_id="167000555" count="1"/>
     </rewards>
   </quest>
+  <quest id="28744" name="普罗库拉提供的勒门图的情报" nameId="1800950" minlevel_permitted="60" max_repeat_count="1" cannot_share="false" cannot_giveup="false" race_permitted="ASMODIANS" category="QUEST"/>
   <quest id="28745" name="[Instance] Temporarily Stolen" nameId="1801981" minlevel_permitted="60" max_repeat_count="10" use_class_reward="2" race_permitted="ASMODIANS" category="IMPORTANT">
     <collect_items>
       <collect_item item_id="182215944" count="1"/>
