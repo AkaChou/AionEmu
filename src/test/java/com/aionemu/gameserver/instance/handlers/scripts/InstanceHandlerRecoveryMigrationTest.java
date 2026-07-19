@@ -221,6 +221,34 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void shadowCourtUsesRetailQuestAndKeyDropsWithoutLegacyHandler() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ShadowCourtInstance.java")));
+
+		String drops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_004.xml"));
+		String[][] keys = {
+			{ "214347", "185000014" }, { "214349", "185000011" }, { "214351", "185000012" },
+			{ "214353", "185000013" }, { "214357", "185000009" }, { "214360", "185000010" },
+			{ "214531", "185000008" }
+		};
+		for (String[] key : keys) {
+			assertTrue(npcDropBlock(drops, key[0])
+				.contains("item_id=\"" + key[1] + "\" chance=\"100.00\""));
+		}
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/320120000_Shadow_Court_Dungeon.xml"));
+		assertTrue(staticSpawns.contains("<spawn npc_id=\"700369\">"));
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(Pattern.compile("<world\\b(?=[^>]*\\bid=\"320120000\")"
+			+ "(?=[^>]*\\bbehavior=\"RETAIL_AI_QUEST\")(?=[^>]*_24046The_Shadow_Calls\\.java)[^>]*/>")
+			.matcher(coverage).find());
+	}
+
+	@Test
 	void aetherMineUsesRetailConditionFlowWithoutLegacySpawns() throws Exception {
 		assertFalse(Files.exists(Path.of(
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AetherMineQInstance.java")));
