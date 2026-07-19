@@ -7,6 +7,9 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.craft.CraftService;
 import com.aionemu.gameserver.utils.MathUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 /**
  * 请求制作/合成物品的客户端包。
  * Client packet requesting crafting of an item.
@@ -14,15 +17,13 @@ import com.aionemu.gameserver.utils.MathUtil;
 @Slf4j
 
 public class CM_CRAFT extends AionClientPacket {
-	private int itemID;
-	private long itemCount;
 	private int unk;
 	private int targetTemplateId;
 	private int recipeId;
 	private int targetObjId;
 	private int materialsCount;
 	private int craftType;
-	private int craftCount = 1;
+	private final Map<Integer, Long> requestedComponents = new HashMap<>();
 	private boolean componentsOk = true;
 
 	/**
@@ -39,7 +40,6 @@ public class CM_CRAFT extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		Player player = getConnection().getActivePlayer();
 		unk = readC();
 		targetTemplateId = readD();
 		recipeId = readD();
@@ -47,16 +47,19 @@ public class CM_CRAFT extends AionClientPacket {
 		materialsCount = readH();
 		craftType = readC();
 		if (craftType == 0) {
-			craftCount = 0;
+			requestedComponents.clear();
 			componentsOk = true;
 			for (int i = 0; i < materialsCount; i++) {
-				itemID = readD();
-				itemCount = readQ();
-				int materialCraftCount = CraftService.checkComponents(player, recipeId, itemID, itemCount);
-				if (materialCraftCount < 1) {
+				int itemId = readD();
+				long itemCount = readQ();
+				if (itemCount < 1) {
 					componentsOk = false;
-				} else {
-					craftCount = craftCount == 0 ? materialCraftCount : Math.min(craftCount, materialCraftCount);
+					continue;
+				}
+				try {
+					requestedComponents.merge(itemId, itemCount, Math::addExact);
+				} catch (ArithmeticException e) {
+					componentsOk = false;
 				}
 			}
 		}
@@ -78,8 +81,11 @@ public class CM_CRAFT extends AionClientPacket {
 				return;
 			}
 		}
-		if (craftType == 0 && (!componentsOk || craftCount < 1)) {
-			return;
+		int craftCount = 1;
+		if (craftType == 0) {
+			if (!componentsOk || (craftCount = CraftService.consumeComponents(player, recipeId, requestedComponents)) < 1) {
+				return;
+			}
 		}
 		CraftService.startCrafting(player, recipeId, targetObjId, craftType, craftCount);
 	}

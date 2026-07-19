@@ -490,8 +490,7 @@ public class DropService {
 			if (player != requestedItem.getWinningPlayer() && requestedItem.isItemWonNotCollected()) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LOOT_ANOTHER_OWNER_ITEM);
 				return;
-			} else if (requestedItem.getWinningPlayer().getInventory()
-					.isFull(requestedItem.getDropTemplate().getItemTemplate().getExtraInventoryId())) {
+			} else if (!ItemService.canAddItem(requestedItem.getWinningPlayer(), itemId, currentDropItemCount)) {
 				PacketSendUtility.sendPacket(requestedItem.getWinningPlayer(),
 						SM_SYSTEM_MESSAGE.STR_MSG_DICE_INVEN_ERROR);
 				requestedItem.isItemWonNotCollected(true);
@@ -503,8 +502,20 @@ public class DropService {
 				return;
 			}
 
+			long requestedCount = currentDropItemCount;
 			currentDropItemCount = ItemService.addItem(requestedItem.getWinningPlayer(), itemId, currentDropItemCount,
 					new TempTradeDropPredicate(dropNpc));
+			if (currentDropItemCount != 0) {
+				long grantedCount = requestedCount - currentDropItemCount;
+				if (grantedCount > 0) {
+					requestedItem.getWinningPlayer().getInventory().decreaseByItemId(itemId, grantedCount);
+				}
+				if (dropNpc.getDistributionId() == 3 && requestedItem.getHighestValue() > 0) {
+					requestedItem.getWinningPlayer().getInventory().increaseKinah(requestedItem.getHighestValue());
+				}
+				requestedItem.isItemWonNotCollected(true);
+				return;
+			}
 
 			switch (dropNpc.getDistributionId()) {
 			case 2:

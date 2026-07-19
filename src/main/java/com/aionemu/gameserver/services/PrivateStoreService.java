@@ -3,7 +3,9 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.aionemu.commons.objects.filter.ObjectFilter;
@@ -14,6 +16,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PrivateStore;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.items.storage.Storage;
+import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.trade.TradeItem;
 import com.aionemu.gameserver.model.trade.TradeList;
 import com.aionemu.gameserver.model.trade.TradePSItem;
@@ -72,9 +75,19 @@ public class PrivateStoreService {
 			/**
 	 * 3. 检查空闲槽位 / 3. Check free slots
 	 */
+			Map<Integer, Long> requestedItems = new HashMap<>();
+			Map<Integer, ItemTemplate> templates = new HashMap<>();
+			try {
+				for (TradeItem tradeItem : tradeList.getTradeItems()) {
+					Item item = getItemByObjId(seller, tradeItem.getItemId());
+					requestedItems.merge(item.getItemId(), tradeItem.getCount(), Math::addExact);
+					templates.put(item.getItemId(), item.getItemTemplate());
+				}
+			} catch (ArithmeticException e) {
+				return;
+			}
 			Storage inventory = buyer.getInventory();
-			int freeSlots = inventory.getLimit() - inventory.getItemsWithKinah().size() + 1;
-			if (freeSlots < tradeList.size()) {
+			if (!ItemService.canAddItems(inventory, requestedItems, templates)) {
 				PacketSendUtility.sendPacket(buyer, SM_SYSTEM_MESSAGE.STR_MSG_DICE_INVEN_ERROR);
 				return;
 			}
@@ -95,7 +108,9 @@ public class PrivateStoreService {
 				for (TradeItem tradeItem : tradeList.getTradeItems()) {
 					Item item = getItemByObjId(seller, tradeItem.getItemId());
 					decreaseItemFromPlayer(seller, item, tradeItem);
-					ItemService.addItem(buyer, item.getItemId(), tradeItem.getCount(), item);
+					if (ItemService.addItem(buyer, item.getItemId(), tradeItem.getCount(), item) != 0) {
+						return;
+					}
 
 					// 记录交易 / Log the trade
 					log.info(I18n.get("log.d2e08279f4c2", seller.getName(), item.getItemId(), item.getItemCount(), buyer.getName(), price));

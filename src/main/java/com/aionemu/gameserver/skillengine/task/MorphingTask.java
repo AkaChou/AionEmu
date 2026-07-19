@@ -95,7 +95,9 @@ public class MorphingTask extends CraftingTask {
 		PacketSendUtility.broadcastPacket(requestor, new SM_CRAFT_ANIMATION(requestor.getObjectId(), 0, 0, 2), true);
 		PacketSendUtility.sendPacket(requestor,
 				new SM_CRAFT_UPDATE(recipeTemplate.getSkillid(), itemTemplate, 0, 0, 5));
-		CraftService.finishCrafting(requestor, recipeTemplate, critCount, 0);
+		if (!CraftService.finishCrafting(requestor, recipeTemplate, critCount, 0)) {
+			return true;
+		}
 		return finishCraftAttempt();
 	}
 

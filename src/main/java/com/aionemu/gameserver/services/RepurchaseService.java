@@ -10,7 +10,9 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.trade.RepurchaseList;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -109,10 +111,18 @@ public class RepurchaseService {
 		Storage inventory = player.getInventory();
 		for (Item repurchaseItem : repurchaseList.getRepurchaseItems()) {
 			Collection<Item> items = repurchaseItems.get(player.getObjectId());
-			if (items.contains(repurchaseItem)) {
+			if (items != null && items.contains(repurchaseItem)) {
+				if (!ItemService.canAddItem(player, repurchaseItem.getItemId(), repurchaseItem.getItemCount())) {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
+					return;
+				}
 				if (inventory.tryDecreaseKinah(repurchaseItem.getRepurchasePrice())) {
-					ItemService.addItem(player, repurchaseItem);
-					removeRepurchaseItem(player, repurchaseItem);
+					if (ItemService.addItem(player, repurchaseItem) == 0) {
+						removeRepurchaseItem(player, repurchaseItem);
+					} else {
+						inventory.increaseKinah(repurchaseItem.getRepurchasePrice());
+						return;
+					}
 				} else {
 					AuditLogger.info(player, "Player try repurchase item: " + repurchaseItem.getItemId() + " count: "
 							+ repurchaseItem.getItemCount() + " whithout kinah");
