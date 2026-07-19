@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 43% | 2026-07-20 | 139 图行为闭包；36 个 handler 移除私有关键任务，剩余 35 个声明 `Future`、64 个直接使用 `GameThreadPoolServices` 的生产 handler |
+| 阶段 4：handler 状态迁移 | 进行中 | 43% | 2026-07-20 | 139 图行为闭包；37 个 handler 移除私有关键任务，剩余 35 个声明 `Future`、63 个直接使用 `GameThreadPoolServices` 的生产 handler |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1255,3 +1255,6 @@ REGISTERED
 - 完成阿德玛城堡陷落（`301600000`）真端单轨替换：以 `IDF6_Adma/world_N.xml`、`NpcAIPatterns_IDF6_Adma_Lap_SSH.xml`、真端 NPC/AI/掉落数据为权威，条件刷新接管召唤石、控制 NPC、最终 Boss 和出口，Retail Pattern AI 接管两扇门；删除旧 `AdmaFallInstance` 的私服掉落、门控制、手刷出口/宝箱和线程池消息。闭包补入 AI 写入但原文件遗漏的 `Sub_Boss_Die` 变量，正式结果为 6 条条件、4 个副本状态变量。
 - 删除与 `boss_summon == 2` 条件刷新重复且坐标错误的静态 `220427`，保留真端静态入口、普通怪、两个交互对象和 `248974` 消息控制 NPC；不保留无真端出生来源的旧宝箱兼容路径。该图不再注册专用 handler，回落公共 `GeneralInstanceHandler`。
 - 阿德玛批次验证通过：`mvn -q -DskipTests compile`；`InstanceHandlerRecoveryMigrationTest`、`RetailAiDefinitionLoaderTest`、`RetailConditionSpawnEngineTest`、`RetailConditionSpawnPartyLoaderTest`、`RetailPatternAI2Test`；`condition-spawns.xsd`、静态出生 XML 和相关文件 `git diff --check` 均通过。生产 handler 直接使用 `GameThreadPoolServices` 的文件降至 64 个，含 `Future` 的文件仍为 35 个。
+- 完成哈拉梅尔（`300200000`）真端单轨替换：以 `idnovice/world_N.xml`、`NpcAIPatterns_LDF4_PJW.xml` 和真端 NPC/AI/掉落数据为权威，`IDNovice_Hameroon` Retail Pattern AI 接管召唤、职业宝箱、457 电影、出口和死亡清理；删除旧 handler 的 HTML、随机掉落、成长药、手刷宝箱/出口、重复钥匙掉落和线程池消息。
+- 哈拉梅尔没有真端条件刷新缺口，静态出生保留 `216922` 等常驻对象，不新增宝箱/出口兼容出生；删除只验证旧 `sendMovie` 私有列表的 `HaramelInstanceTest`。生产 handler 直接使用 `GameThreadPoolServices` 的文件降至 63 个，含 `Future` 的文件仍为 35 个。
+- 哈拉梅尔批次验证通过：`mvn -q -DskipTests compile`；`InstanceHandlerRecoveryMigrationTest`、`RetailAiDefinitionLoaderTest`、`RetailConditionSpawnEngineTest`、`RetailPatternAI2Test`；静态出生 XML、相关 AI XML 和 `git diff --check` 均通过。

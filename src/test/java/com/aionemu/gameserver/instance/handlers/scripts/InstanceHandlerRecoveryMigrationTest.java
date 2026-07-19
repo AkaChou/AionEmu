@@ -140,6 +140,29 @@ class InstanceHandlerRecoveryMigrationTest {
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AdmaFallInstance.java")));
 	}
 
+	@Test
+	void haramelUsesRetailAiAndDropsWithoutLegacyHandler() throws Exception {
+		String staticSpawns = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/spawns/Instances/300200000_Haramel.xml"));
+		assertTrue(staticSpawns.contains("npc_id=\"216922\""));
+		assertFalse(staticSpawns.contains("npc_id=\"700829\""));
+		assertFalse(staticSpawns.contains("npc_id=\"700852\""));
+		assertFalse(Files.exists(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/HaramelInstance.java")));
+		assertFalse(Files.exists(Path.of(
+				"src/test/java/com/aionemu/gameserver/instance/handlers/scripts/HaramelInstanceTest.java")));
+
+		String pattern = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/ai/npcaipatterns_ldf4_pjw.xml"));
+		int hameroon = pattern.indexOf("<name>IDNovice_Hameroon</name>");
+		assertTrue(hameroon >= 0);
+		int nextPattern = pattern.indexOf("<npc_ai_pattern>", hameroon + 1);
+		String hameroonPattern = pattern.substring(hameroon, nextPattern < 0 ? pattern.length() : nextPattern);
+		assertTrue(hameroonPattern.contains("IDNovice_Chest_Fighter"));
+		assertTrue(hameroonPattern.contains("IDNovice_Out"));
+		assertTrue(hameroonPattern.contains("play_cutscene_by_user_indicator"));
+	}
+
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {
 		String source = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + className + ".java"));
