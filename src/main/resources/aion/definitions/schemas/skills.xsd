@@ -71,7 +71,6 @@
 		<xs:attribute name="skillset_maxoccur" type="xs:int" use="optional" default="0"/>
 		<xs:attribute name="avatar" type="xs:boolean" use="optional" default="false"/>
 		<xs:attribute name="ground" type="xs:boolean" use="optional" default="false"/>
-		<xs:attribute name="unpottable" type="xs:boolean" use="optional" default="false"/>
 		<xs:attribute name="remove_flyend" type="xs:boolean"/>
 		<xs:attribute name="noremoveatdie" type="xs:boolean"/>
 		<xs:attribute name="applymcrit" type="xs:boolean" use="optional" default="true"/>

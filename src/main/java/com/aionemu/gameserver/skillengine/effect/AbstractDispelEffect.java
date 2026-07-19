@@ -44,13 +44,11 @@ public class AbstractDispelEffect extends EffectTemplate {
 	 * @param slot 目标槽位 / target slot
 	 */
 	public void applyEffect(Effect effect, DispelCategoryType type, SkillTargetSlot slot) {
-		boolean isItemTriggered = effect.getItemTemplate() != null;
 		int skillLevel = effect.getSkillLevel();
 		int count = value + delta * skillLevel;
 		int finalPower = power + dpower * skillLevel;
 		int finalDispelLevel = dispelLevel + dispelLevelDelta * skillLevel;
 
-		effect.getEffected().getEffectController().removeEffectByDispelCat(type, slot, count, finalDispelLevel, finalPower,
-				isItemTriggered);
+		effect.getEffected().getEffectController().removeEffectByDispelCat(type, slot, count, finalDispelLevel, finalPower);
 	}
 }

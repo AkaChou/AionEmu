@@ -605,7 +605,7 @@
       <f i="19" v="2199" />
     </retail>
   </skill_template>
-  <skill_template skill_id="3550" name="마법 역류" nameId="4575105" name_desc="EL_ManaReverse_G1" stack="SKILL_EL_ManaReverse" skill_group_name="EL_ManaReverse" delayId="1660" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" unpottable="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
+  <skill_template skill_id="3550" name="마법 역류" nameId="4575105" name_desc="EL_ManaReverse_G1" stack="SKILL_EL_ManaReverse" skill_group_name="EL_ManaReverse" delayId="1660" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_671723826006EA82" />
     <startconditions>
       <mp value="260" delta="-8" />
@@ -650,7 +650,7 @@
       <f i="99" v="0" />
     </retail>
   </skill_template>
-  <skill_template skill_id="3551" name="마법 역류" nameId="4575105" name_desc="EL_ManaReverse_G2" stack="SKILL_EL_ManaReverse" skill_group_name="EL_ManaReverse" delayId="1660" lvl="2" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" unpottable="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
+  <skill_template skill_id="3551" name="마법 역류" nameId="4575105" name_desc="EL_ManaReverse_G2" stack="SKILL_EL_ManaReverse" skill_group_name="EL_ManaReverse" delayId="1660" lvl="2" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_671723826006EA82" />
     <startconditions>
       <mp value="288" delta="-8" />
@@ -695,7 +695,7 @@
       <f i="99" v="0" />
     </retail>
   </skill_template>
-  <skill_template skill_id="3552" name="마법 역류" nameId="4575105" name_desc="EL_ManaReverse_G3" stack="SKILL_EL_ManaReverse" skill_group_name="EL_ManaReverse" delayId="1660" lvl="3" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" unpottable="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
+  <skill_template skill_id="3552" name="마법 역류" nameId="4575105" name_desc="EL_ManaReverse_G3" stack="SKILL_EL_ManaReverse" skill_group_name="EL_ManaReverse" delayId="1660" lvl="3" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_671723826006EA82" />
     <startconditions>
       <mp value="317" delta="-9" />
@@ -740,7 +740,7 @@
       <f i="99" v="0" />
     </retail>
   </skill_template>
-  <skill_template skill_id="3553" name="마법 역류" nameId="4575105" name_desc="EL_ManaReverse_G4" stack="SKILL_EL_ManaReverse" skill_group_name="EL_ManaReverse" delayId="1660" lvl="4" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" unpottable="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
+  <skill_template skill_id="3553" name="마법 역류" nameId="4575105" name_desc="EL_ManaReverse_G4" stack="SKILL_EL_ManaReverse" skill_group_name="EL_ManaReverse" delayId="1660" lvl="4" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_671723826006EA82" />
     <startconditions>
       <mp value="346" delta="-10" />
@@ -875,7 +875,7 @@
       <f i="99" v="0" />
     </retail>
   </skill_template>
-  <skill_template skill_id="3556" name="지옥의 고통" nameId="4574677" name_desc="EL_HellPain_G1" stack="SKILL_EL_HellPain" skill_group_name="EL_HellPain" skill_group="EL_HellPain" delayId="1666" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1500" apply_casting_time_bonus="true" remain_cooltime_on_login="true" pvp_damage="80" cancel_rate="20" stigma="ADVANCED" unpottable="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
+  <skill_template skill_id="3556" name="지옥의 고통" nameId="4574677" name_desc="EL_HellPain_G1" stack="SKILL_EL_HellPain" skill_group_name="EL_HellPain" skill_group="EL_HellPain" delayId="1666" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1500" apply_casting_time_bonus="true" remain_cooltime_on_login="true" pvp_damage="80" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_FCF4B3AD7F138AAF" />
     <startconditions>
       <mp value="487" delta="-14" />
@@ -920,7 +920,7 @@
       <f i="73" v="100" />
     </retail>
   </skill_template>
-  <skill_template skill_id="3557" name="지옥의 고통" nameId="4574677" name_desc="EL_HellPain_G2" stack="SKILL_EL_HellPain" skill_group_name="EL_HellPain" skill_group="EL_HellPain" delayId="1666" lvl="2" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1500" apply_casting_time_bonus="true" remain_cooltime_on_login="true" pvp_damage="80" cancel_rate="20" stigma="ADVANCED" unpottable="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
+  <skill_template skill_id="3557" name="지옥의 고통" nameId="4574677" name_desc="EL_HellPain_G2" stack="SKILL_EL_HellPain" skill_group_name="EL_HellPain" skill_group="EL_HellPain" delayId="1666" lvl="2" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1500" apply_casting_time_bonus="true" remain_cooltime_on_login="true" pvp_damage="80" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_FCF4B3AD7F138AAF" />
     <startconditions>
       <mp value="530" delta="-15" />
@@ -1737,7 +1737,7 @@
       <f i="19" v="4143" />
     </retail>
   </skill_template>
-  <skill_template skill_id="3574" name="둔화의 족쇄" nameId="4574715" name_desc="EL_Enfeeblement_G1" stack="SKILL_EL_Enfeeblement" skill_group_name="EL_Enfeeblement" delayId="1663" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" unpottable="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
+  <skill_template skill_id="3574" name="둔화의 족쇄" nameId="4574715" name_desc="EL_Enfeeblement_G1" stack="SKILL_EL_Enfeeblement" skill_group_name="EL_Enfeeblement" delayId="1663" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_FCF4B3AD7F138AAF" />
     <startconditions>
       <mp value="103" delta="-3" />

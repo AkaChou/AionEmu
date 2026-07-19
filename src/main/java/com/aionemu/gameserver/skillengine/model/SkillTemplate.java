@@ -127,8 +127,6 @@ public class SkillTemplate {
 	protected boolean isDeityAvatar;
 	@XmlAttribute(name = "ground")
 	protected boolean isGroundSkill;
-	@XmlAttribute(name = "unpottable")
-	protected boolean isUndispellableByPotions;
 	@XmlAttribute(name = "ammospeed")
 	protected int ammoSpeed;
 	@XmlAttribute
@@ -760,16 +758,6 @@ public class SkillTemplate {
 	 */
 	public AttackStatus getCounterSkill() {
 		return counterSkill;
-	}
-
-	/**
-	 * 是否不可被药水驱散。
-	 * Whether undispellable by potions.
-	 *
-	 * @return 是否不可药水驱散 / undispellable by potions
-	 */
-	public boolean isUndispellableByPotions() {
-		return isUndispellableByPotions;
 	}
 
 	/**

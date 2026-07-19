@@ -550,10 +550,9 @@ public class EffectController {
 	 * @param count 最多移除数量 / max removals
 	 * dispel level
 	 * @param power 驱散强度 / dispel power
-	 * @param itemTriggered 是否由物品触发 / whether triggered by an item
 	 */
 	public void removeEffectByDispelCat(DispelCategoryType dispelCat, SkillTargetSlot targetSlot, int count,
-			int dispelLevel, int power, boolean itemTriggered) {
+			int dispelLevel, int power) {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (count == 0) {
 				break;
@@ -563,11 +562,6 @@ public class EffectController {
 				continue;
 			}
 			if (effect.isSanctuaryEffect()) {
-				continue;
-			}
-			// 若驱散由物品触发（如治疗药水） / If dispel is triggered by an item (ex. Healing Potion)
-			// 若减益不可用药驱散，则不驱散 / and debuff is unpottable, do not dispel
-			if ((effect.getSkillTemplate().isUndispellableByPotions()) && itemTriggered) {
 				continue;
 			}
 			// 检查目标槽；目标槽等级 ≥2 的效果 / check for targetslot, effects with target slot level higher or equal to 2

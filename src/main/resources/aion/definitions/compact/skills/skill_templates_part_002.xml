@@ -10293,7 +10293,7 @@
       <f i="19" v="291" />
     </retail>
   </skill_template>
-  <skill_template skill_id="810" name="고통의 화살" nameId="4575801" name_desc="RA_PainArrow_G1" stack="SKILL_RA_PainArrow" skill_group_name="RA_PainArrow" delayId="632" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="240" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="20" stigma="ADVANCED" unpottable="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
+  <skill_template skill_id="810" name="고통의 화살" nameId="4575801" name_desc="RA_PainArrow_G1" stack="SKILL_RA_PainArrow" skill_group_name="RA_PainArrow" delayId="632" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="240" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_6047D812D129E0B0" />
     <startconditions>
       <mp value="89" delta="-3" />

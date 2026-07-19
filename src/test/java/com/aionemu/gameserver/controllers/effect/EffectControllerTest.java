@@ -139,9 +139,34 @@ class EffectControllerTest {
 		controller.addEffect(matchingEffect);
 		controller.addEffect(unrelatedEffect);
 
-		assertDoesNotThrow(() -> controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 0, 1, false));
+		assertDoesNotThrow(() -> controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 0, 1));
 		assertNull(controller.abnormalEffect("matching"));
 		assertSame(unrelatedEffect, controller.abnormalEffect("unrelated"));
+	}
+
+	@Test
+	void retailCategoryAndPowerControlDispel() {
+		TestEffectController controller = new TestEffectController();
+		TestEffect deathSentence = effect(controller, "death-sentence", 18461, 1, 1,
+			ActivationAttribute.ACTIVE, SkillTargetSlot.DEBUFF).withPower(90);
+		TestEffect protectedDebuff = effect(controller, "protected", 10, 2, 1,
+			ActivationAttribute.ACTIVE, SkillTargetSlot.DEBUFF);
+		setField(deathSentence.getSkillTemplate(), "dispelCategory", DispelCategoryType.DEBUFF_PHYSICAL);
+		setField(deathSentence.getSkillTemplate(), "reqDispelLevel", 1);
+		setField(protectedDebuff.getSkillTemplate(), "dispelCategory", DispelCategoryType.NEVER);
+		controller.addEffect(deathSentence);
+		controller.addEffect(protectedDebuff);
+
+		controller.removeEffectByDispelCat(DispelCategoryType.DEBUFF_PHYSICAL, SkillTargetSlot.DEBUFF, 2, 1, 20);
+
+		assertSame(deathSentence, controller.abnormalEffect("death-sentence"));
+		assertEquals(70, deathSentence.getPower());
+		assertSame(protectedDebuff, controller.abnormalEffect("protected"));
+
+		controller.removeEffectByDispelCat(DispelCategoryType.DEBUFF_PHYSICAL, SkillTargetSlot.DEBUFF, 2, 1, 70);
+
+		assertNull(controller.abnormalEffect("death-sentence"));
+		assertSame(protectedDebuff, controller.abnormalEffect("protected"));
 	}
 
 	@Test
@@ -164,8 +189,7 @@ class EffectControllerTest {
 
 		Thread dispel = new Thread(() -> {
 			try {
-				controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 0, 1,
-						false);
+				controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 0, 1);
 			} catch (Throwable t) {
 				failure.set(t);
 			}
@@ -218,7 +242,7 @@ class EffectControllerTest {
 		setField(effect.getSkillTemplate(), "dispelCategory", DispelCategoryType.NPC_BUFF);
 		controller.addEffect(effect);
 
-		controller.removeEffectByDispelCat(DispelCategoryType.NPC_BUFF, SkillTargetSlot.BUFF, 1, 5, 50, false);
+		controller.removeEffectByDispelCat(DispelCategoryType.NPC_BUFF, SkillTargetSlot.BUFF, 1, 5, 50);
 
 		assertNull(controller.abnormalEffect("long"));
 	}
@@ -243,9 +267,9 @@ class EffectControllerTest {
 		controller.addEffect(npcBuff);
 		controller.addEffect(allBuff);
 
-		controller.removeEffectByDispelCat(DispelCategoryType.NPC_DEBUFF, SkillTargetSlot.DEBUFF, 2, 5, 100, false);
-		controller.removeEffectByDispelCat(DispelCategoryType.NPC_BUFF, SkillTargetSlot.BUFF, 1, 5, 100, false);
-		controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 5, 100, false);
+		controller.removeEffectByDispelCat(DispelCategoryType.NPC_DEBUFF, SkillTargetSlot.DEBUFF, 2, 5, 100);
+		controller.removeEffectByDispelCat(DispelCategoryType.NPC_BUFF, SkillTargetSlot.BUFF, 1, 5, 100);
+		controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 5, 100);
 
 		assertNull(controller.abnormalEffect("physical"));
 		assertNull(controller.abnormalEffect("mental"));
@@ -253,7 +277,7 @@ class EffectControllerTest {
 		assertSame(npcBuff, controller.abnormalEffect("npc-buff"));
 		assertNull(controller.abnormalEffect("all-buff"));
 
-		controller.removeEffectByDispelCat(DispelCategoryType.NPC_BUFF, SkillTargetSlot.BUFF, 1, 6, 100, false);
+		controller.removeEffectByDispelCat(DispelCategoryType.NPC_BUFF, SkillTargetSlot.BUFF, 1, 6, 100);
 		assertNull(controller.abnormalEffect("npc-buff"));
 	}
 
@@ -263,7 +287,7 @@ class EffectControllerTest {
 		TestEffect effect = abnormalEffect(controller, "long", 21439, 1, 1, 86400000);
 		controller.addEffect(effect);
 
-		controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 5, 50, false);
+		controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 5, 50);
 
 		assertSame(effect, controller.abnormalEffect("long"));
 	}
