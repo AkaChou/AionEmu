@@ -2,7 +2,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -21,7 +20,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 德劳普尼尔洞穴副本事件处理器。
@@ -40,10 +38,27 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		private int bakarmaCharger;
 	/** adjutants killed / adjutants killed */
 		private int adjutantsKilled;
-	/** 欧比斯 gate 任务 / abyss gate task */
-		private Future<?> abyssGateTask;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
+
+	@Override
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		bakarmaCharger = runtimeState().getInt("draupnir.chargers", 0);
+		adjutantsKilled = runtimeState().getInt("draupnir.adjutants", 0);
+		String race = runtimeState().get("draupnir.race");
+		spawnRace = race == null ? null : Race.valueOf(race);
+		if (spawnRace != null) {
+			SpawnIDDF3DragonSP();
+		}
+		if (adjutantsKilled >= 4 && !runtimeState().getBoolean("draupnir.bakarma_dead", false)) {
+			spawnCommanderBakarma();
+		}
+		if (runtimeState().getBoolean("draupnir.bakarma_dead", false)) {
+			spawnRewardChest();
+		}
+		restoreDeadlines();
+	}
 	
 	/**
 	 * 玩家进入副本时处理。
@@ -57,18 +72,13 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 			return;
 		}
 		spawnRace = player.getRace();
+		runtimeState().put("draupnir.race", spawnRace.name());
 		// 须击杀阿弗兰、萨拉斯瓦蒂、拉克希米与宁巴卡，指挥官巴卡尔玛才会出现。 / You must kill Afrane, Saraswati, Lakshmi, and Nimbarka to make Commander Bakarma appear.
 		sendMsgByRace(1400757, Race.PC_ALL, 10000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				spawn(237276, 495.48535f, 392.0867f, 616.5717f, (byte) 89); //Akhal's Phantasm.
-			}
-		}, 10000);
+		long deadline = System.currentTimeMillis() + 10_000;
+		runtimeState().put("draupnir.phantasm_deadline", deadline);
+		scheduleDeadline("phantasm", deadline,
+				() -> spawn(237276, 495.48535f, 392.0867f, 616.5717f, (byte) 89));
 		SpawnIDDF3DragonSP();
 	}
 	
@@ -140,6 +150,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 			case 213802: //Kind Saraswati.
 			case 237267:
 				adjutantsKilled++;
+				runtimeState().put("draupnir.adjutants", adjutantsKilled);
 				if (adjutantsKilled == 1) {
 					// 还须再击杀 3 名副官，指挥官巴卡尔玛才会出现。 / You must kill 3 more Adjutants to make Commander Bakarma appear.
 				    sendMsgByRace(1400758, Race.PC_ALL, 0);
@@ -157,32 +168,20 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 				}
 			break;
 			case 236929: //Commander Bakarma.
+				runtimeState().put("draupnir.bakarma_dead", true);
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Draupnir Cave>");
-				switch (Rnd.get(1, 2)) {
-		            case 1:
-				        spawn(702658, 787.32513f, 431.49173f, 319.62155f, (byte) 33); //修道院箱子。 / Abbey Box.
-					break;
-					case 2:
-					    spawn(702659, 787.32513f, 431.49173f, 319.62155f, (byte) 33); //高级修道院箱子。 / Noble Abbey Box.
-					break;
-				}
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						spawnAkhal();
-						// 贝里特拉神谕室出现了强大龙族。 / A powerful Balaur has appeared in Beritra's Oracle Chamber.
-						sendMsgByRace(1403068, Race.PC_ALL, 0);
-					}
-				}, 60000);
+				spawnRewardChest();
+				long akhalDeadline = System.currentTimeMillis() + 60_000;
+				runtimeState().put("draupnir.akhal_deadline", akhalDeadline);
+				scheduleDeadline("akhal", akhalDeadline, this::spawnAkhalStage);
 			break;
 			case 236900: //Bakarma Charger.
 			    bakarmaCharger++;
+				runtimeState().put("draupnir.chargers", bakarmaCharger);
 				if (bakarmaCharger == 18) {
-					abyssGateTask.cancel(true);
+					runtimeState().put("draupnir.gate_neutralized", true);
+					cancelDeadline("gate_raid_1");
+					cancelDeadline("gate_raid_2");
 					// 欧比斯之门增强器已被中和。 / The Abyss Gate Enhancer has been neutralized.
 					sendMsgByRace(1403065, Race.PC_ALL, 0);
 				}
@@ -197,33 +196,20 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
 			case 702857: //Balaur Abyss Gate Enhancer.
+				if (runtimeState().getBoolean("draupnir.gate_started", false)) {
+					return;
+				}
+				runtimeState().put("draupnir.gate_started", true);
 				despawnNpc(npc);
 				// 龙族蜂拥而至，保卫欧比斯之门增强器。 / Balaur are swarming to defend the Abyss Gate Enhancer.
 				sendMsgByRace(1403063, Race.PC_ALL, 0);
 				// 龙族已察觉入侵者的存在。 / The Balaur have been alerted to the presence of intruders.
 				sendMsgByRace(1403064, Race.PC_ALL, 4000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    /**
-				     * 处理 run。
-				     * Handle run.
-				     */
-				    @Override
-				    public void run() {
-						startAbyssGateRaid1();
-				    }
-			    }, 5000);
-				abyssGateTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    /**
-				     * 处理 run。
-				     * Handle run.
-				     */
-				    @Override
-				    public void run() {
-						// 龙族蜂拥而至，保卫欧比斯之门增强器。 / Balaur are swarming to defend the Abyss Gate Enhancer.
-						sendMsgByRace(1403063, Race.PC_ALL, 0);
-						startAbyssGateRaid2();
-				    }
-			    }, 60000);
+				long raid1 = System.currentTimeMillis() + 5_000;
+				long raid2 = System.currentTimeMillis() + 60_000;
+				runtimeState().put("draupnir.gate_raid_1", raid1);
+				runtimeState().put("draupnir.gate_raid_2", raid2);
+				restoreDeadlines();
 			break;
 			case 702858: //Balaur Abyss Gate Booster.
 			    despawnNpc(npc);
@@ -245,6 +231,50 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	
 	private void spawnAkhal() {
 		spawn(237275, 777.46985f, 431.09888f, 321.7541f, (byte) 62); //Akhal.
+	}
+
+	private void spawnAkhalStage() {
+		if (runtimeState().getBoolean("draupnir.akhal_spawned", false)) {
+			return;
+		}
+		runtimeState().put("draupnir.akhal_spawned", true);
+		spawnAkhal();
+		sendMsgByRace(1403068, Race.PC_ALL, 0);
+	}
+
+	private void spawnRewardChest() {
+		int chest = runtimeState().getInt("draupnir.reward_chest", 0);
+		if (chest == 0) {
+			chest = Rnd.get(1, 2) == 1 ? 702658 : 702659;
+			runtimeState().put("draupnir.reward_chest", chest);
+		}
+		spawn(chest, 787.32513f, 431.49173f, 319.62155f, (byte) 33);
+	}
+
+	private void restoreDeadlines() {
+		long phantasm = runtimeState().getLong("draupnir.phantasm_deadline", 0);
+		if (phantasm > 0) {
+			scheduleDeadline("phantasm", phantasm,
+					() -> spawn(237276, 495.48535f, 392.0867f, 616.5717f, (byte) 89));
+		}
+		long akhal = runtimeState().getLong("draupnir.akhal_deadline", 0);
+		if (akhal > 0) {
+			scheduleDeadline("akhal", akhal, this::spawnAkhalStage);
+		}
+		if (runtimeState().getBoolean("draupnir.gate_neutralized", false)) {
+			return;
+		}
+		long raid1 = runtimeState().getLong("draupnir.gate_raid_1", 0);
+		if (raid1 > 0) {
+			scheduleDeadline("gate_raid_1", raid1, this::startAbyssGateRaid1);
+		}
+		long raid2 = runtimeState().getLong("draupnir.gate_raid_2", 0);
+		if (raid2 > 0) {
+			scheduleDeadline("gate_raid_2", raid2, () -> {
+				sendMsgByRace(1403063, Race.PC_ALL, 0);
+				startAbyssGateRaid2();
+			});
+		}
 	}
 	/**
 	 * 处理 startAbyssGateRaid1。
