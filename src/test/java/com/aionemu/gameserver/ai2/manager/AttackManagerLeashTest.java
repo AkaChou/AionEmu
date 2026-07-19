@@ -8,6 +8,12 @@ import org.junit.jupiter.api.Test;
 class AttackManagerLeashTest {
 
 	@Test
+	void distanceLimitedChaseStopsOnlyBeyondThirtyFiveMeters() {
+		assertFalse(AttackManager.shouldStopDistanceLimitedChase(35));
+		assertTrue(AttackManager.shouldStopDistanceLimitedChase(35.01));
+	}
+
+	@Test
 	void numericRetailChaseTimeRefreshesAfterEachAttack() {
 		assertFalse(AttackManager.shouldStopTimedChase(1_000, 0, 5, 5_999));
 		assertTrue(AttackManager.shouldStopTimedChase(1_000, 0, 5, 6_000));

@@ -22,16 +22,21 @@ class GameServerTest {
 	@Test
 	void enhancedHomeReturnIsEnabledByDefaultAndCanBeDisabled() {
 		boolean original = AIConfig.ENHANCED_HOME_RETURN;
+		boolean originalChaseDistanceLimit = AIConfig.CHASE_DISTANCE_LIMIT_ENABLED;
 		try {
 			ConfigurableProcessor.process(AIConfig.class, new Properties());
 			assertTrue(AIConfig.ENHANCED_HOME_RETURN);
+			assertFalse(AIConfig.CHASE_DISTANCE_LIMIT_ENABLED);
 
 			Properties properties = new Properties();
 			properties.setProperty("gameserver.ai.home.return.enhanced.enable", "false");
+			properties.setProperty("gameserver.ai.chase.distance.limit.enable", "true");
 			ConfigurableProcessor.process(AIConfig.class, properties);
 			assertFalse(AIConfig.ENHANCED_HOME_RETURN);
+			assertTrue(AIConfig.CHASE_DISTANCE_LIMIT_ENABLED);
 		} finally {
 			AIConfig.ENHANCED_HOME_RETURN = original;
+			AIConfig.CHASE_DISTANCE_LIMIT_ENABLED = originalChaseDistanceLimit;
 		}
 	}
 

@@ -39,6 +39,13 @@ public class AIConfig {
 	public static int AGGRO_LEVEL_IMMUNE;
 
 	/**
+	 * 是否忽略真端追击时限，并只在离出生点超过 35 米时脱离。
+	 * Whether retail chase timers are ignored and NPCs only leash beyond 35 meters from spawn.
+	 */
+	@Property(key = "gameserver.ai.chase.distance.limit.enable", defaultValue = "false")
+	public static boolean CHASE_DISTANCE_LIMIT_ENABLED;
+
+	/**
 	 * 是否让等级不超过 2、生命值低于 10 且原 AI 不是 aggressive 的野兽使用胆怯 AI。
 	 * Whether level-2-or-lower beasts with less than 10 HP and a non-aggressive original AI use the fearful-beast AI.
 	 */

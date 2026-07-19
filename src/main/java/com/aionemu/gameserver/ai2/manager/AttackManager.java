@@ -7,6 +7,7 @@ import com.aionemu.gameserver.ai2.AttackIntention;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.handler.TargetEventHandler;
+import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -20,6 +21,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
  * @modified Yon (Aion Reconstruction Project) -- removed non-retail-like leash in {@link #checkGiveupDistance(NpcAI2)}.
  */
 public class AttackManager {
+	private static final double MAX_CHASE_DISTANCE = 35;
 
 	/**
 	 * 开始攻击目标：记录开战时间、播放攻击表情并调度下一次攻击。
@@ -179,6 +181,9 @@ public class AttackManager {
 	}
 
 	private static boolean shouldStopRetailChase(Npc npc, double distanceToHome, long now) {
+		if (AIConfig.CHASE_DISTANCE_LIMIT_ENABLED) {
+			return shouldStopDistanceLimitedChase(distanceToHome);
+		}
 		var definition = DataManager.NPC_PATH_BEHAVIOR_DATA == null ? null
 			: DataManager.NPC_PATH_BEHAVIOR_DATA.get(npc.getNpcId());
 		String maxChaseTime = definition == null ? null : definition.maxChaseTime();
@@ -216,6 +221,10 @@ public class AttackManager {
 	static boolean shouldStopTimedChase(long fightStartedAt, long lastAttackAt, int maxSeconds, long now) {
 		long chaseRefreshedAt = Math.max(fightStartedAt, lastAttackAt);
 		return maxSeconds > 0 && chaseRefreshedAt > 0 && now - chaseRefreshedAt >= maxSeconds * 1000L;
+	}
+
+	static boolean shouldStopDistanceLimitedChase(double distanceToHome) {
+		return distanceToHome > MAX_CHASE_DISTANCE;
 	}
 
 	static boolean shouldCheckSpawnPointChase(long lastCheck, long now) {
