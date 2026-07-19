@@ -130,7 +130,11 @@ public final class RetailConditionSpawnEngine {
 
 	/** Returns and consumes the condition-spawn death mode captured before respawn state is cleared. */
 	public static Boolean consumeConditionSpawnDeath(Npc npc) {
-		WorldMapInstance instance = npc.getPosition().getWorldMapInstance();
+		return consumeConditionSpawnDeath(npc.getPosition().getWorldMapInstance(), npc);
+	}
+
+	/** Returns and consumes the condition-spawn death mode for an explicitly supplied instance. */
+	public static Boolean consumeConditionSpawnDeath(WorldMapInstance instance, Npc npc) {
 		State state = instance == null ? null : instance.getTransientState(State.class);
 		if (state == null) {
 			return null;

@@ -212,8 +212,8 @@ class RetailConditionSpawnEngineTest {
 
 			RetailConditionSpawnEngine.onDie(context.instance, npc);
 
-			assertEquals(Boolean.TRUE, RetailConditionSpawnEngine.consumeConditionSpawnDeath(npc));
-			assertNull(RetailConditionSpawnEngine.consumeConditionSpawnDeath(npc));
+			assertEquals(Boolean.TRUE, RetailConditionSpawnEngine.consumeConditionSpawnDeath(context.instance, npc));
+			assertNull(RetailConditionSpawnEngine.consumeConditionSpawnDeath(context.instance, npc));
 		}
 	}
 

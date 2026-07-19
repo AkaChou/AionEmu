@@ -79,7 +79,7 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 
 	@Override
 	public void onDie(Npc npc) {
-		Boolean conditionRespawn = RetailConditionSpawnEngine.consumeConditionSpawnDeath(npc);
+		Boolean conditionRespawn = RetailConditionSpawnEngine.consumeConditionSpawnDeath(instance, npc);
 		var score = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getNpcScore(npc.getNpcId());
 		if (score == null) {
 			return;
