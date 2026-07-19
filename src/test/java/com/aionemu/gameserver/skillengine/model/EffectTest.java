@@ -21,6 +21,7 @@ class EffectTest {
 		Effect effect = new Effect(null, null, skillTemplate(), 1, 0);
 
 		assertNull(effect.getActionObserver(1));
+		assertNull(effect.getPeriodicTask(1));
 	}
 
 	@Test

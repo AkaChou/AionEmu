@@ -34,7 +34,7 @@ public class SummonSkillAreaEffect extends SummonServantEffect {
 		float y = effect.getY();
 		float z = effect.getZ();
 		if (x == 0 && y == 0) {
-			Creature effected = effect.getEffected();
+			Creature effected = getPositionReference(effect);
 			x = effected.getX();
 			y = effected.getY();
 			z = effected.getZ();

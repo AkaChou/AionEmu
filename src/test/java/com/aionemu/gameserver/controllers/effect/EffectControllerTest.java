@@ -30,6 +30,18 @@ import org.junit.jupiter.api.Test;
 class EffectControllerTest {
 
 	@Test
+	void rejectedEffectReportsThatItWasNotStarted() {
+		TestEffectController controller = new TestEffectController();
+		TestEffect existingEffect = passiveEffect(controller, "existing", 10, 1, 2);
+		TestEffect rejectedEffect = passiveEffect(controller, "rejected", 11, 1, 1);
+
+		assertTrue(controller.addEffect(existingEffect));
+		assertFalse(controller.addEffect(rejectedEffect));
+		assertTrue(existingEffect.started());
+		assertFalse(rejectedEffect.started());
+	}
+
+	@Test
 	void replacingPassiveEffectByEffectIdToleratesEndEffectRemovingFromController() {
 		TestEffectController controller = new TestEffectController();
 		TestEffect oldEffect = passiveEffect(controller, "old", 1, 1);
@@ -457,6 +469,7 @@ class EffectControllerTest {
 
 		private final TestEffectController controller;
 		private boolean ended;
+		private boolean started;
 		private boolean useRealPower;
 		private Runnable afterClear = () -> {
 		};
@@ -479,6 +492,7 @@ class EffectControllerTest {
 
 		@Override
 		public void startEffect(boolean restored) {
+			started = true;
 		}
 
 		@Override
@@ -499,6 +513,10 @@ class EffectControllerTest {
 
 		private boolean ended() {
 			return ended;
+		}
+
+		private boolean started() {
+			return started;
 		}
 
 		private void clearFromController() {

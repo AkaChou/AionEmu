@@ -41,12 +41,15 @@ public class PlayerEffectController extends EffectController {
 	 * @param effect 待添加效果 / effect to add
 	 */
 	@Override
-	public void addEffect(Effect effect) {
+	public boolean addEffect(Effect effect) {
 		if (checkDuelCondition(effect) && !effect.getIsForcedEffect()) {
-			return;
+			return false;
 		}
-		super.addEffect(effect);
+		if (!super.addEffect(effect)) {
+			return false;
+		}
 		updatePlayerIconsAndGroup(effect);
+		return true;
 	}
 
 	/**

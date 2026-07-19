@@ -422,7 +422,7 @@ public class Effect implements StatOwner {
 	 * task
 	 */
 	public Future<?> getPeriodicTask(int i) {
-		return periodicTasks[i - 1];
+		return periodicTasks != null ? periodicTasks[i - 1] : null;
 	}
 
 	/**
@@ -1324,8 +1324,7 @@ public class Effect implements StatOwner {
 	 */
 	public void addToEffectedController() {
 		if ((!addedToController) && (effected.getLifeStats() != null) && (!effected.getLifeStats().isAlreadyDead())) {
-			effected.getEffectController().addEffect(this);
-			addedToController = true;
+			addedToController = effected.getEffectController().addEffect(this);
 		}
 	}
 	/**

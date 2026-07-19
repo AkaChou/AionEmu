@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.TaskId;
+import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.summons.SummonMode;
@@ -31,6 +32,10 @@ public class SummonEffect extends EffectTemplate {
 	protected int npcId;
 	@XmlAttribute(name = "time", required = true)
 	protected int time; // in seconds
+
+	protected static Creature getPositionReference(Effect effect) {
+		return effect.getEffected() != null ? effect.getEffected() : effect.getEffector();
+	}
 
 	/**
 	 * 创建召唤物；若配置了存活时间则调度自动解散任务。
