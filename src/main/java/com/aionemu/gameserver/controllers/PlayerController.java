@@ -1072,6 +1072,7 @@ public class PlayerController extends CreatureController<Player> {
 		player.setPlayerStatsTemplate(statsTemplate);
 		player.getLifeStats().synchronizeWithMaxStats();
 		player.getLifeStats().updateCurrentStats();
+		SkillLearnService.addNewSkills(player);
 		PacketSendUtility.broadcastPacket(player, new SM_LEVEL_UPDATE(player.getObjectId(), 0, level), true);
 		if (HTMLConfig.ENABLE_GUIDES) {
 			HTMLService.sendGuideHtml(player);
@@ -1129,7 +1130,6 @@ public class PlayerController extends CreatureController<Player> {
 		if (level == 70) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CPSTONE_OPEN_SLOT);
 		}
-		SkillLearnService.addNewSkills(player);
 		PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, player.getSkillList().getBasicSkills()));
 		if (player.isInTeam()) {
 			GameTaskManagerServices.teamEffectUpdater().startTask(player);
