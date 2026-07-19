@@ -968,7 +968,7 @@ REGISTERED
 
 任务：
 
-- [ ] 将剩余 55 个含任务字段的生产 handler 迁移到 deadline；
+- [ ] 将剩余 54 个含任务字段的生产 handler 迁移到 deadline；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 23% | 2026-07-19 | 139 图行为闭包；16 个 handler 批次移除私有关键任务，剩余 55 个含 `Future` 文件 |
+| 阶段 4：handler 状态迁移 | 进行中 | 24% | 2026-07-19 | 139 图行为闭包；17 个 handler 批次移除私有关键任务，剩余 54 个含 `Future` 文件 |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1188,3 +1188,5 @@ REGISTERED
 - `mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest test` 通过。
 - 完成 Crucible Challenge 第二奖励阶段的阶段、击杀/刷新/奖励计数和递归 deadline 恢复，删除固定频率私有 `Future`；剩余含 `Future` 的生产 handler 文件降至 55。
 - `mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest test` 通过。
+- 完成 Linkgate Foundry 真端 20 分钟绝对截止时间、15/10/5/3/1 分钟警告、除 Belsagos 外实验室怪物到期清理、完成出口和重启恢复；删除私有 `Future`、线程池直调和固定索引清怪，剩余含 `Future` 的生产 handler 文件降至 54。
+- Linkgate 批次验证通过：`mvn -q -DskipTests compile`、`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest` 和生成器 `--check`。

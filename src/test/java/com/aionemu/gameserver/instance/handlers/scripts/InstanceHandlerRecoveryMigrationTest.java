@@ -20,6 +20,8 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertMigrated("DraupnirCaveInstance", "scheduleDeadline(\"gate_raid_2\"", "draupnir.adjutants");
 		assertMigrated("crucible/CrucibleChallengeInstance", "scheduleDeadline(\"bonus_spawn\"",
 				"crucible.bonus_spawning_done");
+		assertMigrated("LinkgateFoundryInstance", "scheduleDeadline(\"expire\"",
+				"linkgate.expire_deadline");
 	}
 
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {

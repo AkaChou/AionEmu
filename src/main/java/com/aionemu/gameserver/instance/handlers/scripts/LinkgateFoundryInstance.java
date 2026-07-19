@@ -16,8 +16,6 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -28,12 +26,11 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
+import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /****/
 /** Author (Encom)
@@ -42,17 +39,35 @@ import java.util.concurrent.Future;
 @InstanceID(301270000)
 public class LinkgateFoundryInstance extends GeneralInstanceHandler
 {
-    private Future<?> linkgateTask;
-	private boolean isStartTimer1 = false;
-	private List<Npc> Drs = new ArrayList<Npc>();
-	private List<Npc> Drs2 = new ArrayList<Npc>();
-	private List<Npc> Drs3 = new ArrayList<Npc>();
-	private List<Npc> TailedBuzzBug = new ArrayList<Npc>();
-	private List<Npc> IrradiatedStog = new ArrayList<Npc>();
-	private List<Npc> VashartiDracuni = new ArrayList<Npc>();
-	private List<Npc> ThecynonBruiser = new ArrayList<Npc>();
-	private List<Npc> IridescentLeowasp = new ArrayList<Npc>();
-	private List<Npc> DementedAshulagen = new ArrayList<Npc>();
+	private static final long LINKGATE_DURATION = 20 * 60 * 1000L;
+	private final List<Npc> Drs = new ArrayList<>();
+	private final List<Npc> Drs2 = new ArrayList<>();
+	private final List<Npc> Drs3 = new ArrayList<>();
+	private final List<Npc> TailedBuzzBug = new ArrayList<>();
+	private final List<Npc> IrradiatedStog = new ArrayList<>();
+	private final List<Npc> VashartiDracuni = new ArrayList<>();
+	private final List<Npc> ThecynonBruiser = new ArrayList<>();
+	private final List<Npc> IridescentLeowasp = new ArrayList<>();
+	private final List<Npc> DementedAshulagen = new ArrayList<>();
+
+	@Override
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		if (runtimeState().getBoolean("linkgate.complete", false)) {
+			spawnExit();
+			return;
+		}
+		long deadline = runtimeState().getLong("linkgate.expire_deadline", 0);
+		if (deadline == 0 || runtimeState().getBoolean("linkgate.expired", false)) {
+			return;
+		}
+		if (deadline <= System.currentTimeMillis()) {
+			expireMonsters();
+			return;
+		}
+		spawnExpiringMonsters();
+		scheduleLinkgateTimer(deadline);
+	}
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -93,19 +108,27 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 	
 	@Override
 	public void onEnterInstance(final Player player) {
-		super.onInstanceCreate(instance);
-		if (!isStartTimer1) {
-			isStartTimer1 = true;
-			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-				@Override
-			    public void visit(Player player) {
-					if (player.isOnline()) {
-					    startLinkgateTimer();
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 1200)); //20 Minutes.
-					}
-				}
-			});
+		super.onEnterInstance(player);
+		long deadline = runtimeState().getLong("linkgate.expire_deadline", 0);
+		boolean complete = runtimeState().getBoolean("linkgate.complete", false);
+		boolean expired = runtimeState().getBoolean("linkgate.expired", false);
+		if (deadline == 0 && !complete && !expired) {
+			deadline = System.currentTimeMillis() + LINKGATE_DURATION;
+			runtimeState().put("linkgate.expire_deadline", deadline);
+			spawnExpiringMonsters();
+			sendMsg(1402453);
+			scheduleLinkgateTimer(deadline);
+		}
+		if (deadline > System.currentTimeMillis() && !complete && !expired) {
+			int remaining = (int) Math.max(0, (deadline - System.currentTimeMillis()) / 1000);
+			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, remaining));
+		}
+	}
+
+	private void spawnExpiringMonsters() {
+		if (!Drs.isEmpty()) {
+			return;
+		}
 			//\\//\\//\\//***Dimensional Research Security***\//\\//\\//\\//
 			Drs.add((Npc) spawn(233888, 237.69263f, 205.63078f, 311.48178f, (byte) 106));
             Drs.add((Npc) spawn(233888, 200.84613f, 228.59465f, 311.36386f, (byte) 82));
@@ -203,19 +226,23 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 			VashartiDracuni.add((Npc) spawn(233897, 198.85709f, 301.7359f, 311.39212f, (byte) 16));
             VashartiDracuni.add((Npc) spawn(233897, 199.55707f, 300.5287f, 351.85858f, (byte) 16));
             VashartiDracuni.add((Npc) spawn(233897, 197.58377f, 300.5562f, 392.32074f, (byte) 16));
-		}
 	}
 	
 	@Override
 	public void onDie(Npc npc) {
-		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 		    case 233898: //Volatile Belsagos.
 			case 234990: //Wounded Belsagos.
 			case 234991: //Furious Belsagos.
-				//sendMsg("[SUCCES]: You have finished <Linkgate Foundry >");
-				spawn(702338, 225.60777f, 259.7162f, 312.62796f, (byte) 119); //Linkgate Foundry Exit.
+				runtimeState().put("linkgate.complete", true);
+				spawnExit();
 			break;
+		}
+	}
+
+	private void spawnExit() {
+		if (getNpc(702338) == null) {
+			spawn(702338, 225.60777f, 259.7162f, 312.62796f, (byte) 119); //Linkgate Foundry Exit.
 		}
 	}
 	
@@ -224,125 +251,37 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(185000196, storage.getItemCountByItemId(185000196)); //Abyss Gap Sealing Key's.
 	}
 	
-	private void startLinkgateTimer() {
-		//You have entered the Linkgate Foundry.
-		//Monsters in the lab, except Belsagos, will disappear in 20 minutes.
-		sendMsg(1402453);
-		//Monsters in the lab, except Belsagos, will disappear in 15 minutes.
-		this.sendMessage(1402454, 5 * 60 * 1000);
-		//Monsters in the lab, except Belsagos, will disappear in 10 minutes.
-		this.sendMessage(1402455, 10 * 60 * 1000);
-		//Monsters in the lab, except Belsagos, will disappear in 5 minutes.
-		this.sendMessage(1402456, 15 * 60 * 1000);
-		//Monsters in the lab, except Belsagos, will disappear in 3 minutes.
-		this.sendMessage(1402457, 17 * 60 * 1000);
-		//Monsters in the lab, except Belsagos, will disappear in 1 minute.
-		this.sendMessage(1402458, 19 * 60 * 1000);
-		//All monsters except Belsagos have disappeared from the Linkgate Foundry.
-		this.sendMessage(1402461, 20 * 60 * 1000);
-		linkgateTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				//***Dimensional Research Security***//
-				Drs.get(0).getController().onDelete();
-				Drs.get(1).getController().onDelete();
-				Drs.get(2).getController().onDelete();
-				Drs.get(3).getController().onDelete();
-				Drs.get(4).getController().onDelete();
-				Drs.get(5).getController().onDelete();
-				Drs.get(6).getController().onDelete();
-				Drs.get(7).getController().onDelete();
-				Drs.get(8).getController().onDelete();
-				Drs.get(9).getController().onDelete();
-				Drs.get(10).getController().onDelete();
-				Drs.get(11).getController().onDelete();
-				Drs.get(12).getController().onDelete();
-				Drs.get(13).getController().onDelete();
-				Drs.get(14).getController().onDelete();
-				Drs.get(15).getController().onDelete();
-				Drs.get(16).getController().onDelete();
-				Drs.get(17).getController().onDelete();
-				Drs.get(18).getController().onDelete();
-				Drs.get(19).getController().onDelete();
-				Drs.get(20).getController().onDelete();
-				Drs.get(21).getController().onDelete();
-				Drs.get(22).getController().onDelete();
-				//***Dimensional Research Security***//
-				Drs2.get(0).getController().onDelete();
-				Drs2.get(1).getController().onDelete();
-				Drs2.get(2).getController().onDelete();
-				Drs2.get(3).getController().onDelete();
-				Drs2.get(4).getController().onDelete();
-				Drs2.get(5).getController().onDelete();
-				//***Dimensional Research Security***//
-				Drs3.get(0).getController().onDelete();
-				Drs3.get(1).getController().onDelete();
-				Drs3.get(2).getController().onDelete();
-				Drs3.get(3).getController().onDelete();
-				Drs3.get(4).getController().onDelete();
-				Drs3.get(5).getController().onDelete();
-				Drs3.get(6).getController().onDelete();
-				Drs3.get(7).getController().onDelete();
-				Drs3.get(8).getController().onDelete();
-				Drs3.get(9).getController().onDelete();
-				Drs3.get(10).getController().onDelete();
-				Drs3.get(11).getController().onDelete();
-				Drs3.get(12).getController().onDelete();
-				Drs3.get(13).getController().onDelete();
-				Drs3.get(14).getController().onDelete();
-				Drs3.get(15).getController().onDelete();
-				Drs3.get(16).getController().onDelete();
-				Drs3.get(17).getController().onDelete();
-				Drs3.get(18).getController().onDelete();
-				Drs3.get(19).getController().onDelete();
-				Drs3.get(20).getController().onDelete();
-				Drs3.get(21).getController().onDelete();
-				//***Thecynon Bruiser***//
-				ThecynonBruiser.get(0).getController().onDelete();
-				ThecynonBruiser.get(1).getController().onDelete();
-				ThecynonBruiser.get(2).getController().onDelete();
-				ThecynonBruiser.get(3).getController().onDelete();
-				ThecynonBruiser.get(4).getController().onDelete();
-				ThecynonBruiser.get(5).getController().onDelete();
-				ThecynonBruiser.get(6).getController().onDelete();
-				//***Irradiated Stog***//
-				IrradiatedStog.get(0).getController().onDelete();
-				IrradiatedStog.get(1).getController().onDelete();
-				IrradiatedStog.get(2).getController().onDelete();
-				IrradiatedStog.get(3).getController().onDelete();
-				IrradiatedStog.get(4).getController().onDelete();
-				IrradiatedStog.get(5).getController().onDelete();
-				IrradiatedStog.get(6).getController().onDelete();
-				IrradiatedStog.get(7).getController().onDelete();
-				IrradiatedStog.get(8).getController().onDelete();
-				//***Iridescent Leowasp***//
-				IridescentLeowasp.get(0).getController().onDelete();
-				IridescentLeowasp.get(1).getController().onDelete();
-				IridescentLeowasp.get(2).getController().onDelete();
-				//***Demented Ashulagen***//
-				DementedAshulagen.get(0).getController().onDelete();
-				DementedAshulagen.get(1).getController().onDelete();
-				DementedAshulagen.get(2).getController().onDelete();
-				DementedAshulagen.get(3).getController().onDelete();
-				DementedAshulagen.get(4).getController().onDelete();
-				DementedAshulagen.get(5).getController().onDelete();
-				DementedAshulagen.get(6).getController().onDelete();
-				DementedAshulagen.get(7).getController().onDelete();
-				DementedAshulagen.get(8).getController().onDelete();
-				DementedAshulagen.get(9).getController().onDelete();
-				DementedAshulagen.get(10).getController().onDelete();
-				DementedAshulagen.get(11).getController().onDelete();
-				//***Tailed Buzz Bug***//
-				TailedBuzzBug.get(0).getController().onDelete();
-				TailedBuzzBug.get(1).getController().onDelete();
-				TailedBuzzBug.get(2).getController().onDelete();
-				//***Vasharti Dracuni***//
-				VashartiDracuni.get(0).getController().onDelete();
-				VashartiDracuni.get(1).getController().onDelete();
-				VashartiDracuni.get(2).getController().onDelete();
+	private void scheduleLinkgateTimer(long deadline) {
+		scheduleWarning("warning_15", deadline - 15 * 60_000L, 1402454);
+		scheduleWarning("warning_10", deadline - 10 * 60_000L, 1402455);
+		scheduleWarning("warning_5", deadline - 5 * 60_000L, 1402456);
+		scheduleWarning("warning_3", deadline - 3 * 60_000L, 1402457);
+		scheduleWarning("warning_1", deadline - 60_000L, 1402458);
+		scheduleDeadline("expire", deadline, this::expireMonsters);
+	}
+
+	private void scheduleWarning(String key, long deadline, int messageId) {
+		if (deadline > System.currentTimeMillis()) {
+			scheduleDeadline(key, deadline, () -> sendMsg(messageId));
+		}
+	}
+
+	private void expireMonsters() {
+		if (runtimeState().getBoolean("linkgate.expired", false)) {
+			return;
+		}
+		runtimeState().put("linkgate.expired", true);
+		for (List<Npc> npcs : List.of(Drs, Drs2, Drs3, TailedBuzzBug, IrradiatedStog, VashartiDracuni,
+				ThecynonBruiser, IridescentLeowasp, DementedAshulagen)) {
+			for (Npc npc : npcs) {
+				if (npc != null) {
+					npc.getController().onDelete();
+				}
 			}
-		}, 1200000); //20 Minutes.
-    }
+			npcs.clear();
+		}
+		sendMsg(1402461);
+	}
 	
 	@Override
 	public void onPlayerLogOut(Player player) {
@@ -354,30 +293,4 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 		removeItems(player);
 	}
 	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
-	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
-	private void sendMessage(final int msgId, long delay) {
-        if (delay == 0) {
-            this.sendMsg(msgId);
-        } else {
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-                public void run() {
-                    sendMsg(msgId);
-                }
-            }, delay);
-        }
-    }
 }
