@@ -30,6 +30,8 @@ class InstanceHandlerRecoveryMigrationTest {
 				"leftwing.next_deadline");
 		assertMigrated("TheHexwayInstance", "scheduleDeadline(\"chest\"",
 				"hexway.next_deadline");
+		assertMigrated("LowerUdasTempleInstance", "scheduleDeadline(\"chest\"",
+				"lower_udas.next_deadline");
 	}
 
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {

@@ -968,7 +968,7 @@ REGISTERED
 
 任务：
 
-- [ ] 将剩余 50 个含任务字段的生产 handler 迁移到 deadline；
+- [ ] 将剩余 49 个含任务字段的生产 handler 迁移到 deadline；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 28% | 2026-07-19 | 139 图行为闭包；21 个 handler 批次移除私有关键任务，剩余 50 个含 `Future` 文件 |
+| 阶段 4：handler 状态迁移 | 进行中 | 29% | 2026-07-19 | 139 图行为闭包；22 个 handler 批次移除私有关键任务，剩余 49 个含 `Future` 文件 |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1203,3 +1203,5 @@ REGISTERED
 - Left Wing 批次验证通过：`mvn -q -DskipTests compile`、`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest` 和生成器 `--check`。
 - 完成 The Hexway 的 12 阶段、总计 60 分钟宝箱消失链恢复：保留 Captain Jarka 的 6 选 1 仓库钥匙掉落、12 个宝箱点位和每阶段 5 分钟倒计时，持久化当前阶段与下一绝对截止时间；删除 12 个布尔计时字段、私有 `Future`、直接线程池调度和无效门缓存，剩余含 `Future` 的生产 handler 文件降至 50。
 - The Hexway 批次验证通过：`mvn -q -DskipTests compile`、`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest` 和生成器 `--check`。
+- 完成 Lower Udas Temple 的 12 阶段、总计 60 分钟宝箱消失链恢复：保留 6 个普通和 6 个高级宝箱点位、Boss/宝箱/玩家专属掉落以及离本钥匙清理，持久化当前阶段、下一绝对截止时间和 Debilkarim 死亡后的停止状态；停止后重启仍重建剩余宝箱但不继续消失，删除 12 个布尔计时字段、私有 `Future` 和直接线程池调度，剩余含 `Future` 的生产 handler 文件降至 49。
+- Lower Udas 批次验证通过：`mvn -q -DskipTests compile`、`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest` 和生成器 `--check`。
