@@ -54,7 +54,7 @@ public class _11076ProofOfTalent extends QuestHandler {
 						return sendQuestDialog(env, 2034);
 				}
 				else if (dialog == QuestDialog.STEP_TO_4) {
-					TeleportService2.teleportTo(player, 210130000, 1338.6f, 279.6f, 590, (byte) 80, TeleportAnimation.BEAM_ANIMATION);
+					TeleportService2.teleportTo(player, 210050000, 1338.6f, 279.6f, 590, (byte) 80, TeleportAnimation.BEAM_ANIMATION);
 					return defaultCloseDialog(env, 3, 4, true, false);
 				}
 			}
@@ -75,7 +75,7 @@ public class _11076ProofOfTalent extends QuestHandler {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		if (qs != null && qs.getStatus() == QuestStatus.START) {
-			if(player.getWorldId() == 210130000) {
+			if(player.getWorldId() == 210050000) {
 				if(teleportId == 405001)
 					changeQuestStep(env, 0, 1, false);
 				else if(teleportId == 406001)

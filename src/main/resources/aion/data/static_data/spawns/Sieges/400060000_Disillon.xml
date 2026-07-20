@@ -2109,7 +2109,7 @@
 					</spawn>
 					<!-- Boss -->
 					<spawn npc_id="277455">
-					    <spot x="1024.1173" y="1024.4729" z="1552.5522" h="65"/>
+					    <spot x="1024.1173" y="1024.4729" z="1552.5522" h="65" random_walk="2"/>
 					</spawn>
                 </siege_mod>
             </siege_race>

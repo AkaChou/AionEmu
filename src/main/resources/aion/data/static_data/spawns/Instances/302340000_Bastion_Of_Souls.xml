@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--
-	Bastion Of Souls 5.5 Spawn By (Encom)
- -->
 <spawns>
 	<spawn_map map_id="302340000">
 	    <!-- IDAb1_Ere_Prison_Lever_01 -->
@@ -143,16 +140,6 @@
 		    <spot x="325.54486" y="665.073" z="426.13705" h="102"/>
             <spot x="417.30148" y="670.1516" z="425.23416" h="30"/>
 		</spawn>
-		<!-- IDAb1_Ere_1Round_Sp_Prison_Da_Deva_M_73_AE -->
-	    <spawn npc_id="246595">
-		    <spot x="1123.0656" y="553.5793" z="436.89935"/>
-		</spawn>
-		<!-- IDAb1_Ere_1Round_Prison_Cinema_01_73_N -->
-	    <spawn npc_id="246604">
-		    <spot x="1246.7856" y="736.91486" z="410.93744" h="16"/>
-            <spot x="1246.5972" y="758.39" z="410.93744" h="107"/>
-            <spot x="1245.864" y="747.878" z="410.93744"/>
-		</spawn>
 		<!-- IDAb1_Ere_1Round_Prison_Cinema_02_73_N -->
 	    <spawn npc_id="246605">
 		    <spot x="1251.7534" y="758.84375" z="410.93744" h="99"/>
@@ -175,10 +162,6 @@
             <spot x="1305.465" y="633.24835" z="421.81287" h="80"/>
             <spot x="1315.1482" y="667.3668" z="416.0849" h="89"/>
 		</spawn>
-	    <!-- IDAb1_Ere_Sub_1F_Abusing_NPC -->
-	    <spawn npc_id="246659">
-		    <spot x="1250.3672" y="747.8553" z="410.93744"/>
-		</spawn>
 		<!-- IDAb1_Ere_3F_Key_Monster_74_AE -->
 	    <spawn npc_id="246727">
 		    <spot x="1342.3304" y="939.5019" z="404.53137" h="91"/>
@@ -190,10 +173,6 @@
 		<!-- IDAb1_Ere_3F_Moving_Key_Monster_74_AE -->
 	    <spawn npc_id="246730">
 		    <spot x="1265.3972" y="747.9685" z="410.94193"/>
-		</spawn>
-		<!-- IDAb1_Ere_Sub_Assassin_Item_Brother_75_AH -->
-	    <spawn npc_id="246797">
-		    <spot x="1096.2784" y="823.38763" z="390.96933" h="48"/>
 		</spawn>
 		<!-- IDAb1_Ere_Sub_Warehouse_Keeper_75_AH -->
 	    <spawn npc_id="246798">
@@ -316,22 +295,9 @@
             <spot x="1108.2521" y="597.13025" z="396.22903" h="60"/>
             <spot x="1088.9418" y="629.8033" z="393.10324" h="60"/>
 		</spawn>
-		<!-- IDAb1_Ere_1RDirection_Drakan_High_Ra_74_AE -->
-	    <spawn npc_id="246928">
-		    <spot x="1265.555" y="860.74414" z="404.09674" h="109"/>
-		</spawn>
 		<!-- IDAb1_Ere_1RDirection_Drakan_High_Wi_74_AE -->
 	    <spawn npc_id="246930">
 		    <spot x="1299.5204" y="861.6209" z="405.95972" h="75"/>
-		</spawn>
-		<!-- IDAb1_Ere_1RDirection_Drakan_Fi_73_AN -->
-	    <spawn npc_id="246931">
-		    <spot x="1097.6812" y="601.9761" z="395.08047" h="68"/>
-		</spawn>
-		<!-- IDAb1_Ere_1RDirection_Drakan_As_73_AN -->
-	    <spawn npc_id="246932">
-		    <spot x="1051.3107" y="643.0476" z="393.61172" h="94"/>
-            <spot x="1095.8546" y="597.7171" z="394.80478" h="41"/>
 		</spawn>
 		<!-- IDAb1_Ere_Start_Drakan_High_Fi_74_AE -->
 	    <spawn npc_id="246941">
@@ -452,14 +418,6 @@
 	    <spawn npc_id="247181">
 		    <spot x="1183.1943" y="657.01154" z="427.28555" h="101"/>
 		</spawn>
-		<!-- IDAb1_Ere_1Round_He_Dra_As_75_AE -->
-	    <spawn npc_id="247208">
-		    <spot x="1315.2942" y="765.4343" z="416.4143" h="60"/>
-		</spawn>
-		<!-- IDAb1_Ere_1Round_He_Dra_Fi_75_AE -->
-	    <spawn npc_id="247209">
-		    <spot x="1315.2509" y="770.1163" z="416.41318" h="60"/>
-		</spawn>
 		<!-- Drana Energy -->
 	    <spawn npc_id="246548">
 		    <spot x="72.830560" y="597.84631" z="499.52720" entity_id="50"/>
@@ -476,32 +434,9 @@
 	    <spawn npc_id="246671">
 		    <spot x="1256.7778" y="747.99976" z="410.91733" entity_id="600"/>
 		</spawn>
-		<!-- Prison Weapon Cage -->
-	    <spawn npc_id="246923">
-		    <spot x="1092.4749" y="653.73254" z="392.91333" entity_id="816"/>
-		</spawn>
-		<!-- Prison Armor Cage -->
-	    <spawn npc_id="246924">
-		    <spot x="1105.1051" y="644.92975" z="392.80798" entity_id="300"/>
-		</spawn>
 		<!-- Prison Door -->
 	    <spawn npc_id="246925">
 		    <spot x="1204.2843" y="848.23456" z="405.12549" entity_id="344"/>
-		</spawn>
-		<!-- Prison Core -->
-	    <spawn npc_id="247026">
-		    <spot x="1108.4281" y="695.92889" z="397.43091" entity_id="948"/>
-		    <spot x="1108.7614" y="759.46625" z="398.07852" entity_id="949"/>
-		    <spot x="1023.8091" y="759.97101" z="398.44064" entity_id="974"/>
-			<spot x="1023.8867" y="695.62463" z="398.92917" entity_id="975"/>
-		</spawn>
-		<!-- Pipe 01 -->
-	    <spawn npc_id="247070">
-		    <spot x="1104.7000" y="705.09003" z="412.62000" entity_id="799"/>
-		</spawn>
-		<!-- Pipe 02 -->
-	    <spawn npc_id="247071">
-		    <spot x="1103.8800" y="750.42999" z="412.62000" entity_id="1014"/>
 		</spawn>
 		<!-- Pipe 03 -->
 	    <spawn npc_id="247072">
@@ -621,26 +556,11 @@
 	    <spawn npc_id="206624" respawn_time="1">
 	      <spot x="787.476929" y="727.728149" z="411.96826"/>
 	    </spawn>
-	    <spawn npc_id="246658" respawn_time="1">
-	      <spot x="1303.007080" y="1350.495239" z="494.2026" h="15"/>
-	    </spawn>
 	    <spawn npc_id="246922" respawn_time="1">
 	      <spot x="1257.224976" y="747.956543" z="414.67313"/>
 	    </spawn>
 	    <spawn npc_id="247172" respawn_time="1">
 	      <spot x="180.552078" y="692.669800" z="441.45312" h="15"/>
-	    </spawn>
-	    <spawn npc_id="703457" respawn_time="1">
-	      <spot x="1190.607422" y="628.724304" z="426.34802" h="60"/>
-	    </spawn>
-	    <spawn npc_id="703460" respawn_time="1">
-	      <spot x="1327.957642" y="729.735107" z="413.9595"/>
-	    </spawn>
-	    <spawn npc_id="703461" respawn_time="1">
-	      <spot x="1184.102173" y="817.342224" z="402.9256" h="90"/>
-	    </spawn>
-	    <spawn npc_id="703462" respawn_time="1">
-	      <spot x="1183.385620" y="882.486328" z="400.74057" h="90"/>
 	    </spawn>
 	    <spawn npc_id="835446" respawn_time="1">
 	      <spot x="1159.102173" y="816.112244" z="405.2975"/>

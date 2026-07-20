@@ -1,11 +1,8 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
@@ -15,7 +12,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
@@ -120,7 +116,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 			case 282295: //Command Gate Control.
 				doors.get(39).setOpen(true);
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
-				sendMsgByRace(1401839, Race.PC_ALL, 0);
+				sendMsg(1401839, 0, false, 25, 0);
 			break;
 		}
 	}
@@ -143,9 +139,9 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				deleteNpc(217204); //Kexkra.
 				deleteNpc(283173); //Drana FX.
 				// 苏卡纳供应器已过载。 / The Surkana Supplier has overloaded.
-				sendMsgByRace(1400996, Race.PC_ALL, 0);
+				sendMsg(1400996, 0, false, 25, 0);
 				// 苏卡纳供应器已损坏。 / The Surkana Supplier has been broken.
-				sendMsgByRace(1401037, Race.PC_ALL, 4000);
+				sendMsg(1401037, 0, false, 25, 4000);
 				spawn(217205, 1315.99f, 1170.77f, 51.8004f, (byte) 87); //Kexkra Prototype.
 			break;
 			/**
@@ -153,11 +149,11 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	 */
 			case 217185: //Dalia Charlands.
 			    // 达莉亚·查兰兹已消失。 / Dalia Charlands has vanished.
-				sendMsgByRace(1401036, Race.PC_ALL, 0);
+				sendMsg(1401036, 0, false, 25, 0);
 				// 苏卡纳蒸汽喷射产生了上升气流。 / The Surkana Steam Jet has generated an updraft.
-				sendMsgByRace(1400997, Race.PC_ALL, 5000);
+				sendMsg(1400997, 0, false, 25, 5000);
 				// 击败所有德拉纳生产实验室区段管理员以打开实验室院子门。 / Defeat all Drana Production Lab Section Managers to open the Laboratory Yard door.
-				sendMsgByRace(1400919, Race.PC_ALL, 120000);
+				sendMsg(1400919, 0, false, 25, 120000);
 				spawn(703052, 392.27563f, 543.89026f, 318.3265f, (byte) 18); //Windstream A
 				spawn(703054, 392.27563f, 543.89026f, 318.3265f, (byte) 18); //Windstream B
 				spawn(701023, 1264.862061f, 644.995178f, 296.831818f, (byte) 0, 112); //Large Entwined Chest.
@@ -173,15 +169,15 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				} else if (labManagerKilled == 3) {
 					doors.get(111).setOpen(true);
 					// 通往实验室院子的门现已打开。 / The door to the Laboratory Yard is now open.
-					sendMsgByRace(1400920, Race.PC_ALL, 0);
+					sendMsg(1400920, 0, false, 25, 0);
 					// 德拉纳生产实验室通道现已开放。 / The Drana Production Lab walkway is now open.
-					sendMsgByRace(1400923, Race.PC_ALL, 6000);
+					sendMsg(1400923, 0, false, 25, 6000);
 				}
 			break;
 			case 217281: //Lab Gatekeeper.
 				doors.get(70).setOpen(true);
 				// 通往实验室空调室的门现已打开。 / The door to the Laboratory Air Conditioning Room is now open.
-				sendMsgByRace(1400921, Race.PC_ALL, 0);
+				sendMsg(1400921, 0, false, 25, 0);
             break;
 			case 286930: //Esoterrace Mage.
                 despawnNpc(npc);
@@ -196,18 +192,18 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				    case 1:
 						doors.get(45).setOpen(true);
 						// 守门人倒下，左侧门已打开！ / With the gatekeeper down, the door on the left is open!
-						sendMsgByRace(1401229, Race.PC_ALL, 0);
+						sendMsg(1401229, 0, false, 25, 0);
 					break;
 			        case 2:
 						doors.get(67).setOpen(true);
 						// 守门人倒下，右侧门已打开！ / With the gatekeeper down, the door on the right is open!
-						sendMsgByRace(1401230, Race.PC_ALL, 0);
+						sendMsg(1401230, 0, false, 25, 0);
 					break;
 				}
 				doors.get(52).setOpen(true);
 				doors.get(70).setOpen(true);
 				// 苏卡纳蒸汽喷射产生了上升气流。 / The Surkana Steam Jet has generated an updraft.
-				sendMsgByRace(1400997, Race.PC_ALL, 6000);
+				sendMsg(1400997, 0, false, 25, 6000);
 				spawn(703056, 392.27563f, 543.89026f, 318.3265f, (byte) 18); //Windstream C
 				spawn(703058, 392.27563f, 543.89026f, 318.3265f, (byte) 18); //Windstream D
 				spawn(701024, 751.67f, 1136.08f, 365.031f, (byte) 105, 41); //Chilled Treasure.
@@ -216,12 +212,12 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 			case 282293: //Esoterrace Ventilator.
 			    despawnNpc(npc);
 				// 实验室通风口现已打开。 / The Laboratory Ventilator is now open.
-				sendMsgByRace(1400922, Race.PC_ALL, 0);
+				sendMsg(1400922, 0, false, 25, 0);
 			break;
 			case 217289: //Esoterrace Biolab Watchman.
 				doors.get(122).setOpen(true);
 				// 生物实验室外墙已坍塌。 / The outer wall of the Bio Lab has collapsed.
-				sendMsgByRace(1400924, Race.PC_ALL, 0);
+				sendMsg(1400924, 0, false, 25, 0);
             break;
 		   /**
 	 * 击败“凯克斯克拉”后刷新宝箱，含欧比斯遗物与白金勋章等。 / When "Kexkra" is defeated, a treasure chest will spawn containing Abyss relics and Platinum Medals. In addition, the treasure chest has a chance to contain Fabled armor from the Surama set
@@ -261,55 +257,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
-	}
-	
-    private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
 	}
 	
 	/**

@@ -79,7 +79,7 @@
 		<sphere x="1109.1493" y="1692.0824" z="184.5" r="10.0"/>
 	</zone>
 	<!-- Inggison [Normal Server] -->
-<!-- 	<zone mapid="210050000" name="LF4_SENSORY_AREA_Q11147_210050000" area_type="SPHERE" zone_type="SUB">
+		<zone mapid="210050000" name="LF4_SENSORY_AREA_Q11147_210050000" area_type="SPHERE" zone_type="SUB">
 		<sphere x="1096.5378" y="1129.3385" z="446.0" r="10.0"/>
 	</zone>
 	<zone mapid="210050000" name="LF4_SENSORY_AREA_Q11149_A_210050000" area_type="SPHERE" zone_type="SUB">
@@ -90,7 +90,7 @@
 	</zone>
 	<zone mapid="210050000" name="LF4_SENSORY_AREA_Q11149_C_210050000" area_type="SPHERE" zone_type="SUB">
 		<sphere x="1109.1493" y="1688.0824" z="196.0" r="10.0"/>
-	</zone> -->
+		</zone>
 	<!-- Theobomos -->
 	<zone mapid="210060000" name="LF2A_SENSORY_AREA_Q3090_210060000" area_type="SPHERE" zone_type="SUB">
 		<sphere x="208.02142" y="1346.6992" z="64.0" r="10.0"/>
@@ -191,10 +191,10 @@
         <sphere x="375.49576" y="2483.521" z="278.85196" r="10.0"/>
     </zone>
     <!-- Gelkmaros [Normal Server] 
-	<zone mapid="220070000" name="DF4_ITEMUSEAREA_Q20033" area_type="SPHERE" zone_type="SUB">
+		<zone mapid="220070000" name="DF4_ITEMUSEAREA_Q20033" area_type="SPHERE" zone_type="SUB">
 		<sphere x="278.7311" y="1535.613" z="356.4207" r="10.0"/>
 	</zone>
-	<zone mapid="220070000" name="DF4_ITEMUSEAREA_Q20035" area_type="SPHERE" zone_type="SUB">
+		<zone mapid="220070000" name="DF4_ITEMUSEAREA_Q20035" area_type="SPHERE" zone_type="SUB">
 		<sphere x="1420.7408" y="1076.959" z="316.5951" r="10.0"/>
 	</zone>
 	-->

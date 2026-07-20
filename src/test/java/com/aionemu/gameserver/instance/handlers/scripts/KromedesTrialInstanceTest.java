@@ -29,6 +29,7 @@ class KromedesTrialInstanceTest {
 		assertFalse(source.contains("spawn(217005"));
 		assertFalse(source.contains("spawn(217006"));
 		assertFalse(source.contains("Rnd."));
+		assertFalse(source.contains("GameThreadPoolServices"));
 
 		String spawns = Files.readString(SPAWNS);
 		assertTrue(spawns.contains("<spawn npc_id=\"217006\">"));

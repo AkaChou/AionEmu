@@ -11,7 +11,6 @@ class GameRuntimeBridgeEagernessTest {
     void runtimeBridgeComponentsAreEagerSpringWiring() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
             context.register(
-                    GameBattlefieldRuntimeBridge.class,
                     GameCoreServicesRuntimeBridge.class,
                     GameEnginesRuntimeBridge.class,
                     GameEventBootstrapRuntimeBridge.class,
@@ -27,7 +26,6 @@ class GameRuntimeBridgeEagernessTest {
                     GameWorldServicesRuntimeBridge.class);
             context.refresh();
 
-            assertEager(context, "gameBattlefieldRuntimeBridge");
             assertEager(context, "gameCoreServicesRuntimeBridge");
             assertEager(context, "gameEnginesRuntimeBridge");
             assertEager(context, "gameEventBootstrapRuntimeBridge");

@@ -123,7 +123,9 @@ public class PlayerTeamDistributionService {
 						kinahCount = 1000;
 					}
 					break;
+				case 210050000: // Inggison.
 				case 210130000: // Inggison [Master Server].
+				case 220070000: // Gelkmaros.
 				case 220140000: // Gelkmaros [Master Server].
 					if (member.getLevel() < owner.getLevel() + 5) {
 						kinahCount = Rnd.get(100, 3500) * member.getLevel();

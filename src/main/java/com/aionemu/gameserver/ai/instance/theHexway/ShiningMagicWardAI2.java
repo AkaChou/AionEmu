@@ -32,8 +32,8 @@ public class ShiningMagicWardAI2 extends ActionItemNpcAI2
 			        break;
 				} switch (player.getWorldId()) {
                     case 300700000: //The Hexway 4.3.
-					    PacketSendUtility.sendMessage(player, "you enter in <Silentera Canyon [Master Server]>");
-						TeleportService2.teleportTo(player, 600110000, 528.7647f, 766.7518f, 299.61633f, (byte) 1);
+					    PacketSendUtility.sendMessage(player, "you enter in <Silentera Canyon>");
+						TeleportService2.teleportTo(player, 600010000, 528.7647f, 766.7518f, 299.61633f, (byte) 1);
 			        break;
 				}
 		    break;

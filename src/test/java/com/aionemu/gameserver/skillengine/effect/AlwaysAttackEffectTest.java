@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.skillengine.model.ActivationAttribute;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 class AlwaysAttackEffectTest {
@@ -22,13 +23,14 @@ class AlwaysAttackEffectTest {
 		TestCreature creature = new TestCreature();
 		SkillTemplate skill = new SkillTemplate();
 		setField(skill, "activationAttribute", ActivationAttribute.ACTIVE);
+		setField(skill, "subType", SkillSubType.NONE);
 
 		AlwaysHitEffect alwaysHit = new AlwaysHitEffect();
 		setField(alwaysHit, "value", 2);
 		setField(alwaysHit, "position", 1);
 		Effect hitEffect = new Effect(creature, creature, skill, 1, 0);
 		hitEffect.addSucessEffect(alwaysHit);
-		alwaysHit.startEffect(hitEffect);
+		hitEffect.startEffect(false);
 		assertTrue(creature.getObserveController().hasAlwaysHit());
 		assertTrue(creature.getObserveController().consumeAlwaysHit());
 		assertTrue(creature.getObserveController().hasAlwaysHit());
@@ -38,7 +40,7 @@ class AlwaysAttackEffectTest {
 		setField(noResist, "position", 2);
 		Effect noResistEffect = new Effect(creature, creature, skill, 1, 0);
 		noResistEffect.addSucessEffect(noResist);
-		noResist.startEffect(noResistEffect);
+		noResistEffect.startEffect(false);
 		assertTrue(creature.getObserveController().hasAlwaysNoResist());
 		assertTrue(creature.getObserveController().consumeAlwaysNoResist());
 		assertFalse(creature.getObserveController().hasAlwaysNoResist());

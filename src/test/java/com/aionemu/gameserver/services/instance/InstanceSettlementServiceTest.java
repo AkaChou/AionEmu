@@ -109,6 +109,23 @@ class InstanceSettlementServiceTest {
 	}
 
 	@Test
+	void buildsCrucibleRewardsFromRetailDefinitions() {
+		assertEquals(List.of(new RewardItem(186000130, 350)),
+				InstanceSettlementService.cruciblePlan(300300000, 0).items());
+		assertEquals(350, InstanceSettlementService.cruciblePlan(300300000, 1_099).itemCount(186000130));
+		assertEquals(361, InstanceSettlementService.cruciblePlan(300300000, 1_100).itemCount(186000130));
+		assertEquals(5_332, InstanceSettlementService.cruciblePlan(300300000, 999_999).itemCount(186000130));
+
+		assertEquals(350, InstanceSettlementService.cruciblePlan(300320000, 99).itemCount(186000130));
+		assertEquals(351, InstanceSettlementService.cruciblePlan(300320000, 100).itemCount(186000130));
+		assertEquals(1_584, InstanceSettlementService.cruciblePlan(300320000, 123_499).itemCount(186000130));
+		assertThrows(IllegalArgumentException.class,
+				() -> InstanceSettlementService.cruciblePlan(300300000, -1));
+		assertThrows(IllegalArgumentException.class,
+				() -> InstanceSettlementService.cruciblePlan(1, 0));
+	}
+
+	@Test
 	void buildsTournamentRewardsFromRetailRounds() {
 		RewardPlan first = InstanceSettlementService.tournamentPlan(DataManager.RETAIL_INSTANCE_DATA.tournament(1), 1);
 		assertEquals(1_000, first.exp());

@@ -58,7 +58,7 @@ public class _20034Rescue_The_Reians extends QuestHandler {
                     updateQuestStatus(env);
                 }
             } if (var == 6) {
-                if (player.getWorldId() == 220140000) {
+                if (player.getWorldId() == 220070000) {
                     qs.setStatus(QuestStatus.REWARD);
 					changeQuestStep(env, 6, 7, false);
                     updateQuestStatus(env);
@@ -180,7 +180,7 @@ public class _20034Rescue_The_Reians extends QuestHandler {
                 case USE_OBJECT: {
                     if (var == 6) {
 						removeQuestItem(env, 182215595, 1);
-                        TeleportService2.teleportTo(env.getPlayer(), 220140000, 2511.7263f, 2140.7117f, 464.84372f, (byte) 101);
+                        TeleportService2.teleportTo(env.getPlayer(), 220070000, 2511.7263f, 2140.7117f, 464.84372f, (byte) 101);
                     }
 				}
             }

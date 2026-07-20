@@ -25,12 +25,12 @@ public class _30057JotunJaunt extends QuestHandler {
 	public void register() {
 		qe.registerQuestNpc(799381).addOnQuestStart(questId);
 		qe.registerQuestNpc(799381).addOnTalkEvent(questId);
-		qe.registerOnEnterZone(ZoneName.get("SILENTERA_WESTGATE_600110000"), questId);
+		qe.registerOnEnterZone(ZoneName.get("SILENTERA_WESTGATE_600010000"), questId);
 	}
 
 	@Override
 	public boolean onEnterZoneEvent(QuestEnv env, ZoneName zoneName) {
-		if (zoneName != ZoneName.get("SILENTERA_WESTGATE_600110000"))
+		if (zoneName != ZoneName.get("SILENTERA_WESTGATE_600010000"))
 			return false;
 		final Player player = env.getPlayer();
 		if (player == null)

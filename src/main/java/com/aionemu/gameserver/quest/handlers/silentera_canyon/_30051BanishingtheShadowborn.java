@@ -24,7 +24,7 @@ public class _30051BanishingtheShadowborn extends QuestHandler {
 	public void register() {
 		qe.registerQuestNpc(799381).addOnQuestStart(questId);
 		qe.registerQuestNpc(799381).addOnTalkEvent(questId);
-		qe.registerOnKillInWorld(600110000, questId);
+		qe.registerOnKillInWorld(600010000, questId);
 	}
 	
 	@Override

@@ -195,8 +195,13 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 		 */
 		protected final void trySendPacket(final Creature creature, byte mask) {
 			if ((mask & mask()) == mask()) {
-				sendPacket(creature);
 				creature.removePacketBroadcastMask(this);
+				try {
+					sendPacket(creature);
+				} catch (RuntimeException e) {
+					creature.addPacketBroadcastMask(this);
+					throw e;
+				}
 			}
 		}
 	}

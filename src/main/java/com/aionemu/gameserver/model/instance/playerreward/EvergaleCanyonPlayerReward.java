@@ -6,4 +6,8 @@ public final class EvergaleCanyonPlayerReward extends BattlegroundPlayerReward {
 	public EvergaleCanyonPlayerReward(int objectId, byte buffId, Race race) {
 		super(objectId, buffId, race);
 	}
+
+	public EvergaleCanyonPlayerReward(int objectId, byte buffId, Race race, long joinedAt) {
+		super(objectId, buffId, race, joinedAt);
+	}
 }

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.instance.playerreward.EngulfedOphidanBridgePlayerReward;
+import com.aionemu.gameserver.model.instance.playerreward.EvergaleCanyonPlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.KamarBattlefieldPlayerReward;
 
 class BattlefieldInstanceMigrationTest {
@@ -19,6 +21,8 @@ class BattlefieldInstanceMigrationTest {
 		assertNotNull(KamarBattlefieldPlayerReward.class
 			.getConstructor(int.class, byte.class, Race.class, long.class));
 		assertNotNull(EngulfedOphidanBridgePlayerReward.class
+			.getConstructor(int.class, byte.class, Race.class, long.class));
+		assertNotNull(EvergaleCanyonPlayerReward.class
 			.getConstructor(int.class, byte.class, Race.class, long.class));
 	}
 
@@ -138,6 +142,75 @@ class BattlefieldInstanceMigrationTest {
 		assertTrue(eternalBastion.contains("<npc id=\"231113\""));
 	}
 
+	@Test
+	void evergaleUsesRetailLifecyclePopulationAndSettlement() throws Exception {
+		String handler = handler("EvergaleCanyonInstance");
+		for (String required : new String[] {
+			"scheduleDeadline(\"preparation\"", "scheduleDeadline(\"battle\"",
+			"scheduleDeadline(\"noEnemy\"", "scheduleDeadline(\"exit\"",
+			"PHASE_NO_ENEMY", "wait_time_after_noenemy", "InstanceSettlementService.queueBattleground",
+			"RetailConditionSpawnEngine.setVariable(instance, \"people_expand_con\"",
+			"DataManager.RETAIL_AI_DATA.getNpcScore", "npc.getSpawn().getStableKey()",
+			"setDoorState(352, true)", "setDoorState(507, true)"
+		}) {
+			assertTrue(handler.contains(required), required);
+		}
+		for (String legacy : new String[] {
+			"Future<", "GameThreadPoolServices", "onDropRegistered", "handleUseItemFinish", "ItemService",
+			"sendMovie", "loosingGroupMultiplier", "stopInstanceTask", " sp(", "spawn("
+		}) {
+			assertFalse(handler.contains(legacy), legacy);
+		}
+
+		int[] thresholds = { 37, 55, 73, 74, 75 };
+		assertEquals(0, EvergaleCanyonInstance.populationLevelForCount(36, thresholds));
+		assertEquals(1, EvergaleCanyonInstance.populationLevelForCount(37, thresholds));
+		assertEquals(3, EvergaleCanyonInstance.populationLevelForCount(73, thresholds));
+		assertEquals(5, EvergaleCanyonInstance.populationLevelForCount(96, thresholds));
+		assertEquals(73, EvergaleCanyonInstance.populationThresholdForLevel(3, thresholds));
+		assertEquals(Race.PC_ALL, EvergaleCanyonInstance.noEnemyWinner(0, 0));
+		assertEquals(Race.ELYOS, EvergaleCanyonInstance.noEnemyWinner(1, 0));
+		assertEquals(Race.ASMODIANS, EvergaleCanyonInstance.noEnemyWinner(0, 1));
+		String first = EvergaleCanyonInstance.scoreEventKey("condition:1:generation.1", 1);
+		assertEquals(first, EvergaleCanyonInstance.scoreEventKey("condition:1:generation.1", 2));
+		assertFalse(first.equals(EvergaleCanyonInstance.scoreEventKey("condition:1:generation.2", 1)));
+
+		String definitions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String evergale = worldConditions(definitions, 302350000);
+		assertEquals(20, occurrences(evergale, "<variable "));
+		assertEquals(347, occurrences(evergale, "<condition "));
+		assertEquals(1_183, occurrences(evergale, "<slot>"));
+		assertEquals(1_197, occurrences(evergale, "<npc "));
+		assertFalse(Files.exists(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/302350000_Evergale_Canyon.xml")));
+
+		String rewards = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/rewards.xml"));
+		assertTrue(rewards.contains("name=\"IDEternity_War\" pc_die_score=\"0\" pc_kill_score=\"5\""));
+		assertTrue(rewards.contains("spawn_page=\"1\" spawn_type=\"0\" wait_time=\"180\" wait_time_after_noenemy=\"60\""));
+		assertTrue(rewards.contains("name=\"IDEternity_War_SP\" pc_die_score=\"0\" pc_kill_score=\"5\""));
+		assertTrue(rewards.contains("spawn_page=\"2\" spawn_type=\"0\" wait_time=\"180\" wait_time_after_noenemy=\"60\""));
+
+		String packet = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_INSTANCE_SCORE.java"));
+		assertTrue(packet.contains("Race oppositeRace = ecpr.getRace() == Race.ELYOS"));
+		String reward = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/model/instance/instancereward/EvergaleCanyonReward.java"));
+		assertFalse(reward.contains("instanceTime"));
+		assertFalse(reward.contains("capPoints"));
+
+		for (String quest : new String[] {
+			"_13962Legendary_Black_Market_Trader", "_23962Rumors_About_The_Black_Market_Trader"
+		}) {
+			String source = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/quest/handlers/evergale_canyon/" + quest + ".java"));
+			for (String npcId : new String[] { "835385", "835447", "835474", "835476", "835478", "835480" }) {
+				assertTrue(source.contains(npcId), quest + ':' + npcId);
+			}
+		}
+	}
+
 	private static String worldConditions(String definitions, int worldId) {
 		int start = definitions.indexOf("<world id=\"" + worldId + "\"");
 		int end = definitions.indexOf("</world>", start);
@@ -147,5 +220,9 @@ class BattlefieldInstanceMigrationTest {
 	private static String handler(String name) throws Exception {
 		return Files.readString(Path.of(
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + name + ".java"));
+	}
+
+	private static int occurrences(String value, String needle) {
+		return (value.length() - value.replace(needle, "").length()) / needle.length();
 	}
 }

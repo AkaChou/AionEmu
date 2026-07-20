@@ -5,6 +5,9 @@ import com.aionemu.gameserver.dataholders.RetailAiData;
 import com.aionemu.gameserver.dataholders.RetailAiData.Operation;
 import com.aionemu.gameserver.dataholders.RetailAiData.Pattern;
 import com.aionemu.gameserver.dataholders.RetailAiData.Rule;
+import com.aionemu.gameserver.ai.AggressiveNpcAI2;
+import com.aionemu.gameserver.ai.DummyAI2;
+import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -28,6 +31,22 @@ class AI2EngineRetailSelectionTest {
 				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
 				Map.of(), Map.of(), Map.of());
 			assertEquals("retail_pattern", AI2Engine.selectNpcAi("general", 200000, null));
+		} finally {
+			DataManager.RETAIL_AI_DATA = previous;
+		}
+	}
+
+	@Test
+	void replacesRemovedRetailFallbackWithRegisteredGenericAi() {
+		var previous = DataManager.RETAIL_AI_DATA;
+		try {
+			DataManager.RETAIL_AI_DATA = null;
+			AI2Engine engine = new AI2Engine();
+			engine.registerAI(GeneralNpcAI2.class);
+			engine.registerAI(AggressiveNpcAI2.class);
+			engine.registerAI(DummyAI2.class);
+
+			assertEquals("general", engine.selectRegisteredNpcAi("hyperion", null));
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
 		}

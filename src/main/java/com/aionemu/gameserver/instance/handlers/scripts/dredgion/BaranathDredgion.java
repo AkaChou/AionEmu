@@ -674,7 +674,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 				}
 				onExitInstance(player);
 			}
-			GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+			GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance);
 		});
 	}
 

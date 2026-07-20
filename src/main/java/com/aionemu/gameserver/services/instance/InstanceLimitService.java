@@ -16,6 +16,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerInstanceLimit;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_INFO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.WorldMapInstance;
 
 public final class InstanceLimitService {
 	static final ZoneId RETAIL_ZONE = ZoneId.of("Asia/Shanghai");
@@ -85,6 +86,38 @@ public final class InstanceLimitService {
 			limit.setUsed(limit.getUsed() + 1);
 			if (limit.getResetAt() == 0) {
 				limit.setResetAt(nextReset(cooldown, now));
+			}
+		}
+		sendUpdate(player, worldId);
+		return true;
+	}
+
+	static boolean reserveMatch(WorldMapInstance instance, Player player, int teamId, byte side) {
+		int worldId = instance.getMapId();
+		Row cooldown = cooldown(player, worldId);
+		int key = limitKey(worldId);
+		if (cooldown == null || key == 0 || cooldown.intValue("maxcount", 0) == 0) {
+			DynamicInstanceManager.reserveMatchMember(instance, player, teamId, side, null);
+			return true;
+		}
+		PlayerInstanceLimit limit = player.getInstanceLimits().getOrCreate(key);
+		synchronized (limit) {
+			long now = System.currentTimeMillis();
+			refresh(limit, cooldown, now);
+			int totalMax = cooldown.requiredInt("maxcount") + limit.getBonusAvailable()
+					+ purchasedEntries(cooldown, limit);
+			if (limit.getUsed() >= totalMax) {
+				return false;
+			}
+			limit.setUsed(limit.getUsed() + 1);
+			if (limit.getResetAt() == 0) {
+				limit.setResetAt(nextReset(cooldown, now));
+			}
+			try {
+				DynamicInstanceManager.reserveMatchMember(instance, player, teamId, side, limit);
+			} catch (RuntimeException | Error e) {
+				limit.setUsed(limit.getUsed() - 1);
+				throw e;
 			}
 		}
 		sendUpdate(player, worldId);

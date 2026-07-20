@@ -4129,7 +4129,9 @@
   <skill_template skill_id="8383" name="기절 효과" nameId="574733" name_desc="AS_SignetBurst_G1_AddEffect" stack="SKILL_AS_SignetBurst_G1_AddEffect" skill_group_name="AS_SignetBurst_G1_AddEffect" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="0" activation="PROVOKED" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="NONE">
     <group_ref id="SG_95BEDA56FBD5148F" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_9A4952DD4B23C614" />
+    <effects>
+      <stun duration1="0" duration2="3000" randomtime="0" effectid="20000" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="500" preeffect_prob="100" critprobmod2="100" critadddmg2="300" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
+    </effects>
     <retail>
       <f i="5" v="0" />
       <f i="223" v="2" />
@@ -13083,7 +13085,7 @@
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="LIGHT" value="25" delta="0" percent="true" maxdamage="1000000" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="LIGHT" value="25" delta="0" percent="true" maxdamage="1000000" />
       <spellatk duration1="0" duration2="15000" randomtime="0" effectid="1087002" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="LIGHT" checktime="3000" value="850" delta="0" mrresist="false" />
       <provoker duration1="0" duration2="15000" randomtime="0" effectid="1087003" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="LIGHT" skill_id="8703" provoke_target="OPPONENT" delta="0" value="55" hittype="NMLATK" hittypeprob2="1000" condrace="TRICODARK" />
       <search duration1="0" duration2="15000" randomtime="0" effectid="166" e="4" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" state="SEARCH10" />

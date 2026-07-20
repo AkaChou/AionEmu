@@ -25,7 +25,6 @@ import com.aionemu.gameserver.ai.RetailPatternAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
@@ -35,7 +34,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
-import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -174,21 +172,6 @@ public class NpcController extends CreatureController<Npc> {
 		if (owner.getSpawn().getState() != 0) {
 			owner.setState(owner.getSpawn().getState());
 		}
-
-		if (shouldCorrectGroundSpawnHeight(GeoDataConfig.GEO_ENABLE, GeoDataConfig.GEO_NPC_MOVE, owner.isFlying(),
-				owner.getNpcType())) {
-			float z = GameWorldServices.geoService().getZ(owner.getWorldId(), owner.getX(), owner.getY(), owner.getZ(), 100,
-					owner.getInstanceId());
-			owner.getPosition().setZ(z);
-			owner.getSpawn().setZ(z);
-		}
-		
-	}
-
-	static boolean shouldCorrectGroundSpawnHeight(boolean geoEnabled, boolean npcMoveEnabled, boolean flying,
-			NpcType npcType) {
-		return geoEnabled && npcMoveEnabled && !flying
-				&& (npcType == NpcType.ATTACKABLE || npcType == NpcType.AGGRESSIVE);
 	}
 
 	/**
@@ -267,7 +250,11 @@ public class NpcController extends CreatureController<Npc> {
 				this.doReward();
 			}
 			RetailConditionSpawnEngine.onDie(owner);
-			owner.getPosition().getWorldMapInstance().getInstanceHandler().onDie(owner);
+			try {
+				owner.getPosition().getWorldMapInstance().getInstanceHandler().onDie(owner);
+			} finally {
+				RetailConditionSpawnEngine.consumeConditionSpawnDeath(owner);
+			}
 			owner.getAi2().onCreatureEvent(AIEventType.DIED, lastAttacker);
 			owner.getAi2().onGeneralEvent(AIEventType.DIED);
 		} finally { // always make sure npc is scheduled to respawn
@@ -434,7 +421,9 @@ public class NpcController extends CreatureController<Npc> {
 								kinahCount = 1000;
 							}
 							break;
+						case 210050000: // Inggison.
 						case 210130000: // Inggison [Master Server].
+						case 220070000: // Gelkmaros.
 						case 220140000: // Gelkmaros [Master Server].
 							if (player.getLevel() < getOwner().getLevel() + 5) {
 								kinahCount = Rnd.get(100, 3500) * player.getLevel();

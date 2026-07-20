@@ -1813,7 +1813,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2582" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_1_G1" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_EathiumBeam1">
-    <group_ref id="SG_FFAC550DEF93A29F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="9" revision_distance="2" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <group_ref id="SG_65158C3DC7EE3932" />
     <group_ref id="SG_9D272F513996D3ED" />
     <effects>
@@ -1839,7 +1839,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2583" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_2_G1" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_C6CC70B7FA5D7D2D" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="103" delta="-3" />
       <riderobot />
@@ -1871,7 +1871,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2584" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_3_G1" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DE736668A197AB2F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="134" delta="-4" />
       <riderobot />
@@ -1903,7 +1903,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2585" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_1_G2" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_EathiumBeam2">
-    <group_ref id="SG_FFAC550DEF93A29F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="9" revision_distance="2" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="97" delta="-2" />
       <riderobot />
@@ -1935,7 +1935,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2586" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_2_G2" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_C6CC70B7FA5D7D2D" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="110" delta="-3" />
       <riderobot />
@@ -1967,7 +1967,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2587" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_3_G2" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DE736668A197AB2F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="141" delta="-4" />
       <riderobot />
@@ -1999,7 +1999,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2588" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_1_G3" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_EathiumBeam3">
-    <group_ref id="SG_FFAC550DEF93A29F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="9" revision_distance="2" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="104" delta="-3" />
       <riderobot />
@@ -2031,7 +2031,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2589" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_2_G3" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_C6CC70B7FA5D7D2D" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="116" delta="-3" />
       <riderobot />
@@ -2063,7 +2063,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2590" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_3_G3" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DE736668A197AB2F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="147" delta="-4" />
       <riderobot />
@@ -2095,7 +2095,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2591" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_1_G4" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_EathiumBeam4">
-    <group_ref id="SG_FFAC550DEF93A29F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="9" revision_distance="2" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="113" delta="-3" />
       <riderobot />
@@ -2127,7 +2127,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2592" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_2_G4" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_C6CC70B7FA5D7D2D" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="123" delta="-3" />
       <riderobot />
@@ -2159,7 +2159,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2593" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_3_G4" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DE736668A197AB2F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="155" delta="-4" />
       <riderobot />
@@ -2191,7 +2191,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2594" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_1_G5" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_EathiumBeam5">
-    <group_ref id="SG_FFAC550DEF93A29F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="9" revision_distance="2" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="120" delta="-3" />
       <riderobot />
@@ -2223,7 +2223,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2595" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_2_G5" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_C6CC70B7FA5D7D2D" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <group_ref id="SG_068DB4D52854694D" />
     <group_ref id="SG_9D272F513996D3ED" />
     <effects>
@@ -2249,7 +2249,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2596" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_3_G5" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DE736668A197AB2F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="166" delta="-4" />
       <riderobot />
@@ -2281,7 +2281,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2597" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_1_G6" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="6" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_EathiumBeam6">
-    <group_ref id="SG_FFAC550DEF93A29F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="9" revision_distance="2" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <group_ref id="SG_068DB4D52854694D" />
     <group_ref id="SG_9D272F513996D3ED" />
     <effects>
@@ -2307,7 +2307,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2598" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_2_G6" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="6" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_C6CC70B7FA5D7D2D" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="141" delta="-4" />
       <riderobot />
@@ -2339,7 +2339,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2599" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_3_G6" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="6" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DE736668A197AB2F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="179" delta="-5" />
       <riderobot />
@@ -2371,7 +2371,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2600" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_1_G7" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="7" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_EathiumBeam7">
-    <group_ref id="SG_FFAC550DEF93A29F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="9" revision_distance="2" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="145" delta="-4" />
       <riderobot />
@@ -2403,7 +2403,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2601" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_2_G7" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="7" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_C6CC70B7FA5D7D2D" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="155" delta="-4" />
       <riderobot />
@@ -2435,7 +2435,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2602" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_3_G7" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="7" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DE736668A197AB2F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="186" delta="-5" />
       <riderobot />
@@ -2467,7 +2467,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2603" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_1_G8" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="8" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_EathiumBeam8">
-    <group_ref id="SG_FFAC550DEF93A29F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="9" revision_distance="2" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="156" delta="-4" />
       <riderobot />
@@ -2499,7 +2499,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2604" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_2_G8" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="8" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_C6CC70B7FA5D7D2D" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="173" delta="-5" />
       <riderobot />
@@ -2531,7 +2531,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2605" name="이디움 광선" nameId="4573633" name_desc="RI_EathiumBeam_3_G8" stack="SKILL_RI_EathiumBeam" skill_group_name="RI_EathiumBeam" delayId="1735" lvl="8" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DE736668A197AB2F" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="20" effective_width="6" effective_altitude="10" />
     <startconditions>
       <mp value="197" delta="-5" />
       <riderobot />
@@ -3611,7 +3611,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2642" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_1_G1" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_FlameThrow1">
-    <group_ref id="SG_16BCDD4F25E3B66B" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="71" delta="-2" />
       <riderobot />
@@ -3644,7 +3644,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2643" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_2_G1" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_77C0257E7EB9E8E8" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="4" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="85" delta="-2" />
       <riderobot />
@@ -3694,7 +3694,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2644" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_3_G1" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FAB7AF9B8DE883C2" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="100" delta="-3" />
       <riderobot />
@@ -3744,7 +3744,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2645" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_1_G2" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_FlameThrow2">
-    <group_ref id="SG_16BCDD4F25E3B66B" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="75" delta="-2" />
       <riderobot />
@@ -3777,7 +3777,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2646" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_2_G2" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_77C0257E7EB9E8E8" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="4" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_65158C3DC7EE3932" />
     <group_ref id="SG_9D272F513996D3ED" />
     <effects>
@@ -3821,7 +3821,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2647" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_3_G2" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FAB7AF9B8DE883C2" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="105" delta="-3" />
       <riderobot />
@@ -3871,7 +3871,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2648" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_1_G3" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_FlameThrow3">
-    <group_ref id="SG_16BCDD4F25E3B66B" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="81" delta="-2" />
       <riderobot />
@@ -3904,7 +3904,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2649" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_2_G3" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_77C0257E7EB9E8E8" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="4" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="96" delta="-2" />
       <riderobot />
@@ -3954,7 +3954,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2650" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_3_G3" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FAB7AF9B8DE883C2" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="114" delta="-3" />
       <riderobot />
@@ -4004,7 +4004,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2651" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_1_G4" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_FlameThrow4">
-    <group_ref id="SG_16BCDD4F25E3B66B" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="94" delta="-2" />
       <riderobot />
@@ -4037,7 +4037,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2652" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_2_G4" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_77C0257E7EB9E8E8" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="4" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="112" delta="-3" />
       <riderobot />
@@ -4087,7 +4087,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2653" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_3_G4" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FAB7AF9B8DE883C2" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_068DB4D52854694D" />
     <group_ref id="SG_9D272F513996D3ED" />
     <effects>
@@ -4131,7 +4131,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2654" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_1_G5" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_FlameThrow5">
-    <group_ref id="SG_16BCDD4F25E3B66B" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="101" delta="-2" />
       <riderobot />
@@ -4164,7 +4164,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2655" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_2_G5" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_77C0257E7EB9E8E8" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="4" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="120" delta="-3" />
       <riderobot />
@@ -4214,7 +4214,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2656" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_3_G5" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FAB7AF9B8DE883C2" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="142" delta="-4" />
       <riderobot />
@@ -4264,7 +4264,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2657" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_1_G6" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="6" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_FlameThrow6">
-    <group_ref id="SG_16BCDD4F25E3B66B" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="105" delta="-3" />
       <riderobot />
@@ -4297,7 +4297,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2658" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_2_G6" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="6" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_77C0257E7EB9E8E8" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="4" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="125" delta="-3" />
       <riderobot />
@@ -4347,7 +4347,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2659" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_3_G6" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="6" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FAB7AF9B8DE883C2" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="147" delta="-4" />
       <riderobot />
@@ -4397,7 +4397,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2660" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_1_G7" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="7" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_FlameThrow7">
-    <group_ref id="SG_16BCDD4F25E3B66B" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="109" delta="-3" />
       <riderobot />
@@ -4430,7 +4430,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2661" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_2_G7" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="7" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_77C0257E7EB9E8E8" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="4" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_068DB4D52854694D" />
     <group_ref id="SG_9D272F513996D3ED" />
     <effects>
@@ -4474,7 +4474,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2662" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_3_G7" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="7" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FAB7AF9B8DE883C2" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="154" delta="-4" />
       <riderobot />
@@ -4524,7 +4524,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2663" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_1_G8" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="8" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_FlameThrow8">
-    <group_ref id="SG_16BCDD4F25E3B66B" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="115" delta="-3" />
       <riderobot />
@@ -4557,7 +4557,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2664" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_2_G8" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="8" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_77C0257E7EB9E8E8" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="4" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="137" delta="-4" />
       <riderobot />
@@ -4607,7 +4607,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2665" name="이디움 채찍" nameId="4573649" name_desc="RI_FlameThrow_3_G8" stack="SKILL_RI_FlameThrow" skill_group_name="RI_FlameThrow" delayId="1741" lvl="8" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FAB7AF9B8DE883C2" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="160" delta="-4" />
       <riderobot />
@@ -12550,7 +12550,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2833" name="흡혈파" nameId="4573763" name_desc="RI_DrainingNet_G1" stack="SKILL_RI_DrainingNet" skill_group_name="RI_DrainingNet" delayId="1764" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="220" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B931E4ACF497D73F" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="56" delta="0" />
       <chain category="E_CHAINE_2TH_2" precategory="E_CHAINE_1TH_1" time="3500" />
@@ -12558,7 +12558,7 @@
     </startconditions>
     <group_ref id="SG_9AAE56CA11A3A34F" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="22" value="379" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="22" value="379" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="30" value="-30" race="TYPE_C" />
         </modifiers>
@@ -12587,7 +12587,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2834" name="흡혈파" nameId="4573763" name_desc="RI_DrainingNet_G2" stack="SKILL_RI_DrainingNet" skill_group_name="RI_DrainingNet" delayId="1764" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="220" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B931E4ACF497D73F" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="58" delta="0" />
       <chain category="E_CHAINE_2TH_2" precategory="E_CHAINE_1TH_1" time="3500" />
@@ -12595,7 +12595,7 @@
     </startconditions>
     <group_ref id="SG_9AAE56CA11A3A34F" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="24" value="411" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="24" value="411" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="32" value="-32" race="TYPE_C" />
         </modifiers>
@@ -12627,7 +12627,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2835" name="흡혈파" nameId="4573763" name_desc="RI_DrainingNet_G3" stack="SKILL_RI_DrainingNet" skill_group_name="RI_DrainingNet" delayId="1764" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="220" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B931E4ACF497D73F" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="61" delta="0" />
       <chain category="E_CHAINE_2TH_2" precategory="E_CHAINE_1TH_1" time="3500" />
@@ -12635,7 +12635,7 @@
     </startconditions>
     <group_ref id="SG_9AAE56CA11A3A34F" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="25" value="444" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="25" value="444" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="34" value="-34" race="TYPE_C" />
         </modifiers>
@@ -12667,7 +12667,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2836" name="흡혈파" nameId="4573763" name_desc="RI_DrainingNet_G4" stack="SKILL_RI_DrainingNet" skill_group_name="RI_DrainingNet" delayId="1764" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="220" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B931E4ACF497D73F" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="65" delta="0" />
       <chain category="E_CHAINE_2TH_2" precategory="E_CHAINE_1TH_1" time="3500" />
@@ -12675,7 +12675,7 @@
     </startconditions>
     <group_ref id="SG_9AAE56CA11A3A34F" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="28" value="475" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="28" value="475" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="38" value="-38" race="TYPE_C" />
         </modifiers>
@@ -12707,7 +12707,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2837" name="흡혈파" nameId="4573763" name_desc="RI_DrainingNet_G5" stack="SKILL_RI_DrainingNet" skill_group_name="RI_DrainingNet" delayId="1764" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="220" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B931E4ACF497D73F" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="3" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="72" delta="0" />
       <chain category="E_CHAINE_2TH_2" precategory="E_CHAINE_1TH_1" time="3500" />
@@ -12715,7 +12715,7 @@
     </startconditions>
     <group_ref id="SG_9AAE56CA11A3A34F" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="30" value="494" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="30" value="494" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="40" value="-40" race="TYPE_C" />
         </modifiers>
@@ -12985,7 +12985,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2849" name="광전파" nameId="4573771" name_desc="RI_EathiumNet_G1" stack="SKILL_RI_EathiumNet" skill_group_name="RI_EathiumNet" delayId="1766" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_CFF90DBA389AA451" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="301" delta="0" />
       <riderobot />
@@ -13035,7 +13035,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2850" name="광전파" nameId="4573771" name_desc="RI_EathiumNet_G2" stack="SKILL_RI_EathiumNet" skill_group_name="RI_EathiumNet" delayId="1766" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_CFF90DBA389AA451" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="342" delta="0" />
       <riderobot />
@@ -13085,7 +13085,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2851" name="광전파" nameId="4573771" name_desc="RI_EathiumNet_G3" stack="SKILL_RI_EathiumNet" skill_group_name="RI_EathiumNet" delayId="1766" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_CFF90DBA389AA451" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="375" delta="0" />
       <riderobot />
@@ -17346,7 +17346,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2967" name="STR_SKILLN_KN_TripleSnacher" nameId="0" name_desc="KN_TripleSnacher_G1" stack="SKILL_KN_TripleSnacher" skill_group_name="KN_TripleSnacher" delayId="100" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="900" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="true" target_maxcount="3" revision_distance="0" target_status="" target_distance="5" effective_angle="5" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="true" target_maxcount="3" revision_distance="0" target_status="" effective_range="5" effective_altitude="5" />
     <group_ref id="SG_F13CF199A52D1A8D" />
     <group_ref id="SG_6087797C17FD750B" />
     <effects>

@@ -17,6 +17,7 @@ public class AbyssService {
 			//// ***////
 			210020000, // Elten.
 			210040000, // Heiron.
+			210050000, // Inggison.
 			210130000, // Inggison [Master Server].
 			210060000, // Theobomos.
 			210070000, // Cygnea.
@@ -26,6 +27,7 @@ public class AbyssService {
 			220020000, // Morheim.
 			220040000, // Beluslan.
 			220050000, // Brusthonin.
+			220070000, // Gelkmaros.
 			220140000, // Gelkmaros [Master Server].
 			220080000, // Enshar.
 			220100000, // Idian Depths.
@@ -38,6 +40,7 @@ public class AbyssService {
 			400050000, // Atanatos.
 			400060000, // Disillon.
 			//// ***////
+			600010000, // Silentera Canyon.
 			600110000, // Silentera Canyon [Master Server].
 			//// 4.7////
 			600090000, // Kaldor.

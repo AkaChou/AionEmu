@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.skillengine.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,12 +14,35 @@ import java.util.concurrent.FutureTask;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
+import com.aionemu.gameserver.controllers.effect.EffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.properties.FirstTargetAttribute;
 
 class SkillCancellationTest {
+
+	@Test
+	void silenceBlocksMagicalSkillsButNotPhysicalSkills() throws Exception {
+		TestCreature caster = new ObjenesisStd().newInstance(TestCreature.class);
+		EffectController effectController = new EffectController(caster);
+		setField(effectController, "abnormals", AbnormalState.SILENCE.getId());
+		caster.setEffectController(effectController);
+
+		SkillTemplate magicalTemplate = new SkillTemplate();
+		magicalTemplate.type = SkillType.MAGICAL;
+		Skill magicalSkill = new Skill(magicalTemplate, caster, 1, caster, null);
+		magicalSkill.setFirstTargetAttribute(FirstTargetAttribute.ME);
+
+		SkillTemplate physicalTemplate = new SkillTemplate();
+		physicalTemplate.type = SkillType.PHYSICAL;
+		Skill physicalSkill = new Skill(physicalTemplate, caster, 1, caster, null);
+		physicalSkill.setFirstTargetAttribute(FirstTargetAttribute.ME);
+
+		assertFalse(magicalSkill.canUseSkill());
+		assertTrue(physicalSkill.canUseSkill());
+	}
 
 	@Test
 	void cancelledCastCannotFinishWhileTheControllerIsClearingIt() throws Exception {

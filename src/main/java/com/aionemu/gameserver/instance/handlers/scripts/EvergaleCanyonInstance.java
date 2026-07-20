@@ -1,1252 +1,690 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import org.apache.commons.lang3.mutable.MutableInt;
 
-import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.ai2.manager.WalkManager;
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.configs.main.GroupConfig;
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.RetailInstanceData.Row;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.actions.PlayerActions;
-import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
-import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.EvergaleCanyonReward;
-import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
+import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.playerreward.EvergaleCanyonPlayerReward;
-import com.aionemu.gameserver.model.items.storage.Storage;
-import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService.BattleResult;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
-import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
-import org.apache.commons.lang3.mutable.MutableInt;
-
-import java.util.*;
-import java.util.concurrent.Future;
-
-/**
- * 永风峡谷副本事件处理器。
- * Instance event handler for Evergale Canyon.
- *
- * @author Encom
- */
 
 @InstanceID(302350000)
-public class EvergaleCanyonInstance extends GeneralInstanceHandler
-{
-	/** 副本时间戳 / instance timestamp */
-	private long instanceTime;
-	/** 门映射 / door map */
-	private Map<Integer, StaticDoor> doors;
-	/** 败方倍率 / losing-group multiplier */
-		private float loosingGroupMultiplier = 1;
-	/** evergale canyon reward / evergale canyon reward */
-		protected EvergaleCanyonReward evergaleCanyonReward;
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	private boolean isInstanceDestroyed = false;
-	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
-	/** evergalecanyon 任务 / evergale canyon task */
-		private final List<Future<?>> evergaleCanyonTask = new ArrayList<Future<?>>();
-	
-	protected EvergaleCanyonPlayerReward getPlayerReward(Player player) {
-        evergaleCanyonReward.regPlayerReward(player);
-        return (EvergaleCanyonPlayerReward) evergaleCanyonReward.getPlayerReward(player.getObjectId());
-    }
-	
-    private boolean containPlayer(Integer object) {
-        return evergaleCanyonReward.containPlayer(object);
-    }
-	
-	/**
-	 * NPC 掉落表注册时处理。
-	 * Handle NPC drop-table registration.
-	 *
-	 * npc
-	 */
+public class EvergaleCanyonInstance extends GeneralInstanceHandler {
+	private static final long EXIT_MILLIS = 60_000;
+	private static final String PHASE_PREPARING = "PREPARING";
+	private static final String PHASE_BATTLE = "BATTLE";
+	private static final String PHASE_NO_ENEMY = "NO_ENEMY";
+	private static final String PHASE_FINISHED = "FINISHED";
+	private static final String STATE_PREFIX = "evergale.";
+
+	private final Set<Integer> participants = new LinkedHashSet<>();
+	private final Set<Integer> activeMembers = new LinkedHashSet<>();
+	private final int[] populationThresholds = new int[5];
+	private EvergaleCanyonReward reward;
+	private long preparationMillis;
+	private long battleMillis;
+	private long noEnemyMillis;
+	private long preparationStartedAt;
+	private long battleStartedAt;
+	private int playerKillScore;
+	private int playerDeathScore;
+	private int scoreLimitMaximum;
+	private int scoreLimitGap;
+	private int populationLevel;
+	private volatile boolean destroyed;
+
 	@Override
-    public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-        switch (npcId) {
-        }
-    }
-	
-	private void removeItems(Player player) {
-		Storage storage = player.getInventory();
-		storage.decreaseByItemId(0, storage.getItemCountByItemId(0));
-	}
-	
-	protected void startInstanceTask() {
-		instanceTime = System.currentTimeMillis();
-        evergaleCanyonReward.setInstanceStartTime();
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!evergaleCanyonReward.isRewarded()) {
-				    openFirstDoors();
-				    // 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
-				    sendMsgByRace(1401181, Race.PC_ALL, 5000);
-                    evergaleCanyonReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-                    startInstancePacket();
-                    evergaleCanyonReward.sendPacket(4, null);
-					// 传送雕像。 / Teleport Statue.
-				    sp(835273, 446.27618f, 752.14069f, 334.35410f, (byte) 0, 198, 0, 0, null);
-					// 传送雕像。 / Teleport Statue.
-				    sp(835286, 1050.0051f, 752.30511f, 334.31192f, (byte) 0, 236, 0, 0, null);
-					// 传送雕像。 / Teleport Statue.
-				    sp(835411, 719.26935f, 396.20844f, 305.75839f, (byte) 0, 253, 0, 0, null);
-				    // 传送雕像。 / Teleport Statue.
-				    sp(835412, 746.86560f, 850.73126f, 347.88959f, (byte) 0, 65, 10000, 0, null);
-				    // 传送雕像。 / Teleport Statue.
-				    sp(835413, 451.62146f, 1079.1924f, 347.28760f, (byte) 0, 55, 15000, 0, null);
-				    // 传送雕像。 / Teleport Statue.
-				    sp(835414, 1035.4257f, 1065.4717f, 350.22650f, (byte) 0, 117, 20000, 0, null);
-				}
-            }
-        }, 90000));
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-				// 添加了第 2 阶段的元素。 / An element of the 2nd stage was added.
-				sendMsgByRace(1404174, Race.PC_ALL, 0);
-				// 马霍特已出现在永恒铁砧。 / Mahot has appeared at the Eon Anvil.
-				sendMsgByRace(1404254, Race.PC_ALL, 5000);
-				// 达格隆已出现在永恒铁砧。 / Daglon has appeared at the Eternal Anvil.
-				sendMsgByRace(1404255, Race.PC_ALL, 10000);
-				// 隐秘的凯桑已出现在剩余祭坛。 / Furtive Kaisan has appeared at the remaining altar.
-				sendMsgByRace(1404275, Race.PC_ALL, 15000);
-				// 腐化的巴加图尔已出现在尤顿花园。 / Corrupt Bagatur has appeared at the Jotun Garden.
-				sendMsgByRace(1404276, Race.PC_ALL, 20000);
-				sp(246701, 330.9594f, 957.66223f, 353.8341f, (byte) 82, 5000);
-				sp(246702, 1185.338f, 957.84283f, 368.1132f, (byte) 111, 10000);
-				sp(246703, 743.7306f, 487.89166f, 305.3329f, (byte) 23, 15000);
-            }
-        }, 120000));
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-				// 腐化的巴加图尔已出现在尤顿花园。 / Corrupt Bagatur has appeared at the Jotun Garden.
-				sendMsgByRace(1404173, Race.PC_ALL, 0);
-            	sp(246704, 747.3699f, 1029.9686f, 334.3001f, (byte) 90, 0);
-            }
-        }, 480000));
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-            	if (!evergaleCanyonReward.isRewarded()) {
-					Race winnerRace = evergaleCanyonReward.getWinnerRaceByScore();
-					stopInstance(winnerRace);
-				}
-            }
-        }, 1800000));
-    }
-	
-	protected void stopInstance(Race race) {
-        stopInstanceTask();
-        evergaleCanyonReward.setWinnerRace(race);
-        evergaleCanyonReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-        reward();
-        evergaleCanyonReward.sendPacket(5, null);
-    }
-	
-	/**
-	 * 玩家进入副本时处理。
-	 * Handle a player entering the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-    public void onEnterInstance(final Player player) {
-        if (!containPlayer(player.getObjectId())) {
-            evergaleCanyonReward.regPlayerReward(player);
-        }
-        sendEnterPacket(player);
-    }
-	
-	private void sendEnterPacket(final Player player) {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * opponent
-             */
-            @Override
-            public void visit(Player opponent) {
-                if (player.getRace() != opponent.getRace()) {
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
-                    PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), opponent.getObjectId()));
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(),  player.getObjectId()));
-                } else {
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), opponent.getObjectId()));
-                    if (player.getObjectId() != opponent.getObjectId()) {
-                        PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
-                    }
-                }
-            }
-        });
-    	sendPacket(true);
-    	sendPacket(false);
-        PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
-    }
-	
-	private void startInstancePacket() {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(3, getTime(), evergaleCanyonReward, player.getObjectId(), 0, 0));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
-            }
-        });
-    }
-	
-    private void sendPacket(boolean isObjects) {
-    	if (isObjects) {
-    		instance.doOnAllPlayers(new Visitor<Player>() {
-                /**
-                 * 处理 visit。
-                 * Handle visit.
-                 *
-                 * @param player 玩家 / player
-                 */
-                @Override
-                public void visit(Player player) {
-                	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
-                }
-            });
-    	} else {
-    		instance.doOnAllPlayers(new Visitor<Player>() {
-                /**
-                 * 处理 visit。
-                 * Handle visit.
-                 *
-                 * @param player 玩家 / player
-                 */
-                @Override
-                public void visit(Player player) {
-                	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
-                }
-            });
-    	}
-    }
-	
-	/**
-	 * 副本创建时初始化逻辑。
-	 * Initialize logic when the instance is created.
-	 *
-	 * @param instance 世界地图实例 / world-map instance
-	 */
-	@Override
-    public void onInstanceCreate(WorldMapInstance instance) {
-        super.onInstanceCreate(instance);
-		doors = instance.getDoors();
-		evergaleCanyonReward = new EvergaleCanyonReward(mapId, instanceId, instance);
-        evergaleCanyonReward.setInstanceScoreType(InstanceScoreType.PREPARING);
-		startInstanceTask();
-		switch (Rnd.get(1, 2)) {
-		    case 1:
-				spawn(835355, 725.68774f, 575.82648f, 321.44675f, (byte) 0, 105); //Firmly Closed Door.
-				spawn(835356, 772.28290f, 614.70581f, 321.89883f, (byte) 0, 389); //Firmly Closed Door.
-			break;
-			case 2:
-				spawn(835356, 725.68774f, 575.82648f, 321.44675f, (byte) 0, 105); //Firmly Closed Door.
-				spawn(835355, 772.28290f, 614.70581f, 321.89883f, (byte) 0, 389); //Firmly Closed Door.
-			break;
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		Row battleground = battleground();
+		preparationMillis = battleground.requiredInt("wait_time") * 1_000L;
+		battleMillis = battleground.requiredInt("limit_time") * 1_000L;
+		noEnemyMillis = battleground.requiredInt("wait_time_after_noenemy") * 1_000L;
+		playerKillScore = battleground.requiredInt("pc_kill_score");
+		playerDeathScore = battleground.requiredInt("pc_die_score");
+		scoreLimitMaximum = battleground.requiredInt("score_limit_max");
+		scoreLimitGap = battleground.requiredInt("score_limit_gap");
+		for (int i = 0; i < populationThresholds.length; i++) {
+			populationThresholds[i] = battleground.requiredInt("condition_reward_cond_0" + (i + 1));
 		}
-    }
-	
-	protected void reward() {
-        int elyosPoints = getPointsByRace(Race.ELYOS).intValue();
-        int asmodianPoints = getPointsByRace(Race.ASMODIANS).intValue();
-        int minimumTeamSize = (int) Math.min(
-                evergaleCanyonReward.getInstanceRewards().stream().filter(r -> r.getRace() == Race.ELYOS).count(),
-                evergaleCanyonReward.getInstanceRewards().stream().filter(r -> r.getRace() == Race.ASMODIANS).count());
-        long endedAt = System.currentTimeMillis();
-        for (Player player: instance.getPlayersInside()) {
-            if (PlayerActions.isAlreadyDead(player)) {
+		reward = new EvergaleCanyonReward(mapId, instanceId);
+		restoreReward(battleground.requiredInt("base_score"));
+		restoreActiveMembers();
+		populationLevel = runtimeState().getInt(STATE_PREFIX + "population.level", 0);
+		setPopulationVariable(populationLevel);
+		preparationStartedAt = runtimeState().getLong(STATE_PREFIX + "preparation.started", 0);
+		battleStartedAt = runtimeState().getLong(STATE_PREFIX + "battle.started", 0);
+		restorePhase();
+	}
+
+	private Row battleground() {
+		int spawnPage = instance.getDynamicInstance() == null ? 0 : instance.getDynamicInstance().getSpawnPage();
+		if (spawnPage != 1 && spawnPage != 2) {
+			throw new IllegalStateException("Missing Evergale battleground spawn page 1 or 2: " + spawnPage);
+		}
+		return DataManager.RETAIL_INSTANCE_DATA.rewards("instant_dungeon_battleground").stream()
+			.filter(row -> row.requiredInt("world_id") == mapId)
+			.filter(row -> row.requiredInt("spawn_page") == spawnPage)
+			.findFirst().orElseThrow(() -> new IllegalStateException(
+				"Missing Evergale battleground data for spawn page " + spawnPage));
+	}
+
+	private void restorePhase() {
+		String phase = phase();
+		switch (phase) {
+			case PHASE_FINISHED -> {
+				reward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
+				reward.setWinnerRace(winnerRace());
+				long deadline = runtimeState().getLong(STATE_PREFIX + "exit.deadline", 0);
+				if (deadline == 0) {
+					deadline = System.currentTimeMillis() + EXIT_MILLIS;
+					runtimeState().put(STATE_PREFIX + "exit.deadline", deadline);
+				}
+				scheduleDeadline("exit", deadline, this::exitPlayers);
+			}
+			case PHASE_NO_ENEMY -> {
+				reward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+				openFirstDoors();
+				long deadline = runtimeState().getLong(STATE_PREFIX + "noEnemy.deadline", 0);
+				if (deadline == 0) {
+					deadline = System.currentTimeMillis() + noEnemyMillis;
+					runtimeState().put(STATE_PREFIX + "noEnemy.deadline", deadline);
+				}
+				scheduleDeadline("noEnemy", deadline, this::finishBattle);
+			}
+			case PHASE_BATTLE -> {
+				reward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+				openFirstDoors();
+				scheduleDeadline("battle", restoreDeadline("battle", battleStartedAt, battleMillis), this::finishBattle);
+			}
+			case PHASE_PREPARING -> {
+				reward.setInstanceScoreType(InstanceScoreType.PREPARING);
+				if (preparationStartedAt > 0) {
+					scheduleDeadline("preparation",
+						restoreDeadline("preparation", preparationStartedAt, preparationMillis), this::startBattle);
+				}
+			}
+			default -> throw new IllegalStateException("Unknown Evergale phase " + phase);
+		}
+	}
+
+	private long restoreDeadline(String phase, long startedAt, long duration) {
+		String key = STATE_PREFIX + phase + ".deadline";
+		long deadline = runtimeState().getLong(key, 0);
+		if (deadline == 0) {
+			deadline = (startedAt > 0 ? startedAt : System.currentTimeMillis()) + duration;
+			runtimeState().put(key, deadline);
+		}
+		return deadline;
+	}
+
+	@Override
+	public synchronized void onEnterInstance(Player player) {
+		boolean knownParticipant = reward.containPlayer(player.getObjectId());
+		if ((PHASE_NO_ENEMY.equals(phase()) || PHASE_FINISHED.equals(phase())) && !knownParticipant) {
+			onExitInstance(player);
+			return;
+		}
+		EvergaleCanyonPlayerReward playerReward = registerPlayer(player);
+		activeMembers.add(player.getObjectId());
+		persistActiveMembers();
+		updatePopulationLevel();
+		playerReward.updateBonusTime();
+		persistPlayer(playerReward);
+		startPreparation();
+		sendEnterPacket(player);
+	}
+
+	private synchronized void startPreparation() {
+		if (preparationStartedAt != 0 || destroyed || reward.isRewarded()) {
+			return;
+		}
+		preparationStartedAt = System.currentTimeMillis();
+		long deadline = preparationStartedAt + preparationMillis;
+		runtimeState().put(STATE_PREFIX + "preparation.started", preparationStartedAt);
+		runtimeState().put(STATE_PREFIX + "preparation.deadline", deadline);
+		runtimeState().put(STATE_PREFIX + "phase", PHASE_PREPARING);
+		scheduleDeadline("preparation", deadline, this::startBattle);
+	}
+
+	private synchronized void startBattle() {
+		if (battleStartedAt != 0 || destroyed || reward.isRewarded()) {
+			return;
+		}
+		battleStartedAt = Math.min(System.currentTimeMillis(),
+			runtimeState().getLong(STATE_PREFIX + "preparation.deadline", System.currentTimeMillis()));
+		long deadline = battleStartedAt + battleMillis;
+		reward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+		runtimeState().put(STATE_PREFIX + "battle.started", battleStartedAt);
+		runtimeState().put(STATE_PREFIX + "battle.deadline", deadline);
+		runtimeState().put(STATE_PREFIX + "phase", PHASE_BATTLE);
+		openFirstDoors();
+		sendMsgByRace(1401181, Race.PC_ALL);
+		startInstancePacket();
+		broadcastScoreTables();
+		scheduleDeadline("battle", deadline, this::finishBattle);
+		checkNoEnemy();
+	}
+
+	private synchronized void finishBattle() {
+		if (destroyed || reward.isRewarded()) {
+			return;
+		}
+		long endedAt = runtimeState().getLong(STATE_PREFIX + "battle.ended", 0);
+		if (endedAt == 0) {
+			long now = System.currentTimeMillis();
+			String deadlineKey = PHASE_NO_ENEMY.equals(phase()) ? "noEnemy.deadline" : "battle.deadline";
+			long deadline = runtimeState().getLong(STATE_PREFIX + deadlineKey, 0);
+			endedAt = deadline > 0 && deadline <= now ? deadline : now;
+			runtimeState().put(STATE_PREFIX + "battle.ended", endedAt);
+		}
+		Race winner = winnerRace();
+		reward.setWinnerRace(winner);
+		reward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
+		runtimeState().put(STATE_PREFIX + "winner", winner.getRaceId());
+		settlePlayers(endedAt, winner);
+		broadcastScoreTables();
+		long exitDeadline = runtimeState().getLong(STATE_PREFIX + "exit.deadline", 0);
+		if (exitDeadline == 0) {
+			exitDeadline = endedAt + EXIT_MILLIS;
+			runtimeState().put(STATE_PREFIX + "exit.deadline", exitDeadline);
+		}
+		runtimeState().put(STATE_PREFIX + "phase", PHASE_FINISHED);
+		scheduleDeadline("exit", exitDeadline, this::exitPlayers);
+	}
+
+	private void settlePlayers(long endedAt, Race winner) {
+		int elyosPoints = getPointsByRace(Race.ELYOS).intValue();
+		int asmodianPoints = getPointsByRace(Race.ASMODIANS).intValue();
+		int populationThreshold = populationThresholdForLevel(populationLevel, populationThresholds);
+		for (EvergaleCanyonPlayerReward playerReward : List.copyOf(reward.getInstanceRewards())) {
+			int teamScore = playerReward.getRace() == Race.ELYOS ? elyosPoints : asmodianPoints;
+			int opposingScore = playerReward.getRace() == Race.ELYOS ? asmodianPoints : elyosPoints;
+			BattleResult result = winner == Race.PC_ALL ? BattleResult.DRAW
+				: playerReward.getRace() == winner ? BattleResult.WIN : BattleResult.LOSE;
+			double bonusRate = InstanceSettlementService.battlegroundBonusRate(
+				playerReward.calculateParticipation(battleStartedAt, endedAt), teamScore, opposingScore);
+			RewardPlan base = InstanceSettlementService.battlegroundPlan(instance, result, 0, teamScore, 0,
+				populationThreshold);
+			RewardPlan total = InstanceSettlementService.battlegroundPlan(instance, result, bonusRate, teamScore, 0,
+				populationThreshold);
+			InstanceSettlementService.applyBattlegroundDisplay(playerReward, base, total);
+			Player player = instance.getPlayer(playerReward.getOwner());
+			if (player == null) {
+				InstanceSettlementService.queueBattleground(instance, playerReward.getOwner(), result, total);
+				continue;
+			}
+			if (PlayerActions.isAlreadyDead(player)) {
 				PlayerReviveService.duelRevive(player);
 			}
-			EvergaleCanyonPlayerReward playerReward = evergaleCanyonReward.getPlayerReward(player.getObjectId());
-            int teamScore = player.getRace() == Race.ELYOS ? elyosPoints : asmodianPoints;
-            int opposingScore = player.getRace() == Race.ELYOS ? asmodianPoints : elyosPoints;
-            BattleResult result = InstanceSettlementService.battlegroundResult(teamScore, opposingScore);
-            double bonusRate = InstanceSettlementService.battlegroundBonusRate(
-                    playerReward.calculateParticipation(instanceTime, endedAt), teamScore, opposingScore);
-            RewardPlan base = InstanceSettlementService.battlegroundPlan(instance, result, 0, teamScore, 0,
-                    minimumTeamSize);
-            RewardPlan total = InstanceSettlementService.battlegroundPlan(instance, result, bonusRate, teamScore, 0,
-                    minimumTeamSize);
-            InstanceSettlementService.applyBattlegroundDisplay(playerReward, base, total);
-            InstanceSettlementService.settleBattleground(instance, player, result, bonusRate, teamScore, 0,
-                    minimumTeamSize);
-        } for (Npc npc: instance.getNpcs()) {
-			npc.getController().onDelete();
-		}
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed) {
-					for (Player player : instance.getPlayersInside()) {
-						onExitInstance(player);
-					}
-					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
-				}
-			}
-		}, 60000);
-    }
-	
-	private int getTime() {
-        long result = System.currentTimeMillis() - instanceTime;
-        if (result < 90000) {
-            return (int) (90000 - result);
-        } else if (result < 1800000) { //30-Mins
-            return (int) (1800000 - (result - 90000));
-        }
-        return 0;
-    }
-	
-    /**
-     * 处理玩家复活事件。
-     * Handle a player revive event.
-     *
-     * 玩家 / player
-     * result
-     */
-    @Override
-    public boolean onReviveEvent(Player player) {
-        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
-        PlayerReviveService.revive(player, 100, 100, false, 0);
-        player.getGameStats().updateStatsAndSpeedVisually();
-		evergaleCanyonReward.portToPosition(player);
-        return true;
-    }
-	
-	/**
-	 * 处理死亡事件。
-	 * Handle a death event.
-	 *
-	 * 玩家 / player
-	 * @param lastAttacker 最后攻击者 / last attacker
-	 * result
-	 */
-	@Override
-    public boolean onDie(Player player, Creature lastAttacker) {
-		EvergaleCanyonPlayerReward ownerReward = evergaleCanyonReward.getPlayerReward(player.getObjectId());
-		ownerReward.endBoostMoraleEffect(player);
-		ownerReward.applyBoostMoraleEffect(player);
-        int points = 10;
-        if (lastAttacker instanceof Player) {
-            if (lastAttacker.getRace() != player.getRace()) {
-                InstancePlayerReward playerReward = evergaleCanyonReward.getPlayerReward(player.getObjectId());
-				if (getPointsByRace(lastAttacker.getRace()).compareTo(getPointsByRace(player.getRace())) < 0) {
-                    points *= loosingGroupMultiplier;
-                } else if (loosingGroupMultiplier == 10 || playerReward.getPoints() == 0) {
-                    points = 0;
-                }
-				ItemService.addItem(player, 186000470, 10); //战争点数。 / War Points.
-                updateScore((Player) lastAttacker, player, points, true);
-            }
-        }
-        updateScore(player, player, -points, false);
-        return true;
-    }
-	
-	private MutableInt getPvpKillsByRace(Race race) {
-        return evergaleCanyonReward.getPvpKillsByRace(race);
-    }
-	
-    private MutableInt getPointsByRace(Race race) {
-        return evergaleCanyonReward.getPointsByRace(race);
-    }
-	
-    private void addPointsByRace(Race race, int points) {
-        evergaleCanyonReward.addPointsByRace(race, points);
-    }
-	
-    private void addPvpKillsByRace(Race race, int points) {
-        evergaleCanyonReward.addPvpKillsByRace(race, points);
-    }
-	
-    private void addPointToPlayer(Player player, int points) {
-        evergaleCanyonReward.getPlayerReward(player.getObjectId()).addPoints(points);
-    }
-	
-    private void addPvPKillToPlayer(Player player) {
-        evergaleCanyonReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
-    }
-	
-	protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
-        if (points == 0) {
-            return;
-        }
-        addPointsByRace(player.getRace(), points);
-        List<Player> playersToGainScore = new ArrayList<Player>();
-        if (target != null && player.isInGroup2()) {
-            for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
-                if (member.getLifeStats().isAlreadyDead()) {
-                    continue;
-                } if (MathUtil.isIn3dRange(member, target, GroupConfig.GROUP_MAX_DISTANCE)) {
-                    playersToGainScore.add(member);
-                }
-            }
-        } else {
-            playersToGainScore.add(player);
-        } for (Player playerToGainScore : playersToGainScore) {
-            addPointToPlayer(playerToGainScore, points / playersToGainScore.size());
-            if (target instanceof Npc) {
-                PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(((Npc) target).getObjectTemplate().getNameId() * 2 + 1), points));
-            } else if (target instanceof Player) {
-                PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, target.getName(), points));
-            }
-        }
-        int pointDifference = getPointsByRace(Race.ASMODIANS).intValue() - (getPointsByRace(Race.ELYOS)).intValue();
-        if (pointDifference < 0) {
-            pointDifference *= -1;
-        } if (pointDifference >= 3000) {
-            loosingGroupMultiplier = 10;
-        } else if (pointDifference >= 1000) {
-            loosingGroupMultiplier = 1.5f;
-        } else {
-            loosingGroupMultiplier = 1;
-        } if (pvpKill && points > 0) {
-            addPvpKillsByRace(player.getRace(), 1);
-            addPvPKillToPlayer(player);
-        }
-        evergaleCanyonReward.sendPacket(11, player.getObjectId());
-    }
-	
-	/**
-	 * 处理死亡事件。
-	 * Handle a death event.
-	 *
-	 * npc
-	 */
-	@Override
-	public void onDie(Npc npc) {
-		int point = 0;
-		Player mostPlayerDamage = npc.getAggroList().getMostPlayerDamage();
-        if (mostPlayerDamage == null) {
-            return;
-        }
-		Race race = mostPlayerDamage.getRace();
-		switch (npc.getNpcId()) {
-			case 246701: //Mahot.
-				if (race.equals(Race.ELYOS)) {
-				   // 魔族消灭了马霍特。 / The Asmodians eliminated Mahot.
-				   sendMsgByRace(1404186, Race.ELYOS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
-				} else if (race.equals(Race.ASMODIANS)) {
-				   // 天族消灭了马霍特。 / The Elyos eliminated Mahot.
-				   sendMsgByRace(1404185, Race.ASMODIANS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
-				}
-				// “马霍特”被击杀后每 3 分钟再出现。 / "Mahot" appears every 3min after being killed.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-				        // “马霍特”已出现在剩余祭坛。 / "Mahot" has appeared at the remaining altar.
-						sendMsgByRace(1404413, Race.PC_ALL, 0);
-						spawn(246701, 330.9594f, 957.66223f, 353.8341f, (byte) 82); //Mahot.
-					}
-				}, 180000);
-			break;
-			case 246702: //Daglon.
-				if (race.equals(Race.ELYOS)) {
-				   // 魔族消灭了达格隆。 / The Asmodians eliminated Daglon.
-				   sendMsgByRace(1404188, Race.ELYOS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
-				} else if (race.equals(Race.ASMODIANS)) {
-				   // 天族消灭了达格隆。 / The Elyos eliminated Daglon.
-				   sendMsgByRace(1404187, Race.ASMODIANS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
-				}
-				// “达格隆”被击杀后每 3 分钟再出现。 / "Daglon" appears every 3min after being killed.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						// “达格隆”已出现在剩余祭坛。 / "Daglon" has appeared at the remaining altar.
-						sendMsgByRace(1404414, Race.PC_ALL, 0);
-						spawn(246702, 1185.338f, 957.84283f, 368.1132f, (byte) 111); //Daglon.
-					}
-				}, 180000);
-			break;
-			case 246703: //Furtive Kaisan.
-				if (race.equals(Race.ELYOS)) {
-				   // 魔族消灭了隐秘的凯桑。 / The Asmodians eliminated Furtive Kaisan.
-				   sendMsgByRace(1404190, Race.ELYOS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
-				} else if (race.equals(Race.ASMODIANS)) {
-				   // 天族消灭了隐秘的凯桑。 / The Elyos eliminated Furtive Kaisan.
-				   sendMsgByRace(1404189, Race.ASMODIANS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
-				}
-				// “隐秘的凯桑”被击杀后每 3 分钟再出现。 / "Furtive Kaisan" appears every 3min after being killed.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						// “隐秘的凯桑”已出现在剩余祭坛。 / "Furtive Kaisan" has appeared at the remaining altar.
-						sendMsgByRace(1404172, Race.PC_ALL, 0);
-						spawn(246703, 743.7306f, 487.89166f, 305.3329f, (byte) 23); //Furtive Kaisan.
-					}
-				}, 180000);
-			break;
-			case 246704: //Corrupt Bagatur.
-				if (race.equals(Race.ELYOS)) {
-				   // 魔族消灭了腐化的凯桑。 / The Asmodians eliminated Corrupt Kaisan.
-				   sendMsgByRace(1404192, Race.ELYOS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
-				} else if (race.equals(Race.ASMODIANS)) {
-				   // 天族消灭了腐化的凯桑。 / The Elyos eliminated Corrupt Kaisan.
-				   sendMsgByRace(1404191, Race.ASMODIANS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
-				}
-				// “腐化的巴加图尔”被击杀后每 8 分钟再出现。 / "Corrupt Bagatur" appears every 8min after being killed.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						// “腐化的巴加图尔”已出现在尤顿花园。 / "Corrupt Bagatur" has appeared at the Jotun Garden.
-						sendMsgByRace(1404173, Race.PC_ALL, 0);
-						spawn(246704, 747.3699f, 1029.9686f, 334.3001f, (byte) 90); //Corrupt Bagatur.
-					}
-				}, 480000);
-			break;
-			case 246709: //Archon Detachment Captain.
-				point = 2000;
-				// 天族消灭了执政官分遣队队长。 / The Elyos have eliminated the Archon Detachment Captain.
-				sendMsgByRace(1404209, Race.ASMODIANS, 0);
-				// 天族消灭了执政官分遣队队长。 / The Elyos have eliminated the Archon Detachment Captain.
-				sendMsgByRace(1404365, Race.ASMODIANS, 10000);
-				ItemService.addItem(mostPlayerDamage, 186000470, 500); //战争点数。 / War Points.
-			break;
-			case 246714: //Guardian Detachment Captain.
-				point = 2000;
-				// 魔族消灭了守护者分遣队队长。 / The Asmodians have eliminated the Guardian Detachment Captain.
-				sendMsgByRace(1404210, Race.ELYOS, 0);
-				// 魔族消灭了守护者分遣队队长。 / The Asmodians have eliminated the Guardian Detachment Captain.
-				sendMsgByRace(1404366, Race.ELYOS, 10000);
-				ItemService.addItem(mostPlayerDamage, 186000470, 500); //战争点数。 / War Points.
-			break;
-        }
-		updateScore(mostPlayerDamage, npc, point, false);
-    }
-	
-	/**
-	 * 玩家对 NPC 使用物品完成时处理。
-	 * Handle item-use finish on an NPC.
-	 *
-	 * 玩家 / player
-	 * npc
-	 */
-	@Override
-    public void handleUseItemFinish(Player player, Npc npc) {
-		int point = 0;
-		switch (npc.getNpcId()) {
-		   /**
-	 * Pure Neutral
-	 */
-			case 835210: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    // 天族在起源神殿占据了碎片。 / The Elyos took possession of the fragment at the Temple of Origin.
-						sendMsgByRace(1404179, Race.PC_ALL, 2000);
-					    sp(835304, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
-						sp(835455, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag]
-						sp(835238, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v03_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Temple of Origin.
-						sendMsgByRace(1404180, Race.PC_ALL, 2000);
-					    sp(835309, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
-						sp(835456, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag]
-						sp(835239, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v03_Flag_D.
-					break;
-				}
-			break;
-			case 835211: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    // 天族在北洞占据了碎片。 / The Elyos took possession of the fragment at the Northern Cave.
-						sendMsgByRace(1404181, Race.PC_ALL, 2000);
-					    // 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246750, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
-						sp(246750, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
-						sp(246750, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
-						sp(246750, 190.00842f, 448.16849f, 302.56314f, (byte) 0, 9000);
-						sp(246750, 223.94318f, 439.94461f, 302.56314f, (byte) 0, 11000);
-					    sp(835305, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 11, 2000, 0, null); //Northern Cave.
-						sp(835455, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //Northern Cave [Flag]
-						sp(835240, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v04_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Northern Cave.
-						sendMsgByRace(1404182, Race.PC_ALL, 2000);
-					    // 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246751, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
-						sp(246751, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
-						sp(246751, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
-						sp(246751, 190.00842f, 448.16849f, 302.56314f, (byte) 0, 9000);
-						sp(246751, 223.94318f, 439.94461f, 302.56314f, (byte) 0, 11000);
-					    sp(835310, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 11, 2000, 0, null); //Northern Cave.
-						sp(835456, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //Northern Cave [Flag]
-						sp(835241, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v04_Flag_D.
-					break;
-				}
-			break;
-			case 835212: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    // 天族在城墙遗迹占据了碎片。 / The Elyos took possession of the fragment at the Wall Ruins.
-						sendMsgByRace(1404175, Race.PC_ALL, 2000);
-					    sp(835306, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's.
-						sp(835455, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's. [Flag]
-						sp(835242, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v05_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Wall Ruins.
-						sendMsgByRace(1404176, Race.PC_ALL, 2000);
-					    sp(835311, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's.
-						sp(835456, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's. [Flag]
-						sp(835243, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v05_Flag_D.
-					break;
-				}
-			break;
-			case 835213: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    // 天族在崩塌之墙占据了碎片。 / The Elyos took possession of the fragment at the Collapsed Wall.
-						sendMsgByRace(1404177, Race.PC_ALL, 2000);
-					    sp(835307, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
-						sp(835455, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's. [Flag]
-						sp(835244, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v06_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Collapsed Wall.
-						sendMsgByRace(1404178, Race.PC_ALL, 2000);
-					    sp(835312, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
-						sp(835456, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's. [Flag]
-						sp(835245, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v06_Flag_D.
-					break;
-				}
-			break;
-			case 835214: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    // 天族在南洞占据了碎片。 / The Elyos took possession of the fragment at the Southern Cave.
-						sendMsgByRace(1404183, Race.PC_ALL, 2000);
-					    // 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246752, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
-						sp(246752, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
-						sp(246752, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
-						sp(246752, 1260.6436f, 399.44736f, 312.49734f, (byte) 0, 9000);
-						sp(246752, 1258.8136f, 387.54639f, 312.49734f, (byte) 0, 11000);
-						sp(246752, 1246.9137f, 385.63171f, 312.49734f, (byte) 0, 13000);
-					    sp(835308, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 42, 2000, 0, null); //Southern Cave.
-						sp(835455, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //Southern Cave [Flag]
-						sp(835246, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v07_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Southern Cave.
-						sendMsgByRace(1404184, Race.PC_ALL, 2000);
-					    // 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246753, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
-						sp(246753, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
-						sp(246753, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
-						sp(246753, 1260.6436f, 399.44736f, 312.49734f, (byte) 0, 9000);
-						sp(246753, 1258.8136f, 387.54639f, 312.49734f, (byte) 0, 11000);
-						sp(246753, 1246.9137f, 385.63171f, 312.49734f, (byte) 0, 13000);
-					    sp(835313, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 42, 2000, 0, null); //Southern Cave.
-						sp(835456, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //Southern Cave [Flag]
-						sp(835247, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v07_Flag_L.
-					break;
-				}
-			break;
-		   /**
-	 * Pure Light
-	 */
-			case 835304: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    deleteNpc(835456);
-					    // 天族在起源神殿占据了碎片。 / The Elyos took possession of the fragment at the Temple of Origin.
-						sendMsgByRace(1404179, Race.PC_ALL, 2000);
-					    sp(835304, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
-						sp(835455, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag].
-						sp(835238, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v03_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    deleteNpc(835455);
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Temple of Origin.
-						sendMsgByRace(1404180, Race.PC_ALL, 2000);
-					    sp(835309, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
-						sp(835456, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag].
-						sp(835239, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v03_Flag_D.
-					break;
-				}
-			break;
-			case 835305: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    deleteNpc(835456);
-					    // 天族在北洞占据了碎片。 / The Elyos took possession of the fragment at the Northern Cave.
-						sendMsgByRace(1404181, Race.PC_ALL, 2000);
-						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246750, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
-						sp(246750, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
-						sp(246750, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
-						sp(246750, 190.00842f, 448.16849f, 302.56314f, (byte) 0, 9000);
-						sp(246750, 223.94318f, 439.94461f, 302.56314f, (byte) 0, 11000);
-					    sp(835305, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 11, 2000, 0, null); //Northern Cave.
-						sp(835455, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //Northern Cave [Flag]
-						sp(835240, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v04_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    deleteNpc(835455);
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Northern Cave.
-						sendMsgByRace(1404182, Race.PC_ALL, 2000);
-						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246751, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
-						sp(246751, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
-						sp(246751, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
-						sp(246751, 190.00842f, 448.16849f, 302.56314f, (byte) 0, 9000);
-						sp(246751, 223.94318f, 439.94461f, 302.56314f, (byte) 0, 11000);
-					    sp(835310, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 11, 2000, 0, null); //Northern Cave.
-						sp(835456, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //Northern Cave [Flag]
-						sp(835241, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v04_Flag_D.
-					break;
-				}
-			break;
-			case 835306: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    deleteNpc(835456);
-					    // 天族在城墙遗迹占据了碎片。 / The Elyos took possession of the fragment at the Wall Ruins.
-						sendMsgByRace(1404175, Race.PC_ALL, 2000);
-					    sp(835306, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's.
-						sp(835455, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's. [Flag]
-						sp(835242, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v05_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    deleteNpc(835455);
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Wall Ruins.
-						sendMsgByRace(1404176, Race.PC_ALL, 2000);
-					    sp(835311, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's.
-						sp(835456, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's. [Flag]
-						sp(835243, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v05_Flag_D.
-					break;
-				}
-			break;
-			case 835307: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    deleteNpc(835456);
-					    // 天族在崩塌之墙占据了碎片。 / The Elyos took possession of the fragment at the Collapsed Wall.
-						sendMsgByRace(1404177, Race.PC_ALL, 2000);
-					    sp(835307, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
-						sp(835455, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's [Flag]
-						sp(835244, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v06_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    deleteNpc(835455);
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Collapsed Wall.
-						sendMsgByRace(1404178, Race.PC_ALL, 2000);
-					    sp(835312, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
-						sp(835456, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's [Flag]
-						sp(835245, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v06_Flag_D.
-					break;
-				}
-			break;
-			case 835308: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    deleteNpc(835456);
-					    // 天族在南洞占据了碎片。 / The Elyos took possession of the fragment at the Southern Cave.
-						sendMsgByRace(1404183, Race.PC_ALL, 2000);
-						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246752, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
-						sp(246752, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
-						sp(246752, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
-						sp(246752, 1260.6436f, 399.44736f, 312.49734f, (byte) 0, 9000);
-						sp(246752, 1258.8136f, 387.54639f, 312.49734f, (byte) 0, 11000);
-						sp(246752, 1246.9137f, 385.63171f, 312.49734f, (byte) 0, 13000);
-					    sp(835308, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 42, 2000, 0, null); //Southern Cave.
-						sp(835455, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //Southern Cave [Flag]
-						sp(835246, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v07_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    deleteNpc(835455);
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Southern Cave.
-						sendMsgByRace(1404184, Race.PC_ALL, 2000);
-						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246753, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
-						sp(246753, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
-						sp(246753, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
-						sp(246753, 1260.6436f, 399.44736f, 312.49734f, (byte) 0, 9000);
-						sp(246753, 1258.8136f, 387.54639f, 312.49734f, (byte) 0, 11000);
-						sp(246753, 1246.9137f, 385.63171f, 312.49734f, (byte) 0, 13000);
-					    sp(835313, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 42, 2000, 0, null); //Southern Cave.
-						sp(835456, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //Southern Cave [Flag]
-						sp(835247, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v07_Flag_D.
-					break;
-				}
-			break;
-		   /**
-	 * Pure Dark
-	 */
-			case 835309: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    deleteNpc(835456);
-					    // 天族在起源神殿占据了碎片。 / The Elyos took possession of the fragment at the Temple of Origin.
-						sendMsgByRace(1404179, Race.PC_ALL, 2000);
-					    sp(835304, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
-						sp(835455, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag].
-						sp(835238, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v03_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    deleteNpc(835455);
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Temple of Origin.
-						sendMsgByRace(1404180, Race.PC_ALL, 2000);
-					    sp(835309, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
-						sp(835456, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag].
-						sp(835239, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v03_Flag_D.
-					break;
-				}
-			break;
-			case 835310: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    deleteNpc(835456);
-					    // 天族在北洞占据了碎片。 / The Elyos took possession of the fragment at the Northern Cave.
-						sendMsgByRace(1404181, Race.PC_ALL, 2000);
-						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246750, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
-						sp(246750, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
-						sp(246750, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
-						sp(246750, 190.00842f, 448.16849f, 302.56314f, (byte) 0, 9000);
-						sp(246750, 223.94318f, 439.94461f, 302.56314f, (byte) 0, 11000);
-					    sp(835305, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 11, 2000, 0, null); //Northern Cave.
-						sp(835455, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //Northern Cave [Flag]
-						sp(835240, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v04_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    deleteNpc(835455);
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Northern Cave.
-						sendMsgByRace(1404182, Race.PC_ALL, 2000);
-						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246751, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
-						sp(246751, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
-						sp(246751, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
-						sp(246751, 190.00842f, 448.16849f, 302.56314f, (byte) 0, 9000);
-						sp(246751, 223.94318f, 439.94461f, 302.56314f, (byte) 0, 11000);
-					    sp(835310, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 11, 2000, 0, null); //Northern Cave.
-						sp(835456, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //Northern Cave [Flag]
-						sp(835241, 212.27483f, 443.66403f, 294.31482f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v04_Flag_D.
-					break;
-				}
-			break;
-			case 835311: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    deleteNpc(835456);
-					    // 天族在城墙遗迹占据了碎片。 / The Elyos took possession of the fragment at the Wall Ruins.
-						sendMsgByRace(1404175, Race.PC_ALL, 2000);
-					    sp(835306, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's
-						sp(835455, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's [Flag]
-						sp(835242, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v05_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    deleteNpc(835455);
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Wall Ruins.
-						sendMsgByRace(1404176, Race.PC_ALL, 2000);
-					    sp(835311, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's
-						sp(835456, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's [Flag]
-						sp(835243, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v05_Flag_D.
-					break;
-				}
-			break;
-			case 835312: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    deleteNpc(835456);
-					    // 天族在崩塌之墙占据了碎片。 / The Elyos took possession of the fragment at the Collapsed Wall.
-						sendMsgByRace(1404177, Race.PC_ALL, 2000);
-					    sp(835307, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
-						sp(835455, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's [Flag]
-						sp(835244, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v06_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    deleteNpc(835455);
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Collapsed Wall.
-						sendMsgByRace(1404178, Race.PC_ALL, 2000);
-					    sp(835312, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
-						sp(835456, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's [Flag]
-						sp(835245, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v06_Flag_D.
-					break;
-				}
-			break;
-			case 835313: //Artifact Core Fragment.
-				despawnNpc(npc);
-				switch (player.getRace()) {
-					case ELYOS:
-					    point = 200;
-					    deleteNpc(835456);
-					    // 天族在南洞占据了碎片。 / The Elyos took possession of the fragment at the Southern Cave.
-						sendMsgByRace(1404183, Race.PC_ALL, 2000);
-						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246752, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
-						sp(246752, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
-						sp(246752, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
-						sp(246752, 1260.6436f, 399.44736f, 312.49734f, (byte) 0, 9000);
-						sp(246752, 1258.8136f, 387.54639f, 312.49734f, (byte) 0, 11000);
-						sp(246752, 1246.9137f, 385.63171f, 312.49734f, (byte) 0, 13000);
-					    sp(835308, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 42, 2000, 0, null); //Southern Cave.
-						sp(835455, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //Southern Cave [Flag]
-						sp(835246, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v07_Flag_L.
-					break;
-					case ASMODIANS:
-					    point = 200;
-					    deleteNpc(835455);
-					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Southern Cave.
-						sendMsgByRace(1404184, Race.PC_ALL, 2000);
-						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
-						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
-						sp(246753, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
-						sp(246753, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
-						sp(246753, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
-						sp(246753, 1260.6436f, 399.44736f, 312.49734f, (byte) 0, 9000);
-						sp(246753, 1258.8136f, 387.54639f, 312.49734f, (byte) 0, 11000);
-						sp(246753, 1246.9137f, 385.63171f, 312.49734f, (byte) 0, 13000);
-					    sp(835313, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 42, 2000, 0, null); //Southern Cave.
-						sp(835456, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //Southern Cave [Flag]
-						sp(835247, 1250.4025f, 396.76108f, 309.01529f, (byte) 0, 0, 2000, 0, null); //IDEternityWar_v07_Flag_D.
-					break;
-				}
-			break;
-        }
-		updateScore(player, npc, point, false);
-    }
-	
-	private void despawnNpc(Npc npc) {
-		if (npc != null) {
-			npc.getController().onDelete();
+			InstanceSettlementService.settleBattleground(instance, player, result, total);
+			PacketSendUtility.sendPacket(player,
+				new SM_INSTANCE_SCORE(5, getTime(), reward, player.getObjectId()));
 		}
 	}
-	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
+
+	private Race winnerRace() {
+		int storedWinner = runtimeState().getInt(STATE_PREFIX + "winner", -1);
+		if (storedWinner == Race.ELYOS.getRaceId()) {
+			return Race.ELYOS;
 		}
+		if (storedWinner == Race.ASMODIANS.getRaceId()) {
+			return Race.ASMODIANS;
+		}
+		int comparison = getPointsByRace(Race.ELYOS).compareTo(getPointsByRace(Race.ASMODIANS));
+		return comparison > 0 ? Race.ELYOS : comparison < 0 ? Race.ASMODIANS : Race.PC_ALL;
 	}
-	
-	/**
-	 * 副本销毁时清理资源。
-	 * Clean up resources when the instance is destroyed.
-	 */
-	@Override
-    public void onInstanceDestroy() {
-        isInstanceDestroyed = true;
-		evergaleCanyonReward.clear();
-        stopInstanceTask();
-        doors.clear();
-    }
-	
-	protected void openFirstDoors() {
-        openDoor(352);
-		openDoor(507);
-    }
-	
-    protected void openDoor(int doorId) {
-        StaticDoor door = doors.get(doorId);
-        if (door != null) {
-            door.setOpen(true);
-        }
-    }
-	
-	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
-        sp(npcId, x, y, z, h, 0, time, 0, null);
-    }
-	
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
-        sp(npcId, x, y, z, h, 0, time, msg, race);
-    }
-	
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    spawn(npcId, x, y, z, h, entityId);
-                    if (msg > 0) {
-                        sendMsgByRace(msg, race, 0);
-                    }
-                }
-            }
-        }, time));
-    }
-	
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    Npc npc = (Npc) spawn(npcId, x, y, z, h);
-                    npc.getSpawn().setWalkerId(walkerId);
-                    WalkManager.startWalking((NpcAI2) npc.getAi2());
-                }
-            }
-        }, time));
-    }
-	
-    protected void sendMsgByRace(final int msg, final Race race, int time) {
-        evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
-                    /**
-                     * 处理 visit。
-                     * Handle visit.
-                     *
-                     * @param player 玩家 / player
-                     */
-                    @Override
-                    public void visit(Player player) {
-                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-                        }
-                    }
-                });
-            }
-        }, time));
-    }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
+
+	private void exitPlayers() {
+		if (destroyed) {
+			return;
+		}
+		for (Player player : instance.getPlayersInside()) {
+			onExitInstance(player);
+		}
+		GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance);
+	}
+
+	private void sendEnterPacket(Player player) {
+		instance.doOnAllPlayers(opponent -> {
+			if (player.getRace() != opponent.getRace()) {
+				PacketSendUtility.sendPacket(opponent,
+					new SM_INSTANCE_SCORE(11, getTime(), reward, player.getObjectId()));
+				PacketSendUtility.sendPacket(player,
+					new SM_INSTANCE_SCORE(11, getTime(), reward, opponent.getObjectId()));
+				PacketSendUtility.sendPacket(opponent,
+					new SM_INSTANCE_SCORE(3, getTime(), reward, player.getObjectId()));
+			} else {
+				PacketSendUtility.sendPacket(opponent,
+					new SM_INSTANCE_SCORE(11, getTime(), reward, opponent.getObjectId()));
+				if (player.getObjectId() != opponent.getObjectId()) {
+					PacketSendUtility.sendPacket(opponent,
+						new SM_INSTANCE_SCORE(3, getTime(), reward, player.getObjectId(), 20, 0));
+				}
 			}
 		});
+		broadcastScoreTables();
+		PacketSendUtility.sendPacket(player,
+			new SM_INSTANCE_SCORE(4, getTime(), reward, player.getObjectId(), 20, 0));
 	}
-	
-    private void stopInstanceTask() {
-        for (Future<?> task : evergaleCanyonTask) {
-			if (task != null) {
-				task.cancel(true);
+
+	private void startInstancePacket() {
+		instance.doOnAllPlayers(player -> {
+			PacketSendUtility.sendPacket(player,
+				new SM_INSTANCE_SCORE(7, getTime(), reward, instance.getPlayersInside(), true));
+			PacketSendUtility.sendPacket(player,
+				new SM_INSTANCE_SCORE(3, getTime(), reward, player.getObjectId(), 0, 0));
+			PacketSendUtility.sendPacket(player,
+				new SM_INSTANCE_SCORE(11, getTime(), reward, player.getObjectId()));
+		});
+	}
+
+	private void sendPacket(boolean objects) {
+		int type = objects ? 6 : 7;
+		instance.doOnAllPlayers(player -> PacketSendUtility.sendPacket(player,
+			new SM_INSTANCE_SCORE(type, getTime(), reward, instance.getPlayersInside(), true)));
+	}
+
+	private void broadcastScoreTables() {
+		sendPacket(true);
+		sendPacket(false);
+	}
+
+	private void broadcastScore(int objectId) {
+		instance.doOnAllPlayers(player -> PacketSendUtility.sendPacket(player,
+			new SM_INSTANCE_SCORE(11, getTime(), reward, objectId)));
+	}
+
+	private int getTime() {
+		long now = System.currentTimeMillis();
+		String deadline = switch (phase()) {
+			case PHASE_PREPARING -> "preparation.deadline";
+			case PHASE_BATTLE -> "battle.deadline";
+			case PHASE_NO_ENEMY -> "noEnemy.deadline";
+			default -> null;
+		};
+		return deadline == null ? 0 : (int) Math.max(0, runtimeState().getLong(STATE_PREFIX + deadline, now) - now);
+	}
+
+	@Override
+	public boolean onReviveEvent(Player player) {
+		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
+		PlayerReviveService.revive(player, 100, 100, false, 0);
+		player.getGameStats().updateStatsAndSpeedVisually();
+		reward.portToPosition(player);
+		return true;
+	}
+
+	@Override
+	public boolean onDie(Player player, Creature lastAttacker) {
+		EvergaleCanyonPlayerReward playerReward = reward.getPlayerReward(player.getObjectId());
+		if (playerReward != null) {
+			playerReward.endBoostMoraleEffect(player);
+			playerReward.applyBoostMoraleEffect(player);
+		}
+		if (isBattlePhase() && lastAttacker instanceof Player attacker && attacker.getRace() != player.getRace()) {
+			updateScore(attacker, player, playerKillScore, true);
+			addTeamScore(player.getRace(), -playerDeathScore);
+			broadcastScore(player.getObjectId());
+			if (scoreLimitReached()) {
+				finishBattle();
 			}
-        }
-    }
-	
-	/**
-	 * 返回本副本奖励对象。
-	 * Return this instance's reward object.
-	 *
-	 * result
-	 */
+		}
+		return true;
+	}
+
+	private MutableInt getPointsByRace(Race race) {
+		return reward.getPointsByRace(race);
+	}
+
+	private void addTeamScore(Race race, int points) {
+		reward.addPointsByRace(race, points);
+		runtimeState().put(STATE_PREFIX + "score." + race.name(), getPointsByRace(race).intValue());
+	}
+
+	private void updateScore(Player player, Creature target, int points, boolean pvpKill) {
+		if (!isBattlePhase() || points == 0) {
+			return;
+		}
+		addTeamScore(player.getRace(), points);
+		List<Player> recipients = new ArrayList<>();
+		if (target != null && player.isInGroup2()) {
+			for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
+				if (!member.getLifeStats().isAlreadyDead()
+						&& MathUtil.isIn3dRange(member, target, GroupConfig.GROUP_MAX_DISTANCE)) {
+					recipients.add(member);
+				}
+			}
+		}
+		if (recipients.isEmpty()) {
+			recipients.add(player);
+		}
+		for (Player recipient : recipients) {
+			EvergaleCanyonPlayerReward recipientReward = registerPlayer(recipient);
+			recipientReward.addPoints(points / recipients.size());
+			persistPlayer(recipientReward);
+			if (target instanceof Npc npc) {
+				PacketSendUtility.sendPacket(recipient, new SM_SYSTEM_MESSAGE(1400237,
+					new DescriptionId(npc.getObjectTemplate().getNameId() * 2 + 1), points));
+			} else if (target instanceof Player) {
+				PacketSendUtility.sendPacket(recipient, new SM_SYSTEM_MESSAGE(1400237, target.getName(), points));
+			}
+		}
+		if (pvpKill && points > 0) {
+			reward.addPvpKillsByRace(player.getRace(), 1);
+			EvergaleCanyonPlayerReward killerReward = registerPlayer(player);
+			killerReward.addPvPKillToPlayer();
+			persistPlayer(killerReward);
+			runtimeState().put(STATE_PREFIX + "pvp." + player.getRace().name(),
+				reward.getPvpKillsByRace(player.getRace()).intValue());
+		}
+		broadcastScore(player.getObjectId());
+	}
+
+	private boolean scoreLimitReached() {
+		int elyos = getPointsByRace(Race.ELYOS).intValue();
+		int asmodians = getPointsByRace(Race.ASMODIANS).intValue();
+		return scoreLimitMaximum > 0 && Math.max(elyos, asmodians) >= scoreLimitMaximum
+			|| scoreLimitGap > 0 && Math.abs(elyos - asmodians) >= scoreLimitGap;
+	}
+
 	@Override
-    public InstanceReward<?> getInstanceReward() {
-        return evergaleCanyonReward;
-    }
-	
-	/**
-	 * 玩家请求退出副本时处理。
-	 * Handle a player exit request.
-	 *
-	 * @param player 玩家 / player
-	 */
+	public boolean supportsRetailNpcScore(int npcId, int scoreApplyType) {
+		var score = DataManager.RETAIL_AI_DATA.getNpcScore(npcId);
+		return score != null && score.scoreApplyType() == scoreApplyType
+			&& (scoreApplyType == 1 || scoreApplyType == 2) && score.equalizingScore() == 0;
+	}
+
 	@Override
-    public void onExitInstance(Player player) {
-        TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
-    }
-	
-	/**
-	 * 玩家离开副本时处理。
-	 * Handle a player leaving the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
+	public boolean onRetailNpcScore(Player player, Npc npc, int scoreApplyType, int points) {
+		if (!supportsRetailNpcScore(npc.getNpcId(), scoreApplyType)) {
+			return false;
+		}
+		consumeNpcScore(npc, scoreApplyType, points);
+		return true;
+	}
+
 	@Override
-    public void onLeaveInstance(Player player) {
-		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
+	public void onDie(Npc npc) {
+		var score = DataManager.RETAIL_AI_DATA.getNpcScore(npc.getNpcId());
+		if (score != null && supportsRetailNpcScore(npc.getNpcId(), score.scoreApplyType())) {
+			consumeNpcScore(npc, score.scoreApplyType(), score.value());
+		}
+	}
+
+	private synchronized boolean consumeNpcScore(Npc npc, int scoreApplyType, int points) {
+		if (!isBattlePhase() || points == 0) {
+			return false;
+		}
+		String stableKey = npc.getSpawn() == null ? null : npc.getSpawn().getStableKey();
+		String eventKey = scoreEventKey(stableKey, npc.getObjectId());
+		if (runtimeState().getBoolean(eventKey, false)) {
+			return true;
+		}
+		runtimeState().put(eventKey, true);
+		addTeamScore(scoreApplyType == 1 ? Race.ELYOS : Race.ASMODIANS, points);
+		broadcastScoreTables();
+		if (scoreLimitReached()) {
+			finishBattle();
+		}
+		return true;
+	}
+
+	static String scoreEventKey(String stableKey, int objectId) {
+		return STATE_PREFIX + "score.event."
+			+ (stableKey == null || stableKey.isBlank() ? "object." + objectId : stableKey);
+	}
+
+	private synchronized void checkNoEnemy() {
+		if (!isBattlePhase()) {
+			return;
+		}
+		int elyos = activeMemberCount(Race.ELYOS);
+		int asmodians = activeMemberCount(Race.ASMODIANS);
+		Race winner = noEnemyWinner(elyos, asmodians);
+		if (winner == Race.PC_ALL) {
+			return;
+		}
+		Race emptyRace = winner == Race.ELYOS ? Race.ASMODIANS : Race.ELYOS;
+		restoreTeamScore(emptyRace, 0);
+		MutableInt emptyKills = reward.getPvpKillsByRace(emptyRace);
+		emptyKills.add(-emptyKills.intValue());
+		runtimeState().put(STATE_PREFIX + "pvp." + emptyRace.name(), 0);
+		long deadline = System.currentTimeMillis() + noEnemyMillis;
+		runtimeState().put(STATE_PREFIX + "winner", winner.getRaceId());
+		runtimeState().put(STATE_PREFIX + "phase", PHASE_NO_ENEMY);
+		runtimeState().put(STATE_PREFIX + "noEnemy.deadline", deadline);
+		cancelDeadline("battle");
+		broadcastScoreTables();
+		scheduleDeadline("noEnemy", deadline, this::finishBattle);
+	}
+
+	static Race noEnemyWinner(int elyosMembers, int asmodianMembers) {
+		if (elyosMembers == 0 && asmodianMembers > 0) {
+			return Race.ASMODIANS;
+		}
+		if (asmodianMembers == 0 && elyosMembers > 0) {
+			return Race.ELYOS;
+		}
+		return Race.PC_ALL;
+	}
+
+	private void updatePopulationLevel() {
+		int memberCount = Math.max(activeMemberCount(Race.ELYOS), activeMemberCount(Race.ASMODIANS));
+		int nextLevel = populationLevelForCount(memberCount, populationThresholds);
+		if (nextLevel <= populationLevel) {
+			return;
+		}
+		populationLevel = nextLevel;
+		runtimeState().put(STATE_PREFIX + "population.level", populationLevel);
+		setPopulationVariable(populationLevel);
+	}
+
+	static int populationLevelForCount(int memberCount, int... thresholds) {
+		int level = 0;
+		while (level < thresholds.length && memberCount >= thresholds[level]) {
+			level++;
+		}
+		return level;
+	}
+
+	static int populationThresholdForLevel(int level, int... thresholds) {
+		return level <= 0 ? 0 : thresholds[Math.min(level, thresholds.length) - 1];
+	}
+
+	private int activeMemberCount(Race race) {
+		int count = 0;
+		for (int playerId : activeMembers) {
+			EvergaleCanyonPlayerReward playerReward = reward.getPlayerReward(playerId);
+			if (playerReward != null && playerReward.getRace() == race) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	private void setPopulationVariable(int level) {
+		if (!RetailConditionSpawnEngine.setVariable(instance, "people_expand_con", level, 0)) {
+			throw new IllegalStateException("Missing Evergale condition variable people_expand_con");
+		}
+	}
+
+	private EvergaleCanyonPlayerReward registerPlayer(Player player) {
+		EvergaleCanyonPlayerReward playerReward = reward.getPlayerReward(player.getObjectId());
+		if (playerReward == null) {
+			playerReward = new EvergaleCanyonPlayerReward(player.getObjectId(), reward.getBuffId(), player.getRace());
+			reward.addPlayerReward(playerReward);
+			runtimeState().put(playerKey(player.getObjectId(), "joined"), System.currentTimeMillis());
+		}
+		participants.add(player.getObjectId());
+		persistParticipants();
+		return playerReward;
+	}
+
+	private void restoreReward(int baseScore) {
+		restoreTeamScore(Race.ELYOS, runtimeState().getInt(STATE_PREFIX + "score.ELYOS", baseScore));
+		restoreTeamScore(Race.ASMODIANS, runtimeState().getInt(STATE_PREFIX + "score.ASMODIANS", baseScore));
+		reward.addPvpKillsByRace(Race.ELYOS, runtimeState().getInt(STATE_PREFIX + "pvp.ELYOS", 0));
+		reward.addPvpKillsByRace(Race.ASMODIANS, runtimeState().getInt(STATE_PREFIX + "pvp.ASMODIANS", 0));
+		String players = runtimeState().get(STATE_PREFIX + "players", "");
+		if (players.isBlank()) {
+			return;
+		}
+		for (String value : players.split(",")) {
+			int playerId = Integer.parseInt(value);
+			participants.add(playerId);
+			Race race = runtimeState().getInt(playerKey(playerId, "race"), Race.ELYOS.getRaceId())
+				== Race.ELYOS.getRaceId() ? Race.ELYOS : Race.ASMODIANS;
+			EvergaleCanyonPlayerReward playerReward = new EvergaleCanyonPlayerReward(playerId, reward.getBuffId(), race,
+				runtimeState().getLong(playerKey(playerId, "joined"), 0));
+			playerReward.addPoints(runtimeState().getInt(playerKey(playerId, "points"), 0));
+			for (int kills = runtimeState().getInt(playerKey(playerId, "kills"), 0); kills > 0; kills--) {
+				playerReward.addPvPKillToPlayer();
+			}
+			playerReward.restoreActivity(runtimeState().getLong(playerKey(playerId, "logout"), 0),
+				runtimeState().getLong(playerKey(playerId, "offline"), 0));
+			reward.addPlayerReward(playerReward);
+		}
+	}
+
+	private void restoreActiveMembers() {
+		String members = runtimeState().get(STATE_PREFIX + "members", "");
+		if (!members.isBlank()) {
+			for (String value : members.split(",")) {
+				activeMembers.add(Integer.parseInt(value));
+			}
+		}
+	}
+
+	private void restoreTeamScore(Race race, int points) {
+		reward.addPointsByRace(race, points - reward.getPointsByRace(race).intValue());
+		runtimeState().put(STATE_PREFIX + "score." + race.name(), points);
+	}
+
+	private void persistPlayer(EvergaleCanyonPlayerReward playerReward) {
+		int playerId = playerReward.getOwner();
+		participants.add(playerId);
+		runtimeState().put(playerKey(playerId, "race"), playerReward.getRace().getRaceId());
+		runtimeState().put(playerKey(playerId, "joined"),
+			runtimeState().getLong(playerKey(playerId, "joined"), playerReward.getJoinedAt()));
+		runtimeState().put(playerKey(playerId, "points"), playerReward.getPoints());
+		runtimeState().put(playerKey(playerId, "kills"), playerReward.getPvPKills());
+		runtimeState().put(playerKey(playerId, "logout"), playerReward.getLogoutAt());
+		runtimeState().put(playerKey(playerId, "offline"), playerReward.getOfflineMillis());
+		persistParticipants();
+	}
+
+	private void persistParticipants() {
+		runtimeState().put(STATE_PREFIX + "players", participants.stream().map(String::valueOf)
+			.collect(java.util.stream.Collectors.joining(",")));
+	}
+
+	private void persistActiveMembers() {
+		runtimeState().put(STATE_PREFIX + "members", activeMembers.stream().map(String::valueOf)
+			.collect(java.util.stream.Collectors.joining(",")));
+	}
+
+	private String playerKey(int playerId, String field) {
+		return STATE_PREFIX + "player." + playerId + '.' + field;
+	}
+
+	private String phase() {
+		return runtimeState().get(STATE_PREFIX + "phase", PHASE_PREPARING);
+	}
+
+	private boolean isBattlePhase() {
+		return PHASE_BATTLE.equals(phase()) && reward.isStartProgress();
+	}
+
+	@Override
+	public synchronized void onLeaveInstance(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
-		EvergaleCanyonPlayerReward playerReward = evergaleCanyonReward.getPlayerReward(player.getObjectId());
-		playerReward.endBoostMoraleEffect(player);
-    }
+		EvergaleCanyonPlayerReward playerReward = reward.getPlayerReward(player.getObjectId());
+		if (playerReward != null) {
+			playerReward.updateLogOutTime();
+			playerReward.endBoostMoraleEffect(player);
+			persistPlayer(playerReward);
+		}
+		activeMembers.remove(player.getObjectId());
+		persistActiveMembers();
+		checkNoEnemy();
+	}
 
 	@Override
 	public void onPlayerLogOut(Player player) {
-		EvergaleCanyonPlayerReward reward = evergaleCanyonReward.getPlayerReward(player.getObjectId());
-		if (reward != null) {
-			reward.updateLogOutTime();
+		EvergaleCanyonPlayerReward playerReward = reward.getPlayerReward(player.getObjectId());
+		if (playerReward != null) {
+			playerReward.updateLogOutTime();
+			persistPlayer(playerReward);
 		}
 	}
-	
-	private void sendMovie(Player player, int movie) {
-        if (!movies.contains(movie)) {
-             movies.add(movie);
-             PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
-        }
-    }
-	
-	/**
-	 * 玩家登录到该副本时处理。
-	 * Handle a player logging into this instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-    @Override
-    public void onPlayerLogin(Player player) {
-        EvergaleCanyonPlayerReward reward = evergaleCanyonReward.getPlayerReward(player.getObjectId());
-        if (reward != null) {
-            reward.updateBonusTime();
-        }
-        evergaleCanyonReward.sendPacket(10, player.getObjectId());
-    }
+
+	@Override
+	public void onPlayerLogin(Player player) {
+		EvergaleCanyonPlayerReward playerReward = registerPlayer(player);
+		playerReward.updateBonusTime();
+		persistPlayer(playerReward);
+		PacketSendUtility.sendPacket(player,
+			new SM_INSTANCE_SCORE(10, getTime(), reward, player.getObjectId()));
+	}
+
+	private void sendMsgByRace(int messageId, Race race) {
+		instance.doOnAllPlayers(player -> {
+			if (race == Race.PC_ALL || player.getRace() == race) {
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(messageId));
+			}
+		});
+	}
+
+	private void openFirstDoors() {
+		setDoorState(352, true);
+		setDoorState(507, true);
+	}
+
+	@Override
+	public void onInstanceDestroy() {
+		destroyed = true;
+		cancelDeadline("preparation");
+		cancelDeadline("battle");
+		cancelDeadline("noEnemy");
+		cancelDeadline("exit");
+		reward.clear();
+	}
+
+	@Override
+	public InstanceReward<?> getInstanceReward() {
+		return reward;
+	}
+
+	@Override
+	public void onExitInstance(Player player) {
+		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
+	}
 }

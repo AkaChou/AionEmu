@@ -15,8 +15,9 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
  */
 public class _23962Rumors_About_The_Black_Market_Trader extends QuestHandler {
 
-    private final static int questId = 23962;
+	private final static int questId = 23962;
 	private final static int[] npcs = {835221, 835220};
+	private static final int[] traders = {835385, 835447, 835474, 835476, 835478, 835480};
     public _23962Rumors_About_The_Black_Market_Trader() {
         super(questId);
     }
@@ -28,7 +29,9 @@ public class _23962Rumors_About_The_Black_Market_Trader extends QuestHandler {
         }
 		qe.registerOnEnterWorld(questId);
 		qe.registerQuestNpc(835221).addOnQuestStart(questId);
-		qe.registerQuestNpc(835385).addOnAtDistanceEvent(questId);
+		for (int trader : traders) {
+			qe.registerQuestNpc(trader).addOnAtDistanceEvent(questId);
+		}
 	}
 	
 	@Override

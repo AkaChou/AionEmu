@@ -78,15 +78,15 @@
 	<teleloc_template loc_id="87" mapid="220050000" name="Baltasar Hill Village" name_id="401084"/>
 	<teleloc_template loc_id="88" mapid="220050000" name="BuBu Village" name_id="401085"/>
 	<teleloc_template loc_id="95" mapid="110010000" name="Outer Dock" name_id="401542" posX="1743.5588" posY="2059.158" posZ="518.0106" heading="0"/>
-	<teleloc_template loc_id="96" mapid="210130000" name="Outer Port Of Inggison" name_id="401543" posX="1369.6293" posY="360.29944" posZ="589.57605" heading="17"/>
+	<teleloc_template loc_id="96" mapid="210050000" name="Outer Port Of Inggison" name_id="401543" posX="1369.6293" posY="360.29944" posZ="589.57605" heading="17"/>
 	<teleloc_template loc_id="97" mapid="120010000" name="Pandaemonium Airship Dock" name_id="401544" posX="943.9" posY="1126.1" posZ="206.9" heading="0"/>
-	<teleloc_template loc_id="98" mapid="220140000" name="Gelkmaros Airship Dock" name_id="401545" posX="1888.2524" posY="2847.2727" posZ="554.9964" heading="98"/>
-	<teleloc_template loc_id="99" mapid="210130000" name="Inggison Illusion Fortress" name_id="401546"/>
-	<teleloc_template loc_id="100" mapid="210130000" name="Soteria Sanctuary" name_id="401547"/>
-	<teleloc_template loc_id="101" mapid="210130000" name="Undirborg Observation Post" name_id="401548"/>
-	<teleloc_template loc_id="102" mapid="220140000" name="Gelkmaros Fortress" name_id="401549"/>
-	<teleloc_template loc_id="103" mapid="220140000" name="Rhonnam Refugee Village" name_id="401550"/>
-	<teleloc_template loc_id="104" mapid="220140000" name="Subterranea Observation Post" name_id="401551"/>
+	<teleloc_template loc_id="98" mapid="220070000" name="Gelkmaros Airship Dock" name_id="401545" posX="1888.2524" posY="2847.2727" posZ="554.9964" heading="98"/>
+	<teleloc_template loc_id="99" mapid="210050000" name="Inggison Illusion Fortress" name_id="401546"/>
+	<teleloc_template loc_id="100" mapid="210050000" name="Soteria Sanctuary" name_id="401547"/>
+	<teleloc_template loc_id="101" mapid="210050000" name="Undirborg Observation Post" name_id="401548"/>
+	<teleloc_template loc_id="102" mapid="220070000" name="Gelkmaros Fortress" name_id="401549"/>
+	<teleloc_template loc_id="103" mapid="220070000" name="Rhonnam Refugee Village" name_id="401550"/>
+	<teleloc_template loc_id="104" mapid="220070000" name="Subterranea Observation Post" name_id="401551"/>
 	<teleloc_template loc_id="105" mapid="110010000" name="Outer Dock" name_id="401552" posX="1817.1605" posY="2154.2178" posZ="527.9301" heading="83"/>
 	<teleloc_template loc_id="106" mapid="120010000" name="Crandale District" name_id="401553" posX="1175.7998" posY="1167.0049" posZ="207.97896" heading="20"/>
 	<teleloc_template loc_id="111" mapid="210030000" name="Tolbas Village" name_id="401640"/>
@@ -209,8 +209,8 @@
     <teleloc_template loc_id="380" mapid="600050000" name="Beritran Foothold (Base Elyos)" name_id="404433" posX="967.71124" posY="396.22546" posZ="187.12152" heading="15"/>
     <teleloc_template loc_id="381" mapid="600050000" name="Primeval Ruin (Base Elyos)" name_id="404434" posX="963.1022" posY="2784.7249" posZ="205.23875" heading="60"/>	
 	<!-- -->
-	<teleloc_template loc_id="313" mapid="210130000" name="Outer Port Of Inggison" name_id="403989" posX="1369.6293" posY="360.29944" posZ="589.57605" heading="17"/>
-	<teleloc_template loc_id="314" mapid="220140000" name="Gelkmaros Airship Dock" name_id="403990" posX="1888.2524" posY="2847.2727" posZ="554.9964" heading="98"/>
+	<teleloc_template loc_id="313" mapid="210050000" name="Outer Port Of Inggison" name_id="403989" posX="1369.6293" posY="360.29944" posZ="589.57605" heading="17"/>
+	<teleloc_template loc_id="314" mapid="220070000" name="Gelkmaros Airship Dock" name_id="403990" posX="1888.2524" posY="2847.2727" posZ="554.9964" heading="98"/>
 	<!-- Kaldor 4.7 -->
 	<teleloc_template loc_id="316" mapid="600090000" name="Hero's Fall (Elyos)" name_id="404261" posX="863.2553" posY="804.6878" posZ="164.80492" heading="94"/>
 	<teleloc_template loc_id="317" mapid="600090000" name="Hero's Fall (Asmodians)" name_id="404262" posX="863.2553" posY="804.6878" posZ="164.80492" heading="94"/>

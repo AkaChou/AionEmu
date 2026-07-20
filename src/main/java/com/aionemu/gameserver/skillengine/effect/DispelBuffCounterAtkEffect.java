@@ -28,9 +28,6 @@ public class DispelBuffCounterAtkEffect extends DamageEffect {
 	protected int hitdelta;
 	@XmlAttribute(name = "dispel_level")
 	protected int dispelLevel;
-	private int i;
-	private int finalPower;
-
 	/**
 	 * 应用伤害并按层数驱散 Buff。
 	 * Applies damage and dispels buffs by computed count.
@@ -40,7 +37,8 @@ public class DispelBuffCounterAtkEffect extends DamageEffect {
 	@Override
 	public void applyEffect(Effect effect) {
 		super.applyEffect(effect);
-		effect.getEffected().getEffectController().dispelBuffCounterAtkEffect(i, dispelLevel, finalPower);
+		effect.getEffected().getEffectController().dispelBuffCounterAtkEffect(effect.getReservedInt(position), dispelLevel,
+				power + dpower * effect.getSkillLevel());
 	}
 
 	/**
@@ -56,9 +54,8 @@ public class DispelBuffCounterAtkEffect extends DamageEffect {
 		}
 		Creature effected = effect.getEffected();
 		int count = value + delta * effect.getSkillLevel();
-		finalPower = power + dpower * effect.getSkillLevel();
-		i = effected.getEffectController().calculateNumberOfEffects(dispelLevel);
-		i = (i < count ? i : count);
+		int i = Math.min(effected.getEffectController().calculateNumberOfEffects(dispelLevel), count);
+		effect.setReservedInt(position, i);
 		int newValue = 0;
 		if (i == 1) {
 			newValue = hitvalue;

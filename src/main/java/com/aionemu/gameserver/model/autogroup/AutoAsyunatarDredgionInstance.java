@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.autogroup;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
-
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -9,8 +7,6 @@ import com.aionemu.gameserver.model.instance.instancereward.DredgionReward;
 import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
-import com.aionemu.gameserver.services.instance.AsyunatarService;
-
 /**
  * 自动 Asyunatar 无畏舰副本，用于 autogroup 相关逻辑。
  * Auto Asyunatar Dredgion Instance for autogroup logic.

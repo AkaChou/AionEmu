@@ -76,15 +76,13 @@ public final class TeamMoveUpdater extends AbstractIterativePeriodicTaskManager<
 	 */
 	@Override
 	protected void callTask(Player player) {
+		this.stopTask(player);
 		if (player.isInGroup2()) {
 			PlayerGroupService.updateGroup(player, GroupEvent.MOVEMENT);
 		}
 		if (player.isInAlliance2()) {
 			PlayerAllianceService.updateAlliance(player, PlayerAllianceEvent.MOVEMENT);
 		}
-
-		// 从列表移除任务；玩家再次移动时会重新加入。 / Remove task from list. It will be re-added if player moves again.
-		this.stopTask(player);
 	}
 
 	/**

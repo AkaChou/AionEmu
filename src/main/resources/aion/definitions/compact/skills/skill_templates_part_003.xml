@@ -8495,7 +8495,7 @@
     <group_ref id="SG_8367438F114D910F" />
     <group_ref id="SG_AE9E9C6C28F94CEF" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="9" value="270" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="150">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" critadddmg2="150" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="9" value="270" applymboost="false" mp_percent_delta="0" mp_percent="50">
         <modifiers>
           <targetrace delta="10" value="-10" race="TYPE_C" />
         </modifiers>
@@ -8531,7 +8531,7 @@
     <group_ref id="SG_8367438F114D910F" />
     <group_ref id="SG_AE9E9C6C28F94CEF" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="9" value="303" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="150">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" critadddmg2="150" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="9" value="303" applymboost="false" mp_percent_delta="0" mp_percent="50">
         <modifiers>
           <targetrace delta="10" value="-10" race="TYPE_C" />
         </modifiers>
@@ -8567,7 +8567,7 @@
     <group_ref id="SG_8367438F114D910F" />
     <group_ref id="SG_AE9E9C6C28F94CEF" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="10" value="335" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="150">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" critadddmg2="150" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="10" value="335" applymboost="false" mp_percent_delta="0" mp_percent="50">
         <modifiers>
           <targetrace delta="12" value="-12" race="TYPE_C" />
         </modifiers>
@@ -8603,7 +8603,7 @@
     <group_ref id="SG_8367438F114D910F" />
     <group_ref id="SG_AE9E9C6C28F94CEF" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="12" value="367" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="150">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" critadddmg2="150" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="12" value="367" applymboost="false" mp_percent_delta="0" mp_percent="50">
         <modifiers>
           <targetrace delta="14" value="-14" race="TYPE_C" />
         </modifiers>
@@ -8639,7 +8639,7 @@
     <group_ref id="SG_8367438F114D910F" />
     <group_ref id="SG_AE9E9C6C28F94CEF" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="12" value="400" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="150">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" critadddmg2="150" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="12" value="400" applymboost="false" mp_percent_delta="0" mp_percent="50">
         <modifiers>
           <targetrace delta="14" value="-14" race="TYPE_C" />
         </modifiers>
@@ -8675,7 +8675,7 @@
     <group_ref id="SG_8367438F114D910F" />
     <group_ref id="SG_AE9E9C6C28F94CEF" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="13" value="432" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="150">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" critadddmg2="150" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="13" value="432" applymboost="false" mp_percent_delta="0" mp_percent="50">
         <modifiers>
           <targetrace delta="16" value="-16" race="TYPE_C" />
         </modifiers>
@@ -8711,7 +8711,7 @@
     <group_ref id="SG_8367438F114D910F" />
     <group_ref id="SG_AE9E9C6C28F94CEF" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="15" value="463" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="150">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" critadddmg2="150" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="15" value="463" applymboost="false" mp_percent_delta="0" mp_percent="50">
         <modifiers>
           <targetrace delta="18" value="-18" race="TYPE_C" />
         </modifiers>
@@ -8747,7 +8747,7 @@
     <group_ref id="SG_8367438F114D910F" />
     <group_ref id="SG_AE9E9C6C28F94CEF" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="15" value="497" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="150">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="90" critadddmg2="150" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="15" value="497" applymboost="false" mp_percent_delta="0" mp_percent="50">
         <modifiers>
           <targetrace delta="18" value="-18" race="TYPE_C" />
         </modifiers>
@@ -12043,7 +12043,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1338" name="수면 구름" nameId="4576029" name_desc="WI_SleepingCloud_G1" stack="SKILL_WI_SleepingCloud" skill_group_name="WI_SleepingCloud" delayId="977" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="18000" duration="2000" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="12" target_status="" target_distance="5" effective_angle="5" />
+    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="12" target_status="" effective_range="5" effective_altitude="5" />
     <group_ref id="SG_6817993A542935B0" />
     <useconditions>
       <playermove allow="false" />
@@ -12077,7 +12077,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1339" name="수면 폭풍" nameId="4576035" name_desc="WI_SleepingStorm_G1" stack="SKILL_WI_SleepingStorm" skill_group_name="WI_SleepingStorm" delayId="1443" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="1000" pvp_duration="40" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="12" target_status="" target_distance="12" effective_angle="5" />
+    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="12" target_status="" effective_range="12" effective_altitude="5" />
     <startconditions>
       <mp value="602" delta="0" />
     </startconditions>
@@ -14415,7 +14415,7 @@
     <group_ref id="SG_259BC31B08552D41" />
     <group_ref id="SG_5E1A08884AAB27A1" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="51" value="861" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="51" value="861" applymboost="false" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <group_ref id="SG_E454B3AD9690C227" />
     <retail>
@@ -14441,7 +14441,7 @@
     <group_ref id="SG_259BC31B08552D41" />
     <group_ref id="SG_5E1A08884AAB27A1" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="55" value="929" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="55" value="929" applymboost="false" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <group_ref id="SG_E454B3AD9690C227" />
     <retail>
@@ -14467,7 +14467,7 @@
     <group_ref id="SG_259BC31B08552D41" />
     <group_ref id="SG_5E1A08884AAB27A1" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="60" value="995" applymboost="false" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="60" value="995" applymboost="false" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <group_ref id="SG_E454B3AD9690C227" />
     <retail>
@@ -14579,7 +14579,7 @@
       <mp value="415" delta="0" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="39" value="647" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="39" value="647" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="52" value="-52" race="TYPE_A" />
         </modifiers>
@@ -14618,7 +14618,7 @@
       <mp value="461" delta="0" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="42" value="710" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="42" value="710" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="56" value="-56" race="TYPE_A" />
         </modifiers>
@@ -14657,7 +14657,7 @@
       <mp value="507" delta="0" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="46" value="772" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="46" value="772" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="62" value="-62" race="TYPE_A" />
         </modifiers>
@@ -14696,7 +14696,7 @@
       <mp value="553" delta="0" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="49" value="835" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="49" value="835" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="66" value="-66" race="TYPE_A" />
         </modifiers>
@@ -14735,7 +14735,7 @@
       <mp value="599" delta="0" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="54" value="896" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="54" value="896" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="72" value="-72" race="TYPE_A" />
         </modifiers>
@@ -14774,7 +14774,7 @@
       <mp value="645" delta="0" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="57" value="959" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="57" value="959" applymboost="false" hp_percent_delta="0" hp_percent="100">
         <modifiers>
           <targetrace delta="76" value="-76" race="TYPE_A" />
         </modifiers>

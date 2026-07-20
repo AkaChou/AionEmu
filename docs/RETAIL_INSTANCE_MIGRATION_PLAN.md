@@ -60,12 +60,12 @@
 
 - [x] 139 个有效副本地图全部完成数据和行为审计；
 - [x] 18 个当前无专用 handler 的地图已逐图确认 Quest/Retail AI、Housing、Event 或纯数据所有权；
-- [ ] 所有副本入口统一经过一个进入决策和提交入口；
-- [ ] 真端基础次数、同步冷却、累计次数和购买次数全部生效；
+- [x] 所有副本入口统一经过一个进入决策和提交入口；
+- [x] 真端基础次数、同步冷却、累计次数和购买次数全部生效；
 - [ ] 动态副本可在 JVM 重启后恢复；
 - [ ] 阶段、门、主要目标、条件变量、积分和截止时间可恢复；
-- [ ] 结算和扣费在崩溃重试后不重复、不丢失；
-- [ ] 自动匹配规则不再依赖 `AutoGroupType` 巨型枚举和地图类型 switch；
+- [x] 结算和扣费在崩溃重试后不重复、不丢失；
+- [x] 自动匹配规则不再依赖 `AutoGroupType` 巨型枚举和地图类型 switch；
 - [ ] 时间攻击、战场、竞技场、无限塔和 Luna 奖励来自真端表；
 - [ ] 客户端副本信息、次数、匹配、阶段和积分包与 5.8 协议一致；
 - [ ] 被替代的旧 XML、DAO、模型、枚举、硬编码和测试全部删除；
@@ -81,7 +81,7 @@
 - 121 个地图有专用 handler；
 - 18 个地图没有专用 handler；
 - handler 注解共有 123 个唯一地图 ID；
-- `300260000`、`301632000` 有 handler，但不在当前有效副本地图集合中。
+- `300260000` 仍有 handler 但不在当前有效副本地图集合中；`301632000` 的非活动 handler 和静态出生已删除，真端行为归属 `301631000 / IDEvent_def`。
 
 没有专用 handler 的 18 个地图：
 
@@ -96,9 +96,9 @@
 
 无 handler 时 `InstanceEngine` 返回 `GeneralInstanceHandler` 空实现。地图可能存在基础刷怪，但没有阶段、门、计时、积分和结算编排。
 
-### 4.2 当前创建和生命周期
+### 4.2 迁移前创建和生命周期
 
-当前 `InstanceService.getNextAvailableInstance(...)`：
+迁移前 `InstanceService.getNextAvailableInstance(...)`：
 
 1. 从 `WorldMap` 分配内存 `instanceId`；
 2. 创建 `WorldMapInstance`；
@@ -107,7 +107,7 @@
 5. 调用 handler 的 `onInstanceCreate`；
 6. 启动空本检查。
 
-存在的问题：
+迁移前存在的问题：
 
 - 没有永久 `instanceUid`；
 - 没有动态实例数据库记录；
@@ -127,7 +127,7 @@
 - handler；
 - `InstanceRuntimeState` 持久机制状态；
 - 按实例持有的不可序列化瞬态对象和任务；
-- 旧空实例销毁 `Future`。
+- 统一 deadline 管理的空实例销毁状态。
 
 Retail AI 的实例状态迁移已经完成：
 
@@ -136,7 +136,7 @@ Retail AI 的实例状态迁移已经完成：
 - `DynamicInstanceManager` 绑定状态变更落库，并在恢复实例时先解码状态再初始化 Retail AI；
 - `InstanceService.destroyInstance()` 统一清理 Retail AI、deadline 和对象注册表。
 
-当前 `src/main/java/com/aionemu/gameserver/ai` 中已无 `static Map<WorldMapInstance, State>`；历史上 10 个实例静态 Map 和 2 个全局玩家状态表由 `22146d6e3` 删除。剩余旧空实例销毁任务所有权属于生命周期收口项，不再与 Retail AI 状态迁移混记。
+当前 `src/main/java/com/aionemu/gameserver/ai` 中已无 `static Map<WorldMapInstance, State>`；历史上 10 个实例静态 Map 和 2 个全局玩家状态表由 `22146d6e3` 删除。旧空实例销毁任务所有权也已由 `e783d92e5` 删除并统一进入 deadline 框架。
 
 ### 4.4 handler 状态规模
 
@@ -834,9 +834,9 @@ REGISTERED
 - [x] `data/static_data/instance_cooltimes/`；
 - [x] `data/static_data/auto_group/`；
 - [x] 被真端定义替代的 `instance_bonusattr` 简化数据、JAXB 模型和主静态表引用；
-- [ ] 与新定义重复的本地副本倍率、人数和冷却配置；
-- [ ] `static_data.xml` 和 `static_data.xsd` 中对应 import/include；
-- [ ] 运行目录中的旧副本 XML 副本。
+- [x] 与新定义重复的本地副本倍率、人数和冷却配置；全仓扫描未发现旧地图专用配置，人数和次数均读取真端定义；
+- [x] `static_data.xml` 和 `static_data.xsd` 中对应 import/include；
+- [x] 运行目录中的旧副本 XML 副本；全仓及运行目录扫描未发现 `instance_cooltimes`、`auto_group` 或旧 `instance_bonusattr` 副本。
 
 ### 15.2 Java 模型和加载器
 
@@ -852,12 +852,12 @@ REGISTERED
 ### 15.3 运行逻辑
 
 - [x] `PortalService` 中副本进入判断、收费、注册和地图 switch；
-- [ ] `AutoGroupService` 中专用副本可用性和冷却 switch；
+- [x] `AutoGroupService` 中专用副本可用性和冷却 switch；生产匹配统一读取 `MatchDefinition` 与 `InstanceLimitService`；
 - [x] Luna 固定副本 ID、价格、免费标记和直接创建逻辑；
-- [ ] `InstanceService` 中不属于底层地图操作的进入和次数逻辑；
+- [x] `InstanceService` 中不属于底层地图操作的进入和次数逻辑；当前仅保留创建、注册、重进定位、进出通知和空本回收，人数读取真端 limit；
 - [x] Retail AI 的静态 `Map<WorldMapInstance, State>`；
 - [ ] handler 中已由公共状态接管的阶段、计时、积分和奖励字段；
-- [ ] 各战场 Service 重复的 `hasCoolDown` 和开放判断；
+- [x] 各战场 Service 重复的 `hasCoolDown` 和开放判断；10 个旧报名服务及 3 个兼容桥已删除，HUD 开闭统一读取真端匹配定义；
 - [ ] 被真端奖励表替代的奖励常量和类。
 
 ### 15.4 数据库
@@ -865,14 +865,14 @@ REGISTERED
 - [x] `portal_cooldowns` 表；启动迁移完成后立即删除；
 - [x] 对应外键、DAO 注册、登录加载和登出保存逻辑；
 - [x] Luna 旧免费次数存储中被新 limit 模型替代的字段；`player_luna_shop` 仅保留工艺宝箱状态；
-- [ ] 被 reward ledger 替代的临时奖励标记。
+- [x] 被 reward ledger 替代的临时奖励标记；删除 `dynamic_instance_members.reward_status` 模型、DAO 和 schema，并在启动迁移中删除旧列。
 
 ### 15.5 测试
 
-- [ ] 删除只验证旧 XML 和旧枚举的测试；
-- [ ] 删除旧 DAO 测试；
-- [ ] 删除旧 handler 硬编码数值测试；
-- [ ] 新增统一数据闭包、恢复、扣费、匹配和结算测试。
+- [x] 删除只验证旧 XML 和旧枚举的测试；生产测试已无 `InstanceCooltime`、`AutoGroupType` 和旧 auto-group XML 引用；
+- [x] 删除旧 DAO 测试；旧 PortalCooldown DAO 测试和服务桥测试均已删除；
+- [x] 删除旧 handler 硬编码数值测试；保留的迁移测试验证真端数据归属及旧数值不得回归；
+- [x] 新增统一数据闭包、恢复、扣费、匹配和结算测试。
 
 ## 16. 实施阶段与严格依赖
 
@@ -932,7 +932,7 @@ REGISTERED
 - [x] 实现 deadline 调度；
 - [x] 将 Retail AI 实例状态迁入公共状态；
 - [x] 删除对应静态状态 Map；
-- [ ] 删除旧空本任务所有权逻辑。
+- [x] 删除旧空本任务所有权逻辑：`InstanceService` 使用固定 deadline 键，删除 `pendingResets`、`WorldMapInstance.emptyInstanceTask`、直接线程池调度及无效的配置重挂入口。
 
 验收：
 
@@ -970,12 +970,16 @@ REGISTERED
 
 任务：
 
-- [ ] 将剩余 30 个含 `Future` 的生产 handler 迁移到 deadline 或真端 Retail AI；
+- [x] 清理非活动地图 `301632000` 的旧 `IDEvent_Def_HInstance` 及静态出生；有效地图使用 `301631000 / IDEvent_def`，不保留无真端证据的硬编码流程；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
 - [x] 对 18 个无 handler 地图确认数据驱动覆盖；
 - [x] 完成 Sulfur、Carpus、Hamate、Treasure Island、Danuar 三变体、Adma、Padmarashka、Cradle 和 Transidium 的首批恢复迁移；
+- [x] 完成 Transidium Annex 四座进阶走廊护盾的返回目标、绝对 deadline 和完成态恢复，删除四段重复线程池传送、旧消息 helper 及无消费方的销毁标记；
+- [x] 完成 Tiamat Stronghold（`300510000`）真端单轨迁移：18 个变量、159 条条件接管剧情演员、三波防卫、七个 Boss 后续对象、门和宝箱，删除静态重复演员、Java 波次/Boss/掉落/电影/线程池逻辑，handler 仅保留 `701523` 操作门 22；
+- [x] 完成 Dragon Lord Refuge 普通/困难版（`300520000`、`300630000`）真端单轨迁移：两图各 18 个变量、51 条条件和 51 个槽位接管阶段、演员、Boss、门、宝箱和 Kahrun 流程；真端 30 分钟 Tiamat deadline 进入公共调度，handler 仅保留离本效果清理；
+- [x] 完成 Nightmare Circus（`301200000`）真端世界版迁移：4 个变量、124 条条件和 222 个 NPC 接管波次、Boss、宝箱、消息和电影，删除误用 `301160000` party 版 NPC 的 Java 流程，handler 仅保留世界专属变身效果清理；
 - [x] 完成 Infinity Shard（`300800000`）真端 Retail AI/条件出生接管，删除旧 handler、Hyperion/Ide Resonator Java AI、手工护盾/出口/奖励和私服掉落；
 - [x] 完成 Nochsana 与 Alquimia 的真端掉落收口，删除重复钥匙、私服奖励和无业务价值 handler；
 - [x] 完成奥德矿脉（`301690000`）真端种族任务链，条件出生接管初始敌人、裂隙、任务对象、最终 Boss 和友方 NPC；
@@ -986,6 +990,15 @@ REGISTERED
 - [x] 完成圣所地下城（`301580000`，真端 `IDF6_OP`）种族条件出生迁移：`703092` 的真端 Pattern 写入 `IDF6_RACE_L/D`，条件出生接管 `806076/806080` 和 `806189/806190`，补入真端静态控制 NPC/火焰效果，删除旧 handler 的首个进入玩家手刷逻辑；
 - [x] 完成阿祖图兰要塞（`310100000`，真端 `IDLF3_Castle_Lehpar`）私服任务 Buff 清理：真端世界无技能区域，技能 `274` 仅有任务技能定义且无副本调用，删除旧 handler 的全本强制施放和离本清理逻辑；
 - [x] 完成黑暗普埃塔（`300040000`）普通服 page 1 的真端积分、评级、Boss 选择和可恢复生命周期：67 条条件、16 个变量、`npc-scores.xml`、`instant_dungeon_define.xml` 与公共 deadline 接管流程，handler 仅保留真端生成数据未表达的电影、门和 Marabata 控制器交互；
+- [x] 完成铁壁堡垒战场（`301220000`）真端单轨迁移：28 个变量、486 条条件和 542 个 NPC 槽位接管出生，四阶段、积分、参与者和结算状态迁入公共运行状态，全部相对任务迁为绝对 deadline；
+- [x] 完成阿舒纳塔尔无渊号（`301650000`）真端首领链：第五个 Surkana 推进 `surkana_8`，条件出生生成真端 `243953` 并读取其 1000 分定义，删除错误的 `243816` 手工出生和恢复状态；
+- [x] 完成 Crucible Spire（`302400000`）55 个变量、798 条条件/槽位和 `floor_01..40` 楼层出生闭包，楼层推进和结算接入公共状态、deadline 与 infinity ledger；
+- [x] 完成 Crucible 团队/单人家族（`300300000`、`300320000`）真端单轨迁移：分别以 36 个变量、310 条条件和 30 个变量、137 条条件接管阶段、波次、Boss 与门；单人隐藏路线由真端恢复脚本写入 `hidden_L/hidden_D/STAGE`，两个 handler、公共基类和三个 Recordkeeper AI 删除旧编排、私服掉落/奖励及线程池逻辑，积分读取 `npc-scores.xml`，奖励统一进入 `InstanceSettlementService` 和 reward ledger；
+- [x] 完成 Arena PvP 八图公共生命周期迁移：`HarmonyArenaInstance`、`PvPArenaInstance` 的准备、三轮比赛、换场、动态遗物和退出改为可恢复绝对 deadline，起始时间、轮次、随机场景、玩家/队伍积分、击杀、缺席时间、参与率和奖励倍率进入 `runtimeState()`；生产 handler 的 `Future` 和直接线程池引用均清零；
+- [x] 完成 Shugo Imperial Tomb（`300560000`）`Condition_S2/S3/S4` 的 453 条条件、509 个槽位和恢复型路径时钟，删除 Java 波次、递归任务和私服掉落；
+- [x] 完成 Bastion of Souls（`302340000`）真端单轨迁移：58 个变量、328 条条件、351 个槽位覆盖开场阵营、救援/治疗波次、阶段英雄、随机钥匙怪、终局首领、宝箱和出口；handler 仅保留飞行环、电影/传送及离场清理；
+- [x] 完成 Evergale Canyon（`302350000`）真端单轨迁移：20 个变量、347 条条件、1183 个槽位和 1197 个 NPC 备选接管出生，准备/比赛/无人敌方/退出阶段、人口扩容、阵营积分、参与者和结算迁入公共状态、deadline 与 reward ledger；
+- [x] 完成 Trials of Eternity（`301560000`）真端单轨迁移：42 个变量、574 条条件和 576 个槽位接管开场、波次、半首领、最终首领、掉落箱和出口流程；静态出生删除条件数据已覆盖的重复 NPC，handler 仅保留图书馆钥匙交互、传送及副本道具离场清理；
 - [ ] 删除只提供重复通用逻辑的 handler。
 
 验收：
@@ -1002,7 +1015,7 @@ REGISTERED
 任务：
 
 - [x] 接入 `world_timeattack`；
-- [x] 接入 battleground；9 条真端行覆盖 8 个 handler，含 IDRun；
+- [x] 接入 battleground；9 条真端行覆盖 8 个 handler，含 IDRun，Iron Wall 已按真端四阶段和 `score_apply_type=0/1/2/3` 语义接入；
 - [x] 接入 arena PvP；40 条真端行覆盖 8 张地图和全部 spawn page；
 - [x] 接入 tournament；5 条定义、6 个 matchmaker、十张 Lobby/Stage 地图和轮次结算已接管；
 - [x] 接入 infinity reward；
@@ -1030,6 +1043,7 @@ REGISTERED
 - [x] 自动匹配创建、成员预留、次数消费、取消补偿和传送均接入统一准入；
 - [x] 接入主动取消、准备超时、队伍变化和惩罚区分；
 - [x] 删除 `AutoGroupType`、旧 auto_group 数据和 `MatchDefinition.getAutoInstance()` 专用 switch，适配器类名由真端定义生成。
+- [x] 删除 10 个地图专用报名服务、3 个兼容桥及地图专用 enable/timer/Cron 配置；在线 HUD 边界切换和登录同步统一由 `RetailMatchmakingService` 驱动。
 
 验收：
 
@@ -1048,9 +1062,9 @@ REGISTERED
 - [x] 完成 139 个地图的静态和行为闭包报告；
 - [ ] 完成代表性副本在线验收；
 - [ ] 完成三类 JVM 崩溃恢复测试；
-- [ ] 完成数据库离线迁移演练；
+- [x] 完成数据库离线迁移演练；MySQL 8.2 一次性环境验证旧次数表和成员奖励列迁移、删除及 ledger 建表；
 - [ ] 完成协议抓包对比；
-- [ ] 扫描旧类、旧 XML、旧表和旧调用残留；
+- [x] 扫描旧类、旧 XML、旧表和旧调用残留；
 - [ ] 维护窗口执行整体发布；
 - [ ] 更新本文档最终状态和证据。
 
@@ -1113,12 +1127,12 @@ REGISTERED
 | 方案和现状审计 | 完成 | 100% | 2026-07-19 | 本文档 |
 | 阶段 0：证据和版本冻结 | 完成 | 100% | 2026-07-19 | `manifest.xml`、`coverage.xml`、生成器 `--check` |
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-20 | 7 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除；真端 18 条副本 Buff 已接管 |
-| 阶段 2：动态实例和状态持久化 | 进行中 | 78% | 2026-07-20 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格；Retail AI 实例状态已下沉，Dark Poeta 与 The Eternal Bastion 的积分、评级、奖励和 deadline 已接入恢复路径 |
-| 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 70% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma、Alquimia、Aether Mine、Indratu、Shadow Court、Steel Rake Cabin、Divine Tower L/D、Sanctuary Dungeon、Azoturan Fortress、Karamatis、Ataxiar 等旧 handler 已删除，Nochsana、Theobomos Test Chamber、Aetherogenetics Lab 已收缩为真端数据未表达的最小交互，Kromede 的 Boss 选择、掉落、剧情出生、宝库感知、任务电影和尸体技能职责已回归真端链，Raksang Ruins、Drakenspire 普通版/任务版、Fallen Poeta、Dark Poeta 与 The Eternal Bastion 的主要流程已由真端条件出生、Retail Pattern、公共状态及 deadline 接管；当前为 93 张 `HANDLER`、21 张 `RETAIL_AI_QUEST`、7 张 `MATCHMAKER`，剩余 6 个含 `Future`、32 个直接使用 `GameThreadPoolServices` 的生产 handler |
-| 阶段 5：积分和奖励 | 进行中 | 97% | 2026-07-20 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna、Dark Poeta 与 The Eternal Bastion 真端积分/评级/条件奖励箱；Eternal Bastion 仍保留 802185 的证据边界奖励 hook |
-| 阶段 6：完整匹配 | 进行中 | 96% | 2026-07-20 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复、登录时统一同步 18 个 HUD 入口开闭状态 |
-| 阶段 7：全量闭包和发布 | 进行中 | 18% | 2026-07-20 | 139 图静态与行为闭包报告、条件表达式逐条解析、全量 1753 项自动测试基线已完成；本轮修复生成 XML 非法条件并更新 6000 条条件加载基线 |
+| 阶段 2：动态实例和状态持久化 | 进行中 | 95% | 2026-07-21 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格；运行状态批量原子发布、串行持久化及 deadline/动态出生完整快照已闭环；剩余为第 17、18 节重启验收矩阵 |
+| 阶段 3：统一进入、冷却和次数 | 完成 | 100% | 2026-07-21 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型和临时成员奖励状态删除；MySQL 8.2 离线迁移演练通过 |
+| 阶段 4：handler 状态迁移 | 进行中 | 98% | 2026-07-21 | 139 图行为闭包；主要副本族均已由真端条件出生、Retail Pattern、公共状态及 deadline 接管，非活动 `301632000` 旧 handler 已删除；Arena PvP 八图的准备、三轮比赛、换场、积分、参与和结算恢复已完成，生产 handler 中 `Future` 与 `GameThreadPoolServices` 残留均为 0；剩余工作仅为证据边界交互及重复通用 handler 的最终审计，不再有已知整图迁移缺口 |
+| 阶段 5：积分和奖励 | 进行中 | 99% | 2026-07-21 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna、Dark Poeta、The Eternal Bastion、Iron Wall、Evergale 与 Stonespear Reach 真端积分/评级或胜负/条件奖励箱；Eternal Bastion `802185` 私服奖励 hook 已删除，Dredgion Defense 最终 Rank 奖励仍缺真端数据 |
+| 阶段 6：完整匹配 | 进行中 | 99% | 2026-07-21 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复；活动实例按持久 `instanceUid` 隔离，预留、次数消费和回滚已数据库事务化；剩余为在线并发与抓包验收 |
+| 阶段 7：全量闭包和发布 | 进行中 | 50% | 2026-07-21 | 139 图静态与行为闭包、条件表达式逐条解析、生成/XML/XSD/编译和旧残留扫描、MySQL 8.2 离线迁移演练均完成；全量执行 1816 项，1815 项通过、1 项跳过，零失败、零错误 |
 
 ### 19.2 更新规则
 
@@ -1137,14 +1151,14 @@ REGISTERED
 
 ### 19.3 下一步
 
-唯一下一步：继续迁移仍含私有阶段、门、关键对象 ID 或线程池调度的生产 handler，并在每张图完成时同步删除旧字段、旧静态出生和旧掉落逻辑。
+唯一下一步：进入维护窗口执行代表性副本重启、在线并发、协议抓包和整包发布验收。
 
 ## 20. 实施日志
 
 ### 2026-07-19
 
 - 完成当前副本创建、生命周期、handler、Retail AI、冷却、匹配、评分和数据库盘点。
-- 当前有效副本集合更新为 139 张，121 张有专用 handler，18 张无专用 handler；另有 `300260000`、`301632000` 两个非活动 handler 注解。
+- 当前有效副本集合更新为 139 张，121 张有专用 handler，18 张无专用 handler；`300260000` 为非活动旧 handler，`301632000` 已删除并归属 `301631000 / IDEvent_def`。
 - 确认真端 instance creation/restrict/cooltime/cooltime2/matchmaker/reward 数据规模。
 - 确认真端 `WorldDb`、`DynamicWorldManager`、`DynamicWorld`、`MatchMaker` 和购买次数能力。
 - 确认复用现有 `staticdata_converter`、`WorldMapInstance`、`SpawnEngine` 和 Retail AI，不重写世界系统。
@@ -1349,5 +1363,115 @@ REGISTERED
 - 完成 The Eternal Bastion（`300540000`）状态迁移：准备窗口、1800 秒战斗期限、完成/失败评级、离场 deadline、积分、击杀数和玩家奖励标记统一写入 `InstanceRuntimeState`，重启后由 `restoreDeadline()`/`restoreScore()` 恢复；奖励统一经 `InstanceSettlementService.timeAttackPlan()` 与 `settleTimeAttack()` 幂等结算。`RetailPatternAI2` 的 `give_score` 负责 `score_apply_type=3`，handler `onDie` 对已接管类型不再重复计分；炮台物品和离本效果清理保留为真端未表达的交互职责。
 - 重新生成 `300540000` 条件出生：保留 `Race`、`Wave_Z1`、`castle_gate_02_Bomb`、`timewave_down` 和终局 Boss/门条件，共 302 条条件、302 个槽位、43 个变量；修正生成结果中两条 `Race == 2(Race == 2)` 非法表达式为 `(Race == 2)`，全量条件表达式逐条解析通过，加载基线更新为 6000 条。
 - 修复条件生成器的无条件 Retail AI 变量生产者闭包：无条件生产者作为锚点，避免无效 `fire*` 变量依赖传播而错误删掉 `Race/Wave_Z1`；`aion_drop` 提交 `3620311`，生成器回归测试 24 项通过。
-- The Eternal Bastion 仍保留 `802185` 的四项机会奖励 hook，原因是当前仓库没有中国区 5.8 真端掉落行证据；Ashunatal 的 `243816` 条件出生及 `243807/243816/243817/243818` 全局积分、Crucible/Shugo 条件闭包、Bastion 终局出生、Dredgion 最终 Rank 奖励和 Iron Wall/Stonespear/Evergale 的部分真端证据仍列为未闭环项，不以硬编码替代证据。
+- The Eternal Bastion `802185 / Event_IDLDF5b_TD_TreasureBox` 已核对基础/China NPC 数据及恢复脚本 `FUN_180c8dfe0`：真端只检查并消耗交互物品，不存在 `186000051/52/236/237` 发放或掉落；提交 `21df3906b` 删除整个 `onDropRegistered()` 私服注入及专用 import。Dredgion Defense 最终 Rank 奖励仍缺真端奖励行，不以硬编码替代证据。
 - 本批验证：`mvn -q -Dtest=TheEternalBastionMigrationTest,RetailConditionSpawnEngineTest test`、条件加载器全量解析、`mvn -q -DskipTests compile` 和 `git diff --check`；仅保留 Lombok 调用 JDK `Unsafe` 的弃用警告。
+- 完成 Iron Wall Warfront（`301220000`）真端出生闭包：28 个变量、486 条条件、542 个 NPC 槽位接管波次、动态对象和门，补入真端无条件 Boss `233544`，删除静态 XML 中 29 组重复 NPC；静态与条件出生 NPC ID 交集为零，仅保留静态变量初始化器 `831919` 和五分钟推进器 `831975`。
+- Iron Wall 四阶段按 `instant_dungeon_battleground` 的 `120 秒 ADJUSTING -> 60 秒 PREPARING -> 2400 秒 BATTLE -> 60 秒 FINISHED/退出` 执行；阶段、startedAt、deadline、阵营/个人积分、PvP 击杀、参与者、joinedAt、登出和离线时间全部写入 `runtimeState()`，调度统一使用 `scheduleDeadline()`，在线/离线结算统一进入 `InstanceSettlementService` 和 reward ledger。
+- Iron Wall 真端积分消费统一为 `score_apply_type=0` 记攻击者阵营及个人分、`1` 固定天族、`2` 固定魔族、`3` 双方；后三类无需攻击者。40 个固定阵营 NPC、军官 `-400` 和 Boss `+200000` 均读取 `npc-scores.xml`，事件使用包含条件出生 generation 的 stable key 幂等；删除旧 `HANDLERS` 重复军官积分和 Boss 提前结算。
+- 删除 Iron Wall handler 的 `Future`、直接线程池、静态 instance 桥接、私有阶段/门/占点字段、硬编码出生、`sp()`、私服掉落和奖励 cap/计时；AionEmu 数据/公共生命周期/出生补齐/字符串/handler 提交为 `0e6eba234`、`9652967fb`、`408af763c`、`3c8cd6ebc`、`e18eb774f`，aion_drop 字符串生成器提交为 `2b3110a`、`e0bf212`。
+- Iron Wall 收口验证通过：`IronWallWarfrontMigrationTest,RetailAiDefinitionLoaderTest,BattlefieldInstanceMigrationTest`、`mvn -q -DskipTests compile`、正式副本生成器 `--check` 和 `git diff --check` 均通过；生产 handler 残留降为 5 个含 `Future`、31 个直接使用 `GameThreadPoolServices`。
+- 复核 Ashunatal 真端源确认旧交接中的 `surkana_8 -> 243816` 结论错误：`IDDreadgion_04/world_N.xml` 的 `Surkana_8 >= 5` 实际生成 `243953 / IDDreadgion_04_DrakanWi_DrakanNinja_Ah`，其 `npc_scores.xml` 真端积分为 1000；`243807/243816/243817/243818` 的 `_71_` 名称没有积分行，运行时保持 0，不伪造定义。主分支 `09b38d7a9` 已删除 `243816` 手刷和 `captain_spawned` 恢复状态。
+- Crucible Spire 生成结果为 55 个变量、798 条条件和 798 个 NPC 槽位，覆盖 `floor_01..40`、双 spawn page 和赛季状态；Shugo Imperial Tomb 为 3 个变量、453 条条件和 509 个槽位，覆盖 `Condition_S2/S3/S4` 路径波次。对应提交为 `f5a87daaa`、`fcdf688b2`。
+- Bastion of Souls 终局缺口先由 `f5a87daaa` 补入 54 个变量、154 条条件和 157 个槽位；本批继续以 `IDAb1_Ere/world_N.xml`、真端 Pattern 和掉落为权威，扩展到 58 个变量、328 条条件和 351 个槽位，补齐 `statdown/heal_play`、开场控制 NPC `246658`、治疗控制器 `246959..246961`、阵营阶段 NPC `806583/806592/806702/806703`，以及 `246881/246885/246895/246905` 四组真端随机钥匙怪。
+- 条件生成器新增按 NPC ID 定向保留无条件随机组，不启用整图 `--unconditional-parties`；只在 `idle_live_range=-1` 时允许所选组忽略不生效的 `moveareaindex`，其他地图继续严格拒绝无法表达的移动区域。生成器测试 28 项通过，提交为 `aion_drop:477027a`；`302340000` 定向重生成重复执行字节一致。
+- Bastion handler 从 1616 行缩减到 57 行，删除全部 `Future`、直接线程池、阶段/门/UI/计数字段、硬编码出生、死亡分支、私服掉落交互、波次与电影任务；`835445/835446` 使用真端掉落 `188100423 x1`、`188100424 x4`。静态出生同步删除 19 组已由条件数据接管的旧对象，新增数据未留下近坐标静态重复。
+- `IDAb1_Ere_Condition_37` 没有 NPC Pattern 绑定，无法由当前生成数据触发，因此 handler 仅保留飞行环：写 `statdown=1`、传送触发玩家并播放电影 `957`；离本和登出只清理效果 `17649/17672` 与临时物品 `185000302/303/304/309`、`188100423/424`，不保留旧流程兼容。
+- Bastion 地图提交为 `a4c9792fa`，7838 条条件加载基线提交为 `4d3bc7665`；`BastionOfSoulsMigrationTest,RetailAiDefinitionLoaderTest,RetailConditionSpawnEngineTest`、条件出生 XSD、静态出生 XSD、生成器幂等检查、`mvn -q -DskipTests compile`、旧逻辑残留扫描和 `git diff --check` 通过。生产 handler 残留降为 4 个含 `Future`、30 个直接使用 `GameThreadPoolServices`。
+- 完成 Evergale Canyon（`302350000`，真端 `IDEternity_War`）条件出生闭包：20 个变量、347 条条件、1183 个槽位和 1197 个 NPC 备选接管阵营出生、人口扩容、据点/Boss/传送对象与动态组；删除旧静态 `302350000_Evergale_Canyon.xml`，不保留双轨出生。
+- Evergale 按真端 `180 秒 PREPARING -> 1800 秒 BATTLE -> 60 秒 NO_ENEMY/FINISHED -> 退出` 运行；`people_expand_con` 使用较大阵营注册人数的 `37/55/73/74/75` 阈值并只升不降，阶段、deadline、人口等级、阵营/个人积分、PvP、参与者及 joinedAt 全部持久化。`score_apply_type=1/2` 分别固定计入天族/魔族，稳定出生键防重复消费；无人敌方时清空空方积分和 PvP、锁定胜方并进入 60 秒结算倒计时。
+- 删除 Evergale 的全部 `Future`、直接线程池、手工出生/占点、门缓存、私服战争点数、电影和掉落逻辑；`SM_INSTANCE_SCORE` 修复 type 11 对方分数和 type 2 持久 deadline 时间，黑市商人任务注册六个真端变体。代码提交为 `890b076bc`，全量条件加载基线 `8163` 及地图断言提交为 `a1d5b1778`。
+- Evergale 定向验证在实现批次通过 `BattlefieldInstanceMigrationTest,InstanceSettlementServiceTest,RetailConditionSpawnEngineTest` 共 34 项；集成复验通过 `BattlefieldInstanceMigrationTest` 6 项、条件出生 XSD、完整主源码编译和 `git diff --check`。并行 Retail sensory-area 数据已从 40 增至 61 但其测试基线尚未提交，当前组合运行 `RetailAiDefinitionLoaderTest` 仅受该无关断言阻断。生产 handler 残留降为 3 个含 `Future`、29 个直接使用 `GameThreadPoolServices`。
+- 完成 Stonespear Reach 单轨迁移并纠正文档地图归属：Stonespear 是 `301500000 / IDLegion`，旧写的 `301680000` 实为 Idgel Dome Landmark。按 `--alternative-world 301500000` 重生成后，真端数据由 3 个变量、18 条条件扩展为 7 个变量、38 条条件和 38 个槽位，完整覆盖种族分支、隐藏目标及四轮三选一 Boss；静态出生删除旧常驻 `833284`，改为真端初始控制 NPC `856460`，`833284` 只在 `legion_on == 1` 时生成。
+- Stonespear handler 从 1121 行缩减为 284 行：删除全部 `Future`、直接线程池、四轮硬编码刷怪、随机 Boss、守护石、隐藏怪、私服积分和空掉落 hook；准备/挑战使用真端 180 秒/1800 秒绝对 deadline，积分读取 `npc-scores.xml` 并按稳定出生键幂等，阶段、积分、击杀、评级和玩家奖励标记进入 `runtimeState()`，结算统一使用 `InstanceSettlementService`。最终 Boss `855843` 在结算前计入真端 42000 分，不增加无真端依据的自动退出倒计时。
+- Stonespear 地图提交为 `f2b5f11d5`；`StonespearReachMigrationTest,RetailPatternAI2Test,RetailAiDefinitionLoaderTest,InstanceSettlementServiceTest,RetailConditionSpawnEngineTest,RetailConditionSpawnPartyLoaderTest,BattlefieldInstanceMigrationTest` 组合测试、静态出生 XSD、生成器幂等检查和 `git diff --check` 通过。全局条件基线为 8183，sensory area 基线为 61；生产 handler 残留降为 2 个含 `Future`、28 个直接使用 `GameThreadPoolServices`。
+- 完成 Trials of Eternity（`301560000`）真端单轨迁移：42 个变量、574 条条件和 576 个槽位接管全流程，静态出生删除条件数据已覆盖的重复对象；handler 从约 1140 行缩减为 45 行，仅保留图书馆钥匙交互、传送及副本道具离场清理，删除旧 Future、线程池、波次、硬编码出生、死亡编排和私服掉落，不保留兼容分支。
+- Trials 定向验证通过：`TrialsOfEternityMigrationTest`、`RetailAiDefinitionLoaderTest`、`RetailConditionSpawnEngineTest`、`RetailConditionSpawnPartyLoaderTest`，共 8589 条生成条件逐条可解析；生成器单元测试 34 项通过，条件出生和静态出生 XML 均可解析。
+- 清理非活动地图 `301632000`：确认有效真端地图为 `301631000 / IDEvent_def` 后，删除 `IDEvent_Def_HInstance` 及静态出生文件，不保留无有效地图归属的硬编码流程；同步补充 `ContaminatedUnderpathMigrationTest` 的非活动地图回归断言并移除旧模型集合测试引用。生产 handler 中含 `Future` 的文件降为 0 个，直接使用 `GameThreadPoolServices` 的文件降为 26 个。
+- 本批验证：`mvn -q -DskipTests compile`、正式副本生成器 `--check`、`git diff --check` 和 Trials/IDEvent/AI 定向测试全部通过。全量 `mvn -q test` 首次受并行 IntelliJ JPS 重建 `target/classes` 影响，在测试发现阶段报 `SMSkillCooldownTest` 的 `SM_SKILL_COOLDOWN` 类加载竞态；排除该发现阶段类后执行 1785 项，0 失败但 `SkillCancellationTest` 有 2 个既有 `CreatureGameStats` 空指针，待独立修复，不归因于本次副本迁移。
+- 清理克罗梅德试炼最后一处直接线程池调用：旧 helper 只为 `time=0` 即时消息提交任务，改用基类 `sendMsg(int)` 同步走统一消息服务，删除重复广播实现；提交为 `af20542fe`，`KromedesTrialInstanceTest,InstanceHandlerRecoveryMigrationTest`、编译及差异检查通过，直接使用 `GameThreadPoolServices` 的生产 handler 降为 25 个。
+- 收敛 10 个旧消息 helper：Adma、Archives 普通/任务版、Danuar Sanctuary/Seized、Esoterrace、Sauro、Theobomos Lab、Crucible 族和 Steel Rake 的固定 `PC_ALL` 消息统一委托基类与 `NpcShoutsService`，删除重复线程池广播及无调用的字符串广播。审计发现 `CrucibleInstance` helper 被两个子类继承后，同步替换全部 224 个固定全阵营调用，不改子类阶段或波次调度。
+- 消息收敛提交为 `e281c7c9c`、`9a2eaf545`、`914a242a9`、`0526d4703`、`08134f2e9`、`64257c1ec`、`e41ef9d33`、`5d34526d2`；`InstanceHandlerRecoveryMigrationTest`、`mvn -q -DskipTests compile`、残留扫描和 `git diff --check` 通过，直接使用 `GameThreadPoolServices` 的生产 handler 降为 15 个。
+- 完成五个恢复缺口：Padmarashka 删除重复消息调度；Mirash 的钥匙怪二选一及 5 秒波次进入运行状态和绝对 deadline；Cradle 的图书馆净化与太阳祭坛进入触发/截止/完成状态并可重建隐藏入口；Draupnir 删除无真端依据且不改变动作结果的 1 秒移动包装；Rentus 普通/困难版删除与 `IDYun_Temp_31`、`IDYun_Drakan_ND3` 真端 `on_die` Pattern 重复的落骑变身分支。
+- 本批提交为 `19b3eb388`、`fc9a7015b`、`1d85badce`、`030826761`、`cd971c6b8`；`InstanceHandlerRecoveryMigrationTest`、增量编译、残留扫描和 `git diff --check` 通过，直接使用 `GameThreadPoolServices` 的生产 handler 降为 9 个。
+- 完成 Transidium Annex 返回流程恢复：四座进阶走廊护盾统一写入 `transidium.return_world`、`transidium.return_deadline` 和 `transidium.return_complete`，15 秒传送改由 `scheduleDeadline("return")` 执行并在实例恢复时重挂；固定全阵营消息改走基类消息服务，删除四段重复线程池任务、旧 `sendMsgByRace` 和从未读取的 `isInstanceDestroyed`。代码提交为 `27939a85c`；`InstanceHandlerRecoveryMigrationTest`、编译、残留扫描和 `git diff --check` 通过，直接使用 `GameThreadPoolServices` 的生产 handler 降为 8 个。
+- 完成 Tiamat Stronghold（`300510000`）真端条件闭包：以 `--alternative-world 300510000` 重生成后由 6 个变量、13 条条件扩展为 18 个变量、159 条条件和 161 个槽位，完整接入 `ARIANASORUS_SPAWN`、`KAHRUN_SPAWN`、`MURUGAN_SPAWN`、`NAMED_KILL`、三波防卫和七个 Boss 后续对象；生成器重复执行字节一致，其他世界块未变化。
+- Tiamat handler 从 558 行缩减为 16 行，删除全部手工波次、Boss 死亡编排、门/剧情/消息任务、私服掉落、`Future`/直接线程池和错图出生；静态 XML 删除 20 组已由条件数据接管的演员。`701523 / IDTiamat_FOBJ_Switch_4` 的真端 AI 为 `NoAction`，因此只保留操作门 22 的最小职责，不增加兼容逻辑。代码提交为 `70e701f4e`。
+- Tiamat 定向验证通过：`InstanceHandlerRecoveryMigrationTest,RetailConditionSpawnEngineTest,RetailConditionSpawnPartyLoaderTest,RetailPatternAI2Test,RetailAiDefinitionLoaderTest` 共 119 项，`mvn -q -DskipTests compile`、两份 XML 解析、生成器幂等、旧逻辑残留扫描和 `git diff --check` 均通过；全局条件加载基线更新为 8735，生产 handler 直接使用 `GameThreadPoolServices` 的文件降为 7 个。
+- 完成 Dragon Lord Refuge 普通/困难版（`300520000`、`300630000`）真端条件闭包：必须在同一次生成中同时指定两个 `--world` 和两个 `--alternative-world`，两图均由 10 个变量、14 条条件扩展为 18 个变量、51 条条件和 51 个槽位；全局条件加载基线更新为 8809，窄重生成 SHA-256 为 `94c9765e1baaa1a272dbefa75d935e9679b50eb488da8112fb1cf8f38c10fe64`，重复执行字节一致。
+- 两个约 900 行 handler 均缩减为 24 行，删除硬编码阶段、出生、电影、掉落、直接线程池和私服奖励；静态出生补齐两图 Kahrun/Tiamat 流程所需对象，删除重复或无真端依据的 `701502`、`730694`、`730699`、`831990`。Kahrun 交互改为生成真端控制 NPC `283154`，由 Pattern 推进后续对象；仅保留条件数据未替代的出口 `730633..730636` 和离本效果 `20932/20936` 清理，不增加兼容流程。
+- Retail Pattern 消息链补充脚本 AI 投递能力并在异步投递前固定接收者；`IDTiamat_Tiamat_Timer_01` 使用 `InstanceDeadlineScheduler` 实现真端 30 分钟 deadline，收到 Tiamat 死亡消息 `201` 后取消，超时向 `219362/236277` 投递 `10010`。代码提交为 `584880ed3`。
+- Dragon Lord Refuge 批次验证通过：条件转换器 34 项，`DragonLordRefugeRetailMigrationTest` 2 项、`RetailPatternAI2Test` 81 项、`RetailConditionSpawnEngineTest` 12 项、`RetailAiDefinitionLoaderTest` 4 项，`mvn -q -DskipTests compile`、条件 XSD、两份静态 XML、生成器幂等、旧逻辑残留扫描及 `git diff --check` 均通过；仅有 Lombok 调用 JDK `Unsafe` 的弃用警告。生产 handler 直接使用 `GameThreadPoolServices` 的文件降为 5 个。
+- 完成 Nightmare Circus（`301200000 / IDAsteria_IU_World`）真端单轨迁移并修正版本错配：旧 handler 使用的 `233144..233162` 属于 `301160000 / IDAsteria_IU_Party`，世界版真端 NPC 实为 `233450..233467`。以 `--world 301200000 --alternative-world 301200000` 生成 4 个变量、124 条条件、124 个槽位和 222 个 NPC，覆盖三阶段波次、Boss、宝箱、系统消息及结束电影。
+- 静态出生只保留真端无条件生产者 `831740/831747`：前者死亡广播 `1997`，后者写入 `Condition_S1=1` 启动流程；删除 party 版 `831573`、条件数据已接管的 `831720/831721` 及无世界地图证据的 `831722/831723`。旧 669 行 handler 缩减为 25 行，仅清理世界专属变身效果 `21469..21472`，删除手工波次、Boss、掉落、电影、复活重施、线程池和错误 NPC，不保留 party 版兼容逻辑。代码提交为 `6b0c82c9a`。
+- Nightmare Circus 条件生成 SHA-256 为 `43b54f633f0b4ea1a53271c76df54557d7d052c1ae912ff032544fbfbe6a97b8`；条件与静态生成重复执行字节一致。`NightmareCircusRetailMigrationTest,RetailAiDefinitionLoaderTest,RetailConditionSpawnEngineTest,RetailConditionSpawnPartyLoaderTest,RetailPatternAI2Test` 共 100 项、`mvn -q -DskipTests compile`、条件 XSD、静态 XML、残留扫描和 `git diff --check` 均通过；全局条件基线更新为 8933，直接使用 `GameThreadPoolServices` 的生产 handler 降为 4 个。
+- 完成 Crucible 团队/单人（`300300000`、`300320000`）真端条件闭包：团队版为 36 个变量、310 条条件，单人版最终扩展为 30 个变量、137 条条件和 153 个 NPC 槽位，补齐 `condition_s1_l/d`、`hidden_L/hidden_D/STAGE` 与 `217784/217785`；真端证据来自 `idarena/world_N.xml`、`idarena_solo/world_N.xml`、生成的 `condition-spawns.xml`、`npc-scores.xml`、`instant_dungeon_define.xml` 及恢复源码 `fun_722.cpp/FUN_180c6d260`。
+- 两个 Crucible handler、公共基类和三个 Recordkeeper AI 由约 3700 行收缩到 392 行：删除 Java 波次/Boss/门/阶段计数、`Future`、直接线程池、私服掉落和奖励；Recordkeeper 直接写 Retail 条件变量，积分、玩家奖励状态、阶段协议及复活位置进入 `runtimeState()`，结算统一使用 `InstanceSettlementService.cruciblePlan()`、`settleCrucible()` 和 reward ledger。`CrucibleInstance.onChangeStage()` 仅保留 Retail Pattern 仍需要的 `SM_INSTANCE_STAGE_INFO` 客户端同步。
+- Crucible 保留边界：资格票清理、玩家死亡/复活/离场协议、单人任务门户 `730459` 和 `onStopTraining()` 结算仍有明确消费方；恢复源码证明 `730459` 的事件 `10000` 按阵营写 `hidden_L/hidden_D=1`，并按等级 `<=50/>50` 写 `STAGE=7/8`，原 6 条无生产者条件已闭环，不再拒绝。
+- Crucible 生成器提交为 `aion_drop:592e633`、`aion_drop:abed825`、`aion_drop:3b8a559`；AionEmu 条件数据和实现提交为 `b2c56e1f4`、`77ceab931`、`80f3825a7`，六参数消息服务编译修复为 `e0bae43f4`，此前团队版条件提交为 `6d48d2628`。生成器 35 项测试、`RetailAiDefinitionLoaderTest,RetailConditionSpawnEngineTest,CrucibleMigrationTest,InstanceHandlerRecoveryMigrationTest`、条件 XSD、`mvn -q -DskipTests compile` 和 `git diff --check` 均通过；生产 handler 已无 `Future` 与直接 `GameThreadPoolServices`。
+- 完成 Arena PvP 八图的最后公共迁移：`300350000`、`300360000`、`300420000`、`300430000`、`300550000` 由 `PvPArenaInstance` 共享恢复路径，`300450000`、`300570000`、`301100000` 由 `HarmonyArenaInstance` 共享恢复路径；准备、每轮、1 秒换场、遗物重生及 60 秒退出均使用 `scheduleDeadline()`，JVM 恢复后沿用原起始时间、轮次和已抽取场景。
+- 玩家积分、PvP/怪物击杀、缺席累计/起点、参与率、最终时间分和奖励倍率写入 `arena.player.*`；Harmony 队伍积分、击杀和最终分写入 `arena.group.*`。结算仍只使用 `InstanceSettlementService` 与幂等 ledger，崩溃后不会重新抽取场景或丢失离线玩家分数。
+- 竞技场 NPC 积分删除两份 Java `switch` 并统一读取 `npc-scores.xml`，修正旧代码把 `243681` 写成 400、真端实际为 500 的偏差；删除 `218784..218795` 宝箱直发勋章/徽章的私服分支，保留生成数据已有的 `IDARENA_PVP_FFA_BOX`、`IDARENA_PVP_1VS1_BOX` common drop。
+- Arena PvP 代码提交为 `95b2aeeca`；`PvPArenaMigrationTest,PvPArenaPlayerRewardTest,InstanceSettlementServiceTest,InstanceHandlerRecoveryMigrationTest`、`mvn -q -DskipTests compile`、`git diff --check` 和生产 handler 残留扫描通过，仅有 Lombok/JDK `Unsafe` 弃用警告。生产 handler 的 `Future` 与直接 `GameThreadPoolServices` 文件数均降为 0。
+- The Eternal Bastion `802185` 掉落边界收口提交为 `21df3906b`：删除四项旧私服奖励注册，不保留兼容或替代发奖；`TheEternalBastionMigrationTest` 与完整源码编译通过。
+- 空副本回收公共框架提交为 `e783d92e5`：`InstanceService` 统一通过 `InstanceDeadlineScheduler` 固定键安排、恢复和取消空本销毁，删除弱引用 `pendingResets`、实例内 `Future` 字段及 `Config.reloadDestroyTasks()` 的无效重挂；`InstanceServiceTest,InstanceDeadlineSchedulerTest,DynamicInstanceManagerTest` 与完整源码编译通过。
+- 完成旧战场报名调度单轨清理，提交为 `16b236f00`：删除 `KamarBattlefieldService`、`EngulfedOphidanBridgeService`、`SuspiciousOphidanBridgeService`、`IronWallWarfrontService`、`IdgelDomeService`、`IdgelDomeLandmarkService`、`GrandArenaTrainingCampService`、`IDRunService`、`AsyunatarService`、`DredgionService2`，并删除 `GameBattlefieldServices`、`GameBattlefieldRuntimeBridge`、`GameBattlefieldFallbacks` 及旧 Bean/provider/管理员入口；不保留兼容桥。
+- `RetailMatchmakingService` 统一遍历 `MatchDefinition.all()`，以真端 `isOpen()`、等级许可和 `InstanceLimitService.status()` 驱动在线玩家 HUD 边界切换；登录路径继续即时同步当前状态。`AutoGroupConfig` 与 `autogroup.properties` 仅保留全局自动组队开关，删除地图专用 enable/timer/Cron。完整编译、测试编译和 9 个定向测试类共 94 项通过，旧类、旧配置键与 `playersWithCooldown` 生产残留扫描为零，`git diff --check` 通过。
+- 完成旧静态和数据库残留审计：全仓及运行目录没有旧 `instance_cooltimes`、`auto_group`、`instance_bonusattr` 副本或 import/include；`InstanceService` 已只承担底层生命周期职责。提交 `2be5f9cfc` 删除从未被消费、始终写入 `0` 的 `dynamic_instance_members.reward_status`，运行模型、DAO 和新建库脚本不再包含该字段，现有数据库启动时检测并删除旧列；奖励幂等状态只由 `instance_reward_ledger` 持有。完整编译、`DatabaseSchemaInitializerTest` 和差异检查通过。
+- 完成数据库离线迁移演练：一次性 MySQL 8.2 容器先构造 `dynamic_instance_members.reward_status` 与 `portal_cooldowns` 旧状态，再通过真实 `DatabaseSchemaInitializer.initializeIfMissing()` 升级；结果为 `reward_status_columns=0`、`portal_cooldowns_tables=0`、`migrated_limit=9,123456789,2`、`ledger_tables=1`。容器随后停止并自动删除，未连接或修改现有游戏数据库。
+- 旧测试残留扫描完成：测试源码不再引用 `InstanceCooltime`、`AutoGroupType`、旧 auto-group XML、PortalCooldown DAO 或已删除的战场服务测试；现有迁移测试只验证真端闭包、恢复和旧硬编码不得回归。奖励类逐项引用审计未发现除自身外无消费方的孤儿类，剩余类型均被 handler、匹配适配器或 `SM_INSTANCE_SCORE` 协议实际使用，不作误删。
+- 完成副本迁移公共代码审查及根因修复：`7a6b3ecef` 将匹配活动实例从地图局部 `instanceId` 改为持久 `instanceUid`，并让玩家进入/离开按实例对象交叉校验，避免不同地图相同局部 ID 串本；`72c3fe780` 将匹配预留、次数消费、取消和恢复放入数据库事务，离线超时及 JVM 重启后也能回滚。
+- `a97264615` 为 `InstanceRuntimeState` 增加一次发布一个完整快照的批量原子变更，持久化按动态实例串行执行；deadline 的截止/完成二元组和 Retail Pattern 动态出生的十字段快照不再逐字段落库，恢复时删除不完整旧快照。
+- `ad12177cd` 修复启动时“无效 AI 名称”误报：`ide_resonator`、`IDF6_Lap_GodElemental_67_Ah`、`hyperion`、`brigadier_indratu`、`anikiki` 对应 9 个 NPC 均由可执行 Retail Pattern 接管，不再要求已删除的 Java AI 注册；当 Pattern 因上下文不支持而拒绝接管时，只回退到已注册的 `general`、`aggressive` 或 `dummy`，避免装配空 AI。
+- `a6e485174` 清理条件出生已完成的调度任务及 handler 未消费的死亡模式记录，避免长生命周期副本中集合持续增长；`41a5d4367` 只修正同一死亡清理块的缩进，不改变行为。
+- 审查定向验证全部通过：正式生成器 `python3 scripts/generate_retail_instance_data.py --check` 确认 139 张活动地图（134 standard、5 special）；`condition-spawns.xml` 通过 XSD；11 组审查测试、各批定向测试、`RetailConditionSpawnEngineTest`、完整源码编译和 `git diff --check` 均通过。最终扫描确认生产 handler 不再用局部 `instanceId` 注销匹配实例，deadline 和动态出生没有逐字段持久化残留，五个旧 AI 名只存在于模板/真端定义或专用类名中，不再进入无效 AI 告警路径。
+- 全量 `mvn -q test` 首先确认旧包 `target/test-classes/com/aionemu/gameserver/network/SMSkillCooldownTest.class` 是 JPS 遗留产物；只删除该陈旧构建产物后，Surefire 正常运行 1813 项。最终结果为 1 个失败、2 个错误、1 个跳过：`AlwaysAttackEffectTest` 的旁路次数断言，以及 `SkillCancellationTest` 两个缺少 `CreatureGameStats` 的既有空指针。三项均位于战斗/技能测试，不涉及本次副本、匹配、运行状态或 AI 选择代码，必须另开范围修复后再取得全量绿色基线。
+- 清零上述 3 项测试债务：`AlwaysAttackEffectTest` 改为通过正式 `Effect.startEffect()` 生命周期验证真端 `AlwaysHit`/`AlwaysNoResist` 次数耗尽后的 Begin/End 注册清理；充能技能选择最终阶段后仅在真端冷却非零时读取攻击速度并登记冷却，与普通技能零冷却路径一致。原始 5 项和攻击判定/Effect/技能模板聚焦回归通过；稳定执行 `process-classes` 后的全量 Surefire 为 1816 项、1815 项通过、1 项跳过、零失败、零错误。
+- 当前仍缺：Dredgion Defense 最终 Rank 真端奖励行；第 17、18 节代表性副本在线、JVM 重启/崩溃恢复、并发和 5.8 协议抓包；维护窗口整包发布。代码闭包不等于已上线完成，不得提前勾选阶段 2、5、6、7 的最终验收。
+
+## 21. Claude Code 接力说明
+
+### 21.1 权威路径和必用入口
+
+- 主仓库：`/Users/mc/IdeaProjects/AionEmu`；当前集成分支为 `main`，本计划是迁移状态和实施日志的唯一文档入口。
+- 中国区 5.8 真端服务端证据：`/Users/mc/IdeaProjects/58Server`；地图条件以 `Map/Worlds/<world>/world_N.xml` 为主，必须同时核对对应 NPC Pattern、实例定义、积分、奖励和掉落数据。
+- 最新客户端：`/Users/mc/IdeaProjects/5.8客户端`；客户端包、字符串、地图、电影、对象和协议行为只能用于补证，不能用旧客户端路径覆盖该路径。
+- 数据转换仓库：`/Users/mc/PycharmProjects/aion_drop`；条件出生生成器为 `staticdata_converter/generate_retail_condition_spawns.py`，测试为同目录 `test_generate_retail_condition_spawns.py`。
+- AionEmu 生成结果：`src/main/resources/aion/definitions/compact/ai/condition-spawns.xml`；NPC 积分读取相邻 Retail AI 数据中的 `npc-scores.xml`，副本定义/奖励读取 `src/main/resources/aion/definitions/compact/instances/` 下的生成 XML。生成文件必须由转换器重建并做幂等检查，不手改结果伪造证据。
+- 公共实现优先复用 `RetailConditionSpawnEngine`、`RetailPatternAI2`、`DynamicInstanceManager`、`InstanceDeadlineScheduler`、`InstanceRuntimeState` 和 `InstanceSettlementService`，不要在 handler 中重建同类状态机、线程池或奖励公式。
+
+### 21.2 不可破坏的迁移约束
+
+- 单轨替换：新路径接管后立即删除旧 Java 流程、旧静态重复出生和旧私服奖励，不保留双读、双写、fallback 或兼容开关。
+- 先证明真端所有权再删除：每个阶段、条件变量、NPC、门、电影、掉落、积分和奖励都要能指向真端源或当前生成数据；证据缺失时只保留最小职责并在本文档登记，禁止猜测变量生产者。
+- 可恢复状态统一写入 `runtimeState()`；相对计时转换为绝对时间并通过 `scheduleDeadline()`/恢复入口重挂；动态对象、积分事件和奖励必须使用稳定键或幂等 ledger，不能依赖 objectId、内存布尔值或 JVM 存活时间。
+- NPC 分数只读取 `npc-scores.xml`，不得在 handler 新增硬编码积分表；在线和离线奖励统一进入 `InstanceSettlementService` 与 reward ledger，不直接发 AP、GP 或物品。
+- Retail Pattern 仍调用的 handler 回调不能因“看似只发包”而盲删；例如 Crucible 的 `onChangeStage()` 是客户端阶段包同步边界，不再拥有出生流程，但仍有真实调用方。
+- 条件表达式必须对生成 XML 全量逐条解析；曾出现 `(1141_out == 1) && (1141_in == 1)` 启动失败，任何生成器改动都必须覆盖嵌套括号、大小写变量和无生产者条件的回归测试。
+
+### 21.3 工作区和提交隔离
+
+- 主工作区可能同时存在其他窗口的任务改动。开始和提交前都执行 `git status --short --branch`、`git diff --name-only`、`git diff --cached --name-only`；发现不属于当前批次的已暂存文件时先停止，不覆盖、不清理。
+- 禁止 `git add -A`、`git add .` 和破坏性还原；只按明确文件逐个暂存。一个地图或同构家族一个逻辑提交，公共修复与文档更新分别提交。
+- 不修改或提交当前无关未跟踪文档 `docs/RETAIL_AI_MIGRATION.md`、`docs/RETAIL_SKILL_ENGINE_MIGRATION_PLAN.md`；也不得带入 Inggison、Gelkmaros、Silentera、任务、门户或服务窗口的并行改动。
+- 未经用户要求不得 push。接收其他分支提交时先看 `git show --stat` 和完整 diff，一次只 cherry-pick 一个逻辑提交，定向验证通过后再继续。
+
+### 21.4 当前断点、缺口和推荐顺序
+
+1. Arena PvP 八图的公共恢复迁移已由 `95b2aeeca` 完成；生产 handler 的 `Future<` 与 `GameThreadPoolServices` 扫描结果均为 0。
+2. Crucible 隐藏路线已由 `FUN_180c6d260` 闭环并生成 12 条条件；The Eternal Bastion `802185` 已证明无四项真端奖励并删除旧 hook，这两项不再是断点。
+3. Dredgion Defense 最终 Rank 奖励仍缺真端奖励行；没有新证据时不猜测奖励，也不把旧私服值搬进公共服务。
+4. 旧空副本任务、旧战场报名服务、兼容桥、地图专用 Cron、旧成员奖励标记、旧 XML/import/运行副本及调用残留均已扫描闭环；不要重新引入以局部 `instanceId` 识别匹配实例、逐字段持久化 deadline/动态出生或已删除 Java AI 名称。
+5. JPS 遗留的旧包 `SMSkillCooldownTest.class` 已定位并清理；`AlwaysAttackEffectTest` 和 `SkillCancellationTest` 的 3 项债务也已按正式 Effect 生命周期和零冷却语义清零。当前稳定全量基线为 1816 项、1815 项通过、1 项跳过、零失败、零错误。
+6. 阶段 3 已完成且数据库离线迁移演练通过；生成器、XML/XSD、编译、审查定向测试、最终残留扫描和干净全量测试基线也已完成。阶段 2、5、6、7 仍待 Dredgion Defense 奖励证据以及维护窗口在线重启/并发/协议抓包与发布验收，未取得这些证据前不得勾选总验收项。
+
+### 21.5 每批最低验证和交付格式
+
+```bash
+git status --short --branch
+git diff --name-only
+mvn -q -Dtest=<本批迁移测试>,InstanceHandlerRecoveryMigrationTest test
+mvn -q -DskipTests compile
+git diff --check
+```
+
+若修改条件生成器，在 `/Users/mc/PycharmProjects/aion_drop/staticdata_converter` 额外执行 `python3 -m unittest test_generate_retail_condition_spawns.py`，对目标世界连续生成两次并比较字节结果，再验证 AionEmu 的条件 XSD和 `RetailAiDefinitionLoaderTest,RetailConditionSpawnEngineTest`。每批交付必须在本文档写明：地图/机制、删除的旧逻辑、提交 SHA、验证命令与结果、尚缺真端证据、公共依赖、剩余数量和唯一下一步。

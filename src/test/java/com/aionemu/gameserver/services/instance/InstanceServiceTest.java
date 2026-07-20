@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
@@ -55,6 +58,23 @@ class InstanceServiceTest {
 		} finally {
 			InstanceConfig.DESTROY_DELAY_SECONDS = regularDelay;
 		}
+	}
+
+	@Test
+	void emptyRecycleUsesPersistentDeadlineScheduler() throws Exception {
+		String service = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java"));
+		String world = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/world/WorldMapInstance.java"));
+		String config = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/configs/Config.java"));
+
+		assertTrue(service.contains("InstanceDeadlineScheduler.schedule(instance, EMPTY_RESET_DEADLINE"));
+		assertTrue(service.contains("InstanceDeadlineScheduler.cancel(instance, EMPTY_RESET_DEADLINE)"));
+		assertFalse(service.contains("pendingResets"));
+		assertFalse(service.contains("GameThreadPoolServices"));
+		assertFalse(world.contains("emptyInstanceTask"));
+		assertFalse(config.contains("reloadDestroyTasks"));
 	}
 
 	private TestWorldMapInstance instanceWithPlayerCount(int playerCount) {

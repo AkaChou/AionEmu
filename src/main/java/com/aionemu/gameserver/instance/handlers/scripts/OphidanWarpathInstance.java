@@ -215,7 +215,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler {
 		for (Player player : instance.getPlayersInside()) {
 			onExitInstance(player);
 		}
-		GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+		GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance);
 	}
 
 	private void sendEnterPacket(Player player) {

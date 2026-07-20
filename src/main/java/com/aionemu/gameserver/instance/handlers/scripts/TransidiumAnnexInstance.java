@@ -2,8 +2,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -13,7 +11,6 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -40,8 +37,6 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 		private int hangarBarricade;
 	/** transidium annex base / transidium annex base */
 		private int transidiumAnnexBase;
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	protected boolean isInstanceDestroyed = false;
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -97,6 +92,10 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 		if (runtimeState().getBoolean("transidium.complete", false)) {
 			spawnCompletion();
 		}
+		long returnDeadline = runtimeState().getLong("transidium.return_deadline", 0);
+		if (!runtimeState().getBoolean("transidium.return_complete", false) && returnDeadline > 0) {
+			scheduleDeadline("return", returnDeadline, this::finishReturn);
+		}
 	}
 	
 	/**
@@ -113,14 +112,14 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 		}
 		if (runtimeState().getLong("transidium.start_deadline", 0) == 0) {
 			// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
-			sendMsgByRace(1402252, Race.PC_ALL, 10000);
+			sendMsg(1402252, 0, false, 25, 10000);
 			// 进阶走廊护盾已激活。 / The Advance Corridor Shield has been activated.
 			// 若保护装置被摧毁，通道将消失并返回要塞。 / If the protection device is destroyed, the corridor will disappear and you will return to the fortress.
-			sendMsgByRace(1402637, Race.PC_ALL, 20000);
+			sendMsg(1402637, 0, false, 25, 20000);
 			// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
-			sendMsgByRace(1401181, Race.PC_ALL, 50000);
+			sendMsg(1401181, 0, false, 25, 50000);
 			// 特兰西迪姆附楼效果削弱了机库路障。 / The effect of the Transidium Annex has weakened the Hangar Barricade.
-			sendMsgByRace(1402638, Race.PC_ALL, 1200000);
+			sendMsg(1402638, 0, false, 25, 1200000);
 			long deadline = System.currentTimeMillis() + 60_000;
 			runtimeState().put("transidium.start_deadline", deadline);
 			scheduleDeadline("start", deadline, this::openStart);
@@ -171,135 +170,19 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			// 贝卢斯进阶走廊护盾。 / Belus Advance Corridor Shield.
 			case 297306:
-				// 贝卢斯进阶走廊护盾已被摧毁。 / The Belus Advance Corridor Shield has been destroyed.
-				// 贝卢斯营地的守护者已返回阿卡迪亚要塞。 / The Daevas from the Belus camp have returned to the Arcadian Fortress.
-				sendMsgByRace(1402270, Race.PC_ALL, 2000);
-				// 进阶走廊护盾即将消失。 / The Advance Corridor Shield will disappear soon.
-				sendMsgByRace(1402641, Race.PC_ALL, 7000);
-				// 你即将返回要塞。 / You will return to the fortress soon.
-				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
-							/**
-							 * 处理 visit。
-							 * Handle visit.
-							 *
-							 * @param player 玩家 / player
-							 */
-							@Override
-							public void visit(Player player) {
-								// 【阿卡迪亚要塞】 / [Arcadian Fortress]
-								TeleportService2.teleportTo(player, 400020000, 1023.73315f, 1023.5483f, 1530.4855f, (byte) 27);
-							}
-						});
-						onInstanceDestroy();
-					}
-				}, 15000);
+				beginReturn(1402270, 400020000);
 			break;
 			// 阿斯皮达进阶走廊护盾。 / Aspida Advance Corridor Shield.
 			case 297307:
-				// 阿斯皮达进阶走廊护盾遭受攻击。 / The Aspida Advance Corridor Shield is under attack.
-				// 阿斯皮达营地的守护者已返回暗影要塞。 / The Daevas from the Aspida camp have returned to the Umbral Fortress.
-				sendMsgByRace(1402271, Race.PC_ALL, 2000);
-				// 进阶走廊护盾即将消失。 / The Advance Corridor Shield will disappear soon.
-				sendMsgByRace(1402641, Race.PC_ALL, 7000);
-				// 你即将返回要塞。 / You will return to the fortress soon.
-				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
-							/**
-							 * 处理 visit。
-							 * Handle visit.
-							 *
-							 * @param player 玩家 / player
-							 */
-							@Override
-							public void visit(Player player) {
-								// 【暗影要塞】 / [Umbral Fortress]
-								TeleportService2.teleportTo(player, 400040000, 1023.73315f, 1023.5483f, 1530.4855f, (byte) 27);
-							}
-						});
-						onInstanceDestroy();
-					}
-				}, 15000);
+				beginReturn(1402271, 400040000);
 			break;
 			// 阿塔纳托斯进阶走廊护盾。 / Atanatos Advance Corridor Shield.
 			case 297308:
-				// 阿塔纳托斯进阶走廊护盾遭受攻击。 / The Atanatos Advance Corridor Shield is under attack.
-				// 阿塔纳托斯营地的守护者已返回永恒要塞。 / The Daevas from the Atanatos camp have returned to the Eternum Fortress.
-				sendMsgByRace(1402272, Race.PC_ALL, 2000);
-				// 进阶走廊护盾即将消失。 / The Advance Corridor Shield will disappear soon.
-				sendMsgByRace(1402641, Race.PC_ALL, 7000);
-				// 你即将返回要塞。 / You will return to the fortress soon.
-				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
-							/**
-							 * 处理 visit。
-							 * Handle visit.
-							 *
-							 * @param player 玩家 / player
-							 */
-							@Override
-							public void visit(Player player) {
-								// 【永恒要塞】 / [Eternum Fortress]
-								TeleportService2.teleportTo(player, 400050000, 1023.73315f, 1023.5483f, 1530.4855f, (byte) 27);
-							}
-						});
-						onInstanceDestroy();
-					}
-				}, 15000);
+				beginReturn(1402272, 400050000);
 			break;
 			// 迪西隆进阶走廊护盾。 / Disillon Advance Corridor Shield.
 			case 297309:
-				// 迪西隆进阶走廊护盾已被摧毁。 / The Disillon Advance Corridor Shield has been destroyed.
-				// 迪西隆营地的守护者已返回天击要塞。 / The Daevas from the Disillon camp have returned to the Skyclash Fortress.
-				sendMsgByRace(1402273, Race.PC_ALL, 2000);
-				// 进阶走廊护盾即将消失。 / The Advance Corridor Shield will disappear soon.
-				sendMsgByRace(1402641, Race.PC_ALL, 7000);
-				// 你即将返回要塞。 / You will return to the fortress soon.
-				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
-							/**
-							 * 处理 visit。
-							 * Handle visit.
-							 *
-							 * @param player 玩家 / player
-							 */
-							@Override
-							public void visit(Player player) {
-								// 【天击要塞】 / [Skyclash Fortress]
-								TeleportService2.teleportTo(player, 400060000, 1023.73315f, 1023.5483f, 1530.4855f, (byte) 27);
-							}
-						});
-						onInstanceDestroy();
-					}
-				}, 15000);
+				beginReturn(1402273, 400060000);
 			break;
 			case 297310: //Chariot Hangar I Controller.
 		        despawnNpc(npc);
@@ -307,12 +190,12 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				    if (race.equals(Race.ELYOS)) {
 					    deleteNpc(804118);
 						// 战车机库 I 控制器已被摧毁。 / Chariot Hangar I Controller has been destroyed.
-						sendMsgByRace(1402262, Race.PC_ALL, 0);
+							sendMsg(1402262);
 					    spawn(804116, 335.55713f, 512.7856f, 683.0075f, (byte) 61); //Elyos Chariot Hangar I Flag.
 				    } else if (race.equals(Race.ASMODIANS)) {
 					    deleteNpc(804118);
 						// 战车机库 I 控制器已被摧毁。 / Chariot Hangar I Controller has been destroyed.
-						sendMsgByRace(1402262, Race.PC_ALL, 0);
+							sendMsg(1402262);
 					    spawn(804114, 335.55713f, 512.7856f, 683.0075f, (byte) 61); //Elyos Chariot Hangar I Flag.
 				    }
 				}
@@ -323,12 +206,12 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				    if (race.equals(Race.ELYOS)) {
 					    deleteNpc(804123);
 						// 战车机库 II 控制器已被摧毁。 / Chariot Hangar II Controller has been destroyed.
-						sendMsgByRace(1402263, Race.PC_ALL, 0);
+							sendMsg(1402263);
 					    spawn(804121, 681.18427f, 513.76154f, 683.0339f, (byte) 0); //Elyos Chariot Hangar II Flag.
 				    } else if (race.equals(Race.ASMODIANS)) {
 					    deleteNpc(804123);
 						// 战车机库 II 控制器已被摧毁。 / Chariot Hangar II Controller has been destroyed.
-						sendMsgByRace(1402263, Race.PC_ALL, 0);
+							sendMsg(1402263);
 					    spawn(804119, 681.18427f, 513.76154f, 683.0339f, (byte) 0); //Asmodians Chariot Hangar II Flag.
 				    }
 				}
@@ -339,12 +222,12 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				    if (race.equals(Race.ELYOS)) {
 					    deleteNpc(804128);
 						// 伊格努斯引擎机库 I 控制器已被摧毁。 / Ignus Engine Hangar I Controller has been destroyed.
-						sendMsgByRace(1402264, Race.PC_ALL, 0);
+							sendMsg(1402264);
 					    spawn(804126, 508.25092f, 339.45773f, 683.0075f, (byte) 91); //Elyos Ignus Engine Hangar I Flag.
 				    } else if (race.equals(Race.ASMODIANS)) {
 					    deleteNpc(804128);
 						// 伊格努斯引擎机库 I 控制器已被摧毁。 / Ignus Engine Hangar I Controller has been destroyed.
-						sendMsgByRace(1402264, Race.PC_ALL, 0);
+							sendMsg(1402264);
 					    spawn(804124, 508.25092f, 339.45773f, 683.0075f, (byte) 91); //Asmodians Ignus Engine Hangar I Flag.
 				    }
 				}
@@ -355,12 +238,12 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				    if (race.equals(Race.ELYOS)) {
 					    deleteNpc(804133);
 						// 伊格努斯引擎机库 II 控制器已被摧毁。 / Ignus Engine Hangar II Controller has been destroyed.
-						sendMsgByRace(1402265, Race.PC_ALL, 0);
+							sendMsg(1402265);
 					    spawn(804131, 508.54236f, 686.10504f, 683.0075f, (byte) 30); //Elyos Ignus Engine Hangar II Flag.
 				    } else if (race.equals(Race.ASMODIANS)) {
 					    deleteNpc(804133);
 						// 伊格努斯引擎机库 II 控制器已被摧毁。 / Ignus Engine Hangar II Controller has been destroyed.
-						sendMsgByRace(1402265, Race.PC_ALL, 0);
+							sendMsg(1402265);
 					    spawn(804129, 508.54236f, 686.10504f, 683.0075f, (byte) 30); //Asmodians Ignus Engine Hangar II Flag.
 				    }
 				}
@@ -383,11 +266,37 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Transidium Annex>");
 				runtimeState().put("transidium.complete", true);
 				spawnCompletion();
-            break;
+	            break;
+			}
 		}
+
+	private void beginReturn(int messageId, int worldId) {
+		if (runtimeState().getInt("transidium.return_world", 0) != 0) {
+			return;
+		}
+		runtimeState().put("transidium.return_world", worldId);
+		long deadline = System.currentTimeMillis() + 15_000L;
+		runtimeState().put("transidium.return_deadline", deadline);
+		sendMsg(messageId, 0, false, 25, 2_000);
+		sendMsg(1402641, 0, false, 25, 7_000);
+		sendMsg(1402642, 0, false, 25, 12_000);
+		scheduleDeadline("return", deadline, this::finishReturn);
 	}
 
-	private void spawnCompletion() {
+	private void finishReturn() {
+		if (runtimeState().getBoolean("transidium.return_complete", false)) {
+			return;
+		}
+		int worldId = runtimeState().getInt("transidium.return_world", 0);
+		if (worldId == 0) {
+			return;
+		}
+		runtimeState().put("transidium.return_complete", true);
+		instance.doOnAllPlayers(
+			player -> TeleportService2.teleportTo(player, worldId, 1023.73315f, 1023.5483f, 1530.4855f, (byte) 27));
+	}
+
+		private void spawnCompletion() {
 		int pasha = spawnRace == Race.ASMODIANS ? 804750 : 804749;
 		spawn(pasha, 499.92294f, 512.67365f, 675.0881f, (byte) 0);
 	}
@@ -540,61 +449,4 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 		removeEffects(player);
 	}
 	
-	/**
-	 * 副本销毁时清理资源。
-	 * Clean up resources when the instance is destroyed.
-	 */
-	@Override
-	public void onInstanceDestroy() {
-		isInstanceDestroyed = true;
-	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
 }

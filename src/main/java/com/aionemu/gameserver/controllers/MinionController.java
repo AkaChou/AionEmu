@@ -100,7 +100,8 @@ public class MinionController extends VisibleObjectController<Minion> {
      */
     public void teleportToPlayer(Player player) {
         Minion minion = getOwner();
-        if (minion == null || player == null || !minion.isSpawned()) {
+        if (minion == null || player == null || minion.getMaster() != player || player.getMinion() != minion
+                || !minion.isSpawned()) {
             return;
         }
 
@@ -140,7 +141,7 @@ public class MinionController extends VisibleObjectController<Minion> {
         public void run() {
             try {
                 Minion minion = getOwner();
-                if (minion == null || player == null || player.getMinion() == null) {
+                if (minion == null || player == null || player.getMinion() != minion) {
                     return;
                 }
 
@@ -204,7 +205,11 @@ public class MinionController extends VisibleObjectController<Minion> {
         public void run() {
             try {
                 Minion minion = getOwner();
-                if (minion == null || player == null || player.getMinion() == null) {
+                if (minion == null || player == null || player.getMinion() != minion) {
+                    return;
+                }
+
+                if (minion.getMaster() != player) {
                     return;
                 }
 

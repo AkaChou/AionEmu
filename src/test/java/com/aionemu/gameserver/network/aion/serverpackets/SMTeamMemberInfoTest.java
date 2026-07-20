@@ -45,7 +45,7 @@ class SMTeamMemberInfoTest {
 	}
 
 	@Test
-	void writesFullEffectSlotMaskForGroupUpdates() throws ReflectiveOperationException {
+	void writesFullEffectSlotMaskAndFreshEffectAgesForGroupUpdates() throws ReflectiveOperationException {
 		Player player = playerAt(210020000, 37);
 		player.setEffectController(new PlayerEffectController(player));
 		SM_GROUP_MEMBER_INFO packet = OBJENESIS.newInstance(SM_GROUP_MEMBER_INFO.class);
@@ -60,6 +60,10 @@ class SMTeamMemberInfoTest {
 		buffer.getInt();
 
 		assertEquals(0x7F, Byte.toUnsignedInt(buffer.get()));
+		assertEquals(0, buffer.getShort());
+		for (int i = 0; i < 8; i++) {
+			assertEquals(0, buffer.getInt());
+		}
 	}
 
 	private static ByteBuffer write(SM_ALLIANCE_MEMBER_INFO packet) {

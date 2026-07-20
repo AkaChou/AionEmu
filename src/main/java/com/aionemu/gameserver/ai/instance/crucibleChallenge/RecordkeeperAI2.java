@@ -1,176 +1,109 @@
 package com.aionemu.gameserver.ai.instance.crucibleChallenge;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
-
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.instance.handlers.InstanceHandler;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.instance.StageType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
-import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Crucible Challenge 副本 NPC AI：Recordkeeper（@AIName "recordkeeper"），继承 NpcAI2。
- * Crucible Challenge instance NPC AI: Recordkeeper (@AIName "recordkeeper"), extends NpcAI2.
- *
- * @author Encom
- */
 @AIName("recordkeeper")
-public class RecordkeeperAI2 extends NpcAI2
-{
-	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+public class RecordkeeperAI2 extends NpcAI2 {
+
+	private final AtomicBoolean greeted = new AtomicBoolean();
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
-		int instanceId = getPosition().getInstanceId();
-		InstanceHandler instanceHandler = getPosition().getWorldMapInstance().getInstanceHandler();
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 205668:
-					instanceHandler.onChangeStage(StageType.START_STAGE_1_ROUND_1);
-				break;
-				case 205674:
-					TeleportService2.teleportTo(player, 300320000, instanceId, 1796.5513f, 306.9967f, 469.25f, (byte) 60);
-					spawn(205683, 1821.5643f, 311.92484f, 469.4562f, (byte) 60);
-					spawn(205669, 1784.4633f, 306.98645f, 469.25f, (byte) 0);
-				break;
-				case 205669:
-					instanceHandler.onChangeStage(StageType.START_STAGE_2_ROUND_1);
-				break; 
-				case 205675:
-					TeleportService2.teleportTo(player, 300320000, instanceId, 1324.433f, 1738.2279f, 316.476f, (byte) 70);
-					spawn(205684, 1358.4021f, 1758.744f, 319.1873f, (byte) 70);
-					spawn(205670, 1307.5472f, 1732.9865f, 316.0777f, (byte) 6);
-				break;
-				case 205670:
-					instanceHandler.onChangeStage(StageType.START_STAGE_3_ROUND_1);
-				break;
-				case 205676:
-					switch (Rnd.get(1, 2)) {
-						case 1:
-							TeleportService2.teleportTo(player, 300320000, instanceId, 1283.1246f, 791.6683f, 436.6403f, (byte) 60);
-							spawn(205685, 1308.9664f, 796.20276f, 437.29678f, (byte) 60);
-							spawn(205671, 1271.4222f, 791.36145f, 436.64017f, (byte) 0);
-						break;
-						case 2:
-							TeleportService2.teleportTo(player, 300320000, instanceId, 1270.8877f, 237.93307f, 405.38028f, (byte) 60);
-							spawn(205663, 1295.7217f, 242.15009f, 406.03677f, (byte) 60);
-							spawn(205666, 1258.7214f, 237.85518f, 405.3968f, (byte) 0);
-						break;
+				case 205668 -> setRace(player, "condition_s1_l", "condition_s1_d");
+				case 205674 -> move(player, "stage2_start", 1796.5513f, 306.9967f, 469.25f, (byte) 60);
+				case 205669 -> setRandom("condition_s2a", "condition_s2b");
+				case 205675 -> move(player, "stage3_start", 1324.433f, 1738.2279f, 316.476f, (byte) 70);
+				case 205670 -> setRandom("condition_s3a", "condition_s3b");
+				case 205676 -> {
+					set("stage4_start");
+					if (Rnd.nextBoolean()) {
+						teleport(player, 1283.1246f, 791.6683f, 436.6403f, (byte) 60);
+					} else {
+						teleport(player, 1270.8877f, 237.93307f, 405.38028f, (byte) 60);
 					}
-				break;
-				case 205666:
-					instanceHandler.onChangeStage(StageType.START_KROMEDE_STAGE_4_ROUND_1);
-				break;
-				case 205671:
-					instanceHandler.onChangeStage(StageType.START_HARAMEL_STAGE_4_ROUND_1);
-				break;
-				case 205667:
-				case 205677:
-					TeleportService2.teleportTo(player, 300320000, instanceId, 357.98798f, 349.19116f, 96.09108f, (byte) 60);
-					spawn(205686, 383.30933f, 354.07846f, 96.07846f, (byte) 60);
-					spawn(205672, 346.52298f, 349.25586f, 96.0098f, (byte) 0);
-				break;
-				case 205672:
-					instanceHandler.onChangeStage(StageType.START_STAGE_5_ROUND_1);
-				break;
-				case 205678:
-					TeleportService2.teleportTo(player, 300320000, instanceId, 1759.5004f, 1273.5414f, 389.11743f, (byte) 10);
-					spawn(205687, 1747.3901f, 1250.201f, 389.11765f, (byte) 16);
-					spawn(205673, 1767.1036f, 1288.4425f, 389.11728f, (byte) 76);
-				break;
-				case 205673:
-					instanceHandler.onChangeStage(StageType.START_STAGE_6_ROUND_1);
-				break;
-				case 205679:
-					getPosition().getWorldMapInstance().getInstanceHandler().doReward(player);
-				break;
-			} if (getNpcId() != 205679) {
+				}
+				case 205666 -> set("condition_s4b");
+				case 205671 -> set("condition_s4a");
+				case 205667, 205677 -> move(player, "stage5_start", 357.98798f, 349.19116f, 96.09108f, (byte) 60);
+				case 205672 -> setRace(player, "condition_s5_l", "condition_s5_d");
+				case 205678 -> move(player, "stage6_start", 1759.5004f, 1273.5414f, 389.11743f, (byte) 10);
+				case 205673 -> set("condition_s6");
+				case 205679 -> getPosition().getWorldMapInstance().getInstanceHandler().doReward(player);
+			}
+			if (getNpcId() != 205679) {
 				AI2Actions.deleteOwner(this);
 			}
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		return true;
 	}
-	
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		if (creature instanceof Player) {
-			final Player player = (Player) creature;
-			if (MathUtil.getDistance(getOwner(), player) <= 30) {
-				if (startedEvent.compareAndSet(false, true)) {
-					switch (getNpcId()) {
-						case 205668:
-						    // 别磨蹭！想开始第 1 阶段就过来。 / Quick lollygagging! Come over here if you want to start Stage 1.
-						    sendMsg(1111470, getObjectId(), false, 2000);
-						break;
-						case 205669:
-						    // 准备好！第 2 阶段开始了，尼尔克！ / Get ready! It's time for Stage 2 to start, nyerk!
-						    sendMsg(1111471, getObjectId(), false, 2000);
-						break;
-						case 205670:
-						    // 现在，准备第 3 阶段，尼尔克。 / Now, prepare for Stage 3, nyerk.
-						    sendMsg(1111472, getObjectId(), false, 2000);
-						break;
-						case 205666:
-						case 205671:
-						    // 深呼吸……第 4 阶段开始了。 / Take a deep breath now... it's time for Stage 4 to begin.
-						    sendMsg(1111473, getObjectId(), false, 2000);
-						break;
-						case 205672:
-						    // 恢复冷静后告诉我，你就可以进入第 5 阶段，尼尔克。 / When you've recovered your composure, let me know and you can move on to Stage 5, nyerk.
-						    sendMsg(1111474, getObjectId(), false, 2000);
-						break;
-						case 205673:
-						    // 准备好了吗？要我启动第 6 阶段吗？ / Are you ready? Shall I start up Stage 6?
-						    sendMsg(1111475, getObjectId(), false, 2000);
-						break;
-						case 205674:
-						    // 你已完成第 1 阶段，尼尔克。 / You have completed Stage 1, nyerk.
-						    sendMsg(1111476, getObjectId(), false, 2000);
-						break;
-						case 205675:
-						    // 你已完成第 2 阶段，尼尔克。 / You have completed Stage 2, nyerk.
-						    sendMsg(1111477, getObjectId(), false, 2000);
-						break;
-						case 205676:
-						    // 你已完成第 3 阶段，尼尔克。 / You have completed Stage 3, nyerk.
-						    sendMsg(1111478, getObjectId(), false, 2000);
-						break;
-						case 205667:
-						case 205677:
-						    // 你已完成第 4 阶段，尼尔克。 / You have completed Stage 4, nyerk.
-						    sendMsg(1111479, getObjectId(), false, 2000);
-						break;
-						case 205678:
-						    // 恭喜。你已通过第 5 阶段！ / Congratulations. You have passed Stage 5!
-						    sendMsg(1111480, getObjectId(), false, 2000);
-						break;
-						case 205679:
-						    // 恭喜！你已完成第 6 阶段，尼尔克！ / Congratulations! You have completed Stage 6, nyerk!
-						    sendMsg(1111481, getObjectId(), false, 2000);
-						break;
-					}
-				}
+		if (creature instanceof Player && MathUtil.getDistance(getOwner(), creature) <= 30
+				&& greeted.compareAndSet(false, true)) {
+			int message = switch (getNpcId()) {
+				case 205668 -> 1111470;
+				case 205669 -> 1111471;
+				case 205670 -> 1111472;
+				case 205666, 205671 -> 1111473;
+				case 205672 -> 1111474;
+				case 205673 -> 1111475;
+				case 205674 -> 1111476;
+				case 205675 -> 1111477;
+				case 205676 -> 1111478;
+				case 205667, 205677 -> 1111479;
+				case 205678 -> 1111480;
+				case 205679 -> 1111481;
+				default -> 0;
+			};
+			if (message != 0) {
+				GameFeatureServices.npcShoutsService().sendMsg(
+						getPosition().getWorldMapInstance(), message, getObjectId(), false, 0, 2000);
 			}
 		}
 	}
-	
-	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+
+	private void move(Player player, String variable, float x, float y, float z, byte heading) {
+		set(variable);
+		teleport(player, x, y, z, heading);
+	}
+
+	private void teleport(Player player, float x, float y, float z, byte heading) {
+		TeleportService2.teleportTo(player, getPosition().getWorldMapInstance().getMapId(),
+				getPosition().getInstanceId(), x, y, z, heading);
+	}
+
+	private void setRandom(String first, String second) {
+		set(Rnd.nextBoolean() ? first : second);
+	}
+
+	private void setRace(Player player, String elyos, String asmodians) {
+		set(player.getRace() == Race.ELYOS ? elyos : asmodians);
+	}
+
+	private void set(String variable) {
+		RetailConditionSpawnEngine.setVariable(getPosition().getWorldMapInstance(), variable, 0, 1);
 	}
 }

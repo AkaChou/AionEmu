@@ -41,23 +41,23 @@
 	<instance_exit instance_id="300140000" exit_world="400010000" race="ELYOS" x="2259.2463" y="663.3353" z="1527.9968" h="94"/>
 	<instance_exit instance_id="300140000" exit_world="400010000" race="ASMODIANS" x="576.90533" y="2542.4539" z="1636.0665" h="30"/>
 	<!-- Udas Temple -->
-	<instance_exit instance_id="300150000" exit_world="210130000" race="ELYOS" x="206.71632" y="1389.4113" z="266.41653" h="18"/>
-	<instance_exit instance_id="300150000" exit_world="220140000" race="ASMODIANS" x="2269.9226" y="1603.7386" z="310.44006" h="56"/>
+	<instance_exit instance_id="300150000" exit_world="210050000" race="ELYOS" x="206.71632" y="1389.4113" z="266.41653" h="18"/>
+	<instance_exit instance_id="300150000" exit_world="220070000" race="ASMODIANS" x="2269.9226" y="1603.7386" z="310.44006" h="56"/>
 	<!-- Lower Udas Temple -->
-	<instance_exit instance_id="300160000" exit_world="210130000" race="ELYOS" x="339.40308" y="1352.5548" z="262.6838" h="110"/>
-	<instance_exit instance_id="300160000" exit_world="220140000" race="ASMODIANS" x="2259.9226" y="1733.0059" z="308.19" h="93"/>
+	<instance_exit instance_id="300160000" exit_world="210050000" race="ELYOS" x="339.40308" y="1352.5548" z="262.6838" h="110"/>
+	<instance_exit instance_id="300160000" exit_world="220070000" race="ASMODIANS" x="2259.9226" y="1733.0059" z="308.19" h="93"/>
 	<!-- Taloc's Hollow -->
-	<instance_exit instance_id="300190000" exit_world="210130000" race="ELYOS" x="2894.7688" y="357.71338" z="299.4761" h="0"/>
-	<instance_exit instance_id="300190000" exit_world="220140000" race="ASMODIANS" x="979.4631" y="2569.5842" z="242.23325" h="0"/>
+	<instance_exit instance_id="300190000" exit_world="210050000" race="ELYOS" x="2894.7688" y="357.71338" z="299.4761" h="0"/>
+	<instance_exit instance_id="300190000" exit_world="220070000" race="ASMODIANS" x="979.4631" y="2569.5842" z="242.23325" h="0"/>
 	<!-- Haramel -->
 	<instance_exit instance_id="300200000" exit_world="210030000" race="ELYOS" x="2526.1013" y="829.10144" z="103.967476" h="59"/>
 	<instance_exit instance_id="300200000" exit_world="220030000" race="ASMODIANS" x="2909.8335" y="1456.1504" z="252.59262" h="36"/>
 	<!-- Chantra Dredgion -->
-	<instance_exit instance_id="300210000" exit_world="210130000" race="ELYOS" x="1347.6431" y="329.33328" z="588.625" h="13"/>
-	<instance_exit instance_id="300210000" exit_world="220140000" race="ASMODIANS" x="1794.3582" y="2918.3582" z="554.809" h="89"/>
+	<instance_exit instance_id="300210000" exit_world="210050000" race="ELYOS" x="1347.6431" y="329.33328" z="588.625" h="13"/>
+	<instance_exit instance_id="300210000" exit_world="220070000" race="ASMODIANS" x="1794.3582" y="2918.3582" z="554.809" h="89"/>
 	<!-- Abyssal Splinter -->
-	<instance_exit instance_id="300220000" exit_world="210130000" race="ELYOS" x="1375.1648" y="366.27975" z="589.6201" h="22"/>
-	<instance_exit instance_id="300220000" exit_world="220140000" race="ASMODIANS" x="1888.2524" y="2847.2727" z="554.9964" h="98"/>
+	<instance_exit instance_id="300220000" exit_world="210050000" race="ELYOS" x="1375.1648" y="366.27975" z="589.6201" h="22"/>
+	<instance_exit instance_id="300220000" exit_world="220070000" race="ASMODIANS" x="1888.2524" y="2847.2727" z="554.9964" h="98"/>
 	<!-- Kromede's Trial -->
 	<instance_exit instance_id="300230000" exit_world="210040000" race="ELYOS" x="136.43874" y="1566.1239" z="119.69516" h="0"/>
 	<instance_exit instance_id="300230000" exit_world="220040000" race="ASMODIANS" x="1929.999" y="507.82068" z="412.25" h="0"/>
@@ -68,8 +68,8 @@
 	<instance_exit instance_id="300241000" exit_world="210070000" race="ELYOS" x="2418.4604" y="630.34576" z="548.80962" h="8"/>
 	<instance_exit instance_id="300241000" exit_world="220080000" race="ASMODIANS" x="702.56445" y="2852.6885" z="215.72034" h="48"/>
 	<!-- Esoterrace -->
-	<instance_exit instance_id="300250000" exit_world="210130000" race="ELYOS" x="1079.5535" y="1571.55" z="407.90637" h="90"/>
-	<instance_exit instance_id="300250000" exit_world="220140000" race="ASMODIANS" x="1781.5739" y="1819.9113" z="405.47812" h="86"/>
+	<instance_exit instance_id="300250000" exit_world="210050000" race="ELYOS" x="1079.5535" y="1571.55" z="407.90637" h="90"/>
+	<instance_exit instance_id="300250000" exit_world="220070000" race="ASMODIANS" x="1781.5739" y="1819.9113" z="405.47812" h="86"/>
 	<!-- Rentus Base -->
 	<instance_exit instance_id="300280000" exit_world="210070000" race="ELYOS" x="1143.1522" y="797.8267" z="562.75" h="73"/>
 	<instance_exit instance_id="300280000" exit_world="220080000" race="ASMODIANS" x="1977.697" y="2019.9493" z="328.66605" h="10"/>
@@ -122,8 +122,8 @@
 	<instance_exit instance_id="300590000" exit_world="210070000" race="ELYOS" x="2782.2812" y="3003.5215" z="274.875" h="80"/>
 	<instance_exit instance_id="300590000" exit_world="220080000" race="ASMODIANS" x="491.57666" y="92.30605" z="199.21175" h="28"/>
 	<!-- Unstable Abyssal Splinter -->
-	<instance_exit instance_id="300600000" exit_world="210130000" race="ELYOS" x="1375.1648" y="366.27975" z="589.6201" h="22"/>
-	<instance_exit instance_id="300600000" exit_world="220140000" race="ASMODIANS" x="1888.2524" y="2847.2727" z="554.9964" h="98"/>
+	<instance_exit instance_id="300600000" exit_world="210050000" race="ELYOS" x="1375.1648" y="366.27975" z="589.6201" h="22"/>
+	<instance_exit instance_id="300600000" exit_world="220070000" race="ASMODIANS" x="1888.2524" y="2847.2727" z="554.9964" h="98"/>
 	<!-- Raksang Ruins -->
 	<instance_exit instance_id="300610000" exit_world="210070000" race="ELYOS" x="2691.6714" y="1446.9246" z="434.86563" h="49"/>
 	<instance_exit instance_id="300610000" exit_world="220080000" race="ASMODIANS" x="409.94803" y="1446.2336" z="274.6104" h="34"/>
@@ -313,8 +313,8 @@
 	<instance_exit instance_id="320130000" exit_world="210060000" race="ELYOS" x="2682.2166" y="833.9273" z="138.35718" h="43"/>
 	<instance_exit instance_id="320130000" exit_world="220050000" race="ASMODIANS" x="1840.48" y="887.51" z="59.108303" h="0"/>
 	<!-- Padmarashka's Cave -->
-	<instance_exit instance_id="320150000" exit_world="210130000" race="ELYOS" x="138.09879" y="2005.2008" z="433.98132" h="0"/>
-	<instance_exit instance_id="320150000" exit_world="220140000" race="ASMODIANS" x="2972.322" y="1212.870" z="242.125" h="0"/>
+	<instance_exit instance_id="320150000" exit_world="210050000" race="ELYOS" x="138.09879" y="2005.2008" z="433.98132" h="0"/>
+	<instance_exit instance_id="320150000" exit_world="220070000" race="ASMODIANS" x="2972.322" y="1212.870" z="242.125" h="0"/>
 	<!-- Divine Tower D 5.8 -->
 	<instance_exit instance_id="320160000" exit_world="400010000" race="ASMODIANS" x="986.64740" y="2743.7097" z="3034.09470" h="30"/>
 	

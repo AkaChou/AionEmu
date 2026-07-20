@@ -84,6 +84,9 @@ public class Npc extends Creature {
 		skillList = new NpcSkillList(this);
 		npcType = objectTemplate.getNpcType();
 		setupStatContainers(level);
+		if (objectTemplate.getStatsTemplate() != null) {
+			setStatRatio(objectTemplate.getStatsTemplate().getStatRatio());
+		}
 
 		boolean aiOverride = false;
 		if (spawnTemplate.getModel() != null) {

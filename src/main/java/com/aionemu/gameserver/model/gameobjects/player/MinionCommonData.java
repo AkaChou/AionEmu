@@ -1,15 +1,11 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-
 import java.sql.Timestamp;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerMinionsDAO;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 守护灵公共数据。
@@ -35,19 +31,13 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 	private Timestamp minionFunctionTime;
 
 	public MinionCommonData(int minionId, int masterObjectId, String name, String minionGrade, int minionLevel, int miniongrowthpoint) {
-		switch (this.minionObjId) {
-		case 0: {
-			this.minionObjId = GameWorldBootstrapServices.idFactory().nextId();
-			break;
-		}
-		default:
-			do {
-				if (DAOManager.getDAO(PlayerMinionsDAO.class).PlayerMinions(masterObjectId, minionObjId)) {
-					this.minionObjId = GameWorldBootstrapServices.idFactory().nextId();
-				}
-			} while (DAOManager.getDAO(PlayerMinionsDAO.class).PlayerMinions(masterObjectId, minionObjId));
-			break;
-		}
+		this(GameWorldBootstrapServices.idFactory().nextId(), minionId, masterObjectId, name, minionGrade, minionLevel,
+				miniongrowthpoint);
+	}
+
+	public MinionCommonData(int minionObjId, int minionId, int masterObjectId, String name, String minionGrade,
+			int minionLevel, int miniongrowthpoint) {
+		this.minionObjId = minionObjId;
 		this.minionId = minionId;
 		this.masterObjectId = masterObjectId;
 		this.name = name;

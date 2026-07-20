@@ -6,6 +6,8 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawn;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnChoice;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
+import com.aionemu.gameserver.ai2.AIState;
+import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.TaskId;
@@ -25,6 +27,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /** 真端实例级条件变量与条件刷怪。 */
 public final class RetailConditionSpawnEngine {
@@ -246,13 +250,13 @@ public final class RetailConditionSpawnEngine {
 						spawn(instance, state, condition.id(), active, choice.partyId(), npc, spawnKey, deadline);
 					} else {
 						long spawnDeadline = deadline;
-						active.tasks.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
-							synchronized (state) {
-								if (instance.getTransientState(State.class) == state && state.active.get(condition.id()) == active) {
-									spawn(instance, state, condition.id(), active, choice.partyId(), npc, spawnKey, spawnDeadline);
+							schedule(active, () -> {
+								synchronized (state) {
+									if (instance.getTransientState(State.class) == state && state.active.get(condition.id()) == active) {
+										spawn(instance, state, condition.id(), active, choice.partyId(), npc, spawnKey, spawnDeadline);
+									}
 								}
-							}
-						}, delay));
+							}, delay);
 					}
 				}
 			}
@@ -326,26 +330,47 @@ public final class RetailConditionSpawnEngine {
 		}
 		SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(instance.getMapId(), npc.id(), npc.x(), npc.y(),
 			npc.z(), MathUtil.convertDegreeToHeading(npc.heading()));
-		template.setStableKey(spawnKey);
+		int generation = state.runtime.getInt(spawnKey + "generation", 0) + 1;
+		state.runtime.put(spawnKey + "generation", generation);
+		template.setStableKey(spawnKey + "generation." + generation);
 		template.setWalkerId(npc.walkerId());
 		template.setNpcPartyId(partyId);
+		template.setRandomWalk(npc.idleLiveRange());
+		template.setDespawnAtAttackState(npc.despawnAtAttackState());
 		VisibleObject object = SpawnEngine.spawnObject(template, instance.getInstanceId());
 		active.spawns.put(template, new Spawned(conditionId, partyId, npc, spawnKey, spawnDeadline));
 		if (npc.life() > 0) {
 			long remainingLife = lifeDeadline - System.currentTimeMillis();
-			active.tasks.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				synchronized (state) {
-					if (instance.getTransientState(State.class) == state && object.isSpawned()) {
-						object.getController().onDelete();
+				schedule(active, () -> {
+					synchronized (state) {
+						if (instance.getTransientState(State.class) == state && object.isSpawned()) {
+							despawnForLife(instance, state, active, object, npc.despawnAtAttackState());
+						}
 					}
-				}
-			}, remainingLife));
+				}, remainingLife);
 		}
+	}
+
+	private static void despawnForLife(WorldMapInstance instance, State state, ActiveSpawn active,
+			VisibleObject object, boolean despawnAtAttackState) {
+		boolean duringAttack = object instanceof Npc npc && npc.getAi2() instanceof AbstractAI ai
+			&& ai.isInState(AIState.FIGHT);
+		if (RetailPatternAI2.shouldDelayLifecycleDespawn(despawnAtAttackState, duringAttack)) {
+				schedule(active, () -> {
+					synchronized (state) {
+						if (instance.getTransientState(State.class) == state && object.isSpawned()) {
+							despawnForLife(instance, state, active, object, despawnAtAttackState);
+						}
+					}
+				}, 1000);
+			return;
+		}
+		object.getController().onDelete();
 	}
 
 	private static void scheduleRespawn(WorldMapInstance instance, State state, ActiveSpawn active,
 			Spawned spawned, long deadline) {
-		active.tasks.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		schedule(active, () -> {
 			synchronized (state) {
 				if (instance.getTransientState(State.class) == state
 					&& state.active.get(spawned.conditionId()) == active) {
@@ -354,11 +379,14 @@ public final class RetailConditionSpawnEngine {
 						spawned.key(), spawned.spawnDeadline());
 				}
 			}
-		}, Math.max(0, deadline - System.currentTimeMillis())));
+		}, Math.max(0, deadline - System.currentTimeMillis()));
 	}
 
 	private static void delete(ActiveSpawn active) {
-		active.tasks.forEach(task -> task.cancel(false));
+		synchronized (active) {
+			active.tasks.forEach(task -> task.cancel(false));
+			active.tasks.clear();
+		}
 		for (SpawnTemplate template : active.spawns.keySet()) {
 			VisibleObject object = template.getVisibleObject();
 			if (object instanceof Npc npc) {
@@ -366,6 +394,27 @@ public final class RetailConditionSpawnEngine {
 			}
 			if (object != null && object.isSpawned()) {
 				object.getController().onDelete();
+			}
+		}
+	}
+
+	private static void schedule(ActiveSpawn active, Runnable action, long delay) {
+		AtomicBoolean completed = new AtomicBoolean();
+		AtomicReference<Future<?>> reference = new AtomicReference<>();
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			try {
+				action.run();
+			} finally {
+				synchronized (active) {
+					completed.set(true);
+					active.tasks.remove(reference.get());
+				}
+			}
+		}, Math.max(0, delay));
+		synchronized (active) {
+			reference.set(task);
+			if (!completed.get()) {
+				active.tasks.add(task);
 			}
 		}
 	}
@@ -466,7 +515,7 @@ public final class RetailConditionSpawnEngine {
 			skipWhitespace();
 			if (consume("(")) {
 				int value = or();
-				if (!consume(")") && position != source.length()) {
+				if (!consume(")")) {
 					throw new IllegalArgumentException("Unclosed retail condition: " + source);
 				}
 				return value;

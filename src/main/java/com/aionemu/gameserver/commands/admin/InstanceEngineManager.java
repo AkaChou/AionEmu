@@ -2,8 +2,6 @@ package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
-
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.CountDownLatch;
@@ -11,7 +9,6 @@ import java.util.concurrent.CountDownLatch;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
@@ -24,8 +21,6 @@ public class InstanceEngineManager extends AdminCommand {
 	private static final String COMMAND_START = "start";
 	private static final String COMMAND_STOP = "stop";
 	private static final String COMMAND_RESTART = "restart";
-
-	private static final String COMMAND_STARTKAR = "karma";
 
 	public InstanceEngineManager() {
 		super("instance_manager");
@@ -46,7 +41,7 @@ public class InstanceEngineManager extends AdminCommand {
 			showHelp(player);
 			return;
 		}
-		if (COMMAND_STOP.equalsIgnoreCase(params[0]) || COMMAND_START.equalsIgnoreCase(params[0]) || COMMAND_RESTART.equalsIgnoreCase(params[0]) || COMMAND_STARTKAR.equalsIgnoreCase(params[0])) {
+			if (COMMAND_STOP.equalsIgnoreCase(params[0]) || COMMAND_START.equalsIgnoreCase(params[0]) || COMMAND_RESTART.equalsIgnoreCase(params[0])) {
 			if (COMMAND_START.equalsIgnoreCase(params[0])) {
 				GameEngineServices.instanceEngine().load(progressLatch);
 				PacketSendUtility.sendMessage(player, "InstanceEngine loaded successfully!");
@@ -64,9 +59,6 @@ public class InstanceEngineManager extends AdminCommand {
 						PacketSendUtility.sendMessage(player, "InstanceEngine reloaded successfully!");
 					}
 				}, 5000);
-			}
-			if (COMMAND_STARTKAR.equalsIgnoreCase(params[0])) {
-				GameBattlefieldServices.kamarBattlefieldService().startKamarRegistration();
 			}
 		}
 	}

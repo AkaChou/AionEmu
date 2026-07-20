@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -10,11 +8,8 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.Map;
 import java.util.Set;
@@ -286,13 +281,13 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		player.getController().updateNearbyQuests();
 		// 与代理人交谈。 / Talk with the Agent.
-		sendMsgByRace(1403340, Race.PC_ALL, 5000);
+		sendMsg(1403340, 0, false, 25, 5000);
 		// 须摧毁奥德封印才能进入。 / You must destroy the Aether seals to enter.
-		sendMsgByRace(1403210, Race.PC_ALL, 30000);
+		sendMsg(1403210, 0, false, 25, 30000);
 		// 古物学家已开始激活永恒遗物。 / The Antiquarian has begun activating the Eternity Relics.
-		sendMsgByRace(1403212, Race.PC_ALL, 60000);
+		sendMsg(1403212, 0, false, 25, 60000);
 		// 阿特雷亚古物学家已激活全部永恒遗物。 / The Antiquarian of Atreia has activated all Eternity Relics.
-		sendMsgByRace(1403213, Race.PC_ALL, 120000);
+		sendMsg(1403213, 0, false, 25, 120000);
 		if (spawnRace == null) {
 			spawnRace = player.getRace();
 			spawnHistoriesOfAtreia();
@@ -457,45 +452,45 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			case 703009: //Shedim Eternity Relic.
 			    despawnNpc(npc);
 				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
-				sendMsgByRace(1403269, Race.PC_ALL, 0);
+				sendMsg(1403269, 0, false, 25, 0);
 			break;
 			case 703010: //Seraphim Eternity Relic.
 			    despawnNpc(npc);
 				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
-				sendMsgByRace(1403270, Race.PC_ALL, 0);
+				sendMsg(1403270, 0, false, 25, 0);
 				deleteNpc(703017);
 			break;
 			case 703011: //Shedim Eternity Relic.
 			    despawnNpc(npc);
 				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
-				sendMsgByRace(1403269, Race.PC_ALL, 0);
+				sendMsg(1403269, 0, false, 25, 0);
 			break;
 			case 703012: //Seraphim Eternity Relic.
 			    despawnNpc(npc);
 				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
-				sendMsgByRace(1403270, Race.PC_ALL, 0);
+				sendMsg(1403270, 0, false, 25, 0);
 				deleteNpc(703018);
 			break;
 			case 703013: //Shedim Eternity Relic.
 			    despawnNpc(npc);
 				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
-				sendMsgByRace(1403269, Race.PC_ALL, 0);
+				sendMsg(1403269, 0, false, 25, 0);
 			break;
 			case 703014: //Seraphim Eternity Relic.
 				despawnNpc(npc);
 				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
-				sendMsgByRace(1403270, Race.PC_ALL, 0);
+				sendMsg(1403270, 0, false, 25, 0);
 				deleteNpc(703019);
 			break;
 			case 703015: //Shedim Eternity Relic.
 			    despawnNpc(npc);
 				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
-				sendMsgByRace(1403269, Race.PC_ALL, 0);
+				sendMsg(1403269, 0, false, 25, 0);
 			break;
 			case 703016: //Seraphim Eternity Relic.
 			    despawnNpc(npc);
 				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
-				sendMsgByRace(1403270, Race.PC_ALL, 0);
+				sendMsg(1403270, 0, false, 25, 0);
 				deleteNpc(703020);
 			break;
 			case 857460: //Ancient Relic Techgolem.
@@ -503,7 +498,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			case 857464: //Mountainous Shardgolem.
 			    doors.get(33).setOpen(true);
 				// 阿特雷亚古物学家被击败，永恒遗物停止运作。 / The Antiquarian of Atreia is defeated and the Eternity Relics ceased functioning.
-				sendMsgByRace(1403214, Race.PC_ALL, 0);
+				sendMsg(1403214, 0, false, 25, 0);
 				final int ArchivesExit = spawnRace == Race.ASMODIANS ? 806192 : 806191;
 				spawn(ArchivesExit, 222.88667f, 511.78955f, 468.80215f, (byte) 0);
 				final int ArchivesToCradle = spawnRace == Race.ASMODIANS ? 806057 : 806055;
@@ -512,55 +507,6 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Archives Of Eternity>");
 			break;
 		}
-	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
 	}
 	
 	private void deleteNpc(int npcId) {

@@ -140,7 +140,7 @@ public final class InstanceAdmissionService {
 			return new Admission(instance, player, false, false, false, 0, List.of());
 		}
 		if (instance.isRegistered(player.getObjectId())) {
-			return new Admission(instance, player, false, true, true, 0, List.of());
+			return new Admission(instance, player, false, true, false, 0, List.of());
 		}
 		if (!eligible(player, instance.getMapId()) || !InstanceLimitService.status(player, instance.getMapId()).allowed()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANNOT_MAKE_INSTANCE_COOL_TIME);
@@ -157,18 +157,16 @@ public final class InstanceAdmissionService {
 			return null;
 		}
 		boolean reserved = false;
-		boolean limitConsumed = false;
 		try {
-			DynamicInstanceManager.reserveMember(instance, player, teamId(player), side);
-			reserved = true;
-			InstanceLimitService.LimitStatus status = InstanceLimitService.status(player, instance.getMapId());
-			if (!InstanceLimitService.consume(player, instance.getMapId())) {
+			if (!InstanceLimitService.reserveMatch(instance, player, teamId(player), side)) {
 				throw new AdmissionFailure();
 			}
-			limitConsumed = status.maxEntries() > 0;
-			return new Admission(instance, player, false, reserved, limitConsumed, 0, List.of());
+			reserved = true;
+			return new Admission(instance, player, false, true, false, 0, List.of());
 		} catch (RuntimeException e) {
-			rollback(instance, player, false, reserved, limitConsumed, 0, List.of());
+			if (reserved) {
+				cancelMatchReservation(instance, player);
+			}
 			if (e instanceof AdmissionFailure) {
 				return null;
 			}
@@ -177,11 +175,14 @@ public final class InstanceAdmissionService {
 	}
 
 	public static synchronized void cancelMatchReservation(WorldMapInstance instance, Player player) {
-		if (instance.isRegistered(player.getObjectId())
-				&& !DynamicInstanceManager.hasJoined(instance, player.getObjectId())) {
-			InstanceLimitService.restoreEntry(player, InstanceLimitService.limitKey(instance.getMapId()));
-			DynamicInstanceManager.removeReservedMember(instance, player.getObjectId());
+		int restoredLimitKey = DynamicInstanceManager.cancelMatchReservation(instance, player.getObjectId());
+		if (restoredLimitKey != 0) {
+			InstanceLimitService.restoreEntry(player, restoredLimitKey);
 		}
+	}
+
+	public static synchronized void cancelMatchReservation(WorldMapInstance instance, int playerId) {
+		DynamicInstanceManager.cancelMatchReservation(instance, playerId);
 	}
 
 	public static synchronized LunaAdmission admitLuna(Row dungeon, Player player, long lunaCost) {
@@ -388,6 +389,11 @@ public final class InstanceAdmissionService {
 		}
 
 		public void rollback() {
+			DynamicInstance dynamic = instance.getDynamicInstance();
+			if (reserved && !created && dynamic != null && dynamic.getOwnerType() == DynamicInstance.OWNER_MATCH) {
+				cancelMatchReservation(instance, player);
+				return;
+			}
 			InstanceAdmissionService.rollback(instance, player, created, reserved, limitConsumed, kinah, items);
 		}
 	}

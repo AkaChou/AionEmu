@@ -89,6 +89,8 @@ final class DatabaseSchemaInitializer {
             return;
         }
         executeScript(connection, "db/mysql/retail_instance_schema.sql");
+        ensureRetailMatchAdmissionColumns(connection, database);
+        dropLegacyInstanceRewardStatus(connection, database);
         if (!hasTable(connection, database, "portal_cooldowns")) {
             return;
         }
@@ -130,6 +132,53 @@ final class DatabaseSchemaInitializer {
             throw new IOException("Failed to migrate retail instance limits", e);
         } finally {
             connection.setAutoCommit(autoCommit);
+        }
+    }
+
+    private static void ensureRetailMatchAdmissionColumns(Connection connection, String database) throws SQLException {
+        for (String definition : List.of(
+            "entry_limit_key int(11) NOT NULL DEFAULT 0",
+            "entry_consumed tinyint(1) NOT NULL DEFAULT 0"
+        )) {
+            String column = definition.substring(0, definition.indexOf(' '));
+            if (!hasColumn(connection, database, "dynamic_instance_members", column)) {
+                try (Statement statement = connection.createStatement()) {
+                    statement.execute("ALTER TABLE `al_server_gs`.`dynamic_instance_members` ADD COLUMN `" + column
+                        + "` " + definition.substring(column.length() + 1));
+                }
+            }
+        }
+    }
+
+    private static void dropLegacyInstanceRewardStatus(Connection connection, String database) throws SQLException {
+        String query = "SELECT COUNT(*) FROM information_schema.columns WHERE table_schema=? "
+            + "AND table_name='dynamic_instance_members' AND column_name='reward_status'";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, database);
+            try (ResultSet row = statement.executeQuery()) {
+                row.next();
+                if (row.getInt(1) == 0) {
+                    return;
+                }
+            }
+        }
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE `al_server_gs`.`dynamic_instance_members` DROP COLUMN `reward_status`");
+        }
+    }
+
+    private static boolean hasColumn(Connection connection, String database, String table, String column)
+            throws SQLException {
+        String query = "SELECT COUNT(*) FROM information_schema.columns WHERE table_schema=? "
+            + "AND table_name=? AND column_name=?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, database);
+            statement.setString(2, table);
+            statement.setString(3, column);
+            try (ResultSet row = statement.executeQuery()) {
+                row.next();
+                return row.getInt(1) != 0;
+            }
         }
     }
 

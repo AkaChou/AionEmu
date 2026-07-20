@@ -471,7 +471,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 		for (Player player : instance.getPlayersInside()) {
 			onExitInstance(player);
 		}
-		GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+		GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance);
 	}
 
 	private void sendMovie(Player player, int movieId) {

@@ -1,20 +1,14 @@
 package com.aionemu.gameserver.instance.handlers.scripts.steelRake;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -293,17 +287,17 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 /* 				spawn(215421, 471.095f, 576.663f, 887.46f, (byte) 30); //Treasure Box.
 				spawn(215421, 451.161f, 575.938f, 887.41f, (byte) 30); //Treasure Box. */
 				// 门已打开，现在可进入禁闭室。 / The door is open and you can now access The Brig.
-				sendMsgByRace(1400249, Race.PC_ALL, 2000);
+				sendMsg(1400249, 0, false, 25, 2000);
 				spawn(730200, 461.898f, 487.228f, 877.713f, (byte) 0, 30); //The Brig Entrance.
 			break;
 			case 215064: //Collector Memekin.
 			case 215065: //Discerner Werikiki.
 				// 门已打开，现在可进入格罗格特保险箱。 / The door is open and you can now access Grogget's Safe.
-				sendMsgByRace(1400248, Race.PC_ALL, 2000);
+				sendMsg(1400248, 0, false, 25, 2000);
 			break;
 			case 215066: //Technician Binukin.
 				// 门已打开，现在可进入德拉纳发生器室。 / The door is open and you can now access the Drana Generator Chamber.
-				sendMsgByRace(1400250, Race.PC_ALL, 2000);
+				sendMsg(1400250, 0, false, 25, 2000);
 				spawn(730202, 657.111f, 509.11f, 872.948f, (byte) 0, 10); //Drana Generator Chamber Access Door.
 			break;
 			case 215079: //Golden Eye Mantutu.
@@ -322,7 +316,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 			break;
 			case 215411: //Zerkin The One-Eyed.
 				// 门已打开，现在可进入大炮甲板。 / The door is open and you can now access the Large Gun Deck.
-				sendMsgByRace(1400251, Race.PC_ALL, 2000);
+				sendMsg(1400251, 0, false, 25, 2000);
 				spawn(730203, 722.564f, 508.877f, 1012.93f, (byte) 0, 88); //Large Gun Deck Entrance.
 			break;
 		}
@@ -346,55 +340,6 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
     public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
 	
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {

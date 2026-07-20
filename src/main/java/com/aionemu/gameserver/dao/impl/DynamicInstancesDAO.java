@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerInstanceLimit;
 import com.aionemu.gameserver.model.instance.DynamicInstance;
 import com.aionemu.gameserver.model.instance.DynamicInstanceMember;
 
@@ -23,10 +24,18 @@ public class DynamicInstancesDAO extends com.aionemu.gameserver.dao.DynamicInsta
 	private static final String SELECT_RECOVERABLE = "SELECT * FROM dynamic_instances WHERE status IN (?,?) "
 			+ "AND (destroy_at=0 OR destroy_at>?) ORDER BY instance_uid";
 	private static final String UPSERT_MEMBER = "INSERT INTO dynamic_instance_members "
-			+ "(instance_uid,player_id,team_id_at_entry,side,permitted,joined_at,left_at,reentry_until,exit_world_id,exit_alias,reward_status) "
-			+ "VALUES (?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE team_id_at_entry=VALUES(team_id_at_entry),"
+			+ "(instance_uid,player_id,team_id_at_entry,side,permitted,joined_at,left_at,reentry_until,exit_world_id,exit_alias,"
+			+ "entry_limit_key,entry_consumed) VALUES (?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE team_id_at_entry=VALUES(team_id_at_entry),"
 			+ "side=VALUES(side),permitted=VALUES(permitted),joined_at=IF(joined_at=0,VALUES(joined_at),joined_at),left_at=VALUES(left_at),"
 			+ "reentry_until=VALUES(reentry_until),exit_world_id=VALUES(exit_world_id),exit_alias=VALUES(exit_alias)";
+	private static final String INSERT_MATCH_RESERVATION = "INSERT INTO dynamic_instance_members "
+			+ "(instance_uid,player_id,team_id_at_entry,side,permitted,joined_at,left_at,reentry_until,exit_world_id,exit_alias,"
+			+ "entry_limit_key,entry_consumed) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+	private static final String UPSERT_LIMIT = "INSERT INTO player_instance_limits "
+			+ "(player_id,limit_key,reset_at,used,bonus_available,purchased_count,purchase_step,updated_at) "
+			+ "VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE reset_at=VALUES(reset_at),used=VALUES(used),"
+			+ "bonus_available=VALUES(bonus_available),purchased_count=VALUES(purchased_count),"
+			+ "purchase_step=VALUES(purchase_step),updated_at=VALUES(updated_at)";
 
 	@Override
 	public long create(DynamicInstance instance) {
@@ -103,20 +112,82 @@ public class DynamicInstancesDAO extends com.aionemu.gameserver.dao.DynamicInsta
 	public void saveMember(DynamicInstanceMember member) {
 		try (Connection connection = DatabaseFactory.getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPSERT_MEMBER)) {
-			statement.setLong(1, member.getInstanceUid());
-			statement.setInt(2, member.getPlayerId());
-			statement.setInt(3, member.getTeamIdAtEntry());
-			statement.setByte(4, member.getSide());
-			statement.setBoolean(5, member.isPermitted());
-			statement.setLong(6, member.getJoinedAt());
-			statement.setLong(7, member.getLeftAt());
-			statement.setLong(8, member.getReentryUntil());
-			statement.setInt(9, member.getExitWorldId());
-			statement.setString(10, member.getExitAlias());
-			statement.setByte(11, member.getRewardStatus());
+			bindMember(statement, member);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new IllegalStateException("Failed to save dynamic instance member " + member.getPlayerId(), e);
+		}
+	}
+
+	@Override
+	public void saveMatchReservation(DynamicInstanceMember member, PlayerInstanceLimit limit) {
+		try (Connection connection = DatabaseFactory.getConnection()) {
+			connection.setAutoCommit(false);
+			try (PreparedStatement reservation = connection.prepareStatement(INSERT_MATCH_RESERVATION)) {
+				bindMember(reservation, member);
+				reservation.executeUpdate();
+				if (limit != null) {
+					try (PreparedStatement entryLimit = connection.prepareStatement(UPSERT_LIMIT)) {
+						bindLimit(entryLimit, member.getPlayerId(), limit);
+						entryLimit.executeUpdate();
+					}
+				}
+				connection.commit();
+			} catch (SQLException e) {
+				connection.rollback();
+				throw e;
+			}
+		} catch (SQLException e) {
+			throw new IllegalStateException("Failed to save match reservation " + member.getPlayerId(), e);
+		}
+	}
+
+	@Override
+	public int cancelMatchReservation(long instanceUid, int playerId) {
+		String select = "SELECT entry_limit_key,entry_consumed FROM dynamic_instance_members "
+				+ "WHERE instance_uid=? AND player_id=? AND joined_at=0 FOR UPDATE";
+		try (Connection connection = DatabaseFactory.getConnection()) {
+			connection.setAutoCommit(false);
+			try {
+				int limitKey = 0;
+				boolean consumed = false;
+				try (PreparedStatement statement = connection.prepareStatement(select)) {
+					statement.setLong(1, instanceUid);
+					statement.setInt(2, playerId);
+					try (ResultSet row = statement.executeQuery()) {
+						if (!row.next()) {
+							connection.commit();
+							return 0;
+						}
+						limitKey = row.getInt("entry_limit_key");
+						consumed = row.getBoolean("entry_consumed");
+					}
+				}
+				if (consumed) {
+					try (PreparedStatement restore = connection.prepareStatement("UPDATE player_instance_limits "
+							+ "SET used=GREATEST(0,used-1),updated_at=? WHERE player_id=? AND limit_key=?")) {
+						restore.setLong(1, System.currentTimeMillis());
+						restore.setInt(2, playerId);
+						restore.setInt(3, limitKey);
+						if (restore.executeUpdate() != 1) {
+							throw new SQLException("Missing consumed instance limit " + playerId + ":" + limitKey);
+						}
+					}
+				}
+				try (PreparedStatement delete = connection.prepareStatement("DELETE FROM dynamic_instance_members "
+						+ "WHERE instance_uid=? AND player_id=? AND joined_at=0")) {
+					delete.setLong(1, instanceUid);
+					delete.setInt(2, playerId);
+					delete.executeUpdate();
+				}
+				connection.commit();
+				return consumed ? limitKey : 0;
+			} catch (SQLException e) {
+				connection.rollback();
+				throw e;
+			}
+		} catch (SQLException e) {
+			throw new IllegalStateException("Failed to cancel match reservation " + playerId, e);
 		}
 	}
 
@@ -267,6 +338,33 @@ public class DynamicInstancesDAO extends com.aionemu.gameserver.dao.DynamicInsta
 		statement.setLong(16, instance.getUpdatedAt());
 	}
 
+	private static void bindMember(PreparedStatement statement, DynamicInstanceMember member) throws SQLException {
+		statement.setLong(1, member.getInstanceUid());
+		statement.setInt(2, member.getPlayerId());
+		statement.setInt(3, member.getTeamIdAtEntry());
+		statement.setByte(4, member.getSide());
+		statement.setBoolean(5, member.isPermitted());
+		statement.setLong(6, member.getJoinedAt());
+		statement.setLong(7, member.getLeftAt());
+		statement.setLong(8, member.getReentryUntil());
+		statement.setInt(9, member.getExitWorldId());
+		statement.setString(10, member.getExitAlias());
+		statement.setInt(11, member.getEntryLimitKey());
+		statement.setBoolean(12, member.isEntryConsumed());
+	}
+
+	private static void bindLimit(PreparedStatement statement, int playerId, PlayerInstanceLimit limit)
+			throws SQLException {
+		statement.setInt(1, playerId);
+		statement.setInt(2, limit.getLimitKey());
+		statement.setLong(3, limit.getResetAt());
+		statement.setInt(4, limit.getUsed());
+		statement.setInt(5, limit.getBonusAvailable());
+		statement.setInt(6, limit.getPurchasedCount());
+		statement.setInt(7, limit.getPurchaseStep());
+		statement.setLong(8, System.currentTimeMillis());
+	}
+
 	private static DynamicInstance readInstance(ResultSet row) throws SQLException {
 		return new DynamicInstance(row.getLong("instance_uid"), row.getInt("world_id"), row.getInt("creation_id"),
 				row.getInt("client_instance_id"), row.getInt("runtime_instance_id"), row.getByte("owner_type"),
@@ -280,7 +378,8 @@ public class DynamicInstancesDAO extends com.aionemu.gameserver.dao.DynamicInsta
 		return new DynamicInstanceMember(row.getLong("instance_uid"), row.getInt("player_id"),
 				row.getInt("team_id_at_entry"), row.getByte("side"), row.getBoolean("permitted"),
 				row.getLong("joined_at"), row.getLong("left_at"), row.getLong("reentry_until"),
-				row.getInt("exit_world_id"), row.getString("exit_alias"), row.getByte("reward_status"));
+				row.getInt("exit_world_id"), row.getString("exit_alias"), row.getInt("entry_limit_key"),
+				row.getBoolean("entry_consumed"));
 	}
 
 	@Override

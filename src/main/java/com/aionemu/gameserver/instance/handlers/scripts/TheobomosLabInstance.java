@@ -1,19 +1,13 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.Set;
 
 /**
@@ -210,7 +204,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 	public void onEnterInstance(final Player player) {
 		if (runtimeState().getLong("theobomos.stone_deadline", 0) == 0
 				&& !runtimeState().getBoolean("theobomos.stone_removed", false)) {
-			sendMsgByRace(1403061, Race.PC_ALL, 2000);
+			sendMsg(1403061, 0, false, 25, 2000);
 			spawn(237253, 477.88632f, 230.60364f, 173.06987f, (byte) 90);
 			long deadline = System.currentTimeMillis() + 180_000;
 			runtimeState().put("theobomos.stone_deadline", deadline);
@@ -238,26 +232,26 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 				runtimeState().put("theobomos.stone_removed", true);
 				cancelDeadline("stone");
 				// 若未按正确顺序举行仪式，辉煌元素将失去力量。 / If you do not perform the proper order of the ritual, the Brilliant Elemental will lose its power.
-				sendMsgByRace(1403039, Race.PC_ALL, 4000);
+				sendMsg(1403039, 0, false, 25, 4000);
 				// 辉煌元素正朝记忆硅石所在的元素核心生成室发出光束。 / The Brilliant Elemental is beaming towards the researcher's lounge where Queen Arachne is located.
-				sendMsgByRace(1403021, Race.PC_ALL, 6000);
+				sendMsg(1403021, 0, false, 25, 6000);
 				spawn(237258, 477.88632f, 230.60364f, 173.06987f, (byte) 90); //Demon Lord Mulion.
 			break;
 			case 237246: //Watcher Queen Arachne.
 				// 刺眼光束正射向中央控制室。 / The blinding light is beaming towards the Central Control Room.
-				sendMsgByRace(1403022, Race.PC_ALL, 2000);
+				sendMsg(1403022, 0, false, 25, 2000);
             break;
 			case 237247: //Watcher Cracked Nuhas.
 				// 辉煌元素正朝记忆硅石所在的元素核心生成室发出光束。 / The Brilliant Elemental is beaming towards the Elemental Core Generation Room where the Silicanimum of Memory is located.
-				sendMsgByRace(1403023, Race.PC_ALL, 2000);
+				sendMsg(1403023, 0, false, 25, 2000);
             break;
 			case 237248: //Watcher Silikor Of Memory.
 				// 辉煌元素正朝记忆硅石所在的元素核心生成室发出光束。 / The Brilliant Elemental is beaming towards the Library of Theobomos where Jilitia of Innocence is located.
-				sendMsgByRace(1403024, Race.PC_ALL, 2000);
+				sendMsg(1403024, 0, false, 25, 2000);
             break;
 			case 237249: //Watcher Jilitia.
 				// 辉煌元素正朝记忆硅石所在的元素核心生成室发出光束。 / The Brilliant Elemental is beaming towards the Elemental Core Testing Room where Unstable Triroan is located.
-				sendMsgByRace(1403025, Race.PC_ALL, 2000);
+				sendMsg(1403025, 0, false, 25, 2000);
             break;
 			case 280971: //First Silikor Guard.
 			case 280972: //Second Silikor Guard.
@@ -296,7 +290,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 			return;
 		}
 		runtimeState().put("theobomos.ifrit_spawned", true);
-		sendMsgByRace(1403026, Race.PC_ALL, 0);
+		sendMsg(1403026, 0, false, 25, 0);
 		spawn(237251, 616.169f, 488.758f, 196.015f, (byte) 62);
 	}
 
@@ -317,52 +311,4 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 		}
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
 }

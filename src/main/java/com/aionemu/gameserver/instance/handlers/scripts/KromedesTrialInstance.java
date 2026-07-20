@@ -2,7 +2,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -11,10 +10,8 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
@@ -131,55 +128,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
         storage.decreaseByItemId(164000142, storage.getItemCountByItemId(164000142)); //Sapping Pollen.
 		storage.decreaseByItemId(164000143, storage.getItemCountByItemId(164000143)); //Maga's Potion.
     }
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
-	
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
@@ -188,13 +136,13 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 * zone
 	 */
 	@Override
-    public void onEnterZone(Player player, ZoneInstance zone) {
-        if (zone.getAreaTemplate().getZoneName() == ZoneName.get("MANOR_ENTRANCE_300230000")) {
-            sendMovie(player, 462);
-			// 附近有强大物品。 / There is an object of great power nearby.
-			sendMsgByRace(1400653, Race.PC_ALL, 0);
-        }
-    }
+	    public void onEnterZone(Player player, ZoneInstance zone) {
+	        if (zone.getAreaTemplate().getZoneName() == ZoneName.get("MANOR_ENTRANCE_300230000")) {
+	            sendMovie(player, 462);
+				// 附近有强大物品。 / There is an object of great power nearby.
+				sendMsg(1400653);
+	        }
+	    }
 	
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {

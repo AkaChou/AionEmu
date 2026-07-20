@@ -53,6 +53,7 @@ public class SpawnTemplate {
 	private String npcPartyId;
 	private String stableKey;
 	private String runtimeLifecycleKey;
+	private boolean despawnAtAttackState;
 	private Creature master;
 	private TemporarySpawn temporarySpawn;
 	private VisibleObject visibleObject;
@@ -451,6 +452,14 @@ public class SpawnTemplate {
 
 	public void setStableKey(String stableKey) {
 		this.stableKey = stableKey;
+	}
+
+	public boolean isDespawnAtAttackState() {
+		return despawnAtAttackState;
+	}
+
+	public void setDespawnAtAttackState(boolean despawnAtAttackState) {
+		this.despawnAtAttackState = despawnAtAttackState;
 	}
 
 	public String getRuntimeLifecycleKey() {

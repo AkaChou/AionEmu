@@ -77,6 +77,8 @@
     <xs:attribute name="life" type="xs:positiveInteger"/>
     <xs:attribute name="respawn_time" type="xs:positiveInteger"/>
     <xs:attribute name="respawn_time_extra" type="xs:positiveInteger"/>
+    <xs:attribute name="idle_live_range" type="xs:positiveInteger"/>
+    <xs:attribute name="despawn_at_attack_state" type="xs:boolean"/>
   </xs:complexType>
   <xs:complexType name="partyType">
     <xs:sequence>

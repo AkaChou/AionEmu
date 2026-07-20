@@ -71,7 +71,8 @@ public abstract class DamageEffect extends EffectTemplate {
 		SkillType accuracyType = damageType == DamageType.MAGICAL ? SkillType.MAGICAL : SkillType.PHYSICAL;
 		int accMod = this.accMod2 + this.accMod1 * skillLvl
 				+ effect.getEffector().getObserveController().getSkillAccuracyModifier(accuracyType);
-		int critAddDmg = this.critAddDmg2 + this.critAddDmg1 * skillLvl;
+		int criticalProbability = getCriticalProbability(skillLvl);
+		int critAddDmg = getCriticalAdditionalDamage(skillLvl);
 		Object effector = effect.getEffector().getController().getOwner();
 		switch (damageType) {
 		case PHYSICAL:
@@ -82,7 +83,7 @@ public abstract class DamageEffect extends EffectTemplate {
 			int rndDmg = (this instanceof SkillAttackInstantEffect ? ((SkillAttackInstantEffect) this).getRnddmg() : 0);
 			AttackUtil.calculateSkillResult(effect, valueWithDelta, modifier, this.getMode(), flatDamage, percentDamage,
 					rndDmg, accMod,
-					this.critProbMod2, critAddDmg, cannotMiss, shared, false, false);
+					criticalProbability, critAddDmg, cannotMiss, shared, false, false);
 			break;
 		case MAGICAL:
 			boolean useKnowledge = true;
@@ -91,7 +92,7 @@ public abstract class DamageEffect extends EffectTemplate {
 			}
 			AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, modifier, getElement(),
 					isMagicBoostApplied(effect), useKnowledge, false, this.getMode(), flatDamage, percentDamage,
-					this.critProbMod2, critAddDmg, shared, false);
+					criticalProbability, critAddDmg, shared, false);
 			break;
 		default:
 			AttackUtil.calculateSkillResult(effect, 0, null, this.getMode(), 0, accMod, 100, 0, false, shared, false,

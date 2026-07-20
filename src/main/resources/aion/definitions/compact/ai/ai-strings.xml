@@ -2209,6 +2209,7 @@
   <string name="STR_MSG_BaseTake_4_IDLDF5_Under_01_War" id="1401964"/>
   <string name="STR_MSG_BaseTake_4_IDLDF5_Under_01_War_Dark" id="1401994"/>
   <string name="STR_MSG_BaseTake_4_IDLDF5_Under_01_War_Drakan" id="1402003"/>
+  <string name="STR_MSG_BATTLEGROUND_ADJUST_TIME" id="1401934"/>
   <string name="STR_MSG_BattleGround_Fotress_01_Da" id="1403435"/>
   <string name="STR_MSG_BattleGround_Fotress_01_Li" id="1403428"/>
   <string name="STR_MSG_BattleGround_Fotress_02_Da" id="1403436"/>
@@ -2221,6 +2222,7 @@
   <string name="STR_MSG_BattleGround_Fotress_04_Li" id="1403432"/>
   <string name="STR_MSG_BattleGround_Fotress_Win_Da" id="1403441"/>
   <string name="STR_MSG_BattleGround_Fotress_Win_Li" id="1403434"/>
+  <string name="STR_MSG_BATTLEGROUND_START_SCOREMOD" id="1401933"/>
   <string name="STR_MSG_BattleGround_Time_300" id="1403409"/>
   <string name="STR_MSG_BattleGround_Time_600" id="1403410"/>
   <string name="STR_MSG_BattleGround_Time_840" id="1403411"/>
@@ -2230,6 +2232,7 @@
   <string name="STR_MSG_BattleGround_Under_ShugoCh_Li" id="1403449"/>
   <string name="STR_MSG_BattleGround_Under_Soon" id="1403624"/>
   <string name="STR_MSG_BattleGround_Under_Start" id="1403451"/>
+  <string name="STR_MSG_BATTLEGROUND_WAIT_TIME" id="1401935"/>
   <string name="STR_MSG_BF4_Rotation_Buff_NPC_01" id="1402890"/>
   <string name="STR_MSG_BLDF5_Fortress_GuardianHead_65_Al_PD" id="1402574"/>
   <string name="STR_MSG_BLDF5_Fortress_GuardianHead_65_Al_Son" id="1402575"/>

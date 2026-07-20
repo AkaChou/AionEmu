@@ -11,8 +11,6 @@ import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
-import com.aionemu.gameserver.services.instance.AsyunatarService;
-import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
@@ -44,10 +42,6 @@ public class GameFeatureServicesRuntimeBridge {
     private ObjectProvider<OutpostService> outpostServiceProvider;
     /** 保护者征服者服务提供者 / Protector-conqueror service provider. */
     private ObjectProvider<ProtectorConquerorService> protectorConquerorServiceProvider;
-    /** 钢铁之战服务提供者 / Dredgion service provider. */
-    private ObjectProvider<DredgionService2> dredgionServiceProvider;
-    /** 阿修那塔服务提供者 / Asyunatar service provider. */
-    private ObjectProvider<AsyunatarService> asyunatarServiceProvider;
     /** FFA 服务提供者 / FFA service provider */
     private ObjectProvider<FFAService> ffaServiceProvider;
     /** 天梯服务提供者 / Ladder service provider. */
@@ -147,28 +141,6 @@ public class GameFeatureServicesRuntimeBridge {
     @Autowired(required = false)
     void setProtectorConquerorServiceProvider(ObjectProvider<ProtectorConquerorService> protectorConquerorServiceProvider) {
         this.protectorConquerorServiceProvider = protectorConquerorServiceProvider;
-    }
-
-    /**
-     * 可选注入钢铁之战服务提供者。
-     * Optionally inject the Dredgion service provider.
-     *
-     * @param dredgionServiceProvider 钢铁之战服务提供者 / Dredgion service provider
-     */
-    @Autowired(required = false)
-    void setDredgionServiceProvider(ObjectProvider<DredgionService2> dredgionServiceProvider) {
-        this.dredgionServiceProvider = dredgionServiceProvider;
-    }
-
-    /**
-     * 可选注入阿修那塔服务提供者。
-     * Optionally inject the Asyunatar service provider.
-     *
-     * @param asyunatarServiceProvider 阿修那塔服务提供者 / Asyunatar service provider
-     */
-    @Autowired(required = false)
-    void setAsyunatarServiceProvider(ObjectProvider<AsyunatarService> asyunatarServiceProvider) {
-        this.asyunatarServiceProvider = asyunatarServiceProvider;
     }
 
     /**
@@ -315,26 +287,6 @@ public class GameFeatureServicesRuntimeBridge {
      */
     public ProtectorConquerorService protectorConquerorService() {
         return getIfAvailable(protectorConquerorServiceProvider, ProtectorConquerorService::getInstance);
-    }
-
-    /**
-     * 解析钢铁之战服务。
-     * Resolve the Dredgion service.
-     *
-     * @return 钢铁之战服务 / Dredgion service
-     */
-    public DredgionService2 dredgionService() {
-        return getIfAvailable(dredgionServiceProvider, DredgionService2::getInstance);
-    }
-
-    /**
-     * 解析阿修那塔服务。
-     * Resolve the Asyunatar service.
-     *
-     * @return 阿修那塔服务 / Asyunatar service
-     */
-    public AsyunatarService asyunatarService() {
-        return getIfAvailable(asyunatarServiceProvider, AsyunatarService::getInstance);
     }
 
     /**

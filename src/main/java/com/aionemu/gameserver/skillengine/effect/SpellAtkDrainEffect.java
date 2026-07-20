@@ -33,9 +33,10 @@ public class SpellAtkDrainEffect extends AbstractOverTimeEffect {
 	@Override
 	public void onPeriodicAction(Effect effect) {
 		int valueWithDelta = value + delta * effect.getSkillLevel();
-		int critAddDmg = critAddDmg2 + critAddDmg1 * effect.getSkillLevel();
+		int critAddDmg = getCriticalAdditionalDamage(effect.getSkillLevel());
 		int damage = AttackUtil.calculateMagicalOverTimeSkillResult(effect, valueWithDelta, element, position,
-				effect.getSkillTemplate().isMboostApplied(), mrResist, critProbMod2, critAddDmg);
+				effect.getSkillTemplate().isMboostApplied(), mrResist,
+				getCriticalProbability(effect.getSkillLevel()), critAddDmg);
 		effect.getEffected().getController().onAttack(effect.getEffector(), effect.getSkillId(), TYPE.REGULAR, damage,
 				true, LOG.SPELLATKDRAIN);
 		if (effect.tryActivateGodstone()) {

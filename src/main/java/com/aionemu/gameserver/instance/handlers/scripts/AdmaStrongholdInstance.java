@@ -1,22 +1,16 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.Set;
 
 /**
@@ -174,7 +168,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 		// 可疑罐子将在 3 分钟后消失。 / The Suspicious Pot will disappear in 3 minutes.
 		if (runtimeState().getLong("adma.pot_deadline", 0) == 0
 				&& !runtimeState().getBoolean("adma.pot_removed", false)) {
-			sendMsgByRace(1403059, Race.PC_ALL, 2000);
+			sendMsg(1403059, 0, false, 25, 2000);
 			spawn(237245, 451.54147f, 276.3691f, 170.08488f, (byte) 90); //Suspicious Pot.
 			long deadline = System.currentTimeMillis() + 180_000;
 			runtimeState().put("adma.pot_deadline", deadline);
@@ -202,25 +196,25 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 				runtimeState().put("adma.pot_removed", true);
 				cancelDeadline("pot");
 				// 须按正确顺序摧毁暗影幽魂，否则它们会保留力量。 / Destroy the Shadow Specters in the proper order or they will retain their power.
-				sendMsgByRace(1403038, Race.PC_ALL, 4000);
+				sendMsg(1403038, 0, false, 25, 4000);
 				// 暗影幽魂正前往仓库，寻找仓库管理员古托伦。 / The Shadow Specter is moving towards the storehouse, to look for Warehouse Manager Gutorum.
-				sendMsgByRace(1403014, Race.PC_ALL, 6000);
+				sendMsg(1403014, 0, false, 25, 6000);
 			break;
 			case 237240: //Enthralled Gutorum.
 				// 暗影幽魂正前往卡雷米温卧室，寻找卡雷米温公主。 / The Shadow Specter is moving towards Karemiwen's Bedroom, to look for Princess Karemiwen.
-				sendMsgByRace(1403015, Race.PC_ALL, 2000);
+				sendMsg(1403015, 0, false, 25, 2000);
 			break;
 			case 237241: //Enthralled Karemiwen.
 				// 一道暗影正滑向二楼主厅。 / A dark shadow is slithering towards the 2nd floor Main Hall.
-				sendMsgByRace(1403016, Race.PC_ALL, 2000);
+				sendMsg(1403016, 0, false, 25, 2000);
 			break;
 			case 237242: //Enthralled Taliesin.
 				// 暗影幽魂正前往地下马厩，寻找马厩管理员泽图伦。 / The Shadow Specter is moving towards the Underground Stable, to look for Stable Keeper Zeeturun.
-				sendMsgByRace(1403017, Race.PC_ALL, 2000);
+				sendMsg(1403017, 0, false, 25, 2000);
 			break;
 			case 237243: //Enthralled Zeeturun.
 				// 暗影幽魂正前往崩塌观察哨，寻找兰马克领主。 / The Shadow Specter is moving towards the Collapsed Observation Post, to look for Lord Lanmark.
-				sendMsgByRace(1403018, Race.PC_ALL, 2000);
+				sendMsg(1403018, 0, false, 25, 2000);
 			break;
 			case 237148: //Captain Mundirve.
 				spawn(237159, 346.57733f, 534.69476f, 181.204f, (byte) 40);
@@ -258,7 +252,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 			return;
 		}
 		runtimeState().put("adma.reaper_spawned", true);
-		sendMsgByRace(1403019, Race.PC_ALL, 0);
+		sendMsg(1403019, 0, false, 25, 0);
 		spawn(237239, 606.483f, 745.0968f, 197.72092f, (byte) 61);
 	}
 
@@ -296,55 +290,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
-	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
 	}
 	
 	/**

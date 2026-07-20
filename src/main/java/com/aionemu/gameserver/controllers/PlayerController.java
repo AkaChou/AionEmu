@@ -18,7 +18,6 @@ import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.gameobjects.*;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.BindPointPosition;
-import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureVisualState;
@@ -117,8 +116,7 @@ public class PlayerController extends CreatureController<Player> {
 			}
 			if (player.getMinion() != null) {
 				log.debug("Player " + getOwner().getName() + " sees " + object.getName() + " that has minion");
-				MinionCommonData commonData = player.getMinionList().getMinion(object.getObjectId());
-				PacketSendUtility.sendPacket(getOwner(), new SM_MINIONS(5, commonData));
+				PacketSendUtility.sendPacket(getOwner(), new SM_MINIONS(5, player.getMinion().getCommonData()));
 			}
 			player.getEffectController().sendEffectIconsTo(getOwner());
 		} else if (object instanceof Kisk) {
@@ -146,8 +144,7 @@ public class PlayerController extends CreatureController<Player> {
 		} else if (object instanceof Pet) {
 			PacketSendUtility.sendPacket(getOwner(), new SM_PET(3, (Pet) object));
 		} else if (object instanceof Minion) {
-			MinionCommonData commonData = getOwner().getMinionList().getMinion(object.getObjectId());
-			PacketSendUtility.sendPacket(getOwner(), new SM_MINIONS(5, commonData));
+			PacketSendUtility.sendPacket(getOwner(), new SM_MINIONS(5, ((Minion) object).getCommonData()));
 		}
 	}
 
@@ -169,8 +166,7 @@ public class PlayerController extends CreatureController<Player> {
 		if (object instanceof Pet) {
 			PacketSendUtility.sendPacket(getOwner(), new SM_PET(4, (Pet) object));
 		} else if (object instanceof Minion) {
-			MinionCommonData commonData = getOwner().getMinionList().getMinion(object.getObjectId());
-			PacketSendUtility.sendPacket(getOwner(), new SM_MINIONS(6, commonData));
+			PacketSendUtility.sendPacket(getOwner(), new SM_MINIONS(6, ((Minion) object).getCommonData()));
 		} else {
 			PacketSendUtility.sendPacket(getOwner(), new SM_DELETE(object, isOutOfRange ? 0 : 15));
 		}

@@ -52,8 +52,9 @@
 	<portal_loc world_id="210080000" loc_id="2100800" x="262.998" y="200.0" z="498.762" h="27"/>
 	<!-- Habrok -->
 	<portal_loc world_id="220090000" loc_id="2200900" x="252.773" y="177.981" z="503.511" h="29"/>
+	<!-- Inggison -->
+	<portal_loc world_id="210050000" loc_id="2100517" x="1080.1464" y="1519.1409" z="405.72308"/>
 	<!-- Inggison [Master Server] -->
-	<portal_loc world_id="210130000" loc_id="2100517" x="1080.1464" y="1519.1409" z="405.72308"/>
 	<portal_loc world_id="210130000" loc_id="2101300" x="1375.1648" y="366.27975" z="589.6201" h="22"/>
 	<portal_loc world_id="210130000" loc_id="2101301" x="543.21" y="715.02" z="484.0491" h="17"/> 
 	<portal_loc world_id="210130000" loc_id="2101302" x="536.35" y="705.89" z="484.04898" h="76"/>
@@ -186,8 +187,9 @@
 	<portal_loc world_id="220050000" loc_id="2200500" x="1409.85" y="2013.62" z="51.5" h="0"/>
 	<portal_loc world_id="220050000" loc_id="2200501" x="1535.1396" y="385.41147" z="231.125" h="8"/> <!-- Theobomos Lab Exit -->
 	<portal_loc world_id="220050000" loc_id="2200502" x="2100.697" y="179.41963" z="218.59442" h="57"/> <!-- Theobomos Lab To Adma Plain -->
+	<!-- Gelkmaros -->
+    <portal_loc world_id="220070000" loc_id="2200717" x="1797.6472" y="1884.7391" z="404.25" h="78"/>
 	<!-- Gelkmaros [Master Server] -->
-    <portal_loc world_id="220140000" loc_id="2200717" x="1797.6472" y="1884.7391" z="404.25" h="78"/>
 	<portal_loc world_id="220140000" loc_id="2201400" x="1888.2524" y="2847.2727" z="554.9964" h="98"/>
 	<portal_loc world_id="220140000" loc_id="2201401" x="2657.23" y="2195.18" z="495.9283" h="73"/>
 	<portal_loc world_id="220140000" loc_id="2201402" x="2663.65" y="2200.99" z="495.9283" h="15"/>
@@ -716,4 +718,48 @@
 	<!-- Divine Tower D 5.8 -->
 	<portal_loc world_id="320160000" loc_id="3201600" x="79.03465" y="207.17049" z="419.29254" h="4"/> <!-- Divine Tower D Entrance -->
 	<portal_loc world_id="320160000" loc_id="3201601" x="234.31956" y="246.75645" z="404.25793" h="8"/> <!-- Divine Tower D Boss -->
-</portal_locs>
+	<!-- Normal Balaurea worlds -->
+	<portal_loc world_id="210050000" loc_id="2100500" x="1375.1648" y="366.27975" z="589.6201" h="22"/>
+	<portal_loc world_id="210050000" loc_id="2100501" x="543.21" y="715.02" z="484.0491" h="17"/>
+	<portal_loc world_id="210050000" loc_id="2100502" x="536.35" y="705.89" z="484.04898" h="76"/>
+	<portal_loc world_id="210050000" loc_id="2100503" x="2514.82" y="821.68" z="415.8327" h="17"/>
+	<portal_loc world_id="210050000" loc_id="2100504" x="2507.78" y="811.96" z="415.83273" h="76"/>
+	<portal_loc world_id="210050000" loc_id="2100505" x="204.9667" y="1386.87" z="266.4227" h="75"/>
+	<portal_loc world_id="210050000" loc_id="2100506" x="332.81326" y="1353.1685" z="263.96545"/>
+	<portal_loc world_id="210050000" loc_id="2100507" x="1363.2781" y="2298.1277" z="296.6737"/>
+	<portal_loc world_id="210050000" loc_id="2100508" x="1066.0039" y="2005.531" z="370.1548"/>
+	<portal_loc world_id="210050000" loc_id="2100509" x="2756.1963" y="2141.9448" z="245.125"/>
+	<portal_loc world_id="210050000" loc_id="2100510" x="405.25473" y="2062.1338" z="332.26474"/>
+	<portal_loc world_id="210050000" loc_id="2100511" x="2894.7688" y="357.71338" z="299.4761"/>
+	<portal_loc world_id="210050000" loc_id="2100512" x="1725.530029" y="2251.399902" z="328.294006"/>
+	<portal_loc world_id="210050000" loc_id="2100513" x="1081.3258" y="1567.8789" z="407.9063"/>
+	<portal_loc world_id="210050000" loc_id="2100514" x="892.479" y="1992.595" z="340.7177"/>
+	<portal_loc world_id="210050000" loc_id="2100515" x="142.179" y="2073.37" z="438.9"/>
+	<portal_loc world_id="210050000" loc_id="2100516" x="1269.26" y="2178.2" z="357.3"/>
+	<portal_loc world_id="210050000" loc_id="2100518" x="461.1575" y="194.68065" z="459.5" h="24"/> <!-- Dimaia Fountainhead -->
+	<portal_loc world_id="210050000" loc_id="2100519" x="1730.1896" y="1207.7006" z="391.85815" h="13"/> <!-- Wretched Garden -->
+	<portal_loc world_id="210050000" loc_id="2100520" x="2374.9312" y="273.11795" z="458.6949" h="67"/> <!-- Phanoe Valley -->
+	<portal_loc world_id="210050000" loc_id="2100521" x="1830.978" y="1869.2764" z="309.41748" h="7"/> <!-- Hanarkand Plains -->
+	<portal_loc world_id="210050000" loc_id="2100522" x="1318.2023" y="295.06198" z="589.7862"/>
+	<portal_loc world_id="220070000" loc_id="2200700" x="1888.2524" y="2847.2727" z="554.9964" h="98"/>
+	<portal_loc world_id="220070000" loc_id="2200701" x="2657.23" y="2195.18" z="495.9283" h="73"/>
+	<portal_loc world_id="220070000" loc_id="2200702" x="2663.65" y="2200.99" z="495.9283" h="15"/>
+	<portal_loc world_id="220070000" loc_id="2200703" x="724.96" y="2279.15" z="389.64566" h="79"/>
+	<portal_loc world_id="220070000" loc_id="2200704" x="728.87" y="2286.43" z="389.6456" h="21"/>
+	<portal_loc world_id="220070000" loc_id="2200705" x="2274.8582" y="1602.2708" z="310.4504"/>
+	<portal_loc world_id="220070000" loc_id="2200706" x="2261.6108" y="1728.4307" z="309.1358"/>
+	<portal_loc world_id="220070000" loc_id="2200707" x="1448.3127" y="910.9731" z="294.02194"/>
+	<portal_loc world_id="220070000" loc_id="2200708" x="691" y="623" z="385"/>
+	<portal_loc world_id="220070000" loc_id="2200709" x="1623" y="1135" z="353.375"/>
+	<portal_loc world_id="220070000" loc_id="2200710" x="2934" y="882" z="310.25"/>
+	<portal_loc world_id="220070000" loc_id="2200711" x="979.4631" y="2569.5842" z="242.23325"/>
+	<portal_loc world_id="220070000" loc_id="2200712" x="1878.780029" y="1027" z="330.270996"/>
+	<portal_loc world_id="220070000" loc_id="2200713" x="1196.989990" y="802.956970" z="313.450012"/>
+	<portal_loc world_id="220070000" loc_id="2200714" x="1783.3955" y="1815.8047" z="405.47815"/>
+	<portal_loc world_id="220070000" loc_id="2200715" x="2927.1094" y="916.34" z="35.3"/>
+	<portal_loc world_id="220070000" loc_id="2200716" x="1557.8" y="1072.84" z="336.25"/>
+	<portal_loc world_id="600010000" loc_id="6000100" x="471.12662" y="460.05142" z="330.0077"/>
+	<portal_loc world_id="600010000" loc_id="6000101" x="480" y="1094" z="334.7"/>
+	<portal_loc world_id="600010000" loc_id="6000102" x="1412" y="767" z="313"/>
+	<portal_loc world_id="600010000" loc_id="3007001" x="529.67" y="767.19" z="299.61633"/>
+	</portal_locs>

@@ -57,11 +57,6 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	/** 吸收时消耗 MP 百分比 / MP cost percent on absorb */
 	private int mpValue;
 	/**
-	 * 总命中百分比是否已结算。 / Whether the total hit percentage has been resolved.
-	 */
-	private boolean totalHitPercentSet = false;
-
-	/**
 	 * 简化构造：百分比总伤、无半径/治疗/保护/MP。
 	 * Simplified constructor: percent total hit, no radius/heal/protect/MP.
 	 *
@@ -177,14 +172,11 @@ public class AttackShieldObserver extends AttackCalcObserver {
 			}
 			if (shieldType == 2) {
 				int damage = attackResult.getDamage();
-				int absorbedDamage = 0;
-				if (hitPercent) {
-					absorbedDamage = damage * hit / 100;
-				} else {
-					absorbedDamage = damage >= hit ? hit : damage;
-				}
-				absorbedDamage = absorbedDamage >= totalHit ? totalHit : absorbedDamage;
-				totalHit -= absorbedDamage;
+				int currentMp = mpValue > 0 ? effect.getEffected().getLifeStats().getCurrentMp() : Integer.MAX_VALUE;
+				int shieldUse = calculateShieldUse(damage, hit, hitPercent, totalHit, currentMp);
+				int absorbedDamage = mpValue > 0 && effect.getEffected() instanceof Player
+						? calculatePercent(shieldUse, mpValue) : shieldUse;
+				totalHit -= shieldUse;
 				if (absorbedDamage > 0) {
 					attackResult.setShieldType(shieldType);
 				}
@@ -193,11 +185,12 @@ public class AttackShieldObserver extends AttackCalcObserver {
 					attackResult.setLaunchSubEffect(false);
 				}
 				if (mpValue > 0) {
-					attackResult.setShieldMp((int) (absorbedDamage * mpValue * 0.01f));
-					effect.getEffected().getLifeStats().reduceMp((int) (absorbedDamage * mpValue * 0.01f));
+					int mpCost = calculatePercent(shieldUse, mpValue);
+					attackResult.setShieldMp(mpCost);
+					effect.getEffected().getLifeStats().reduceMp(mpCost);
 					attackResult.setReflectedSkillId(effect.getSkillId());
 				}
-				if (totalHit <= 0) {
+				if (totalHit <= 0 || mpValue > 0 && shieldUse == currentMp) {
 					effect.endEffect();
 					return;
 				}
@@ -233,17 +226,8 @@ public class AttackShieldObserver extends AttackCalcObserver {
 					break;
 				}
 				if (MathUtil.isIn3dRange(effect.getEffector(), effect.getEffected(), totalHit)) {
-					int damageProtected = 0;
-					int effectorDamage = 0;
-					if (hitPercent) {
-						damageProtected = ((int) (attackResult.getDamage() * hit * 0.01));
-						if (this.effectorDamage == 0) {
-							this.effectorDamage = 100;
-						}
-						effectorDamage = ((int) (attackResult.getDamage() * this.effectorDamage * 0.01));
-					} else {
-						damageProtected = hit;
-					}
+					int damageProtected = calculateProtectedDamage(attackResult.getDamage(), hit, hitPercent);
+					int effectorDamage = calculateProtectorDamage(damageProtected, this.effectorDamage);
 					int finalDamage = attackResult.getDamage() - damageProtected;
 					attackResult.setDamage((finalDamage <= 0 ? 0 : finalDamage));
 					attackResult.setShieldType(shieldType);
@@ -255,20 +239,11 @@ public class AttackShieldObserver extends AttackCalcObserver {
 				}
 			} else if (shieldType == 0) {
 				int damage = attackResult.getDamage();
-				int absorbedDamage = damage;
-				if (totalHitPercent && !totalHitPercentSet) {
-					totalHit = (int) (totalHit * 0.01 * effect.getEffected().getGameStats().getHealth().getCurrent());
-					totalHitPercentSet = true;
-				}
-				absorbedDamage = absorbedDamage >= totalHit ? totalHit : absorbedDamage;
-				totalHit -= absorbedDamage;
+				int requestedAbsorption = hitPercent ? calculatePercent(damage, totalHit) : Math.min(damage, totalHit);
+				int absorbedDamage = Math.max(0, Math.min(damage, requestedAbsorption));
 				attackResult.setDamage(damage - absorbedDamage);
-				int healValue = 0;
-				if (hitPercent) {
-					healValue = damage * hit / 100;
-				} else {
-					healValue = hit;
-				}
+				int conversionBase = calculateConversionBase(damage, absorbedDamage);
+				int healValue = totalHitPercent ? calculatePercent(conversionBase, hit) : hit;
 				switch (healType) {
 				case HP:
 					effect.getEffected().getLifeStats().increaseHp(TYPE.HP, healValue, effect.getSkillId(),
@@ -284,10 +259,6 @@ public class AttackShieldObserver extends AttackCalcObserver {
 				if (absorbedDamage >= damage && !isPunchShield(attackerEffect)) {
 					attackResult.setLaunchSubEffect(false);
 				}
-				if (totalHit <= 0) {
-					effect.endEffect();
-					return;
-				}
 			}
 		}
 	}
@@ -297,7 +268,40 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	}
 
 	static int calculateReflectedDamage(int damage, int percent, int minimum) {
-		return Math.max(damage * percent / 100, minimum);
+		return damage * percent / 100 + minimum;
+	}
+
+	static int calculateShieldUse(int damage, int hit, boolean percent, int remainingShield, int currentMp) {
+		int requested = percent ? calculatePercent(damage, hit) : Math.min(damage, hit);
+		return Math.max(0, Math.min(requested, Math.min(remainingShield, currentMp)));
+	}
+
+	static int calculatePercent(int value, int percent) {
+		return (int) ((long) value * percent / 100);
+	}
+
+	static int calculateConversionBase(int damage, int absorbedDamage) {
+		return Math.min(absorbedDamage, Math.max(0, damage - 1));
+	}
+
+	static int calculateProtectedDamage(int damage, int protectedValue, boolean percent) {
+		return Math.min(damage, percent ? damage * protectedValue / 100 : protectedValue);
+	}
+
+	static int calculateProtectorDamage(int protectedDamage, int protectorPercent) {
+		return protectedDamage * (protectorPercent == 0 ? 100 : protectorPercent) / 100;
+	}
+
+	public int getShieldPriority() {
+		if (shieldType == 2) {
+			return mpValue > 0 ? 1 : 0;
+		}
+		return switch (shieldType) {
+			case 1 -> 2;
+			case 8 -> 3;
+			case 0 -> 4;
+			default -> 5;
+		};
 	}
 
 	/**

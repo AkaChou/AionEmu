@@ -4,9 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -25,7 +22,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +40,6 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 {
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	private boolean isInstanceDestroyed;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
@@ -170,9 +164,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 	@Override
 	public void onDie(final Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
-		if (isInstanceDestroyed) {
-			return;
-		} switch (npc.getObjectTemplate().getTemplateId()) {
+		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 217313: //Brigade General Vasharti.
 /* 				switch (Rnd.get(1, 2)) {
 		            case 1:
@@ -207,66 +199,6 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			case 283000: //Kiss Of Fire.
 			case 283001: //Kiss Of Ice.
 				despawnNpc(npc);
-			break;
-			case 217292: //Exhausted Vasharti Pagati Combatant.
-			    final float x1 = npc.getX();
-			    final float y1 = npc.getY();
-			    final float z1 = npc.getZ();
-			    final byte h1 = npc.getHeading();
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    /**
-				     * 处理 run。
-				     * Handle run.
-				     */
-				    @Override
-				    public void run() {
-					    if (!isInstanceDestroyed) {
-						    if (x1 > 0 && y1 > 0 && z1 > 0) {
-							   spawn(217293, x1, y1, z1, h1); //Exhausted Vasharti Combatant.
-						    }
-					    }
-				    }
-			    }, 2000);
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    /**
-				     * 处理 run。
-				     * Handle run.
-				     */
-				    @Override
-				    public void run() {
-					    despawnNpc(npc);
-				    }
-			    }, 1000);
-			break;
-			case 217299: //Elite Vasharti Pagati Combatant.
-			    final float x2 = npc.getX();
-			    final float y2 = npc.getY();
-			    final float z2 = npc.getZ();
-			    final byte h2 = npc.getHeading();
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    /**
-				     * 处理 run。
-				     * Handle run.
-				     */
-				    @Override
-				    public void run() {
-					    if (!isInstanceDestroyed) {
-						    if (x2 > 0 && y2 > 0 && z2 > 0) {
-							   spawn(217300, x2, y2, z2, h2); //Vasharti Butcher.
-						    }
-					    }
-				    }
-			    }, 2000);
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    /**
-				     * 处理 run。
-				     * Handle run.
-				     */
-				    @Override
-				    public void run() {
-					    despawnNpc(npc);
-				    }
-			    }, 1000);
 			break;
 		}
 	}
@@ -389,55 +321,6 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 		for (Npc npc: npcs) {
 			npc.getController().onDelete();
 		}
-	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
 	}
 	
 	private void despawnNpc(Npc npc) {

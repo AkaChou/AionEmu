@@ -82,6 +82,19 @@ public class PvPArenaPlayerReward extends InstancePlayerReward {
 		endAbsence(System.currentTimeMillis());
 	}
 
+	public long getAbsentMillis() {
+		return absentMillis;
+	}
+
+	public long getAbsenceStartedAt() {
+		return absenceStartedAt;
+	}
+
+	public void restoreAbsence(long absentMillis, long absenceStartedAt) {
+		this.absentMillis = Math.max(0, absentMillis);
+		this.absenceStartedAt = Math.max(0, absenceStartedAt);
+	}
+
 	void beginAbsence(long now) {
 		if (absenceStartedAt == 0) {
 			absenceStartedAt = now;
@@ -107,6 +120,12 @@ public class PvPArenaPlayerReward extends InstancePlayerReward {
 		timeBonus = (int) (playedMillis * maximumTimeBonus / totalPlayMillis);
 		participation = (int) (playedMillis * 100 / totalPlayMillis);
 		finalScore = true;
+	}
+
+	public void restoreFinalScore(int timeBonus, int participation) {
+		this.timeBonus = Math.max(0, timeBonus);
+		this.participation = Math.max(0, Math.min(100, participation));
+		this.finalScore = true;
 	}
 
 	// <欧比斯点数> / <Abyss Points>

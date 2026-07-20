@@ -38,16 +38,6 @@ import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.events.ThievesGuildService;
-import com.aionemu.gameserver.services.instance.AsyunatarService;
-import com.aionemu.gameserver.services.instance.DredgionService2;
-import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
-import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.IDRunService;
-import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
-import com.aionemu.gameserver.services.instance.IdgelDomeService;
-import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
-import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
-import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
@@ -342,102 +332,6 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public ChallengeTaskService challengeTaskService() {
         return new ChallengeTaskService();
-    }
-
-    /**
-     * 提供懒加载的 KamarBattlefieldService Bean。
-     * Provides a lazy KamarBattlefieldService bean.
-     *
-     * KamarBattlefieldService instance
-     */
-    @Bean
-    @Lazy
-    public KamarBattlefieldService kamarBattlefieldService() {
-        return new KamarBattlefieldService();
-    }
-
-    /**
-     * 提供懒加载的 EngulfedOphidanBridgeService Bean。
-     * Provides a lazy EngulfedOphidanBridgeService bean.
-     *
-     * EngulfedOphidanBridgeService instance
-     */
-    @Bean
-    @Lazy
-    public EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
-        return new EngulfedOphidanBridgeService();
-    }
-
-    /**
-     * 提供懒加载的 SuspiciousOphidanBridgeService Bean。
-     * Provides a lazy SuspiciousOphidanBridgeService bean.
-     *
-     * SuspiciousOphidanBridgeService instance
-     */
-    @Bean
-    @Lazy
-    public SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
-        return new SuspiciousOphidanBridgeService();
-    }
-
-    /**
-     * 提供懒加载的 IronWallWarfrontService Bean。
-     * Provides a lazy IronWallWarfrontService bean.
-     *
-     * IronWallWarfrontService instance
-     */
-    @Bean
-    @Lazy
-    public IronWallWarfrontService ironWallWarfrontService() {
-        return new IronWallWarfrontService();
-    }
-
-    /**
-     * 提供懒加载的 IdgelDomeService Bean。
-     * Provides a lazy IdgelDomeService bean.
-     *
-     * IdgelDomeService instance
-     */
-    @Bean
-    @Lazy
-    public IdgelDomeService idgelDomeService() {
-        return new IdgelDomeService();
-    }
-
-    /**
-     * 提供懒加载的 IdgelDomeLandmarkService Bean。
-     * Provides a lazy IdgelDomeLandmarkService bean.
-     *
-     * IdgelDomeLandmarkService instance
-     */
-    @Bean
-    @Lazy
-    public IdgelDomeLandmarkService idgelDomeLandmarkService() {
-        return new IdgelDomeLandmarkService();
-    }
-
-    /**
-     * 提供懒加载的 GrandArenaTrainingCampService Bean。
-     * Provides a lazy GrandArenaTrainingCampService bean.
-     *
-     * GrandArenaTrainingCampService instance
-     */
-    @Bean
-    @Lazy
-    public GrandArenaTrainingCampService grandArenaTrainingCampService() {
-        return new GrandArenaTrainingCampService();
-    }
-
-    /**
-     * 提供懒加载的 IDRunService Bean。
-     * Provides a lazy IDRunService bean.
-     *
-     * IDRunService instance
-     */
-    @Bean
-    @Lazy
-    public IDRunService idRunService() {
-        return new IDRunService();
     }
 
     /**
@@ -905,30 +799,6 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public OutpostService outpostService() {
         return new OutpostService();
-    }
-
-    /**
-     * 提供懒加载的 DredgionService2 Bean。
-     * Provides a lazy DredgionService2 bean.
-     *
-     * DredgionService2 instance
-     */
-    @Bean
-    @Lazy
-    public DredgionService2 dredgionService() {
-        return new DredgionService2();
-    }
-
-    /**
-     * 提供懒加载的 AsyunatarService Bean。
-     * Provides a lazy AsyunatarService bean.
-     *
-     * AsyunatarService instance
-     */
-    @Bean
-    @Lazy
-    public AsyunatarService asyunatarService() {
-        return new AsyunatarService();
     }
 
     /**

@@ -52,4 +52,10 @@ public class InstancePlayerReward {
 	public void addMonsterKillToPlayer() {
 		playerMonsterKills++;
 	}
+
+	public void restore(int points, int pvpKills, int monsterKills) {
+		this.points = Math.max(0, points);
+		this.playerPvPKills = Math.max(0, pvpKills);
+		this.playerMonsterKills = Math.max(0, monsterKills);
+	}
 }

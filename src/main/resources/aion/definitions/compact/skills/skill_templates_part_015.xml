@@ -920,7 +920,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10853" name="지원용 은신 주문서" nameId="4568893" name_desc="IDLDF5_U1_WAR_SCROLL_HIDE" stack="SKILL_IDLDF5_U1_WAR_SCROLL_HIDE" skill_group_name="IDLDF5_U1_WAR_SCROLL_HIDE" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <properties first_target="ME" first_target_range="1" target_type="PARTY_WITHPET" target_relation="MYPARTY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="7" effective_angle="5" />
+    <properties first_target="ME" first_target_range="1" target_type="PARTY_WITHPET" target_relation="MYPARTY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" effective_range="7" effective_altitude="5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <hide duration1="0" duration2="120000" randomtime="0" effectid="165" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" state="HIDE1" type="0" buffcount="0">
@@ -2553,7 +2553,7 @@
       <f i="29" v="Flyspeed" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10885" name="[자쿠룽] 불의 기운" nameId="1664683" name_desc="item_fx_fire_russia" stack="SKILL_item_fx_fire_russia" skill_group_name="item_fx_fire_russia" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10885" name="[자쿠룽] 불의 기운" nameId="1664683" name_desc="item_fx_fire_russia" stack="SKILL_item_fx_fire_russia" skill_group_name="item_fx_fire_russia" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -2574,7 +2574,7 @@
       <f i="29" v="MaxFp" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10886" name="[자쿠룽] 물의 기운" nameId="1664685" name_desc="item_fx_water_russia" stack="SKILL_item_fx_water_russia" skill_group_name="item_fx_water_russia" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10886" name="[자쿠룽] 물의 기운" nameId="1664685" name_desc="item_fx_water_russia" stack="SKILL_item_fx_water_russia" skill_group_name="item_fx_water_russia" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -2595,7 +2595,7 @@
       <f i="29" v="MaxFp" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10887" name="[자쿠룽] 땅의 기운" nameId="1664687" name_desc="item_fx_air_russia" stack="SKILL_item_fx_air_russia" skill_group_name="item_fx_air_russia" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10887" name="[자쿠룽] 땅의 기운" nameId="1664687" name_desc="item_fx_air_russia" stack="SKILL_item_fx_air_russia" skill_group_name="item_fx_air_russia" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -2616,7 +2616,7 @@
       <f i="29" v="MaxFp" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10888" name="[자쿠룽] 바람의 기운" nameId="1664689" name_desc="item_fx_earth_russia" stack="SKILL_item_fx_earth_russia" skill_group_name="item_fx_earth_russia" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10888" name="[자쿠룽] 바람의 기운" nameId="1664689" name_desc="item_fx_earth_russia" stack="SKILL_item_fx_earth_russia" skill_group_name="item_fx_earth_russia" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -2637,7 +2637,7 @@
       <f i="29" v="MaxFp" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10889" name="[자쿠룽] 마법의 기운" nameId="1664691" name_desc="item_fx_allresist_russia" stack="SKILL_item_fx_allresist_russia" skill_group_name="item_fx_allresist_russia" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10889" name="[자쿠룽] 마법의 기운" nameId="1664691" name_desc="item_fx_allresist_russia" stack="SKILL_item_fx_allresist_russia" skill_group_name="item_fx_allresist_russia" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -4064,7 +4064,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10913" name="수면 유도" nameId="4569305" name_desc="IDLDF4_Re_01_Stumble_immune" stack="SKILL_IDLDF4_Re_01_Stumble_immune" skill_group_name="IDLDF4_Re_01_Stumble_immune" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="15" effective_angle="5" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="15" effective_altitude="5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <sleep duration1="0" duration2="15000" randomtime="0" effectid="20106" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="WATER" />
@@ -6379,10 +6379,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10980" name="폭탄 구슬 효과" nameId="599213" name_desc="LF5_Q_item_Damage" stack="SKILL_LF5_Q_item_Damage" skill_group_name="LF5_Q_item_Damage" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="7" target_type="AREA" target_relation="ENEMY" target_species="NPC" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="3" effective_angle="3" />
+    <properties first_target="TARGET" first_target_range="7" target_type="AREA" target_relation="ENEMY" target_species="NPC" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="3" effective_altitude="3" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="22" delta="0" percent="true" maxdamage="10000000" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="22" delta="0" percent="true" maxdamage="10000000" />
     </effects>
     <group_ref id="SG_B6C2B13D1C0E2613" />
     <retail>
@@ -6400,10 +6400,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10981" name="연쇄폭탄" nameId="4571607" name_desc="ITEM_IDRaksha_Solo_SKILL_01" stack="SKILL_ITEM_IDRaksha_Solo_SKILL_01" skill_group_name="ITEM_IDRaksha_Solo_SKILL_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="7" effective_angle="4" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="7" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9000" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" delta="0" value="8000" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9000" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" delta="0" value="8000" applymboost="false" hp_percent_delta="0" hp_percent="100" />
       <poison duration1="0" duration2="10000" randomtime="0" effectid="20005" e="2" basiclvl="100" noresist="true" accmod1="0" accmod2="9000" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" checktime="2000" delta="0" value="1000" />
     </effects>
     <group_ref id="SG_E454B3AD9690C227" />
@@ -8207,7 +8207,7 @@
     <group_ref id="SG_0026B30C4862E828" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="1" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="1" delta="0" />
     </effects>
     <motion name="throw" speed="100" instant_skill="true" />
     <retail>
@@ -8901,7 +8901,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11036" name="초월: 뇌격" nameId="4577117" name_desc="Deva_WeaponSkill_G1" stack="SKILL_Deva_WeaponSkill_G1" skill_group_name="Deva_WeaponSkill_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" remain_cooltime_on_login="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="0" target_status="" target_distance="15" effective_angle="4" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="0" target_status="" effective_range="15" effective_altitude="4" />
     <effects>
       <spellatkinstant value="400" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="9000" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" />
       <stun duration1="0" duration2="1000" randomtime="0" effectid="20000" e="2" basiclvl="40" noresist="false" accmod1="0" accmod2="9000" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" />
@@ -9625,7 +9625,7 @@
   <skill_template skill_id="11052" name="권능: 화룡왕의 응징 I" nameId="4577369" name_desc="ALL_FlameDragon_G1" stack="SKILL_ALL_FlameDragon_G1" skill_group_name="ALL_FlameDragon_G1" delayId="2033" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" remain_cooltime_on_login="true" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_5087124907065496" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="840" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="840" delta="0" />
     </effects>
     <group_ref id="SG_0E5C87E5075CA277" />
     <retail>
@@ -9708,7 +9708,7 @@
     <group_ref id="SG_F0486B158E3C6ED7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="50" delta="0" percent="true" maxdamage="102000" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="50" delta="0" percent="true" maxdamage="102000" />
     </effects>
     <motion name="throw" speed="80" instant_skill="false" />
     <retail>
@@ -9779,7 +9779,7 @@
       <f i="88" v="mpRegen" />
     </retail>
   </skill_template>
-  <skill_template skill_id="11058" name="물리 치명타 증가" nameId="1426587" name_desc="world_cash_item_scroll_critical_phy_50a" stack="SKILL_world_cash_item_scroll_critical_phy_50a" skill_group_name="world_cash_item_scroll_critical_phy_50a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="11058" name="물리 치명타 증가" nameId="1426587" name_desc="world_cash_item_scroll_critical_phy_50a" stack="SKILL_world_cash_item_scroll_critical_phy_50a" skill_group_name="world_cash_item_scroll_critical_phy_50a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -9798,7 +9798,7 @@
       <f i="29" v="Critical" />
     </retail>
   </skill_template>
-  <skill_template skill_id="11059" name="마법 치명타 증가" nameId="1426589" name_desc="world_cash_item_scroll_critical_mag_50a" stack="SKILL_world_cash_item_scroll_critical_mag_50a" skill_group_name="world_cash_item_scroll_critical_mag_50a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="11059" name="마법 치명타 증가" nameId="1426589" name_desc="world_cash_item_scroll_critical_mag_50a" stack="SKILL_world_cash_item_scroll_critical_mag_50a" skill_group_name="world_cash_item_scroll_critical_mag_50a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -9817,7 +9817,7 @@
       <f i="29" v="magicalCritical" />
     </retail>
   </skill_template>
-  <skill_template skill_id="11060" name="물리 치명타 증가" nameId="1426587" name_desc="world_cash_item_scroll_critical_phy_50b" stack="SKILL_world_cash_item_scroll_critical_phy_50b" skill_group_name="world_cash_item_scroll_critical_phy_50b" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="11060" name="물리 치명타 증가" nameId="1426587" name_desc="world_cash_item_scroll_critical_phy_50b" stack="SKILL_world_cash_item_scroll_critical_phy_50b" skill_group_name="world_cash_item_scroll_critical_phy_50b" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -9836,7 +9836,7 @@
       <f i="29" v="Critical" />
     </retail>
   </skill_template>
-  <skill_template skill_id="11061" name="마법 치명타 증가" nameId="1426589" name_desc="world_cash_item_scroll_critical_mag_50b" stack="SKILL_world_cash_item_scroll_critical_mag_50b" skill_group_name="world_cash_item_scroll_critical_mag_50b" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="11061" name="마법 치명타 증가" nameId="1426589" name_desc="world_cash_item_scroll_critical_mag_50b" stack="SKILL_world_cash_item_scroll_critical_mag_50b" skill_group_name="world_cash_item_scroll_critical_mag_50b" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -12283,7 +12283,7 @@
   <skill_template skill_id="11106" name="권능: 화룡왕의 응징 I" nameId="4577369" name_desc="ALL_FlameDragon_G2" stack="SKILL_ALL_FlameDragon_G2" skill_group_name="ALL_FlameDragon_G2" delayId="2033" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" remain_cooltime_on_login="true" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_5087124907065496" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="1176" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="1176" delta="0" />
     </effects>
     <group_ref id="SG_0E5C87E5075CA277" />
     <retail>
@@ -12302,7 +12302,7 @@
   <skill_template skill_id="11107" name="권능: 화룡왕의 응징 I" nameId="4577369" name_desc="ALL_FlameDragon_G3" stack="SKILL_ALL_FlameDragon_G3" skill_group_name="ALL_FlameDragon_G3" delayId="2033" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" remain_cooltime_on_login="true" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_5087124907065496" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="1512" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="1512" delta="0" />
     </effects>
     <group_ref id="SG_0E5C87E5075CA277" />
     <retail>
@@ -12321,7 +12321,7 @@
   <skill_template skill_id="11108" name="권능: 화룡왕의 응징 I" nameId="4577369" name_desc="ALL_FlameDragon_M_G1" stack="SKILL_ALL_FlameDragon_M_G1" skill_group_name="ALL_FlameDragon_M_G1" delayId="2033" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" remain_cooltime_on_login="true" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_5087124907065496" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="402" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="402" delta="0" />
     </effects>
     <group_ref id="SG_0E5C87E5075CA277" />
     <retail>
@@ -12340,7 +12340,7 @@
   <skill_template skill_id="11109" name="권능: 화룡왕의 응징 I" nameId="4577369" name_desc="ALL_FlameDragon_M_G2" stack="SKILL_ALL_FlameDragon_M_G2" skill_group_name="ALL_FlameDragon_M_G2" delayId="2033" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" remain_cooltime_on_login="true" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_5087124907065496" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="562" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="562" delta="0" />
     </effects>
     <group_ref id="SG_0E5C87E5075CA277" />
     <retail>
@@ -12359,7 +12359,7 @@
   <skill_template skill_id="11110" name="권능: 화룡왕의 응징 I" nameId="4577369" name_desc="ALL_FlameDragon_M_G3" stack="SKILL_ALL_FlameDragon_M_G3" skill_group_name="ALL_FlameDragon_M_G3" delayId="2033" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" remain_cooltime_on_login="true" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_5087124907065496" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="723" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="723" delta="0" />
     </effects>
     <group_ref id="SG_0E5C87E5075CA277" />
     <retail>
@@ -12379,7 +12379,7 @@
     <group_ref id="SG_82D16F344E283868" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="14000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="14000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="1000000" delta="341" timed_value="0" timed_delta="0" split_totem_hate="false" />
       <targetchange duration1="0" duration2="0" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="10" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" target_effector="true" />
     </effects>
@@ -12416,10 +12416,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11112" name="폭격" nameId="4579673" name_desc="IDLuna_def_cannon_range_01" stack="SKILL_IDLuna_def_cannon_range_01" skill_group_name="IDLuna_def_cannon_range_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="5" revision_distance="0" target_status="" target_distance="4" effective_angle="4" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="5" revision_distance="0" target_status="" effective_range="4" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="25000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="25000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="4000000" delta="341" timed_value="0" timed_delta="0" split_totem_hate="false" />
       <targetchange duration1="0" duration2="0" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="10" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" target_effector="true" />
     </effects>
@@ -12459,7 +12459,7 @@
     <group_ref id="SG_9991DB5D7256ADA8" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="44000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="44000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="1000000" delta="341" timed_value="0" timed_delta="0" split_totem_hate="false" />
       <targetchange duration1="0" duration2="0" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="10" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" target_effector="true" />
     </effects>
@@ -12496,10 +12496,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11114" name="포획" nameId="4579677" name_desc="IDLuna_def_cannon_pull_01" stack="SKILL_IDLuna_def_cannon_pull_01" skill_group_name="IDLuna_def_cannon_pull_01" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="10" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" target_distance="10" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="10" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" effective_range="10" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <skillatk value="150" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="DAMAGE" hopa="0" hopb="0">
+      <skillatk value="150" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="DAMAGE" hopa="0" hopb="0">
         <subeffect skill_id="8441" chance="100" />
       </skillatk>
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="5000000" delta="341" timed_value="0" timed_delta="0" split_totem_hate="false" />
@@ -12544,7 +12544,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11115" name="도발" nameId="4579679" name_desc="IDLuna_def_barricade_01" stack="SKILL_IDLuna_def_barricade_01" skill_group_name="IDLuna_def_barricade_01" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="30" revision_distance="0" target_status="" target_distance="20" effective_angle="20" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="30" revision_distance="0" target_status="" effective_range="20" effective_altitude="20" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_99B9A1E47B7CACCA" />
     <group_ref id="SG_E454B3AD9690C227" />
@@ -12569,7 +12569,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11116" name="도발" nameId="4579681" name_desc="IDLuna_def_barricade_02" stack="SKILL_IDLuna_def_barricade_02" skill_group_name="IDLuna_def_barricade_02" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="30" revision_distance="0" target_status="" target_distance="30" effective_angle="30" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="30" revision_distance="0" target_status="" effective_range="30" effective_altitude="30" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_99B9A1E47B7CACCA" />
     <group_ref id="SG_E454B3AD9690C227" />
@@ -12597,7 +12597,7 @@
     <group_ref id="SG_52CEB439E9A05381" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" />
     </effects>
     <group_ref id="SG_13AFE91966EBE1E1" />
     <retail>
@@ -12616,7 +12616,7 @@
     <group_ref id="SG_52CEB439E9A05381" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="45000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="45000" delta="0" />
     </effects>
     <group_ref id="SG_13AFE91966EBE1E1" />
     <retail>
@@ -12635,7 +12635,7 @@
     <group_ref id="SG_30E6423DB61FF44F" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" />
       <stun duration1="0" duration2="2000" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
     </effects>
     <group_ref id="SG_3A5FCA9B68C8D187" />
@@ -12670,7 +12670,7 @@
     <group_ref id="SG_30E6423DB61FF44F" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="3000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="3000" delta="0" />
       <stun duration1="0" duration2="1000" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
     </effects>
     <group_ref id="SG_3A5FCA9B68C8D187" />
@@ -12758,7 +12758,7 @@
     <group_ref id="SG_775B8899E80C7B47" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="2500" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="2500" delta="0" />
     </effects>
     <group_ref id="SG_B9AD78AEB061B936" />
     <retail>
@@ -12778,7 +12778,7 @@
     <group_ref id="SG_775B8899E80C7B47" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="3000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="3000" delta="0" />
     </effects>
     <motion name="20EPointFire" speed="100" instant_skill="false" />
     <retail>
@@ -13073,10 +13073,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11134" name="파괴" nameId="4579699" name_desc="IDLuna_def_destroycannon_monster_01" stack="SKILL_IDLuna_def_destroycannon_monster_01" skill_group_name="IDLuna_def_destroycannon_monster_01" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="3" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="20" revision_distance="0" target_status="" target_distance="7" effective_angle="7" />
+    <properties first_target="TARGET" first_target_range="3" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="20" revision_distance="0" target_status="" effective_range="7" effective_altitude="7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="450000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="450000" delta="0" />
     </effects>
     <group_ref id="SG_3A5FCA9B68C8D187" />
     <retail>
@@ -13093,10 +13093,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11135" name="자폭" nameId="4579661" name_desc="IDLuna_siege_2stage_Boss_04" stack="SKILL_IDLuna_siege_2stage_Boss_04" skill_group_name="IDLuna_siege_2stage_Boss_04" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="5000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" target_distance="6" effective_angle="6" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" effective_range="6" effective_altitude="6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" />
     </effects>
     <group_ref id="SG_3A5FCA9B68C8D187" />
     <retail>
@@ -13134,9 +13134,11 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11137" name="폭탄 가동" nameId="4579663" name_desc="IDLuna_siege_2stage_Boss_05" stack="SKILL_IDLuna_siege_2stage_Boss_05" skill_group_name="IDLuna_siege_2stage_Boss_05" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="6000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" target_distance="9" effective_angle="9" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" effective_range="9" effective_altitude="9" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_DE467AABECD337BC" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="0" delta="0" />
+    </effects>
     <group_ref id="SG_D9AC9D1547217AEE" />
     <retail>
       <f i="54" v="NoReduceSpellATK_Instant" />
@@ -13432,10 +13434,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11160" name="파괴" nameId="4579699" name_desc="IDLuna_def_destroycannon_monster_02" stack="SKILL_IDLuna_def_destroycannon_monster_02" skill_group_name="IDLuna_def_destroycannon_monster_02" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" target_distance="3" effective_angle="3" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" effective_range="3" effective_altitude="3" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="1000000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="1000000" delta="0" />
     </effects>
     <group_ref id="SG_3A5FCA9B68C8D187" />
     <retail>
@@ -13474,9 +13476,11 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11162" name="폭발" nameId="4579687" name_desc="IDLuna_siege_Shulackbombing_01" stack="SKILL_IDLuna_siege_Shulackbombing_01" skill_group_name="IDLuna_siege_Shulackbombing_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" target_distance="8" effective_angle="8" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" effective_range="8" effective_altitude="8" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_A530DBAF59C995B3" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="5000" delta="0" />
+    </effects>
     <group_ref id="SG_3A5FCA9B68C8D187" />
     <retail>
       <f i="54" v="NoReduceSpellATK_Instant" />
@@ -13495,7 +13499,7 @@
     <group_ref id="SG_775B8899E80C7B47" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="2000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="2000" delta="0" />
     </effects>
     <group_ref id="SG_46317670C9D854A7" />
     <retail>
@@ -13573,7 +13577,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11166" name="지원용 폭탄" nameId="4579795" name_desc="dread_multiatk_Skill" stack="SKILL_dread_multiatk_Skill" skill_group_name="dread_multiatk_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="255" revision_distance="0" target_status="" target_distance="6" effective_angle="6" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="255" revision_distance="0" target_status="" effective_range="6" effective_altitude="6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_513455AAA0A14CA6" />
     <group_ref id="SG_B6C2B13D1C0E2613" />
@@ -13663,9 +13667,11 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11170" name="폭탄 가동" nameId="4579663" name_desc="IDLuna_siege_1stage_Mboss_02" stack="SKILL_IDLuna_siege_1stage_Mboss_02" skill_group_name="IDLuna_siege_1stage_Mboss_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="6000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" target_distance="13" effective_angle="13" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" effective_range="13" effective_altitude="13" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_542470940AB66768" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="15000" delta="0" />
+    </effects>
     <group_ref id="SG_E454B3AD9690C227" />
     <retail>
       <f i="54" v="NoReduceSpellATK_Instant" />
@@ -13715,7 +13721,9 @@
   <skill_template skill_id="11173" name="방출" nameId="4580059" name_desc="IDLuna_def_Boss_03" stack="SKILL_IDLuna_def_Boss_03" skill_group_name="IDLuna_def_Boss_03" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
     <properties first_target="ME" first_target_range="0" target_type="ONLYONE" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="0" revision_distance="0" target_status="" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_DE467AABECD337BC" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="0" delta="0" />
+    </effects>
     <group_ref id="SG_D9AC9D1547217AEE" />
     <retail>
       <f i="5" v="0" />
@@ -13732,10 +13740,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11174" name="지배" nameId="4580061" name_desc="IDLuna_def_Boss_04" stack="SKILL_IDLuna_def_Boss_04" skill_group_name="IDLuna_def_Boss_04" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="20" revision_distance="0" target_status="" target_distance="6" effective_angle="6" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="20" revision_distance="0" target_status="" effective_range="6" effective_altitude="6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="18000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="18000" delta="0" />
       <stun duration1="0" duration2="3000" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
     </effects>
     <group_ref id="SG_E454B3AD9690C227" />
@@ -13913,7 +13921,7 @@
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="200000000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="200000000" delta="0" />
     </effects>
     <motion name="NormalfireSC2" speed="100" instant_skill="true" />
     <retail>
@@ -13932,7 +13940,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11181" name="방구탄 던지기" nameId="4580091" name_desc="Item_IDEvent_Solo_Smog" stack="SKILL_Item_IDEvent_Solo_Smog" skill_group_name="Item_IDEvent_Solo_Smog" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="520" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="10" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="10" effective_altitude="10" />
     <effects>
       <paralyze duration1="0" duration2="10000" randomtime="0" effectid="10176201" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER" />
     </effects>
@@ -17265,7 +17273,7 @@
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="1000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="1000" delta="0" />
     </effects>
     <motion name="throw" speed="100" instant_skill="true" />
     <retail>

@@ -1383,12 +1383,14 @@ public class Player extends Creature {
 					worldId != 210060000 && // Theobomos.
 					worldId != 210070000 && // Cygnea.
 					worldId != 210100000 && // Iluma.
+					worldId != 210050000 && // Inggison.
 					worldId != 210130000 && // Inggison [Master Server].
 					worldId != 220020000 && // Morheim.
 					worldId != 220040000 && // Beluslan.
 					worldId != 220050000 && // Brusthonin.
 					worldId != 220080000 && // Enshar.
 					worldId != 220110000 && // Norsvold.
+					worldId != 220070000 && // Gelkmaros.
 					worldId != 220140000 && // Gelkmaros [Master Server].
 					// \\//\\//\\//\\//\\//
 					worldId != 400010000 && // Reshanta.
@@ -1403,7 +1405,8 @@ public class Player extends Creature {
 					worldId != 600050000 && // Katalam.
 					worldId != 600090000 && // Kaldor.
 					worldId != 600100000 && // Levinshor.
-					worldId != 600110000) { // Silentera Canyon.
+					worldId != 600010000 && // Silentera Canyon.
+					worldId != 600110000) { // Silentera Canyon [Master Server].
 				return (this.isInsideZoneType(ZoneType.PVP) && enemy.isInsideZoneType(ZoneType.PVP) && !isInSameTeam(enemy));
 			}
 		}

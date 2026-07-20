@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -14,13 +12,11 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -72,19 +68,19 @@ public class SeizedDanuarSanctuaryInstance extends GeneralInstanceHandler
     public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
 		// 贝里特拉特别研究队指挥官正接近毁灭之室。 / The Beritran Special Research Team commanders are nearing The Chamber of Ruin.
-		sendMsgByRace(1401855, Race.PC_ALL, 300000);
+		sendMsg(1401855, 0, false, 25, 300000);
 		// 贝里特拉特别研究队指挥官发现了毁灭之室。 / The Beritran Special Research Team commanders have discovered The Chamber of Ruin.
-		sendMsgByRace(1401856, Race.PC_ALL, 600000);
+		sendMsg(1401856, 0, false, 25, 600000);
 		// 贝里特拉特别研究队指挥官已进入毁灭之室。 / The Beritran Special Research Team commanders have entered The Chamber of Ruin.
-		sendMsgByRace(1401857, Race.PC_ALL, 900000);
+		sendMsg(1401857, 0, false, 25, 900000);
 		// 贝里特拉特别研究队指挥官正在收集达努阿尔遗物。 / The Beritran Special Research Team commanders are collecting Danuar relics.
-		sendMsgByRace(1401858, Race.PC_ALL, 1200000);
+		sendMsg(1401858, 0, false, 25, 1200000);
 		// 贝里特拉特别研究队指挥官已带着宝物离开。 / The Beritran Special Research Team commanders have departed with their treasures.
-		sendMsgByRace(1401859, Race.PC_ALL, 1500000);
+		sendMsg(1401859, 0, false, 25, 1500000);
 		// 奇尔盗墓者几乎挖完了。 / The Chir Grave Robbers are almost finished digging.
-		sendMsgByRace(1401860, Race.PC_ALL, 1800000);
+		sendMsg(1401860, 0, false, 25, 1800000);
 		// 奇尔盗墓者已离开。 / The Chir Grave Robbers have left.
-		sendMsgByRace(1401861, Race.PC_ALL, 2100000);
+		sendMsg(1401861, 0, false, 25, 2100000);
 		switch (player.getRace()) {
 		    case ELYOS:
 			    sendMovie(player, 910);
@@ -154,7 +150,7 @@ public class SeizedDanuarSanctuaryInstance extends GeneralInstanceHandler
 			break;
 			case 233391: //Sanctuary Keybox.
 				// 请谨慎选择。钥匙一经选定无法更改。 / Be careful in your selection. The key cannot be changed once it is chosen.
-				sendMsgByRace(1401946, Race.PC_ALL, 0);
+				sendMsg(1401946, 0, false, 25, 0);
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000181, 1)); //The Catacombs Key.
@@ -237,25 +233,25 @@ public class SeizedDanuarSanctuaryInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 701859: //Metallic Mystic KeyStone.
 				if (player.getInventory().isFull()) {
-					sendMsgByRace(1390149, Race.PC_ALL, 0);
+					sendMsg(1390149, 0, false, 25, 0);
 				}
 				despawnNpc(npc);
 				ItemService.addItem(player, 188052613, 1); //Sanctuary Treasure Crate.
 			break;
 			case 701860: //Golden Mystic KeyStone.
 				if (player.getInventory().isFull()) {
-					sendMsgByRace(1390149, Race.PC_ALL, 0);
+					sendMsg(1390149, 0, false, 25, 0);
 				}
 				despawnNpc(npc);
 				ItemService.addItem(player, 188052613, 1); //Sanctuary Treasure Crate.
 			break;
 			case 701863: //Spherical Mystic KeyStone.
 				// 某处有一扇门已打开。 / A door has opened somewhere.
-				sendMsgByRace(1401838, Race.PC_ALL, 0);
+				sendMsg(1401838, 0, false, 25, 0);
 			break;
 			case 701864: //Pyramidal Mystic KeyStone.
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
-				sendMsgByRace(1401839, Race.PC_ALL, 0);
+				sendMsg(1401839, 0, false, 25, 0);
 			break;
 		}
 	}
@@ -329,55 +325,6 @@ public class SeizedDanuarSanctuaryInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(185000182, storage.getItemCountByItemId(185000182)); //The Crypts Key.
         storage.decreaseByItemId(185000183, storage.getItemCountByItemId(185000183)); //The Charnels Key.
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
 	
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {

@@ -16,6 +16,7 @@ import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 
 /**
@@ -67,6 +68,7 @@ public class IDFactory {
 		lockIds(DAOManager.getDAO(MailDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(GuideDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(HousesDAO.class).getUsedIDs());
+		lockIds(DAOManager.getDAO(PlayerMinionsDAO.class).getUsedIDs());
 		log.info(I18n.get("log.b00d0337832b", getUsedCount()));
 	}
 

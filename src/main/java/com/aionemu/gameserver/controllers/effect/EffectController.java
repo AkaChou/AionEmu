@@ -51,7 +51,7 @@ public class EffectController {
 	private final Lock lock = new ReentrantLock();
 
 	/** 当前异常状态位掩码。 / Current abnormal-state bit mask. */
-	protected int abnormals;
+	protected volatile int abnormals;
 
 	/** 是否处于护盾保护。 / Whether currently under a shield. */
 	private boolean isUnderShield = false;
@@ -384,7 +384,7 @@ public class EffectController {
 	 * 立即向可见对象广播当前异常效果。
 	 * Immediately broadcasts current abnormal effects to visible objects.
 	 */
-	public void broadCastEffectsImp() {
+	public synchronized void broadCastEffectsImp() {
 		List<Effect> effects = getAbnormalEffects();
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_ABNORMAL_EFFECT(getOwner(), abnormals, effects));
 	}
@@ -395,7 +395,7 @@ public class EffectController {
 	 *
 	 * target player
 	 */
-	public void sendEffectIconsTo(Player player) {
+	public synchronized void sendEffectIconsTo(Player player) {
 		List<Effect> effects = getAbnormalEffects();
 		PacketSendUtility.sendPacket(player, new SM_ABNORMAL_EFFECT(getOwner(), abnormals, effects));
 	}
@@ -406,9 +406,12 @@ public class EffectController {
 	 *
 	 * @param effect 要清除的效果 / effect to clear
 	 */
-	public void clearEffect(Effect effect) {
+	public synchronized void clearEffect(Effect effect) {
 		Map<String, Effect> mapForEffect = getMapForEffect(effect);
-		mapForEffect.remove(effect.getStack(), effect);
+		if (mapForEffect.remove(effect.getStack(), effect)) {
+			int remainingAbnormals = getMappedAbnormals();
+			abnormals &= ~(effect.getAbnormals() & ~remainingAbnormals);
+		}
 		broadCastEffects();
 	}
 
@@ -1035,7 +1038,7 @@ public class EffectController {
 	 *
 	 * @param mask 异常状态掩码 / abnormal state mask
 	 */
-	public void setAbnormal(int mask) {
+	public synchronized void setAbnormal(int mask) {
 		owner.getObserveController().notifyAbnormalSettedObservers(AbnormalState.getStateById(mask));
 		abnormals |= mask;
 	}
@@ -1046,16 +1049,16 @@ public class EffectController {
 	 *
 	 * @param mask 异常状态掩码 / abnormal state mask
 	 */
-	public void unsetAbnormal(int mask) {
-		int count = 0;
+	public synchronized void unsetAbnormal(int mask) {
+		abnormals &= ~(mask & ~getMappedAbnormals());
+	}
+
+	private int getMappedAbnormals() {
+		int mappedAbnormals = 0;
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
-			if ((effect.getAbnormals() & mask) == mask) {
-				count++;
-			}
+			mappedAbnormals |= effect.getAbnormals();
 		}
-		if (count <= 1) {
-			abnormals &= ~mask;
-		}
+		return mappedAbnormals;
 	}
 
 	/**

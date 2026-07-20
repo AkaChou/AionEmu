@@ -23,16 +23,16 @@
 	<rift_location id="2145" world="210040000"/>
 	<rift_location id="2146" world="210040000"/>
 	<!-- インギスオン -->
-	<rift_location id="2150" world="210130000"/>
-	<rift_location id="2151" world="210130000"/>
-	<rift_location id="2152" world="210130000"/>
-	<rift_location id="2153" world="210130000"/>
-	<rift_location id="2154" world="210130000"/>
-	<rift_location id="2155" world="210130000"/>
-	<rift_location id="2156" world="210130000"/>
-	<rift_location id="2157" world="210130000"/>
-	<rift_location id="2158" world="210130000"/>
-	<rift_location id="2159" world="210130000"/>
+	<rift_location id="2150" world="210050000"/>
+	<rift_location id="2151" world="210050000"/>
+	<rift_location id="2152" world="210050000"/>
+	<rift_location id="2153" world="210050000"/>
+	<rift_location id="2154" world="210050000"/>
+	<rift_location id="2155" world="210050000"/>
+	<rift_location id="2156" world="210050000"/>
+	<rift_location id="2157" world="210050000"/>
+	<rift_location id="2158" world="210050000"/>
+	<rift_location id="2159" world="210050000"/>
 	<!-- 시그니아 -->
 	<rift_location id="2170" world="210070000"/>
 	<rift_location id="2171" world="210070000"/>
@@ -70,16 +70,16 @@
 	<rift_location id="2245" world="220040000"/>
 	<rift_location id="2246" world="220040000"/>
 	<!-- ゲルクマルス -->
-	<rift_location id="2270" world="220140000"/>
-	<rift_location id="2271" world="220140000"/>
-	<rift_location id="2272" world="220140000"/>
-	<rift_location id="2273" world="220140000"/>
-	<rift_location id="2274" world="220140000"/>
-	<rift_location id="2275" world="220140000"/>
-	<rift_location id="2276" world="220140000"/>
-	<rift_location id="2277" world="220140000"/>
-	<rift_location id="2278" world="220140000"/>
-	<rift_location id="2279" world="220140000"/>
+	<rift_location id="2270" world="220070000"/>
+	<rift_location id="2271" world="220070000"/>
+	<rift_location id="2272" world="220070000"/>
+	<rift_location id="2273" world="220070000"/>
+	<rift_location id="2274" world="220070000"/>
+	<rift_location id="2275" world="220070000"/>
+	<rift_location id="2276" world="220070000"/>
+	<rift_location id="2277" world="220070000"/>
+	<rift_location id="2278" world="220070000"/>
+	<rift_location id="2279" world="220070000"/>
 	<!-- 엔샤르 -->
 	<rift_location id="2280" world="220080000"/>
 	<rift_location id="2281" world="220080000"/>

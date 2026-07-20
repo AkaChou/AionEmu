@@ -29,7 +29,7 @@ public class _11147Cute_Beady_Eyes extends QuestHandler
 		qe.registerQuestNpc(798997).addOnTalkEvent(questId);
 		qe.registerQuestNpc(799079).addOnTalkEvent(questId);
 		qe.registerQuestNpc(799081).addOnTalkEvent(questId);
-		qe.registerOnEnterZone(ZoneName.get("LF4_SENSORY_AREA_Q11147_210130000"), questId);
+		qe.registerOnEnterZone(ZoneName.get("LF4_SENSORY_AREA_Q11147_210050000"), questId);
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class _11147Cute_Beady_Eyes extends QuestHandler
 	
 	@Override
 	public boolean onEnterZoneEvent(QuestEnv env, ZoneName zoneName) {
-		if (zoneName == ZoneName.get("LF4_SENSORY_AREA_Q11147_210130000")) {
+		if (zoneName == ZoneName.get("LF4_SENSORY_AREA_Q11147_210050000")) {
 			Player player = env.getPlayer();
 			if (player == null)
 				return false;

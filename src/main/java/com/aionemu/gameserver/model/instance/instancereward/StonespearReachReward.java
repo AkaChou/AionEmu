@@ -45,4 +45,10 @@ public class StonespearReachReward extends InstanceReward<StonespearReachPlayerR
 	public int getRank() {
 		return rank;
 	}
+
+	public void restore(int points, int npcKills, int rank) {
+		this.points = points;
+		this.npcKills = npcKills;
+		this.rank = rank;
+	}
 }

@@ -219,16 +219,9 @@ public class SM_MINIONS extends AionServerPacket {
 				writeD(0);
 				writeD(commonData.getMinionGrowthPoint());
 				writeC(commonData.isLock() ? 1 : 0);
-				// if (commonData.getDopingBag() == null) {
-				writeB(new byte[24]);
-				/*
-				 * } else { int[] scrollBag = commonData.getDopingBag().getScrollsUsed();
-				 * writeD(commonData.getDopingBag().getFoodItem());
-				 * writeD(commonData.getDopingBag().getDrinkItem()); if (scrollBag != null) {
-				 * writeD(scrollBag[0]); writeD((scrollBag.length > 1) ? scrollBag[1] : 0);
-				 * writeD((scrollBag.length > 2) ? scrollBag[2] : 0); writeD((scrollBag.length >
-				 * 3) ? scrollBag[3] : 0); } else { writeB(new byte[16]); } }
-				 */
+				for (int slot = 0; slot < 6; slot++) {
+					writeD(commonData.getDopingBag() == null ? 0 : commonData.getDopingBag().getItem(slot));
+				}
 				writeC(0);
 			}
 			break;

@@ -144,6 +144,36 @@ public final class InstanceSettlementService {
 				row.intValue("reward_ap", 0), row.intValue("reward_gp", 0));
 	}
 
+	public static RewardPlan cruciblePlan(int worldId, int score) {
+		if (score < 0) {
+			throw new IllegalArgumentException("Crucible score cannot be negative");
+		}
+		int itemId;
+		long itemCount;
+		if (worldId == 300300000) {
+			int rewardCount = instanceDefinitionValue("IDArena_Reward_Count");
+			int tier = 0;
+			for (int candidate = 1; candidate < rewardCount; candidate++) {
+				if (score < instanceDefinitionValue("IDArena_Reward" + candidate + "_ScoreMin")) {
+					break;
+				}
+				tier = candidate;
+			}
+			itemId = instanceDefinitionValue("IDArena_Reward" + tier + "_ItemID");
+			itemCount = instanceDefinitionValue("IDArena_Reward" + tier + "_ItemCount");
+		} else if (worldId == 300320000) {
+			int perScore = instanceDefinitionValue("IDArena_Reward_perScore");
+			if (perScore <= 0) {
+				throw new IllegalStateException("Invalid retail Crucible score divisor");
+			}
+			itemId = instanceDefinitionValue("IDArena_Reward_ItemID");
+			itemCount = Math.addExact(instanceDefinitionValue("IDArena_Reward_Base"), score / perScore);
+		} else {
+			throw new IllegalArgumentException("Unsupported Crucible world " + worldId);
+		}
+		return new RewardPlan(List.of(new RewardItem(itemId, itemCount)), 0, 0, 0, 0);
+	}
+
 	public static RewardPlan tournamentPlan(Row tournament, int round) {
 		if (tournament == null || round < 1 || round > tournament.requiredInt("round_count")) {
 			throw new IllegalArgumentException("Invalid tournament reward round");
@@ -295,6 +325,10 @@ public final class InstanceSettlementService {
 
 	public static boolean settleInfinity(WorldMapInstance instance, Player player, int floor) {
 		return settle(instanceUid(instance), player, "infinity:" + floor, infinityPlan(floor));
+	}
+
+	public static boolean settleCrucible(WorldMapInstance instance, Player player, int score) {
+		return settle(instanceUid(instance), player, "crucible", cruciblePlan(instance.getMapId(), score));
 	}
 
 	public static boolean settleBattleground(WorldMapInstance instance, Player player, BattleResult result,
@@ -547,11 +581,14 @@ public final class InstanceSettlementService {
 	}
 
 	private static int darkPoetaValue(String name) {
-		String key = "IDLF1_" + name;
+		return instanceDefinitionValue("IDLF1_" + name);
+	}
+
+	private static int instanceDefinitionValue(String key) {
 		return DataManager.RETAIL_INSTANCE_DATA.rewards("instant_dungeon_define").stream()
 			.filter(row -> key.equals(row.value("name")))
 			.findFirst().orElseThrow(() -> new IllegalStateException(
-				"Missing retail Dark Poeta definition " + key)).requiredInt("value");
+				"Missing retail instance definition " + key)).requiredInt("value");
 	}
 
 	private static Row battlegroundRow(int worldId, int spawnPage) {

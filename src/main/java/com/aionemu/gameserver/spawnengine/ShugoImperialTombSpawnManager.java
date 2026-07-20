@@ -159,13 +159,13 @@ public class ShugoImperialTombSpawnManager {
 		/** 因迪亚鲁纳克（圣所） / Indiarunark Sanctum */
 		Indiarunark_Sanctum(831117, 110010000, 1454.038f, 1520.621f, 573.0719f, (byte) 60),
 		/** 因迪亚鲁纳克（英吉森） / Indiarunark Inggison */
-		Indiarunark_Inggison(831117, 210130000, 1358.8662f, 299.00287f, 588.7499f, (byte) 0),
+		Indiarunark_Inggison(831117, 210050000, 1358.8662f, 299.00287f, 588.7499f, (byte) 0),
 		/** 因迪亚鲁纳克（希格尼娅） / Indiarunark Cygnea */
 		Indiarunark_Cygnea(831117, 210070000, 2930.079f, 825.9626f, 569.5f, (byte) 71),
 		/** 阿尔贝托（潘德蒙） / Alberto Pandaemonium */
 		Alberto_Pandaemonium(831131, 120010000, 1584.4727f, 1405.4204f, 193.09547f, (byte) 0),
 		/** 阿尔贝托（格尔克玛洛斯） / Alberto Gelkmaros */
-		Alberto_Gelkmaros(831131, 220140000, 1794.8785f, 2914.2793f, 554.80853f, (byte) 0),
+		Alberto_Gelkmaros(831131, 220070000, 1794.8785f, 2914.2793f, 554.80853f, (byte) 0),
 		/** 阿尔贝托（恩沙尔） / Alberto Enshar */
 		Alberto_Enshar(831131, 220080000, 471.96454f, 2319.1738f, 216.45724f, (byte) 23);
 

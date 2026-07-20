@@ -53,6 +53,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PET;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.QuestService;
+import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.DropRewardEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
@@ -329,7 +330,8 @@ public class DropRegistrationService {
 				return;
 			}
 		}
-		if (player.getMinion() != null && player.getMinion().getCommonData().isLooting()) {
+		if (player.getMinion() != null && player.getMinion().getCommonData().isLooting()
+				&& !MinionService.rejectIfMinionFunctionExpired(player)) {
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, npcObjId, true));
 			Set<DropItem> drops = getCurrentDropMap().get(npcObjId);
 			if (drops == null || drops.size() == 0) {
@@ -340,7 +342,7 @@ public class DropRegistrationService {
 					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
 				}
 			}
-			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, npcObjId, true));
+			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, npcObjId, false));
 			if (drops == null || drops.size() == 0) {
 				return;
 			}

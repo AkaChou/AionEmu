@@ -17,11 +17,28 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertMigrated("AdmaStrongholdInstance", "scheduleDeadline(\"pot\"", "adma.complete");
 		assertMigrated("PadmarashkaCaveInstance", "scheduleDeadline(\"expire\"", "padma.protectors");
 		assertMigrated("CradleOfEternityInstance", "scheduleDeadline(\"start\"", "cradle.covetous_complete");
+		assertSourceContains("CradleOfEternityInstance", "cradle.sun_revealed");
+		assertSourceExcludes("CradleOfEternityInstance", "GameThreadPoolServices");
 		assertMigrated("TransidiumAnnexInstance", "scheduleDeadline(\"start\"", "transidium.hangar_barricade");
+		assertSourceContains("TransidiumAnnexInstance", "scheduleDeadline(\"return\"");
+		assertSourceContains("TransidiumAnnexInstance", "transidium.return_deadline");
+		assertSourceContains("TransidiumAnnexInstance", "transidium.return_complete");
+		assertSourceExcludes("TransidiumAnnexInstance", "GameThreadPoolServices");
 		assertMigrated("TheobomosLabInstance", "scheduleDeadline(\"stone\"", "theobomos.ifrit_deadline");
 		assertMigrated("DraupnirCaveInstance", "scheduleDeadline(\"gate_raid_2\"", "draupnir.adjutants");
-		assertMigrated("crucible/CrucibleChallengeInstance", "scheduleDeadline(\"bonus_spawn\"",
-				"crucible.bonus_spawning_done");
+		assertSourceExcludes("DraupnirCaveInstance", "GameThreadPoolServices");
+		assertSourceExcludes("RentusBaseInstance", "GameThreadPoolServices");
+		assertSourceExcludes("RentusBaseInstance", "case 217292");
+		assertSourceExcludes("RentusBaseInstance", "case 217299");
+		assertSourceExcludes("OccupiedRentusBaseInstance", "GameThreadPoolServices");
+		assertSourceExcludes("OccupiedRentusBaseInstance", "case 236267");
+		assertMigrated("MirashSanctuaryInstance", "scheduleDeadline(\"wave\"", "mirash.wave_spawned");
+		assertSourceExcludes("MirashSanctuaryInstance", "GameThreadPoolServices");
+		assertSourceContains("crucible/CrucibleChallengeInstance", "scheduleDeadline(\"revive.\"");
+		assertSourceExcludes("crucible/CrucibleChallengeInstance", "GameThreadPoolServices");
+		assertSourceExcludes("crucible/CrucibleChallengeInstance", "onDropRegistered");
+		assertSourceExcludes("crucible/EmpyreanCrucibleInstance", "GameThreadPoolServices");
+		assertSourceExcludes("crucible/EmpyreanCrucibleInstance", "onDropRegistered");
 		assertMigrated("LinkgateFoundryInstance", "scheduleDeadline(\"expire\"",
 				"linkgate.expire_deadline");
 		assertMigrated("DrakenseerLairInstance", "scheduleDeadline(\"expire\"",
@@ -64,6 +81,53 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertSourceContains("DarkPoetaInstance", "DataManager.RETAIL_AI_DATA.getNpcScore");
 		assertSourceExcludes("DarkPoetaInstance", "GameThreadPoolServices");
 		assertNoFuture("DarkPoetaInstance");
+	}
+
+	@Test
+	void tiamatStrongholdUsesRetailConditionsAndKeepsOnlyUnsupportedSwitch() throws Exception {
+		String conditions = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = worldBlock(conditions, "300510000");
+		assertEquals(18, count(world, "<variable "));
+		assertEquals(159, count(world, "<condition "));
+		for (String variable : new String[] { "arianasorus_spawn", "garnon_spawn", "idtiamat_enter_s1",
+				"idtiamat_teleport_s1_1", "idtiamat_teleport_s1_2", "idtiamat_teleport_s1_3",
+				"idtiamat_teleport_s3", "kahrun_spawn", "kahrun_talk", "murugan_spawn", "rewardl_spawn",
+				"surama_spawn" }) {
+			assertTrue(world.contains("<variable name=\"" + variable + "\"/>"), variable);
+		}
+		for (String expected : new String[] { "NAMED_KILL == 7", "TAHABATA_TREASUREBOX == 1",
+				"IDTIAMAT_WAVE1 == 1", "IDTIAMAT_WAVE2 == 1", "IDTIAMAT_WAVE3 == 1", "npc id=\"701527\"",
+				"npc id=\"701541\"", "npc id=\"800456\"" }) {
+			assertTrue(world.contains(expected), expected);
+		}
+
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TiamatStrongholdInstance.java"));
+		assertTrue(handler.contains("npc.getNpcId() == 701523"));
+		assertTrue(handler.contains("setDoorState(22, true)"));
+		for (String legacy : new String[] { "GameThreadPoolServices", "onDropRegistered", "onDie(", "spawn(",
+				"onInstanceCreate", "Future<", "219363", "219364", "730694" }) {
+			assertFalse(handler.contains(legacy), legacy);
+		}
+
+		String staticSpawns = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/spawns/Instances/300510000_Tiamat_Stronghold.xml"));
+		for (String npcId : new String[] { "206265", "206266", "206267", "219392", "800369", "800373",
+				"800374", "800375", "800376", "800377", "800378", "800379", "800380", "800423", "800424",
+				"800435", "800436", "800438", "800460", "800463" }) {
+			assertFalse(staticSpawns.contains("npc_id=\"" + npcId + "\""), npcId);
+		}
+	}
+
+	@Test
+	void rentusTransformationsUseRetailPatterns() throws Exception {
+		String patterns = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npcaipatterns_idyun_hue.xml"));
+		assertTrue(patterns.contains("<name>IDYun_Temp_31</name>"));
+		assertTrue(patterns.contains("<name>IDYun_Drakan_ND3</name>"));
+		assertTrue(patterns.contains("<npc_nameid>IDYun_FallOff_Spawner_weak</npc_nameid>"));
+		assertTrue(patterns.contains("<npc_nameid>IDYun_FallOff_Spawner</npc_nameid>"));
 	}
 
 	@Test

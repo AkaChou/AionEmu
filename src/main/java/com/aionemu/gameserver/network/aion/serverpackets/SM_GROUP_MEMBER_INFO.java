@@ -99,7 +99,7 @@ public class SM_GROUP_MEMBER_INFO extends AionServerPacket {
 				writeD(effect.getRemainingTime());
 				writeH(0x00);// unk 5.3
 			}
-			writeB("3743000037430000374300003743000037430000374300003743000037430000");// 32bytes
+			writeB(new byte[32]);
 			break;
 		case UNK_53:
 			writeD(0x00);

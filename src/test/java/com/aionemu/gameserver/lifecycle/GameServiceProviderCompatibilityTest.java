@@ -96,16 +96,6 @@ import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.events.ThievesGuildService;
-import com.aionemu.gameserver.services.instance.AsyunatarService;
-import com.aionemu.gameserver.services.instance.DredgionService2;
-import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
-import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.IDRunService;
-import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
-import com.aionemu.gameserver.services.instance.IdgelDomeService;
-import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
-import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
-import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
@@ -177,8 +167,6 @@ class GameServiceProviderCompatibilityTest {
         LandingUpdateService landingUpdateService = instance(LandingUpdateService.class);
         AbyssLandingSpecialService abyssLandingSpecialService = instance(AbyssLandingSpecialService.class);
         DisputeLandService disputeLandService = instance(DisputeLandService.class);
-        DredgionService2 dredgionService = instance(DredgionService2.class);
-        AsyunatarService asyunatarService = instance(AsyunatarService.class);
         ShugoImperialTombSpawnManager shugoImperialTombSpawnManager = instance(ShugoImperialTombSpawnManager.class);
         SeasonRankingUpdateService seasonRankingUpdateService = instance(SeasonRankingUpdateService.class);
         PeriodicSaveService periodicSaveService = instance(PeriodicSaveService.class);
@@ -253,14 +241,6 @@ class GameServiceProviderCompatibilityTest {
         MaintenanceTask maintenanceTask = instance(MaintenanceTask.class);
         TownService townService = instance(TownService.class);
         ChallengeTaskService challengeTaskService = instance(ChallengeTaskService.class);
-        KamarBattlefieldService kamarBattlefieldService = instance(KamarBattlefieldService.class);
-        EngulfedOphidanBridgeService engulfedOphidanBridgeService = instance(EngulfedOphidanBridgeService.class);
-        SuspiciousOphidanBridgeService suspiciousOphidanBridgeService = instance(SuspiciousOphidanBridgeService.class);
-        IronWallWarfrontService ironWallWarfrontService = instance(IronWallWarfrontService.class);
-        IdgelDomeService idgelDomeService = instance(IdgelDomeService.class);
-        IdgelDomeLandmarkService idgelDomeLandmarkService = instance(IdgelDomeLandmarkService.class);
-        GrandArenaTrainingCampService grandArenaTrainingCampService = instance(GrandArenaTrainingCampService.class);
-        IDRunService idRunService = instance(IDRunService.class);
         CreativityEssenceService creativityEssenceService = instance(CreativityEssenceService.class);
         CreativitySkillService creativitySkillService = instance(CreativitySkillService.class);
         CreativityStatsService creativityStatsService = instance(CreativityStatsService.class);
@@ -289,8 +269,6 @@ class GameServiceProviderCompatibilityTest {
             LandingUpdateService.setInstanceProvider(provider(LandingUpdateService.class, landingUpdateService));
             AbyssLandingSpecialService.setInstanceProvider(provider(AbyssLandingSpecialService.class, abyssLandingSpecialService));
             DisputeLandService.setInstanceProvider(provider(DisputeLandService.class, disputeLandService));
-            DredgionService2.setInstanceProvider(provider(DredgionService2.class, dredgionService));
-            AsyunatarService.setInstanceProvider(provider(AsyunatarService.class, asyunatarService));
             ShugoImperialTombSpawnManager.setInstanceProvider(provider(ShugoImperialTombSpawnManager.class, shugoImperialTombSpawnManager));
             SeasonRankingUpdateService.setInstanceProvider(provider(SeasonRankingUpdateService.class, seasonRankingUpdateService));
             PeriodicSaveService.setInstanceProvider(provider(PeriodicSaveService.class, periodicSaveService));
@@ -365,14 +343,6 @@ class GameServiceProviderCompatibilityTest {
             MaintenanceTask.setInstanceProvider(provider(MaintenanceTask.class, maintenanceTask));
             TownService.setInstanceProvider(provider(TownService.class, townService));
             ChallengeTaskService.setInstanceProvider(provider(ChallengeTaskService.class, challengeTaskService));
-            KamarBattlefieldService.setInstanceProvider(provider(KamarBattlefieldService.class, kamarBattlefieldService));
-            EngulfedOphidanBridgeService.setInstanceProvider(provider(EngulfedOphidanBridgeService.class, engulfedOphidanBridgeService));
-            SuspiciousOphidanBridgeService.setInstanceProvider(provider(SuspiciousOphidanBridgeService.class, suspiciousOphidanBridgeService));
-            IronWallWarfrontService.setInstanceProvider(provider(IronWallWarfrontService.class, ironWallWarfrontService));
-            IdgelDomeService.setInstanceProvider(provider(IdgelDomeService.class, idgelDomeService));
-            IdgelDomeLandmarkService.setInstanceProvider(provider(IdgelDomeLandmarkService.class, idgelDomeLandmarkService));
-            GrandArenaTrainingCampService.setInstanceProvider(provider(GrandArenaTrainingCampService.class, grandArenaTrainingCampService));
-            IDRunService.setInstanceProvider(provider(IDRunService.class, idRunService));
             CreativityEssenceService.setInstanceProvider(provider(CreativityEssenceService.class, creativityEssenceService));
             CreativitySkillService.setInstanceProvider(provider(CreativitySkillService.class, creativitySkillService));
             CreativityStatsService.setInstanceProvider(provider(CreativityStatsService.class, creativityStatsService));
@@ -402,8 +372,6 @@ class GameServiceProviderCompatibilityTest {
             assertSame(landingUpdateService, LandingUpdateService.getInstance());
             assertSame(abyssLandingSpecialService, AbyssLandingSpecialService.getInstance());
             assertSame(disputeLandService, DisputeLandService.getInstance());
-            assertSame(dredgionService, DredgionService2.getInstance());
-            assertSame(asyunatarService, AsyunatarService.getInstance());
             assertSame(shugoImperialTombSpawnManager, ShugoImperialTombSpawnManager.getInstance());
             assertSame(seasonRankingUpdateService, SeasonRankingUpdateService.getInstance());
             assertSame(seasonRankingUpdateService, GameMaintenanceServices.seasonRankingUpdateService());
@@ -485,14 +453,6 @@ class GameServiceProviderCompatibilityTest {
             assertSame(maintenanceTask, MaintenanceTask.getInstance());
             assertSame(townService, TownService.getInstance());
             assertSame(challengeTaskService, ChallengeTaskService.getInstance());
-            assertSame(kamarBattlefieldService, KamarBattlefieldService.getInstance());
-            assertSame(engulfedOphidanBridgeService, EngulfedOphidanBridgeService.getInstance());
-            assertSame(suspiciousOphidanBridgeService, SuspiciousOphidanBridgeService.getInstance());
-            assertSame(ironWallWarfrontService, IronWallWarfrontService.getInstance());
-            assertSame(idgelDomeService, IdgelDomeService.getInstance());
-            assertSame(idgelDomeLandmarkService, IdgelDomeLandmarkService.getInstance());
-            assertSame(grandArenaTrainingCampService, GrandArenaTrainingCampService.getInstance());
-            assertSame(idRunService, IDRunService.getInstance());
             assertSame(creativityEssenceService, CreativityEssenceService.getInstance());
             assertSame(creativityEssenceService, GameCreativityServices.creativityEssenceService());
             assertSame(creativitySkillService, CreativitySkillService.getInstance());
@@ -534,8 +494,6 @@ class GameServiceProviderCompatibilityTest {
             LandingUpdateService.setInstanceProvider(null);
             AbyssLandingSpecialService.setInstanceProvider(null);
             DisputeLandService.setInstanceProvider(null);
-            DredgionService2.setInstanceProvider(null);
-            AsyunatarService.setInstanceProvider(null);
             ShugoImperialTombSpawnManager.setInstanceProvider(null);
             SeasonRankingUpdateService.setInstanceProvider(null);
             PeriodicSaveService.setInstanceProvider(null);
@@ -609,14 +567,6 @@ class GameServiceProviderCompatibilityTest {
             MaintenanceTask.setInstanceProvider(null);
             TownService.setInstanceProvider(null);
             ChallengeTaskService.setInstanceProvider(null);
-            KamarBattlefieldService.setInstanceProvider(null);
-            EngulfedOphidanBridgeService.setInstanceProvider(null);
-            SuspiciousOphidanBridgeService.setInstanceProvider(null);
-            IronWallWarfrontService.setInstanceProvider(null);
-            IdgelDomeService.setInstanceProvider(null);
-            IdgelDomeLandmarkService.setInstanceProvider(null);
-            GrandArenaTrainingCampService.setInstanceProvider(null);
-            IDRunService.setInstanceProvider(null);
             CreativityEssenceService.setInstanceProvider(null);
             CreativitySkillService.setInstanceProvider(null);
             CreativityStatsService.setInstanceProvider(null);
@@ -644,8 +594,6 @@ class GameServiceProviderCompatibilityTest {
     void gameFeatureServicesRegistersAndClearsPlayerActionProviders() throws Exception {
         BonusService bonusService = instance(BonusService.class);
         NpcShoutsService npcShoutsService = instance(NpcShoutsService.class);
-        DredgionService2 dredgionService = instance(DredgionService2.class);
-        AsyunatarService asyunatarService = instance(AsyunatarService.class);
         ShieldService shieldService = instance(ShieldService.class);
         ProtectorConquerorService protectorConquerorService = instance(ProtectorConquerorService.class);
         PetService petService = instance(PetService.class);
@@ -669,8 +617,6 @@ class GameServiceProviderCompatibilityTest {
 
         GameFeatureServices featureServices = new GameFeatureServices(
                 provider(DisputeLandService.class, disputeLandService),
-                provider(DredgionService2.class, dredgionService),
-                provider(AsyunatarService.class, asyunatarService),
                 provider(PlayerLimitService.class, instance(PlayerLimitService.class)),
                 provider(NpcShoutsService.class, npcShoutsService),
                 provider(ShieldService.class, shieldService),
@@ -701,8 +647,6 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(npcShoutsService, GameFeatureServices.npcShoutsService());
-            assertSame(dredgionService, GameFeatureServices.dredgionService());
-            assertSame(asyunatarService, GameFeatureServices.asyunatarService());
             assertSame(shieldService, GameFeatureServices.shieldService());
             assertSame(protectorConquerorService, GameFeatureServices.protectorConquerorService());
             assertSame(disputeLandService, GameFeatureServices.disputeLandService());
@@ -1311,48 +1255,6 @@ class GameServiceProviderCompatibilityTest {
             assertProviderCleared(LimitedItemTradeService.class);
             assertProviderCleared(SurveyService.class);
             assertProviderCleared(GMService.class);
-        }
-    }
-
-    @Test
-    void gameBattlefieldServicesRegistersAndClearsBattlefieldAccessors() throws Exception {
-        KamarBattlefieldService kamarBattlefieldService = instance(KamarBattlefieldService.class);
-        EngulfedOphidanBridgeService engulfedOphidanBridgeService = instance(EngulfedOphidanBridgeService.class);
-        SuspiciousOphidanBridgeService suspiciousOphidanBridgeService = instance(SuspiciousOphidanBridgeService.class);
-        IronWallWarfrontService ironWallWarfrontService = instance(IronWallWarfrontService.class);
-        IdgelDomeService idgelDomeService = instance(IdgelDomeService.class);
-        IdgelDomeLandmarkService idgelDomeLandmarkService = instance(IdgelDomeLandmarkService.class);
-        GrandArenaTrainingCampService grandArenaTrainingCampService = instance(GrandArenaTrainingCampService.class);
-        IDRunService idRunService = instance(IDRunService.class);
-        GameBattlefieldServices battlefieldServices = new GameBattlefieldServices(
-                provider(KamarBattlefieldService.class, kamarBattlefieldService),
-                provider(EngulfedOphidanBridgeService.class, engulfedOphidanBridgeService),
-                provider(SuspiciousOphidanBridgeService.class, suspiciousOphidanBridgeService),
-                provider(IronWallWarfrontService.class, ironWallWarfrontService),
-                provider(IdgelDomeService.class, idgelDomeService),
-                provider(IdgelDomeLandmarkService.class, idgelDomeLandmarkService),
-                provider(GrandArenaTrainingCampService.class, grandArenaTrainingCampService),
-                provider(IDRunService.class, idRunService));
-
-        try {
-            assertSame(kamarBattlefieldService, GameBattlefieldServices.kamarBattlefieldService());
-            assertSame(engulfedOphidanBridgeService, GameBattlefieldServices.engulfedOphidanBridgeService());
-            assertSame(suspiciousOphidanBridgeService, GameBattlefieldServices.suspiciousOphidanBridgeService());
-            assertSame(ironWallWarfrontService, GameBattlefieldServices.ironWallWarfrontService());
-            assertSame(idgelDomeService, GameBattlefieldServices.idgelDomeService());
-            assertSame(idgelDomeLandmarkService, GameBattlefieldServices.idgelDomeLandmarkService());
-            assertSame(grandArenaTrainingCampService, GameBattlefieldServices.grandArenaTrainingCampService());
-            assertSame(idRunService, GameBattlefieldServices.idRunService());
-        } finally {
-            battlefieldServices.destroy();
-            assertProviderCleared(KamarBattlefieldService.class);
-            assertProviderCleared(EngulfedOphidanBridgeService.class);
-            assertProviderCleared(SuspiciousOphidanBridgeService.class);
-            assertProviderCleared(IronWallWarfrontService.class);
-            assertProviderCleared(IdgelDomeService.class);
-            assertProviderCleared(IdgelDomeLandmarkService.class);
-            assertProviderCleared(GrandArenaTrainingCampService.class);
-            assertProviderCleared(IDRunService.class);
         }
     }
 

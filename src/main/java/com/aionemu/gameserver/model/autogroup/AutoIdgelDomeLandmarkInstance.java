@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.autogroup;
 
-import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
-
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -9,8 +7,6 @@ import com.aionemu.gameserver.model.instance.instancereward.LandMarkReward;
 import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
-import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
-
 /**
  * 自动 IdgelDomeLandmark 副本，用于 autogroup 相关逻辑。
  * Auto Idgel Dome Landmark Instance for autogroup logic.

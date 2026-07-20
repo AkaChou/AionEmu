@@ -31,7 +31,7 @@ class RetailConditionSpawnPartyLoaderTest {
 			<condition_spawns version="1"><world id="123" name="TestWorld"><variable name="wave"/>
 			<condition id="1" expression="wave == 1" page_start="2" page_end="3" despawn_at_other="false" group_mode="all" source="test">
 			<group probability="1000"><slot><party probability="10000" token="test:g1:s1:p1">
-			<npc id="1" probability="10000" x="1" y="2" z="3" heading="90" initial_delay="0" initial_delay_extra="0" life="20" respawn_time="120" respawn_time_extra="30"/>
+				<npc id="1" probability="10000" x="1" y="2" z="3" heading="90" initial_delay="0" initial_delay_extra="0" life="20" respawn_time="120" respawn_time_extra="30" idle_live_range="6" despawn_at_attack_state="true"/>
 			<npc id="2" probability="10000" x="4" y="5" z="6" heading="90" initial_delay="0" initial_delay_extra="0"/>
 			</party></slot></group></condition></world></condition_spawns>
 			""");
@@ -48,5 +48,7 @@ class RetailConditionSpawnPartyLoaderTest {
 		assertEquals(20, choice.members().get(0).life());
 		assertEquals(120, choice.members().get(0).respawnTime());
 		assertEquals(30, choice.members().get(0).respawnTimeExtra());
+		assertEquals(6, choice.members().get(0).idleLiveRange());
+		org.junit.jupiter.api.Assertions.assertTrue(choice.members().get(0).despawnAtAttackState());
 	}
 }

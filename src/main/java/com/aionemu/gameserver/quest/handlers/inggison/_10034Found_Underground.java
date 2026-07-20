@@ -195,7 +195,7 @@ public class _10034Found_Underground extends QuestHandler
 				qs.setQuestVar(8);
 				qs.setStatus(QuestStatus.REWARD);
 				updateQuestStatus(env);
-				TeleportService2.teleportTo(env.getPlayer(), 210130000, 389.17194f, 980.16077f, 460.25f, (byte) 2);
+				TeleportService2.teleportTo(env.getPlayer(), 210050000, 389.17194f, 980.16077f, 460.25f, (byte) 2);
 				QuestService.questTimerEnd(env);
 				return HandlerResult.SUCCESS;
 			}

@@ -4996,7 +4996,7 @@
       <spot x="232.028152" y="1018.325378" z="344.3785" h="50" walker_id="B6_P_MobPath_LF4_B6_FanaticRa_54_An"/>
       <spot x="451.346985" y="1330.067139" z="340.63428" h="73"/>
     </spawn>
-    <spawn npc_id="835603" respawn_time="240">
+    <spawn npc_id="730485" respawn_time="240">
       <spot x="138.004211" y="2006.548096" z="434.22803" entity_id="1315"/>
     </spawn>
     <spawn npc_id="215652" respawn_time="180">
@@ -6178,6 +6178,7 @@
       <spot x="2503.179443" y="2158.961426" z="222.26048" h="78"/>
     </spawn>
     <spawn npc_id="730277" respawn_time="60">
+      <spot x="210.790680" y="1393.381470" z="266.69495" entity_id="127"/>
     </spawn>
     <spawn npc_id="296489" respawn_time="3600">
       <spot x="1742.514526" y="1318.340088" z="386.17456" h="3"/>
@@ -6359,6 +6360,7 @@
       <spot x="2493.142578" y="404.689423" z="338.42126"/>
     </spawn>
     <spawn npc_id="730279" respawn_time="60">
+      <spot x="342.779968" y="1349.805054" z="262.2649" entity_id="443"/>
     </spawn>
     <spawn npc_id="700626" respawn_time="60">
       <spot x="2509.407715" y="1844.360352" z="235.0" entity_id="141"/>
@@ -7364,12 +7366,6 @@
 	</spawn>
 	<spawn npc_id="731834" respawn_time="60">
 	  <spot x="1375.884521" y="367.847748" z="589.59973" h="73"/>
-	</spawn>
-	<spawn npc_id="835597" respawn_time="60">
-	  <spot x="210.790680" y="1393.381470" z="266.69495"/>
-	</spawn>
-	<spawn npc_id="835599" respawn_time="60">
-	  <spot x="342.779968" y="1349.805054" z="262.2649"/>
 	</spawn>
 	<spawn npc_id="835605" respawn_time="120">
 	  <spot x="2888.987793" y="354.663055" z="298.79324" h="33"/>

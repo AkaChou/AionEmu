@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import java.util.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,7 +12,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.utils.*;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 永恒档案库任务副本事件处理器。
@@ -81,14 +78,14 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 					doors.get(53).setOpen(true);
 					doors.get(56).setOpen(true);
 					// 移至门已打开处。 / Move to where the door is open.
-					sendMsgByRace(1403296, Race.PC_ALL, 0);
+					sendMsg(1403296, 0, false, 25, 0);
 				}
 			break;
 			case 857783: //Crystalized Shardgolem.
 				doors.get(252).setOpen(true);
 				doors.get(33).setOpen(true);
 				// 通往阿特雷亚历史档案的门现已打开。 / The door to the Atreia History Archives is now open.
-				sendMsgByRace(1403297, Race.PC_ALL, 0);
+				sendMsg(1403297, 0, false, 25, 0);
 			break;
 			case 857901: //Lesser Shardgolem.
 				IDEternityQSadoFi65An01++;
@@ -96,7 +93,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				    doors.get(67).setOpen(true);
 				    doors.get(54).setOpen(true);
 				    // 通往下一图书馆的门已打开。 / The door to the next library is now open.
-				    sendMsgByRace(1403298, Race.PC_ALL, 0);
+				    sendMsg(1403298, 0, false, 25, 0);
 				}
 			break;
 			case 857902: //Lesser Shardgolem.
@@ -105,14 +102,14 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				    doors.get(449).setOpen(true);
 				    doors.get(55).setOpen(true);
 				    // 通往人类历史档案的门现已打开。 / The door to the Human History Archives is now open.
-				    sendMsgByRace(1403299, Race.PC_ALL, 0);
+				    sendMsg(1403299, 0, false, 25, 0);
 				}
 			break;
 			case 857784: //Relic Techgolem.
 				doors.get(64).setOpen(true);
 				doors.get(27).setOpen(true);
 				// 通往下一图书馆的门已打开。 / The door to the next library is now open.
-				sendMsgByRace(1403300, Race.PC_ALL, 0);
+				sendMsg(1403300, 0, false, 25, 0);
 			break;
 			case 857948: //Lesser Fleshgolem.
 			    IDEternityQSadoWi65An02++;
@@ -120,20 +117,20 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 					doors.get(311).setOpen(true);
 					doors.get(57).setOpen(true);
 					// 通往主神档案的门现已打开。 / The door to the Empyrean Lord's Archives is now open.
-					sendMsgByRace(1403301, Race.PC_ALL, 0);
+					sendMsg(1403301, 0, false, 25, 0);
 				}
 			break;
 			case 857903: //Augmented Fleshgolem.
 			    doors.get(77).setOpen(true);
 				doors.get(52).setOpen(true);
 				// 通往下一图书馆的门已打开。 / The door to the next library is now open.
-				sendMsgByRace(1403302, Race.PC_ALL, 0);
+				sendMsg(1403302, 0, false, 25, 0);
 			break;
 			case 857916: //Violent Bust.
 			    doors.get(421).setOpen(true);
 				doors.get(65).setOpen(true);
 				// 通往全知档案的门现已打开。 / The door to the Archive of All Knowledge is now open.
-				sendMsgByRace(1403303, Race.PC_ALL, 0);
+				sendMsg(1403303, 0, false, 25, 0);
 			break;
 			
 		   /**
@@ -142,13 +139,13 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 			case 857788: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
-			    sendMsgByRace(1403365, Race.PC_ALL, 0);
+			    sendMsg(1403365, 0, false, 25, 0);
 				spawn(857786, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
 			break;
 			case 857786: //Archdaeva Of Eternal Waves.
 			    despawnNpc(npc);
 				// 你获得了祝福大地光环。 / You are graced with the aura of Blessed Earth.
-				sendMsgByRace(1403366, Race.PC_ALL, 0);
+				sendMsg(1403366, 0, false, 25, 0);
 				spawn(857787, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
 			break;
 			case 857787: //Archdaeva Of Eternal Earth.
@@ -162,7 +159,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				doors.get(90).setOpen(true);
 				spawn(806179, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
-				sendMsgByRace(1403304, Race.PC_ALL, 0);
+				sendMsg(1403304, 0, false, 25, 0);
 				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
 		   /**
@@ -171,13 +168,13 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 			case 857795: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
-			    sendMsgByRace(1403365, Race.PC_ALL, 0);
+			    sendMsg(1403365, 0, false, 25, 0);
 				spawn(857793, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
 			break;
 			case 857793: //Archdaeva Of Eternal Waves.
 			    despawnNpc(npc);
 				// 你获得了祝福大地光环。 / You are graced with the aura of Blessed Earth.
-				sendMsgByRace(1403366, Race.PC_ALL, 0);
+				sendMsg(1403366, 0, false, 25, 0);
 				spawn(857794, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
 			break;
 			case 857794: //Archdaeva Of Eternal Earth.
@@ -191,7 +188,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				doors.get(90).setOpen(true);
 				spawn(806179, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
-				sendMsgByRace(1403304, Race.PC_ALL, 0);
+				sendMsg(1403304, 0, false, 25, 0);
 				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
 		   /**
@@ -200,13 +197,13 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 			case 857799: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
-			    sendMsgByRace(1403365, Race.PC_ALL, 0);
+			    sendMsg(1403365, 0, false, 25, 0);
 				spawn(857797, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
 			break;
 			case 857797: //Archdaeva Of Eternal Waves.
 			    despawnNpc(npc);
 				// 你获得了祝福大地光环。 / You are graced with the aura of Blessed Earth.
-				sendMsgByRace(1403366, Race.PC_ALL, 0);
+				sendMsg(1403366, 0, false, 25, 0);
 				spawn(857798, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
 			break;
 			case 857798: //Archdaeva Of Eternal Earth.
@@ -220,7 +217,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				doors.get(90).setOpen(true);
 				spawn(806180, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
-				sendMsgByRace(1403304, Race.PC_ALL, 0);
+				sendMsg(1403304, 0, false, 25, 0);
 				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
 		   /**
@@ -229,13 +226,13 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 			case 857803: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
-			    sendMsgByRace(1403365, Race.PC_ALL, 0);
+			    sendMsg(1403365, 0, false, 25, 0);
 				spawn(857801, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
 			break;
 			case 857801: //Archdaeva Of Eternal Waves.
 			    despawnNpc(npc);
 				// 你获得了祝福大地光环。 / You are graced with the aura of Blessed Earth.
-				sendMsgByRace(1403366, Race.PC_ALL, 0);
+				sendMsg(1403366, 0, false, 25, 0);
 				spawn(857802, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
 			break;
 			case 857802: //Archdaeva Of Eternal Earth.
@@ -249,59 +246,10 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				doors.get(90).setOpen(true);
 				spawn(806180, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
-				sendMsgByRace(1403304, Race.PC_ALL, 0);
+				sendMsg(1403304, 0, false, 25, 0);
 				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
 		}
-	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
 	}
 	
 	private void deleteNpc(int npcId) {

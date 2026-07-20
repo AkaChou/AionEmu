@@ -25,6 +25,12 @@ class TheEternalBastionMigrationTest {
 		assertFalse(source.contains("java.util.concurrent.Future"));
 		assertFalse(source.contains("startInstanceTask"));
 		assertFalse(source.contains("spawn("));
+		assertFalse(source.contains("onDropRegistered"));
+		assertFalse(source.contains("802185"));
+		assertFalse(source.contains("186000051"));
+		assertFalse(source.contains("186000052"));
+		assertFalse(source.contains("186000236"));
+		assertFalse(source.contains("186000237"));
 	}
 
 	@Test

@@ -67,7 +67,7 @@
 			<spot x="2185.14" y="2634.4" z="459.471" h="38"/>
 		</spawn>
 		<!-- Padmarashka's Cave Entrance -->
-		<spawn npc_id="835604" respawn_time="295">
+		<spawn npc_id="730486" respawn_time="295">
 			<spot x="2972.322" y="1212.870" z="242.125" entity_id="1235"/>
 		</spawn>
 		<spawn npc_id="799444" respawn_time="295">

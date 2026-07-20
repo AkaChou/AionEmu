@@ -13903,7 +13903,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4406" name="광대 행진곡" nameId="4572095" name_desc="Ar_SongofRest_G1" stack="SKILL_Ar_SongofRest" skill_group_name="Ar_SongofRest" delayId="1281" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" no_jump_cancel="true" pvp_duration="80" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="7" effective_angle="7" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="7" effective_altitude="7" />
     <startconditions>
       <mp value="50" delta="0" />
       <weapon weapon="HARP_2H" />
@@ -16558,7 +16558,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4469" name="파괴의 환상곡" nameId="4572157" name_desc="Ba_SongofDestroy_G1" stack="SKILL_Ba_SongofDestroy" skill_group_name="Ba_SongofDestroy" delayId="1292" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="18000" duration="0" apply_casting_time_bonus="true" no_jump_cancel="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <properties first_target="ME" first_target_range="25" target_type="PARTY" target_relation="MYPARTY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="6" target_status="" target_distance="25" effective_angle="25" />
+    <properties first_target="ME" first_target_range="25" target_type="PARTY" target_relation="MYPARTY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="6" target_status="" effective_range="25" effective_altitude="25" />
     <group_ref id="SG_29F29074B0724B7F" />
     <useconditions>
       <playermove allow="false" />
@@ -16617,7 +16617,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4470" name="희망의 선율" nameId="4572167" name_desc="Ba_SongofHope_G1" stack="SKILL_Ba_SongofHope" skill_group_name="Ba_SongofHope" delayId="1293" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="18000" duration="0" apply_casting_time_bonus="true" no_jump_cancel="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <properties first_target="ME" first_target_range="25" target_type="PARTY" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="25" effective_angle="25" />
+    <properties first_target="ME" first_target_range="25" target_type="PARTY" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="25" effective_altitude="25" />
     <startconditions>
       <dp value="4000" />
       <weapon weapon="HARP_2H" />
@@ -19152,7 +19152,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4538" name="진격의 선율" nameId="4572269" name_desc="Ba_SongofAdvance_G1" stack="SKILL_Ba_SongofAdvance" skill_group_name="Ba_SongofAdvance" delayId="1355" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" no_jump_cancel="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <properties first_target="ME" first_target_range="1" target_type="PARTY" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="25" effective_angle="25" />
+    <properties first_target="ME" first_target_range="1" target_type="PARTY" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="25" effective_altitude="25" />
     <startconditions>
       <mp value="41" delta="-1" />
       <weapon weapon="HARP_2H" />

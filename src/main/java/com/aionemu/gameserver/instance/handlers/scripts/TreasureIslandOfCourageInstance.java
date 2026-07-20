@@ -255,7 +255,7 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 		for (Player player : instance.getPlayersInside()) {
 			onExitInstance(player);
 		}
-		GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+		GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance);
 	}
 
 	private int getTime() {

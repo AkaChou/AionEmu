@@ -11,6 +11,7 @@ import com.aionemu.gameserver.dao.DynamicInstancesDAO;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerInstanceLimit;
 import com.aionemu.gameserver.model.instance.DynamicInstance;
 import com.aionemu.gameserver.model.instance.DynamicInstanceMember;
 import com.aionemu.gameserver.model.instance.InstanceRuntimeState;
@@ -74,8 +75,30 @@ public final class DynamicInstanceManager {
 			return;
 		}
 		dao().saveMember(new DynamicInstanceMember(dynamic.getInstanceUid(), player.getObjectId(), teamId, side, true,
-				0, 0, 0, player.getWorldId(), "", (byte) 0));
+				0, 0, 0, player.getWorldId(), "", 0, false));
 		instance.register(player.getObjectId());
+	}
+
+	public static void reserveMatchMember(WorldMapInstance instance, Player player, int teamId, byte side,
+			PlayerInstanceLimit limit) {
+		DynamicInstance dynamic = instance.getDynamicInstance();
+		if (dynamic == null || dynamic.getOwnerType() != DynamicInstance.OWNER_MATCH) {
+			throw new IllegalStateException("Match reservation requires a retail match instance");
+		}
+		int limitKey = limit == null ? 0 : limit.getLimitKey();
+		dao().saveMatchReservation(new DynamicInstanceMember(dynamic.getInstanceUid(), player.getObjectId(), teamId,
+				side, true, 0, 0, 0, player.getWorldId(), "", limitKey, limit != null), limit);
+		instance.register(player.getObjectId());
+	}
+
+	public static int cancelMatchReservation(WorldMapInstance instance, int playerId) {
+		DynamicInstance dynamic = instance.getDynamicInstance();
+		if (dynamic == null) {
+			return 0;
+		}
+		int restoredLimitKey = dao().cancelMatchReservation(dynamic.getInstanceUid(), playerId);
+		instance.unregister(playerId);
+		return restoredLimitKey;
 	}
 
 	public static void markEntered(WorldMapInstance instance, Player player) {
@@ -167,8 +190,10 @@ public final class DynamicInstanceManager {
 		if (dynamic == null) {
 			return;
 		}
-		dynamic.setStateJson(instance.getRuntimeState().encode());
-		update(dynamic);
+		synchronized (dynamic) {
+			dynamic.setStateJson(instance.getRuntimeState().encode());
+			update(dynamic);
+		}
 	}
 
 	public static int defaultCreationId(int worldId, boolean personal) {

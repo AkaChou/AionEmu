@@ -34,7 +34,7 @@ public class _10035Soar_To_The_Corridor extends QuestHandler {
         }
 		qe.registerOnLevelUp(questId);
         qe.registerOnEnterZoneMissionEnd(questId);
-		qe.registerOnEnterZone(ZoneName.get("ANGRIEF_GATE_210130000"), questId);
+		qe.registerOnEnterZone(ZoneName.get("ANGRIEF_GATE_210050000"), questId);
     }
 	
 	@Override
@@ -168,7 +168,7 @@ public class _10035Soar_To_The_Corridor extends QuestHandler {
         QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {
             int var = qs.getQuestVarById(0);
-            if (zoneName.equals(ZoneName.get("ANGRIEF_GATE_210130000"))) {
+            if (zoneName.equals(ZoneName.get("ANGRIEF_GATE_210050000"))) {
                 if (var == 4) {
                     changeQuestStep(env, 4, 5, false);
                     return true;

@@ -5,12 +5,18 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.XMLConstants;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
@@ -79,14 +85,16 @@ class SkillDefinitionLoaderTest {
 		assertEquals(200, data.getExclusiveStatusImmune(List.of(111300461), "Test_Vritra1_Immune"));
 		assertNotNull(data.getSkillTemplate(4698));
 		assertNotNull(data.getSkillTemplate(11404));
+		assertTrue(data.getSkillTemplate(3541).isTargetStop());
 		assertEquals(12_000, data.getSkillTemplate(398).getToggleTimer());
 		assertEquals(8674, data.getSkillTemplate(621).getPenaltySkillId());
 		assertEquals("FI_BladeShock1", data.getSkillTemplate(727).getChargeSetName());
 		assertEquals("PARRY", data.getSkillTemplate(584).getCounterSkill().name());
 		assertEquals(80, data.getSkillTemplate(838).getPvpDamage());
-		assertEquals(3, data.getSkillTemplate(838).getProperties().getTargetDistance());
-		assertEquals(26, data.getSkillTemplate(838).getProperties().getEffectiveAngle());
-		assertEquals(5, data.getSkillTemplate(838).getProperties().getEffectiveWidth());
+		assertEquals(26, data.getSkillTemplate(838).getProperties().getTargetDistance());
+		assertEquals(3, data.getSkillTemplate(838).getProperties().getEffectiveWidth());
+		assertEquals(5, data.getSkillTemplate(838).getProperties().getEffectiveAltitude());
+		assertEquals(0, data.getSkillTemplate(838).getProperties().getEffectiveAngle());
 		for (int skillId : new int[] { 555, 670, 758, 769 }) {
 			assertEquals(7, data.getSkillTemplate(skillId).getProperties().getEffectiveRange());
 			assertEquals(5, data.getSkillTemplate(skillId).getProperties().getEffectiveAltitude());
@@ -95,9 +103,11 @@ class SkillDefinitionLoaderTest {
 		assertEquals(5, data.getSkillTemplate(20069).getProperties().getEffectiveRange());
 		assertEquals(45, data.getSkillTemplate(20069).getProperties().getEffectiveAltitude());
 		assertEquals(0, data.getSkillTemplate(20069).getProperties().getEffectiveAngle());
-		assertEquals(2, data.getSkillTemplate(20400).getProperties().getEffectiveRange());
+		assertEquals(0, data.getSkillTemplate(20400).getProperties().getEffectiveRange());
+		assertEquals(25, data.getSkillTemplate(20400).getProperties().getTargetDistance());
 		assertEquals(8, data.getSkillTemplate(20400).getProperties().getEffectiveAltitude());
-		assertEquals(25, data.getSkillTemplate(20400).getProperties().getEffectiveWidth());
+		assertEquals(2, data.getSkillTemplate(20400).getProperties().getEffectiveWidth());
+		assertEquals(0, data.getSkillTemplate(20400).getProperties().getEffectiveAngle());
 		assertEquals(100, data.getSkillTemplate(838).getChainSkillProb());
 		assertTrue(data.getSkillTemplate(2993).isStance());
 		assertTrue(data.getSkillTemplate(601).getStartconditions().getConditions().stream()
@@ -139,6 +149,36 @@ class SkillDefinitionLoaderTest {
 				validator.validate(new StreamSource(part.toFile()));
 			}
 		}
+	}
+
+	@Test
+	void currentRetailFieldInventoryIsExplicit() throws Exception {
+		Set<String> fieldNames = readRetailFieldNames(
+			Path.of("src/main/resources/aion/definitions/compact/skills/groups.xml"));
+
+		assertEquals(228, fieldNames.size());
+		fieldNames.removeIf(name -> name.startsWith("effect"));
+		assertEquals(Set.of("__type_desc__", "advancement_rate", "auto_attack", "charging_delay", "delay_type",
+			"max_skill_point", "motion_mode", "penalty_type_succ", "pre_fx_delay", "prechain_skillname",
+			"status_fx_slot", "status_fx_slot_lv", "status_sfx1", "system_fire_fx", "toggle_id", "use_arrow_count"),
+			fieldNames);
+	}
+
+	private static Set<String> readRetailFieldNames(Path file) throws Exception {
+		XMLInputFactory factory = XMLInputFactory.newFactory();
+		factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+		Set<String> fields = new HashSet<>();
+		try (InputStream stream = Files.newInputStream(file)) {
+			XMLStreamReader reader = factory.createXMLStreamReader(stream);
+			while (reader.hasNext()) {
+				if (reader.next() == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("field")) {
+					assertTrue(fields.add(reader.getAttributeValue(null, "name")), "retail field name must be unique");
+				}
+			}
+			reader.close();
+		}
+		return fields;
 	}
 
 	private void writePart(String file, int id, String stack, String value, int occurrence) throws Exception {

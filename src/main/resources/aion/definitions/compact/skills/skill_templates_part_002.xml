@@ -11251,7 +11251,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="838" name="나찰의 화살" nameId="4575607" name_desc="RA_ThroughShot_G1" stack="SKILL_RA_ThroughShot" skill_group_name="RA_ThroughShot" delayId="109" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" no_jump_cancel="true" pvp_damage="80" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6118082EC4270AC1" />
+    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="26" effective_width="3" effective_altitude="5" />
     <startconditions>
       <mp value="153" delta="0" />
       <weapon weapon="BOW" />
@@ -11303,7 +11303,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="839" name="나찰의 화살" nameId="4575607" name_desc="RA_ThroughShot_G2" stack="SKILL_RA_ThroughShot" skill_group_name="RA_ThroughShot" delayId="109" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" no_jump_cancel="true" pvp_damage="80" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6118082EC4270AC1" />
+    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="26" effective_width="3" effective_altitude="5" />
     <startconditions>
       <mp value="164" delta="0" />
       <weapon weapon="BOW" />

@@ -177,6 +177,10 @@ public class Skill {
 	 * whether usable
 	 */
 	public boolean canUseSkill() {
+		if (skillTemplate.getType() == SkillType.MAGICAL && !skillTemplate.hasEvadeEffect()
+				&& effector.getEffectController().isAbnormalSet(AbnormalState.SILENCE)) {
+			return false;
+		}
 		if (skillTemplate.isStanceUsable()
 				&& (!(effector instanceof Player player) || player.getController().getStanceType() != 2)) {
 			return false;
@@ -360,10 +364,17 @@ public class Skill {
 				? Math.max(1, Math.ceilDiv(skillTemplate.getNonchainedCooldown(), 100))
 				: effector.getSkillCooldown(skillTemplate);
 		if (cooldown != 0) {
-			cooldown = SkillConfig.scaleCooldown(StigmaEnchantCoolDown(this, cooldown));
+			cooldown = calculateCooldown(cooldown);
 			effector.setSkillCoolDown(skillTemplate.getDelayId(), cooldown * 100 + this.duration + System.currentTimeMillis());
 			effector.setSkillCoolDownBase(skillTemplate.getDelayId(), System.currentTimeMillis());
 		}
+	}
+
+	public int calculateCooldown(int cooldown) {
+		cooldown = StigmaEnchantCoolDown(this, cooldown);
+		cooldown = skillTemplate.scaleCooldownByAttackDelay(cooldown,
+				effector.getGameStats().getAttackSpeed().getCurrent());
+		return SkillConfig.scaleCooldown(cooldown);
 	}
 
 	/**
@@ -1331,7 +1342,9 @@ public class Skill {
 			}
 			skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 
-			effector.setSkillCoolDown(skillTemplate.getDelayId(), SkillConfig.scaleCooldown(skillTemplate.getCooldown()) * 100L + System.currentTimeMillis());
+			if (skillTemplate.getCooldown() != 0) {
+				effector.setSkillCoolDown(skillTemplate.getDelayId(), calculateCooldown(skillTemplate.getCooldown()) * 100L + System.currentTimeMillis());
+			}
 		}
 
 		// 若目标超出范围 / if target out of range

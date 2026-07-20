@@ -31,7 +31,7 @@ public class CM_DELETE_QUEST extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		questId = readH();
+		questId = readD();
 	}
 
 	@Override

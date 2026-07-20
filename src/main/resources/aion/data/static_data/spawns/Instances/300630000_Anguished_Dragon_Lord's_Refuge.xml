@@ -4,10 +4,6 @@
  -->
 <spawns>
 	<spawn_map map_id="300630000">
-		<!-- Siel's Relic -->
-		<spawn npc_id="701502">
-			<spot x="456.1200" y="514.52002" z="437.35321" entity_id="96"/>
-		</spawn>
 		<!-- Internal Passage Out 1 -->
 		<spawn npc_id="730633">
 			<spot x="216.92004" y="195.3886" z="246.44954" entity_id="93"/>
@@ -24,17 +20,23 @@
 		<spawn npc_id="730636">
 		    <spot x="778.85364" y="832.67804" z="246.07117" entity_id="95"/>
 		</spawn>
-		<!-- Tiamat Aetheric Field -->
-		<spawn npc_id="730694">
-			<spot x="436.85999" y="514.52002" z="417.47" entity_id="14"/>
+		<spawn npc_id="236278">
+			<spot x="200.310577" y="179.133545" z="250.000000" h="15" random_walk="2"/>
 		</spawn>
-		<!-- Wavering Surkana -->
-		<spawn npc_id="730699">
-			<spot x="503.91858" y="514.51959" z="416.87329" entity_id="9"/>
+		<spawn npc_id="236279">
+			<spot x="801.047607" y="179.277420" z="250.000000" h="45" random_walk="2"/>
 		</spawn>
-		<!-- Greater Blessed Relics -->
-		<spawn npc_id="831990">
-            <spot x="510.3906" y="516.59485" z="240.26653" h="61"/>
-        </spawn>
+		<spawn npc_id="236280">
+			<spot x="200.857346" y="848.302795" z="250.000000" h="105" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="236281">
+			<spot x="797.651611" y="848.708069" z="250.000000" h="75" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="283150" respawn_time="1">
+			<spot x="506.208771" y="516.619995" z="242.851898" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="283154" respawn_time="1">
+			<spot x="506.208771" y="516.619995" z="242.000000" random_walk="2"/>
+		</spawn>
 	</spawn_map>
 </spawns>

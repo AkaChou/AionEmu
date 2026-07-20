@@ -1,18 +1,17 @@
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.IntConsumer;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -25,19 +24,12 @@ import com.aionemu.gameserver.model.instance.playerreward.PvPArenaPlayerReward;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_DIE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService.ArenaReward;
-import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
-import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
-import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -51,6 +43,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 public class PvPArenaInstance extends GeneralInstanceHandler
 {
+	private static final String STATE = "arena.";
+	private static final String PREPARING = "PREPARING";
+	private static final String BATTLE = "BATTLE";
+	private static final String FINISHED = "FINISHED";
+	private static final long EXIT_DELAY = 60_000;
+
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 副本奖励对象 / instance reward object */
@@ -72,10 +70,11 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				instanceReward.getRebirthBuffDuration(instanceReward.getRank(ownerReward.getPoints())));
 		sendPacket();
 		if (lastAttacker != null && lastAttacker != player) {
-			if (lastAttacker instanceof Player) {
-				Player winner = (Player) lastAttacker;
-				PvPArenaPlayerReward reward = getPlayerReward(winner.getObjectId());
-				reward.addPvPKillToPlayer();
+				if (lastAttacker instanceof Player) {
+					Player winner = (Player) lastAttacker;
+					PvPArenaPlayerReward reward = getPlayerReward(winner.getObjectId());
+					reward.addPvPKillToPlayer();
+					persistPlayer(reward);
 				int worldId = winner.getWorldId();
 				GameEngineServices.questEngine().onKillInWorld(new QuestEnv(player, winner, 0, 0), worldId);
 			}
@@ -94,6 +93,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			PvPArenaPlayerReward victimFine = getPlayerReward(victim.getObjectId());
 			rank = instanceReward.getRank(victimFine.getPoints());
 			victimFine.addPoints(-instanceReward.getDeathScore(rank));
+			persistPlayer(victimFine);
 			bonus = instanceReward.getKillScore() * instanceReward.getScoreModifier(rank) / 100;
 		} else {
 			bonus = getNpcBonus(((Npc) victim).getNpcId());
@@ -109,8 +109,10 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				continue;
 			} if (master instanceof Player) {
 				Player attaker = (Player) master;
-				int rewardPoints = bonus * damager.getDamage() / victim.getAggroList().getTotalDamage();
-				getPlayerReward(attaker.getObjectId()).addPoints(rewardPoints);
+					int rewardPoints = bonus * damager.getDamage() / victim.getAggroList().getTotalDamage();
+					PvPArenaPlayerReward reward = getPlayerReward(attaker.getObjectId());
+					reward.addPoints(rewardPoints);
+					persistPlayer(reward);
 				sendSystemMsg(attaker, victim, rewardPoints);
 			}
 		} if (instanceReward.hasCapPoints()) {
@@ -164,16 +166,18 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	@Override
 	public void onEnterInstance(Player player) {
 		Integer object = player.getObjectId();
-		if (!containPlayer(object)) {
-			instanceReward.regPlayerReward(object);
-			PvPArenaPlayerReward playerReward = getPlayerReward(object);
+		boolean known = containPlayer(object) || runtimeState().get(playerKey(object, "points")) != null;
+		PvPArenaPlayerReward playerReward = restorePlayer(object);
+		if (!known) {
 			playerReward.setRewardRate(rewardRate(player));
 			playerReward.applyBoostMoraleEffect(player, instanceReward.getRebirthBuffDuration(0));
 			instanceReward.setRndPosition(object);
 		} else {
-			getPlayerReward(object).setRewardRate(rewardRate(player));
+			playerReward.endAbsence();
+			playerReward.setRewardRate(rewardRate(player));
 			instanceReward.portToPosition(player);
 		}
+		persistPlayer(playerReward);
 		applyStageBuff(player);
 		sendPacket();
 	}
@@ -193,67 +197,31 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		});
 	}
 	
-	private void spawnBlessedRelics(int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
-					spawn(Rnd.get(1, 2) == 1 ? 701173 : 701187, 1841.951f, 1733.968f, 300.242f, (byte) 0);
-				}
+	private void spawnBlessedRelics(int delay) {
+		long deadline = System.currentTimeMillis() + delay;
+		runtimeState().put(STATE + "blessed.deadline", deadline);
+		scheduleDeadline("blessed", deadline, () -> {
+			runtimeState().remove(STATE + "blessed.deadline");
+			if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
+				spawn(Rnd.get(1, 2) == 1 ? 701173 : 701187, 1841.951f, 1733.968f, 300.242f, (byte) 0);
 			}
-		}, time);
+		});
 	}
-	
-	private void spawnCursedRelics(int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
-					spawn(Rnd.get(1, 2) == 1 ? 701174 : 701188, 674.517f, 1778.428f, 204.693f, (byte) 0);
-				}
+
+	private void spawnCursedRelics(int delay) {
+		long deadline = System.currentTimeMillis() + delay;
+		runtimeState().put(STATE + "cursed.deadline", deadline);
+		scheduleDeadline("cursed", deadline, () -> {
+			runtimeState().remove(STATE + "cursed.deadline");
+			if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
+				spawn(Rnd.get(1, 2) == 1 ? 701174 : 701188, 674.517f, 1778.428f, 204.693f, (byte) 0);
 			}
-		}, time);
+		});
 	}
-	
+
 	private int getNpcBonus(int npcId) {
-		switch (npcId) {
-			case 243666: //Black Claw Scratcher.
-			case 243675: //Red Sand Brax.
-			case 243676: //Red Sand Tog.
-			case 243667: //Mutated Drakan Fighter.
-			    return 100;
-			case 243681: //Casus Manor Chief Maid.
-			    return 400;
-			case 243671: //Casus Manor Butler.
-			    return 650;
-			case 243672: //Casus Manor Noble.
-			    return 750;
-			case 243665: //Mumu Rake Gatherer.
-			    return 1250;
-			case 243673: //Pale Carmina.
-			case 243674: //Corrupt Casus.
-				return 1500;
-			// 祝福遗物/诅咒遗物 / Blessed Relics/Cursed Relics
-			case 701173:
-			case 701174:
-			case 701187:
-			case 701188:
-			case 701201:
-			case 701202:
-			case 701834:
-			case 701835:
-			    return 1750;
-			default:
-				return 0;
-		}
+		var score = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getNpcScore(npcId);
+		return score == null || score.scoreApplyType() != 0 || score.equalizingScore() != 0 ? 0 : score.value();
 	}
 	
 	/**
@@ -275,7 +243,9 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
-		getPlayerReward(player.getObjectId()).beginAbsence();
+		PvPArenaPlayerReward reward = getPlayerReward(player.getObjectId());
+		reward.beginAbsence();
+		persistPlayer(reward);
 	}
 	
 	/**
@@ -286,9 +256,10 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogin(Player player) {
-		PvPArenaPlayerReward playerReward = getPlayerReward(player.getObjectId());
+		PvPArenaPlayerReward playerReward = restorePlayer(player.getObjectId());
 		playerReward.endAbsence();
 		playerReward.setRewardRate(rewardRate(player));
+		persistPlayer(playerReward);
 		applyStageBuff(player);
 	}
 	
@@ -302,15 +273,57 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		instanceReward = new PvPArenaReward(mapId, instanceId, instance);
-		instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
 		spawnRings();
-		if (!instanceReward.isSoloArena()) {
-			spawnCursedRelics(0);
-			spawnBlessedRelics(0);
+		restoreLifecycle();
+	}
+
+	private void restoreLifecycle() {
+		long startedAt = runtimeState().getLong(STATE + "started_at", 0);
+		if (startedAt == 0) {
+			startedAt = System.currentTimeMillis();
+			runtimeState().put(STATE + "started_at", startedAt);
+			runtimeState().put(STATE + "phase", PREPARING);
+			runtimeState().put(STATE + "round", 1);
+			runtimeState().put(STATE + "zone.1", instanceReward.getZone());
 		}
-		instanceReward.setInstanceStartTime();
-		GameThreadPoolServices.threadPoolManager().schedule(this::startBattle,
-				instanceReward.getWaitTimeSeconds() * 1000L);
+		instanceReward.setInstanceStartTime(startedAt);
+		int round = runtimeState().getInt(STATE + "round", 1);
+		int[] zones = new int[round];
+		for (int i = 0; i < round; i++) {
+			zones[i] = runtimeState().getInt(STATE + "zone." + (i + 1), 0);
+		}
+		instanceReward.restoreProgress(round, zones);
+		String phase = runtimeState().get(STATE + "phase", PREPARING);
+		instanceReward.setInstanceScoreType(switch (phase) {
+			case FINISHED -> InstanceScoreType.END_PROGRESS;
+			case BATTLE -> InstanceScoreType.START_PROGRESS;
+			default -> InstanceScoreType.PREPARING;
+		});
+		restorePlayers();
+		switch (phase) {
+		case FINISHED -> scheduleExit(runtimeState().getLong(STATE + "exit_deadline", System.currentTimeMillis()));
+		case BATTLE -> {
+			openDoors();
+				scheduleDeadline("round", runtimeState().getLong(STATE + "round_deadline", System.currentTimeMillis()),
+						this::finishRound);
+				long zoneDeadline = runtimeState().getLong(STATE + "zone_deadline", 0);
+				if (zoneDeadline > 0) {
+					scheduleDeadline("zone", zoneDeadline, this::changeZone);
+				}
+		}
+		default -> {
+			long deadline = runtimeState().getLong(STATE + "prepare_deadline", 0);
+				if (deadline == 0) {
+					deadline = startedAt + instanceReward.getWaitTimeSeconds() * 1000L;
+					runtimeState().put(STATE + "prepare_deadline", deadline);
+				}
+				scheduleDeadline("prepare", deadline, this::startBattle);
+			}
+		}
+		if (!instanceReward.isSoloArena() && !FINISHED.equals(phase)) {
+			restoreRelic("blessed", this::spawnBlessedRelics);
+			restoreRelic("cursed", this::spawnCursedRelics);
+		}
 	}
 
 	private void startBattle() {
@@ -318,11 +331,12 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			return;
 		}
 		openDoors();
-		sendMsgByRace(1401181, Race.PC_ALL, 0);
+		sendMsg(1401181);
 		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+		runtimeState().put(STATE + "phase", BATTLE);
+		runtimeState().put(STATE + "doors_open", true);
 		sendPacket();
-		GameThreadPoolServices.threadPoolManager().schedule(this::finishRound,
-				instanceReward.getStageTimeSeconds() * 1000L);
+		scheduleRound();
 	}
 
 	private void finishRound() {
@@ -336,60 +350,26 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		removeStageBuffs();
 		instanceReward.setRound(instanceReward.getRound() + 1);
 		instanceReward.setRndZone();
+		runtimeState().put(STATE + "round", instanceReward.getRound());
+		runtimeState().put(STATE + "zone." + instanceReward.getRound(), instanceReward.getZone());
 		applyStageBuffs();
-		changeZone();
+		scheduleZoneChange();
 		if (instanceReward.getRound() == instanceReward.getScoreModifierStartStage()) {
-			sendMsgByRace(1401491, Race.PC_ALL, 2000);
+			sendMsg(1401491, 0, false, 25, 2000);
 		}
 		sendPacket();
-		GameThreadPoolServices.threadPoolManager().schedule(this::finishRound,
-				instanceReward.getStageTimeSeconds() * 1000L);
+		scheduleRound();
 	}
 	
 	private boolean canStart() {
 		if (instanceReward.getInstanceRewards().isEmpty()) {
 			// 独自一人时无法使用。 / Unavailable to use when you're alone.
-			sendMsgByRace(1403045, Race.PC_ALL, 0);
+			sendMsg(1403045);
 			finishBattle();
 			return false;
 		}
 		return true;
 	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
-	
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -421,8 +401,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 */
 	
 	protected PvPArenaPlayerReward getPlayerReward(Integer object) {
-		instanceReward.regPlayerReward(object);
-		return (PvPArenaPlayerReward) instanceReward.getPlayerReward(object);
+		return restorePlayer(object);
 	}
 	
 	/**
@@ -456,6 +435,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			playerReward.endBoostMoraleEffect(player);
 			playerReward.endStageBuff(player);
 			playerReward.beginAbsence();
+			persistPlayer(playerReward);
 			instanceReward.clearPosition(playerReward.getPosition(), Boolean.FALSE);
 		}
 	}
@@ -484,20 +464,19 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		instanceReward.clear();
 	}
 	
+	private void scheduleZoneChange() {
+		long deadline = System.currentTimeMillis() + 1000;
+		runtimeState().put(STATE + "zone_deadline", deadline);
+		scheduleDeadline("zone", deadline, this::changeZone);
+	}
+
 	private void changeZone() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				for (Player player : instance.getPlayersInside()) {
-					instanceReward.portToPosition(player);
-				}
-				sendPacket();
-			}
-		}, 1000);
+		runtimeState().remove(STATE + "zone_deadline");
+		for (Player player : instance.getPlayersInside()) {
+			instanceReward.portToPosition(player);
+			persistPlayer(getPlayerReward(player.getObjectId()));
+		}
+		sendPacket();
 	}
 	/**
 	 * 处理 reward。
@@ -512,11 +491,17 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		if (isInstanceDestroyed || instanceReward.isRewarded()) {
 			return;
 		}
+		cancelDeadline("prepare");
+		cancelDeadline("round");
+		cancelDeadline("zone");
 		removeStageBuffs();
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		long endedAt = System.currentTimeMillis();
 		for (PvPArenaPlayerReward playerReward : instanceReward.getInstanceRewards()) {
 			playerReward.finalizePlaytimeBonus(instanceReward.getTotalPlayMillis(), endedAt);
+			runtimeState().put(playerKey(playerReward.getOwner(), "time_bonus"), playerReward.getTimeBonus());
+			runtimeState().put(playerKey(playerReward.getOwner(), "participation"),
+					playerReward.getParticipationPercent());
 		}
 		int playerCount = instanceReward.getInstanceRewards().size();
 		int totalScore = instanceReward.getTotalPoints();
@@ -530,31 +515,19 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				InstanceSettlementService.queue(instance, playerReward.getOwner(), "arena", arenaReward.plan());
 				continue;
 			}
-			if (PlayerActions.isAlreadyDead(player)) {
-				PlayerReviveService.duelRevive(player);
+				if (PlayerActions.isAlreadyDead(player)) {
+					PlayerReviveService.duelRevive(player);
+				}
+				InstanceSettlementService.settle(instance.getDynamicInstance().getInstanceUid(), player, "arena",
+						arenaReward.plan());
 			}
-			InstanceSettlementService.settle(instance.getDynamicInstance().getInstanceUid(), player, "arena",
-					arenaReward.plan());
-		}
+		runtimeState().put(STATE + "phase", FINISHED);
+		runtimeState().put(STATE + "ended_at", endedAt);
 		sendPacket();
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed) {
-					for (Player player : instance.getPlayersInside()) {
-						onExitInstance(player);
-					}
-					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
-				}
-			}
-			}, 60000);
+		scheduleExit(endedAt + EXIT_DELAY);
 	}
 
 	private double rewardRate(Player player) {
@@ -657,63 +630,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				player.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.HP, 10000);
 				player.getLifeStats().increaseMp(SM_ATTACK_STATUS.TYPE.MP, 10000);
 			break;
-		   /**
-	 * Treasure Box [Arena Of Chaos/Chaos Training Grounds]
-	 */
-			case 218784:
-			case 218785:
-			case 218786:
-			case 218787:
-			case 218788:
-			case 218789:
-		   /**
-	 * Treasure Box [Arena Of Discipline/Discipline Training Grounds]
-	 */
-			case 218791:
-			case 218792:
-			case 218793:
-			case 218794:
-			case 218795:
-				if (player.getInventory().isFull()) {
-					sendMsgByRace(1390149, Race.PC_ALL, 0);
-				} switch (Rnd.get(1, 11)) {
-					case 1:
-					    ItemService.addItem(player, 186000030, 1); //Gold Medal.
-					break;
-					case 2:
-					    ItemService.addItem(player, 186000031, 1); //Silver Medal.
-					break;
-					case 3:
-					    ItemService.addItem(player, 186000096, 1); //Platinum Medal.
-					break;
-					case 4:
-					    ItemService.addItem(player, 186000130, 5); //Crucible Insignia.
-					break;
-					case 5:
-					    ItemService.addItem(player, 186000137, 5); //Courage Insignia.
-					break;
-					case 6:
-					    ItemService.addItem(player, 186000147, 1); //Mithril Medal.
-					break;
-					case 7:
-					    ItemService.addItem(player, 186000165, 5); //Opportunity Token.
-					break;
-					case 8:
-					    ItemService.addItem(player, 186000242, 1); //Ceramium Medal.
-					break;
-					case 9:
-					    ItemService.addItem(player, 186000442, 5); //Valor Insignia.
-					break;
-					case 10:
-					    ItemService.addItem(player, 182213259, 5); //Glorious Insignia.
-					break;
-					case 11:
-					    ItemService.addItem(player, 186000454, 5); //Spinel Medal.
-					break;
-				}
-				despawnNpc(npc);
-			break;
-		} if (!instanceReward.isStartProgress()) {
+			} if (!instanceReward.isStartProgress()) {
 			return;
 		}
 		int rewardetPoints = getNpcBonus(npc.getNpcId());
@@ -721,9 +638,93 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		if (skill != 0) {
 			useSkill(npc, player, skill >> 8, skill & 0xFF);
 		}
-		getPlayerReward(player.getObjectId()).addPoints(rewardetPoints);
+		PvPArenaPlayerReward reward = getPlayerReward(player.getObjectId());
+		reward.addPoints(rewardetPoints);
+		persistPlayer(reward);
 		sendSystemMsg(player, npc, rewardetPoints);
 		sendPacket();
+	}
+
+	private void scheduleRound() {
+		long deadline = System.currentTimeMillis() + instanceReward.getStageTimeSeconds() * 1000L;
+		runtimeState().put(STATE + "round_deadline", deadline);
+		scheduleDeadline("round", deadline, this::finishRound);
+	}
+
+	private void restoreRelic(String name, IntConsumer spawn) {
+		long deadline = runtimeState().getLong(STATE + name + ".deadline", 0);
+		spawn.accept((int) Math.max(0, deadline - System.currentTimeMillis()));
+	}
+
+	private void scheduleExit(long deadline) {
+		runtimeState().put(STATE + "exit_deadline", deadline);
+		scheduleDeadline("exit", deadline, () -> {
+			if (isInstanceDestroyed) {
+				return;
+			}
+			for (Player player : instance.getPlayersInside()) {
+				if (PlayerActions.isAlreadyDead(player)) {
+					PlayerReviveService.duelRevive(player);
+				}
+				onExitInstance(player);
+			}
+			GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance);
+		});
+	}
+
+	private void restorePlayers() {
+		Set<Integer> players = new HashSet<>();
+		for (String key : runtimeState().snapshot(STATE + "player.").keySet()) {
+			String suffix = key.substring((STATE + "player.").length());
+			int separator = suffix.indexOf('.');
+			if (separator > 0) {
+				players.add(Integer.parseInt(suffix.substring(0, separator)));
+			}
+		}
+		players.forEach(this::restorePlayer);
+	}
+
+	private PvPArenaPlayerReward restorePlayer(int playerId) {
+		PvPArenaPlayerReward reward = instanceReward.getPlayerReward(playerId);
+		if (reward != null) {
+			return reward;
+		}
+		instanceReward.regPlayerReward(playerId);
+		reward = instanceReward.getPlayerReward(playerId);
+		String points = runtimeState().get(playerKey(playerId, "points"));
+		if (points != null) {
+			reward.restore(Integer.parseInt(points), runtimeState().getInt(playerKey(playerId, "pvp_kills"), 0),
+					runtimeState().getInt(playerKey(playerId, "monster_kills"), 0));
+			long absenceStartedAt = runtimeState().getLong(playerKey(playerId, "absence_started_at"), 0);
+			if (absenceStartedAt == 0 && !FINISHED.equals(runtimeState().get(STATE + "phase", PREPARING))) {
+				absenceStartedAt = System.currentTimeMillis();
+			}
+			reward.restoreAbsence(runtimeState().getLong(playerKey(playerId, "absent_millis"), 0), absenceStartedAt);
+			String rate = runtimeState().get(playerKey(playerId, "reward_rate"));
+			if (rate != null) {
+				reward.setRewardRate(Double.parseDouble(rate));
+			}
+			if (FINISHED.equals(runtimeState().get(STATE + "phase", PREPARING))) {
+				reward.restoreFinalScore(runtimeState().getInt(playerKey(playerId, "time_bonus"), 0),
+						runtimeState().getInt(playerKey(playerId, "participation"), 0));
+			}
+			persistPlayer(reward);
+		}
+		return reward;
+	}
+
+	private void persistPlayer(PvPArenaPlayerReward reward) {
+		int playerId = reward.getOwner();
+		runtimeState().put(playerKey(playerId, "points"), reward.getPoints());
+		runtimeState().put(playerKey(playerId, "pvp_kills"), reward.getPvPKills());
+		runtimeState().put(playerKey(playerId, "monster_kills"), reward.getMonsterKills());
+		runtimeState().put(playerKey(playerId, "absent_millis"), reward.getAbsentMillis());
+		runtimeState().put(playerKey(playerId, "absence_started_at"), reward.getAbsenceStartedAt());
+		runtimeState().put(playerKey(playerId, "reward_rate"), reward.getRewardRate());
+	}
+
+	private static String playerKey(int playerId, String field) {
+		return STATE + "player." + playerId + '.' + field;
 	}
 	/**
 	 * 处理 useSkill。

@@ -14,7 +14,7 @@
         <loc world_id="110070000" desc="Kaisinel Academy"/>
         <loc world_id="700010000" desc="Oriel"/>
         <loc world_id="400010000" desc="Reshanta"/>
-        <loc world_id="210130000" desc="Inggison [Master Server]"/>
+        <loc world_id="210050000" desc="Inggison"/>
         <loc world_id="600100000" desc="Levinshor"/>
         <loc world_id="210070000" desc="Cygnea"/>
 		<loc world_id="210100000" desc="Iluma"/>
@@ -29,7 +29,7 @@
         <loc world_id="120080000" desc="Marchutan Priory"/>
         <loc world_id="710010000" desc="Pernon"/>
         <loc world_id="400010000" desc="Reshanta"/>
-        <loc world_id="220140000" desc="Gelkmaros [Master Server]"/>
+        <loc world_id="220070000" desc="Gelkmaros"/>
         <loc world_id="600100000" desc="Levinshor"/>
         <loc world_id="220080000" desc="Enshar"/>
 		<loc world_id="220110000" desc="Norsvold"/>

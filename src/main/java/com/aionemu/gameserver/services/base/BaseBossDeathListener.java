@@ -180,9 +180,11 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 		switch (player.getWorldId()) {
 		case 210020000: // Eltnen.
 		case 210040000: // Heiron.
+		case 210050000: // Inggison.
 		case 210130000: // Inggison [Master Server].
 		case 220020000: // Morheim.
 		case 220040000: // Beluslan.
+		case 220070000: // Gelkmaros.
 		case 220140000: // Gelkmaros [Master Server].
 			HTMLService.sendGuideHtml(player, "adventurers_base1");
 			break;

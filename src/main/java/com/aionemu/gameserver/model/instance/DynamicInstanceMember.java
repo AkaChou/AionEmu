@@ -11,10 +11,12 @@ public final class DynamicInstanceMember {
 	private final long reentryUntil;
 	private final int exitWorldId;
 	private final String exitAlias;
-	private final byte rewardStatus;
+	private final int entryLimitKey;
+	private final boolean entryConsumed;
 
 	public DynamicInstanceMember(long instanceUid, int playerId, int teamIdAtEntry, byte side, boolean permitted,
-			long joinedAt, long leftAt, long reentryUntil, int exitWorldId, String exitAlias, byte rewardStatus) {
+			long joinedAt, long leftAt, long reentryUntil, int exitWorldId, String exitAlias, int entryLimitKey,
+			boolean entryConsumed) {
 		this.instanceUid = instanceUid;
 		this.playerId = playerId;
 		this.teamIdAtEntry = teamIdAtEntry;
@@ -25,7 +27,8 @@ public final class DynamicInstanceMember {
 		this.reentryUntil = reentryUntil;
 		this.exitWorldId = exitWorldId;
 		this.exitAlias = exitAlias;
-		this.rewardStatus = rewardStatus;
+		this.entryLimitKey = entryLimitKey;
+		this.entryConsumed = entryConsumed;
 	}
 
 	public long getInstanceUid() { return instanceUid; }
@@ -38,5 +41,6 @@ public final class DynamicInstanceMember {
 	public long getReentryUntil() { return reentryUntil; }
 	public int getExitWorldId() { return exitWorldId; }
 	public String getExitAlias() { return exitAlias; }
-	public byte getRewardStatus() { return rewardStatus; }
+	public int getEntryLimitKey() { return entryLimitKey; }
+	public boolean isEntryConsumed() { return entryConsumed; }
 }

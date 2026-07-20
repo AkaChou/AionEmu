@@ -41,8 +41,10 @@ class DredgionHandlerRecoveryMigrationTest {
 		assertMigrated("AshunatalDredgionInstance", "ashunatal.");
 		String source = readSource("AshunatalDredgionInstance");
 		assertTrue(source.contains("RetailConditionSpawnEngine.setVariable(instance, \"named_killed_l\""));
-		assertTrue(source.contains("runtimeState().put(STATE + \"captain_spawned\""));
-		assertTrue(source.contains("spawn(243816"));
+		assertTrue(source.contains("RetailConditionSpawnEngine.setVariable(instance, \"surkana_8\", 1, 1)"));
+		assertTrue(source.contains("case 243953:"));
+		assertFalse(source.contains("captain_spawned"));
+		assertFalse(source.contains("spawn(243816"));
 		assertFalse(source.contains("spawn(801991"));
 
 		String conditions = Files.readString(Path.of(
@@ -52,6 +54,8 @@ class DredgionHandlerRecoveryMigrationTest {
 		assertTrue(world.contains("<npc id=\"243953\""));
 		assertTrue(world.contains("<npc id=\"248996\""));
 		assertFalse(world.contains("<npc id=\"243816\""));
+		String scores = Files.readString(Path.of("src/main/resources/aion/definitions/compact/ai/npc-scores.xml"));
+		assertTrue(scores.lines().anyMatch(line -> line.contains("npc_id=\"243953\"") && line.contains("value=\"1000\"")));
 	}
 
 	private static void assertMigrated(String handler, String statePrefix) throws Exception {

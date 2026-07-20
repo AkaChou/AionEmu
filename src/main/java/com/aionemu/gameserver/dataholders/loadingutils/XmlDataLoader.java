@@ -64,6 +64,7 @@ public class XmlDataLoader {
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/compact/npc_drops";
+	private static final String NPC_COMBAT_DEFINITIONS_FILE = "./definitions/compact/npc-combat.xml";
 	private static final String HOTSPOT_LOCATION_DEFINITIONS_FILE = "./definitions/compact/hotspot_location/hotspot_location.xml";
 	private static final String RETAIL_INSTANCE_DEFINITIONS_DIR = "./definitions/compact/instance";
 	private static final String RETAIL_INSTANCE_SCHEMA_FILE = "./definitions/schemas/retail-instance-data.xsd";
@@ -188,6 +189,7 @@ public class XmlDataLoader {
 			Unmarshaller un = createStaticDataUnmarshaller(progressListener);
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
+				NpcCombatDefinitionLoader.apply(Config.definitionFile(NPC_COMBAT_DEFINITIONS_FILE), data.npcData);
 				PetDefinitionLoader.Result petDefinitions = loadPetDefinitions();
 				data.npcDropData = loadNpcDropData();
 				data.hotspotLocationData = loadHotspotLocationData();

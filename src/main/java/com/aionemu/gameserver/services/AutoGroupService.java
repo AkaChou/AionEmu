@@ -619,6 +619,10 @@ public class AutoGroupService {
 		}
 	}
 
+	public void unRegisterInstance(WorldMapInstance instance) {
+		unRegisterInstance(instance.getInstanceId());
+	}
+
 	/**
 	 * 判断实例是否由自动组队创建。
 	 * Returns whether the instance was created by auto-group.
@@ -630,6 +634,10 @@ public class AutoGroupService {
 	 */
 	public boolean isAutoInstance(int instanceId) {
 		return autoInstances.containsKey(instanceId);
+	}
+
+	public boolean isAutoInstance(Player player) {
+		return isAutoInstance(player.getInstanceId());
 	}
 
 	/**

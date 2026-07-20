@@ -1,26 +1,21 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.EmotionType;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.*;
 
@@ -34,8 +29,6 @@ import java.util.*;
 @InstanceID(301720000)
 public class MirashSanctuaryInstance extends GeneralInstanceHandler
 {
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	private boolean isInstanceDestroyed;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	
@@ -49,7 +42,12 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
 		doors = instance.getDoors();
-		switch (Rnd.get(1, 2)) {
+		int keySpawn = runtimeState().getInt("mirash.key_spawn", 0);
+		if (keySpawn == 0) {
+			keySpawn = Rnd.get(1, 2);
+			runtimeState().put("mirash.key_spawn", keySpawn);
+		}
+		switch (keySpawn) {
 			case 1:
 				spawn(248533, 664.0945f, 623.5564f, 532.5159f, (byte) 2); //IDAbRe_Core_03_Key_Drakan_High_As_An.
 			break;
@@ -57,6 +55,7 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 				spawn(248533, 684.9298f, 630.2946f, 530.1250f, (byte) 74); //IDAbRe_Core_03_Key_Drakan_High_As_An.
 			break;
 		}
+		restoreWave();
     }
 	
 	/**
@@ -188,16 +187,10 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 			break;
 			case 248389:
 			    despawnNpc(npc);
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						mirashSanctuaryWave();
-					}
-				}, 5000);
+				runtimeState().put("mirash.wave_triggered", true);
+				long deadline = System.currentTimeMillis() + 5_000;
+				runtimeState().put("mirash.wave_deadline", deadline);
+				scheduleDeadline("wave", deadline, this::spawnMirashWave);
 			break;
 			case 248444: //IDAbRe_Core_03_Resurrect_Drakan_Statue_01.
 				spawn(248449, player.getX(), player.getY(), player.getZ(), (byte) 0);
@@ -221,7 +214,22 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
 	
-	private void mirashSanctuaryWave() {
+	private void restoreWave() {
+		if (!runtimeState().getBoolean("mirash.wave_triggered", false)
+				|| runtimeState().getBoolean("mirash.wave_spawned", false)) {
+			return;
+		}
+		long deadline = runtimeState().getLong("mirash.wave_deadline", 0);
+		if (deadline > 0) {
+			scheduleDeadline("wave", deadline, this::spawnMirashWave);
+		}
+	}
+
+	private void spawnMirashWave() {
+		if (runtimeState().getBoolean("mirash.wave_spawned", false)) {
+			return;
+		}
+		runtimeState().put("mirash.wave_spawned", true);
 		raidMirashSanctuary((Npc)spawn(248385, 283.95505f, 482.93155f, 548.0041f, (byte) 30), 284.07160f, 559.67145f, 547.99650f, false);
 		raidMirashSanctuary((Npc)spawn(248383, 282.09033f, 485.19363f, 547.9946f, (byte) 30), 281.76416f, 559.63020f, 547.99585f, false);
 		raidMirashSanctuary((Npc)spawn(248387, 279.90730f, 483.05050f, 548.0014f, (byte) 29), 279.76407f, 559.63390f, 547.99390f, false);
@@ -255,7 +263,6 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public void onInstanceDestroy() {
-		isInstanceDestroyed = true;
         doors.clear();
     }
 	
@@ -270,52 +277,4 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(164000531, storage.getItemCountByItemId(164000531));
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
 }

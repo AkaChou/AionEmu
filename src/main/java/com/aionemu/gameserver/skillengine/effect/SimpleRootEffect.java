@@ -34,8 +34,8 @@ public class SimpleRootEffect extends EffectTemplate {
 	}
 
 	/**
-	 * 目标已有特定异常时失败，否则按踉跄抗性结算并计算后退落点。
-	 * Fails if certain abnormals are present; otherwise calculates a move-away landing point.
+	 * 目标已有特定异常时失败，否则按简易击退抗性结算并计算后退落点。
+	 * Fails if certain abnormals are present; otherwise checks simple-root resistance and calculates a move-away landing point.
 	 */
 	@Override
 	public void calculate(Effect effect) {
@@ -43,7 +43,7 @@ public class SimpleRootEffect extends EffectTemplate {
 				|| effect.getEffected().getEffectController().hasAbnormalEffect(8678)) {
 			return;
 		}
-		if (!super.calculate(effect, StatEnum.STAGGER_RESISTANCE, null)) {
+		if (!super.calculate(effect, StatEnum.SIMPLE_ROOT_RESISTANCE, null)) {
 			return;
 		}
 		effect.setSkillMoveType(SkillMoveType.KNOCKBACK);

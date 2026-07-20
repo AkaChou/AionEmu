@@ -59,4 +59,21 @@ class PvPArenaMigrationTest {
 		assertTrue(packet.contains("new byte[76]"));
 		assertTrue(packet.contains("writeArenaReward(harmonyPlayerReward)"));
 	}
+
+	@Test
+	void arenaHandlersUseRecoverableDeadlinesAndRetailScores() throws IOException {
+		for (String name : List.of("PvPArenaInstance.java", "HarmonyArenaInstance.java")) {
+			String source = Files.readString(HANDLERS.resolve(name));
+			assertTrue(source.contains("runtimeState().put(STATE + \"phase\""), name);
+			assertTrue(source.contains("scheduleDeadline(\"prepare\""), name);
+			assertTrue(source.contains("scheduleDeadline(\"round\""), name);
+			assertTrue(source.contains("scheduleDeadline(\"exit\""), name);
+			assertTrue(source.contains("DataManager.RETAIL_AI_DATA.getNpcScore"), name);
+			assertFalse(source.contains("GameThreadPoolServices"), name);
+			assertFalse(source.contains("private int getNpcBonus(int npcId) {\n\t\tswitch"), name);
+		}
+		String solo = Files.readString(HANDLERS.resolve("PvPArenaInstance.java"));
+		assertFalse(solo.contains("ItemService.addItem"));
+		assertFalse(solo.contains("186000454"));
+	}
 }

@@ -5,20 +5,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.aionemu.gameserver.controllers.CreatureController;
+import com.aionemu.gameserver.controllers.ObserveController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
+import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
 import com.aionemu.gameserver.skillengine.effect.Effects;
 import com.aionemu.gameserver.skillengine.model.ActivationAttribute;
@@ -32,6 +38,104 @@ import com.aionemu.gameserver.world.WorldPosition;
 import org.junit.jupiter.api.Test;
 
 class EffectControllerTest {
+
+	@Test
+	void abnormalMaskUpdatesAreVisibleAndSerialized() throws Exception {
+		Field field = EffectController.class.getDeclaredField("abnormals");
+
+		assertTrue(java.lang.reflect.Modifier.isVolatile(field.getModifiers()));
+		assertTrue(java.lang.reflect.Modifier.isSynchronized(
+			EffectController.class.getDeclaredMethod("setAbnormal", int.class).getModifiers()));
+		assertTrue(java.lang.reflect.Modifier.isSynchronized(
+			EffectController.class.getDeclaredMethod("unsetAbnormal", int.class).getModifiers()));
+		assertTrue(java.lang.reflect.Modifier.isSynchronized(
+			EffectController.class.getDeclaredMethod("clearEffect", Effect.class).getModifiers()));
+		assertTrue(java.lang.reflect.Modifier.isSynchronized(
+			EffectController.class.getDeclaredMethod("broadCastEffectsImp").getModifiers()));
+		assertTrue(java.lang.reflect.Modifier.isSynchronized(
+			EffectController.class.getDeclaredMethod("sendEffectIconsTo", Player.class).getModifiers()));
+	}
+
+	@Test
+	void concurrentEffectsSharingAbnormalMaskClearTheLastBit() throws Exception {
+		TestCreature creature = new TestCreature();
+		CountDownLatch bothUnset = new CountDownLatch(2);
+		LatchingEffectController controller = new LatchingEffectController(creature, bothUnset);
+		creature.setEffectController(controller);
+		Effect first = lifecycleEffect(creature, "first", 10,
+			new AbnormalLifecycleEffectTemplate(AbnormalState.SLOW.getId()));
+		Effect second = lifecycleEffect(creature, "second", 11,
+			new AbnormalLifecycleEffectTemplate(AbnormalState.SLOW.getId()));
+		controller.addEffect(first);
+		controller.addEffect(second);
+		AtomicReference<Throwable> failure = new AtomicReference<>();
+		Thread firstEnd = endInThread(first, failure);
+		Thread secondEnd = endInThread(second, failure);
+
+		firstEnd.start();
+		secondEnd.start();
+		firstEnd.join(5000);
+		secondEnd.join(5000);
+
+		assertFalse(firstEnd.isAlive());
+		assertFalse(secondEnd.isAlive());
+		assertNull(failure.get());
+		assertTrue(controller.getAbnormalEffects().isEmpty());
+		assertEquals(0, controller.getAbnormals());
+	}
+
+	@Test
+	void failedStartCleansControllerAndAbnormalState() {
+		TestCreature creature = new TestCreature();
+		TestEffectController controller = new TestEffectController(creature);
+		creature.setEffectController(controller);
+		FailingStartEffectTemplate template = new FailingStartEffectTemplate(AbnormalState.SLOW.getId());
+		Effect effect = lifecycleEffect(creature, "failing-start", 10, template);
+
+		assertThrows(IllegalStateException.class, () -> controller.addEffect(effect));
+
+		assertTrue(effect.isStopped());
+		assertEquals(1, template.endCount());
+		assertNull(controller.abnormalEffect("failing-start"));
+		assertEquals(0, controller.getAbnormals());
+	}
+
+	@Test
+	void failedEndStillRunsRemainingCleanup() {
+		TestCreature creature = new TestCreature();
+		TestEffectController controller = new TestEffectController(creature);
+		creature.setEffectController(controller);
+		EndTrackingEffectTemplate failing = new EndTrackingEffectTemplate(true);
+		EndTrackingEffectTemplate remaining = new EndTrackingEffectTemplate(false);
+		Effect effect = lifecycleEffect(creature, "failing-end", 10, failing, remaining);
+		CompletableFuture<Void> task = new CompletableFuture<>();
+		controller.addEffect(effect);
+		effect.setTask(task);
+
+		assertThrows(IllegalStateException.class, effect::endEffect);
+
+		assertEquals(1, failing.endCount());
+		assertEquals(1, remaining.endCount());
+		assertTrue(task.isCancelled());
+		assertTrue(effect.isStopped());
+		assertNull(controller.abnormalEffect("failing-end"));
+	}
+
+	@Test
+	void cancelOnDamageObserversAreRegisteredOnceAndRemovedOnEnd() {
+		TestCreature creature = new TestCreature();
+		TestEffectController controller = new TestEffectController(creature);
+		creature.setEffectController(controller);
+		Effect effect = lifecycleEffect(creature, "observers", 10,
+			new EndTrackingEffectTemplate(false), new EndTrackingEffectTemplate(false));
+		effect.setCancelOnDmg(true);
+
+		controller.addEffect(effect);
+
+		assertEquals(2, observerCount(creature.getObserveController(), "onceUsedObservers"));
+		effect.endEffect();
+		assertEquals(0, observerCount(creature.getObserveController(), "onceUsedObservers"));
+	}
 
 	@Test
 	void rejectedEffectReportsThatItWasNotStarted() {
@@ -476,16 +580,43 @@ class EffectControllerTest {
 		return effects;
 	}
 
-	private static Effects effects(EffectTemplate effectTemplate) {
+	private static Effects effects(EffectTemplate... effectTemplates) {
 		Effects effects = new Effects();
-		effects.getEffects().add(effectTemplate);
+		Collections.addAll(effects.getEffects(), effectTemplates);
 		return effects;
 	}
 
-	private static SkillTemplate skillTemplateWithEffects(String stack, int skillId, EffectTemplate effectTemplate) {
+	private static SkillTemplate skillTemplateWithEffects(String stack, int skillId, EffectTemplate... effectTemplates) {
 		SkillTemplate skillTemplate = skillTemplate(stack, skillId, ActivationAttribute.ACTIVE, SkillTargetSlot.BUFF);
-		setField(skillTemplate, "effects", effects(effectTemplate));
+		setField(skillTemplate, "effects", effects(effectTemplates));
 		return skillTemplate;
+	}
+
+	private static Effect lifecycleEffect(Creature creature, String stack, int skillId,
+			EffectTemplate... effectTemplates) {
+		Effect effect = new Effect(creature, creature, skillTemplateWithEffects(stack, skillId, effectTemplates), 1, 0);
+		effect.addAllEffectToSucess();
+		return effect;
+	}
+
+	private static Thread endInThread(Effect effect, AtomicReference<Throwable> failure) {
+		return new Thread(() -> {
+			try {
+				effect.endEffect();
+			} catch (Throwable t) {
+				failure.compareAndSet(null, t);
+			}
+		});
+	}
+
+	private static int observerCount(ObserveController controller, String fieldName) {
+		try {
+			Field field = ObserveController.class.getDeclaredField(fieldName);
+			field.setAccessible(true);
+			return ((Collection<?>) field.get(controller)).size();
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError(e);
+		}
 	}
 
 	private static void setField(Object target, String name, Object value) {
@@ -518,6 +649,34 @@ class EffectControllerTest {
 
 		private Effect abnormalEffect(String stack) {
 			return abnormalEffectMap.get(stack);
+		}
+
+		@Override
+		public void broadCastEffects() {
+		}
+	}
+
+	private static final class LatchingEffectController extends EffectController {
+
+		private final CountDownLatch bothUnset;
+
+		private LatchingEffectController(Creature owner, CountDownLatch bothUnset) {
+			super(owner);
+			this.bothUnset = bothUnset;
+		}
+
+		@Override
+		public void unsetAbnormal(int mask) {
+			super.unsetAbnormal(mask);
+			bothUnset.countDown();
+			try {
+				if (!bothUnset.await(5, TimeUnit.SECONDS)) {
+					throw new AssertionError("Timed out waiting for concurrent abnormal cleanup");
+				}
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new AssertionError(e);
+			}
 		}
 
 		@Override
@@ -641,6 +800,75 @@ class EffectControllerTest {
 
 		private int startCount() {
 			return starts.get();
+		}
+	}
+
+	private static class AbnormalLifecycleEffectTemplate extends EffectTemplate {
+
+		private final int abnormal;
+		private final AtomicInteger ends = new AtomicInteger();
+
+		private AbnormalLifecycleEffectTemplate(int abnormal) {
+			this.abnormal = abnormal;
+		}
+
+		@Override
+		public void applyEffect(Effect effect) {
+		}
+
+		@Override
+		public void startEffect(Effect effect) {
+			effect.setAbnormal(abnormal);
+			effect.getEffected().getEffectController().setAbnormal(abnormal);
+		}
+
+		@Override
+		public void endEffect(Effect effect) {
+			ends.incrementAndGet();
+			effect.getEffected().getEffectController().unsetAbnormal(abnormal);
+		}
+
+		protected int endCount() {
+			return ends.get();
+		}
+	}
+
+	private static final class FailingStartEffectTemplate extends AbnormalLifecycleEffectTemplate {
+
+		private FailingStartEffectTemplate(int abnormal) {
+			super(abnormal);
+		}
+
+		@Override
+		public void startEffect(Effect effect) {
+			super.startEffect(effect);
+			throw new IllegalStateException("start failed");
+		}
+	}
+
+	private static final class EndTrackingEffectTemplate extends EffectTemplate {
+
+		private final boolean fail;
+		private final AtomicInteger ends = new AtomicInteger();
+
+		private EndTrackingEffectTemplate(boolean fail) {
+			this.fail = fail;
+		}
+
+		@Override
+		public void applyEffect(Effect effect) {
+		}
+
+		@Override
+		public void endEffect(Effect effect) {
+			ends.incrementAndGet();
+			if (fail) {
+				throw new IllegalStateException("end failed");
+			}
+		}
+
+		private int endCount() {
+			return ends.get();
 		}
 	}
 

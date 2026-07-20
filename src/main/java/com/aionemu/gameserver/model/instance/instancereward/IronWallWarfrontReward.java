@@ -8,69 +8,36 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.geometry.Point3D;
 import com.aionemu.gameserver.model.instance.playerreward.IronWallWarfrontPlayerReward;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
-
-/**
- * IronWallWarfront 奖励，用于副本相关逻辑。
- * Iron Wall Warfront Reward for instance logic.
- */
 
 public class IronWallWarfrontReward extends InstanceReward<IronWallWarfrontPlayerReward> {
-	private int capPoints;
-	private MutableInt asmodiansPoints = new MutableInt(0);
-	private MutableInt elyosPoins = new MutableInt(0);
-	private MutableInt asmodiansPvpKills = new MutableInt(0);
-	private MutableInt elyosPvpKills = new MutableInt(0);
-	private Race race;
-	private Point3D asmodiansStartPosition;
-	private Point3D elyosStartPosition;
-	protected WorldMapInstance instance;
-	private long instanceTime;
-	private final byte buffId;
+	private final MutableInt asmodianPoints = new MutableInt();
+	private final MutableInt elyosPoints = new MutableInt();
+	private final MutableInt asmodianPvpKills = new MutableInt();
+	private final MutableInt elyosPvpKills = new MutableInt();
+	private final Point3D asmodianStartPosition = new Point3D(282.16364f, 390.80576f, 238.60538f);
+	private final Point3D elyosStartPosition = new Point3D(711.2616f, 630.29364f, 211.9369f);
+	private final byte buffId = 12;
+	private Race winnerRace;
 
-	public IronWallWarfrontReward(Integer mapId, int instanceId, WorldMapInstance instance) {
+	public IronWallWarfrontReward(Integer mapId, int instanceId) {
 		super(mapId, instanceId);
-		this.instance = instance;
-		// 帕希德指挥官给予 200000 点 / Commander Pashid give 200.000 Pts
-		capPoints = 500000;
-		buffId = 12;
-		setStartPositions();
 	}
 
-	/** 排序点。 / Sort points. */
 	public List<IronWallWarfrontPlayerReward> sortPoints() {
 		return RewardCollections.sortedByScoreDescending(getInstanceRewards(),
-				IronWallWarfrontPlayerReward::getScorePoints);
+			IronWallWarfrontPlayerReward::getScorePoints);
 	}
 
-	private void setStartPositions() {
-		Point3D a = new Point3D(282.16364f, 390.80576f, 238.60538f);
-		Point3D e = new Point3D(711.2616f, 630.29364f, 211.9369f);
-		asmodiansStartPosition = a;
-		elyosStartPosition = e;
-	}
-
-	/** 传送至坐标 / Port To Position */
 	public void portToPosition(Player player) {
-		if (player.getRace() == Race.ASMODIANS) {
-			TeleportService2.teleportTo(player, mapId, instanceId, asmodiansStartPosition.getX(),
-					asmodiansStartPosition.getY(), asmodiansStartPosition.getZ());
-		} else {
-			TeleportService2.teleportTo(player, mapId, instanceId, elyosStartPosition.getX(), elyosStartPosition.getY(),
-					elyosStartPosition.getZ());
-		}
+		Point3D position = player.getRace() == Race.ASMODIANS ? asmodianStartPosition : elyosStartPosition;
+		TeleportService2.teleportTo(player, mapId, instanceId, position.getX(), position.getY(), position.getZ());
 	}
 
-	/** 返回点种族 / Returns the points by race*/
 	public MutableInt getPointsByRace(Race race) {
-		return (race == Race.ELYOS) ? elyosPoins : (race == Race.ASMODIANS) ? asmodiansPoints : null;
+		return race == Race.ELYOS ? elyosPoints : race == Race.ASMODIANS ? asmodianPoints : null;
 	}
 
-	/** 添加 points by race / Adds points by race */
 	public void addPointsByRace(Race race, int points) {
 		MutableInt racePoints = getPointsByRace(race);
 		racePoints.add(points);
@@ -79,102 +46,32 @@ public class IronWallWarfrontReward extends InstanceReward<IronWallWarfrontPlaye
 		}
 	}
 
-	/** 按 race 返回 pvp kills / Returns the pvp kills by race */
 	public MutableInt getPvpKillsByRace(Race race) {
-		return (race == Race.ELYOS) ? elyosPvpKills : (race == Race.ASMODIANS) ? asmodiansPvpKills : null;
+		return race == Race.ELYOS ? elyosPvpKills : race == Race.ASMODIANS ? asmodianPvpKills : null;
 	}
 
-	/** 添加 pvp kills by race / Adds pvp kills by race */
 	public void addPvpKillsByRace(Race race, int points) {
-		MutableInt racePoints = getPvpKillsByRace(race);
-		racePoints.add(points);
-		if (racePoints.intValue() < 0) {
-			racePoints.setValue(0);
+		MutableInt raceKills = getPvpKillsByRace(race);
+		raceKills.add(points);
+		if (raceKills.intValue() < 0) {
+			raceKills.setValue(0);
 		}
 	}
 
-	/** 设置 winner race / Sets the winner race */
 	public void setWinnerRace(Race race) {
-		this.race = race;
+		winnerRace = race;
 	}
 
-	/** 返回 winner race / Returns the winner race */
 	public Race getWinnerRace() {
-		return race;
+		return winnerRace;
 	}
 
-	/** 按 score 返回 winner race / Returns the winner race by score */
-	public Race getWinnerRaceByScore() {
-		return asmodiansPoints.compareTo(elyosPoins) > 0 ? Race.ASMODIANS : Race.ELYOS;
-	}
-
-	/** 清空。 / Clear. */
-	@Override
-	public void clear() {
-		super.clear();
-	}
-
-	/** Reg 玩家 Reward / Reg Player Reward */
-	public void regPlayerReward(Player player) {
-		if (!containPlayer(player.getObjectId())) {
-			addPlayerReward(new IronWallWarfrontPlayerReward(player.getObjectId(), buffId, player.getRace()));
-		}
-	}
-
-	/** 添加玩家奖励。 / Adds player reward. */
-	@Override
-	public void addPlayerReward(IronWallWarfrontPlayerReward reward) {
-		super.addPlayerReward(reward);
-	}
-
-	/** 获取玩家奖励。 / Returns the player reward. */
-	@Override
-	public IronWallWarfrontPlayerReward getPlayerReward(Integer object) {
-		return (IronWallWarfrontPlayerReward) super.getPlayerReward(object);
-	}
-
-	/** 发送数据包。 / Send packet. */
-	public void sendPacket(final int type, final Integer object) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/** 访问 / visit. */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player,
-						new SM_INSTANCE_SCORE(type, getTime(), getInstanceReward(), object));
-			}
-		});
-	}
-
-	/** 返回时间 / Returns the time*/
-	public int getTime() {
-		long result = System.currentTimeMillis() - instanceTime;
-		if (result < 90000) {
-			return (int) (90000 - result);
-		} else if (result < 2400000) { // 40-Mins
-			return (int) (2400000 - (result - 90000));
-		}
-		return 0;
-	}
-
-	/** 返回增益 ID / Returns the buff id */
 	public byte getBuffId() {
 		return buffId;
 	}
 
-	/** 设置 instance start time / Sets the instance start time */
-	public void setInstanceStartTime() {
-		this.instanceTime = System.currentTimeMillis();
-	}
-
-	/** 返回 cap points / Returns the cap points */
-	public int getCapPoints() {
-		return capPoints;
-	}
-
-	/**
-	 * @return Whether cap points
-	 */
-	public boolean hasCapPoints() {
-		return RewardCollections.maxPoints(getInstanceRewards()) >= capPoints;
+	@Override
+	public IronWallWarfrontPlayerReward getPlayerReward(Integer objectId) {
+		return (IronWallWarfrontPlayerReward) super.getPlayerReward(objectId);
 	}
 }

@@ -86,11 +86,13 @@ public class DisputeLandService {
 		}
 		worlds.add(210020000); // Eltnen.
 		worlds.add(210040000); // Heiron.
+		worlds.add(210050000); // Inggison.
 		worlds.add(210130000); // Inggison [Master Server].
 		worlds.add(210060000); // Theobomos.
 		worlds.add(220020000); // Morheim.
 		worlds.add(220040000); // Beluslan.
 		worlds.add(220050000); // Brusthonin.
+		worlds.add(220070000); // Gelkmaros.
 		worlds.add(220140000); // Gelkmaros [Master Server].
 		// 4.7
 		worlds.add(600090000); // Kaldor.
@@ -129,12 +131,14 @@ public class DisputeLandService {
 		for (int world : worlds) {
 			if (world == 210020000 || // Eltnen.
 					world == 210040000 || // Heiron.
+					world == 210050000 || // Inggison.
 					world == 210130000 || // Inggison [Master Server].
 					world == 210060000 || // Theobomos.
 					world == 210070000 || // Cygnea.
 					world == 220020000 || // Morheim.
 					world == 220040000 || // Beluslan.
 					world == 220050000 || // Brusthonin.
+					world == 220070000 || // Gelkmaros.
 					world == 220140000 || // Gelkmaros [Master Server].
 					world == 220080000 || // Enshar.
 					world == 210100000 || // Iluma.

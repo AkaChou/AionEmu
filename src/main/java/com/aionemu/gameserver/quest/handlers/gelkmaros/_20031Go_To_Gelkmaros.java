@@ -62,7 +62,7 @@ public class _20031Go_To_Gelkmaros extends QuestHandler {
                     return true;
                 }
             }
-        } else if (player.getWorldId() == 220140000) {
+        } else if (player.getWorldId() == 220070000) {
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
                 int var = qs.getQuestVars().getQuestVars();
                 if (var == 3) {
@@ -122,7 +122,7 @@ public class _20031Go_To_Gelkmaros extends QuestHandler {
 					} case STEP_TO_3: {
                         qs.setQuestVarById(0, var + 1);
 						updateQuestStatus(env);
-						TeleportService2.teleportTo(player, 220140000, 1, 1868, 2746, 531, (byte) 20);
+						TeleportService2.teleportTo(player, 220070000, 1, 1868, 2746, 531, (byte) 20);
 						return true;
 					}
                 }
@@ -234,7 +234,7 @@ public class _20031Go_To_Gelkmaros extends QuestHandler {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {
-            if (player.isInsideZone(ZoneName.get("DREDGION_CRASH_SITE_220140000"))) {
+            if (player.isInsideZone(ZoneName.get("DREDGION_CRASH_SITE_220070000"))) {
 				playQuestMovie(env, 566);
                 return HandlerResult.fromBoolean(useQuestItem(env, item, 9, 10, false));
             }

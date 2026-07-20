@@ -237,7 +237,7 @@ public class ZorshivDredgionService {
 		switch (id) {
 		case 3:
 			adventControl.put(702529, SpawnEngine.spawnObject(
-					SpawnEngine.addNewSingleTimeSpawn(210130000, 702529, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
+					SpawnEngine.addNewSingleTimeSpawn(210050000, 702529, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
 			return true;
 		default:
@@ -256,7 +256,7 @@ public class ZorshivDredgionService {
 		switch (id) {
 		case 3:
 			adventEffect.put(702549, SpawnEngine.spawnObject(
-					SpawnEngine.addNewSingleTimeSpawn(210130000, 702549, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
+					SpawnEngine.addNewSingleTimeSpawn(210050000, 702549, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
 			return true;
 		default:
@@ -275,7 +275,7 @@ public class ZorshivDredgionService {
 		switch (id) {
 		case 3:
 			adventPortal.put(702550, SpawnEngine.spawnObject(
-					SpawnEngine.addNewSingleTimeSpawn(210130000, 702550, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
+					SpawnEngine.addNewSingleTimeSpawn(210050000, 702550, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
 			return true;
 		default:
@@ -294,7 +294,7 @@ public class ZorshivDredgionService {
 		switch (id) {
 		case 3:
 			adventDirecting.put(855231, SpawnEngine.spawnObject(
-					SpawnEngine.addNewSingleTimeSpawn(210130000, 855231, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
+					SpawnEngine.addNewSingleTimeSpawn(210050000, 855231, 1439.8473f, 407.9271f, 552.26624f, (byte) 78),
 					1));
 			return true;
 		default:

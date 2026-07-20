@@ -100011,13 +100011,13 @@
   </item_template>
   <item_template id="164000103" name="Blessing of Concentration" level="50" mask="12356" category="NONE" max_stack_count="10" item_type="NORMAL" quality="RARE" price="500000" race="ELYOS" restrict="50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50" desc="1507233" name_desc="Item_Q_Wonkiock_skill"/>
   <item_template id="164000104" name="Blessing of Devotion" level="50" mask="12356" category="NONE" max_stack_count="10" item_type="NORMAL" quality="RARE" price="500000" race="ASMODIANS" restrict="50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50" desc="1507235" name_desc="Item_Q_Wonkiock_Da_skill"/>
-  <item_template id="164000106" name="Inggison Illusion Fortress Scroll" level="50" mask="12364" category="NONE" max_stack_count="1000" item_type="NORMAL" quality="COMMON" price="11700" race="ELYOS" restrict="50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50" desc="1508487" return_world="210130000" return_alias="INGGISON_RETURN_AREA" activate_target="STANDALONE" activate_count="1" name_desc="scroll_return_lf4">
+  <item_template id="164000106" name="Inggison Illusion Fortress Scroll" level="50" mask="12364" category="NONE" max_stack_count="1000" item_type="NORMAL" quality="COMMON" price="11700" race="ELYOS" restrict="50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50" desc="1508487" return_world="210050000" return_alias="INGGISON_RETURN_AREA" activate_target="STANDALONE" activate_count="1" name_desc="scroll_return_lf4">
     <actions>
       <skilluse level="1" skillid="8198"/>
     </actions>
     <uselimits usedelay="15000" usedelayid="56"/>
   </item_template>
-  <item_template id="164000107" name="Gelkmaros Fortress Scroll" level="50" mask="12364" category="NONE" max_stack_count="1000" item_type="NORMAL" quality="COMMON" price="11700" race="ASMODIANS" restrict="50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50" desc="1508489" return_world="220140000" return_alias="GELKMAROS_RETURN_AREA" activate_target="STANDALONE" activate_count="1" name_desc="scroll_return_df4">
+  <item_template id="164000107" name="Gelkmaros Fortress Scroll" level="50" mask="12364" category="NONE" max_stack_count="1000" item_type="NORMAL" quality="COMMON" price="11700" race="ASMODIANS" restrict="50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50" desc="1508489" return_world="220070000" return_alias="GELKMAROS_RETURN_AREA" activate_target="STANDALONE" activate_count="1" name_desc="scroll_return_df4">
     <actions>
       <skilluse level="1" skillid="8198"/>
     </actions>

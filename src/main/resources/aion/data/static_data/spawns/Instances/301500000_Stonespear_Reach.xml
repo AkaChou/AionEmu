@@ -5,9 +5,8 @@
  -->
 <spawns>
 	<spawn_map map_id="301500000">
-		<!-- -->
-		<spawn npc_id="833284">
-			<spot x="231.14" y="264.39999" z="95.290001" entity_id="14"/>
+		<spawn npc_id="856460">
+			<spot x="231.460693" y="264.565704" z="96.932259" entity_id="14"/>
 		</spawn>
 		<!-- Legion Territory Manager
 		<Spectator Helper>

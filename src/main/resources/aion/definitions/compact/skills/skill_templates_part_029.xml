@@ -177,7 +177,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22672" name="얼어붙은 대검" nameId="4576867" name_desc="Ab1_Boss_AreaATK_01" stack="SKILL_Ab1_Boss_AreaATK_01" skill_group_name="Ab1_Boss_AreaATK_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="5000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="26" target_type="AREA" target_relation="ENEMY" target_species="PC" awr="false" target_maxcount="96" revision_distance="0" target_status="" target_distance="30" effective_angle="10" effective_width="30" />
+    <properties first_target="ME" first_target_range="26" target_type="AREA" target_relation="ENEMY" target_species="PC" awr="false" target_maxcount="96" revision_distance="0" target_status="" target_distance="10" effective_width="30" effective_altitude="30" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="100" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -714,7 +714,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22683" name="약화의 일격" nameId="4576751" name_desc="Ere_Pulled_Fi_01" stack="SKILL_Ere_Pulled_Fi_01" skill_group_name="Ere_Pulled_Fi_01" delayId="13" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="1500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="7" effective_angle="15" />
+    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="7" effective_altitude="15" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="87" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -756,7 +756,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22684" name="찰나의 보호막" nameId="4576753" name_desc="Ere_DefenceBuff_Fi_01" stack="SKILL_Ere_DefenceBuff_Fi_01" skill_group_name="Ere_DefenceBuff_Fi_01" delayId="8" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="2">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="7" effective_angle="15" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="7" effective_altitude="15" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="5000" randomtime="0" effectid="10001" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -850,7 +850,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22688" name="흡혈 일격" nameId="4576761" name_desc="Ere_DrainHP_Fi_01" stack="SKILL_Ere_DrainHP_Fi_01" skill_group_name="Ere_DrainHP_Fi_01" delayId="10" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="7" effective_angle="15" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="7" effective_altitude="15" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_06494E782037A1A4" />
     <group_ref id="SG_6703026AA31D6684" />
@@ -1442,7 +1442,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22712" name="범위 재우기" nameId="4576809" name_desc="Ere_Sleep_Wi_02" stack="SKILL_Ere_Sleep_Wi_02" skill_group_name="Ere_Sleep_Wi_02" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="16" target_type="ONLYONE" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="16" revision_distance="0" target_status="" target_distance="7" effective_angle="15" />
+    <properties first_target="TARGET" first_target_range="16" target_type="ONLYONE" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="16" revision_distance="0" target_status="" effective_range="7" effective_altitude="15" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_8C3B9F549AB4E1F0" />
     <group_ref id="SG_F22E6FE56D603A02" />
@@ -1686,7 +1686,7 @@
     <effects>
       <spellatk duration1="0" duration2="3000" randomtime="0" effectid="10193891" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="DARK" checktime="1000" value="125" delta="10" mrresist="true" />
       <mpattack duration1="0" duration2="3000" randomtime="0" effectid="10193892" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="DARK" checktime="1000" delta="0" value="10" percent="true" />
-      <buffbind duration1="0" duration2="3000" randomtime="0" effectid="10217151" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER" />
+      <buffbind duration1="0" duration2="3000" randomtime="0" effectid="10217151" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod1="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER" />
     </effects>
     <group_ref id="SG_FDCEBBAB040BAEAF" />
     <retail>
@@ -1749,7 +1749,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22721" name="이드 결계막 해제" nameId="4566225" name_desc="IDRunewp_Area_Dispel" stack="SKILL_IDRunewp_Area_Dispel" skill_group_name="IDRunewp_Area_Dispel" delayId="5" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="INDIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="5" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="5" effective_altitude="10" />
     <group_ref id="SG_7A4ECABB9917535C" />
     <group_ref id="SG_D302E49114D3A289" />
     <retail>
@@ -1852,7 +1852,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22724" name="어둠의 명령 : 저주" nameId="4576965" name_desc="Adma_Curse_PointFire" stack="SKILL_Adma_Curse_PointFire" skill_group_name="Adma_Curse_PointFire" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="5" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_C9E64E929A27CDB2" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="25" effective_angle="120" effective_altitude="30" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -1919,7 +1919,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22725" name="어둠의 명령 : 실명" nameId="4576971" name_desc="Adma_Blind_PointFire" stack="SKILL_Adma_Blind_PointFire" skill_group_name="Adma_Blind_PointFire" delayId="4" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_C9E64E929A27CDB2" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="25" effective_angle="120" effective_altitude="30" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -1980,7 +1980,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22726" name="암흑성" nameId="4576977" name_desc="Adma_AreaMG_PointFire" stack="SKILL_Adma_AreaMG_PointFire" skill_group_name="Adma_AreaMG_PointFire" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="3" effective_angle="30" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="3" effective_altitude="30" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -2116,7 +2116,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22730" name="대지의 절규" nameId="4576989" name_desc="IDLF2A_GodElemental_Earth_AreaFire" stack="SKILL_IDLF2A_GodElemental_Earth_AreaFire" skill_group_name="IDLF2A_GodElemental_Earth_AreaFire" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="15" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="15" effective_altitude="10" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -2274,7 +2274,7 @@
     <effects>
       <absolutesnare duration1="0" duration2="8000" randomtime="0" effectid="10217151" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="11000" delta="0" />
       <silence duration1="0" duration2="8000" randomtime="0" effectid="10217151" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER" />
-      <buffbind duration1="0" duration2="8000" randomtime="0" effectid="10217151" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER" />
+      <buffbind duration1="0" duration2="8000" randomtime="0" effectid="10217151" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod1="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER" />
       <shield duration1="0" duration2="8000" randomtime="0" effectid="10217151" e="4" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="3" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" hitdelta="0" hitvalue="150000" delta="0" value="150000" hittype="EVERYHIT" hittypeprob1="0" hittypeprob2="1000" />
     </effects>
     <group_ref id="SG_9C2CEADE93D37876" />
@@ -2761,7 +2761,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22747" name="암흑성" nameId="4577141" name_desc="IDDF3_T_Messenger_Meteo" stack="SKILL_IDDF3_T_Messenger_Meteo" skill_group_name="IDDF3_T_Messenger_Meteo" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="14" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="14" effective_altitude="10" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -2787,7 +2787,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22748" name="어둠의 불길" nameId="4577143" name_desc="IDDF3_T_Messenger_FireArea" stack="SKILL_IDDF3_T_Messenger_FireArea" skill_group_name="IDDF3_T_Messenger_FireArea" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="11" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="11" effective_altitude="10" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -2985,7 +2985,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22753" name="영혼 강화" nameId="4577161" name_desc="IDDF3_T_Messenger_Dominate_Care" stack="SKILL_IDDF3_T_Messenger_Dominate_Care" skill_group_name="IDDF3_T_Messenger_Dominate_Care" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="10" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="5" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="10" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="5" effective_altitude="10" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <dispel duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="60" element="DARK" dispeltype="EFFECTID" delta="0" value="255" dispel_level_delta="0" dispel_level="100" dpower="0" power="100">
@@ -3191,7 +3191,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22761" name="대지의 울림" nameId="4577185" name_desc="IDLF1_Vanq_Satk_PointFire" stack="SKILL_IDLF1_Vanq_Satk_PointFire" skill_group_name="IDLF1_Vanq_Satk_PointFire" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="28" effective_angle="100" />
+    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="28" effective_angle="100" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_D0A32DBD750F0938" />
     <group_ref id="SG_3A5FCA9B68C8D187" />
@@ -3212,7 +3212,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22762" name="시공간 베기" nameId="4577187" name_desc="IDLF1_Vanq_Satk_AreaATK" stack="SKILL_IDLF1_Vanq_Satk_AreaATK" skill_group_name="IDLF1_Vanq_Satk_AreaATK" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="10" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="10" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_D0A32DBD750F0938" />
     <group_ref id="SG_6703026AA31D6684" />
@@ -3255,7 +3255,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22764" name="흡수" nameId="4577191" name_desc="IDLF1_NoShow_OpenArial_NormalFire" stack="SKILL_IDLF1_NoShow_OpenArial_NormalFire" skill_group_name="IDLF1_NoShow_OpenArial_NormalFire" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" target_distance="50" effective_angle="10" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" effective_range="50" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="120" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -3426,7 +3426,12 @@
   <skill_template skill_id="22769" name="집중 표적" nameId="4569947" name_desc="LDF5_F_GuardianHead_NormalFire2_New" stack="SKILL_LDF5_F_GuardianHead_NormalFire2_New" skill_group_name="LDF5_F_GuardianHead_NormalFire2_New" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
     <group_ref id="SG_DA9CC2D4CC76B29C" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_A1F67C3085E9FE7E" />
+    <effects>
+      <absolutesnare duration1="0" duration2="11000" randomtime="0" effectid="10217151" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="5000" delta="0" />
+      <silence duration1="0" duration2="11000" randomtime="0" effectid="10217151" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER" />
+      <buffbind duration1="0" duration2="11000" randomtime="0" effectid="10217151" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod1="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER" />
+      <shield duration1="0" duration2="11000" randomtime="0" effectid="10217151" e="4" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="3" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" hitdelta="0" hitvalue="150000" delta="0" value="150000" hittype="EVERYHIT" hittypeprob1="0" hittypeprob2="1000" />
+    </effects>
     <group_ref id="SG_9C2CEADE93D37876" />
     <retail>
       <f i="1" v="LDF5_Fortress" />
@@ -3519,7 +3524,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22771" name="한기 폭발" nameId="4577229" name_desc="WorldRaid_Turret_Bomb_AreaFire_Ab1" stack="SKILL_WorldRaid_Turret_Bomb_AreaFire_Ab1" skill_group_name="WorldRaid_Turret_Bomb_AreaFire_Ab1" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="5000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="96" revision_distance="0" target_status="" target_distance="20" effective_angle="30" />
+    <properties first_target="ME" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="96" revision_distance="0" target_status="" effective_range="20" effective_altitude="30" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_8639E93BC05D7B01" />
     <group_ref id="SG_FDCEBBAB040BAEAF" />
@@ -3589,7 +3594,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22774" name="죽음의 화염" nameId="4577225" name_desc="IDDF3_T_Messenger_AreaSkill" stack="SKILL_IDDF3_T_Messenger_AreaSkill" skill_group_name="IDDF3_T_Messenger_AreaSkill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="150" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" effective_range="150" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="100000" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="DARK" />
@@ -3614,7 +3619,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22775" name="차원의 돌풍" nameId="4577227" name_desc="IDLF1_Vanq_camera_shake" stack="SKILL_IDLF1_Vanq_camera_shake" skill_group_name="IDLF1_Vanq_camera_shake" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="50" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="50" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="10" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
@@ -3849,7 +3854,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22782" name="수호 성상의 보호 해제" nameId="4577251" name_desc="Ab1_Point_DispelSanctuary_Self" stack="SKILL_Ab1_Point_DispelSanctuary_Self" skill_group_name="Ab1_Point_DispelSanctuary_Self" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="2" revision_distance="0" target_status="" target_distance="5" effective_angle="60" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="2" revision_distance="0" target_status="" effective_range="5" effective_altitude="60" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <dispel duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER" dispeltype="EFFECTID" delta="0" value="25" dispel_level_delta="0" dispel_level="100" dpower="0" power="100">
@@ -3917,7 +3922,9 @@
   <skill_template skill_id="22784" name="신호탄 발사 성공" nameId="4577373" name_desc="world_event_firework_success" stack="SKILL_world_event_firework_success" skill_group_name="world_event_firework_success" delayId="290" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
     <properties first_target="ME" first_target_range="15" target_type="ONLYONE" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_107657957069B1A4" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod1="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" value="1" delta="0" />
+    </effects>
     <group_ref id="SG_FDCEBBAB040BAEAF" />
     <retail>
       <f i="1" v="LDF5" />
@@ -4062,7 +4069,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22789" name="망령의 절규" nameId="4566325" name_desc="BNWI_ConfuseAttackDirection_Rune_TA_Nor" stack="SKILL_BNWI_ConfuseAttackDirection_Rune_TA_Nor" skill_group_name="BNWI_ConfuseAttackDirection_Rune_TA_Nor" delayId="1050" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_8F00AB5254426CEA" />
+    <properties first_target="ME" first_target_range="5" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="0" target_status="" target_distance="10" effective_width="15" effective_altitude="30" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -4385,7 +4392,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22798" name="거대한 돌진" nameId="4577405" name_desc="DF6_ElephantBird_Lightningbolt" stack="SKILL_DF6_ElephantBird_Lightningbolt" skill_group_name="DF6_ElephantBird_Lightningbolt" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="50" effective_angle="15" effective_width="20" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="15" effective_width="50" effective_altitude="20" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="85" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" />
@@ -4521,7 +4528,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22802" name="영혼 착취" nameId="4577419" name_desc="DF6_Deathknight_Debuff_Fireball" stack="SKILL_DF6_Deathknight_Debuff_Fireball" skill_group_name="DF6_Deathknight_Debuff_Fireball" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="25" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="90" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="30" effective_angle="20" />
+    <properties first_target="TARGET" first_target_range="90" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" effective_range="30" effective_altitude="20" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="50" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" />
@@ -4637,7 +4644,7 @@
     <group_ref id="SG_7BE23D95A1AF2B6B" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="EARTH" delta="0" value="200" applymboost="true" hp_percent_delta="0" hp_percent="10" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="EARTH" delta="0" value="200" applymboost="true" hp_percent_delta="0" hp_percent="10" />
     </effects>
     <group_ref id="SG_FDCEBBAB040BAEAF" />
     <retail>
@@ -4664,7 +4671,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22805" name="고대 영혼의 힘" nameId="4577435" name_desc="DF6_Deathknight_Soul_Buff_Fireball" stack="SKILL_DF6_Deathknight_Soul_Buff_Fireball" skill_group_name="DF6_Deathknight_Soul_Buff_Fireball" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="90" target_type="AREA" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" target_distance="10" effective_angle="20" />
+    <properties first_target="ME" first_target_range="90" target_type="AREA" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" effective_range="10" effective_altitude="20" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="30000" randomtime="0" effectid="10217151" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1">
@@ -4779,7 +4786,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22808" name="대지 가르기" nameId="4577455" name_desc="DF6_Leader_Lightningbolt" stack="SKILL_DF6_Leader_Lightningbolt" skill_group_name="DF6_Leader_Lightningbolt" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="0" target_status="" target_distance="30" effective_angle="10" effective_width="20" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="0" target_status="" target_distance="10" effective_width="30" effective_altitude="20" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="500" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -5519,7 +5526,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22839" name="저주의 검기" nameId="4577541" name_desc="LF6_Ghost_Curse_PowerAtk" stack="SKILL_LF6_Ghost_Curse_PowerAtk" skill_group_name="LF6_Ghost_Curse_PowerAtk" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="5" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="50" effective_angle="180" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="50" effective_angle="180" effective_altitude="20" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5571,7 +5578,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22840" name="영혼 타격" nameId="4577547" name_desc="LF6_Ghost_Curse_AddDmg_PowerAtk" stack="SKILL_LF6_Ghost_Curse_AddDmg_PowerAtk" skill_group_name="LF6_Ghost_Curse_AddDmg_PowerAtk" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="30" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="30" effective_angle="90" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="30" effective_angle="90" effective_altitude="20" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5772,7 +5779,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22846" name="포격 명령" nameId="4577563" name_desc="LF6_Ghost_Bomb_Hit_Areafire" stack="SKILL_LF6_Ghost_Bomb_Hit_Areafire" skill_group_name="LF6_Ghost_Bomb_Hit_Areafire" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="5" effective_angle="20" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" effective_range="5" effective_altitude="20" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5864,7 +5871,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22849" name="대지의 분노" nameId="4577573" name_desc="LF6_Golem_SpellATK_AreaAtk" stack="SKILL_LF6_Golem_SpellATK_AreaAtk" skill_group_name="LF6_Golem_SpellATK_AreaAtk" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="20" effective_angle="20" />
+    <properties first_target="ME" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" effective_range="20" effective_altitude="20" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5893,7 +5900,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22850" name="대지의 바람" nameId="4577575" name_desc="LF6_Golem_LightningBolt_PowerAtk" stack="SKILL_LF6_Golem_LightningBolt_PowerAtk" skill_group_name="LF6_Golem_LightningBolt_PowerAtk" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="66" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="30" effective_angle="45" effective_width="20" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="45" effective_width="30" effective_altitude="20" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="115" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH">
@@ -5923,7 +5930,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22851" name="발목 강타" nameId="4577577" name_desc="LF6_Golem_LightningBolt_PowerAtk2" stack="SKILL_LF6_Golem_LightningBolt_PowerAtk2" skill_group_name="LF6_Golem_LightningBolt_PowerAtk2" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="66" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="15" effective_angle="45" effective_width="20" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="150" revision_distance="0" target_status="" target_distance="45" effective_width="15" effective_altitude="20" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="145" delta="0" mode="PERCENT" rnddmg="3" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" />
@@ -6009,7 +6016,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22854" name="맹렬한 충격" nameId="4577605" name_desc="IDEternity_01_Wizard_Firestorm" stack="SKILL_IDEternity_01_Wizard_Firestorm" skill_group_name="IDEternity_01_Wizard_Firestorm" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="50" effective_angle="120" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="50" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="183" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -6289,7 +6296,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22861" name="포획 고리" nameId="4577625" name_desc="IDEternity_01_W_Summon_Pulled" stack="SKILL_IDEternity_01_W_Summon_Pulled" skill_group_name="IDEternity_01_W_Summon_Pulled" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="2" effective_angle="10" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="2" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="1" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE">
@@ -6371,7 +6378,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22863" name="무자비한 주먹" nameId="4577629" name_desc="IDEternity_01_Fighter_Firestorm" stack="SKILL_IDEternity_01_Fighter_Firestorm" skill_group_name="IDEternity_01_Fighter_Firestorm" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="35" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="35" effective_angle="8" effective_width="10" />
+    <properties first_target="TARGET" first_target_range="35" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="8" effective_width="35" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_1B4AC7DADF91424D" />
     <group_ref id="SG_6703026AA31D6684" />
@@ -6503,7 +6510,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22867" name="미로의 돌격체" nameId="4577639" name_desc="IDEternity_01_Fighter_ATK_02" stack="SKILL_IDEternity_01_Fighter_ATK_02" skill_group_name="IDEternity_01_Fighter_ATK_02" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="5" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="5" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="155" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
@@ -6676,7 +6683,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22870" name="무력화 폭풍" nameId="4577651" name_desc="IDEternity_01_Fighter_Drain_Dispel" stack="SKILL_IDEternity_01_Fighter_Drain_Dispel" skill_group_name="IDEternity_01_Fighter_Drain_Dispel" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="255" revision_distance="0" target_status="" target_distance="50" effective_angle="10" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="255" revision_distance="0" target_status="" effective_range="50" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <dispel duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" dispeltype="EFFECTID" delta="0" value="255" dispel_level_delta="0" dispel_level="100" dpower="0" power="100">
@@ -6775,7 +6782,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22873" name="느닷없는 폭풍 일격" nameId="4577659" name_desc="IDEternity_01_Priest_Firestorm" stack="SKILL_IDEternity_01_Priest_Firestorm" skill_group_name="IDEternity_01_Priest_Firestorm" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="28" effective_angle="100" />
+    <properties first_target="TARGET" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="28" effective_angle="100" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_6BF8A1D29CFAC1AC" />
     <group_ref id="SG_6703026AA31D6684" />
@@ -6845,7 +6852,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22876" name="번개 투창" nameId="4577665" name_desc="IDEternity_01_Priest_Paralyze" stack="SKILL_IDEternity_01_Priest_Paralyze" skill_group_name="IDEternity_01_Priest_Paralyze" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="40" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="5" effective_angle="10" effective_width="10" />
+    <properties first_target="TARGET" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="10" effective_width="5" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="170" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -6934,7 +6941,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22879" name="엄청난 폭발" nameId="4577673" name_desc="IDEternity_01_Priest_Fireball" stack="SKILL_IDEternity_01_Priest_Fireball" skill_group_name="IDEternity_01_Priest_Fireball" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="50" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="50" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="20000" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -6958,7 +6965,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22880" name="숨겨진 비술" nameId="4577675" name_desc="IDEternity_01_Priest_PCBuff" stack="SKILL_IDEternity_01_Priest_PCBuff" skill_group_name="IDEternity_01_Priest_PCBuff" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="5" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="FRIEND" target_species="PC" awr="false" target_maxcount="255" revision_distance="0" target_status="" target_distance="10" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="FRIEND" target_species="PC" awr="false" target_maxcount="255" revision_distance="0" target_status="" effective_range="10" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="30000" randomtime="0" effectid="10172411" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60">
@@ -7292,7 +7299,7 @@
     <group_ref id="SG_B8124842795135AB" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="3000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="3000" delta="0" />
     </effects>
     <group_ref id="SG_FDCEBBAB040BAEAF" />
     <retail>
@@ -7315,11 +7322,11 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22890" name="광역포격" nameId="4577693" name_desc="F6_Event_G1_Cannon_AreaShot" stack="SKILL_F6_Event_G1_Cannon_AreaShot" skill_group_name="F6_Event_G1_Cannon_AreaShot" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="150" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="40" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" other_target_only="true" revision_distance="0" target_status="" target_distance="10" effective_angle="20" />
+    <properties first_target="TARGET" first_target_range="40" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" other_target_only="true" revision_distance="0" target_status="" effective_range="10" effective_altitude="20" />
     <group_ref id="SG_B8124842795135AB" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" />
     </effects>
     <group_ref id="SG_F22E6FE56D603A02" />
     <retail>
@@ -7474,7 +7481,7 @@
     </startconditions>
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="1" element="FIRE" value="2000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="1" element="FIRE" value="2000" delta="0" />
     </effects>
     <actions>
       <hpuse value="100" delta="0" ratio="true" />
@@ -7524,7 +7531,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22898" name="눈부신 일격" nameId="4577725" name_desc="RVR_FireballATK" stack="SKILL_RVR_FireballATK" skill_group_name="RVR_FireballATK" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="255" revision_distance="0" target_status="" target_distance="50" effective_angle="10" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="255" revision_distance="0" target_status="" effective_range="50" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_0C936DA1A7592D51" />
     <group_ref id="SG_C092574AC30CEE28" />
@@ -7598,7 +7605,7 @@
     <group_ref id="SG_55A3804A08844C05" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="90" delta="0" percent="true" maxdamage="109137600" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="90" delta="0" percent="true" maxdamage="109137600" />
     </effects>
     <group_ref id="SG_2ACD179D86475473" />
     <retail>
@@ -7772,7 +7779,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22906" name="발목잡기" nameId="4577745" name_desc="NFI_Snare_NoCast_NoResist" stack="SKILL_NFI_Snare_NoCast_NoResist" skill_group_name="NFI_Snare_NoCast_NoResist" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="2" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="25" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="4" effective_angle="5" />
+    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="4" effective_altitude="5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="120" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -7842,7 +7849,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22908" name="죽음을 부르는 그림자" nameId="4577751" name_desc="IDEternity_Flame_SpellATK_02" stack="SKILL_IDEternity_Flame_SpellATK_02" skill_group_name="IDEternity_Flame_SpellATK_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="25" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="3" effective_angle="5" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="3" effective_altitude="5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="720" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -8379,7 +8386,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22924" name="넓은 약점공략" nameId="573243" name_desc="IDEternity_SkillAtk_Stumble_AddDMG" stack="SKILL_IDEternity_SkillAtk_Stumble_AddDMG" skill_group_name="IDEternity_SkillAtk_Stumble_AddDMG" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="55" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F27F5D2639E1C22D" />
+    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="5" effective_angle="240" effective_altitude="5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_E0DB37947B183261" />
@@ -8408,7 +8415,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22925" name="일격파동" nameId="568997" name_desc="IDEternity_SatkSA_Nr" stack="SKILL_IDEternity_SatkSA_Nr" skill_group_name="IDEternity_SatkSA_Nr" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1CA8EA1B87AA5E9D" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="5" effective_angle="240" effective_altitude="5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_61C76D25F811AE7F" />
@@ -9216,7 +9223,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22952" name="해제" nameId="4577765" name_desc="IDEternity_Priest_BossBuff_Dispel" stack="SKILL_IDEternity_Priest_BossBuff_Dispel" skill_group_name="IDEternity_Priest_BossBuff_Dispel" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="50" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="255" revision_distance="0" target_status="" target_distance="30" effective_angle="5" />
+    <properties first_target="ME" first_target_range="50" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="255" revision_distance="0" target_status="" effective_range="30" effective_altitude="5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <dispel duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" dispeltype="EFFECTIDRANGE" delta="0" value="255" dispel_level_delta="0" dispel_level="100" dpower="0" power="100">
@@ -9307,7 +9314,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22955" name="영혼봉쇄" nameId="576027" name_desc="IDEternity_BindSlienceTA_Water" stack="SKILL_IDEternity_BindSlienceTA_Water" skill_group_name="IDEternity_BindSlienceTA_Water" delayId="5" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="16" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="5" effective_angle="5" />
+    <properties first_target="TARGET" first_target_range="16" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="5" effective_altitude="5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -10530,7 +10537,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22991" name="초기화 텔레포트" nameId="4578399" name_desc="IDF6_Dragon_Reset_Teleport" stack="SKILL_IDF6_Dragon_Reset_Teleport" skill_group_name="IDF6_Dragon_Reset_Teleport" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="INDIRECT">
-    <properties first_target="TARGET" first_target_range="5" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="100" effective_angle="30" />
+    <properties first_target="TARGET" first_target_range="5" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="100" effective_altitude="30" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -10572,10 +10579,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22992" name="화상" nameId="4579665" name_desc="world_idlunadef_npc_burn_01" stack="SKILL_world_idlunadef_npc_burn_01" skill_group_name="world_idlunadef_npc_burn_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="30" revision_distance="0" target_status="" target_distance="8" effective_angle="8" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="30" revision_distance="0" target_status="" effective_range="8" effective_altitude="8" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="2" duration2="500" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="100" delta="0" critprobmod1="100" critadddmg2="0" />
+      <noreducespellatk duration1="2" duration2="500" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod1="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="100" delta="0" />
       <spellatk duration1="0" duration2="10000" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" checktime="1000" value="4000" delta="2" mrresist="false" />
     </effects>
     <group_ref id="SG_F22E6FE56D603A02" />
@@ -10617,7 +10624,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22993" name="냉각" nameId="4575963" name_desc="world_idlunadef_npc_frozen_01" stack="SKILL_world_idlunadef_npc_frozen_01" skill_group_name="world_idlunadef_npc_frozen_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="30" revision_distance="0" target_status="" target_distance="15" effective_angle="7" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="30" revision_distance="0" target_status="" effective_range="15" effective_altitude="7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <snare duration1="2" duration2="10000" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER">
@@ -10756,7 +10763,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22997" name="죽음의 표식의 기운" nameId="4578479" name_desc="IDLF1_UserAllKill_SpellATK_Instant" stack="SKILL_IDLF1_UserAllKill_SpellATK_Instant" skill_group_name="IDLF1_UserAllKill_SpellATK_Instant" delayId="1018" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="5" target_type="AREA" target_relation="FRIEND" target_species="PC" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="18" effective_angle="10" />
+    <properties first_target="ME" first_target_range="5" target_type="AREA" target_relation="FRIEND" target_species="PC" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="18" effective_altitude="10" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -10802,7 +10809,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22999" name="숨막히는 눈빛" nameId="4578487" name_desc="IDEternity_02_Tower_ATK_02" stack="SKILL_IDEternity_02_Tower_ATK_02" skill_group_name="IDEternity_02_Tower_ATK_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_27875DF37C8070BD" />
+    <properties first_target="TARGET" first_target_range="35" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="35" effective_width="5" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_0C936DA1A7592D51" />
     <group_ref id="SG_BF9A807A0960CB4E" />
@@ -10823,7 +10830,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23000" name="맹렬한 격동" nameId="4578489" name_desc="IDEternity_02_Tower_FireStorm" stack="SKILL_IDEternity_02_Tower_FireStorm" skill_group_name="IDEternity_02_Tower_FireStorm" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="50" effective_angle="100" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="50" effective_angle="100" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="170" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -10846,7 +10853,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23001" name="번개 강타" nameId="4578491" name_desc="IDEternity_02_Tower_Paralyze_01" stack="SKILL_IDEternity_02_Tower_Paralyze_01" skill_group_name="IDEternity_02_Tower_Paralyze_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="40" activation="ACTIVE" cooldown="0" duration="1500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_27875DF37C8070BD" />
+    <properties first_target="TARGET" first_target_range="35" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="35" effective_width="5" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="130" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -10885,7 +10892,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23002" name="폭발적인 충격" nameId="4578497" name_desc="IDEternity_02_Tower_Snare_01" stack="SKILL_IDEternity_02_Tower_Snare_01" skill_group_name="IDEternity_02_Tower_Snare_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="40" activation="ACTIVE" cooldown="0" duration="1500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_27875DF37C8070BD" />
+    <properties first_target="TARGET" first_target_range="35" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="35" effective_width="5" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="180" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -10929,7 +10936,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23003" name="고통을 부르는 파동" nameId="4578503" name_desc="IDEternity_02_Tower_Snare_02" stack="SKILL_IDEternity_02_Tower_Snare_02" skill_group_name="IDEternity_02_Tower_Snare_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="40" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="12" effective_angle="10" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="12" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="195" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -11015,7 +11022,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23006" name="억류의 구체" nameId="4578513" name_desc="IDEternity_02_Nepilim_OpenAerial" stack="SKILL_IDEternity_02_Nepilim_OpenAerial" skill_group_name="IDEternity_02_Nepilim_OpenAerial" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="50" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="50" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="80" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" />
@@ -11053,7 +11060,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23007" name="폭발하는 격류" nameId="4578519" name_desc="IDEternity_02_Nepilim_PowerATK" stack="SKILL_IDEternity_02_Nepilim_PowerATK" skill_group_name="IDEternity_02_Nepilim_PowerATK" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" target_distance="3" effective_angle="50" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" effective_range="3" effective_altitude="50" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_0A26BB3B5DE4E5F1" />
     <group_ref id="SG_BF9A807A0960CB4E" />
@@ -11098,7 +11105,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23009" name="대지를 흔드는 분노" nameId="4578523" name_desc="IDEternity_02_Nepilim_Sum_02" stack="SKILL_IDEternity_02_Nepilim_Sum_02" skill_group_name="IDEternity_02_Nepilim_Sum_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="40" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_5BA8BA7D45FFC383" />
+    <properties first_target="TARGET" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="30" effective_width="5" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_2B9EB637E43ADFD9" />
     <group_ref id="SG_6703026AA31D6684" />
@@ -11160,7 +11167,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23011" name="위협적인 물보라" nameId="4578531" name_desc="IDEternity_02_Nepilim_Snare" stack="SKILL_IDEternity_02_Nepilim_Snare" skill_group_name="IDEternity_02_Nepilim_Snare" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="40" activation="ACTIVE" cooldown="0" duration="1500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="50" effective_angle="90" />
+    <properties first_target="TARGET" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="50" effective_angle="90" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="220" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -11204,7 +11211,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23012" name="확실한 일격" nameId="4578537" name_desc="IDEternity_02_Nepilim_Sum_ATK" stack="SKILL_IDEternity_02_Nepilim_Sum_ATK" skill_group_name="IDEternity_02_Nepilim_Sum_ATK" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="1" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="1" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="80" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
@@ -11273,7 +11280,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23014" name="희생의 의식" nameId="4578545" name_desc="IDEternity_02_Nepilim_Sum_Explosion" stack="SKILL_IDEternity_02_Nepilim_Sum_Explosion" skill_group_name="IDEternity_02_Nepilim_Sum_Explosion" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="5" effective_angle="10" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="5" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="300" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -11386,7 +11393,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23019" name="죽음의 독기" nameId="4578559" name_desc="IDEternity_02_SnakeL_Paralyze" stack="SKILL_IDEternity_02_SnakeL_Paralyze" skill_group_name="IDEternity_02_SnakeL_Paralyze" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="5" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_1739AD383098E2B8" />
+    <properties first_target="TARGET" first_target_range="40" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="40" effective_width="6" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="170" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -11426,7 +11433,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23020" name="치솟는 독안개" nameId="4578565" name_desc="IDEternity_02_SnakeL_Lightning" stack="SKILL_IDEternity_02_SnakeL_Lightning" skill_group_name="IDEternity_02_SnakeL_Lightning" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_1739AD383098E2B8" />
+    <properties first_target="TARGET" first_target_range="40" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="40" effective_width="6" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_E72584B87F24BDCE" />
     <group_ref id="SG_3A5FCA9B68C8D187" />
@@ -11556,7 +11563,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23025" name="섬멸의 입김" nameId="4578579" name_desc="IDEternity_02_SnakeR_Lightning" stack="SKILL_IDEternity_02_SnakeR_Lightning" skill_group_name="IDEternity_02_SnakeR_Lightning" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="20" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="6" effective_angle="40" effective_width="10" />
+    <properties first_target="TARGET" first_target_range="50" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="40" effective_width="6" effective_altitude="10" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_E72584B87F24BDCE" />
     <group_ref id="SG_3A5FCA9B68C8D187" />
@@ -11875,7 +11882,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="23038" name="재앙의 불꽃" nameId="4578609" name_desc="IDEternity_02_Snake_DOT_Dispel" stack="SKILL_IDEternity_02_Snake_DOT_Dispel" skill_group_name="IDEternity_02_Snake_DOT_Dispel" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="8" effective_angle="8" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="8" effective_altitude="8" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="80" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -13322,7 +13329,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="12905" name="심연의 해일 I" nameId="577433" name_desc="Abyss_RankerSkill_AbyssianChainBolt_G1_01" stack="SKILL_Abyss_RankerSkill_AbyssianChainBolt_G1_01" skill_group_name="Abyss_RankerSkill_AbyssianChainBolt_G1_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1200" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_A781DB5D731EB47A" />
+    <properties first_target="TARGET" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="18" revision_distance="12" target_status="" target_distance="30" effective_angle="90" effective_altitude="4" />
     <startconditions>
       <mp value="37700" delta="0" />
       <form value="AVATAR" />

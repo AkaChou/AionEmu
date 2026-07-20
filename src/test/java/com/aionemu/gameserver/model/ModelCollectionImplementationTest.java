@@ -188,7 +188,6 @@ class ModelCollectionImplementationTest {
 	@Test
 	void remainingSimpleInstanceFutureTaskListsUseJdkLists() throws Exception {
 		List<String> instanceScripts = List.of(
-				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/IDEvent_Def_HInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SmolderingFireTempleInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheEternalBastionInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FissureOfOblivionInstance.java",

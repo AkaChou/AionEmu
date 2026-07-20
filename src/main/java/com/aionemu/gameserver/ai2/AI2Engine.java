@@ -21,6 +21,7 @@ import com.aionemu.gameserver.ai.RetailPatternAI2;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.GameEngine;
+import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
@@ -102,9 +103,13 @@ public class AI2Engine implements GameEngine {
 		AbstractAI aiInstance = null;
 		try {
 			if (owner instanceof Npc npc) {
-				name = selectNpcAi(name, npc.getNpcId(), npc);
+				name = selectRegisteredNpcAi(name, npc);
 			}
-			aiInstance = aiMap.get(name).getDeclaredConstructor().newInstance();
+			Class<? extends AbstractAI> aiClass = aiMap.get(name);
+			if (aiClass == null) {
+				throw new IllegalArgumentException("Unknown AI " + name);
+			}
+			aiInstance = aiClass.getDeclaredConstructor().newInstance();
 			aiInstance.setOwner(owner);
 			owner.setAi2(aiInstance);
 			if (AIConfig.ONCREATE_DEBUG) {
@@ -119,6 +124,16 @@ public class AI2Engine implements GameEngine {
 	static String selectNpcAi(String fallback, int npcId, Npc npc) {
 		var pattern = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getPattern(npcId);
 		return RetailPatternAI2.supports(pattern, npc) ? "retail_pattern" : fallback;
+	}
+
+	String selectRegisteredNpcAi(String fallback, Npc npc) {
+		String selected = selectNpcAi(fallback, npc == null ? 0 : npc.getNpcId(), npc);
+		if (aiMap.containsKey(selected)) {
+			return selected;
+		}
+		String generic = npc != null && npc.getObjectTemplate().getNpcType() == NpcType.AGGRESSIVE
+				? AiNames.AGGRESSIVE_NPC.getName() : AiNames.GENERAL_NPC.getName();
+		return aiMap.containsKey(generic) ? generic : AiNames.DUMMY_NPC.getName();
 	}
 
 	/**
@@ -139,9 +154,12 @@ public class AI2Engine implements GameEngine {
 	private void validateScripts() {
 		Collection<String> npcAINames = new HashSet<String>();
 		for (NpcTemplate npcTemplate : DataManager.NPC_DATA.getNpcData().values()) {
-			npcAINames.add(npcTemplate.getAi());
+			String ai = npcTemplate.getAi();
+			if (!aiMap.containsKey(ai) && !(aiMap.containsKey("retail_pattern") && DataManager.RETAIL_AI_DATA != null
+					&& RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcTemplate.getTemplateId())))) {
+				npcAINames.add(ai);
+			}
 		}
-		npcAINames.removeAll(aiMap.keySet());
 		if (npcAINames.size() > 0) {
 			log.warn(I18n.get("log.84b7db63f072", StringUtils.join(npcAINames, ", ")));
 		}

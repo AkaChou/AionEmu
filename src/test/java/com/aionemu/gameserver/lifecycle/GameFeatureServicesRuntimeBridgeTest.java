@@ -24,8 +24,6 @@ class GameFeatureServicesRuntimeBridgeTest {
         ProviderUsedException disputeLandProviderUsed = new ProviderUsedException();
         ProviderUsedException outpostProviderUsed = new ProviderUsedException();
         ProviderUsedException protectorConquerorProviderUsed = new ProviderUsedException();
-        ProviderUsedException dredgionProviderUsed = new ProviderUsedException();
-        ProviderUsedException asyunatarProviderUsed = new ProviderUsedException();
         ProviderUsedException ffaProviderUsed = new ProviderUsedException();
         ProviderUsedException ladderProviderUsed = new ProviderUsedException();
         ProviderUsedException bgProviderUsed = new ProviderUsedException();
@@ -42,8 +40,6 @@ class GameFeatureServicesRuntimeBridgeTest {
         runtimeBridge.setDisputeLandServiceProvider(throwingProvider(disputeLandProviderUsed));
         runtimeBridge.setOutpostServiceProvider(throwingProvider(outpostProviderUsed));
         runtimeBridge.setProtectorConquerorServiceProvider(throwingProvider(protectorConquerorProviderUsed));
-        runtimeBridge.setDredgionServiceProvider(throwingProvider(dredgionProviderUsed));
-        runtimeBridge.setAsyunatarServiceProvider(throwingProvider(asyunatarProviderUsed));
         runtimeBridge.setFfaServiceProvider(throwingProvider(ffaProviderUsed));
         runtimeBridge.setLadderServiceProvider(throwingProvider(ladderProviderUsed));
         runtimeBridge.setBgServiceProvider(throwingProvider(bgProviderUsed));
@@ -59,8 +55,6 @@ class GameFeatureServicesRuntimeBridgeTest {
         assertSame(disputeLandProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::disputeLandService));
         assertSame(outpostProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::outpostService));
         assertSame(protectorConquerorProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::protectorConquerorService));
-        assertSame(dredgionProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::dredgionService));
-        assertSame(asyunatarProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::asyunatarService));
         assertSame(ffaProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::ffaService));
         assertSame(ladderProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::ladderService));
         assertSame(bgProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::bgService));
@@ -194,8 +188,6 @@ class GameFeatureServicesRuntimeBridgeTest {
         try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
             sources = stream
                 .filter(path -> path.toString().endsWith(".java"))
-                .filter(path -> !path.endsWith(Path.of("services/instance/DredgionService2.java")))
-                .filter(path -> !path.endsWith(Path.of("services/instance/AsyunatarService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/ShieldService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/ProtectorConquerorService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/AStationService.java")))
@@ -217,8 +209,6 @@ class GameFeatureServicesRuntimeBridgeTest {
         for (Path source : sources) {
             String content = Files.readString(source);
 
-            assertFalse(content.contains("DredgionService2.getInstance()"), source.toString());
-            assertFalse(content.contains("AsyunatarService.getInstance()"), source.toString());
             assertFalse(content.contains("ShieldService.getInstance()"), source.toString());
             assertFalse(content.contains("ProtectorConquerorService.getInstance()"), source.toString());
             assertFalse(content.contains("AStationService.getInstance()"), source.toString());

@@ -53,7 +53,7 @@ public class LeagueService {
 	/** 是否邀请 / Whether invite*/
 	public static final boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
-			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
+			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter)) {
 				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
 				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
@@ -61,7 +61,7 @@ public class LeagueService {
 			}
 		}
 		if (invited.isInInstance()) {
-			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(invited.getInstanceId())) {
+			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(invited)) {
 				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
 				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);

@@ -1,16 +1,12 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import java.util.Set;
-
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
@@ -48,22 +44,6 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
-	}
-
-	/**
-	 * The opportunity bundle is the only legacy reward without a matching retail
-	 * drop row. Keep that evidence-backed reward until the source data is found.
-	 */
-	@Override
-	public void onDropRegistered(Npc npc) {
-		if (npc.getNpcId() != 802185) {
-			return;
-		}
-		Set<DropItem> drops = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-		drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 186000051, 30));
-		drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 186000052, 30));
-		drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 186000236, 50));
-		drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 186000237, 50));
 	}
 
 	@Override

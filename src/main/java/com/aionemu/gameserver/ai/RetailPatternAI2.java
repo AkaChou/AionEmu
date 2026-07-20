@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
@@ -866,6 +867,11 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	@Override
+	public void onRetailMessage(int type, int param1, int param2, Creature sender, Creature parameter) {
+		runEvent("on_message", null, parameter, new RetailMessage(type, param1, param2, sender, parameter));
+	}
+
+	@Override
 	public void onEnterAbnormalState(Creature caster, int abnormalState) {
 		runEvent("on_enter_abnormal_state", null, caster, null, null, abnormalState);
 	}
@@ -1588,14 +1594,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		RetailMessage message = new RetailMessage(integer(action, "message_type"), integer(action, "param1"),
 			integer(action, "param2"), getOwner(), paramObject);
 		int range = integer(action, "range_as_meter");
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			for (Npc npc : getPosition().getWorldMapInstance().getNpcs()) {
-				if (npc != getOwner() && npc.isSpawned() && MathUtil.isIn3dRange(getOwner(), npc, range)
-					&& npc.getAi2() instanceof RetailPatternAI2 ai) {
-					ai.runEvent("on_message", null, message.paramObject(), message);
-				}
-			}
-		}, 1);
+		List<AI2> recipients = getPosition().getWorldMapInstance().getNpcs().stream()
+			.filter(npc -> npc != getOwner() && npc.isSpawned() && MathUtil.isIn3dRange(getOwner(), npc, range))
+			.map(Npc::getAi2)
+			.filter(ai -> ai != null)
+			.toList();
+		GameThreadPoolServices.threadPoolManager().schedule(() -> recipients.forEach(ai ->
+			ai.onRetailMessage(message.type(), message.param1(), message.param2(), message.sender(), message.paramObject())), 1);
 	}
 
 	private void broadcastMessageToParty(Operation action, Creature eventTarget, RetailMessage sourceMessage) {
@@ -1605,14 +1610,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		}
 		RetailMessage message = new RetailMessage(integer(action, "message_type"), integer(action, "param1"),
 			integer(action, "param2"), getOwner(), paramObject);
-		List<Npc> members = RetailNpcParty.members(getOwner());
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			for (Npc member : members) {
-				if (member.isSpawned() && member.getAi2() instanceof RetailPatternAI2 ai) {
-					ai.runEvent("on_message", null, message.paramObject(), message);
-				}
-			}
-		}, 1);
+		List<AI2> recipients = RetailNpcParty.members(getOwner()).stream()
+			.filter(Npc::isSpawned)
+			.map(Npc::getAi2)
+			.filter(ai -> ai != null)
+			.toList();
+		GameThreadPoolServices.threadPoolManager().schedule(() -> recipients.forEach(ai ->
+			ai.onRetailMessage(message.type(), message.param1(), message.param2(), message.sender(), message.paramObject())), 1);
 	}
 
 	private void sendMessage(Operation action, Creature eventTarget, RetailMessage sourceMessage) {
@@ -1624,7 +1628,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		RetailMessage message = new RetailMessage(integer(action, "message_type"), integer(action, "param1"),
 			integer(action, "param2"), getOwner(), paramObject);
 		GameThreadPoolServices.threadPoolManager().schedule(
-			() -> runEvent("on_message", null, message.paramObject(), message), 1);
+			() -> onRetailMessage(message.type(), message.param1(), message.param2(), message.sender(), message.paramObject()), 1);
 	}
 
 	private void sayToAll(Operation action, boolean shout) {
@@ -2328,6 +2332,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				template.setWalkerId(walkerId);
 			}
 			template.setFly(value(action, "is_aerial_spawn").equals("TRUE") ? 1 : 0);
+			template.setDespawnAtAttackState(!value(action, "despawn_at_attack_state").equals("FALSE"));
 			VisibleObject spawned = SpawnEngine.spawnObject(template, getOwner().getInstanceId());
 			boolean trackedBySpawnId = !value(action, "spawn_id").equals("SPAWN_ID_NONE");
 			int liveTime = integer(action, "live_time");
@@ -2335,10 +2340,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			if (lifecycleKey != null) {
 				persistDynamicSpawn(lifecycleKey, npcId, spawnX, spawnY, z, heading, walkerId,
 					value(action, "spawn_id"), template.getFly(),
-					!value(action, "despawn_at_attack_state").equals("FALSE"), liveDeadline);
+					template.isDespawnAtAttackState(), liveDeadline);
 			}
 			if (trackedBySpawnId || liveTime > 0) {
-				despawnAtAttackState.put(spawned, !value(action, "despawn_at_attack_state").equals("FALSE"));
+				despawnAtAttackState.put(spawned, template.isDespawnAtAttackState());
 			}
 			if (trackedBySpawnId) {
 				this.spawned.computeIfAbsent(value(action, "spawn_id"), key -> new ArrayList<>()).add(spawned);
@@ -2366,17 +2371,18 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	private void persistDynamicSpawn(String key, int npcId, float x, float y, float z, byte heading, String walkerId,
 			String spawnId, int fly, boolean despawnDuringAttack, long liveDeadline) {
-		InstanceRuntimeState state = runtimeState();
-		state.put(key + "npc", npcId);
-		state.put(key + "x", x);
-		state.put(key + "y", y);
-		state.put(key + "z", z);
-		state.put(key + "heading", Byte.toUnsignedInt(heading));
-		state.put(key + "walker", walkerId == null ? "" : walkerId);
-		state.put(key + "spawn_id", spawnId);
-		state.put(key + "fly", fly);
-		state.put(key + "despawn_at_attack", despawnDuringAttack);
-		state.put(key + "live_deadline", liveDeadline);
+		runtimeState().mutate(values -> {
+			values.put(key + "npc", Integer.toString(npcId));
+			values.put(key + "x", Float.toString(x));
+			values.put(key + "y", Float.toString(y));
+			values.put(key + "z", Float.toString(z));
+			values.put(key + "heading", Integer.toString(Byte.toUnsignedInt(heading)));
+			values.put(key + "walker", walkerId == null ? "" : walkerId);
+			values.put(key + "spawn_id", spawnId);
+			values.put(key + "fly", Integer.toString(fly));
+			values.put(key + "despawn_at_attack", Boolean.toString(despawnDuringAttack));
+			values.put(key + "live_deadline", Long.toString(liveDeadline));
+		});
 	}
 
 	private void restoreDynamicSpawns() {
@@ -2384,6 +2390,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		for (String key : runtimeState().snapshot(prefix).keySet().stream()
 			.filter(key -> key.endsWith(".npc")).sorted().toList()) {
 			String lifecycleKey = key.substring(0, key.length() - "npc".length());
+			if (!hasCompleteDynamicSpawn(lifecycleKey)) {
+				runtimeState().removePrefix(lifecycleKey);
+				continue;
+			}
 			long liveDeadline = runtimeState().getLong(lifecycleKey + "live_deadline", 0);
 			if (liveDeadline > 0 && liveDeadline <= System.currentTimeMillis()) {
 				runtimeState().removePrefix(lifecycleKey);
@@ -2404,12 +2414,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			String walker = runtimeState().get(lifecycleKey + "walker", "");
 			template.setWalkerId(walker.isBlank() ? null : walker);
 			template.setFly(runtimeState().getInt(lifecycleKey + "fly", 0));
+			template.setDespawnAtAttackState(runtimeState().getBoolean(lifecycleKey + "despawn_at_attack", true));
 			VisibleObject object = SpawnEngine.spawnObject(template, getOwner().getInstanceId());
 			String spawnId = runtimeState().get(lifecycleKey + "spawn_id", "SPAWN_ID_NONE");
 			boolean tracked = !spawnId.equals("SPAWN_ID_NONE");
 			if (tracked || liveDeadline > 0) {
-				despawnAtAttackState.put(object,
-					runtimeState().getBoolean(lifecycleKey + "despawn_at_attack", true));
+				despawnAtAttackState.put(object, template.isDespawnAtAttackState());
 			}
 			if (tracked) {
 				spawned.computeIfAbsent(spawnId, ignored -> new ArrayList<>()).add(object);
@@ -2419,6 +2429,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 					Math.max(1, liveDeadline - System.currentTimeMillis()));
 			}
 		}
+	}
+
+	private boolean hasCompleteDynamicSpawn(String lifecycleKey) {
+		Map<String, String> saved = runtimeState().snapshot(lifecycleKey);
+		return List.of("npc", "x", "y", "z", "heading", "walker", "spawn_id", "fly", "despawn_at_attack",
+				"live_deadline").stream().allMatch(field -> saved.containsKey(lifecycleKey + field));
 	}
 
 	private String dynamicStableKey(String generation) {

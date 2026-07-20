@@ -2,12 +2,9 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -47,7 +44,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	@Override
     public void onEnterInstance(Player player) {
 		// 须在时限内击败守护者以唤醒处于防护沉眠的帕德玛拉什卡。 / You must defeat the protector within the time limit to wake Padmarashka from the Protective Slumber.
-		sendMsgByRace(1400711, Race.PC_ALL, 10000);
+		sendMsg(1400711, 0, false, 25, 10000);
 		if (runtimeState().getLong("padma.deadline", 0) == 0
 				&& !runtimeState().getBoolean("padma.complete", false)) {
 			startPadmarashkaTimer();
@@ -175,7 +172,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 				runtimeState().put("padma.complete", true);
 				cancelPadmarashkaTimer();
 				// 帕德玛拉什卡已死亡。30 分钟后将离开其洞穴。 / Padmarashka has died. You will be removed from Padmarashka's Cave in 30 minutes.
-				sendMsgByRace(1400675, Race.PC_ALL, 10000);
+				sendMsg(1400675, 0, false, 25, 10000);
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Padmarashka Cave>");
 				instance.doOnAllPlayers(new Visitor<Player>() {
 			        /**
@@ -198,10 +195,10 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 				runtimeState().put("padma.eggs", dramataEgg55);
 				if (dramataEgg55 == 2) {
 					// 帕德玛拉什卡即将产卵。 / Padmarashka is about to lay eggs.
-					sendMsgByRace(1400526, Race.PC_ALL, 0);
+					sendMsg(1400526, 0, false, 25, 0);
 				} else if (dramataEgg55 == 5) {
 					// 帕德玛拉什卡因大量卵被毁而暴怒。 / Padmarashka is furious after seeing so many of her eggs destroyed.
-					sendMsgByRace(1401213, Race.PC_ALL, 0);
+					sendMsg(1401213, 0, false, 25, 0);
 				}
 			break;
 			case 218670: //Padmarashka's Elite Commander.
@@ -218,7 +215,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 					} else if (dramataFi55Ae == 4) {
 						deleteNpc(282123); //Dramata Shield.
 						// 帕德玛拉什卡已从防护沉眠中苏醒。 / Padmarashka has awoken from the Protective Slumber.
-						sendMsgByRace(1400728, Race.PC_ALL, 10000);
+						sendMsg(1400728, 0, false, 25, 10000);
 						dramata55Al.getEffectController().removeEffect(19186); //Protective Slumber.
 					}
 				}
@@ -252,7 +249,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 
 	private void expirePadmarashka() {
 		runtimeState().put("padma.expired", true);
-		sendMsgByRace(1400524, Race.PC_ALL, 0);
+		sendMsg(1400524, 0, false, 25, 0);
 		deleteNpc(218756);
 	}
 
@@ -267,71 +264,6 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
-	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
-	private void sendMessage(final int msgId, long delay) {
-        if (delay == 0) {
-            this.sendMsg(msgId);
-        } else {
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-                /**
-                 * 处理 run。
-                 * Handle run.
-                 */
-                public void run() {
-                    sendMsg(msgId);
-                }
-            }, delay);
-        }
-    }
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
 	}
 	
 	private void sendMovie(Player player, int movie) {

@@ -58,6 +58,11 @@ public class MinionDopingBag {
 		}
 	}
 
+	/** 返回指定槽位的物品 / Returns the item in the given slot */
+	public int getItem(int slot) {
+		return itemBag == null || slot < 0 || slot >= itemBag.length ? 0 : itemBag[slot];
+	}
+
 	/** 返回 scrolls used / Returns the scrolls used */
 	public int[] getScrollsUsed() {
 		if (itemBag == null || itemBag.length < 3) {

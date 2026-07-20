@@ -108,7 +108,7 @@
 					</spawn>
                 </spawn_map>
 				<!-- Inggison -->
-				<spawn_map map_id="210130000">
+				<spawn_map map_id="210050000">
 					<!-- Brios -->
 					<spawn npc_id="798414">
 						<spot x="1331.930" y="321.415" z="588.625" h="106"/>
@@ -207,7 +207,7 @@
 					</spawn>
                 </spawn_map>
 				<!-- Gelkmaros -->
-				<spawn_map map_id="220140000">
+				<spawn_map map_id="220070000">
 					<!-- Bothen -->
 					<spawn npc_id="798416">
 						<spot x="1765.34" y="2899.360" z="548.526" h="88"/>
@@ -283,7 +283,7 @@
 					</spawn>
                 </spawn_map>
 				<!-- Inggison -->
-				<spawn_map map_id="210130000">
+				<spawn_map map_id="210050000">
 					<!-- Celline -->
 					<spawn npc_id="799938">
 						<spot x="1297.713" y="257.6204" z="595.8169" h="88"/>
@@ -326,7 +326,7 @@
 					</spawn>
                 </spawn_map>
 				<!-- Gelkmaros -->
-				<spawn_map map_id="220140000">
+				<spawn_map map_id="220070000">
 					<!-- Reoni -->
 					<spawn npc_id="799944">
 						<spot x="1782.7567" y="2900.8984" z="552.508" h="102"/>
@@ -432,7 +432,7 @@
 					</spawn>
                 </spawn_map>
 				<!-- Gelkmaros -->
-				<spawn_map map_id="220140000">
+				<spawn_map map_id="220070000">
 					<!-- Darian -->
 					<spawn npc_id="799798">
 						<spot x="1772.2051" y="2903.5684" z="554.8029" h="34"/>
@@ -475,7 +475,7 @@
 					</spawn>
                 </spawn_map>
 				<!-- Inggison -->
-				<spawn_map map_id="210130000">
+				<spawn_map map_id="210050000">
 					<!-- Larsa -->
 					<spawn npc_id="799710">
 						<spot x="1360.7979" y="358.68234" z="589.5762" h="93"/>
@@ -668,7 +668,7 @@
 					</spawn>
 				</spawn_map>
 				<!-- Inggison -->
-		        <spawn_map map_id="210130000">
+		        <spawn_map map_id="210050000">
 					<!-- Nebrith [Event Staff] -->
 					<spawn npc_id="831031">
 						<spot x="1339.4084" y="268.29758" z="589.42175" h="51"/>
@@ -774,7 +774,7 @@
 					</spawn>
 		        </spawn_map>
 				<!-- Gelkmaros -->
-		        <spawn_map map_id="220140000">
+		        <spawn_map map_id="220070000">
 					<!-- Edandos [Event Staff] -->
 					<spawn npc_id="831029">
 					    <spot x="1760.8632" y="2911.2908" z="554.79820" h="13"/>
@@ -897,7 +897,7 @@
 				    </spawn>
 				</spawn_map>
 				<!-- Inggison -->
-				<spawn_map map_id="210130000">
+				<spawn_map map_id="210050000">
 					<!-- Reklov -->
 					<spawn npc_id="831186">
                        <spot x="1353.7819" y="261.88284" z="589.7973" h="48"/>
@@ -1021,7 +1021,7 @@
                     </spawn>
 				</spawn_map>
 				<!-- Gelkmaros -->
-				<spawn_map map_id="220140000">
+				<spawn_map map_id="220070000">
 					<!-- Reklov -->
 					<spawn npc_id="831186">
                         <spot x="1801.5968" y="2893.8403" z="548.5251" h="37"/>
@@ -1808,7 +1808,7 @@
 					</spawn>
                 </spawn_map>
 				<!-- Inggison -->
-				<spawn_map map_id="210130000">
+				<spawn_map map_id="210050000">
 					<!-- Casre -->
 					<spawn npc_id="831433">
 						<spot x="1360.2000" y="239.8000" z="589.7000" h="36"/>
@@ -2088,7 +2088,7 @@
 					</spawn>
 		        </spawn_map>
 				<!-- Gelkmaros -->
-				<spawn_map map_id="220140000">
+				<spawn_map map_id="220070000">
 					<!-- Largos -->
 					<spawn npc_id="831439">
 						<spot x="1839.7000" y="2843.6001" z="536.1000" h="38"/>

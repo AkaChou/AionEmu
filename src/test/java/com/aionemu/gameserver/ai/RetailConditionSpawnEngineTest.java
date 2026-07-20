@@ -17,6 +17,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.npc.NpcRating;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
+import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.stats.NpcStatsTemplate;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
@@ -25,6 +26,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -41,8 +43,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RetailConditionSpawnEngineTest {
 	private static final int WORLD_ID = 1;
@@ -102,9 +106,21 @@ class RetailConditionSpawnEngineTest {
 			Map.of("wave", 3, "race", 2)));
 		assertTrue(RetailConditionSpawnEngine.evaluate("(1141_out == 1) && (1141_in == 1)",
 			Map.of("1141_out", 1, "1141_in", 1)));
-		assertTrue(RetailConditionSpawnEngine.evaluate(
+		assertThrows(IllegalArgumentException.class, () -> RetailConditionSpawnEngine.evaluate(
 			"(1131_rewardcon_l_set == 1) && (1131_mistoff == 1) && (1132_mistoff == 1) && (1141_mistoff == 1",
 			Map.of("1131_rewardcon_l_set", 1, "1131_mistoff", 1, "1132_mistoff", 1, "1141_mistoff", 1)));
+	}
+
+	@Test
+	void clearsCompletedTasksAndUnconsumedDeathMarkers() throws Exception {
+		String engine = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/ai/RetailConditionSpawnEngine.java"));
+		String controller = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/controllers/NpcController.java"));
+
+		assertTrue(engine.contains("active.tasks.remove(reference.get())"));
+		assertTrue(engine.contains("active.tasks.clear()"));
+		assertTrue(controller.contains("RetailConditionSpawnEngine.consumeConditionSpawnDeath(owner)"));
 	}
 
 	@Test
@@ -206,6 +222,7 @@ class RetailConditionSpawnEngineTest {
 			RetailConditionSpawnEngine.initialize(context.instance);
 			Npc npc = (Npc) context.world.object;
 
+			String firstStableKey = npc.getSpawn().getStableKey();
 			RetailConditionSpawnEngine.onDie(context.instance, npc);
 			long deadline = context.instance.getRuntimeState()
 				.getLong("retail.condition.spawn.1.object.0.0.0.respawn_deadline", 0);
@@ -221,6 +238,21 @@ class RetailConditionSpawnEngineTest {
 			}
 			TimeUnit.MILLISECONDS.sleep(100);
 			assertEquals(2, context.world.spawnCount);
+			assertNotEquals(firstStableKey, ((Npc) context.world.object).getSpawn().getStableKey());
+		}
+	}
+
+	@Test
+	void appliesRetailIdleRangeAndAttackStateLifecycleMode() throws ReflectiveOperationException {
+		ConditionSpawnNpc npc = new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null,
+			0, 0, 0, 6, true);
+		try (TestContext context = new TestContext(npc)) {
+			RetailConditionSpawnEngine.initialize(context.instance);
+			SpawnTemplate spawn = ((Npc) context.world.object).getSpawn();
+
+			assertEquals(6, spawn.getRandomWalk());
+			assertTrue(spawn.isDespawnAtAttackState());
+			assertEquals("retail.condition.spawn.1.object.0.0.0.generation.1", spawn.getStableKey());
 		}
 	}
 
@@ -247,7 +279,7 @@ class RetailConditionSpawnEngineTest {
 
 	private static ConditionSpawnNpc conditionNpc(int life, int respawnTime, int respawnTimeExtra) {
 		return new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null, life, respawnTime,
-			respawnTimeExtra);
+			respawnTimeExtra, 0, false);
 	}
 
 	private static RetailAiData retailAiData(ConditionSpawnNpc npc) {

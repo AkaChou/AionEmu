@@ -17,6 +17,7 @@ import com.aionemu.gameserver.model.stats.calc.functions.StatAddFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatRateFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatSetFunction;
 import com.aionemu.gameserver.model.stats.container.CreatureGameStats;
+import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.skillengine.change.Change;
 import com.aionemu.gameserver.skillengine.condition.Conditions;
@@ -114,8 +115,18 @@ public abstract class BuffEffect extends EffectTemplate {
 						new StatAddFunction(changeItem.getStat(), valueWithDelta, true).withConditions(conditions));
 				break;
 			case PERCENT:
-				modifiers.add(
-						new StatRateFunction(changeItem.getStat(), valueWithDelta, true).withConditions(conditions));
+				if (changeItem.getStat() == StatEnum.ABNORMAL_RESISTANCE_ALL) {
+					for (StatEnum stat : AR_ALL_RESISTANCE_STATS) {
+						modifiers.add(new StatRateFunction(stat, valueWithDelta, true).withConditions(conditions));
+					}
+				} else if (changeItem.getStat() == StatEnum.STUNLIKE_RESISTANCE) {
+					for (StatEnum stat : STUNLIKE_RESISTANCE_STATS) {
+						modifiers.add(new StatRateFunction(stat, valueWithDelta, true).withConditions(conditions));
+					}
+				} else {
+					modifiers.add(
+							new StatRateFunction(changeItem.getStat(), valueWithDelta, true).withConditions(conditions));
+				}
 				break;
 			case REPLACE:
 				modifiers.add(

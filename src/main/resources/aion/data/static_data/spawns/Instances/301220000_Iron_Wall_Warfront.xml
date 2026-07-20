@@ -1,145 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-	Iron Wall Warfront Spawn By (Encom)
- -->
 <spawns>
 	<spawn_map map_id="301220000">
-		<!-- Supply Base Beta Flag -->
-		<spawn npc_id="831895">
-			<spot x="393.92688" y="271.82904" z="253.375" h="107"/>
-		</spawn>
-		<!-- Military Supply Base Flag -->
-		<spawn npc_id="831896">
-			<spot x="259.81546" y="740.3553" z="201.36577" h="23"/>
-		</spawn>
-		<!-- Supply Base Alpha Flag -->
-		<spawn npc_id="831897">
-			<spot x="574.5787" y="505.92386" z="217.75" h="8"/>
-		</spawn>
-		<!-- Artillery Base Flag -->
-		<spawn npc_id="831898">
-			<spot x="604.0888" y="878.7746" z="192.95142" h="88"/>
-		</spawn>
-		<!-- Sentry Post Alpha Flag -->
-		<spawn npc_id="831899">
-			<spot x="555.3127" y="416.20398" z="222.77223" h="19"/>
-		</spawn>
-		<!-- Sentry Post Beta Flag -->
-		<spawn npc_id="831900">
-			<spot x="819.66156" y="604.6976" z="239.70569" h="82"/>
-		</spawn>
-		<!-- Holy Grounds Flag -->
-		<spawn npc_id="831901">
-			<spot x="449.6276" y="448.86804" z="270.74738" h="78"/>
-		</spawn>
-		<!-- Command Center Flag -->
-		<spawn npc_id="831902">
-			<spot x="440.07004" y="768.60376" z="202.6145" h="118"/>
-		</spawn>
-		<!-- Headquarters Alpha Flag -->
-		<spawn npc_id="831903">
-			<spot x="356.20807" y="473.54718" z="236.18228" h="106"/>
-		</spawn>
-		<!-- Headquarters Beta Flag -->
-		<spawn npc_id="831904">
-			<spot x="772.203" y="762.5251" z="198.04073" h="69"/>
-		</spawn>
-		<!-- Pashid Supply Base Beta Officer -->
-		<spawn npc_id="233550">
-            <spot x="393.92688" y="271.82904" z="253.375" h="107"/>
-        </spawn>
-		<!-- Pashid Military Supply Base Officer -->
-		<spawn npc_id="233551">
-            <spot x="259.81546" y="740.3553" z="201.36577" h="23"/>
-        </spawn>
-		<!-- Pashid Supply Base Alpha Officer Officer -->
-		<spawn npc_id="233552">
-            <spot x="574.5787" y="505.92386" z="217.75" h="8"/>
-        </spawn>
-		<!-- Pashid Artillery Base Officer -->
-		<spawn npc_id="233553">
-            <spot x="604.0888" y="878.7746" z="192.95142" h="88"/>
-        </spawn>
-		<!-- Pashid Sentry Post Alpha Officer -->
-		<spawn npc_id="233554">
-            <spot x="555.3127" y="416.20398" z="222.77223" h="19"/>
-        </spawn>
-		<!-- Pashid Sentry Post Beta Officer -->
-		<spawn npc_id="233555">
-            <spot x="819.66156" y="604.6976" z="239.70569" h="82"/>
-        </spawn>
-		<!-- Pashid Holy Grounds Officer -->
-		<spawn npc_id="233556">
-            <spot x="449.6276" y="448.86804" z="270.74738" h="78"/>
-        </spawn>
-		<!-- Pashid Command Center Officer -->
-		<spawn npc_id="233557">
-            <spot x="440.07004" y="768.60376" z="202.6145" h="118"/>
-        </spawn>
-		<!-- Pashid Headquarters Alpha Officer -->
-		<spawn npc_id="233558">
-            <spot x="356.20807" y="473.54718" z="236.18228" h="106"/>
-        </spawn>
-		<!-- Pashid Headquarters Beta Officer -->
-		<spawn npc_id="233559">
-            <spot x="772.203" y="762.5251" z="198.04073" h="69"/>
-        </spawn>
 		<!-- Pashid Beastmaster -->
 		<spawn npc_id="233537">
 			<spot x="702.0077" y="340.50586" z="247.84883" h="43"/>
 		</spawn>
-		<!-- Pashid Scout -->
-		<spawn npc_id="233543">
-            <spot x="453.74094" y="264.6635" z="246.40028" h="36"/>
-            <spot x="438.01596" y="276.6177" z="246.375" h="118"/>
-			<spot x="308.43594" y="701.484" z="209.6052" h="92"/>
-            <spot x="288.6053" y="735.61084" z="205.65054" h="97"/>
-			<spot x="574.4876" y="487.7919" z="217.75" h="6"/>
-            <spot x="605.71234" y="499.11005" z="217.85703" h="39"/>
-            <spot x="582.6051" y="496.10278" z="217.75" h="109"/>
-			<spot x="606.8558" y="854.07117" z="192.43098" h="83"/>
-            <spot x="598.023" y="854.6677" z="192.43138" h="95"/>
-			<spot x="560.5613" y="435.62216" z="222.75" h="95"/>
-			<spot x="810.6133" y="577.9746" z="239.5" h="113"/>
-            <spot x="831.00385" y="597.151" z="239.5" h="82"/>
-            <spot x="803.56793" y="611.3292" z="239.5659" h="95"/>
-			<spot x="452.27325" y="385.31363" z="246.42839" h="0"/>
-            <spot x="421.9427" y="404.8145" z="258.16705" h="100"/>
-			<spot x="454.5969" y="767.52106" z="202.30487" h="119"/>
-            <spot x="491.3722" y="765.2371" z="200.16635" h="119"/>
-			<spot x="344.62454" y="446.85638" z="234.20306" h="101"/>
-            <spot x="372.08167" y="455.98224" z="234.25" h="81"/>
-			<spot x="755.43805" y="767.4794" z="195.54028" h="76"/>
-            <spot x="771.21936" y="743.6165" z="195.54028" h="76"/>
-            <spot x="770.72797" y="725.1369" z="194.5" h="67"/>
-            <spot x="741.4761" y="771.03613" z="194.625" h="76"/>
-        </spawn>
-		<!-- Pashid Summoner Captain -->
-        <spawn npc_id="233547">
-            <spot x="428.56836" y="270.10815" z="246.45772" h="117"/>
-			<spot x="297.2353" y="715.4191" z="206.38576" h="102"/>
-			<spot x="595.8862" y="869.7282" z="193.1967" h="102"/>
-			<spot x="591.69977" y="498.41666" z="217.76877" h="99"/>
-			<spot x="565.85754" y="416.52362" z="222.75" h="36"/>
-            <spot x="822.6201" y="586.7958" z="239.55705" h="90"/>
-			<spot x="439.18732" y="433.28952" z="270.887" h="75"/>
-			<spot x="450.8697" y="775.763" z="202.89624" h="82"/>
-			<spot x="357.5201" y="451.77515" z="234.41061" h="91"/>
-			<spot x="741.4577" y="755.0922" z="195.30608" h="84"/>
-        </spawn>
-		<!-- Pashid Defender Captain -->
-        <spawn npc_id="233548">
-            <spot x="429.64246" y="260.12732" z="246.7947" h="15"/>
-			<spot x="262.56683" y="760.37726" z="201.4094" h="106"/>
-			<spot x="587.89545" y="513.49084" z="217.75" h="8"/>
-			<spot x="608.3503" y="870.7595" z="193.10478" h="87"/>
-			<spot x="553.7597" y="429.06116" z="222.69131" h="6"/>
-			<spot x="806.08026" y="590.5061" z="239.5659" h="98"/>
-			<spot x="433.1931" y="439.81213" z="270.88953" h="75"/>
-			<spot x="449.76147" y="760.18384" z="202.88968" h="34"/>
-			<spot x="374.35403" y="469.04745" z="235.10414" h="13"/>
-			<spot x="749.9243" y="740.33624" z="195.2935" h="76"/>
-        </spawn>
 		<!-- Pashid Sentinel -->
         <spawn npc_id="233549">
             <spot x="452.7445" y="284.59048" z="245.72272" h="34"/>
@@ -219,32 +84,6 @@
 		<spawn npc_id="233749">
 			<spot x="518.4247" y="230.84209" z="231.92047" h="0"/>
 		</spawn>
-		<!-- Asmodians Guardian Statue -->
-		<spawn npc_id="233509">
-            <spot x="286.75266" y="388.11136" z="238.54927" h="14"/>
-            <spot x="280.00458" y="395.1691" z="238.55945" h="14"/>
-        </spawn>
-		<!-- Elyos Guardian Statue -->
-		<spawn npc_id="233529">
-			<spot x="713.90643" y="635.1225" z="212.1905" h="37"/>
-            <spot x="705.83136" y="633.45776" z="212.17476" h="38"/>
-        </spawn>
-		<!-- Lundvarr -->
-		<spawn npc_id="802054">
-            <spot x="282.54315" y="386.91547" z="238.72746" h="31"/>
-        </spawn>
-		<!-- Demades -->
-		<spawn npc_id="802055">
-            <spot x="715.05194" y="627.5818" z="212.01936" h="53"/>
-        </spawn>
-		<!-- Entrance Mortar -->
-		<spawn npc_id="831966">
-            <spot x="715.03003" y="639.14838" z="212.27075" entity_id="200"/>
-        </spawn>
-		<!-- Entrance Mortar -->
-		<spawn npc_id="831967">
-            <spot x="290.62711" y="389.59903" z="238.40169" entity_id="201"/>
-        </spawn>
 		<!-- Post-Bastion Strategy -->
 		<spawn npc_id="701660">
 			<spot x="572.27283" y="514.05396" z="218.33615" entity_id="328"/>

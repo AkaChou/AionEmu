@@ -88,6 +88,10 @@ public interface AI2 {
 	default void onMostHatingUpdated(Creature creature) {
 	}
 
+	/** 接收真端 NPC 脚本消息。 */
+	default void onRetailMessage(int type, int param1, int param2, Creature sender, Creature parameter) {
+	}
+
 	/** 处理进入异常状态事件。 */
 	default void onEnterAbnormalState(Creature caster, int abnormalState) {
 	}

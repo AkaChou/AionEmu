@@ -1,6 +1,7 @@
 package com.aionemu.commons.database;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -60,6 +61,21 @@ class DatabaseSchemaInitializerTest {
         assertTrue(schema.contains("`remaining` int(10) unsigned NOT NULL"));
         assertTrue(schema.contains("PRIMARY KEY (`quest_id`)"));
     }
+
+    @Test
+    void retailInstanceSchemasUseLedgerInsteadOfMemberRewardStatus() throws IOException {
+        assertFalse(resourceText("db/mysql/al_server_gs.sql").contains("reward_status"));
+        assertFalse(resourceText("db/mysql/retail_instance_schema.sql").contains("reward_status"));
+    }
+
+	@Test
+	void retailInstanceSchemasPersistMatchEntryReservations() throws IOException {
+		for (String resource : List.of("db/mysql/al_server_gs.sql", "db/mysql/retail_instance_schema.sql")) {
+			String schema = resourceText(resource);
+			assertTrue(schema.contains("`entry_limit_key` int(11) NOT NULL DEFAULT 0"));
+			assertTrue(schema.contains("`entry_consumed` tinyint(1) NOT NULL DEFAULT 0"));
+		}
+	}
 
     @Test
     void loadsInstanceSyncKeysFromExternalDefinitions(@TempDir Path definitionsDir) throws IOException {

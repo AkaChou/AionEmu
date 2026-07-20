@@ -21,8 +21,6 @@ import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
-import com.aionemu.gameserver.services.instance.AsyunatarService;
-import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
@@ -47,10 +45,6 @@ public final class GameFeatureServices implements DisposableBean {
     private static volatile ObjectProvider<NpcShoutsService> npcShoutsServiceProvider;
     /** 争议之地服务提供者 / Dispute-land service provider. */
     private static volatile ObjectProvider<DisputeLandService> disputeLandServiceProvider;
-    /** 钢铁之战服务提供者 / Dredgion service provider. */
-    private static volatile ObjectProvider<DredgionService2> dredgionServiceProvider;
-    /** 阿修那塔服务提供者 / Asyunatar service provider. */
-    private static volatile ObjectProvider<AsyunatarService> asyunatarServiceProvider;
     /** 护盾服务提供者 / Shield service provider. */
     private static volatile ObjectProvider<ShieldService> shieldServiceProvider;
     /** 奖励服务提供者 / Reward service provider. */
@@ -104,8 +98,6 @@ public final class GameFeatureServices implements DisposableBean {
      * Construct and register instance providers for feature services.
      *
      * @param disputeLandServiceProvider 争议之地服务提供者 / Dispute-land service provider
-     * @param dredgionServiceProvider 钢铁之战服务提供者 / Dredgion service provider
-     * @param asyunatarServiceProvider 阿修那塔服务提供者 / Asyunatar service provider
      * @param playerLimitServiceProvider 玩家限制服务提供者 / Player-limit service provider
      * @param npcShoutsServiceProvider NPC 喊话服务提供者 / NPC-shouts service provider
      * @param shieldServiceProvider 护盾服务提供者 / Shield service provider
@@ -135,8 +127,6 @@ public final class GameFeatureServices implements DisposableBean {
      * @param growthEnergyProvider 成长能量提供者 / Growth-energy provider
      */
     public GameFeatureServices(ObjectProvider<DisputeLandService> disputeLandServiceProvider,
-            ObjectProvider<DredgionService2> dredgionServiceProvider,
-            ObjectProvider<AsyunatarService> asyunatarServiceProvider,
             ObjectProvider<PlayerLimitService> playerLimitServiceProvider,
             ObjectProvider<NpcShoutsService> npcShoutsServiceProvider,
             ObjectProvider<ShieldService> shieldServiceProvider,
@@ -166,8 +156,6 @@ public final class GameFeatureServices implements DisposableBean {
             ObjectProvider<GrowthEnergy> growthEnergyProvider) {
         GameFeatureServices.npcShoutsServiceProvider = npcShoutsServiceProvider;
         GameFeatureServices.disputeLandServiceProvider = disputeLandServiceProvider;
-        GameFeatureServices.dredgionServiceProvider = dredgionServiceProvider;
-        GameFeatureServices.asyunatarServiceProvider = asyunatarServiceProvider;
         GameFeatureServices.shieldServiceProvider = shieldServiceProvider;
         GameFeatureServices.rewardServiceProvider = rewardServiceProvider;
         GameFeatureServices.protectorConquerorServiceProvider = protectorConquerorServiceProvider;
@@ -193,8 +181,6 @@ public final class GameFeatureServices implements DisposableBean {
         GameFeatureServices.coalescenceServiceProvider = coalescenceServiceProvider;
         GameFeatureServices.growthEnergyProvider = growthEnergyProvider;
         DisputeLandService.setInstanceProvider(disputeLandServiceProvider);
-        DredgionService2.setInstanceProvider(dredgionServiceProvider);
-        AsyunatarService.setInstanceProvider(asyunatarServiceProvider);
         PlayerLimitService.setInstanceProvider(playerLimitServiceProvider);
         NpcShoutsService.setInstanceProvider(npcShoutsServiceProvider);
         ShieldService.setInstanceProvider(shieldServiceProvider);
@@ -239,16 +225,6 @@ public final class GameFeatureServices implements DisposableBean {
     }
 
     /**
-     * 解析钢铁之战服务。
-     * Resolve the Dredgion service.
-     *
-     * @return 钢铁之战服务 / Dredgion service
-     */
-    public static DredgionService2 dredgionService() {
-        return getIfAvailable(dredgionServiceProvider, DredgionService2::getInstance);
-    }
-
-    /**
      * 解析争议之地服务。
      * Resolve the dispute-land service.
      *
@@ -256,16 +232,6 @@ public final class GameFeatureServices implements DisposableBean {
      */
     public static DisputeLandService disputeLandService() {
         return getIfAvailable(disputeLandServiceProvider, DisputeLandService::getInstance);
-    }
-
-    /**
-     * 解析阿修那塔服务。
-     * Resolve the Asyunatar service.
-     *
-     * @return 阿修那塔服务 / Asyunatar service
-     */
-    public static AsyunatarService asyunatarService() {
-        return getIfAvailable(asyunatarServiceProvider, AsyunatarService::getInstance);
     }
 
     /**
@@ -553,8 +519,6 @@ public final class GameFeatureServices implements DisposableBean {
     public void destroy() {
         npcShoutsServiceProvider = null;
         disputeLandServiceProvider = null;
-        dredgionServiceProvider = null;
-        asyunatarServiceProvider = null;
         shieldServiceProvider = null;
         rewardServiceProvider = null;
         protectorConquerorServiceProvider = null;
@@ -580,8 +544,6 @@ public final class GameFeatureServices implements DisposableBean {
         coalescenceServiceProvider = null;
         growthEnergyProvider = null;
         DisputeLandService.setInstanceProvider(null);
-        DredgionService2.setInstanceProvider(null);
-        AsyunatarService.setInstanceProvider(null);
         PlayerLimitService.setInstanceProvider(null);
         NpcShoutsService.setInstanceProvider(null);
         ShieldService.setInstanceProvider(null);

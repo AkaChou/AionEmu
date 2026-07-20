@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,10 +54,35 @@ public final class RetailMatchmakingService extends AutoGroupService {
 	private final AtomicLong sequence = new AtomicLong();
 	private final Map<Integer, List<Registration>> queues = new HashMap<>();
 	private final Map<PlayerMatch, Registration> registrations = new HashMap<>();
-	private final Map<Integer, ActiveMatch> activeByInstance = new HashMap<>();
+	private final Map<Long, ActiveMatch> activeByInstance = new HashMap<>();
 	private final Map<Integer, ActiveMatch> activeByPlayer = new HashMap<>();
 	private final Map<Integer, Long> penalties = new HashMap<>();
+	private final Map<Integer, Boolean> hudOpen = new HashMap<>();
 	private Future<?> matchingTask;
+	private Future<?> hudTask;
+
+	public synchronized void startScheduleNotifications() {
+		if (hudTask != null && !hudTask.isDone()) {
+			return;
+		}
+		refreshHud(false);
+		hudTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			synchronized (RetailMatchmakingService.this) {
+				refreshHud(true);
+			}
+		}, 60_000, 60_000);
+	}
+
+	public synchronized void shutdown() {
+		if (matchingTask != null) {
+			matchingTask.cancel(false);
+			matchingTask = null;
+		}
+		if (hudTask != null) {
+			hudTask.cancel(false);
+			hudTask = null;
+		}
+	}
 
 	@Override
 	public synchronized void startLooking(Player player, int instanceMaskId, EntryRequestType requestType) {
@@ -128,6 +154,7 @@ public final class RetailMatchmakingService extends AutoGroupService {
 					sendCancelled(player, match.definition);
 				} else {
 					match.adapter.players.remove(member.playerId());
+					InstanceAdmissionService.cancelMatchReservation(match.instance, member.playerId());
 				}
 				match.session.remove(member.playerId(), "TEAM_CHANGED");
 				activeByPlayer.remove(member.playerId(), match);
@@ -208,8 +235,9 @@ public final class RetailMatchmakingService extends AutoGroupService {
 
 	@Override
 	public synchronized void onEnterInstance(Player player) {
-		ActiveMatch match = activeByInstance.get(player.getInstanceId());
-		if (match == null || !match.adapter.players.containsKey(player.getObjectId())) {
+		ActiveMatch match = activeByPlayer.get(player.getObjectId());
+		if (match == null || match.instance != player.getPosition().getWorldMapInstance()
+				|| !match.adapter.players.containsKey(player.getObjectId())) {
 			return;
 		}
 		match.adapter.onEnterInstance(player);
@@ -219,8 +247,9 @@ public final class RetailMatchmakingService extends AutoGroupService {
 
 	@Override
 	public synchronized void onLeaveInstance(Player player) {
-		ActiveMatch match = activeByInstance.get(player.getInstanceId());
-		if (match == null || match.session.member(player.getObjectId()) == null) {
+		ActiveMatch match = activeByPlayer.get(player.getObjectId());
+		if (match == null || match.instance != player.getPosition().getWorldMapInstance()
+				|| match.session.member(player.getObjectId()) == null) {
 			return;
 		}
 		match.adapter.onLeaveInstance(player);
@@ -298,7 +327,20 @@ public final class RetailMatchmakingService extends AutoGroupService {
 
 	@Override
 	public synchronized void unRegisterInstance(Integer instanceId) {
-		ActiveMatch match = activeByInstance.get(instanceId);
+		List<ActiveMatch> matches = activeByInstance.values().stream()
+				.filter(match -> match.instance.getInstanceId() == instanceId).toList();
+		if (matches.size() > 1) {
+			throw new IllegalStateException("Ambiguous retail match runtime instance id " + instanceId);
+		}
+		if (!matches.isEmpty()) {
+			ActiveMatch match = matches.getFirst();
+			closeMatch(match, "INSTANCE_CLOSED", true);
+		}
+	}
+
+	@Override
+	public synchronized void unRegisterInstance(WorldMapInstance instance) {
+		ActiveMatch match = activeByInstance.get(instanceUid(instance));
 		if (match != null) {
 			closeMatch(match, "INSTANCE_CLOSED", true);
 		}
@@ -306,7 +348,13 @@ public final class RetailMatchmakingService extends AutoGroupService {
 
 	@Override
 	public synchronized boolean isAutoInstance(int instanceId) {
-		return activeByInstance.containsKey(instanceId);
+		return activeByInstance.values().stream().anyMatch(match -> match.instance.getInstanceId() == instanceId);
+	}
+
+	@Override
+	public synchronized boolean isAutoInstance(Player player) {
+		ActiveMatch match = activeByPlayer.get(player.getObjectId());
+		return match != null && match.instance == player.getPosition().getWorldMapInstance();
 	}
 
 	public synchronized void showWindow(Player player, MatchDefinition definition) {
@@ -341,7 +389,7 @@ public final class RetailMatchmakingService extends AutoGroupService {
 		}
 		adapter.onInstanceCreate(instance);
 		ActiveMatch match = new ActiveMatch(definition, instance, adapter, session);
-		activeByInstance.put(instance.getInstanceId(), match);
+		activeByInstance.put(instanceUid(instance), match);
 		for (RetailMatchSession.Member member : session.members()) {
 			activeByPlayer.put(member.playerId(), match);
 		}
@@ -406,7 +454,7 @@ public final class RetailMatchmakingService extends AutoGroupService {
 			RetailMatchSession session = new RetailMatchSession(definition.getInstanceMaskId(),
 					instance.getDynamicInstance().getInstanceUid(), now, now + READY_TIMEOUT_MILLIS, draftDeadline, members);
 			match = new ActiveMatch(definition, instance, adapter, session);
-			activeByInstance.put(instance.getInstanceId(), match);
+			activeByInstance.put(instanceUid(instance), match);
 			for (RetailMatchSession.Member member : members) {
 				activeByPlayer.put(member.playerId(), match);
 			}
@@ -425,7 +473,7 @@ public final class RetailMatchmakingService extends AutoGroupService {
 			return true;
 		} catch (RuntimeException | Error e) {
 			if (match != null) {
-				activeByInstance.remove(match.instance.getInstanceId(), match);
+				activeByInstance.remove(instanceUid(match.instance), match);
 				for (RetailMatchSession.Member member : match.session.members()) {
 					activeByPlayer.remove(member.playerId(), match);
 				}
@@ -534,7 +582,7 @@ public final class RetailMatchmakingService extends AutoGroupService {
 	}
 
 	private synchronized void readyTimeout(ActiveMatch match) {
-		if (activeByInstance.get(match.instance.getInstanceId()) != match) {
+		if (activeByInstance.get(instanceUid(match.instance)) != match) {
 			return;
 		}
 		long now = System.currentTimeMillis();
@@ -543,13 +591,14 @@ public final class RetailMatchmakingService extends AutoGroupService {
 				continue;
 			}
 			Player player = player(member.playerId());
-				if (player != null) {
-					match.adapter.unregister(player);
-					InstanceAdmissionService.cancelMatchReservation(match.instance, player);
-					sendCancelled(player, match.definition);
-					closeTeamMatchWindow(player, match, false);
+			if (player != null) {
+				match.adapter.unregister(player);
+				InstanceAdmissionService.cancelMatchReservation(match.instance, player);
+				sendCancelled(player, match.definition);
+				closeTeamMatchWindow(player, match, false);
 			} else {
 				match.adapter.players.remove(member.playerId());
+				InstanceAdmissionService.cancelMatchReservation(match.instance, member.playerId());
 			}
 			match.session.remove(member.playerId(), "READY_TIMEOUT");
 			activeByPlayer.remove(member.playerId(), match);
@@ -580,11 +629,16 @@ public final class RetailMatchmakingService extends AutoGroupService {
 			match.session.cancel(reason);
 		}
 		persist(match);
-		activeByInstance.remove(match.instance.getInstanceId(), match);
+		activeByInstance.remove(instanceUid(match.instance), match);
 		for (RetailMatchSession.Member member : match.session.members()) {
 			Player player = player(member.playerId());
-			if (player != null && !member.entered()) {
-				closeTeamMatchWindow(player, match, false);
+			if (!member.entered()) {
+				if (player == null) {
+					InstanceAdmissionService.cancelMatchReservation(match.instance, member.playerId());
+				} else {
+					InstanceAdmissionService.cancelMatchReservation(match.instance, player);
+					closeTeamMatchWindow(player, match, false);
+				}
 			}
 			activeByPlayer.remove(member.playerId(), match);
 		}
@@ -596,6 +650,13 @@ public final class RetailMatchmakingService extends AutoGroupService {
 
 	private void persist(ActiveMatch match) {
 		match.instance.getRuntimeState().put(SESSION_KEY, match.session.encode());
+	}
+
+	static long instanceUid(WorldMapInstance instance) {
+		if (instance.getDynamicInstance() == null || instance.getDynamicInstance().getInstanceUid() <= 0) {
+			throw new IllegalStateException("Retail match requires a persisted dynamic instance");
+		}
+		return instance.getDynamicInstance().getInstanceUid();
 	}
 
 	private List<Registration> removeMatchedParties(List<Party> parties) {
@@ -841,6 +902,27 @@ public final class RetailMatchmakingService extends AutoGroupService {
 							runTurn();
 						}
 					}, MATCH_TURN_MILLIS, MATCH_TURN_MILLIS);
+		}
+	}
+
+	private void refreshHud(boolean notifyTransitions) {
+		for (MatchDefinition definition : MatchDefinition.all()) {
+			if (definition.isTournament() || !definition.hasHudRegister()) {
+				continue;
+			}
+			boolean open = definition.isOpen();
+			Boolean previous = hudOpen.put(definition.getInstanceMaskId(), open);
+			if (!notifyTransitions || previous == null || previous == open) {
+				continue;
+			}
+			Iterator<Player> players = GameWorldBootstrapServices.world().getPlayersIterator();
+			while (players.hasNext()) {
+				Player player = players.next();
+				boolean close = !open || !definition.hasLevelPermit(player.getLevel())
+						|| !InstanceLimitService.status(player, definition.getInstanceMapId()).allowed();
+				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(definition.getInstanceMaskId(),
+						SM_AUTO_GROUP.wnd_EntryIcon, close));
+			}
 		}
 	}
 

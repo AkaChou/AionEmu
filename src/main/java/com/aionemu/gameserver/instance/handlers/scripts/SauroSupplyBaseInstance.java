@@ -1,22 +1,16 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.EmotionType;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -60,7 +54,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			break;
 			case 230847: //Mystery Box Key.
 				// 请谨慎选择。钥匙一经选定无法更改。 / Be careful in your selection. The key cannot be changed once it is chosen.
-				sendMsgByRace(1401946, Race.PC_ALL, 0);
+				sendMsg(1401946, 0, false, 25, 0);
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000179, 1)); //Danuar Omphanium Key.
@@ -134,15 +128,15 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
         super.onInstanceCreate(instance);
 		doors = instance.getDoors();
 		// 入侵警报响起。索罗精英护卫队正在集结。 / An intruder alarm has sounded. The Sauro Elite Protectorate are gathering.
-		sendMsgByRace(1401810, Race.PC_ALL, 10000);
+		sendMsg(1401810, 0, false, 25, 10000);
 		// 索罗精英护卫队已集结。 / The Sauro Elite Protectorate has assembled.
-		sendMsgByRace(1401811, Race.PC_ALL, 30000);
+		sendMsg(1401811, 0, false, 25, 30000);
 		// 索罗精英护卫队正在接近。 / The Sauro Elite Protectorate approaches.
-		sendMsgByRace(1401812, Race.PC_ALL, 50000);
+		sendMsg(1401812, 0, false, 25, 50000);
 		// 索罗精英护卫队还有一分钟到达。 / The Sauro Elite Protectorate is one minute out.
-		sendMsgByRace(1401813, Race.PC_ALL, 70000);
+		sendMsg(1401813, 0, false, 25, 70000);
 		// 索罗精英护卫队已到你面前。 / The Sauro Elite Protectorate is upon you.
-		sendMsgByRace(1401814, Race.PC_ALL, 130000);
+		sendMsg(1401814, 0, false, 25, 130000);
 		switch (Rnd.get(1, 5)) {
 		    case 1:
 				spawn(230846, 464.07788f, 401.3575f, 182.15321f, (byte) 10);
@@ -178,23 +172,23 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			case 230849: //Guard Captain Rohuka.
 				doors.get(383).setOpen(true);
 				// 通往被玷污的达努阿尔神殿的门已打开。 / The door to the Defiled Danuar Temple has opened.
-				sendMsgByRace(1401914, Race.PC_ALL, 0);
+				sendMsg(1401914, 0, false, 25, 0);
 			break;
 			case 230851: //Chief Gunner Kurmata.
 				doors.get(59).setOpen(true);
 				// 通往达努阿尔冥想花园的门已打开。 / The door to the Danuar Meditation Garden has opened.
-				sendMsgByRace(1401915, Race.PC_ALL, 0);
+				sendMsg(1401915, 0, false, 25, 0);
 				switch (Rnd.get(1, 2)) {
 				    case 1:
 				        doors.get(382).setOpen(true);
 						// 守门人倒下，左侧门已打开！ / With the gatekeeper down, the door on the left is open!
-						sendMsgByRace(1401229, Race.PC_ALL, 5000);
+						sendMsg(1401229, 0, false, 25, 5000);
 						spawn(230797, 610.7328f, 518.80884f, 191.2776f, (byte) 75); //Sheban Legion Elite Ambusher.
 					break;
 			        case 2:
 						doors.get(387).setOpen(true);
 						// 守门人倒下，右侧门已打开！ / With the gatekeeper down, the door on the right is open!
-						sendMsgByRace(1401230, Race.PC_ALL, 5000);
+						sendMsg(1401230, 0, false, 25, 5000);
 						spawn(230797, 611.1872f, 452.91882f, 191.2776f, (byte) 39); //Sheban Legion Elite Ambusher.
 					break;
 				}
@@ -206,12 +200,12 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			case 230818: //Sheban Legion Elite Gunner.
 				doors.get(372).setOpen(true);
 				// 通往首席研究员办公室的门已打开。 / The door to the Head Researcher's Office has opened.
-				sendMsgByRace(1401916, Race.PC_ALL, 0);
+				sendMsg(1401916, 0, false, 25, 0);
 			break;
 			case 230850: //Research Teselik.
 				doors.get(375).setOpen(true);
 				// 通往失落虔诚之树的门已打开。 / The door to the Lost Tree of Devotion has opened.
-				sendMsgByRace(1401917, Race.PC_ALL, 0);
+				sendMsg(1401917, 0, false, 25, 0);
 			break;
 			
 		   /**
@@ -220,12 +214,12 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			case 233255: //Gatekeeper Stranir.
 				doors.get(378).setOpen(true);
 				// 通往索罗军械库的门已打开。 / The door to the Sauro Armory has opened.
-				sendMsgByRace(1401918, Race.PC_ALL, 0);
+				sendMsg(1401918, 0, false, 25, 0);
 			break;
 			case 230852: //Commander Ranodim.
 				doors.get(388).setOpen(true);
 				// 通往重型仓储区的门已打开。 / The door to the Heavy Storage Area has opened.
-				sendMsgByRace(1401919, Race.PC_ALL, 0);
+				sendMsg(1401919, 0, false, 25, 0);
 			break;
 			
 			/**
@@ -234,13 +228,13 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			case 230791: //Sheban Legion Elite Assaulter.
 				doors.get(376).setOpen(true);
 				// 通往莫里亚塔住所的门已打开。 / The door to Moriata's Quarters has opened.
-				sendMsgByRace(1401920, Race.PC_ALL, 0);
+				sendMsg(1401920, 0, false, 25, 0);
 			break;
 			case 230853: //Chief Of Staff Moriata.
 				// 通往达努阿尔万神殿的装置已激活。 / A device leading to the Danuar Omphanium has been activated.
-				sendMsgByRace(1401921, Race.PC_ALL, 0);
+				sendMsg(1401921, 0, false, 25, 0);
 				// 通往达努阿尔万神殿的通道将开放 5 分钟。 / The passage to the Danuar Omphanium will be open for five minutes.
-				sendMsgByRace(1401922, Race.PC_ALL, 5000);
+				sendMsg(1401922, 0, false, 25, 5000);
 				spawn(730872, 127.77696f, 432.75684f, 151.69659f, (byte) 0, 3);
 			break;
 			
@@ -289,55 +283,6 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
         storage.decreaseByItemId(185000178, storage.getItemCountByItemId(185000178)); //Green Storeroom Key.
 		storage.decreaseByItemId(185000179, storage.getItemCountByItemId(185000179)); //Danuar Stone Room Key.
     }
-	
-    private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
 	
 	/**
 	 * 玩家从该副本登出时处理。

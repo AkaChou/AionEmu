@@ -324,7 +324,6 @@ public class Config {
 			ConfigurableProcessor.process(InstanceConfig.class, mainProps);
 			InstanceConfig.refresh();
 			InstanceScaler.reload();
-			InstanceService.reloadDestroyTasks();
 			InstanceService.load();
 			ConfigurableProcessor.process(AbyssLandingConfig.class, mainProps);
 			ConfigurableProcessor.process(LegionConfig.class, mainProps);

@@ -1,14 +1,15 @@
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.DescriptionId;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.autogroup.AGPlayer;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -40,6 +41,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 public class HarmonyArenaInstance extends GeneralInstanceHandler
 {
+	private static final String STATE = "arena.";
+	private static final String PREPARING = "PREPARING";
+	private static final String BATTLE = "BATTLE";
+	private static final String FINISHED = "FINISHED";
+	private static final long EXIT_DELAY = 60_000;
+
 	/** 副本奖励对象 / instance reward object */
 	protected HarmonyArenaReward instanceReward;
 	/** 副本是否已销毁 / whether the instance is destroyed */
@@ -69,17 +76,19 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		if (group == null) {
 			throw new IllegalStateException("Harmony player has no retail match side: " + object);
 		}
-		if (!instanceReward.containPlayer(object)) {
-			instanceReward.regPlayerReward(object);
-			PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(object);
+		restoreGroup(group);
+		boolean known = instanceReward.containPlayer(object) || runtimeState().get(playerKey(object, "points")) != null;
+		PvPArenaPlayerReward playerReward = restorePlayer(object);
+		if (!known) {
 			playerReward.setRewardRate(player.getRates().getHarmonyRewardRate());
 			playerReward.applyBoostMoraleEffect(player, instanceReward.getRebirthBuffDuration(0));
 			instanceReward.setRndPosition(object);
 		} else {
-			instanceReward.getPlayerReward(object).endAbsence();
-			instanceReward.getPlayerReward(object).setRewardRate(player.getRates().getHarmonyRewardRate());
+			playerReward.endAbsence();
+			playerReward.setRewardRate(player.getRates().getHarmonyRewardRate());
 			instanceReward.portToPosition(player);
 		}
+		persistPlayer(playerReward);
 		applyStageBuff(player);
 		sendEnterPacket(player);
 	}
@@ -126,8 +135,10 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			if (victimGroup == null) {
 				return;
 			}
+			restoreGroup(victimGroup);
 			rank = instanceReward.getRank(victimGroup.getPoints());
 			victimGroup.addPoints(-instanceReward.getDeathScore(rank));
+			persistGroup(victimGroup);
 			bonus = instanceReward.getKillScore() * instanceReward.getScoreModifier(rank) / 100;
 			instanceReward.sendPacket(10, victim.getObjectId());
 		} else {
@@ -144,12 +155,14 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 				continue;
 			} if (master instanceof Player) {
 				Player attaker = (Player) master;
-				HarmonyGroupReward attackerGroup = instanceReward.getHarmonyGroupReward(attaker.getObjectId());
+					HarmonyGroupReward attackerGroup = instanceReward.getHarmonyGroupReward(attaker.getObjectId());
 				if (attackerGroup == null) {
 					continue;
 				}
-				int rewardPoints = bonus * damager.getDamage() / victim.getAggroList().getTotalDamage();
-				attackerGroup.addPoints(rewardPoints);
+					restoreGroup(attackerGroup);
+					int rewardPoints = bonus * damager.getDamage() / victim.getAggroList().getTotalDamage();
+					attackerGroup.addPoints(rewardPoints);
+					persistGroup(attackerGroup);
 				sendSystemMsg(attaker, victim, rewardPoints);
 				instanceReward.sendPacket(10, attaker.getObjectId());
 			}
@@ -187,21 +200,8 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	}
 	
 	private int getNpcBonus(int npcId) {
-		switch (npcId) {
-			case 207102:
-			case 207116:
-			case 243678: //Roaming Volcanic Petrahulk.
-				return 400;
-			case 207099:
-				return 200;
-			case 243679: //Heated Negotiator Grangvolkan.
-				return 100;
-			case 219328: //Plaza Wall.	
-			case 243680: //Lurking Fangwing.
-				return 50;
-			default:
-				return 0;
-		}
+		var score = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getNpcScore(npcId);
+		return score == null || score.scoreApplyType() != 0 || score.equalizingScore() != 0 ? 0 : score.value();
 	}
 	
 	private int getTime() {
@@ -216,10 +216,11 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogin(Player player) {
-		PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
+		PvPArenaPlayerReward playerReward = restorePlayer(player.getObjectId());
 		if (playerReward != null) {
 			playerReward.endAbsence();
 			playerReward.setRewardRate(player.getRates().getHarmonyRewardRate());
+			persistPlayer(playerReward);
 			applyStageBuff(player);
 		}
 		sendEnterPacket(player);
@@ -230,6 +231,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
 		if (playerReward != null) {
 			playerReward.beginAbsence();
+			persistPlayer(playerReward);
 		}
 	}
 	
@@ -243,11 +245,53 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		instanceReward = new HarmonyArenaReward(mapId, instanceId, instance);
-		instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
-		instanceReward.setInstanceStartTime();
 		spawnRings();
-		GameThreadPoolServices.threadPoolManager().schedule(this::startBattle,
-				instanceReward.getWaitTimeSeconds() * 1000L);
+		restoreLifecycle();
+	}
+
+	private void restoreLifecycle() {
+		long startedAt = runtimeState().getLong(STATE + "started_at", 0);
+		if (startedAt == 0) {
+			startedAt = System.currentTimeMillis();
+			runtimeState().put(STATE + "started_at", startedAt);
+			runtimeState().put(STATE + "phase", PREPARING);
+			runtimeState().put(STATE + "round", 1);
+			runtimeState().put(STATE + "zone.1", instanceReward.getZone());
+		}
+		instanceReward.setInstanceStartTime(startedAt);
+		int round = runtimeState().getInt(STATE + "round", 1);
+		int[] zones = new int[round];
+		for (int i = 0; i < round; i++) {
+			zones[i] = runtimeState().getInt(STATE + "zone." + (i + 1), 0);
+		}
+		instanceReward.restoreProgress(round, zones);
+		String phase = runtimeState().get(STATE + "phase", PREPARING);
+		instanceReward.setInstanceScoreType(switch (phase) {
+			case FINISHED -> InstanceScoreType.END_PROGRESS;
+			case BATTLE -> InstanceScoreType.START_PROGRESS;
+			default -> InstanceScoreType.PREPARING;
+		});
+		restorePlayers();
+		switch (phase) {
+			case FINISHED -> scheduleExit(runtimeState().getLong(STATE + "exit_deadline", System.currentTimeMillis()));
+			case BATTLE -> {
+				openDoors();
+				scheduleDeadline("round", runtimeState().getLong(STATE + "round_deadline", System.currentTimeMillis()),
+						this::finishRound);
+				long zoneDeadline = runtimeState().getLong(STATE + "zone_deadline", 0);
+				if (zoneDeadline > 0) {
+					scheduleDeadline("zone", zoneDeadline, this::changeZone);
+				}
+			}
+			default -> {
+				long deadline = runtimeState().getLong(STATE + "prepare_deadline", 0);
+				if (deadline == 0) {
+					deadline = startedAt + instanceReward.getWaitTimeSeconds() * 1000L;
+					runtimeState().put(STATE + "prepare_deadline", deadline);
+				}
+				scheduleDeadline("prepare", deadline, this::startBattle);
+			}
+		}
 	}
 
 	private void startBattle() {
@@ -255,12 +299,13 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			return;
 		}
 		openDoors();
-		sendMsgByRace(1401181, Race.PC_ALL, 0);
+		sendMsg(1401181);
 		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+		runtimeState().put(STATE + "phase", BATTLE);
+		runtimeState().put(STATE + "doors_open", true);
 		instanceReward.sendPacket(10, null);
 		instanceReward.sendPacket(2, null);
-		GameThreadPoolServices.threadPoolManager().schedule(this::finishRound,
-				instanceReward.getStageTimeSeconds() * 1000L);
+		scheduleRound();
 	}
 
 	private void finishRound() {
@@ -274,15 +319,16 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		removeStageBuffs();
 		instanceReward.setRound(instanceReward.getRound() + 1);
 		instanceReward.setRndZone();
+		runtimeState().put(STATE + "round", instanceReward.getRound());
+		runtimeState().put(STATE + "zone." + instanceReward.getRound(), instanceReward.getZone());
 		applyStageBuffs();
 		instanceReward.sendPacket(10, null);
 		instanceReward.sendPacket(2, null);
-		changeZone();
+		scheduleZoneChange();
 		if (instanceReward.getRound() == instanceReward.getScoreModifierStartStage()) {
-			sendMsgByRace(1401491, Race.PC_ALL, 2000);
+			sendMsg(1401491, 0, false, 25, 2000);
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(this::finishRound,
-				instanceReward.getStageTimeSeconds() * 1000L);
+		scheduleRound();
 	}
 	/**
 	 * 处理 spawnRings。
@@ -295,27 +341,26 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	private boolean canStart() {
 		if (instanceReward.getParticipatingGroups().size() < 2) {
 			// 独自一人时无法使用。 / Unavailable to use when you're alone.
-			sendMsgByRace(1403045, Race.PC_ALL, 0);
+			sendMsg(1403045);
 			finishBattle(false);
 			return false;
 		}
 		return true;
 	}
 	
+	private void scheduleZoneChange() {
+		long deadline = System.currentTimeMillis() + 1000;
+		runtimeState().put(STATE + "zone_deadline", deadline);
+		scheduleDeadline("zone", deadline, this::changeZone);
+	}
+
 	private void changeZone() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				for (Player player : instance.getPlayersInside()) {
-					instanceReward.portToPosition(player);
-					instanceReward.sendPacket(4, player.getObjectId());
-				}
-			}
-		}, 1000);
+		runtimeState().remove(STATE + "zone_deadline");
+		for (Player player : instance.getPlayersInside()) {
+			instanceReward.portToPosition(player);
+			persistPlayer(restorePlayer(player.getObjectId()));
+			instanceReward.sendPacket(4, player.getObjectId());
+		}
 	}
 	
 	/**
@@ -331,44 +376,10 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			playerReward.endBoostMoraleEffect(player);
 			playerReward.endStageBuff(player);
 			playerReward.beginAbsence();
+			persistPlayer(playerReward);
 			instanceReward.clearPosition(playerReward.getPosition(), Boolean.FALSE);
 		}
 	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
-	
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -400,11 +411,18 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		if (isInstanceDestroyed || instanceReward.isRewarded()) {
 			return;
 		}
+		cancelDeadline("prepare");
+		cancelDeadline("round");
+		cancelDeadline("zone");
+		restoreGroups();
 		removeStageBuffs();
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		long endedAt = System.currentTimeMillis();
 		for (PvPArenaPlayerReward playerReward : instanceReward.getInstanceRewards()) {
 			playerReward.finalizePlaytimeBonus(instanceReward.getTotalPlayMillis(), endedAt);
+			runtimeState().put(playerKey(playerReward.getOwner(), "time_bonus"), playerReward.getTimeBonus());
+			runtimeState().put(playerKey(playerReward.getOwner(), "participation"),
+					playerReward.getParticipationPercent());
 			HarmonyGroupReward group = instanceReward.getHarmonyGroupReward(playerReward.getOwner());
 			if (group != null) {
 				group.addPoints(playerReward.getTimeBonus());
@@ -436,29 +454,17 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 							arenaReward.plan());
 				}
 			}
+			}
+		for (HarmonyGroupReward group : groups) {
+			runtimeState().put(groupKey(group, "final_points"), group.getPoints());
 		}
+		runtimeState().put(STATE + "phase", FINISHED);
+		runtimeState().put(STATE + "ended_at", endedAt);
 		instanceReward.sendPacket(5, null);
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed) {
-					for (Player player : instance.getPlayersInside()) {
-						if (PlayerActions.isAlreadyDead(player)) {
-							PlayerReviveService.duelRevive(player);
-						}
-						onExitInstance(player);
-					}
-					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
-				}
-			}
-		}, 60000);
+		scheduleExit(endedAt + EXIT_DELAY);
 	}
 
 	private void applyStageBuffs() {
@@ -515,7 +521,9 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 				Integer winnerObj = winner.getObjectId();
 				HarmonyGroupReward winnerGroup = instanceReward.getHarmonyGroupReward(winnerObj);
 				if (winnerGroup != null) {
+					restoreGroup(winnerGroup);
 					winnerGroup.addPvPKillToPlayer();
+					persistGroup(winnerGroup);
 				}
 				int worldId = winner.getWorldId();
 				GameEngineServices.questEngine().onKillInWorld(new QuestEnv(player, winner, 0, 0), worldId);
@@ -539,14 +547,114 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		if (!instanceReward.isStartProgress() || group == null) {
 			return;
 		}
+		restoreGroup(group);
 		int rewardetPoints = getNpcBonus(npc.getNpcId());
 		int skill = instanceReward.getNpcBonusSkill(npc.getNpcId());
 		if (skill != 0) {
 			useSkill(npc, player, skill >> 8, skill & 0xFF);
 		}
 		group.addPoints(rewardetPoints);
+		persistGroup(group);
 		sendSystemMsg(player, npc, rewardetPoints);
 		instanceReward.sendPacket(10, object);
+	}
+
+	private void scheduleRound() {
+		long deadline = System.currentTimeMillis() + instanceReward.getStageTimeSeconds() * 1000L;
+		runtimeState().put(STATE + "round_deadline", deadline);
+		scheduleDeadline("round", deadline, this::finishRound);
+	}
+
+	private void scheduleExit(long deadline) {
+		runtimeState().put(STATE + "exit_deadline", deadline);
+		scheduleDeadline("exit", deadline, () -> {
+			if (isInstanceDestroyed) {
+				return;
+			}
+			for (Player player : instance.getPlayersInside()) {
+				if (PlayerActions.isAlreadyDead(player)) {
+					PlayerReviveService.duelRevive(player);
+				}
+				onExitInstance(player);
+			}
+			GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance);
+		});
+	}
+
+	private void restorePlayers() {
+		Set<Integer> players = new HashSet<>();
+		for (String key : runtimeState().snapshot(STATE + "player.").keySet()) {
+			String suffix = key.substring((STATE + "player.").length());
+			int separator = suffix.indexOf('.');
+			if (separator > 0) {
+				players.add(Integer.parseInt(suffix.substring(0, separator)));
+			}
+		}
+		players.forEach(this::restorePlayer);
+	}
+
+	private PvPArenaPlayerReward restorePlayer(int playerId) {
+		PvPArenaPlayerReward reward = instanceReward.getPlayerReward(playerId);
+		if (reward != null) {
+			return reward;
+		}
+		instanceReward.regPlayerReward(playerId);
+		reward = instanceReward.getPlayerReward(playerId);
+		String points = runtimeState().get(playerKey(playerId, "points"));
+		if (points != null) {
+			reward.restore(Integer.parseInt(points), runtimeState().getInt(playerKey(playerId, "pvp_kills"), 0),
+					runtimeState().getInt(playerKey(playerId, "monster_kills"), 0));
+			long absenceStartedAt = runtimeState().getLong(playerKey(playerId, "absence_started_at"), 0);
+			if (absenceStartedAt == 0 && !FINISHED.equals(runtimeState().get(STATE + "phase", PREPARING))) {
+				absenceStartedAt = System.currentTimeMillis();
+			}
+			reward.restoreAbsence(runtimeState().getLong(playerKey(playerId, "absent_millis"), 0), absenceStartedAt);
+			String rate = runtimeState().get(playerKey(playerId, "reward_rate"));
+			if (rate != null) {
+				reward.setRewardRate(Double.parseDouble(rate));
+			}
+			if (FINISHED.equals(runtimeState().get(STATE + "phase", PREPARING))) {
+				reward.restoreFinalScore(runtimeState().getInt(playerKey(playerId, "time_bonus"), 0),
+						runtimeState().getInt(playerKey(playerId, "participation"), 0));
+			}
+			persistPlayer(reward);
+		}
+		return reward;
+	}
+
+	private void persistPlayer(PvPArenaPlayerReward reward) {
+		int playerId = reward.getOwner();
+		runtimeState().put(playerKey(playerId, "points"), reward.getPoints());
+		runtimeState().put(playerKey(playerId, "pvp_kills"), reward.getPvPKills());
+		runtimeState().put(playerKey(playerId, "monster_kills"), reward.getMonsterKills());
+		runtimeState().put(playerKey(playerId, "absent_millis"), reward.getAbsentMillis());
+		runtimeState().put(playerKey(playerId, "absence_started_at"), reward.getAbsenceStartedAt());
+		runtimeState().put(playerKey(playerId, "reward_rate"), reward.getRewardRate());
+	}
+
+	private void restoreGroups() {
+		instanceReward.getGroups().forEach(this::restoreGroup);
+	}
+
+	private void restoreGroup(HarmonyGroupReward group) {
+		String phase = runtimeState().get(STATE + "phase", PREPARING);
+		String points = runtimeState().get(groupKey(group, FINISHED.equals(phase) ? "final_points" : "points"));
+		if (points != null) {
+			group.restore(Integer.parseInt(points), runtimeState().getInt(groupKey(group, "pvp_kills"), 0), 0);
+		}
+	}
+
+	private void persistGroup(HarmonyGroupReward group) {
+		runtimeState().put(groupKey(group, "points"), group.getPoints());
+		runtimeState().put(groupKey(group, "pvp_kills"), group.getPvPKills());
+	}
+
+	private static String playerKey(int playerId, String field) {
+		return STATE + "player." + playerId + '.' + field;
+	}
+
+	private static String groupKey(HarmonyGroupReward group, String field) {
+		return STATE + "group." + group.getOwner() + '.' + field;
 	}
 	/**
 	 * 处理 useSkill。

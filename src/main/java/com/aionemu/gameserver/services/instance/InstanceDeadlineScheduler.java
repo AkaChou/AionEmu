@@ -19,12 +19,15 @@ public final class InstanceDeadlineScheduler {
 		}
 		State state = instance.getOrCreateTransientState(State.class, State::new);
 		synchronized (state) {
-			long previousDeadline = instance.getRuntimeState().getLong(atKey(key), 0);
-			if (previousDeadline != deadline) {
-				instance.getRuntimeState().put(atKey(key), deadline);
-				instance.getRuntimeState().put(completedKey(key), false);
+			var runtimeState = instance.getRuntimeState();
+			long previousDeadline = runtimeState.getLong(atKey(key), 0);
+			if (previousDeadline != deadline || runtimeState.get(completedKey(key)) == null) {
+				runtimeState.mutate(values -> {
+					values.put(atKey(key), Long.toString(deadline));
+					values.put(completedKey(key), Boolean.FALSE.toString());
+				});
 			}
-			if (instance.getRuntimeState().getBoolean(completedKey(key), false)) {
+			if (runtimeState.getBoolean(completedKey(key), false)) {
 				return;
 			}
 			Future<?> previous = state.tasks.remove(key);
@@ -47,8 +50,10 @@ public final class InstanceDeadlineScheduler {
 				}
 			}
 		}
-		instance.getRuntimeState().remove(atKey(key));
-		instance.getRuntimeState().remove(completedKey(key));
+		instance.getRuntimeState().mutate(values -> {
+			values.remove(atKey(key));
+			values.remove(completedKey(key));
+		});
 	}
 
 	public static void clearTransient(WorldMapInstance instance) {
@@ -79,9 +84,11 @@ public final class InstanceDeadlineScheduler {
 			state.tasks.remove(key);
 		}
 		action.run();
-		if (instance.getRuntimeState().getLong(atKey(key), 0) == expectedDeadline) {
-			instance.getRuntimeState().put(completedKey(key), true);
-		}
+		instance.getRuntimeState().mutate(values -> {
+			if (Long.parseLong(values.getOrDefault(atKey(key), "0")) == expectedDeadline) {
+				values.put(completedKey(key), Boolean.TRUE.toString());
+			}
+		});
 	}
 
 	private static String atKey(String key) {

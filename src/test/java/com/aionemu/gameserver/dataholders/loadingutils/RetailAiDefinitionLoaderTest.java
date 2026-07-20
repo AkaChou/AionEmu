@@ -107,7 +107,7 @@ class RetailAiDefinitionLoaderTest {
 
 		assertEquals(12798, data.patternCount());
 		assertEquals(87721, data.npcCount());
-		assertEquals(3492, data.stringCount());
+		assertEquals(3495, data.stringCount());
 		assertEquals(135, data.areaCount());
 		assertEquals(18, data.resurrectAreaCount());
 		assertEquals(231, data.questAreaCount());
@@ -115,8 +115,8 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(6749, data.conditionSpawnCount());
-		assertEquals(40, data.sensoryAreaCount());
+		assertEquals(9219, data.conditionSpawnCount());
+		assertEquals(67, data.sensoryAreaCount());
 		var bossDoorPattern = data.getPattern(206163);
 		assertNotNull(bossDoorPattern);
 		assertTrue(RetailPatternAI2.supports(bossDoorPattern));
@@ -161,7 +161,8 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(288, data.dynamicAreaCount());
 		assertEquals(12655, java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(RetailPatternAI2::supports).count());
-		for (int npcId : new int[] { 251812, 251813, 251814, 257300, 257305, 257310, 855729 }) {
+		for (int npcId : new int[] { 214159, 219040, 220426, 231073, 231092, 231093, 231094, 231095, 233259,
+				251812, 251813, 251814, 257300, 257305, 257310, 855729 }) {
 			assertTrue(RetailPatternAI2.supports(data.getPattern(npcId)), data.getPattern(npcId).name());
 		}
 		assertNotNull(data.getPattern(231073));
@@ -230,7 +231,45 @@ class RetailAiDefinitionLoaderTest {
 		}
 		assertEquals("SKILLCTG_HEAL", data.getSkillCategory(245));
 		assertEquals(1250, data.getNpcScore(232855).value());
-		assertTrue(data.supportsConditionVariable(300320000, "Condition_S4B"));
+			for (String variable : new String[] { "Condition_S1_L", "Condition_S1_D", "Condition_S2A",
+					"Condition_S2B", "Condition_S3A", "Condition_S3B", "Condition_S4A", "Condition_S4B",
+					"hidden_L", "hidden_D", "STAGE" }) {
+			assertTrue(data.supportsConditionVariable(300320000, variable), variable);
+		}
+			assertEquals(310, data.getConditionSpawns(300300000).size());
+				assertEquals(137, data.getConditionSpawns(300320000).size());
+			for (int npcId : new int[] { 217477, 217484, 217568, 217600, 217783, 217784, 217786,
+					217797, 217807, 217819, 217842 }) {
+				assertNotNull(data.getPattern(npcId), Integer.toString(npcId));
+				assertTrue(RetailPatternAI2.supports(data.getPattern(npcId)), Integer.toString(npcId));
+				assertNotNull(data.getNpcScore(npcId), Integer.toString(npcId));
+				assertEquals(0, data.getNpcScore(npcId).scoreApplyType(), Integer.toString(npcId));
+			}
+		for (String variable : new String[] { "Condition_S2", "Condition_S3", "Condition_S4" }) {
+			assertTrue(data.supportsConditionVariable(300560000, variable));
+		}
+		assertEquals(453, data.getConditionSpawns(300560000).size());
+		assertEquals(486, data.getConditionSpawns(301220000).size());
+		assertEquals(347, data.getConditionSpawns(302350000).size());
+		for (String variable : new String[] { "v01", "v10", "v07_bomb_01", "v08_bomb_03", "time_35" }) {
+			assertTrue(data.supportsConditionVariable(301220000, variable), variable);
+		}
+		assertTrue(data.getConditionSpawns(301220000).stream()
+			.anyMatch(spawn -> spawn.expression().equals("(v08_BOMB_02 != 1) && (v08_BOMB_03 == 1)")));
+		var ironWallPatrol = data.getConditionSpawns(301220000).stream()
+			.flatMap(spawn -> spawn.groups().stream()).flatMap(group -> group.slots().stream())
+			.flatMap(java.util.List::stream).flatMap(choice -> choice.members().stream())
+			.filter(npc -> npc.id() == 233548 && npc.idleLiveRange() == 6).findFirst().orElseThrow();
+		assertTrue(ironWallPatrol.despawnAtAttackState());
+		var ironWallBoss = data.getConditionSpawns(301220000).stream()
+			.flatMap(spawn -> spawn.groups().stream()).flatMap(group -> group.slots().stream())
+			.flatMap(java.util.List::stream).flatMap(choice -> choice.members().stream())
+			.filter(npc -> npc.id() == 233544).findFirst().orElseThrow();
+		assertEquals(743.685364f, ironWallBoss.x());
+		assertEquals(293.568237f, ironWallBoss.y());
+		assertEquals(237.799255f, ironWallBoss.z());
+		assertEquals(5, ironWallBoss.initialDelay());
+		assertTrue(ironWallBoss.despawnAtAttackState());
 		assertEquals(220140000, data.findConditionWorldId("df4_m"));
 		assertEquals(210040000, data.findConditionWorldId("LF3"));
 		assertEquals(9, data.getConditionSpawns(300320000).stream()
@@ -239,6 +278,8 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(349942, data.findStringId("STR_Chat_Raksha_Solo_boss_Skill_01"));
 		assertEquals(1500178, data.findStringId("STR_CHAT_NPC_Robstin_Patterns_01"));
 		assertEquals(1403373, data.findStringId("STR_MSG_F6_Event_G1_Po_Time_Start_01"));
+		assertEquals(1401934, data.findStringId("STR_MSG_BATTLEGROUND_ADJUST_TIME"));
+		assertEquals(1401935, data.findStringId("STR_MSG_BATTLEGROUND_WAIT_TIME"));
 		assertEquals("LC1_LF4_Teleport", data.getNpc(730218).aiName());
 		assertEquals(15, data.getNpc(219358).sensoryRange());
 		assertEquals(0, data.getNpc(219358).sensoryRangeShort());

@@ -74,6 +74,7 @@ public final class TeamEffectUpdater extends AbstractIterativePeriodicTaskManage
 	 */
 	@Override
 	protected void callTask(Player player) {
+		this.stopTask(player);
 		if (player.isOnline()) {
 			if (player.isInGroup2()) {
 				PlayerGroupService.updateGroup(player, GroupEvent.UPDATE);
@@ -82,7 +83,6 @@ public final class TeamEffectUpdater extends AbstractIterativePeriodicTaskManage
 				PlayerAllianceService.updateAlliance(player, PlayerAllianceEvent.UPDATE);
 			}
 		}
-		this.stopTask(player);
 	}
 
 	/**

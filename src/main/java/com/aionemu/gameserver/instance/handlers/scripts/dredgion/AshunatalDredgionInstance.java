@@ -121,13 +121,12 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		}
 		int surkanaKills = runtimeState().getInt(STATE + "surkana", 0) + 1;
 		runtimeState().put(STATE + "surkana", surkanaKills);
+		RetailConditionSpawnEngine.setVariable(instance, "surkana_8", 1, 1);
 		if (surkanaKills == 5) {
-            // 护卫舰指挥官阿舒纳塔尔现已在船长室。 / Frigate Commander Ashunatal is now in the Captain's Cabin.
+			// 真端条件出生会在第五个 Surkana 后生成首领。 / Retail condition spawns the boss after the fifth Surkana.
 			PacketSendUtility.sendSys3Message(mostPlayerDamage,
-			"\uE050", "<Frigate Commander Ashunatal> is now in the Captain's Cabin");
-			runtimeState().put(STATE + "captain_spawned", true);
-			spawn(243816, 485.47916f, 812.4957f, 416.68475f, (byte) 31);
-        }
+				"\uE050", "<Frigate Commander Ashunatal> is now in the Captain's Cabin");
+		}
 		getPlayerReward(mostPlayerDamage).captureZone();
 		persistPlayerReward(getPlayerReward(mostPlayerDamage));
 		npc.getController().onDelete();
@@ -351,7 +350,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			break;
 			case 243818: //Raima The Cruel.
 			break;
-			case 243816: //Frigate Commander Ashunatal.
+			case 243953: //Frigate Commander Ashunatal.
 				long finishDeadline = System.currentTimeMillis() + 30_000;
 				runtimeState().put(STATE + "boss_finish_deadline", finishDeadline);
 				scheduleDeadline("boss_finish", finishDeadline, this::finishByScore);
@@ -639,7 +638,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 				}
 				onExitInstance(player);
 			}
-			GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+			GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance);
 		});
 	}
 
@@ -663,10 +662,6 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		if (runtimeState().getBoolean(STATE + "timed_named", false)
 				&& !runtimeState().getBoolean(STATE + "dead.243822", false)) {
 			spawn(243822, 485.4811f, 313.925f, 403.71857f, (byte) 36);
-		}
-		if (runtimeState().getBoolean(STATE + "captain_spawned", false)
-				&& !runtimeState().getBoolean(STATE + "dead.243816", false)) {
-			spawn(243816, 485.47916f, 812.4957f, 416.68475f, (byte) 31);
 		}
 		if (runtimeState().getBoolean(STATE + "secret_chest", false)
 				&& !runtimeState().getBoolean(STATE + "dead.701455", false)) {

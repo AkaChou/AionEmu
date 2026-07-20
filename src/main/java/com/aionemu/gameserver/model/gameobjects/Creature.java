@@ -67,6 +67,8 @@ public abstract class Creature extends VisibleObject {
 	private int attackedCount;
 	private long spawnTime = System.currentTimeMillis();
 	private int PulledMulti = 1;
+	/** 真端 stat ratio，1000 表示 1.0。 / Retail stat ratio, 1000 = 1.0. */
+	private int statRatio = 1000;
 
 	/**
 	 * @param objId
@@ -289,6 +291,25 @@ public abstract class Creature extends VisibleObject {
 				|| isInState(CreatureState.RESTING) || isInState(CreatureState.PRIVATE_SHOP));
 	}
 
+	/** 返回真端战斗属性缩放系数。 / Returns the retail combat-stat scaling ratio. */
+	public float getStatRatio() {
+		int ratio = statRatio;
+		if (this instanceof Player) {
+			ratio = Math.max(ratio, getPlayerStatRatio(getLevel()));
+		}
+		return Math.max(1000, Math.min(65000, ratio)) / 1000f;
+	}
+
+	/** 设置 stat ratio（真端范围为 1000~65000）。 / Sets the retail stat ratio. */
+	public void setStatRatio(int statRatio) {
+		this.statRatio = Math.max(1000, Math.min(65000, statRatio));
+	}
+
+	/** 5.8 pc_stat_ratio.xml 的等级曲线。 / Retail pc_stat_ratio.xml level curve. */
+	static int getPlayerStatRatio(int level) {
+		return 1000 + Math.max(0, level - 65) * 15;
+	}
+
 	/**
 	 * @return state
 	 */
@@ -416,7 +437,7 @@ public abstract class Creature extends VisibleObject {
 	/**
 	 * This is adding broadcast to player
 	 */
-	public final void addPacketBroadcastMask(BroadcastMode mode) {
+	public final synchronized void addPacketBroadcastMask(BroadcastMode mode) {
 		packetBroadcastMask |= mode.mask();
 
 		GameEventServices.packetBroadcaster().add(this);
@@ -430,7 +451,7 @@ public abstract class Creature extends VisibleObject {
 	/**
 	 * This is removing broadcast from player
 	 */
-	public final void removePacketBroadcastMask(BroadcastMode mode) {
+	public final synchronized void removePacketBroadcastMask(BroadcastMode mode) {
 		packetBroadcastMask &= ~mode.mask();
 
 		// 调试 / Debug
@@ -610,7 +631,8 @@ public abstract class Creature extends VisibleObject {
 		 * not be blocked
 		 */
 		if (skillCoolDownsBase != null && skillCoolDownsBase.get(delayId) != null) {
-			if ((template.getDuration() + SkillConfig.scaleCooldown(template.getCooldown()) * 100 + skillCoolDownsBase.get(delayId)) < System
+			int cooldown = template.scaleCooldownByAttackDelay(template.getCooldown(), getGameStats().getAttackSpeed().getCurrent());
+			if ((template.getDuration() + SkillConfig.scaleCooldown(cooldown) * 100 + skillCoolDownsBase.get(delayId)) < System
 					.currentTimeMillis()) {
 				return false;
 			}

@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 public final class InstanceRuntimeState {
 	private static final String EMPTY = "{\"version\":1,\"data\":\"\"}";
@@ -108,6 +110,25 @@ public final class InstanceRuntimeState {
 			if (values.remove(key) == null) {
 				return;
 			}
+			listener = changeListener;
+		}
+		listener.run();
+	}
+
+	public void mutate(Consumer<Map<String, String>> mutation) {
+		Objects.requireNonNull(mutation, "mutation");
+		Runnable listener;
+		synchronized (this) {
+			Map<String, String> next = new LinkedHashMap<>(values);
+			mutation.accept(next);
+			if (next.equals(values)) {
+				return;
+			}
+			if (next.containsKey(null) || next.containsValue(null)) {
+				throw new IllegalArgumentException("Instance runtime state does not accept null keys or values");
+			}
+			values.clear();
+			values.putAll(next);
 			listener = changeListener;
 		}
 		listener.run();

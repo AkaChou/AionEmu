@@ -14,15 +14,11 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
 
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -62,11 +58,9 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 @Slf4j
 
 public class InstanceService {
+	private static final String EMPTY_RESET_DEADLINE = "instance.emptyReset";
 	/** 映射 IDwhereinstancemobsuseaggro / Map IDs where instance mobs use aggro */
 	private static final List<Integer> instanceAggro = new ArrayList<Integer>();
-	/** 待空副本重置的实例集合（弱引用）。 / Instances pending empty-reset (weak refs). */
-	private static final Set<WorldMapInstance> pendingResets = Collections
-			.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
 	/**
 	 * 加载副本仇恨地图配置。
@@ -149,10 +143,7 @@ public class InstanceService {
 	 * @param instance 要销毁的副本 / instance to destroy
 	 */
 	public static void destroyInstance(WorldMapInstance instance) {
-		pendingResets.remove(instance);
-		if (instance.getEmptyInstanceTask() != null) {
-			instance.getEmptyInstanceTask().cancel(false);
-		}
+		InstanceDeadlineScheduler.cancel(instance, EMPTY_RESET_DEADLINE);
 		int worldId = instance.getMapId();
 		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
 		if (!map.isInstanceType()) {
@@ -409,21 +400,12 @@ public class InstanceService {
 	 * instance
 	 */
 	private static void scheduleResetIfEmpty(final WorldMapInstance instance) {
-		if (instance.getEmptyInstanceTask() != null) {
-			instance.getEmptyInstanceTask().cancel(false);
-		}
 		long deadline = DynamicInstanceManager.markEmpty(instance, getScheduledDestroyDelayMillis(instance));
-		long delay = Math.max(1000L, deadline - System.currentTimeMillis());
-		pendingResets.add(instance);
-		instance.setEmptyInstanceTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				pendingResets.remove(instance);
-				if (isInstanceExist(instance.getMapId(), instance.getInstanceId()) && isEmptyForResetAfterLeave(instance)) {
-					destroyInstance(instance);
-				}
+		InstanceDeadlineScheduler.schedule(instance, EMPTY_RESET_DEADLINE, deadline, () -> {
+			if (isInstanceExist(instance.getMapId(), instance.getInstanceId()) && isEmptyForResetAfterLeave(instance)) {
+				destroyInstance(instance);
 			}
-		}, delay));
+		});
 	}
 
 	/**
@@ -450,31 +432,9 @@ public class InstanceService {
 	 */
 	public static void onPlayerAdded(WorldMapInstance instance) {
 		if (instance.getParent().isInstanceType()) {
-			pendingResets.remove(instance);
-			if (instance.getEmptyInstanceTask() != null) {
-				instance.getEmptyInstanceTask().cancel(false);
-				instance.setEmptyInstanceTask(null);
-			}
+			InstanceDeadlineScheduler.cancel(instance, EMPTY_RESET_DEADLINE);
 			DynamicInstanceManager.markActive(instance);
 			InstanceScaler.onPlayersChanged(instance);
-		}
-	}
-
-	/**
-	 * 重新加载所有待销毁空副本的延迟任务。
-	 * Reloads delayed destroy tasks for all pending empty instances.
-	 */
-	public static void reloadDestroyTasks() {
-		List<WorldMapInstance> instances;
-		synchronized (pendingResets) {
-			instances = new ArrayList<>(pendingResets);
-		}
-		for (WorldMapInstance instance : instances) {
-			if (isInstanceExist(instance.getMapId(), instance.getInstanceId()) && isEmptyForResetAfterLeave(instance)) {
-				scheduleResetIfEmpty(instance);
-			} else {
-				pendingResets.remove(instance);
-			}
 		}
 	}
 

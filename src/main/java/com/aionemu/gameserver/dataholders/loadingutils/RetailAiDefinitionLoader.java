@@ -373,7 +373,8 @@ final class RetailAiDefinitionLoader {
 			List<ConditionSpawnNpc> partyMembers = null;
 			String partyId = null;
 			int npcId = 0, choiceProbability = 0, npcHeading = 0, initialDelay = 0, initialDelayExtra = 0;
-			int life = 0, respawnTime = 0, respawnTimeExtra = 0;
+				int life = 0, respawnTime = 0, respawnTimeExtra = 0, idleLiveRange = 0;
+				boolean despawnAtAttackState = false;
 			float npcX = 0, npcY = 0, npcZ = 0, sensoryBottom = 0, sensoryTop = 0;
 			String walker = null;
 			List<Point2D> sensoryPoints = null;
@@ -420,8 +421,11 @@ final class RetailAiDefinitionLoader {
 							initialDelayExtra = Integer.parseInt(attribute(reader, "initial_delay_extra"));
 							walker = attribute(reader, "walker");
 							life = Integer.parseInt(attribute(reader, "life", "0"));
-							respawnTime = Integer.parseInt(attribute(reader, "respawn_time", "0"));
-							respawnTimeExtra = Integer.parseInt(attribute(reader, "respawn_time_extra", "0"));
+								respawnTime = Integer.parseInt(attribute(reader, "respawn_time", "0"));
+								respawnTimeExtra = Integer.parseInt(attribute(reader, "respawn_time_extra", "0"));
+								idleLiveRange = Integer.parseInt(attribute(reader, "idle_live_range", "0"));
+								despawnAtAttackState = Boolean.parseBoolean(
+									attribute(reader, "despawn_at_attack_state", "false"));
 							sensoryPoints = null;
 						}
 						case "sensory_area" -> {
@@ -442,8 +446,9 @@ final class RetailAiDefinitionLoader {
 							Area sensoryArea = sensoryPoints == null ? null : new PolyArea(
 								ZoneName.createOrGet("retail_sensory_" + worldId + "_" + npcId + "_" + npcX + "_" + npcY),
 								worldId, sensoryPoints, sensoryBottom, sensoryTop);
-							ConditionSpawnNpc npc = new ConditionSpawnNpc(npcId, npcX, npcY, npcZ, npcHeading,
-								initialDelay, initialDelayExtra, walker, sensoryArea, life, respawnTime, respawnTimeExtra);
+								ConditionSpawnNpc npc = new ConditionSpawnNpc(npcId, npcX, npcY, npcZ, npcHeading,
+									initialDelay, initialDelayExtra, walker, sensoryArea, life, respawnTime, respawnTimeExtra,
+									idleLiveRange, despawnAtAttackState);
 							if (partyMembers == null) {
 								slot.add(new ConditionSpawnChoice(choiceProbability, null, List.of(npc)));
 							} else {

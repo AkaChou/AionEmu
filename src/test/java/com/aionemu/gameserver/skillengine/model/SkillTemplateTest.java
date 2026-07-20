@@ -112,6 +112,25 @@ class SkillTemplateTest {
 	}
 
 	@Test
+	void delayTypeScalesCooldownByFinalAttackDelay() throws Exception {
+		SkillTemplate scaled = unmarshal("""
+			<skill_data>
+				<skill_template skill_id="1" name="test" nameId="1" skilltype="PHYSICAL" skillsubtype="ATTACK"
+					activation="ACTIVE" duration="0" cooldown="300" delay_type="1"/>
+			</skill_data>
+			""");
+		SkillTemplate fixed = unmarshal("""
+			<skill_data>
+				<skill_template skill_id="1" name="test" nameId="1" skilltype="PHYSICAL" skillsubtype="ATTACK"
+					activation="ACTIVE" duration="0" cooldown="300"/>
+			</skill_data>
+			""");
+
+		assertEquals(450, scaled.scaleCooldownByAttackDelay(scaled.getCooldown(), 1500));
+		assertEquals(300, fixed.scaleCooldownByAttackDelay(fixed.getCooldown(), 1500));
+	}
+
+	@Test
 	void unmarshalsSpellAttackMagicalDefenseSwitch() throws Exception {
 		SkillTemplate template = unmarshal("""
 			<skill_data>

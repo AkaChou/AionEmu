@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -13,11 +11,9 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.Set;
 
@@ -38,8 +34,6 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		private int bakarmaCharger;
 	/** adjutants killed / adjutants killed */
 		private int adjutantsKilled;
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	protected boolean isInstanceDestroyed = false;
 
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
@@ -74,7 +68,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		spawnRace = player.getRace();
 		runtimeState().put("draupnir.race", spawnRace.name());
 		// 须击杀阿弗兰、萨拉斯瓦蒂、拉克希米与宁巴卡，指挥官巴卡尔玛才会出现。 / You must kill Afrane, Saraswati, Lakshmi, and Nimbarka to make Commander Bakarma appear.
-		sendMsgByRace(1400757, Race.PC_ALL, 10000);
+		sendMsg(1400757, 0, false, 25, 10000);
 		long deadline = System.currentTimeMillis() + 10_000;
 		runtimeState().put("draupnir.phantasm_deadline", deadline);
 		scheduleDeadline("phantasm", deadline,
@@ -153,17 +147,17 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 				runtimeState().put("draupnir.adjutants", adjutantsKilled);
 				if (adjutantsKilled == 1) {
 					// 还须再击杀 3 名副官，指挥官巴卡尔玛才会出现。 / You must kill 3 more Adjutants to make Commander Bakarma appear.
-				    sendMsgByRace(1400758, Race.PC_ALL, 0);
+				    sendMsg(1400758, 0, false, 25, 0);
 				} else if (adjutantsKilled == 2) {
 					// 还须再击杀 2 名副官，指挥官巴卡尔玛才会出现。 / You must kill 2 more Adjutants to make Commander Bakarma appear.
-				    sendMsgByRace(1400759, Race.PC_ALL, 0);
+				    sendMsg(1400759, 0, false, 25, 0);
 				} else if (adjutantsKilled == 3) {
 					// 还须再击杀 1 名副官，指挥官巴卡尔玛才会出现。 / You must kill 1 more Adjutant to make Commander Bakarma appear.
-				    sendMsgByRace(1400760, Race.PC_ALL, 0);
+				    sendMsg(1400760, 0, false, 25, 0);
 				} else if (adjutantsKilled == 4) {
 					spawnCommanderBakarma();
 					// 指挥官巴卡尔玛已出现在贝里特拉神谕处。 / Commander Bakarma has appeared at Beritra's Oracle.
-				    sendMsgByRace(1400751, Race.PC_ALL, 0);
+				    sendMsg(1400751, 0, false, 25, 0);
 					deleteNpc(214026); //Deputy Brigade General Yavant.
 				}
 			break;
@@ -183,7 +177,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 					cancelDeadline("gate_raid_1");
 					cancelDeadline("gate_raid_2");
 					// 欧比斯之门增强器已被中和。 / The Abyss Gate Enhancer has been neutralized.
-					sendMsgByRace(1403065, Race.PC_ALL, 0);
+					sendMsg(1403065, 0, false, 25, 0);
 				}
 			break;
         }
@@ -202,9 +196,9 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 				runtimeState().put("draupnir.gate_started", true);
 				despawnNpc(npc);
 				// 龙族蜂拥而至，保卫欧比斯之门增强器。 / Balaur are swarming to defend the Abyss Gate Enhancer.
-				sendMsgByRace(1403063, Race.PC_ALL, 0);
+				sendMsg(1403063, 0, false, 25, 0);
 				// 龙族已察觉入侵者的存在。 / The Balaur have been alerted to the presence of intruders.
-				sendMsgByRace(1403064, Race.PC_ALL, 4000);
+				sendMsg(1403064, 0, false, 25, 4000);
 				long raid1 = System.currentTimeMillis() + 5_000;
 				long raid2 = System.currentTimeMillis() + 60_000;
 				runtimeState().put("draupnir.gate_raid_1", raid1);
@@ -214,10 +208,10 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 			case 702858: //Balaur Abyss Gate Booster.
 			    despawnNpc(npc);
 				// 在中央控制室找到并过载欧比斯之门增强器。 / Find and overload the Abyss Gate Enhancer in the Central Control Room.
-				sendMsgByRace(1403058, Race.PC_ALL, 0);
+				sendMsg(1403058, 0, false, 25, 0);
 				// 龙族的欧比斯之门增强器已激活。 / The Balaur's Abyss Gate Enhancer is active.
 				// 增强器防护装置将在 3 分钟后激活，防止被摧毁。 / The enhancer protection device will activate in 3 minutes, preventing it from being destroyed.
-				sendMsgByRace(1403081, Race.PC_ALL, 5000);
+				sendMsg(1403081, 0, false, 25, 5000);
 				spawn(702857, 469.00000f, 563.0000f, 510.49686f, (byte) 29); //Balaur Abyss Gate Enhancer.
 				spawn(702857, 511.36166f, 591.0183f, 510.60300f, (byte) 60); //Balaur Abyss Gate Enhancer.
 				spawn(702857, 466.00000f, 617.0000f, 511.22543f, (byte) 96); //Balaur Abyss Gate Enhancer.
@@ -239,7 +233,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		}
 		runtimeState().put("draupnir.akhal_spawned", true);
 		spawnAkhal();
-		sendMsgByRace(1403068, Race.PC_ALL, 0);
+		sendMsg(1403068, 0, false, 25, 0);
 	}
 
 	private void spawnRewardChest() {
@@ -271,7 +265,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		long raid2 = runtimeState().getLong("draupnir.gate_raid_2", 0);
 		if (raid2 > 0) {
 			scheduleDeadline("gate_raid_2", raid2, () -> {
-				sendMsgByRace(1403063, Race.PC_ALL, 0);
+				sendMsg(1403063, 0, false, 25, 0);
 				startAbyssGateRaid2();
 			});
 		}
@@ -298,24 +292,13 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	}
 	
 	private void abyssGateRaid(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed) {
-					for (Player player: instance.getPlayersInside()) {
-						npc.setTarget(player);
-						((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
-						npc.setState(1);
-						npc.getMoveController().moveToTargetObject();
-						PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
-					}
-				}
-			}
-		}, 1000);
+		for (Player player: instance.getPlayersInside()) {
+			npc.setTarget(player);
+			((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
+			npc.setState(1);
+			npc.getMoveController().moveToTargetObject();
+			PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
+		}
 	}
 	/**
 	 * 移除指定 NPC。
@@ -336,52 +319,4 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		}
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
 }

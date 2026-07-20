@@ -25,12 +25,12 @@ public class _30158JotunJunket extends QuestHandler {
 	public void register() {
 		qe.registerQuestNpc(799383).addOnQuestStart(questId);
 		qe.registerQuestNpc(799383).addOnTalkEvent(questId);
-		qe.registerOnEnterZone(ZoneName.get("UNKNOWN_LANDS_600110000"), questId);
+		qe.registerOnEnterZone(ZoneName.get("UNKNOWN_LANDS_600010000"), questId);
 	}
 
 	@Override
 	public boolean onEnterZoneEvent(QuestEnv env, ZoneName zoneName) {
-		if (zoneName != ZoneName.get("UNKNOWN_LANDS_600110000"))
+		if (zoneName != ZoneName.get("UNKNOWN_LANDS_600010000"))
 			return false;
 		final Player player = env.getPlayer();
 		if (player == null)

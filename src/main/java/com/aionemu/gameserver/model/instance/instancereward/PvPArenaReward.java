@@ -89,6 +89,24 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		zones.remove(index);
 	}
 
+	public void restoreProgress(int round, int... usedZones) {
+		this.round = round;
+		zones.clear();
+		for (int stage = 1; stage <= arenaRow.requiredInt("stage_count"); stage++) {
+			zones.add(stage);
+		}
+		zone = null;
+		for (int usedZone : usedZones) {
+			if (usedZone > 0) {
+				zones.remove(Integer.valueOf(usedZone));
+				zone = usedZone;
+			}
+		}
+		if (zone == null) {
+			setRndZone();
+		}
+	}
+
 	private List<Integer> getFreePositions() {
 		List<Integer> p = new ArrayList<Integer>();
 		for (Integer key : positions.keySet()) {
@@ -244,6 +262,10 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	/** 设置 instance start time / Sets the instance start time */
 	public void setInstanceStartTime() {
 		this.instanceTime = System.currentTimeMillis();
+	}
+
+	public void setInstanceStartTime(long instanceTime) {
+		this.instanceTime = instanceTime;
 	}
 
 	/** 发送数据包。 / Send packet. */

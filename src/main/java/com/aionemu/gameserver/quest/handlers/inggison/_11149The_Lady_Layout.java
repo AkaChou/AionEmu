@@ -24,9 +24,9 @@ public class _11149The_Lady_Layout extends QuestHandler {
 	public void register() {
 		qe.registerQuestNpc(296491).addOnQuestStart(questId);
 		qe.registerQuestNpc(296491).addOnTalkEvent(questId);
-		qe.registerOnEnterZone(ZoneName.get("LF4_SENSORY_AREA_Q11149_A_210130000"), questId);
-		qe.registerOnEnterZone(ZoneName.get("LF4_SENSORY_AREA_Q11149_B_210130000"), questId);
-		qe.registerOnEnterZone(ZoneName.get("LF4_SENSORY_AREA_Q11149_C_210130000"), questId);
+		qe.registerOnEnterZone(ZoneName.get("LF4_SENSORY_AREA_Q11149_A_210050000"), questId);
+		qe.registerOnEnterZone(ZoneName.get("LF4_SENSORY_AREA_Q11149_B_210050000"), questId);
+		qe.registerOnEnterZone(ZoneName.get("LF4_SENSORY_AREA_Q11149_C_210050000"), questId);
 	}
 	
 	@Override
@@ -64,19 +64,19 @@ public class _11149The_Lady_Layout extends QuestHandler {
   		    int var1 = qs.getQuestVarById(1);
 			int var2 = qs.getQuestVarById(2);
 			int var3 = qs.getQuestVarById(3);
-			if (zoneName == ZoneName.get("LF4_SENSORY_AREA_Q11149_A_210130000") && var1 == 0) {
+			if (zoneName == ZoneName.get("LF4_SENSORY_AREA_Q11149_A_210050000") && var1 == 0) {
 				qs.setQuestVarById(1, 1);
 				updateQuestStatus(env);
 				checkReward(env);
 				return true;
 			}
-			if (zoneName == ZoneName.get("LF4_SENSORY_AREA_Q11149_B_210130000") && var2 == 0) {
+			if (zoneName == ZoneName.get("LF4_SENSORY_AREA_Q11149_B_210050000") && var2 == 0) {
 				qs.setQuestVarById(2, 1);
 				updateQuestStatus(env);
 				checkReward(env);
 				return true;
 			}
-			if (zoneName == ZoneName.get("LF4_SENSORY_AREA_Q11149_C_210130000") && var3 == 0) {
+			if (zoneName == ZoneName.get("LF4_SENSORY_AREA_Q11149_C_210050000") && var3 == 0) {
 				qs.setQuestVarById(3, 1);
 				updateQuestStatus(env);
 				checkReward(env);

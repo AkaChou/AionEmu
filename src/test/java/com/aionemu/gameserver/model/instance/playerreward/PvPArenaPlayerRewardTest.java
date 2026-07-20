@@ -42,4 +42,20 @@ class PvPArenaPlayerRewardTest {
 		assertEquals(6_000, reward.getTimeBonus());
 		assertEquals(50, reward.getParticipationPercent());
 	}
+
+	@Test
+	void restoresPersistentArenaState() {
+		PvPArenaPlayerReward reward = new PvPArenaPlayerReward(1, 0, 0, 12_000, (byte) 7);
+		reward.restore(8_000, 3, 4);
+		reward.restoreAbsence(1_500, 2_000);
+		reward.restoreFinalScore(6_000, 50);
+
+		assertEquals(8_000, reward.getPoints());
+		assertEquals(3, reward.getPvPKills());
+		assertEquals(4, reward.getMonsterKills());
+		assertEquals(1_500, reward.getAbsentMillis());
+		assertEquals(2_000, reward.getAbsenceStartedAt());
+		assertEquals(14_000, reward.getScorePoints());
+		assertEquals(50, reward.getParticipationPercent());
+	}
 }

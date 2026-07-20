@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import com.aionemu.gameserver.configs.main.WorldConfig;
@@ -87,9 +86,6 @@ public abstract class WorldMapInstance {
 
 	/** 注册的队伍 / registered player group */
 	private PlayerGroup registeredGroup = null;
-
-	/** 空实例销毁任务 / empty-instance destroy task */
-	private Future<?> emptyInstanceTask = null;
 
 	/**
 	 * 实例 ID（频道）。
@@ -639,26 +635,6 @@ public abstract class WorldMapInstance {
 	 */
 	public boolean isRegistered(int objectId) {
 		return registeredObjects.contains(objectId);
-	}
-
-	/**
-	 * 返回空实例任务。
-	 * Return the empty-instance task.
-	 *
-	 * future task
-	 */
-	public Future<?> getEmptyInstanceTask() {
-		return emptyInstanceTask;
-	}
-
-	/**
-	 * 设置空实例任务。
-	 * Set the empty-instance task.
-	 *
-	 * task
-	 */
-	public void setEmptyInstanceTask(Future<?> emptyInstanceTask) {
-		this.emptyInstanceTask = emptyInstanceTask;
 	}
 
 	/**

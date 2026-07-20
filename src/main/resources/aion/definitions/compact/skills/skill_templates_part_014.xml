@@ -1272,7 +1272,7 @@
       <f i="29" v="BoostCastingTime" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10365" name="타하바타 보호의 주문서" nameId="1551027" name_desc="item_IDArena_scroll_regist_Light" stack="SKILL_item_IDArena_scroll_regist_Light" skill_group_name="item_IDArena_scroll_regist_Light" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10365" name="타하바타 보호의 주문서" nameId="1551027" name_desc="item_IDArena_scroll_regist_Light" stack="SKILL_item_IDArena_scroll_regist_Light" skill_group_name="item_IDArena_scroll_regist_Light" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -1754,7 +1754,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10382" name="데브리 변이" nameId="599189" name_desc="ITEM_QUEST_Q41530a" stack="SKILL_ITEM_QUEST_Q41530a" skill_group_name="ITEM_QUEST_Q41530a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="15" effective_angle="50" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="15" effective_altitude="50" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -1799,7 +1799,10 @@
   <skill_template skill_id="10383" name="폭탄 구슬 효과" nameId="599213" name_desc="item_idarena_skill_01" stack="SKILL_item_idarena_skill_01" skill_group_name="item_idarena_skill_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_CB859BDC198EDE93" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_7AC56FD6651BD7C7" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="50" delta="0" percent="true" maxdamage="10000" />
+      <paralyze duration1="0" duration2="3000" randomtime="0" effectid="20002" e="2" basiclvl="200" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1" element="WATER" />
+    </effects>
     <group_ref id="SG_BB0B3BD26B8FCCC6" />
     <retail>
       <f i="5" v="0" />
@@ -4786,7 +4789,7 @@
       <f i="30" v="mpRegen" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10444" name="빨간코 그란케르 변신" nameId="4560545" name_desc="item_shapechange_Christmas_Candy" stack="SKILL_item_shapechange_Christmas_Candy" skill_group_name="item_shapechange_Christmas_Candy" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10444" name="빨간코 그란케르 변신" nameId="4560545" name_desc="item_shapechange_Christmas_Candy" stack="SKILL_item_shapechange_Christmas_Candy" skill_group_name="item_shapechange_Christmas_Candy" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -4819,7 +4822,7 @@
       <f i="84" v="air" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10445" name="테스트 스킬: 파티원 소환" nameId="4560555" name_desc="TestItem_RecallAid_Scroll01" stack="SKILL_TestItem_RecallAid_Scroll01" skill_group_name="TestItem_RecallAid_Scroll01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
+  <skill_template skill_id="10445" name="테스트 스킬: 파티원 소환" nameId="4560555" name_desc="TestItem_RecallAid_Scroll01" stack="SKILL_TestItem_RecallAid_Scroll01" skill_group_name="TestItem_RecallAid_Scroll01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" delay_type="1">
     <group_ref id="SG_869FD6338DCDEA9F" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -5470,7 +5473,7 @@
       <f i="29" v="BoostCastingTime" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10463" name="물리 치명타 증가" nameId="1426587" name_desc="cash_item_scroll_critical_phy" stack="SKILL_cash_item_scroll_critical_phy" skill_group_name="cash_item_scroll_critical_phy" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10463" name="물리 치명타 증가" nameId="1426587" name_desc="cash_item_scroll_critical_phy" stack="SKILL_cash_item_scroll_critical_phy" skill_group_name="cash_item_scroll_critical_phy" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -5489,7 +5492,7 @@
       <f i="29" v="Critical" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10464" name="마법 치명타 증가" nameId="1426589" name_desc="cash_item_scroll_critical_mag" stack="SKILL_cash_item_scroll_critical_mag" skill_group_name="cash_item_scroll_critical_mag" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10464" name="마법 치명타 증가" nameId="1426589" name_desc="cash_item_scroll_critical_mag" stack="SKILL_cash_item_scroll_critical_mag" skill_group_name="cash_item_scroll_critical_mag" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -5580,7 +5583,7 @@
       <f i="29" v="BoostCastingTime" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10468" name="물리 치명타 증가" nameId="1426587" name_desc="event_item_scroll_critical_phy" stack="SKILL_event_item_scroll_critical_phy" skill_group_name="event_item_scroll_critical_phy" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10468" name="물리 치명타 증가" nameId="1426587" name_desc="event_item_scroll_critical_phy" stack="SKILL_event_item_scroll_critical_phy" skill_group_name="event_item_scroll_critical_phy" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -5599,7 +5602,7 @@
       <f i="29" v="Critical" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10469" name="마법 치명타 증가" nameId="1426589" name_desc="event_item_scroll_critical_mag" stack="SKILL_event_item_scroll_critical_mag" skill_group_name="event_item_scroll_critical_mag" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10469" name="마법 치명타 증가" nameId="1426589" name_desc="event_item_scroll_critical_mag" stack="SKILL_event_item_scroll_critical_mag" skill_group_name="event_item_scroll_critical_mag" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -5841,10 +5844,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10479" name="[공용] 일반 공격" nameId="4561991" name_desc="item_IDEvent01_NomalDamage" stack="SKILL_item_IDEvent01_NomalDamage" skill_group_name="item_IDEvent01_NomalDamage" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="4" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="5" effective_angle="4" />
+    <properties first_target="TARGET" first_target_range="4" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" effective_range="5" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" value="3000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" value="3000" delta="0" />
     </effects>
     <group_ref id="SG_6FD615962C460185" />
     <retail>
@@ -5880,11 +5883,11 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10481" name="[탱커] 광역 어글" nameId="4561999" name_desc="item_IDEvent01_HostileUp" stack="SKILL_item_IDEvent01_HostileUp" skill_group_name="item_IDEvent01_HostileUp" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="16" revision_distance="0" target_status="" target_distance="10" effective_angle="4" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="16" revision_distance="0" target_status="" effective_range="10" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="6000" hopb="60000" element="EARTH" value="50000" delta="5000" timed_value="0" timed_delta="0" split_totem_hate="false" />
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" value="2000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" value="2000" delta="0" />
     </effects>
     <group_ref id="SG_E454B3AD9690C227" />
     <retail>
@@ -5958,7 +5961,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10483" name="[탱커] 나포" nameId="4562007" name_desc="item_IDEvent01_LandSnacher" stack="SKILL_item_IDEvent01_LandSnacher" skill_group_name="item_IDEvent01_LandSnacher" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" target_distance="10" effective_angle="4" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" effective_range="10" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_4AF62FB16C62D587" />
     <group_ref id="SG_857DFC5BB01436C3" />
@@ -6017,7 +6020,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10485" name="[딜러] 광역 딜" nameId="4562015" name_desc="item_IDEvent01_AreaDamage" stack="SKILL_item_IDEvent01_AreaDamage" skill_group_name="item_IDEvent01_AreaDamage" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="7" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="7" effective_angle="4" />
+    <properties first_target="ME" first_target_range="7" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" effective_range="7" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="5000" delta="0" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="150" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" />
@@ -6129,7 +6132,7 @@
       <f i="46" v="IDEvent01_Skill_NPC04" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10490" name="소환: 도우미 I" nameId="4562035" name_desc="Item_RecallAid_Scroll01" stack="SKILL_Item_RecallAid_Scroll01" skill_group_name="Item_RecallAid_Scroll01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
+  <skill_template skill_id="10490" name="소환: 도우미 I" nameId="4562035" name_desc="Item_RecallAid_Scroll01" stack="SKILL_Item_RecallAid_Scroll01" skill_group_name="Item_RecallAid_Scroll01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" delay_type="1">
     <group_ref id="SG_869FD6338DCDEA9F" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -6527,12 +6530,12 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10506" name="[공용] 화염 방사기" nameId="4562205" name_desc="item_IDEvent01_FireThrow" stack="SKILL_item_IDEvent01_FireThrow" skill_group_name="item_IDEvent01_FireThrow" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="20" revision_distance="0" target_status="" target_distance="20" effective_angle="90" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="20" revision_distance="0" target_status="" target_distance="20" effective_angle="90" effective_altitude="30" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="1500" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
       <spellatk duration1="0" duration2="5000" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" checktime="1000" value="800" delta="0" mrresist="true" />
-      <confuse duration1="0" duration2="5000" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="2" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="FIRE" />
+      <confuse duration1="0" duration2="5000" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="2" preeffect_prob="100" critprobmod1="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="FIRE" />
     </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
@@ -6929,7 +6932,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10516" name="저주의 냉기" nameId="4562375" name_desc="item_IDEvent01_AreaRoot" stack="SKILL_item_IDEvent01_AreaRoot" skill_group_name="item_IDEvent01_AreaRoot" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="4" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" effective_range="15" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="800" delta="1" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -7561,7 +7564,7 @@
       <f i="192" v="MaxFp" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10527" name="마법 치명타 상승" nameId="4562545" name_desc="item_scroll_critical_mag_btest" stack="SKILL_item_scroll_critical_mag_btest" skill_group_name="item_scroll_critical_mag_btest" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10527" name="마법 치명타 상승" nameId="4562545" name_desc="item_scroll_critical_mag_btest" stack="SKILL_item_scroll_critical_mag_btest" skill_group_name="item_scroll_critical_mag_btest" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -7579,7 +7582,7 @@
       <f i="29" v="magicalCritical" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10528" name="마법 치명타 저항 상승" nameId="4562547" name_desc="item_scroll_critical_magresist_btest" stack="SKILL_item_scroll_critical_magresist_btest" skill_group_name="item_scroll_critical_magresist_btest" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10528" name="마법 치명타 저항 상승" nameId="4562547" name_desc="item_scroll_critical_magresist_btest" stack="SKILL_item_scroll_critical_magresist_btest" skill_group_name="item_scroll_critical_magresist_btest" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -7598,7 +7601,7 @@
       <f i="29" v="MagicalCriticalReduceRate" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10529" name="물리 치명타 저항 상승" nameId="4562549" name_desc="item_scroll_critical_phyresist_btest" stack="SKILL_item_scroll_critical_phyresist_btest" skill_group_name="item_scroll_critical_phyresist_btest" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10529" name="물리 치명타 저항 상승" nameId="4562549" name_desc="item_scroll_critical_phyresist_btest" stack="SKILL_item_scroll_critical_phyresist_btest" skill_group_name="item_scroll_critical_phyresist_btest" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -7617,7 +7620,7 @@
       <f i="29" v="PhysicalCriticalReduceRate" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10530" name="마법 감소 상승" nameId="4562551" name_desc="item_scroll_magresist_mag_btest" stack="SKILL_item_scroll_magresist_mag_btest" skill_group_name="item_scroll_magresist_mag_btest" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10530" name="마법 감소 상승" nameId="4562551" name_desc="item_scroll_magresist_mag_btest" stack="SKILL_item_scroll_magresist_mag_btest" skill_group_name="item_scroll_magresist_mag_btest" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -8939,7 +8942,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10575" name="[이벤트] 맹타" nameId="4563489" name_desc="item_IDEvent01_Simpleattack" stack="SKILL_item_IDEvent01_Simpleattack" skill_group_name="item_IDEvent01_Simpleattack" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="6" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" target_distance="5" effective_angle="4" />
+    <properties first_target="TARGET" first_target_range="6" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" effective_range="5" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="8000" delta="0" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
@@ -8964,7 +8967,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10576" name="[이벤트] 다중 진공" nameId="4563491" name_desc="item_IDEvent01_MultiMabble" stack="SKILL_item_IDEvent01_MultiMabble" skill_group_name="item_IDEvent01_MultiMabble" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1600" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="20" effective_angle="90" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="20" effective_angle="90" effective_altitude="30" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="2500" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -9022,7 +9025,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10578" name="[이벤트] 나포 2" nameId="4563495" name_desc="item_IDEvent01_Snacher2" stack="SKILL_item_IDEvent01_Snacher2" skill_group_name="item_IDEvent01_Snacher2" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="10" effective_angle="4" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="10" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_4AF62FB16C62D587" />
     <group_ref id="SG_857DFC5BB01436C3" />
@@ -9061,7 +9064,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10579" name="[이벤트] 다중 밀어내기" nameId="4563497" name_desc="item_IDEvent01_AreaBack" stack="SKILL_item_IDEvent01_AreaBack" skill_group_name="item_IDEvent01_AreaBack" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8979F071FFCEFECF" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" target_distance="20" effective_angle="90" effective_altitude="30" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="4000" delta="0" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
@@ -9143,7 +9146,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10583" name="[이벤트] 범위 스나이핑" nameId="4563723" name_desc="item_IDEvent01_Snipe2" stack="SKILL_item_IDEvent01_Snipe2" skill_group_name="item_IDEvent01_Snipe2" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="50" duration="5000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="5" effective_angle="30" />
+    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" effective_range="5" effective_altitude="30" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="38000" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -9188,7 +9191,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10585" name="[이벤트] 범위 슬로우" nameId="4563727" name_desc="item_IDEvent01_Areaslow" stack="SKILL_item_IDEvent01_Areaslow" skill_group_name="item_IDEvent01_Areaslow" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8979F071FFCEFECF" />
+    <properties first_target="ME" first_target_range="2" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="10" revision_distance="0" target_status="" target_distance="20" effective_angle="90" effective_altitude="30" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <snare duration1="0" duration2="6000" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH">
@@ -9214,7 +9217,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10586" name="[이벤트] 범위 강타" nameId="4563827" name_desc="item_IDEvent01_Areaclear" stack="SKILL_item_IDEvent01_Areaclear" skill_group_name="item_IDEvent01_Areaclear" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="10" effective_angle="30" />
+    <properties first_target="TARGET" first_target_range="25" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" effective_range="10" effective_altitude="30" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="7500" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" />
@@ -9236,7 +9239,7 @@
       <f i="15" v="100" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10590" name="물리 치명타 상승" nameId="4564723" name_desc="item_scroll_critical_btest" stack="SKILL_item_scroll_critical_btest" skill_group_name="item_scroll_critical_btest" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10590" name="물리 치명타 상승" nameId="4564723" name_desc="item_scroll_critical_btest" stack="SKILL_item_scroll_critical_btest" skill_group_name="item_scroll_critical_btest" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -9267,9 +9270,12 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10600" name="폭탄 구슬 효과" nameId="599213" name_desc="item_idldf5re_03_key" stack="SKILL_item_idldf5re_03_key" skill_group_name="item_idldf5re_03_key" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="21" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="TARGET" first_target_range="7" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="6" effective_angle="4" />
+    <properties first_target="TARGET" first_target_range="7" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="6" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_7AC56FD6651BD7C7" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="50" delta="0" percent="true" maxdamage="10000" />
+      <paralyze duration1="0" duration2="3000" randomtime="0" effectid="20002" e="2" basiclvl="200" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1" element="WATER" />
+    </effects>
     <motion name="throw" speed="80" instant_skill="false" />
     <retail>
       <f i="5" v="0" />
@@ -10314,7 +10320,7 @@
     <group_ref id="SG_F0486B158E3C6ED7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="50" delta="0" percent="true" maxdamage="1000" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="50" delta="0" percent="true" maxdamage="1000" />
     </effects>
     <group_ref id="SG_B6C2B13D1C0E2613" />
     <retail>
@@ -16546,7 +16552,7 @@
       <f i="192" v="MaxFp" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10766" name="물리 치명타 증가" nameId="1426587" name_desc="item_scroll_critical_phy_70a" stack="SKILL_item_scroll_critical_phy_70a" skill_group_name="item_scroll_critical_phy_70a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10766" name="물리 치명타 증가" nameId="1426587" name_desc="item_scroll_critical_phy_70a" stack="SKILL_item_scroll_critical_phy_70a" skill_group_name="item_scroll_critical_phy_70a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -16564,7 +16570,7 @@
       <f i="29" v="Critical" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10767" name="마법 치명타 증가" nameId="1426589" name_desc="item_scroll_critical_mag_70a" stack="SKILL_item_scroll_critical_mag_70a" skill_group_name="item_scroll_critical_mag_70a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10767" name="마법 치명타 증가" nameId="1426589" name_desc="item_scroll_critical_mag_70a" stack="SKILL_item_scroll_critical_mag_70a" skill_group_name="item_scroll_critical_mag_70a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="31" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -16582,7 +16588,7 @@
       <f i="29" v="magicalCritical" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10768" name="물리 치명타 저항 상승" nameId="591837" name_desc="item_scroll_critical_phyresist_70a" stack="SKILL_item_scroll_critical_phyresist_70a" skill_group_name="item_scroll_critical_phyresist_70a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10768" name="물리 치명타 저항 상승" nameId="591837" name_desc="item_scroll_critical_phyresist_70a" stack="SKILL_item_scroll_critical_phyresist_70a" skill_group_name="item_scroll_critical_phyresist_70a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -16601,7 +16607,7 @@
       <f i="29" v="PhysicalCriticalReduceRate" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10769" name="마법 치명타 저항 상승" nameId="591839" name_desc="item_scroll_critical_magresist_70a" stack="SKILL_item_scroll_critical_magresist_70a" skill_group_name="item_scroll_critical_magresist_70a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10769" name="마법 치명타 저항 상승" nameId="591839" name_desc="item_scroll_critical_magresist_70a" stack="SKILL_item_scroll_critical_magresist_70a" skill_group_name="item_scroll_critical_magresist_70a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -16648,7 +16654,7 @@
       <f i="49" v="1000" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10771" name="마법 상쇄 증가" nameId="1628981" name_desc="item_scroll_regist_magic_70a" stack="SKILL_item_scroll_regist_magic_70a" skill_group_name="item_scroll_regist_magic_70a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="41" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10771" name="마법 상쇄 증가" nameId="1628981" name_desc="item_scroll_regist_magic_70a" stack="SKILL_item_scroll_regist_magic_70a" skill_group_name="item_scroll_regist_magic_70a" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="41" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -16671,7 +16677,7 @@
       <f i="29" v="magicalskillboostresist" />
     </retail>
   </skill_template>
-  <skill_template skill_id="10772" name="거대폭죽" nameId="1629403" name_desc="item_test_firework_giant01" stack="SKILL_item_test_firework_giant01" skill_group_name="item_test_firework_giant01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
+  <skill_template skill_id="10772" name="거대폭죽" nameId="1629403" name_desc="item_test_firework_giant01" stack="SKILL_item_test_firework_giant01" skill_group_name="item_test_firework_giant01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1" delay_type="1">
     <group_ref id="SG_7E40FA3276CF8C0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
@@ -17490,7 +17496,10 @@
   <skill_template skill_id="10796" name="폭탄 구슬 효과" nameId="1648701" name_desc="idkamar_boom_skill_01" stack="SKILL_idkamar_boom_skill_01" skill_group_name="idkamar_boom_skill_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_CB859BDC198EDE93" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_7AC56FD6651BD7C7" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="50" delta="0" percent="true" maxdamage="10000" />
+      <paralyze duration1="0" duration2="3000" randomtime="0" effectid="20002" e="2" basiclvl="200" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1" element="WATER" />
+    </effects>
     <group_ref id="SG_BB0B3BD26B8FCCC6" />
     <retail>
       <f i="5" v="0" />
@@ -17664,10 +17673,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10803" name="말살 구슬 효과" nameId="1649287" name_desc="idkamar_boom_skill_02" stack="SKILL_idkamar_boom_skill_02" skill_group_name="idkamar_boom_skill_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="50" effective_angle="4" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="50" effective_altitude="4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="75000" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="75000" delta="0" />
       <paralyze duration1="0" duration2="3000" randomtime="0" effectid="20002" e="2" basiclvl="200" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1" element="WATER" />
     </effects>
     <group_ref id="SG_BB0B3BD26B8FCCC6" />

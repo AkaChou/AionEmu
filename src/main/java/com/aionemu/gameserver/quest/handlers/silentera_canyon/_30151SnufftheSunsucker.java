@@ -25,7 +25,7 @@ public class _30151SnufftheSunsucker extends QuestHandler {
 	public void register() {
 		qe.registerQuestNpc(799383).addOnQuestStart(questId);
 		qe.registerQuestNpc(799383).addOnTalkEvent(questId);
-		qe.registerOnKillInWorld(600110000, questId);
+		qe.registerOnKillInWorld(600010000, questId);
 	}
 	
 	@Override

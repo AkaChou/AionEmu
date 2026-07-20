@@ -152,6 +152,16 @@ class RetailPatternAI2Test {
 				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 					"300460000:" + npcId);
 			}
+			for (int npcId : new int[] { 856460, 855955, 855765, 855788, 855811, 855834 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 301500000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.skillList = new NpcSkillList(npc);
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"301500000:" + npcId);
+			}
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
 			DataManager.NPC_SKILL_DATA = previousNpcSkills;
@@ -545,6 +555,25 @@ class RetailPatternAI2Test {
 			List.of(new Operation("do_nothing", Map.of())));
 		assertTrue(RetailPatternAI2.supports(new Pattern("message_enemy",
 			Map.of("on_message", List.of(messageEnemy)))));
+	}
+
+	@Test
+	void receivesExternalRetailMessage() throws ReflectiveOperationException {
+		Rule rule = new Rule(1, "DIRECT", List.of(
+			new Operation("is_message", Map.of("message_type", "201")),
+			new Operation("set_flag_var", Map.of("flagvar_indicator", "FLAGVARI_ALPHA_1"))),
+			List.of(new Operation("do_nothing", Map.of())));
+		ObjenesisStd objenesis = new ObjenesisStd();
+		MasterNpc owner = objenesis.newInstance(MasterNpc.class);
+		owner.setLifeStats(objenesis.newInstance(NpcLifeStats.class));
+		RetailPatternAI2 ai = new RetailPatternAI2();
+		setField(AbstractAI.class, ai, "owner", owner);
+		setField(RetailPatternAI2.class, ai, "pattern",
+			new Pattern("external_message", Map.of("on_message", List.of(rule))));
+
+		ai.onRetailMessage(201, 0, 0, owner, owner);
+
+		assertEquals(Set.of("FLAGVARI_ALPHA_1"), flags(ai));
 	}
 
 	@Test

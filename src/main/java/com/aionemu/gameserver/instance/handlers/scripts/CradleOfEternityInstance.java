@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -17,7 +15,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import java.util.Map;
@@ -115,10 +112,11 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			shield.setEntityId(725);
 			SpawnEngine.spawnObject(shield, instanceId);
 		}
-		//****//
-		SpawnTemplate shield = SpawnEngine.addNewSingleTimeSpawn(301550000, 703026, 307.59805f, 1471.2153f, 919.05554f, (byte) 0);
-		shield.setEntityId(272);
-		SpawnEngine.spawnObject(shield, instanceId);
+		if (!runtimeState().getBoolean("cradle.library_cleansed", false)) {
+			SpawnTemplate shield = SpawnEngine.addNewSingleTimeSpawn(301550000, 703026, 307.59805f, 1471.2153f, 919.05554f, (byte) 0);
+			shield.setEntityId(272);
+			SpawnEngine.spawnObject(shield, instanceId);
+		}
 		long deadline = runtimeState().getLong("cradle.start_deadline", 0);
 		if (deadline > 0 && !runtimeState().getBoolean("cradle.start_unlocked", false)) {
 			scheduleDeadline("start", deadline, this::unlockStart);
@@ -131,6 +129,10 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 		}
 		if (runtimeState().getBoolean("cradle.complete", false)) {
 			spawnCompletion();
+		}
+		restoreInteractionDeadlines();
+		if (runtimeState().getBoolean("cradle.sun_revealed", false)) {
+			spawnSunEntrance();
 		}
 	}
 	
@@ -156,7 +158,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	private void unlockStart() {
 		runtimeState().put("cradle.start_unlocked", true);
 		deleteNpc(834123);
-		sendMsgByRace(1403547, Race.PC_ALL, 0);
+		sendMsg(1403547, 0, false, 25, 0);
 	}
 	
 	/**
@@ -183,21 +185,21 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 					runtimeState().put("cradle.covetous_complete", true);
 				    // 你已击杀残酷守护者。 / Youve killed the Cruel Protector.
 					// 仍有进阶单位魔法士兵需要帮助。 / There are still Advance unit Magical Soldiers who need help.
-				    sendMsgByRace(1403542, Race.PC_ALL, 0);
+				    sendMsg(1403542, 0, false, 25, 0);
 					// 你已击杀全部残酷守护者。 / Youve killed all Cruel Protectors.
-					sendMsgByRace(1403545, Race.PC_ALL, 8000);
+					sendMsg(1403545, 0, false, 25, 8000);
 					spawnCovetousCompletion();
 				}
 			break;
 			case 220480: //Fallen Jotun Warrior.
 				// 通往支配圣所的门已激活。 / The door to the Sanctuary of Domination was activated.
-				sendMsgByRace(1403507, Race.PC_ALL, 0);
+				sendMsg(1403507, 0, false, 25, 0);
 				spawn(834000, 1196.7842f, 774.28778f, 1037.6906f, (byte) 0, 297);
 				spawn(834000, 1152.3800f, 728.48621f, 1036.1700f, (byte) 60, 301);
 			break;
 			case 220526: //Insightful Eye.
 				// 洞察之眼的探测已消失。 / The detection of the Insightful Eye has disappeared.
-				sendMsgByRace(1403544, Race.PC_ALL, 0);
+				sendMsg(1403544, 0, false, 25, 0);
 				spawn(834003, 1069.1040f, 783.19177f, 511.93161f, (byte) 0, 323);
 				spawn(834088, 1162.5231f, 790.3289f, 505.0359f, (byte) 60);
 			break;
@@ -209,7 +211,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			break;
 			case 220539: //Fiery Typhon.
 				// 炽热格里康已死，赶快击杀邪恶格里康！ / The Fiery Glycon is dead, quickly kill the Vile Glycon!
-				sendMsgByRace(1403530, Race.PC_ALL, 0);
+				sendMsg(1403530, 0, false, 25, 0);
 			break;
 			case 220540: //Typhon.
 				runtimeState().put("cradle.complete", true);
@@ -218,14 +220,14 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			break;
 			case 220541: //Vile Typhon.
 				// 邪恶格里康已死，赶快击杀炽热格里康！ / The Vile Glycon is dead, quickly kill the Fiery Glycon!
-				sendMsgByRace(1403529, Race.PC_ALL, 0);
+				sendMsg(1403529, 0, false, 25, 0);
 			break;
 			case 220597: //Locked Door To The Vile Library.
 				setDoorState(509, true);
 				// 你可使用风道到达全知之树中心。 / You can use a Wind Road to get to the center of the All-knowing Tree.
-				sendMsgByRace(1403520, Race.PC_ALL, 5000);
+				sendMsg(1403520, 0, false, 25, 5000);
 				// 格莱昂已出现。 / Glyon has appeared.
-				sendMsgByRace(1403533, Race.PC_ALL, 10000);
+				sendMsg(1403533, 0, false, 25, 10000);
 			break;
 		}
 	}
@@ -262,41 +264,22 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			case 703024: //Heavy Door Lever.
 			case 703025: //Heavy Door Lever.
 			    despawnNpc(npc);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-						deleteNpc(703026);
-						// 你已清除图书馆中的污染物。 / Youve removed the pollutants from the library.
-						sendMsgByRace(1403526, Race.PC_ALL, 0);
-						// 图书馆污染物已消失。 / The librarys pollutants have disappeared.
-						sendMsgByRace(1403527, Race.PC_ALL, 10000);
-					}
-				}, 10000);
+				if (!runtimeState().getBoolean("cradle.library_triggered", false)) {
+					runtimeState().put("cradle.library_triggered", true);
+					long deadline = System.currentTimeMillis() + 10_000;
+					runtimeState().put("cradle.library_deadline", deadline);
+					scheduleDeadline("library", deadline, this::cleanseLibrary);
+				}
 			break;
 			case 834007: //Altar Of Sun.
+				if (runtimeState().getBoolean("cradle.sun_triggered", false)) {
+					return;
+				}
 			    if (player.getInventory().decreaseByItemId(185000267, 1)) { //Sun Quartz.
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						/**
-						 * 处理 run。
-						 * Handle run.
-						 */
-						@Override
-						public void run() {
-							deleteNpc(834007);
-							deleteNpc(834018);
-							// 神秘瀑布已停止流动。 / The Mysterious Waterfall has stopped flowing.
-							// 你发现了隐藏入口。 / Youve discovered a hidden entrance.
-							sendMsgByRace(1403522, Race.PC_ALL, 0);
-							// 太阳玫瑰石英发出光芒并开始漂浮。 / The Rose Quarz of Sun emits a light and starts to float.
-							sendMsgByRace(1403590, Race.PC_ALL, 5000);
-							spawn(834007, 745.79639f, 728.73376f, 547.07489f, (byte) 0, 42);
-							spawn(834091, 794.84790f, 737.12927f, 542.71869f, (byte) 0, 633);
-						}
-					}, 5000);
+					runtimeState().put("cradle.sun_triggered", true);
+					long deadline = System.currentTimeMillis() + 5_000;
+					runtimeState().put("cradle.sun_deadline", deadline);
+					scheduleDeadline("sun", deadline, this::revealSunEntrance);
 				} else {
 					// 你没有可放在祭坛上的太阳玫瑰石英。 / You dont have a Rose Quarz of Sun to place on the altar.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403448));
@@ -309,6 +292,50 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 				setDoorState(115, true);
 			break;
 		}
+	}
+
+	private void restoreInteractionDeadlines() {
+		if (runtimeState().getBoolean("cradle.library_triggered", false)
+				&& !runtimeState().getBoolean("cradle.library_cleansed", false)) {
+			long deadline = runtimeState().getLong("cradle.library_deadline", 0);
+			if (deadline > 0) {
+				scheduleDeadline("library", deadline, this::cleanseLibrary);
+			}
+		}
+		if (runtimeState().getBoolean("cradle.sun_triggered", false)
+				&& !runtimeState().getBoolean("cradle.sun_revealed", false)) {
+			long deadline = runtimeState().getLong("cradle.sun_deadline", 0);
+			if (deadline > 0) {
+				scheduleDeadline("sun", deadline, this::revealSunEntrance);
+			}
+		}
+	}
+
+	private void cleanseLibrary() {
+		if (runtimeState().getBoolean("cradle.library_cleansed", false)) {
+			return;
+		}
+		runtimeState().put("cradle.library_cleansed", true);
+		deleteNpc(703026);
+		sendMsg(1403526);
+		sendMsg(1403527, 0, false, 25, 10_000);
+	}
+
+	private void revealSunEntrance() {
+		if (runtimeState().getBoolean("cradle.sun_revealed", false)) {
+			return;
+		}
+		runtimeState().put("cradle.sun_revealed", true);
+		deleteNpc(834007);
+		deleteNpc(834018);
+		sendMsg(1403522);
+		sendMsg(1403590, 0, false, 25, 5_000);
+		spawnSunEntrance();
+	}
+
+	private void spawnSunEntrance() {
+		spawn(834007, 745.79639f, 728.73376f, 547.07489f, (byte) 0, 42);
+		spawn(834091, 794.84790f, 737.12927f, 542.71869f, (byte) 0, 633);
 	}
 	
 	/**
@@ -323,41 +350,41 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("HOLLOW_TEMPLE_301550000")) {
             // 你发现了空虚祭坛。 / Youve discovered the Altar of Emptiness.
 			// 祭坛中央有可放入书本的凹槽。 / At the center of the altar is an indentation into which a book would fit.
-			sendMsgByRace(1403505, Race.PC_ALL, 0);
+			sendMsg(1403505, 0, false, 25, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("WALKING_PATH_301550000")) {
             // 你发现了大地祭坛。 / Youve discovered the Altar of Earth.
 			// 看起来可以在上面放置东西。 / Looks like you could place something on it.
-			sendMsgByRace(1403509, Race.PC_ALL, 0);
+			sendMsg(1403509, 0, false, 25, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("SEALED_LIGHT_301550000")) {
             // 花园精灵与看守者变为敌对。 / The Garden Fairies and Watchers have become aggressive.
-			sendMsgByRace(1403515, Race.PC_ALL, 0);
+			sendMsg(1403515, 0, false, 25, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("ALB_GARDEN_301550000")) {
             // 花园精灵与看守者变为敌对。 / The Garden Fairies and Watchers have become aggressive.
-			sendMsgByRace(1403515, Race.PC_ALL, 0);
+			sendMsg(1403515, 0, false, 25, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("TAINTED_LIBRARY_301550000")) {
             removeEffects(player);
 			// 可在此区域滑翔。 / You can glide in this area.
-			sendMsgByRace(1403517, Race.PC_ALL, 5000);
+			sendMsg(1403517, 0, false, 25, 5000);
 			// 可在此区域飞行。 / You can fly in this area.
-			sendMsgByRace(1403518, Race.PC_ALL, 10000);
+			sendMsg(1403518, 0, false, 25, 10000);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("LIBRARY_GAP_301550000")) {
             removeEffects(player);
 			// 可在此区域滑翔。 / You can glide in this area.
-			sendMsgByRace(1403517, Race.PC_ALL, 5000);
+			sendMsg(1403517, 0, false, 25, 5000);
 			// 可在此区域飞行。 / You can fly in this area.
-			sendMsgByRace(1403518, Race.PC_ALL, 10000);
+			sendMsg(1403518, 0, false, 25, 10000);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("CORRUPT_LIBRARY_301550000")) {
             // 你发现了维德秘密图书馆的入口。 / Youve discovered the entrance to Vids Secret Library.
-			sendMsgByRace(1403519, Race.PC_ALL, 0);
+			sendMsg(1403519, 0, false, 25, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("VILE_LIBRARY_301550000")) {
             // 若扳动开关，应有东西被激活。 / If you move the switch, something should activate.
-			sendMsgByRace(1403525, Race.PC_ALL, 0);
+			sendMsg(1403525, 0, false, 25, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("MYSTERIOUS_WATERFALL_301550000")) {
             // 你发现了太阳祭坛。 / Youve discovered the Altar of Sun.
 			// 看起来可以在上面放置东西。 / Looks like you could place something on it.
-			sendMsgByRace(1403521, Race.PC_ALL, 0);
+			sendMsg(1403521, 0, false, 25, 0);
 			// 你发现了奇怪的 Kisk。 / Youve discovered a strange Kisk.
-			sendMsgByRace(1403523, Race.PC_ALL, 10000);
+			sendMsg(1403523, 0, false, 25, 10000);
 		}
     }
 	
@@ -451,55 +478,6 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
         spawn(IDEternity02AGuardOffRun, 1242.3444f, 860.0123f, 1028.6128f, (byte) 91);
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
-	
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -527,7 +505,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 		effectController.removeEffect(21340); //Sylfae Queens Blessing.
 		effectController.removeEffect(21344); //Beguiling Visions.
 		// 希尔法女王的力量已消失。 / The Sylfae Queens power has disappeared.
-		sendMsgByRace(1403607, Race.PC_ALL, 0);
+		sendMsg(1403607, 0, false, 25, 0);
     }
 	
 	/**
