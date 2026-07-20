@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -105,6 +106,32 @@ class TargetRangePropertyTest {
 	}
 
 	@Test
+	void cylindricalAreaIncludesMultipleTargetsAcrossConfiguredWidth() {
+		boolean originalGeoEnabled = GeoDataConfig.GEO_ENABLE;
+		try {
+			GeoDataConfig.GEO_ENABLE = false;
+			TestCreature effector = new TestCreature(1);
+			TestCreature leftTarget = new TestCreature(2, -1f, 4f, 0f, 0f);
+			TestCreature rightTarget = new TestCreature(3, -1f, -4f, 0f, 0f);
+			effector.getKnownList().getKnownObjects().put(leftTarget.getObjectId(), leftTarget);
+			effector.getKnownList().getKnownObjects().put(rightTarget.getObjectId(), rightTarget);
+			Skill skill = new Skill(new SkillTemplate(), effector, 1, effector, null);
+			Properties properties = new Properties();
+			properties.targetType = TargetRangeAttribute.AREA;
+			properties.targetDistance = 2;
+			properties.direction = 1;
+			setField(properties, "effectiveWidth", 8);
+
+			TargetRangeProperty.set(skill, properties);
+
+			assertTrue(skill.getEffectedList().contains(leftTarget));
+			assertTrue(skill.getEffectedList().contains(rightTarget));
+		} finally {
+			GeoDataConfig.GEO_ENABLE = originalGeoEnabled;
+		}
+	}
+
+	@Test
 	void onlyOneOtherTargetRejectsEffector() {
 		TestCreature effector = new TestCreature(1);
 		Skill skill = new Skill(new SkillTemplate(), effector, 1, effector, null);
@@ -115,6 +142,16 @@ class TargetRangePropertyTest {
 
 		assertFalse(TargetRangeProperty.set(skill, properties));
 		assertTrue(skill.getEffectedList().isEmpty());
+	}
+
+	private static void setField(Object target, String name, Object value) {
+		try {
+			Field field = target.getClass().getDeclaredField(name);
+			field.setAccessible(true);
+			field.set(target, value);
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError(e);
+		}
 	}
 
 	private static class TestCreature extends Creature {

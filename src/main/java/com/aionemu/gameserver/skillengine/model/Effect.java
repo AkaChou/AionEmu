@@ -1159,8 +1159,8 @@ public class Effect implements StatOwner {
 	 *
 	 * whether restored
 	 */
-	public void startEffect(boolean restored) {
-		if (successEffects.isEmpty()) {
+	public synchronized void startEffect(boolean restored) {
+		if (isStopped || successEffects.isEmpty()) {
 			return;
 		}
 		shedulePeriodicActions();

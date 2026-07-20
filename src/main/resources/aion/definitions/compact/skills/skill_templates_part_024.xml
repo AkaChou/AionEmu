@@ -6157,7 +6157,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="20069" name="용암 분출" nameId="597371" name_desc="Arena_pvp02_S2_magma45m" stack="SKILL_Arena_pvp02_S2_magma45m" skill_group_name="Arena_pvp02_S2_magma45m" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="4" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="5" effective_angle="45" />
+    <properties first_target="ME" first_target_range="4" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="5" effective_altitude="45" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -14104,7 +14104,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="20400" name="산성 용액 분출" nameId="599431" name_desc="Arena_pvp01_S4_PoisonTrap" stack="SKILL_Arena_pvp01_S4_PoisonTrap" skill_group_name="Arena_pvp01_S4_PoisonTrap" delayId="11" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="400" cancel_rate="0" conflict_id="2" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="4" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" target_distance="2" effective_angle="25" effective_width="8" direction="1" />
+    <properties first_target="ME" first_target_range="4" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="24" revision_distance="0" target_status="" effective_range="2" effective_altitude="8" effective_width="25" direction="1" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
