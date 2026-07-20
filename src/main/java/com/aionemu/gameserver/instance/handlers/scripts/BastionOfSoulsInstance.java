@@ -7,6 +7,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -48,14 +49,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 {
 	/** prison ice / prison ice */
 		private int prisonIce;
-	/** boss witch / boss witch */
-		private int bossWitch;
 	/** prison core / prison core */
 		private int prisonCore;
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	/** 视频种族 / video race */
-		private Race videoRace;
 	/** 开始时间 / start time */
 	private long startTime;
 	/** idab1ere wave / idab1ere wave */
@@ -119,6 +116,8 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		sendPacket(player, "UI_Gauge_03", 0 + 1);
 		if (spawnRace == null) {
 			spawnRace = player.getRace();
+			RetailConditionSpawnEngine.setVariable(instance,
+				spawnRace == Race.ASMODIANS ? "da_play" : "li_play", 1, 0);
 			SpawnBastionRace();
 		}
 	}
@@ -429,117 +428,11 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					}
 				}, 60000);
 			break;
-			case 246506: //Arrogant Prida.
-			case 246507: //Jealous Invilda.
-			case 246508: //Enraged Halda.
-			case 246509: //Envious Lida.
-			    bossWitch++;
-				if (bossWitch == 1) {
-				} else if (bossWitch == 2) {
-				} else if (bossWitch == 3) {
-				} else if (bossWitch == 4) {
-					deleteNpc(246511); //Opel.
-					deleteNpc(246512); //Shurak.
-					switch (Rnd.get(1, 3)) {
-						case 1:
-						    final int bossFinalHard = spawnRace == Race.ASMODIANS ? 246496 : 246493;
-							spawn(bossFinalHard, 125.554344f, 648.39526f, 443.92804f, (byte) 14);
-						break;
-						case 2:
-						    final int bossFinalNormal = spawnRace == Race.ASMODIANS ? 246497 : 246494;
-							spawn(bossFinalNormal, 125.554344f, 648.39526f, 443.92804f, (byte) 14);
-						break;
-						case 3:
-						    final int bossFinalEasy = spawnRace == Race.ASMODIANS ? 246498 : 246495;
-							spawn(bossFinalEasy, 125.554344f, 648.39526f, 443.92804f, (byte) 14);
-						break;
-					}
-				}
-			break;
-			// Boss 困难 天族。 / Boss Hard Elyos.
-			case 246493: //Suffering Opel.
-			    spawnBastionHardChest();
-				// sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
-				final int IDAb1EreVideo1 = videoRace == Race.ASMODIANS ? 961 : 959;
-				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo1));
-				// 堡垒出口。 / Bastion Exit.
-				final int bastionExit1 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
-				spawn(bastionExit1, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
-			break;
-			// Boss 普通 天族。 / Boss Normal Elyos.
-			case 246494: //Cursed Opel.
-			    spawnBastionNormalChest();
-			    // sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
-				final int IDAb1EreVideo2 = videoRace == Race.ASMODIANS ? 961 : 959;
-				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo2));
-				// 堡垒出口。 / Bastion Exit.
-				final int bastionExit2 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
-				spawn(bastionExit2, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
-			break;
-			// Boss 简单 天族。 / Boss Easy Elyos.
-			case 246495: //Twisted Opel.
-			    spawnBastionEasyChest();
-				// sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
-				final int IDAb1EreVideo3 = videoRace == Race.ASMODIANS ? 961 : 959;
-				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo3));
-				// 堡垒出口。 / Bastion Exit.
-				final int bastionExit3 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
-				spawn(bastionExit3, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
-			break;
-			///////////////////////////////////////////////////////////////////////////////
-			// Boss 困难 魔族。 / Boss Hard Asmodians.
-			case 246496: //Suffering Opel.
-			    spawnBastionHardChest();
-				// sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
-				final int IDAb1EreVideo4 = videoRace == Race.ASMODIANS ? 961 : 959;
-				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo4));
-				// 堡垒出口。 / Bastion Exit.
-				final int bastionExit4 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
-				spawn(bastionExit4, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
-			break;
-			// Boss 普通 魔族。 / Boss Normal Asmodians.
-			case 246497: //Cursed Opel.
-			    spawnBastionNormalChest();
-			    // sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
-				final int IDAb1EreVideo5 = videoRace == Race.ASMODIANS ? 961 : 959;
-				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo5));
-				// 堡垒出口。 / Bastion Exit.
-				final int bastionExit5 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
-				spawn(bastionExit5, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
-			break;
-			// Boss 简单 魔族。 / Boss Easy Asmodians.
-			case 246498: //Twisted Opel.
-			    spawnBastionEasyChest();
-				// sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
-				final int IDAb1EreVideo6 = videoRace == Race.ASMODIANS ? 961 : 959;
-				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo6));
-				// 堡垒出口。 / Bastion Exit.
-				final int bastionExit6 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
-				spawn(bastionExit6, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
-			break;
 		}
 	}
 	
-	private void spawnBastionEasyChest() {
-		spawn(835484, 119.39699f, 642.50430f, 443.95374f, (byte) 15);
-        spawn(835484, 115.42487f, 638.64166f, 443.97333f, (byte) 15);
-        spawn(835484, 120.47298f, 635.68460f, 443.92804f, (byte) 23);
-        spawn(835484, 112.50187f, 643.73267f, 443.92804f, (byte) 5);
-	}
-	private void spawnBastionNormalChest() {
-		spawn(835485, 119.39699f, 642.50430f, 443.95374f, (byte) 15);
-        spawn(835485, 115.42487f, 638.64166f, 443.97333f, (byte) 15);
-        spawn(835485, 120.47298f, 635.68460f, 443.92804f, (byte) 23);
-        spawn(835485, 112.50187f, 643.73267f, 443.92804f, (byte) 5);
-	}
-	private void spawnBastionHardChest() {
-		spawn(835486, 119.39699f, 642.50430f, 443.95374f, (byte) 15);
-        spawn(835486, 115.42487f, 638.64166f, 443.97333f, (byte) 15);
-        spawn(835486, 120.47298f, 635.68460f, 443.92804f, (byte) 23);
-        spawn(835486, 112.50187f, 643.73267f, 443.92804f, (byte) 5);
-	}
-	
 	private void sendPacket(Player player, final String variable, final int value) {
+		RetailConditionSpawnEngine.setVariable(instance, variable, value, 0);
 		instance.doOnAllPlayers(new Visitor<Player>() {
 		    /**
 		     * 处理 visit。
@@ -618,7 +511,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		final int RoundPrisonF = spawnRace == Race.ASMODIANS ? 247140 : 247138;
 		// 回合闲谈。 / Round Gossip.
 		final int RoundGossip1 = spawnRace == Race.ASMODIANS ? 247186 : 247185;
-		final int RoundGossip10 = spawnRace == Race.ASMODIANS ? 247220 : 247219;
 		// 工作守护者。 / Work Deva.
 		final int WorkDevaM = spawnRace == Race.ASMODIANS ? 247018 : 247016;
 		final int WorkDevaF = spawnRace == Race.ASMODIANS ? 247019 : 247017;
@@ -662,7 +554,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		spawn(RoundPrisonF, 1164.0812f, 886.5736f, 400.6619f, (byte) 66);
 		// 回合闲谈。 / Round Gossip.
 		spawn(RoundGossip1, 1212.2343f, 853.5162f, 405.29352f, (byte) 30);
-		spawn(RoundGossip10, 1184.5503f, 655.08954f, 427.28555f, (byte) 94);
 		// 工作守护者。 / Work Deva.
 		spawn(WorkDevaM, 1337.1613f, 932.3105f, 404.81616f, (byte) 63);
         spawn(WorkDevaM, 1351.9149f, 912.46375f, 404.6229f, (byte) 91);

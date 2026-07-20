@@ -115,7 +115,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(6000, data.conditionSpawnCount());
+		assertEquals(6749, data.conditionSpawnCount());
 		assertEquals(40, data.sensoryAreaCount());
 		var bossDoorPattern = data.getPattern(206163);
 		assertNotNull(bossDoorPattern);

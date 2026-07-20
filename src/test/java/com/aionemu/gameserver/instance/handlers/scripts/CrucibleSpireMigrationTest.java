@@ -18,6 +18,8 @@ class CrucibleSpireMigrationTest {
 		assertTrue(source.contains("runtimeState().put(FLOOR_CONTROLLER_DEADLINE, deadline)"));
 		assertTrue(source.contains("scheduleDeadline(\"delete_floor_controller\", controllerDeadline"));
 		assertTrue(source.contains("this::deleteFloorController"));
+		assertTrue(source.contains("RetailConditionSpawnEngine.setVariable(instance, \"race\""));
+		assertTrue(source.contains("RetailConditionSpawnEngine.setVariable(instance, variable, floor, 0)"));
 		assertTrue(source.contains("InstanceSettlementService.settleInfinity("));
 		assertFalse(source.contains("bossTimerStart"));
 		assertFalse(source.contains("bossTimerEnd"));
@@ -25,6 +27,8 @@ class CrucibleSpireMigrationTest {
 		assertFalse(source.contains("isSpawning"));
 		assertFalse(source.contains("Future<?>"));
 		assertFalse(source.contains("GameThreadPoolServices"));
+		assertFalse(source.contains("spawnNextFloor"));
+		assertFalse(source.contains("spawn(247249"));
 
 		String conditions = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
@@ -35,6 +39,14 @@ class CrucibleSpireMigrationTest {
 			assertTrue(world.contains("<variable name=\"" + variable + "\"/>"), variable);
 		}
 		assertTrue(world.contains("page_start=\"1\" page_end=\"2\""));
-		assertFalse(world.contains("<variable name=\"floor_01\"/>"));
+		for (int floor = 1; floor <= 40; floor++) {
+			assertTrue(world.contains("<variable name=\"floor_" + String.format("%02d", floor) + "\"/>"));
+		}
+		for (String variable : new String[] { "race", "condition_infinity_pre_season_floor",
+			"condition_infinity_this_season_floor" }) {
+			assertTrue(world.contains("<variable name=\"" + variable + "\"/>"), variable);
+		}
+		assertTrue(world.contains("<npc id=\"247312\""));
+		assertTrue(world.contains("<npc id=\"247350\""));
 	}
 }

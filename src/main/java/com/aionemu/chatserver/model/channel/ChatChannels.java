@@ -47,7 +47,7 @@ public class ChatChannels {
         addTradeChannel("trade_LF1A");
         addTradeChannel("trade_LF3");
         addTradeChannel("trade_LF4");
-		addTradeChannel("trade_LF4_M1");
+		addTradeChannel("trade_LF4_M");
 		addTradeChannel("trade_LF5");
 		addTradeChannel("trade_LF5_Ship");
         addTradeChannel("trade_LF2A");
@@ -212,7 +212,7 @@ public class ChatChannels {
         addRegionChannel(210030000, "public_LF1A");
         addRegionChannel(210040000, "public_LF3");
         addRegionChannel(210050000, "public_LF4");
-		addRegionChannel(210050000, "public_LF4_M1");
+		addRegionChannel(210130000, "public_LF4_M");
 		addRegionChannel(210070000, "public_LF5");
 		addRegionChannel(210080000, "public_LF5_Ship");
 		addRegionChannel(210090000, "public_LDF5_Under_L");
@@ -225,7 +225,7 @@ public class ChatChannels {
         addRegionChannel(220070000, "public_DF4");
 		addRegionChannel(220080000, "public_DF5");
 		addRegionChannel(220090000, "public_DF5_Ship");
-		addRegionChannel(210090000, "public_LDF5_Under_D");
+		addRegionChannel(220100000, "public_LDF5_Under_D");
         addRegionChannel(300010000, "public_IDAbPro");
         addRegionChannel(300020000, "public_IDTest_Dungeon");
         addRegionChannel(300030000, "public_IDAb1_MiniCastle");
@@ -312,7 +312,7 @@ public class ChatChannels {
         addRegionChannel(301270000, "public_IDLDF4Re_01");
         addRegionChannel(301280000, "public_IDAbRe_Up3_Dkisas_02_N");
         addRegionChannel(301290000, "public_IDAbRe_Up3_Lamiren_02_N");
-        addRegionChannel(301300000, "public_IDAbRe_Up3_Crotan");
+        addRegionChannel(301300000, "public_IDAbRe_Up3_Crotan_02_N");
         addRegionChannel(301310000, "public_IDLDF5_Fortress_Re");
         addRegionChannel(301320000, "public_IDLDF5_Under_01_PC");
         addRegionChannel(301330000, "public_IDLDF5_Under_Rune_PC");
@@ -358,7 +358,7 @@ public class ChatChannels {
         addRegionChannel(600070000, "public_LDF5_Under");
         addRegionChannel(600080000, "public_IDIU");
 		addRegionChannel(600100000, "public_LDF4_Advance");
-		addRegionChannel(600100000, "public_LDF5_Fortress");
+		addRegionChannel(600090000, "public_LDF5_Fortress");
         addRegionChannel(700010000, "public_Housing_LF_personal");
         addRegionChannel(700020000, "public_Housing_LC_legion");
         addRegionChannel(710010000, "public_Housing_DF_personal");

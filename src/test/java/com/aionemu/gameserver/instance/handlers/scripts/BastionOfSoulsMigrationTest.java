@@ -46,11 +46,15 @@ class BastionOfSoulsMigrationTest {
 	}
 
 	@Test
-	void finalSettlementSpawnsRemainUntilRetailConditionsAreGenerated() throws Exception {
+	void retailConditionsOwnFinalBossesChestsAndExits() throws Exception {
 		String source = Files.readString(HANDLER);
-		assertTrue(source.contains("spawnBastionEasyChest"));
-		assertTrue(source.contains("spawnBastionNormalChest"));
-		assertTrue(source.contains("spawnBastionHardChest"));
+		assertTrue(source.contains("RetailConditionSpawnEngine.setVariable(instance"));
+		for (String legacy : new String[] { "bossWitch", "spawnBastionEasyChest", "spawnBastionNormalChest",
+			"spawnBastionHardChest", "spawn(246493", "spawn(246494", "spawn(246495", "spawn(246496",
+			"spawn(246497", "spawn(246498", "spawn(835484", "spawn(835485", "spawn(835486",
+			"spawn(731805", "spawn(731806" }) {
+			assertFalse(source.contains(legacy), legacy);
+		}
 
 		Document conditions = parse("src/main/resources/aion/definitions/compact/ai/condition-spawns.xml");
 		String world = "//world[@id='302340000']";
@@ -63,12 +67,13 @@ class BastionOfSoulsMigrationTest {
 			"246923", "246924" }) {
 			assertTrue(exists(conditions, world + "//npc[@id='" + npc + "']"), npc);
 		}
-		for (String variable : new String[] { "mission_end", "final_boss", "item_a", "item_b", "item_c" }) {
-			assertFalse(exists(conditions, world + "/variable[@name='" + variable + "']"), variable);
+		for (String variable : new String[] { "da_play", "li_play", "mission_end", "final_boss", "item_a", "item_b",
+			"item_c", "boss_e_kill", "boss_n_kill", "boss_h_kill" }) {
+			assertTrue(exists(conditions, world + "/variable[@name='" + variable + "']"), variable);
 		}
 		for (String npc : new String[] { "246493", "246494", "246495", "246496", "246497", "246498", "835484",
 			"835485", "835486", "731805", "731806" }) {
-			assertFalse(exists(conditions, world + "//npc[@id='" + npc + "']"), npc);
+			assertTrue(exists(conditions, world + "//npc[@id='" + npc + "']"), npc);
 		}
 	}
 
