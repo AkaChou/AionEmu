@@ -14,8 +14,8 @@ public class SkillConfig {
 	@Property(key = "gameserver.skill.dp.consume", defaultValue = "true")
 	public static boolean CONSUME_DP = true;
 
-	@Property(key = "gameserver.magicboost.cap", defaultValue = "6500")
-	public static int MAGICBOOST_CAP = 6500;
+	@Property(key = "gameserver.magicboost.cap", defaultValue = "3400")
+	public static int MAGICBOOST_CAP = 3400;
 
 	@Property(key = "gameserver.skill.root.break.on.dot", defaultValue = "false")
 	public static boolean ROOT_BREAK_ON_DOT = false;

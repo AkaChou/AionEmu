@@ -602,6 +602,12 @@
     <point x="176.766296" y="246.383881"/>
     <point x="275.819519" y="244.79364"/>
   </area>
+  <area world_id="300230000" world_name="idcromede" name="IDCromede_SensoryArea_BossDoor" bottom="213.045425" top="227.045425">
+    <point x="561.241028" y="756.814941"/>
+    <point x="561.440308" y="782.309692"/>
+    <point x="588.809021" y="782.268372"/>
+    <point x="589.051575" y="756.332642"/>
+  </area>
   <area world_id="300350000" world_name="idarena_pvp01" name="NoticeFlyingArea" bottom="127.398102" top="277.398102">
     <point x="589.421753" y="1714.48547"/>
     <point x="587.634155" y="1846.69336"/>

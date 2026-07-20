@@ -59,6 +59,11 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertSourceExcludes("ShugoVaultTimeAttackInstance", "GameThreadPoolServices");
 		assertNoFuture("TheShugoEmperorVaultInstance");
 		assertNoFuture("EmperorTrillirunerkSafeInstance");
+		assertMigrated("DarkPoetaInstance", "scheduleDeadline(\"expire\"", "dark.kill.");
+		assertSourceContains("DarkPoetaInstance", "InstanceSettlementService.darkPoetaRank");
+		assertSourceContains("DarkPoetaInstance", "DataManager.RETAIL_AI_DATA.getNpcScore");
+		assertSourceExcludes("DarkPoetaInstance", "GameThreadPoolServices");
+		assertNoFuture("DarkPoetaInstance");
 	}
 
 	@Test
@@ -74,6 +79,103 @@ class InstanceHandlerRecoveryMigrationTest {
 			assertTrue(Pattern.compile("<world\\b(?=[^>]*\\bid=\\\"" + worldId
 				+ "\\\")(?=[^>]*\\bbehavior=\\\"MATCHMAKER\\\")[^>]*/>").matcher(coverage).find());
 		}
+	}
+
+	@Test
+	void sanctuaryDungeonUsesRetailRaceConditionsWithoutLegacyHandler() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SanctuaryDungeonInstance.java")));
+
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String sanctuary = worldBlock(conditions, "301580000");
+		assertTrue(sanctuary.contains("<variable name=\"idf6_race_l\"/>"));
+		assertTrue(sanctuary.contains("<variable name=\"idf6_race_d\"/>"));
+		assertTrue(sanctuary.contains("IDF6_RACE_L ==1"));
+		assertTrue(sanctuary.contains("IDF6_RACE_D ==1"));
+		for (String npcId : new String[] { "806076", "806080", "806189", "806190" }) {
+			assertTrue(sanctuary.contains("npc id=\"" + npcId + "\""));
+		}
+		assertEquals(4, count(sanctuary, "<condition "));
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/301580000_Sanctuary_Dungeon.xml"));
+		assertTrue(staticSpawns.contains("<spawn npc_id=\"703092\" respawn_time=\"1\">"));
+		assertTrue(staticSpawns.contains("x=\"432.973297\" y=\"490.474091\" z=\"102.525612\""));
+		assertTrue(staticSpawns.contains("<spawn npc_id=\"806118\" respawn_time=\"1\">"));
+
+		String npcAi = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npc-ai.xml"));
+		assertTrue(npcAi.contains("id=\"703092\" name=\"LDF6_OP_race_check_NPC\""
+			+ " ai=\"LF6_F2_Din_04_Enter_Attack_67\""));
+
+		String pattern = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npcaipatterns_idf6_ydy.xml"));
+		assertTrue(pattern.contains("<name>LF6_F2_Din_04_Enter_Attack_67</name>"));
+		assertTrue(pattern.contains("<string>IDF6_RACE_L</string>"));
+		assertTrue(pattern.contains("<string>IDF6_RACE_D</string>"));
+	}
+
+	@Test
+	void azoturanFortressUsesRetailMatchmakingWithoutPrivateQuestBuff() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AzoturanFortressInstance.java")));
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(coverage.contains("behavior=\"MATCHMAKER\""
+			+ " behavior_source=\"matchmaker.xml:334,matchmaker.xml:405\""
+			+ " classification=\"standard\" cooltime_id=\"25\""
+			+ " creation_ids=\"31,221,234,257\" id=\"310100000\""));
+	}
+
+	@Test
+	void karamatisUsesRetailAscensionBlessingWithoutLegacyZoneHandler() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KaramatisInstance.java")));
+
+		String quest = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/quest/handlers/ascension/_1006Ascension.java"));
+		assertTrue(quest.contains("if (qs.getQuestVars().getQuestVars() == 99) {\n"
+			+ "\t\t\t\t\t\t\t\tGameEngineServices.skillEngine().applyEffectDirectly(281, player, player, 0);"));
+	}
+
+	@Test
+	void ataxiarUsesRetailAscensionShieldWithoutLegacyZoneHandler() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AtaxiarInstance.java")));
+
+		String quest = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/quest/handlers/ascension/_2008Ascension.java"));
+		assertTrue(quest.contains("if (var == 99) {\n"
+			+ "\t\t\t\t\t\t\tGameEngineServices.skillEngine().applyEffectDirectly(257, player, player, 0);"));
+	}
+
+	@Test
+	void kromedesTrialKeepsRageOnRetailCorpseInteraction() throws Exception {
+		String handler = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KromedesTrialInstance.java"));
+		assertFalse(handler.contains("rageOfKromede"));
+		assertFalse(handler.contains("19288"));
+		assertFalse(handler.contains("onDropRegistered"));
+		for (String privateReward : new String[] { "188052826", "188053787", "190080005", "190080006",
+			"190080007", "190080008", "190200000" }) {
+			assertFalse(handler.contains(privateReward));
+		}
+		assertFalse(handler.contains("sendMovie(player, 454);"));
+		assertFalse(handler.contains("KALIGA_DUNGEONS_300230000"));
+
+		for (String file : new String[] { "_18602Nightmare_In_Shining_Armor.java", "_28602Into_The_Unknown.java" }) {
+			String quest = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/quest/handlers/kromedes_trial", file));
+			assertTrue(quest.contains("getSkill(player, 19288, 1, player).useNoAnimationSkill()"));
+			assertFalse(quest.contains("1111307"));
+		}
+
+		String drops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_006.xml"));
+		assertTrue(npcDropBlock(drops, "216999")
+			.contains("item_id=\"185000101\" chance=\"100.00\""));
 	}
 
 	@Test
@@ -128,6 +230,16 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertTrue(staticSpawns.contains("x=\"689.528625\" y=\"669.004517\""));
 		assertTrue(staticSpawns.contains("<spawn npc_id=\"215788\">"));
 		assertTrue(staticSpawns.contains("x=\"807.570984\" y=\"560.611877\""));
+		String level52Skinmenders = spawnBlock(staticSpawns, "215857");
+		for (String misplacedPosition : new String[] { "x=\"527.282\" y=\"503.964\"",
+				"x=\"595.821\" y=\"640.241\"", "x=\"441.13\" y=\"435.65\"",
+				"x=\"524.769\" y=\"387.584\"", "x=\"652.313\" y=\"525.245\"",
+				"x=\"767.793\" y=\"304.979\"", "x=\"492.231\" y=\"386.141\"" }) {
+			assertFalse(level52Skinmenders.contains(misplacedPosition));
+		}
+		String level53Skinmenders = spawnBlock(staticSpawns, "215808");
+		assertEquals(7, count(level53Skinmenders, "<spot "));
+		assertFalse(level53Skinmenders.contains("respawn_time="));
 		for (String npcId : new String[] { "215782", "215783", "215793", "730217", "700706", "730272" }) {
 			assertFalse(staticSpawns.contains("npc_id=\"" + npcId + "\""));
 		}
@@ -470,6 +582,13 @@ class InstanceHandlerRecoveryMigrationTest {
 	private static String npcDropBlock(String source, String npcId) {
 		var matcher = Pattern.compile("<npc_drop npc_id=\\\"" + npcId + "\\\".*?</npc_drop>", Pattern.DOTALL)
 			.matcher(source);
+		assertTrue(matcher.find());
+		return matcher.group();
+	}
+
+	private static String spawnBlock(String source, String npcId) {
+		var matcher = Pattern.compile("<spawn npc_id=\\\"" + npcId + "\\\".*?</spawn>", Pattern.DOTALL)
+				.matcher(source);
 		assertTrue(matcher.find());
 		return matcher.group();
 	}

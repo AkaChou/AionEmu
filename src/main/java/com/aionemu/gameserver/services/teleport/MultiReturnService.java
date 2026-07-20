@@ -1,11 +1,13 @@
 package com.aionemu.gameserver.services.teleport;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.portal.PortalLoc;
 import com.aionemu.gameserver.services.instance.InstanceService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 多重回城服务，处理多目的地回城卷轴传送与世界 ID 映射。
@@ -13,6 +15,7 @@ import com.aionemu.gameserver.services.instance.InstanceService;
  *
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class MultiReturnService {
 	/**
 	 * 按传送点 ID 将玩家传送到目标世界。
@@ -23,8 +26,12 @@ public class MultiReturnService {
 	 * Target world id
 	 */
 	public static void Teleport(Player player, int LocId, int worldId) {
-		InstanceService.onLeaveInstance(player);
 		PortalLoc loc = DataManager.PORTAL_LOC_DATA.getPortalLoc(LocId);
+		if (loc == null) {
+			log.warn(I18n.get("log.e07f399d3e8d", LocId));
+			return;
+		}
+		InstanceService.onLeaveInstance(player);
 		TeleportService2.teleportTo(player, worldId, loc.getX(), loc.getY(), loc.getZ(), player.getHeading(),
 				TeleportAnimation.BEAM_ANIMATION);
 	}

@@ -1,21 +1,17 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import java.util.Set;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.ai2.AIState;
-import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
-import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.EternalBastionReward;
@@ -23,1009 +19,322 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.playerreward.EternalBastionPlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
-import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * 永恒堡垒副本事件处理器。
  * Instance event handler for The Eternal Bastion.
- *
- * @author Encom
  */
-
 @InstanceID(300540000)
-public class TheEternalBastionInstance extends GeneralInstanceHandler
-{
-	/** 刷怪种族 / spawn race */
-	private Race spawnRace;
-	/** 开始时间 / start time */
-	private long startTime;
-	/** 准备计时器 / timer prepare */
-		private Future<?> timerPrepare;
-	/** 副本计时器 / timer instance */
-		private Future<?> timerInstance;
-	/** dredgion signal tower / dredgion signal tower */
-		private int dredgionSignalTower;
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	private boolean isInstanceDestroyed;
-	/** 门映射 / door map */
-	private Map<Integer, StaticDoor> doors;
-	/** 副本奖励对象 / instance reward object */
+public class TheEternalBastionInstance extends GeneralInstanceHandler {
+	private static final String STATE_PREFIX = "eternal.";
+	private static final long EXIT_DELAY = 5_000L;
 	private EternalBastionReward instanceReward;
-	// 准备时间。 / Preparation Time.
-	/** 准备计时秒数 / prepare timer seconds */
-		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
-	// 副本持续计时。 / Duration Instance Time.
-	/** 副本计时秒数 / instance timer seconds */
-		private int instanceTimerSeconds = 1800000; //...30Min
-	/** 灵魂堡垒任务 / bastion task */
-		private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
-	/**
-	 * 返回玩家奖励记录。
-	 * Return the player's reward record.
-	 *
-	 * visible object
-	 * result
-	 */
-	
-	protected EternalBastionPlayerReward getPlayerReward(Integer object) {
-		return (EternalBastionPlayerReward) instanceReward.getPlayerReward(object);
+
+	@Override
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		instanceReward = new EternalBastionReward(mapId, instanceId);
+		restoreScore();
+		instanceReward.setInstanceScoreType(scoreType());
+		restoreDeadline();
 	}
-	
-	/**
-	 * 处理 addPlayerReward。
-	 * Handle addPlayerReward.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addPlayerReward(Player player) {
-		instanceReward.addPlayerReward(new EternalBastionPlayerReward(player.getObjectId()));
-	}
-	
-	private boolean containPlayer(Integer object) {
-		return instanceReward.containPlayer(object);
-	}
-	
-	/**
-	 * 返回本副本奖励对象。
-	 * Return this instance's reward object.
-	 *
-	 * result
-	 */
+
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
-	
+
 	/**
-	 * NPC 掉落表注册时处理。
-	 * Handle NPC drop-table registration.
-	 *
-	 * npc
+	 * The opportunity bundle is the only legacy reward without a matching retail
+	 * drop row. Keep that evidence-backed reward until the source data is found.
 	 */
 	@Override
-    public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-        switch (npcId) {
-			case 701913: //Bastion's Eternal Treasure S.
-			case 701914: //Bastion's Eternal Treasure A.
-			case 701915: //Bastion's Eternal Treasure B.
-			case 701916: //Bastion's Eternal Treasure C.
-			case 701917: //Bastion's Eternal Treasure D.
-			    for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    switch (Rnd.get(1, 3)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052591, 1)); //Weapon Box Of The Iron Wall Fighter.
-				            break;
-							case 2:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052592, 1)); //Armor Box Of The Iron Wall Fighter.
-							break;
-							case 3:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052593, 1)); //Firm Equipment Support Box Of Iron Wall.
-							break;
-						}
-				    }
-				}
-			break;
-			// 堡垒永恒宝箱。 / Bastion's Eternal Treasure Chest.
-			case 801268:
-			case 801269:
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-				    }
-				}
-			break;
-			case 831328: //Cannon Supplies Box.
-			case 831329: //Ammo Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006996, 10)); //Case Shot.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006997, 10)); //Armor-Piercing Shot.
-			break;
-			case 831330: //Siege Mine.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000137, 1)); //Mobile Turret Key.
-			break;
-			case 802185: //The Eternal Bastion Opportunity Bundle.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
-			break;
-        }
-    }
-	
-	/**
-	 * 处理死亡事件。
-	 * Handle a death event.
-	 *
-	 * npc
-	 */
+	public void onDropRegistered(Npc npc) {
+		if (npc.getNpcId() != 802185) {
+			return;
+		}
+		Set<DropItem> drops = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 186000051, 30));
+		drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 186000052, 30));
+		drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 186000236, 50));
+		drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 186000237, 50));
+	}
+
+	@Override
+	public void onEnterInstance(Player player) {
+		EternalBastionPlayerReward playerReward = getOrCreatePlayerReward(player.getObjectId());
+		if (runtimeState().getBoolean(STATE_PREFIX + "completed", false)) {
+			if (!playerReward.isRewarded()) {
+				doReward(player);
+			}
+			sendScore(0, 0);
+			return;
+		}
+		startPrepareTimer();
+		sendScore(0, 0);
+	}
+
 	@Override
 	public void onDie(Npc npc) {
-		int points = 0;
-		int npcId = npc.getNpcId();
-		Player player = npc.getAggroList().getMostPlayerDamage();
-		switch (npc.getObjectTemplate().getTemplateId()) {
-			case 233313: //Pashid Siege Combatant.
-			    points = 20;
-				despawnNpc(npc);
-			break;
-			case 231115: //Pashid Siege Soldier.
-			case 231116: //Pashid Siege Mage.
-			case 233309: //Pashid Siege Ambusher.
-			    points = 33;
-				despawnNpc(npc);
-			break;
-			case 233312: //Pashid Siege Healer.
-			case 233314: //Pashid Elite Siege Defender.
-			case 233315: //Pashid Elite Siege Gunner.
-			    points = 36;
-				despawnNpc(npc);
-			break;
-			case 231105: //Pashid Advance Protector.
-			case 231106: //Pashid Advance Ambusher.
-			case 231107: //Pashid Advance Magus.
-			case 231108: //Pashid Advance Gunner.
-			case 231109: //Pashid Advance Medic.
-			case 231110: //Pashid Strike Fencer.
-			case 231111: //Pashid Strike Spellcaster.
-			case 231112: //Pashid Strike Marksman.
-			case 231113: //Pashid Strike Cavalry.
-			case 231114: //Pashid Combat Striker.
-			case 231117: //Pashid Elite Siege Combatant.
-			case 231118: //Pashid Elite Siege Protector.
-			case 231119: //Pashid Elite Siege Ambusher.
-			case 231120: //Pashid Elite Siege Troublemaker.
-			case 231121: //Pashid Elite Siege Scout.
-			case 231122: //Pashid Elite Siege Marksman.
-			case 231123: //Pashid Elite Siege Rampager.
-			case 231124: //Pashid Elite Siege Magus.
-			case 231125: //Pashid Elite Siege Summoner.
-			case 231126: //Pashid Elite Siege Cavalry.
-			case 231127: //Pashid Elite Siege Striker.
-			case 231128: //Pashid Elite Siege Medic.
-			case 233310: //Pashid Siege Cavalry.
-			case 233311: //Pashid Siege Engineer.
-			    points = 42;
-				despawnNpc(npc);
-			break;
-			case 230782: //Pashid Army Barricade.
-			case 231149: //Pashid Army Barricade.
-			case 231181: //Pashid Army Barricade.
-			    points = 266;
-				despawnNpc(npc);
-			break;
-			case 230784: //Pashid Snare Turret.
-			case 230785: //Pashid Assault Flamethrower.
-			case 231137: //Pashid Danuar Turret.
-			case 231138: //Pashid Danuar Turret.
-			case 231140: //Pashid Assault Pod.
-			case 231141: //Pashid Siege Drop Pod.
-			case 231143: //Pashid Siege Tower.
-			case 231144: //Pashid Siege Cannon.
-			case 231151: //Pashid Siege Flamethrower.
-			case 231152: //Pashid Siege Tower.
-			case 231153: //Pashid Siege Tower.
-			case 231154: //Pashid Siege Tower.
-			case 231155: //Pashid Siege Tower.
-			case 231156: //Pashid Assault Pod.
-			case 231157: //Pashid Assault Pod.
-			case 231158: //Pashid Assault Pod.
-			case 231159: //Pashid Assault Pod.
-			case 231160: //Pashid Assault Pod.
-			case 231161: //Pashid Assault Pod.
-			case 231162: //Pashid Assault Pod.
-			case 231148: //Dredgion Signal Tower I.
-			case 231180: //Dredgion Signal Tower II.
-			    points = 334;
-				despawnNpc(npc);
-			break;
-			case 230744: //Pashid Assault Tribuni Combatant.
-			case 230745: //Pashid Assault Tribuni Protector.
-			case 230746: //Pashid Assault Tribuni Sentry.
-			case 230749: //Pashid Assault Tribuni Marksman
-			case 230753: //Pashid Assault Rider.
-			case 230754: //Pashid Assault Gunner.
-			case 230756: //Pashid Assault Supply Officer.
-			case 230757: //Pashid Assault Dragon.
-			case 231131: //Pashid Siege Dragon.
-			case 231132: //Pashid Siege Dragon.
-			case 231133: //Pashid Siege Dragon.
-			case 231134: //Pashid Siege Dragon.
-			case 231135: //Pashid Siege Dragon.
-			    points = 1002;
-				despawnNpc(npc);
-			break;
-			case 231174: //Pashid Artillery Commander Murat.
-			case 231175: //Pashid Artillery Commander Kaimdu.
-			case 231176: //Pashid Infantry Commander Nirta.
-			    points = 1880;
-				despawnNpc(npc);
-				startPashidSiegeTower();
-			break;
-			case 231168: //Pashid Scout Commander Azute.
-			case 231169: //Pashid Scout Commander Zest.
-			case 231170: //Pashid Scout Commander Sartas.
-			case 231171: //Pashid Infantry Commander Matuk.
-			case 231172: //Pashid Assault Commander Badute.
-			case 231173: //Pashid Assault Commander Katsu.
-			    points = 1880;
-				despawnNpc(npc);
-			break;
-			case 231177: //Deathbringer Tariksha.
-			case 231178: //Commander Hakunta.
-			case 231179: //Commander Rakunta.
-			    points = 1880;
-				despawnNpc(npc);
-			break;
-			case 231130: //Grand Commander Pashid.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
-						    }
-					    });
-					}
-				}, 5000);
-				points = 24000;
-				despawnNpc(npc);
-				if (checkRank(instanceReward.getPoints()) == 1) {
-                    spawn(701913, 744.06085f, 293.31564f, 233.70102f, (byte) 104); //Bastion's Eternal Treasure Chest S.
-					spawn(802185, 749.53143f, 294.72095f, 233.88902f, (byte) 5); //The Eternal Bastion Opportunity Bundle.
-					spawn(801268, 745.52191f, 329.83740f, 233.81584f, (byte) 0, 330); //Supply Box.
-					spawn(801269, 748.98627f, 331.62048f, 233.79378f, (byte) 0, 331); //Supply Box.
-                } else if (checkRank(instanceReward.getPoints()) == 2) {
-                    spawn(701914, 744.06085f, 293.31564f, 233.70102f, (byte) 104); //Bastion's Eternal Treasure Chest A.
-					spawn(802185, 749.53143f, 294.72095f, 233.88902f, (byte) 5); //The Eternal Bastion Opportunity Bundle.
-					spawn(801268, 745.52191f, 329.83740f, 233.81584f, (byte) 0, 330); //Supply Box.
-					spawn(801269, 748.98627f, 331.62048f, 233.79378f, (byte) 0, 331); //Supply Box.
-                } else if (checkRank(instanceReward.getPoints()) == 3) {
-                    spawn(701915, 744.06085f, 293.31564f, 233.70102f, (byte) 104); //Bastion's Eternal Treasure Chest B.
-                } else if (checkRank(instanceReward.getPoints()) == 4) {
-                    spawn(701916, 744.06085f, 293.31564f, 233.70102f, (byte) 104); //Bastion's Eternal Treasure Chest C.
-                } else if (checkRank(instanceReward.getPoints()) == 5) {
-                    spawn(701917, 744.06085f, 293.31564f, 233.70102f, (byte) 104); //Bastion's Eternal Treasure Chest D.
-                }
-				final int bastionExit2 = spawnRace == Race.ASMODIANS ? 730882 : 730871;
-				spawn(bastionExit2, 767.1659f, 264.31552f, 233.49748f, (byte) 43); //The Eternal Bastion Exit.
-			break;
-		} if (instanceReward.getInstanceScoreType().isStartProgress()) {
-			instanceReward.addNpcKill();
-			instanceReward.addPoints(points);
-			sendPacket(npc.getObjectTemplate().getNameId(), points);
-		} switch (npcId) {
-			case 209554: //Lysander's Disciple.
-            case 209555: //Lysander's Disciple.
-            case 209556: //Granir's Disciple.
-            case 209557: //Granir's Disciple.
-                despawnNpc(npc);
-				instanceReward.addPoints(-50);
-			break;
-			case 831332: //Right Castle Gate.
-			case 831333: //Left Castle Gate.
-			case 831334: //Outer Water Gate.
-			    // 堡垒已被突破。帕希德军团正从缺口涌入。 / The Bastion has been breached. The Pashid Legion is flooding through the hole.
-				sendMsgByRace(1401826, Race.PC_ALL, 0);
-			    despawnNpc(npc);
-				instanceReward.addPoints(-150);
-			break;
-			case 831335: //Inner Water Gate.
-			    // 帕希德军团摧毁了地下水道的闸门。 / The Pashid Legion has destroyed the gate at the underground wateray.
-				sendMsgByRace(1401824, Race.PC_ALL, 0);
-                despawnNpc(npc);
-				instanceReward.addPoints(-150);
-            break;
-			case 209516: //Commander Lysander.
-            case 209517: //Commander Granir.
-				despawnNpc(npc);
-				instanceReward.addPoints(-90000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/**
-					 * 处理 run。
-					 * Handle run.
-					 */
-					@Override
-					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
-						    }
-					    });
-					}
-				}, 5000);
-				final int bastionExit1 = spawnRace == Race.ASMODIANS ? 730882 : 730871;
-                spawn(bastionExit1, 767.1659f, 264.31552f, 233.49748f, (byte) 43); //The Eternal Bastion Exit.
-			break;
+		var score = DataManager.RETAIL_AI_DATA.getNpcScore(npc.getNpcId());
+		if (score != null && !supportsRetailNpcScore(npc.getNpcId(), score.scoreApplyType())
+			&& score.equalizingScore() == 0 && instanceReward.isStartProgress()) {
+			applyRetailScore(npc, score.value());
+		}
+		switch (npc.getNpcId()) {
+			case 231130 -> finishInstance(true);
+			case 209516, 209517 -> finishInstance(false);
+			default -> {
+			}
 		}
 	}
-	
-	private void removeItems(Player player) {
-		Storage storage = player.getInventory();
-		storage.decreaseByItemId(185000137, storage.getItemCountByItemId(185000137)); //Aetheric Power Crystal.
-		storage.decreaseByItemId(182006996, storage.getItemCountByItemId(182006996)); //Case Shot.
-		storage.decreaseByItemId(182006997, storage.getItemCountByItemId(182006997)); //Armor-Piercing Shot.
+
+	@Override
+	public boolean supportsRetailNpcScore(int npcId, int scoreApplyType) {
+		return scoreApplyType == 3;
 	}
-	
-	/**
-	 * 玩家对 NPC 使用物品完成时处理。
-	 * Handle item-use finish on an NPC.
-	 *
-	 * 玩家 / player
-	 * npc
-	 */
+
+	@Override
+	public boolean onRetailNpcScore(Player player, Npc npc, int scoreApplyType, int value) {
+		if (!supportsRetailNpcScore(npc.getNpcId(), scoreApplyType) || !instanceReward.isStartProgress()) {
+			return false;
+		}
+		applyRetailScore(npc, value);
+		return true;
+	}
+
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
-			case 701625: //Lysander's Siege Cannon.
-				despawnNpc(npc);
+			case 701625 -> {
+				delete(npc);
 				GameEngineServices.skillEngine().getSkill(npc, 21065, 60, player).useNoAnimationSkill();
-			break;
-			case 701922: //Granir's Siege Cannon.
-				despawnNpc(npc);
+			}
+			case 701922 -> {
+				delete(npc);
 				GameEngineServices.skillEngine().getSkill(npc, 21066, 60, player).useNoAnimationSkill();
-			break;
+			}
+			default -> {
+			}
 		}
 	}
-	/**
-	 * 启动副本计时/任务。
-	 * Start instance timer/tasks.
-	 */
-	
-	protected void startInstanceTask() {
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-				startAssaultPod1();
-			    doors.get(311).setOpen(true);
-				deleteNpc(831334); //Outer Water Gate.
-				// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
-				sendMsgByRace(1401181, Race.PC_ALL, 5000);
-				// 玩家有 1 分钟准备！！！【红色计时】 / The player has 1 min to prepare !!! [Timer Red]
-				if ((timerPrepare != null) && (!timerPrepare.isDone() || !timerPrepare.isCancelled())) {
-					// 开始副本计时！！！【白色计时】 / Start the instance time !!! [Timer White]
-					startMainInstanceTimer();
-				}
-            }
-        }, 60000)); //1 Minute.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-			    startAssaultPod2();
-				startRaidBastion1();
-            }
-        }, 120000)); //2 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-			    // 帕希德军团第 2 攻城部队正在攻击堡垒大门。 / The Pashid Legion's 2nd Siege Troop is attacking the Bastion's gates.
-				sendMsgByRace(1401816, Race.PC_ALL, 2000);
-				// 又一突击机械被击中，将在堡垒墙内坠毁。 / Another assault machine has been hit and will crash within the Bastion's wall.
-				sendMsgByRace(1401821, Race.PC_ALL, 5000);
-				startRaidBastion2();
-            }
-        }, 300000)); //5 分钟。 / 5 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-			    // 帕希德军团第 3 攻城部队正在攻击堡垒大门。 / The Pashid Legion's 3rd Siege Troop is attacking the Bastion's gates.
-				sendMsgByRace(1401817, Race.PC_ALL, 2000);
-				// 又一突击机械被击中，将在堡垒墙内坠毁。 / Another assault machine has been hit and will crash within the Bastion's wall.
-				sendMsgByRace(1401822, Race.PC_ALL, 5000);
-				startAssaultPod3();
-				startRaidBastion3();
-            }
-        }, 480000)); //8 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-				// 帕希德军团舍班攻城部队正在攻击堡垒大门。 / The Pashid Legion's Sheban Siege Troop is attacking the Bastion's gates.
-				sendMsgByRace(1401818, Race.PC_ALL, 2000);
-				startAssaultPod4();
-				startRaidBastion4();
-            }
-        }, 660000)); //11 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-				// 永恒堡垒守军已后撤，准备应对帕希德进攻。 / The Eternal Bastion defenders have withdrawn in preparation of Pashid's assault.
-				sendMsgByRace(1401939, Race.PC_ALL, 2000);
-				// 驻军指挥官已被击杀。突击部队失去协调并正在撤退。 / The commander of the garrison has been killed. The assault force is no longer coordinated and is in retreat.
-				sendMsgByRace(1401940, Race.PC_ALL, 5000);
-				startRaidBastion6();
-            }
-        }, 840000)); //14 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-				startRaidBastion7();
-            }
-        }, 1020000)); //17 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-				// 帕希德大指挥官携卫队抵达，进攻要塞。 / Grand Commander Pashid has arrived with the Guard to assault the fortress.
-				sendMsgByRace(1401819, Race.PC_ALL, 0);
-				// 总督遭受攻击。 / The Governor is under attack.
-				sendMsgByRace(1401827, Race.PC_ALL, 5000);
-				spawn(231130, 744.06085f, 293.31564f, 233.70102f, (byte) 104); //Grand Commander Pashid.
-            }
-        }, 1200000)); //20 Minutes.
-	}
-	
-	private void moveToForward(final Npc npc, float x, float y, float z, boolean despawn) {
-		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
-		npc.setState(1);
-		npc.getMoveController().moveToPoint(x, y, z);
-		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
-	}
-	
-   /**
-	 * Assault Pod
-	 */
-	private void startAssaultPod1() {
-		// 帕希德军团第 1 攻城部队正在攻击堡垒大门。 / The Pashid Legion's 1st Siege Troop is attacking the Bastion's gates.
-		sendMsgByRace(1401815, Race.PC_ALL, 0);
-		// 一台突击机械摇摇欲坠，将在永恒堡垒内坍塌。 / One of the assault machines is faltering and will collapse within the Eternal Bastion.
-		sendMsgByRace(1401820, Race.PC_ALL, 2000);
-		// 帕希德军团正在攻击地下水道。 / The Pashid Legion is attacking the underground waterway.
-		sendMsgByRace(1401823, Race.PC_ALL, 6000);
-		spawn(231156, 753.4488f, 296.26138f, 233.75148f, (byte) 67);
-        spawn(231156, 741.1732f, 302.49472f, 233.75148f, (byte) 96);
-		spawn(231105, 750.00336f, 295.08008f, 233.88875f, (byte) 69);
-		spawn(231106, 742.04126f, 299.33875f, 233.85815f, (byte) 96);
-		// FXMon_Smoke.
-		spawn(297352, 753.4488f, 296.26138f, 233.75148f, (byte) 67);
-		spawn(297352, 741.1732f, 302.49472f, 233.75148f, (byte) 96);
-	}
-	private void startAssaultPod2() {
-		spawn(231157, 706.7695f, 261.6263f, 253.43394f, (byte) 40);
-		// FXMon_Smoke.
-		spawn(297352, 706.7695f, 261.6263f, 253.43394f, (byte) 40);
-	}
-	private void startAssaultPod3() {
-		spawn(231158, 699.1482f, 308.8426f, 249.30322f, (byte) 103);
-		// FXMon_Smoke.
-		spawn(297352, 699.1482f, 308.8426f, 249.30322f, (byte) 103);
-	}
-	private void startAssaultPod4() {
-		spawn(231159, 626.0661f, 294.24414f, 238.0753f, (byte) 23);
-		spawn(231160, 754.409f, 400.14343f, 243.35422f, (byte) 63);
-		// FXMon_Smoke.
-		spawn(297352, 626.0661f, 294.24414f, 238.0753f, (byte) 23);
-		spawn(297352, 754.409f, 400.14343f, 243.35422f, (byte) 63);
-	}
-	
-   /**
-	 * Pashid Raid Siege Tower
-	 */
-	public void startPashidSiegeTower() {
-	    spawn(231143, 628.07947f, 350.28632f, 226.0f, (byte) 113);
-        spawn(231143, 610.7189f, 303.6627f, 226.375f, (byte) 113);
-        spawn(231143, 698.67365f, 410.3066f, 231.0f, (byte) 93);
-        spawn(231143, 668.7155f, 401.9532f, 228.46445f, (byte) 73);
-        spawn(231143, 647.66833f, 384.26685f, 228.50421f, (byte) 13);
-		spawn(231110, 661.85333f, 397.61002f, 240.22342f, (byte) 84);
-		spawn(231111, 650.91345f, 391.36047f, 240.22342f, (byte) 113);
-		spawn(231112, 636.0446f, 345.1452f, 238.07559f, (byte) 7);
-		spawn(231113, 620.0381f, 301.13055f, 238.07529f, (byte) 8);
-		spawn(231114, 701.09595f, 399.9889f, 243.35422f, (byte) 82);
-	}
-	
-   /**
-	 * Raid Assault
-	 */
-	public void startRaidBastion1() {
-	    moveToForward((Npc)spawn(231105, 706.402f, 265.68735f, 253.43398f, (byte) 39), 698.8748f, 287.8586f, 253.42f, false);
-		moveToForward((Npc)spawn(231106, 706.402f, 265.68735f, 253.43398f, (byte) 39), 698.8748f, 287.8586f, 253.42f, false);
-		moveToForward((Npc)spawn(231107, 706.402f, 265.68735f, 253.43398f, (byte) 39), 698.8748f, 287.8586f, 253.42f, false);
-		moveToForward((Npc)spawn(231108, 706.402f, 265.68735f, 253.43398f, (byte) 39), 698.8748f, 287.8586f, 253.42f, false);
-		moveToForward((Npc)spawn(231109, 706.402f, 265.68735f, 253.43398f, (byte) 39), 698.8748f, 287.8586f, 253.42f, false);
-	}
-	/**
-	 * 处理 startRaidBastion2。
-	 * Handle startRaidBastion2.
-	 */
-	public void startRaidBastion2() {
-	    moveToForward((Npc)spawn(231110, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231111, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231112, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231113, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231114, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		switch (Rnd.get(1, 3)) {
-		    case 1:
-		        moveToForward((Npc)spawn(231168, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false); //Pashid Scout Commander Azute.
-		    break;
-			case 2:
-				moveToForward((Npc)spawn(231169, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false); //Pashid Scout Commander Zest.
-		    break;
-			case 3:
-			    moveToForward((Npc)spawn(231170, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false); //Pashid Scout Commander Sartas.
-		    break;
+
+	@Override
+	public void doReward(Player player) {
+		if (!runtimeState().getBoolean(STATE_PREFIX + "completed", false)) {
+			return;
 		}
-	}
-	/**
-	 * 处理 startRaidBastion3。
-	 * Handle startRaidBastion3.
-	 */
-	public void startRaidBastion3() {
-	    moveToForward((Npc)spawn(231105, 701.2387f, 305.8705f, 249.30322f, (byte) 103), 713.0358f, 288.13544f, 249.28407f, false);
-		moveToForward((Npc)spawn(231106, 701.2387f, 305.8705f, 249.30322f, (byte) 103), 713.0358f, 288.13544f, 249.28407f, false);
-		moveToForward((Npc)spawn(231107, 701.2387f, 305.8705f, 249.30322f, (byte) 103), 713.0358f, 288.13544f, 249.28407f, false);
-		moveToForward((Npc)spawn(231108, 701.2387f, 305.8705f, 249.30322f, (byte) 103), 713.0358f, 288.13544f, 249.28407f, false);
-		moveToForward((Npc)spawn(231109, 701.2387f, 305.8705f, 249.30322f, (byte) 103), 713.0358f, 288.13544f, 249.28407f, false);
-		switch (Rnd.get(1, 3)) {
-		    case 1:
-		        moveToForward((Npc)spawn(231171, 701.2387f, 305.8705f, 249.30322f, (byte) 103), 713.0358f, 288.13544f, 249.28407f, false); //Pashid Infantry Commander Matuk.
-		    break;
-			case 2:
-				moveToForward((Npc)spawn(231172, 701.2387f, 305.8705f, 249.30322f, (byte) 103), 713.0358f, 288.13544f, 249.28407f, false); //Pashid Assault Commander Badute.
-		    break;
-			case 3:
-			    moveToForward((Npc)spawn(231173, 701.2387f, 305.8705f, 249.30322f, (byte) 103), 713.0358f, 288.13544f, 249.28407f, false); //Pashid Assault Commander Katsu.
-		    break;
+		EternalBastionPlayerReward playerReward = getOrCreatePlayerReward(player.getObjectId());
+		if (playerReward.isRewarded()) {
+			return;
 		}
+		RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, instanceReward.getRank());
+		playerReward.setScoreAP(plan.ap());
+		playerReward.setHighestGradeMaterialBox(Math.toIntExact(plan.itemCount(188052594)));
+		playerReward.setHighGradeMaterialBox(Math.toIntExact(plan.itemCount(188052595)));
+		playerReward.setHighestGradeMaterialSupportBundle(Math.toIntExact(plan.itemCount(188052596)));
+		playerReward.setHighGradeMaterialSupportBundle(Math.toIntExact(plan.itemCount(188052597)));
+		playerReward.setLowGradeMaterialSupportBundle(Math.toIntExact(plan.itemCount(188052598)));
+		InstanceSettlementService.settleTimeAttack(instance, player, instanceReward.getRank());
+		playerReward.setRewarded();
+		runtimeState().put(playerRewardKey(player.getObjectId()), true);
 	}
-	/**
-	 * 处理 startRaidBastion4。
-	 * Handle startRaidBastion4.
-	 */
-	public void startRaidBastion4() {
-	    moveToForward((Npc)spawn(231110, 626.0661f, 294.24414f, 238.0753f, (byte) 23), 673.7405f, 372.1047f, 241.59521f, false);
-		moveToForward((Npc)spawn(231111, 626.0661f, 294.24414f, 238.0753f, (byte) 23), 673.7405f, 372.1047f, 241.59521f, false);
-		moveToForward((Npc)spawn(231112, 626.0661f, 294.24414f, 238.0753f, (byte) 23), 673.7405f, 372.1047f, 241.59521f, false);
-		moveToForward((Npc)spawn(231113, 626.0661f, 294.24414f, 238.0753f, (byte) 23), 673.7405f, 372.1047f, 241.59521f, false);
-		moveToForward((Npc)spawn(231114, 626.0661f, 294.24414f, 238.0753f, (byte) 23), 673.7405f, 372.1047f, 241.59521f, false);
-		moveToForward((Npc)spawn(231110, 750.2154f, 399.5554f, 243.35422f, (byte) 62), 673.7405f, 372.1047f, 241.59521f, false);
-		moveToForward((Npc)spawn(231111, 750.2154f, 399.5554f, 243.35422f, (byte) 62), 673.7405f, 372.1047f, 241.59521f, false);
-		moveToForward((Npc)spawn(231112, 750.2154f, 399.5554f, 243.35422f, (byte) 62), 673.7405f, 372.1047f, 241.59521f, false);
-		moveToForward((Npc)spawn(231113, 750.2154f, 399.5554f, 243.35422f, (byte) 62), 673.7405f, 372.1047f, 241.59521f, false);
-		moveToForward((Npc)spawn(231114, 750.2154f, 399.5554f, 243.35422f, (byte) 62), 673.7405f, 372.1047f, 241.59521f, false);
-		switch (Rnd.get(1, 3)) {
-		    case 1:
-		        moveToForward((Npc)spawn(231174, 626.0661f, 294.24414f, 238.0753f, (byte) 23), 673.7405f, 372.1047f, 241.59521f, false); //Pashid Artillery Commander Murat.
-		    break;
-			case 2:
-				moveToForward((Npc)spawn(231175, 626.0661f, 294.24414f, 238.0753f, (byte) 23), 673.7405f, 372.1047f, 241.59521f, false); //Pashid Artillery Commander Kaimdu.
-		    break;
-			case 3:
-			    moveToForward((Npc)spawn(231176, 626.0661f, 294.24414f, 238.0753f, (byte) 23), 673.7405f, 372.1047f, 241.59521f, false); //Pashid Infantry Commander Nirta.
-		    break;
-		}
-	}
-	/**
-	 * 处理 startRaidBastion6。
-	 * Handle startRaidBastion6.
-	 */
-	public void startRaidBastion6() {
-	    moveToForward((Npc)spawn(231110, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231111, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231112, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231113, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231114, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-	}
-	/**
-	 * 处理 startRaidBastion7。
-	 * Handle startRaidBastion7.
-	 */
-	public void startRaidBastion7() {
-	    moveToForward((Npc)spawn(231110, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231111, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231112, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231113, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-		moveToForward((Npc)spawn(231114, 810.351f, 348.20648f, 230.98207f, (byte) 73), 744.66473f, 293.50308f, 233.7125f, false);
-	}
-	
-	private void removeEffects(Player player) {
-		PlayerEffectController effectController = player.getEffectController();
-		effectController.removeEffect(21065);
-		effectController.removeEffect(21066);
-		effectController.removeEffect(21141);
-	}
-	
-	/**
-	 * 玩家离开副本时处理。
-	 * Handle a player leaving the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
+
 	@Override
 	public void onLeaveInstance(Player player) {
-		stopInstanceTask();
 		removeItems(player);
 		removeEffects(player);
 		if (player.isInGroup2()) {
-            PlayerGroupService.removePlayer(player);
-        }
-		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
-		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
+			PlayerGroupService.removePlayer(player);
+		}
 	}
-	
-	/**
-	 * 玩家从该副本登出时处理。
-	 * Handle a player logging out from this instance.
-	 *
-	 * @param player 玩家 / player
-	 */
+
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 		removeEffects(player);
 	}
-	
-	private int getTime() {
-		long result = (int) (System.currentTimeMillis() - startTime);
-		return instanceTimerSeconds - (int) result;
-	}
-	
-	private void sendPacket(final int nameId, final int point) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				if (nameId != 0) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(nameId * 2 + 1), point));
-				}
-				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), instanceReward, null));
-			}
-		});
-	}
-	
-	private int checkRank(int totalPoints) {
-		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
-				Math.max(0, System.currentTimeMillis() - startTime) / 1000);
-	}
-	/**
-	 * 停止副本并结算。
-	 * Stop the instance and settle.
-	 *
-	 * @param player 玩家 / player
-	 */
-	
-	protected void stopInstance(Player player) {
-		stopInstanceTask();
-        instanceReward.setRank(6);
-		instanceReward.setRank(checkRank(instanceReward.getPoints()));
-		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-		doReward(player);
-		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <The Eternal Bastion>");
-		sendPacket(0, 0);
-	}
-	
-	private void stopInstanceTask() {
-        for (Future<?> task : bastionTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
-	
-	private void rewardGroup() {
-		for (Player p: instance.getPlayersInside()) {
-			doReward(p);
-		}
-	}
-	
-	/**
-	 * 结算并发放奖励。
-	 * Settle and grant rewards.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void doReward(Player player) {
-		EternalBastionPlayerReward playerReward = getPlayerReward(player.getObjectId());
-		if (!playerReward.isRewarded()) {
-			int bastionRank = instanceReward.getRank();
-			RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, bastionRank);
-			playerReward.setScoreAP(plan.ap());
-			playerReward.setHighestGradeMaterialBox(Math.toIntExact(plan.itemCount(188052594)));
-			playerReward.setHighGradeMaterialBox(Math.toIntExact(plan.itemCount(188052595)));
-			playerReward.setHighestGradeMaterialSupportBundle(Math.toIntExact(plan.itemCount(188052596)));
-			playerReward.setHighGradeMaterialSupportBundle(Math.toIntExact(plan.itemCount(188052597)));
-			playerReward.setLowGradeMaterialSupportBundle(Math.toIntExact(plan.itemCount(188052598)));
-			InstanceSettlementService.settleTimeAttack(instance, player, bastionRank);
-			playerReward.setRewarded();
-		}
-	}
-	
-	/**
-	 * 玩家进入副本时处理。
-	 * Handle a player entering the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onEnterInstance(final Player player) {
-		if (!instanceReward.containPlayer(player.getObjectId())) {
-			addPlayerReward(player);
-		}
-		EternalBastionPlayerReward playerReward = getPlayerReward(player.getObjectId());
-		if (playerReward.isRewarded()) {
-			doReward(player);
-		}
-		startPrepareTimer();
-		if (spawnRace != null) {
-			return;
-		}
-		spawnRace = player.getRace();
-		instanceReward.addPoints(20000);
-		//Siege Weapon * *//
-		final int siegeweapon1 = spawnRace == Race.ASMODIANS ? 701610 : 701596;
-        final int siegeweapon2 = spawnRace == Race.ASMODIANS ? 701611 : 701597;
-        final int siegeweapon3 = spawnRace == Race.ASMODIANS ? 701612 : 701598;
-        final int siegeweapon4 = spawnRace == Race.ASMODIANS ? 701613 : 701599;
-        final int siegeweapon5 = spawnRace == Race.ASMODIANS ? 701614 : 701600;
-        final int siegeweapon6 = spawnRace == Race.ASMODIANS ? 701615 : 701601;
-		final int siegeweapon7 = spawnRace == Race.ASMODIANS ? 701616 : 701602;
-		final int siegeweapon8 = spawnRace == Race.ASMODIANS ? 701617 : 701603;
-		final int siegeweapon9 = spawnRace == Race.ASMODIANS ? 701618 : 701604;
-		final int siegeweapon10 = spawnRace == Race.ASMODIANS ? 701619 : 701605;
-		final int siegeweapon11 = spawnRace == Race.ASMODIANS ? 701620 : 701606;
-		final int siegeweapon12 = spawnRace == Race.ASMODIANS ? 701621 : 701607;
-		final int siegeweapon13 = spawnRace == Race.ASMODIANS ? 702922 : 701625;
-		spawn(siegeweapon1, 617.95416f, 248.32031f, 235.74449f, (byte) 63);
-		spawn(siegeweapon2, 613.11914f, 275.30057f, 235.74294f, (byte) 64);
-		spawn(siegeweapon3, 616.4774f, 313.85846f, 235.74289f, (byte) 52);
-		spawn(siegeweapon4, 625.97675f, 339.55414f, 235.7432f, (byte) 54);
-		spawn(siegeweapon5, 651.3247f, 373.3068f, 238.60867f, (byte) 44);
-		spawn(siegeweapon6, 678.08124f, 396.04736f, 238.63474f, (byte) 43);
-		spawn(siegeweapon7, 710.27765f, 409.9322f, 241.02042f, (byte) 31);
-		spawn(siegeweapon8, 737.3579f, 413.3636f, 241.02278f, (byte) 33);
-		spawn(siegeweapon9, 772.7887f, 410.0723f, 241.02089f, (byte) 6);
-		spawn(siegeweapon10, 798.2277f, 400.5876f, 241.02304f, (byte) 38);
-		spawn(siegeweapon11, 709.54443f, 313.67133f, 254.21622f, (byte) 103);
-		spawn(siegeweapon12, 726.6982f, 328.01038f, 254.21628f, (byte) 103);
-		spawn(siegeweapon13, 640.8445f, 412.9476f, 243.93938f, (byte) 103);
-		//Lysander's/Granir's Disciple * *//
-		final int disciple1 = spawnRace == Race.ASMODIANS ? 209556 : 209554;
-        final int disciple2 = spawnRace == Race.ASMODIANS ? 209557 : 209555;
-		spawn(disciple1, 687.8377f, 350.53018f, 244.65965f, (byte) 43);
-		spawn(disciple2, 694.3164f, 355.77338f, 244.68953f, (byte) 43);
-		//Beritran Chariot * *//
-		final int beritranChariot = spawnRace == Race.ASMODIANS ? 702589 : 701624;
-		spawn(beritranChariot, 414.05554f, 616.8139f, 214.52452f, (byte) 31);
-        spawn(beritranChariot, 410.86f, 640.4919f, 214.52452f, (byte) 92);
-        spawn(beritranChariot, 422.98706f, 641.44116f, 214.52452f, (byte) 92);
-        spawn(beritranChariot, 426.4476f, 617.95264f, 214.52452f, (byte) 32);
-		//Commander * *//
-		final int commander = spawnRace == Race.ASMODIANS ? 209517 : 209516;
-        spawn(commander, 748.7025f, 287.65768f, 233.81223f, (byte) 44);
-	}
-	
-	private void startPrepareTimer() {
-		if (timerPrepare == null) {
-			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/**
-				 * 处理 run。
-				 * Handle run.
-				 */
-				@Override
-				public void run() {
-					startMainInstanceTimer();
-				}
-			}, prepareTimerSeconds);
-		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(prepareTimerSeconds, instanceReward, null));
-			}
-		});
-	}
-	
-	private void startMainInstanceTimer() {
-		if (!timerPrepare.isDone()) {
-			timerPrepare.cancel(false);
-		}
-		startTime = System.currentTimeMillis();
-		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-		sendPacket(0, 0);
-	}
-	/**
-	 * 移除指定 NPC。
-	 * Despawn the given NPC.
-	 *
-	 * npc
-	 */
-	
-	protected void despawnNpc(Npc npc) {
-        if (npc != null) {
-            npc.getController().onDelete();
-        }
-    }
-	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
-	}
-	
-	/**
-	 * 副本销毁时清理资源。
-	 * Clean up resources when the instance is destroyed.
-	 */
+
 	@Override
 	public void onInstanceDestroy() {
-		if (timerInstance != null) {
-			timerInstance.cancel(false);
-		} if (timerPrepare != null) {
-			timerPrepare.cancel(false);
+		cancelDeadline("prepare");
+		cancelDeadline("expire");
+		cancelDeadline("exit");
+		if (instanceReward != null) {
+			instanceReward.clear();
 		}
-		isInstanceDestroyed = true;
-		instanceReward.clear();
-		stopInstanceTask();
-		doors.clear();
 	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
-	
-	/**
-	 * 副本创建时初始化逻辑。
-	 * Initialize logic when the instance is created.
-	 *
-	 * @param instance 世界地图实例 / world-map instance
-	 */
-	@Override
-	public void onInstanceCreate(WorldMapInstance instance) {
-		super.onInstanceCreate(instance);
-		instanceReward = new EternalBastionReward(mapId, instanceId);
-		instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
-		doors = instance.getDoors();
-		startInstanceTask();
-		switch (Rnd.get(1, 2)) {
-			case 1:
-				spawn(230746, 552.5082f, 414.074f, 222.75688f, (byte) 17); //Pashid Assault Tribuni Sentry.
-				spawn(231177, 820.55133f, 606.02814f, 239.70607f, (byte) 20); //Deathbringer Tariksha.
-			break;
-			case 2:
-			    spawn(231177, 552.5082f, 414.074f, 222.75688f, (byte) 17); //Deathbringer Tariksha.
-				spawn(230746, 820.55133f, 606.02814f, 239.70607f, (byte) 20); //Pashid Assault Tribuni Sentry.
-			break;
+
+	private void startPrepareTimer() {
+		if (runtimeState().getLong(STATE_PREFIX + "start_at", 0) > 0
+			|| runtimeState().getBoolean(STATE_PREFIX + "completed", false)) {
+			return;
 		}
+		long deadline = runtimeState().getLong(STATE_PREFIX + "prepare_deadline", 0);
+		if (deadline == 0) {
+			deadline = System.currentTimeMillis() + InstanceSettlementService.timeAttackWaitSeconds(mapId) * 1_000L;
+			runtimeState().put(STATE_PREFIX + "prepare_deadline", deadline);
+		}
+		long prepareDeadline = deadline;
+		scheduleDeadline("prepare", deadline, () -> startMainTimer(prepareDeadline));
+	}
+
+	private synchronized void startMainTimer(long startAt) {
+		if (runtimeState().getLong(STATE_PREFIX + "start_at", 0) > 0
+			|| runtimeState().getBoolean(STATE_PREFIX + "completed", false)) {
+			return;
+		}
+		cancelDeadline("prepare");
+		long deadline = startAt + InstanceSettlementService.timeAttackLimitSeconds(mapId) * 1_000L;
+		runtimeState().put(STATE_PREFIX + "start_at", startAt);
+		runtimeState().put(STATE_PREFIX + "expire_deadline", deadline);
+		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+		sendScore(0, 0);
+		scheduleDeadline("expire", deadline, () -> finishInstance(false));
+	}
+
+	private synchronized void finishInstance(boolean success) {
+		if (runtimeState().getBoolean(STATE_PREFIX + "completed", false)) {
+			return;
+		}
+		long startAt = runtimeState().getLong(STATE_PREFIX + "start_at", 0);
+		long finishAt = System.currentTimeMillis();
+		int rank = success && startAt > 0
+			? checkRank(instanceReward.getPoints(), startAt, finishAt)
+			: 7;
+		instanceReward.setRank(rank);
+		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
+		runtimeState().put(STATE_PREFIX + "finish_at", finishAt);
+		runtimeState().put(STATE_PREFIX + "rank", rank);
+		runtimeState().put(STATE_PREFIX + "completed", true);
+		cancelDeadline("prepare");
+		cancelDeadline("expire");
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
+		sendScore(0, 0);
+		long exitDeadline = finishAt + EXIT_DELAY;
+		runtimeState().put(STATE_PREFIX + "exit_deadline", exitDeadline);
+		scheduleDeadline("exit", exitDeadline, this::exitPlayers);
+	}
+
+	private int checkRank(int totalPoints, long startAt, long finishAt) {
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+			Math.max(0, finishAt - startAt) / 1_000L);
+	}
+
+	private void restoreDeadline() {
+		if (runtimeState().getBoolean(STATE_PREFIX + "completed", false)) {
+			long exit = runtimeState().getLong(STATE_PREFIX + "exit_deadline", 0);
+			if (exit > 0) {
+				scheduleDeadline("exit", exit, this::exitPlayers);
+			}
+			return;
+		}
+		long expire = runtimeState().getLong(STATE_PREFIX + "expire_deadline", 0);
+		if (expire > 0) {
+			scheduleDeadline("expire", expire, () -> finishInstance(false));
+			return;
+		}
+		long prepare = runtimeState().getLong(STATE_PREFIX + "prepare_deadline", 0);
+		if (prepare > 0) {
+			scheduleDeadline("prepare", prepare, () -> startMainTimer(prepare));
+		}
+	}
+
+	private void exitPlayers() {
+		if (instance == null) {
+			return;
+		}
+		for (Player player : instance.getPlayersInside()) {
+			onLeaveInstance(player);
+		}
+	}
+
+	private void applyRetailScore(Npc npc, int value) {
+		instanceReward.addPoints(value);
+		instanceReward.addNpcKill();
+		runtimeState().put(STATE_PREFIX + "points", instanceReward.getPoints());
+		runtimeState().put(STATE_PREFIX + "kills", instanceReward.getNpcKills());
+		sendScore(npc.getObjectTemplate().getNameId(), value);
+	}
+
+	private void restoreScore() {
+		int baseScore = DataManager.RETAIL_INSTANCE_DATA.rewards("world_timeattack").stream()
+			.filter(row -> row.requiredInt("world_id") == mapId)
+			.findFirst().map(row -> row.intValue("base_score", 0)).orElse(0);
+		instanceReward.restore(runtimeState().getInt(STATE_PREFIX + "points", baseScore),
+			runtimeState().getInt(STATE_PREFIX + "kills", 0), runtimeState().getInt(STATE_PREFIX + "rank", 7));
+	}
+
+	private InstanceScoreType scoreType() {
+		if (runtimeState().getBoolean(STATE_PREFIX + "completed", false)) {
+			return InstanceScoreType.END_PROGRESS;
+		}
+		return runtimeState().getLong(STATE_PREFIX + "start_at", 0) > 0
+			? InstanceScoreType.START_PROGRESS : InstanceScoreType.PREPARING;
+	}
+
+	private int getTime() {
+		if (runtimeState().getBoolean(STATE_PREFIX + "completed", false)) {
+			return 0;
+		}
+		long now = System.currentTimeMillis();
+		long deadline = runtimeState().getLong(STATE_PREFIX + "start_at", 0) > 0
+			? runtimeState().getLong(STATE_PREFIX + "expire_deadline", now)
+			: runtimeState().getLong(STATE_PREFIX + "prepare_deadline", now);
+		return (int) Math.max(0, deadline - now);
+	}
+
+	private void sendScore(int nameId, int points) {
+		for (Player player : instance.getPlayersInside()) {
+			if (nameId != 0) {
+				PacketSendUtility.sendPacket(player,
+					new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(nameId * 2 + 1), points));
+			}
+			PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), instanceReward, null));
+		}
+	}
+
+	private EternalBastionPlayerReward getOrCreatePlayerReward(int playerId) {
+		EternalBastionPlayerReward reward = (EternalBastionPlayerReward) instanceReward.getPlayerReward(playerId);
+		if (reward == null) {
+			reward = new EternalBastionPlayerReward(playerId);
+			if (runtimeState().getBoolean(playerRewardKey(playerId), false)) {
+				reward.setRewarded();
+			}
+			instanceReward.addPlayerReward(reward);
+		}
+		return reward;
+	}
+
+	private static String playerRewardKey(int playerId) {
+		return STATE_PREFIX + "player." + playerId + ".rewarded";
+	}
+
+	private static void delete(Npc npc) {
+		if (npc != null) {
+			npc.getController().onDelete();
+		}
+	}
+
+	private static void removeItems(Player player) {
+		Storage storage = player.getInventory();
+		storage.decreaseByItemId(185000137, storage.getItemCountByItemId(185000137));
+		storage.decreaseByItemId(182006996, storage.getItemCountByItemId(182006996));
+		storage.decreaseByItemId(182006997, storage.getItemCountByItemId(182006997));
+	}
+
+	private static void removeEffects(Player player) {
+		PlayerEffectController effects = player.getEffectController();
+		effects.removeEffect(21065);
+		effects.removeEffect(21066);
+		effects.removeEffect(21141);
 	}
 }

@@ -25,6 +25,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 import java.lang.reflect.Field;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -37,6 +38,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -98,6 +100,24 @@ class RetailConditionSpawnEngineTest {
 		assertTrue(RetailConditionSpawnEngine.evaluate("SpecialServer_Cond == 0", Map.of()));
 		assertFalse(RetailConditionSpawnEngine.evaluate("wave >= 3 && race != 2",
 			Map.of("wave", 3, "race", 2)));
+		assertTrue(RetailConditionSpawnEngine.evaluate("(1141_out == 1) && (1141_in == 1)",
+			Map.of("1141_out", 1, "1141_in", 1)));
+		assertTrue(RetailConditionSpawnEngine.evaluate(
+			"(1131_rewardcon_l_set == 1) && (1131_mistoff == 1) && (1132_mistoff == 1) && (1141_mistoff == 1",
+			Map.of("1131_rewardcon_l_set", 1, "1131_mistoff", 1, "1132_mistoff", 1, "1141_mistoff", 1)));
+	}
+
+	@Test
+	void parsesEveryGeneratedRetailCondition() throws Exception {
+		var document = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder()
+			.parse(Path.of("src/main/resources/aion/definitions/compact/ai/condition-spawns.xml").toFile());
+		var conditions = document.getElementsByTagName("condition");
+		for (int i = 0; i < conditions.getLength(); i++) {
+			var condition = (org.w3c.dom.Element) conditions.item(i);
+			String expression = condition.getAttribute("expression");
+			assertDoesNotThrow(() -> RetailConditionSpawnEngine.evaluate(expression, Map.of()),
+				condition.getAttribute("source") + ": " + expression);
+		}
 	}
 
 	@Test

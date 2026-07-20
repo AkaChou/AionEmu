@@ -19,6 +19,7 @@ TABLES = (
     "instance_cooltime2.xml",
     "matchmaker.xml",
     "team_match_maker.xml",
+    "instant_dungeon_define.xml",
     "world_timeattack.xml",
     "world_timeattack2.xml",
     "infinity_indun_reward.xml",
@@ -28,8 +29,24 @@ TABLES = (
     "luna_indun.xml",
     "luna_cost.xml",
     "npc_scores.xml",
+    "instance_bonusattr.xml",
 )
-REWARD_TABLES = TABLES[6:]
+REWARD_TABLES = TABLES[6:-1]
+INSTANCE_BONUS_STATS = {
+    "hitaccuracy": "PHYSICAL_ACCURACY",
+    "magicalhitaccuracy": "MAGICAL_ACCURACY",
+    "phyattack": "PHYSICAL_ATTACK",
+    "magicalskillboost": "BOOST_MAGICAL_SKILL",
+    "maxhp": "MAXHP",
+    "healskillboost": "HEAL_SKILL_BOOST",
+    "pvpattackratio": "PVP_ATTACK_RATIO",
+    "pvpdefendratio": "PVP_DEFEND_RATIO",
+    "speed": "SPEED",
+    "magicalresist": "MAGICAL_RESIST",
+    "arall": "ABNORMAL_RESISTANCE_ALL",
+    "arfear": "FEAR_RESISTANCE",
+    "physicaldefend": "PHYSICAL_DEFENSE",
+}
 MATCH_HANDLER_BY_WORLD = {
     300110000: "DREDGION",
     300210000: "DREDGION",
@@ -161,6 +178,24 @@ def unique_names(rows: list[dict[str, str]], table: str) -> dict[str, dict[str, 
         if name in result:
             raise ValueError(f"{table}: duplicate name {row['name']}")
         result[name] = row
+    return result
+
+
+def resolve_object_ids(path: Path, wanted: set[str]) -> dict[str, str]:
+    result = {}
+    for _event, node in ET.iterparse(path, events=("end",)):
+        if node.tag != "object":
+            continue
+        name = (node.findtext("name") or "").strip().casefold()
+        identifier = (node.findtext("id") or "").strip()
+        if name in wanted:
+            if not identifier.isdigit() or name in result and result[name] != identifier:
+                raise ValueError(f"invalid housing object mapping: {name}")
+            result[name] = identifier
+        node.clear()
+    missing = sorted(wanted - result.keys())
+    if missing:
+        raise ValueError(f"unmapped retail gather objects: {', '.join(missing)}")
     return result
 
 
@@ -371,6 +406,29 @@ def tournament_rounds(path: Path) -> dict[str, list[dict[str, str]]]:
     return result
 
 
+def instance_bonus_attributes(row: dict[str, str]) -> list[dict[str, str]]:
+    fields = sorted(
+        (key for key in row if key.startswith("penalty_attr")),
+        key=lambda key: int(key.removeprefix("penalty_attr")),
+    )
+    if fields != [f"penalty_attr{i}" for i in range(1, len(fields) + 1)]:
+        raise ValueError(f"non-contiguous instance bonus attributes: {row.get('id')}")
+    result = []
+    for field in fields:
+        value = row[field]
+        match = re.fullmatch(r"([A-Za-z][A-Za-z0-9_]*)\s+([+-]\d+)(%)?", value)
+        if match is None or match.group(1).casefold() not in INSTANCE_BONUS_STATS:
+            raise ValueError(f"unsupported instance bonus attribute {row.get('id')}/{field}: {value!r}")
+        result.append({
+            "stat": INSTANCE_BONUS_STATS[match.group(1).casefold()],
+            "func": "PERCENT" if match.group(3) else "ADD",
+            "value": str(int(match.group(2))),
+        })
+    if not result:
+        raise ValueError(f"empty instance bonus attributes: {row.get('id')}")
+    return result
+
+
 def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[str, int]:
     selected = {name: source_file(source, name) for name in TABLES}
     for name, (path, _region) in selected.items():
@@ -382,6 +440,12 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
     for name, rows in source_rows.items():
         tables[name], duplicate_rows[name] = dedupe_rows(rows, name)
     by_id = {name: positive_ids(rows, name) for name, rows in tables.items()}
+    object_path, object_region = source_file(source, "Objects.xml")
+    gather_names = {
+        row["name_id"].casefold() for row in tables["npc_scores.xml"]
+        if row.get("type", "").casefold() == "gather" and row.get("name_id")
+    }
+    gather_ids = resolve_object_ids(object_path, gather_names)
     creations_by_name = unique_names(tables["instance_creation.xml"], "instance_creation.xml")
     restrictions_by_name = unique_names(tables["instance_restrict.xml"], "instance_restrict.xml")
     worlds = world_ids(source / "China" / "ID" / "WorldId.xml")
@@ -562,12 +626,22 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
         }))
     write_xml(matchmaking, output / "matchmaking.xml")
 
+    bonus_attributes = ET.Element("retail_instance_bonus_attributes", {"version": "1"})
+    schema(bonus_attributes)
+    for row in sorted(tables["instance_bonusattr.xml"], key=lambda value: int(value["id"])):
+        buff = ET.SubElement(bonus_attributes, "buff", {"id": row["id"], "name": row["name"]})
+        for attribute in instance_bonus_attributes(row):
+            ET.SubElement(buff, "attribute", attribute)
+    write_xml(bonus_attributes, output / "bonus-attributes.xml")
+
     rewards = ET.Element("retail_rewards", {"version": "1"})
     schema(rewards)
     for table_name in REWARD_TABLES:
         table = ET.SubElement(rewards, "table", {"name": table_name.removesuffix(".xml")})
         for row in sorted(tables[table_name], key=lambda value: int(value["id"])):
             extra = add_item_ids(row, item_ids)
+            if table_name == "npc_scores.xml" and row.get("type", "").casefold() == "gather":
+                extra["gather_id"] = gather_ids[row["name_id"].casefold()]
             if row.get("worldname"):
                 extra["world_id"] = worlds[row["worldname"].casefold()]
             if table_name == "instant_dungeon_tournament.xml":
@@ -680,7 +754,8 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
             "effective_records": str(len(tables[name])),
             "duplicate_records": str(duplicate_rows[name]),
         })
-    for name, path, region in (("npcs.xml", npc_path, npc_region), ("strings.xml", strings_path, "base")):
+    for name, path, region in (("npcs.xml", npc_path, npc_region), ("strings.xml", strings_path, "base"),
+                               ("Objects.xml", object_path, object_region)):
         ET.SubElement(manifest, "source", {
             "name": name,
             "region": region,
@@ -710,6 +785,7 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
         "tournament_mappings": str(len(tournament_extras)),
         "tournament_matchmakers": str(len(tournament_matches)),
         "luna_dungeon_mappings": str(len(luna_extras)),
+        "instance_bonus_attributes": str(len(tables["instance_bonusattr.xml"])),
         "resolved_item_names": str(len(item_ids)),
         "behavior_total_worlds": str(sum(behaviors.values())),
         **{f"behavior_{behavior.lower()}_worlds": str(behaviors[behavior]) for behavior in BEHAVIORS},

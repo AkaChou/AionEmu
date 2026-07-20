@@ -113,6 +113,14 @@ public class StatCapUtil {
 		case MAXMP:
 			value = 0;
 			break;
+		case PVP_ATTACK_RATIO:
+		case PVP_ATTACK_RATIO_PHYSICAL:
+		case PVP_ATTACK_RATIO_MAGICAL:
+		case PVP_DEFEND_RATIO:
+		case PVP_DEFEND_RATIO_PHYSICAL:
+		case PVP_DEFEND_RATIO_MAGICAL:
+			value = Integer.MIN_VALUE;
+			break;
 		default:
 			break;
 		}
@@ -139,7 +147,7 @@ public class StatCapUtil {
 		case PVP_DEFEND_RATIO:
 		case PVP_DEFEND_RATIO_PHYSICAL:
 		case PVP_DEFEND_RATIO_MAGICAL:
-			value = 900;
+			value = Integer.MAX_VALUE;
 			break;
 		case BOOST_MAGICAL_SKILL:
 			value = 32767;
@@ -170,11 +178,11 @@ public class StatCapUtil {
 		int min;
 		int max;
 		if (mode == CombatMode.PVP) {
-			min = type == RatioType.ATTACK ? -900 : -1000;
-			max = type == RatioType.ATTACK ? 1000 : 900;
+			min = -9999;
+			max = 9999;
 		} else {
-			min = type == RatioType.ATTACK ? -900 : -5000;
-			max = type == RatioType.ATTACK ? 5000 : 900;
+			min = -10000;
+			max = 10000;
 		}
 		return Math.max(min, Math.min(max, value));
 	}

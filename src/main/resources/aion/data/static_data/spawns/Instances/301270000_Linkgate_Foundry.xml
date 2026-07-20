@@ -88,9 +88,6 @@
 		  <spot x="182.136581" y="282.493500" z="311.40408" h="15"/>
 		  <spot x="304.737640" y="282.536926" z="351.91266"/>
 		</spawn>
-		<spawn npc_id="234992" respawn_time="1">
-		  <spot x="358.039856" y="259.782074" z="311.36285"/>
-		</spawn>
 		<spawn npc_id="702591" respawn_time="1">
 		  <spot x="227.546906" y="322.976257" z="270.82913"/>
 		</spawn>
@@ -99,6 +96,9 @@
 		</spawn>
 		<spawn npc_id="855259" respawn_time="1">
 		  <spot x="334.420898" y="260.411438" z="311.37103"/>
+		</spawn>
+		<spawn npc_id="234992">
+		  <spot x="358.039856" y="259.782074" z="314.140503" random_walk="2"/>
 		</spawn>
 	</spawn_map>
 </spawns>

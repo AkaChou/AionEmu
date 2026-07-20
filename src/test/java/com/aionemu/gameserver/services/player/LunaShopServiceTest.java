@@ -13,6 +13,8 @@ class LunaShopServiceTest {
 		assertEquals(2, LunaShopService.MATERIAL_BOX_PRICE);
 		assertEquals(12, LunaShopService.WARDROBE_APPEARANCE_PRICE);
 		assertEquals(5, LunaShopService.TREASURE_CHEST_PRICE);
+		assertEquals(10, LunaShopService.wardrobePrice(1));
+		assertEquals(10, LunaShopService.wardrobePrice(2));
 		assertEquals(10, LunaShopService.wardrobePrice(3));
 		assertEquals(12, LunaShopService.wardrobePrice(8));
 		assertEquals(1, LunaShopService.lunaConsumeRewardId(25));

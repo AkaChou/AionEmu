@@ -6,4 +6,8 @@ public final class LandMarkPlayerReward extends BattlegroundPlayerReward {
 	public LandMarkPlayerReward(int objectId, byte buffId, Race race) {
 		super(objectId, buffId, race);
 	}
+
+	public LandMarkPlayerReward(int objectId, byte buffId, Race race, long joinedAt) {
+		super(objectId, buffId, race, joinedAt);
+	}
 }

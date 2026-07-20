@@ -34,8 +34,7 @@ class InstanceSettlementServiceTest {
 			"SmolderingFireTempleInstance.java",
 			"FissureOfOblivionInstance.java",
 			"StonespearReachInstance.java",
-			"event/Event_ContaminatedUnderpathInstance.java",
-			"event/Opportunity_FissureOfOblivionInstance.java");
+			"event/Event_ContaminatedUnderpathInstance.java");
 
 	@BeforeAll
 	static void loadRetailData() {
@@ -78,6 +77,27 @@ class InstanceSettlementServiceTest {
 		assertEquals(900, InstanceSettlementService.timeAttackLimitSeconds(301510000));
 		assertEquals(100, InstanceSettlementService.timeAttackWaitSeconds(302000000));
 		assertEquals(480, InstanceSettlementService.timeAttackLimitSeconds(302000000));
+	}
+
+	@Test
+	void appliesRetailDarkPoetaTimingRankBossAndGatherRules() {
+		assertEquals(120, InstanceSettlementService.darkPoetaPrepareSeconds());
+		assertEquals(14_400, InstanceSettlementService.darkPoetaLimitSeconds());
+		assertEquals(600, InstanceSettlementService.darkPoetaLeaveSeconds());
+
+		assertEquals(1, InstanceSettlementService.darkPoetaRank(17_817, 7_199));
+		assertEquals(2, InstanceSettlementService.darkPoetaRank(17_817, 7_200));
+		assertEquals(3, InstanceSettlementService.darkPoetaRank(10_913, 10_799));
+		assertEquals(4, InstanceSettlementService.darkPoetaRank(6_656, 12_599));
+		assertEquals(5, InstanceSettlementService.darkPoetaRank(0, 14_399));
+		assertEquals(7, InstanceSettlementService.darkPoetaRank(99_999, 14_400));
+
+		assertEquals(1, InstanceSettlementService.darkPoetaBossGrade(1, 54));
+		assertEquals(6, InstanceSettlementService.darkPoetaBossGrade(1, 55));
+		assertEquals(2, InstanceSettlementService.darkPoetaBossGrade(2, 65));
+		assertEquals(200, InstanceSettlementService.darkPoetaGatherScore(401111));
+		assertEquals(50, InstanceSettlementService.darkPoetaGatherScore(401112));
+		assertEquals(0, InstanceSettlementService.darkPoetaGatherScore(1));
 	}
 
 	@Test
@@ -251,6 +271,9 @@ class InstanceSettlementServiceTest {
 			assertTrue(rank.group(1).contains("InstanceSettlementService.timeAttackRank("), relative);
 			assertFalse(rank.group(1).contains(">="), relative);
 		}
+		String fissureEvent = Files.readString(handlers.resolve("event/Opportunity_FissureOfOblivionInstance.java"));
+		assertTrue(fissureEvent.contains("extends com.aionemu.gameserver.instance.handlers.scripts.FissureOfOblivionInstance"));
+		assertFalse(fissureEvent.contains("Future<?>"));
 		String shugoShared = Files.readString(handlers.resolve("ShugoVaultTimeAttackInstance.java"));
 		assertTrue(shugoShared.contains("InstanceSettlementService.settleTimeAttack("));
 		assertTrue(shugoShared.contains("InstanceSettlementService.timeAttackRank("));
@@ -264,9 +287,14 @@ class InstanceSettlementServiceTest {
 				"luna/SecretMunitionsFactoryInstance.java")) {
 			String source = Files.readString(handlers.resolve(relative));
 			assertTrue(source.contains("InstanceSettlementService.settleLuna("), relative);
-			assertTrue(source.contains("InstanceSettlementService.lunaPlan("), relative);
 			assertFalse(source.contains("InstanceSettlementService.settleTimeAttack("), relative);
 		}
+		String contaminated = Files.readString(handlers.resolve("luna/ContaminatedUnderpathInstance.java"));
+		assertTrue(contaminated.contains("InstanceSettlementService.lunaPlan("));
+		String scorePacket = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_INSTANCE_SCORE.java"));
+		assertTrue(scorePacket.contains("InstanceSettlementService.lunaPlan(mapId, smfr.getRank())"));
+		assertFalse(scorePacket.contains("188055648"));
 
 		String infinity = Files.readString(handlers.resolve("crucible/CrucibleSpireInstance.java"));
 		assertTrue(infinity.contains("InstanceSettlementService.settleInfinity("));

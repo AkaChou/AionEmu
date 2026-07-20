@@ -4,23 +4,20 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.actions.PlayerActions;
-import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.DredgionReward;
@@ -29,10 +26,9 @@ import com.aionemu.gameserver.model.instance.playerreward.DredgionPlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -43,10 +39,6 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 钱特拉无渊号副本事件处理器。
@@ -59,26 +51,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @InstanceID(300210000)
 public class ChantraDredgionInstance extends GeneralInstanceHandler
 {
-	/** 隔板 / bulkhead */
-		private int bulkhead;
-	/** 秘密缓存 / secret cache */
-		private int secretCache;
-	/** 苏卡纳击杀 / surkana kills */
-		private int surkanaKills;
-	/** 副本时间戳 / instance timestamp */
-		private long instanceTime;
-	/** 门映射 / door map */
-	private Map<Integer, StaticDoor> doors;
 	/** 无畏舰奖励 / dredgion reward */
 		protected DredgionReward dredgionReward;
 	/** 败方倍率 / losing-group multiplier */
 		private float loosingGroupMultiplier = 1;
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	private boolean isInstanceDestroyed = false;
-	/** 副本是否已开始 / whether the instance started */
-		protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-	/** chantra 任务 / chantra task */
-		private final List<Future<?>> chantraTask = new ArrayList<Future<?>>();
+	private static final String STATE = "chantra.";
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
@@ -107,125 +84,51 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	}
 	
 	private void addPlayerToReward(Player player) {
-		dredgionReward.addPlayerReward(new DredgionPlayerReward(player.getObjectId()));
+		DredgionPlayerReward reward = restorePlayerReward(player.getObjectId());
+		dredgionReward.addPlayerReward(reward);
 	}
 	
 	private boolean containPlayer(Integer object) {
 		return dredgionReward.containPlayer(object);
 	}
-	/**
-	 * NPC 掉落表注册时处理。
-	 * Handle NPC drop-table registration.
-	 *
-	 * npc
-	 */
-	
-	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-		switch (npcId) {
-			case 216886: //Captain Zanata.
-				for (Player player: instance.getPlayersInside()) {
-					if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-					}
-				}
-			break;
-			case 216875: //Shipmate Badala.
-			case 216876: //Horizonist Anuta.
-			case 216877: //First Mate Rukana.
-			case 216878: //Skylord Vundar.
-			case 216879: //First Mate Dubakar.
-			case 216880: //Chief Daraka.
-			case 216881: //Trigger.
-			case 216882: //Sahadena The Abettor.
-			case 216883: //Quartermaster Nupakun.
-			case 216884: //Takahan.
-			case 216885: //Hookmatan.
-			case 216887: //Skyguard Parishka.
-			case 216888: //Quartermaster Bhati.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-					}
-				}
-			break;
-			case 216889: //Rajaya The Inquisitor.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-						switch (Rnd.get(1, 4)) {
-							case 1:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001097, 1)); //Rajaya's Belt.
-							break;
-							case 2:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001117, 1)); //Rajaya's Earrings.
-							break;
-							case 3:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123000941, 1)); //Rajaya's Corundum Necklace.
-							break;
-							case 4:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001032, 1)); //Rajaya's Turquoise Necklace.
-							break;
-						}
-					}
-				}
-			break;
-			case 216890: //Windfinder Kumar.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-						switch (Rnd.get(1, 4)) {
-							case 1:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001096, 1)); //Kumar's Belt.
-							break;
-							case 2:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001118, 1)); //Kumar's Earrings.
-							break;
-							case 3:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001266, 1)); //Kumar's Corundum Ring.
-							break;
-							case 4:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001267, 1)); //Kumar's Turquoise Ring.
-							break;
-						}
-					}
-				}
-			break;
-		   /**
-	 * 击杀守门人萨尔塔获得船长钥匙，可打开船长室门。 / Obtain the Captain’s Key by killing Gatekeeper Sarta. The Captain’s Key opens the door to the Captain’s Cabin
-	 */
-			case 217037: //Gatekeeper Sarta.
-				for (Player player: instance.getPlayersInside()) {
-				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000105, 1)); //Captain's Cabin Passage Key.
-				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
-					if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-					}
-				}
-			break;
-		}
+	private DredgionPlayerReward restorePlayerReward(int playerId) {
+		DredgionPlayerReward reward = new DredgionPlayerReward(playerId);
+		reward.addPoints(runtimeState().getInt(playerState(playerId, "points"), 0));
+		for (int i = 0; i < runtimeState().getInt(playerState(playerId, "pvp"), 0); i++) reward.addPvPKillToPlayer();
+		for (int i = 0; i < runtimeState().getInt(playerState(playerId, "monster"), 0); i++) reward.addMonsterKillToPlayer();
+		for (int i = 0; i < runtimeState().getInt(playerState(playerId, "zones"), 0); i++) reward.captureZone();
+		return reward;
 	}
-	
-	private void onDieSurkan(Npc npc, Player mostPlayerDamage, int points) {
+
+	private String playerState(int playerId, String field) {
+		return STATE + "player." + playerId + "." + field;
+	}
+
+	private void persistPlayerReward(InstancePlayerReward reward) {
+		int playerId = reward.getOwner();
+		runtimeState().put(playerState(playerId, "points"), reward.getPoints());
+		runtimeState().put(playerState(playerId, "pvp"), reward.getPvPKills());
+		runtimeState().put(playerState(playerId, "monster"), reward.getMonsterKills());
+		runtimeState().put(playerState(playerId, "zones"), ((DredgionPlayerReward) reward).getZoneCaptured());
+	}
+
+	private void onDieSurkan(Npc npc, Player mostPlayerDamage) {
 		Race race = mostPlayerDamage.getRace();
 		captureRoom(race, npc.getNpcId() + 14 - 700851); //Captain's Cabin Power Surkana.
+		runtimeState().put(STATE + "room." + (npc.getNpcId() + 14 - 700851), race.name());
 		for (Player player: instance.getPlayersInside()) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400199, new DescriptionId(race.equals(Race.ASMODIANS) ? 1800483 : 1800481), new DescriptionId(npc.getObjectTemplate().getNameId() * 2 + 1)));
-		} if (++surkanaKills == 5) {
+		}
+		int surkanaKills = runtimeState().getInt(STATE + "surkana", 0) + 1;
+		runtimeState().put(STATE + "surkana", surkanaKills);
+		if (surkanaKills == 5) {
             // 扎纳塔船长已出现在船长室。 / Captain Zanata has appeared in the Captain's Cabin.
 			sendMsgByRace(1400632, Race.PC_ALL, 0);
-			spawn(216886, 485.47916f, 812.4957f, 416.68475f, (byte) 31); //Captain Zanata.
+			runtimeState().put(STATE + "captain_spawned", true);
+			spawn(216886, 485.47916f, 812.4957f, 416.68475f, (byte) 31);
         }
 		getPlayerReward(mostPlayerDamage).captureZone();
-		updateScore(mostPlayerDamage, npc, points, false);
+		persistPlayerReward(getPlayerReward(mostPlayerDamage));
 		npc.getController().onDelete();
 	}
 	/**
@@ -234,82 +137,59 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	 */
 	
 	protected void startInstanceTask() {
-		instanceTime = System.currentTimeMillis();
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				openFirstDoors();
-				// 舱壁已激活，第一军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the First Armory and Gravity Control has been sealed.
-				sendMsgByRace(1400604, Race.PC_ALL, 5000);
-				// 舱壁已激活，第二军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the Second Armory and Gravity Control has been sealed.
-				sendMsgByRace(1400605, Race.PC_ALL, 10000);
-				dredgionReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-				sendPacket();
-				switch (Rnd.get(1, 2)) {
-					case 1:
-					    spawn(216888, 415.2769f, 282.0216f, 409.7311f, (byte) 118); //Quartermaster Bhati.
-					break;
-					case 2:
-					    spawn(216888, 556.53534f, 279.2918f, 409.7311f, (byte) 33); //Quartermaster Bhati.
-					break;
-				} switch (Rnd.get(1, 2)) {
-					case 1:
-					    spawn(216887, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Skyguard Parishka.
-					break;
-					case 2:
-					    spawn(216885, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Hookmatan.
-					break;
-				}
-			}
-		}, 60000));
-	   /**
-	 * 钱特拉战舰内有多处传送装置。 / Chantra Dredgion Teleportation Devices: There are numerous teleportation devices located inside the Chantra Dredgion. These teleportation devices allow players to teleport to different areas of the Dredgion with ease. Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun
-	 */
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				// 紧急出口传送装置已激活。 / A teleport device has been activated in the Emergency Exit.
-				sendMsgByRace(1401424, Race.PC_ALL, 0);
-				spawn(730311, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34); //Portside Central Teleporter.
-				spawn(730312, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9); //Starboard Central Teleporter.
-			}
-		}, 600000));
-	   /**
-	 * 军官卡曼亚：位置重力控制室；经过 15 分钟；勇气 1000 点。 / Officer Kamanya: Location: Gravity Control Time Elapsed: 15 Minutes Valor: 1,000 Points
-	 */
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				// 军官卡曼亚已出现在重力控制室。 / Officer Kamanya has appeared in Gravity Control.
-				sendMsgByRace(1400633, Race.PC_ALL, 0);
-				spawn(216941, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Officer Kamanya.
-			}
-		}, 900000));
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				if (!dredgionReward.isRewarded()) {
-					Race winningRace = dredgionReward.getWinningRaceByScore();
-					stopInstance(winningRace);
-				}
-			}
-		}, 3600000));
+		long startedAt = runtimeState().getLong(STATE + "started_at", 0);
+		if (startedAt == 0) {
+			startedAt = System.currentTimeMillis();
+			runtimeState().put(STATE + "started_at", startedAt);
+			runtimeState().put(STATE + "phase", "PREPARING");
+		}
+		scheduleDeadline("start", startedAt + 60_000, this::startProgress);
+		scheduleDeadline("teleport", startedAt + 600_000, this::activateCentralTeleporters);
+		scheduleDeadline("named", startedAt + 900_000, this::spawnTimedNamed);
+		scheduleDeadline("finish", startedAt + 3_600_000, this::finishByScore);
+		long bossFinish = runtimeState().getLong(STATE + "boss_finish_deadline", 0);
+		if (bossFinish > 0) scheduleDeadline("boss_finish", bossFinish, this::finishByScore);
+	}
+
+	private void startProgress() {
+		if (runtimeState().getBoolean(STATE + "settled", false)) return;
+		openFirstDoors();
+		runtimeState().put(STATE + "phase", "START_PROGRESS");
+		dredgionReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+		sendMsgByRace(1400604, Race.PC_ALL, 0);
+		sendMsgByRace(1400605, Race.PC_ALL, 0);
+		if (!runtimeState().getBoolean(STATE + "opening_spawned", false)) {
+			runtimeState().put(STATE + "opening_spawned", true);
+			int side = Rnd.get(1, 2);
+			int captain = Rnd.get(1, 2) == 1 ? 216887 : 216885;
+			runtimeState().put(STATE + "opening_side", side);
+			runtimeState().put(STATE + "opening_captain", captain);
+			spawn(216888, side == 1 ? 415.2769f : 556.53534f, side == 1 ? 282.0216f : 279.2918f,
+				409.7311f, side == 1 ? (byte) 118 : (byte) 33);
+			spawn(captain, 485.25455f, 877.04614f, 405.01407f, (byte) 90);
+		}
+		sendPacket();
+	}
+
+	private void activateCentralTeleporters() {
+		if (runtimeState().getBoolean(STATE + "settled", false)
+				|| runtimeState().getBoolean(STATE + "teleporters", false)) return;
+		runtimeState().put(STATE + "teleporters", true);
+		sendMsgByRace(1401424, Race.PC_ALL, 0);
+		spawn(730311, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34);
+		spawn(730312, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9);
+	}
+
+	private void spawnTimedNamed() {
+		if (runtimeState().getBoolean(STATE + "settled", false)
+				|| runtimeState().getBoolean(STATE + "timed_named", false)) return;
+		runtimeState().put(STATE + "timed_named", true);
+		sendMsgByRace(1400633, Race.PC_ALL, 0);
+		spawn(216941, 485.4811f, 313.925f, 403.71857f, (byte) 36);
+	}
+
+	private void finishByScore() {
+		if (!runtimeState().getBoolean(STATE + "settled", false)) stopInstance(dredgionReward.getWinningRaceByScore());
 	}
 	
 	/**
@@ -320,18 +200,18 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
-		int point = 0;
+		int point = retailScore(npc);
 		Player mostPlayerDamage = npc.getAggroList().getMostPlayerDamage();
         if (mostPlayerDamage == null) {
             return;
         }
 		Race race = mostPlayerDamage.getRace();
+		runtimeState().put(STATE + "dead." + npc.getNpcId(), true);
 		switch (npc.getObjectTemplate().getTemplateId()) {
 		   /**
 	 * 钱特拉战舰入口附近有 6 个武器箱，摧毁各得 100 分。 / There are six weapon chests located near the Chantra Dredgion entrance, and each chest awards 100 points if destroyed. These chests are also related to Quests for both Elyos and Asmodians
 	 */
 		    case 700836: //Weapon Chest.
-                point = 100;
 				despawnNpc(npc);
             break;
 		   /**
@@ -340,43 +220,43 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			case 700838: //Armory Maintenance Surkana.
 			case 700839: //Armory Maintenance Surkana.
 			    despawnNpc(npc);
-				onDieSurkan(npc, mostPlayerDamage, 500);
+				onDieSurkan(npc, mostPlayerDamage);
 			break;
 			case 700840: //Gravity Control Surkana.
 			    despawnNpc(npc);
-				onDieSurkan(npc, mostPlayerDamage, 900);
+				onDieSurkan(npc, mostPlayerDamage);
 			break;
 			case 700841: //Nuclear Control Surkana.
 			case 700842: //Nuclear Control Surkana.
 			    despawnNpc(npc);
-				onDieSurkan(npc, mostPlayerDamage, 1100);
+				onDieSurkan(npc, mostPlayerDamage);
 			break;
 			case 700843: //Main Cannon Control Surkana.
 			case 700844: //Main Cannon Control Surkana.
 			    despawnNpc(npc);
-				onDieSurkan(npc, mostPlayerDamage, 800);
+				onDieSurkan(npc, mostPlayerDamage);
 			break;
 			case 700845: //Drop Device Surkana.
 			case 700846: //Drop Device Surkana.
 			    despawnNpc(npc);
-				onDieSurkan(npc, mostPlayerDamage, 600);
+				onDieSurkan(npc, mostPlayerDamage);
 			break;
 			case 700847: //Fighter Enhancing Surkana.
 			    despawnNpc(npc);
-				onDieSurkan(npc, mostPlayerDamage, 700);
+				onDieSurkan(npc, mostPlayerDamage);
 			break;
 			case 700848: //Storage Power Surkana.
 			case 700849: //Storage Power Surkana.
 			    despawnNpc(npc);
-				onDieSurkan(npc, mostPlayerDamage, 500);
+				onDieSurkan(npc, mostPlayerDamage);
 			break;
 			case 700850: //Bridge Power Surkana.
 			    despawnNpc(npc);
-				onDieSurkan(npc, mostPlayerDamage, 700);
+				onDieSurkan(npc, mostPlayerDamage);
 			break;
 			case 700851: //Captain's Cabin Power Surkana.
 				despawnNpc(npc);
-				onDieSurkan(npc, mostPlayerDamage, 1100);
+				onDieSurkan(npc, mostPlayerDamage);
 			break;
 		   /**
 	 * 船长室通道：二楼船长室左右有路但门被封，需特殊方式开启。 / Captain’s Cabin Passage: There are paths to the left and right of the Captain’s Cabin’s on the second floor, but the doors are blocked. These doors cannot be demolished, and can only be opened with a key dropped by a specific Named Monster. Groups desiring the Captain’s Cabin Passage Key will need to defeat "Sahadena The Abettor" in the center of the Dredgion. Only one Group can loot the key. The Captain’s Cabin Teleport Device is located just beyond the Barracks, and can make reaching Captain Zanata much easier
@@ -385,13 +265,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				if (race.equals(Race.ELYOS)) {
 				   // 船长室传送装置已在中庭尽头生成。 / Captain's Cabin teleport device has been created at the end of the Atrium.
 				   sendMsgByRace(1400652, Race.ELYOS, 0);
-				   spawn(730357, 473.62231f, 761.99506f, 388.66f, (byte) 0, 33); //Elyos Captain's Cabin Teleporter.
+				   RetailConditionSpawnEngine.setVariable(instance, "teleport_l_destroyed", 1, 0);
 				} else if (race.equals(Race.ASMODIANS)) {
 				   // 船长室传送装置已在中庭尽头生成。 / Captain's Cabin teleport device has been created at the end of the Atrium.
 				   sendMsgByRace(1400652, Race.ASMODIANS, 0);
-				   spawn(730358, 496.52225f, 761.99506f, 388.66f, (byte) 0, 186); //Asmodian Captain's Cabin Teleporter.
+				   RetailConditionSpawnEngine.setVariable(instance, "teleport_d_destroyed", 1, 0);
 				}
-				point = 1000;
             break;
 		   /**
 	 * 补给室传送器：兵营中传送发生器被摧毁后激活 / Supply Room Teleporter: This teleporter activates after the destruction of the Teleporter Generator in the Barracks
@@ -400,13 +279,13 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
                 despawnNpc(npc);
 				// 物资仓库传送装置已在副逃生舱口生成。 / Supplies Storage teleport device has been created at Escape Hatch.
 				sendMsgByRace(1400631, Race.PC_ALL, 0);
-				spawn(730314, 397.11661f, 184.29782f, 432.8032f, (byte) 0, 42); //Port Supply Room Teleporter.
+				RetailConditionSpawnEngine.setVariable(instance, "teleport_4_destroyed", 1, 0);
             break;
 			case 730350: //Starboard Teleporter Generator.
                 despawnNpc(npc);
 				// 物资仓库传送装置已在副逃生舱口生成。 / Supplies Storage teleport device has been created at the Secondary Escape Hatch.
 				sendMsgByRace(1400641, Race.PC_ALL, 0);
-				spawn(730315, 572.10443f, 185.23933f, 432.56024f, (byte) 0, 10); //Starboard Supply Room Teleporter.
+				RetailConditionSpawnEngine.setVariable(instance, "teleport_5_destroyed", 1, 0);
             break;
 		   /**
 	 * 每台护盾发生器需要 3 个理念物品，共 12 个 / Defense Shield Generator: When the Defense Shield Generator on the Weapons Deck or Lower Weapons deck is demolished, a shield appears in Ready Room 1 or 2. This shield blocks access to the center of the Chantra Dredgion. The Ready Room is the shortest route to the center of the Dredgion, and the quickest route to the opposing race’s area. Different tactics can be used in this area to maximize the Group’s accumulation of points. For example, if one Group decides to destroy the opposing Group’s Shield Generator, it will make it difficult for the opposing Group to reach the center of the Dredgion. In some cases, it might wiser for one Group to destroy their own Defense Shield Generator, and delay engagement with the opposing race in order to accumulate more points
@@ -419,29 +298,29 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 				// 左舷防御护盾已在准备室 1 生成。 / The Portside Defense Shield has been generated in Ready Room 1.
 				sendMsgByRace(1400226, Race.PC_ALL, 0);
-				spawn(730345, 448.39151f, 493.64182f, 394.13174f, (byte) 0, 12);  // spawn barier
+				RetailConditionSpawnEngine.setVariable(instance, "switch_1_destroyed", 1, 0);
 			break;
 			case 730352: //Starboard Defense Shield Generator.
 				despawnNpc(npc);
 				// 右舷防御护盾已在准备室 2 生成。 / The Starboard Defense Shield has been generated in Ready Room 2.
 				sendMsgByRace(1400227, Race.PC_ALL, 0);
-				spawn(730346, 520.87555f, 493.40115f, 394.43292f, (byte) 0, 133);  // spawn barier
+				RetailConditionSpawnEngine.setVariable(instance, "switch_2_destroyed", 1, 0);
 			break;
 		   /**
 	 * 舱壁：钱特拉哨兵开战时激活护盾，阻挡入口。 / The Bulkhead: These shields are activated by the Chantra Sentinel when first encountered at the beginning of the battle. These shields block the entrance from the Armories to Gravity Control, and can be demolished with attacks, but also have a significant amount of health. Groups often opt to move around the shields instead of demolishing them. It’s worth noting that after a certain amount of time has passed, Officer Kamanya spawns in the Gravity Control room, and gives 1,000 points when defeated. There is also a chance that Rajaya the Inquisitor, a Hero grade Named Monster, will spawn. Rajaya the Inquisitor has a chance to drop Fabled and Heroic accessories
 	 */
 			case 730353: //Port Bulkhead.
 			case 730354: //Starboard Bulkhead.
-				bulkhead++;
+				int bulkhead = runtimeState().getInt(STATE + "bulkhead", 0) + 1;
+				runtimeState().put(STATE + "bulkhead", bulkhead);
 				if (bulkhead == 2) {
-					switch (Rnd.get(1, 2)) {
-					    case 1:
-					        spawn(216889, 456.3946f, 319.65912f, 402.69315f, (byte) 28); //Rajaya The Inquisitor.
-					    break;
-					    case 2:
-					        spawn(216875, 513.9867f, 319.86224f, 402.68634f, (byte) 4); //Shipmate Badala.
-					    break;
-				    }
+					int named = Rnd.get(1, 2) == 1 ? 216889 : 216875;
+					runtimeState().put(STATE + "bulkhead_named", named);
+					if (named == 216889) {
+						spawn(named, 456.3946f, 319.65912f, 402.69315f, (byte) 28);
+					} else {
+						spawn(named, 513.9867f, 319.86224f, 402.68634f, (byte) 4);
+					}
 				}
 				despawnNpc(npc);
 			break;
@@ -455,39 +334,27 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			case 216883: //Quartermaster Nupakun.
 			case 216884: //Takahan.
 			case 217037: //Gatekeeper Sarta.
-			    secretCache++;
+				int secretCache = runtimeState().getInt(STATE + "secret_cache", 0) + 1;
+				runtimeState().put(STATE + "secret_cache", secretCache);
 				if (secretCache == 6) {
 				    // 战舰宝箱已出现在投放区！ / A Dredgion Treasure Chest has appeared in the Drop Zone!
 					sendMsgByRace(1401421, Race.PC_ALL, 0);
+					runtimeState().put(STATE + "secret_chest", true);
 					spawn(701455, 482.82455f, 496.16556f, 397.28323f, (byte) 92); //Dredgion Opportunity Bundle.
 				}
-			    point = 200;
             break;
 			case 216885: //Hookmatan.
-			    point = 500;
             break;
 			case 216887: //Skyguard Parishka.
 			case 216889: //Rajaya The Inquisitor.
 			case 216888: //Quartermaster Bhati.
 			case 216890: //Windfinder Kumar.
 			case 216941: //Officier Kamanya.
-				point = 1000;
 			break;
 			case 216886: //Captain Zanata.
-				point = 1000;
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    /**
-				     * 处理 run。
-				     * Handle run.
-				     */
-				    @Override
-					public void run() {
-						if (!dredgionReward.isRewarded()) {
-							Race winningRace = dredgionReward.getWinningRaceByScore();
-							stopInstance(winningRace);
-						}
-					}
-				}, 30000);
+				long finishDeadline = System.currentTimeMillis() + 30_000;
+				runtimeState().put(STATE + "boss_finish_deadline", finishDeadline);
+				scheduleDeadline("boss_finish", finishDeadline, this::finishByScore);
 			break;
 		}
 		updateScore(mostPlayerDamage, npc, point, false);
@@ -519,6 +386,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		if (!containPlayer(player.getObjectId())) {
 			addPlayerToReward(player);
 		}
+		if (runtimeState().getBoolean(STATE + "settled", false)) settlePlayer(player);
 		sendPacket();
 	}
 	
@@ -532,9 +400,19 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		dredgionReward = new DredgionReward(mapId, instanceId);
-		dredgionReward.setInstanceScoreType(InstanceScoreType.PREPARING);
-		doors = instance.getDoors();
+		dredgionReward.addPointsByRace(Race.ELYOS, runtimeState().getInt(STATE + "score.ELYOS", 0));
+		dredgionReward.addPointsByRace(Race.ASMODIANS, runtimeState().getInt(STATE + "score.ASMODIANS", 0));
+		refreshLosingMultiplier();
+		String winner = runtimeState().get(STATE + "winner");
+		if (winner != null) dredgionReward.setWinningRace(Race.valueOf(winner));
+		dredgionReward.setInstanceScoreType(InstanceScoreType.valueOf(runtimeState().get(STATE + "phase", "PREPARING")));
+		for (var entry : runtimeState().snapshot(STATE + "room.").entrySet()) {
+			captureRoom(Race.valueOf(entry.getValue()), Integer.parseInt(entry.getKey().substring((STATE + "room.").length())));
+		}
+		RetailConditionSpawnEngine.initialize(instance);
 		startInstanceTask();
+		restoreDynamicObjects();
+		if (runtimeState().getBoolean(STATE + "settled", false)) scheduleExit();
 	}
 	/**
 	 * 停止副本并结算。
@@ -544,7 +422,10 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	 */
 	
 	protected void stopInstance(Race race) {
-		stopInstanceTask();
+		if (runtimeState().getBoolean(STATE + "settled", false)) return;
+		runtimeState().put(STATE + "settled", true);
+		runtimeState().put(STATE + "phase", "END_PROGRESS");
+		runtimeState().put(STATE + "winner", race.name());
 		dredgionReward.setWinningRace(race);
 		dredgionReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		doReward();
@@ -557,42 +438,16 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	
 	public void doReward() {
 		for (Player player : instance.getPlayersInside()) {
-			InstancePlayerReward playerReward = getPlayerReward(player);
-			float abyssPoint = playerReward.getPoints() * RateConfig.DREDGION_REWARD_RATE;
-			if (player.getRace().equals(dredgionReward.getWinningRace())) {
-				abyssPoint += dredgionReward.getWinnerPoints();
-			} else {
-				abyssPoint += dredgionReward.getLooserPoints();
-			}
-			AbyssPointsService.addAp(player, (int) abyssPoint);
-			QuestEnv env = new QuestEnv(null, player, 0, 0);
-			GameEngineServices.questEngine().onDredgionReward(env);
+			settlePlayer(player);
 		}
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed) {
-					for (Player player : instance.getPlayersInside()) {
-						if (PlayerActions.isAlreadyDead(player)) {
-							PlayerReviveService.duelRevive(player);
-						}
-						onExitInstance(player);
-					}
-					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
-				}
-			}
-		}, 120000);
+		scheduleExit();
 	}
 	
 	private int getTime() {
-		long result = System.currentTimeMillis() - instanceTime;
+		long result = System.currentTimeMillis() - runtimeState().getLong(STATE + "started_at", System.currentTimeMillis());
 		if (result < 60000) {
 			return (int) (60000 - result);
 		} else if (result < 3600000) {
@@ -652,18 +507,25 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	
 	private void addPointsByRace(Race race, int points) {
 		dredgionReward.addPointsByRace(race, points);
+		runtimeState().put(STATE + "score." + race.name(), dredgionReward.getPointsByRace(race).intValue());
 	}
 	
 	private void addPointToPlayer(Player player, int points) {
-		getPlayerReward(player).addPoints(points);
+		DredgionPlayerReward reward = getPlayerReward(player);
+		reward.addPoints(points);
+		persistPlayerReward(reward);
 	}
 	
 	private void addPvPKillToPlayer(Player player) {
-		getPlayerReward(player).addPvPKillToPlayer();
+		DredgionPlayerReward reward = getPlayerReward(player);
+		reward.addPvPKillToPlayer();
+		persistPlayerReward(reward);
 	}
 	
 	private void addBalaurKillToPlayer(Player player) {
-		getPlayerReward(player).addMonsterKillToPlayer();
+		DredgionPlayerReward reward = getPlayerReward(player);
+		reward.addMonsterKillToPlayer();
+		persistPlayerReward(reward);
 	}
 	/**
 	 * 处理 updateScore。
@@ -723,10 +585,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onInstanceDestroy() {
-		isInstanceDestroyed = true;
 		dredgionReward.clear();
-		stopInstanceTask();
-		doors.clear();
 	}
 	/**
 	 * 打开指定门。
@@ -736,10 +595,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	 */
 	
 	protected void openDoor(int doorId) {
-		StaticDoor door = doors.get(doorId);
-		if (door != null) {
-			door.setOpen(true);
-		}
+		setDoorState(doorId, true);
 	}
 	
 	private void sendPacket() {
@@ -756,99 +612,84 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * time
-	 */
-	
-	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
-        sp(npcId, x, y, z, h, 0, time, 0, null);
-    }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * time
-	 * message
-	 * 阵营 / race
-	 */
-	
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
-        sp(npcId, x, y, z, h, 0, time, msg, race);
-    }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * entity id
-	 * time
-	 * message
-	 * 阵营 / race
-	 */
-	
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    spawn(npcId, x, y, z, h, entityId);
-                    if (msg > 0) {
-                        sendMsgByRace(msg, race, 0);
-                    }
-                }
-            }
-        }, time));
-    }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * time
-	 * walkerId
-	 */
-	
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    Npc npc = (Npc) spawn(npcId, x, y, z, h);
-                    npc.getSpawn().setWalkerId(walkerId);
-                    WalkManager.startWalking((NpcAI2) npc.getAi2());
-                }
-            }
-        }, time));
-    }
+
+	private int retailScore(Npc npc) {
+		var score = DataManager.RETAIL_AI_DATA.getNpcScore(npc.getNpcId());
+		return score == null ? 0 : score.value();
+	}
+
+	private void refreshLosingMultiplier() {
+		int difference = Math.abs(getPointsByRace(Race.ASMODIANS).intValue()
+			- getPointsByRace(Race.ELYOS).intValue());
+		loosingGroupMultiplier = difference >= 3000 ? 10 : difference >= 1000 ? 1.5f : 1;
+	}
+
+	private void settlePlayer(Player player) {
+		InstancePlayerReward playerReward = getPlayerReward(player);
+		float abyssPoint = playerReward.getPoints() * RateConfig.DREDGION_REWARD_RATE;
+		abyssPoint += player.getRace().equals(dredgionReward.getWinningRace())
+			? dredgionReward.getWinnerPoints() : dredgionReward.getLooserPoints();
+		RewardPlan plan = new RewardPlan(List.of(), 0, 0, Math.max(0, (int) abyssPoint), 0);
+		if (InstanceSettlementService.settle(instance.getDynamicInstance().getInstanceUid(), player, "dredgion", plan)) {
+			GameEngineServices.questEngine().onDredgionReward(new QuestEnv(null, player, 0, 0));
+		}
+	}
+
+	private void scheduleExit() {
+		long deadline = runtimeState().getLong(STATE + "exit_deadline", 0);
+		if (deadline == 0) {
+			deadline = System.currentTimeMillis() + 120_000;
+			runtimeState().put(STATE + "exit_deadline", deadline);
+		}
+		scheduleDeadline("exit", deadline, () -> {
+			for (Player player : instance.getPlayersInside()) {
+				if (PlayerActions.isAlreadyDead(player)) {
+					PlayerReviveService.duelRevive(player);
+				}
+				onExitInstance(player);
+			}
+			GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+		});
+	}
+
+	private void restoreDynamicObjects() {
+		if (runtimeState().getBoolean(STATE + "settled", false)) return;
+		if (runtimeState().getBoolean(STATE + "teleporters", false)) {
+			spawn(730311, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34);
+			spawn(730312, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9);
+		}
+		if (runtimeState().getBoolean(STATE + "opening_spawned", false)) {
+			int side = runtimeState().getInt(STATE + "opening_side", 1);
+			if (!runtimeState().getBoolean(STATE + "dead.216888", false)) {
+				spawn(216888, side == 1 ? 415.2769f : 556.53534f, side == 1 ? 282.0216f : 279.2918f,
+					409.7311f, side == 1 ? (byte) 118 : (byte) 33);
+			}
+			int captain = runtimeState().getInt(STATE + "opening_captain", 216885);
+			if (!runtimeState().getBoolean(STATE + "dead." + captain, false)) {
+				spawn(captain, 485.25455f, 877.04614f, 405.01407f, (byte) 90);
+			}
+		}
+		if (runtimeState().getBoolean(STATE + "timed_named", false)
+				&& !runtimeState().getBoolean(STATE + "dead.216941", false)) {
+			spawn(216941, 485.4811f, 313.925f, 403.71857f, (byte) 36);
+		}
+		if (runtimeState().getBoolean(STATE + "captain_spawned", false)
+				&& !runtimeState().getBoolean(STATE + "dead.216886", false)) {
+			spawn(216886, 485.47916f, 812.4957f, 416.68475f, (byte) 31);
+		}
+		if (runtimeState().getBoolean(STATE + "secret_chest", false)
+				&& !runtimeState().getBoolean(STATE + "dead.701455", false)) {
+			spawn(701455, 482.82455f, 496.16556f, 397.28323f, (byte) 92);
+		}
+		int named = runtimeState().getInt(STATE + "bulkhead_named", 0);
+		if (named > 0 && !runtimeState().getBoolean(STATE + "dead." + named, false)) {
+			if (named == 216889) {
+				spawn(named, 456.3946f, 319.65912f, 402.69315f, (byte) 28);
+			} else if (named == 216875) {
+				spawn(named, 513.9867f, 319.86224f, 402.68634f, (byte) 4);
+			}
+		}
+	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -858,54 +699,13 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	 * time
 	 */
 	
-    protected void sendMsgByRace(final int msg, final Race race, int time) {
-        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
-                    /**
-                     * 处理 visit。
-                     * Handle visit.
-                     *
-                     * @param player 玩家 / player
-                     */
-                    @Override
-                    public void visit(Player player) {
-                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-                        }
-                    }
-                });
-            }
-        }, time));
-    }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
+	protected void sendMsgByRace(final int msg, final Race race, int time) {
+		instance.doOnAllPlayers((Visitor<Player>) player -> {
+			if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
 			}
 		});
 	}
-	
-	private void stopInstanceTask() {
-        for (Future<?> task : chantraTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
 	
 	/**
 	 * 返回本副本奖励对象。
@@ -936,8 +736,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	 * @param player 玩家 / player
 	 */
 	@Override
-    public void onLeaveInstance(Player player) {
-        stopInstanceTask();
+	    public void onLeaveInstance(Player player) {
 		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
         if (player.isInGroup2()) {

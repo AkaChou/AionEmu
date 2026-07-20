@@ -127,7 +127,6 @@
 		<import file="events_config/events_config.xml" skipRoot="true"/>
 	</events_config>
 	<import file="polymorph_panels/polymorph_panels.xml"/>
-	<import file="instance_bonusattr/instance_bonusattr.xml"/>
 	<import file="housing/housing_objects.xml"/>
 	<import file="ride/ride.xml"/>
 	<import file="robot/robot.xml"/>

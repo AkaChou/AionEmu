@@ -322,11 +322,6 @@
 			<spot x="900.30823" y="839.59943" z="292.76813" entity_id="117"/>
 		</spawn>
 		<!-- IDLDF5_Under_02_FOBJ_Vritra_Box_Q16989A -->
-		<spawn npc_id="702960">
-		</spawn>
-		<spawn npc_id="233187" respawn_time="30">
-		  <spot x="906.129211" y="857.146057" z="279.827789"/>
-		</spawn>
 		<spawn npc_id="284749" respawn_time="60">
 		  <spot x="388.795746" y="1171.578613" z="58.801796" h="33"/>
 		</spawn>
@@ -344,6 +339,9 @@
 		</spawn>
 		<spawn npc_id="832908" respawn_time="30">
 		  <spot x="1046.161987" y="1206.163818" z="316.840179"/>
+		</spawn>
+		<spawn npc_id="233187">
+		  <spot x="906.129211" y="857.146057" z="279.827789" random_walk="2"/>
 		</spawn>
 	</spawn_map>
 </spawns>

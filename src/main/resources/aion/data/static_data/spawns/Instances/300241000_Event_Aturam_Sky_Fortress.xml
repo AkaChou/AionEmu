@@ -55,7 +55,6 @@
 		</spawn>
 		<!-- Recharging Talon Laborer -->
 		<spawn npc_id="217342">
-			<spot x="697.389" y="85.954" z="604.119" h="90"/>
 			<spot x="737.619" y="54.139" z="604.143" h="60"/>
 		</spawn>
 		<!-- Talon Guardian -->
@@ -63,9 +62,6 @@
             <spot h="90" z="608.79407" y="163.94362" x="749.28955"/>
 		</spawn>
 		<!-- Recharging Talon Guardian -->
-		<spawn npc_id="217344">
-			<spot x="737.258" y="66.069" z="604.141" h="60"/>
-		</spawn>
 		<!-- Shulack Assistant -->
 		<spawn npc_id="217348">
             <spot h="81" z="648.0293" y="398.9686" x="560.5716"/>

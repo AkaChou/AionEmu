@@ -83,7 +83,6 @@ public final class DataManager {
     public static SpawnsData2 SPAWNS_DATA2;
     public static EventData EVENT_DATA;
     public static PanelSkillsData PANEL_SKILL_DATA;
-    public static InstanceBuffData INSTANCE_BUFF_DATA;
     public static HousingObjectData HOUSING_OBJECT_DATA;
     public static RideData RIDE_DATA;
     public static InstanceExitData INSTANCE_EXIT_DATA;
@@ -264,7 +263,6 @@ public final class DataManager {
             ASSEMBLY_ITEM_DATA = data.assemblyItemData;
             EVENT_DATA = data.eventData;
             PANEL_SKILL_DATA = data.panelSkillsData;
-            INSTANCE_BUFF_DATA = data.instanceBuffData;
             HOUSING_OBJECT_DATA = data.housingObjectData;
             RIDE_DATA = data.rideData;
             INSTANCE_EXIT_DATA = data.instanceExitData;

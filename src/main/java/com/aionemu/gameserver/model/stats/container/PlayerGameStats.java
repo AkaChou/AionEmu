@@ -627,7 +627,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	/** 返回 main hand m attack / Returns the main hand m attack */
 	@Override
 	public Stat2 getMainHandMAttack() {
-		return getMainHandMAttack(new CalculationType[0]);
+		return getMainHandMAttack(CalculationType.DISPLAY);
 	}
 
 	/** 返回 main hand m attack / Returns the main hand m attack */
@@ -641,7 +641,12 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 			if (!mainHandWeapon.getItemTemplate().getAttackType().isMagical()) {
 				return new AdditionStat(StatEnum.MAIN_HAND_MAGICAL_POWER, 0, owner);
 			}
-			base = mainHandWeapon.getItemTemplate().getWeaponStats().getMeanDamage();
+			if (ArrayUtils.contains(calculationTypes, CalculationType.DISPLAY)) {
+				base = mainHandWeapon.getItemTemplate().getWeaponStats().getMeanDamage();
+			} else {
+				base = Rnd.get(mainHandWeapon.getItemTemplate().getWeaponStats().getMinDamage(),
+						mainHandWeapon.getItemTemplate().getWeaponStats().getMaxDamage());
+			}
 			if (ArrayUtils.contains(calculationTypes, CalculationType.APPLY_POWER_SHARD_DAMAGE)) {
 				base += getPowerShardDamage(true, ArrayUtils.contains(calculationTypes, CalculationType.REMOVE_POWER_SHARD));
 			}
@@ -653,7 +658,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	/** 返回 off hand m attack / Returns the off hand m attack */
 	@Override
 	public Stat2 getOffHandMAttack() {
-		return getOffHandMAttack(new CalculationType[0]);
+		return getOffHandMAttack(CalculationType.DISPLAY);
 	}
 
 	/** 返回 off hand m attack / Returns the off hand m attack */
@@ -665,7 +670,12 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		if (offHandWeapon != null && offHandWeapon != equipment.getMainHandWeapon() && offHandWeapon.getItemTemplate().isWeapon()
 				&& offHandWeapon.getItemTemplate().getArmorType() != ArmorType.SHIELD) {
 			calculationTypes = ArrayUtils.add(calculationTypes, CalculationType.OFF_HAND);
-			base = offHandWeapon.getItemTemplate().getWeaponStats().getMeanDamage();
+			if (ArrayUtils.contains(calculationTypes, CalculationType.DISPLAY)) {
+				base = offHandWeapon.getItemTemplate().getWeaponStats().getMeanDamage();
+			} else {
+				base = Rnd.get(offHandWeapon.getItemTemplate().getWeaponStats().getMinDamage(),
+						offHandWeapon.getItemTemplate().getWeaponStats().getMaxDamage());
+			}
 			if (ArrayUtils.contains(calculationTypes, CalculationType.APPLY_POWER_SHARD_DAMAGE)) {
 				base += getPowerShardDamage(false, ArrayUtils.contains(calculationTypes, CalculationType.REMOVE_POWER_SHARD));
 			}

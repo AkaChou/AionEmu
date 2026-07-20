@@ -47,9 +47,10 @@ public class AttackUtil {
 	 * @return 攻击结果列表 / list of attack results
 	 */
 	public static List<AttackResult> calculateAutoAttackPhysical(Creature attacker, Creature attacked) {
-	    List<AttackResult> attackList = new ArrayList<>();
-	    AttackStatus status = calculatePhysicalStatus(attacker, attacked, true);
-		List<AttackResult> weaponResults = StatFunctions.calculateAttackDamage(attacker, SkillElement.NONE, status);
+		List<AttackResult> attackList = new ArrayList<>();
+		AttackStatus status = calculatePhysicalStatus(attacker, attacked, true);
+		List<AttackResult> weaponResults = StatFunctions.calculateAttackDamage(attacker, SkillElement.NONE, status,
+				CalculationType.APPLY_POWER_SHARD_DAMAGE, CalculationType.REMOVE_POWER_SHARD);
 		for (int i = 0; i < weaponResults.size(); i++) {
 			AttackResult result = weaponResults.get(i);
 			float damage = applyPhysicalAutoAttackModifiers(attacker, attacked, result.getExactDamage());
@@ -57,11 +58,11 @@ public class AttackUtil {
 			splitPhysicalDamage(attacker, attacked, mainHand, getPhysicalHitCount(attacker, mainHand), Math.round(damage),
 					result.getAttackStatus(), attackList);
 		}
-	    applyDamageMultiplier(attackList);
-	    modifyDamageByNpcAi(attacker, attacked, attackList);
-	    
-	    attacked.getObserveController().checkShieldStatus(attackList, null, attacker);
-	    return attackList;
+		applyDamageMultiplier(attackList);
+		modifyDamageByNpcAi(attacker, attacked, attackList);
+
+		attacked.getObserveController().checkShieldStatus(attackList, null, attacker);
+		return attackList;
 	}
 
 	/**
@@ -74,13 +75,14 @@ public class AttackUtil {
 	 * @return 修正后伤害 / adjusted damage
 	 */
 	private static float applyPhysicalAutoAttackModifiers(Creature attacker, Creature attacked, float damage) {
+		damage = StatFunctions.applyPveLevelPenalty(attacker, attacked, damage);
 		float pDef = attacked.getGameStats().getPDef().getBonus() + StatFunctions.getMovementModifier(attacked,
 				StatEnum.PHYSICAL_DEFENSE, attacked.getGameStats().getPDef().getBase());
 		damage -= pDef * 0.10f;
 		if (damage <= 0) {
 			damage = 1;
 		}
-		return StatFunctions.adjustDamages(attacker, attacked, damage, 0, true, SkillElement.NONE);
+		return damage;
 	}
 
 	/**
@@ -162,46 +164,37 @@ public class AttackUtil {
 	 * raw damage
 	 * @return 格挡后伤害 / damage after block
 	 */
-	private static int calculateBlockedDamage(Creature attacked, int damage) {
-		// 检查是否有盾牌
-		if (attacked instanceof Player) {
-			Player player = (Player) attacked;
-			Item shield = player.getEquipment().getEquippedShield();
-			if (shield != null) {
-				// 【盾牌防御计算】
-				// 1. 获取盾牌减伤百分比（橙色盾牌+10以上为70%）
-				int shieldDefensePercent = player.getGameStats().getPositiveReverseStat(StatEnum.DAMAGE_REDUCE, damage);
-				
-				// 2. 计算理论减伤金额
-				int theoreticalBlockedDamage = (int) (damage * shieldDefensePercent * 0.01f);
-				
-				// 3. 获取盾牌的最大防御值（伤害承受上限）
-				int maxBlock = shield.getItemTemplate().getWeaponStats().getReduceMax();
-				
-				// 4. 检查是否过载
-				// 如果理论减伤金额 > 最大防御值，则实际减伤 = 最大防御值（过载）
-				// 否则实际减伤 = 理论减伤金额（未过载）
-				int actualBlockedDamage;
-				if (maxBlock > 0 && theoreticalBlockedDamage > maxBlock) {
-					// 过载情况：按最大防御值计算
-					actualBlockedDamage = maxBlock;
-				} else {
-					// 未过载情况：按理论减伤金额计算
-					actualBlockedDamage = theoreticalBlockedDamage;
-				}
-				
-				// 5. 计算实际伤害
-				damage -= actualBlockedDamage;
-				return damage;
-			}
+	private static int calculateBlockedDamage(Creature attacker, Creature attacked, int damage) {
+		if (!(attacked instanceof Player player)) {
+			return calculateBlockedDamage(damage, false, damage, 0, 0);
 		}
-		
-		// 【武器防御计算】
-		// 武器防御伤害削减为40%，没有最大防御值限制
-		int weaponDefensePercent = attacked.getGameStats().getPositiveReverseStat(StatEnum.DAMAGE_REDUCE, damage);
-		int actualBlockedDamage = (int) (damage * weaponDefensePercent * 0.01f);
-		damage -= actualBlockedDamage;
-		return damage;
+		Item shield = player.getEquipment().getEquippedShield();
+		if (shield == null) {
+			return damage;
+		}
+		int damageAfterShieldReduction = player.getGameStats().getPositiveReverseStat(StatEnum.DAMAGE_REDUCE, damage);
+		int blockPenetration = attacker instanceof Player
+				? attacker.getGameStats().getStat(StatEnum.BLOCK_PENETRATION, 0).getCurrent() : 0;
+		int maxBlock = shield.getItemTemplate().getWeaponStats().getReduceMax();
+		return calculateBlockedDamage(damage, true, damageAfterShieldReduction, blockPenetration, maxBlock);
+	}
+
+	static int calculateBlockedDamage(int damage, boolean playerDefender, int damageAfterShieldReduction,
+			int blockPenetration, int maxBlock) {
+		if (!playerDefender) {
+			return Math.max(0, (int) (damage * 0.9f));
+		}
+		float shieldReduction = Math.max(0, damage - damageAfterShieldReduction) / (float) Math.max(1, damage);
+		float reductionRate = Math.max(0, Math.min(1, shieldReduction - blockPenetration / 1000f));
+		int blockedDamage = (int) (damage * reductionRate);
+		if (maxBlock > 0) {
+			blockedDamage = Math.min(blockedDamage, maxBlock);
+		}
+		return Math.max(0, damage - blockedDamage);
+	}
+
+	static int calculateParriedDamage(int damage, boolean playerDefender) {
+		return Math.max(0, (int) (damage * (playerDefender ? 0.6f : 0.9f)));
 	}
 
 	/**
@@ -218,6 +211,8 @@ public class AttackUtil {
 	public static List<AttackResult> calculateMagAttackResult(Creature attacker, Creature attacked, SkillElement elem,
 			CalculationType... calculationTypes) {
 		AttackStatus status = calculateMagicalStatus(attacker, attacked, 100, false, true);
+		calculationTypes = ArrayUtils.addAll(calculationTypes, CalculationType.APPLY_POWER_SHARD_DAMAGE,
+				CalculationType.REMOVE_POWER_SHARD);
 		List<AttackResult> attackList = StatFunctions.calculateAttackDamage(attacker, elem, status, calculationTypes);
 		applyMagicalAutoAttackModifiers(attacker, attacked, elem, attackList);
 		applyAdditionalHitCount(attacker, status, attackList);
@@ -243,14 +238,12 @@ public class AttackUtil {
 				result.setDamage(0);
 				continue;
 			}
-			float damage = result.getExactDamage();
-			float mDef = attacked.getGameStats().getMDef().getBonus() + StatFunctions.getMovementModifier(attacked,
-					StatEnum.MAGICAL_DEFEND, attacked.getGameStats().getMDef().getBase());
-			damage -= mDef * 0.10f;
+			float damage = StatFunctions.applyPveLevelPenalty(attacker, attacked, result.getExactDamage());
+			damage = StatFunctions.applyMagicalDefenseModifiers(attacker, attacked, damage, elem, true);
 			if (result.getAttackStatus().isCritical()) {
-				damage = calculateWeaponCritical(attacked, damage, null, StatEnum.MAGICAL_CRITICAL_DAMAGE_REDUCE);
+				damage = calculateWeaponCritical(attacker, attacked, damage, null, StatEnum.MAGICAL_CRITICAL_DAMAGE_REDUCE);
 			}
-			damage = StatFunctions.adjustDamages(attacker, attacked, damage, 0, true, elem);
+			damage = StatFunctions.adjustDamages(attacker, attacked, damage, 0, true, elem, HitType.MAHIT);
 			result.setDamage(Math.max(1, Math.round(damage)));
 		}
 	}
@@ -352,17 +345,7 @@ public class AttackUtil {
 		WeaponType weaponType;
 		switch (AttackStatus.getBaseStatus(status)) {
 		case BLOCK:
-			int reduce = damage - attacked.getGameStats().getPositiveReverseStat(StatEnum.DAMAGE_REDUCE, damage);
-			if (attacked instanceof Player) {
-				Item shield = ((Player) attacked).getEquipment().getEquippedShield();
-				if (shield != null) {
-					int reduceMax = shield.getItemTemplate().getWeaponStats().getReduceMax();
-					if (reduceMax > 0 && reduceMax < reduce) {
-						reduce = reduceMax;
-					}
-				}
-			}
-			damage -= reduce;
+			damage = calculateBlockedDamage(attacker, attacked, damage);
 			if (damage < 1) {
 				damage = 1;
 			}
@@ -371,7 +354,7 @@ public class AttackUtil {
 			damage = 0;
 			break;
 		case PARRY:
-			damage *= 0.6;
+			damage = calculateParriedDamage(damage, attacked instanceof Player);
 			if (damage < 1) {
 				damage = 1;
 			}
@@ -384,17 +367,19 @@ public class AttackUtil {
 			if (attacker instanceof Player) {
 				weaponType = mainHand ? ((Player) attacker).getEquipment().getMainHandWeaponType()
 						: ((Player) attacker).getEquipment().getOffHandWeaponType();
-				damage = (int) calculateWeaponCritical(attacked, damage, weaponType,
+				damage = (int) calculateWeaponCritical(attacker, attacked, damage, weaponType,
 						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
 				// 暴击时触发绊倒/踉跄计算 / Proc Stumble/Stagger on Crit calculation
 				if (mainHand) {
 					applyEffectOnCritical((Player) attacker, attacked, 0);
 				}
 			} else {
-				damage = (int) calculateWeaponCritical(attacked, damage, null,
+				damage = (int) calculateWeaponCritical(attacker, attacked, damage, null,
 						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
 			}
 		}
+		damage = Math.round(StatFunctions.adjustDamages(attacker, attacked, damage, 0, true,
+				SkillElement.NONE, HitType.PHHIT));
 
 		if (damage == 1 || damage == 2) {
 			attackList.add(new AttackResult(1, status, HitType.PHHIT));
@@ -436,9 +421,9 @@ public class AttackUtil {
 	 * @param stat 暴击减伤属性 / critical damage reduce stat
 	 * @return 暴击后伤害 / damage after critical
 	 */
-	private static float calculateWeaponCritical(Creature attacked, float damages, WeaponType weaponType,
+	private static float calculateWeaponCritical(Creature attacker, Creature attacked, float damages, WeaponType weaponType,
 			StatEnum stat) {
-		return calculateWeaponCritical(attacked, damages, weaponType, 0, stat);
+		return calculateWeaponCritical(attacker, attacked, damages, weaponType, 0, stat);
 	}
 
 	/**
@@ -452,10 +437,11 @@ public class AttackUtil {
 	 * @param stat 暴击减伤属性 / critical damage reduce stat
 	 * @return 暴击后伤害 / damage after critical
 	 */
-	private static float calculateWeaponCritical(Creature attacked, float damages, WeaponType weaponType,
+	private static float calculateWeaponCritical(Creature attacker, Creature attacked, float damages, WeaponType weaponType,
 			int critAddDmg, StatEnum stat) {
 		int fortitude = attacked instanceof Player ? attacked.getGameStats().getStat(stat, 0).getCurrent() : 0;
-		return Math.round(damages * calculateWeaponCriticalMultiplier(weaponType, stat, fortitude, critAddDmg));
+		return Math.round(damages * calculateWeaponCriticalMultiplier(weaponType, stat, fortitude, critAddDmg,
+				attacker instanceof Player));
 	}
 
 	/**
@@ -468,28 +454,42 @@ public class AttackUtil {
 	 * @param critAddDmg 额外暴击伤害 / extra critical damage
 	 * critical multiplier
 	 */
-	static float calculateWeaponCriticalMultiplier(WeaponType weaponType, StatEnum stat, int fortitude, int critAddDmg) {
-		float coefficient = 1.5f;
-		if (stat == StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE && weaponType != null) {
+	static float calculateWeaponCriticalMultiplier(WeaponType weaponType, StatEnum stat, int fortitude, int critAddDmg,
+			boolean playerAttacker) {
+		float coefficient;
+		if (stat == StatEnum.MAGICAL_CRITICAL_DAMAGE_REDUCE) {
+			coefficient = playerAttacker ? 1.5f : 1f;
+		} else if (!playerAttacker) {
+			coefficient = 1.5f;
+		} else if (weaponType == null) {
+			coefficient = 1f;
+		} else {
 			coefficient = switch (weaponType) {
-			case GUN_1H:
-			case DAGGER_1H:
-				yield 2.3f;
-			case SWORD_1H:
-				yield 2.2f;
-			case MACE_1H:
-				yield 2f;
-			case SWORD_2H:
-			case POLEARM_2H:
-				yield 1.8f;
-			case STAFF_2H:
-			case BOW:
-				yield 1.7f;
-			default:
-				yield 1.5f;
+				case DAGGER_1H:
+					yield 2.3f;
+				case SWORD_1H:
+					yield 2.2f;
+				case MACE_1H:
+					yield 2f;
+				case SWORD_2H:
+				case POLEARM_2H:
+					yield 1.8f;
+				case STAFF_2H:
+				case BOW:
+				case GUN_1H:
+				case CANNON_2H:
+					yield 1.7f;
+				case BOOK_2H:
+				case ORB_2H:
+				case HARP_2H:
+					yield 2f;
+				case KEYBLADE_2H:
+					yield 1.5f;
+				default:
+					yield 1f;
 			};
 		}
-		return coefficient - fortitude / 1000f + critAddDmg / 100f;
+		return Math.max(1f, coefficient - fortitude / 1000f + critAddDmg / 100f);
 	}
 
 	/**
@@ -539,27 +539,24 @@ public class AttackUtil {
 			calculationTypes = ArrayUtils.add(calculationTypes, CalculationType.DUAL_WIELD);
 		}
 		AttackStatus status = AttackStatus.NORMALHIT;
-		if (effector.getAttackType() == ItemAttackType.PHYSICAL) {
+		boolean physicalAttackType = effector.getAttackType() == ItemAttackType.PHYSICAL;
+		if (physicalAttackType) {
 			status = calculatePhysicalStatus(effector, effected, true, accMod, criticalProb, true, cannotMiss);
 		} else {
 			status = calculateMagicalStatus(effector, effected, criticalProb, true, effect.getSkillTemplate().isMcritApplied());
 		}
-		if (effector.getAttackType() == ItemAttackType.PHYSICAL) {
-			CalculationType[] baseCalculationTypes = ArrayUtils.add(calculationTypes, CalculationType.APPLY_POWER_SHARD_DAMAGE);
+		CalculationType[] baseCalculationTypes = ArrayUtils.add(calculationTypes, CalculationType.APPLY_POWER_SHARD_DAMAGE);
+		if (physicalAttackType) {
 			baseAttack = effector.getGameStats().getMainHandPAttack(baseCalculationTypes).getBase();
-			CalculationType[] damageCalculationTypes = ArrayUtils.add(baseCalculationTypes, CalculationType.REMOVE_POWER_SHARD);
-			damage = 0;
-			for (AttackResult result : StatFunctions.calculateAttackDamage(effector, SkillElement.NONE, status, damageCalculationTypes)) {
-				damage += result.getExactDamage();
-			}
 		} else {
-			if (isMainHand) {
-				baseAttack = effector.getGameStats().getMainHandMAttack(calculationTypes).getBase();
-			} else {
-				baseAttack = effector.getGameStats().getOffHandMAttack(calculationTypes).getBase();
-			}
-			damage = StatFunctions.calculateMagicalAttackDamage(effector, effected,
-					effector.getAttackType().getMagicalElement(), isMainHand);
+			baseAttack = (isMainHand ? effector.getGameStats().getMainHandMAttack(baseCalculationTypes)
+					: effector.getGameStats().getOffHandMAttack(baseCalculationTypes)).getBase();
+		}
+		CalculationType[] damageCalculationTypes = ArrayUtils.add(baseCalculationTypes, CalculationType.REMOVE_POWER_SHARD);
+		damage = 0;
+		SkillElement attackElement = physicalAttackType ? SkillElement.NONE : effector.getAttackType().getMagicalElement();
+		for (AttackResult result : StatFunctions.calculateAttackDamage(effector, attackElement, status, damageCalculationTypes)) {
+			damage += result.getExactDamage();
 		}
 
 		// 添加技能伤害 / add skill damage
@@ -602,19 +599,8 @@ public class AttackUtil {
 			damage = randomizeDamage(randomDamage, damage);
 		}
 
-		if (status.isCritical()) {
-			if (effector instanceof Player) {
-				WeaponType weaponType = ((Player) effector).getEquipment().getMainHandWeaponType();
-				damage = (int) calculateWeaponCritical(effected, damage, weaponType, critAddDmg,
-						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
-				// 暴击时触发绊倒/踉跄计算 / Proc Stumble/Stagger on Crit calculation
-				applyEffectOnCritical((Player) effector, effected, effect.getSkillId());
-			} else {
-				damage = (int) calculateWeaponCritical(effected, damage, null, critAddDmg,
-						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
-			}
-		}
 		damage = applyDistanceAttenuation(effect, damage);
+		damage = StatFunctions.applyPveLevelPenalty(effector, effected, damage);
 
 		float pDef = effected.getGameStats().getPDef().getBonus() + StatFunctions.getMovementModifier(effected,
 				StatEnum.PHYSICAL_DEFENSE, effected.getGameStats().getPDef().getBase());
@@ -622,13 +608,25 @@ public class AttackUtil {
 
 		switch (AttackStatus.getBaseStatus(status)) {
 		case BLOCK:
-			damage = calculateBlockedDamage(effected, Math.round(damage));
+			damage = calculateBlockedDamage(effector, effected, Math.round(damage));
 			break;
 		case PARRY:
-			damage *= 0.6;
+			damage = calculateParriedDamage(Math.round(damage), effected instanceof Player);
 			break;
 		default:
 			break;
+		}
+
+		if (status.isCritical()) {
+			if (effector instanceof Player) {
+				WeaponType weaponType = ((Player) effector).getEquipment().getMainHandWeaponType();
+				damage = (int) calculateWeaponCritical(effector, effected, damage, weaponType, critAddDmg,
+						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
+				applyEffectOnCritical((Player) effector, effected, effect.getSkillId());
+			} else {
+				damage = (int) calculateWeaponCritical(effector, effected, damage, null, critAddDmg,
+						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
+			}
 		}
 
 		if (effector instanceof Npc) {
@@ -734,10 +732,10 @@ public class AttackUtil {
 		case CRITICAL:
 			if (effector instanceof Player) {
 				WeaponType weaponType = ((Player) effector).getEquipment().getMainHandWeaponType();
-				damage = (int) calculateWeaponCritical(effected, damage, weaponType, critAddDmg,
+				damage = (int) calculateWeaponCritical(effector, effected, damage, weaponType, critAddDmg,
 						StatEnum.MAGICAL_CRITICAL_DAMAGE_REDUCE);
 			} else {
-				damage = (int) calculateWeaponCritical(effected, damage, null, critAddDmg,
+				damage = (int) calculateWeaponCritical(effector, effected, damage, null, critAddDmg,
 						StatEnum.MAGICAL_CRITICAL_DAMAGE_REDUCE);
 			}
 			break;
@@ -746,7 +744,7 @@ public class AttackUtil {
 		}
 
 		damage = Math.round(StatFunctions.adjustDamages(effector, effected, damage,
-				effect.getSkillTemplate().getPvpDamage(), false, element));
+				effect.getSkillTemplate().getPvpDamage(), false, element, HitType.MAHIT));
 
 		damage = StatFunctions.applyDamageMultiplier(damage);
 
@@ -847,10 +845,10 @@ public class AttackUtil {
 		case CRITICAL:
 			if (effector instanceof Player) {
 				WeaponType weaponType = ((Player) effector).getEquipment().getMainHandWeaponType();
-				damage = (int) calculateWeaponCritical(effected, damage, weaponType, critAddDmg,
+				damage = (int) calculateWeaponCritical(effector, effected, damage, weaponType, critAddDmg,
 						StatEnum.MAGICAL_CRITICAL_DAMAGE_REDUCE);
 			} else {
-				damage = (int) calculateWeaponCritical(effected, damage, null, critAddDmg,
+				damage = (int) calculateWeaponCritical(effector, effected, damage, null, critAddDmg,
 						StatEnum.MAGICAL_CRITICAL_DAMAGE_REDUCE);
 			}
 			break;
@@ -867,7 +865,7 @@ public class AttackUtil {
 		}
 
 		damage = (int) StatFunctions.adjustDamages(effector, effected, damage,
-				effect.getSkillTemplate().getPvpDamage(), false, element);
+					effect.getSkillTemplate().getPvpDamage(), false, element, HitType.MAHIT);
 		damage = StatFunctions.applyDamageMultiplier(damage);
 
 		if (effected instanceof Npc) {

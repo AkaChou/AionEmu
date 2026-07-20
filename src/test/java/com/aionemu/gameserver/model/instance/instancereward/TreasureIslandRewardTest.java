@@ -3,22 +3,29 @@ package com.aionemu.gameserver.model.instance.instancereward;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.dataholders.InstanceBuffData;
+import com.aionemu.gameserver.dataholders.RetailInstanceData;
 import com.aionemu.gameserver.model.Race;
 
 class TreasureIslandRewardTest {
+	@BeforeAll
+	static void initializeBuffData() {
+		if (DataManager.RETAIL_INSTANCE_DATA == null) {
+			DataManager.RETAIL_INSTANCE_DATA = RetailInstanceData.load(
+				new File("src/main/resources/aion/definitions/compact/instance"),
+				new File("src/main/resources/aion/definitions/schemas/retail-instance-data.xsd"));
+		}
+	}
 
 	@Test
 	void awardsEachStageOnceInGlobalArrivalOrder() {
-		if (DataManager.INSTANCE_BUFF_DATA == null) {
-			DataManager.INSTANCE_BUFF_DATA = new InstanceBuffData();
-		}
 		TreasureIslandReward reward = new TreasureIslandReward(301700000, 1);
 		int[] expected = { 100, 80, 60, 40, 20, 10 };
 		for (int i = 0; i < expected.length; i++) {
@@ -38,9 +45,6 @@ class TreasureIslandRewardTest {
 
 	@Test
 	void restoresPlayersScoresStagesAndActivity() {
-		if (DataManager.INSTANCE_BUFF_DATA == null) {
-			DataManager.INSTANCE_BUFF_DATA = new InstanceBuffData();
-		}
 		TreasureIslandReward reward = new TreasureIslandReward(301700000, 1);
 		var player = reward.restorePlayer(7, Race.ASMODIANS, 100, 500, 5, 200, 300);
 		reward.restoreStageArrivals(1, 3);

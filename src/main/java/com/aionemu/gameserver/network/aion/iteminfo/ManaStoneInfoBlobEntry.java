@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Set;
 
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.items.IdianStone;
 import com.aionemu.gameserver.model.items.ItemStone;
@@ -84,9 +85,11 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 	 * Writes amplification-related fields.
 	 */
 	private void writeAmplification(ByteBuffer buf) {
-		// 5.8 客户端将未解析的固有物品技能 ID 显示为“(null)”。 / The 5.8 client renders unresolved inherent item skill ids as "(null)".
-		writeC(buf, 0);
-		writeD(buf, 0);
+		Item item = ownerItem;
+		int skillId = item.getAmplificationSkill();
+		boolean hasSkill = item.isAmplified() && DataManager.SKILL_DATA.getSkillTemplate(skillId) != null;
+		writeC(buf, hasSkill ? 1 : 0);
+		writeD(buf, hasSkill ? skillId : 0);
 	}
 
 	/**

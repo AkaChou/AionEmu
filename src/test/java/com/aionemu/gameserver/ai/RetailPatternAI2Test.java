@@ -29,6 +29,7 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.geometry.Point3D;
+import com.aionemu.gameserver.model.instance.InstanceRuntimeState;
 import com.aionemu.gameserver.model.instance.StageType;
 import com.aionemu.gameserver.model.skill.NpcSkillEntry;
 import com.aionemu.gameserver.model.skill.NpcSkillList;
@@ -66,6 +67,39 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RetailPatternAI2Test {
+	@Test
+	void restoresPersistedFlagsAndIntegerVariables() {
+		InstanceRuntimeState state = new InstanceRuntimeState();
+		String prefix = "retail.pattern.ai.entity:77.";
+		Set<String> flags = new java.util.HashSet<>(Set.of("FLAGVARI_ALPHA_1"));
+		Map<String, Integer> variables = new HashMap<>(Map.of("INTVARI_INDEX_1", 4));
+		RetailPatternAI2.persistFlag(state, prefix, "FLAGVARI_ALPHA_1", flags);
+		RetailPatternAI2.persistIntVar(state, prefix, "INTVARI_INDEX_1", variables);
+
+		Set<String> restoredFlags = new java.util.HashSet<>();
+		Map<String, Integer> restoredVariables = new HashMap<>();
+		RetailPatternAI2.restoreLocalState(InstanceRuntimeState.decode(state.encode()), prefix,
+			restoredFlags, restoredVariables);
+
+		assertEquals(flags, restoredFlags);
+		assertEquals(variables, restoredVariables);
+		flags.clear();
+		RetailPatternAI2.persistFlag(state, prefix, "FLAGVARI_ALPHA_1", flags);
+		assertTrue(state.snapshot(prefix + "flag.").isEmpty());
+	}
+
+	@Test
+	void restoresThePreviouslySelectedWakeUpRuleWithoutReevaluatingConditions() {
+		Rule first = flagRule("FLAGVARI_FIRST");
+		Rule selected = flagRule("FLAGVARI_SELECTED");
+		InstanceRuntimeState state = new InstanceRuntimeState();
+		String key = "retail.pattern.ai.entity:77.restore_rule.on_wake_up";
+		state.put(key, 1);
+
+		assertEquals(selected, RetailPatternAI2.restoreRule(List.of(first, selected), state, key));
+		assertNull(RetailPatternAI2.restoreRule(List.of(first), state, key));
+	}
+
 	@Test
 	void retailInstancePatternsUseCompleteConditionVariables() throws Exception {
 		String previousDefinitions = System.getProperty("aion.game.definitions.dir");
@@ -438,14 +472,13 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
-	void acceptsOnlyDirectRetailNpcScores() {
+	void acceptsDocumentedRetailNpcScoreTargetsWithoutEqualizingRules() {
 		assertTrue(RetailPatternAI2.supportsNpcScore(0, 0));
-		assertFalse(RetailPatternAI2.supportsNpcScore(1, 0));
+		assertTrue(RetailPatternAI2.supportsNpcScore(1, 0));
+		assertTrue(RetailPatternAI2.supportsNpcScore(2, 0));
+		assertTrue(RetailPatternAI2.supportsNpcScore(3, 0));
+		assertFalse(RetailPatternAI2.supportsNpcScore(4, 0));
 		assertFalse(RetailPatternAI2.supportsNpcScore(0, 1));
-		assertTrue(RetailPatternAI2.supportsNpcScore(301120000, 232855, 0, 0));
-		assertTrue(RetailPatternAI2.supportsNpcScore(301670000, 833961, 0, 0));
-		assertFalse(RetailPatternAI2.supportsNpcScore(301120000, 833961, 0, 0));
-		assertFalse(RetailPatternAI2.supportsNpcScore(301120000, 232855, 1, 0));
 	}
 
 	@Test
@@ -1103,8 +1136,10 @@ class RetailPatternAI2Test {
 			List.of(new Rule(1, "DIRECT", List.of(), List.of(switchTarget)))))));
 
 		Operation flying = new Operation("is_user_flying", Map.of("user", "USERI_EVENT_MAKER"));
+		Operation userMessage = new Operation("send_system_msg_by_user_indicator", Map.of(
+			"user", "USERI_EVENT_MAKER", "string_id", "STR_QUEST_SAY_IDCromede_004"));
 		assertTrue(RetailPatternAI2.supports(new Pattern("sensory_user", Map.of("on_user_enter_sensory_area",
-			List.of(new Rule(1, "INSTANT", List.of(flying), List.of(new Operation("do_nothing", Map.of()))))))));
+			List.of(new Rule(1, "INSTANT", List.of(flying), List.of(userMessage)))))));
 
 		Operation casterSkill = new Operation("use_skill", Map.of(
 			"target", "OBJI_CASTER", "skill", "SKILLI_INDEX_0", "skill_level", "0"));
@@ -1765,6 +1800,12 @@ class RetailPatternAI2Test {
 
 		assertTrue(RetailPatternAI2.supports(new Pattern("attackable_status_test", Map.of("on_wake_up",
 			List.of(new Rule(1, "DIRECT", List.of(), List.of(action)))))));
+		assertTrue(RetailPatternAI2.canReplayDuringRestore(action));
+		assertTrue(RetailPatternAI2.canReplayDuringRestore(
+			new Operation("control_door", Map.of("id", "1", "method", "1"))));
+		assertFalse(RetailPatternAI2.canReplayDuringRestore(new Operation("spawn", Map.of())));
+		assertFalse(RetailPatternAI2.canReplayDuringRestore(
+			new Operation("set_condition_spawn_variable", Map.of())));
 	}
 
 	@Test

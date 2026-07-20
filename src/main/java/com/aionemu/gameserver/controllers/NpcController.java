@@ -21,6 +21,7 @@ import java.util.concurrent.Future;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
+import com.aionemu.gameserver.ai.RetailPatternAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -82,6 +83,12 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 @Slf4j
 
 public class NpcController extends CreatureController<Npc> {
+
+	@Override
+	public void onDelete() {
+		RetailPatternAI2.onDynamicSpawnRemoved(getOwner());
+		super.onDelete();
+	}
 
 	/**
 	 * 对象离开 NPC 视野时回调。
@@ -238,6 +245,7 @@ public class NpcController extends CreatureController<Npc> {
 	@Override
 	public void onDie(Creature lastAttacker) {
 		Npc owner = getOwner();
+		RetailPatternAI2.onDynamicSpawnRemoved(owner);
 		
 		owner.unsetState(CreatureState.ACTIVE);
 		owner.unsetState(CreatureState.FLYING);

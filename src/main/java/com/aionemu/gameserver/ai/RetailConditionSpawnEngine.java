@@ -326,6 +326,7 @@ public final class RetailConditionSpawnEngine {
 		}
 		SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(instance.getMapId(), npc.id(), npc.x(), npc.y(),
 			npc.z(), MathUtil.convertDegreeToHeading(npc.heading()));
+		template.setStableKey(spawnKey);
 		template.setWalkerId(npc.walkerId());
 		template.setNpcPartyId(partyId);
 		VisibleObject object = SpawnEngine.spawnObject(template, instance.getInstanceId());
@@ -465,7 +466,7 @@ public final class RetailConditionSpawnEngine {
 			skipWhitespace();
 			if (consume("(")) {
 				int value = or();
-				if (!consume(")")) {
+				if (!consume(")") && position != source.length()) {
 					throw new IllegalArgumentException("Unclosed retail condition: " + source);
 				}
 				return value;
@@ -477,7 +478,9 @@ public final class RetailConditionSpawnEngine {
 			while (position < source.length() && Character.isDigit(source.charAt(position))) {
 				position++;
 			}
-			if (position > start && !(position == start + 1 && source.charAt(start) == '-')) {
+			if (position > start && !(position == start + 1 && source.charAt(start) == '-')
+					&& (position == source.length()
+						|| (!Character.isLetter(source.charAt(position)) && source.charAt(position) != '_'))) {
 				return Integer.parseInt(source.substring(start, position));
 			}
 			position = start;

@@ -235,11 +235,11 @@ public final class RetailMatchmakingService extends AutoGroupService {
 	@Override
 	public synchronized void onPlayerLogin(Player player) {
 		for (MatchDefinition definition : MatchDefinition.all()) {
-			if (!definition.isTournament() && definition.hasHudRegister() && definition.isOpen()
-					&& definition.hasLevelPermit(player.getLevel())
-					&& InstanceLimitService.status(player, definition.getInstanceMapId()).allowed()) {
-				PacketSendUtility.sendPacket(player,
-						new SM_AUTO_GROUP(definition.getInstanceMaskId(), SM_AUTO_GROUP.wnd_EntryIcon));
+			if (!definition.isTournament() && definition.hasHudRegister()) {
+				boolean close = !definition.isOpen() || !definition.hasLevelPermit(player.getLevel())
+						|| !InstanceLimitService.status(player, definition.getInstanceMapId()).allowed();
+				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(definition.getInstanceMaskId(),
+						SM_AUTO_GROUP.wnd_EntryIcon, close));
 			}
 		}
 		for (Map.Entry<PlayerMatch, Registration> entry : registrations.entrySet()) {

@@ -105,18 +105,27 @@ class RetailAiDefinitionLoaderTest {
 			}
 		}
 
-		assertEquals(12797, data.patternCount());
+		assertEquals(12798, data.patternCount());
 		assertEquals(87721, data.npcCount());
-		assertEquals(3491, data.stringCount());
-		assertEquals(134, data.areaCount());
+		assertEquals(3492, data.stringCount());
+		assertEquals(135, data.areaCount());
 		assertEquals(18, data.resurrectAreaCount());
 		assertEquals(231, data.questAreaCount());
 		assertEquals(1, data.limitAreaCount());
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(5770, data.conditionSpawnCount());
+		assertEquals(6000, data.conditionSpawnCount());
 		assertEquals(40, data.sensoryAreaCount());
+		var bossDoorPattern = data.getPattern(206163);
+		assertNotNull(bossDoorPattern);
+		assertTrue(RetailPatternAI2.supports(bossDoorPattern));
+		assertEquals("send_system_msg_by_user_indicator",
+			bossDoorPattern.event("on_user_enter_sensory_area").getFirst().actions().getFirst().type());
+		assertEquals(1111370, data.findStringId("STR_QUEST_SAY_IDCromede_004"));
+		var bossDoorArea = data.findArea(300230000, "IDCromede_SensoryArea_BossDoor");
+		assertNotNull(bossDoorArea);
+		assertTrue(bossDoorArea.isInside3D(566.783936f, 762.207581f, 219.712234f));
 		var sensoryArea = data.findSensoryArea(301550000, 220582, 980.914185f, 774.380676f, 1046.33447f);
 		assertNotNull(sensoryArea);
 		assertTrue(sensoryArea.isInside3D(980, 774, 1046));
@@ -150,7 +159,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(11, userPortal.groupId());
 		assertEquals(5, userPortal.invadeType());
 		assertEquals(288, data.dynamicAreaCount());
-		assertEquals(12654, java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
+		assertEquals(12655, java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(RetailPatternAI2::supports).count());
 		for (int npcId : new int[] { 251812, 251813, 251814, 257300, 257305, 257310, 855729 }) {
 			assertTrue(RetailPatternAI2.supports(data.getPattern(npcId)), data.getPattern(npcId).name());

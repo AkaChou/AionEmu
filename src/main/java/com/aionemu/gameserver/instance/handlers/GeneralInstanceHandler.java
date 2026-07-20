@@ -348,12 +348,12 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	}
 
 	@Override
-	public boolean supportsRetailNpcScore(int npcId) {
+	public boolean supportsRetailNpcScore(int npcId, int scoreApplyType) {
 		return false;
 	}
 
 	@Override
-	public boolean onRetailNpcScore(Player player, Npc npc, int points) {
+	public boolean onRetailNpcScore(Player player, Npc npc, int scoreApplyType, int points) {
 		return false;
 	}
 }

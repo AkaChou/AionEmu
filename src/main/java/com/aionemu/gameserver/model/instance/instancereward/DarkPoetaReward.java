@@ -16,6 +16,13 @@ public class DarkPoetaReward extends InstanceReward {
 		super(mapId, instanceId);
 	}
 
+	public void restore(int points, int npcKills, int gatherCollections, int rank) {
+		this.points = points;
+		this.npcKills = npcKills;
+		this.gatherCollections = gatherCollections;
+		this.rank = rank;
+	}
+
 	/** 添加点。 / Adds points. */
 	public void addPoints(int points) {
 		this.points += points;

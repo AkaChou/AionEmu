@@ -2,7 +2,6 @@ package com.aionemu.gameserver.utils.stats;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,6 @@ import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.controllers.attack.AttackResult;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.controllers.observer.AttackerCriticalStatus;
-import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.SkillElement;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -32,7 +30,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
-import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.model.stats.calc.AdditionStat;
 import com.aionemu.gameserver.model.stats.calc.StatCapUtil;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
@@ -707,19 +704,13 @@ public class StatFunctions {
 				magicBoost -= tgs.getMBResist().getCurrent();
 			}
 			int knowledge = useKnowledge ? sgs.getKnowledge().getCurrent() : 100;
-			damages *= (1 + capMagicBoostForDamage(magicBoost) / (knowledge * 10f));
+			damages *= calculateMagicalSkillDamageFactor(magicBoost, knowledge);
 			damages = sgs.getStat(StatEnum.BOOST_SPELL_ATTACK, (int) damages).getCurrent();
 		}
 		damages += bonus;
-		if (!noReduce && element != SkillElement.NONE) {
-			float elementalDef = getMovementModifier(target, SkillElement.getResistanceForElement(element),
-					tgs.getMagicalDefenseFor(element));
-			damages *= (1 - elementalDef / getElementalDefenseDenominator(speller, target));
-			if (useMagicalDefense) {
-				float mDef = target.getGameStats().getMDef().getBonus()
-						+ getMovementModifier(target, StatEnum.MAGICAL_DEFEND, target.getGameStats().getMDef().getBase());
-				damages -= mDef * 0.10f;
-			}
+		if (!noReduce) {
+			damages = applyPveLevelPenalty(speller, target, damages);
+			damages = applyMagicalDefenseModifiers(speller, target, damages, element, useMagicalDefense);
 		}
 		if (damages < 0) {
 			damages = 0;
@@ -735,6 +726,32 @@ public class StatFunctions {
 			return 0;
 		}
 		return Math.min(magicBoost, SkillConfig.MAGICBOOST_CAP);
+	}
+
+	static float calculateMagicalSkillDamageFactor(int magicBoost, int knowledge) {
+		return knowledge / 100f + capMagicBoostForDamage(magicBoost) / 1000f;
+	}
+
+	public static float applyMagicalDefenseModifiers(Creature attacker, Creature target, float damage,
+			SkillElement element, boolean useMagicalDefense) {
+		float magicalDefense = 0;
+		if (useMagicalDefense) {
+			magicalDefense = target.getGameStats().getMDef().getBonus()
+					+ getMovementModifier(target, StatEnum.MAGICAL_DEFEND, target.getGameStats().getMDef().getBase());
+		}
+		float elementalDefense = 0;
+		if (element != SkillElement.NONE) {
+			elementalDefense = getMovementModifier(target, SkillElement.getResistanceForElement(element),
+					target.getGameStats().getMagicalDefenseFor(element));
+		}
+		return applyMagicalDefenseModifiers(damage, magicalDefense, elementalDefense,
+				getElementalDefenseDenominator(attacker, target));
+	}
+
+	static float applyMagicalDefenseModifiers(float damage, float magicalDefense, float elementalDefense,
+			float elementalDefenseDenominator) {
+		damage -= magicalDefense * 0.1f;
+		return damage * (1 - elementalDefense / elementalDefenseDenominator);
 	}
 
 	/**
@@ -875,7 +892,7 @@ public class StatFunctions {
 	 */
 	public static float adjustDamages(Creature attacker, Creature target, float damages, int pvpDamage,
 			boolean useMovement) {
-		return adjustDamages(attacker, target, damages, pvpDamage, useMovement, SkillElement.NONE);
+		return adjustDamages(attacker, target, damages, pvpDamage, useMovement, SkillElement.NONE, HitType.PHHIT);
 	}
 
 	/**
@@ -895,97 +912,89 @@ public class StatFunctions {
 		if (element == null) {
 			element = SkillElement.NONE;
 		}
+		HitType hitType = element == SkillElement.NONE ? HitType.PHHIT : HitType.MAHIT;
+		return adjustDamages(attacker, target, damages, pvpDamage, useMovement, element, hitType);
+	}
+
+	public static float adjustDamages(Creature attacker, Creature target, float damages, int pvpDamage,
+			boolean useMovement, SkillElement element, HitType hitType) {
+		if (element == null) {
+			element = SkillElement.NONE;
+		}
 		if (attacker instanceof Npc && ((Npc) attacker).getAbyssNpcType() == AbyssNpcType.ARTIFACT) {
 			return damages;
 		}
 
 		if (attacker.isPvpTarget(target)) {
-			if (pvpDamage > 0) {
-				damages *= pvpDamage * 0.01;
-			}
-			damages *= 0.42f;
-			int pvpAttackBonus = attacker.getGameStats().getStat(StatEnum.PVP_ATTACK_RATIO, 0).getCurrent();
-			int pvpDefenceBonus = target.getGameStats().getStat(StatEnum.PVP_DEFEND_RATIO, 0).getCurrent();
-			switch (element) {
-			case NONE:
-				pvpAttackBonus += attacker.getGameStats().getStat(StatEnum.PVP_ATTACK_RATIO_PHYSICAL, 0).getCurrent();
-				pvpDefenceBonus += target.getGameStats().getStat(StatEnum.PVP_DEFEND_RATIO_PHYSICAL, 0).getCurrent();
-				break;
-			case FIRE:
-			case WATER:
-			case WIND:
-			case EARTH:
-			case LIGHT:
-			case DARK:
-				pvpAttackBonus += attacker.getGameStats().getStat(StatEnum.PVP_ATTACK_RATIO_MAGICAL, 0).getCurrent();
-				pvpDefenceBonus += target.getGameStats().getStat(StatEnum.PVP_DEFEND_RATIO_MAGICAL, 0).getCurrent();
-				break;
-			default:
-				break;
-			}
-			if (attacker.getRace() != target.getRace() && !attacker.isInInstance()) {
-				pvpAttackBonus += Math.round(GameRuntimeServices.influence().getPvpRaceBonus(attacker.getRace()) * 1000 - 1000);
-			}
-			pvpAttackBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVP, RatioType.ATTACK, pvpAttackBonus);
-			pvpDefenceBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVP, RatioType.DEFENSE, pvpDefenceBonus);
-			damages *= Math.max(0.1f, 1f + (pvpAttackBonus - pvpDefenceBonus) / 1000f);
+			boolean magical = hitType == HitType.MAHIT;
+			int pvpAttackBonus = getPvpRatio(attacker, StatEnum.PVP_ATTACK_RATIO,
+					magical ? StatEnum.PVP_ATTACK_RATIO_MAGICAL : StatEnum.PVP_ATTACK_RATIO_PHYSICAL);
+			int pvpDefenceBonus = getPvpRatio(target, StatEnum.PVP_DEFEND_RATIO,
+					magical ? StatEnum.PVP_DEFEND_RATIO_MAGICAL : StatEnum.PVP_DEFEND_RATIO_PHYSICAL);
+			damages = applyPvpDamageModifiers(damages, pvpDamage, pvpAttackBonus, pvpDefenceBonus);
 		} else {
-			if (attacker instanceof Player && target instanceof Npc) {
-				int levelDiff = target.getLevel() - attacker.getLevel();
-				damages *= 1f - getNpcLevelDiffMod(levelDiff, 0);
-			}
 			int pveAttackBonus = attacker.getGameStats().getStat(StatEnum.PVE_ATTACK_RATIO, 0).getCurrent();
 			int pveDefenceBonus = target.getGameStats().getStat(StatEnum.PVE_DEFEND_RATIO, 0).getCurrent();
 			StatEnum targetRaceAttackRatio = getPveAttackRatioStat(target.getRace());
 			if (targetRaceAttackRatio != null) {
 				pveAttackBonus += attacker.getGameStats().getStat(targetRaceAttackRatio, 0).getCurrent();
 			}
-			switch (element) {
-			case NONE:
+			switch (hitType) {
+			case PHHIT:
 				pveAttackBonus += attacker.getGameStats().getStat(StatEnum.PVE_ATTACK_RATIO_PHYSICAL, 0).getCurrent();
 				pveDefenceBonus += target.getGameStats().getStat(StatEnum.PVE_DEFEND_RATIO_PHYSICAL, 0).getCurrent();
 				break;
-			case FIRE:
-			case WATER:
-			case WIND:
-			case EARTH:
-			case LIGHT:
-			case DARK:
+			case MAHIT:
 				pveAttackBonus += attacker.getGameStats().getStat(StatEnum.PVE_ATTACK_RATIO_MAGICAL, 0).getCurrent();
 				pveDefenceBonus += target.getGameStats().getStat(StatEnum.PVE_DEFEND_RATIO_MAGICAL, 0).getCurrent();
 				break;
 				default:
 					break;
 				}
-			pveAttackBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVE, RatioType.ATTACK, pveAttackBonus);
-			pveDefenceBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVE, RatioType.DEFENSE, pveDefenceBonus);
-			damages *= Math.max(0.1f, 1f + (pveAttackBonus - pveDefenceBonus) / 1000f);
+			damages = applyPveDamageModifiers(damages, pveAttackBonus, pveDefenceBonus);
 		}
 		if (useMovement) {
 			damages = movementDamageBonus(attacker, damages);
 		}
-		if (attacker instanceof Player) {
-			PlayerClass playerClass = ((Player) attacker).getPlayerClass();
-			if (playerClass != null) {
-				switch (playerClass) {
-				case AETHERTECH:
-					damages *= 0.8f;
-					break;
-				case GUNSLINGER:
-					damages *= 0.7f;
-					break;
-				case SONGWEAVER:
-					damages *= 0.7f;
-					break;
-				case SORCERER:
-					damages *= 0.7f;
-					break;
-				default:
-					damages *= 1f;
-				}
-			}
-		}
 		return damages;
+	}
+
+	static int getPvpRatio(Creature creature, StatEnum generalStat, StatEnum typedStat) {
+		Integer absoluteValue = creature.getGameStats().getSetStatValue(typedStat);
+		if (absoluteValue != null) {
+			return absoluteValue;
+		}
+		return creature.getGameStats().getStat(generalStat, 0).getCurrent()
+				+ creature.getGameStats().getStat(typedStat, 0).getCurrent();
+	}
+
+	static float applyPvpDamageModifiers(float damage, int pvpDamage, int attackBonus, int defenceBonus) {
+		if (pvpDamage > 0) {
+			damage *= pvpDamage * 0.01f;
+		}
+		attackBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVP, RatioType.ATTACK, attackBonus);
+		defenceBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVP, RatioType.DEFENSE, defenceBonus);
+		float ratio = 1f + (attackBonus - defenceBonus) / 1000f;
+		return damage * 0.42f * Math.max(0.1f, Math.min(1.5f, ratio));
+	}
+
+	static float applyPveDamageModifiers(float damage, int attackBonus, int defenceBonus) {
+		attackBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVE, RatioType.ATTACK, attackBonus);
+		defenceBonus = StatCapUtil.limitValueForPvpOrPveStat(CombatMode.PVE, RatioType.DEFENSE, defenceBonus);
+		float ratio = 1f + attackBonus / 1000f - defenceBonus / 1000f;
+		return damage * Math.max(0.1f, Math.min(12f, ratio));
+	}
+
+	public static float applyPveLevelPenalty(Creature attacker, Creature target, float damage) {
+		if (attacker.isPvpTarget(target) || !(attacker instanceof Player player) || !(target instanceof Npc)) {
+			return damage;
+		}
+		return damage * getNpcDamageFactor(target.getLevel() - attacker.getLevel(), player.isArchDaeva());
+	}
+
+	static float getNpcDamageFactor(int levelDiff, boolean archDaeva) {
+		int graceLevels = archDaeva ? 3 : 2;
+		return Math.max(0, 1f - Math.max(0, levelDiff - graceLevels) * 0.1f);
 	}
 
 	static StatEnum getPveAttackRatioStat(Race race) {

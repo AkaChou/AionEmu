@@ -2,17 +2,21 @@ package com.aionemu.gameserver.model.instance.playerreward;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.File;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.dataholders.InstanceBuffData;
+import com.aionemu.gameserver.dataholders.RetailInstanceData;
 
 class PvPArenaPlayerRewardTest {
 	@BeforeAll
 	static void initializeBuffData() {
-		if (DataManager.INSTANCE_BUFF_DATA == null) {
-			DataManager.INSTANCE_BUFF_DATA = new InstanceBuffData();
+		if (DataManager.RETAIL_INSTANCE_DATA == null) {
+			DataManager.RETAIL_INSTANCE_DATA = RetailInstanceData.load(
+				new File("src/main/resources/aion/definitions/compact/instance"),
+				new File("src/main/resources/aion/definitions/schemas/retail-instance-data.xsd"));
 		}
 	}
 

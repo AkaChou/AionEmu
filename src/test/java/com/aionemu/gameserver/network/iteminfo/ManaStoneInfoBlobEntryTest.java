@@ -5,11 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemBlobEntry;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
+import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import org.junit.jupiter.api.Test;
 
 class ManaStoneInfoBlobEntryTest {
@@ -57,18 +60,47 @@ class ManaStoneInfoBlobEntryTest {
 	}
 
 	@Test
-	void suppressesInherentSkillDisplayEvenWhenAmplificationSkillIsPresent() {
+	void writesInherentSkillDisplayWhenSkillTemplateExists() {
+		SkillData previousSkillData = DataManager.SKILL_DATA;
+		try {
+			DataManager.SKILL_DATA = new SkillData();
+			DataManager.SKILL_DATA.getSkillData().put(12345, new SkillTemplate());
+			ItemBlobEntry entry = amplificationEntry(12345);
+			ByteBuffer buffer = ByteBuffer.allocate(entry.getSize()).order(ByteOrder.LITTLE_ENDIAN);
+
+			entry.writeThisBlob(buffer);
+
+			assertEquals(entry.getSize(), buffer.position());
+			assertEquals(1, buffer.get(AMPLIFICATION_FLAG_OFFSET));
+			assertEquals(12345, buffer.getInt(AMPLIFICATION_SKILL_ID_OFFSET));
+		} finally {
+			DataManager.SKILL_DATA = previousSkillData;
+		}
+	}
+
+	@Test
+	void suppressesInherentSkillDisplayWhenSkillTemplateIsMissing() {
+		SkillData previousSkillData = DataManager.SKILL_DATA;
+		try {
+			DataManager.SKILL_DATA = new SkillData();
+			ItemBlobEntry entry = amplificationEntry(12345);
+			ByteBuffer buffer = ByteBuffer.allocate(entry.getSize()).order(ByteOrder.LITTLE_ENDIAN);
+
+			entry.writeThisBlob(buffer);
+
+			assertEquals(entry.getSize(), buffer.position());
+			assertEquals(0, buffer.get(AMPLIFICATION_FLAG_OFFSET));
+			assertEquals(0, buffer.getInt(AMPLIFICATION_SKILL_ID_OFFSET));
+		} finally {
+			DataManager.SKILL_DATA = previousSkillData;
+		}
+	}
+
+	private ItemBlobEntry amplificationEntry(int skillId) {
 		Item item = new TestItem(1, new TestItemTemplate(114101846));
 		item.setAmplification(true);
-		item.setAmplificationSkill(12345);
-		ItemBlobEntry entry = ItemInfoBlob.newBlobEntry(ItemBlobType.MANA_SOCKETS, null, item);
-		ByteBuffer buffer = ByteBuffer.allocate(entry.getSize()).order(ByteOrder.LITTLE_ENDIAN);
-
-		entry.writeThisBlob(buffer);
-
-		assertEquals(entry.getSize(), buffer.position());
-		assertEquals(0, buffer.get(AMPLIFICATION_FLAG_OFFSET));
-		assertEquals(0, buffer.getInt(AMPLIFICATION_SKILL_ID_OFFSET));
+		item.setAmplificationSkill(skillId);
+		return ItemInfoBlob.newBlobEntry(ItemBlobType.MANA_SOCKETS, null, item);
 	}
 
 	private static final class TestItemTemplate extends ItemTemplate {

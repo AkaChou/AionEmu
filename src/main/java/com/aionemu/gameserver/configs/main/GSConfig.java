@@ -14,7 +14,7 @@ public class GSConfig {
 	 * 服务器国家代码。99 = 按系统 Locale 自动适配。
 	 * Server country code. 99 = auto-detect from system Locale.
 	 */
-	@Property(key = "gameserver.country.code", defaultValue = "99")
+	@Property(key = "gameserver.country.code", defaultValue = "5")
 	public static int SERVER_COUNTRY_CODE;
 
 	/**

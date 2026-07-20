@@ -77,7 +77,6 @@ public final class TeamEffectUpdater extends AbstractIterativePeriodicTaskManage
 		if (player.isOnline()) {
 			if (player.isInGroup2()) {
 				PlayerGroupService.updateGroup(player, GroupEvent.UPDATE);
-				PlayerGroupService.updateGroup(player, GroupEvent.UNK_53);
 			}
 			if (player.isInAlliance2()) {
 				PlayerAllianceService.updateAlliance(player, PlayerAllianceEvent.UPDATE);

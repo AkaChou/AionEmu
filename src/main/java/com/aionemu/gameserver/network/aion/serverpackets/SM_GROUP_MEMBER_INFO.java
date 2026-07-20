@@ -88,7 +88,7 @@ public class SM_GROUP_MEMBER_INFO extends AionServerPacket {
 			writeS(pcd.getName());
 			writeD(0x00);
 			writeD(0x00);
-			writeC(0x02);// unk 5.5
+			writeC(0x7F); // all effect slots
 			List<Effect> abnormalEffects1 = this.player.getEffectController().getAbnormalEffects();
 			writeH(abnormalEffects1.size());
 			for (Effect effect : abnormalEffects1) {
@@ -104,7 +104,7 @@ public class SM_GROUP_MEMBER_INFO extends AionServerPacket {
 		case UNK_53:
 			writeD(0x00);
 			writeD(0x00);
-			writeC(0x02);// unk 5.5
+			writeC(0x7F); // all effect slots
 			List<Effect> abnormalEffects2 = this.player.getEffectController().getAbnormalEffects();
 			writeH(abnormalEffects2.size());
 			for (Effect effect : abnormalEffects2) {
@@ -121,7 +121,7 @@ public class SM_GROUP_MEMBER_INFO extends AionServerPacket {
 			writeS(pcd.getName());
 			writeD(0x00);
 			writeD(0x00);
-			writeC(0x02);// unk 5.5
+			writeC(0x7F); // all effect slots
 			List<Effect> abnormalEffects = player.getEffectController().getAbnormalEffects();
 			writeH(abnormalEffects.size());
 			for (Effect effect : abnormalEffects) {

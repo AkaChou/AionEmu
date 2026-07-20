@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<retail_instance_bonus_attributes version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/retail-instance-data.xsd">
+  <buff id="1" name="INSTANCE_BUFF_01">
+    <attribute stat="PHYSICAL_ACCURACY" func="ADD" value="1100" />
+    <attribute stat="MAGICAL_ACCURACY" func="ADD" value="800" />
+    <attribute stat="PVP_ATTACK_RATIO" func="ADD" value="500" />
+    <attribute stat="PVP_DEFEND_RATIO" func="ADD" value="350" />
+    <attribute stat="SPEED" func="PERCENT" value="70" />
+  </buff>
+  <buff id="2" name="INSTANCE_BUFF_10">
+    <attribute stat="PHYSICAL_ATTACK" func="ADD" value="15" />
+    <attribute stat="BOOST_MAGICAL_SKILL" func="ADD" value="95" />
+    <attribute stat="MAXHP" func="ADD" value="440" />
+    <attribute stat="HEAL_SKILL_BOOST" func="ADD" value="30" />
+  </buff>
+  <buff id="3" name="INSTANCE_BUFF_20">
+    <attribute stat="PHYSICAL_ATTACK" func="ADD" value="20" />
+    <attribute stat="BOOST_MAGICAL_SKILL" func="ADD" value="105" />
+    <attribute stat="MAXHP" func="ADD" value="520" />
+    <attribute stat="HEAL_SKILL_BOOST" func="ADD" value="30" />
+  </buff>
+  <buff id="4" name="INSTANCE_BUFF_30">
+    <attribute stat="PHYSICAL_ATTACK" func="ADD" value="20" />
+    <attribute stat="BOOST_MAGICAL_SKILL" func="ADD" value="115" />
+    <attribute stat="MAXHP" func="ADD" value="600" />
+    <attribute stat="HEAL_SKILL_BOOST" func="ADD" value="30" />
+  </buff>
+  <buff id="5" name="INSTANCE_BUFF_40">
+    <attribute stat="PHYSICAL_ATTACK" func="ADD" value="25" />
+    <attribute stat="BOOST_MAGICAL_SKILL" func="ADD" value="125" />
+    <attribute stat="MAXHP" func="ADD" value="680" />
+    <attribute stat="HEAL_SKILL_BOOST" func="ADD" value="50" />
+  </buff>
+  <buff id="6" name="INSTANCE_BUFF_50">
+    <attribute stat="PHYSICAL_ATTACK" func="ADD" value="25" />
+    <attribute stat="BOOST_MAGICAL_SKILL" func="ADD" value="125" />
+    <attribute stat="MAXHP" func="ADD" value="680" />
+    <attribute stat="HEAL_SKILL_BOOST" func="ADD" value="50" />
+  </buff>
+  <buff id="7" name="ARENA_PVP_BUFF_01">
+    <attribute stat="PVP_DEFEND_RATIO" func="ADD" value="9999" />
+    <attribute stat="SPEED" func="PERCENT" value="50" />
+    <attribute stat="MAGICAL_RESIST" func="ADD" value="9999" />
+    <attribute stat="ABNORMAL_RESISTANCE_ALL" func="ADD" value="9999" />
+  </buff>
+  <buff id="8" name="ARENA_PVP_BUFF_02">
+    <attribute stat="PVP_DEFEND_RATIO" func="ADD" value="9999" />
+    <attribute stat="SPEED" func="PERCENT" value="50" />
+    <attribute stat="MAGICAL_RESIST" func="ADD" value="9999" />
+    <attribute stat="ABNORMAL_RESISTANCE_ALL" func="ADD" value="9999" />
+  </buff>
+  <buff id="9" name="ARENA_PVP_BUFF_03">
+    <attribute stat="PVP_DEFEND_RATIO" func="ADD" value="100" />
+    <attribute stat="PVP_ATTACK_RATIO" func="ADD" value="100" />
+  </buff>
+  <buff id="10" name="IDKamar_BUFF_01">
+    <attribute stat="PVP_DEFEND_RATIO" func="ADD" value="1000" />
+    <attribute stat="SPEED" func="PERCENT" value="50" />
+    <attribute stat="MAGICAL_RESIST" func="ADD" value="9999" />
+    <attribute stat="ABNORMAL_RESISTANCE_ALL" func="ADD" value="1000" />
+  </buff>
+  <buff id="11" name="IDLDF5_Under_01_War_BUFF_01">
+    <attribute stat="PVP_DEFEND_RATIO" func="ADD" value="1000" />
+    <attribute stat="SPEED" func="PERCENT" value="50" />
+    <attribute stat="MAGICAL_RESIST" func="ADD" value="9999" />
+    <attribute stat="ABNORMAL_RESISTANCE_ALL" func="ADD" value="1000" />
+  </buff>
+  <buff id="12" name="IDF5_TD_War_BUFF_01">
+    <attribute stat="PVP_DEFEND_RATIO" func="ADD" value="1000" />
+    <attribute stat="SPEED" func="PERCENT" value="50" />
+    <attribute stat="MAGICAL_RESIST" func="ADD" value="9999" />
+    <attribute stat="ABNORMAL_RESISTANCE_ALL" func="ADD" value="1000" />
+  </buff>
+  <buff id="13" name="IDLDF5_Under_01_War_arFear_01">
+    <attribute stat="FEAR_RESISTANCE" func="ADD" value="200" />
+  </buff>
+  <buff id="14" name="PCBANG_BUFF_01">
+    <attribute stat="PHYSICAL_ATTACK" func="ADD" value="25" />
+    <attribute stat="BOOST_MAGICAL_SKILL" func="ADD" value="125" />
+    <attribute stat="MAXHP" func="ADD" value="1000" />
+    <attribute stat="HEAL_SKILL_BOOST" func="ADD" value="50" />
+  </buff>
+  <buff id="15" name="IDLDF5_Fortress_Re_BUFF_01">
+    <attribute stat="PVP_DEFEND_RATIO" func="ADD" value="300" />
+    <attribute stat="PVP_ATTACK_RATIO" func="ADD" value="300" />
+  </buff>
+  <buff id="16" name="IDLDF5_Fortress_Re_BUFF_02">
+    <attribute stat="PHYSICAL_DEFENSE" func="PERCENT" value="10" />
+  </buff>
+  <buff id="17" name="IDEternity_War_HP_BUFF">
+    <attribute stat="MAXHP" func="ADD" value="10000" />
+  </buff>
+  <buff id="18" name="IDEternity_War_HP_BUFF_SP">
+    <attribute stat="MAXHP" func="ADD" value="5000" />
+  </buff>
+</retail_instance_bonus_attributes>

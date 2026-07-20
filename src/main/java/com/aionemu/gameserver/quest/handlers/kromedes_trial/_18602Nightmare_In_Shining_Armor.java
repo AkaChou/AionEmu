@@ -7,11 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.services.instance.InstanceService;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.model.TeleportAnimation;
+import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
  * 克罗米德试炼任务脚本：Nightmare In Shining Armor（任务 ID 18602）。
@@ -22,8 +21,7 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 public class _18602Nightmare_In_Shining_Armor extends QuestHandler {
 
 	private final static int questId = 18602;
-	private final static int[] kaliga = {217005, 217006};
-	private final static int[] npc_ids = {205229, 700939};
+	private final static int[] npc_ids = {205229, 730308, 700939};
 	
 	public _18602Nightmare_In_Shining_Armor() {
 		super(questId);
@@ -34,12 +32,10 @@ public class _18602Nightmare_In_Shining_Armor extends QuestHandler {
 		qe.registerOnDie(questId);
 		qe.registerOnEnterWorld(questId);
 		qe.registerOnMovieEndQuest(454, questId);
-		for (int npc_id: npc_ids) {
-		    qe.registerQuestNpc(npc_id).addOnTalkEvent(questId);
-		    qe.registerQuestNpc(205229).addOnQuestStart(questId);
-		} for (int mob: kaliga) {
-			qe.registerQuestNpc(mob).addOnKillEvent(questId);
-		}
+		for (int npc_id : npc_ids)
+			qe.registerQuestNpc(npc_id).addOnTalkEvent(questId);
+		qe.registerQuestNpc(205229).addOnQuestStart(questId);
+		qe.registerQuestNpc(217005).addOnKillEvent(questId);
 	}
 	
 	@Override
@@ -81,11 +77,9 @@ public class _18602Nightmare_In_Shining_Armor extends QuestHandler {
 		int targetId = 0;
 		if (env.getVisibleObject() instanceof Npc)
 			targetId = ((Npc) env.getVisibleObject()).getNpcId();
-		switch (targetId) {
-			case 217005: //Shadow Judge Kaliga.
-				return defaultOnKillEvent(env, targetId, 3, true);
-			case 217006: //Kaliga The Unjust.
-				return defaultOnKillEvent(env, targetId, 3, true);
+		if (targetId == 217005 && qs.getQuestVarById(0) == 3) {
+			playQuestMovie(env, 455);
+			return defaultOnKillEvent(env, targetId, 3, true);
 		}
 		return false;
 	}
@@ -96,9 +90,10 @@ public class _18602Nightmare_In_Shining_Armor extends QuestHandler {
 			return false;
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (qs == null || qs.getStatus() != QuestStatus.START)
+		if (qs == null || qs.getStatus() != QuestStatus.START || qs.getQuestVarById(0) != 2)
 			return false;
-		changeQuestStep(env, 1, 2, false);
+		TeleportService2.teleportTo(player, 300230000, player.getInstanceId(), 687.631104f, 675.972412f,
+			201.040802f, (byte) 90, TeleportAnimation.NO_ANIMATION);
 		return true;
 	}
 	
@@ -128,14 +123,28 @@ public class _18602Nightmare_In_Shining_Armor extends QuestHandler {
 					changeQuestStep(env, 0, 1, false);
 					return closeDialogWindow(env);
 				}
+			} else if (targetId == 730308) {
+				if (env.getDialog() == QuestDialog.USE_OBJECT) {
+					if (var == 1) {
+						return sendQuestDialog(env, 1693);
+					}
+				} else if (env.getDialog() == QuestDialog.STEP_TO_2 && var == 1) {
+					if (!checkItemExistence(env, 185000109, 1, true)) {
+						return sendQuestDialog(env, 10001);
+					}
+					closeDialogWindow(env);
+					changeQuestStep(env, 1, 2, false);
+					playQuestMovie(env, 454);
+					QuestService.addNewSpawn(300230000, player.getInstanceId(), 282089, 653f, 774f, 216f, (byte) 0);
+					return true;
+				}
 			} else if (targetId == 700939) {
 				if (env.getDialog() == QuestDialog.USE_OBJECT) {
 					if (var == 2) {
 						return sendQuestDialog(env, 1693);
 					}
 				} else if (env.getDialog() == QuestDialog.STEP_TO_3) {
-					// 哦，罗布斯廷……我要以血为你复仇！ / Oh, Robstin.... I'll avenge you with blood!
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111307, player.getObjectId(), 2));
+					GameEngineServices.skillEngine().getSkill(player, 19288, 1, player).useNoAnimationSkill();
 					return defaultCloseDialog(env, 2, 3);
 				}
 			}

@@ -1,1190 +1,385 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
-
+import com.aionemu.gameserver.ai2.NpcAI2;
+import com.aionemu.gameserver.ai2.manager.WalkManager;
 import java.util.Map;
-import java.util.Set;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-
-/**
- * 术古皇陵副本事件处理器。
- * Instance event handler for Shugo Imperial Tomb.
- *
- * @author Encom
- */
+import java.util.concurrent.ConcurrentHashMap;
 
 @InstanceID(300560000)
-public class ShugoImperialTombInstance extends GeneralInstanceHandler
-{
- /** tombraid 任务 a1 / tomb raid task a1 */
-        private Future<?> tombRaidTaskA1;
-	/** tombraid 任务 b1 / tomb raid task b1 */
-		private Future<?> tombRaidTaskB1;
-	/** tombraid 任务 c1 / tomb raid task c1 */
-		private Future<?> tombRaidTaskC1;
-	/** tombraid 任务 c2 / tomb raid task c2 */
-		private Future<?> tombRaidTaskC2;
-	/////////////////////////////////
-	/** strong kobold worker / strong kobold worker */
-		private int strongKoboldWorker;
-	/** diligent kobold worker / diligent kobold worker */
-		private int diligentKoboldWorker;
-	/** swift krall graverobber / swift krall graverobber */
-		private int swiftKrallGraverobber;
-	/** krall lookout commander / krall lookout commander */
-		private int krallLookoutCommander;
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	private boolean isInstanceDestroyed;
-	/** imperialtomb 任务 / imperial tomb task */
-		private final List<Future<?>> imperialTombTask = new ArrayList<Future<?>>();
-	/**
-	 * NPC 掉落表注册时处理。
-	 * Handle NPC drop-table registration.
-	 *
-	 * npc
-	 */
-	
-	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-		switch (npcId) {
-			case 219508: //Diligent Kobold Worker.
-			case 219514: //Strong Kobold Worker.
-			case 219521: //Swift Krall Graverobber.
-			case 219528: //Krall Lookout Commander.
-			    for (Player player: instance.getPlayersInside()) {
-					if (player.isOnline()) {
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002160, 1)); //Repair.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002158, 1)); //Cursed Chill.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002157, 1)); //Powerful Trickster's Essence.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002156, 1)); //Trickster's Essence.
-						switch (Rnd.get(1, 4)) {
-					        case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100087, 1)); //Treasure Room Map Piece 1.
-				            break;
-					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100088, 1)); //Treasure Room Map Piece 2.
-				            break;
-					        case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100089, 1)); //Treasure Room Map Piece 3.
-				            break;
-					        case 4:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100090, 1)); //Treasure Room Map Piece 4.
-				            break;
-						}
-					}
-				}
-			break;
-			case 219530: //Letu Erezat.
-			case 219531: //Captain Lediar.
-			case 219544: //Awakened Guardian.
-			    for (Player player: instance.getPlayersInside()) {
-					if (player.isOnline()) {
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002160, 1)); //Repair.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002158, 1)); //Cursed Chill.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002157, 1)); //Powerful Trickster's Essence.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002156, 1)); //Trickster's Essence.
-						switch (Rnd.get(1, 4)) {
-					        case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100087, 1)); //Treasure Room Map Piece 1.
-				            break;
-					        case 2:
-						        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100088, 1)); //Treasure Room Map Piece 2.
-				            break;
-					        case 3:
-						        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100089, 1)); //Treasure Room Map Piece 3.
-						    break;
-						    case 4:
-						        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100090, 1)); //Treasure Room Map Piece 4.
-						    break;
-						} switch (Rnd.get(1, 2)) {
-						    case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000129, 1)); //Common Treasure Chest Key.
-						    break;
-						    case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000129, 2)); //Common Treasure Chest Key.
-						    break;
-						}
-					}
-				}
-			break;
-		}
-	}
-	
-	/**
-	 * 副本创建时初始化逻辑。
-	 * Initialize logic when the instance is created.
-	 *
-	 * @param instance 世界地图实例 / world-map instance
-	 */
+public class ShugoImperialTombInstance extends GeneralInstanceHandler {
+	private static final long[] RAID_WAVE_OFFSETS = {
+		10_000L, 30_000L, 50_000L, 70_000L, 90_000L,
+		110_000L, 130_000L, 150_000L, 170_000L, 190_000L
+	};
+	private static final int[] RAID_SPAWN_DELAYS = {1_000, 5_000, 9_000};
+
+	private static final int[] A_NPCS = {219508, 219509, 219510};
+	private static final float[][] A_SPOTS = {
+		{199.53075f, 270.43457f, 550.5646f},
+		{209.68540f, 263.57240f, 550.5646f}
+	};
+	private static final byte[] A_HEADINGS = {77, 78};
+	private static final String[] A_WALKERS = {"ImperialTombUnderpath1", "ImperialTombUnderpath2"};
+
+	private static final int[] B_NPCS = {219514, 219515, 219516};
+	private static final float[][] B_SPOTS = {
+		{307.80344f, 434.2390f, 298.31903f},
+		{307.02597f, 433.8582f, 298.31903f},
+		{359.85450f, 421.5649f, 292.48206f},
+		{359.61240f, 421.5032f, 292.48206f}
+	};
+	private static final byte[] B_HEADINGS = {25, 88, 30, 82};
+	private static final String[] B_WALKERS = {
+		"ImperialTombUnderpath3", "ImperialTombUnderpath4",
+		"ImperialTombUnderpath5", "ImperialTombUnderpath6"
+	};
+
+	private static final int[] C1_NPCS = {219521, 219522, 219523};
+	private static final float[][] C1_SPOTS = {
+		{398.80435f, 81.94784f, 223.16089f},
+		{398.66214f, 81.80799f, 223.16089f},
+		{419.37616f, 90.95251f, 214.33856f}
+	};
+	private static final byte[] C1_HEADINGS = {8, 8, 8};
+	private static final String[] C1_WALKERS = {
+		"ImperialTombUnderpath7", "ImperialTombUnderpath8", "ImperialTombUnderpath9"
+	};
+
+	private static final int[] C2_NPCS = {219527, 219528, 219529};
+	private static final float[][] C2_SPOTS = C1_SPOTS;
+	private static final byte[] C2_HEADINGS = C1_HEADINGS;
+	private static final String[] C2_WALKERS = C1_WALKERS;
+
+	private final Map<Integer, String> raidSpawnKeys = new ConcurrentHashMap<>();
+	private boolean instanceDestroyed;
+
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
-		spawn(831110, 183.95969f, 237.51074f, 536.16974f, (byte) 71); //Crown Prince's Admirer.
-		spawn(831095, 218.27571f, 287.24326f, 550.68805f, (byte) 74); //Shugo Warrior Transformation Device.
+		restoreRaid("a", A_NPCS, A_SPOTS, A_HEADINGS, A_WALKERS);
+		restoreRaid("b", B_NPCS, B_SPOTS, B_HEADINGS, B_WALKERS);
+		restoreRaid("c1", C1_NPCS, C1_SPOTS, C1_HEADINGS, C1_WALKERS);
+		restoreRaid("c2", C2_NPCS, C2_SPOTS, C2_HEADINGS, C2_WALKERS);
+		restoreDelayedSpawn("boss.letu", 219530, 398.80435f, 81.94784f, 223.16089f, (byte) 8,
+			"ImperialTombUnderpath7");
+		restoreDelayedSpawn("boss.captain", 219531, 398.66214f, 81.80799f, 223.16089f, (byte) 8,
+			"ImperialTombUnderpath8");
+		restoreFinishedSpawns();
 	}
-	
-	/**
-	 * 处理死亡事件。
-	 * Handle a death event.
-	 *
-	 * npc
-	 */
+
 	@Override
 	public void onDie(Npc npc) {
+		String spawnKey = raidSpawnKeys.remove(npc.getObjectId());
+		if (spawnKey != null) {
+			runtimeState().put(spawnKey + ".dead", true);
+		}
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			case 219508: //Diligent Kobold Worker.
-			    diligentKoboldWorker++;
-				if (diligentKoboldWorker == 6) {
-					startTombRaidA1_1();
-					// 第二波掠夺者将在 10 秒后到达！ / A second wave of pillagers will arrive in 10 seconds!
-					sendMsgByRace(1401586, Race.PC_ALL, 0);
-					//再坚持一下就能活下来。 / Hold a little longer and you will survive.
-				    sendMsgByRace(1402833, Race.PC_ALL, 5000);
-				    //只剩少数敌人！ / Only a few enemies left!
-				    sendMsgByRace(1402834, Race.PC_ALL, 10000);
-				} else if (diligentKoboldWorker == 20) {
-					tombRaidTaskA1.cancel(true);
-					spawn(831095, 344.28635f, 425.418f, 294.75867f, (byte) 56); //Shugo Warrior Transformation Device.
-					spawn(831114, 183.95969f, 237.51074f, 536.16974f, (byte) 71); //Crown Prince's Delighted Admirer.
-					spawn(831111, 340.27893f, 426.2435f, 294.7574f, (byte) 56); //Empress' Admirer.
+			case 219508 -> {
+				int kills = increment("tomb.kills.diligent");
+				if (kills == 6) {
+					beginRaid("a", A_NPCS, A_SPOTS, A_HEADINGS, A_WALKERS);
+					scheduleStartMessages("a");
+				} else if (kills == 20) {
+					completeRaid("a");
+					spawnOnce("tomb.finish.a", this::spawnRaidAFinish);
 				}
-			break;
-			case 219514: //Strong Kobold Worker.
-			    strongKoboldWorker++;
-				if (strongKoboldWorker == 6) {
-					startTombRaidB1_1();
-					// 第二波掠夺者将在 10 秒后到达！ / A second wave of pillagers will arrive in 10 seconds!
-					sendMsgByRace(1401586, Race.PC_ALL, 0);
-					//再坚持一下就能活下来。 / Hold a little longer and you will survive.
-				    sendMsgByRace(1402833, Race.PC_ALL, 5000);
-				    //只剩少数敌人！ / Only a few enemies left!
-				    sendMsgByRace(1402834, Race.PC_ALL, 10000);
-				} else if (strongKoboldWorker == 40) {
-					spawnFairyGuardian();
-					tombRaidTaskB1.cancel(true);
-					//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
-					sendMsgByRace(1402832, Race.PC_ALL, 0);
+			}
+			case 219514 -> {
+				int kills = increment("tomb.kills.strong");
+				if (kills == 6) {
+					beginRaid("b", B_NPCS, B_SPOTS, B_HEADINGS, B_WALKERS);
+					scheduleStartMessages("b");
+				} else if (kills == 40) {
+					completeRaid("b");
+					spawnOnce("tomb.finish.b", this::spawnFairyGuardian);
+					sendMsgByRaceNow(1402832, Race.PC_ALL);
 				}
-			break;
-			case 219521: //Swift Krall Graverobber.
-			    swiftKrallGraverobber++;
-				if (swiftKrallGraverobber == 6) {
-					startTombRaidC1_1();
-					// 第二波掠夺者将在 10 秒后到达！ / A second wave of pillagers will arrive in 10 seconds!
-					sendMsgByRace(1401586, Race.PC_ALL, 0);
-					//再坚持一下就能活下来。 / Hold a little longer and you will survive.
-				    sendMsgByRace(1402833, Race.PC_ALL, 5000);
-				    //只剩少数敌人！ / Only a few enemies left!
-				    sendMsgByRace(1402834, Race.PC_ALL, 10000);
-				} else if (swiftKrallGraverobber == 30) {
-					startLetuErezat();
-					tombRaidTaskC1.cancel(true);
-					//再坚持一下就能活下来。 / Hold a little longer and you will survive.
-				    sendMsgByRace(1402833, Race.PC_ALL, 5000);
-				    //只剩少数敌人！ / Only a few enemies left!
-				    sendMsgByRace(1402834, Race.PC_ALL, 10000);
+			}
+			case 219521 -> {
+				int kills = increment("tomb.kills.swift");
+				if (kills == 6) {
+					beginRaid("c1", C1_NPCS, C1_SPOTS, C1_HEADINGS, C1_WALKERS);
+					scheduleStartMessages("c1");
+				} else if (kills == 30) {
+					completeRaid("c1");
+					scheduleBossSpawn("boss.letu", 219530, 398.80435f, 81.94784f, 223.16089f, (byte) 8,
+							"ImperialTombUnderpath7");
+					scheduleMessage("tomb.message.c1.finish.0", System.currentTimeMillis(), 1402833, Race.PC_ALL);
+					scheduleMessage("tomb.message.c1.finish.1", System.currentTimeMillis() + 5_000L, 1402834, Race.PC_ALL);
 				}
-			break;
-			case 219528: //Krall Lookout Commander.
-			    krallLookoutCommander++;
-			    if (krallLookoutCommander == 30) {
-					startCaptainLediar();
-					//再坚持一下就能活下来。 / Hold a little longer and you will survive.
-				    sendMsgByRace(1402833, Race.PC_ALL, 5000);
-				    //只剩少数敌人！ / Only a few enemies left!
-				    sendMsgByRace(1402834, Race.PC_ALL, 10000);
-					tombRaidTaskC2.cancel(true);
+			}
+			case 219528 -> {
+				int kills = increment("tomb.kills.commander");
+				if (kills == 30) {
+					completeRaid("c2");
+					scheduleBossSpawn("boss.captain", 219531, 398.66214f, 81.80799f, 223.16089f, (byte) 8,
+							"ImperialTombUnderpath8");
+					scheduleMessage("tomb.message.c2.finish.0", System.currentTimeMillis(), 1402833, Race.PC_ALL);
+					scheduleMessage("tomb.message.c2.finish.1", System.currentTimeMillis() + 5_000L, 1402834, Race.PC_ALL);
 				}
-			break;
-			case 219530: //Letu Erezat.
-			    startTombRaidC1_2();
-				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
-				sendMsgByRace(1402833, Race.PC_ALL, 0);
-				//只剩少数敌人！ / Only a few enemies left!
-				sendMsgByRace(1402834, Race.PC_ALL, 5000);
-			break;
-			case 219531: //Captain Lediar.
-			    deleteNpc(831130); //Crown Prince's Monument.
-			    spawn(831116, 443.322f, 110.39832f, 212.20023f, (byte) 92); //Emperor's Delighted Admirer.
-				spawn(831119, 440.2393f, 109.80865f, 212.20023f, (byte) 94); //Marayrinerk.
-				spawn(831350, 452.43765f, 106.14462f, 212.20023f, (byte) 68); //Imperial Shrine.
-			break;
-			case 219544: //Awakened Guardian.
-			    spawn(831095, 465.13556f, 111.26043f, 214.702f, (byte) 8); //Shugo Warrior Transformation Device.
-				spawn(831115, 329.33588f, 432.96265f, 294.76144f, (byte) 100); //Empress's Delighted Admirer.
-			    spawn(831112, 452.43765f, 106.14462f, 212.20023f, (byte) 68); //Emperor's Admirer.
-			break;
+			}
+			case 219530 -> {
+				runtimeState().put("tomb.boss.letu.killed", true);
+				beginRaid("c2", C2_NPCS, C2_SPOTS, C2_HEADINGS, C2_WALKERS);
+				scheduleMessage("tomb.message.letu.0", System.currentTimeMillis(), 1402833, Race.PC_ALL);
+				scheduleMessage("tomb.message.letu.1", System.currentTimeMillis() + 5_000L, 1402834, Race.PC_ALL);
+			}
+			case 219531 -> {
+				runtimeState().put("tomb.boss.captain.killed", true);
+				spawnOnce("tomb.finish.captain", this::spawnCaptainFinish);
+			}
+			case 219544 -> spawnOnce("tomb.finish.guardian", this::spawnGuardianFinish);
+			default -> {
+			}
 		}
 	}
-	
+
+	private int increment(String key) {
+		int value = runtimeState().getInt(key, 0) + 1;
+		runtimeState().put(key, value);
+		return value;
+	}
+
+	private void beginRaid(String key, int[] npcs, float[][] spots, byte[] headings, String[] walkers) {
+		if (runtimeState().getLong(raidKey(key, "started_at"), 0) > 0) {
+			return;
+		}
+		long startedAt = System.currentTimeMillis();
+		runtimeState().put(raidKey(key, "started_at"), startedAt);
+		runtimeState().put(raidKey(key, "completed"), false);
+		scheduleRaid(key, startedAt, npcs, spots, headings, walkers);
+	}
+
+	private void restoreRaid(String key, int[] npcs, float[][] spots, byte[] headings, String[] walkers) {
+		long startedAt = runtimeState().getLong(raidKey(key, "started_at"), 0);
+		if (startedAt > 0 && !runtimeState().getBoolean(raidKey(key, "completed"), false)) {
+			scheduleRaid(key, startedAt, npcs, spots, headings, walkers);
+			if (!key.equals("c2")) {
+				scheduleStartMessages(key);
+			}
+		}
+	}
+
+	private void scheduleRaid(String key, long startedAt, int[] npcs, float[][] spots, byte[] headings,
+			String[] walkers) {
+		long now = System.currentTimeMillis();
+		for (int wave = 0; wave < RAID_WAVE_OFFSETS.length; wave++) {
+			long waveAt = startedAt + RAID_WAVE_OFFSETS[wave];
+			for (int spot = 0; spot < spots.length; spot++) {
+				for (int mob = 0; mob < npcs.length; mob++) {
+					String spawnKey = raidKey(key, "wave." + wave + ".spot." + spot + ".mob." + mob);
+					int npcId = npcs[mob];
+					float[] position = spots[spot];
+					byte heading = headings[spot];
+					String walkerId = walkers[spot];
+					long spawnAt = waveAt + RAID_SPAWN_DELAYS[mob];
+					if (spawnAt <= now) {
+						spawnRaidNpc(key, spawnKey, npcId, position, heading, walkerId);
+					} else {
+						scheduleDeadline(spawnKey, spawnAt,
+							() -> spawnRaidNpc(key, spawnKey, npcId, position, heading, walkerId));
+					}
+				}
+			}
+			if ((wave & 1) == 1) {
+				scheduleDeadline(raidKey(key, "wave." + wave + ".message"), waveAt,
+						() -> sendRaidMessage(key));
+			}
+		}
+	}
+
+	private void spawnRaidNpc(String key, String spawnKey, int npcId, float[] position, byte heading, String walkerId) {
+		if (instanceDestroyed || runtimeState().getBoolean(raidKey(key, "completed"), false)
+				|| runtimeState().getBoolean(spawnKey + ".dead", false)) {
+			return;
+		}
+		Npc npc = (Npc) spawn(npcId, position[0], position[1], position[2], heading);
+		raidSpawnKeys.put(npc.getObjectId(), spawnKey);
+		npc.getSpawn().setWalkerId(walkerId);
+		WalkManager.startWalking((NpcAI2) npc.getAi2());
+	}
+
+	private void sendRaidMessage(String key) {
+		if (!instanceDestroyed && !runtimeState().getBoolean(raidKey(key, "completed"), false)) {
+			sendMsgByRaceNow(1401607, Race.PC_ALL);
+		}
+	}
+
+	private void completeRaid(String key) {
+		runtimeState().put(raidKey(key, "completed"), true);
+	}
+
+	private String raidKey(String raid, String suffix) {
+		return "tomb.raid." + raid + "." + suffix;
+	}
+
+	private void scheduleStartMessages(String raid) {
+		long startedAt = runtimeState().getLong(raidKey(raid, "started_at"), 0);
+		scheduleMessage("tomb.message." + raid + ".start.0", startedAt, 1401586, Race.PC_ALL);
+		scheduleMessage("tomb.message." + raid + ".start.1", startedAt + 5_000L, 1402833, Race.PC_ALL);
+		scheduleMessage("tomb.message." + raid + ".start.2", startedAt + 10_000L, 1402834, Race.PC_ALL);
+	}
+
+	private void scheduleMessage(String key, long deadline, int messageId, Race race) {
+		scheduleDeadline(key, deadline, () -> {
+			if (!instanceDestroyed) {
+				sendMsgByRaceNow(messageId, race);
+			}
+		});
+	}
+
+	private void sendMsgByRaceNow(int messageId, Race race) {
+		instance.doOnAllPlayers(player -> {
+			if (race == Race.PC_ALL || player.getRace() == race) {
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(messageId));
+			}
+		});
+	}
+
+	private void scheduleBossSpawn(String key, int npcId, float x, float y, float z, byte heading, String walkerId) {
+		String atKey = "tomb.spawn." + key + ".at";
+		String spawnedKey = "tomb.spawn." + key + ".spawned";
+		if (runtimeState().getBoolean(spawnedKey, false) || bossKilled(key)) {
+			return;
+		}
+		long deadline = runtimeState().getLong(atKey, 0);
+		if (deadline == 0) {
+			deadline = System.currentTimeMillis() + 2_000L;
+			runtimeState().put(atKey, deadline);
+		}
+		scheduleDeadline("tomb.spawn." + key, deadline, () -> {
+			if (instanceDestroyed || runtimeState().getBoolean(spawnedKey, false) || bossKilled(key)) {
+				return;
+			}
+			spawnWalking(npcId, x, y, z, heading, walkerId);
+			runtimeState().put(spawnedKey, true);
+		});
+	}
+
+	private void restoreDelayedSpawn(String key, int npcId, float x, float y, float z, byte heading, String walkerId) {
+		if (bossKilled(key)) {
+			return;
+		}
+		if (runtimeState().getBoolean("tomb.spawn." + key + ".spawned", false)) {
+			spawnWalking(npcId, x, y, z, heading, walkerId);
+		} else if (runtimeState().getLong("tomb.spawn." + key + ".at", 0) > 0) {
+			scheduleBossSpawn(key, npcId, x, y, z, heading, walkerId);
+		}
+	}
+
+	private boolean bossKilled(String key) {
+		return runtimeState().getBoolean("tomb." + key + ".killed", false);
+	}
+
+	private void spawnWalking(int npcId, float x, float y, float z, byte heading, String walkerId) {
+		Npc npc = (Npc) spawn(npcId, x, y, z, heading);
+		npc.getSpawn().setWalkerId(walkerId);
+		WalkManager.startWalking((NpcAI2) npc.getAi2());
+	}
+
+	private void restoreFinishedSpawns() {
+		if (runtimeState().getBoolean("tomb.finish.a", false)) {
+			spawnRaidAFinish();
+		}
+		if (runtimeState().getBoolean("tomb.finish.guardian", false)) {
+			spawnGuardianFinish();
+		} else if (runtimeState().getBoolean("tomb.finish.b", false)) {
+			spawnFairyGuardian();
+		}
+		if (runtimeState().getBoolean("tomb.finish.captain", false)) {
+			spawnCaptainFinish();
+		}
+	}
+
+	private void spawnRaidAFinish() {
+		spawn(831095, 344.28635f, 425.418f, 294.75867f, (byte) 56);
+		spawn(831114, 183.95969f, 237.51074f, 536.16974f, (byte) 71);
+		spawn(831111, 340.27893f, 426.2435f, 294.7574f, (byte) 56);
+	}
+
+	private void spawnCaptainFinish() {
+		deleteNpc(831130);
+		spawn(831116, 443.322f, 110.39832f, 212.20023f, (byte) 92);
+		spawn(831119, 440.2393f, 109.80865f, 212.20023f, (byte) 94);
+		spawn(831350, 452.43765f, 106.14462f, 212.20023f, (byte) 68);
+	}
+
+	private void spawnGuardianFinish() {
+		spawn(831095, 465.13556f, 111.26043f, 214.702f, (byte) 8);
+		spawn(831115, 329.33588f, 432.96265f, 294.76144f, (byte) 100);
+		spawn(831112, 452.43765f, 106.14462f, 212.20023f, (byte) 68);
+	}
+
 	private void spawnFairyGuardian() {
 		spawn(219544, 315.94565f, 431.73035f, 294.58875f, (byte) 116);
-        spawn(219505, 314.94418f, 428.22006f, 294.58875f, (byte) 115);
-        spawn(219505, 318.11328f, 427.66050f, 294.58875f, (byte) 115);
-        spawn(219505, 319.69778f, 434.42917f, 294.58875f, (byte) 115);
-        spawn(219505, 316.08636f, 435.35806f, 294.58875f, (byte) 115);
-        spawn(219505, 321.05954f, 430.44263f, 294.58875f, (byte) 115);
+		spawn(219505, 314.94418f, 428.22006f, 294.58875f, (byte) 115);
+		spawn(219505, 318.11328f, 427.66050f, 294.58875f, (byte) 115);
+		spawn(219505, 319.69778f, 434.42917f, 294.58875f, (byte) 115);
+		spawn(219505, 316.08636f, 435.35806f, 294.58875f, (byte) 115);
+		spawn(219505, 321.05954f, 430.44263f, 294.58875f, (byte) 115);
 	}
-	
-   /**
-	 * TOMB RAID A
-	 */
-	private void startTombRaidA1_1() {
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
-		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
-		        sp(219510, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 9000, "ImperialTombUnderpath1");
-		        sp(219508, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 1000, "ImperialTombUnderpath2");
-		        sp(219509, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 5000, "ImperialTombUnderpath2");
-		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
-			}
-		}, 10000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
-		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
-		        sp(219510, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 9000, "ImperialTombUnderpath1");
-		        sp(219508, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 1000, "ImperialTombUnderpath2");
-		        sp(219509, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 5000, "ImperialTombUnderpath2");
-		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
-			}
-		}, 30000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
-		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
-		        sp(219510, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 9000, "ImperialTombUnderpath1");
-		        sp(219508, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 1000, "ImperialTombUnderpath2");
-		        sp(219509, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 5000, "ImperialTombUnderpath2");
-		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
-			}
-		}, 50000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
-		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
-		        sp(219510, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 9000, "ImperialTombUnderpath1");
-		        sp(219508, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 1000, "ImperialTombUnderpath2");
-		        sp(219509, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 5000, "ImperialTombUnderpath2");
-		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
-			}
-		}, 70000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
-		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
-		        sp(219510, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 9000, "ImperialTombUnderpath1");
-		        sp(219508, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 1000, "ImperialTombUnderpath2");
-		        sp(219509, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 5000, "ImperialTombUnderpath2");
-		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
-			}
-		}, 90000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
-		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
-		        sp(219510, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 9000, "ImperialTombUnderpath1");
-		        sp(219508, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 1000, "ImperialTombUnderpath2");
-		        sp(219509, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 5000, "ImperialTombUnderpath2");
-		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
-			}
-		}, 110000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
-		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
-		        sp(219510, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 9000, "ImperialTombUnderpath1");
-		        sp(219508, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 1000, "ImperialTombUnderpath2");
-		        sp(219509, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 5000, "ImperialTombUnderpath2");
-		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
-			}
-		}, 130000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
-		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
-		        sp(219510, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 9000, "ImperialTombUnderpath1");
-		        sp(219508, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 1000, "ImperialTombUnderpath2");
-		        sp(219509, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 5000, "ImperialTombUnderpath2");
-		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
-			}
-		}, 150000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
-		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
-		        sp(219510, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 9000, "ImperialTombUnderpath1");
-		        sp(219508, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 1000, "ImperialTombUnderpath2");
-		        sp(219509, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 5000, "ImperialTombUnderpath2");
-		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
-			}
-		}, 170000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
-		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
-		        sp(219510, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 9000, "ImperialTombUnderpath1");
-		        sp(219508, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 1000, "ImperialTombUnderpath2");
-		        sp(219509, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 5000, "ImperialTombUnderpath2");
-		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
-			}
-		}, 190000);
-	}
-	
-   /**
-	 * TOMB RAID B
-	 */
-	private void startTombRaidB1_1() {
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
-		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
-		        sp(219516, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 9000, "ImperialTombUnderpath3");
-		        sp(219514, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 1000, "ImperialTombUnderpath4");
-		        sp(219515, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 5000, "ImperialTombUnderpath4");
-		        sp(219516, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 9000, "ImperialTombUnderpath4");
-		        sp(219514, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 1000, "ImperialTombUnderpath5");
-		        sp(219515, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 5000, "ImperialTombUnderpath5");
-		        sp(219516, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 9000, "ImperialTombUnderpath5");
-		        sp(219514, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 1000, "ImperialTombUnderpath6");
-		        sp(219515, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 5000, "ImperialTombUnderpath6");
-		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
-			}
-		}, 10000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
-		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
-		        sp(219516, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 9000, "ImperialTombUnderpath3");
-		        sp(219514, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 1000, "ImperialTombUnderpath4");
-		        sp(219515, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 5000, "ImperialTombUnderpath4");
-		        sp(219516, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 9000, "ImperialTombUnderpath4");
-		        sp(219514, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 1000, "ImperialTombUnderpath5");
-		        sp(219515, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 5000, "ImperialTombUnderpath5");
-		        sp(219516, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 9000, "ImperialTombUnderpath5");
-		        sp(219514, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 1000, "ImperialTombUnderpath6");
-		        sp(219515, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 5000, "ImperialTombUnderpath6");
-		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
-			}
-		}, 30000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
-		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
-		        sp(219516, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 9000, "ImperialTombUnderpath3");
-		        sp(219514, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 1000, "ImperialTombUnderpath4");
-		        sp(219515, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 5000, "ImperialTombUnderpath4");
-		        sp(219516, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 9000, "ImperialTombUnderpath4");
-		        sp(219514, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 1000, "ImperialTombUnderpath5");
-		        sp(219515, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 5000, "ImperialTombUnderpath5");
-		        sp(219516, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 9000, "ImperialTombUnderpath5");
-		        sp(219514, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 1000, "ImperialTombUnderpath6");
-		        sp(219515, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 5000, "ImperialTombUnderpath6");
-		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
-			}
-		}, 50000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
-		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
-		        sp(219516, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 9000, "ImperialTombUnderpath3");
-		        sp(219514, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 1000, "ImperialTombUnderpath4");
-		        sp(219515, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 5000, "ImperialTombUnderpath4");
-		        sp(219516, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 9000, "ImperialTombUnderpath4");
-		        sp(219514, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 1000, "ImperialTombUnderpath5");
-		        sp(219515, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 5000, "ImperialTombUnderpath5");
-		        sp(219516, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 9000, "ImperialTombUnderpath5");
-		        sp(219514, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 1000, "ImperialTombUnderpath6");
-		        sp(219515, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 5000, "ImperialTombUnderpath6");
-		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
-			}
-		}, 70000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
-		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
-		        sp(219516, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 9000, "ImperialTombUnderpath3");
-		        sp(219514, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 1000, "ImperialTombUnderpath4");
-		        sp(219515, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 5000, "ImperialTombUnderpath4");
-		        sp(219516, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 9000, "ImperialTombUnderpath4");
-		        sp(219514, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 1000, "ImperialTombUnderpath5");
-		        sp(219515, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 5000, "ImperialTombUnderpath5");
-		        sp(219516, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 9000, "ImperialTombUnderpath5");
-		        sp(219514, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 1000, "ImperialTombUnderpath6");
-		        sp(219515, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 5000, "ImperialTombUnderpath6");
-		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
-			}
-		}, 90000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
-		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
-		        sp(219516, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 9000, "ImperialTombUnderpath3");
-		        sp(219514, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 1000, "ImperialTombUnderpath4");
-		        sp(219515, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 5000, "ImperialTombUnderpath4");
-		        sp(219516, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 9000, "ImperialTombUnderpath4");
-		        sp(219514, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 1000, "ImperialTombUnderpath5");
-		        sp(219515, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 5000, "ImperialTombUnderpath5");
-		        sp(219516, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 9000, "ImperialTombUnderpath5");
-		        sp(219514, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 1000, "ImperialTombUnderpath6");
-		        sp(219515, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 5000, "ImperialTombUnderpath6");
-		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
-			}
-		}, 110000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
-		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
-		        sp(219516, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 9000, "ImperialTombUnderpath3");
-		        sp(219514, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 1000, "ImperialTombUnderpath4");
-		        sp(219515, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 5000, "ImperialTombUnderpath4");
-		        sp(219516, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 9000, "ImperialTombUnderpath4");
-		        sp(219514, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 1000, "ImperialTombUnderpath5");
-		        sp(219515, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 5000, "ImperialTombUnderpath5");
-		        sp(219516, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 9000, "ImperialTombUnderpath5");
-		        sp(219514, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 1000, "ImperialTombUnderpath6");
-		        sp(219515, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 5000, "ImperialTombUnderpath6");
-		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
-			}
-		}, 130000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
-		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
-		        sp(219516, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 9000, "ImperialTombUnderpath3");
-		        sp(219514, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 1000, "ImperialTombUnderpath4");
-		        sp(219515, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 5000, "ImperialTombUnderpath4");
-		        sp(219516, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 9000, "ImperialTombUnderpath4");
-		        sp(219514, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 1000, "ImperialTombUnderpath5");
-		        sp(219515, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 5000, "ImperialTombUnderpath5");
-		        sp(219516, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 9000, "ImperialTombUnderpath5");
-		        sp(219514, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 1000, "ImperialTombUnderpath6");
-		        sp(219515, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 5000, "ImperialTombUnderpath6");
-		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
-			}
-		}, 150000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
-		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
-		        sp(219516, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 9000, "ImperialTombUnderpath3");
-		        sp(219514, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 1000, "ImperialTombUnderpath4");
-		        sp(219515, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 5000, "ImperialTombUnderpath4");
-		        sp(219516, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 9000, "ImperialTombUnderpath4");
-		        sp(219514, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 1000, "ImperialTombUnderpath5");
-		        sp(219515, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 5000, "ImperialTombUnderpath5");
-		        sp(219516, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 9000, "ImperialTombUnderpath5");
-		        sp(219514, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 1000, "ImperialTombUnderpath6");
-		        sp(219515, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 5000, "ImperialTombUnderpath6");
-		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
-			}
-		}, 170000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
-		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
-		        sp(219516, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 9000, "ImperialTombUnderpath3");
-		        sp(219514, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 1000, "ImperialTombUnderpath4");
-		        sp(219515, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 5000, "ImperialTombUnderpath4");
-		        sp(219516, 307.02597f, 433.8582f, 298.31903f, (byte) 88, 9000, "ImperialTombUnderpath4");
-		        sp(219514, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 1000, "ImperialTombUnderpath5");
-		        sp(219515, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 5000, "ImperialTombUnderpath5");
-		        sp(219516, 359.85450f, 421.5649f, 292.48206f, (byte) 30, 9000, "ImperialTombUnderpath5");
-		        sp(219514, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 1000, "ImperialTombUnderpath6");
-		        sp(219515, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 5000, "ImperialTombUnderpath6");
-		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
-			}
-		}, 190000);
-	}
-	
-   /**
-	 * TOMB RAID C-1
-	 */
-	private void startTombRaidC1_1() {
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219523, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219521, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219522, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219523, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219521, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219522, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 10000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219523, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219521, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219522, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219523, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219521, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219522, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 30000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219523, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219521, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219522, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219523, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219521, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219522, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 50000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219523, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219521, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219522, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219523, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219521, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219522, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 70000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219523, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219521, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219522, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219523, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219521, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219522, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 90000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219523, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219521, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219522, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219523, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219521, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219522, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 110000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219523, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219521, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219522, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219523, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219521, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219522, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 130000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219523, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219521, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219522, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219523, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219521, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219522, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 150000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219523, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219521, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219522, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219523, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219521, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219522, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 170000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219523, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219521, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219522, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219523, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219521, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219522, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 190000);
-	}
-	
-   /**
-	 * TOMB RAID C-2
-	 */
-	private void startTombRaidC1_2() {
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219529, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219527, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219528, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219529, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219527, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219528, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 10000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219529, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219527, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219528, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219529, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219527, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219528, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 30000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219529, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219527, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219528, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219529, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219527, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219528, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 50000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219529, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219527, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219528, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219529, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219527, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219528, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 70000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219529, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219527, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219528, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219529, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219527, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219528, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 90000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219529, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219527, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219528, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219529, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219527, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219528, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 110000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219529, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219527, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219528, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219529, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219527, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219528, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 130000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219529, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219527, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219528, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219529, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219527, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219528, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 150000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219529, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219527, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219528, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219529, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219527, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219528, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 170000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
-				sendMsgByRace(1401607, Race.PC_ALL, 0);
-				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
-		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
-		        sp(219529, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath7");
-		        sp(219527, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath8");
-		        sp(219528, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath8");
-		        sp(219529, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 9000, "ImperialTombUnderpath8");
-		        sp(219527, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 1000, "ImperialTombUnderpath9");
-		        sp(219528, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 5000, "ImperialTombUnderpath9");
-		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
-			}
-		}, 190000);
-	}
-	private void startLetuErezat() {
-		sp(219530, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 2000, "ImperialTombUnderpath7"); //Letu Erezat.
-	}
-	private void startCaptainLediar() {
-		sp(219531, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 2000, "ImperialTombUnderpath8"); //Captain Lediar.
-	}
-	
-	/**
-	 * 玩家对 NPC 使用物品完成时处理。
-	 * Handle item-use finish on an NPC.
-	 *
-	 * 玩家 / player
-	 * npc
-	 */
+
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
-		switch (npc.getNpcId()) {
-			case 831095: //Shugo Warrior Transformation Device.
-				GameEngineServices.skillEngine().getSkill(npc, 21096, 60, player).useNoAnimationSkill();
-			break;
+		if (npc.getNpcId() == 831095) {
+			GameEngineServices.skillEngine().getSkill(npc, 21096, 60, player).useNoAnimationSkill();
 		}
 	}
-	/**
-	 * 移除相关物品。
-	 * Remove related items.
-	 *
-	 * @param player 玩家 / player
-	 */
-	
+
 	public void removeItems(Player player) {
-        Storage storage = player.getInventory();
-        storage.decreaseByItemId(182006989, storage.getItemCountByItemId(182006989)); //Emperor's Golden Tag.
-		storage.decreaseByItemId(182006990, storage.getItemCountByItemId(182006990)); //Empress' Silver Tag.
-        storage.decreaseByItemId(182006991, storage.getItemCountByItemId(182006991)); //Crown Prince's Brass Tag.
-		storage.decreaseByItemId(182006999, storage.getItemCountByItemId(182006999)); //Shugo Coin.
-    }
-	
+		Storage storage = player.getInventory();
+		storage.decreaseByItemId(182006989, storage.getItemCountByItemId(182006989));
+		storage.decreaseByItemId(182006990, storage.getItemCountByItemId(182006990));
+		storage.decreaseByItemId(182006991, storage.getItemCountByItemId(182006991));
+		storage.decreaseByItemId(182006999, storage.getItemCountByItemId(182006999));
+	}
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21096);
 	}
-	
-	private void despawnNpc(Npc npc) {
+
+	private void deleteNpc(int npcId) {
+		Npc npc = getNpc(npcId);
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
+
+	private void spawnOnce(String key, Runnable action) {
+		if (runtimeState().getBoolean(key, false)) {
+			return;
 		}
+		runtimeState().put(key, true);
+		action.run();
 	}
-	
-	/**
-	 * 玩家离开副本时处理。
-	 * Handle a player leaving the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
+
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 		removeEffects(player);
-		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
-	
-	/**
-	 * 玩家从该副本登出时处理。
-	 * Handle a player logging out from this instance.
-	 *
-	 * @param player 玩家 / player
-	 */
+
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 		removeEffects(player);
 	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	
-	/**
-	 * 副本销毁时清理资源。
-	 * Clean up resources when the instance is destroyed.
-	 */
+
 	@Override
 	public void onInstanceDestroy() {
-		isInstanceDestroyed = true;
-	}
-	
-	private void stopInstanceTask() {
-        for (Future<?> task : imperialTombTask) {
-			if (task != null) {
-				task.cancel(true);
-			}
-        }
-    }
-	
-	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        imperialTombTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    Npc npc = (Npc) spawn(npcId, x, y, z, h);
-                    npc.getSpawn().setWalkerId(walkerId);
-                    WalkManager.startWalking((NpcAI2) npc.getAi2());
-                }
-            }
-        }, time));
-    }
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
+		instanceDestroyed = true;
 	}
 }

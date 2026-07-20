@@ -154,7 +154,6 @@
 	<portal_loc world_id="220010000" loc_id="2200102" x="950.19385" y="1714.3174" z="259.27582" h="30"/> <!-- Anturron Sentry Post -->
 	<portal_loc world_id="220010000" loc_id="2200103" x="384.79547" y="1890.3213" z="327.6802" h="8"/> <!-- The Forsaken Hollow -->
 	<!-- Morheim -->
-	<portal_loc world_id="220020000" loc_id="2201413" x="1888.306" y="2852.0967" z="554.98364" h="1"/> 
 	<portal_loc world_id="220020000" loc_id="2200200" x="270.9" y="2339.6" z="443.74" h="0"/>
 	<portal_loc world_id="220020000" loc_id="2200201" x="1685.6427" y="1159.2311" z="200.3536" h="0"/>
 	<portal_loc world_id="220020000" loc_id="2200202" x="1668.0662" y="1146.7683" z="200.3536" h="0"/>

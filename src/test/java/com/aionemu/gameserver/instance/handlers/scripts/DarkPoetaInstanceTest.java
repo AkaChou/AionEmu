@@ -9,15 +9,21 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.model.instance.instancereward.DarkPoetaReward;
+
 class DarkPoetaInstanceTest {
 	private static final Path SCRIPTS = Path.of("src/main/java/com/aionemu/gameserver/instance/handlers/scripts");
 
 	@Test
-	void settlesOnceInsteadOfOncePerPlayer() throws Exception {
-		String source = source("DarkPoetaInstance");
+	void restoresPersistedScoreboard() {
+		DarkPoetaReward reward = new DarkPoetaReward(300040000, 1);
 
-		assertFalse(source.contains("stopInstance(player);"));
-		assertEquals(2, source.lines().filter(line -> line.contains("stopInstance();")).count());
+		reward.restore(17_817, 42, 3, 1);
+
+		assertEquals(17_817, reward.getPoints());
+		assertEquals(42, reward.getNpcKills());
+		assertEquals(3, reward.getGatherCollections());
+		assertEquals(1, reward.getRank());
 	}
 
 	@Test
@@ -25,8 +31,9 @@ class DarkPoetaInstanceTest {
 		assertFalse(source("HamateIsleStoreroomInstance").contains("public void onEnterInstance"));
 		assertFalse(source("CarpusIsleStoreroomInstance").contains("public void onEnterInstance"));
 		assertSpawnGuarded("DraupnirCaveInstance", "spawn(237276");
-		assertSpawnGuarded("DarkPoetaInstance", "spawn(npc1");
-		assertSpawnGuarded("TheEternalBastionInstance", "instanceReward.addPoints(20000)");
+		String eternal = source("TheEternalBastionInstance");
+		assertTrue(eternal.contains("runtimeState().getBoolean(STATE_PREFIX + \"completed\""));
+		assertFalse(eternal.contains("instanceReward.addPoints(20000)"));
 	}
 
 	private static void assertSpawnGuarded(String className, String spawnMarker) throws Exception {

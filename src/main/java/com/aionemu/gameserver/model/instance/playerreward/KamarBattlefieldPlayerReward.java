@@ -6,4 +6,8 @@ public final class KamarBattlefieldPlayerReward extends BattlegroundPlayerReward
 	public KamarBattlefieldPlayerReward(int objectId, byte buffId, Race race) {
 		super(objectId, buffId, race);
 	}
+
+	public KamarBattlefieldPlayerReward(int objectId, byte buffId, Race race, long joinedAt) {
+		super(objectId, buffId, race, joinedAt);
+	}
 }

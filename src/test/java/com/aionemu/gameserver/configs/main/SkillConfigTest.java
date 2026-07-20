@@ -57,7 +57,7 @@ class SkillConfigTest {
 
 		assertEquals("1", properties.getProperty("gameserver.skill.cooldown.multiplier"));
 		assertEquals("true", properties.getProperty("gameserver.skill.dp.consume"));
-		assertEquals("6500", properties.getProperty("gameserver.magicboost.cap"));
+		assertEquals("3400", properties.getProperty("gameserver.magicboost.cap"));
 		assertEquals("false", properties.getProperty("gameserver.skill.root.break.on.dot"));
 	}
 }

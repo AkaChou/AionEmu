@@ -52,7 +52,6 @@
 	<xs:include schemaLocation="npc_shouts/npc_shouts.xsd"/>
 	<xs:include schemaLocation="events_config/events_config.xsd"/>
 	<xs:include schemaLocation="polymorph_panels/polymorph_panels.xsd"/>
-	<xs:include schemaLocation="instance_bonusattr/instance_bonusattr.xsd"/>
 	<xs:include schemaLocation="housing/housing_objects.xsd"/>
 	<xs:include schemaLocation="ride/ride.xsd"/>
 	<xs:include schemaLocation="robot/robot.xsd"/>
@@ -177,7 +176,6 @@
 				<xs:element ref="npc_shouts" minOccurs="0"/>
 				<xs:element ref="events_config" minOccurs="0"/>
 				<xs:element ref="polymorph_panels" minOccurs="0"/>
-				<xs:element ref="instance_bonusattrs" minOccurs="0"/>
 				<xs:element ref="housing_objects" minOccurs="0"/>
 				<xs:element ref="rides" minOccurs="0"/>
 				<xs:element ref="robots" minOccurs="0"/>

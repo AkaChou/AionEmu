@@ -1,5 +1,298 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <retail_rewards version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/retail-instance-data.xsd">
+  <table name="instant_dungeon_define">
+    <row desc="IDLF1 D등급 최소 스코어 조건" id="1" name="IDLF1_D_SCORE_MINIMUM" value="0" />
+    <row desc="IDLF1 C등급 최소 스코어 조건" id="2" name="IDLF1_C_SCORE_MINIMUM" value="6656" />
+    <row desc="IDLF1 B등급 최소 스코어 조건" id="3" name="IDLF1_B_SCORE_MINIMUM" value="10913" />
+    <row desc="IDLF1 A등급 최소 스코어 조건" id="4" name="IDLF1_A_SCORE_MINIMUM" value="15219" />
+    <row desc="IDLF1 S등급 최소 스코어 조건" id="5" name="IDLF1_S_SCORE_MINIMUM" value="17817" />
+    <row desc="IDLF1 D등급 시간 최대 조건" id="6" name="IDLF1_D_TIME_MAXIMUM" value="14400" />
+    <row desc="IDLF1 C등급 시간 최대 조건" id="7" name="IDLF1_C_TIME_MAXIMUM" value="12600" />
+    <row desc="IDLF1 B등급 시간 최대 조건" id="8" name="IDLF1_B_TIME_MAXIMUM" value="10800" />
+    <row desc="IDLF1 A등급 시간 최대 조건" id="9" name="IDLF1_A_TIME_MAXIMUM" value="9000" />
+    <row desc="IDLF1 S등급 시간 최대 조건" id="10" name="IDLF1_S_TIME_MAXIMUM" value="7200" />
+    <row desc="IDLF1 보스 클래스" id="11" name="IDLF1_BOSS_NAME" value="IDLF1_H_DrakanFiName_50_Ah" />
+    <row desc="IDLF1 버프 타임" id="12" name="IDLF1_BUFF_TIME" value="120" />
+    <row desc="IDLF1 플레이 타임" id="13" name="IDLF1_LIMIT_TIME" value="14400" />
+    <row desc="IDLF1 천족 OUT 레벨" id="14" name="IDLF1_LIGHT_OUT_LEVEL" value="LF3" />
+    <row desc="IDLF1 천족 OUT Locations" id="15" name="IDLF1_LIGHT_OUT_LOCATIONS" value="LF3_IDLF1_OUTAREA_01" />
+    <row desc="IDLF1 마족 OUT 레벨" id="16" name="IDLF1_DARK_OUT_LEVEL" value="DF3" />
+    <row desc="IDLF1 마족 OUT Locations" id="17" name="IDLF1_DARK_OUT_LOCATIONS" value="DF3_IDLF1_OUTAREA_01" />
+    <row desc="IDLF1 부활 Locations" id="18" name="IDLF1_REBIRTH_LOCATIONS" value="IDLF1_REBIRTH_AREA" />
+    <row desc="IDLF1 스코어 알림 간격_하드코딩 옮김" id="19" name="IDLF1_SCORE_ALARM" value="500" />
+    <row desc="IDLF1 플레이 종료 후 강제 퇴장 시간(초)" id="20" name="IDLF1_Leave_Time" value="600" />
+    <row desc="IDAb1_Dreadgion 버프 타임" id="100" name="IDAB1_DREADGION_BUFF_TIME" value="120" />
+    <row desc="IDAb1_Dreadgion 플레이 타임" id="101" name="IDAB1_DREADGION_LIMIT_TIME" value="2400" />
+    <row desc="IDAb1_Dreadgion 보스 클래스" id="102" name="IDAB1_DREADGION_BOSS_NAME" value="IDAb1_Dreadgion_DrakanBoss_50_Ah" />
+    <row desc="IDAb1_Dreadgion 시작점 01" id="103" name="IDAB1_DREADGION_START_ALIAS_01" value="IDAb1_Dreadgion_Extra_01" />
+    <row desc="IDAb1_Dreadgion 시작점 02" id="104" name="IDAB1_DREADGION_START_ALIAS_02" value="IDAb1_Dreadgion_Extra_02" />
+    <row desc="IDAB1 천족 OUT 레벨" id="105" name="IDAB1_LIGHT_OUT_LEVEL" value="AB1" />
+    <row desc="IDAB1 천족 OUT Locations" id="106" name="IDAB1_LIGHT_OUT_LOCATIONS" value="AB1_IDAB1_DREADGION_OUTAREA_01" />
+    <row desc="IDAB1 마족 OUT 레벨" id="107" name="IDAB1_DARK_OUT_LEVEL" value="AB1" />
+    <row desc="IDAB1 마족 OUT Locations" id="108" name="IDAB1_DARK_OUT_LOCATIONS" value="AB1_IDAB1_DREADGION_OUTAREA_02" />
+    <row desc="IDAB1_DREADGION 승리 보너스 AP" id="109" name="IDAB1_DREADGION_WIN_BONUS_AP" value="5500" />
+    <row desc="IDAB1_DREADGION 무승부 보너스 AP" id="110" name="IDAB1_DREADGION_DRAW_BONUS_AP" value="4500" />
+    <row desc="IDAB1_DREADGION 패배 보너스 AP" id="111" name="IDAB1_DREADGION_LOST_BONUS_AP" value="4000" />
+    <row desc="IDAB1_DREADGION 플레이 보너스 AP" id="112" name="IDAB1_DREADGION_PLAY_BONUS_AP" value="21000" />
+    <row desc="IDAB1_DREADGION TOTAL_SCORE" id="113" name="IDAB1_DREADGION_TOTAL_SCORE" value="18204" />
+    <row desc="IDAB1_DREADGION 스코어 알림 간격_하드코딩 옮김" id="114" name="IDAB1_DREADGION_SCORE_ALARM" value="500" />
+    <row desc="IDAB1 플레이 종료 후 강제 퇴장 시간(초)" id="115" name="IDAB1_Dreadgion_Leave_Time" value="600" />
+    <row desc="IDAB1_DREADGION PC 킬 점수" id="116" name="IDAB1_DREADGION_PC_KILL_SCORE" value="10" />
+    <row desc="IDAb1_Dreadgion 손실 한계 점수(Per)" id="117" name="IDAB1_DREADGION_LOWER_LIMIT_PERC" value="15" />
+    <row desc="IDDreadgion_02 버프 타임" id="118" name="IDDreadgion_02_BUFF_TIME" value="120" />
+    <row desc="IDDreadgion_02 플레이 타임" id="119" name="IDDreadgion_02_LIMIT_TIME" value="2400" />
+    <row desc="IDDreadgion_02 보스 클래스" id="120" name="IDDreadgion_02_BOSS_NAME" value="IDDreadgion_02_DrakanBoss_55_Ah" />
+    <row desc="IDDreadgion_02 시작점 01" id="121" name="IDDreadgion_02_START_ALIAS_01" value="IDDreadgion_02_Extra_01" />
+    <row desc="IDDreadgion_02 시작점 02" id="122" name="IDDreadgion_02_START_ALIAS_02" value="IDDreadgion_02_Extra_02" />
+    <row desc="IDAB1 천족 OUT 레벨" id="123" name="IDDreadgion_02_LIGHT_OUT_LEVEL" value="LF4" />
+    <row desc="IDAB1 천족 OUT Locations" id="124" name="IDDreadgion_02_LIGHT_OUT_LOCATIONS" value="LF4_IDDreadgion_02_OUTAREA_01" />
+    <row desc="IDAB1 마족 OUT 레벨" id="125" name="IDDreadgion_02_DARK_OUT_LEVEL" value="DF4" />
+    <row desc="IDAB1 마족 OUT Locations" id="126" name="IDDreadgion_02_DARK_OUT_LOCATIONS" value="DF4_IDDreadgion_02_OUTAREA_02" />
+    <row desc="IDDreadgion_02 승리 보너스 AP" id="127" name="IDDreadgion_02_WIN_BONUS_AP" value="5500" />
+    <row desc="IDDreadgion_02 무승부 보너스 AP" id="128" name="IDDreadgion_02_DRAW_BONUS_AP" value="4500" />
+    <row desc="IDDreadgion_02 패배 보너스 AP" id="129" name="IDDreadgion_02_LOST_BONUS_AP" value="4000" />
+    <row desc="IDDreadgion_02 플레이 보너스 AP" id="130" name="IDDreadgion_02_PLAY_BONUS_AP" value="21000" />
+    <row desc="IDDreadgion_02 TOTAL_SCORE" id="131" name="IDDreadgion_02_TOTAL_SCORE" value="18204" />
+    <row desc="IDAB1 플레이 종료 후 강제 퇴장 시간(초)" id="132" name="IDDreadgion_02_Leave_Time" value="600" />
+    <row desc="IDDreadgion_02 PC 킬 점수" id="133" name="IDDreadgion_02_PC_KILL_SCORE" value="10" />
+    <row desc="IDDreadgion_02 손실 한계 점수(Per)" id="134" name="IDDreadgion_02_LOWER_LIMIT_PERC" value="15" />
+    <row desc="IDArena 스테이지 정보 - 스테이지의 개수" id="145" name="IDArena_Stage_Count" value="10" />
+    <row desc="IDArena 스테이지 정보 - 1스테이지 시작 위치" id="146" name="IDArena_Stage0_Play_PositionAlias" value="STAGE_00_START" />
+    <row desc="IDArena 스테이지 정보 - 1스테이지 대기소 위치" id="147" name="IDArena_Stage0_Wait_PositionAlias" value="STAGE_00_WAIT" />
+    <row desc="IDArena 스테이지 정보 - 2스테이지 시작 위치" id="148" name="IDArena_Stage1_Play_PositionAlias" value="STAGE_01_START" />
+    <row desc="IDArena 스테이지 정보 - 2스테이지 대기소 위치" id="149" name="IDArena_Stage1_Wait_PositionAlias" value="STAGE_01_WAIT" />
+    <row desc="IDArena 스테이지 정보 - 3스테이지 시작 위치" id="150" name="IDArena_Stage2_Play_PositionAlias" value="STAGE_02_START" />
+    <row desc="IDArena 스테이지 정보 - 3스테이지 대기소 위치" id="151" name="IDArena_Stage2_Wait_PositionAlias" value="STAGE_02_WAIT" />
+    <row desc="IDArena 스테이지 정보 - 4스테이지 시작 위치" id="152" name="IDArena_Stage3_Play_PositionAlias" value="STAGE_03_START" />
+    <row desc="IDArena 스테이지 정보 - 4스테이지 대기소 위치" id="153" name="IDArena_Stage3_Wait_PositionAlias" value="STAGE_03_WAIT" />
+    <row desc="IDArena 스테이지 정보 - 5스테이지 시작 위치" id="154" name="IDArena_Stage4_Play_PositionAlias" value="STAGE_04_START" />
+    <row desc="IDArena 스테이지 정보 - 5스테이지 대기소 위치" id="155" name="IDArena_Stage4_Wait_PositionAlias" value="STAGE_04_WAIT" />
+    <row desc="IDArena 스테이지 정보 - 6스테이지 시작 위치" id="156" name="IDArena_Stage5_Play_PositionAlias" value="STAGE_05_START" />
+    <row desc="IDArena 스테이지 정보 - 6스테이지 대기소 위치" id="157" name="IDArena_Stage5_Wait_PositionAlias" value="STAGE_05_WAIT" />
+    <row desc="IDArena 스테이지 정보 - 7스테이지 시작 위치" id="158" name="IDArena_Stage6_Play_PositionAlias" value="STAGE_06_START" />
+    <row desc="IDArena 스테이지 정보 - 7스테이지 대기소 위치" id="159" name="IDArena_Stage6_Wait_PositionAlias" value="STAGE_06_WAIT" />
+    <row desc="IDArena 스테이지 정보 - 8스테이지 시작 위치" id="160" name="IDArena_Stage7_Play_PositionAlias" value="STAGE_07_START" />
+    <row desc="IDArena 스테이지 정보 - 8스테이지 대기소 위치" id="161" name="IDArena_Stage7_Wait_PositionAlias" value="STAGE_07_WAIT" />
+    <row desc="IDArena 스테이지 정보 - 9스테이지 시작 위치" id="162" name="IDArena_Stage8_Play_PositionAlias" value="STAGE_08_START" />
+    <row desc="IDArena 스테이지 정보 - 9스테이지 대기소 위치" id="163" name="IDArena_Stage8_Wait_PositionAlias" value="STAGE_08_WAIT" />
+    <row desc="IDArena 스테이지 정보 - 10스테이지 시작 위치" id="164" name="IDArena_Stage9_Play_PositionAlias" value="STAGE_09_START" />
+    <row desc="IDArena 스테이지 정보 - 10스테이지 대기소 위치" id="165" name="IDArena_Stage9_Wait_PositionAlias" value="STAGE_09_WAIT" />
+    <row desc="IDArena 스테이지 정보 - 11스테이지 시작 위치" id="166" name="IDArena_Stage10_Play_PositionAlias" value="STAGE_10_START" />
+    <row desc="IDArena 스테이지 정보 - 11스테이지 대기소 위치" id="167" name="IDArena_Stage10_Wait_PositionAlias" value="STAGE_10_WAIT" />
+    <row desc="IDArena 보상 지급 구간 개수" id="168" name="IDArena_Reward_Count" value="51" />
+    <row desc="IDArena 보상 지급 구간 기본지급 최소값" id="169" name="IDArena_Reward0_ScoreMin" value="0" />
+    <row desc="IDArena 보상 지급 구간 기본지급 아이템 종류" id="170" name="IDArena_Reward0_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 기본지급 아이템 개수" id="171" name="IDArena_Reward0_ItemCount" value="350" />
+    <row desc="IDArena 보상 지급 구간 1 최소값" id="172" name="IDArena_Reward1_ScoreMin" value="1100" />
+    <row desc="IDArena 보상 지급 구간 1 아이템 종류" id="173" name="IDArena_Reward1_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 1 아이템 개수" id="174" name="IDArena_Reward1_ItemCount" value="361" />
+    <row desc="IDArena 보상 지급 구간 2 최소값" id="175" name="IDArena_Reward2_ScoreMin" value="2200" />
+    <row desc="IDArena 보상 지급 구간 2 아이템 종류" id="176" name="IDArena_Reward2_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 2 아이템 개수" id="177" name="IDArena_Reward2_ItemCount" value="372" />
+    <row desc="IDArena 보상 지급 구간 3 최소값" id="178" name="IDArena_Reward3_ScoreMin" value="3400" />
+    <row desc="IDArena 보상 지급 구간 3 아이템 종류" id="179" name="IDArena_Reward3_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 3 아이템 개수" id="180" name="IDArena_Reward3_ItemCount" value="384" />
+    <row desc="IDArena 보상 지급 구간 4 최소값" id="181" name="IDArena_Reward4_ScoreMin" value="4700" />
+    <row desc="IDArena 보상 지급 구간 4 아이템 종류" id="182" name="IDArena_Reward4_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 4 아이템 개수" id="183" name="IDArena_Reward4_ItemCount" value="397" />
+    <row desc="IDArena 보상 지급 구간 5 최소값" id="184" name="IDArena_Reward5_ScoreMin" value="9700" />
+    <row desc="IDArena 보상 지급 구간 5 아이템 종류" id="185" name="IDArena_Reward5_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 5 아이템 개수" id="186" name="IDArena_Reward5_ItemCount" value="447" />
+    <row desc="IDArena 보상 지급 구간 6 최소값" id="187" name="IDArena_Reward6_ScoreMin" value="10900" />
+    <row desc="IDArena 보상 지급 구간 6 아이템 종류" id="188" name="IDArena_Reward6_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 6 아이템 개수" id="189" name="IDArena_Reward6_ItemCount" value="459" />
+    <row desc="IDArena 보상 지급 구간 7 최소값" id="190" name="IDArena_Reward7_ScoreMin" value="12200" />
+    <row desc="IDArena 보상 지급 구간 7 아이템 종류" id="191" name="IDArena_Reward7_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 7 아이템 개수" id="192" name="IDArena_Reward7_ItemCount" value="472" />
+    <row desc="IDArena 보상 지급 구간 8 최소값" id="193" name="IDArena_Reward8_ScoreMin" value="13700" />
+    <row desc="IDArena 보상 지급 구간 8 아이템 종류" id="194" name="IDArena_Reward8_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 8 아이템 개수" id="195" name="IDArena_Reward8_ItemCount" value="487" />
+    <row desc="IDArena 보상 지급 구간 9 최소값" id="196" name="IDArena_Reward9_ScoreMin" value="15400" />
+    <row desc="IDArena 보상 지급 구간 9 아이템 종류" id="197" name="IDArena_Reward9_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 9 아이템 개수" id="198" name="IDArena_Reward9_ItemCount" value="504" />
+    <row desc="IDArena 보상 지급 구간 10 최소값" id="199" name="IDArena_Reward10_ScoreMin" value="20900" />
+    <row desc="IDArena 보상 지급 구간 10 아이템 종류" id="200" name="IDArena_Reward10_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 10 아이템 개수" id="201" name="IDArena_Reward10_ItemCount" value="559" />
+    <row desc="IDArena 보상 지급 구간 11 최소값" id="202" name="IDArena_Reward11_ScoreMin" value="22200" />
+    <row desc="IDArena 보상 지급 구간 11 아이템 종류" id="203" name="IDArena_Reward11_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 11 아이템 개수" id="204" name="IDArena_Reward11_ItemCount" value="572" />
+    <row desc="IDArena 보상 지급 구간 12 최소값" id="205" name="IDArena_Reward12_ScoreMin" value="23600" />
+    <row desc="IDArena 보상 지급 구간 12 아이템 종류" id="206" name="IDArena_Reward12_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 12 아이템 개수" id="207" name="IDArena_Reward12_ItemCount" value="586" />
+    <row desc="IDArena 보상 지급 구간 13 최소값" id="208" name="IDArena_Reward13_ScoreMin" value="25300" />
+    <row desc="IDArena 보상 지급 구간 13 아이템 종류" id="209" name="IDArena_Reward13_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 13 아이템 개수" id="210" name="IDArena_Reward13_ItemCount" value="603" />
+    <row desc="IDArena 보상 지급 구간 14 최소값" id="211" name="IDArena_Reward14_ScoreMin" value="27200" />
+    <row desc="IDArena 보상 지급 구간 14 아이템 종류" id="212" name="IDArena_Reward14_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 14 아이템 개수" id="213" name="IDArena_Reward14_ItemCount" value="622" />
+    <row desc="IDArena 보상 지급 구간 15 최소값" id="214" name="IDArena_Reward15_ScoreMin" value="33700" />
+    <row desc="IDArena 보상 지급 구간 15 아이템 종류" id="215" name="IDArena_Reward15_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 15 아이템 개수" id="216" name="IDArena_Reward15_ItemCount" value="687" />
+    <row desc="IDArena 보상 지급 구간 16 최소값" id="217" name="IDArena_Reward16_ScoreMin" value="35100" />
+    <row desc="IDArena 보상 지급 구간 16 아이템 종류" id="218" name="IDArena_Reward16_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 16 아이템 개수" id="219" name="IDArena_Reward16_ItemCount" value="701" />
+    <row desc="IDArena 보상 지급 구간 17 최소값" id="220" name="IDArena_Reward17_ScoreMin" value="36800" />
+    <row desc="IDArena 보상 지급 구간 17 아이템 종류" id="221" name="IDArena_Reward17_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 17 아이템 개수" id="222" name="IDArena_Reward17_ItemCount" value="718" />
+    <row desc="IDArena 보상 지급 구간 18 최소값" id="223" name="IDArena_Reward18_ScoreMin" value="38700" />
+    <row desc="IDArena 보상 지급 구간 18 아이템 종류" id="224" name="IDArena_Reward18_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 18 아이템 개수" id="225" name="IDArena_Reward18_ItemCount" value="737" />
+    <row desc="IDArena 보상 지급 구간 19 최소값" id="226" name="IDArena_Reward19_ScoreMin" value="40800" />
+    <row desc="IDArena 보상 지급 구간 19 아이템 종류" id="227" name="IDArena_Reward19_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 19 아이템 개수" id="228" name="IDArena_Reward19_ItemCount" value="758" />
+    <row desc="IDArena 보상 지급 구간 20 최소값" id="229" name="IDArena_Reward20_ScoreMin" value="47700" />
+    <row desc="IDArena 보상 지급 구간 20 아이템 종류" id="230" name="IDArena_Reward20_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 20 아이템 개수" id="231" name="IDArena_Reward20_ItemCount" value="827" />
+    <row desc="IDArena 보상 지급 구간 21 최소값" id="232" name="IDArena_Reward21_ScoreMin" value="49200" />
+    <row desc="IDArena 보상 지급 구간 21 아이템 종류" id="233" name="IDArena_Reward21_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 21 아이템 개수" id="234" name="IDArena_Reward21_ItemCount" value="842" />
+    <row desc="IDArena 보상 지급 구간 22 최소값" id="235" name="IDArena_Reward22_ScoreMin" value="51100" />
+    <row desc="IDArena 보상 지급 구간 22 아이템 종류" id="236" name="IDArena_Reward22_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 22 아이템 개수" id="237" name="IDArena_Reward22_ItemCount" value="861" />
+    <row desc="IDArena 보상 지급 구간 23 최소값" id="238" name="IDArena_Reward23_ScoreMin" value="53100" />
+    <row desc="IDArena 보상 지급 구간 23 아이템 종류" id="239" name="IDArena_Reward23_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 23 아이템 개수" id="240" name="IDArena_Reward23_ItemCount" value="881" />
+    <row desc="IDArena 보상 지급 구간 24 최소값" id="241" name="IDArena_Reward24_ScoreMin" value="55500" />
+    <row desc="IDArena 보상 지급 구간 24 아이템 종류" id="242" name="IDArena_Reward24_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 24 아이템 개수" id="243" name="IDArena_Reward24_ItemCount" value="905" />
+    <row desc="IDArena 보상 지급 구간 25 최소값" id="244" name="IDArena_Reward25_ScoreMin" value="63300" />
+    <row desc="IDArena 보상 지급 구간 25 아이템 종류" id="245" name="IDArena_Reward25_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 25 아이템 개수" id="246" name="IDArena_Reward25_ItemCount" value="983" />
+    <row desc="IDArena 보상 지급 구간 26 최소값" id="247" name="IDArena_Reward26_ScoreMin" value="64900" />
+    <row desc="IDArena 보상 지급 구간 26 아이템 종류" id="248" name="IDArena_Reward26_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 26 아이템 개수" id="249" name="IDArena_Reward26_ItemCount" value="999" />
+    <row desc="IDArena 보상 지급 구간 27 최소값" id="250" name="IDArena_Reward27_ScoreMin" value="66800" />
+    <row desc="IDArena 보상 지급 구간 27 아이템 종류" id="251" name="IDArena_Reward27_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 27 아이템 개수" id="252" name="IDArena_Reward27_ItemCount" value="1018" />
+    <row desc="IDArena 보상 지급 구간 28 최소값" id="253" name="IDArena_Reward28_ScoreMin" value="69000" />
+    <row desc="IDArena 보상 지급 구간 28 아이템 종류" id="254" name="IDArena_Reward28_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 28 아이템 개수" id="255" name="IDArena_Reward28_ItemCount" value="1040" />
+    <row desc="IDArena 보상 지급 구간 29 최소값" id="256" name="IDArena_Reward29_ScoreMin" value="71600" />
+    <row desc="IDArena 보상 지급 구간 29 아이템 종류" id="257" name="IDArena_Reward29_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 29 아이템 개수" id="258" name="IDArena_Reward29_ItemCount" value="1066" />
+    <row desc="IDArena 보상 지급 구간 30 최소값" id="259" name="IDArena_Reward30_ScoreMin" value="80500" />
+    <row desc="IDArena 보상 지급 구간 30 아이템 종류" id="260" name="IDArena_Reward30_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 30 아이템 개수" id="261" name="IDArena_Reward30_ItemCount" value="1155" />
+    <row desc="IDArena 보상 지급 구간 31 최소값" id="262" name="IDArena_Reward31_ScoreMin" value="83400" />
+    <row desc="IDArena 보상 지급 구간 31 아이템 종류" id="263" name="IDArena_Reward31_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 31 아이템 개수" id="264" name="IDArena_Reward31_ItemCount" value="1184" />
+    <row desc="IDArena 보상 지급 구간 32 최소값" id="265" name="IDArena_Reward32_ScoreMin" value="86500" />
+    <row desc="IDArena 보상 지급 구간 32 아이템 종류" id="266" name="IDArena_Reward32_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 32 아이템 개수" id="267" name="IDArena_Reward32_ItemCount" value="1215" />
+    <row desc="IDArena 보상 지급 구간 33 최소값" id="268" name="IDArena_Reward33_ScoreMin" value="89900" />
+    <row desc="IDArena 보상 지급 구간 33 아이템 종류" id="269" name="IDArena_Reward33_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 33 아이템 개수" id="270" name="IDArena_Reward33_ItemCount" value="1249" />
+    <row desc="IDArena 보상 지급 구간 34 최소값" id="271" name="IDArena_Reward34_ScoreMin" value="93700" />
+    <row desc="IDArena 보상 지급 구간 34 아이템 종류" id="272" name="IDArena_Reward34_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 34 아이템 개수" id="273" name="IDArena_Reward34_ItemCount" value="1287" />
+    <row desc="IDArena 보상 지급 구간 35 최소값" id="274" name="IDArena_Reward35_ScoreMin" value="105200" />
+    <row desc="IDArena 보상 지급 구간 35 아이템 종류" id="275" name="IDArena_Reward35_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 35 아이템 개수" id="276" name="IDArena_Reward35_ItemCount" value="1402" />
+    <row desc="IDArena 보상 지급 구간 36 최소값" id="277" name="IDArena_Reward36_ScoreMin" value="109200" />
+    <row desc="IDArena 보상 지급 구간 36 아이템 종류" id="278" name="IDArena_Reward36_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 36 아이템 개수" id="279" name="IDArena_Reward36_ItemCount" value="1442" />
+    <row desc="IDArena 보상 지급 구간 37 최소값" id="280" name="IDArena_Reward37_ScoreMin" value="113400" />
+    <row desc="IDArena 보상 지급 구간 37 아이템 종류" id="281" name="IDArena_Reward37_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 37 아이템 개수" id="282" name="IDArena_Reward37_ItemCount" value="1484" />
+    <row desc="IDArena 보상 지급 구간 38 최소값" id="283" name="IDArena_Reward38_ScoreMin" value="118400" />
+    <row desc="IDArena 보상 지급 구간 38 아이템 종류" id="284" name="IDArena_Reward38_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 38 아이템 개수" id="285" name="IDArena_Reward38_ItemCount" value="1534" />
+    <row desc="IDArena 보상 지급 구간 39 최소값" id="286" name="IDArena_Reward39_ScoreMin" value="124400" />
+    <row desc="IDArena 보상 지급 구간 39 아이템 종류" id="287" name="IDArena_Reward39_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 39 아이템 개수" id="288" name="IDArena_Reward39_ItemCount" value="1594" />
+    <row desc="IDArena 보상 지급 구간 40 최소값" id="289" name="IDArena_Reward40_ScoreMin" value="141400" />
+    <row desc="IDArena 보상 지급 구간 40 아이템 종류" id="290" name="IDArena_Reward40_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 40 아이템 개수" id="291" name="IDArena_Reward40_ItemCount" value="1764" />
+    <row desc="IDArena 보상 지급 구간 41 최소값" id="292" name="IDArena_Reward41_ScoreMin" value="147600" />
+    <row desc="IDArena 보상 지급 구간 41 아이템 종류" id="293" name="IDArena_Reward41_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 41 아이템 개수" id="294" name="IDArena_Reward41_ItemCount" value="1826" />
+    <row desc="IDArena 보상 지급 구간 42 최소값" id="295" name="IDArena_Reward42_ScoreMin" value="154900" />
+    <row desc="IDArena 보상 지급 구간 42 아이템 종류" id="296" name="IDArena_Reward42_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 42 아이템 개수" id="297" name="IDArena_Reward42_ItemCount" value="1899" />
+    <row desc="IDArena 보상 지급 구간 43 최소값" id="298" name="IDArena_Reward43_ScoreMin" value="163400" />
+    <row desc="IDArena 보상 지급 구간 43 아이템 종류" id="299" name="IDArena_Reward43_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 43 아이템 개수" id="300" name="IDArena_Reward43_ItemCount" value="1984" />
+    <row desc="IDArena 보상 지급 구간 44 최소값" id="301" name="IDArena_Reward44_ScoreMin" value="172800" />
+    <row desc="IDArena 보상 지급 구간 44 아이템 종류" id="302" name="IDArena_Reward44_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 44 아이템 개수" id="303" name="IDArena_Reward44_ItemCount" value="2078" />
+    <row desc="IDArena 보상 지급 구간 45 최소값" id="304" name="IDArena_Reward45_ScoreMin" value="198700" />
+    <row desc="IDArena 보상 지급 구간 45 아이템 종류" id="305" name="IDArena_Reward45_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 45 아이템 개수" id="306" name="IDArena_Reward45_ItemCount" value="2337" />
+    <row desc="IDArena 보상 지급 구간 46 최소값" id="307" name="IDArena_Reward46_ScoreMin" value="209600" />
+    <row desc="IDArena 보상 지급 구간 46 아이템 종류" id="308" name="IDArena_Reward46_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 46 아이템 개수" id="309" name="IDArena_Reward46_ItemCount" value="2446" />
+    <row desc="IDArena 보상 지급 구간 47 최소값" id="310" name="IDArena_Reward47_ScoreMin" value="223500" />
+    <row desc="IDArena 보상 지급 구간 47 아이템 종류" id="311" name="IDArena_Reward47_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 47 아이템 개수" id="312" name="IDArena_Reward47_ItemCount" value="2585" />
+    <row desc="IDArena 보상 지급 구간 48 최소값" id="313" name="IDArena_Reward48_ScoreMin" value="241300" />
+    <row desc="IDArena 보상 지급 구간 48 아이템 종류" id="314" name="IDArena_Reward48_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 48 아이템 개수" id="315" name="IDArena_Reward48_ItemCount" value="2763" />
+    <row desc="IDArena 보상 지급 구간 49 최소값" id="316" name="IDArena_Reward49_ScoreMin" value="433800" />
+    <row desc="IDArena 보상 지급 구간 49 아이템 종류" id="317" name="IDArena_Reward49_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 49 아이템 개수" id="318" name="IDArena_Reward49_ItemCount" value="4688" />
+    <row desc="IDArena 보상 지급 구간 50 최소값" id="319" name="IDArena_Reward50_ScoreMin" value="498200" />
+    <row desc="IDArena 보상 지급 구간 50 아이템 종류" id="320" name="IDArena_Reward50_ItemID" value="186000130" />
+    <row desc="IDArena 보상 지급 구간 50 아이템 개수" id="321" name="IDArena_Reward50_ItemCount" value="5332" />
+    <row desc="IDArena_Solo 스테이지 정보 - 스테이지의 개수" id="322" name="IDArenaSolo_Stage_Count" value="9" />
+    <row desc="IDArena_Solo 스테이지 정보 - 1스테이지 시작 위치" id="323" name="IDArenaSolo_Stage0_Play_PositionAlias" value="STAGE_00_START" />
+    <row desc="IDArena_Solo 스테이지 정보 - 1스테이지 대기소 위치" id="324" name="IDArenaSolo_Stage0_Wait_PositionAlias" value="STAGE_00_WAIT" />
+    <row desc="IDArena_Solo 스테이지 정보 - 2스테이지 시작 위치" id="325" name="IDArenaSolo_Stage1_Play_PositionAlias" value="STAGE_01_START" />
+    <row desc="IDArena_Solo 스테이지 정보 - 2스테이지 대기소 위치" id="326" name="IDArenaSolo_Stage1_Wait_PositionAlias" value="STAGE_01_WAIT" />
+    <row desc="IDArena_Solo 스테이지 정보 - 3스테이지 시작 위치" id="327" name="IDArenaSolo_Stage2_Play_PositionAlias" value="STAGE_02_START" />
+    <row desc="IDArena_Solo 스테이지 정보 - 3스테이지 대기소 위치" id="328" name="IDArenaSolo_Stage2_Wait_PositionAlias" value="STAGE_02_WAIT" />
+    <row desc="IDArena_Solo 스테이지 정보 - 4A스테이지 시작 위치" id="329" name="IDArenaSolo_Stage3_Play_PositionAlias" value="STAGE_03_START" />
+    <row desc="IDArena_Solo 스테이지 정보 - 4A스테이지 대기소 위치" id="330" name="IDArenaSolo_Stage3_Wait_PositionAlias" value="STAGE_03_WAIT" />
+    <row desc="IDArena_Solo 스테이지 정보 - 4B스테이지 시작 위치" id="331" name="IDArenaSolo_Stage4_Play_PositionAlias" value="STAGE_04_START" />
+    <row desc="IDArena_Solo 스테이지 정보 - 4B스테이지 대기소 위치" id="332" name="IDArenaSolo_Stage4_Wait_PositionAlias" value="STAGE_04_WAIT" />
+    <row desc="IDArena_Solo 스테이지 정보 - 5스테이지 시작 위치" id="333" name="IDArenaSolo_Stage5_Play_PositionAlias" value="STAGE_05_START" />
+    <row desc="IDArena_Solo 스테이지 정보 - 5스테이지 대기소 위치" id="334" name="IDArenaSolo_Stage5_Wait_PositionAlias" value="STAGE_05_WAIT" />
+    <row desc="IDArena_Solo 스테이지 정보 - 6스테이지 시작 위치" id="335" name="IDArenaSolo_Stage6_Play_PositionAlias" value="STAGE_06_START" />
+    <row desc="IDArena_Solo 스테이지 정보 - 6스테이지 대기소 위치" id="336" name="IDArenaSolo_Stage6_Wait_PositionAlias" value="STAGE_06_WAIT" />
+    <row desc="IDArena_Solo 스테이지 정보 - H1스테이지 시작 위치" id="337" name="IDArenaSolo_Stage7_Play_PositionAlias" value="STAGE_07_START" />
+    <row desc="IDArena_Solo 스테이지 정보 - H1스테이지 대기소 위치" id="338" name="IDArenaSolo_Stage7_Wait_PositionAlias" value="STAGE_07_WAIT" />
+    <row desc="IDArena_Solo 스테이지 정보 - H2스테이지 시작 위치" id="339" name="IDArenaSolo_Stage8_Play_PositionAlias" value="STAGE_08_START" />
+    <row desc="IDArena_Solo 스테이지 정보 - H2스테이지 대기소 위치" id="340" name="IDArenaSolo_Stage8_Wait_PositionAlias" value="STAGE_08_WAIT" />
+    <row desc="IDArena 보상 아이템 1개당 필요한 점수" id="341" name="IDArena_Reward_perScore" value="100" />
+    <row desc="IDArena 보상 아이템 종류" id="342" name="IDArena_Reward_ItemID" value="186000130" />
+    <row desc="IDArena 보상 아이템 기본 개수" id="343" name="IDArena_Reward_Base" value="350" />
+    <row desc="IDArena_solo 보상 아이템 1개당 필요한 점수" id="344" name="IDArenaSolo_Reward_perScore" value="100" />
+    <row desc="IDArena_solo 보상 아이템 종류" id="345" name="IDArenaSolo_Reward_ItemID" value="186000130" />
+    <row desc="IDArena_solo 보상 아이템 기본 개수" id="346" name="IDArenaSolo_Reward_Base" value="120" />
+    <row desc="IDDreadgion_03 버프 타임" id="347" name="IDDreadgion_03_BUFF_TIME" value="120" />
+    <row desc="IDDreadgion_03 플레이 타임" id="348" name="IDDreadgion_03_LIMIT_TIME" value="2400" />
+    <row desc="IDDreadgion_03 보스 클래스" id="349" name="IDDreadgion_03_BOSS_NAME" value="IDDreadgion_03_DrakanWi_Boss_Ah" />
+    <row desc="IDDreadgion_03 시작점 01" id="350" name="IDDreadgion_03_START_ALIAS_01" value="IDDreadgion_03_Extra_01" />
+    <row desc="IDDreadgion_03 시작점 02" id="351" name="IDDreadgion_03_START_ALIAS_02" value="IDDreadgion_03_Extra_02" />
+    <row desc="IDDreadgion_03 천족 OUT 레벨" id="352" name="IDDreadgion_03_LIGHT_OUT_LEVEL" value="LF5" />
+    <row desc="IDDreadgion_03 천족 OUT Locations" id="353" name="IDDreadgion_03_LIGHT_OUT_LOCATIONS" value="LF5_IDDreadgion_03_Out_Area" />
+    <row desc="IDDreadgion_03 마족 OUT 레벨" id="354" name="IDDreadgion_03_DARK_OUT_LEVEL" value="DF5" />
+    <row desc="IDDreadgion_03 마족 OUT Locations" id="355" name="IDDreadgion_03_DARK_OUT_LOCATIONS" value="DF5_IDDreadgion_03_Out_Area" />
+    <row desc="IDDreadgion_03 승리 보너스 AP" id="356" name="IDDreadgion_03_WIN_BONUS_AP" value="11000" />
+    <row desc="IDDreadgion_03 무승부 보너스 AP" id="357" name="IDDreadgion_03_DRAW_BONUS_AP" value="7000" />
+    <row desc="IDDreadgion_03 패배 보너스 AP" id="358" name="IDDreadgion_03_LOST_BONUS_AP" value="7000" />
+    <row desc="IDDreadgion_03 플레이 보너스 AP" id="359" name="IDDreadgion_03_PLAY_BONUS_AP" value="21000" />
+    <row desc="IDDreadgion_03 TOTAL_SCORE" id="360" name="IDDreadgion_03_TOTAL_SCORE" value="18204" />
+    <row desc="IDDreadgion_03 플레이 종료 후 강제 퇴장 시간(초)" id="361" name="IDDreadgion_03_Leave_Time" value="600" />
+    <row desc="IDDreadgion_03 PC 킬 점수" id="362" name="IDDreadgion_03_PC_KILL_SCORE" value="10" />
+    <row desc="IDDreadgion_03 손실 한계 점수(Per)" id="363" name="IDDreadgion_03_LOWER_LIMIT_PERC" value="15" />
+    <row desc="IDDreadgion_04 버프 타임" id="364" name="IDDreadgion_04_BUFF_TIME" value="120" />
+    <row desc="IDDreadgion_04 플레이 타임" id="365" name="IDDreadgion_04_LIMIT_TIME" value="2400" />
+    <row desc="IDDreadgion_04 보스 클래스" id="366" name="IDDreadgion_04_BOSS_NAME" value="IDDreadgion_04_DrakanWi_DrakanNinja_Ah" />
+    <row desc="IDDreadgion_04 시작점 01" id="367" name="IDDreadgion_04_START_ALIAS_01" value="IDDreadgion_04_Extra_01" />
+    <row desc="IDDreadgion_04 시작점 02" id="368" name="IDDreadgion_04_START_ALIAS_02" value="IDDreadgion_04_Extra_02" />
+    <row desc="IDDreadgion_04 천족 OUT 레벨" id="369" name="IDDreadgion_04_LIGHT_OUT_LEVEL" value="LF5" />
+    <row desc="IDDreadgion_04 천족 OUT Locations" id="370" name="IDDreadgion_04_LIGHT_OUT_LOCATIONS" value="LF5_IDDreadgion_03_Out_Area" />
+    <row desc="IDDreadgion_04 마족 OUT 레벨" id="371" name="IDDreadgion_04_DARK_OUT_LEVEL" value="DF5" />
+    <row desc="IDDreadgion_04 마족 OUT Locations" id="372" name="IDDreadgion_04_DARK_OUT_LOCATIONS" value="DF5_IDDreadgion_03_Out_Area" />
+    <row desc="IDDreadgion_04 승리 보너스 AP" id="373" name="IDDreadgion_04_WIN_BONUS_AP" value="11000" />
+    <row desc="IDDreadgion_04 무승부 보너스 AP" id="374" name="IDDreadgion_04_DRAW_BONUS_AP" value="7000" />
+    <row desc="IDDreadgion_04 패배 보너스 AP" id="375" name="IDDreadgion_04_LOST_BONUS_AP" value="7000" />
+    <row desc="IDDreadgion_04 플레이 보너스 AP" id="376" name="IDDreadgion_04_PLAY_BONUS_AP" value="21000" />
+    <row desc="IDDreadgion_04 TOTAL_SCORE" id="377" name="IDDreadgion_04_TOTAL_SCORE" value="18204" />
+    <row desc="IDDreadgion_04 플레이 종료 후 강제 퇴장 시간(초)" id="378" name="IDDreadgion_04_Leave_Time" value="600" />
+    <row desc="IDDreadgion_04 PC 킬 점수" id="379" name="IDDreadgion_04_PC_KILL_SCORE" value="10" />
+    <row desc="IDDreadgion_04 손실 한계 점수(Per)" id="380" name="IDDreadgion_04_LOWER_LIMIT_PERC" value="15" />
+  </table>
   <table name="world_timeattack">
     <row a_ap_reward="500" a_bonus_item1="186000018" a_bonus_item1_reward="14" a_bonus_item2="186000137" a_bonus_item2_reward="5" a_item1_reward="50" a_item2_reward="5" a_npc_condition="SpawnPointGrouptest7" a_score_minimum="7000" a_time_maximum="120" b_ap_reward="400" b_bonus_item1="186000004" b_bonus_item1_reward="13" b_bonus_item2="186000005" b_bonus_item2_reward="4" b_item1_reward="40" b_item2_reward="4" b_npc_condition="SpawnPointGrouptest6" b_score_minimum="5000" b_time_maximum="180" base_score="1000" c_ap_reward="300" c_bonus_item1="186000003" c_bonus_item1_reward="12" c_bonus_item2="186000469" c_bonus_item2_reward="54" c_item1_reward="30" c_item2_reward="3" c_npc_condition="SpawnPointGrouptest5" c_score_minimum="3000" c_time_maximum="240" calculate_npc_01="Test_IDLDF5Re_Mob1" calculate_npc_02="test_basic_krallScout_55_an" d_ap_reward="200" d_bonus_item1="186000002" d_bonus_item1_reward="11" d_bonus_item2="186000469" d_bonus_item2_reward="10" d_item1_reward="20" d_item2_reward="2" d_npc_condition="SpawnPointGrouptest4" d_score_minimum="1000" d_time_maximum="300" door_id="1" end_score="10000" f_ap_reward="100" f_bonus_item1="186000001" f_bonus_item1_reward="10" f_bonus_item2="186000469" f_bonus_item2_reward="1" f_item1_reward="10" f_item2_reward="1" f_npc_condition="SpawnPointGrouptest3" f_timeover_type="0" id="1" item1_id="186000130" item2_id="186000137" lowest_score="500" name="IDLDF5RE_test" npc_despawn="1" s_ap_reward="600" s_bonus_item1="186000143" s_bonus_item1_reward="15" s_bonus_item2="186000469" s_bonus_item2_reward="378" s_item1_reward="60" s_item2_reward="6" s_npc_condition="SpawnPointGrouptest8" s_score_minimum="9000" s_time_maximum="60" time_limit="360" wait_time="60" worldname="IDLDF5RE_test" world_id="900130000" />
     <row a_ap_reward="25000" a_bonus_item1="188052597" a_bonus_item1_reward="1" a_bonus_item2="188052594" a_bonus_item2_reward="1" a_item1_reward="420" a_npc_condition="SpawnPointGrouptest7" a_score_minimum="82000" a_time_maximum="3600" b_ap_reward="15000" b_bonus_item1="188052598" b_bonus_item1_reward="1" b_bonus_item2="188052595" b_bonus_item2_reward="1" b_item1_reward="210" b_npc_condition="SpawnPointGrouptest6" b_score_minimum="60000" b_time_maximum="3600" base_score="20000" c_ap_reward="11000" c_bonus_item1="188052598" c_bonus_item1_reward="1" c_item1_reward="0" c_npc_condition="SpawnPointGrouptest5" c_score_minimum="30000" c_time_maximum="3600" calculate_npc_01="IDF5_TD_Commander_Li_65_Ah" calculate_npc_02="IDF5_TD_DragonRider_Chief_N_65_Al" calculate_npc_03="IDF5_TD_Commander_Da_65_Ah" d_ap_reward="7000" d_item1_reward="0" d_npc_condition="SpawnPointGrouptest4" d_score_minimum="5000" d_time_maximum="3600" door_id="1" end_score="100000" f_ap_reward="0" f_item1_reward="0" f_npc_condition="SpawnPointGrouptest3" f_timeover_type="1" id="2" item1_id="186000469" lowest_score="0" name="IDLDF5b_TD" npc_despawn="1" s_ap_reward="35000" s_bonus_item1="188052596" s_bonus_item1_reward="1" s_bonus_item2="188052594" s_bonus_item2_reward="1" s_item1_reward="840" s_npc_condition="SpawnPointGrouptest8" s_score_minimum="90000" s_time_maximum="3600" time_limit="1800" wait_time="180" worldname="IDLDF5b_TD" world_id="300540000" />
@@ -218,7 +511,7 @@
     <row desc="테스트 데이터 입니다 하하5" id="5" name="score_test_lb5" name_id="Test_LB_5" score="-500" type="NPC" />
     <row desc="테스트 데이터 입니다 하하6" id="6" name="score_test_lb6" name_id="Test_LB_6" score="600" type="NPC" />
     <row desc="테스트 데이터 입니다 하하7" id="7" name="score_test_lb7" name_id="Test_LB_7" score="700" type="NPC" />
-    <row desc="IDLF1 채집 데이터 트몰리아 폐광에서 채집" id="8" name="score_gather_IDLF1_1" name_id="gb_source_gmetal_50a_IDLF1" score="50" type="Gather" />
+    <row desc="IDLF1 채집 데이터 트몰리아 폐광에서 채집" id="8" name="score_gather_IDLF1_1" name_id="gb_source_gmetal_50a_IDLF1" score="50" type="Gather" gather_id="401112" />
     <row desc="STR_OBJ_IDAb1_Dreadgion_Surkana_1" id="9" name="IDAb1_Dreadgion_Surkana_1" name_id="IDAb1_Dreadgion_Surkana_1" score="500" type="NPC" />
     <row desc="STR_OBJ_IDAb1_Dreadgion_Surkana_2" id="10" name="IDAb1_Dreadgion_Surkana_2" name_id="IDAb1_Dreadgion_Surkana_2" score="500" type="NPC" />
     <row desc="STR_OBJ_IDAb1_Dreadgion_Surkana_3" id="11" name="IDAb1_Dreadgion_Surkana_3" name_id="IDAb1_Dreadgion_Surkana_3" score="900" type="NPC" />
@@ -272,7 +565,7 @@
     <row desc="STR_NPC_IDAB1_Dreadgion_prisoner_dark" id="59" name="IDAB1_Dreadgion_prisoner_dark2" name_id="IDAB1_Dreadgion_prisoner_dark2" score="100" type="NPC" />
     <row desc="STR_NPC_IDAB1_Dreadgion_prisoner_dark" id="60" name="IDAB1_Dreadgion_prisoner_dark3" name_id="IDAB1_Dreadgion_prisoner_dark3" score="100" type="NPC" />
     <row desc="STR_NPC_IDAB1_Dreadgion_prisoner_dark" id="61" name="IDAB1_Dreadgion_prisoner_dark4" name_id="IDAB1_Dreadgion_prisoner_dark4" score="100" type="NPC" />
-    <row desc="IDLF1 채집 데이터 스카 동굴 앞 거대 채집물" id="62" name="score_gather_IDLF1_2" name_id="gb_source_gtree_50a_IDLF1" score="200" type="Gather" />
+    <row desc="IDLF1 채집 데이터 스카 동굴 앞 거대 채집물" id="62" name="score_gather_IDLF1_2" name_id="gb_source_gtree_50a_IDLF1" score="200" type="Gather" gather_id="401111" />
     <row desc="IDLF1 아카리오스 황야 몬스터" id="63" name="IDLF1_A_LizardFi_50_Ae" name_id="IDLF1_A_LizardFi_50_Ae" score="26" type="NPC" />
     <row desc="IDLF1 아카리오스 황야 몬스터" id="64" name="IDLF1_A_FeA_LizardFi_50_Ae" name_id="IDLF1_A_FeA_LizardFi_50_Ae" score="26" type="NPC" />
     <row desc="IDLF1 아카리오스 황야 몬스터" id="65" name="IDLF1_A_LizardAs_50_Ae" name_id="IDLF1_A_LizardAs_50_Ae" score="26" type="NPC" />
@@ -726,8 +1019,8 @@
     <row desc="IDArena_pvp03_S3_브락스_56" id="513" name="IDArena_pvp02_S3_Brax_56" name_id="IDArena_pvp02_S3_Brax_56" score="100" type="NPC" />
     <row desc="IDArena_pvp03_S3_토그_56" id="514" name="IDArena_pvp02_S3_Tog_56" name_id="IDArena_pvp02_S3_Tog_56" score="100" type="NPC" />
     <row desc="IDArena_pvp03_S3_박쥐_56" id="515" name="IDArena_pvp02_S4_Vivre_56" name_id="IDArena_pvp02_S4_Vivre_56" score="0" type="NPC" />
-    <row desc="템페르 채집 나무 1번(임시명)" id="516" name="gb_source_tree_arena_pvp01_01" name_id="gb_source_metal_arena_pvp01_01" score="1250" type="Gather" />
-    <row desc="템페르 채집 나무 2번(임시명)" id="517" name="gb_source_tree_arena_pvp01_02" name_id="gb_source_metal_arena_pvp01_02" score="1250" score_apply_type="3" type="Gather" />
+    <row desc="템페르 채집 나무 1번(임시명)" id="516" name="gb_source_tree_arena_pvp01_01" name_id="gb_source_metal_arena_pvp01_01" score="1250" type="Gather" gather_id="405000" />
+    <row desc="템페르 채집 나무 2번(임시명)" id="517" name="gb_source_tree_arena_pvp01_02" name_id="gb_source_metal_arena_pvp01_02" score="1250" score_apply_type="3" type="Gather" gather_id="405001" />
     <row desc="FFA 늪지 스테이지 버프 오브젝트_46용" id="518" name="IDArena_pvp01_S6_buff01_46" name_id="IDArena_pvp01_S6_buff01_46" score="500" type="NPC" />
     <row desc="FFA 늪지 스테이지 버프 오브젝트_51용" id="519" name="IDArena_pvp01_S6_buff01_51" name_id="IDArena_pvp01_S6_buff01_51" score="500" type="NPC" />
     <row desc="FFA 늪지 스테이지 버프 오브젝트_56용" id="520" name="IDArena_pvp01_S6_buff01_56" name_id="IDArena_pvp01_S6_buff01_56" score="500" type="NPC" />
@@ -865,8 +1158,8 @@
     <row desc="IDArena_Glory_S2 브락스_51" id="652" name="IDArena_Glory_S3_Brax_51" name_id="IDArena_Glory_S3_Brax_51" score="400" type="NPC" />
     <row desc="IDArena_Glory_S2 브락스_56" id="653" name="IDArena_Glory_S3_Brax_56" name_id="IDArena_Glory_S3_Brax_56" score="400" type="NPC" />
     <row desc="점수 감소 테스트" id="654" name="score_test_minus" name_id="Test_IDLDF5Re_Mob1" score="-500" type="NPC" />
-    <row desc="점수 감소 테스트" id="655" name="gb_source_jewelry_d_10b_Phouisng_test" name_id="gb_source_jewelry_d_10b_Phouisng_test" score="500" score_apply_type="2" type="Gather" />
-    <row desc="점수 감소 테스트" id="656" name="gb_source_jewelry_d_30c_Phouisng_test" name_id="gb_source_jewelry_d_30c_Phouisng_test" score="-500" score_apply_type="3" type="Gather" />
+    <row desc="점수 감소 테스트" id="655" name="gb_source_jewelry_d_10b_Phouisng_test" name_id="gb_source_jewelry_d_10b_Phouisng_test" score="500" score_apply_type="2" type="Gather" gather_id="409148" />
+    <row desc="점수 감소 테스트" id="656" name="gb_source_jewelry_d_30c_Phouisng_test" name_id="gb_source_jewelry_d_30c_Phouisng_test" score="-500" score_apply_type="3" type="Gather" gather_id="409163" />
     <row desc="점수 감소 테스트" id="657" name="LightDevaAsD_25_An" name_id="LightDevaAsD_25_An" score="-500" score_apply_type="1" type="NPC" />
     <row desc="점수 감소 테스트" id="658" name="LightDevaFiD_25_An" name_id="LightDevaFiD_25_An" score="-500" score_apply_type="2" type="NPC" />
     <row desc="점수 감소 테스트" id="659" name="LightDevaLeaderKnD_25_An" name_id="LightDevaLeaderKnD_25_An" score="500" score_apply_type="3" type="NPC" />

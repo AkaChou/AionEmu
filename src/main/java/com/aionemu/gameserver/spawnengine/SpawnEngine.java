@@ -387,7 +387,8 @@ public class SpawnEngine {
 		StaticDoorSpawnManager.spawnTemplate(worldId, instanceId);
 		int spawnedCounter = 0;
 		if (worldSpawns != null) {
-			for (SpawnGroup2 spawn : worldSpawns) {
+			for (int groupIndex = 0; groupIndex < worldSpawns.size(); groupIndex++) {
+				SpawnGroup2 spawn = worldSpawns.get(groupIndex);
 				int difficult = spawn.getDifficultId();
 				if (difficult != 0 && difficult != difficultId) {
 					continue;
@@ -416,11 +417,14 @@ public class SpawnEngine {
 						SpawnTemplate template = spawn.getRndTemplate(instanceId);
 						if (template == null)
 							break;
+						assignStableKey(template, groupIndex, spawn.getSpawnTemplates().indexOf(template));
 						spawnObject(template, instanceId);
 						spawnedCounter++;
 					}
 				} else {
-					for (SpawnTemplate template : spawn.getSpawnTemplates()) {
+					for (int templateIndex = 0; templateIndex < spawn.getSpawnTemplates().size(); templateIndex++) {
+						SpawnTemplate template = spawn.getSpawnTemplates().get(templateIndex);
+						assignStableKey(template, groupIndex, templateIndex);
 						spawnObject(template, instanceId);
 						spawnedCounter++;
 					}
@@ -433,6 +437,13 @@ public class SpawnEngine {
 		var instance = GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(instanceId);
 		RetailNpcPartyEngine.initialize(instance);
 		RetailConditionSpawnEngine.initialize(instance);
+	}
+
+	static void assignStableKey(SpawnTemplate template, int groupIndex, int templateIndex) {
+		if (template.getStableKey() == null) {
+			template.setStableKey(template.getEntityId() > 0 ? "entity:" + template.getEntityId()
+				: "static:" + groupIndex + ':' + templateIndex);
+		}
 	}
 
 	/**

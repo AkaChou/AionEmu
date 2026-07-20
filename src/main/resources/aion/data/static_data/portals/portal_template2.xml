@@ -41,10 +41,6 @@
 	<portal_use npc_id="730358">
 		<portal_path loc_id="3002105" race="ASMODIANS"/>
 	</portal_use>
-	<!-- Elementis Forest Exit -->
-	<portal_use npc_id="730378">
-		<portal_path loc_id="6000202"/>
-	</portal_use>
 	<!-- ESCAPE HATCH -->
 	<!-- Portside Central Teleporter -->
 	<portal_use npc_id="730312">
@@ -1532,56 +1528,6 @@
 		<portal_path loc_id="2201400" race="ASMODIANS"/>
 	</portal_use>
 	<!-- UNSTABLE ABYSSAL SPLINTER END -->
-
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701307">
-        <portal_path loc_id="6000331"/>
-    </portal_use>
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701308">
-        <portal_path loc_id="6000332"/>
-    </portal_use>
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701310">
-        <portal_path loc_id="6000340"/>
-    </portal_use>
-	<!-- Abyss Gap -->
-    <portal_use npc_id="701312">
-        <portal_path loc_id="6000337"/>
-    </portal_use>
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701313">
-        <portal_path loc_id="6000341"/>
-    </portal_use>
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701314">
-        <portal_path loc_id="6000341"/>
-    </portal_use>
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701315">
-        <portal_path loc_id="6000341"/>
-    </portal_use>
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701306">
-        <portal_path loc_id="6000333"/>
-    </portal_use>
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701279">
-        <portal_path loc_id="6000334"/>
-    </portal_use>
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701280">
-        <portal_path loc_id="6000338"/>
-    </portal_use>
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701278">
-        <portal_path loc_id="6000339"/>
-    </portal_use>
-    <!-- Abyss Gap -->
-    <portal_use npc_id="701276">
-        <portal_path loc_id="6000305"/>
-    </portal_use>
-	
 	<!-- TIAMARANTA'S EYE 5.8 -->
 	<!-- Western Tiamaranta's Eye Exit -->
 	<portal_use npc_id="701304">
@@ -1720,23 +1666,6 @@
 			<portal_req min_level="34" err_level="27"/>
 		</portal_path>
     </portal_dialog>
-    <!-- Asmodian Ship To Sarpan -->
-    <portal_dialog npc_id="730542">
-        <portal_path dialog="10000" loc_id="6000203" race="ASMODIANS"/>
-    </portal_dialog>
-    <!-- Elyos Ship To Sarpan -->
-    <portal_dialog npc_id="730540">
-        <portal_path dialog="10000" loc_id="6000204" race="ELYOS"/>
-    </portal_dialog>
-    <!-- Sarpan To Asmodian Ship -->
-    <portal_dialog npc_id="730541">
-        <portal_path dialog="10000" loc_id="6000200" race="ASMODIANS"/>
-    </portal_dialog>
-    <!-- Sarpan To Elyos Ship -->
-    <portal_dialog npc_id="730539">
-        <portal_path dialog="10000" loc_id="6000201" race="ELYOS"/>
-    </portal_dialog>
-	
 	<!-- TIAMAT STRONGHOLD 4.8 -->
 	<!-- Tiamat Stronghold Entrance [Elyos] -->
 	<portal_dialog npc_id="832995">
@@ -1779,25 +1708,6 @@
 	</portal_dialog>
 	<!-- DRAUPNIR CAVE END -->
 
-    <!-- KATALAM 4.3 TELEPORTER -->
-    <!-- Danuar Spire To Danaria [Dalerunerk] -->
-    <portal_dialog npc_id="801399">
-        <portal_path dialog="10000" loc_id="6000600">
-            <portal_req min_level="65">
-                <item_req item_id="186000237" item_count="2"/>
-            </portal_req>
-        </portal_path>
-    </portal_dialog>
-    <!-- Kaisinel Beacon To Danaria [Avorinrinerk] -->
-    <portal_dialog npc_id="801466">
-        <portal_path dialog="10000" loc_id="6000600">
-            <portal_req min_level="65">
-                <item_req item_id="186000237" item_count="2"/>
-            </portal_req>
-        </portal_path>
-    </portal_dialog>
-    <!-- KATALAM 4.3 TELEPORTER END -->
-
     <!-- DANARIA/IDIAN DEPHTS 4.3 TELEPORTER -->
     <!-- Pandarunerk's Delve To Kaisinel Beacon [Madalerk] -->
     <portal_dialog npc_id="801521">
@@ -1815,21 +1725,7 @@
             </portal_req>
         </portal_path>
     </portal_dialog>
-    <!-- Segarunerk's Bazzar To Danaria [Akurunerk] -->
-    <portal_dialog npc_id="801812">
-        <portal_path dialog="104" loc_id="6000600">
-            <portal_req kinah_req="64650"/>
-        </portal_path>
-    </portal_dialog>
     <!-- DANARIA/IDIAN DEPHTS 4.3 TELEPORTER END -->
-
-	<!-- INSTANCES 3.0 -->
-	<!-- Elementis Forest Entrance -->
-	<portal_dialog npc_id="730377">
-		<portal_path dialog="10000" loc_id="3002600" player_count="12" instance="true">
-			<portal_req min_level="57"/>
-		</portal_path>
-	</portal_dialog>
 
 	<!-- INDRATU FORTRESS 3.9 -->
 	<!-- Indratu Legion Abyss Gate -->
@@ -3761,19 +3657,6 @@
 		    <portal_req min_level="50" err_level="27"/>
 		</portal_path>
 	</portal_dialog>
-	<!-- Old Cygnea Teleporter -->
-	<portal_dialog npc_id="833585">
-	    <portal_path dialog="104" loc_id="0">
-		    <portal_req min_level="55" err_level="27"/>
-		</portal_path>
-	</portal_dialog>
-	<!-- Old Enshar Teleporter -->
-	<portal_dialog npc_id="833586">
-	    <portal_path dialog="104" loc_id="0">
-		    <portal_req min_level="55" err_level="27"/>
-		</portal_path>
-	</portal_dialog>
-	
 	<!-- REDEMPTION LANDING 4.9 -->
 	<!-- Cygnea Teleporter -->
 	<portal_dialog npc_id="805604">
@@ -5367,14 +5250,6 @@
 		    <portal_req min_level="60" err_level="27"/>
 		</portal_path>
 	</portal_dialog>
-	<!-- Twisted Land Entrance -->
-	<portal_dialog npc_id="800118">
-		<portal_path dialog="10000" loc_id="6000207"/>
-	</portal_dialog>
-	<!-- Twisted Land Exit -->
-	<portal_dialog npc_id="800119">
-		<portal_path dialog="10000" loc_id="6000208"/>
-	</portal_dialog>
 	<!-- UNSTABLE ABYSSAL SPLINTER END -->
 	
 	<!-- *********************************************** -->
@@ -5469,12 +5344,4 @@
 	<portal_scroll name="LEVINSHOR_D_RETURN_AREA">
 		<portal_path loc_id="6001000" race="ASMODIANS"/>
 	</portal_scroll>
-
-    <!-- SCROLL TELEPORTS ALL -->
-    <portal_scroll name="LDF4B_RETURN_AREA_1">
-        <portal_path loc_id="6000310"/>
-    </portal_scroll>
-    <portal_scroll name="LDF4A_RETURN_AREA_1">
-        <portal_path loc_id="6000210"/>
-    </portal_scroll>
 </portal_templates2>

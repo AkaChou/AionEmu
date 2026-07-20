@@ -20,11 +20,14 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.aionemu.gameserver.model.stats.container.StatEnum;
+import com.aionemu.gameserver.skillengine.change.Func;
+
 public final class RetailInstanceData {
 
 	private static final String ATTRIBUTE_LIMIT = "http://www.oracle.com/xml/jaxp/properties/elementAttributeLimit";
-	private static final String[] FILES = { "definitions.xml", "limits.xml", "matchmaking.xml", "rewards.xml",
-		"coverage.xml", "manifest.xml" };
+	private static final String[] FILES = { "definitions.xml", "limits.xml", "matchmaking.xml", "bonus-attributes.xml",
+		"rewards.xml", "coverage.xml", "manifest.xml" };
 
 	private final Map<Integer, Row> definitions;
 	private final Map<Integer, List<Row>> definitionsByWorld;
@@ -44,13 +47,15 @@ public final class RetailInstanceData {
 	private final Map<Integer, Row> lunaDungeons;
 	private final Map<Integer, Row> lunaDungeonsByWorld;
 	private final Map<Integer, Row> lunaPrices;
+	private final Map<Integer, List<BonusAttribute>> bonusAttributes;
 
 	private RetailInstanceData(Map<Integer, Row> definitions, Map<Integer, List<Row>> definitionsByWorld,
 		Map<Integer, Row> limitsByWorld, Map<Integer, List<Row>> limitsBySync, Map<Integer, Row> cooldowns, Map<Integer, Row> matches,
 		Map<Integer, List<Row>> matchesByWorld, Map<Integer, List<Row>> matchesByNpc, Map<String, List<Row>> rewards,
 			Map<Integer, Row> teamMatches, Map<Integer, Row> coverage, Map<Integer, Row> tournaments, Map<Integer, Row> tournamentsByLobbyWorld,
 		Map<Integer, Row> tournamentsByStageWorld, Map<Integer, Row> tournamentsByMatchmaker,
-		Map<Integer, Row> lunaDungeons, Map<Integer, Row> lunaDungeonsByWorld, Map<Integer, Row> lunaPrices) {
+		Map<Integer, Row> lunaDungeons, Map<Integer, Row> lunaDungeonsByWorld, Map<Integer, Row> lunaPrices,
+		Map<Integer, List<BonusAttribute>> bonusAttributes) {
 		this.definitions = immutableMap(definitions);
 		Map<Integer, List<Row>> byWorld = new LinkedHashMap<>();
 		definitionsByWorld.forEach((key, value) -> byWorld.put(key, List.copyOf(value)));
@@ -75,6 +80,7 @@ public final class RetailInstanceData {
 		this.lunaDungeons = immutableMap(lunaDungeons);
 		this.lunaDungeonsByWorld = immutableMap(lunaDungeonsByWorld);
 		this.lunaPrices = immutableMap(lunaPrices);
+		this.bonusAttributes = immutableLists(bonusAttributes);
 	}
 
 	public static RetailInstanceData load(File directory, File schemaFile) {
@@ -128,6 +134,27 @@ public final class RetailInstanceData {
 				}
 			}
 
+			Map<Integer, List<BonusAttribute>> bonusAttributes = new LinkedHashMap<>();
+			NodeList bonusNodes = documents.get("bonus-attributes.xml").getDocumentElement().getElementsByTagName("buff");
+			for (int i = 0; i < bonusNodes.getLength(); i++) {
+				Element buff = (Element) bonusNodes.item(i);
+				Row row = row(buff);
+				int id = row.requiredInt("id");
+				if (row.value("name").isEmpty()) {
+					throw new IllegalStateException("Missing retail instance bonus name " + id);
+				}
+				List<BonusAttribute> attributes = childRows(buff, "attribute").stream()
+						.map(attribute -> new BonusAttribute(StatEnum.valueOf(attribute.value("stat")),
+							Func.valueOf(attribute.value("func")), attribute.requiredInt("value")))
+						.toList();
+				if (attributes.isEmpty() || bonusAttributes.put(id, attributes) != null) {
+					throw new IllegalStateException("Invalid retail instance bonus " + id);
+				}
+			}
+			if (bonusAttributes.size() != 18) {
+				throw new IllegalStateException("Retail instance bonus attributes are incomplete");
+			}
+
 			Map<String, List<Row>> rewards = new LinkedHashMap<>();
 			NodeList rewardTables = documents.get("rewards.xml").getDocumentElement().getElementsByTagName("table");
 			for (int i = 0; i < rewardTables.getLength(); i++) {
@@ -147,6 +174,9 @@ public final class RetailInstanceData {
 			Element validation = (Element) documents.get("manifest.xml").getElementsByTagName("validation").item(0);
 			if (validation == null || !"0".equals(validation.getAttribute("unresolved_references"))) {
 				throw new IllegalStateException("Retail instance manifest contains unresolved references");
+			}
+			if (!Integer.toString(bonusAttributes.size()).equals(validation.getAttribute("instance_bonus_attributes"))) {
+				throw new IllegalStateException("Retail instance bonus manifest closure is incomplete");
 			}
 			Map<String, Integer> behaviorCounts = new LinkedHashMap<>();
 			for (Row row : coverage.values()) {
@@ -196,9 +226,9 @@ public final class RetailInstanceData {
 			if (validation == null || !"2".equals(validation.getAttribute("luna_dungeon_mappings"))) {
 				throw new IllegalStateException("Retail Luna dungeon manifest closure is incomplete");
 			}
-				return new RetailInstanceData(definitions, definitionsByWorld, limitsByWorld, limitsBySync, cooldowns, matches,
+			return new RetailInstanceData(definitions, definitionsByWorld, limitsByWorld, limitsBySync, cooldowns, matches,
 						matchesByWorld, matchesByNpc, rewards, teamMatches, coverage, tournaments, tournamentsByLobbyWorld,
-					tournamentsByStageWorld, tournamentsByMatchmaker, lunaDungeons, lunaDungeonsByWorld, lunaPrices);
+					tournamentsByStageWorld, tournamentsByMatchmaker, lunaDungeons, lunaDungeonsByWorld, lunaPrices, bonusAttributes);
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load retail instance data from " + directory.getPath(), e);
 		}
@@ -298,6 +328,14 @@ public final class RetailInstanceData {
 
 	public Row lunaPrice(int priceId) {
 		return lunaPrices.get(priceId);
+	}
+
+	public List<BonusAttribute> bonusAttributes(int buffId) {
+		return bonusAttributes.getOrDefault(buffId, List.of());
+	}
+
+	public int bonusAttributeCount() {
+		return bonusAttributes.size();
 	}
 
 	public int definitionCount() {
@@ -494,6 +532,9 @@ public final class RetailInstanceData {
 		Map<K, List<V>> result = new LinkedHashMap<>();
 		values.forEach((key, value) -> result.put(key, List.copyOf(value)));
 		return Collections.unmodifiableMap(result);
+	}
+
+	public record BonusAttribute(StatEnum stat, Func func, int value) {
 	}
 
 	public record Row(Map<String, String> values) {

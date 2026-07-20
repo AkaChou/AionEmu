@@ -52,6 +52,8 @@ import com.aionemu.gameserver.model.instance.playerreward.SmolderingPlayerReward
 import com.aionemu.gameserver.model.instance.playerreward.StonespearReachPlayerReward;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 
 import java.util.ArrayList;
 
@@ -1095,34 +1097,27 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 			for (SecretMunitionsFactoryPlayerReward playerReward : (List<SecretMunitionsFactoryPlayerReward>) instanceReward
 					.getInstanceRewards()) {
 				SecretMunitionsFactoryReward smfr = (SecretMunitionsFactoryReward) instanceReward;
+				RewardPlan plan = InstanceSettlementService.lunaPlan(mapId, smfr.getRank());
 				writeD(smfr.getPoints());
 				writeD(smfr.getNpcKills());
 				writeD(0);
 				writeD(smfr.getRank());
 				writeD(0);
-				writeD(playerReward.getScoreAP());
+				writeD(plan.ap());
 				writeD(0);
 				writeD(0);
 				writeD(0);
-				if (smfr.getPoints() >= 878600) {
-					writeD(188055648); // Mechaturerk's Special Treasure Box.
-					writeD(playerReward.getMechaturerkSpecialTreasureBox());
-					writeD(188055647); // Mechaturerk's Normal Treasure Chest.
-				} else {
-					writeD(0);
-					writeD(0);
-					writeD(0);
-					writeD(0);
-					writeD(0);
+				for (int slot = 0; slot < 3; slot++) {
+					if (slot < plan.items().size()) {
+						writeD(plan.items().get(slot).itemId());
+						writeD(Math.toIntExact(plan.items().get(slot).count()));
+					} else {
+						writeD(0);
+						writeD(0);
+					}
 				}
-				if (smfr.getPoints() >= 878600) {
-					writeD(188055475); // Mechaturerk's Secret Box.
-					writeD(playerReward.getMechaturerkSecretBox());
-				} else {
-					writeD(0);
-					writeD(0);
-					writeD(0);
-				}
+				writeD(0);
+				writeD(0);
 			}
 			break;
 		case 302000000: // Smoldering Fire Temple 5.1

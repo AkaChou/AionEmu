@@ -131,8 +131,6 @@ public class StaticData {
 	public ItemGroupsData itemGroupsData;
 	@XmlElement(name = "polymorph_panels")
 	public PanelSkillsData panelSkillsData;
-	@XmlElement(name = "instance_bonusattrs")
-	public InstanceBuffData instanceBuffData;
 	@XmlElement(name = "housing_objects")
 	public HousingObjectData housingObjectData;
 	@XmlElement(name = "rides")
@@ -348,7 +346,6 @@ public class StaticData {
 		log.info(I18n.get("log.2bcccf8f811f", spawnsData2.size()));
 		log.info(I18n.get("log.a8fed52a5964", eventData.size()));
 		log.info(I18n.get("log.c43241318695", panelSkillsData.size()));
-		log.info(I18n.get("log.402505407463", instanceBuffData.size()));
 		log.info(I18n.get("log.2b693aa87217", housingObjectData.size()));
 		log.info(I18n.get("log.2b042d4f0fc3", rideData.size()));
 		log.info(I18n.get("log.266dbc9bceaf", robotData.size()));

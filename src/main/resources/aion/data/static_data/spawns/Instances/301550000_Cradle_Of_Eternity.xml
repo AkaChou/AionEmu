@@ -918,11 +918,11 @@
 		<spawn npc_id="834013" respawn_time="1">
 		  <spot x="794.890015" y="738.478455" z="542.7017"/>
 		</spawn>
-		<spawn npc_id="834093" respawn_time="1">
-		  <spot x="1139.085693" y="782.784607" z="505.51965"/>
+		<spawn npc_id="834093">
+		  <spot x="1139.085693" y="782.784607" z="506.518219" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="834094" respawn_time="1">
-		  <spot x="718.335327" y="1174.291138" z="1039.0297" h="90"/>
+		<spawn npc_id="834094">
+		  <spot x="718.335327" y="1174.291138" z="1040.809448" h="90" random_walk="2"/>
 		</spawn>
     </spawn_map>
 </spawns>

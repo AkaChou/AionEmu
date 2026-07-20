@@ -115,32 +115,32 @@
 		<spawn npc_id="206491" respawn_time="1">
 		  <spot x="366.210327" y="511.708008" z="468.87393"/>
 		</spawn>
-		<spawn npc_id="857824" respawn_time="1">
-		  <spot x="598.283813" y="432.472778" z="468.8791" h="20"/>
+		<spawn npc_id="857824">
+		  <spot x="598.283813" y="432.472778" z="470.884338" h="20" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857825" respawn_time="1">
-		  <spot x="554.001038" y="349.697327" z="468.8791"/>
+		<spawn npc_id="857825">
+		  <spot x="554.001038" y="349.697327" z="469.896790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857826" respawn_time="1">
-		  <spot x="460.728546" y="350.790222" z="468.9799"/>
+		<spawn npc_id="857826">
+		  <spot x="460.728546" y="350.790222" z="469.896790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857827" respawn_time="1">
-		  <spot x="505.645569" y="432.780182" z="468.9743"/>
+		<spawn npc_id="857827">
+		  <spot x="505.645569" y="432.780182" z="469.896790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857828" respawn_time="1">
-		  <spot x="550.520569" y="513.655151" z="468.97675"/>
+		<spawn npc_id="857828">
+		  <spot x="550.520569" y="513.655151" z="473.021790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857829" respawn_time="1">
-		  <spot x="505.492065" y="592.392639" z="468.8791"/>
+		<spawn npc_id="857829">
+		  <spot x="505.492065" y="592.392639" z="469.896790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857830" respawn_time="1">
-		  <spot x="460.721222" y="673.640503" z="469.8968"/>
+		<spawn npc_id="857830">
+		  <spot x="460.721222" y="673.640503" z="469.896790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857831" respawn_time="1">
-		  <spot x="415.597260" y="591.050842" z="468.8791"/>
+		<spawn npc_id="857831">
+		  <spot x="415.597260" y="591.050842" z="469.896790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857832" respawn_time="1">
-		  <spot x="365.813568" y="507.876740" z="468.937"/>
+		<spawn npc_id="857832">
+		  <spot x="365.813568" y="507.876740" z="469.896790" random_walk="2"/>
 		</spawn>
     </spawn_map>
 </spawns>

@@ -657,6 +657,8 @@ public class LunaShopService {
 
 	static int wardrobePrice(int wardrobeSlot) {
 		switch (wardrobeSlot) {
+		case 1:
+		case 2:
 		case 3:
 		case 4:
 			return 10;

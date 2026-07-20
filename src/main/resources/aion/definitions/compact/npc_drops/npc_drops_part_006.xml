@@ -22325,6 +22325,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
+      <drop item_id="185000101" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idcromede_04"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_C2_39A" common_drop_adjustment="4"/>
     <common_drop_group name="ARMOR_A_N_C2_37A" common_drop_adjustment="3"/>

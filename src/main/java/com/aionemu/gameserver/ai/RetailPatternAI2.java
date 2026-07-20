@@ -39,6 +39,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.geometry.Area;
 import com.aionemu.gameserver.model.geometry.Point3D;
+import com.aionemu.gameserver.model.instance.InstanceRuntimeState;
 import com.aionemu.gameserver.model.instance.StageType;
 import com.aionemu.gameserver.model.skill.NpcSkillEntry;
 import com.aionemu.gameserver.model.skill.NpcSkillList;
@@ -56,6 +57,7 @@ import com.aionemu.gameserver.questEngine.model.RetailQuestState;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.services.LimitedQuestService;
+import com.aionemu.gameserver.services.instance.InstanceDeadlineScheduler;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
@@ -68,6 +70,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -105,19 +108,11 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			"is_world_flag_var", "sub_intvar", "is_event_skill_category", "is_hyperlink_id",
 			"has_attack_damage_flag", "is_target_quest_state");
 	private static final Set<String> ATTACK_DAMAGE_FLAGS = Set.of("DODGE");
-	private static final Set<Long> NPC_SCORE_CONSUMERS = Set.of(
-		npcScoreConsumer(301120000, 232855), npcScoreConsumer(301120000, 232856),
-		npcScoreConsumer(301120000, 730878), npcScoreConsumer(301120000, 730879),
-		npcScoreConsumer(301120000, 730880), npcScoreConsumer(301120000, 801766),
-		npcScoreConsumer(301120000, 801767), npcScoreConsumer(301120000, 801818),
-		npcScoreConsumer(301120000, 801819), npcScoreConsumer(301120000, 801820),
-		npcScoreConsumer(301120000, 801821), npcScoreConsumer(301120000, 801903),
-		npcScoreConsumer(301670000, 833935), npcScoreConsumer(301670000, 833936),
-		npcScoreConsumer(301670000, 833961));
 	private static final Set<String> SUPPORTED_ACTIONS = Set.of(
 		"use_skill", "use_skill_by_attacker_indicator", "switch_target_by_attacker_indicator", "add_battle_timer",
 		"set_idle_timer", "spawn", "spawn_on_target", "despawn", "despawn_self", "do_nothing", "broadcast_message",
-		"say_to_all", "display_system_message", "reset_hatepoints", "spawn_on_target_by_attacker_indicator",
+		"say_to_all", "display_system_message", "send_system_msg_by_user_indicator", "reset_hatepoints",
+		"spawn_on_target_by_attacker_indicator",
 		"spawn_on_multi_target", "despawn_by_nameid", "control_door", "set_condition_spawn_variable",
 		"set_condition_spawn_variable_to_world",
 		"give_item_by_user_indicator", "give_item_by_obj_indicator", "give_score", "give_exp",
@@ -159,6 +154,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private static final Set<String> RETAIL_COMBAT_SKILL_EVENTS = Set.of(
 		"on_enter_attack_state", "on_battle_timer");
 	private static final String WAKE_UP_TIMER = "WAKE_UP_STATE";
+	private static final String STATE_PREFIX = "retail.pattern.ai.";
+	private static final Set<String> LOCAL_STATE_CONDITIONS = Set.of(
+		"set_flag_var", "unset_flag_var", "increase_intvar", "set_intvar_if_larger_than",
+		"set_intvar_if_less_than", "add_intvar", "decrease_intvar", "sub_intvar");
 	private static final Set<String> SENSORY_EVENTS = Set.of(
 		"on_user_enter_sensory_area", "on_user_leave_sensory_area");
 	private static final Set<String> FRIEND_EVENTS = Set.of(
@@ -171,8 +170,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private static final Set<String> TERMINAL_EVENTS = Set.of(
 		"on_leave_attack_state", "on_die", "on_killed_by_user", "on_killed_by_npc", "on_despawn");
 	private final Map<String, Future<?>> timers = new HashMap<>();
+	private final Set<String> persistentTimers = new HashSet<>();
 	private final Set<Future<?>> actionTasks = ConcurrentHashMap.newKeySet();
 	private final Map<String, List<VisibleObject>> spawned = new HashMap<>();
+	private final Map<Operation, String> spawnActionKeys = new IdentityHashMap<>();
 	private final Map<VisibleObject, Boolean> despawnAtAttackState = new ConcurrentHashMap<>();
 	private final Set<String> flags = new HashSet<>();
 	private final Map<String, Integer> intVars = new HashMap<>();
@@ -195,6 +196,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private AIState fleeReturnState = AIState.IDLE;
 	private AISubState fleeReturnSubState = AISubState.NONE;
 	private Creature deathKiller;
+	private String runtimeStatePrefix;
+	private boolean restoringPattern;
 
 	private record RetailMessage(int type, int param1, int param2, Creature sender, Creature paramObject) {
 	}
@@ -328,6 +331,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 						}
 					if ((operation.type().equals("say") || operation.type().equals("say_to_all") || operation.type().equals("shout_to_all")
 						|| operation.type().equals("display_system_message")
+						|| operation.type().equals("send_system_msg_by_user_indicator")
 						|| operation.type().equals("send_system_msg"))
 						&& DataManager.RETAIL_AI_DATA.findStringId(value(operation, "string_id")) == null) {
 						return false;
@@ -354,8 +358,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 							return false;
 						}
 						var score = DataManager.RETAIL_AI_DATA.getNpcScore(npc.getNpcId());
-						if (score == null || !supportsNpcScore(npc.getWorldId(), npc.getNpcId(), score.scoreApplyType(),
-							score.equalizingScore())) {
+						if (!supportsNpcScore(npc, score)) {
 							return false;
 						}
 					}
@@ -474,12 +477,27 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	@Override
 	protected void handleSpawned() {
 		pattern = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getPattern(getNpcId());
+		indexSpawnActions();
 		sensoryArea = pattern == null || Collections.disjoint(pattern.events().keySet(), SENSORY_EVENTS) ? null
 			: DataManager.RETAIL_AI_DATA.findSensoryArea(getOwner().getWorldId(), getNpcId(), getOwner().getSpawn().getX(),
 				getOwner().getSpawn().getY(), getOwner().getSpawn().getZ());
 		super.handleSpawned();
 		if (sensoryArea != null) {
 			RetailSensoryAreaEngine.register(getPosition().getWorldMapInstance(), this);
+		}
+		if (restorePatternState()) {
+			restoreDynamicSpawns();
+			restoreTimers();
+			restoringPattern = true;
+			try {
+				runEvent("on_wake_up", null, null);
+			} finally {
+				restoringPattern = false;
+			}
+			return;
+		}
+		if (runtimeStatePrefix != null) {
+			runtimeState().put(runtimeStatePrefix + "initialized", true);
 		}
 		runEvent("on_wake_up", null, null);
 		if (Collections.disjoint(pattern.events().keySet(), WAKE_UP_EVENTS)) {
@@ -981,22 +999,43 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		if (pattern == null || isAlreadyDead() && !TERMINAL_EVENTS.contains(event)) {
 			return;
 		}
-		for (Rule rule : pattern.event(event)) {
-			if (matches(rule, timer, eventTarget, message, eventSkill, eventAbnormalState, attackStatus)) {
+		List<Rule> rules = pattern.event(event);
+		if (restoringPattern) {
+			Rule rule = restoreRule(rules, runtimeState(), runtimeStatePrefix + "restore_rule." + event);
+			if (rule != null) {
 				executeActions(rule.actions(), 0, eventTarget, message, TERMINAL_EVENTS.contains(event),
-					supportsImmediateTerminalCleanup(event, rule.actions()));
+					supportsImmediateTerminalCleanup(event, rule.actions()), true);
+			}
+			return;
+		}
+		for (int ruleIndex = 0; ruleIndex < rules.size(); ruleIndex++) {
+			Rule rule = rules.get(ruleIndex);
+			if (matches(rule, timer, eventTarget, message, eventSkill, eventAbnormalState, attackStatus)) {
+				if (runtimeStatePrefix != null && event.equals("on_wake_up")) {
+					runtimeState().put(runtimeStatePrefix + "restore_rule." + event, ruleIndex);
+				}
+				executeActions(rule.actions(), 0, eventTarget, message, TERMINAL_EVENTS.contains(event),
+					supportsImmediateTerminalCleanup(event, rule.actions()), false);
 				return;
 			}
 		}
 	}
 
+	static Rule restoreRule(List<Rule> rules, InstanceRuntimeState state, String key) {
+		int ruleIndex = state.getInt(key, -1);
+		return ruleIndex >= 0 && ruleIndex < rules.size() ? rules.get(ruleIndex) : null;
+	}
+
 	private void executeActions(List<Operation> actions, int start, Creature eventTarget, RetailMessage message,
-			boolean allowDead, boolean immediateTerminalCleanup) {
+			boolean allowDead, boolean immediateTerminalCleanup, boolean restoreOnly) {
 		if (!allowDead && isAlreadyDead()) {
 			return;
 		}
 		for (int i = start; i < actions.size(); i++) {
 			Operation action = actions.get(i);
+			if (restoreOnly && !canReplayDuringRestore(action)) {
+				continue;
+			}
 			if (isSkillAction(action)) {
 				int duration = useSkill(action, eventTarget, message);
 				if (immediateTerminalCleanup) {
@@ -1007,7 +1046,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 					long delay = duration == 0 ? 0 : duration + (actions.get(next).type().equals("despawn_self") ? 1000L : 100L);
 					actionTasks.removeIf(Future::isDone);
 					actionTasks.add(GameThreadPoolServices.threadPoolManager()
-						.schedule(() -> executeActions(actions, next, eventTarget, message, false, false), delay));
+						.schedule(() -> executeActions(actions, next, eventTarget, message, false, false, restoreOnly), delay));
 					return;
 				}
 			} else if (action.type().equals("despawn_self")) {
@@ -1016,6 +1055,14 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				execute(action, eventTarget, message);
 			}
 		}
+	}
+
+	static boolean canReplayDuringRestore(Operation action) {
+		if (isSkillAction(action)) {
+			return action.type().equals("activate_skillarea") || value(action, "target").equals("OBJI_SELF");
+		}
+		return Set.of("control_door", "toggle_attackable_status_flag", "change_direction", "random_move",
+			"goto_waypoint", "goto_next_waypoint", "goto_alias", "do_nothing").contains(action.type());
 	}
 
 	private boolean matches(Rule rule, String timer, Creature eventTarget, RetailMessage message, SkillTemplate eventSkill,
@@ -1113,6 +1160,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 					Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
 				default -> false;
 			};
+			if (LOCAL_STATE_CONDITIONS.contains(condition.type())) {
+				persistLocalState(condition);
+			}
 			if (!matches) {
 				return false;
 			}
@@ -1195,6 +1245,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			}
 			case "display_system_message" -> displaySystemMessage(action);
 			case "send_system_msg" -> displaySystemMessage(action);
+			case "send_system_msg_by_user_indicator" -> sendSystemMessageToUser(action, eventTarget, message);
 			case "system_message_to_all_by_obj_indicator_param" ->
 				systemMessageToAll(action, eventTarget, message);
 			case "reset_hatepoints" -> resetHatepoints(action);
@@ -1253,10 +1304,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		}
 		var score = DataManager.RETAIL_AI_DATA.getNpcScore(getNpcId());
 		var handler = getPosition().getWorldMapInstance().getInstanceHandler();
-		if (score != null && supportsNpcScore(getOwner().getWorldId(), getNpcId(), score.scoreApplyType(),
-			score.equalizingScore())
-			&& handler.supportsRetailNpcScore(getNpcId())) {
-			handler.onRetailNpcScore(player, getOwner(), score.value());
+		if (supportsNpcScore(getOwner(), score)) {
+			handler.onRetailNpcScore(player, getOwner(), score.scoreApplyType(), score.value());
 		}
 	}
 
@@ -1520,7 +1569,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private void controlDoor(Operation action) {
 		var door = getPosition().getWorldMapInstance().getDoors().get(integer(action, "id"));
 		if (door != null) {
-			door.setOpen(integer(action, "method") == 1);
+			boolean open = integer(action, "method") == 1;
+			runtimeState().put("door." + integer(action, "id"), open);
+			door.setOpen(open);
 		}
 	}
 
@@ -1642,6 +1693,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				PacketSendUtility.sendPacket(player, message);
 			}
 		});
+	}
+
+	private void sendSystemMessageToUser(Operation action, Creature eventTarget, RetailMessage message) {
+		Integer stringId = DataManager.RETAIL_AI_DATA.findStringId(value(action, "string_id"));
+		if (resolveUser(value(action, "user"), eventTarget, message) instanceof Player player && stringId != null) {
+			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(stringId));
+		}
 	}
 
 	private void systemMessageToAll(Operation action, Creature eventTarget, RetailMessage sourceMessage) {
@@ -2028,6 +2086,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	private void schedule(String timer, int delay, String event, boolean zeroCancels, Creature eventTarget,
 			RetailMessage message) {
+		if (runtimeStatePrefix != null) {
+			schedulePersistent(timer, delay, event, zeroCancels, eventTarget, message);
+			return;
+		}
 		Future<?> previous = timers.get(timer);
 		if (previous != null && !previous.isDone()) {
 			previous.cancel(false);
@@ -2036,6 +2098,121 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			timers.put(timer, GameThreadPoolServices.threadPoolManager()
 				.schedule(() -> runEvent(event, timer, eventTarget, message), delay));
 		}
+	}
+
+	private boolean restorePatternState() {
+		String stableKey = getOwner().getSpawn() == null ? null : getOwner().getSpawn().getStableKey();
+		if (stableKey == null || stableKey.isBlank()) {
+			return false;
+		}
+		runtimeStatePrefix = STATE_PREFIX + stableKey + '.';
+		InstanceRuntimeState state = runtimeState();
+		restoreLocalState(state, runtimeStatePrefix, flags, intVars);
+		return state.getBoolean(runtimeStatePrefix + "initialized", false);
+	}
+
+	private void indexSpawnActions() {
+		spawnActionKeys.clear();
+		if (pattern == null) {
+			return;
+		}
+		for (String event : pattern.events().keySet().stream().sorted().toList()) {
+			List<Rule> rules = pattern.event(event);
+			for (int ruleIndex = 0; ruleIndex < rules.size(); ruleIndex++) {
+				List<Operation> actions = rules.get(ruleIndex).actions();
+				for (int actionIndex = 0; actionIndex < actions.size(); actionIndex++) {
+					Operation action = actions.get(actionIndex);
+					if (Set.of("spawn", "spawn_on_target", "spawn_on_target_by_attacker_indicator", "spawn_on_multi_target")
+						.contains(action.type())) {
+						spawnActionKeys.put(action, event + '.' + ruleIndex + '.' + actionIndex);
+					}
+				}
+			}
+		}
+	}
+
+	private InstanceRuntimeState runtimeState() {
+		return getPosition().getWorldMapInstance().getRuntimeState();
+	}
+
+	private void persistLocalState(Operation condition) {
+		if (runtimeStatePrefix == null) {
+			return;
+		}
+		String type = condition.type();
+		if (type.equals("set_flag_var") || type.equals("unset_flag_var")) {
+			persistFlag(runtimeState(), runtimeStatePrefix, value(condition, "flagvar_indicator"), flags);
+			return;
+		}
+		String name = value(condition, "intvar_indicator");
+		persistIntVar(runtimeState(), runtimeStatePrefix, name, intVars);
+	}
+
+	static void restoreLocalState(InstanceRuntimeState state, String prefix, Set<String> flags,
+			Map<String, Integer> intVars) {
+		state.snapshot(prefix + "flag.").forEach((key, value) ->
+			flags.add(key.substring((prefix + "flag.").length())));
+		state.snapshot(prefix + "int.").forEach((key, value) ->
+			intVars.put(key.substring((prefix + "int.").length()), Integer.parseInt(value)));
+	}
+
+	static void persistFlag(InstanceRuntimeState state, String prefix, String name, Set<String> flags) {
+		if (flags.contains(name)) {
+			state.put(prefix + "flag." + name, true);
+		} else {
+			state.remove(prefix + "flag." + name);
+		}
+	}
+
+	static void persistIntVar(InstanceRuntimeState state, String prefix, String name,
+			Map<String, Integer> intVars) {
+		Integer current = intVars.get(name);
+		if (current == null) {
+			state.remove(prefix + "int." + name);
+		} else {
+			state.put(prefix + "int." + name, current);
+		}
+	}
+
+	private void schedulePersistent(String timer, int delay, String event, boolean zeroCancels, Creature eventTarget,
+			RetailMessage message) {
+		String deadlineKey = runtimeStatePrefix + "timer." + timer;
+		if (delay == 0 && zeroCancels) {
+			persistentTimers.remove(timer);
+			runtimeState().remove(deadlineKey + ".event");
+			InstanceDeadlineScheduler.cancel(getPosition().getWorldMapInstance(), deadlineKey);
+			return;
+		}
+		long deadline = System.currentTimeMillis() + delay;
+		persistentTimers.add(timer);
+		runtimeState().put(deadlineKey + ".event", event);
+		InstanceDeadlineScheduler.schedule(getPosition().getWorldMapInstance(), deadlineKey, deadline,
+			() -> runPersistentTimer(timer, event, eventTarget, message));
+	}
+
+	private void restoreTimers() {
+		String prefix = runtimeStatePrefix + "timer.";
+		for (Map.Entry<String, String> entry : runtimeState().snapshot(prefix).entrySet()) {
+			if (!entry.getKey().endsWith(".event")) {
+				continue;
+			}
+			String timer = entry.getKey().substring(prefix.length(), entry.getKey().length() - ".event".length());
+			String deadlineKey = runtimeStatePrefix + "timer." + timer;
+			long deadline = InstanceDeadlineScheduler.deadline(getPosition().getWorldMapInstance(), deadlineKey);
+			if (deadline <= 0 || InstanceDeadlineScheduler.isCompleted(getPosition().getWorldMapInstance(), deadlineKey)) {
+				runtimeState().remove(entry.getKey());
+				continue;
+			}
+			persistentTimers.add(timer);
+			InstanceDeadlineScheduler.schedule(getPosition().getWorldMapInstance(), deadlineKey, deadline,
+				() -> runPersistentTimer(timer, entry.getValue(), null, null));
+		}
+	}
+
+	private void runPersistentTimer(String timer, String event, Creature eventTarget, RetailMessage message) {
+		persistentTimers.remove(timer);
+		runtimeState().remove(runtimeStatePrefix + "timer." + timer + ".event");
+		runEvent(event, timer, eventTarget, message);
 	}
 
 	private void spawn(Operation action) {
@@ -2131,6 +2308,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			String walkerId) {
 		int count = Math.max(1, integer(action, "num_to_spawn"));
 		float range = decimal(action, "spawn_range");
+		String generation = nextSpawnGeneration(action);
 		for (int i = 0; i < count; i++) {
 			double angle = Rnd.nextDouble() * Math.PI * 2;
 			float radius = (float) (Rnd.nextDouble() * range);
@@ -2138,6 +2316,11 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			float spawnY = y + (float) Math.sin(angle) * radius;
 			SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), npcId, spawnX, spawnY,
 				z, heading);
+			String lifecycleKey = generation == null ? null : runtimeStatePrefix + "spawn." + generation + '.' + i + '.';
+			if (lifecycleKey != null) {
+				template.setStableKey(dynamicStableKey(generation + '.' + i));
+				template.setRuntimeLifecycleKey(lifecycleKey);
+			}
 			template.setMaster(getOwner());
 			template.setCreatorId(getOwner().getObjectId());
 			template.setMasterName(getOwner().getName());
@@ -2148,6 +2331,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			VisibleObject spawned = SpawnEngine.spawnObject(template, getOwner().getInstanceId());
 			boolean trackedBySpawnId = !value(action, "spawn_id").equals("SPAWN_ID_NONE");
 			int liveTime = integer(action, "live_time");
+			long liveDeadline = liveTime > 0 ? System.currentTimeMillis() + liveTime * 1000L : 0;
+			if (lifecycleKey != null) {
+				persistDynamicSpawn(lifecycleKey, npcId, spawnX, spawnY, z, heading, walkerId,
+					value(action, "spawn_id"), template.getFly(),
+					!value(action, "despawn_at_attack_state").equals("FALSE"), liveDeadline);
+			}
 			if (trackedBySpawnId || liveTime > 0) {
 				despawnAtAttackState.put(spawned, !value(action, "despawn_at_attack_state").equals("FALSE"));
 			}
@@ -2158,13 +2347,98 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				npc.getAggroList().addHate(attackTarget, integer(action, "hatepoints_to_add"));
 			}
 			if (liveTime > 0) {
-				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnForLifecycle(spawned), liveTime * 1000L);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnForLifecycle(spawned),
+					Math.max(1, liveDeadline - System.currentTimeMillis()));
 			}
 		}
 	}
 
+	private String nextSpawnGeneration(Operation action) {
+		String actionKey = spawnActionKeys.get(action);
+		if (runtimeStatePrefix == null || actionKey == null) {
+			return null;
+		}
+		String sequenceKey = runtimeStatePrefix + "spawn_sequence." + actionKey;
+		int sequence = runtimeState().getInt(sequenceKey, 0) + 1;
+		runtimeState().put(sequenceKey, sequence);
+		return actionKey + '.' + sequence;
+	}
+
+	private void persistDynamicSpawn(String key, int npcId, float x, float y, float z, byte heading, String walkerId,
+			String spawnId, int fly, boolean despawnDuringAttack, long liveDeadline) {
+		InstanceRuntimeState state = runtimeState();
+		state.put(key + "npc", npcId);
+		state.put(key + "x", x);
+		state.put(key + "y", y);
+		state.put(key + "z", z);
+		state.put(key + "heading", Byte.toUnsignedInt(heading));
+		state.put(key + "walker", walkerId == null ? "" : walkerId);
+		state.put(key + "spawn_id", spawnId);
+		state.put(key + "fly", fly);
+		state.put(key + "despawn_at_attack", despawnDuringAttack);
+		state.put(key + "live_deadline", liveDeadline);
+	}
+
+	private void restoreDynamicSpawns() {
+		String prefix = runtimeStatePrefix + "spawn.";
+		for (String key : runtimeState().snapshot(prefix).keySet().stream()
+			.filter(key -> key.endsWith(".npc")).sorted().toList()) {
+			String lifecycleKey = key.substring(0, key.length() - "npc".length());
+			long liveDeadline = runtimeState().getLong(lifecycleKey + "live_deadline", 0);
+			if (liveDeadline > 0 && liveDeadline <= System.currentTimeMillis()) {
+				runtimeState().removePrefix(lifecycleKey);
+				continue;
+			}
+			SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(),
+				runtimeState().getInt(lifecycleKey + "npc", 0),
+				Float.parseFloat(runtimeState().get(lifecycleKey + "x")),
+				Float.parseFloat(runtimeState().get(lifecycleKey + "y")),
+				Float.parseFloat(runtimeState().get(lifecycleKey + "z")),
+				(byte) runtimeState().getInt(lifecycleKey + "heading", 0));
+			String generation = lifecycleKey.substring(prefix.length(), lifecycleKey.length() - 1);
+			template.setStableKey(dynamicStableKey(generation));
+			template.setRuntimeLifecycleKey(lifecycleKey);
+			template.setMaster(getOwner());
+			template.setCreatorId(getOwner().getObjectId());
+			template.setMasterName(getOwner().getName());
+			String walker = runtimeState().get(lifecycleKey + "walker", "");
+			template.setWalkerId(walker.isBlank() ? null : walker);
+			template.setFly(runtimeState().getInt(lifecycleKey + "fly", 0));
+			VisibleObject object = SpawnEngine.spawnObject(template, getOwner().getInstanceId());
+			String spawnId = runtimeState().get(lifecycleKey + "spawn_id", "SPAWN_ID_NONE");
+			boolean tracked = !spawnId.equals("SPAWN_ID_NONE");
+			if (tracked || liveDeadline > 0) {
+				despawnAtAttackState.put(object,
+					runtimeState().getBoolean(lifecycleKey + "despawn_at_attack", true));
+			}
+			if (tracked) {
+				spawned.computeIfAbsent(spawnId, ignored -> new ArrayList<>()).add(object);
+			}
+			if (liveDeadline > 0) {
+				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnForLifecycle(object),
+					Math.max(1, liveDeadline - System.currentTimeMillis()));
+			}
+		}
+	}
+
+	private String dynamicStableKey(String generation) {
+		return getOwner().getSpawn().getStableKey() + ":dynamic:" + generation.replace('.', ':');
+	}
+
+	public static void onDynamicSpawnRemoved(Npc npc) {
+		if (npc == null || npc.getSpawn() == null || npc.getSpawn().getRuntimeLifecycleKey() == null
+				|| npc.getPosition() == null || npc.getPosition().getWorldMapInstance() == null) {
+			return;
+		}
+		npc.getPosition().getWorldMapInstance().getRuntimeState()
+			.removePrefix(npc.getSpawn().getRuntimeLifecycleKey());
+	}
+
 	private void despawnForLifecycle(VisibleObject object) {
 		if (!object.isSpawned()) {
+			if (object instanceof Npc npc) {
+				onDynamicSpawnRemoved(npc);
+			}
 			despawnAtAttackState.remove(object);
 			return;
 		}
@@ -2430,6 +2704,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				&& retailStageType(integer(action, "scenestatus")) != null;
 			case "display_system_message" -> !value(action, "string_id").isBlank();
 			case "send_system_msg" -> !value(action, "string_id").isBlank();
+			case "send_system_msg_by_user_indicator" -> supportsUser(event, value(action, "user"))
+				&& !value(action, "string_id").isBlank();
 			case "reset_hatepoints" -> Set.of("TRUE", "FALSE").contains(value(action, "is_except_most_hating"))
 				&& Set.of("TRUE", "FALSE").contains(value(action, "volatile_hatepoint_only"));
 			case "control_door" -> integerInRange(action, "id", 1, Integer.MAX_VALUE)
@@ -2507,16 +2783,15 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	static boolean supportsNpcScore(int scoreApplyType, int equalizingScore) {
-		return scoreApplyType == 0 && equalizingScore == 0;
+		return scoreApplyType >= 0 && scoreApplyType <= 3 && equalizingScore == 0;
 	}
 
-	static boolean supportsNpcScore(int worldId, int npcId, int scoreApplyType, int equalizingScore) {
-		return supportsNpcScore(scoreApplyType, equalizingScore)
-			&& NPC_SCORE_CONSUMERS.contains(npcScoreConsumer(worldId, npcId));
-	}
-
-	private static long npcScoreConsumer(int worldId, int npcId) {
-		return (long) worldId << 32 | Integer.toUnsignedLong(npcId);
+	private static boolean supportsNpcScore(Npc npc,
+			com.aionemu.gameserver.dataholders.RetailAiData.NpcScore score) {
+		return score != null && supportsNpcScore(score.scoreApplyType(), score.equalizingScore())
+			&& npc.getPosition() != null && npc.getPosition().getWorldMapInstance() != null
+			&& npc.getPosition().getWorldMapInstance().getInstanceHandler()
+				.supportsRetailNpcScore(npc.getNpcId(), score.scoreApplyType());
 	}
 
 	private static boolean hasUnsupportedActionsAfterSkill(String event, List<Operation> actions) {
@@ -2719,6 +2994,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			timer.cancel(false);
 		}
 		timers.clear();
+		if (runtimeStatePrefix != null) {
+			for (String timer : Set.copyOf(persistentTimers)) {
+				InstanceDeadlineScheduler.cancel(getPosition().getWorldMapInstance(), runtimeStatePrefix + "timer." + timer);
+			}
+			persistentTimers.clear();
+			runtimeState().removePrefix(runtimeStatePrefix);
+		}
 		cancelQueuedActions(tasksToCancel);
 		fleeMoveTask = null;
 		fleeStopTask = null;

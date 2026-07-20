@@ -7,6 +7,9 @@ import java.io.File;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.model.stats.container.StatEnum;
+import com.aionemu.gameserver.skillengine.change.Func;
+
 class RetailInstanceDataTest {
 
 	@Test
@@ -48,6 +51,19 @@ class RetailInstanceDataTest {
 		assertEquals(301640000, data.lunaDungeon(2).requiredInt("world_id"));
 		assertEquals(2, data.lunaDungeonForWorld(301640000).requiredInt("id"));
 		assertEquals(1, data.lunaPrice(45).requiredInt("free_turn"));
-		assertEquals(5, data.lunaPrice(47).requiredInt("price_max_count"));
+			assertEquals(5, data.lunaPrice(47).requiredInt("price_max_count"));
+		assertEquals(291, data.rewards("instant_dungeon_define").size());
+		assertEquals("17817", data.rewards("instant_dungeon_define").stream()
+			.filter(row -> "IDLF1_S_SCORE_MINIMUM".equals(row.value("name"))).findFirst().orElseThrow().value("value"));
+		assertEquals("50", data.rewards("npc_scores").stream()
+			.filter(row -> row.intValue("gather_id", 0) == 401112).findFirst().orElseThrow().value("score"));
+		assertEquals("200", data.rewards("npc_scores").stream()
+			.filter(row -> row.intValue("gather_id", 0) == 401111).findFirst().orElseThrow().value("score"));
+		assertEquals(18, data.bonusAttributeCount());
+		assertEquals(4, data.bonusAttributes(7).size());
+		assertEquals(new RetailInstanceData.BonusAttribute(StatEnum.PVP_DEFEND_RATIO, Func.ADD, 9999),
+			data.bonusAttributes(7).getFirst());
+		assertEquals(new RetailInstanceData.BonusAttribute(StatEnum.ABNORMAL_RESISTANCE_ALL, Func.ADD, 9999),
+			data.bonusAttributes(8).getLast());
 	}
 }

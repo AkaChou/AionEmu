@@ -51,6 +51,8 @@ public class SpawnTemplate {
 	private String selectprobValues;
 	private String masterName = StringUtils.EMPTY;
 	private String npcPartyId;
+	private String stableKey;
+	private String runtimeLifecycleKey;
 	private Creature master;
 	private TemporarySpawn temporarySpawn;
 	private VisibleObject visibleObject;
@@ -441,6 +443,22 @@ public class SpawnTemplate {
 
 	public void setNpcPartyId(String npcPartyId) {
 		this.npcPartyId = npcPartyId;
+	}
+
+	public String getStableKey() {
+		return stableKey;
+	}
+
+	public void setStableKey(String stableKey) {
+		this.stableKey = stableKey;
+	}
+
+	public String getRuntimeLifecycleKey() {
+		return runtimeLifecycleKey;
+	}
+
+	public void setRuntimeLifecycleKey(String runtimeLifecycleKey) {
+		this.runtimeLifecycleKey = runtimeLifecycleKey;
 	}
 
 	public Creature getMaster() {

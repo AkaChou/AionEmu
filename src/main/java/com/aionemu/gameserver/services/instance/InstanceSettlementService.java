@@ -76,6 +76,43 @@ public final class InstanceSettlementService {
 		return timeAttackRow(worldId).requiredInt("time_limit");
 	}
 
+	public static int darkPoetaPrepareSeconds() {
+		return darkPoetaValue("BUFF_TIME");
+	}
+
+	public static int darkPoetaLimitSeconds() {
+		return darkPoetaValue("LIMIT_TIME");
+	}
+
+	public static int darkPoetaLeaveSeconds() {
+		return darkPoetaValue("Leave_Time");
+	}
+
+	public static int darkPoetaRank(int score, long elapsedSeconds) {
+		if (score < 0 || elapsedSeconds < 0) {
+			throw new IllegalArgumentException("Dark Poeta score and elapsed time cannot be negative");
+		}
+		for (int rank = 1; rank <= 5; rank++) {
+			String grade = TIME_ATTACK_GRADES[rank - 1].toUpperCase();
+			if (score >= darkPoetaValue(grade + "_SCORE_MINIMUM")
+					&& elapsedSeconds < darkPoetaValue(grade + "_TIME_MAXIMUM")) {
+				return rank;
+			}
+		}
+		return 7;
+	}
+
+	public static int darkPoetaBossGrade(int rank, int highestPlayerLevel) {
+		return rank == 1 && highestPlayerLevel >= 55 ? 6 : rank;
+	}
+
+	public static int darkPoetaGatherScore(int gatherId) {
+		return DataManager.RETAIL_INSTANCE_DATA.rewards("npc_scores").stream()
+			.filter(row -> row.value("name").startsWith("score_gather_IDLF1_")
+				&& row.intValue("gather_id", 0) == gatherId)
+			.findFirst().map(row -> row.requiredInt("score")).orElse(0);
+	}
+
 	public static RewardPlan timeAttackPlan(int worldId, int rank) {
 		Row row = timeAttackRow(worldId);
 		String grade = TIME_ATTACK_GRADES[Math.max(0, Math.min(rank - 1, TIME_ATTACK_GRADES.length - 1))];
@@ -507,6 +544,14 @@ public final class InstanceSettlementService {
 		return DataManager.RETAIL_INSTANCE_DATA.rewards("world_timeattack").stream()
 				.filter(candidate -> candidate.requiredInt("world_id") == worldId)
 				.findFirst().orElseThrow(() -> new IllegalStateException("Missing retail time attack reward for " + worldId));
+	}
+
+	private static int darkPoetaValue(String name) {
+		String key = "IDLF1_" + name;
+		return DataManager.RETAIL_INSTANCE_DATA.rewards("instant_dungeon_define").stream()
+			.filter(row -> key.equals(row.value("name")))
+			.findFirst().orElseThrow(() -> new IllegalStateException(
+				"Missing retail Dark Poeta definition " + key)).requiredInt("value");
 	}
 
 	private static Row battlegroundRow(int worldId, int spawnPage) {

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.quest.handlers.ascension;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -168,6 +169,7 @@ public class _1006Ascension extends QuestHandler {
 					switch (dialog) {
 						case START_DIALOG: {
 							if (qs.getQuestVars().getQuestVars() == 99) {
+								GameEngineServices.skillEngine().applyEffectDirectly(281, player, player, 0);
 								player.setState(CreatureState.FLIGHT_TELEPORT);
 								player.unsetState(CreatureState.ACTIVE);
 								player.setFlightTeleportId(1001);

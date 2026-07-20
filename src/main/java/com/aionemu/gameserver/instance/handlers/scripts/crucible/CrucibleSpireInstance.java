@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -13,7 +11,6 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.flyring.FlyRing;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
@@ -28,7 +25,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.*;
-import java.util.concurrent.Future;
 
 /**
  * 熔炉尖塔副本事件处理器。
@@ -39,24 +35,15 @@ import java.util.concurrent.Future;
 
 @InstanceID(302400000)
 public class CrucibleSpireInstance extends GeneralInstanceHandler {
+	private static final String FLOOR_CONTROLLER_DEADLINE = "infinity.floor_controller_deadline";
     /** 层数 / floor */
     private byte floor;
     /** 刷怪种族 / spawn race */
     private Race spawnRace;
-    /** 门映射 / door map */
-    private Map<Integer, StaticDoor> doors;
     /** 副本是否已销毁 / whether the instance is destroyed */
     protected boolean isInstanceDestroyed = false;
-    /** crucible 任务 / crucible task */
-        private final List<Future<?>> crucibleTask = new ArrayList<>();
     /** last teleport time / last teleport time */
         private final Map<Integer, Long> lastTeleportTime = new HashMap<>();
-    /** is spawning / is spawning */
-        private boolean isSpawning = false;
-    /** boss timer start / boss timer start */
-    private long bossTimerStart;
-    /** boss timer end / boss timer end */
-        private long bossTimerEnd;
     /** floor npcs / floor npcs */
     
     private static final int[][] FLOOR_NPCS = {
@@ -152,8 +139,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     @Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
-        doors = instance.getDoors();
-        floor = 1;
+        floor = (byte) runtimeState().getInt("infinity.floor", 1);
         spawnFloorRings();
         spawn(247546, 254.38080f, 245.29360f, 241.08308f, (byte) 55);
         spawn(247311, 255.26721f, 249.49001f, 242.03000f, (byte) 0, 71);
@@ -163,6 +149,10 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         spawn(247310, 279.62357f, 1243.2299f, 243.50325f, (byte) 0, 59);
         spawn(247310, 279.90237f, 255.53593f, 243.45923f, (byte) 0, 60);
         spawn(701772, 280.85883f, 249.46001f, 241.08347f, (byte) 0, 115);
+		long controllerDeadline = runtimeState().getLong(FLOOR_CONTROLLER_DEADLINE, 0);
+		if (controllerDeadline > 0) {
+			scheduleDeadline("delete_floor_controller", controllerDeadline, this::deleteFloorController);
+		}
     }
     
     private void sendPacket(Player player, final String variable, final int floor) {
@@ -180,19 +170,11 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     }
     
     private void teleportCrucibleFloor(Player player) {
-        isSpawning = true;
         int pfloor = player.getFloor();
         spawnNextFloor(pfloor + 1);
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                deleteNpc(701773);
-            }
-        }, 2500);
+        long deadline = System.currentTimeMillis() + 2500;
+		runtimeState().put(FLOOR_CONTROLLER_DEADLINE, deadline);
+        scheduleDeadline("delete_floor_controller", deadline, this::deleteFloorController);
         if (pfloor >= 1 && pfloor <= 38) {
             spawn(701000, 263.55551f, 1249.5244f, 240.73053f, (byte) 0, 56);
             teleportFloor(player, 219.33264f, 1249.4528f, 240.85301f, (byte) 0);
@@ -541,7 +523,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
                     
                     if (isFloorCleared(i + 1, npc)) {
                         floor = (byte) nextFloor;
-                        isSpawning = false;
+                        runtimeState().put("infinity.floor", floor);
                         deleteNpc(701000);
                         
                         if (i + 1 == 5) despawnNpcs(getNpcs(247351));
@@ -570,7 +552,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
                         
                         if (i + 1 == 40) {
                             sendPacket(player, "Condition_Infinity_THIS_SEASON_Floor_Reward", 100);
-                            bossTimerEnd = System.currentTimeMillis() - bossTimerStart;
                         }
                     }
                     return;
@@ -633,13 +614,8 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      */
     
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
+        long deadline = System.currentTimeMillis() + time;
+        scheduleDeadline("message_" + msg + '_' + deadline, deadline, () ->
                 instance.doOnAllPlayers(new Visitor<Player>() {
                     /**
                      * 处理 visit。
@@ -653,9 +629,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
                             PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
                         }
                     }
-                });
-            }
-        }, time);
+                }));
     }
     
     private void deleteNpc(int npcId) {
@@ -663,6 +637,11 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
             getNpc(npcId).getController().onDelete();
         }
     }
+
+	private void deleteFloorController() {
+		deleteNpc(701773);
+		runtimeState().remove(FLOOR_CONTROLLER_DEADLINE);
+	}
     
     private void despawnNpc(Npc npc) {
         if (npc != null) {
@@ -738,15 +717,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     @Override
     public void onInstanceDestroy() {
         isInstanceDestroyed = true;
-        for (Future<?> task : crucibleTask) {
-            if (task != null && !task.isDone()) {
-                task.cancel(true);
-            }
-        }
-        crucibleTask.clear();
-        if (doors != null) {
-            doors.clear();
-        }
     }
     
     private void teleportFloor(float x, float y, float z, byte h) {

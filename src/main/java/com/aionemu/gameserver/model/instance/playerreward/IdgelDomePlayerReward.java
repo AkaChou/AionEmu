@@ -6,4 +6,8 @@ public final class IdgelDomePlayerReward extends BattlegroundPlayerReward {
 	public IdgelDomePlayerReward(int objectId, byte buffId, Race race) {
 		super(objectId, buffId, race);
 	}
+
+	public IdgelDomePlayerReward(int objectId, byte buffId, Race race, long joinedAt) {
+		super(objectId, buffId, race, joinedAt);
+	}
 }

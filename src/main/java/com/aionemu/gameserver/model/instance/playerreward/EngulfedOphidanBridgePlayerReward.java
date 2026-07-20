@@ -6,4 +6,8 @@ public final class EngulfedOphidanBridgePlayerReward extends BattlegroundPlayerR
 	public EngulfedOphidanBridgePlayerReward(int objectId, byte buffId, Race race) {
 		super(objectId, buffId, race);
 	}
+
+	public EngulfedOphidanBridgePlayerReward(int objectId, byte buffId, Race race, long joinedAt) {
+		super(objectId, buffId, race, joinedAt);
+	}
 }
