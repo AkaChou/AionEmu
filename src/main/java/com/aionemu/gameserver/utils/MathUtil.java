@@ -464,7 +464,7 @@ public class MathUtil {
 		if (dot < 0.0f || dot > lengthSqr) {
 			return false;
 		}
-		return (tdx * tdx + tdy * tdy + tdz * tdz) - dot * dot / lengthSqr <= radius;
+		return (tdx * tdx + tdy * tdy + tdz * tdz) - dot * dot / lengthSqr <= radius * radius;
 	}
 
 	/**

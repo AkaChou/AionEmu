@@ -11,11 +11,14 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
 import com.aionemu.gameserver.skillengine.effect.Effects;
 import com.aionemu.gameserver.skillengine.model.ActivationAttribute;
@@ -25,6 +28,7 @@ import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.StigmaType;
+import com.aionemu.gameserver.world.WorldPosition;
 import org.junit.jupiter.api.Test;
 
 class EffectControllerTest {
@@ -84,6 +88,46 @@ class EffectControllerTest {
 
 		assertTrue(oldEffect.ended());
 		assertSame(replacementEffect, controller.abnormalEffect("same"));
+	}
+
+	@Test
+	void effectEndedByConcurrentReplacementCannotStartAfterwards() throws Exception {
+		TestCreature creature = new TestCreature();
+		TestEffectController controller = new TestEffectController(creature);
+		creature.setEffectController(controller);
+		CountDownLatch oldStartEntered = new CountDownLatch(1);
+		CountDownLatch continueOldStart = new CountDownLatch(1);
+		LifecycleEffectTemplate oldTemplate = new LifecycleEffectTemplate(1);
+		SkillTemplate oldSkill = skillTemplate("same", 10, ActivationAttribute.ACTIVE, SkillTargetSlot.BUFF);
+		setField(oldSkill, "effects", effects(oldTemplate));
+		DelayedStartEffect oldEffect = new DelayedStartEffect(creature, oldSkill, oldStartEntered, continueOldStart);
+		oldEffect.addAllEffectToSucess();
+		Effect replacement = new Effect(creature, creature,
+			skillTemplateWithEffects("same", 11, new TestEffectTemplate(2, 1)), 1, 0);
+		replacement.addAllEffectToSucess();
+		AtomicReference<Throwable> failure = new AtomicReference<>();
+		Thread addingOld = new Thread(() -> {
+			try {
+				controller.addEffect(oldEffect);
+			} catch (Throwable t) {
+				failure.set(t);
+			}
+		});
+
+		addingOld.start();
+		assertTrue(oldStartEntered.await(5, TimeUnit.SECONDS));
+		try {
+			assertTrue(controller.addEffect(replacement));
+		} finally {
+			continueOldStart.countDown();
+		}
+		addingOld.join(5000);
+
+		assertFalse(addingOld.isAlive());
+		assertNull(failure.get());
+		assertTrue(oldEffect.isStopped());
+		assertEquals(0, oldTemplate.startCount());
+		replacement.endEffect();
 	}
 
 	@Test
@@ -432,6 +476,18 @@ class EffectControllerTest {
 		return effects;
 	}
 
+	private static Effects effects(EffectTemplate effectTemplate) {
+		Effects effects = new Effects();
+		effects.getEffects().add(effectTemplate);
+		return effects;
+	}
+
+	private static SkillTemplate skillTemplateWithEffects(String stack, int skillId, EffectTemplate effectTemplate) {
+		SkillTemplate skillTemplate = skillTemplate(stack, skillId, ActivationAttribute.ACTIVE, SkillTargetSlot.BUFF);
+		setField(skillTemplate, "effects", effects(effectTemplate));
+		return skillTemplate;
+	}
+
 	private static void setField(Object target, String name, Object value) {
 		try {
 			Field field = target.getClass().getDeclaredField(name);
@@ -445,7 +501,11 @@ class EffectControllerTest {
 	private static final class TestEffectController extends EffectController {
 
 		private TestEffectController() {
-			super((Creature) null);
+			this(null);
+		}
+
+		private TestEffectController(Creature owner) {
+			super(owner);
 		}
 
 		private Effect passiveEffect(String stack) {
@@ -462,6 +522,31 @@ class EffectControllerTest {
 
 		@Override
 		public void broadCastEffects() {
+		}
+	}
+
+	private static final class DelayedStartEffect extends Effect {
+
+		private final CountDownLatch startEntered;
+		private final CountDownLatch continueStart;
+
+		private DelayedStartEffect(Creature creature, SkillTemplate skillTemplate, CountDownLatch startEntered,
+				CountDownLatch continueStart) {
+			super(creature, creature, skillTemplate, 1, 0);
+			this.startEntered = startEntered;
+			this.continueStart = continueStart;
+		}
+
+		@Override
+		public void startEffect(boolean restored) {
+			startEntered.countDown();
+			try {
+				continueStart.await();
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new AssertionError(e);
+			}
+			super.startEffect(restored);
 		}
 	}
 
@@ -533,6 +618,64 @@ class EffectControllerTest {
 
 		@Override
 		public void applyEffect(Effect effect) {
+		}
+	}
+
+	private static final class LifecycleEffectTemplate extends EffectTemplate {
+
+		private final AtomicInteger starts = new AtomicInteger();
+
+		private LifecycleEffectTemplate(int effectId) {
+			this.effectid = effectId;
+			this.basicLvl = 1;
+		}
+
+		@Override
+		public void applyEffect(Effect effect) {
+		}
+
+		@Override
+		public void startEffect(Effect effect) {
+			starts.incrementAndGet();
+		}
+
+		private int startCount() {
+			return starts.get();
+		}
+	}
+
+	private static final class TestCreature extends Creature {
+
+		private TestCreature() {
+			super(1, new CreatureController<>() {}, null, new TestVisibleObjectTemplate(), new WorldPosition(1));
+		}
+
+		@Override
+		public String getName() {
+			return "test";
+		}
+
+		@Override
+		public byte getLevel() {
+			return 1;
+		}
+	}
+
+	private static final class TestVisibleObjectTemplate extends VisibleObjectTemplate {
+
+		@Override
+		public int getTemplateId() {
+			return 1;
+		}
+
+		@Override
+		public String getName() {
+			return "test";
+		}
+
+		@Override
+		public int getNameId() {
+			return 1;
 		}
 	}
 }
