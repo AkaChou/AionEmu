@@ -64,6 +64,7 @@ import com.aionemu.gameserver.model.templates.quest.QuestTargetType;
 import com.aionemu.gameserver.model.templates.quest.QuestWorkItems;
 import com.aionemu.gameserver.model.templates.quest.Rewards;
 import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS.Status;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
@@ -125,7 +126,11 @@ public final class QuestService {
 		if (!canFinishReportedQuest(template, state, dialogActionId)) {
 			return false;
 		}
-		return finishQuest(new QuestEnv(null, player, questId, rewardDialogId));
+		if (!finishQuest(new QuestEnv(null, player, questId, rewardDialogId))) {
+			return false;
+		}
+		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+		return true;
 	}
 
 	static boolean canFinishReportedQuest(QuestTemplate template, QuestState state, int dialogActionId) {
