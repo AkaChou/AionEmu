@@ -98,6 +98,8 @@
 		<!-- Howling Obscura -->
 		<spawn npc_id="212799">
 			<spot x="268.948" y="389.873" z="134.55" h="90"/>
+			<spot x="350.927582" y="351.738922" z="149" h="45" alternate_id="212841" select_prob="3333"/>
+			<spot x="322.319305" y="431.269623" z="137" h="80" alternate_id="212842" select_prob="3333"/>
 			<spot x="301.79" y="422.53" z="134.21428" h="52" walker_id="3970642143392032268C5C6A6D9A5873EA9768D4"/>
 			<spot x="281.43" y="361.2" z="134.254" h="90"/>
 			<spot x="331.275" y="368.998" z="142.101" h="73"/>
@@ -153,6 +155,7 @@
 		</spawn>
 		<!-- Kalgolem of Magic -->
 		<spawn npc_id="212794">
+			<spot x="153.003830" y="299.778625" z="126" h="30" alternate_id="212840" select_prob="3333"/>
 			<spot x="125.592" y="271.662" z="123.599" h="100"/>
 			<spot x="173.182" y="279.216" z="124.497" h="50"/>
 			<spot x="165.968" y="319.829" z="122.593" h="83"/>
@@ -186,6 +189,7 @@
 		</spawn>
 		<!-- Power Kalgolem -->
 		<spawn npc_id="212790">
+			<spot x="127.121834" y="176.191223" z="103" h="15" alternate_id="212839" select_prob="3333"/>
 			<spot x="129.402" y="174.601" z="99.7135" h="15"/>
 			<spot x="149.03" y="231.31" z="112.70212" h="77" walker_id="47EEF0EF924FA3BD4268E7967A2B2541A52CB96A"/>
 			<spot x="126.089" y="267.711" z="123.432"/>
@@ -265,6 +269,7 @@
 		</spawn>
 		<!-- Bloodfist Gargoyle -->
 		<spawn npc_id="214094">
+			<spot x="298.709503" y="89.422447" z="131" h="45"/>
 			<spot x="279.271" y="171.767" z="119.33" h="16"/>
 			<spot x="284.009" y="133.058" z="128.673"/>
 			<spot x="298.673" y="233.982" z="118.414" h="83"/>
@@ -274,6 +279,10 @@
 		<spawn npc_id="212844">
 			<spot x="216.51399" y="263.90427" z="120.869865" h="36" walker_id="silverbladerotanfiretemplemove"/>
 		</spawn> 
+		<!-- Kromede the Corrupt -->
+		<spawn npc_id="212846">
+			<spot x="421.993530" y="93.189148" z="122" h="46" alternate_id="214621" select_prob="1000"/>
+		</spawn>
 		<!-- Temple Caryatid -->
 		<spawn npc_id="212808">
 			<spot x="394.932" y="112.774" z="116.11" h="75"/>
@@ -289,6 +298,7 @@
 		</spawn>
 		<!-- Aetheric Mugolem -->
 		<spawn npc_id="212803">
+			<spot x="296.691101" y="201.909195" z="123" h="15" alternate_id="212843" select_prob="3333"/>
 			<spot x="366.923" y="252.417" z="116.738" h="60"/>
 			<spot x="348.146" y="227.699" z="116.829" h="60"/>
 			<spot x="297.081" y="115.602" z="127.417" h="26"/>
