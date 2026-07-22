@@ -8,6 +8,7 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import java.util.List;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
+import com.aionemu.gameserver.configs.main.InstanceConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RetailInstanceData.Row;
@@ -62,7 +63,8 @@ public class PortalService {
 		boolean instanceTitleReq = !player.havePermission(MembershipConfig.INSTANCES_TITLE_REQ);
 		boolean instanceRaceReq = !player.havePermission(MembershipConfig.INSTANCES_RACE_REQ);
 		boolean instanceQuestReq = !player.havePermission(MembershipConfig.INSTANCES_QUEST_REQ);
-		boolean instanceGroupReq = !player.havePermission(MembershipConfig.INSTANCES_GROUP_REQ);
+		boolean instanceGroupReq = !InstanceConfig.ALLOW_SOLO_ENTRY
+				&& !player.havePermission(MembershipConfig.INSTANCES_GROUP_REQ);
 		int mapId = loc.getWorldId();
 		int playerSize = portalPath.getPlayerCount();
 		boolean isInstance = portalPath.isInstance();

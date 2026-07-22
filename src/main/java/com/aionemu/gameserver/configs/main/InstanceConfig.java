@@ -14,6 +14,13 @@ import com.aionemu.commons.configuration.Property;
 public class InstanceConfig {
 
 	/**
+	 * 是否允许玩家单人进入需要组队的副本。
+	 * Whether players may enter group-required instances alone.
+	 */
+	@Property(key = "gameserver.instance.allow_solo_entry", defaultValue = "true")
+	public static boolean ALLOW_SOLO_ENTRY;
+
+	/**
 	 * 副本冷却倍率。
 	 * Instance cooldown rate multiplier.
 	 */

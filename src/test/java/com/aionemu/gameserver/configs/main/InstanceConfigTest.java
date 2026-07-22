@@ -15,6 +15,7 @@ class InstanceConfigTest {
 
 	@Test
 	void bindsAndParsesInstanceProperties() throws Exception {
+		boolean allowSoloEntry = InstanceConfig.ALLOW_SOLO_ENTRY;
 		double cooldownRate = InstanceConfig.COOLDOWN_RATE;
 		int destroyDelay = InstanceConfig.DESTROY_DELAY_SECONDS;
 		int soloDestroyDelay = InstanceConfig.SOLO_DESTROY_DELAY_SECONDS;
@@ -24,6 +25,7 @@ class InstanceConfigTest {
 		String cooldownMaps = getPrivateString("cooldownExcludedMaps");
 		String scalingMaps = getPrivateString("scalingExcludedMaps");
 		Properties properties = new Properties();
+		properties.setProperty("gameserver.instance.allow_solo_entry", "false");
 		properties.setProperty("gameserver.instances.cooldown.rate", "0.01");
 		properties.setProperty("gameserver.instances.cooldown.filter", "300080000, 0");
 		properties.setProperty("gameserver.instance.destroy_delay_seconds", "90");
@@ -37,6 +39,7 @@ class InstanceConfigTest {
 			ConfigurableProcessor.process(InstanceConfig.class, properties);
 			InstanceConfig.refresh();
 
+			assertFalse(InstanceConfig.ALLOW_SOLO_ENTRY);
 			assertEquals(0.01, InstanceConfig.COOLDOWN_RATE);
 			assertTrue(InstanceConfig.isCooldownExcluded(300080000));
 			assertFalse(InstanceConfig.isCooldownExcluded(300060000));
@@ -47,6 +50,7 @@ class InstanceConfigTest {
 			assertEquals(0.6f, InstanceConfig.SCALING_DMG_FLOOR);
 			assertTrue(InstanceConfig.isScalingExcluded(300060000));
 		} finally {
+			InstanceConfig.ALLOW_SOLO_ENTRY = allowSoloEntry;
 			InstanceConfig.COOLDOWN_RATE = cooldownRate;
 			InstanceConfig.DESTROY_DELAY_SECONDS = destroyDelay;
 			InstanceConfig.SOLO_DESTROY_DELAY_SECONDS = soloDestroyDelay;
