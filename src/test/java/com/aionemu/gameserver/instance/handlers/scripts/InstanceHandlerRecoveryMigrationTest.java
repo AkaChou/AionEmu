@@ -49,8 +49,6 @@ class InstanceHandlerRecoveryMigrationTest {
 				"hexway.next_deadline");
 		assertMigrated("LowerUdasTempleInstance", "scheduleDeadline(\"chest\"",
 				"lower_udas.next_deadline");
-		assertMigrated("AbyssStoreroomInstance", "scheduleDeadline(\"barrier_\"",
-				"storeroom.next_deadline");
 		assertMigrated("SealedArgentManorInstance", "scheduleDeadline(\"expire\"",
 				"sealed.resistance_skill");
 		assertSourceExcludes("SealedArgentManorInstance", "GameThreadPoolServices");

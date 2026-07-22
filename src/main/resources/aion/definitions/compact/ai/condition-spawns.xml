@@ -82605,4 +82605,415 @@
       </group>
     </condition>
   </world>
+  <world id="300140000" name="idabre_up3_crotan">
+    <variable name="racecheck"/>
+    <condition id="9908" expression="racecheck == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="idabre_up3_crotan/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <npc id="805430" probability="10000" x="524.219421" y="148.9944" z="180.923203" heading="270" initial_delay="1" initial_delay_extra="0" respawn_time="30" respawn_time_extra="3" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9909" expression="racecheck == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="idabre_up3_crotan/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="805435" probability="10000" x="524.162842" y="148.18367" z="180.923203" heading="270" initial_delay="1" initial_delay_extra="0" respawn_time="30" respawn_time_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9910" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_crotan/world_N.xml#unconditional-party-1">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-1:g1:s1:p1">
+            <npc id="215105" probability="10000" x="393.797089" y="580.838074" z="192" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215099" probability="10000" x="432.638092" y="581.25061" z="192" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-1:g1:s1:p2">
+            <npc id="215105" probability="10000" x="432.638092" y="581.25061" z="192" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215099" probability="10000" x="393.797089" y="580.838074" z="192" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9911" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_crotan/world_N.xml#unconditional-party-2">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-2:g1:s1:p1">
+            <npc id="215127" probability="10000" x="501.574677" y="362.298523" z="182" heading="315" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215123" probability="10000" x="551.589722" y="362.193817" z="182" heading="225" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-2:g1:s1:p2">
+            <npc id="215127" probability="10000" x="551.589722" y="362.193817" z="182" heading="225" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215123" probability="10000" x="501.574677" y="362.298523" z="182" heading="315" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9912" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_crotan/world_N.xml#unconditional-party-3">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-3:g1:s1:p1">
+            <npc id="215102" probability="10000" x="387.434479" y="270.063751" z="192" heading="330" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215305" probability="10000" x="428.487793" y="276.792084" z="192" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-3:g1:s1:p2">
+            <npc id="215102" probability="10000" x="428.487793" y="276.792084" z="192" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215305" probability="10000" x="387.434479" y="270.063751" z="192" heading="330" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9913" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_crotan/world_N.xml#unconditional-party-4">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-4:g1:s1:p1">
+            <npc id="215103" probability="10000" x="388.363312" y="408.018524" z="198" heading="20" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215290" probability="10000" x="436.803009" y="455.43866" z="198" heading="140" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-4:g1:s1:p2">
+            <npc id="215103" probability="10000" x="436.803009" y="455.43866" z="198" heading="140" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215304" probability="10000" x="388.363312" y="408.018524" z="198" heading="20" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9914" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_crotan/world_N.xml#unconditional-party-5">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-5:g1:s1:p1">
+            <npc id="215114" probability="10000" x="655.696716" y="599.452148" z="192" heading="225" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215110" probability="10000" x="620.315552" y="598.790649" z="192" heading="315" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-5:g1:s1:p2">
+            <npc id="215114" probability="10000" x="620.315552" y="598.790649" z="192" heading="315" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215110" probability="10000" x="655.696716" y="599.452148" z="192" heading="225" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9915" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_crotan/world_N.xml#unconditional-party-6">
+      <group probability="1000">
+        <slot>
+          <npc id="215130" probability="2500" x="527.640015" y="212.051102" z="180" heading="270" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          <npc id="215131" probability="2500" x="527.640015" y="212.051102" z="180" heading="270" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          <npc id="215132" probability="2500" x="527.640015" y="212.051102" z="180" heading="270" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          <npc id="215133" probability="2500" x="527.640015" y="212.051102" z="180" heading="270" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9916" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_crotan/world_N.xml#unconditional-party-7">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-7:g1:s1:p1">
+            <npc id="215129" probability="10000" x="506.584595" y="431.711121" z="182" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215125" probability="10000" x="546.559021" y="430.570465" z="182" heading="175" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-7:g1:s1:p2">
+            <npc id="215129" probability="10000" x="546.559021" y="430.570465" z="182" heading="175" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215125" probability="10000" x="506.584595" y="431.711121" z="182" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9917" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_crotan/world_N.xml#unconditional-party-8">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-8:g1:s1:p1">
+            <npc id="215117" probability="10000" x="613.081543" y="260.819702" z="192" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215113" probability="10000" x="652.880676" y="277.328705" z="192" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-8:g1:s1:p2">
+            <npc id="215117" probability="10000" x="652.880676" y="277.328705" z="192" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215300" probability="10000" x="613.081543" y="260.819702" z="192" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9918" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_crotan/world_N.xml#unconditional-party-9">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-9:g1:s1:p1">
+            <npc id="215115" probability="10000" x="661.988281" y="408.034241" z="198" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215298" probability="10000" x="612.122498" y="455.899872" z="198" heading="310" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_crotan/world_N.xml#unconditional-party-9:g1:s1:p2">
+            <npc id="215115" probability="10000" x="612.122498" y="455.899872" z="198" heading="310" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215314" probability="10000" x="661.988281" y="408.034241" z="198" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+  </world>
+  <world id="300120000" name="idabre_up3_dkisas">
+    <variable name="racecheck"/>
+    <condition id="9919" expression="racecheck == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="idabre_up3_dkisas/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <npc id="805431" probability="10000" x="524.180908" y="149.396759" z="180.056854" heading="270" initial_delay="1" initial_delay_extra="1" respawn_time="30" respawn_time_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9920" expression="racecheck == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="idabre_up3_dkisas/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="805436" probability="10000" x="524.178833" y="149.297745" z="180.056854" heading="270" initial_delay="1" initial_delay_extra="1" respawn_time="30" respawn_time_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9921" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_dkisas/world_N.xml#unconditional-party-1">
+      <group probability="1000">
+        <slot>
+          <npc id="215173" probability="2500" x="527.651123" y="212.138855" z="178.585754" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215176" probability="2500" x="527.651123" y="212.138855" z="178.585754" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215175" probability="2500" x="527.651123" y="212.138855" z="178.585754" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215174" probability="2500" x="527.651123" y="212.138855" z="178.585754" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9922" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_dkisas/world_N.xml#unconditional-party-2">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-2:g1:s1:p1">
+            <npc id="215154" probability="10000" x="638.378967" y="496.562805" z="196.054382" heading="45" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215155" probability="10000" x="636.378967" y="496.562805" z="196.054382" heading="45" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9923" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_dkisas/world_N.xml#unconditional-party-3">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-3:g1:s1:p1">
+            <npc id="215142" probability="10000" x="413.97403" y="496.690125" z="196.054382" heading="45" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215143" probability="10000" x="411.97403" y="496.690125" z="196.054382" heading="45" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9924" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_dkisas/world_N.xml#unconditional-party-4">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-4:g1:s1:p1">
+            <npc id="215148" probability="10000" x="405.750397" y="581.553833" z="191.404602" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215144" probability="10000" x="428.525116" y="591.360352" z="191.404602" heading="225" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-4:g1:s1:p2">
+            <npc id="215148" probability="10000" x="428.525116" y="591.360352" z="191.404602" heading="225" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215144" probability="10000" x="405.750397" y="581.553833" z="191.404602" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9925" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_dkisas/world_N.xml#unconditional-party-5">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-5:g1:s1:p1">
+            <npc id="215153" probability="10000" x="617.619202" y="582.01532" z="192.708969" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215160" probability="10000" x="658.975769" y="580.647339" z="192.608215" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-5:g1:s1:p2">
+            <npc id="215153" probability="10000" x="658.975769" y="580.647339" z="192.608215" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215160" probability="10000" x="617.619202" y="582.01532" z="192.708969" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9926" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_dkisas/world_N.xml#unconditional-party-6">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-6:g1:s1:p1">
+            <npc id="215141" probability="10000" x="409.37619" y="560.961975" z="191.673279" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215142" probability="10000" x="407.37619" y="560.961975" z="191.673279" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9927" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_dkisas/world_N.xml#unconditional-party-7">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-7:g1:s1:p1">
+            <npc id="215320" probability="10000" x="396.684784" y="260.851044" z="192.664429" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215146" probability="10000" x="424.807648" y="276.028839" z="192.563675" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-7:g1:s1:p2">
+            <npc id="215320" probability="10000" x="424.807648" y="276.028839" z="192.563675" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215146" probability="10000" x="396.684784" y="260.851044" z="192.664429" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9928" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_dkisas/world_N.xml#unconditional-party-8">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-8:g1:s1:p1">
+            <npc id="215149" probability="10000" x="612.519592" y="260.92923" z="193.028931" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215157" probability="10000" x="648.324036" y="274.139832" z="193.028931" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-8:g1:s1:p2">
+            <npc id="215149" probability="10000" x="648.324036" y="274.139832" z="193.028931" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215157" probability="10000" x="612.519592" y="260.92923" z="193.028931" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9929" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_dkisas/world_N.xml#unconditional-party-9">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-9:g1:s1:p1">
+            <npc id="215166" probability="10000" x="532.284729" y="689.99585" z="192.89772" heading="140" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215166" probability="10000" x="530.284729" y="689.99585" z="192.89772" heading="140" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9930" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_dkisas/world_N.xml#unconditional-party-10">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="idabre_up3_dkisas/world_N.xml#unconditional-party-10:g1:s1:p1">
+            <npc id="215165" probability="10000" x="528.399048" y="712.130188" z="193.101532" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215165" probability="10000" x="526.399048" y="712.130188" z="193.101532" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+  </world>
+  <world id="300130000" name="idabre_up3_lamiren">
+    <variable name="racecheck"/>
+    <condition id="9931" expression="racecheck == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="idabre_up3_lamiren/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <npc id="805432" probability="10000" x="523.247864" y="149.338165" z="180.401291" heading="270" initial_delay="1" initial_delay_extra="0" respawn_time="30" respawn_time_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9932" expression="racecheck == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="idabre_up3_lamiren/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="805437" probability="10000" x="523.361877" y="149.43129" z="180.401291" heading="270" initial_delay="1" initial_delay_extra="0" respawn_time="30" respawn_time_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9933" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_lamiren/world_N.xml#unconditional-party-1">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-1:g1:s1:p1">
+            <npc id="215191" probability="10000" x="431.807098" y="279.665497" z="192" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215185" probability="10000" x="391.595306" y="279.41925" z="192" heading="330" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-1:g1:s1:p2">
+            <npc id="215191" probability="10000" x="391.595306" y="279.41925" z="192" heading="330" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215185" probability="10000" x="431.807098" y="279.665497" z="192" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9934" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_lamiren/world_N.xml#unconditional-party-2">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-2:g1:s1:p1">
+            <npc id="215202" probability="10000" x="543.984497" y="448.396149" z="182" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215376" probability="10000" x="511.779602" y="446.693481" z="182" heading="330" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-2:g1:s1:p2">
+            <npc id="215202" probability="10000" x="511.779602" y="446.693481" z="182" heading="330" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215376" probability="10000" x="543.984497" y="448.396149" z="182" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9935" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_lamiren/world_N.xml#unconditional-party-3">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-3:g1:s1:p1">
+            <npc id="215188" probability="10000" x="551.103699" y="358.464752" z="182" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215186" probability="10000" x="501.597595" y="357.589935" z="182" heading="330" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-3:g1:s1:p2">
+            <npc id="215188" probability="10000" x="501.597595" y="357.589935" z="182" heading="330" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215186" probability="10000" x="551.103699" y="358.464752" z="182" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9936" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_lamiren/world_N.xml#unconditional-party-4">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-4:g1:s1:p1">
+            <npc id="215213" probability="10000" x="658.156921" y="581.41687" z="192" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215208" probability="10000" x="617.002747" y="581.259277" z="192" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-4:g1:s1:p2">
+            <npc id="215213" probability="10000" x="617.002747" y="581.259277" z="192" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215208" probability="10000" x="658.156921" y="581.41687" z="192" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9937" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_lamiren/world_N.xml#unconditional-party-5">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-5:g1:s1:p1">
+            <npc id="215203" probability="10000" x="433.93811" y="458.105469" z="198" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215197" probability="10000" x="390.438354" y="458.225189" z="198" heading="330" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-5:g1:s1:p2">
+            <npc id="215203" probability="10000" x="433.93811" y="458.105469" z="198" heading="330" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215197" probability="10000" x="390.438354" y="458.225189" z="198" heading="220" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9938" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_lamiren/world_N.xml#unconditional-party-6">
+      <group probability="1000">
+        <slot>
+          <npc id="215216" probability="2500" x="527.715454" y="212.051102" z="180" heading="270" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          <npc id="215217" probability="2500" x="527.715454" y="212.051102" z="180" heading="270" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          <npc id="215218" probability="2500" x="527.715454" y="212.051102" z="180" heading="270" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          <npc id="215219" probability="2500" x="527.715454" y="212.051102" z="180" heading="270" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9939" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_lamiren/world_N.xml#unconditional-party-7">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-7:g1:s1:p1">
+            <npc id="215215" probability="10000" x="434.094849" y="581.393616" z="192" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215210" probability="10000" x="392.689484" y="581.168335" z="192" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-7:g1:s1:p2">
+            <npc id="215210" probability="10000" x="392.689484" y="581.168335" z="192" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215215" probability="10000" x="434.094849" y="581.393616" z="192" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9940" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_lamiren/world_N.xml#unconditional-party-8">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-8:g1:s1:p1">
+            <npc id="215201" probability="10000" x="658.652161" y="458.731476" z="198" heading="225" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215377" probability="10000" x="614.86554" y="458.93045" z="198" heading="315" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-8:g1:s1:p2">
+            <npc id="215201" probability="10000" x="614.86554" y="458.93045" z="198" heading="315" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215377" probability="10000" x="658.652161" y="458.731476" z="198" heading="225" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9941" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idabre_up3_lamiren/world_N.xml#unconditional-party-9">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-9:g1:s1:p1">
+            <npc id="215190" probability="10000" x="657.962708" y="259.175537" z="192" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215187" probability="10000" x="612.317566" y="259.63858" z="192" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idabre_up3_lamiren/world_N.xml#unconditional-party-9:g1:s1:p2">
+            <npc id="215190" probability="10000" x="612.317566" y="259.63858" z="192" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+            <npc id="215187" probability="10000" x="657.962708" y="259.175537" z="192" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+  </world>
 </condition_spawns>

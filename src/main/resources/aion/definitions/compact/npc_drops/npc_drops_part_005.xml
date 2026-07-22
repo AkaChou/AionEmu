@@ -8846,7 +8846,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_ROOT" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_CROTAN" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215131">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -8871,7 +8871,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_ROOT" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_CROTAN" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215132">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -8896,7 +8896,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_ROOT" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_CROTAN" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215133">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -8921,7 +8921,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_ROOT" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_CROTAN" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215134">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -8954,7 +8954,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="185000251" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_root_02"/>
+      <drop item_id="185000059" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_crotan_02"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_C2_44A" common_drop_adjustment="35"/>
     <common_drop_group name="ARMOR_A_N_C2_47A" common_drop_adjustment="8"/>
@@ -8979,8 +8979,8 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="185000251" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_root_02"/>
-      <drop item_id="185000252" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_root_03"/>
+      <drop item_id="185000059" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_crotan_02"/>
+      <drop item_id="185000060" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_crotan_03"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_C2_49A" common_drop_adjustment="33"/>
     <common_drop_group name="ARMOR_A_N_C2_47A" common_drop_adjustment="8"/>
@@ -9921,7 +9921,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_IRON" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_DKISAS" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215174">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -9946,7 +9946,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_IRON" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_DKISAS" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215175">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -9971,7 +9971,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_IRON" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_DKISAS" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215176">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -9996,7 +9996,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_IRON" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_DKISAS" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215177">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -10029,7 +10029,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="185000256" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_iron_02"/>
+      <drop item_id="185000064" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_dkisas_02"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_C2_44A" common_drop_adjustment="35"/>
     <common_drop_group name="ARMOR_A_N_C2_47A" common_drop_adjustment="8"/>
@@ -10054,8 +10054,8 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="185000256" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_iron_02"/>
-      <drop item_id="185000257" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_iron_03"/>
+      <drop item_id="185000064" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_dkisas_02"/>
+      <drop item_id="185000065" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_dkisas_03"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_C2_49A" common_drop_adjustment="33"/>
     <common_drop_group name="ARMOR_A_N_C2_47A" common_drop_adjustment="8"/>
@@ -10996,7 +10996,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_TWILIGHT" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_LAMIREN" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215217">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -11021,7 +11021,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_TWILIGHT" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_LAMIREN" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215218">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -11046,7 +11046,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_TWILIGHT" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_LAMIREN" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215219">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -11071,7 +11071,7 @@
     <common_drop_group name="MATTER_PROC_40A" common_drop_adjustment="52"/>
     <common_drop_group name="MATERIAL_KEY_DRAGON_45A" common_drop_adjustment="22"/>
     <common_drop_group name="MATERIAL_DRAGON_45A" common_drop_adjustment="40"/>
-    <common_drop_group name="KEY_IDAB1_REWARD_TWILIGHT" common_drop_adjustment="100"/>
+    <common_drop_group name="KEY_IDAB1_REWARD_LAMIREN" common_drop_adjustment="100"/>
   </npc_drop>
   <npc_drop npc_id="215220">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
@@ -11104,7 +11104,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="185000261" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_twilight_02"/>
+      <drop item_id="185000069" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_lamiren_02"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_C2_44A" common_drop_adjustment="35"/>
     <common_drop_group name="ARMOR_A_N_C2_47A" common_drop_adjustment="8"/>
@@ -11129,8 +11129,8 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="185000261" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_twilight_02"/>
-      <drop item_id="185000262" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_twilight_03"/>
+      <drop item_id="185000069" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_lamiren_02"/>
+      <drop item_id="185000070" chance="100.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="key_idabre3_lamiren_03"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_C2_49A" common_drop_adjustment="33"/>
     <common_drop_group name="ARMOR_A_N_C2_47A" common_drop_adjustment="8"/>
