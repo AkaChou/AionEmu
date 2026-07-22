@@ -38,7 +38,7 @@ public final class DatabaseFactory {
         try {
             Class.forName(DatabaseConfig.DATABASE_DRIVER);
         } catch (Exception e) {
-            log.error(I18n.get("log.a8dd0e7b9e78", e));
+            log.error(I18n.get("log.a8dd0e7b9e78", e), e);
             throw new Error("DB Driver doesnt exist!");
         }
 
@@ -64,7 +64,7 @@ public final class DatabaseFactory {
         try {
             dataSource = new HikariDataSource(config);
         } catch (Exception e) {
-            log.error(I18n.get("log.232091bdb3d8", e));
+            log.error(I18n.get("log.232091bdb3d8", e), e);
             throw new Error("DatabaseFactory not initialized!", e);
         }
 
@@ -78,7 +78,7 @@ public final class DatabaseFactory {
         } catch (Exception e) {
             states.remove(context);
             dataSource.close();
-            log.error(I18n.get("log.5ea00f54f65b", DatabaseConfig.DATABASE_URL, e));
+            log.error(I18n.get("log.5ea00f54f65b", DatabaseConfig.DATABASE_URL, e), e);
             throw new Error("DatabaseFactory not initialized!");
         }
 
@@ -134,7 +134,7 @@ public final class DatabaseFactory {
             try {
                 state.dataSource.close();
             } catch (Exception e) {
-                log.warn(I18n.get("log.79521306df38", e));
+                log.warn(I18n.get("log.79521306df38", e), e);
             }
         }
     }
@@ -164,7 +164,7 @@ public final class DatabaseFactory {
                     st.close();
                 }
             } catch (SQLException e) {
-                log.error(I18n.get("log.a509eb4fdeff", e));
+                log.error(I18n.get("log.a509eb4fdeff", e), e);
             }
         }
     }
@@ -182,12 +182,12 @@ public final class DatabaseFactory {
                     con.setAutoCommit(true);
                 }
             } catch (SQLException e) {
-                log.error(I18n.get("log.2bbe0501f216", e));
+                log.error(I18n.get("log.2bbe0501f216", e), e);
             }
             try {
                 con.close();
             } catch (SQLException e) {
-                log.error(I18n.get("log.082a33b1782b", e));
+                log.error(I18n.get("log.082a33b1782b", e), e);
             }
         }
     }

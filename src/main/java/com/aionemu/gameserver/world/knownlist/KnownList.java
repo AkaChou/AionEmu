@@ -326,7 +326,7 @@ public class KnownList {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.70e363d7c042", ex));
+			log.error(I18n.get("log.70e363d7c042", ex), ex);
 		}
 		return counter;
 	}
@@ -363,7 +363,7 @@ public class KnownList {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.70e363d7c042", ex));
+			log.error(I18n.get("log.70e363d7c042", ex), ex);
 		}
 		return counter;
 	}
@@ -385,7 +385,7 @@ public class KnownList {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.77c1d3d24013", ex));
+			log.error(I18n.get("log.77c1d3d24013", ex), ex);
 		}
 	}
 
@@ -403,7 +403,7 @@ public class KnownList {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.e15440de12ca", ex));
+			log.error(I18n.get("log.e15440de12ca", ex), ex);
 		}
 	}
 

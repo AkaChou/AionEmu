@@ -54,7 +54,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
         try (Connection con = DatabaseFactory.getConnection()) {
             return insertMinion(con, minionCommonData);
         } catch (Exception e) {
-            log.error(I18n.get("log.2527877e3b8c", minionCommonData.getMinionId(), minionCommonData.getName(), e));
+            log.error(I18n.get("log.2527877e3b8c", minionCommonData.getMinionId(), minionCommonData.getName(), e), e);
             return false;
         }
     }
@@ -89,7 +89,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
             return stmt.executeUpdate() == 1;
 
         } catch (Exception e) {
-            log.error(I18n.get("log.85f2880b076f", minionObjectId, e));
+            log.error(I18n.get("log.85f2880b076f", minionObjectId, e), e);
             return false;
         }
     }
@@ -150,7 +150,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.6b0198f98c6b", player.getObjectId(), e));
+            log.error(I18n.get("log.6b0198f98c6b", player.getObjectId(), e), e);
             return null;
         }
 
@@ -174,7 +174,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
             return stmt.executeUpdate() == 1;
 
         } catch (Exception e) {
-            log.error(I18n.get("log.d5697671e606", minionCommonData.getMinionId(), e));
+            log.error(I18n.get("log.d5697671e606", minionCommonData.getMinionId(), e), e);
             return false;
         }
     }
@@ -197,7 +197,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
             return stmt.executeUpdate() == 1;
 
         } catch (Exception e) {
-            log.error(I18n.get("log.d7a903023f02", minionCommonData.getMinionId(), e));
+            log.error(I18n.get("log.d7a903023f02", minionCommonData.getMinionId(), e), e);
             return false;
         }
     }
@@ -219,7 +219,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
                 throw e;
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.d7a903023f02", minionCommonData.getMinionId(), e));
+            log.error(I18n.get("log.d7a903023f02", minionCommonData.getMinionId(), e), e);
             return false;
         }
     }
@@ -261,7 +261,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
                 throw e;
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.2527877e3b8c", replacement.getMinionId(), replacement.getName(), e));
+            log.error(I18n.get("log.2527877e3b8c", replacement.getMinionId(), replacement.getName(), e), e);
             return false;
         }
     }
@@ -285,7 +285,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
             return stmt.executeUpdate() == 1;
 
         } catch (Exception e) {
-            log.error(I18n.get("log.188874aa8e51", minionCommonData.getMinionId(), e));
+            log.error(I18n.get("log.188874aa8e51", minionCommonData.getMinionId(), e), e);
             return false;
         }
     }
@@ -309,7 +309,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
             return stmt.executeUpdate() == 1;
 
         } catch (Exception e) {
-            log.error(I18n.get("log.65bb4c6328f8", minionObjId, e));
+            log.error(I18n.get("log.65bb4c6328f8", minionObjId, e), e);
             return false;
         }
     }
@@ -348,7 +348,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
             return stmt.executeUpdate() == 1;
 
         } catch (Exception e) {
-            log.error(I18n.get("log.0c8cc68553ee", minionCommonData.getObjectId(), e));
+            log.error(I18n.get("log.0c8cc68553ee", minionCommonData.getObjectId(), e), e);
             return false;
         }
     }
@@ -363,7 +363,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
                 ids.add(rs.getInt(1));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.6b0198f98c6b", 0, e));
+            log.error(I18n.get("log.6b0198f98c6b", 0, e), e);
             return new int[0];
         }
         return ids.stream().mapToInt(Integer::intValue).toArray();
@@ -389,7 +389,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.8896cfb9d7f2", minionCommonData.getMasterObjectId(), e));
+            log.error(I18n.get("log.8896cfb9d7f2", minionCommonData.getMasterObjectId(), e), e);
         }
     }
 
@@ -409,7 +409,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
             }
             return deleted;
         } catch (Exception e) {
-            log.error(I18n.get("log.55b90eeb49ae", e));
+            log.error(I18n.get("log.55b90eeb49ae", e), e);
             return 0;
         }
     }

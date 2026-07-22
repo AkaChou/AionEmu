@@ -52,7 +52,7 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.df17e20d3575", player.getObjectId(), e));
+            log.error(I18n.get("log.df17e20d3575", player.getObjectId(), e), e);
             insertPlayerLifeStat(player);
         }
     }
@@ -78,7 +78,7 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.57de73400d87", player.getObjectId(), e));
+            log.error(I18n.get("log.57de73400d87", player.getObjectId(), e), e);
         }
     }
 
@@ -114,7 +114,7 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.78b2c8b3d4cc", player.getObjectId(), e));
+            log.error(I18n.get("log.78b2c8b3d4cc", player.getObjectId(), e), e);
         }
     }
 
@@ -161,7 +161,7 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
             con.commit();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.29e5d532c9e9", e));
+            log.error(I18n.get("log.29e5d532c9e9", e), e);
         }
     }
 

@@ -75,7 +75,7 @@ public class CM_GS_AUTH extends GsClientPacket {
             try {
                 ipRanges.add(new IPRange(min, max, address));
             } catch (IllegalArgumentException e) {
-                log.warn(I18n.get("log.7d4955b67564", i, e.getMessage()));
+                log.warn(I18n.get("log.7d4955b67564", i, e.getMessage()), e);
             }
         }
 

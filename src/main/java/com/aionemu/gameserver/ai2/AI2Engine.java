@@ -116,7 +116,7 @@ public class AI2Engine implements GameEngine {
 				aiInstance.setLogging(true);
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.b80441439b8c", name, e));
+			log.error(I18n.get("log.b80441439b8c", name, e), e);
 		}
 		return aiInstance;
 	}

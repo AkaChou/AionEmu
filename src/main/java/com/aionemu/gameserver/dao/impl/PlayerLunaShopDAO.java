@@ -53,7 +53,7 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.064f9d2d26d3", player.getObjectId(), e));
+            log.error(I18n.get("log.064f9d2d26d3", player.getObjectId(), e), e);
         }
     }
 
@@ -77,7 +77,7 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.44819cc1f7de", playerId, e));
+            log.error(I18n.get("log.44819cc1f7de", playerId, e), e);
             return false;
         }
     }
@@ -96,7 +96,7 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.4cc438cef8a8", e));
+            log.error(I18n.get("log.4cc438cef8a8", e), e);
             return false;
         }
     }
@@ -133,7 +133,7 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
             }
             con.commit();
         } catch (SQLException e) {
-            log.error(I18n.get("log.3148132d5775", player.getObjectId(), e));
+            log.error(I18n.get("log.3148132d5775", player.getObjectId(), e), e);
         }
         return success;
     }
@@ -159,7 +159,7 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.500d6b5a68a9", player.getObjectId(), e));
+            log.error(I18n.get("log.500d6b5a68a9", player.getObjectId(), e), e);
             return false;
         }
     }

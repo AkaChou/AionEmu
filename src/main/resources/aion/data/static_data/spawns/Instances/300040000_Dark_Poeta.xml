@@ -367,7 +367,7 @@
 		</spawn>
 		<!-- Noahs Furious Shade -->
 		<spawn npc_id="214864">
-			<spot x="535.011" y="829.242" z="108.875" h="27"/>
+			<spot x="535.011" y="829.242" z="108.875" h="27" walker_id="retail:300040000:idlf1_d_path_ghostelim_50_001"/>
 		</spawn>
 		<!-- Anuhart Legatus -->
 		<spawn npc_id="214865">
@@ -388,7 +388,7 @@
 		</spawn>
 		<!-- Telepathy Controller -->
 		<spawn npc_id="214894">
-			<spot x="237.596" y="420.791" z="103.806" h="24"/>
+			<spot x="237.596" y="420.791" z="105.0" h="24"/>
 		</spawn>
 		<!-- Anuhart Proconsul -->
 		<spawn npc_id="215452">

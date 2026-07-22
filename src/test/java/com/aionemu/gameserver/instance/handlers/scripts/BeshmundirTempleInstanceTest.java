@@ -61,6 +61,7 @@ class BeshmundirTempleInstanceTest {
 			}
 		}
 		assertTrue(world != null);
+		assertEquals(83, world.getElementsByTagName("condition").getLength());
 		Set<String> variables = new HashSet<>();
 		for (Element variable : elements(world.getElementsByTagName("variable"))) {
 			variables.add(variable.getAttribute("name"));
@@ -69,6 +70,7 @@ class BeshmundirTempleInstanceTest {
 			"idct_specterh_spawn")));
 
 		Map<Integer, Map<Integer, Integer>> producerCounts = new HashMap<>();
+		Map<Integer, String> walkers = new HashMap<>();
 		for (Element condition : elements(world.getElementsByTagName("condition"))) {
 			int page = Integer.parseInt(condition.getAttribute("page_start"));
 			String expression = condition.getAttribute("expression");
@@ -76,6 +78,9 @@ class BeshmundirTempleInstanceTest {
 			for (Element npc : elements(condition.getElementsByTagName("npc"))) {
 				int npcId = Integer.parseInt(npc.getAttribute("id"));
 				ids.add(npcId);
+				if (!npc.getAttribute("walker").isBlank()) {
+					walkers.put(npcId, npc.getAttribute("walker"));
+				}
 				if ("1".equals(expression)) {
 					producerCounts.computeIfAbsent(page, ignored -> new HashMap<>()).merge(npcId, 1, Integer::sum);
 				}
@@ -93,6 +98,10 @@ class BeshmundirTempleInstanceTest {
 		assertEquals(15, producerCounts.get(2).get(216740));
 		assertTrue(producerCounts.get(1).keySet().containsAll(Set.of(216587, 216588, 216589)));
 		assertTrue(producerCounts.get(2).keySet().containsAll(Set.of(216583, 216584, 216585)));
+		assertEquals("retail:300170000:path_12", walkers.get(216161));
+		assertEquals("retail:300170000:hugeslime_path", walkers.get(216163));
+		assertEquals("retail:300170000:path_8", walkers.get(216247));
+		assertEquals("retail:300170000:path_6", walkers.get(216248));
 	}
 
 	@Test

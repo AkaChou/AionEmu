@@ -248,7 +248,7 @@ public final class ThreadPoolManager {
 			scheduledPool.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
 			success |= awaitTermination(10000);
 		} catch (InterruptedException e) {
-			log.warn(I18n.get("log.8f2ed10ffefe", e));
+			log.warn(I18n.get("log.8f2ed10ffefe", e), e);
 			Thread.currentThread().interrupt();
 		}
 		log.info(I18n.get("log.e2793575e244", success, (System.currentTimeMillis() - begin)));

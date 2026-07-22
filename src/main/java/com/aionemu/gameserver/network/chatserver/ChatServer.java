@@ -184,7 +184,7 @@ public class ChatServer {
 		} catch (Exception e) {
 			chatServer = null;
 			shutdownNettyClient();
-			log.info(I18n.get("log.4b5f26f1f747", e.getMessage()));
+			log.info(I18n.get("log.4b5f26f1f747", e.getMessage()), e);
 			return false;
 		}
 	}

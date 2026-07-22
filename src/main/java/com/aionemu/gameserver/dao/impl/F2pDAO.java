@@ -51,7 +51,7 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.b700281835c0", player.getObjectId(), e));
+            log.error(I18n.get("log.b700281835c0", player.getObjectId(), e), e);
         }
 
         player.setF2p(f2p);
@@ -77,7 +77,7 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
             return result > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.2830d63e3475", objectId, e));
+            log.error(I18n.get("log.2830d63e3475", objectId, e), e);
             return false;
         }
     }
@@ -107,7 +107,7 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
             return true;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.4295e27fcc73", objectId, e));
+            log.error(I18n.get("log.4295e27fcc73", objectId, e), e);
             return false;
         }
     }
@@ -130,7 +130,7 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
             return result > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.34f50ac7e4cb", objectId, e));
+            log.error(I18n.get("log.34f50ac7e4cb", objectId, e), e);
             return false;
         }
     }
@@ -177,7 +177,7 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.efc1390e42c9", objectId, e));
+            log.error(I18n.get("log.efc1390e42c9", objectId, e), e);
         }
 
         return 0;

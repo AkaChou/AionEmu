@@ -55,7 +55,7 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 				}
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.a442a442976d", player.getObjectId(), e));
+			log.error(I18n.get("log.a442a442976d", player.getObjectId(), e), e);
 		}
 		player.getEffectController().broadCastEffects();
 	}
@@ -103,7 +103,7 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 
 			con.commit();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.77f5a5e723bf", player.getObjectId(), e));
+			log.error(I18n.get("log.77f5a5e723bf", player.getObjectId(), e), e);
 		}
 	}
 
@@ -120,7 +120,7 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 			stmt.setInt(1, player.getObjectId());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.8c3c2893f6d3", player.getObjectId(), e));
+			log.error(I18n.get("log.8c3c2893f6d3", player.getObjectId(), e), e);
 		}
 	}
 

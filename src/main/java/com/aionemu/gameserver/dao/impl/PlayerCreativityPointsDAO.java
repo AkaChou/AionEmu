@@ -61,7 +61,7 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.f66364d8a626", player.getObjectId(), " from DB", e));
+			log.error(I18n.get("log.f66364d8a626", player.getObjectId(), " from DB", e), e);
 		}
 		return new PlayerCPList(cp);
 	}
@@ -85,7 +85,7 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 			stmt.setInt(3, point);
 			return stmt.executeUpdate() > 0;
 		} catch (Exception e) {
-			log.error(I18n.get("log.ca5c95d176db", objectId, " from DB", e));
+			log.error(I18n.get("log.ca5c95d176db", objectId, " from DB", e), e);
 			return false;
 		}
 	}
@@ -107,7 +107,7 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 			stmt.setInt(2, slot);
 			return stmt.executeUpdate() > 0;
 		} catch (Exception e) {
-			log.error(I18n.get("log.55ed70097989", objectId, " from DB", e));
+			log.error(I18n.get("log.55ed70097989", objectId, " from DB", e), e);
 			return false;
 		}
 	}
@@ -132,7 +132,7 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.ddd6a72fd9a0", playerObjId, e));
+			log.error(I18n.get("log.ddd6a72fd9a0", playerObjId, e), e);
 		}
 		return 0;
 	}
@@ -157,7 +157,7 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.08a2600ad0a0", obj, e));
+			log.error(I18n.get("log.08a2600ad0a0", obj, e), e);
 		}
 		return 0;
 	}

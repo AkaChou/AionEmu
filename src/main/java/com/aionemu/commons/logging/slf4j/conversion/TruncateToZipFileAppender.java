@@ -63,7 +63,7 @@ public class TruncateToZipFileAppender extends FileAppender<Object> {
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 date = reader.readLine().split("\f")[1];
             } catch (IOException e) {
-                log.error(I18n.get("log.1004c98fd450", e));
+                log.error(I18n.get("log.1004c98fd450", e), e);
             }
 
             File zipFile = new File(backupRoot, file.getName() + "." + date + ".zip");
@@ -91,7 +91,7 @@ public class TruncateToZipFileAppender extends FileAppender<Object> {
                 zos.closeEntry();
                 
             } catch (Exception e) {
-                log.warn(I18n.get("log.a0e571dbdb33", e));
+                log.warn(I18n.get("log.a0e571dbdb33", e), e);
                 return;
             }
 

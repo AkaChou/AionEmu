@@ -71,7 +71,7 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
                 }
             }
         } catch (Exception e) {
-            log.warn(I18n.get("log.c4af5ae55182", e));
+            log.warn(I18n.get("log.c4af5ae55182", e), e);
             success = false;
         }
 
@@ -109,7 +109,7 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
 
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
-            log.error(I18n.get("log.c2e97c849263", locations.getId(), e));
+            log.error(I18n.get("log.c2e97c849263", locations.getId(), e), e);
             return false;
         }
     }
@@ -140,7 +140,7 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
 
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
-            log.error(I18n.get("log.34ceaeea74ab", locations.getId(), e));
+            log.error(I18n.get("log.34ceaeea74ab", locations.getId(), e), e);
             return false;
         }
     }

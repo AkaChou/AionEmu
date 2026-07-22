@@ -62,7 +62,7 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
             player.getCraftCooldownList().setCraftCoolDowns(cooldowns);
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.a61919a3fe85", player.getObjectId(), e));
+            log.error(I18n.get("log.a61919a3fe85", player.getObjectId(), e), e);
         }
     }
 
@@ -125,7 +125,7 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
             con.commit();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.0b287ae80175", player.getObjectId(), e));
+            log.error(I18n.get("log.0b287ae80175", player.getObjectId(), e), e);
         }
     }
 
@@ -143,7 +143,7 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.01f57aee7b11", player.getObjectId(), e));
+            log.error(I18n.get("log.01f57aee7b11", player.getObjectId(), e), e);
         }
     }
 
@@ -163,7 +163,7 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.234aa73d4c36", e));
+            log.error(I18n.get("log.234aa73d4c36", e), e);
         }
     }
 

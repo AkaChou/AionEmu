@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.playerreward.CruciblePlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_STAGE_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -52,6 +53,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance {
 	@Override
 	public void onStopTraining(Player player) {
 		doReward(player);
+	}
+
+	public void changeWorldSceneStatus(int status) {
+		for (Player player : instance.getPlayersInside()) {
+			PacketSendUtility.sendPacket(player, new SM_INSTANCE_STAGE_INFO(2, status & 0xffff, status >>> 16));
+		}
 	}
 
 	@Override

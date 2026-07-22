@@ -55,7 +55,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.da2be87857a1", race, e));
+            log.error(I18n.get("log.da2be87857a1", race, e), e);
         }
 
         return towns;
@@ -80,7 +80,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.faf0ffd96bb1", e));
+            log.error(I18n.get("log.faf0ffd96bb1", e), e);
         }
 
         return towns;
@@ -146,7 +146,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
             town.setPersistentState(PersistentState.UPDATED);
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.83ac20817a76", town.getId(), e));
+            log.error(I18n.get("log.83ac20817a76", town.getId(), e), e);
         }
     }
 
@@ -181,7 +181,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.86ef9ddbc0ca", town.getId(), e));
+            log.error(I18n.get("log.86ef9ddbc0ca", town.getId(), e), e);
         }
     }
 
@@ -200,7 +200,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
             town.setPersistentState(PersistentState.UPDATED);
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.2d0c2046cc72", town.getId(), e));
+            log.error(I18n.get("log.2d0c2046cc72", town.getId(), e), e);
         }
     }
 
@@ -267,7 +267,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.e7999a48b385", e));
+            log.error(I18n.get("log.e7999a48b385", e), e);
         }
     }
 

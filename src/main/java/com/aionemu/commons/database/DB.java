@@ -65,9 +65,9 @@ public final class DB {
             return true;
         } catch (Exception var17) {
             if (errMsg == null) {
-                log.warn(I18n.get("log.47cff7ac9cfa", query, var17));
+                log.warn(I18n.get("log.47cff7ac9cfa", query, var17), var17);
             } else {
-                log.warn(I18n.get("log.6b2012065d8f", errMsg, query, var17));
+                log.warn(I18n.get("log.6b2012065d8f", errMsg, query, var17), var17);
             }
             return false;
         } finally {
@@ -79,7 +79,7 @@ public final class DB {
                     stmt.close();
                 }
             } catch (Exception var16) {
-                log.warn(I18n.get("log.687eec966cd6", var16));
+                log.warn(I18n.get("log.687eec966cd6", var16), var16);
             }
         }
     }
@@ -122,9 +122,9 @@ public final class DB {
             return true;
         } catch (Exception var17) {
             if (errMsg == null) {
-                log.warn(I18n.get("log.7e2c163a97cb", query, var17));
+                log.warn(I18n.get("log.7e2c163a97cb", query, var17), var17);
             } else {
-                log.warn(I18n.get("log.6b2012065d8f", errMsg, query, var17));
+                log.warn(I18n.get("log.6b2012065d8f", errMsg, query, var17), var17);
             }
             return false;
         } finally {
@@ -136,7 +136,7 @@ public final class DB {
                     stmt.close();
                 }
             } catch (Exception var16) {
-                log.warn(I18n.get("log.687eec966cd6", var16));
+                log.warn(I18n.get("log.687eec966cd6", var16), var16);
             }
         }
     }
@@ -206,9 +206,9 @@ public final class DB {
             return true;
         } catch (Exception var16) {
             if (errMsg == null) {
-                log.warn(I18n.get("log.b9dc77234b58", query, var16));
+                log.warn(I18n.get("log.b9dc77234b58", query, var16), var16);
             } else {
-                log.warn(I18n.get("log.6b2012065d8f", errMsg, query, var16));
+                log.warn(I18n.get("log.6b2012065d8f", errMsg, query, var16), var16);
             }
             return false;
         } finally {
@@ -220,7 +220,7 @@ public final class DB {
                     stmt.close();
                 }
             } catch (Exception var15) {
-                log.warn(I18n.get("log.687eec966cd6", var15));
+                log.warn(I18n.get("log.687eec966cd6", var15), var15);
             }
         }
     }
@@ -271,12 +271,12 @@ public final class DB {
             c = DatabaseFactory.getConnection();
             ps = c.prepareStatement(sql, resultSetType, resultSetConcurrency);
         } catch (Exception var8) {
-            log.error(I18n.get("log.077dab038e28", sql, var8));
+            log.error(I18n.get("log.077dab038e28", sql, var8), var8);
             if (c != null) {
                 try {
                     c.close();
                 } catch (SQLException var7) {
-                    log.error(I18n.get("log.9a42eb3319dc", var7));
+                    log.error(I18n.get("log.9a42eb3319dc", var7), var7);
                 }
             }
         }
@@ -295,7 +295,7 @@ public final class DB {
         try {
             return statement.executeUpdate();
         } catch (Exception var2) {
-            log.error(I18n.get("log.bfed240a7aa7", var2));
+            log.error(I18n.get("log.bfed240a7aa7", var2), var2);
             return -1;
         }
     }
@@ -323,7 +323,7 @@ public final class DB {
         try {
             rs = statement.executeQuery();
         } catch (Exception var3) {
-            log.error(I18n.get("log.85a2b5d243d2", var3));
+            log.error(I18n.get("log.85a2b5d243d2", var3), var3);
         }
         return rs;
     }
@@ -344,7 +344,7 @@ public final class DB {
             statement.close();
             c.close();
         } catch (Exception var2) {
-            log.error(I18n.get("log.a3f261348388", var2));
+            log.error(I18n.get("log.a3f261348388", var2), var2);
         }
     }
 }

@@ -42,7 +42,7 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
             stmt.setString(2, passkey);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.cf0e27a382ab", accountId, e));
+            log.error(I18n.get("log.cf0e27a382ab", accountId, e), e);
         }
     }
 
@@ -66,7 +66,7 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
             stmt.setString(3, oldPasskey);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.9cef2da6c580", accountId, e));
+            log.error(I18n.get("log.9cef2da6c580", accountId, e), e);
             return false;
         }
     }
@@ -89,7 +89,7 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
             stmt.setInt(2, accountId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.9cef2da6c580", accountId, e));
+            log.error(I18n.get("log.9cef2da6c580", accountId, e), e);
             return false;
         }
     }
@@ -116,7 +116,7 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.c22df4b9c35d", accountId, e));
+            log.error(I18n.get("log.c22df4b9c35d", accountId, e), e);
         }
         return false;
     }
@@ -141,7 +141,7 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.c22df4b9c35d", accountId, e));
+            log.error(I18n.get("log.c22df4b9c35d", accountId, e), e);
         }
         return false;
     }

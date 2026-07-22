@@ -37,7 +37,7 @@ class ItemUpdateTask implements Runnable {
 				DAOManager.getDAO(InventoryDAO.class).store(player);
 				DAOManager.getDAO(ItemStoneListDAO.class).save(player);
 			} catch (Exception ex) {
-				log.error(I18n.get("log.7850b77ba785", player.getName(), ex));
+				log.error(I18n.get("log.7850b77ba785", player.getName(), ex), ex);
 			}
 	}
 }

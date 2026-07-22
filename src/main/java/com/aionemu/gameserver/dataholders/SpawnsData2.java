@@ -1002,7 +1002,7 @@ public class SpawnsData2 {
 				unmarshaller.setSchema(schema);
 				data = (SpawnsData2) unmarshaller.unmarshal(fin);
 			} catch (Exception e) {
-				log.error(e.getMessage());
+				log.error(e.getMessage(), e);
 				PacketSendUtility.sendMessage(admin, "Could not load old XML file!");
 				return false;
 			} finally {
@@ -1102,7 +1102,7 @@ public class SpawnsData2 {
 			DataManager.SPAWNS_DATA2.clearTemplates();
 			data.clearTemplates();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 			PacketSendUtility.sendMessage(admin, "Could not save XML file!");
 			return false;
 		} finally {
@@ -1160,13 +1160,15 @@ public class SpawnsData2 {
 	public SpawnSearchResult getFirstSpawnByNpcId(int worldId, int npcId) {
 		Spawn spawns = DataManager.SPAWNS_DATA2.getSpawnsForNpc(worldId, npcId);
 
-		if (spawns == null) {
+		if (spawns == null || spawns.getSpawnSpotTemplates().isEmpty()) {
+			spawns = null;
 			for (WorldMapTemplate template : DataManager.WORLD_MAPS_DATA) {
 				if (template.getMapId() == worldId) {
 					continue;
 				}
-				spawns = DataManager.SPAWNS_DATA2.getSpawnsForNpc(template.getMapId(), npcId);
-				if (spawns != null) {
+				Spawn candidate = DataManager.SPAWNS_DATA2.getSpawnsForNpc(template.getMapId(), npcId);
+				if (candidate != null && !candidate.getSpawnSpotTemplates().isEmpty()) {
+					spawns = candidate;
 					worldId = template.getMapId();
 					break;
 				}

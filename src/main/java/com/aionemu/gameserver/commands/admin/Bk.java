@@ -222,7 +222,7 @@ public class Bk extends AdminCommand {
 			statement.close();
 		}
 		catch (Exception e) {
-			log.error(I18n.get("log.0de52ee75b14", e));
+			log.error(I18n.get("log.0de52ee75b14", e), e);
 		}
 		finally {
 			DatabaseFactory.close(con);

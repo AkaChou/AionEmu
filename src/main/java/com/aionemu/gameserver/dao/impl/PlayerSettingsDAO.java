@@ -68,7 +68,7 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.6e9496b8330d", playerId, " from DB", e));
+			log.error(I18n.get("log.6e9496b8330d", playerId, " from DB", e), e);
 		}
 
 		playerSettings.setPersistentState(PersistentState.UPDATED);
@@ -139,7 +139,7 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 				throw e;
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.19b35d703bb1", playerId, e));
+			log.error(I18n.get("log.19b35d703bb1", playerId, e), e);
 			return;
 		}
 

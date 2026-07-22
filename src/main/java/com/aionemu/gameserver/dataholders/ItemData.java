@@ -192,7 +192,7 @@ public class ItemData extends ReloadableData {
 			DataManager.ITEM_DATA.setData(newTemplates);
 		} catch (Exception e) {
 			PacketSendUtility.sendMessage(admin, "Item templates reload failed!");
-			log.error(I18n.get("log.b18c257924d5", e));
+			log.error(I18n.get("log.b18c257924d5", e), e);
 		} finally {
 			PacketSendUtility.sendMessage(admin,
 					"Item templates reload Success! Total loaded: " + DataManager.ITEM_DATA.size());

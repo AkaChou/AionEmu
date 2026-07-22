@@ -126,7 +126,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.210ed885e1c7", playerId, e));
+            log.error(I18n.get("log.210ed885e1c7", playerId, e), e);
         }
 
         return abyssRank;
@@ -159,7 +159,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
             rank.setPersistentState(PersistentState.UPDATED);
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.418d26f689fd", player.getObjectId(), e));
+            log.error(I18n.get("log.418d26f689fd", player.getObjectId(), e), e);
             return false;
         }
     }
@@ -285,7 +285,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.727699958569", race, e));
+            log.error(I18n.get("log.727699958569", race, e), e);
         }
 
         return results;
@@ -322,7 +322,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.feb137f3fb49", race, e));
+            log.error(I18n.get("log.feb137f3fb49", race, e), e);
         }
 
         return results;
@@ -347,7 +347,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.d75f73bd7260", legionId, e));
+            log.error(I18n.get("log.d75f73bd7260", legionId, e), e);
         }
 
         return 0;
@@ -385,7 +385,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.9546bd5b2940", race, e));
+            log.error(I18n.get("log.9546bd5b2940", race, e), e);
         }
 
         return results;
@@ -423,7 +423,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.997ae7fa479a", race, e));
+            log.error(I18n.get("log.997ae7fa479a", race, e), e);
         }
 
         return results;
@@ -447,7 +447,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.77672b720fdd", playerId, e));
+            log.error(I18n.get("log.77672b720fdd", playerId, e), e);
         }
     }
 
@@ -499,7 +499,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 				throw e;
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.4c4ea22ad393", e));
+			log.error(I18n.get("log.4c4ea22ad393", e), e);
 		}
     }
 
@@ -531,7 +531,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 				throw e;
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.19fd6d465738", e));
+			log.error(I18n.get("log.19fd6d465738", e), e);
 		}
     }
 

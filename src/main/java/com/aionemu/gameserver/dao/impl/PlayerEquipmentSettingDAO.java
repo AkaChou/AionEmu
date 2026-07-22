@@ -51,7 +51,7 @@ public class PlayerEquipmentSettingDAO extends com.aionemu.gameserver.dao.Player
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.3864e5946e2d", player.getObjectId(), e));
+			log.error(I18n.get("log.3864e5946e2d", player.getObjectId(), e), e);
 		}
 		player.setEquipmentSettingList(equipmentSettingList);
 	}
@@ -95,7 +95,7 @@ public class PlayerEquipmentSettingDAO extends com.aionemu.gameserver.dao.Player
 			stmt.executeUpdate();
 			equipmentSetting.setPersistentState(PersistentState.UPDATED);
 		} catch (Exception e) {
-			log.error(I18n.get("log.593407c982a0", player.getObjectId(), e));
+			log.error(I18n.get("log.593407c982a0", player.getObjectId(), e), e);
 		}
 	}
 

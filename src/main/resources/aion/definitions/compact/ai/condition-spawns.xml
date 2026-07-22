@@ -47877,6 +47877,7 @@
     </condition>
   </world>
   <world id="300320000" name="idarena_solo">
+    <variable name="clear"/>
     <variable name="condition_box"/>
     <variable name="condition_s1_d"/>
     <variable name="condition_s1_l"/>
@@ -48894,790 +48895,906 @@
     <variable name="lichkey1"/>
     <variable name="lichkey2"/>
     <variable name="lichkey3"/>
+    <condition id="9769" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <npc id="216167" probability="10000" x="1400.43005" y="1284.99316" z="307" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_6" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
     <condition id="5018" expression="(debufflich &gt;= 24) &amp;&amp; (SpecialServer_Cond == 1)" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#2">
       <group probability="1000">
         <slot>
-          <npc id="246047" probability="10000" x="981.009338" y="134.386017" z="252.791397" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="246047" probability="10000" x="981.009338" y="134.386017" z="252.791397" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9770" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#3">
+      <group probability="1000">
+        <slot>
+          <npc id="246253" probability="5000" x="1103.29639" y="19.520763" z="236.56781" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_12" despawn_at_attack_state="true"/>
+          <npc id="246254" probability="5000" x="1103.29639" y="19.520763" z="236.56781" heading="30" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5019" expression="SpecialServer_Cond == 0" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#4">
       <group probability="1000">
         <slot>
-          <npc id="730290" probability="10000" x="1450.31201" y="1102.56421" z="289" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730290" probability="10000" x="1450.31201" y="1102.56421" z="289" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5020" expression="(IDCT_SpecterH_Spawn &gt;= 10) &amp;&amp; (SpecialServer_Cond == 1)" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#5">
       <group probability="1000">
         <slot>
-          <npc id="246040" probability="10000" x="1356.54688" y="147.808456" z="252.748886" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246040" probability="10000" x="1356.54688" y="147.808456" z="252.748886" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5021" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#6">
       <group probability="1000">
         <slot>
-          <npc id="246044" probability="10000" x="1603.42676" y="1593.01269" z="311.959564" heading="235" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246044" probability="10000" x="1603.42676" y="1593.01269" z="311.959564" heading="235" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5022" expression="(IDCT_SpecterH_Spawn &gt;= 10) &amp;&amp; (SpecialServer_Cond == 0)" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#7">
       <group probability="1000">
         <slot>
-          <npc id="216158" probability="10000" x="1356.5719" y="147.764175" z="250.5" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216158" probability="10000" x="1356.5719" y="147.764175" z="250.5" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5023" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#8">
       <group probability="1000">
         <slot>
-          <npc id="246260" probability="10000" x="1398.88281" y="532.729004" z="244.87825" heading="180" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246260" probability="10000" x="1398.88281" y="532.729004" z="244.87825" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9771" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#9">
+      <group probability="1000">
+        <slot>
+          <npc id="216247" probability="10000" x="1394.3811" y="458.539063" z="246" heading="45" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_8" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9772" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#10">
+      <group probability="1000">
+        <slot>
+          <npc id="246247" probability="10000" x="1052.57495" y="83.344643" z="237.361145" heading="10" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:hugeslime_path" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9773" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#11">
+      <group probability="1000">
+        <slot>
+          <npc id="246255" probability="10000" x="1052.57495" y="83.344643" z="237.297455" heading="10" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:hugeslime_path" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5024" expression="debufflich &gt;= 36" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#12">
       <group probability="1000">
         <slot>
-          <npc id="281760" probability="10000" x="982.234131" y="135.797928" z="244" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="281760" probability="10000" x="982.234131" y="135.797928" z="244" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5025" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#13">
       <group probability="1000">
         <slot>
-          <npc id="246259" probability="10000" x="1398.88281" y="532.729004" z="245.009491" heading="180" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246259" probability="10000" x="1398.88281" y="532.729004" z="245.009491" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5026" expression="(debufflich &gt;= 36) &amp;&amp; (SpecialServer_Cond == 1)" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#14">
       <group probability="1000">
         <slot>
-          <npc id="246057" probability="10000" x="980.79303" y="134.140869" z="253.291397" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="246057" probability="10000" x="980.79303" y="134.140869" z="253.291397" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="2612" expression="lichkey1 == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#15">
       <group probability="1000">
         <slot>
-          <npc id="799518" probability="10000" x="933.982971" y="444.269104" z="222" heading="220" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="799518" probability="10000" x="933.982971" y="444.269104" z="222" heading="220" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="2613" expression="lichkey3 == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#16">
       <group probability="1000">
         <slot>
-          <npc id="799520" probability="10000" x="817.974426" y="276.899506" z="222" heading="335" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="799520" probability="10000" x="817.974426" y="276.899506" z="222" heading="335" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5027" expression="(IDCT_SpecterN_Spawn &gt;= 10) &amp;&amp; (SpecialServer_Cond == 0)" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#17">
       <group probability="1000">
         <slot>
-          <npc id="216239" probability="10000" x="1356.54688" y="147.808456" z="250" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216239" probability="10000" x="1356.54688" y="147.808456" z="250" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5028" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#18">
       <group probability="1000">
         <slot>
-          <npc id="246045" probability="10000" x="558.306396" y="1369.0199" z="227.740494" heading="225" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246045" probability="10000" x="558.306396" y="1369.0199" z="227.740494" heading="225" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5029" expression="(debufflich &gt;= 12) &amp;&amp; (SpecialServer_Cond == 0)" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#19">
       <group probability="1000">
         <slot>
-          <npc id="216733" probability="10000" x="981.009338" y="134.386017" z="246" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="216733" probability="10000" x="981.009338" y="134.386017" z="246" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9774" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#20">
+      <group probability="1000">
+        <slot>
+          <npc id="246249" probability="10000" x="1394.3811" y="458.539063" z="247.346481" heading="45" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_8" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5030" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#21">
       <group probability="1000">
         <slot>
-          <npc id="246252" probability="10000" x="1084.87292" y="614.101624" z="235.445206" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246252" probability="10000" x="1084.87292" y="614.101624" z="235.445206" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9775" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#22">
+      <group probability="1000">
+        <slot>
+          <npc id="216248" probability="10000" x="1400.43005" y="1284.99316" z="307.996735" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_6" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5031" expression="SpecialServer_Cond == 0" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#23">
       <group probability="1000">
         <slot>
-          <npc id="730288" probability="10000" x="1356.57227" y="324.428894" z="249" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730288" probability="10000" x="1356.57227" y="324.428894" z="249" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5032" expression="(debufflich &gt;= 24) &amp;&amp; (SpecialServer_Cond == 0)" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#24">
       <group probability="1000">
         <slot>
-          <npc id="216734" probability="10000" x="981.001587" y="134.411072" z="247" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="216734" probability="10000" x="981.001587" y="134.411072" z="247" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5033" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#25">
       <group probability="1000">
         <slot>
-          <npc id="216168" probability="10000" x="1511.69495" y="1048.16479" z="275" heading="120" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216168" probability="10000" x="1511.69495" y="1048.16479" z="275" heading="120" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5034" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#26">
       <group probability="1000">
         <slot>
-          <npc id="216182" probability="10000" x="1603.42676" y="1593.01269" z="309.60495" heading="235" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216182" probability="10000" x="1603.42676" y="1593.01269" z="309.60495" heading="235" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5035" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#27">
       <group probability="1000">
         <slot>
-          <npc id="216264" probability="10000" x="558.306396" y="1369.0199" z="227.202927" heading="225" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216264" probability="10000" x="558.306396" y="1369.0199" z="227.202927" heading="225" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9776" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#28">
+      <group probability="1000">
+        <slot>
+          <npc id="216163" probability="10000" x="1052.57495" y="83.344643" z="237.03215" heading="10" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:hugeslime_path" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5036" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#29">
       <group probability="1000">
         <slot>
-          <npc id="216525" probability="10000" x="1398.88281" y="532.729004" z="244.236404" heading="180" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216525" probability="10000" x="1398.88281" y="532.729004" z="244.236404" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5037" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#30">
       <group probability="1000">
         <slot>
-          <npc id="216526" probability="10000" x="1398.88281" y="532.729004" z="244" heading="180" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216526" probability="10000" x="1398.88281" y="532.729004" z="244" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5038" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#31">
       <group probability="1000">
         <slot>
-          <npc id="246053" probability="10000" x="1603.42676" y="1593.01269" z="311.959564" heading="235" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246053" probability="10000" x="1603.42676" y="1593.01269" z="311.959564" heading="235" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="2614" expression="lichkey2 == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#32">
       <group probability="1000">
         <slot>
-          <npc id="799519" probability="10000" x="788.74469" y="442.353271" z="222" heading="245" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="799519" probability="10000" x="788.74469" y="442.353271" z="222" heading="245" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5039" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#33">
       <group probability="1000">
         <slot>
-          <npc id="216246" probability="10000" x="1215.32141" y="659.386963" z="251" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216246" probability="10000" x="1215.32141" y="659.386963" z="251" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5040" expression="(debufflich &gt;= 1) &amp;&amp; (SpecialServer_Cond == 0)" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#34">
       <group probability="1000">
         <slot>
-          <npc id="216164" probability="10000" x="980.742065" y="134.418869" z="245" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="216164" probability="10000" x="980.742065" y="134.418869" z="245" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5041" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#35">
       <group probability="1000">
         <slot>
-          <npc id="246250" probability="10000" x="1173.87683" y="1212.45227" z="288.580414" heading="315" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246250" probability="10000" x="1173.87683" y="1212.45227" z="288.580414" heading="315" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5042" expression="debufflich &gt;= 24" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#36">
       <group probability="1000">
         <slot>
-          <npc id="281759" probability="10000" x="980.823486" y="137.116974" z="244" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="281759" probability="10000" x="980.823486" y="137.116974" z="244" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5043" expression="(IDCT_SpecterN_Spawn &gt;= 10) &amp;&amp; (SpecialServer_Cond == 1)" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#37">
       <group probability="1000">
         <slot>
-          <npc id="246049" probability="10000" x="1356.54688" y="147.808456" z="252.436798" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246049" probability="10000" x="1356.54688" y="147.808456" z="252.436798" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5044" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#38">
       <group probability="1000">
         <slot>
-          <npc id="216183" probability="10000" x="558.306396" y="1369.0199" z="227" heading="225" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216183" probability="10000" x="558.306396" y="1369.0199" z="227" heading="225" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9777" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#39">
+      <group probability="1000">
+        <slot>
+          <npc id="246051" probability="10000" x="1400.43005" y="1284.99316" z="311.054596" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_6" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="2615" expression="BigOrb_Spawn == 1" page_start="1" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#40">
       <group probability="1000">
         <slot>
-          <npc id="730275" probability="10000" x="1611.1532" y="1604.61841" z="312.296295" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730275" probability="10000" x="1611.1532" y="1604.61841" z="312.296295" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5045" expression="(debufflich &gt;= 24) &amp;&amp; (SpecialServer_Cond == 0)" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#41">
       <group probability="1000">
         <slot>
-          <npc id="216737" probability="10000" x="980.79303" y="134.140869" z="246.5" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="216737" probability="10000" x="980.79303" y="134.140869" z="246.5" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5046" expression="(SpecialServer_Cond == 1) &amp;&amp; (con_rebirth_check == 1)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#42">
       <group probability="1000">
         <slot>
-          <npc id="834484" probability="10000" x="550.160034" y="1359.76367" z="228.377762" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="15" respawn_time_extra="1"/>
+          <npc id="834484" probability="10000" x="550.160034" y="1359.76367" z="228.377762" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="15" respawn_time_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5047" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#43">
       <group probability="1000">
         <slot>
-          <npc id="246244" probability="10000" x="1084.87292" y="614.101624" z="235" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246244" probability="10000" x="1084.87292" y="614.101624" z="235" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5048" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#44">
       <group probability="1000">
         <slot>
-          <npc id="246243" probability="10000" x="1342.93762" y="288.04834" z="249.198776" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246243" probability="10000" x="1342.93762" y="288.04834" z="249.198776" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5049" expression="(debufflich &gt;= 1) &amp;&amp; (SpecialServer_Cond == 1)" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#45">
       <group probability="1000">
         <slot>
-          <npc id="246041" probability="10000" x="980.80542" y="134.411575" z="251.291397" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="246041" probability="10000" x="980.80542" y="134.411575" z="251.291397" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9778" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#46">
+      <group probability="1000">
+        <slot>
+          <npc id="216161" probability="5000" x="1103.29639" y="19.520763" z="236.168503" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_12" despawn_at_attack_state="true"/>
+          <npc id="216162" probability="5000" x="1103.29639" y="19.520763" z="236.168503" heading="30" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5050" expression="(debufflich &gt;= 12) &amp;&amp; (SpecialServer_Cond == 1)" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#47">
       <group probability="1000">
         <slot>
-          <npc id="246055" probability="10000" x="980.80542" y="134.411575" z="251.291397" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="246055" probability="10000" x="980.80542" y="134.411575" z="251.291397" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5051" expression="(debufflich &gt;= 36) &amp;&amp; (SpecialServer_Cond == 1)" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#48">
       <group probability="1000">
         <slot>
-          <npc id="246048" probability="10000" x="981.001587" y="134.411072" z="253.791397" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="246048" probability="10000" x="981.001587" y="134.411072" z="253.791397" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5052" expression="SpecialServer_Cond == 0" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#49">
       <group probability="1000">
         <slot>
-          <npc id="730289" probability="10000" x="1229.40967" y="401.346527" z="241.022614" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730289" probability="10000" x="1229.40967" y="401.346527" z="241.022614" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5053" expression="(debufflich &gt;= 1) &amp;&amp; (SpecialServer_Cond == 0)" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#50">
       <group probability="1000">
         <slot>
-          <npc id="216245" probability="10000" x="980.80542" y="134.411575" z="244.5" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="216245" probability="10000" x="980.80542" y="134.411575" z="244.5" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5054" expression="(SpecialServer_Cond == 1) &amp;&amp; (con_rebirth_check == 1)" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#51">
       <group probability="1000">
         <slot>
-          <npc id="834484" probability="10000" x="550.160034" y="1359.76367" z="227.443909" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="15" respawn_time_extra="1"/>
+          <npc id="834484" probability="10000" x="550.160034" y="1359.76367" z="227.443909" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="15" respawn_time_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5055" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#52">
       <group probability="1000">
         <slot>
-          <npc id="216157" probability="10000" x="1342.93762" y="288.04834" z="250.292252" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216157" probability="10000" x="1342.93762" y="288.04834" z="250.292252" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5056" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#53">
       <group probability="1000">
         <slot>
-          <npc id="216241" probability="10000" x="1084.87292" y="614.101624" z="237.106857" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216241" probability="10000" x="1084.87292" y="614.101624" z="237.106857" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5057" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#54">
       <group probability="1000">
         <slot>
-          <npc id="246052" probability="10000" x="1511.69495" y="1048.16479" z="276.187927" heading="120" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246052" probability="10000" x="1511.69495" y="1048.16479" z="276.187927" heading="120" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5058" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#55">
       <group probability="1000">
         <slot>
-          <npc id="246258" probability="10000" x="1173.87683" y="1212.45227" z="288.357574" heading="315" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246258" probability="10000" x="1173.87683" y="1212.45227" z="288.357574" heading="315" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5059" expression="debufflich &gt;= 12" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#56">
       <group probability="1000">
         <slot>
-          <npc id="281696" probability="10000" x="979.342834" y="135.741806" z="244" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="281696" probability="10000" x="979.342834" y="135.741806" z="244" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5060" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#57">
       <group probability="1000">
         <slot>
-          <npc id="216165" probability="10000" x="1215.32141" y="659.386963" z="251.192413" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216165" probability="10000" x="1215.32141" y="659.386963" z="251.192413" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5061" expression="SpecialServer_Cond == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#58">
       <group probability="1000">
         <slot>
-          <npc id="834911" probability="10000" x="1450.31201" y="1102.56421" z="289.177826" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="834911" probability="10000" x="1450.31201" y="1102.56421" z="289.177826" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5062" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#59">
       <group probability="1000">
         <slot>
-          <npc id="246043" probability="10000" x="1511.69495" y="1048.16479" z="276.187927" heading="120" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246043" probability="10000" x="1511.69495" y="1048.16479" z="276.187927" heading="120" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5063" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#60">
       <group probability="1000">
         <slot>
-          <npc id="216263" probability="10000" x="1603.42676" y="1593.01269" z="309" heading="235" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216263" probability="10000" x="1603.42676" y="1593.01269" z="309" heading="235" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9779" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#61">
+      <group probability="1000">
+        <slot>
+          <npc id="246245" probability="5000" x="1103.29639" y="19.520763" z="236.685242" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_12" despawn_at_attack_state="true"/>
+          <npc id="246246" probability="5000" x="1103.29639" y="19.520763" z="236.685242" heading="30" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5064" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#62">
       <group probability="1000">
         <slot>
-          <npc id="246256" probability="10000" x="1215.32141" y="659.386963" z="251.62175" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246256" probability="10000" x="1215.32141" y="659.386963" z="251.62175" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5065" expression="(debufflich &gt;= 36) &amp;&amp; (SpecialServer_Cond == 0)" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#63">
       <group probability="1000">
         <slot>
-          <npc id="216735" probability="10000" x="981.014771" y="134.373032" z="248" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="216735" probability="10000" x="981.014771" y="134.373032" z="248" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5066" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#64">
       <group probability="1000">
         <slot>
-          <npc id="216250" probability="10000" x="1173.87683" y="1212.45227" z="287" heading="315" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216250" probability="10000" x="1173.87683" y="1212.45227" z="287" heading="315" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5067" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#65">
       <group probability="1000">
         <slot>
-          <npc id="216249" probability="10000" x="1511.69495" y="1048.16479" z="275.327087" heading="120" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216249" probability="10000" x="1511.69495" y="1048.16479" z="275.327087" heading="120" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5068" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#66">
       <group probability="1000">
         <slot>
-          <npc id="246054" probability="10000" x="558.306396" y="1369.0199" z="227.740494" heading="225" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246054" probability="10000" x="558.306396" y="1369.0199" z="227.740494" heading="225" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5069" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#67">
       <group probability="1000">
         <slot>
-          <npc id="246248" probability="10000" x="1215.32141" y="659.386963" z="251.89093" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246248" probability="10000" x="1215.32141" y="659.386963" z="251.89093" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5070" expression="(debufflich &gt;= 24) &amp;&amp; (SpecialServer_Cond == 1)" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#68">
       <group probability="1000">
         <slot>
-          <npc id="246056" probability="10000" x="980.796997" y="134.34996" z="252.291397" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="246056" probability="10000" x="980.796997" y="134.34996" z="252.291397" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5071" expression="(debufflich &gt;= 12) &amp;&amp; (SpecialServer_Cond == 1)" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#69">
       <group probability="1000">
         <slot>
-          <npc id="246046" probability="10000" x="980.742065" y="134.418869" z="251.791397" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="246046" probability="10000" x="980.742065" y="134.418869" z="251.791397" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5072" expression="(debufflich &gt;= 12) &amp;&amp; (SpecialServer_Cond == 0)" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#70">
       <group probability="1000">
         <slot>
-          <npc id="216736" probability="10000" x="980.796997" y="134.34996" z="245.5" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="216736" probability="10000" x="980.796997" y="134.34996" z="245.5" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5073" expression="(debufflich &gt;= 36) &amp;&amp; (SpecialServer_Cond == 0)" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#71">
       <group probability="1000">
         <slot>
-          <npc id="216738" probability="10000" x="980.821533" y="134.295212" z="247.5" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="216738" probability="10000" x="980.821533" y="134.295212" z="247.5" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9780" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#72">
+      <group probability="1000">
+        <slot>
+          <npc id="216242" probability="5000" x="1103.29639" y="19.520763" z="236" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_12" despawn_at_attack_state="true"/>
+          <npc id="216243" probability="5000" x="1103.29639" y="19.520763" z="236" heading="30" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9781" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#73">
+      <group probability="1000">
+        <slot>
+          <npc id="216244" probability="10000" x="1052.57495" y="83.344643" z="236.947113" heading="10" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:hugeslime_path" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9782" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#74">
+      <group probability="1000">
+        <slot>
+          <npc id="216166" probability="10000" x="1394.3811" y="458.539063" z="246.339203" heading="45" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_8" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5074" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#75">
       <group probability="1000">
         <slot>
-          <npc id="216160" probability="10000" x="1084.87292" y="614.101624" z="236.799484" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216160" probability="10000" x="1084.87292" y="614.101624" z="236.799484" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5075" expression="SpecialServer_Cond == 0" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#76">
       <group probability="1000">
         <slot>
-          <npc id="216169" probability="10000" x="1173.87683" y="1212.45227" z="287.345947" heading="315" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216169" probability="10000" x="1173.87683" y="1212.45227" z="287.345947" heading="315" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5076" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#77">
       <group probability="1000">
         <slot>
-          <npc id="246251" probability="10000" x="1342.93762" y="288.04834" z="248.832932" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246251" probability="10000" x="1342.93762" y="288.04834" z="248.832932" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5077" expression="SpecialServer_Cond == 0" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#78">
       <group probability="1000">
         <slot>
-          <npc id="216238" probability="10000" x="1342.93762" y="288.04834" z="250.654221" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216238" probability="10000" x="1342.93762" y="288.04834" z="250.654221" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9783" expression="SpecialServer_Cond == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#79">
+      <group probability="1000">
+        <slot>
+          <npc id="246257" probability="10000" x="1394.3811" y="458.539063" z="247.06456" heading="45" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_8" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5078" expression="(debufflich &gt;= 1) &amp;&amp; (SpecialServer_Cond == 1)" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#80">
       <group probability="1000">
         <slot>
-          <npc id="246050" probability="10000" x="980.80542" y="134.411575" z="251.291397" heading="90" initial_delay="10" initial_delay_extra="1"/>
+          <npc id="246050" probability="10000" x="980.80542" y="134.411575" z="251.291397" heading="90" initial_delay="10" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9784" expression="SpecialServer_Cond == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idcatacombs/world_N.xml#81">
+      <group probability="1000">
+        <slot>
+          <npc id="246042" probability="10000" x="1400.43005" y="1284.99316" z="311.054596" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300170000:path_6" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5079" expression="1" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#producer-page-1-1">
       <group probability="1000">
         <slot>
-          <npc id="216287" probability="10000" x="781.80835" y="283.015869" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216287" probability="10000" x="781.80835" y="283.015869" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216287" probability="10000" x="786.982666" y="276.812988" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216287" probability="10000" x="786.982666" y="276.812988" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216287" probability="10000" x="805.703186" y="450.535675" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216287" probability="10000" x="805.703186" y="450.535675" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216287" probability="10000" x="812.384888" y="471.650635" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216287" probability="10000" x="812.384888" y="471.650635" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216287" probability="10000" x="927.273926" y="467.304291" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216287" probability="10000" x="927.273926" y="467.304291" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216287" probability="10000" x="954.94458" y="478.030121" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216287" probability="10000" x="954.94458" y="478.030121" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216288" probability="10000" x="792.305908" y="314.635223" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216288" probability="10000" x="792.305908" y="314.635223" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216288" probability="10000" x="799.027771" y="463.234314" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216288" probability="10000" x="799.027771" y="463.234314" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216288" probability="10000" x="952.838867" y="456.028442" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216288" probability="10000" x="952.838867" y="456.028442" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216288" probability="10000" x="954.757751" y="467.617432" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216288" probability="10000" x="954.757751" y="467.617432" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216289" probability="10000" x="801.354065" y="273.682831" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216289" probability="10000" x="801.354065" y="273.682831" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216289" probability="10000" x="811.061401" y="474.270538" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216289" probability="10000" x="811.061401" y="474.270538" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216289" probability="10000" x="949.322998" y="466.664673" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216289" probability="10000" x="949.322998" y="466.664673" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216290" probability="10000" x="766.897705" y="276.233002" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216290" probability="10000" x="766.897705" y="276.233002" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216290" probability="10000" x="786.215271" y="451.325317" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216290" probability="10000" x="786.215271" y="451.325317" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216290" probability="10000" x="794.532837" y="284.055176" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216290" probability="10000" x="794.532837" y="284.055176" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216290" probability="10000" x="804.502319" y="456.700745" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216290" probability="10000" x="804.502319" y="456.700745" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216290" probability="10000" x="917.902893" y="474.549133" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216290" probability="10000" x="917.902893" y="474.549133" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216291" probability="10000" x="793.566345" y="261.632233" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216291" probability="10000" x="793.566345" y="261.632233" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216291" probability="10000" x="795.006592" y="306.216064" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216291" probability="10000" x="795.006592" y="306.216064" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216291" probability="10000" x="801.782227" y="456.786652" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216291" probability="10000" x="801.782227" y="456.786652" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216291" probability="10000" x="805.075928" y="462.878357" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216291" probability="10000" x="805.075928" y="462.878357" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216291" probability="10000" x="934.730408" y="475.015167" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216291" probability="10000" x="934.730408" y="475.015167" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216291" probability="10000" x="939.78064" y="469.390106" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216291" probability="10000" x="939.78064" y="469.390106" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216292" probability="10000" x="802.707031" y="295.699402" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216292" probability="10000" x="802.707031" y="295.699402" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216292" probability="10000" x="806.876282" y="472.325684" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216292" probability="10000" x="806.876282" y="472.325684" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216292" probability="10000" x="931.682983" y="468.9151" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216292" probability="10000" x="931.682983" y="468.9151" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216292" probability="10000" x="954.685852" y="444.772675" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216292" probability="10000" x="954.685852" y="444.772675" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216293" probability="10000" x="781.336609" y="271.483185" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216293" probability="10000" x="781.336609" y="271.483185" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216293" probability="10000" x="790.757324" y="267.383667" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216293" probability="10000" x="790.757324" y="267.383667" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216293" probability="10000" x="793.005066" y="459.787811" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216293" probability="10000" x="793.005066" y="459.787811" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216293" probability="10000" x="951.464355" y="490.468933" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216293" probability="10000" x="951.464355" y="490.468933" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216294" probability="10000" x="777.574097" y="270.932953" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216294" probability="10000" x="777.574097" y="270.932953" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216294" probability="10000" x="796.484863" y="469.256927" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216294" probability="10000" x="796.484863" y="469.256927" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216294" probability="10000" x="802.691162" y="461.459564" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216294" probability="10000" x="802.691162" y="461.459564" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216294" probability="10000" x="916.426514" y="476.936218" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216294" probability="10000" x="916.426514" y="476.936218" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216587" probability="10000" x="935.521606" y="445.488983" z="223" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216587" probability="10000" x="935.521606" y="445.488983" z="223" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216588" probability="10000" x="788.985291" y="442.963348" z="222" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216588" probability="10000" x="788.985291" y="442.963348" z="222" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216589" probability="10000" x="816.610779" y="277.501648" z="223" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216589" probability="10000" x="816.610779" y="277.501648" z="223" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1019.71301" y="562.712097" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1019.71301" y="562.712097" z="229" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1019.74799" y="472.514008" z="232" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1019.74799" y="472.514008" z="232" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1022.13361" y="221.024597" z="234" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1022.13361" y="221.024597" z="234" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1034.7533" y="130.549515" z="235" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1034.7533" y="130.549515" z="235" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1035.49329" y="515.093567" z="228" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1035.49329" y="515.093567" z="228" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1052.4845" y="422.912048" z="226" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1052.4845" y="422.912048" z="226" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1061.92163" y="171.997498" z="237" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1061.92163" y="171.997498" z="237" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1125.88184" y="477.376312" z="237" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1125.88184" y="477.376312" z="237" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1134.79565" y="226.299133" z="227" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1134.79565" y="226.299133" z="227" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1151.62048" y="571.106995" z="235" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1151.62048" y="571.106995" z="235" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1151.79675" y="134.011658" z="227" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1151.79675" y="134.011658" z="227" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1152.25842" y="523.63562" z="236" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1152.25842" y="523.63562" z="236" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1164.42505" y="162.876038" z="232" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1164.42505" y="162.876038" z="232" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1167.11169" y="424.213043" z="234" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1167.11169" y="424.213043" z="234" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216739" probability="10000" x="1167.7467" y="84.288139" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216739" probability="10000" x="1167.7467" y="84.288139" z="229" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="5080" expression="1" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="idcatacombs/world_N.xml#producer-page-2-2">
       <group probability="1000">
         <slot>
-          <npc id="216206" probability="10000" x="781.80835" y="283.015869" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216206" probability="10000" x="781.80835" y="283.015869" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216206" probability="10000" x="786.982666" y="276.812988" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216206" probability="10000" x="786.982666" y="276.812988" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216206" probability="10000" x="805.703186" y="450.535675" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216206" probability="10000" x="805.703186" y="450.535675" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216206" probability="10000" x="812.384888" y="471.650635" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216206" probability="10000" x="812.384888" y="471.650635" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216206" probability="10000" x="927.273926" y="467.304291" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216206" probability="10000" x="927.273926" y="467.304291" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216206" probability="10000" x="954.94458" y="478.030121" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216206" probability="10000" x="954.94458" y="478.030121" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216207" probability="10000" x="792.305908" y="314.635223" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216207" probability="10000" x="792.305908" y="314.635223" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216207" probability="10000" x="799.027771" y="463.234314" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216207" probability="10000" x="799.027771" y="463.234314" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216207" probability="10000" x="952.838867" y="456.028442" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216207" probability="10000" x="952.838867" y="456.028442" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216207" probability="10000" x="954.757751" y="467.617432" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216207" probability="10000" x="954.757751" y="467.617432" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216208" probability="10000" x="801.354065" y="273.682831" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216208" probability="10000" x="801.354065" y="273.682831" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216208" probability="10000" x="811.061401" y="474.270538" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216208" probability="10000" x="811.061401" y="474.270538" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216208" probability="10000" x="949.322998" y="466.664673" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216208" probability="10000" x="949.322998" y="466.664673" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216209" probability="10000" x="766.897705" y="276.233002" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216209" probability="10000" x="766.897705" y="276.233002" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216209" probability="10000" x="786.215271" y="451.325317" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216209" probability="10000" x="786.215271" y="451.325317" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216209" probability="10000" x="794.532837" y="284.055176" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216209" probability="10000" x="794.532837" y="284.055176" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216209" probability="10000" x="804.502319" y="456.700745" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216209" probability="10000" x="804.502319" y="456.700745" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216209" probability="10000" x="917.902893" y="474.549133" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216209" probability="10000" x="917.902893" y="474.549133" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216210" probability="10000" x="793.566345" y="261.632233" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216210" probability="10000" x="793.566345" y="261.632233" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216210" probability="10000" x="795.006592" y="306.216064" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216210" probability="10000" x="795.006592" y="306.216064" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216210" probability="10000" x="801.782227" y="456.786652" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216210" probability="10000" x="801.782227" y="456.786652" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216210" probability="10000" x="805.075928" y="462.878357" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216210" probability="10000" x="805.075928" y="462.878357" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216210" probability="10000" x="934.730408" y="475.015167" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216210" probability="10000" x="934.730408" y="475.015167" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216210" probability="10000" x="939.78064" y="469.390106" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216210" probability="10000" x="939.78064" y="469.390106" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216211" probability="10000" x="802.707031" y="295.699402" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216211" probability="10000" x="802.707031" y="295.699402" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216211" probability="10000" x="806.876282" y="472.325684" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216211" probability="10000" x="806.876282" y="472.325684" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216211" probability="10000" x="931.682983" y="468.9151" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216211" probability="10000" x="931.682983" y="468.9151" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216211" probability="10000" x="954.685852" y="444.772675" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216211" probability="10000" x="954.685852" y="444.772675" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216212" probability="10000" x="781.336609" y="271.483185" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216212" probability="10000" x="781.336609" y="271.483185" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216212" probability="10000" x="790.757324" y="267.383667" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216212" probability="10000" x="790.757324" y="267.383667" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216212" probability="10000" x="793.005066" y="459.787811" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216212" probability="10000" x="793.005066" y="459.787811" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216212" probability="10000" x="951.464355" y="490.468933" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216212" probability="10000" x="951.464355" y="490.468933" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216213" probability="10000" x="777.574097" y="270.932953" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216213" probability="10000" x="777.574097" y="270.932953" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216213" probability="10000" x="796.484863" y="469.256927" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216213" probability="10000" x="796.484863" y="469.256927" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216213" probability="10000" x="802.691162" y="461.459564" z="225" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216213" probability="10000" x="802.691162" y="461.459564" z="225" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216213" probability="10000" x="916.426514" y="476.936218" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216213" probability="10000" x="916.426514" y="476.936218" z="229" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216583" probability="10000" x="935.521606" y="445.488983" z="223" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216583" probability="10000" x="935.521606" y="445.488983" z="223" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216584" probability="10000" x="788.985291" y="442.963348" z="222" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216584" probability="10000" x="788.985291" y="442.963348" z="222" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216585" probability="10000" x="816.610779" y="277.501648" z="223" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216585" probability="10000" x="816.610779" y="277.501648" z="223" heading="0" initial_delay="1" initial_delay_extra="1" idle_live_range="9" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1019.71301" y="562.712097" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1019.71301" y="562.712097" z="229" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1019.74799" y="472.514008" z="232" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1019.74799" y="472.514008" z="232" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1022.13361" y="221.024597" z="234" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1022.13361" y="221.024597" z="234" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1034.7533" y="130.549515" z="235" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1034.7533" y="130.549515" z="235" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1035.49329" y="515.093567" z="228" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1035.49329" y="515.093567" z="228" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1052.4845" y="422.912048" z="226" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1052.4845" y="422.912048" z="226" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1061.92163" y="171.997498" z="237" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1061.92163" y="171.997498" z="237" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1125.88184" y="477.376312" z="237" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1125.88184" y="477.376312" z="237" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1134.79565" y="226.299133" z="227" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1134.79565" y="226.299133" z="227" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1151.62048" y="571.106995" z="235" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1151.62048" y="571.106995" z="235" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1151.79675" y="134.011658" z="227" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1151.79675" y="134.011658" z="227" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1152.25842" y="523.63562" z="236" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1152.25842" y="523.63562" z="236" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1164.42505" y="162.876038" z="232" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1164.42505" y="162.876038" z="232" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1167.11169" y="424.213043" z="234" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1167.11169" y="424.213043" z="234" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
         <slot>
-          <npc id="216740" probability="10000" x="1167.7467" y="84.288139" z="229" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="216740" probability="10000" x="1167.7467" y="84.288139" z="229" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>

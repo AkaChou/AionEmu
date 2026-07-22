@@ -87,7 +87,7 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.f1ef66964c92", playerId, e));
+            log.error(I18n.get("log.f1ef66964c92", playerId, e), e);
         }
         return motions;
     }
@@ -112,7 +112,7 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.ee15090dda12", objectId, e));
+            log.error(I18n.get("log.ee15090dda12", objectId, e), e);
             return false;
         }
     }
@@ -135,7 +135,7 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.1bf60097aea6", objectId, e));
+            log.error(I18n.get("log.1bf60097aea6", objectId, e), e);
             return false;
         }
     }
@@ -159,7 +159,7 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.91b2b22576c2", objectId, e));
+            log.error(I18n.get("log.91b2b22576c2", objectId, e), e);
             return false;
         }
     }

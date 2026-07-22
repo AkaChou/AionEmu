@@ -418,7 +418,7 @@ public class RunnableStatsManager {
                 ps.println(line);
             }
         } catch (Exception e) {
-            log.warn(I18n.get("log.da39a3ee5e6b", e));
+            log.warn(I18n.get("log.da39a3ee5e6b", e), e);
         } finally {
             IOUtils.closeQuietly(ps);
         }

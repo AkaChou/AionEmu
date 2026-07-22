@@ -132,7 +132,7 @@ public class LoginStartupGateway {
      * @param e 异常 / exception
      */
     public void logKeyGeneratorFailure(Exception e) {
-        log.error(I18n.get("log.9802aeee5f36", e.getMessage(), e));
+        log.error(I18n.get("log.9802aeee5f36", e.getMessage(), e), e);
     }
 
     /**

@@ -584,6 +584,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	@Override
 	protected void handleCreatureSee(Creature creature) {
 		super.handleCreatureSee(creature);
+		if (!isInRetailSight(creature)) {
+			return;
+		}
 		if (creature instanceof Player) {
 			runEvent("on_see_user", null, creature);
 		} else if (creature instanceof Npc) {
@@ -594,6 +597,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		super.handleCreatureMoved(creature);
+		if (!isInRetailSight(creature)) {
+			return;
+		}
 		if (creature instanceof Player) {
 			runEvent("on_see_user_move", null, creature);
 		} else if (creature instanceof Npc) {
@@ -841,6 +847,11 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			- MathUtil.convertHeadingToDegree(observer.getHeading()));
 		difference = Math.min(difference, 360 - difference);
 		return angle >= 360 || difference <= angle / 2;
+	}
+
+	private boolean isInRetailSight(Creature creature) {
+		com.aionemu.gameserver.dataholders.RetailAiData.Npc npc = DataManager.RETAIL_AI_DATA.getNpc(getNpcId());
+		return npc != null && inRetailSight(getOwner(), creature, npc.sensoryRange(), npc.sensoryAngle());
 	}
 
 	private boolean isFriend(Creature creature) {
@@ -1105,7 +1116,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				case "is_npc" -> resolveObject(value(condition, "obj_indicator"), eventTarget, message) instanceof Npc;
 				case "is_enemy" -> {
 					Creature object = resolveObject(value(condition, "who"), eventTarget, message);
-					yield object != null && getOwner().isEnemy(object);
+					yield object != null && (getOwner().isEnemy(object)
+						|| object instanceof Npc npc && npc.isHostileFrom(getOwner()));
 				}
 				case "is_event_skill_id" -> eventSkill != null
 					&& value(condition, "skill_id").equals(eventSkill.getNamedesc());
@@ -1607,8 +1619,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			.map(Npc::getAi2)
 			.filter(ai -> ai != null)
 			.toList();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> recipients.forEach(ai ->
-			ai.onRetailMessage(message.type(), message.param1(), message.param2(), message.sender(), message.paramObject())), 1);
+		queueMessage(recipients, message);
 	}
 
 	private void broadcastMessageToParty(Operation action, Creature eventTarget, RetailMessage sourceMessage) {
@@ -1623,6 +1634,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			.map(Npc::getAi2)
 			.filter(ai -> ai != null)
 			.toList();
+		queueMessage(recipients, message);
+	}
+
+	private void queueMessage(List<AI2> recipients, RetailMessage message) {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> recipients.forEach(ai ->
 			ai.onRetailMessage(message.type(), message.param1(), message.param2(), message.sender(), message.paramObject())), 1);
 	}

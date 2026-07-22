@@ -45,7 +45,7 @@ public abstract class AionClientPacket extends BaseClientPacket<LoginConnection>
                 name = getConnection().getIP();
             }
 
-            log.error(I18n.get("log.de8b49a0a205", name, this, e));
+            log.error(I18n.get("log.de8b49a0a205", name, this, e), e);
         }
     }
 

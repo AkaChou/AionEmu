@@ -229,7 +229,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
                 players.add(plInfo);
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.9a75439aa03e", e));
+            log.error(I18n.get("log.9a75439aa03e", e), e);
             return;
         }
 
@@ -277,10 +277,10 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
                 con.commit();
             } catch (SQLException e) {
                 con.rollback();
-                log.error(I18n.get("log.dbf61ab14760", e));
+                log.error(I18n.get("log.dbf61ab14760", e), e);
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.7f7d50101121", e));
+            log.error(I18n.get("log.7f7d50101121", e), e);
         }
     }
 
@@ -304,7 +304,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
             stmt.setInt(3, value);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.58ec4d70c9e9", player.getObjectId(), e));
+            log.error(I18n.get("log.58ec4d70c9e9", player.getObjectId(), e), e);
         }
     }
 
@@ -327,7 +327,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
             stmt.setInt(2, value);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.4ea6502ae269", player.getObjectId(), e));
+            log.error(I18n.get("log.4ea6502ae269", player.getObjectId(), e), e);
         }
     }
 
@@ -347,7 +347,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
             stmt.setInt(2, playerId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.181a09080739", playerId, e));
+            log.error(I18n.get("log.181a09080739", playerId, e), e);
         }
     }
 
@@ -374,7 +374,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.960d9c9f47e1", player.getObjectId(), e));
+            log.error(I18n.get("log.960d9c9f47e1", player.getObjectId(), e), e);
         }
 
         return value;
@@ -402,7 +402,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.29e72ebe993e", playerId, e));
+            log.error(I18n.get("log.29e72ebe993e", playerId, e), e);
         }
 
         return value;
@@ -429,7 +429,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.faf0c73a8eb8", player.getObjectId(), e));
+            log.error(I18n.get("log.faf0c73a8eb8", player.getObjectId(), e), e);
         }
         return value;
     }
@@ -451,7 +451,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
             stmt.setInt(2, playerId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.052014ac9f3c", player.getObjectId(), e));
+            log.error(I18n.get("log.052014ac9f3c", player.getObjectId(), e), e);
         }
     }
 
@@ -470,7 +470,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
             stmt.setInt(2, playerId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.461b6c4b9a36", playerId, e));
+            log.error(I18n.get("log.461b6c4b9a36", playerId, e), e);
         }
     }
 
@@ -503,7 +503,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.af5e85661cbb", player.getObjectId(), e));
+            log.error(I18n.get("log.af5e85661cbb", player.getObjectId(), e), e);
         }
 
         if (data == null) {

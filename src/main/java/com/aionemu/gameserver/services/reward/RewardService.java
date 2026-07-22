@@ -92,7 +92,7 @@ public class RewardService {
 				log.info(I18n.get("log.3944ea5d4631", item.unique, player.getName(), item.count, item.id));
 				rewarded.add(item.unique);
 			} catch (Exception e) {
-				log.error(I18n.get("log.b52e75494d2a", item.unique, item.count, item.id, player.getObjectId(), e));
+				log.error(I18n.get("log.b52e75494d2a", item.unique, item.count, item.id, player.getObjectId(), e), e);
 				continue;
 			}
 		}

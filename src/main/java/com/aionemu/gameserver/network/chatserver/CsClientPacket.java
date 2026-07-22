@@ -30,7 +30,7 @@ public abstract class CsClientPacket extends BaseClientPacket<ChatServerConnecti
 		try {
 			runImpl();
 		} catch (Throwable e) {
-			log.warn(I18n.get("log.8f589268f23f", getConnection().getIP(), this, e));
+			log.warn(I18n.get("log.8f589268f23f", getConnection().getIP(), this, e), e);
 		}
 	}
 

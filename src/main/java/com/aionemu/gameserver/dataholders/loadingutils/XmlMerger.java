@@ -457,7 +457,7 @@ public class XmlMerger {
 					return true;
 				}
 			} catch (IOException e) {
-				log.warn(I18n.get("log.20b451dc6e2b", file.getPath(), locator.getLineNumber(), locator.getColumnNumber(), e));
+				log.warn(I18n.get("log.20b451dc6e2b", file.getPath(), locator.getLineNumber(), locator.getColumnNumber(), e), e);
 				return true;// was modified.
 			}
 			return false;

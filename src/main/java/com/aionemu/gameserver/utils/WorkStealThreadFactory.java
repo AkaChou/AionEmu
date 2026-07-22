@@ -96,7 +96,7 @@ public class WorkStealThreadFactory extends PriorityThreadFactory implements For
 		@Override
 		protected void onTermination(Throwable exception) {
 			if (exception != null) {
-				log.error(I18n.get("log.07f358910e11", this.getName(), exception));
+				log.error(I18n.get("log.07f358910e11", this.getName(), exception), exception);
 			}
 			super.onTermination(exception);
 		}

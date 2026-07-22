@@ -153,7 +153,7 @@ public class Config {
             log.info(I18n.get("log.2d8e1d8b4e5a"));
             ConfigurableProcessor.process(Config.class, props);
         } catch (Exception e) {
-            log.error(I18n.get("log.7e1c21e90609", e));
+            log.error(I18n.get("log.7e1c21e90609", e), e);
             throw new Error("Can't load chatserver configuration", e);
         }
     }

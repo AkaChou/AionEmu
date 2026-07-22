@@ -49,7 +49,7 @@ public class ChatCommandsLoader implements ClassListener {
 				try {
 					processor.registerCommand((ChatCommand) tmp.getDeclaredConstructor().newInstance());
 				} catch (ReflectiveOperationException e) {
-					log.error(I18n.get("log.64cad7b61530", tmp.getName(), e));
+					log.error(I18n.get("log.64cad7b61530", tmp.getName(), e), e);
 				}
 			}
 		}

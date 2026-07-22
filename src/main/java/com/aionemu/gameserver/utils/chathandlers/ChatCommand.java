@@ -56,7 +56,7 @@ public abstract class ChatCommand {
 			execute(player, params);
 			return true;
 		} catch (Exception e) {
-			log.error(I18n.get("log.da39a3ee5e6b", e));
+			log.error(I18n.get("log.da39a3ee5e6b", e), e);
 			onFail(player, e.getMessage());
 			return false;
 		}

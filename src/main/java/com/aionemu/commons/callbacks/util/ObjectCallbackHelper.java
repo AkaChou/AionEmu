@@ -133,7 +133,7 @@ public class ObjectCallbackHelper {
                     break;
                 }
             } catch (Exception var12) {
-                log.error(I18n.get("log.1e8eeae4d2a1", var12));
+                log.error(I18n.get("log.1e8eeae4d2a1", var12), var12);
             }
         }
 
@@ -179,7 +179,7 @@ public class ObjectCallbackHelper {
                     break;
                 }
             } catch (Exception var13) {
-                log.error(I18n.get("log.1e8eeae4d2a1", var13));
+                log.error(I18n.get("log.1e8eeae4d2a1", var13), var13);
             }
         }
 

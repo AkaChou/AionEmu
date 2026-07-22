@@ -112,7 +112,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler {
 		} else if (npcId == 214904) {
 			startSettlement(event.killedAt());
 		} else if (GRADE_BOSSES.contains(npcId)) {
-			setCondition("boss_kill", 1);
 			setCondition("idlf1_bonus_boss_kill", 1);
 		}
 	}
@@ -206,6 +205,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler {
 		runtimeState().put("dark.rank", rank);
 		runtimeState().put("dark.grade", grade);
 		setCondition("grade", grade);
+		setCondition("boss_kill", 1);
 		runtimeState().put("dark.completed", true);
 		cancelDeadline("prepare");
 		cancelDeadline("expire");
@@ -445,11 +445,11 @@ public class DarkPoetaInstance extends GeneralInstanceHandler {
 		return npcId >= 700439 && npcId <= 700447;
 	}
 
-	private static int marabataBossId(int npcId) {
+	static int marabataBossId(int npcId) {
 		return switch (npcId) {
-			case 700439, 700440, 700441 -> 214850;
-			case 700442, 700443, 700444 -> 214851;
-			case 700445, 700446, 700447 -> 214849;
+			case 700439, 700440, 700441 -> 214849;
+			case 700442, 700443, 700444 -> 214850;
+			case 700445, 700446, 700447 -> 214851;
 			default -> throw new IllegalArgumentException("Unknown Marabata controller " + npcId);
 		};
 	}

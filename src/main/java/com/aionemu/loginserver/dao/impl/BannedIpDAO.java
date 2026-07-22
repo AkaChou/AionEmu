@@ -65,7 +65,7 @@ public class BannedIpDAO extends com.aionemu.loginserver.dao.BannedIpDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.2317a7af1cc6", bannedIP.getMask(), e));
+            log.error(I18n.get("log.2317a7af1cc6", bannedIP.getMask(), e), e);
         }
 
         return false;
@@ -90,7 +90,7 @@ public class BannedIpDAO extends com.aionemu.loginserver.dao.BannedIpDAO {
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.e5c0c472a65c", bannedIP.getId(), e));
+            log.error(I18n.get("log.e5c0c472a65c", bannedIP.getId(), e), e);
         }
 
         return false;
@@ -107,7 +107,7 @@ public class BannedIpDAO extends com.aionemu.loginserver.dao.BannedIpDAO {
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.19986598786f", mask, e));
+            log.error(I18n.get("log.19986598786f", mask, e), e);
         }
 
         return false;
@@ -135,7 +135,7 @@ public class BannedIpDAO extends com.aionemu.loginserver.dao.BannedIpDAO {
                 result.add(ip);
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.5a0812fa8b4c", e));
+            log.error(I18n.get("log.5a0812fa8b4c", e), e);
         }
 
         return result;
@@ -153,7 +153,7 @@ public class BannedIpDAO extends com.aionemu.loginserver.dao.BannedIpDAO {
                 log.info(I18n.get("log.351f92913e18", deleted));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.42ddf2573c66", e));
+            log.error(I18n.get("log.42ddf2573c66", e), e);
         }
     }
 

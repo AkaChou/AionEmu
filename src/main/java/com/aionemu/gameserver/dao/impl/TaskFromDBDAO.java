@@ -51,7 +51,7 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 				));
             }
 		} catch (SQLException e) {
-			log.error(I18n.get("log.1261465dcfcf", e));
+			log.error(I18n.get("log.1261465dcfcf", e), e);
 		}
 		return result;
 	}
@@ -71,7 +71,7 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 			stmt.setInt(2, id);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.b39cd8a3758d", e));
+			log.error(I18n.get("log.b39cd8a3758d", e), e);
 		}
 	}
 

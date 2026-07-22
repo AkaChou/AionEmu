@@ -52,7 +52,7 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.7cb3e1e1c2aa", playerId, e));
+            log.error(I18n.get("log.7cb3e1e1c2aa", playerId, e), e);
         }
 
         return tl;
@@ -78,7 +78,7 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.b49a1a09f26e", player.getObjectId(), e));
+            log.error(I18n.get("log.b49a1a09f26e", player.getObjectId(), e), e);
             return false;
         }
     }
@@ -102,7 +102,7 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
             int updated = stmt.executeUpdate();
             return updated > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.1c834a3bbe53", playerObjId, skinId, e));
+            log.error(I18n.get("log.1c834a3bbe53", playerObjId, skinId, e), e);
             return false;
         }
     }
@@ -126,7 +126,7 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
             int updated = stmt.executeUpdate();
             return updated > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.467b5e662059", playerObjId, skinId, e));
+            log.error(I18n.get("log.467b5e662059", playerObjId, skinId, e), e);
             return false;
         }
     }
@@ -149,7 +149,7 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
             int deleted = stmt.executeUpdate();
             return deleted > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.84df7864194f", playerId, e));
+            log.error(I18n.get("log.84df7864194f", playerId, e), e);
             return false;
         }
     }

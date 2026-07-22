@@ -91,7 +91,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
             }
             return false;
         } catch (SQLException e) {
-            log.error(I18n.get("log.84ada47a4666", name, e));
+            log.error(I18n.get("log.84ada47a4666", name, e), e);
             return true;
         }
     }
@@ -114,7 +114,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 legionIds.add(rs.getInt("id"));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.3117e02da50f", e));
+            log.error(I18n.get("log.3117e02da50f", e), e);
         }
 
         return legionIds;
@@ -139,7 +139,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.5560e48eed9e", legion.getLegionId(), e));
+            log.error(I18n.get("log.5560e48eed9e", legion.getLegionId(), e), e);
             return false;
         }
     }
@@ -181,7 +181,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.9f74efb13ee5", legion.getLegionId(), e));
+            log.error(I18n.get("log.9f74efb13ee5", legion.getLegionId(), e), e);
         }
     }
 
@@ -209,7 +209,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.ef450357e2bb", legionName, e));
+            log.error(I18n.get("log.ef450357e2bb", legionName, e), e);
         }
 
         log.debug("Loaded legion: {}", legion != null ? legion.getLegionId() : "null");
@@ -245,7 +245,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.bd9d366b0d7a", legionId, e));
+            log.error(I18n.get("log.bd9d366b0d7a", legionId, e), e);
         }
 
         log.debug("Loaded legion: {}", legion != null ? legion.getLegionId() : "null");
@@ -308,7 +308,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 throw e;
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.9be4d3aa4400", legionId, e));
+            log.error(I18n.get("log.9be4d3aa4400", legionId, e), e);
         }
     }
 
@@ -331,7 +331,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 ids.add(rs.getInt("id"));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.82d77c44202e", e));
+            log.error(I18n.get("log.82d77c44202e", e), e);
             return new int[0];
         }
 
@@ -368,7 +368,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.c4ec74ecbd88", legionId, e));
+            log.error(I18n.get("log.c4ec74ecbd88", legionId, e), e);
         }
 
         log.debug("Loaded announcement list for legion: {}", legionId);
@@ -397,7 +397,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.d7d4b79baa01", legionId, e));
+            log.error(I18n.get("log.d7d4b79baa01", legionId, e), e);
             return false;
         }
     }
@@ -418,7 +418,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
             stmt.setTimestamp(2, unixTime);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.eb7e7af87a03", legionId, e));
+            log.error(I18n.get("log.eb7e7af87a03", legionId, e), e);
         }
     }
 
@@ -457,7 +457,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 return rs.next();
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.5ee404f2d84f", legionid, e));
+            log.error(I18n.get("log.5ee404f2d84f", legionid, e), e);
             return false;
         }
     }
@@ -475,7 +475,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
             stmt.setBytes(7, legionEmblem.getCustomEmblemData());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.0a3029c9bb09", legionId, e));
+            log.error(I18n.get("log.0a3029c9bb09", legionId, e), e);
         }
     }
 
@@ -492,7 +492,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
             stmt.setInt(7, legionId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.746f2ebe921f", legionId, e));
+            log.error(I18n.get("log.746f2ebe921f", legionId, e), e);
         }
     }
 
@@ -527,7 +527,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.256b0f63755e", legionId, e));
+            log.error(I18n.get("log.256b0f63755e", legionId, e), e);
         }
 
         if (!found) {
@@ -567,7 +567,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.d65e37a60b80", legionId, e));
+            log.error(I18n.get("log.d65e37a60b80", legionId, e), e);
         }
 
         return inventory;
@@ -640,7 +640,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.c1a020fe3695", legion.getLegionId(), e));
+            log.error(I18n.get("log.c1a020fe3695", legion.getLegionId(), e), e);
         }
     }
 
@@ -666,7 +666,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.db8f371bd4f0", legionId, e));
+            log.error(I18n.get("log.db8f371bd4f0", legionId, e), e);
             return false;
         }
     }
@@ -688,7 +688,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
             stmt.setInt(4, legion.getLegionId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.21551dfa9189", legion.getLegionId(), e));
+            log.error(I18n.get("log.21551dfa9189", legion.getLegionId(), e), e);
         }
     }
 
@@ -714,7 +714,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
             stmt.setTimestamp(9, legionJoinRequest.getDate());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.d118ce68ab6e", legionJoinRequest.getLegionId(), legionJoinRequest.getPlayerId(), e));
+            log.error(I18n.get("log.d118ce68ab6e", legionJoinRequest.getLegionId(), legionJoinRequest.getPlayerId(), e), e);
         }
     }
 
@@ -751,7 +751,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.e21f88ccc6c6", legionId, e));
+            log.error(I18n.get("log.e21f88ccc6c6", legionId, e), e);
         }
 
         return requestList;
@@ -773,7 +773,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
             stmt.setInt(2, playerId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.c35e7fe03617", legionId, playerId, e));
+            log.error(I18n.get("log.c35e7fe03617", legionId, playerId, e), e);
         }
     }
 

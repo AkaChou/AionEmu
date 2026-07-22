@@ -118,7 +118,7 @@ public class WalkerData {
 		try {
 			schema = sf.newSchema(Config.dataFile("./data/static_data/npc_walker/npc_walker.xsd"));
 		} catch (SAXException e1) {
-			log.error(I18n.get("log.a52b870058c9", e1.getMessage(), e1.getCause()));
+			log.error(I18n.get("log.a52b870058c9", e1.getMessage(), e1.getCause()), e1);
 			return;
 		}
 
@@ -132,7 +132,7 @@ public class WalkerData {
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			marshaller.marshal(this, xml);
 		} catch (JAXBException e) {
-			log.error(I18n.get("log.a52b870058c9", e.getMessage(), e.getCause()));
+			log.error(I18n.get("log.a52b870058c9", e.getMessage(), e.getCause()), e);
 			return;
 		} finally {
 			if (walkerlist != null) {

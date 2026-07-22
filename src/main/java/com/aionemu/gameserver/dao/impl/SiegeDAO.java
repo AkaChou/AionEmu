@@ -64,7 +64,7 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.f0edc322efd4", e));
+            log.error(I18n.get("log.f0edc322efd4", e), e);
             success = false;
         }
 
@@ -91,7 +91,7 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
             return updated > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.98dc2b49ab4b", siegeLocation.getLocationId(), e));
+            log.error(I18n.get("log.98dc2b49ab4b", siegeLocation.getLocationId(), e), e);
             return false;
         }
     }
@@ -115,7 +115,7 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
             return inserted > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.2d6381d9bee1", siegeLocation.getLocationId(), e));
+            log.error(I18n.get("log.2d6381d9bee1", siegeLocation.getLocationId(), e), e);
             return false;
         }
     }
@@ -151,7 +151,7 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.16223a055fa8", e));
+            log.error(I18n.get("log.16223a055fa8", e), e);
             return false;
         }
     }
@@ -182,7 +182,7 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.afdfcca54f61", race, e));
+            log.error(I18n.get("log.afdfcca54f61", race, e), e);
         }
 
         return locations;

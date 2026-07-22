@@ -179,6 +179,14 @@
 	<portal_use npc_id="831967">
 		<portal_path loc_id="3012202"/>
 	</portal_use>
+	<!-- Entrance Mortar -->
+	<portal_use npc_id="831968">
+		<portal_path loc_id="3012202"/>
+	</portal_use>
+	<!-- Entrance Mortar -->
+	<portal_use npc_id="831969">
+		<portal_path loc_id="3012202"/>
+	</portal_use>
 	<!-- IRON WALL WARFRONT END -->
 	
 	<!-- HARAMEL 2.0 -->
@@ -451,6 +459,11 @@
 		<portal_path loc_id="2101312" race="ELYOS"/>
 		<portal_path loc_id="2201412" race="ASMODIANS"/>
 	</portal_use>
+	<!-- [Dimensional Rift Exit] -->
+	<portal_use npc_id="205437">
+		<portal_path loc_id="2101312" race="ELYOS"/>
+		<portal_path loc_id="2201412" race="ASMODIANS"/>
+	</portal_use>
 	<!-- ESOTERRACE 5.3 END -->
 	
 	<!-- RENTUS BASE/[OCCUPIED] RENTUS BASE 4.8 EXIT -->
@@ -561,6 +574,10 @@
 	</portal_use>
 	<!-- Dark Poeta Exit 5.3 -->
 	<portal_use npc_id="731666">
+		<portal_path loc_id="4000108"/>
+	</portal_use>
+	<!-- Dark Poeta Exit -->
+	<portal_use npc_id="730211">
 		<portal_path loc_id="4000108"/>
 	</portal_use>
 	<!-- DARK POETA END -->
@@ -727,6 +744,11 @@
 	
 	<!-- Nightmare Circus Exit -->
 	<portal_use npc_id="831576">
+		<portal_path loc_id="1100105" race="ELYOS"/>
+		<portal_path loc_id="1200107" race="ASMODIANS"/>
+	</portal_use>
+	<!-- Nightmare Circus Exit -->
+	<portal_use npc_id="831746">
 		<portal_path loc_id="1100105" race="ELYOS"/>
 		<portal_path loc_id="1200107" race="ASMODIANS"/>
 	</portal_use>

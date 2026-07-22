@@ -70,7 +70,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 ids.add(rs.getInt(1));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.0bebcd82021c", e));
+            log.error(I18n.get("log.0bebcd82021c", e), e);
             return new int[0];
         }
         
@@ -158,7 +158,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
                 registry.setPersistentState(PersistentState.UPDATED);
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.98d5b9d41325", playerId, e));
+            log.error(I18n.get("log.98d5b9d41325", playerId, e), e);
         }
     }
     
@@ -271,7 +271,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
 			}
 			registry.setPersistentState(PersistentState.UPDATED);
 		} catch (SQLException e) {
-			log.error(I18n.get("log.7c25eacf0aac", playerId, e));
+			log.error(I18n.get("log.7c25eacf0aac", playerId, e), e);
 			return false;
         }
         
@@ -451,7 +451,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
             stmt.executeUpdate();
             return true;
         } catch (Exception e) {
-            log.error(I18n.get("log.65741ede13d8", playerId, e));
+            log.error(I18n.get("log.65741ede13d8", playerId, e), e);
             return false;
         }
     }
@@ -471,7 +471,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
             stmt.setInt(1, playerId);
             stmt.executeUpdate();
         } catch (Exception e) {
-            log.error(I18n.get("log.7f671b6e18ee", playerId, e));
+            log.error(I18n.get("log.7f671b6e18ee", playerId, e), e);
         }
     }
     

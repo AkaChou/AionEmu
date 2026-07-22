@@ -61,7 +61,7 @@ public class Message {
         try {
             this.text = str.getBytes("utf-16le");
         } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.bf0194979c60", e));
+            log.error(I18n.get("log.bf0194979c60", e), e);
         }
     }
 

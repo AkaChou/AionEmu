@@ -354,7 +354,7 @@ public class SystemMailService {
 				throw e;
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.bf6c47a4810b", recipientCommonData.getPlayerObjId(), e));
+			log.error(I18n.get("log.bf6c47a4810b", recipientCommonData.getPlayerObjId(), e), e);
 			return false;
 		}
 		if (attachedItem != null) {

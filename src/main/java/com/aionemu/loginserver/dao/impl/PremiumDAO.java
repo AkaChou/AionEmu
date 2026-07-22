@@ -38,7 +38,7 @@ public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.3f7cc1bd1041", accountId, e));
+            log.error(I18n.get("log.3f7cc1bd1041", accountId, e), e);
         }
 
         List<Integer> rewarded = new ArrayList<>();
@@ -58,7 +58,7 @@ public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.a296b4ad2c95", accountId, e));
+            log.error(I18n.get("log.a296b4ad2c95", accountId, e), e);
         }
 
         if (!rewarded.isEmpty()) {
@@ -74,7 +74,7 @@ public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
 
                 stmt.executeBatch();
             } catch (SQLException e) {
-                log.error(I18n.get("log.25ee99257715", accountId, e));
+                log.error(I18n.get("log.25ee99257715", accountId, e), e);
             }
         }
 
@@ -93,7 +93,7 @@ public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.62998c0631eb", accountId, e));
+            log.error(I18n.get("log.62998c0631eb", accountId, e), e);
         }
 
         return false;
@@ -115,7 +115,7 @@ public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.d397b8bcef72", accountId, e));
+            log.error(I18n.get("log.d397b8bcef72", accountId, e), e);
         }
 
         return luna;
@@ -133,7 +133,7 @@ public class PremiumDAO extends com.aionemu.loginserver.dao.PremiumDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.83d2610955c2", accountId, e));
+            log.error(I18n.get("log.83d2610955c2", accountId, e), e);
         }
 
         return false;

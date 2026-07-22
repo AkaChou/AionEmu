@@ -62,7 +62,7 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 
 			player.setNpcFactions(factions);
 		} catch (Exception e) {
-			log.error(I18n.get("log.165b89344e7f", player.getObjectId(), " from DB", e));
+			log.error(I18n.get("log.165b89344e7f", player.getObjectId(), " from DB", e), e);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 			stmt.setInt(6, faction.getQuestId());
 			stmt.executeUpdate();
 		} catch (Exception e) {
-			log.error(I18n.get("log.e4fe3ce16d8e", playerObjectId, " from DB", e));
+			log.error(I18n.get("log.e4fe3ce16d8e", playerObjectId, " from DB", e), e);
 		}
 	}
 
@@ -131,7 +131,7 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 			stmt.setInt(6, faction.getId());
 			stmt.executeUpdate();
 		} catch (Exception e) {
-			log.error(I18n.get("log.494a98a72b0b", playerObjectId, " from DB", e));
+			log.error(I18n.get("log.494a98a72b0b", playerObjectId, " from DB", e), e);
 		}
 	}
 

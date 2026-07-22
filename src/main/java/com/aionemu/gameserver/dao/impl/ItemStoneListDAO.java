@@ -134,7 +134,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.112e060c3cda", e));
+            log.error(I18n.get("log.112e060c3cda", e), e);
         }
     }
 
@@ -240,13 +240,13 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
 
             con.commit();
         } catch (SQLException e) {
-            log.error(I18n.get("log.441d0f828363", e));
+            log.error(I18n.get("log.441d0f828363", e), e);
             try {
                 if (con != null) {
                     con.rollback();
                 }
             } catch (SQLException rollbackEx) {
-                log.error(I18n.get("log.469fdfa81ee5", rollbackEx));
+                log.error(I18n.get("log.469fdfa81ee5", rollbackEx), rollbackEx);
             }
             return;
         } finally {
@@ -255,7 +255,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                     con.setAutoCommit(true);
                 }
             } catch (SQLException e) {
-                log.error(I18n.get("log.42b10c59c466", e));
+                log.error(I18n.get("log.42b10c59c466", e), e);
             }
             DatabaseFactory.close(con);
         }
@@ -301,7 +301,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
 
             st.executeBatch();
         } catch (SQLException e) {
-            log.error(I18n.get("log.ff24b8461da0", e));
+            log.error(I18n.get("log.ff24b8461da0", e), e);
             throw e;
         }
     }
@@ -342,7 +342,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
 
             st.executeBatch();
         } catch (SQLException e) {
-            log.error(I18n.get("log.9292d96bede8", e));
+            log.error(I18n.get("log.9292d96bede8", e), e);
             throw e;
         }
     }
@@ -371,7 +371,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
 
             st.executeBatch();
         } catch (SQLException e) {
-            log.error(I18n.get("log.e2ee88575c70", e));
+            log.error(I18n.get("log.e2ee88575c70", e), e);
             throw e;
         }
     }
@@ -394,7 +394,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
             st.setInt(3, category);
             st.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.48e07380c52b", e));
+            log.error(I18n.get("log.48e07380c52b", e), e);
             throw e;
         }
     }

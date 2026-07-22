@@ -99,7 +99,7 @@ public class ShutdownHook extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class ShutdownHook extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 	}
 

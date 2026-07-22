@@ -38,7 +38,7 @@ public class AccountTimeDAO extends com.aionemu.loginserver.dao.AccountTimeDAO {
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.ff2d8c2ec1de", accountId, e));
+            log.error(I18n.get("log.ff2d8c2ec1de", accountId, e), e);
         }
 
         return false;
@@ -66,7 +66,7 @@ public class AccountTimeDAO extends com.aionemu.loginserver.dao.AccountTimeDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.acdac4f0d5c7", accountId, e));
+            log.error(I18n.get("log.acdac4f0d5c7", accountId, e), e);
         }
 
         return accountTime;

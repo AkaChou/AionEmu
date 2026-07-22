@@ -46,7 +46,7 @@ public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransfe
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.ced4ca54368a", e));
+            log.error(I18n.get("log.ced4ca54368a", e), e);
         }
 
         return list;
@@ -58,7 +58,7 @@ public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransfe
             updateInTransaction(con, task);
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.84835322c373", task.id, e));
+            log.error(I18n.get("log.84835322c373", task.id, e), e);
             return false;
         }
     }

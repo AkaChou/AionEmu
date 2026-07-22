@@ -83,7 +83,7 @@ public class Raw extends AdminCommand {
 		}
 		catch (Exception e) {
 			PacketSendUtility.sendMessage(admin, "An error has occurred.");
-			log.warn(I18n.get("log.c97d2cc30727", e));
+			log.warn(I18n.get("log.c97d2cc30727", e), e);
 		}
 	}
 

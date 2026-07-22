@@ -199,7 +199,7 @@ public class AionConnection extends AConnection {
 				return true;
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.885daea16916", ex.getMessage()));
+			log.error(I18n.get("log.885daea16916", ex.getMessage()), ex);
 			return false;
 		}
 

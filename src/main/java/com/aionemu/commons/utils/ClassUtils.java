@@ -172,7 +172,7 @@ public class ClassUtils {
                 try {
                     jarFile.close();
                 } catch (IOException e) {
-                    log.error(I18n.get("log.5f2c41da34b9", jarFile.getName(), e));
+                    log.error(I18n.get("log.5f2c41da34b9", jarFile.getName(), e), e);
                 }
             }
         }
@@ -226,14 +226,14 @@ public class ClassUtils {
                 try {
                     nestedJar.close();
                 } catch (IOException e) {
-                    log.error(I18n.get("log.aad47c1b2c2d", file, e));
+                    log.error(I18n.get("log.aad47c1b2c2d", file, e), e);
                 }
             }
             if (jarFile != null) {
                 try {
                     jarFile.close();
                 } catch (IOException e) {
-                    log.error(I18n.get("log.5f2c41da34b9", jarFile.getName(), e));
+                    log.error(I18n.get("log.5f2c41da34b9", jarFile.getName(), e), e);
                 }
             }
         }

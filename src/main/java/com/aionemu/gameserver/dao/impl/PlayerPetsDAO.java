@@ -44,7 +44,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
             stmt.setInt(5, petId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.8faeec608d56", petId, e));
+            log.error(I18n.get("log.8faeec608d56", petId, e), e);
         }
     }
 
@@ -74,7 +74,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
             stmt.setInt(3, petId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.b3af66365ffc", petId, e));
+            log.error(I18n.get("log.b3af66365ffc", petId, e), e);
         }
     }
 
@@ -97,7 +97,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
             stmt.setInt(3, petId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.8faeec608d56", petId, e));
+            log.error(I18n.get("log.8faeec608d56", petId, e), e);
         }
     }
 
@@ -121,7 +121,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
             stmt.setInt(6, petCommonData.getExpireTime());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.470c078aecdc", petCommonData.getPetId(), petCommonData.getName(), e));
+            log.error(I18n.get("log.470c078aecdc", petCommonData.getPetId(), petCommonData.getName(), e), e);
         }
     }
 
@@ -142,7 +142,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
             stmt.setInt(2, petId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.c0204a470d98", petId, e));
+            log.error(I18n.get("log.c0204a470d98", petId, e), e);
         }
     }
 
@@ -216,7 +216,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.2e256611ad4a", player.getObjectId(), e));
+            log.error(I18n.get("log.2e256611ad4a", player.getObjectId(), e), e);
         }
         return pets;
     }
@@ -238,7 +238,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
             stmt.setInt(3, petCommonData.getPetId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.8faeec608d56", petCommonData.getPetId(), e));
+            log.error(I18n.get("log.8faeec608d56", petCommonData.getPetId(), e), e);
         }
     }
 
@@ -265,7 +265,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.44d7671006ae", petCommonData.getPetId(), e));
+            log.error(I18n.get("log.44d7671006ae", petCommonData.getPetId(), e), e);
             return false;
         }
     }

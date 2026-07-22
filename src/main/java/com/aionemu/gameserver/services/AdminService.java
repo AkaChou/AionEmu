@@ -90,13 +90,13 @@ public class AdminService {
 				list.add(Integer.parseInt(pt));
 			}
 		} catch (IOException e) {
-			log.error(I18n.get("log.2dd4f31d928c", e));
+			log.error(I18n.get("log.2dd4f31d928c", e), e);
 		} finally {
 			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
-					log.warn(I18n.get("log.1a564ebb3da2", e));
+					log.warn(I18n.get("log.1a564ebb3da2", e), e);
 				}
 			}
 		}

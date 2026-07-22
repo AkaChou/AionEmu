@@ -68,7 +68,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.934e7f9ba605", player.getObjectId(), e));
+            log.error(I18n.get("log.934e7f9ba605", player.getObjectId(), e), e);
         }
         return new PlayerEventWindowList(eventWindow);
     }
@@ -95,7 +95,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.d5794895e11e", accountId, e));
+            log.error(I18n.get("log.d5794895e11e", accountId, e), e);
             return false;
         }
     }
@@ -118,7 +118,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
             stmt.setTimestamp(3, last_stamp);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.57c352a40e1f", e));
+            log.error(I18n.get("log.57c352a40e1f", e), e);
         }
     }
 
@@ -138,7 +138,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
             stmt.setInt(2, eventId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.10a9343136b2", accountId, eventId, e));
+            log.error(I18n.get("log.10a9343136b2", accountId, eventId, e), e);
         }
     }
 
@@ -164,7 +164,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.55105d71a66c", accountId, e));
+            log.error(I18n.get("log.55105d71a66c", accountId, e), e);
         }
         return ids;
     }
@@ -191,7 +191,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.14716135e108", accountId, eventId, e));
+            log.error(I18n.get("log.14716135e108", accountId, eventId, e), e);
         }
         return new Timestamp(System.currentTimeMillis());
     }
@@ -241,7 +241,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
             stmt.setInt(3, eventId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.59f40fb9f03a", accountId, eventId, e));
+            log.error(I18n.get("log.59f40fb9f03a", accountId, eventId, e), e);
         }
     }
 
@@ -291,7 +291,7 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
             stmt.setInt(3, eventId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.90532cef7c99", accountId, eventId, e));
+            log.error(I18n.get("log.90532cef7c99", accountId, eventId, e), e);
         }
     }
 

@@ -66,7 +66,7 @@ public class CM_CHANNEL_REQUEST extends AbstractClientPacket {
                 log.info(I18n.get("log.97c4098f2607", new String(channelIdentifier, "UTF-16le")));
             }
         } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.6c1460337508", e));
+            log.error(I18n.get("log.6c1460337508", e), e);
         }
         ChatClient chatClient = clientChannelHandler.getChatClient();
         Channel channel = chatService.registerPlayerWithChannel(chatClient, channelIndex, channelIdentifier);

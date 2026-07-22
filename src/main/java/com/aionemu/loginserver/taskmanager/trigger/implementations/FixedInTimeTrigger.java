@@ -33,9 +33,9 @@ public class FixedInTimeTrigger extends TaskFromDBTrigger {
                 second = Integer.parseInt(time[2]);
                 return true;
             } catch (NumberFormatException e) {
-                log.warn(I18n.get("log.93bccf2b3c83", e));
+                log.warn(I18n.get("log.93bccf2b3c83", e), e);
             } catch (Exception e) {
-                log.warn(I18n.get("log.1d3a1baa4ece", e));
+                log.warn(I18n.get("log.1d3a1baa4ece", e), e);
             }
         }
         log.warn(I18n.get("log.0029a966209a"));

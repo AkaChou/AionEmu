@@ -361,19 +361,6 @@
 		<routestep step="7" x="1183.5634" y="722.1206" z="433.62564" rest_time="7200000"/>
 	</walker_template>
 	
-	<!-- STONESPEAR REACH -->
-	<walker_template route_id="301500000" pool="1">
-        <routestep step="1" z="96.25" y="260.50378" x="207.00575"/>
-        <routestep step="2" z="96.30058" y="245.97572" x="215.59537"/>
-        <routestep step="3" z="96.1597" y="240.55519" x="232.98933"/>
-        <routestep step="4" z="96.01796" y="250.28609" x="250.99939"/>
-        <routestep step="5" z="96.21567" y="271.6262" x="253.45073"/>
-        <routestep step="6" z="96.504776" y="287.33328" x="239.37805"/>
-        <routestep step="7" z="96.156075" y="283.1101" x="215.24858"/>
-        <routestep step="8" z="96.25" y="263.47446" x="206.64572"/>
-		<routestep step="9" z="96.25" y="260.50378" x="207.00575" rest_time="7200000"/>
-	</walker_template>
-	
 	<!-- HEAVY TETRAN 5.6 -->
 	<walker_template route_id="210100001" pool="1">
 		<routestep step="1" z="241.0119" y="1711.0952" x="2883.3152"/>

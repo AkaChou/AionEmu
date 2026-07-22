@@ -55,7 +55,7 @@ public final class DateTimeUtil {
 				useConfiguredZone = true;
 				log.info(I18n.get("log.530e4ccc70d1", configuredZoneId.getId()));
 			} catch (Exception e) {
-				log.error(I18n.get("log.2e8994c20b6c", zoneConfig, e));
+				log.error(I18n.get("log.2e8994c20b6c", zoneConfig, e), e);
 				configuredZoneId = ZoneId.systemDefault();
 				useConfiguredZone = false;
 			}
@@ -90,7 +90,7 @@ public final class DateTimeUtil {
 			LocalDateTime localDateTime = LocalDateTime.parse(isoDateTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 			return applyZoneRetainFields(localDateTime);
 		} catch (DateTimeParseException e) {
-			log.error(I18n.get("log.2d6fa0340d1f", isoDateTime, e));
+			log.error(I18n.get("log.2d6fa0340d1f", isoDateTime, e), e);
 			return now();
 		}
 	}
@@ -108,7 +108,7 @@ public final class DateTimeUtil {
 			LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
 			return applyZoneRetainFields(localDateTime);
 		} catch (DateTimeParseException e) {
-			log.error(I18n.get("log.177d6d05cfac", dateTimeString, formatter, e));
+			log.error(I18n.get("log.177d6d05cfac", dateTimeString, formatter, e), e);
 			return now();
 		}
 	}

@@ -329,9 +329,9 @@ public class MotionLoggingService {
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			marshaller.marshal(templates, new FileOutputStream(Config.definitionFile(file)));
 		} catch (JAXBException e) {
-			log.error(I18n.get("log.a34c1da0cbcb", file, e));
+			log.error(I18n.get("log.a34c1da0cbcb", file, e), e);
 		} catch (FileNotFoundException e) {
-			log.error(I18n.get("log.23cf814a22a6", file, e));
+			log.error(I18n.get("log.23cf814a22a6", file, e), e);
 		}
 	}
 
@@ -444,7 +444,7 @@ public class MotionLoggingService {
 			}
 			stmt.close();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.59fa1e0145de", e));
+			log.error(I18n.get("log.59fa1e0145de", e), e);
 		} finally {
 			DatabaseFactory.close(con);
 		}
@@ -491,7 +491,7 @@ public class MotionLoggingService {
 			resultSet.close();
 			stmt.close();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.59fa1e0145de", e));
+			log.error(I18n.get("log.59fa1e0145de", e), e);
 		} finally {
 			DatabaseFactory.close(con);
 		}

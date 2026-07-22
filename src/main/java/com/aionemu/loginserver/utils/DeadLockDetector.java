@@ -123,7 +123,7 @@ public class DeadLockDetector extends Thread {
                 }
                 Thread.sleep(sleepTime);
             } catch (Exception e) {
-                log.warn(I18n.get("log.49697309af30", e, e));
+                log.warn(I18n.get("log.49697309af30", e, e), e);
             }
         }
     }

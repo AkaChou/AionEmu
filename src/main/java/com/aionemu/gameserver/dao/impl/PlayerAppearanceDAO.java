@@ -107,7 +107,7 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.5f83ae225558", playerId, e));
+            log.error(I18n.get("log.5f83ae225558", playerId, e), e);
             return null;
         }
         return pa;
@@ -197,7 +197,7 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
             return true;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.915757e82ea4", id, e));
+            log.error(I18n.get("log.915757e82ea4", id, e), e);
             return false;
         }
     }

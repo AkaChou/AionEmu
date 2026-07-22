@@ -81,7 +81,7 @@ public class GlobalCallbackHelper {
                         break;
                     }
                 } catch (Exception var7) {
-                    log.error(I18n.get("log.20a4e454ea2f", var7));
+                    log.error(I18n.get("log.20a4e454ea2f", var7), var7);
                 }
             }
         }
@@ -112,7 +112,7 @@ public class GlobalCallbackHelper {
                         break;
                     }
                 } catch (Exception var8) {
-                    log.error(I18n.get("log.20a4e454ea2f", var8));
+                    log.error(I18n.get("log.20a4e454ea2f", var8), var8);
                 }
             }
         }

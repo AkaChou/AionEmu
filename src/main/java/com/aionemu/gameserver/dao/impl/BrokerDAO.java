@@ -87,7 +87,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
                 brokerItems.add(new BrokerItem(item, itemId, itemPointer, itemCount, itemCreator, price, seller, sellerId, itemBrokerRace, isSold, isSettled, expireTime, settleTime, isSplitSell));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.39996ee23f7f", e));
+            log.error(I18n.get("log.39996ee23f7f", e), e);
         }
 
         return brokerItems;
@@ -137,7 +137,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
                 brokerItems.add(new Item(itemUniqueId, itemId, itemCount, itemColor, colorExpireTime, itemCreator, expireTime, activationCount, false, false, slot, location, enchant, enchantBonus, itemSkin, fusionedItem, optionalSocket, optionalFusionSocket, charge, randomNumber, rndCount, wrappingCount, false, temperingLevel, false, 0, 0, false, reductionLevel, unSeal, isEnhance, enhanceSkillId, enhanceSkillEnchant));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.21c8f55ddfc2", e));
+            log.error(I18n.get("log.21c8f55ddfc2", e), e);
         }
 
         return brokerItems;
@@ -162,7 +162,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
             item.setPersistentState(PersistentState.UPDATED);
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.96bb344ecaba", item.getItemUniqueId(), e));
+            log.error(I18n.get("log.96bb344ecaba", item.getItemUniqueId(), e), e);
             return false;
         }
     }
@@ -242,7 +242,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
                 return rs.next();
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.565c72023756", itemForCheck, e));
+            log.error(I18n.get("log.565c72023756", itemForCheck, e), e);
             return false;
         }
     }
@@ -308,7 +308,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
                 ids.add(rs.getInt("id"));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.ce9d363cd21c", e));
+            log.error(I18n.get("log.ce9d363cd21c", e), e);
             return new int[0];
         }
 

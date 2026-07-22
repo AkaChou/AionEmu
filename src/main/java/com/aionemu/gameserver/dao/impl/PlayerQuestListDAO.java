@@ -96,7 +96,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 			}
 
 		} catch (SQLException e) {
-			log.error(I18n.get("log.1ce22f7418a0", player.getObjectId(), e.getMessage(), e));
+			log.error(I18n.get("log.1ce22f7418a0", player.getObjectId(), e.getMessage(), e), e);
 		}
 
 		return questStateList;
@@ -131,7 +131,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 				qs.setPersistentState(PersistentState.UPDATED);
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.0b87b3157dfe", player.getObjectId(), e));
+			log.error(I18n.get("log.0b87b3157dfe", player.getObjectId(), e), e);
 		}
 	}
 

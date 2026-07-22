@@ -38,7 +38,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
                 return rset.getInt("nextid");
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.fb167a91b87e", e));
+            log.error(I18n.get("log.fb167a91b87e", e), e);
         }
         return 0;
     }
@@ -77,7 +77,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
                 );
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.72ffd18827d7", petitionId, e));
+            log.error(I18n.get("log.72ffd18827d7", petitionId, e), e);
         }
         return null;
     }
@@ -111,7 +111,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
                 results.add(p);
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.70ecf26917fd", e));
+            log.error(I18n.get("log.70ecf26917fd", e), e);
             // 表缺失/库未初始化时返回空集，避免启动 NPE。
             return results;
         }
@@ -134,7 +134,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
             stmt.setInt(1, playerObjId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.eb43a2da10f3", e));
+            log.error(I18n.get("log.eb43a2da10f3", e), e);
         }
     }
 
@@ -161,7 +161,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
             stmt.setString(8, petition.getStatus().toString());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.d40ee1b26acb", e));
+            log.error(I18n.get("log.d40ee1b26acb", e), e);
         }
     }
 
@@ -181,7 +181,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
             stmt.setInt(1, petitionId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.77073357738f", e));
+            log.error(I18n.get("log.77073357738f", e), e);
         }
     }
 

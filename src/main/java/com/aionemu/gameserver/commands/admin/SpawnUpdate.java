@@ -67,7 +67,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					log.error(I18n.get("log.9c4062a74204", npc.getObjectId(), e));
+					log.error(I18n.get("log.9c4062a74204", npc.getObjectId(), e), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -87,7 +87,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					log.error(I18n.get("log.d90b26fbea8f", npc.getObjectId(), e));
+					log.error(I18n.get("log.d90b26fbea8f", npc.getObjectId(), e), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -107,7 +107,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					log.error(I18n.get("log.e620e6fd8ff4", npc.getObjectId(), e));
+					log.error(I18n.get("log.e620e6fd8ff4", npc.getObjectId(), e), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -133,7 +133,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					log.error(I18n.get("log.8c96d7fce14b", npc.getObjectId(), e));
+					log.error(I18n.get("log.8c96d7fce14b", npc.getObjectId(), e), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -154,7 +154,7 @@ public class SpawnUpdate extends AdminCommand {
 					PacketSendUtility.sendMessage(admin, "updated npcs coordinates to " + admin.getX() + ", " + admin.getY() + ", " + admin.getZ() + ".");
 				}
 				catch (IOException e) {
-					log.error(I18n.get("log.0301bbdb1f5a", npc.getObjectId(), e));
+					log.error(I18n.get("log.0301bbdb1f5a", npc.getObjectId(), e), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -195,7 +195,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					log.error(I18n.get("log.9398ae5c1ffd", npc.getObjectId(), e));
+					log.error(I18n.get("log.9398ae5c1ffd", npc.getObjectId(), e), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 			}

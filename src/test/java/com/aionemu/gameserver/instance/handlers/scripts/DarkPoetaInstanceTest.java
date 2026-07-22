@@ -27,6 +27,13 @@ class DarkPoetaInstanceTest {
 	}
 
 	@Test
+	void mapsMarabataControllersToTheirNearbyBoss() {
+		for (int npcId = 700439; npcId <= 700447; npcId++) {
+			assertEquals(214849 + (npcId - 700439) / 3, DarkPoetaInstance.marabataBossId(npcId));
+		}
+	}
+
+	@Test
 	void globalInstanceSpawnsAreNotRepeatedForEveryPlayer() throws Exception {
 		assertFalse(source("HamateIsleStoreroomInstance").contains("public void onEnterInstance"));
 		assertFalse(source("CarpusIsleStoreroomInstance").contains("public void onEnterInstance"));

@@ -13,6 +13,17 @@ class DarkPoetaRetailMigrationTest {
 
 	@Test
 	void retailDataOwnsDarkPoetaSpawnsPatternsScoresAndDrops() throws Exception {
+		assertFalse(Files.exists(Path.of(
+				"src/main/java/com/aionemu/gameserver/ai/instance/darkPoeta")));
+		String npcTemplates = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/npcs/npc_template.xml"));
+		for (String legacyAi : new String[] { "marabata_of_strength", "marabata_of_aether",
+				"marabata_of_poisoning", "telepathycontroller", "tahabatapyrelord", "calindiflamelord",
+				"enraged_inferno_demon", "inferno_demon", "marabatacontroller", "crazy_scar", "drana_lump",
+				"faithfulsubordinate" }) {
+			assertFalse(npcTemplates.contains("ai=\"" + legacyAi + "\""), legacyAi);
+		}
+
 		String conditions = Files.readString(Path.of(
 				"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
 		String world = worldBlock(conditions, "300040000");
@@ -68,6 +79,7 @@ class DarkPoetaRetailMigrationTest {
 		for (String oldThreshold : new String[] { "19643", "17046", "13055", "9334", "6556", "1254" }) {
 			assertFalse(handler.contains(oldThreshold), oldThreshold);
 		}
+		assertTrue(handler.contains("setCondition(\"grade\", grade);\n\t\tsetCondition(\"boss_kill\", 1);"));
 		for (String generatedSpawn : new String[] { "spawn(215280", "spawn(215281", "spawn(215282",
 				"spawn(215283", "spawn(215284", "spawn(217166", "spawn(214904", "spawn(700478",
 				"spawn(731666", "spawn(856605", "spawn(856606", "spawn(215429", "spawn(215430" }) {

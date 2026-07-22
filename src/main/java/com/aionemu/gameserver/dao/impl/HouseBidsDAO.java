@@ -60,7 +60,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.ff14dcd21c64", e));
+            log.error(I18n.get("log.ff14dcd21c64", e), e);
         }
 
         return bids;
@@ -90,7 +90,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
             return result > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.f1c5d89c6500", playerId, houseId, e));
+            log.error(I18n.get("log.f1c5d89c6500", playerId, houseId, e), e);
             return false;
         }
     }
@@ -121,7 +121,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.68c1f0c325d4", playerId, houseId, e));
+            log.error(I18n.get("log.68c1f0c325d4", playerId, houseId, e), e);
         }
     }
 
@@ -140,7 +140,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.913c026c08a6", houseId, e));
+            log.error(I18n.get("log.913c026c08a6", houseId, e), e);
         }
     }
 
@@ -160,7 +160,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.d16d4a0faede", playerId, houseId, e));
+            log.error(I18n.get("log.d16d4a0faede", playerId, houseId, e), e);
         }
     }
 
@@ -186,7 +186,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.215d2f2d1d7e", houseId, e));
+            log.error(I18n.get("log.215d2f2d1d7e", houseId, e), e);
         }
 
         return 0;
@@ -217,7 +217,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.fe00b8086073", playerId, houseId, e));
+            log.error(I18n.get("log.fe00b8086073", playerId, houseId, e), e);
         }
 
         return null;
@@ -248,7 +248,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
             con.commit();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.13c5e65ca1ad", e));
+            log.error(I18n.get("log.13c5e65ca1ad", e), e);
         }
     }
 

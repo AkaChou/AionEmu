@@ -366,10 +366,10 @@ public final class DataManager {
             future.get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            log.error(I18n.get("log.709022d3959f", e));
+            log.error(I18n.get("log.709022d3959f", e), e);
             throw new IllegalStateException("Static data loading was interrupted", e);
         } catch (ExecutionException e) {
-            log.error(I18n.get("log.709022d3959f", e));
+            log.error(I18n.get("log.709022d3959f", e), e);
             throw new IllegalStateException("Failed to load static data", e.getCause() == null ? e : e.getCause());
         }
     }

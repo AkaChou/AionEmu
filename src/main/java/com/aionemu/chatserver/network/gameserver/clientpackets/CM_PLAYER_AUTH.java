@@ -72,9 +72,9 @@ public class CM_PLAYER_AUTH extends GsClientPacket {
         try {
             chatClient = ChatCoreServices.chatService().registerPlayer(playerId, playerLogin, nick);
         } catch (NoSuchAlgorithmException e) {
-            log.error(I18n.get("log.ce4b198eb93c", e.getMessage()));
+            log.error(I18n.get("log.ce4b198eb93c", e.getMessage()), e);
         } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.ce4b198eb93c", e.getMessage()));
+            log.error(I18n.get("log.ce4b198eb93c", e.getMessage()), e);
         }
 
         if (chatClient != null) {

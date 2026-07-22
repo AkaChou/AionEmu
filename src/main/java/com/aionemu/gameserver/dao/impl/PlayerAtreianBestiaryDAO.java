@@ -59,7 +59,7 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.e26023dd4433", player.getObjectId(), e));
+            log.error(I18n.get("log.e26023dd4433", player.getObjectId(), e), e);
         }
         return new PlayerABList(cp);
     }
@@ -88,7 +88,7 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.072ceacb9d9e", objectId, e));
+            log.error(I18n.get("log.072ceacb9d9e", objectId, e), e);
             return false;
         }
     }
@@ -111,7 +111,7 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.e05ecfff5330", playerObjId, e));
+            log.error(I18n.get("log.e05ecfff5330", playerObjId, e), e);
             return false;
         }
     }

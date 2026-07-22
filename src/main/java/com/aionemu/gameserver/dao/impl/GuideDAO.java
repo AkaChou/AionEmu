@@ -62,7 +62,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 			stmt.setInt(1, guide_id);
 			return stmt.executeUpdate() > 0;
 		} catch (Exception e) {
-			log.error(I18n.get("log.257617627810", guide_id, e));
+			log.error(I18n.get("log.257617627810", guide_id, e), e);
 			return false;
 		}
 	}
@@ -93,7 +93,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.040d5371000d", playerId, " from DB", e));
+			log.error(I18n.get("log.040d5371000d", playerId, " from DB", e), e);
 		}
 		return guides;
 	}
@@ -123,7 +123,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.5857d08149b7", player_id, " from DB", e));
+			log.error(I18n.get("log.5857d08149b7", player_id, " from DB", e), e);
 		}
 		return guide;
 	}
@@ -146,7 +146,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 			stmt.setInt(3, player.getObjectId());
 			stmt.executeUpdate();
 		} catch (Exception e) {
-			log.error(I18n.get("log.9ad0924840e7", player, e));
+			log.error(I18n.get("log.9ad0924840e7", player, e), e);
 		}
 	}
 
@@ -168,7 +168,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 				ids.add(rs.getInt("guide_id"));
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.4c2e4d8e0a12", e));
+			log.error(I18n.get("log.4c2e4d8e0a12", e), e);
 			return new int[0];
 		}
 

@@ -176,7 +176,7 @@ public class ChatProcessor implements GameEngine {
 				accessLevel.put(str, Byte.valueOf(props.getProperty(str).trim()));
 			}
 		} catch (IOException e) {
-			log.error(I18n.get("log.541680aef6cb", e));
+			log.error(I18n.get("log.541680aef6cb", e), e);
 		}
 	}
 

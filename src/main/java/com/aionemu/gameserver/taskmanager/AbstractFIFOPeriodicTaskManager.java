@@ -79,7 +79,7 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 			try {
 				callTask(task);
 			} catch (RuntimeException e) {
-				log.warn(I18n.get("log.4c80525d5d73", task, getClass().getSimpleName(), e));
+				log.warn(I18n.get("log.4c80525d5d73", task, getClass().getSimpleName(), e), e);
 			} finally {
 				RunnableStatsManager.handleStats(task.getClass(), getCalledMethodName(), System.nanoTime() - begin);
 			}

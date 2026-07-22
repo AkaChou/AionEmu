@@ -56,7 +56,7 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 			stmt.setTimestamp(4, last_stamp);
 			stmt.executeUpdate();
 		} catch (Exception e) {
-			log.error(I18n.get("log.06e64ddd17f9", e.getMessage(), e));
+			log.error(I18n.get("log.06e64ddd17f9", e.getMessage(), e), e);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 			stmt.setInt(5, passportId);
 			stmt.executeUpdate();
 		} catch (Exception e) {
-			log.error(I18n.get("log.b7b8fa49af32", e));
+			log.error(I18n.get("log.b7b8fa49af32", e), e);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 				}
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.d8f278a870b7", accountId, passportId, e));
+			log.error(I18n.get("log.d8f278a870b7", accountId, passportId, e), e);
 		}
 		return 0;
 	}
@@ -135,7 +135,7 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 				}
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.52b96dcdcf0e", accountId, e));
+			log.error(I18n.get("log.52b96dcdcf0e", accountId, e), e);
 		}
 		return new Timestamp(System.currentTimeMillis());
 	}
@@ -162,7 +162,7 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 				}
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.add8e8df4ec5", accountId, e));
+			log.error(I18n.get("log.add8e8df4ec5", accountId, e), e);
 		}
 		return ids;
 	}

@@ -51,7 +51,7 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 			stmt.setString(3, macro);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.6fb6dc66106b", playerId, macroPosition, e));
+			log.error(I18n.get("log.6fb6dc66106b", playerId, macroPosition, e), e);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 			stmt.setInt(3, macroPosition);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.a1520e1b6fea", playerId, macroPosition, e));
+			log.error(I18n.get("log.a1520e1b6fea", playerId, macroPosition, e), e);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 			stmt.setInt(2, macroPosition);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.7e1652b6543b", playerId, macroPosition, e));
+			log.error(I18n.get("log.7e1652b6543b", playerId, macroPosition, e), e);
 		}
 	}
 
@@ -124,7 +124,7 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.11ce99709119", playerId, " from DB", e));
+			log.error(I18n.get("log.11ce99709119", playerId, " from DB", e), e);
 		}
 		return new MacroList(macrosses);
 	}

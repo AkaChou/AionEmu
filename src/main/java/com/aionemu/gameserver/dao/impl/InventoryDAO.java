@@ -96,7 +96,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.52f3a07ead8f", playerId, e));
+            log.error(I18n.get("log.52f3a07ead8f", playerId, e), e);
         }
 
         return inventory;
@@ -133,7 +133,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.96d353298d09", playerId, e));
+            log.error(I18n.get("log.96d353298d09", playerId, e), e);
         }
 
         return list;
@@ -168,7 +168,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.ce1e87b43e9b", playerId, e));
+            log.error(I18n.get("log.ce1e87b43e9b", playerId, e), e);
         }
 
         return equipment;
@@ -203,7 +203,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.ce1e87b43e9b", playerId, e));
+            log.error(I18n.get("log.ce1e87b43e9b", playerId, e), e);
         }
 
         return items;
@@ -258,7 +258,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
             }
             return 0;
         } catch (Exception e) {
-            log.error(I18n.get("log.8cf69332a5ea", playerId, e));
+            log.error(I18n.get("log.8cf69332a5ea", playerId, e), e);
             return 0;
         }
     }
@@ -284,7 +284,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
             }
             return 0;
         } catch (Exception e) {
-            log.error(I18n.get("log.13d51b51a32f", playerId, e));
+            log.error(I18n.get("log.13d51b51a32f", playerId, e), e);
             return 0;
         }
     }
@@ -592,7 +592,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
             stmt.executeUpdate();
             return true;
         } catch (Exception e) {
-            log.error(I18n.get("log.6a58c54be58e", playerId, e));
+            log.error(I18n.get("log.6a58c54be58e", playerId, e), e);
             return false;
         }
     }
@@ -611,7 +611,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
             stmt.setInt(1, accountId);
             stmt.executeUpdate();
         } catch (Exception e) {
-            log.error(I18n.get("log.aa5fb04d48d6", accountId, e));
+            log.error(I18n.get("log.aa5fb04d48d6", accountId, e), e);
         }
     }
 
@@ -635,7 +635,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
                 ids.add(rs.getInt("item_unique_id"));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.fc3775ae3813", e));
+            log.error(I18n.get("log.fc3775ae3813", e), e);
             return new int[0];
         }
 

@@ -70,7 +70,7 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.0121b4201018", houseId, e));
+            log.error(I18n.get("log.0121b4201018", houseId, e), e);
         }
 
         return scripts;
@@ -101,7 +101,7 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.22094aa47afe", houseId, position, e));
+            log.error(I18n.get("log.22094aa47afe", houseId, position, e), e);
         }
     }
 
@@ -122,7 +122,7 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.888a7b0cab84", houseId, position, e));
+            log.error(I18n.get("log.888a7b0cab84", houseId, position, e), e);
         }
     }
 
@@ -140,7 +140,7 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.e7dedd0f512c", houseId, e));
+            log.error(I18n.get("log.e7dedd0f512c", houseId, e), e);
         }
     }
 
@@ -164,7 +164,7 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.921bc268cc85", houseId, e));
+            log.error(I18n.get("log.921bc268cc85", houseId, e), e);
         }
 
         return 0;

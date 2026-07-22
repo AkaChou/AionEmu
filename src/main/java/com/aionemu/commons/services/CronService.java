@@ -189,7 +189,7 @@ public final class CronService {
       try {
          localScheduler.shutdown(false);
       } catch (SchedulerException var4) {
-         log.error(I18n.get("log.40cdf7c012ed", var4));
+         log.error(I18n.get("log.40cdf7c012ed", var4), var4);
       }
 
       if (context != null) {

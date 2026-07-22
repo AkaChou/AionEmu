@@ -132,7 +132,7 @@ public final class ZoneService implements GameEngine {
 			try {
 				zoneHandler = zoneClass.getDeclaredConstructor().newInstance();
 			} catch (ReflectiveOperationException ex) {
-				log.warn(I18n.get("log.8cafdba4d507", zoneName, ex));
+				log.warn(I18n.get("log.8cafdba4d507", zoneName, ex), ex);
 			}
 		}
 		if (zoneHandler == null) {
@@ -195,7 +195,7 @@ public final class ZoneService implements GameEngine {
 			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.world.zone.scripts"));
 			log.info(I18n.get("log.fed3fa674a5b", handlers.size()));
 		} catch (IllegalStateException e) {
-			log.warn(I18n.get("log.673c69d49b31", e.getMessage()));
+			log.warn(I18n.get("log.673c69d49b31", e.getMessage()), e);
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize instance handlers.", e);
 		} finally {

@@ -74,7 +74,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
             log.debug("Loaded {} cooldowns for player {}", validCooldowns.size(), player.getObjectId());
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.11da0c8c55d9", player.getObjectId(), e));
+            log.error(I18n.get("log.11da0c8c55d9", player.getObjectId(), e), e);
         }
     }
 
@@ -143,7 +143,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
             log.debug("Stored {} cooldowns for player {}", validCooldowns.size(), player.getObjectId());
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.5f4dd6d0855d", player.getObjectId(), e));
+            log.error(I18n.get("log.5f4dd6d0855d", player.getObjectId(), e), e);
         }
     }
 
@@ -165,7 +165,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.4b0c2a651d40", player.getObjectId(), e));
+            log.error(I18n.get("log.4b0c2a651d40", player.getObjectId(), e), e);
         }
     }
 
@@ -189,7 +189,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
             return deleted;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.0a6ba1f18c8f", e));
+            log.error(I18n.get("log.0a6ba1f18c8f", e), e);
             return 0;
         }
     }
@@ -217,7 +217,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.5eff82579a26", playerId, e));
+            log.error(I18n.get("log.5eff82579a26", playerId, e), e);
         }
 
         return 0;
@@ -245,7 +245,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
             return deleted > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.a6fbc235f8b8", cooldownId, playerId, e));
+            log.error(I18n.get("log.a6fbc235f8b8", cooldownId, playerId, e), e);
             return false;
         }
     }
@@ -275,7 +275,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.5f9103b23516", cooldownId, playerId, e));
+            log.error(I18n.get("log.5f9103b23516", cooldownId, playerId, e), e);
         }
 
         return false;
@@ -342,7 +342,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
             log.info(I18n.get("log.8d5799510bef", playersCooldowns.size()));
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.815f20825b79", e));
+            log.error(I18n.get("log.815f20825b79", e), e);
         }
     }
 
