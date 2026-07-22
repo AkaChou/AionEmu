@@ -18,6 +18,7 @@
 		<!-- Dakaer Sentinel -->
 		<spawn npc_id="214752">
 			<spot x="531.69" y="549.49" z="198.85562" h="28" walker_id="6C2DE92D9F3B54A1B24CC7F18DCFDE626267A867"/>
+		  <spot x="536.104675" y="553.520935" z="200.000000" random_walk="2"/>
 		</spawn>
 		<!-- Dakaer Ambusher -->
 		<spawn npc_id="214757">
@@ -37,6 +38,7 @@
 		<!-- Dakaer Trooper -->
 		<spawn npc_id="214753">
 			<spot x="517.81" y="582.05" z="198.64" h="55" walker_id="185A712696C22B516E25130B10D0B26BB3DF1159"/>
+		  <spot x="512.622925" y="578.612366" z="200.000000" random_walk="2"/>
 		</spawn>
 		<!-- Dakaer Sentinel -->
 		<spawn npc_id="214754">
@@ -52,6 +54,7 @@
 			<spot x="524.72" y="592.16" z="199.55836" h="30" walker_id="799A9289433335ABD8F8E26F518937FB8C75D0F6"/>
 			<spot x="516.875" y="663.845" z="190.308" h="10"/>
 			<spot x="521.653" y="589.004" z="199.562" h="59"/>
+		  <spot x="536.012024" y="578.632813" z="200.000000" random_walk="2"/>
 		</spawn>
 		<!-- Dakaer Geomancer -->
 		<spawn npc_id="214755">
@@ -59,6 +62,7 @@
 			<spot x="524.72" y="592.16" z="199.55836" h="30" walker_id="799A9289433335ABD8F8E26F518937FB8C75D0F6"/>
 			<spot x="500.79" y="564.15" z="198.875" h="32" walker_id="AEFA0BE398324246507C96C11473D230A1148F1B"/>
 			<spot x="547.5" y="567.06" z="198.875" h="83" walker_id="8361DF322C908A577CF38873B6B7C3475BE9DDAD"/>
+		  <spot x="512.442688" y="553.487671" z="200.000000" random_walk="2"/>
 		</spawn>
 		<!-- Dakaer Tactician -->
 		<spawn npc_id="214766">

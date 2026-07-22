@@ -74,6 +74,20 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 		}
 		return false;
 	}
+
+	@Override
+	public void onEnterInstance(Player player) {
+		super.onEnterInstance(player);
+		long deadline = runtimeState().getLong("sulfur.deadline", 0);
+		if (runtimeState().getBoolean("sulfur.expired", false)) {
+			onExitInstance(player);
+		} else if (deadline > 0 && deadline <= System.currentTimeMillis()) {
+			expire();
+		} else if (deadline > System.currentTimeMillis()) {
+			PacketSendUtility.sendPacket(player,
+				new SM_QUEST_ACTION(0, (int) ((deadline - System.currentTimeMillis()) / 1000)));
+		}
+	}
 	
 	private void startSulfurTreeNestTimer() {
 		long deadline = System.currentTimeMillis() + 910_000;
@@ -82,6 +96,9 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
     }
 
 	private void expire() {
+		if (runtimeState().getBoolean("sulfur.expired", false)) {
+			return;
+		}
 		runtimeState().put("sulfur.expired", true);
 		instance.doOnAllPlayers((Visitor<Player>) this::onExitInstance);
 		onInstanceDestroy();

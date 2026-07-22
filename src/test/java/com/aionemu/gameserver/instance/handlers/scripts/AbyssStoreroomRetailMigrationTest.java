@@ -10,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AbyssStoreroomRetailMigrationTest {
+	private static final Path HANDLERS = Path.of(
+		"src/main/java/com/aionemu/gameserver/instance/handlers/scripts");
 
 	@Test
 	void retailDataOwnsStoreroomMechanics() throws Exception {
@@ -76,6 +78,74 @@ class AbyssStoreroomRetailMigrationTest {
 			String world = block(coverage, "<world ", "/>", coverage.indexOf("id=\"" + worldId + "\""));
 			assertTrue(world.contains("behavior=\"HANDLER\""), Integer.toString(worldId));
 			assertTrue(world.contains("handler logout key cleanup"), Integer.toString(worldId));
+		}
+	}
+
+	@Test
+	void retailDataAndHandlersOwnLowerStoreroomMechanics() throws Exception {
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		int[] worldIds = { 300050000, 300060000, 300070000, 300080000, 300090000 };
+		int[] conditionCounts = { 12, 156, 12, 6, 274 };
+		int[] npcCounts = { 12, 468, 12, 168, 826 };
+		for (int i = 0; i < worldIds.length; i++) {
+			String world = block(conditions, "<world id=\"" + worldIds[i] + "\"", "</world>");
+			assertEquals(conditionCounts[i], count(world, "<condition "));
+			assertEquals(conditionCounts[i], count(world, "<slot>"));
+			assertEquals(npcCounts[i], count(world, "<npc "));
+			assertTrue(world.contains("<variable name=\"lightin\"/>"));
+			assertTrue(world.contains("<variable name=\"darkin\"/>"));
+		}
+
+		String[] spawnFiles = {
+			"300050000_Carpus_Isle_Storeroom.xml",
+			"300060000_Sulfur_Tree_Nest.xml",
+			"300070000_Hamate_Isle_Storeroom.xml",
+			"300080000_Left_Wing_Chamber.xml",
+			"300090000_Right_Wing_Chamber.xml"
+		};
+		int[] spotCounts = { 64, 238, 66, 197, 172 };
+		for (int i = 0; i < spawnFiles.length; i++) {
+			String spawns = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/spawns/Instances/" + spawnFiles[i]));
+			assertEquals(spotCounts[i], count(spawns, "<spot "), spawnFiles[i]);
+			assertTrue(spawns.contains("npc_id=\"283080\""), spawnFiles[i]);
+		}
+		String drops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_005.xml"));
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (int itemId = 185000033; itemId <= 185000038; itemId++) {
+			assertTrue(drops.contains("item_id=\"" + itemId + "\""), Integer.toString(itemId));
+		}
+		for (String ownership : new String[] { "ownership_world=\"300050000\"",
+			"ownership_world=\"300070000\"" }) {
+			assertTrue(items.contains(ownership), ownership);
+		}
+
+		String carpus = Files.readString(HANDLERS.resolve("CarpusIsleStoreroomInstance.java"));
+		String hamate = Files.readString(HANDLERS.resolve("HamateIsleStoreroomInstance.java"));
+		for (String handler : new String[] { carpus, hamate }) {
+			assertTrue(handler.contains("onPlayerLogOut"));
+			assertTrue(handler.contains("new SM_QUEST_ACTION"));
+			assertFalse(handler.contains("onLeaveInstance"));
+			assertFalse(handler.contains("onDropRegistered"));
+		}
+		String left = Files.readString(HANDLERS.resolve("LeftWingChamberInstance.java"));
+		assertTrue(left.contains("CHEST_STAGE_COUNT = 6"));
+		assertFalse(left.contains("CHEST_POSITIONS"));
+		String right = Files.readString(HANDLERS.resolve("RightWingChamberInstance.java"));
+		assertTrue(right.contains("CHEST_DURATION = 15 * 60_000L"));
+		assertFalse(right.contains("spawnTreasureBoxes"));
+		String sulfur = Files.readString(HANDLERS.resolve("SulfurTreeNestInstance.java"));
+		assertTrue(sulfur.contains("else if (deadline > 0 && deadline <= System.currentTimeMillis())"));
+		assertTrue(sulfur.contains("expire();"));
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		for (int worldId : worldIds) {
+			String world = block(coverage, "<world ", "/>", coverage.indexOf("id=\"" + worldId + "\""));
+			assertTrue(world.contains("behavior=\"HANDLER\""), Integer.toString(worldId));
 		}
 	}
 
