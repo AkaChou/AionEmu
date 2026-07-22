@@ -29,9 +29,9 @@ class CrucibleMigrationTest {
 			assertTrue(group.contains("<variable name=\"" + variable + "\"/>"), variable);
 		}
 
-		assertEquals(30, count(solo, "<variable "));
+		assertEquals(31, count(solo, "<variable "));
 		assertEquals(137, count(solo, "<condition "));
-		for (String variable : new String[] { "condition_s1_l", "condition_s1_d", "condition_s2a",
+		for (String variable : new String[] { "clear", "condition_s1_l", "condition_s1_d", "condition_s2a",
 				"condition_s2b", "condition_s3a", "condition_s3b", "condition_s4a", "condition_s4b",
 				"condition_s5_l", "condition_s5_d", "condition_s6", "hidden_l", "hidden_d", "stage" }) {
 			assertTrue(solo.contains("<variable name=\"" + variable + "\"/>"), variable);
@@ -64,9 +64,15 @@ class CrucibleMigrationTest {
 
 	@Test
 	void recordKeepersUseOneRetailBridge() throws Exception {
-		String solo = Files.readString(AI.resolve("crucibleChallenge/RecordkeeperAI2.java"));
+		String solo = Files.readString(AI.resolve("crucibleChallenge/CrucibleChallengeRecordkeeperAI2.java"));
 		String group = Files.readString(AI.resolve("empyreanCrucible/EmpyreanCrucibleRecordkeeperAI2.java"));
-		assertTrue(solo.contains("RetailConditionSpawnEngine.setVariable"));
+		assertTrue(solo.contains("set(\"Condition_S2\", 1, 0)"));
+		assertTrue(solo.contains("set(\"Condition_S3\", 1, 0)"));
+		assertTrue(solo.contains("set(\"STAGE\", Rnd.nextBoolean() ? 3 : 4, 0)"));
+		assertTrue(solo.contains("finish(5, \"STAGE5_START\")"));
+		assertTrue(solo.contains("set(\"CLEAR\", 1, 0)"));
+		assertFalse(solo.contains("TeleportService2"));
+		assertFalse(Files.exists(AI.resolve("crucibleChallenge/RecordkeeperAI2.java")));
 		assertTrue(group.contains("case 799568 ->"));
 		assertTrue(group.contains("set(\"STAGE2_START\", 0, 1)"));
 		assertTrue(group.contains("set(\"Condition_S2_L\", 0, 1)"));
@@ -91,6 +97,12 @@ class CrucibleMigrationTest {
 		assertFalse(group.contains("TeleportService2"));
 
 		String templates = Files.readString(Path.of("src/main/resources/aion/data/static_data/npcs/npc_template.xml"));
+		for (int npcId = 205666; npcId <= 205679; npcId++) {
+			int start = templates.indexOf("npc_id=\"" + npcId + "\"");
+			assertTrue(start >= 0, Integer.toString(npcId));
+			assertTrue(templates.substring(start, templates.indexOf('>', start))
+				.contains("ai=\"crucible_challenge_recordkeeper\""), Integer.toString(npcId));
+		}
 		for (int npcId : new int[] { 799567, 799568, 799569, 205331, 205332, 205333, 205334, 205335,
 				205336, 205337, 205338, 205339, 205340, 205341, 205342, 205343, 205344 }) {
 			int start = templates.indexOf("npc_id=\"" + npcId + "\"");

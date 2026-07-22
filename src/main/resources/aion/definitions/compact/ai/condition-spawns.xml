@@ -47877,6 +47877,7 @@
     </condition>
   </world>
   <world id="300320000" name="idarena_solo">
+    <variable name="clear"/>
     <variable name="condition_box"/>
     <variable name="condition_s1_d"/>
     <variable name="condition_s1_l"/>
