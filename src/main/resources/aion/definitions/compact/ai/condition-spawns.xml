@@ -73852,6 +73852,7 @@
     </condition>
   </world>
   <world id="300040000" name="idlf1">
+    <variable name="aboss_die"/>
     <variable name="avanq_die"/>
     <variable name="boss_kill"/>
     <variable name="dark"/>
@@ -73863,11 +73864,14 @@
     <variable name="middleboss_b_kill"/>
     <variable name="middleboss_c_kill"/>
     <variable name="nagaboss_kill"/>
+    <variable name="sboss_die"/>
+    <variable name="specialserver_cond"/>
     <variable name="svanq_die"/>
     <variable name="talk_01"/>
     <variable name="talk_02"/>
     <variable name="talk_03"/>
     <variable name="talk_04"/>
+    <variable name="vanq"/>
     <condition id="5776" expression="(master_boss == 1) &amp;&amp; (GRADE == 6)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idlf1/world_N.xml#1">
       <group probability="1000">
         <slot>
@@ -73879,6 +73883,51 @@
       <group probability="1000">
         <slot>
           <npc id="215284" probability="10000" x="1188.15942" y="1241.28088" z="146.08107" heading="230" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="10457" expression="(vanq == 4) &amp;&amp; (GRADE == 2)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idlf1/world_N.xml#3">
+      <group probability="1000">
+        <slot>
+          <npc id="206478" probability="10000" x="1171.574219" y="1223.534302" z="146.260681" heading="1" initial_delay="1" initial_delay_extra="1" respawn_time="10" respawn_time_extra="10" despawn_at_attack_state="true">
+            <sensory_area bottom="133.198227" top="433.198242">
+              <point x="1158.625610" y="1219.162964"/>
+              <point x="1164.510376" y="1210.668335"/>
+              <point x="1179.419067" y="1202.119019"/>
+              <point x="1206.457520" y="1218.911743"/>
+              <point x="1212.241211" y="1245.137329"/>
+              <point x="1199.826050" y="1262.764282"/>
+              <point x="1179.059082" y="1270.014526"/>
+              <point x="1156.182373" y="1245.593872"/>
+              <point x="1155.801514" y="1225.304321"/>
+            </sensory_area>
+          </npc>
+        </slot>
+      </group>
+    </condition>
+    <condition id="10458" expression="(vanq == 4) &amp;&amp; (GRADE == 6)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idlf1/world_N.xml#4">
+      <group probability="1000">
+        <slot>
+          <npc id="206478" probability="10000" x="1169.437988" y="1227.338745" z="146.965118" heading="1" initial_delay="1" initial_delay_extra="1" respawn_time="10" respawn_time_extra="10" despawn_at_attack_state="true">
+            <sensory_area bottom="133.198227" top="433.198242">
+              <point x="1158.625610" y="1219.162964"/>
+              <point x="1164.510376" y="1210.668335"/>
+              <point x="1179.419067" y="1202.119019"/>
+              <point x="1206.457520" y="1218.911743"/>
+              <point x="1212.241211" y="1245.137329"/>
+              <point x="1199.826050" y="1262.764282"/>
+              <point x="1179.059082" y="1270.014526"/>
+              <point x="1156.182373" y="1245.593872"/>
+              <point x="1155.801514" y="1225.304321"/>
+            </sensory_area>
+          </npc>
+        </slot>
+      </group>
+    </condition>
+    <condition id="10459" expression="(vanq == 4) &amp;&amp; (sboss_die == 1)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idlf1/world_N.xml#5">
+      <group probability="1000">
+        <slot>
+          <npc id="856603" probability="10000" x="1187.215332" y="1231.799438" z="149.5" heading="1" initial_delay="1" initial_delay_extra="1" respawn_time="10" respawn_time_extra="10" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
@@ -73966,6 +74015,32 @@
         </slot>
       </group>
     </condition>
+    <condition id="10460" expression="(vanq == 4) &amp;&amp; (aboss_die == 1)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idlf1/world_N.xml#18">
+      <group probability="1000">
+        <slot>
+          <npc id="856603" probability="10000" x="1191.332397" y="1231.089355" z="149.5" heading="1" initial_delay="1" initial_delay_extra="1" respawn_time="10" respawn_time_extra="10" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="10461" expression="(vanq == 4) &amp;&amp; (GRADE == 1)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idlf1/world_N.xml#19">
+      <group probability="1000">
+        <slot>
+          <npc id="206478" probability="10000" x="1170.894775" y="1225.492432" z="146.965118" heading="1" initial_delay="1" initial_delay_extra="1" respawn_time="10" respawn_time_extra="10" despawn_at_attack_state="true">
+            <sensory_area bottom="133.198227" top="433.198242">
+              <point x="1158.625610" y="1219.162964"/>
+              <point x="1164.510376" y="1210.668335"/>
+              <point x="1179.419067" y="1202.119019"/>
+              <point x="1206.457520" y="1218.911743"/>
+              <point x="1212.241211" y="1245.137329"/>
+              <point x="1199.826050" y="1262.764282"/>
+              <point x="1179.059082" y="1270.014526"/>
+              <point x="1156.182373" y="1245.593872"/>
+              <point x="1155.801514" y="1225.304321"/>
+            </sensory_area>
+          </npc>
+        </slot>
+      </group>
+    </condition>
     <condition id="5790" expression="talk_01 == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idlf1/world_N.xml#20">
       <group probability="1000">
         <slot>
@@ -74019,6 +74094,13 @@
       <group probability="1000">
         <slot>
           <npc id="236943" probability="10000" x="867.83252" y="488.593658" z="123" heading="1" initial_delay="60" initial_delay_extra="0" walker="retail:300040000:idlf1_b_path_mob_rush_6"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="10462" expression="(vanq == 4) &amp;&amp; (aboss_die == 1)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="idlf1/world_N.xml#28">
+      <group probability="1000">
+        <slot>
+          <npc id="237373" probability="10000" x="1189.072754" y="1239.282104" z="145.828812" heading="225" initial_delay="1" initial_delay_extra="1" respawn_time="10" respawn_time_extra="10" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>

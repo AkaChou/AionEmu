@@ -40,6 +40,8 @@ public class DarkPoetaInstance extends GeneralInstanceHandler {
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		instanceReward = new DarkPoetaReward(mapId, instanceId);
+		int spawnPage = instance.getDynamicInstance() == null ? 0 : instance.getDynamicInstance().getSpawnPage();
+		setCondition("specialserver_cond", spawnPage == 2 ? 1 : 0);
 		restoreScore();
 		instanceReward.setInstanceScoreType(scoreType());
 		restoreDeadlines();
