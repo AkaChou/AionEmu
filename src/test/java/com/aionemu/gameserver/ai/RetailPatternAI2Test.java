@@ -205,6 +205,21 @@ class RetailPatternAI2Test {
 				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 					"301500000:" + npcId);
 			}
+			for (int npcId : new int[] { 703154, 857973, 857974, 857975, 857976, 857977, 248970, 248972, 248976, 220450 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 301620000;
+				npc.objectTemplate = new NpcTemplate();
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				if (npcId == 857973) {
+					npc.spawnTemplate.setX(298.666992f);
+					npc.spawnTemplate.setY(258.273102f);
+					npc.spawnTemplate.setZ(324.24118f);
+				}
+				npc.skillList = new NpcSkillList(npc);
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"301620000:" + npcId);
+			}
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
 			DataManager.NPC_SKILL_DATA = previousNpcSkills;

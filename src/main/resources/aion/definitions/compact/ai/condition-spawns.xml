@@ -17159,73 +17159,952 @@
     <variable name="iddf3_dragon_fx1"/>
     <variable name="iddf3_dragon_fx2"/>
     <variable name="iddf3_dragon_fx3"/>
+    <variable name="iddf3_dragon_t_boss"/>
+    <variable name="idf6_dragon_start"/>
+    <variable name="no_exp"/>
+    <variable name="wave_control_01"/>
+    <variable name="wave_control_02"/>
+    <variable name="wave_control_03"/>
     <condition id="765" expression="boss_summon == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#1">
       <group probability="1000">
         <slot>
-          <npc id="248970" probability="10000" x="284.768341" y="258.441681" z="320.65976" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1"/>
+          <npc id="248970" probability="10000" x="284.768341" y="258.441681" z="320.65976" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9785" expression="(Wave_Control_03 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="220437" probability="10000" x="250.043823" y="193.974243" z="326.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_19" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9786" expression="(Wave_Control_03 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="220446" probability="10000" x="250.043823" y="193.974243" z="326.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_19" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9787" expression="(Wave_Control_02 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#3">
+      <group probability="1000">
+        <slot>
+          <npc id="220435" probability="10000" x="337.180786" y="327.768188" z="324.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_29" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9788" expression="(Wave_Control_02 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#3">
+      <group probability="1000">
+        <slot>
+          <npc id="220444" probability="10000" x="337.180786" y="327.768188" z="324.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_29" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9789" expression="IDF6_Dragon_Start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#4">
+      <group probability="1000">
+        <slot>
+          <npc id="857975" probability="10000" x="317.166138" y="282.55661" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9790" expression="IDF6_Dragon_Start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#5">
+      <group probability="1000">
+        <slot>
+          <npc id="857976" probability="10000" x="297.90918" y="228.470398" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9791" expression="IDF6_Dragon_Start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#6">
+      <group probability="1000">
+        <slot>
+          <npc id="857974" probability="10000" x="270.133026" y="267.46167" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9792" expression="(Wave_Control_03 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#7">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="252.554489" y="194.066437" z="324.035889" heading="45" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_4" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9793" expression="(Wave_Control_03 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#7">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="252.554489" y="194.066437" z="324.035889" heading="45" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_4" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9794" expression="(Wave_Control_01 &gt; 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#8">
+      <group probability="1000">
+        <slot>
+          <npc id="220434" probability="10000" x="228.263702" y="292.066162" z="321.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_9" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9795" expression="(Wave_Control_01 &gt; 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#8">
+      <group probability="1000">
+        <slot>
+          <npc id="220443" probability="10000" x="228.263702" y="292.066162" z="321.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_9" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9796" expression="(Wave_Control_03 &gt; 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#9">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="252.554489" y="194.066437" z="325.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_7" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9797" expression="(Wave_Control_03 &gt; 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#9">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="252.554489" y="194.066437" z="325.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_7" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="766" expression="IDDF3_Dragon_Fx2 == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#10">
       <group probability="1000">
         <slot>
-          <npc id="833627" probability="10000" x="299.092163" y="258.368103" z="321.040009" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1"/>
+          <npc id="833627" probability="10000" x="299.092163" y="258.368103" z="321.040009" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9798" expression="(Wave_Control_03 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#11">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="253.86174" y="198.42392" z="326.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_13" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9799" expression="(Wave_Control_03 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#11">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="253.86174" y="198.42392" z="326.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_13" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9800" expression="(Wave_Control_01 &gt; 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="220434" probability="10000" x="228.717819" y="295.17276" z="321.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_7" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9801" expression="(Wave_Control_01 &gt; 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="220443" probability="10000" x="228.717819" y="295.17276" z="321.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_7" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="767" expression="End_Boss_Die == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#13">
       <group probability="1000">
         <slot>
-          <npc id="806240" probability="10000" x="322.213348" y="258.181763" z="320.65976" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1"/>
+          <npc id="806240" probability="10000" x="322.213348" y="258.181763" z="320.65976" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="768" expression="boss_summon == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#14">
       <group probability="1000">
         <slot>
-          <npc id="857977" probability="10000" x="298.567627" y="259.112" z="320.65976" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1"/>
+          <npc id="857977" probability="10000" x="298.567627" y="259.112" z="320.65976" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9802" expression="(Wave_Control_01 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#15">
+      <group probability="1000">
+        <slot>
+          <npc id="220436" probability="10000" x="230.015442" y="297.729156" z="322.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_14" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9803" expression="(Wave_Control_01 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#15">
+      <group probability="1000">
+        <slot>
+          <npc id="220445" probability="10000" x="230.015442" y="297.729156" z="322.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_14" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9804" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#16">
+      <group probability="1000">
+        <slot>
+          <npc id="220519" probability="10000" x="314.823792" y="285.612793" z="320.063843" heading="135" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9805" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#16">
+      <group probability="1000">
+        <slot>
+          <npc id="220522" probability="10000" x="314.823792" y="285.612793" z="320.063843" heading="135" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9806" expression="(Wave_Control_02 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#17">
+      <group probability="1000">
+        <slot>
+          <npc id="220435" probability="10000" x="339.716614" y="325.409027" z="324.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_28" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9807" expression="(Wave_Control_02 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#17">
+      <group probability="1000">
+        <slot>
+          <npc id="220444" probability="10000" x="339.716614" y="325.409027" z="324.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_28" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="769" expression="IDDF3_Dragon_Fx1 == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#18">
       <group probability="1000">
         <slot>
-          <npc id="833626" probability="10000" x="299.092163" y="258.368103" z="320.040009" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1"/>
+          <npc id="833626" probability="10000" x="299.092163" y="258.368103" z="320.040009" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9808" expression="(Wave_Control_01 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#19">
+      <group probability="1000">
+        <slot>
+          <npc id="703159" probability="10000" x="225.486755" y="293.710022" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9809" expression="(Wave_Control_01 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#19">
+      <group probability="1000">
+        <slot>
+          <npc id="703159" probability="10000" x="225.486755" y="293.710022" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9810" expression="(Wave_Control_03 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#20">
+      <group probability="1000">
+        <slot>
+          <npc id="220435" probability="10000" x="256.955566" y="194.763641" z="327.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_21" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9811" expression="(Wave_Control_03 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#20">
+      <group probability="1000">
+        <slot>
+          <npc id="220444" probability="10000" x="256.955566" y="194.763641" z="327.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_21" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9812" expression="(Wave_Control_02 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#21">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="334.466125" y="327.710754" z="324.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_27" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9813" expression="(Wave_Control_02 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#21">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="334.466125" y="327.710754" z="324.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_27" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9814" expression="(Wave_Control_03 &gt; 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#22">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="249.758072" y="199.111023" z="325.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_6" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9815" expression="(Wave_Control_03 &gt; 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#22">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="249.758072" y="199.111023" z="325.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_6" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9816" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#23">
+      <group probability="1000">
+        <slot>
+          <npc id="220521" probability="10000" x="300.681671" y="228.3871" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9817" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#23">
+      <group probability="1000">
+        <slot>
+          <npc id="220524" probability="10000" x="300.681671" y="228.3871" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9818" expression="(Wave_Control_02 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#24">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="333.43692" y="325.149017" z="323.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_13" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9819" expression="(Wave_Control_02 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#24">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="333.43692" y="325.149017" z="323.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_13" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="770" expression="boss_summon == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#25">
       <group probability="1000">
         <slot>
-          <npc id="248970" probability="10000" x="306.674316" y="247.112579" z="320.65976" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1"/>
+          <npc id="248970" probability="10000" x="306.674316" y="247.112579" z="320.65976" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9820" expression="(Wave_Control_02 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#26">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="339.821411" y="325.120819" z="323.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9821" expression="(Wave_Control_02 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#26">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="339.821411" y="325.120819" z="323.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9822" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#27">
+      <group probability="1000">
+        <slot>
+          <npc id="220519" probability="10000" x="295.468445" y="231.448929" z="320.063843" heading="135" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9823" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#27">
+      <group probability="1000">
+        <slot>
+          <npc id="220522" probability="10000" x="295.468445" y="231.448929" z="320.063843" heading="135" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9824" expression="(Wave_Control_02 &gt; 5) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#28">
+      <group probability="1000">
+        <slot>
+          <npc id="220440" probability="10000" x="335.5466" y="323.527069" z="325.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_34" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9825" expression="(Wave_Control_02 &gt; 5) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#28">
+      <group probability="1000">
+        <slot>
+          <npc id="220449" probability="10000" x="335.5466" y="323.527069" z="325.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_34" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9826" expression="(Wave_Control_02 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#29">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="336.821411" y="320.120819" z="323.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_21" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9827" expression="(Wave_Control_02 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#29">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="336.821411" y="320.120819" z="323.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_21" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9828" expression="IDDF3_dragon_t_boss == 4" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="IDF6_Dragon/world_N.xml#30">
+      <group probability="1000">
+        <slot>
+          <npc id="248976" probability="10000" x="298.567627" y="259.112" z="322.996246" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9829" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#31">
+      <group probability="1000">
+        <slot>
+          <npc id="220520" probability="10000" x="267.819794" y="264.46463" z="320.063843" heading="225" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9830" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#31">
+      <group probability="1000">
+        <slot>
+          <npc id="220523" probability="10000" x="267.819794" y="264.46463" z="320.063843" heading="225" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9831" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (IDDF3_dragon_t_boss &lt; 4)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#32">
+      <group probability="1000">
+        <slot>
+          <npc id="857973" probability="10000" x="298.666992" y="258.273102" z="324.24118" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1" despawn_at_attack_state="true">
+            <sensory_area bottom="251.100006" top="351.100006">
+              <point x="222" y="164"/>
+              <point x="192" y="237"/>
+              <point x="204" y="333"/>
+              <point x="324" y="333"/>
+              <point x="347" y="314"/>
+              <point x="351" y="294"/>
+              <point x="393" y="255"/>
+              <point x="367" y="210"/>
+              <point x="344" y="156"/>
+            </sensory_area>
+          </npc>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9832" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#33">
+      <group probability="1000">
+        <slot>
+          <npc id="220521" probability="10000" x="320.037018" y="282.550964" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9833" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#33">
+      <group probability="1000">
+        <slot>
+          <npc id="220524" probability="10000" x="320.037018" y="282.550964" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9834" expression="(Wave_Control_02 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#34">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="339.610718" y="322.557831" z="324.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_31" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9835" expression="(Wave_Control_02 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#34">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="339.610718" y="322.557831" z="324.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_31" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9836" expression="(Wave_Control_03 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#35">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="253.731613" y="195.308456" z="326.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_14" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9837" expression="(Wave_Control_03 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#35">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="253.731613" y="195.308456" z="326.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_14" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9838" expression="(Wave_Control_02 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#36">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="337.233185" y="328.31842" z="323.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_11" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9839" expression="(Wave_Control_02 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#36">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="337.233185" y="328.31842" z="323.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_11" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9840" expression="(Wave_Control_02 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#37">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="337.173309" y="322.572052" z="321.035889" heading="225" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_3" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9841" expression="(Wave_Control_02 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#37">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="337.173309" y="322.572052" z="321.035889" heading="225" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_3" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9842" expression="(Wave_Control_01 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#38">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="230.817566" y="290.341827" z="320.063843" heading="0" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9843" expression="(Wave_Control_01 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#38">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="230.817566" y="290.341827" z="320.063843" heading="0" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9844" expression="(Wave_Control_03 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#39">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="253.86174" y="198.42392" z="324.035889" heading="45" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_2" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9845" expression="(Wave_Control_03 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#39">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="253.86174" y="198.42392" z="324.035889" heading="45" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_2" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9846" expression="(Wave_Control_02 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#40">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="337.203247" y="325.385376" z="321.035889" heading="225" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_4" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9847" expression="(Wave_Control_02 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#40">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="337.203247" y="325.385376" z="321.035889" heading="225" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_4" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9848" expression="(Wave_Control_02 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#41">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="335.181152" y="322.686035" z="323.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_23" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9849" expression="(Wave_Control_02 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#41">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="335.181152" y="322.686035" z="323.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_23" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9850" expression="(Wave_Control_01 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#42">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="228.44899" y="295.109894" z="322.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_12" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9851" expression="(Wave_Control_01 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#42">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="228.44899" y="295.109894" z="322.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_12" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9852" expression="(Wave_Control_03 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#43">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="256.955566" y="194.763641" z="326.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_11" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9853" expression="(Wave_Control_03 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#43">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="256.955566" y="194.763641" z="326.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_11" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9854" expression="(Wave_Control_01 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#44">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="232.074829" y="293.337708" z="320.063843" heading="0" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_3" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9855" expression="(Wave_Control_01 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#44">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="232.074829" y="293.337708" z="320.063843" heading="0" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_3" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9856" expression="(Wave_Control_02 &gt; 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#45">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="337.233185" y="328.31842" z="322.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_9" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9857" expression="(Wave_Control_02 &gt; 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#45">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="337.233185" y="328.31842" z="322.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_9" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9858" expression="(Wave_Control_01 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#46">
+      <group probability="1000">
+        <slot>
+          <npc id="220435" probability="10000" x="229.896088" y="289.577393" z="323.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_17" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9859" expression="(Wave_Control_01 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#46">
+      <group probability="1000">
+        <slot>
+          <npc id="220444" probability="10000" x="229.896088" y="289.577393" z="323.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_17" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9860" expression="(Wave_Control_03 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#47">
+      <group probability="1000">
+        <slot>
+          <npc id="220437" probability="10000" x="252.117905" y="191.629471" z="326.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_18" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9861" expression="(Wave_Control_03 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#47">
+      <group probability="1000">
+        <slot>
+          <npc id="220446" probability="10000" x="252.117905" y="191.629471" z="326.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_18" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9862" expression="(Wave_Control_03 &gt; 5) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#48">
+      <group probability="1000">
+        <slot>
+          <npc id="220438" probability="10000" x="253.955566" y="195.763641" z="328.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_30" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9863" expression="(Wave_Control_03 &gt; 5) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#48">
+      <group probability="1000">
+        <slot>
+          <npc id="220447" probability="10000" x="253.955566" y="195.763641" z="328.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_30" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9864" expression="(Wave_Control_03 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#49">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="256.040497" y="189.796082" z="327.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_23" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9865" expression="(Wave_Control_03 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#49">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="256.040497" y="189.796082" z="327.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_23" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9866" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#50">
+      <group probability="1000">
+        <slot>
+          <npc id="220520" probability="10000" x="295.481232" y="225.361374" z="320.063843" heading="225" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9867" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#50">
+      <group probability="1000">
+        <slot>
+          <npc id="220523" probability="10000" x="295.481232" y="225.361374" z="320.063843" heading="225" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9868" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#51">
+      <group probability="1000">
+        <slot>
+          <npc id="220520" probability="10000" x="314.836578" y="279.525208" z="320.063843" heading="225" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9869" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#51">
+      <group probability="1000">
+        <slot>
+          <npc id="220523" probability="10000" x="314.836578" y="279.525208" z="320.063843" heading="225" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9870" expression="(Wave_Control_03 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#52">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="256.955566" y="194.763641" z="324.035889" heading="45" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_3" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9871" expression="(Wave_Control_03 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#52">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="256.955566" y="194.763641" z="324.035889" heading="45" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_3" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9872" expression="(Wave_Control_03 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#53">
+      <group probability="1000">
+        <slot>
+          <npc id="220435" probability="10000" x="253.86174" y="198.42392" z="327.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_24" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9873" expression="(Wave_Control_03 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#53">
+      <group probability="1000">
+        <slot>
+          <npc id="220444" probability="10000" x="253.86174" y="198.42392" z="327.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_24" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="771" expression="boss_summon_check == 4" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="IDF6_Dragon/world_N.xml#54">
       <group probability="1000">
         <slot>
-          <npc id="248972" probability="10000" x="298.567627" y="259.112" z="321.874786" heading="0" initial_delay="0" initial_delay_extra="0"/>
+          <npc id="248972" probability="10000" x="298.567627" y="259.112" z="321.874786" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9874" expression="(Wave_Control_01 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#55">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="230.025497" y="289.380829" z="322.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9875" expression="(Wave_Control_01 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#55">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="230.025497" y="289.380829" z="322.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9876" expression="(Wave_Control_01 &gt; 5) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#56">
+      <group probability="1000">
+        <slot>
+          <npc id="220439" probability="10000" x="228.201385" y="293.754578" z="324.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_24" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9877" expression="(Wave_Control_01 &gt; 5) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#56">
+      <group probability="1000">
+        <slot>
+          <npc id="220448" probability="10000" x="228.201385" y="293.754578" z="324.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_24" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="772" expression="IDDF3_Dragon_Fx3 == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#57">
       <group probability="1000">
         <slot>
-          <npc id="833628" probability="10000" x="299.092163" y="258.368103" z="322.040009" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1"/>
+          <npc id="833628" probability="10000" x="299.092163" y="258.368103" z="322.040009" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9878" expression="(Wave_Control_03 &gt; 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#58">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="256.040497" y="189.796082" z="325.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_10" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9879" expression="(Wave_Control_03 &gt; 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#58">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="256.040497" y="189.796082" z="325.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_10" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9880" expression="(Wave_Control_02 &gt; 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#59">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="339.821411" y="325.120819" z="322.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_6" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9881" expression="(Wave_Control_02 &gt; 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#59">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="339.821411" y="325.120819" z="322.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_6" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9882" expression="(Wave_Control_01 &gt; 3) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#60">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="228.451782" y="292.066162" z="322.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_11" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9883" expression="(Wave_Control_01 &gt; 3) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#60">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="228.451782" y="292.066162" z="322.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_11" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9884" expression="(Wave_Control_01 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#61">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="228.433884" y="292.198395" z="323.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_19" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9885" expression="(Wave_Control_01 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#61">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="228.433884" y="292.198395" z="323.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_19" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9886" expression="(Wave_Control_01 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#62">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="228.435699" y="295.144135" z="323.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_20" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9887" expression="(Wave_Control_01 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#62">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="228.435699" y="295.144135" z="323.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_20" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9888" expression="(Wave_Control_02 &gt; 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#63">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="337.203247" y="325.385376" z="322.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_8" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9889" expression="(Wave_Control_02 &gt; 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#63">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="337.203247" y="325.385376" z="322.035889" heading="225" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_8" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9890" expression="(Wave_Control_01 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#64">
+      <group probability="1000">
+        <slot>
+          <npc id="220435" probability="10000" x="229.741898" y="297.806" z="323.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_22" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9891" expression="(Wave_Control_01 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#64">
+      <group probability="1000">
+        <slot>
+          <npc id="220444" probability="10000" x="229.741898" y="297.806" z="323.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_22" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="773" expression="boss_summon == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#65">
       <group probability="1000">
         <slot>
-          <npc id="248970" probability="10000" x="307.098297" y="269.403442" z="320.65976" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1"/>
+          <npc id="248970" probability="10000" x="307.098297" y="269.403442" z="320.65976" heading="0" initial_delay="0" initial_delay_extra="0" respawn_time="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9892" expression="(Wave_Control_03 &gt; 4) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#66">
+      <group probability="1000">
+        <slot>
+          <npc id="220433" probability="10000" x="249.758072" y="199.111023" z="327.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_25" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9893" expression="(Wave_Control_03 &gt; 4) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#66">
+      <group probability="1000">
+        <slot>
+          <npc id="220442" probability="10000" x="249.758072" y="199.111023" z="327.035889" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_c_25" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9894" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#67">
+      <group probability="1000">
+        <slot>
+          <npc id="220521" probability="10000" x="273.020233" y="267.490356" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9895" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#67">
+      <group probability="1000">
+        <slot>
+          <npc id="220524" probability="10000" x="273.020233" y="267.490356" z="320.063843" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9896" expression="(Wave_Control_02 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#68">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="334.466431" y="326.723663" z="321.035889" heading="225" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9897" expression="(Wave_Control_02 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#68">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="334.466431" y="326.723663" z="321.035889" heading="225" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_b_1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9898" expression="(Wave_Control_03 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#69">
+      <group probability="1000">
+        <slot>
+          <npc id="703159" probability="10000" x="248.592209" y="191.783493" z="325.035889" heading="30" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9899" expression="(Wave_Control_03 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#69">
+      <group probability="1000">
+        <slot>
+          <npc id="703159" probability="10000" x="248.592209" y="191.783493" z="325.035889" heading="30" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9900" expression="(Wave_Control_02 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#70">
+      <group probability="1000">
+        <slot>
+          <npc id="703159" probability="10000" x="342.21286" y="329.069794" z="321.035889" heading="225" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9901" expression="(Wave_Control_02 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#70">
+      <group probability="1000">
+        <slot>
+          <npc id="703159" probability="10000" x="342.21286" y="329.069794" z="321.035889" heading="225" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="774" expression="boss_summon == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#71">
       <group probability="1000">
         <slot>
-          <npc id="220450" probability="10000" x="298.953766" y="258.344177" z="325.216187" heading="0" initial_delay="0" initial_delay_extra="0"/>
+          <npc id="220450" probability="10000" x="298.953766" y="258.344177" z="325.216187" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9902" expression="(Wave_Control_01 &gt; 1) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#72">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="231.517746" y="296.456787" z="320.063843" heading="0" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_4" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9903" expression="(Wave_Control_01 &gt; 1) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#72">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="231.517746" y="296.456787" z="320.063843" heading="0" initial_delay="3" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_4" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9904" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#73">
+      <group probability="1000">
+        <slot>
+          <npc id="220519" probability="10000" x="267.807007" y="270.552185" z="320.063843" heading="135" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9905" expression="(IDF6_Dragon_Start == 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#73">
+      <group probability="1000">
+        <slot>
+          <npc id="220522" probability="10000" x="267.807007" y="270.552185" z="320.063843" heading="135" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9906" expression="(Wave_Control_01 &gt; 2) &amp;&amp; (NO_EXP == 2)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#74">
+      <group probability="1000">
+        <slot>
+          <npc id="220432" probability="10000" x="232.074829" y="293.337708" z="321.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_6" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9907" expression="(Wave_Control_01 &gt; 2) &amp;&amp; (NO_EXP == 1)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Dragon/world_N.xml#74">
+      <group probability="1000">
+        <slot>
+          <npc id="220441" probability="10000" x="232.074829" y="293.337708" z="321.063843" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301620000:npcpath_wava_a_6" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
