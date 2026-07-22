@@ -16,6 +16,7 @@ out/
 .vscode/
 .cursor/
 .codegraph/
+.codex
 
 # Runtime logs and pid files
 log/
@@ -37,10 +38,7 @@ Thumbs.db
 
 .codegraph
 .cursor
-/docs/*
-!/docs/RETAIL_SKILL_ENGINE_MIGRATION_PLAN.md
-!/docs/RETAIL_SKILL_FIELD_MAPPING.md
-!/docs/RETAIL_AI_MIGRATION.md
+/docs
 
 log
 
@@ -50,7 +48,3 @@ log
 /login
 
 /src/main/resources/aion/data/static_data/npc_drops.zip
-
-/docs
-!/docs/
-!/docs/RETAIL_INSTANCE_MIGRATION_PLAN.md
