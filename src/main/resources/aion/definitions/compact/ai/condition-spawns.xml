@@ -10324,10 +10324,13 @@
     </condition>
   </world>
   <world id="301570000" name="IDEternity_Q">
+    <variable name="scene"/>
+    <variable name="user_gender"/>
+    <variable name="user_race"/>
     <condition id="685" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="IDEternity_Q/world_N.xml#sensory-unconditional">
       <group probability="1000">
         <slot>
-          <npc id="857824" probability="10000" x="598.283813" y="432.472778" z="470.884338" heading="60" initial_delay="1" initial_delay_extra="0">
+          <npc id="857824" probability="10000" x="598.283813" y="432.472778" z="470.884338" heading="60" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true">
             <sensory_area bottom="464.018372" top="514.018372">
               <point x="576.772339" y="416.666656"/>
               <point x="595.201965" y="405.404144"/>
@@ -10342,7 +10345,7 @@
           </npc>
         </slot>
         <slot>
-          <npc id="857825" probability="10000" x="554.001038" y="349.697327" z="469.89679" heading="0" initial_delay="1" initial_delay_extra="0">
+          <npc id="857825" probability="10000" x="554.001038" y="349.697327" z="469.89679" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true">
             <sensory_area bottom="464.018372" top="514.018372">
               <point x="533.396851" y="335.968994"/>
               <point x="551.826477" y="324.706482"/>
@@ -10358,7 +10361,7 @@
           </npc>
         </slot>
         <slot>
-          <npc id="857826" probability="10000" x="460.728546" y="350.790222" z="469.89679" heading="0" initial_delay="1" initial_delay_extra="0">
+          <npc id="857826" probability="10000" x="460.728546" y="350.790222" z="469.89679" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true">
             <sensory_area bottom="464.018372" top="514.018372">
               <point x="440.124359" y="337.06189"/>
               <point x="458.553986" y="325.799377"/>
@@ -10375,7 +10378,7 @@
           </npc>
         </slot>
         <slot>
-          <npc id="857829" probability="10000" x="505.492065" y="592.392639" z="469.89679" heading="0" initial_delay="1" initial_delay_extra="0">
+          <npc id="857829" probability="10000" x="505.492065" y="592.392639" z="469.89679" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true">
             <sensory_area bottom="464.018372" top="514.018372">
               <point x="484.887878" y="578.664307"/>
               <point x="503.317505" y="567.401794"/>
@@ -10390,7 +10393,7 @@
           </npc>
         </slot>
         <slot>
-          <npc id="857831" probability="10000" x="415.59726" y="591.050842" z="469.89679" heading="0" initial_delay="1" initial_delay_extra="0">
+          <npc id="857831" probability="10000" x="415.59726" y="591.050842" z="469.89679" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true">
             <sensory_area bottom="464.018372" top="514.018372">
               <point x="373.740753" y="545.257568"/>
               <point x="400.373016" y="531.385132"/>
@@ -10404,6 +10407,417 @@
               <point x="371.351776" y="548.329163"/>
             </sensory_area>
           </npc>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9785" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#1:g1:s1:p1">
+            <npc id="857948" probability="10000" x="494.393616" y="598.40155" z="469.5" heading="75" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideternity_01_design_5.11" despawn_at_attack_state="true"/>
+            <npc id="857948" probability="10000" x="494.393616" y="595.40155" z="469.5" heading="75" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideternity_01_design_5.11" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9786" expression="(USER_GENDER == 1) &amp;&amp; (SCENE == 12)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="857788" probability="10000" x="231.440536" y="512.078308" z="472.977783" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9787" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#3">
+      <group probability="1000">
+        <slot>
+          <npc id="857781" probability="10000" x="599.510254" y="411.404877" z="469.5" heading="270" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_design_5.20" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9788" expression="SCENE  &lt; 5" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#4">
+      <group probability="1000">
+        <slot>
+          <npc id="857835" probability="10000" x="461.357758" y="333.768402" z="469.89679" heading="270" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9789" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#5">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#5:g1:s1:p1">
+            <npc id="857901" probability="10000" x="443.009247" y="347.08252" z="469.5" heading="165" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e59" despawn_at_attack_state="true"/>
+            <npc id="857901" probability="10000" x="443.009247" y="343.08252" z="469.5" heading="165" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e59" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9790" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#6">
+      <group probability="1000">
+        <slot>
+          <npc id="857784" probability="10000" x="559.063843" y="521.99939" z="469.5" heading="240" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9791" expression="SCENE &gt;= 9" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#7">
+      <group probability="1000">
+        <slot>
+          <npc id="857948" probability="10000" x="459.737335" y="654.10614" z="469.625" heading="60" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9792" expression="SCENE &gt;= 9" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#8">
+      <group probability="1000">
+        <slot>
+          <npc id="857906" probability="10000" x="461.516937" y="671.386841" z="472.939697" heading="315" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_design_5.4" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9793" expression="SCENE &lt; 8" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#9">
+      <group probability="1000">
+        <slot>
+          <npc id="857909" probability="10000" x="506.562347" y="573.955566" z="471.909088" heading="315" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9794" expression="SCENE &lt; 7" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#10">
+      <group probability="1000">
+        <slot>
+          <npc id="857835" probability="10000" x="572.163025" y="523.091858" z="469.89679" heading="45" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9795" expression="SCENE &lt; 10" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#11">
+      <group probability="1000">
+        <slot>
+          <npc id="857909" probability="10000" x="433.643311" y="600.952881" z="471.887878" heading="45" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9796" expression="SCENE &lt; 13" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="703130" probability="10000" x="229.776306" y="512.702271" z="469.89679" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9797" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#13">
+      <group probability="1000">
+        <slot>
+          <npc id="857781" probability="10000" x="580.960144" y="426.770264" z="469.5" heading="270" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_mob_named7" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9798" expression="SCENE &lt; 9" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#14">
+      <group probability="1000">
+        <slot>
+          <npc id="806136" probability="10000" x="461.535522" y="671.390076" z="471.466949" heading="315" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9799" expression="SCENE &gt;= 11" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#15">
+      <group probability="1000">
+        <slot>
+          <npc id="857915" probability="10000" x="349.368042" y="518.781006" z="469.625" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9800" expression="SCENE == 4" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#16">
+      <group probability="1000">
+        <slot>
+          <npc id="857834" probability="10000" x="570.837585" y="363.143616" z="470.645386" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_mob25" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9801" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#17">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#17:g1:s1:p1">
+            <npc id="857902" probability="10000" x="494.250824" y="429.750763" z="469.5" heading="75" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideternity_01_design_5.3" despawn_at_attack_state="true"/>
+            <npc id="857902" probability="10000" x="494.250824" y="426.750763" z="469.5" heading="75" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideternity_01_design_5.3" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9802" expression="(USER_RACE == 2) &amp;&amp; (SCENE == 13)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#18">
+      <group probability="1000">
+        <slot>
+          <npc id="806180" probability="10000" x="224.416321" y="512.294434" z="470.276031" heading="0" initial_delay="3" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9803" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#19">
+      <group probability="1000">
+        <slot>
+          <npc id="857902" probability="10000" x="523.784912" y="443.223663" z="469.444092" heading="210" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9804" expression="SCENE &gt;= 13" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#20">
+      <group probability="1000">
+        <slot>
+          <npc id="857882" probability="10000" x="255.455734" y="509.567474" z="469.89679" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9805" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#21">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#21:g1:s1:p1">
+            <npc id="857914" probability="10000" x="397.260254" y="595.715088" z="469.5" heading="345" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e72" despawn_at_attack_state="true"/>
+            <npc id="857914" probability="10000" x="397.260254" y="593.715088" z="469.5" heading="345" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e72" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9806" expression="SCENE &gt;= 9" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#22">
+      <group probability="1000">
+        <slot>
+          <npc id="857948" probability="10000" x="445.628601" y="662.737061" z="469.625" heading="60" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9807" expression="SCENE &gt;= 7" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#23">
+      <group probability="1000">
+        <slot>
+          <npc id="857836" probability="10000" x="572.195496" y="523.114868" z="470.658875" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_design_5.22" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9808" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#24">
+      <group probability="1000">
+        <slot>
+          <npc id="857901" probability="10000" x="588.546448" y="414.013062" z="473.599609" heading="60" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9809" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#25">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#25:g1:s1:p1">
+            <npc id="857948" probability="10000" x="509.108429" y="609.843506" z="469.5" heading="75" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideternity_01_design_5.13" despawn_at_attack_state="true"/>
+            <npc id="857948" probability="10000" x="509.108429" y="606.843506" z="469.5" heading="75" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideternity_01_design_5.13" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9810" expression="SCENE &gt;= 7" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#26">
+      <group probability="1000">
+        <slot>
+          <npc id="857904" probability="10000" x="553.217346" y="532.590149" z="470.761963" heading="90" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_design_5.21" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9811" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#27">
+      <group probability="1000">
+        <slot>
+          <npc id="857781" probability="10000" x="613.491272" y="443.238647" z="469.5" heading="270" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_mob_named8" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9812" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#28">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#28:g1:s1:p1">
+            <npc id="857914" probability="10000" x="431.816132" y="587.930481" z="469.5" heading="345" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e73" despawn_at_attack_state="true"/>
+            <npc id="857914" probability="10000" x="431.816132" y="585.930481" z="469.5" heading="345" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e73" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9813" expression="SCENE &gt;= 8" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#29">
+      <group probability="1000">
+        <slot>
+          <npc id="857905" probability="10000" x="506.526337" y="573.9328" z="471.427826" heading="315" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_mob43" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9814" expression="SCENE  &lt; 5" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#30">
+      <group probability="1000">
+        <slot>
+          <npc id="857835" probability="10000" x="443.885925" y="340.44986" z="469.89679" heading="224" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9815" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#31">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#31:g1:s1:p1">
+            <npc id="857902" probability="10000" x="520.479736" y="431.154663" z="469.5" heading="75" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideternity_01_design_5.5" despawn_at_attack_state="true"/>
+            <npc id="857902" probability="10000" x="520.479736" y="428.154663" z="469.5" heading="75" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideternity_01_design_5.5" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9816" expression="SCENE &gt;= 11" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#32">
+      <group probability="1000">
+        <slot>
+          <npc id="857908" probability="10000" x="368.141602" y="512.149475" z="471.952667" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_design_5.17" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9817" expression="SCENE &gt;= 9" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#33">
+      <group probability="1000">
+        <slot>
+          <npc id="857903" probability="10000" x="451.523224" y="655.911682" z="471.133179" heading="60" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9818" expression="(USER_RACE == 1) &amp;&amp; (SCENE == 13)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#34">
+      <group probability="1000">
+        <slot>
+          <npc id="806179" probability="10000" x="224.439041" y="512.281067" z="469.89679" heading="0" initial_delay="3" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9819" expression="SCENE  &lt; 5" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#35">
+      <group probability="1000">
+        <slot>
+          <npc id="857835" probability="10000" x="442.442963" y="361.740936" z="469.89679" heading="135" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9820" expression="(USER_GENDER == 2) &amp;&amp; (SCENE == 12)" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#36">
+      <group probability="1000">
+        <slot>
+          <npc id="857795" probability="10000" x="231.447983" y="512.090576" z="473.857758" heading="0" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9821" expression="SCENE == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#37">
+      <group probability="1000">
+        <slot>
+          <npc id="857833" probability="10000" x="663.967041" y="432.065002" z="469.89679" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_mob24" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9822" expression="SCENE &gt;= 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#38">
+      <group probability="1000">
+        <slot>
+          <npc id="857901" probability="10000" x="467.691071" y="368.315826" z="469.625" heading="270" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9823" expression="SCENE &gt;= 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#39">
+      <group probability="1000">
+        <slot>
+          <npc id="857901" probability="10000" x="452.810883" y="368.549927" z="469.625" heading="270" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9824" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#40">
+      <group probability="1000">
+        <slot>
+          <npc id="857902" probability="10000" x="508.181946" y="452.767517" z="469.444092" heading="240" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9825" expression="SCENE  &gt;= 5" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#41">
+      <group probability="1000">
+        <slot>
+          <npc id="857904" probability="10000" x="442.458221" y="361.851349" z="471.95694" heading="135" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathnamedroom_fobj3" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9826" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#42">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#42:g1:s1:p1">
+            <npc id="857948" probability="10000" x="505.409607" y="584.846619" z="469.5" heading="75" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideternity_01_design_5.10" despawn_at_attack_state="true"/>
+            <npc id="857948" probability="10000" x="505.409607" y="581.846619" z="469.5" heading="75" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideternity_01_design_5.10" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9827" expression="SCENE &gt;= 11" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#43">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#43:g1:s1:p1">
+            <npc id="857914" probability="10000" x="354.487549" y="498.47406" z="469.5" heading="345" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e75" despawn_at_attack_state="true"/>
+            <npc id="857914" probability="10000" x="354.487549" y="496.47406" z="469.5" heading="345" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e75" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9828" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#44">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#44:g1:s1:p1">
+            <npc id="857914" probability="10000" x="413.817261" y="573.073914" z="469.5" heading="165" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e69" despawn_at_attack_state="true"/>
+            <npc id="857914" probability="10000" x="413.817261" y="571.073914" z="469.5" heading="165" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e69" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9829" expression="SCENE  &gt;= 5" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#45">
+      <group probability="1000">
+        <slot>
+          <npc id="857836" probability="10000" x="461.369751" y="333.77121" z="472.455414" heading="270" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathnamedroom_fobj1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9830" expression="SCENE &lt; 4" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#46">
+      <group probability="1000">
+        <slot>
+          <npc id="857909" probability="10000" x="570.797363" y="363.14624" z="470.970459" heading="45" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9831" expression="SCENE &gt;= 10" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#47">
+      <group probability="1000">
+        <slot>
+          <npc id="857907" probability="10000" x="433.628326" y="600.975159" z="471.427826" heading="45" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_mob46" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9832" expression="SCENE &gt;= 11" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#48">
+      <group probability="1000">
+        <slot>
+          <npc id="857915" probability="10000" x="349.255096" y="505.736328" z="469.625" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9833" expression="SCENE &gt;= 11" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#49">
+      <group probability="1000">
+        <slot>
+          <npc id="857916" probability="10000" x="349.957306" y="512.213135" z="469.625" heading="0" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9834" expression="SCENE &lt; 11" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#50">
+      <group probability="1000">
+        <slot>
+          <npc id="806137" probability="10000" x="368.021484" y="511.752136" z="471.952667" heading="45" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9835" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#51">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="IDEternity_Q/world_N.xml#51:g1:s1:p1">
+            <npc id="857914" probability="10000" x="415.942261" y="610.198975" z="469.5" heading="345" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e71" despawn_at_attack_state="true"/>
+            <npc id="857914" probability="10000" x="415.942261" y="608.198975" z="469.5" heading="345" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathtype_e71" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9836" expression="SCENE  &gt;= 5" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#52">
+      <group probability="1000">
+        <slot>
+          <npc id="857836" probability="10000" x="443.983917" y="340.531891" z="471.41748" heading="224" initial_delay="0" initial_delay_extra="0" walker="retail:301570000:npcpathnamedroom_fobj2" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9837" expression="SCENE &gt;= 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#53">
+      <group probability="1000">
+        <slot>
+          <npc id="857781" probability="10000" x="598.467468" y="451.84256" z="469.5" heading="270" initial_delay="1" initial_delay_extra="0" walker="retail:301570000:npcpathideterntly_q_design_5.19" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9838" expression="SCENE &lt; 7" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDEternity_Q/world_N.xml#54">
+      <group probability="1000">
+        <slot>
+          <npc id="857835" probability="10000" x="553.192688" y="532.426697" z="469.89679" heading="90" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>

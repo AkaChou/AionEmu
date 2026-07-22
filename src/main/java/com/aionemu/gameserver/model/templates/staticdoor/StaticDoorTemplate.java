@@ -32,6 +32,8 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 	protected Float z;
 	@XmlAttribute(name = "doorid")
 	protected int doorId;
+	@XmlAttribute(name = "retailid")
+	protected int retailId;
 	@XmlAttribute(name = "keyid")
 	protected int keyId;
 	@XmlAttribute(name = "state")
@@ -64,6 +66,10 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 	 */
 	public int getDoorId() {
 		return doorId;
+	}
+
+	public int getRetailId() {
+		return retailId;
 	}
 
 	/**
