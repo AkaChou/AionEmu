@@ -61,7 +61,6 @@ import com.aionemu.gameserver.configs.main.WorldConfig;
 import com.aionemu.gameserver.configs.network.IPConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.services.instance.InstanceScaler;
-import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -324,7 +323,6 @@ public class Config {
 			ConfigurableProcessor.process(InstanceConfig.class, mainProps);
 			InstanceConfig.refresh();
 			InstanceScaler.reload();
-			InstanceService.load();
 			ConfigurableProcessor.process(AbyssLandingConfig.class, mainProps);
 			ConfigurableProcessor.process(LegionConfig.class, mainProps);
 			ConfigurableProcessor.process(LoggingConfig.class, mainProps);

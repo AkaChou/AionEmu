@@ -25,12 +25,6 @@ public class Config {
 
     private static volatile Properties bootOverrides = new Properties();
     /**
-     * 账号字符集。
-     * Account charset.
-     */
-    @Property(key = "accounts.charset", defaultValue = "ISO8859_2")
-    public static String ACCOUNT_CHARSET;
-    /**
      * 快速重连判定时间（秒）。
      * Fast reconnection threshold in seconds.
      */

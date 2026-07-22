@@ -120,15 +120,15 @@ public class RealGeoData implements GeoData {
 	}
 
 	/**
-	 * 从 {@code geo/models.mesh} 加载全部网格模型。
-	 * Loads all mesh models from {@code geo/models.mesh}.
+	 * 从 {@code geo/models.mesh.gz} 加载全部网格模型。
+	 * Loads all mesh models from {@code geo/models.mesh.gz}.
 	 *
 	 * @return 名称 → 空间节点映射 / name → spatial map
 	 */
 	protected Map<String, Spatial> loadMeshes() {
 		log.info(I18n.get("log.f40bcb01bf83"));
 		try {
-			return GeoWorldLoader.loadMeshs("geo/models.mesh");
+			return GeoWorldLoader.loadMeshs("geo/models.mesh.gz");
 		} catch (IOException e) {
 			throw new IllegalStateException("Problem loading meshes", e);
 		}

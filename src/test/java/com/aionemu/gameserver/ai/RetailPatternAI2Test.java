@@ -68,6 +68,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RetailPatternAI2Test {
 	@Test
+	void keepsCastleDoorsImmobileWhenRetailPatternReplacesTheirScriptAi() throws ReflectiveOperationException {
+		SkillNpc owner = new ObjenesisStd().newInstance(SkillNpc.class);
+		owner.objectTemplate = new NpcTemplate();
+		setField(NpcTemplate.class, owner.objectTemplate, "race", Race.DRAGON_CASTLE_DOOR);
+		RetailPatternAI2 ai = new RetailPatternAI2();
+		setField(AbstractAI.class, ai, "owner", owner);
+
+		assertFalse(ai.isMoveSupported());
+	}
+
+	@Test
 	void restoresPersistedFlagsAndIntegerVariables() {
 		InstanceRuntimeState state = new InstanceRuntimeState();
 		String prefix = "retail.pattern.ai.entity:77.";

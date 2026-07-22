@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
-import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.InstanceConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RetailInstanceData;
@@ -59,19 +58,6 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 public class InstanceService {
 	private static final String EMPTY_RESET_DEADLINE = "instance.emptyReset";
-	/** 映射 IDwhereinstancemobsuseaggro / Map IDs where instance mobs use aggro */
-	private static final List<Integer> instanceAggro = new ArrayList<Integer>();
-
-	/**
-	 * 加载副本仇恨地图配置。
-	 * Loads instance aggro map configuration.
-	 */
-	public static void load() {
-		instanceAggro.clear();
-		for (String s : CustomConfig.INSTANCES_MOB_AGGRO.split(",")) {
-			instanceAggro.add(Integer.parseInt(s));
-		}
-	}
 
 	/**
 	 * 创建下一可用副本实例（可指定所有者）。
@@ -536,17 +522,6 @@ public class InstanceService {
 	 */
 	public static void onLeaveZone(Player player, ZoneInstance zone) {
 		player.getPosition().getWorldMapInstance().getInstanceHandler().onLeaveZone(player, zone);
-	}
-
-	/**
-	 * 判断地图是否启用副本仇恨。
-	 * Whether the map uses instance-mob aggro.
-	 *
-	 * map id
-	 * whether aggro is enabled
-	 */
-	public static boolean isAggro(int mapId) {
-		return instanceAggro.contains(mapId);
 	}
 
 	/**

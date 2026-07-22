@@ -22,6 +22,7 @@ import com.aionemu.gameserver.configs.main.DropConfig;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.GlobalDropData;
+import com.aionemu.gameserver.dataholders.ScalingDropData;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropItem;
@@ -139,7 +140,11 @@ public class DropRegistrationService {
 		int index = 1;
 		DropModifiers dropModifiers = createDropModifiers(npc, genesis, highestLevel);
 		float dropRate = dropModifiers.calculateDropChance(1f, true);
-		if (npcDrop != null) {
+		ScalingDropData.NpcScalingDrop scalingDrop = DataManager.NPC_DROP_DATA == null ? null
+			: DataManager.NPC_DROP_DATA.getScalingDrop(npc.getNpcId());
+		if (scalingDrop != null) {
+			index = registerScalingDrops(scalingDrop, droppedItems, index, winnerObj, npcObjId, genesis, dropModifiers);
+		} else if (npcDrop != null) {
 			index = npcDrop.dropCalculator(droppedItems, index, dropModifiers, groupMembers);
 		}
 		currentDropMap.put(npcObjId, droppedItems);
@@ -348,6 +353,33 @@ public class DropRegistrationService {
 			}
 		}
 		GameCoreGameplayServices.dropService().scheduleFreeForAll(npcObjId);
+	}
+
+	private int registerScalingDrops(ScalingDropData.NpcScalingDrop scalingDrop, Set<DropItem> result, int index,
+			int winnerObj, int npcObjId, Player player, DropModifiers modifiers) {
+		for (ScalingDropData.ScalingDropSet set : scalingDrop.getSets()) {
+			if (!set.matches(player)) {
+				continue;
+			}
+			float chance = modifiers.calculateDropChance(set.getRate() / 10f, true);
+			if (Rnd.get() * 100 >= chance) {
+				continue;
+			}
+			int roll = Rnd.get(1, 10000);
+			int cumulative = 0;
+			ScalingDropData.ScalingDropItem selected = null;
+			for (ScalingDropData.ScalingDropItem item : set.getItems()) {
+				cumulative += item.getWeight();
+				if (roll <= cumulative) {
+					selected = item;
+					break;
+				}
+			}
+			if (selected != null) {
+				result.add(regDropItem(index++, winnerObj, npcObjId, selected.getId(), selected.getCount()));
+			}
+		}
+		return index;
 	}
 
 	/**

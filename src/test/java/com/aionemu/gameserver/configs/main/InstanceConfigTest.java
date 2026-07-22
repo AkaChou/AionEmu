@@ -2,6 +2,7 @@ package com.aionemu.gameserver.configs.main;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Properties;
@@ -14,7 +15,7 @@ class InstanceConfigTest {
 
 	@Test
 	void bindsAndParsesInstanceProperties() throws Exception {
-		int cooldownRate = InstanceConfig.COOLDOWN_RATE;
+		double cooldownRate = InstanceConfig.COOLDOWN_RATE;
 		int destroyDelay = InstanceConfig.DESTROY_DELAY_SECONDS;
 		int soloDestroyDelay = InstanceConfig.SOLO_DESTROY_DELAY_SECONDS;
 		boolean scalingEnable = InstanceConfig.SCALING_ENABLE;
@@ -23,7 +24,7 @@ class InstanceConfigTest {
 		String cooldownMaps = getPrivateString("cooldownExcludedMaps");
 		String scalingMaps = getPrivateString("scalingExcludedMaps");
 		Properties properties = new Properties();
-		properties.setProperty("gameserver.instances.cooldown.rate", "3");
+		properties.setProperty("gameserver.instances.cooldown.rate", "0.01");
 		properties.setProperty("gameserver.instances.cooldown.filter", "300080000, 0");
 		properties.setProperty("gameserver.instance.destroy_delay_seconds", "90");
 		properties.setProperty("gameserver.instance.solo.destroy_delay_seconds", "30");
@@ -36,7 +37,7 @@ class InstanceConfigTest {
 			ConfigurableProcessor.process(InstanceConfig.class, properties);
 			InstanceConfig.refresh();
 
-			assertEquals(3, InstanceConfig.COOLDOWN_RATE);
+			assertEquals(0.01, InstanceConfig.COOLDOWN_RATE);
 			assertTrue(InstanceConfig.isCooldownExcluded(300080000));
 			assertFalse(InstanceConfig.isCooldownExcluded(300060000));
 			assertEquals(90, InstanceConfig.DESTROY_DELAY_SECONDS);
@@ -54,6 +55,20 @@ class InstanceConfigTest {
 			InstanceConfig.SCALING_DMG_FLOOR = dmgFloor;
 			setPrivateString("cooldownExcludedMaps", cooldownMaps);
 			setPrivateString("scalingExcludedMaps", scalingMaps);
+			InstanceConfig.refresh();
+		}
+	}
+
+	@Test
+	void rejectsInvalidCooldownRates() {
+		double cooldownRate = InstanceConfig.COOLDOWN_RATE;
+		try {
+			for (double invalid : new double[] { -0.01, 0.001, 1.01, Double.NaN }) {
+				InstanceConfig.COOLDOWN_RATE = invalid;
+				assertThrows(IllegalArgumentException.class, InstanceConfig::refresh);
+			}
+		} finally {
+			InstanceConfig.COOLDOWN_RATE = cooldownRate;
 			InstanceConfig.refresh();
 		}
 	}

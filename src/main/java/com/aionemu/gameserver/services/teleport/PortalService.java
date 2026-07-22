@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.List;
 
-import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -60,23 +59,13 @@ public class PortalService {
 			log.warn(I18n.get("log.e07f399d3e8d", portalPath.getLocId()));
 			return;
 		}
-		boolean instanceTitleReq = false;
-		boolean instanceLevelReq = false;
-		boolean instanceRaceReq = false;
-		boolean instanceQuestReq = false;
-		boolean instanceGroupReq = false;
-		boolean instanceItemReq = false;
+		boolean instanceTitleReq = !player.havePermission(MembershipConfig.INSTANCES_TITLE_REQ);
+		boolean instanceRaceReq = !player.havePermission(MembershipConfig.INSTANCES_RACE_REQ);
+		boolean instanceQuestReq = !player.havePermission(MembershipConfig.INSTANCES_QUEST_REQ);
+		boolean instanceGroupReq = !player.havePermission(MembershipConfig.INSTANCES_GROUP_REQ);
 		int mapId = loc.getWorldId();
 		int playerSize = portalPath.getPlayerCount();
 		boolean isInstance = portalPath.isInstance();
-		if (player.getAccessLevel() < AdminConfig.INSTANCE_REQ) {
-			instanceTitleReq = !player.havePermission(MembershipConfig.INSTANCES_TITLE_REQ);
-			instanceLevelReq = !player.havePermission(MembershipConfig.INSTANCES_LEVEL_REQ);
-			instanceRaceReq = !player.havePermission(MembershipConfig.INSTANCES_RACE_REQ);
-			instanceQuestReq = !player.havePermission(MembershipConfig.INSTANCES_QUEST_REQ);
-			instanceGroupReq = !player.havePermission(MembershipConfig.INSTANCES_GROUP_REQ);
-			instanceItemReq = !player.havePermission(MembershipConfig.INSTANCES_ITEM_REQ);
-		}
 		if (instanceRaceReq && !checkRace(player, portalPath.getRace())) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MOVE_PORTAL_ERROR_INVALID_RACE);
 			return;
@@ -91,13 +80,13 @@ public class PortalService {
 		}
 		PortalReq portalReq = portalPath.getPortalReq();
 		if (portalReq != null) {
-			if (instanceLevelReq && !checkEnterLevel(player, mapId, portalReq, npcObjectId)) {
+			if (!checkEnterLevel(player, mapId, portalReq, npcObjectId)) {
 				return;
 			}
 			if (instanceQuestReq && !checkQuestsReq(player, npcObjectId, portalReq.getQuestReq())) {
 				return;
 			}
-			if (!isInstance && instanceItemReq && !checkItemReq(player, npcObjectId, portalReq.getItemReq())) {
+			if (!isInstance && !checkItemReq(player, npcObjectId, portalReq.getItemReq())) {
 				return;
 			}
 			int titleId = portalReq.getTitleId();

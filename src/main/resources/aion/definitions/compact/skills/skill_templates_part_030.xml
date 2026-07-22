@@ -1212,4 +1212,14 @@
     </effects>
     <motion name="NormalFire" instant_skill="true"/>
   </skill_template>
+  <skill_template skill_id="21125" name="과부화" nameId="4563911" name_desc="IDF5_R2_Sync2_A_Reflect" stack="SKILL_IDF5_R2_SYNC2_A_REFLECT" skill_group_name="IDF5_R2_SYNC2_A_REFLECT" delayId="6" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" dispel_category="BUFF" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="2000" hostile_type="INDIRECT">
+    <properties first_target="TARGET" first_target_range="2" target_relation="FRIEND" target_type="ONLYONE" target_maxcount="1" target_species="NPC"/>
+    <startconditions>
+      <target value="NPC"/>
+    </startconditions>
+    <effects>
+      <reflector radius="8" value="40" delta="10" duration2="10000" effectid="10211251" e="1" noresist="true" hittype="EVERYHIT" hoptype="SKILLLV" hopb="60" hopa="60"/>
+    </effects>
+    <motion name="normalfire"/>
+  </skill_template>
 </skill_data>

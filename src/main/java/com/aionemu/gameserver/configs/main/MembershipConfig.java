@@ -20,12 +20,6 @@ public class MembershipConfig {
 	@Property(key = "gameserver.instances.race.requirement", defaultValue = "10")
 	public static byte INSTANCES_RACE_REQ;
 	/**
-	 * 跳过副本等级要求所需会员等级。
-	 * Membership level required to skip instance level requirements.
-	 */
-	@Property(key = "gameserver.instances.level.requirement", defaultValue = "10")
-	public static byte INSTANCES_LEVEL_REQ;
-	/**
 	 * 跳过副本组队要求所需会员等级。
 	 * Membership level required to skip instance group requirements.
 	 */
@@ -37,18 +31,6 @@ public class MembershipConfig {
 	 */
 	@Property(key = "gameserver.instances.quest.requirement", defaultValue = "10")
 	public static byte INSTANCES_QUEST_REQ;
-	/**
-	 * 跳过副本冷却所需会员等级。
-	 * Membership level required to skip instance cooldown.
-	 */
-	@Property(key = "gameserver.instances.cooldown", defaultValue = "10")
-	public static byte INSTANCES_COOLDOWN;
-	/**
-	 * 跳过副本物品要求所需会员等级。
-	 * Membership level required to skip instance item requirements.
-	 */
-	@Property(key = "gameserver.instances.item.requirement", defaultValue = "10")
-	public static byte INSTANCES_ITEM_REQ;
 	/**
 	 * 使用全部个人仓库所需会员等级。
 	 * Membership level required to use all personal warehouse slots.

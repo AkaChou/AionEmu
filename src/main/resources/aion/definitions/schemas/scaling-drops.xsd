@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="scaling_drops">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="npc" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="set" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="item" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="id" type="xs:int" use="required"/>
+                        <xs:attribute name="count" type="xs:long" use="required"/>
+                        <xs:attribute name="weight" type="xs:int" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="rate" type="xs:int" use="required"/>
+                  <xs:attribute name="min_level" type="xs:int" use="required"/>
+                  <xs:attribute name="max_level" type="xs:int" use="required"/>
+                  <xs:attribute name="race" type="xs:string"/>
+                  <xs:attribute name="class_filter" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:int" use="required"/>
+            <xs:attribute name="source" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

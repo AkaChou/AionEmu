@@ -58,13 +58,6 @@ public class AdminConfig {
 	public static int ADMIN_AUTO_RES;
 
 	/**
-	 * 可忽略副本进入条件的最低权限等级。
-	 * Minimum access level to bypass instance enter requirements.
-	 */
-	@Property(key = "gameserver.administration.instancereq", defaultValue = "3")
-	public static int INSTANCE_REQ;
-
-	/**
 	 * 可查看其他玩家详情的最低权限等级。
 	 * Minimum access level to view other players' details.
 	 */

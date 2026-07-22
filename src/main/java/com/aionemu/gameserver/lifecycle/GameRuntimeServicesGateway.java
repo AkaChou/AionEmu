@@ -445,9 +445,9 @@ public class GameRuntimeServicesGateway {
     }
 
     /**
-     * 启动运行时服务集合：打印分区、解析并初始化各服务、加载副本并启动游戏时钟。
+	 * 启动运行时服务集合：打印分区、解析并初始化各服务，然后启动游戏时钟。
      * Start the runtime services set: print section, resolve and initialize services,
-     * load instances, and start the game-time clock.
+     * and start the game-time clock.
      */
     public void start() {
         runtimeServiceBridge().printServicesSection();
@@ -464,7 +464,6 @@ public class GameRuntimeServicesGateway {
         influence();
         exchangeService();
         petitionService();
-        runtimeServiceBridge().loadInstances();
         flyRingService();
         curingZoneService();
         springZoneService();

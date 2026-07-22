@@ -80,6 +80,19 @@ class GeoWorldLoaderAionServerFormatTest {
 	}
 
 	@Test
+	void loadsCompressedModelsMesh() throws Exception {
+		oldDataDir = System.getProperty("aion.game.data.dir");
+		System.setProperty("aion.game.data.dir", dataDir.toString());
+		Path geoDir = dataDir.resolve("geo");
+		Files.createDirectories(geoDir);
+		writeGzip(geoDir.resolve("models.mesh.gz"), modelsMesh());
+
+		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh.gz");
+
+		assertTrue(models.containsKey("world/1001"));
+	}
+
+	@Test
 	void loadsDespawnableEntitiesFromWorldGeoTypeIdLevel() throws Exception {
 		oldDataDir = System.getProperty("aion.game.data.dir");
 		System.setProperty("aion.game.data.dir", dataDir.toString());

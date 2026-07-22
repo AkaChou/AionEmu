@@ -27,6 +27,8 @@ class InstanceLimitServiceTest {
 				InstanceLimitService.nextReset(row("Relative", "45", ""), monday0830));
 		assertEquals(monday0830 + 7080 * 60_000L,
 				InstanceLimitService.nextReset(row("Daily", "7080", ""), monday0830));
+		assertEquals(monday0830 + 18_000L,
+				InstanceLimitService.nextReset(row("Daily", "0900", ""), monday0830, 0.01));
 	}
 
 	@Test
@@ -41,7 +43,7 @@ class InstanceLimitServiceTest {
 		PlayerInstanceLimit limit = new PlayerInstanceLimit(52, now - 1, 1, 2, 3, 3);
 		Row cooldown = new Row(Map.of("type", "Daily", "value", "0900", "maxcount", "3",
 				"extra_count_buildup", "2", "extra_count_buildup_level", "3"));
-		InstanceLimitService.refresh(limit, cooldown, now);
+		InstanceLimitService.refresh(limit, cooldown, now, 1);
 		assertEquals(0, limit.getUsed());
 		assertEquals(3, limit.getBonusAvailable());
 		assertEquals(0, limit.getPurchasedCount());

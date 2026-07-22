@@ -334,6 +334,10 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 		return Math.round((System.currentTimeMillis() - lastAttackedTime) / 1000f);
 	}
 
+	public long getLastAttackedTime() {
+		return lastAttackedTime;
+	}
+
 	/** 刷新上次攻击时间 / renew Last Attack Time. */
 	public void renewLastAttackTime() {
 		this.lastAttackTime = System.currentTimeMillis();

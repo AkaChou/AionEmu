@@ -9,6 +9,7 @@ import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.handler.ReturningEventHandler;
+import com.aionemu.gameserver.ai2.handler.TargetEventHandler;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -376,6 +377,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public boolean isMoveSupported() {
+		Race race = getRace();
+		return race != Race.PC_LIGHT_CASTLE_DOOR && race != Race.PC_DARK_CASTLE_DOOR
+			&& race != Race.DRAGON_CASTLE_DOOR && super.isMoveSupported();
 	}
 
 	static boolean hasWorldSceneConsumer(Pattern pattern, int worldId) {
@@ -1268,7 +1276,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			case "play_cutscene_by_user_indicator" -> playCutscene(action, eventTarget);
 			case "add_hate_point" -> addHate(action, eventTarget, message);
 			case "switch_target" -> switchObjectTarget(action, eventTarget, message);
-			case "attack_most_hating" -> getOwner().setTarget(getAggroList().getMostHated());
+			case "attack_most_hating" -> changeTarget(getAggroList().getMostHated());
 			case "change_direction" -> GameWorldBootstrapServices.world().updatePosition(getOwner(), getOwner().getX(),
 				getOwner().getY(), getOwner().getZ(), (byte) integer(action, "direction"));
 			case "random_move" -> randomMove(action);
@@ -1741,7 +1749,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		if (target == null) {
 			return -1;
 		}
-		getOwner().setTarget(target);
+		if (action.type().equals("attack_most_hating")) {
+			TargetEventHandler.clearTargetLostState(this);
+			getOwner().setTarget(target);
+		} else {
+			getOwner().setTarget(target);
+		}
 		int duration = -1;
 		int skillLevel = effectiveSkillLevel(skill.getSkillLevel(), integer(action, "skill_level"));
 		if (getOwner().getController().useSkill(skill.getSkillId(), skillLevel)) {
@@ -1846,7 +1859,18 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		AggroInfo targetInfo = getAggroList().getAggroInfo(target);
 		targetInfo.addHate(switchHateAddition(maximumHate, targetInfo.getHate(), integer(action, "percent_to_add"),
 			integer(action, "points_to_add")));
-		getOwner().setTarget(target);
+		changeTarget(target);
+	}
+
+	private void changeTarget(Creature target) {
+		if (target == null) {
+			return;
+		}
+		if (isInState(AIState.FIGHT)) {
+			TargetEventHandler.onTargetChange(this, target);
+		} else {
+			getOwner().setTarget(target);
+		}
 	}
 
 	static int switchHateAddition(int maximumHate, int targetHate, int percent, int points) {

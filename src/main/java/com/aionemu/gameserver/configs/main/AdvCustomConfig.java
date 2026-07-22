@@ -34,11 +34,4 @@ public class AdvCustomConfig {
 	 */
 	@Property(key = "gameserver.gameshop.limit.time", defaultValue = "60")
 	public static long GAMESHOP_LIMIT_TIME;
-
-	/**
-	 * 制作延迟时间倍率。
-	 * Crafting delay time rate.
-	 */
-	@Property(key = "gameserver.craft.delaytime,rate", defaultValue = "2")
-	public static Integer CRAFT_DELAYTIME_RATE;
 }

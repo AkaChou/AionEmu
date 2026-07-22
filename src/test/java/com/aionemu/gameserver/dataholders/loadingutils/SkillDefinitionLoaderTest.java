@@ -69,7 +69,8 @@ class SkillDefinitionLoaderTest {
 		var data = SkillDefinitionLoader.load(
 			Path.of("src/main/resources/aion/definitions/compact/skills").toFile());
 
-		assertEquals(14_517, data.size());
+		assertEquals(14_518, data.size());
+		assertNotNull(data.getSkillTemplate(21_125));
 		for (int[] range : new int[][] { { 10592, 10599 }, { 11151, 11159 }, { 11452, 11465 }, { 11619, 11651 }, { 17603, 17604 } }) {
 			for (int skillId = range[0]; skillId <= range[1]; skillId++) {
 				assertNotNull(data.getSkillTemplate(skillId), "物品引用的技能 " + skillId + " 未加载");

@@ -14,12 +14,14 @@ class AttackManagerLeashTest {
 	}
 
 	@Test
-	void numericRetailChaseTimeRefreshesAfterEachAttack() {
-		assertFalse(AttackManager.shouldStopTimedChase(1_000, 0, 5, 5_999));
-		assertTrue(AttackManager.shouldStopTimedChase(1_000, 0, 5, 6_000));
-		assertFalse(AttackManager.shouldStopTimedChase(1_000, 5_000, 5, 9_999));
-		assertTrue(AttackManager.shouldStopTimedChase(1_000, 5_000, 5, 10_000));
-		assertFalse(AttackManager.shouldStopTimedChase(1_000, 5_000, 0, 20_000));
+	void numericRetailChaseTimeRefreshesAfterCombatActivity() {
+		assertFalse(AttackManager.shouldStopTimedChase(1_000, 0, 0, 5, 5_999));
+		assertTrue(AttackManager.shouldStopTimedChase(1_000, 0, 0, 5, 6_000));
+		assertFalse(AttackManager.shouldStopTimedChase(1_000, 5_000, 0, 5, 9_999));
+		assertTrue(AttackManager.shouldStopTimedChase(1_000, 5_000, 0, 5, 10_000));
+		assertFalse(AttackManager.shouldStopTimedChase(1_000, 0, 5_000, 5, 9_999));
+		assertTrue(AttackManager.shouldStopTimedChase(1_000, 0, 5_000, 5, 10_000));
+		assertFalse(AttackManager.shouldStopTimedChase(1_000, 5_000, 5_000, 0, 20_000));
 	}
 
 	@Test

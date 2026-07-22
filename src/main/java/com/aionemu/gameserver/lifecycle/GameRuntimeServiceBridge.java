@@ -20,7 +20,6 @@ import com.aionemu.gameserver.services.SurveyService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.WebshopService;
 import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
@@ -574,14 +573,6 @@ public class GameRuntimeServiceBridge {
      */
     public PetitionService petitionService() {
         return getIfAvailable(petitionServiceProvider, PetitionService::getInstance);
-    }
-
-    /**
-     * 加载副本实例数据。
-     * Load instance data.
-     */
-    public void loadInstances() {
-        InstanceService.load();
     }
 
     /**

@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import com.aionemu.gameserver.configs.main.InstanceConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RetailInstanceData.Row;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -55,12 +56,13 @@ public final class InstanceLimitService {
 	static LimitStatus status(Player player, int worldId, long now) {
 		Row cooldown = cooldown(player, worldId);
 		int key = limitKey(worldId);
-		if (cooldown == null || key == 0) {
+		double cooldownRate = cooldownRate(worldId);
+		if (cooldownRate == 0 || cooldown == null || key == 0) {
 			return new LimitStatus(key, clientCooldownId(worldId), 0, 0, 0, 0, true);
 		}
 		PlayerInstanceLimit limit = player.getInstanceLimits().getOrCreate(key);
 		synchronized (limit) {
-			refresh(limit, cooldown, now);
+			refresh(limit, cooldown, now, cooldownRate);
 			int baseMax = cooldown.intValue("maxcount", 0);
 			int totalMax = baseMax == 0 ? 0 : baseMax + limit.getBonusAvailable() + purchasedEntries(cooldown, limit);
 			boolean allowed = totalMax == 0 || limit.getUsed() < totalMax;
@@ -72,20 +74,21 @@ public final class InstanceLimitService {
 	public static boolean consume(Player player, int worldId) {
 		Row cooldown = cooldown(player, worldId);
 		int key = limitKey(worldId);
-		if (cooldown == null || key == 0 || cooldown.intValue("maxcount", 0) == 0) {
+		double cooldownRate = cooldownRate(worldId);
+		if (cooldownRate == 0 || cooldown == null || key == 0 || cooldown.intValue("maxcount", 0) == 0) {
 			return true;
 		}
 		PlayerInstanceLimit limit = player.getInstanceLimits().getOrCreate(key);
 		synchronized (limit) {
 			long now = System.currentTimeMillis();
-			refresh(limit, cooldown, now);
+			refresh(limit, cooldown, now, cooldownRate);
 			int totalMax = cooldown.requiredInt("maxcount") + limit.getBonusAvailable() + purchasedEntries(cooldown, limit);
 			if (limit.getUsed() >= totalMax) {
 				return false;
 			}
 			limit.setUsed(limit.getUsed() + 1);
 			if (limit.getResetAt() == 0) {
-				limit.setResetAt(nextReset(cooldown, now));
+				limit.setResetAt(nextReset(cooldown, now, cooldownRate));
 			}
 		}
 		sendUpdate(player, worldId);
@@ -96,14 +99,15 @@ public final class InstanceLimitService {
 		int worldId = instance.getMapId();
 		Row cooldown = cooldown(player, worldId);
 		int key = limitKey(worldId);
-		if (cooldown == null || key == 0 || cooldown.intValue("maxcount", 0) == 0) {
+		double cooldownRate = cooldownRate(worldId);
+		if (cooldownRate == 0 || cooldown == null || key == 0 || cooldown.intValue("maxcount", 0) == 0) {
 			DynamicInstanceManager.reserveMatchMember(instance, player, teamId, side, null);
 			return true;
 		}
 		PlayerInstanceLimit limit = player.getInstanceLimits().getOrCreate(key);
 		synchronized (limit) {
 			long now = System.currentTimeMillis();
-			refresh(limit, cooldown, now);
+			refresh(limit, cooldown, now, cooldownRate);
 			int totalMax = cooldown.requiredInt("maxcount") + limit.getBonusAvailable()
 					+ purchasedEntries(cooldown, limit);
 			if (limit.getUsed() >= totalMax) {
@@ -111,7 +115,7 @@ public final class InstanceLimitService {
 			}
 			limit.setUsed(limit.getUsed() + 1);
 			if (limit.getResetAt() == 0) {
-				limit.setResetAt(nextReset(cooldown, now));
+				limit.setResetAt(nextReset(cooldown, now, cooldownRate));
 			}
 			try {
 				DynamicInstanceManager.reserveMatchMember(instance, player, teamId, side, limit);
@@ -160,12 +164,13 @@ public final class InstanceLimitService {
 	public static boolean purchase(Player player, int worldId) {
 		Row cooldown = cooldown(player, worldId);
 		int key = limitKey(worldId);
-		if (cooldown == null || key == 0 || !"luna".equalsIgnoreCase(cooldown.value("component"))) {
+		double cooldownRate = cooldownRate(worldId);
+		if (cooldownRate == 0 || cooldown == null || key == 0 || !"luna".equalsIgnoreCase(cooldown.value("component"))) {
 			return false;
 		}
 		PlayerInstanceLimit limit = player.getInstanceLimits().getOrCreate(key);
 		synchronized (limit) {
-			refresh(limit, cooldown, System.currentTimeMillis());
+			refresh(limit, cooldown, System.currentTimeMillis(), cooldownRate);
 			int maxPurchases = cooldown.intValue("pricemaxcount", 1);
 			if (limit.getPurchasedCount() >= maxPurchases) {
 				return false;
@@ -205,7 +210,13 @@ public final class InstanceLimitService {
 		throw new IllegalStateException("Unknown retail instance cooldown type " + type);
 	}
 
-	static void refresh(PlayerInstanceLimit limit, Row cooldown, long now) {
+	static long nextReset(Row cooldown, long nowMillis, double cooldownRate) {
+		long retailReset = nextReset(cooldown, nowMillis);
+		return cooldownRate == 1 ? retailReset
+				: nowMillis + Math.max(1, Math.round((retailReset - nowMillis) * cooldownRate));
+	}
+
+	static void refresh(PlayerInstanceLimit limit, Row cooldown, long now, double cooldownRate) {
 		if (limit.getResetAt() == 0 || limit.getResetAt() > now) {
 			return;
 		}
@@ -220,7 +231,11 @@ public final class InstanceLimitService {
 		limit.setUsed(0);
 		limit.setPurchasedCount(0);
 		limit.setPurchaseStep(0);
-		limit.setResetAt(nextReset(cooldown, now));
+		limit.setResetAt(nextReset(cooldown, now, cooldownRate));
+	}
+
+	private static double cooldownRate(int worldId) {
+		return InstanceConfig.isCooldownExcluded(worldId) ? 1 : InstanceConfig.COOLDOWN_RATE;
 	}
 
 	private static int purchasedEntries(Row cooldown, PlayerInstanceLimit limit) {

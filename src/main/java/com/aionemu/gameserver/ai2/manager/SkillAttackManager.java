@@ -3,12 +3,14 @@ package com.aionemu.gameserver.ai2.manager;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Logger;
+import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.skill.NpcSkillEntry;
 import com.aionemu.gameserver.model.skill.NpcSkillList;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
@@ -45,11 +47,16 @@ public class SkillAttackManager {
 		}
 		// 设置施法子状态
 		if (npcAI.setSubStateIfNot(AISubState.CAST)) {
+			Creature target = (Creature) npcAI.getOwner().getTarget();
+			int skillId = npcAI.getSkillId();
+			int skillLevel = npcAI.getSkillLevel();
+			long fightStartingTime = npcAI.getOwner().getGameStats().getFightStartingTime();
 			if (delay > 0) {
 				// 延迟执行技能攻击
-				GameThreadPoolServices.threadPoolManager().schedule(() -> skillAction(npcAI), delay);
+				GameThreadPoolServices.threadPoolManager().schedule(
+						() -> skillAction(npcAI, target, skillId, skillLevel, fightStartingTime), delay);
 			} else {
-				skillAction(npcAI);
+				skillAction(npcAI, target, skillId, skillLevel, fightStartingTime);
 			}
 		}
 	}
@@ -60,20 +67,28 @@ public class SkillAttackManager {
 	 *
 	 * NPC AI instance
 	 */
-	protected static void skillAction(NpcAI2 npcAI) {
-		Creature target = (Creature) npcAI.getOwner().getTarget();
+	private static void skillAction(NpcAI2 npcAI, Creature target, int skillId, int skillLevel, long fightStartingTime) {
+		if (!canExecuteScheduledSkill(npcAI.getState(), npcAI.getSubState(), npcAI.getOwner().getTarget(), target,
+				npcAI.getSkillId(), skillId, npcAI.getSkillLevel(), skillLevel,
+				npcAI.getOwner().getGameStats().getFightStartingTime(), fightStartingTime)) {
+			if (npcAI.isInSubState(AISubState.CAST) && npcAI.getOwner().getCastingSkill() == null) {
+				npcAI.setSubStateIfNot(AISubState.NONE);
+				if (npcAI.isInState(AIState.FIGHT)) {
+					AttackManager.scheduleNextAttack(npcAI);
+				}
+			}
+			return;
+		}
 		// 如果攻击范围为0，使用攻击范围进行检查（而不是仇恨范围）
 		if (npcAI.getOwner().getObjectTemplate().getAttackRange() == 0) {
-			if (npcAI.getOwner().getTarget() != null && !MathUtil.isInRange(npcAI.getOwner(),
-					npcAI.getOwner().getTarget(), npcAI.getOwner().getGameStats().getAttackRange().getCurrent() / 1000f)) {
+			if (!MathUtil.isInRange(npcAI.getOwner(), target,
+					npcAI.getOwner().getGameStats().getAttackRange().getCurrent() / 1000f)) {
 				npcAI.onGeneralEvent(AIEventType.TARGET_TOOFAR);
 				npcAI.getOwner().getController().abortCast();
 				return;
 			}
 		}
 		if (target != null && !target.getLifeStats().isAlreadyDead()) {
-			final int skillId = npcAI.getSkillId();
-			final int skillLevel = npcAI.getSkillLevel();
 			SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 			int duration = template.getDuration();
 			if (npcAI.isLogging()) {
@@ -103,6 +118,14 @@ public class SkillAttackManager {
 			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
 		}
 
+	}
+
+	static boolean canExecuteScheduledSkill(AIState state, AISubState subState, VisibleObject currentTarget,
+			Creature scheduledTarget, int currentSkillId, int scheduledSkillId, int currentSkillLevel, int scheduledSkillLevel,
+			long currentFightStartingTime, long scheduledFightStartingTime) {
+		return state == AIState.FIGHT && subState == AISubState.CAST && currentTarget == scheduledTarget
+				&& currentSkillId == scheduledSkillId && currentSkillLevel == scheduledSkillLevel
+				&& currentFightStartingTime == scheduledFightStartingTime;
 	}
 
 	/**

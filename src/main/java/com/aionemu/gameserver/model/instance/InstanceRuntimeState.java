@@ -11,9 +11,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class InstanceRuntimeState {
 	private static final String EMPTY = "{\"version\":1,\"data\":\"\"}";
+	private static final Pattern DATA = Pattern.compile("\\\"data\\\"\\s*:\\s*\\\"([A-Za-z0-9+/=]*)\\\"");
 	private final Map<String, String> values = new LinkedHashMap<>();
 	private Runnable changeListener = () -> { };
 
@@ -22,16 +25,15 @@ public final class InstanceRuntimeState {
 		if (json == null || json.isBlank() || EMPTY.equals(json)) {
 			return state;
 		}
-		int marker = json.indexOf("\"data\":\"");
-		if (marker < 0) {
+		Matcher data = DATA.matcher(json);
+		if (!data.find()) {
 			throw new IllegalStateException("Invalid instance runtime state JSON");
 		}
-		int start = marker + 8;
-		int end = json.indexOf('"', start);
-		if (end < 0) {
-			throw new IllegalStateException("Invalid instance runtime state payload");
+		String payload = data.group(1);
+		if (payload.isEmpty()) {
+			return state;
 		}
-		byte[] bytes = Base64.getDecoder().decode(json.substring(start, end));
+		byte[] bytes = Base64.getDecoder().decode(payload);
 		try (DataInputStream input = new DataInputStream(new ByteArrayInputStream(bytes))) {
 			int size = input.readInt();
 			for (int i = 0; i < size; i++) {

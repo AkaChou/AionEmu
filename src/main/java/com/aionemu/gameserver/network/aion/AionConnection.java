@@ -43,7 +43,7 @@ public class AionConnection extends AConnection {
 	/** 客户端包线程池处理器 / client packet processor thread pool */
 	private static final PacketProcessor<AionConnection> packetProcessor = new PacketProcessor<AionConnection>(
 			NetworkConfig.PACKET_PROCESSOR_MIN_THREADS, NetworkConfig.PACKET_PROCESSOR_MAX_THREADS,
-			NetworkConfig.PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD, NetworkConfig.PACKET_PROCESSOR_THREAD_KILL_THRESHOLD,
+			50, 3,
 			new ExecuteWrapper());
 
 	/**

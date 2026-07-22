@@ -52,6 +52,8 @@ public class NpcDropData {
 	private Map<String, DropGroup> commonDropGroups;
 	@XmlTransient
 	private Map<Integer, NpcDrop> dropsByNpcId = Collections.emptyMap();
+	@XmlTransient
+	private ScalingDropData scalingDropData = new ScalingDropData();
 
 	public NpcDropData() {
 	}
@@ -70,6 +72,7 @@ public class NpcDropData {
 		NpcDropData data = new NpcDropData();
 		data.npcDropContext = createNpcDropContext();
 		data.commonDropGroups = loadCommonDropGroups(npcDropsDirectory);
+		data.scalingDropData = loadScalingDrops(npcDropsDirectory);
 		data.npcDrop = mergeDrops(listXmlFiles(npcDropsDirectory.toPath()).stream()
 			.filter(file -> file.getName().startsWith("npc_drops_part_") && !file.getName().equals("npc_drops_part_old.xml"))
 			.flatMap(file -> data.loadDropsFromFile(file).stream())
@@ -123,6 +126,10 @@ public class NpcDropData {
 	 */
 	public int size() {
 		return getNpcDrop().size();
+	}
+
+	public ScalingDropData.NpcScalingDrop getScalingDrop(int npcId) {
+		return scalingDropData == null ? null : scalingDropData.getDrop(npcId);
 	}
 
 	/**
@@ -283,6 +290,37 @@ public class NpcDropData {
 			return commonDropGroups(data.getGroups());
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load common drop groups from " + file.getPath(), e);
+		}
+	}
+
+	private static ScalingDropData loadScalingDrops(File npcDropsDirectory) {
+		File file = new File(npcDropsDirectory, "scaling_drops.xml");
+		if (!file.isFile()) {
+			return new ScalingDropData();
+		}
+		try (FileInputStream stream = new FileInputStream(file)) {
+			ScalingDropData data = (ScalingDropData) createScalingDropContext()
+				.createUnmarshaller().unmarshal(stream);
+			data.rebuildIndex();
+			return data;
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load scaling drops from " + file.getPath(), e);
+		}
+	}
+
+	private static JAXBContext createScalingDropContext() {
+		Thread thread = Thread.currentThread();
+		ClassLoader originalClassLoader = thread.getContextClassLoader();
+		ClassLoader scalingDropClassLoader = ScalingDropData.class.getClassLoader();
+		try {
+			if (scalingDropClassLoader != null) {
+				thread.setContextClassLoader(scalingDropClassLoader);
+			}
+			return JAXBContext.newInstance(ScalingDropData.class);
+		} catch (JAXBException e) {
+			throw new IllegalStateException("Failed to create ScalingDrop JAXB context", e);
+		} finally {
+			thread.setContextClassLoader(originalClassLoader);
 		}
 	}
 

@@ -105,20 +105,6 @@ public class NetworkConfig {
 	public static int PACKET_PROCESSOR_MAX_THREADS;
 
 	/**
-	 * 判定可回收多余线程的阈值（min == max 时无效）。
-	 * Threshold for killing extra threads (no effect when min threads == max threads).
-	 */
-	@Property(key = "gameserver.network.packet.processor.threshold.kill", defaultValue = "3")
-	public static int PACKET_PROCESSOR_THREAD_KILL_THRESHOLD;
-
-	/**
-	 * 判定应扩容额外线程的阈值（min == max 时无效）。
-	 * Threshold for spawning extra threads (no effect when min threads == max threads).
-	 */
-	@Property(key = "gameserver.network.packet.processor.threshold.spawn", defaultValue = "50")
-	public static int PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD;
-
-	/**
 	 * 是否记录未知数据包。
 	 * Whether unknown packets should be logged.
 	 */

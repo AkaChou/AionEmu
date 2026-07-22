@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scaling_drops xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/scaling-drops.xsd">
+  <npc id="219640" source="scaledrop_IDEvent_Solo_Box_BM">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="182006892" count="1" weight="10" />
+    </set>
+  </npc>
+  <npc id="246294" source="scaledrop_Key_IDEvent_Solo_Door">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000295" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="246295" source="scaledrop_Key_IDEvent_Solo_Bonus_Door">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000296" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="246327" source="scaledrop_Key_IDEvent_Solo_Door">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000295" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="246328" source="scaledrop_Key_IDEvent_Solo_Bonus_Door">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000296" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="246377" source="scaledrop_IDEvent_Solo_Box_named">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="188058391" count="1" weight="0" />
+    </set>
+  </npc>
+  <npc id="246378" source="scaledrop_IDEvent_Solo_Box_named">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="188058391" count="1" weight="0" />
+    </set>
+  </npc>
+  <npc id="246379" source="scaledrop_IDEvent_Solo_Box_BM">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="182006892" count="1" weight="10" />
+    </set>
+  </npc>
+  <npc id="246380" source="scaledrop_IDEvent_Solo_Box_BM">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="182006892" count="1" weight="10" />
+    </set>
+  </npc>
+  <npc id="246381" source="scaledrop_IDEvent_Solo_Box_Bomb">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="164002390" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="248382" source="scaledrop_IDAbRe_Core_03_A1_Witch_An">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="164000531" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="248395" source="scaledrop_IDAbRe_Core_03_A2_Witch_D_01_An">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000312" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="248423" source="scaledrop_IDAbRe_Core_03_A2_Witch_D_02_An">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000313" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="248424" source="scaledrop_IDAbRe_Core_03_A2_Witch_D_03_An">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000314" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="248425" source="scaledrop_IDAbRe_Core_03_A2_Witch_D_04_An">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000315" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="248426" source="scaledrop_IDAbRe_Core_03_A2_Witch_D_05_An">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000316" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="248533" source="scaledrop_IDAbRe_Core_03_Key_Drakan_High_As_An">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000317" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="248536" source="scaledrop_IDAbRe_Core_03_Key_Drakan_High_Wi_An">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="185000318" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="835730" source="scaledrop_IDAbRe_Core_03_TreasureBox01">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="188058116" count="1" weight="10000" />
+    </set>
+    <set rate="200" min_level="1" max_level="75">
+      <item id="168300025" count="1" weight="10000" />
+    </set>
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="188058497" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="835731" source="scaledrop_IDAbRe_Core_03_TreasureBox02">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="188058115" count="1" weight="10000" />
+    </set>
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="188058498" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="835732" source="scaledrop_IDAbRe_Core_03_TreasureBox03">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="164000531" count="1" weight="10000" />
+    </set>
+  </npc>
+  <npc id="835733" source="scaledrop_IDAbRe_Core_03_Witch_Boss_Ae">
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="188058117" count="1" weight="10000" />
+    </set>
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="188058118" count="1" weight="10000" />
+    </set>
+    <set rate="1000" min_level="1" max_level="75">
+      <item id="190200000" count="12" weight="10000" />
+    </set>
+    <set rate="200" min_level="1" max_level="75">
+      <item id="188058130" count="1" weight="1000" />
+      <item id="188058131" count="1" weight="5000" />
+      <item id="188058132" count="1" weight="4000" />
+    </set>
+  </npc>
+</scaling_drops>

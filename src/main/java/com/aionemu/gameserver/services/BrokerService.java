@@ -119,13 +119,12 @@ public class BrokerService {
 	}
 
 	private void scheduleExpiredItemsTask() {
-		int delay = Math.max(BrokerConfig.CHECK_EXPIRED_ITEMS_INTERVAL * 1000, 60000);
 		expiredItemsTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				checkExpiredItems();
 			}
-		}, delay, delay);
+		}, 60000, 60000);
 	}
 
 	private void initBrokerService() {

@@ -42,11 +42,4 @@ public class GroupConfig {
 	 */
 	@Property(key = "gameserver.playeralliance.inviteotherfaction", defaultValue = "false")
 	public static boolean ALLIANCE_INVITEOTHERFACTION;
-
-	/**
-	 * 是否启用 Team2 系统。
-	 * Whether Team2 system is enabled.
-	 */
-	@Property(key = "gameserver.team2.enable", defaultValue = "false")
-	public static boolean TEAM2_ENABLE;
 }

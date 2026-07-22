@@ -28,8 +28,6 @@ class SMLunaShopTest {
 				new PlayerWardrobeEntry(110102, 2, 0, PersistentState.UPDATED))));
 		NetworkConfig.PACKET_PROCESSOR_MIN_THREADS = 1;
 		NetworkConfig.PACKET_PROCESSOR_MAX_THREADS = 1;
-		NetworkConfig.PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD = 1;
-		NetworkConfig.PACKET_PROCESSOR_THREAD_KILL_THRESHOLD = 1;
 		AionConnection connection = new ObjenesisStd().newInstance(AionConnection.class);
 		setField(connection, "activePlayer", new AtomicReference<>(player));
 

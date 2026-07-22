@@ -85,10 +85,17 @@ public class GeoWorldLoader {
 	public static Map<String, Spatial> loadMeshs(String fileName) throws IOException {
 		Map<String, Spatial> geoms = new HashMap<String, Spatial>();
 		File geoFile = Config.geoFile(fileName);
-		try (RandomAccessFile raFile = new RandomAccessFile(geoFile, "r");
-			 FileChannel roChannel = raFile.getChannel();
-			 Arena arena = Arena.ofConfined()) {
-			ByteBuffer geo = mapReadOnly(roChannel, arena).order(ByteOrder.BIG_ENDIAN);
+		try (Arena arena = Arena.ofConfined()) {
+			ByteBuffer geo;
+			if (geoFile.getName().endsWith(".gz")) {
+				try (InputStream input = new GZIPInputStream(new BufferedInputStream(new FileInputStream(geoFile)))) {
+					geo = ByteBuffer.wrap(input.readAllBytes()).order(ByteOrder.BIG_ENDIAN);
+				}
+			} else {
+				try (RandomAccessFile raFile = new RandomAccessFile(geoFile, "r"); FileChannel roChannel = raFile.getChannel()) {
+					geo = mapReadOnly(roChannel, arena).order(ByteOrder.BIG_ENDIAN);
+				}
+			}
 			while (geo.hasRemaining()) {
 				int namelenght = Short.toUnsignedInt(geo.getShort());
 				byte[] nameByte = new byte[namelenght];

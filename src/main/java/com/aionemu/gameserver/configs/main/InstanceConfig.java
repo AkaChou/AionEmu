@@ -18,7 +18,7 @@ public class InstanceConfig {
 	 * Instance cooldown rate multiplier.
 	 */
 	@Property(key = "gameserver.instances.cooldown.rate", defaultValue = "1")
-	public static int COOLDOWN_RATE;
+	public static double COOLDOWN_RATE;
 
 	/**
 	 * 排除冷却倍率的地图 ID 列表（逗号分隔）。
@@ -86,8 +86,12 @@ public class InstanceConfig {
 	 * Validates config values and refreshes exclusion map sets.
 	 */
 	public static void refresh() {
-		if (COOLDOWN_RATE < 0 || DESTROY_DELAY_SECONDS < 0 || SOLO_DESTROY_DELAY_SECONDS < 0) {
-			throw new IllegalArgumentException("Instance cooldown and destroy delays must not be negative");
+		if (!Double.isFinite(COOLDOWN_RATE) || COOLDOWN_RATE < 0 || COOLDOWN_RATE > 1
+				|| COOLDOWN_RATE > 0 && COOLDOWN_RATE < 0.01) {
+			throw new IllegalArgumentException("Instance cooldown rate must be 0 or between 0.01 and 1");
+		}
+		if (DESTROY_DELAY_SECONDS < 0 || SOLO_DESTROY_DELAY_SECONDS < 0) {
+			throw new IllegalArgumentException("Instance destroy delays must not be negative");
 		}
 		if (SCALING_HP_FLOOR < 0 || SCALING_HP_FLOOR > 1 || SCALING_DMG_FLOOR < 0 || SCALING_DMG_FLOOR > 1) {
 			throw new IllegalArgumentException("Instance scaling floors must be between 0 and 1");

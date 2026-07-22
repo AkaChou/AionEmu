@@ -10,6 +10,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
 class InstanceRuntimeStateTest {
+	@Test
+	void decodesMySqlNormalizedJson() {
+		assertEquals(Map.of(), InstanceRuntimeState.decode("{\"data\": \"\", \"version\": 1}").snapshot());
+		assertEquals(3, InstanceRuntimeState.decode(
+				"{\"data\": \"AAAAAQAAAAVzdGFnZQAAAAEz\", \"version\": 1}").getInt("stage", 0));
+	}
 
 	@Test
 	void roundTripsTypedStateAndOnlySignalsRealChanges() {
