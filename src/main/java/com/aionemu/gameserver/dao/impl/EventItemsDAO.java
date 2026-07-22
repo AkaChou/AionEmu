@@ -53,7 +53,7 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.5aff73432829", player.getObjectId(), e));
+            log.error(I18n.get("log.5aff73432829", player.getObjectId(), e), e);
         }
     }
 
@@ -94,7 +94,7 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
             con.commit();
             player.clearItemMaxThisCount();
         } catch (SQLException e) {
-            log.error(I18n.get("log.cdff3db2bd19", player.getObjectId(), e));
+            log.error(I18n.get("log.cdff3db2bd19", player.getObjectId(), e), e);
         }
     }
 
@@ -112,7 +112,7 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
             stmt.setInt(1, itemId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.903226c3be37", itemId, e));
+            log.error(I18n.get("log.903226c3be37", itemId, e), e);
         }
     }
 
@@ -129,7 +129,7 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
             stmt.setInt(1, player.getObjectId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.bf40ce06a63c", player.getObjectId(), e));
+            log.error(I18n.get("log.bf40ce06a63c", player.getObjectId(), e), e);
         }
     }
 

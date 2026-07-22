@@ -87,7 +87,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.484620fa0a55", playerId, e));
+            log.error(I18n.get("log.484620fa0a55", playerId, e), e);
         }
         return new PlayerEquippedStigmaList(items);
     }
@@ -128,7 +128,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
                 throw e;
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.6790b402b724", player.getObjectId(), e));
+            log.error(I18n.get("log.6790b402b724", player.getObjectId(), e), e);
             return false;
         }
 

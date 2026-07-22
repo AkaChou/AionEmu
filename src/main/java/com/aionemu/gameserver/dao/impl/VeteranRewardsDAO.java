@@ -55,7 +55,7 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 				));
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.3324f8b8d45c", e));
+			log.error(I18n.get("log.3324f8b8d45c", e), e);
 		}
 		return result;
 	}
@@ -71,7 +71,7 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 		try (Connection con = DatabaseFactory.getConnection()) {
 			deleteInTransaction(con, id_veteran_reward);
 		} catch (SQLException e) {
-			log.error(I18n.get("log.b1edbfafc1a6", e));
+			log.error(I18n.get("log.b1edbfafc1a6", e), e);
 		}
 	}
 

@@ -37,7 +37,7 @@ public class BannedMacDAO extends com.aionemu.loginserver.dao.BannedMacDAO {
                 map.put(address, new BannedMacEntry(address, rs.getTimestamp("time"), rs.getString("details")));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.8e046bb74f14", e));
+            log.error(I18n.get("log.8e046bb74f14", e), e);
         }
 
         return map;
@@ -56,7 +56,7 @@ public class BannedMacDAO extends com.aionemu.loginserver.dao.BannedMacDAO {
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.78eb3d669103", entry.getMac(), e));
+            log.error(I18n.get("log.78eb3d669103", entry.getMac(), e), e);
         }
 
         return false;
@@ -73,7 +73,7 @@ public class BannedMacDAO extends com.aionemu.loginserver.dao.BannedMacDAO {
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.1f75cfd0c929", address, e));
+            log.error(I18n.get("log.1f75cfd0c929", address, e), e);
         }
 
         return false;
@@ -91,7 +91,7 @@ public class BannedMacDAO extends com.aionemu.loginserver.dao.BannedMacDAO {
                 log.info(I18n.get("log.bfee9964538a", deleted));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.043ac354757c", e));
+            log.error(I18n.get("log.043ac354757c", e), e);
         }
     }
 

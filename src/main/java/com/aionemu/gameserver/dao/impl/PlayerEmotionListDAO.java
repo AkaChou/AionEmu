@@ -63,7 +63,7 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.efdea0fd00c0", player.getObjectId(), e));
+            log.error(I18n.get("log.efdea0fd00c0", player.getObjectId(), e), e);
         }
 
         player.setEmotions(emotions);
@@ -87,7 +87,7 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.a9e6401899a7", player.getObjectId(), e));
+            log.error(I18n.get("log.a9e6401899a7", player.getObjectId(), e), e);
         }
     }
 
@@ -108,7 +108,7 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.6015c7958d1b", playerId, emotionId, e));
+            log.error(I18n.get("log.6015c7958d1b", playerId, emotionId, e), e);
         }
     }
 
@@ -126,7 +126,7 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.c241415a012d", playerId, e));
+            log.error(I18n.get("log.c241415a012d", playerId, e), e);
         }
     }
 
@@ -146,7 +146,7 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.7659e80a0909", e));
+            log.error(I18n.get("log.7659e80a0909", e), e);
         }
     }
 
@@ -188,7 +188,7 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
             con.commit();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.615e4d6f5316", player.getObjectId(), e));
+            log.error(I18n.get("log.615e4d6f5316", player.getObjectId(), e), e);
         }
     }
 

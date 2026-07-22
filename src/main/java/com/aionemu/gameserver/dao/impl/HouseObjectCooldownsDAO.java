@@ -62,7 +62,7 @@ public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObj
             player.getHouseObjectCooldownList().setHouseObjectCooldowns(cooldowns);
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.fa08c06bca16", player.getObjectId(), e));
+            log.error(I18n.get("log.fa08c06bca16", player.getObjectId(), e), e);
         }
     }
 
@@ -119,7 +119,7 @@ public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObj
             con.commit();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.4f3f74a85b17", player.getObjectId(), e));
+            log.error(I18n.get("log.4f3f74a85b17", player.getObjectId(), e), e);
         }
     }
 
@@ -153,7 +153,7 @@ public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObj
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.7fc2432f11b4", e));
+            log.error(I18n.get("log.7fc2432f11b4", e), e);
         }
     }
 }

@@ -33,7 +33,7 @@ public class AccountPlayTimeDAO extends com.aionemu.loginserver.dao.AccountPlayT
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.f2c20e9730e3", accountId, e));
+            log.error(I18n.get("log.f2c20e9730e3", accountId, e), e);
         }
 
         return false;

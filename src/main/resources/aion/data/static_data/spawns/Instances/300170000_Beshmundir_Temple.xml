@@ -639,10 +639,6 @@
 			<spot x="1602.91" y="1492.02" z="328.137"/>
 			<spot x="1434.94" y="1477.77" z="301.334"/>
 		</spawn>
-		<!-- Shadowshift -->
-		<spawn npc_id="216247">
-			<spot x="1394.38" y="458.539" z="243.317"/>
-		</spawn>
 		<!-- Manadar Slayer -->
 		<spawn npc_id="216198">
 			<spot x="1127.83" y="564.202" z="233.883"/>
@@ -880,22 +876,10 @@
 			<spot x="1305.31" y="517.812" z="240.145"/>
 			<spot x="1388.43" y="475.367" z="243.239"/>
 		</spawn>
-	    <!-- Vehala The Cursed -->
-        <spawn npc_id="216161">
-            <spot x="1101.62" y="34.2592" z="234.361" h="31"/>
-        </spawn>
-		<!-- The Plaguebearer -->
-        <spawn npc_id="216163">
-            <spot x="1042.79" y="81.730003" z="233.84" entity_id="342"/>
-        </spawn>
 		<!-- The Soulcaller -->
 	    <spawn npc_id="216240">
 		    <spot x="1357.25" y="388.925" z="249.261" h="90"/>        
         </spawn>
-		<!-- Taros Lifebane -->
-	    <spawn npc_id="216248">
-		    <spot x="1369.5013" y="1292.1421" z="304.13388" h="100" walker_id="TAROSLIFEBANEBESHMUNDIRTEMPLEGARDENOFDEA"/>
-	    </spawn>
 		<!-- Temadaro -->
 	    <spawn npc_id="216586">
 		    <spot x="939.025" y="245.078" z="226.623" h="30"/>

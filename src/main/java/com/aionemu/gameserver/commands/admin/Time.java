@@ -61,7 +61,7 @@ public class Time extends AdminCommand
 		time = hour - time;
 		time = GameTimeManager.getGameTime().getTime() + (60 * time) - min;
 		GameTimeManager.reloadTime(time);
-		GameTimeManager.getGameTime().calculateDayTime();
+		GameTimeManager.getGameTime().checkDayTimeChange();
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {

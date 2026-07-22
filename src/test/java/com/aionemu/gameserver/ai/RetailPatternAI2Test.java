@@ -127,6 +127,25 @@ class RetailPatternAI2Test {
 			DataManager.WALKER_DATA.merge((WalkerData) JAXBContext.newInstance(WalkerData.class).createUnmarshaller()
 				.unmarshal(Path.of("src/main/resources/aion/data/static_data/npc_walker/300100000_Steel Rake_Walkers.xml")
 					.toFile()));
+			Pattern dranaLump = DataManager.RETAIL_AI_DATA.getPattern(281178);
+			assertEquals("IDLF1_SpallerCtrl", dranaLump.name());
+			assertTrue(RetailPatternAI2.supports(dranaLump));
+			for (int npcId : new int[] { 214849, 214850, 214851, 214864, 214894, 214895, 214896, 214897,
+					215280, 215281, 215284, 237372, 237373, 281178, 281258, 281259,
+					700439, 700440, 700441, 700442, 700443, 700444, 700445, 700446, 700447 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 300040000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				if (npcId == 214864) {
+					npc.spawnTemplate.setWalkerId("retail:300040000:idlf1_d_path_ghostelim_50_001");
+				}
+				npc.skillList = new NpcSkillList(npc);
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"300040000:" + npcId);
+			}
 			for (int worldId : new int[] { 310160000, 320160000 }) {
 				for (int npcId : new int[] { 248025, 248401, 248404, 248405, 248406, 248407, 248440, 248441, 248442, 248443 }) {
 					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
@@ -138,13 +157,22 @@ class RetailPatternAI2Test {
 						worldId + ":" + npcId);
 				}
 			}
-			for (int npcId : new int[] { 216238, 216239, 216245, 216246, 216250, 216263, 216264,
+			for (int npcId : new int[] { 216157, 216158, 216159, 216160, 216161, 216162, 216163, 216164, 216165, 216168, 216169, 216182, 216183,
+					216238, 216239, 216240, 216241, 216245, 216246, 216247, 216248, 216249, 216250, 216263, 216264,
 					216583, 216584, 216585, 216586, 216739, 216740 }) {
 				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
 				npc.npcId = npcId;
 				npc.worldId = 300170000;
 				npc.objectTemplate = new NpcTemplate();
 				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				npc.spawnTemplate.setWalkerId(switch (npcId) {
+					case 216161 -> "retail:300170000:path_12";
+					case 216163 -> "retail:300170000:hugeslime_path";
+					case 216247 -> "retail:300170000:path_8";
+					case 216248 -> "retail:300170000:path_6";
+					default -> null;
+				});
 				npc.skillList = new NpcSkillList(npc);
 				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 					"300170000:" + npcId);
@@ -163,12 +191,16 @@ class RetailPatternAI2Test {
 				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 					"300460000:" + npcId);
 			}
-			for (int npcId : new int[] { 856460, 855955, 855765, 855788, 855811, 855834 }) {
+			for (int npcId : new int[] { 856305, 856460, 855955, 855765, 855788, 855811, 855834 }) {
 				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
 				npc.npcId = npcId;
 				npc.worldId = 301500000;
 				npc.objectTemplate = new NpcTemplate();
 				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				if (npcId == 856305) {
+					npc.spawnTemplate.setWalkerId("retail:301500000:mob_path_01");
+				}
 				npc.skillList = new NpcSkillList(npc);
 				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 					"301500000:" + npcId);
@@ -1057,6 +1089,18 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void resetCancelsQueuedPatternActions() throws ReflectiveOperationException {
+		RetailPatternAI2 ai = new RetailPatternAI2();
+		CompletableFuture<Void> queued = new CompletableFuture<>();
+		addActionTask(ai, queued);
+
+		resetPatternState(ai);
+
+		assertTrue(queued.isCancelled());
+		assertTrue(actionTasks(ai).isEmpty());
+	}
+
+	@Test
 	void supportsRetailFleeLifecycle() {
 		Rule flee = new Rule(1, "DIRECT", List.of(), List.of(new Operation("flee_from",
 			Map.of("from", "OBJI_ATTACKER", "seconds", "5", "push_state", "TRUE"))));
@@ -1669,6 +1713,32 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void treatsHostileNpcAsEnemyForRetailSeenNpcEvents() throws ReflectiveOperationException {
+		Pattern pattern = new Pattern("spaller_ctrl", Map.of("on_see_npc_move", List.of(new Rule(1, "DIRECT",
+			List.of(
+				new Operation("is_enemy", Map.of("who", "OBJI_SEEN")),
+				new Operation("set_flag_var", Map.of("flagvar_indicator", "FLAGVARI_ALPHA_1"))),
+			List.of(new Operation("do_nothing", Map.of()))))));
+		ObjenesisStd objenesis = new ObjenesisStd();
+		HostileNpc owner = objenesis.newInstance(HostileNpc.class);
+		owner.setLifeStats(objenesis.newInstance(NpcLifeStats.class));
+		HostileNpc seen = objenesis.newInstance(HostileNpc.class);
+		seen.hostileFromNpc = true;
+		seen.x = 7;
+		RetailPatternAI2 ai = new RetailPatternAI2();
+		setField(AbstractAI.class, ai, "owner", owner);
+		setField(RetailPatternAI2.class, ai, "pattern", pattern);
+
+		assertFalse(owner.isEnemy(seen));
+		assertFalse(RetailPatternAI2.inRetailSight(owner, seen, 6, 360));
+		seen.x = 5;
+		assertTrue(RetailPatternAI2.inRetailSight(owner, seen, 6, 360));
+		invokeEvent(ai, "on_see_npc_move", seen);
+
+		assertTrue(flags(ai).contains("FLAGVARI_ALPHA_1"));
+	}
+
+	@Test
 	void supportsRetailSkillAvailabilityAndSpelledCategory() {
 		Rule rule = new Rule(1, "DIRECT", List.of(
 			new Operation("is_skill_count_left", Map.of("skill", "SKILLI_INDEX_1")),
@@ -1873,6 +1943,33 @@ class RetailPatternAI2Test {
 		public Creature getMaster() {
 			return master == null ? this : master;
 		}
+	}
+
+	private static final class HostileNpc extends Npc {
+
+		private boolean hostileFromNpc;
+		private float x;
+
+		private HostileNpc() {
+			super(0, null, null, null);
+		}
+
+		@Override
+		public boolean isEnemyFrom(Npc npc) {
+			return false;
+		}
+
+		@Override
+		public boolean isHostileFrom(Npc npc) {
+			return hostileFromNpc;
+		}
+
+		@Override public int getWorldId() { return 300040000; }
+		@Override public int getInstanceId() { return 1; }
+		@Override public float getX() { return x; }
+		@Override public float getY() { return 0; }
+		@Override public float getZ() { return 0; }
+		@Override public byte getHeading() { return 0; }
 	}
 
 	private static final class PartyNpc extends Npc {
@@ -2142,6 +2239,13 @@ class RetailPatternAI2Test {
 		Field field = RetailPatternAI2.class.getDeclaredField("actionTasks");
 		field.setAccessible(true);
 		return Set.copyOf((Set<Future<?>>) field.get(ai));
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void addActionTask(RetailPatternAI2 ai, Future<?> task) throws ReflectiveOperationException {
+		Field field = RetailPatternAI2.class.getDeclaredField("actionTasks");
+		field.setAccessible(true);
+		((Set<Future<?>>) field.get(ai)).add(task);
 	}
 
 	@SuppressWarnings("unchecked")

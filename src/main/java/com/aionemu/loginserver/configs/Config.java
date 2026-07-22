@@ -169,7 +169,7 @@ public class Config {
             ConfigurableProcessor.process(DatabaseConfig.class, props);
 
         } catch (Exception e) {
-            log.error(I18n.get("log.a4dc4f436c94", e));
+            log.error(I18n.get("log.a4dc4f436c94", e), e);
             throw new Error("Can't load loginserver configuration", e);
         }
     }

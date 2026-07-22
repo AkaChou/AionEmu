@@ -65,7 +65,7 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
             String after = realid.split("@")[1];
             identifier = after.getBytes("UTF-16le");
         } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.3c04a2cb63c1", playerId, e));
+            log.error(I18n.get("log.3c04a2cb63c1", playerId, e), e);
         }
     }
 
@@ -78,7 +78,7 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
         try {
             chatService.registerPlayerConnection(playerId, token, identifier, clientChannelHandler, realName);
         } catch (UnsupportedEncodingException e) {
-            log.error(I18n.get("log.fccabf8023e0", playerId, e));
+            log.error(I18n.get("log.fccabf8023e0", playerId, e), e);
         }
     }
 }

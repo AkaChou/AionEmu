@@ -56,7 +56,7 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.400851d054d8", player.getObjectId(), e));
+            log.error(I18n.get("log.400851d054d8", player.getObjectId(), e), e);
         }
     }
 
@@ -82,7 +82,7 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.81d2b7934965", playerId, e));
+            log.error(I18n.get("log.81d2b7934965", playerId, e), e);
             return false;
         }
     }
@@ -101,7 +101,7 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.b01e2acd651b", e));
+            log.error(I18n.get("log.b01e2acd651b", e), e);
             return false;
         }
     }
@@ -138,7 +138,7 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
             }
             con.commit();
         } catch (SQLException e) {
-            log.error(I18n.get("log.3330e011e639", player.getObjectId(), e));
+            log.error(I18n.get("log.3330e011e639", player.getObjectId(), e), e);
         }
         return success;
     }
@@ -166,7 +166,7 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.ee22970ca710", player.getObjectId(), e));
+            log.error(I18n.get("log.ee22970ca710", player.getObjectId(), e), e);
             return false;
         }
     }
@@ -193,7 +193,7 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.88e530b6f3ac", obj, e));
+            log.error(I18n.get("log.88e530b6f3ac", obj, e), e);
             return false;
         }
     }

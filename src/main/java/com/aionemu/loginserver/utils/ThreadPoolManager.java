@@ -259,7 +259,7 @@ public final class ThreadPoolManager {
 
             success |= awaitTermination(10000);
         } catch (InterruptedException e) {
-            log.warn(I18n.get("log.8f2ed10ffefe", e));
+            log.warn(I18n.get("log.8f2ed10ffefe", e), e);
             Thread.currentThread().interrupt();
         }
 

@@ -223,7 +223,7 @@ public class XmlDataLoader {
 		 */
 		catch (Exception e) {
 			progressReporter.failed();
-			log.error(I18n.get("log.a30b9e9db6fa", e));
+			log.error(I18n.get("log.a30b9e9db6fa", e), e);
 		}
 		return null;
 	}
@@ -370,7 +370,7 @@ public class XmlDataLoader {
 			log.info(I18n.get("log.9ca73c5c206f", System.currentTimeMillis() - unmarshalStart));
 			return data;
 		} catch (Exception e) {
-			log.error(I18n.get("log.ffb975771b9c", e));
+			log.error(I18n.get("log.ffb975771b9c", e), e);
 			throw new Error("Error while loading item data", e);
 		}
 	}
@@ -459,7 +459,7 @@ public class XmlDataLoader {
 			log.info(I18n.get("log.1ae1bb91733a", System.currentTimeMillis() - validationStart));
 		} catch (Throwable t) {
 			cachedXml.setLastModified(0);
-			log.error(I18n.get("log.9f39c9471c04", cachedXml.getPath(), t));
+			log.error(I18n.get("log.9f39c9471c04", cachedXml.getPath(), t), t);
 			throw new Error("Error validating static data cache", t);
 		}
 	}
@@ -557,7 +557,7 @@ public class XmlDataLoader {
 		try (FileWriter writer = new FileWriter(countsFile)) {
 			props.store(writer, "static_data section entry counts (avoids re-scanning XML on warm start)");
 		} catch (IOException e) {
-			log.warn(I18n.get("log.62f6cc254c59", countsFile.getPath(), e));
+			log.warn(I18n.get("log.62f6cc254c59", countsFile.getPath(), e), e);
 		}
 	}
 
@@ -673,7 +673,7 @@ public class XmlDataLoader {
 		try {
 			schema = sf.newSchema(Config.dataFile(XML_SCHEMA_FILE));
 		} catch (SAXException saxe) {
-			log.error(I18n.get("log.b9e774d9c3cf", saxe));
+			log.error(I18n.get("log.b9e774d9c3cf", saxe), saxe);
 			throw new Error("Error while getting schema", saxe);
 		}
 		return schema;
@@ -705,7 +705,7 @@ public class XmlDataLoader {
 		try {
 			return merger.process();
 		} catch (Exception e) {
-			log.error(I18n.get("log.f0ac59daadde", e));
+			log.error(I18n.get("log.f0ac59daadde", e), e);
 			throw new Error("Error while merging xml files", e);
 		}
 	}

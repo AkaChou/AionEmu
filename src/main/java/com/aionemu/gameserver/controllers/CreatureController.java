@@ -610,7 +610,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 				return skill.useSkill();
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.1f5bd67c5dae", skillId, ex));
+			log.error(I18n.get("log.1f5bd67c5dae", skillId, ex), ex);
 		}
 		return false;
 	}

@@ -73,7 +73,7 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.8532fdc00af7", player.getObjectId(), e));
+            log.error(I18n.get("log.8532fdc00af7", player.getObjectId(), e), e);
         }
 
         player.getEffectController().broadCastEffects();
@@ -133,7 +133,7 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
             con.commit();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.db9bf45e33ff", player.getObjectId(), e));
+            log.error(I18n.get("log.db9bf45e33ff", player.getObjectId(), e), e);
         }
     }
 
@@ -157,7 +157,7 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.5703018fc477", player.getObjectId(), e));
+            log.error(I18n.get("log.5703018fc477", player.getObjectId(), e), e);
         }
     }
 
@@ -177,7 +177,7 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.217d09d4548d", e));
+            log.error(I18n.get("log.217d09d4548d", e), e);
         }
     }
 

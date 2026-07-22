@@ -45,7 +45,7 @@ class GeneralUpdateTask implements Runnable {
 				for (House house : player.getHouses())
 					house.save();
 			} catch (Exception ex) {
-				log.error(I18n.get("log.fe1aeacc963e", player.getName(), ex));
+				log.error(I18n.get("log.fe1aeacc963e", player.getName(), ex), ex);
 			}
 	}
 }

@@ -170,6 +170,7 @@ public class ChatChannels {
         addTradeChannel("trade_LF_Prison");
         addTradeChannel("trade_DF_Prison");
         addTradeChannel("trade_Underpass");
+        addTradeChannel("trade_Underpass_M");
         addTradeChannel("trade_LDF4a");
         addTradeChannel("trade_LDF4b");
         addTradeChannel("trade_Tiamat_Down");
@@ -350,6 +351,7 @@ public class ChatChannels {
         addRegionChannel(510010000, "public_LF_Prison");
         addRegionChannel(520010000, "public_DF_Prison");
         addRegionChannel(600010000, "public_Underpass");
+        addRegionChannel(600110000, "public_Underpass_M");
         addRegionChannel(600020000, "public_LDF4a");
         addRegionChannel(600030000, "public_LDF4b");
         addRegionChannel(600040000, "public_Tiamat_Down");

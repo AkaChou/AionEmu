@@ -105,7 +105,7 @@ public class CAPTCHAUtil {
 			// 资源释放 / resource dispose
 			g2.dispose();
 		} catch (Exception e) {
-			log.error(I18n.get("log.1e24158b9157", e));
+			log.error(I18n.get("log.1e24158b9157", e), e);
 			bImg = null;
 		}
 		return bImg;

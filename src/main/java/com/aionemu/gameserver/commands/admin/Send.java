@@ -78,7 +78,7 @@ public class Send extends AdminCommand {
 			packetsTemplate = (Packets) unmarshaller.unmarshal(packetsData);
 		}
 		catch (JAXBException e) {
-			log.error(I18n.get("log.79e5f0e82fd8", e));
+			log.error(I18n.get("log.79e5f0e82fd8", e), e);
 			return;
 		}
 

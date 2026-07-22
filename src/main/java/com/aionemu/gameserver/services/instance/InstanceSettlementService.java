@@ -392,7 +392,7 @@ public final class InstanceSettlementService {
 					completed++;
 				}
 			} catch (RuntimeException e) {
-				log.warn(I18n.get("log.f4d91bd76720", player.getObjectId(), pending.rewardKey(), e));
+				log.warn(I18n.get("log.f4d91bd76720", player.getObjectId(), pending.rewardKey(), e), e);
 			}
 		}
 		return completed;

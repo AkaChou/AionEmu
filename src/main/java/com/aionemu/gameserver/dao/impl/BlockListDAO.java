@@ -57,7 +57,7 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 			stmt.setString(3, reason);
 			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
-			log.error(I18n.get("log.5b7ace3c98ed", playerObjId, objIdToBlock, e));
+			log.error(I18n.get("log.5b7ace3c98ed", playerObjId, objIdToBlock, e), e);
 			return false;
 		}
 	}
@@ -81,7 +81,7 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 			stmt.setInt(2, objIdToDelete);
 			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
-			log.error(I18n.get("log.4721ed6a731b", playerObjId, objIdToDelete, e));
+			log.error(I18n.get("log.4721ed6a731b", playerObjId, objIdToDelete, e), e);
 			return false;
 		}
 	}
@@ -115,7 +115,7 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.54a6187d47e3", player.getObjectId(), e));
+			log.error(I18n.get("log.54a6187d47e3", player.getObjectId(), e), e);
 		}
 		return new BlockList(list);
 	}
@@ -140,7 +140,7 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 			stmt.setInt(3, blockedPlayerObjId);
 			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
-			log.error(I18n.get("log.efb77a6431a9", playerObjId, blockedPlayerObjId, e));
+			log.error(I18n.get("log.efb77a6431a9", playerObjId, blockedPlayerObjId, e), e);
 			return false;
 		}
 	}

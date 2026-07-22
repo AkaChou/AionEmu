@@ -57,7 +57,7 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
             stmt.setInt(2, unique);
             stmt.executeUpdate();
         } catch (Exception e) {
-            log.error(I18n.get("log.865c33530603", unique, e));
+            log.error(I18n.get("log.865c33530603", unique, e), e);
         }
     }
 
@@ -78,7 +78,7 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
             stmt.setInt(2, unique);
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
-            log.error(I18n.get("log.248cee6e9874", unique, e));
+            log.error(I18n.get("log.248cee6e9874", unique, e), e);
             return false;
         }
     }
@@ -111,7 +111,7 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.5f1e9111257c", playerId, e));
+            log.error(I18n.get("log.5f1e9111257c", playerId, e), e);
         }
         return list;
     }
@@ -138,7 +138,7 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
             }
             stmt.executeBatch();
         } catch (Exception e) {
-            log.error(I18n.get("log.563cfc162266", e));
+            log.error(I18n.get("log.563cfc162266", e), e);
         }
     }
 }

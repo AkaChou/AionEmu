@@ -339,7 +339,7 @@ public class MailService {
 				throw e;
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.d40fe011fd92", sender.getObjectId(), recipientCommonData.getPlayerObjId(), e));
+			log.error(I18n.get("log.d40fe011fd92", sender.getObjectId(), recipientCommonData.getPlayerObjId(), e), e);
 			return false;
 		}
 
@@ -481,7 +481,7 @@ public class MailService {
 				throw e;
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.9b61ee4df55e", player.getObjectId(), letter.getObjectId(), e));
+			log.error(I18n.get("log.9b61ee4df55e", player.getObjectId(), letter.getObjectId(), e), e);
 			return false;
 		}
 		inventoryDAO.markStored(items);

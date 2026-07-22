@@ -59,7 +59,7 @@ public class ThievesGuildService {
 			player.setThieves(thieves);
 			log.info(I18n.get("log.b578983bb7dd", player.getThieves().getPlayerId()));
 		} catch (Exception ex) {
-			log.error(I18n.get("log.c1bcc321b6d5", player.getName(), "]", ex));
+			log.error(I18n.get("log.c1bcc321b6d5", player.getName(), "]", ex), ex);
 		}
 	}
 

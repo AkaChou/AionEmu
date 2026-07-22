@@ -110,7 +110,7 @@ public class Transaction {
         try {
             this.connection.commit();
         } catch (SQLException var5) {
-            log.warn(I18n.get("log.626246becc90", var5));
+            log.warn(I18n.get("log.626246becc90", var5), var5);
             try {
                 if (rollBackToOnError != null) {
                     this.connection.rollback(rollBackToOnError);
@@ -118,7 +118,7 @@ public class Transaction {
                     this.connection.rollback();
                 }
             } catch (SQLException var4) {
-                log.error(I18n.get("log.5467e30be03b", var4));
+                log.error(I18n.get("log.5467e30be03b", var4), var4);
             }
         }
         this.connection.setAutoCommit(true);

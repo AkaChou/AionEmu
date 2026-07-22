@@ -64,7 +64,7 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.7f727baa8f02", playerId, e));
+            log.error(I18n.get("log.7f727baa8f02", playerId, e), e);
         }
 
         return titleList;
@@ -91,7 +91,7 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
             return result > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.8893f821f5fc", player.getObjectId(), entry.getId(), e));
+            log.error(I18n.get("log.8893f821f5fc", player.getObjectId(), entry.getId(), e), e);
             return false;
         }
     }
@@ -116,7 +116,7 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
             return result > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.4ff4bda7010a", playerId, titleId, e));
+            log.error(I18n.get("log.4ff4bda7010a", playerId, titleId, e), e);
             return false;
         }
     }
@@ -137,7 +137,7 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
             return true;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.a782e260641e", playerId, e));
+            log.error(I18n.get("log.a782e260641e", playerId, e), e);
             return false;
         }
     }
@@ -182,7 +182,7 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
             return true;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.83d8bd1f33ce", player.getObjectId(), e));
+            log.error(I18n.get("log.83d8bd1f33ce", player.getObjectId(), e), e);
             return false;
         }
     }
@@ -203,7 +203,7 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.1470750923e1", e));
+            log.error(I18n.get("log.1470750923e1", e), e);
         }
     }
 

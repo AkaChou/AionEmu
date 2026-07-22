@@ -40,7 +40,7 @@ public class GameServersDAO extends com.aionemu.loginserver.dao.GameServersDAO {
                 result.put(id, gsi);
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.cb987d22f8fa", e));
+            log.error(I18n.get("log.cb987d22f8fa", e), e);
         }
 
         return result;

@@ -41,7 +41,7 @@ public class SvStatsDAO extends com.aionemu.loginserver.dao.SvStatsDAO {
                 insertServerStats(server, status, current, max);
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.e8405213aab7", server, e));
+            log.error(I18n.get("log.e8405213aab7", server, e), e);
         }
     }
 
@@ -66,7 +66,7 @@ public class SvStatsDAO extends com.aionemu.loginserver.dao.SvStatsDAO {
             stmt.setInt(4, max);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.ccd3f03c62c4", server, e));
+            log.error(I18n.get("log.ccd3f03c62c4", server, e), e);
         }
     }
 
@@ -84,7 +84,7 @@ public class SvStatsDAO extends com.aionemu.loginserver.dao.SvStatsDAO {
                 insertServerStats(server, status, current, 0);
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.edce6e5f9a35", server, e));
+            log.error(I18n.get("log.edce6e5f9a35", server, e), e);
         }
     }
 
@@ -97,7 +97,7 @@ public class SvStatsDAO extends com.aionemu.loginserver.dao.SvStatsDAO {
             stmt.setInt(2, current);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.4b7fedeec762", e));
+            log.error(I18n.get("log.4b7fedeec762", e), e);
         }
     }
 

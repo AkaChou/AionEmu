@@ -215,7 +215,7 @@ public class LoginServer {
 		} catch (Exception e) {
 			loginServer = null;
 			shutdownNettyClient();
-			log.info(I18n.get("log.26fdd67c39d5", e.getMessage()));
+			log.info(I18n.get("log.26fdd67c39d5", e.getMessage()), e);
 			return false;
 		}
 	}

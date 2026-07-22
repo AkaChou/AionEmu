@@ -63,7 +63,7 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.e6377177b72f", e));
+            log.error(I18n.get("log.e6377177b72f", e), e);
             success = false;
         }
 
@@ -89,7 +89,7 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
             return updated > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.00e03bf592f1", location.getId(), e));
+            log.error(I18n.get("log.00e03bf592f1", location.getId(), e), e);
             return false;
         }
     }
@@ -112,7 +112,7 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
             return inserted > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.31d1da1209bd", location.getId(), e));
+            log.error(I18n.get("log.31d1da1209bd", location.getId(), e), e);
             return false;
         }
     }
@@ -147,7 +147,7 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.2d182cfdc4ca", e));
+            log.error(I18n.get("log.2d182cfdc4ca", e), e);
             return false;
         }
     }
@@ -179,7 +179,7 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.f5cd772ab16f", race, e));
+            log.error(I18n.get("log.f5cd772ab16f", race, e), e);
         }
 
         return locations;
@@ -214,7 +214,7 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.7fe78b3d8033", e));
+            log.error(I18n.get("log.7fe78b3d8033", e), e);
             return false;
         }
     }

@@ -140,7 +140,7 @@ public class DropLists {
 			transFormer.transform(domSource, xmlResult);
 			log.info(I18n.get("log.88c280779a61", file.getAbsolutePath()));
 		} catch (Exception e) {
-			log.error(I18n.get("log.d81d6a6f69bf", e));
+			log.error(I18n.get("log.d81d6a6f69bf", e), e);
 		} finally {
 		}
 	}

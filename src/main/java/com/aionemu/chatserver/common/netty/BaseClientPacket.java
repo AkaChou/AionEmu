@@ -52,7 +52,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
             }
             return true;
         } catch (Exception ex) {
-            log.error(I18n.get("log.909185c9f5d6", this, ex));
+            log.error(I18n.get("log.909185c9f5d6", this, ex), ex);
             return false;
         }
 
@@ -66,7 +66,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
         try {
             runImpl();
         } catch (Exception ex) {
-            log.error(I18n.get("log.0567970c60e1", this, ex));
+            log.error(I18n.get("log.0567970c60e1", this, ex), ex);
         }
     }
 

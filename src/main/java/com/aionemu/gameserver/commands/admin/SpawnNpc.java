@@ -69,7 +69,7 @@ public class SpawnNpc extends AdminCommand {
 				DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
 			}
 			catch (IOException e) {
-				log.error(I18n.get("log.b9f71a8a3b96", visibleObject.getObjectId(), e));
+				log.error(I18n.get("log.b9f71a8a3b96", visibleObject.getObjectId(), e), e);
 				PacketSendUtility.sendMessage(admin, "Could not save spawn");
 			}
 		}

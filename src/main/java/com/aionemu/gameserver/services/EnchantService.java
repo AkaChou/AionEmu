@@ -1153,7 +1153,7 @@ public class EnchantService {
 				player.getGameStats().addEffect(item, modifiers);
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.d3559bc2bf1a", ex));
+			log.error(I18n.get("log.d3559bc2bf1a", ex), ex);
 		}
 	}
 

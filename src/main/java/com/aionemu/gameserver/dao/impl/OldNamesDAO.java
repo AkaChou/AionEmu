@@ -46,7 +46,7 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 				return rs.getInt("cnt") > 0;
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.b006f4717fd6", name, ", is used, returning positive result", e));
+			log.error(I18n.get("log.b006f4717fd6", name, ", is used, returning positive result", e), e);
 			return true;
 		}
 	}
@@ -69,7 +69,7 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 			stmt.setString(3, newname);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.0f01a0baefea", e));
+			log.error(I18n.get("log.0f01a0baefea", e), e);
 		}
 	}
 

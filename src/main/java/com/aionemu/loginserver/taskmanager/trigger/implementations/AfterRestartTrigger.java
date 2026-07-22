@@ -28,7 +28,7 @@ public class AfterRestartTrigger extends TaskFromDBTrigger {
                 isBlocking = Boolean.parseBoolean(this.params[0]);
                 return true;
             } catch (Exception e) {
-                log.warn(I18n.get("log.1d3a1baa4ece", e));
+                log.warn(I18n.get("log.1d3a1baa4ece", e), e);
             }
         }
         log.warn(I18n.get("log.39cfac3b050e"));

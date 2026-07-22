@@ -173,7 +173,7 @@ public class MinionController extends VisibleObjectController<Minion> {
 
             } catch (Exception e) {
                 log.error(I18n.get("log.77d741ca3881", player == null ? 0 : player.getObjectId(),
-                        getOwner() == null ? 0 : getOwner().getObjectId(), e));
+                        getOwner() == null ? 0 : getOwner().getObjectId(), e), e);
             }
         }
     }
@@ -233,7 +233,7 @@ public class MinionController extends VisibleObjectController<Minion> {
                 }
 
             } catch (Exception e) {
-                log.error(I18n.get("log.d83820e1fe0d", player == null ? 0 : player.getObjectId(), getOwner() == null ? 0 : getOwner().getObjectId(), e));
+                log.error(I18n.get("log.d83820e1fe0d", player == null ? 0 : player.getObjectId(), getOwner() == null ? 0 : getOwner().getObjectId(), e), e);
             }
         }
     }

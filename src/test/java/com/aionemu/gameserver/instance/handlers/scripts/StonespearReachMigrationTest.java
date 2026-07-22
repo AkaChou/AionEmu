@@ -50,6 +50,14 @@ class StonespearReachMigrationTest {
 
 	@Test
 	void retailDataOwnsStartupWavesBossesScoresAndSettlement() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/ai/instance/stoneSpearReach/Macadamic_JesterAI2.java")));
+		String npcTemplate = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/npcs/npc_template.xml"));
+		assertFalse(npcTemplate.contains("ai=\"Macadamic_Jester\""));
+		String customWalkers = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/npc_walker/custom_npc_walker.xml"));
+		assertFalse(customWalkers.contains("route_id=\"301500000\""));
 		String definitions = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
 		String world = worldConditions(definitions, 301500000);

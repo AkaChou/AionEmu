@@ -62,7 +62,7 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.7470c83eff31", playerId, e));
+			log.error(I18n.get("log.7470c83eff31", playerId, e), e);
 		}
 		return thieves;
 	}
@@ -91,7 +91,7 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 			stmt.setTimestamp(8, thieves.getRevengeDate());
 			return stmt.executeUpdate() > 0;
 		} catch (Exception e) {
-			log.error(I18n.get("log.ed90140836fb", e));
+			log.error(I18n.get("log.ed90140836fb", e), e);
 			return false;
 		}
 	}
@@ -117,7 +117,7 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 			stmt.setInt(8, thieves.getPlayerId());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.887d6060852b", thieves.getPlayerId(), e));
+			log.error(I18n.get("log.887d6060852b", thieves.getPlayerId(), e), e);
 		}
 	}
 

@@ -68,9 +68,9 @@ public class OnClassLoadUnloadListener implements ClassListener {
                     try {
                         m.invoke(null);
                     } catch (IllegalAccessException e) {
-                        log.error(I18n.get("log.9638f49038db", m.getName(), m.getDeclaringClass().getName(), e));
+                        log.error(I18n.get("log.9638f49038db", m.getName(), m.getDeclaringClass().getName(), e), e);
                     } catch (InvocationTargetException e) {
-                        log.error(I18n.get("log.fa61d95a8c72", m.getName(), m.getDeclaringClass().getName(), e));
+                        log.error(I18n.get("log.fa61d95a8c72", m.getName(), m.getDeclaringClass().getName(), e), e);
                     }
                 }
                 

@@ -289,7 +289,7 @@ public class PlayerTransferService {
 			}
 			return true;
 		} catch (SQLException e) {
-			log.error(I18n.get("log.e0628bfd2f2b", task == null ? 0 : task.id, e));
+			log.error(I18n.get("log.e0628bfd2f2b", task == null ? 0 : task.id, e), e);
 			return false;
 		}
 	}

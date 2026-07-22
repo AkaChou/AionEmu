@@ -53,7 +53,7 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.81bdb310b4b8", player.getObjectId(), e));
+            log.error(I18n.get("log.81bdb310b4b8", player.getObjectId(), e), e);
         }
     }
 
@@ -79,7 +79,7 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
             return result > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.0ec4dcbf87ba", playerId, e));
+            log.error(I18n.get("log.0ec4dcbf87ba", playerId, e), e);
             return false;
         }
     }
@@ -102,7 +102,7 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
             return result > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.f096dcaaec6b", playerId, e));
+            log.error(I18n.get("log.f096dcaaec6b", playerId, e), e);
             return false;
         }
     }
@@ -133,7 +133,7 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
             return true;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.7aefe66a2cfb", playerId, e));
+            log.error(I18n.get("log.7aefe66a2cfb", playerId, e), e);
             return false;
         }
     }

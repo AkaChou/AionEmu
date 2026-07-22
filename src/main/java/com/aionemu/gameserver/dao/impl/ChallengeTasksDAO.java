@@ -74,7 +74,7 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.617c98736ef3", e));
+            log.error(I18n.get("log.617c98736ef3", e), e);
         }
         return tasks;
     }
@@ -122,7 +122,7 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
 
             quest.setPersistentState(PersistentState.UPDATED);
         } catch (SQLException e) {
-            log.error(I18n.get("log.037d4d23c971", e));
+            log.error(I18n.get("log.037d4d23c971", e), e);
         }
     }
 
@@ -146,7 +146,7 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
 
             quest.setPersistentState(PersistentState.UPDATED);
         } catch (SQLException e) {
-            log.error(I18n.get("log.b3f513aa406e", e));
+            log.error(I18n.get("log.b3f513aa406e", e), e);
         }
     }
 

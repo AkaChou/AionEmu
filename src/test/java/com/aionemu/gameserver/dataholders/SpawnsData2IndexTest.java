@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
+import com.aionemu.gameserver.model.templates.spawns.SpawnSearchResult;
 
 class SpawnsData2IndexTest {
 
@@ -52,6 +53,31 @@ class SpawnsData2IndexTest {
 	}
 
 	@Test
+	void skipsEmptySpawnWhenSearchingForNpc() throws Exception {
+		SpawnsData2 oldSpawns = DataManager.SPAWNS_DATA2;
+		WorldMapsData oldWorldMaps = DataManager.WORLD_MAPS_DATA;
+		try {
+			SpawnsData2 data = unmarshal("""
+				<spawns>
+					<spawn_map map_id="100"><spawn npc_id="101"/></spawn_map>
+					<spawn_map map_id="200"><spawn npc_id="101"><spot x="1" y="2" z="3" h="0"/></spawn></spawn_map>
+				</spawns>
+				""");
+			DataManager.SPAWNS_DATA2 = data;
+			DataManager.WORLD_MAPS_DATA = unmarshalWorldMaps(
+				"<world_maps><map id=\"100\" flags=\"RECALL\"/><map id=\"200\" flags=\"RECALL\"/></world_maps>");
+
+			SpawnSearchResult result = data.getFirstSpawnByNpcId(100, 101);
+
+			assertEquals(200, result.getWorldId());
+			assertEquals(1, result.getSpot().getX());
+		} finally {
+			DataManager.SPAWNS_DATA2 = oldSpawns;
+			DataManager.WORLD_MAPS_DATA = oldWorldMaps;
+		}
+	}
+
+	@Test
 	void reloadsSpawnFilesFromNestedDirectories(@TempDir Path directory) throws Exception {
 		Files.writeString(directory.resolve("first.xml"), """
 			<spawns><spawn_map map_id="100"><spawn npc_id="101"/></spawn_map></spawns>
@@ -70,6 +96,11 @@ class SpawnsData2IndexTest {
 
 	private static SpawnsData2 unmarshal(String xml) throws Exception {
 		return (SpawnsData2) JAXBContext.newInstance(SpawnsData2.class).createUnmarshaller()
+				.unmarshal(new StringReader(xml));
+	}
+
+	private static WorldMapsData unmarshalWorldMaps(String xml) throws Exception {
+		return (WorldMapsData) JAXBContext.newInstance(WorldMapsData.class).createUnmarshaller()
 				.unmarshal(new StringReader(xml));
 	}
 }

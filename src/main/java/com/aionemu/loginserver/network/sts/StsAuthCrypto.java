@@ -98,7 +98,7 @@ public final class StsAuthCrypto {
             log.info(I18n.get("log.63fcf9357a62", crypto.publicKeyFingerprint()));
             return crypto;
         } catch (Exception e) {
-            log.error(I18n.get("log.5f0f615f330b", e.toString()));
+            log.error(I18n.get("log.5f0f615f330b", e.toString()), e);
             return null;
         }
     }

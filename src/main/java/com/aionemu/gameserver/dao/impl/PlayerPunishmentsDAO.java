@@ -58,7 +58,7 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 				}
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.fa809bd49702", player.getObjectId(), e));
+			log.error(I18n.get("log.fa809bd49702", player.getObjectId(), e), e);
 		}
 	}
 
@@ -83,7 +83,7 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 			ps.setString(3, punishmentType.toString());
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.4d229d45c53e", player.getObjectId(), e));
+			log.error(I18n.get("log.4d229d45c53e", player.getObjectId(), e), e);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 			ps.setString(5, reason);
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.5863b35bdb03", playerId, e));
+			log.error(I18n.get("log.5863b35bdb03", playerId, e), e);
 		}
 	}
 
@@ -145,7 +145,7 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 			ps.setString(2, punishmentType.toString());
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.327e8c487d80", playerId, e));
+			log.error(I18n.get("log.327e8c487d80", playerId, e), e);
 		}
 	}
 
@@ -172,7 +172,7 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 				}
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.c1154040f3ec", playerId, e));
+			log.error(I18n.get("log.c1154040f3ec", playerId, e), e);
 		}
 		return charBan[0];
 	}

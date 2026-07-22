@@ -22,6 +22,6 @@ public class ThreadUncaughtExceptionHandler implements Thread.UncaughtExceptionH
      */
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        log.error(I18n.get("log.cf34446ab3a6", t.getName(), e, e));
+        log.error(I18n.get("log.cf34446ab3a6", t.getName(), e, e), e);
     }
 }

@@ -175,7 +175,7 @@ public class ThreadPoolManager implements Executor {
             generalPacketsThreadPool.awaitTermination(2, TimeUnit.SECONDS);
             log.info(I18n.get("log.4ed0b19373c7"));
         } catch (InterruptedException e) {
-            log.error(I18n.get("log.6fb05b263d35", e));
+            log.error(I18n.get("log.6fb05b263d35", e), e);
             Thread.currentThread().interrupt();
         }
     }

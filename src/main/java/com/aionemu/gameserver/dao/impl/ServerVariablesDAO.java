@@ -47,7 +47,7 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 				}
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.dc2937405e21", e));
+			log.error(I18n.get("log.dc2937405e21", e), e);
 		}
 		return 0;
 	}
@@ -70,7 +70,7 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 			ps.setString(2, String.valueOf(time));
 			return ps.executeUpdate() > 0;
 		} catch (SQLException e) {
-			log.error(I18n.get("log.38420527c181", e));
+			log.error(I18n.get("log.38420527c181", e), e);
 			return false;
 		}
 	}

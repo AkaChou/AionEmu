@@ -80,7 +80,7 @@ public class Shutdown extends Thread {
         try {
             NetConnector.shutdownIfInitialized();
         } catch (Throwable t) {
-            log.error(I18n.get("log.8a48277abecd", t));
+            log.error(I18n.get("log.8a48277abecd", t), t);
         }
 
         try {
@@ -93,19 +93,19 @@ public class Shutdown extends Thread {
         try {
             LoginCronServices.shutdownIfInitialized();
         } catch (Throwable t) {
-            log.error(I18n.get("log.203da8e5761c", t));
+            log.error(I18n.get("log.203da8e5761c", t), t);
         }
 
         /* Shuting down threadpools */
         try {
             LoginThreadPoolServices.threadPoolManager().shutdown();
         } catch (Throwable t) {
-            log.error(I18n.get("log.6fb05b263d35", t));
+            log.error(I18n.get("log.6fb05b263d35", t), t);
         }
         try {
             CommonsNetworkThreadPoolServices.threadPoolManager().shutdown();
         } catch (Throwable t) {
-            log.error(I18n.get("log.c02220991afd", t));
+            log.error(I18n.get("log.c02220991afd", t), t);
         }
 
         try {
@@ -113,20 +113,20 @@ public class Shutdown extends Thread {
                 DAOManager.getDAO(SvStatsDAO.class).update_SvStats_All_Offline(0, 0);
             }
         } catch (Throwable t) {
-            log.error(I18n.get("log.3c9d0695e9af", t));
+            log.error(I18n.get("log.3c9d0695e9af", t), t);
         }
 
         try {
             DAOManager.shutdown();
         } catch (Throwable t) {
-            log.error(I18n.get("log.432427ebe7b1", t));
+            log.error(I18n.get("log.432427ebe7b1", t), t);
         }
 
         /* Shuting down DB connections */
         try {
             DatabaseFactory.shutdown();
         } catch (Throwable t) {
-            log.error(I18n.get("log.206f2b67e382", t));
+            log.error(I18n.get("log.206f2b67e382", t), t);
         }
 
         if (!haltJvm) {

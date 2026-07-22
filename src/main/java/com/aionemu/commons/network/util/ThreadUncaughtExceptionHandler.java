@@ -22,7 +22,7 @@ public class ThreadUncaughtExceptionHandler implements UncaughtExceptionHandler 
      */
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        log.error(I18n.get("log.cf34446ab3a6", t.getName(), e, e));
+        log.error(I18n.get("log.cf34446ab3a6", t.getName(), e, e), e);
         if (e instanceof OutOfMemoryError) {
             // 特殊处理内存溢出异常
             // OutOfMemoryError 的特殊处理 / Special handling for OutOfMemoryError

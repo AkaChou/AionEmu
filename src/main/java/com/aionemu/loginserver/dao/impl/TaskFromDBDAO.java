@@ -57,11 +57,11 @@ public class TaskFromDBDAO extends com.aionemu.loginserver.dao.TaskFromDBDAO {
 
                     result.add(trigger);
                 } catch (Exception ex) {
-                    log.error(I18n.get("log.51b28941ecc3", ex.getMessage(), ex));
+                    log.error(I18n.get("log.51b28941ecc3", ex.getMessage(), ex), ex);
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.098a63ad15f2", e));
+            log.error(I18n.get("log.098a63ad15f2", e), e);
         }
 
         return result;

@@ -101,7 +101,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.e6130c3e4ab9", playerId, e));
+            log.error(I18n.get("log.e6130c3e4ab9", playerId, e), e);
         }
 
         return mailbox;
@@ -128,7 +128,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.fa6fe5701ebb", playerId, e));
+            log.error(I18n.get("log.fa6fe5701ebb", playerId, e), e);
         }
 
         return false;
@@ -193,7 +193,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.08b401a571e4", playerId, e));
+            log.error(I18n.get("log.08b401a571e4", playerId, e), e);
         }
 
         return mailboxItems;
@@ -233,7 +233,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
             letter.setPersistState(PersistentState.UPDATED);
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.2d8239fcf778", letter.getRecipientId(), e));
+            log.error(I18n.get("log.2d8239fcf778", letter.getRecipientId(), e), e);
             return false;
         }
     }
@@ -338,7 +338,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
             return true;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.65c1132a74c3", letterId, e));
+            log.error(I18n.get("log.65c1132a74c3", letterId, e), e);
             return false;
         }
     }
@@ -359,7 +359,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
             stmt.executeUpdate();
 
         } catch (Exception e) {
-            log.error(I18n.get("log.a4015981f3b5", recipientCommonData.getName(), e));
+            log.error(I18n.get("log.a4015981f3b5", recipientCommonData.getName(), e), e);
         }
     }
 
@@ -382,7 +382,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
                 ids.add(rs.getInt("mail_unique_id"));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.39fd601f311d", e));
+            log.error(I18n.get("log.39fd601f311d", e), e);
             return new int[0];
         }
 

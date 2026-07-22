@@ -30,7 +30,7 @@ public final class NetFlusher {
 				try {
 					runnable.run();
 				} catch (RuntimeException e) {
-					log.error(I18n.get("log.009023e8c909", e));
+					log.error(I18n.get("log.009023e8c909", e), e);
 				}
 			}
 		}, interval, interval);

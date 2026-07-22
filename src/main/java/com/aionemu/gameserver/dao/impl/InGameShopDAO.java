@@ -71,7 +71,7 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
                 ));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.e1ffb8726a87", e));
+            log.error(I18n.get("log.e1ffb8726a87", e), e);
         }
         return items;
     }
@@ -98,7 +98,7 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.ab89a36682b8", itemId, e));
+            log.error(I18n.get("log.ab89a36682b8", itemId, e), e);
             return false;
         }
     }
@@ -141,7 +141,7 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
             stmt.setString(12, description);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.1bd07eff1e18", objectId, e));
+            log.error(I18n.get("log.1bd07eff1e18", objectId, e), e);
         }
     }
 
@@ -163,7 +163,7 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.2b5a5b8ef0fb", object, e));
+            log.error(I18n.get("log.2b5a5b8ef0fb", object, e), e);
             return false;
         }
     }

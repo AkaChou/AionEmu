@@ -84,7 +84,7 @@ public class RealGeoData implements GeoData {
 					try {
 						GeoWorldLoader.loadWorldObjects(mapId, models, geoMap, missingMeshes);
 					} catch (Throwable t) {
-						log.error(I18n.get("log.55a8c9c96345", mapId, t));
+						log.error(I18n.get("log.55a8c9c96345", mapId, t), t);
 						synchronized (mapsWithErrors) {
 							mapsWithErrors.add(mapId);
 						}
@@ -101,10 +101,10 @@ public class RealGeoData implements GeoData {
 				future.get();
 			}
 		} catch (InterruptedException e) {
-			log.error(I18n.get("log.21e643902d47", e));
+			log.error(I18n.get("log.21e643902d47", e), e);
 			Thread.currentThread().interrupt();
 		} catch (ExecutionException e) {
-			log.error(I18n.get("log.21e643902d47", e));
+			log.error(I18n.get("log.21e643902d47", e), e);
 		}
 
 		progressRenderer.finished(I18n.get("console.progress.geo_maps"), totalMaps);

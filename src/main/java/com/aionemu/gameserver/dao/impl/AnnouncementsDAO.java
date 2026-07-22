@@ -55,7 +55,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 				));
 			}
 		} catch (SQLException e) {
-			log.error(I18n.get("log.3e42f415d09f", e));
+			log.error(I18n.get("log.3e42f415d09f", e), e);
 		}
 		return result;
 	}
@@ -77,7 +77,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 			stmt.setInt(4, announce.getDelay());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			log.error(I18n.get("log.b3b62f944143", e));
+			log.error(I18n.get("log.b3b62f944143", e), e);
 		}
 	}
 
@@ -98,7 +98,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 			stmt.setInt(1, idAnnounce);
 			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
-			log.error(I18n.get("log.7f5bab6b7889", idAnnounce, e));
+			log.error(I18n.get("log.7f5bab6b7889", idAnnounce, e), e);
 			return false;
 		}
 	}

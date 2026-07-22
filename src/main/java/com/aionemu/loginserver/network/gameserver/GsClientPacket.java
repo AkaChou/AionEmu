@@ -30,7 +30,7 @@ public abstract class GsClientPacket extends BaseClientPacket<GsConnection> {
         try {
             runImpl();
         } catch (Throwable e) {
-            log.warn(I18n.get("log.8fd86409bd46", getConnection().getIP(), this, e));
+            log.warn(I18n.get("log.8fd86409bd46", getConnection().getIP(), this, e), e);
         }
     }
 

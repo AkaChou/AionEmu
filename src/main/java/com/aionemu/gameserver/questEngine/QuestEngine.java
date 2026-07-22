@@ -228,7 +228,7 @@ public class QuestEngine implements GameEngine {
             env.setQuestId(0);
         }
     } catch (Exception ex) {
-        log.error(I18n.get("log.dd0b8ceead0c", ex));
+        log.error(I18n.get("log.dd0b8ceead0c", ex), ex);
         return false;
         }
        return false;
@@ -252,7 +252,7 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.59f50c2b1e29", ex));
+			log.error(I18n.get("log.59f50c2b1e29", ex), ex);
 			return false;
 		}
 		return true;

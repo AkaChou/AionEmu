@@ -63,7 +63,7 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
                 }
             }
         } catch (Exception e) {
-            log.error(I18n.get("log.76f2514feafb", player.getObjectId(), " from DB", e));
+            log.error(I18n.get("log.76f2514feafb", player.getObjectId(), " from DB", e), e);
         }
         return new FriendList(player, friends);
     }
@@ -94,7 +94,7 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
             con.commit();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.3eacec776c80", player.getObjectId(), friend.getObjectId(), e));
+            log.error(I18n.get("log.3eacec776c80", player.getObjectId(), friend.getObjectId(), e), e);
             return false;
         }
     }
@@ -125,7 +125,7 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
             con.commit();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.11aae36500f7", playerOid, friendOid, e));
+            log.error(I18n.get("log.11aae36500f7", playerOid, friendOid, e), e);
             return false;
         }
     }
@@ -148,7 +148,7 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
             stmt.setInt(3, friendId);
             stmt.executeUpdate();
         } catch (Exception e) {
-            log.error(I18n.get("log.7761eea711e0", playerId, friendId, e));
+            log.error(I18n.get("log.7761eea711e0", playerId, friendId, e), e);
         }
     }
 

@@ -61,7 +61,7 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.19142084445f", e));
+            log.error(I18n.get("log.19142084445f", e), e);
             success = false;
         }
 
@@ -87,7 +87,7 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
             return updated > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.3e416c0dd49f", location.getId(), e));
+            log.error(I18n.get("log.3e416c0dd49f", location.getId(), e), e);
             return false;
         }
     }
@@ -110,7 +110,7 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
             return inserted > 0;
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.96d78ac95569", location.getId(), e));
+            log.error(I18n.get("log.96d78ac95569", location.getId(), e), e);
             return false;
         }
     }
@@ -145,7 +145,7 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
             }
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.882bb7efcb76", e));
+            log.error(I18n.get("log.882bb7efcb76", e), e);
             return false;
         }
     }

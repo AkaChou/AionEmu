@@ -70,7 +70,7 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 				}
 			}
 		} catch (Exception e) {
-			log.error(I18n.get("log.43ab488ee287", player.getObjectId(), " from DB", e));
+			log.error(I18n.get("log.43ab488ee287", player.getObjectId(), " from DB", e), e);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 			stmt.setByte(6, bpp.getHeading());
 			return stmt.executeUpdate() > 0;
 		} catch (Exception e) {
-			log.error(I18n.get("log.8f29cc17afb0", player.getObjectId(), " from DB", e));
+			log.error(I18n.get("log.8f29cc17afb0", player.getObjectId(), " from DB", e), e);
 			return false;
 		}
 	}
@@ -121,7 +121,7 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 			stmt.setInt(6, player.getObjectId());
 			return stmt.executeUpdate() > 0;
 		} catch (Exception e) {
-			log.error(I18n.get("log.f96acb94f4a3", player.getObjectId(), " from DB", e));
+			log.error(I18n.get("log.f96acb94f4a3", player.getObjectId(), " from DB", e), e);
 			return false;
 		}
 	}

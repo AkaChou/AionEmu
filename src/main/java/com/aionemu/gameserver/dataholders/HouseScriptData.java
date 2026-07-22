@@ -123,7 +123,7 @@ public class HouseScriptData {
 			marshaller.setSchema(schema);
 			marshaller.setProperty("jaxb.encoding", "UTF-8");
 		} catch (Exception e) {
-			log.error(I18n.get("log.6cadba7ab22f", e));
+			log.error(I18n.get("log.6cadba7ab22f", e), e);
 		}
 	}
 
@@ -180,7 +180,7 @@ public class HouseScriptData {
 			try {
 				db = dbf.newDocumentBuilder();
 			} catch (ParserConfigurationException e) {
-				log.error(I18n.get("log.dd62a8c2d8c4", e));
+				log.error(I18n.get("log.dd62a8c2d8c4", e), e);
 			}
 		}
 	}

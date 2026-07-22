@@ -61,7 +61,7 @@ public class Delete extends AdminCommand {
 			DataManager.SPAWNS_DATA2.saveSpawn(player, npc, true);
 		}
 		catch (IOException e) {
-			log.error(I18n.get("log.dd0177354196", npc.getObjectId(), e));
+			log.error(I18n.get("log.dd0177354196", npc.getObjectId(), e), e);
 			PacketSendUtility.sendMessage(player, "Could not remove spawn");
 			return;
 		}

@@ -52,7 +52,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.7be9f6648605", name, e));
+            log.error(I18n.get("log.7be9f6648605", name, e), e);
         }
 
         return account;
@@ -86,7 +86,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.443dba3838a7", id, e));
+            log.error(I18n.get("log.443dba3838a7", id, e), e);
         }
 
         return account;
@@ -108,7 +108,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.f78188013087", name, e));
+            log.error(I18n.get("log.f78188013087", name, e), e);
         }
 
         return id;
@@ -127,7 +127,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
                 count = rs.getInt("c");
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.0738ecab6c77", e));
+            log.error(I18n.get("log.0738ecab6c77", e), e);
         }
 
         return count;
@@ -162,7 +162,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
                 return true;
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.34a80423f0dc", e));
+            log.error(I18n.get("log.34a80423f0dc", e), e);
         }
 
         return false;
@@ -174,7 +174,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
             updateInTransaction(con, account);
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.40f6bd6c99c5", account.getId(), e));
+            log.error(I18n.get("log.40f6bd6c99c5", account.getId(), e), e);
         }
 
         return false;
@@ -216,7 +216,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.7a357f84a3ac", accountId, e));
+            log.error(I18n.get("log.7a357f84a3ac", accountId, e), e);
         }
 
         return false;
@@ -234,7 +234,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.a2c8c099cda2", accountId, e));
+            log.error(I18n.get("log.a2c8c099cda2", accountId, e), e);
         }
 
         return false;
@@ -255,7 +255,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.6acadf7febd4", accountId, e));
+            log.error(I18n.get("log.6acadf7febd4", accountId, e), e);
         }
 
         return "";
@@ -273,7 +273,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.8cb7e88bf3fb", accountId, e));
+            log.error(I18n.get("log.8cb7e88bf3fb", accountId, e), e);
         }
 
         return false;
@@ -290,7 +290,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
 
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error(I18n.get("log.971689f314b7", accountId, e));
+            log.error(I18n.get("log.971689f314b7", accountId, e), e);
         }
 
         return false;
@@ -306,7 +306,7 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
             st.setInt(1, daysOfInactivity);
             st.executeUpdate();
         } catch (SQLException e) {
-            log.error(I18n.get("log.13feade4c9b9", e));
+            log.error(I18n.get("log.13feade4c9b9", e), e);
         }
     }
 

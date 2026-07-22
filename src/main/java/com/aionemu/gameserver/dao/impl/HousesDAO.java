@@ -63,7 +63,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
                 ids.add(rs.getInt(1));
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.977a91e82734", e));
+            log.error(I18n.get("log.977a91e82734", e), e);
             return new int[0];
         }
 
@@ -110,7 +110,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
             }
             return false;
         } catch (SQLException e) {
-            log.error(I18n.get("log.a9a5e7d0614f", houseObjectId, e));
+            log.error(I18n.get("log.a9a5e7d0614f", houseObjectId, e), e);
             return true;
         }
     }
@@ -178,7 +178,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
             stmt.executeUpdate();
 
         } catch (Exception e) {
-            log.error(I18n.get("log.4abe7981971b", house.getObjectId(), e));
+            log.error(I18n.get("log.4abe7981971b", house.getObjectId(), e), e);
         }
     }
 
@@ -228,7 +228,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
             stmt.executeUpdate();
 
         } catch (Exception e) {
-            log.error(I18n.get("log.340314d885f4", house.getObjectId(), e));
+            log.error(I18n.get("log.340314d885f4", house.getObjectId(), e), e);
         }
     }
 
@@ -329,7 +329,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
             }
 
         } catch (Exception e) {
-            log.error(I18n.get("log.423d09af3ba2", e));
+            log.error(I18n.get("log.423d09af3ba2", e), e);
         }
 
         return houses;
@@ -350,7 +350,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            log.error(I18n.get("log.f2facfdc760c", playerId, e));
+            log.error(I18n.get("log.f2facfdc760c", playerId, e), e);
         }
     }
 }

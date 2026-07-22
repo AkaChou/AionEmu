@@ -84,7 +84,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.2d8dc2963806", tableId, e));
+            log.error(I18n.get("log.2d8dc2963806", tableId, e), e);
         }
 
         return results;
@@ -126,7 +126,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.d516d865c7d9", playerId, tableId, e));
+            log.error(I18n.get("log.d516d865c7d9", playerId, tableId, e), e);
         }
 
         return arenaRank;
@@ -182,7 +182,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
 
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.892315d315f0", objectId, e));
+            log.error(I18n.get("log.892315d315f0", objectId, e), e);
             return false;
         }
     }
@@ -204,7 +204,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
 
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.8025a55d13a2", objectId, e));
+            log.error(I18n.get("log.8025a55d13a2", objectId, e), e);
             return false;
         }
     }
@@ -259,7 +259,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
 
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.33e0d184fd35", objectId, e));
+            log.error(I18n.get("log.33e0d184fd35", objectId, e), e);
             return false;
         }
     }
@@ -281,7 +281,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
 
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.525c0a41a0d5", objectId, e));
+            log.error(I18n.get("log.525c0a41a0d5", objectId, e), e);
             return false;
         }
     }
@@ -336,7 +336,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
 
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.1833d5239851", objectId, e));
+            log.error(I18n.get("log.1833d5239851", objectId, e), e);
             return false;
         }
     }
@@ -358,7 +358,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
 
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.b547e9af94b6", objectId, e));
+            log.error(I18n.get("log.b547e9af94b6", objectId, e), e);
             return false;
         }
     }
@@ -413,7 +413,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
 
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.688e68aa0f83", objectId, e));
+            log.error(I18n.get("log.688e68aa0f83", objectId, e), e);
             return false;
         }
     }
@@ -435,7 +435,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
 
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.2027d7f241eb", objectId, e));
+            log.error(I18n.get("log.2027d7f241eb", objectId, e), e);
             return false;
         }
     }
@@ -476,7 +476,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.1c6ce1dd5b7e", playerId, tableId, e));
+            log.error(I18n.get("log.1c6ce1dd5b7e", playerId, tableId, e), e);
         }
 
         return ranking;
@@ -517,7 +517,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.a937504b345f", playerId, tableId, e));
+            log.error(I18n.get("log.a937504b345f", playerId, tableId, e), e);
         }
 
         return ranking;
@@ -559,7 +559,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.a8b4326794d1", playerId, tableId, e));
+            log.error(I18n.get("log.a8b4326794d1", playerId, tableId, e), e);
         }
 
         return ranking;

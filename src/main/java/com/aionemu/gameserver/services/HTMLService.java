@@ -113,7 +113,7 @@ public class HTMLService {
 					String sub = html.substring(from, to);
 					player.getClientConnection().sendPacket(new SM_QUESTIONNAIRE(messageId, i, packet_count, sub));
 				} catch (Exception e) {
-					log.error(I18n.get("log.5db6e71d2d57", e));
+					log.error(I18n.get("log.5db6e71d2d57", e), e);
 				}
 			}
 		}

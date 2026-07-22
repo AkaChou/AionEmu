@@ -70,7 +70,7 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.0c81ac00324b", player.getObjectId(), e));
+            log.error(I18n.get("log.0c81ac00324b", player.getObjectId(), e), e);
         }
         return new PlayerWardrobeList(w);
     }
@@ -97,7 +97,7 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.7fed95e25235", objectId, e));
+            log.error(I18n.get("log.7fed95e25235", objectId, e), e);
             return false;
         }
     }
@@ -120,7 +120,7 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.06e3e78e5e3b", objectId, e));
+            log.error(I18n.get("log.06e3e78e5e3b", objectId, e), e);
             return false;
         }
     }
@@ -230,7 +230,7 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.5acbf781683c", obj, slot, e));
+            log.error(I18n.get("log.5acbf781683c", obj, slot, e), e);
             return false;
         }
     }

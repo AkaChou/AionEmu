@@ -83,7 +83,7 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
 
             return true;
         } catch (Exception var2) {
-            log.error(I18n.get("log.909185c9f5d6", this, var2));
+            log.error(I18n.get("log.909185c9f5d6", this, var2), var2);
             return false;
         }
     }

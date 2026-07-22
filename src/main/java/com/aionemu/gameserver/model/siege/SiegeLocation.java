@@ -240,7 +240,7 @@ public class SiegeLocation implements ZoneHandler {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(I18n.get("log.cc03391ccf0f", ex));
+			log.error(I18n.get("log.cc03391ccf0f", ex), ex);
 		}
 	}
 

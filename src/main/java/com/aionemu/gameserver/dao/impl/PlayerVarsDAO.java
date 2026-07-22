@@ -52,7 +52,7 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error(I18n.get("log.eef4c3c016c8", playerId, e));
+            log.error(I18n.get("log.eef4c3c016c8", playerId, e), e);
         }
         return map;
     }
@@ -78,7 +78,7 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.093f2900065e", playerId, key, e));
+            log.error(I18n.get("log.093f2900065e", playerId, key, e), e);
             return false;
         }
     }
@@ -102,7 +102,7 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            log.error(I18n.get("log.c3f19e683101", playerId, key, e));
+            log.error(I18n.get("log.c3f19e683101", playerId, key, e), e);
             return false;
         }
     }
