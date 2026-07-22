@@ -38,9 +38,17 @@ class MasterServerPortalDataTest {
 		assertTrue(exists(portals, "//portal_dialog[@npc_id='730279']/portal_path[@loc_id='3001600']"));
 		assertTrue(exists(portals, "//portal_dialog[@npc_id='730485']/portal_path[@loc_id='3201500']"));
 		assertTrue(exists(portals, "//portal_dialog[@npc_id='730278']/portal_path[@loc_id='3001500']"));
-		assertTrue(exists(portals, "//portal_dialog[@npc_id='730280']/portal_path[@loc_id='3001600']"));
-		assertTrue(exists(portals, "//portal_dialog[@npc_id='730486']/portal_path[@loc_id='3201500']"));
-	}
+			assertTrue(exists(portals, "//portal_dialog[@npc_id='730280']/portal_path[@loc_id='3001600']"));
+			assertTrue(exists(portals, "//portal_dialog[@npc_id='730486']/portal_path[@loc_id='3201500']"));
+			assertTrue(exists(portals, "//portal_use[@npc_id='730211']/portal_path[@loc_id='4000108']"));
+			assertTrue(exists(portals, "//portal_use[@npc_id='205437']/portal_path[@loc_id='2101312' and @race='ELYOS']"));
+			assertTrue(exists(portals, "//portal_use[@npc_id='205437']/portal_path[@loc_id='2201412' and @race='ASMODIANS']"));
+			assertTrue(exists(portals, "//portal_use[@npc_id='831746']/portal_path[@loc_id='1100105' and @race='ELYOS']"));
+			assertTrue(exists(portals, "//portal_use[@npc_id='831746']/portal_path[@loc_id='1200107' and @race='ASMODIANS']"));
+			for (String npcId : new String[] { "831968", "831969" }) {
+				assertTrue(exists(portals, "//portal_use[@npc_id='" + npcId + "']/portal_path[@loc_id='3012202']"));
+			}
+		}
 
 	@Test
 	void normal58WorldsAreEnabledAndKeepMapMarkerEntities() throws Exception {
