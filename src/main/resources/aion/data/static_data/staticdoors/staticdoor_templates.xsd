@@ -25,6 +25,7 @@
 		<xs:attribute name="y" type="xs:float"/>
 		<xs:attribute name="z" type="xs:float"/>
 		<xs:attribute name="doorid" type="xs:int"/>
+		<xs:attribute name="retailid" type="xs:int"/>
 		<xs:attribute name="keyid" type="xs:int"/>
 		<xs:attribute name="mesh" type="xs:string"/>
 		<xs:attribute name="state" type="xs:string"/>

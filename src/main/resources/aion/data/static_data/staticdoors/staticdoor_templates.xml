@@ -2473,29 +2473,29 @@
     </world>
 	<!-- ARCHIVES OF ETERNITY 5.0 -->
 	<world world="301570000">
-        <staticdoor doorid="21" x="565.95135" y="374.43744" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor doorid="22" x="724.35999" y="489.59000" z="469.10001" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor doorid="24" x="401.79800" y="569.46851" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor doorid="26" x="381.58643" y="534.46100" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="27" x="519.58350" y="569.59741" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor doorid="28" x="704.14923" y="454.59225" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="33" x="486.53409" y="352.31686" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="52" x="427.53964" y="614.05432" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="53" x="665.52136" y="432.09409" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="54" x="493.93198" y="409.96826" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="55" x="539.79395" y="489.41193" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="56" x="624.68787" y="432.12122" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor doorid="21" state="0x1" x="565.95135" y="374.43744" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor doorid="22" state="0x1" x="724.35999" y="489.59000" z="469.10001" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor doorid="24" state="0x1" x="401.79800" y="569.46851" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor doorid="26" state="0x1" x="381.58643" y="534.46100" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="27" state="0x1" x="519.58350" y="569.59741" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor doorid="28" state="0x1" x="704.14923" y="454.59225" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="33" state="0x1" x="486.53409" y="352.31686" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="52" state="0x1" x="427.53964" y="614.05432" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="53" state="0x1" x="665.52136" y="432.09409" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="54" state="0x1" x="493.93198" y="409.96826" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="55" state="0x1" x="539.79395" y="489.41193" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="56" state="0x1" x="624.68787" y="432.12122" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
 		<staticdoor keyid="1" doorid="57" x="473.71664" y="649.16040" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="64" x="539.88971" y="534.35956" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="65" x="301.91339" y="511.97348" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="67" x="473.26086" y="374.12115" z="469.02231" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="77" x="447.96762" y="649.43665" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="90" x="222.52000" y="511.97437" z="468.78000" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="252" x="527.68878" y="352.33432" z="469.02231" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="311" x="494.21509" y="613.80713" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor doorid="384" x="586.19489" y="409.83286" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="421" x="342.77353" y="512.04828" z="469.02231" mesh="IDEternity01_door_01a.cga"/>
-		<staticdoor keyid="1" doorid="449" x="519.68402" y="454.26917" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="64" retailid="5" x="539.88971" y="534.35956" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="65" retailid="10" state="0x1" x="301.91339" y="511.97348" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="67" retailid="3" x="473.26086" y="374.12115" z="469.02231" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="77" retailid="9" x="447.96762" y="649.43665" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="90" retailid="8" x="222.52000" y="511.97437" z="468.78000" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="252" retailid="2" x="527.68878" y="352.33432" z="469.02231" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="311" retailid="6" x="494.21509" y="613.80713" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor doorid="384" retailid="1" x="586.19489" y="409.83286" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="421" retailid="7" x="342.77353" y="512.04828" z="469.02231" mesh="IDEternity01_door_01a.cga"/>
+		<staticdoor keyid="1" doorid="449" retailid="4" x="519.68402" y="454.26917" z="469.05383" mesh="IDEternity01_door_01a.cga"/>
     </world>
 	<!-- EMPEROR TRILLIRUNERK'S SAFE 4.9.1 -->
 	<world world="301590000">

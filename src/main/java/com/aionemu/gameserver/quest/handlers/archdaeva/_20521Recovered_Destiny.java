@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.quest.handlers.archdaeva;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -165,14 +164,7 @@ public class _20521Recovered_Destiny extends QuestHandler {
 						}
 					}
 					case STEP_TO_9: {
-						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-							@Override
-							public void run() {
-								QuestService.addNewSpawn(301570000, player.getInstanceId(), 857948, (float) 446.12146, (float) 654.5927, (float) 468.97745, (byte) 19); //IDEternity_Q_Sado_Wi_65_An_02.
-								QuestService.addNewSpawn(301570000, player.getInstanceId(), 857903, (float) 451.2063, (float) 654.0501, (float) 468.97745, (byte) 20); //IDEternity_Q_Sado_Wi_N_65_An_01.
-								QuestService.addNewSpawn(301570000, player.getInstanceId(), 857948, (float) 453.82755, (float) 650.27997, (float) 468.97745, (byte) 19); //IDEternity_Q_Sado_Wi_65_An_02.
-							}
-						}, 3000);
+						RetailConditionSpawnEngine.setVariable(player.getPosition().getWorldMapInstance(), "SCENE", 9, 0);
 						Npc npc = (Npc) env.getVisibleObject();
 						npc.getController().onDelete();
 						changeQuestStep(env, 8, 9, false);
@@ -214,14 +206,7 @@ public class _20521Recovered_Destiny extends QuestHandler {
 						}
 					}
 					case STEP_TO_12: {
-						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-							@Override
-							public void run() {
-								QuestService.addNewSpawn(301570000, player.getInstanceId(), 857915, (float) 346.18872, (float) 516.0532, (float) 468.937, (byte) 119); //IDEternity_Q_Cube_As_65_An.
-								QuestService.addNewSpawn(301570000, player.getInstanceId(), 857916, (float) 347.85834, (float) 511.8845, (float) 468.937, (byte) 0); //IDEternity_Q_Energy_Wi_65_An.
-								QuestService.addNewSpawn(301570000, player.getInstanceId(), 857915, (float) 346.09894, (float) 507.7084, (float) 468.937, (byte) 119); //IDEternity_Q_Cube_As_65_An.
-							}
-						}, 3000);
+						RetailConditionSpawnEngine.setVariable(player.getPosition().getWorldMapInstance(), "SCENE", 11, 0);
 						Npc npc = (Npc) env.getVisibleObject();
 						npc.getController().onDelete();
 						changeQuestStep(env, 11, 12, false);
@@ -261,6 +246,11 @@ public class _20521Recovered_Destiny extends QuestHandler {
 			if (zoneName == ZoneName.get("ID_ETERNITY_Q_SENSORYAREA_A_301570000")) {
 				if (var == 3) {
 					changeQuestStep(env, 3, 4, false);
+					playQuestMovie(env, 935);
+					RetailConditionSpawnEngine.setVariable(player.getPosition().getWorldMapInstance(), "USER_GENDER",
+						player.getGender().getGenderId() + 1, 0);
+					RetailConditionSpawnEngine.setVariable(player.getPosition().getWorldMapInstance(), "USER_RACE",
+						player.getRace().getRaceId() + 1, 0);
 					return true;
 				}
 			} else if (zoneName == ZoneName.get("ID_ETERNITY_Q_SENSORYAREA_B_301570000")) {
@@ -303,6 +293,7 @@ public class _20521Recovered_Destiny extends QuestHandler {
 	public boolean onMovieEndEvent(QuestEnv env, int movieId) {
 		Player player = env.getPlayer();
 		if (movieId == 924) {
+			RetailConditionSpawnEngine.setVariable(player.getPosition().getWorldMapInstance(), "SCENE", 12, 0);
             switch (player.getGender()) {
 			case MALE: {
 			    PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403364));
@@ -321,6 +312,10 @@ public class _20521Recovered_Destiny extends QuestHandler {
 		if (movieId == 871) {
 			if (!TeleportService2.teleportToInstance(player, 301570000, 737, 512, 469)) {
 				return false;
+			}
+			WorldMapInstance instance = InstanceService.getPersonalInstance(301570000, player.getObjectId());
+			if (instance != null) {
+				RetailConditionSpawnEngine.setVariable(instance, "SCENE", 2, 0);
 			}
 			changeQuestStep(env, 2, 3, false);
 			return true;

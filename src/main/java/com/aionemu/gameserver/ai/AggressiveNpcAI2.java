@@ -7369,34 +7369,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 				brokenMorale();
 			break;
 		} switch (getNpcId()) {
-			case 857785:
-			case 857792:
-			case 857796:
-			case 857800:
-				knowledgeOfFlame();
-			break;
-		} switch (getNpcId()) {
-			case 857786:
-			case 857793:
-			case 857797:
-			case 857801:
-				knowledgeOfWater();
-			break;
-		} switch (getNpcId()) {
-			case 857787:
-			case 857794:
-			case 857798:
-			case 857802:
-				knowledgeOfEarth();
-			break;
-		} switch (getNpcId()) {
-			case 857788:
-			case 857795:
-			case 857799:
-			case 857803:
-				knowledgeOfAir();
-			break;
-		} switch (getNpcId()) {
 			case 246388:
 			case 246389:
 			case 246390:
@@ -7479,18 +7451,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	}
 	private void brokenMorale() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
-	}
-	private void knowledgeOfFlame() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22943, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Flame.
-	}
-	private void knowledgeOfEarth() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22944, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Earth.
-	}
-	private void knowledgeOfWater() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22945, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Water.
-	}
-	private void knowledgeOfAir() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22969, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Air.
 	}
 	private void IDEternity03Guard() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 17753, 1, getOwner()).useNoAnimationSkill(); //IDEternity_03_Guard_Buff.

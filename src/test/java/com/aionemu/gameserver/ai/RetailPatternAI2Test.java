@@ -37,6 +37,7 @@ import com.aionemu.gameserver.model.stats.container.NpcLifeStats;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplateType;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplate;
+import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.walker.RouteStep;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
@@ -205,6 +206,35 @@ class RetailPatternAI2Test {
 				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 					"301500000:" + npcId);
 			}
+
+			SkillNpc roomController = new ObjenesisStd().newInstance(SkillNpc.class);
+			roomController.npcId = 857824;
+			roomController.worldId = 301570000;
+			roomController.objectTemplate = new NpcTemplate();
+			roomController.spawnTemplate = new SpawnTemplate(new SpawnGroup2(301570000, 857824),
+				598.283813f, 432.472778f, 470.884338f, (byte) 60, 0, null, 0, 0);
+			roomController.skillList = new NpcSkillList(roomController);
+			assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(857824), roomController));
+
+			SkillNpc leibo = new ObjenesisStd().newInstance(SkillNpc.class);
+			leibo.npcId = 857833;
+			leibo.worldId = 301570000;
+			leibo.objectTemplate = new NpcTemplate();
+			leibo.spawnTemplate = new SpawnTemplate(new SpawnGroup2(301570000, 857833),
+				663.967041f, 432.065002f, 469.89679f, (byte) 0, 0,
+				"retail:301570000:npcpathideterntly_q_mob24", 0, 0);
+			leibo.skillList = new NpcSkillList(leibo);
+			assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(857833), leibo));
+
+			SkillNpc highdeva = new ObjenesisStd().newInstance(SkillNpc.class);
+			highdeva.npcId = 857785;
+			highdeva.worldId = 301570000;
+			highdeva.objectTemplate = new NpcTemplate();
+			setField(NpcTemplate.class, highdeva.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+			highdeva.spawnTemplate = new SpawnTemplate(new SpawnGroup2(301570000, 857785),
+				231.63109f, 511.9707f, 468.80215f, (byte) 0, 0, null, 0, 0);
+			highdeva.skillList = skillList(DataManager.NPC_SKILL_DATA.getNpcSkillList(857785).getNpcSkills());
+			assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(857785), highdeva));
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
 			DataManager.NPC_SKILL_DATA = previousNpcSkills;

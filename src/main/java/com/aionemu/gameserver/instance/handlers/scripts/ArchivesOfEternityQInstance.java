@@ -1,17 +1,12 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import java.util.*;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.*;
-import com.aionemu.gameserver.model.gameobjects.*;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.utils.*;
-import com.aionemu.gameserver.world.WorldMapInstance;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
+import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 永恒档案库任务副本事件处理器。
@@ -21,262 +16,17 @@ import com.aionemu.gameserver.world.WorldMapInstance;
  */
 
 @InstanceID(301570000)
-public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
-{
-	/** ideternity qsado wi65an01 / ideternity qsado wi65an01 */
-		private int IDEternityQSadoWi65An01;
-	/** ideternity qsado fi65an01 / ideternity qsado fi65an01 */
-		private int IDEternityQSadoFi65An01;
-	/** ideternity qsado pr65an01 / ideternity qsado pr65an01 */
-		private int IDEternityQSadoPr65An01;
-	/** ideternity qsado wi65an02 / ideternity qsado wi65an02 */
-		private int IDEternityQSadoWi65An02;
-	/** 门映射 / door map */
-	private Map<Integer, StaticDoor> doors;
-	/** 已播放动画集合 / played-movie set */
-	private List<Integer> movies = new ArrayList<Integer>();
-	
-	/**
-	 * 玩家进入副本时处理。
-	 * Handle a player entering the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onEnterInstance(Player player) {
-		sendMovie(player, 935);
-	}
-	
-	/**
-	 * 副本创建时初始化逻辑。
-	 * Initialize logic when the instance is created.
-	 *
-	 * @param instance 世界地图实例 / world-map instance
-	 */
-	@Override
-    public void onInstanceCreate(WorldMapInstance instance) {
-        super.onInstanceCreate(instance);
-        doors = instance.getDoors();
-    }
-	
-	/**
-	 * 处理死亡事件。
-	 * Handle a death event.
-	 *
-	 * npc
-	 */
+public class ArchivesOfEternityQInstance extends GeneralInstanceHandler {
+
 	@Override
 	public void onDie(Npc npc) {
+		int npcId = npc.getNpcId();
+		if (npcId != 857785 && npcId != 857792 && npcId != 857796 && npcId != 857800) {
+			return;
+		}
 		Player player = npc.getAggroList().getMostPlayerDamage();
-		switch (npc.getObjectTemplate().getTemplateId()) {
-		   /**
-	 * MOBS
-	 */
-			case 857782: //Lesser Fleshgolem.
-			    IDEternityQSadoWi65An01++;
-				if (IDEternityQSadoWi65An01 == 3) {
-					doors.get(53).setOpen(true);
-					doors.get(56).setOpen(true);
-					// 移至门已打开处。 / Move to where the door is open.
-					sendMsg(1403296, 0, false, 25, 0);
-				}
-			break;
-			case 857783: //Crystalized Shardgolem.
-				doors.get(252).setOpen(true);
-				doors.get(33).setOpen(true);
-				// 通往阿特雷亚历史档案的门现已打开。 / The door to the Atreia History Archives is now open.
-				sendMsg(1403297, 0, false, 25, 0);
-			break;
-			case 857901: //Lesser Shardgolem.
-				IDEternityQSadoFi65An01++;
-				if (IDEternityQSadoFi65An01 == 2) {
-				    doors.get(67).setOpen(true);
-				    doors.get(54).setOpen(true);
-				    // 通往下一图书馆的门已打开。 / The door to the next library is now open.
-				    sendMsg(1403298, 0, false, 25, 0);
-				}
-			break;
-			case 857902: //Lesser Shardgolem.
-				IDEternityQSadoPr65An01++;
-				if (IDEternityQSadoPr65An01 == 5) {
-				    doors.get(449).setOpen(true);
-				    doors.get(55).setOpen(true);
-				    // 通往人类历史档案的门现已打开。 / The door to the Human History Archives is now open.
-				    sendMsg(1403299, 0, false, 25, 0);
-				}
-			break;
-			case 857784: //Relic Techgolem.
-				doors.get(64).setOpen(true);
-				doors.get(27).setOpen(true);
-				// 通往下一图书馆的门已打开。 / The door to the next library is now open.
-				sendMsg(1403300, 0, false, 25, 0);
-			break;
-			case 857948: //Lesser Fleshgolem.
-			    IDEternityQSadoWi65An02++;
-				if (IDEternityQSadoWi65An02 == 5) {
-					doors.get(311).setOpen(true);
-					doors.get(57).setOpen(true);
-					// 通往主神档案的门现已打开。 / The door to the Empyrean Lord's Archives is now open.
-					sendMsg(1403301, 0, false, 25, 0);
-				}
-			break;
-			case 857903: //Augmented Fleshgolem.
-			    doors.get(77).setOpen(true);
-				doors.get(52).setOpen(true);
-				// 通往下一图书馆的门已打开。 / The door to the next library is now open.
-				sendMsg(1403302, 0, false, 25, 0);
-			break;
-			case 857916: //Violent Bust.
-			    doors.get(421).setOpen(true);
-				doors.get(65).setOpen(true);
-				// 通往全知档案的门现已打开。 / The door to the Archive of All Knowledge is now open.
-				sendMsg(1403303, 0, false, 25, 0);
-			break;
-			
-		   /**
-	 * MALE ELYOS
-	 */
-			case 857788: //Archdaeva Of Eternal Storms.
-				despawnNpc(npc);
-				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
-			    sendMsg(1403365, 0, false, 25, 0);
-				spawn(857786, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857786: //Archdaeva Of Eternal Waves.
-			    despawnNpc(npc);
-				// 你获得了祝福大地光环。 / You are graced with the aura of Blessed Earth.
-				sendMsg(1403366, 0, false, 25, 0);
-				spawn(857787, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857787: //Archdaeva Of Eternal Earth.
-			    despawnNpc(npc);
-				spawn(857785, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857785: //Archdaeva Of Eternal Flames.
-			    despawnNpc(npc);
-				deleteNpc(703130);
-				sendMovie(player, 927);
-				doors.get(90).setOpen(true);
-				spawn(806179, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
-				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
-				sendMsg(1403304, 0, false, 25, 0);
-				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
-			break;
-		   /**
-	 * FEMALE ELYOS
-	 */
-			case 857795: //Archdaeva Of Eternal Storms.
-				despawnNpc(npc);
-				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
-			    sendMsg(1403365, 0, false, 25, 0);
-				spawn(857793, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857793: //Archdaeva Of Eternal Waves.
-			    despawnNpc(npc);
-				// 你获得了祝福大地光环。 / You are graced with the aura of Blessed Earth.
-				sendMsg(1403366, 0, false, 25, 0);
-				spawn(857794, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857794: //Archdaeva Of Eternal Earth.
-			    despawnNpc(npc);
-				spawn(857792, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857792: //Archdaeva Of Eternal Flames.
-			    despawnNpc(npc);
-				deleteNpc(703130);
-				sendMovie(player, 928);
-				doors.get(90).setOpen(true);
-				spawn(806179, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
-				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
-				sendMsg(1403304, 0, false, 25, 0);
-				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
-			break;
-		   /**
-	 * MALE ASMODIANS
-	 */
-			case 857799: //Archdaeva Of Eternal Storms.
-				despawnNpc(npc);
-				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
-			    sendMsg(1403365, 0, false, 25, 0);
-				spawn(857797, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857797: //Archdaeva Of Eternal Waves.
-			    despawnNpc(npc);
-				// 你获得了祝福大地光环。 / You are graced with the aura of Blessed Earth.
-				sendMsg(1403366, 0, false, 25, 0);
-				spawn(857798, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857798: //Archdaeva Of Eternal Earth.
-			    despawnNpc(npc);
-				spawn(857796, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857796: //Archdaeva Of Eternal Flames.
-			    despawnNpc(npc);
-				deleteNpc(703130);
-				sendMovie(player, 927);
-				doors.get(90).setOpen(true);
-				spawn(806180, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
-				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
-				sendMsg(1403304, 0, false, 25, 0);
-				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
-			break;
-		   /**
-	 * FEMALE ASMODIANS
-	 */
-			case 857803: //Archdaeva Of Eternal Storms.
-				despawnNpc(npc);
-				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
-			    sendMsg(1403365, 0, false, 25, 0);
-				spawn(857801, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857801: //Archdaeva Of Eternal Waves.
-			    despawnNpc(npc);
-				// 你获得了祝福大地光环。 / You are graced with the aura of Blessed Earth.
-				sendMsg(1403366, 0, false, 25, 0);
-				spawn(857802, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857802: //Archdaeva Of Eternal Earth.
-			    despawnNpc(npc);
-				spawn(857800, 231.63109f, 511.9707f, 468.80215f, (byte) 0);
-			break;
-			case 857800: //Archdaeva Of Eternal Flames.
-			    despawnNpc(npc);
-				deleteNpc(703130);
-				sendMovie(player, 928);
-				doors.get(90).setOpen(true);
-				spawn(806180, 222.71474f, 511.98355f, 468.78000f, (byte) 0, 35); //Eternity Rift.
-				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
-				sendMsg(1403304, 0, false, 25, 0);
-				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
-			break;
-		}
+		PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, npcId == 857785 || npcId == 857796 ? 927 : 928));
+		RetailConditionSpawnEngine.setVariable(npc.getPosition().getWorldMapInstance(), "SCENE", 13, 0);
+		sendMsg(1403304, 0, false, 25, 0);
 	}
-	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
-	}
-	
-	private void despawnNpc(Npc npc) {
-		if (npc != null) {
-			npc.getController().onDelete();
-		}
-	}
-	
-	private void sendMovie(Player player, int movie) {
-		if (!movies.contains(movie)) {
-			movies.add(movie);
-			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
-		}
-	}
-	
-	/**
-	 * 副本销毁时清理资源。
-	 * Clean up resources when the instance is destroyed.
-	 */
-	@Override
-    public void onInstanceDestroy() {
-        doors.clear();
-    }
 }
