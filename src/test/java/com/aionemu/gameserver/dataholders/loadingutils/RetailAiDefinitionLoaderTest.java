@@ -22,6 +22,18 @@ class RetailAiDefinitionLoaderTest {
 	@TempDir
 	Path tempDir;
 
+	@Test
+	void hasGloballyUniqueConditionSpawnIds() throws Exception {
+		var document = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder()
+			.parse(Path.of("src/main/resources/aion/definitions/compact/ai/condition-spawns.xml").toFile());
+		var conditions = document.getElementsByTagName("condition");
+		var ids = new java.util.HashSet<String>();
+		for (int i = 0; i < conditions.getLength(); i++) {
+			String id = conditions.item(i).getAttributes().getNamedItem("id").getNodeValue();
+			assertTrue(ids.add(id), "Duplicate condition spawn ID: " + id);
+		}
+	}
+
 	void rejectsExactMemberAssignedToMultiplePartyTokens() throws Exception {
 		Path parties = tempDir.resolve("npc-parties.xml");
 		Files.writeString(parties, """
