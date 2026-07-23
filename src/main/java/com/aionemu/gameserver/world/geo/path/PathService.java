@@ -2,11 +2,13 @@ package com.aionemu.gameserver.world.geo.path;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.ObjectProvider;
@@ -355,8 +357,13 @@ public final class PathService implements DisposableBean {
 		return owner != null && (owner.isFlying() || waterArea(owner) != null);
 	}
 
+	public boolean allowsPathfinding(Creature owner) {
+		return !(owner instanceof Npc npc) || DataManager.NPC_PATH_BEHAVIOR_DATA == null
+				|| DataManager.NPC_PATH_BEHAVIOR_DATA.allowsPathfinding(npc.getNpcId());
+	}
+
 	public boolean hasPathingData(Creature owner) {
-		return owner != null && pathingAvailable(GeoDataConfig.GEO_PATH_ENABLE,
+		return owner != null && allowsPathfinding(owner) && pathingAvailable(GeoDataConfig.GEO_PATH_ENABLE,
 				GeoDataConfig.GEO_ENABLE && usesSpatialPath(owner)
 						|| hasGroundPathingData(GeoDataConfig.GEO_ENABLE, data.hasMap(owner.getWorldId())));
 	}

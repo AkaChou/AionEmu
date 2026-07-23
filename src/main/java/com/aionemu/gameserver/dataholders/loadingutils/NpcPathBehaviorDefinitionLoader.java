@@ -28,7 +28,8 @@ final class NpcPathBehaviorDefinitionLoader {
 					continue;
 				}
 				int id = Integer.parseInt(attribute(reader, "id"));
-				Behavior behavior = new Behavior(attribute(reader, "max_chase_time"),
+				Behavior behavior = new Behavior(Boolean.parseBoolean(attribute(reader, "generate_pathfind", "true")),
+					attribute(reader, "max_chase_time"),
 					PathfindFailReaction.valueOf(attribute(reader, "react_to_pathfind_fail", "return_to_sp")
 						.toUpperCase(Locale.ROOT)), attribute(reader, "move_type_return", "walk"),
 					Integer.parseInt(attribute(reader, "move_speed_return", "150")),
