@@ -271,16 +271,22 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				.noneMatch(action -> action.type().equals("goto_alias"))) {
 			return false;
 		}
-		for (List<Rule> rules : pattern.events().values()) {
-			for (Rule rule : rules) {
+		for (Map.Entry<String, List<Rule>> event : pattern.events().entrySet()) {
+			for (Rule rule : event.getValue()) {
 				for (Operation operation : concat(rule.conditions(), rule.actions())) {
 					if ((operation.type().equals("goto_next_waypoint") || operation.type().equals("is_last_waypoint"))
 						&& !hasWaypoints(npcWalker)) {
 						return false;
 					}
-					if ((operation.type().equals("goto_waypoint") || operation.type().equals("is_waypoint_index"))
-						&& (!hasWaypoints(npcWalker) || integer(operation,
-							operation.type().equals("goto_waypoint") ? "waypoint" : "index") >= npcWalker.getRouteSteps().size())) {
+					if (operation.type().equals("goto_waypoint")) {
+						int waypoint = integer(operation, "waypoint");
+						if (hasWaypoints(npcWalker) ? waypoint >= npcWalker.getRouteSteps().size()
+							: !event.getKey().equals("on_wake_up") || waypoint != 0) {
+							return false;
+						}
+					}
+					if (operation.type().equals("is_waypoint_index")
+						&& (!hasWaypoints(npcWalker) || integer(operation, "index") >= npcWalker.getRouteSteps().size())) {
 						return false;
 					}
 					if ((isSkillAction(operation) || operation.type().equals("is_skill_count_left"))

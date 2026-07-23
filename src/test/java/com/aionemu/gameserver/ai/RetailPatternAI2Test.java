@@ -132,6 +132,20 @@ class RetailPatternAI2Test {
 			DataManager.WALKER_DATA.merge((WalkerData) JAXBContext.newInstance(WalkerData.class).createUnmarshaller()
 				.unmarshal(Path.of("src/main/resources/aion/data/static_data/npc_walker/300100000_Steel Rake_Walkers.xml")
 					.toFile()));
+			DataManager.WALKER_DATA.merge((WalkerData) JAXBContext.newInstance(WalkerData.class).createUnmarshaller()
+				.unmarshal(Path.of("src/main/resources/aion/data/static_data/npc_walker/300030000_Nochsana_Training_Camp_Walkers.xml")
+					.toFile()));
+			for (int npcId : new int[] { 256686, 256688, 256693, 256694 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 300030000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				npc.skillList = new NpcSkillList(npc);
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"300030000:" + npcId);
+			}
 			SkillNpc coin = new ObjenesisStd().newInstance(SkillNpc.class);
 			coin.npcId = 207101;
 			coin.worldId = 300450000;
