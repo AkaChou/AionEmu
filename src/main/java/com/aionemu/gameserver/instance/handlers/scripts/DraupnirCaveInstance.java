@@ -1,21 +1,16 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-
-import java.util.Set;
 
 /**
  * 德劳普尼尔洞穴副本事件处理器。
@@ -48,9 +43,6 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		if (adjutantsKilled >= 4 && !runtimeState().getBoolean("draupnir.bakarma_dead", false)) {
 			spawnCommanderBakarma();
 		}
-		if (runtimeState().getBoolean("draupnir.bakarma_dead", false)) {
-			spawnRewardChest();
-		}
 		restoreDeadlines();
 	}
 	
@@ -80,51 +72,6 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		final int npc1 = spawnRace == Race.ASMODIANS ? 805737 : 805736;
 		spawn(npc1, 498.74973f, 379.33267f, 621.2866f, (byte) 54);
     }
-	/**
-	 * NPC 掉落表注册时处理。
-	 * Handle NPC drop-table registration.
-	 *
-	 * npc
-	 */
-	
-	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-		switch (npcId) {
-			case 702658: //修道院箱子。 / Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
-		    break;
-			case 702659: //高级修道院箱子。 / Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
-		    break;
-			case 213780: //Commander Bakarma.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-					} switch (Rnd.get(1, 2)) {
-				        case 1:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053265, 1)); //Bakarma's Fabled Weapon Box.
-					    break;
-					    case 2:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053271, 1)); //Bakarma's Weapon Box.
-					    break;
-					}
-				}
-			break;
-			case 237275: //Akhal.
-			    for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054175, 1)); //Master Bakarma's Weapon Box.
-					}
-				}
-			break;
-		}
-	}
-	
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -133,7 +80,6 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
      */
     @Override
     public void onDie(Npc npc) {
-        Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 213776: //Instructor Afrane.
 			case 237264:
@@ -164,7 +110,6 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 			case 236929: //Commander Bakarma.
 				runtimeState().put("draupnir.bakarma_dead", true);
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Draupnir Cave>");
-				spawnRewardChest();
 				long akhalDeadline = System.currentTimeMillis() + 60_000;
 				runtimeState().put("draupnir.akhal_deadline", akhalDeadline);
 				scheduleDeadline("akhal", akhalDeadline, this::spawnAkhalStage);
@@ -234,15 +179,6 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		runtimeState().put("draupnir.akhal_spawned", true);
 		spawnAkhal();
 		sendMsg(1403068, 0, false, 25, 0);
-	}
-
-	private void spawnRewardChest() {
-		int chest = runtimeState().getInt("draupnir.reward_chest", 0);
-		if (chest == 0) {
-			chest = Rnd.get(1, 2) == 1 ? 702658 : 702659;
-			runtimeState().put("draupnir.reward_chest", chest);
-		}
-		spawn(chest, 787.32513f, 431.49173f, 319.62155f, (byte) 33);
 	}
 
 	private void restoreDeadlines() {

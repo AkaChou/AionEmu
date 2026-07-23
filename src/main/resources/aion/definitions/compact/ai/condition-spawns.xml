@@ -59680,31 +59680,151 @@
     <variable name="iddf3_dragon_fx2"/>
     <variable name="iddf3_dragon_fx3"/>
     <variable name="iddf3_dragon_t_boss"/>
-    <condition id="3585" expression="IDDF3_Dragon_Fx2 == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#5">
+    <variable name="iddf3_dragon_t_waveend"/>
+    <variable name="lastboss"/>
+    <variable name="lastboss_t"/>
+    <variable name="master_mode"/>
+    <condition id="9785" expression="master_mode == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#1">
       <group probability="1000">
         <slot>
-          <npc id="833627" probability="10000" x="777.395447" y="431.354797" z="320.597351" heading="50" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="702857" probability="10000" x="469.928436" y="563.937317" z="512.000732" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
-    <condition id="3586" expression="IDDF3_dragon_t_boss == 4" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#7">
+    <condition id="9786" expression="master_mode == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#2">
       <group probability="1000">
         <slot>
-          <npc id="237275" probability="10000" x="776.761963" y="430.857788" z="322.995819" heading="145" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="237265" probability="10000" x="130.620407" y="586.963867" z="506" heading="1" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
-    <condition id="3587" expression="IDDF3_Dragon_Fx1 == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#8">
+    <condition id="9787" expression="IDDF3_dragon_t_waveend == 3" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#3">
       <group probability="1000">
         <slot>
-          <npc id="833626" probability="10000" x="777.289978" y="431.292603" z="320.533356" heading="50" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="702893" probability="10000" x="525.502197" y="619.110046" z="519.177307" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
-    <condition id="3588" expression="IDDF3_Dragon_Fx3 == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#12">
+    <condition id="9788" expression="master_mode == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#4">
       <group probability="1000">
         <slot>
-          <npc id="833628" probability="10000" x="777.040405" y="431.307465" z="320.46344" heading="50" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="702857" probability="10000" x="466.928436" y="617.937317" z="515.000732" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="3585" expression="IDDF3_Dragon_Fx2 == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#5">
+      <group probability="1000">
+        <slot>
+          <npc id="833627" probability="10000" x="777.395447" y="431.354797" z="320.597351" heading="50" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9789" expression="master_mode == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#6">
+      <group probability="1000">
+        <slot>
+          <npc id="702857" probability="10000" x="511.928436" y="591.937317" z="512.000732" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="3586" expression="IDDF3_dragon_t_boss == 4" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#7">
+      <group probability="1000">
+        <slot>
+          <npc id="237275" probability="10000" x="776.761963" y="430.857788" z="322.995819" heading="145" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="3587" expression="IDDF3_Dragon_Fx1 == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#8">
+      <group probability="1000">
+        <slot>
+          <npc id="833626" probability="10000" x="777.289978" y="431.292603" z="320.533356" heading="50" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9790" expression="(SpecialServer_Cond == 1) &amp;&amp; (lastboss_t == 4)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#9">
+      <group probability="1000">
+        <slot>
+          <npc id="237263" probability="10000" x="750.495544" y="464.870758" z="323.995819" heading="225" initial_delay="1" initial_delay_extra="1" walker="retail:320080000:boss_mobpath_n_iddf3_drakanfibossd_50_ah1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9791" expression="(SpecialServer_Cond == 0) &amp;&amp; (lastboss == 4)" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#10">
+      <group probability="1000">
+        <slot>
+          <npc id="213780" probability="10000" x="750.495544" y="464.870758" z="321.995819" heading="225" initial_delay="1" initial_delay_extra="1" walker="retail:320080000:boss_mobpath_n_iddf3_drakanfibossd_50_ah" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9792" expression="master_mode == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#11">
+      <group probability="1000">
+        <slot>
+          <npc id="237266" probability="10000" x="185.648148" y="721.275635" z="534.000732" heading="300" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="3588" expression="IDDF3_Dragon_Fx3 == 1" page_start="1" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="833628" probability="10000" x="777.040405" y="431.307465" z="320.46344" heading="50" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9793" expression="(SpecialServer_Cond == 1) &amp;&amp; (lastboss == 4)" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#13">
+      <group probability="1000">
+        <slot>
+          <npc id="236929" probability="10000" x="750.495544" y="464.870758" z="322.995819" heading="225" initial_delay="1" initial_delay_extra="1" walker="retail:320080000:boss_mobpath_n_iddf3_drakanfibossd_50_ah1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9794" expression="master_mode == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#14">
+      <group probability="1000">
+        <slot>
+          <npc id="237267" probability="10000" x="237.049332" y="451.888153" z="513.000732" heading="80" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9795" expression="master_mode == 1" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#15">
+      <group probability="1000">
+        <slot>
+          <npc id="237264" probability="10000" x="254.184067" y="699.625977" z="607.000732" heading="345" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9796" expression="IDDF3_dragon_t_waveend == 3" page_start="2" page_end="2" despawn_at_other="true" group_mode="all" source="iddf3_dragon/world_N.xml#16">
+      <group probability="1000">
+        <slot>
+          <npc id="702893" probability="10000" x="435.334564" y="556.608032" z="519.073608" heading="180" initial_delay="1" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9797" expression="1" page_start="1" page_end="1" despawn_at_other="false" group_mode="all" source="iddf3_dragon/world_N.xml#producer-page-1-1">
+      <group probability="1000">
+        <slot>
+          <npc id="213776" probability="10000" x="255.125092" y="698.974915" z="604.000732" heading="345" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+        <slot>
+          <npc id="213778" probability="10000" x="130.620407" y="586.963867" z="504" heading="1" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+        <slot>
+          <npc id="213779" probability="10000" x="186.061783" y="720.349915" z="531.000732" heading="300" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+        <slot>
+          <npc id="213802" probability="10000" x="237.400314" y="451.854736" z="510.000732" heading="80" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9798" expression="1" page_start="2" page_end="2" despawn_at_other="false" group_mode="all" source="iddf3_dragon/world_N.xml#producer-page-2-2">
+      <group probability="1000">
+        <slot>
+          <npc id="236925" probability="10000" x="254.184067" y="699.625977" z="605.000732" heading="345" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+        <slot>
+          <npc id="236927" probability="10000" x="130.620407" y="586.963867" z="505" heading="1" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+        <slot>
+          <npc id="236928" probability="10000" x="185.648148" y="721.275635" z="532.000732" heading="300" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+        <slot>
+          <npc id="236931" probability="10000" x="237.049332" y="451.888153" z="511.000732" heading="80" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>

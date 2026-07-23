@@ -51,8 +51,22 @@
 - `SteelRakeRetailMigrationTest` 锁定变量、15 条条件、真端概率/坐标、waypoint、固定 Named、静态去重、Pattern 和掉落 ownership。
 - 条件出生与 waypoint XML 已通过 schema；Loader、Condition Engine 和 Steel Rake 专项测试通过。GM 实测和线上副本压测不在本窗口范围内。
 
+## Draupnir Cave（320080000）
+
+### 真端证据
+
+- `iddf3_dragon/world_N.xml`、`NpcAIPatterns_IDDF3_dragon_SP_YDY.xml` 和 compact `npc_drops` 共同接管阶段出生、AI 与掉落。
+- 条件世界由 4 条扩为 18 条，包含 `master_mode`、`lastboss`、`lastboss_t`、`iddf3_dragon_t_waveend` 等 8 个变量，覆盖 16 个真端 `condition_info` 区域及两组页级副官出生。
+- `702658/702659` 属于 Adma 机制，真端 Draupnir world 不引用它们。
+
+### 已完成
+
+- 条件槽覆盖普通/特殊 Boss、Akhal、三类效果对象、波次控制和四名副官。
+- 静态出生移除 11 个与条件槽重复的 NPC 组，避免阶段出生重复。
+- 删除 Handler 中错误的 Abbey 箱子与自定义掉落；其余 Boss 掉落由 compact `npc_drops` 提供。
+- 专项测试锁定变量、条件、关键 NPC、静态去重和错误 Handler 残留。
+
 ## 未闭环
 
 - 其余生产副本仍需按同样 ownership 证据逐图处理；单图完成不代表全部区域完成。
 - 客户端协议、基础倍率和 GEO/PATH 压测不在本批次范围内。
-
