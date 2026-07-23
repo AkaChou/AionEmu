@@ -43,6 +43,14 @@
 - 所有权：遗物与石门由真端数据出生；使用遗物后的玩家增益、石门即时删除、入口变身/影片说明以及离开清理仍由 Handler 承接。入口变身现按每名玩家的实际种族选择，魔族使用 `19270`。
 - 验证：`KromedesTrialInstanceTest` 覆盖两族变身映射及既有的 Pattern/任务所有权边界。
 
+## Taloc’s Hollow
+
+- 地图：`300190000`
+- 状态：`HYBRID`；真端静态/条件出生、Pattern、门、掉落和任务接管主流程，Handler 仅保留治疗、影片与离开清理桥接。
+- 权威证据：`idelim/world_N.xml`、`NpcAIPatterns_IDElim_OSY.xml`、compact NPC AI/条件出生/掉落及两族 `10032/20032` 任务。
+- 所有权：五株普通治疗植物、巨型植物条件链和无重生虫卵由数据负责；`Elim_ClodwormNm`/`Elim_NeutflyNm` 通过逻辑门号 `1/2` 控制门 `48/7`，门 `49/7/48` 初始开启，门 `180` 初始关闭可点击。Handler 使用真端 `19229/19230` 技能、播放单人影片并清理副本临时状态。
+- 验证：`TalocsHollowQuestMigrationTest` 覆盖任务发放/回滚、条件出生、虫卵、Handler 边界及四扇门的状态和逻辑 ID。
+
 ## Raksang Ruins
 
 - 地图：`300610000`

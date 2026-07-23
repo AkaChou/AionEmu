@@ -303,16 +303,16 @@
 	</world>
 	<!-- TALOC HOLLOW 2.0 -->
 	<world world="300190000">
-		<staticdoor doorid="7" x="597.031067" y="844.303467" z="1295.65369" mesh="root_door.cga">
+		<staticdoor doorid="7" retailid="2" state="0x1" x="597.031067" y="844.303467" z="1295.65369" mesh="root_door.cga">
 			<box x1="592.776245" y1="829.90686" z1="1290.95349" x2="601.302063" y2="856.0556" z2="1305.04858"/>
 		</staticdoor>
-		<staticdoor doorid="48" x="253.54303" y="652.8116" z="1171.43921" mesh="root_door.cga">
+		<staticdoor doorid="48" retailid="1" state="0x1" x="253.54303" y="652.8116" z="1171.43921" mesh="root_door.cga">
 			<box x1="241.597488" y1="649.239258" z1="1166.739" x2="267.958862" y2="655.4401" z2="1180.83411"/>
 		</staticdoor>
-		<staticdoor keyid="1" doorid="49" x="260.436981" y="755.5574" z="1184.07129" mesh="root_door.cga">
+		<staticdoor keyid="1" doorid="49" state="0x1" x="260.436981" y="755.5574" z="1184.07129" mesh="root_door.cga">
 			<box x1="248.495865" y1="752.477844" z1="1179.37109" x2="274.879852" y2="757.779846" z2="1193.46619"/>
 		</staticdoor>
-		<staticdoor keyid="185000108" doorid="180" x="443.901855" y="801.0496" z="1285.4209" mesh="root_door.cga">
+		<staticdoor keyid="185000108" doorid="180" state="0x2" x="443.901855" y="801.0496" z="1285.4209" mesh="root_door.cga">
 			<box x1="441.936584" y1="789.1188" z1="1280.7207" x2="446.668976" y2="815.5005" z2="1294.8158"/>
 		</staticdoor>
 	</world>

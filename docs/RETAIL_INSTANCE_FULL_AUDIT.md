@@ -256,6 +256,26 @@
 
 - `KromedesTrialInstanceTest` 锁定两族变身映射，并继续锁定 Pattern 已接管的首领选择、受伤 NPC、感应提示、任务影片和已删除的私服掉落/出生。
 
+## Taloc’s Hollow（300190000）
+
+### 真端证据
+
+- `/Users/mc/IdeaProjects/58Server/Map/Worlds/idelim/world_N.xml` 为 UTF-16LE 真端来源，含五个固定 `Heal_Plant`、无重生的 `IDElim_FOBJ_BugEgg`，以及在 `IDElim_3F_Heal_Plant_Giant == 50` 时生成的巨型治疗植物 `700941`。当前静态出生与条件出生分别承接这些对象。
+- 真端 `NpcAIPatterns_IDElim_OSY.xml` 的 `Elim_ComadFe2/Elim_ComadMe2` 在 3F Komad 死亡时推进巨型植物变量；`Elim_ClodwormNm` 和 `Elim_NeutflyNm` 分别控制逻辑门号 `1/2`。compact Pattern 和 NPC AI 已保留这条链。
+- 真端对象表将门 `49/7/48` 标为初始开启、门 `180` 标为初始关闭且可点击；原静态门数据缺少开启状态，且门 `48/7` 缺少供 Pattern 查找的逻辑 ID。
+- compact `npc_drops` 已负责 `215456/215478/215482` 的副本技能物品和 `215488` 的常规掉落；两族任务入口在传送前发放各自的果实/泪水并在传送失败时回滚。旧 Handler 的 minion 契约、纪念品和手工 Boss/对象流程没有数据所有权。
+
+### 已完成
+
+- 将门 `49/7/48` 的真端开启状态写入静态门数据，将门 `180` 标为可点击；为 Pattern 控制的门 `48/7` 分别补入逻辑 ID `1/2`，不恢复旧 Handler 的手工开门。
+- 保留 Handler 的普通/巨型治疗植物真端技能桥接、单人副本影片和离开时的副本效果/随从/技能物品清理；`limits.xml` 将该图限制为单人，影片去重不会跨玩家抑制。
+- 继续由静态/条件出生、Pattern、掉落和任务接管其余流程，不重新引入手工出生、掉落、奖励或 Boss 死亡回调。
+
+### 验证范围
+
+- `TalocsHollowQuestMigrationTest` 锁定任务物品发放与回滚、治疗植物条件出生、无重生虫卵、Handler 的最小边界，以及四扇门的真端状态和 Pattern 逻辑 ID。
+- XML 数据加载、专项测试和主源码编译用于自动化验证；GM 实测仍应覆盖三扇初始开启门、钥匙门及巨型治疗植物出现后的交互。
+
 ## Raksang Ruins（300610000）
 
 ### 真端证据

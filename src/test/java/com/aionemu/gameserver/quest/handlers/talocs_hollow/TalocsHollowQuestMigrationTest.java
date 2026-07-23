@@ -2,6 +2,7 @@ package com.aionemu.gameserver.quest.handlers.talocs_hollow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
@@ -23,6 +24,8 @@ class TalocsHollowQuestMigrationTest {
 			"src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_20032All_About_Abnormal_Aether.java");
 	private static final Path SPAWNS = Path.of(
 			"src/main/resources/aion/data/static_data/spawns/Instances/300190000_Taloc's_Hollow.xml");
+	private static final Path DOORS = Path.of(
+			"src/main/resources/aion/data/static_data/staticdoors/staticdoor_templates.xml");
 
 	@Test
 	void questEntriesGrantBothItemsAndRollThemBackWhenTeleportFails() throws Exception {
@@ -65,6 +68,33 @@ class TalocsHollowQuestMigrationTest {
 				"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
 		assertTrue(conditions.contains("expression=\"IDElim_3F_Heal_Plant_Giant == 50\""));
 		assertTrue(conditions.contains("<npc id=\"700941\""));
+	}
+
+	@Test
+	void retailDoorStatesAndPatternAliasesAreRepresentedInStaticData() throws Exception {
+		NodeList worlds = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(DOORS.toFile())
+				.getElementsByTagName("world");
+		Element talocWorld = null;
+		for (int index = 0; index < worlds.getLength(); index++) {
+			Element world = (Element) worlds.item(index);
+			if ("300190000".equals(world.getAttribute("world"))) {
+				talocWorld = world;
+				break;
+			}
+		}
+		assertNotNull(talocWorld);
+		NodeList doors = talocWorld.getElementsByTagName("staticdoor");
+		assertEquals(4, doors.getLength());
+		for (int index = 0; index < doors.getLength(); index++) {
+			Element door = (Element) doors.item(index);
+			switch (door.getAttribute("doorid")) {
+				case "7" -> assertEquals("2:0x1", door.getAttribute("retailid") + ':' + door.getAttribute("state"));
+				case "48" -> assertEquals("1:0x1", door.getAttribute("retailid") + ':' + door.getAttribute("state"));
+				case "49" -> assertEquals("0x1", door.getAttribute("state"));
+				case "180" -> assertEquals("0x2", door.getAttribute("state"));
+				default -> throw new AssertionError(door.getAttribute("doorid"));
+			}
+		}
 	}
 
 	private static void assertPairedEntry(Path path, String first, String second) throws Exception {
