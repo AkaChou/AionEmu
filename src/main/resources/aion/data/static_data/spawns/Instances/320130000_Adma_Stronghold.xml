@@ -615,14 +615,13 @@
 		<spawn npc_id="214695">
 			<spot x="623.902" y="631.4337" z="191.08675" h="94"/>
 		</spawn>
-		<!-- Enthralled Taliesin -->
-		<spawn npc_id="237242">
-			<spot x="450.68787" y="475.11966" z="188.92244" h="16"/>
+		<!-- The Taliesin and Zeeturun stages are condition-spawned by retail AI. -->
+		<spawn npc_id="856575">
+			<spot x="457.766632" y="230.325119" z="172.000000" h="90" alternate_id="237245" select_prob="2500"/>
 		</spawn>
-		<!-- Enthralled Zeeturun -->
-		<spawn npc_id="237243">
-            <spot x="560.3374" y="716.55334" z="173.48601" h="30"/>
-        </spawn>
+		<spawn npc_id="730176" respawn_time="10">
+			<spot x="626.144104" y="745.713867" z="200.999100" h="0" entity_id="66"/>
+		</spawn>
 		<!-- Acid Cloud -->
 		<spawn npc_id="281458">
             <spot x="539.3552" y="470.4026" z="186.59447" h="60"/>

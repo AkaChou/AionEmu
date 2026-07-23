@@ -66,6 +66,21 @@
 - 删除 Handler 中错误的 Abbey 箱子与自定义掉落；其余 Boss 掉落由 compact `npc_drops` 提供。
 - 专项测试锁定变量、条件、关键 NPC、静态去重和错误 Handler 残留。
 
+## Adma Stronghold（320130000）
+
+### 真端证据
+
+- `iddf2a_adma/world_N.xml` 提供 `adma_t_boss`、`iddf3_dragon_fx3` 两个变量和 9 个条件区域。
+- `npcaipatterns_master_4id_jsm.xml` 与 `npc-ai.xml` 共同绑定阶段、辅助出生和亡魂控制。
+- compact `npc_drops` 已覆盖首领钥匙、装备包和常规掉落，Handler 注入属于重复或私服自定义逻辑。
+
+### 已完成
+
+- 写入 9 条真端条件出生，并移除静态出生中重复的 `237242/237243`。
+- 静态出生保留 Pot 的 25% 真端分支，并加入真端坐标的 `730176` 出口。
+- 删除 Handler 的重复掉落、Pot 定时器、首领/亡魂/出口手工流程和错误 Abbey 箱子逻辑。
+- `AdmaStrongholdRetailMigrationTest` 锁定条件、关键 NPC、随机 Pot、出口与 Handler 残留。
+
 ## 未闭环
 
 - 其余生产副本仍需按同样 ownership 证据逐图处理；单图完成不代表全部区域完成。

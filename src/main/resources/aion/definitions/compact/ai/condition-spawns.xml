@@ -96973,4 +96973,35 @@
       </group>
     </condition>
   </world>
+  <world id="320130000" name="iddf2a_adma">
+    <variable name="adma_t_boss"/>
+    <variable name="iddf3_dragon_fx3"/>
+    <condition id="9785" expression="adma_t_boss == 4" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="iddf2a_adma/world_N.xml#1">
+      <group probability="1000"><slot><npc id="237242" probability="10000" x="450.671204" y="475.142487" z="192.357147" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/></slot></group>
+    </condition>
+    <condition id="9786" expression="adma_t_boss == 6" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="iddf2a_adma/world_N.xml#2">
+      <group probability="1000"><slot><npc id="237244" probability="10000" x="598.400024" y="740.099976" z="200" heading="180" initial_delay="1" initial_delay_extra="1" idle_live_range="1" despawn_at_attack_state="true"/></slot></group>
+    </condition>
+    <condition id="9787" expression="adma_t_boss == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="iddf2a_adma/world_N.xml#3">
+      <group probability="1000"><slot><npc id="237240" probability="10000" x="381.250977" y="222.568481" z="166" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/></slot></group>
+    </condition>
+    <condition id="9788" expression="adma_t_boss == 1" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="iddf2a_adma/world_N.xml#4">
+      <group probability="1000"><slot><npc id="856574" probability="10000" x="523.59491" y="222.484833" z="166" heading="290" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/></slot></group>
+    </condition>
+    <condition id="9789" expression="adma_t_boss == 2" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="iddf2a_adma/world_N.xml#5">
+      <group probability="1000"><slot><npc id="856574" probability="10000" x="381.256012" y="222.57637" z="166.621124" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/></slot></group>
+    </condition>
+    <condition id="9790" expression="adma_t_boss == 5" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="iddf2a_adma/world_N.xml#6">
+      <group probability="1000"><slot><npc id="237243" probability="10000" x="560.09552" y="707.775269" z="178.805298" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/></slot></group>
+    </condition>
+    <condition id="9791" expression="adma_t_boss == 2" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="iddf2a_adma/world_N.xml#7">
+      <group probability="1000"><slot><npc id="237240" probability="10000" x="523.591858" y="222.441513" z="167.361557" heading="0" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/></slot></group>
+    </condition>
+    <condition id="9792" expression="adma_t_boss == 7" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="iddf2a_adma/world_N.xml#8">
+      <group probability="1000"><slot><npc id="237239" probability="10000" x="598.5896" y="743.391541" z="204.358231" heading="180" initial_delay="1" initial_delay_extra="1" idle_live_range="8" despawn_at_attack_state="true"/></slot></group>
+    </condition>
+    <condition id="9793" expression="adma_t_boss == 3" page_start="1" page_end="1" despawn_at_other="true" group_mode="all" source="iddf2a_adma/world_N.xml#9">
+      <group probability="1000"><slot><npc id="237241" probability="10000" x="623.913757" y="631.425598" z="193.034332" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/></slot></group>
+    </condition>
+  </world>
 </condition_spawns>

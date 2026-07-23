@@ -14,7 +14,6 @@ class InstanceHandlerRecoveryMigrationTest {
 
 	@Test
 	void migratedHandlersUsePersistentDeadlinesAndState() throws Exception {
-		assertMigrated("AdmaStrongholdInstance", "scheduleDeadline(\"pot\"", "adma.complete");
 		assertMigrated("PadmarashkaCaveInstance", "scheduleDeadline(\"expire\"", "padma.protectors");
 		assertMigrated("CradleOfEternityInstance", "scheduleDeadline(\"start\"", "cradle.covetous_complete");
 		assertSourceContains("CradleOfEternityInstance", "cradle.sun_revealed");
