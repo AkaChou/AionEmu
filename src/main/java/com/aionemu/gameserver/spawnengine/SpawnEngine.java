@@ -6,8 +6,10 @@ import com.aionemu.gameserver.ai.RetailNpcPartyEngine;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.aionemu.gameserver.configs.administration.DeveloperConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -271,8 +273,18 @@ public class SpawnEngine {
 	 * instance index
 	 */
 	static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
-		bringIntoWorld(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), spawn.getZ(),
+		float z = projectedSpawnZ(visibleObject, spawn, npc -> GameWorldServices.pathService()
+			.projectGroundPoint(npc, spawn.getX(), spawn.getY(), spawn.getZ()));
+		bringIntoWorld(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), z,
 				spawn.getHeading());
+	}
+
+	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector) {
+		if (!(visibleObject instanceof Npc npc) || spawn.canFly()) {
+			return spawn.getZ();
+		}
+		float[] point = projector.apply(npc);
+		return point == null ? spawn.getZ() : point[2];
 	}
 
 	/**

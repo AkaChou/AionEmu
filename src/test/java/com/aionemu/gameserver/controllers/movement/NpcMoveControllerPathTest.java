@@ -260,11 +260,12 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void pathMovementKeepsItsPathHeight() {
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(true, true, true, new float[][] {{1, 2, 3}}));
-		assertTrue(NpcMoveController.shouldAdjustGeoHeight(true, true, true, null));
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, true, true, null));
-		assertTrue(NpcMoveController.shouldAdjustGeoHeight(false, false, false, null));
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, false, true, null));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(true, true, true, true, new float[][] {{1, 2, 3}}));
+		assertTrue(NpcMoveController.shouldAdjustGeoHeight(true, true, true, true, null));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(true, false, true, true, null));
+		assertTrue(NpcMoveController.shouldAdjustGeoHeight(true, false, false, false, null));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(true, false, false, true, null));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, true, true, true, null));
 	}
 
 	@Test

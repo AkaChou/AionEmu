@@ -98,6 +98,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler {
 
 		int npcId = npc.getNpcId();
 		if (isMarabataController(npcId)) {
+			removeMarabataEffect(npcId);
 			scheduleMarabataController(npcId);
 			return;
 		}
@@ -356,6 +357,13 @@ public class DarkPoetaInstance extends GeneralInstanceHandler {
 		scheduleDeadline("marabata_" + npcId, deadline, () -> respawnMarabataController(npcId));
 	}
 
+	private void removeMarabataEffect(int npcId) {
+		Npc boss = getNpc(marabataBossId(npcId));
+		if (boss != null && !boss.getLifeStats().isAlreadyDead()) {
+			boss.getEffectController().removeEffect(marabataEffectId(npcId));
+		}
+	}
+
 	private void restoreMarabataDeadlines() {
 		for (int npcId : MARABATA_CONTROLLERS) {
 			long deadline = runtimeState().getLong(marabataDeadlineKey(npcId), 0);
@@ -454,6 +462,13 @@ public class DarkPoetaInstance extends GeneralInstanceHandler {
 			case 700445, 700446, 700447 -> 214851;
 			default -> throw new IllegalArgumentException("Unknown Marabata controller " + npcId);
 		};
+	}
+
+	static int marabataEffectId(int npcId) {
+		if (!isMarabataController(npcId)) {
+			throw new IllegalArgumentException("Unknown Marabata controller " + npcId);
+		}
+		return (npcId - 700439) % 3 == 1 ? 18556 : 18110;
 	}
 
 	private static SpawnPoint marabataPoint(int npcId) {

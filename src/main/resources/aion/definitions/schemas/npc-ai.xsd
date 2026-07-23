@@ -12,6 +12,7 @@
 							<xs:attribute name="sensory_range_short" type="xs:float" use="required"/>
 							<xs:attribute name="sensory_angle" type="xs:float" use="required"/>
 							<xs:attribute name="talk_delay" type="xs:nonNegativeInteger" use="required"/>
+							<xs:attribute name="generate_pathfind" type="xs:boolean" default="true"/>
 							<xs:attribute name="max_chase_time" type="xs:string"/>
 							<xs:attribute name="react_to_pathfind_fail" default="return_to_sp">
 								<xs:simpleType>

@@ -14,6 +14,11 @@ public final class NpcPathBehaviorData {
 		return behaviors.get(npcId);
 	}
 
+	public boolean allowsPathfinding(int npcId) {
+		Behavior behavior = behaviors.get(npcId);
+		return behavior == null || behavior.generatePathfind();
+	}
+
 	public int size() {
 		return behaviors.size();
 	}
@@ -24,7 +29,7 @@ public final class NpcPathBehaviorData {
 		ABANDON_TARGET
 	}
 
-	public record Behavior(String maxChaseTime, PathfindFailReaction pathfindFailReaction,
+	public record Behavior(boolean generatePathfind, String maxChaseTime, PathfindFailReaction pathfindFailReaction,
 			String returnMoveType, int returnSpeedPercent, int returnSensoryPercent) {
 	}
 }

@@ -167,7 +167,7 @@ class RetailPatternAI2Test {
 			assertEquals("IDLF1_SpallerCtrl", dranaLump.name());
 			assertTrue(RetailPatternAI2.supports(dranaLump));
 			for (int npcId : new int[] { 214849, 214850, 214851, 214864, 214894, 214895, 214896, 214897,
-					215280, 215281, 215284, 237372, 237373, 281178, 281258, 281259,
+					214904, 215280, 215281, 215284, 237372, 237373, 281178, 281246, 281249, 281258, 281259,
 					700439, 700440, 700441, 700442, 700443, 700444, 700445, 700446, 700447 }) {
 				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
 				npc.npcId = npcId;
@@ -439,6 +439,19 @@ class RetailPatternAI2Test {
 			assertFalse(RetailPatternAI2.shouldUseDefaultIdleThinking(
 				new Pattern("idle", Map.of(event, List.of(rule)))));
 		}
+	}
+
+	@Test
+	void scriptedSightEventsReplaceDefaultAggroHandling() {
+		Rule rule = new Rule(1, "DIRECT", List.of(), List.of(new Operation("do_nothing", Map.of())));
+		Pattern scripted = new Pattern("sight", Map.of("on_see_user", List.of(rule)));
+		ObjenesisStd objenesis = new ObjenesisStd();
+		Player player = objenesis.newInstance(Player.class);
+		Npc npc = objenesis.newInstance(Npc.class);
+
+		assertFalse(RetailPatternAI2.shouldUseDefaultSightHandling(scripted, player));
+		assertTrue(RetailPatternAI2.shouldUseDefaultSightHandling(scripted, npc));
+		assertTrue(RetailPatternAI2.shouldUseDefaultSightHandling(new Pattern("default", Map.of()), player));
 	}
 
 	@Test

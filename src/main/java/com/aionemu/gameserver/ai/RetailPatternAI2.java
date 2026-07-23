@@ -589,7 +589,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	@Override
 	protected void handleCreatureSee(Creature creature) {
-		super.handleCreatureSee(creature);
+		if (shouldUseDefaultSightHandling(pattern, creature)) {
+			super.handleCreatureSee(creature);
+		}
 		if (!isInRetailSight(creature)) {
 			return;
 		}
@@ -598,6 +600,11 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		} else if (creature instanceof Npc) {
 			runEvent("on_see_npc", null, creature);
 		}
+	}
+
+	static boolean shouldUseDefaultSightHandling(Pattern pattern, Creature creature) {
+		return creature instanceof Player ? !pattern.events().containsKey("on_see_user")
+			: !(creature instanceof Npc) || !pattern.events().containsKey("on_see_npc");
 	}
 
 	@Override

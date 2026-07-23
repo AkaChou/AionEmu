@@ -375,9 +375,10 @@ public class NpcMoveController
                 targetY + (float) Math.sin(angle) * radius, targetZ};
     }
 
-    static boolean shouldAdjustGeoHeight(boolean enhancedHomeReturn, boolean returning, boolean spawnDestination,
-            float[][] path) {
-        return path == null && (enhancedHomeReturn && returning || !returning && !spawnDestination);
+    static boolean shouldAdjustGeoHeight(boolean pathfindingAllowed, boolean enhancedHomeReturn, boolean returning,
+            boolean spawnDestination, float[][] path) {
+        return pathfindingAllowed && path == null
+                && (enhancedHomeReturn && returning || !returning && !spawnDestination);
     }
 
     /**
@@ -521,9 +522,11 @@ public class NpcMoveController
                     long now = System.currentTimeMillis();
                     if (targetMoved(target.getX(), target.getY(), target.getZ())) {
                         float attackDistance = owner.getController().getAttackDistanceToTarget();
-                        boolean spatialPath = GameWorldServices.pathService().usesSpatialPath(owner);
-                        float targetZ = getTargetZ(spatialPath, creature);
-                        updateTargetDestination(creature, spatialPath, targetZ, attackDistance);
+                        PathService pathService = GameWorldServices.pathService();
+                        boolean pathfindingAllowed = pathService.allowsPathfinding(owner);
+                        boolean spatialPath = pathService.usesSpatialPath(owner);
+                        float targetZ = pathfindingAllowed ? getTargetZ(spatialPath, creature) : creature.getZ();
+                        updateTargetDestination(creature, spatialPath || !pathfindingAllowed, targetZ, attackDistance);
                         trackedTargetX = target.getX();
                         trackedTargetY = target.getY();
                         trackedTargetZ = target.getZ();
@@ -783,7 +786,8 @@ public class NpcMoveController
         boolean returning = owner.getAi2().getState() == AIState.RETURNING;
         SpawnTemplate spawn = owner.getSpawn();
         boolean spawnDestination = spawn.getX() == targetDestX && spawn.getY() == targetDestY && spawn.getZ() == targetDestZ;
-        if (shouldAdjustGeoHeight(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination, path)
+        if (shouldAdjustGeoHeight(GameWorldServices.pathService().allowsPathfinding(owner),
+                AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination, path)
                 && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
                 && !GameWorldServices.pathService().usesSpatialPath(owner)
                 && owner.getAi2().getSubState() != AISubState.WALK_PATH
@@ -1140,6 +1144,7 @@ public class NpcMoveController
     private synchronized void tryStuckRecovery(float fromX, float fromY, float fromZ, float waypointX,
             float waypointY, float waypointZ, long now) {
         if (owner == null || !GeoDataConfig.GEO_PATH_RECOVERY_ENABLE
+                || !GameWorldServices.pathService().allowsPathfinding(owner)
                 || GameWorldServices.pathService().usesSpatialPath(owner)) {
             return;
         }

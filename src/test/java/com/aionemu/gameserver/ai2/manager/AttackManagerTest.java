@@ -15,10 +15,9 @@ import org.junit.jupiter.api.Test;
 class AttackManagerTest {
 
 	@Test
-	void passiveImmobileStructureKeepsVisibleTarget() {
-		assertTrue(AttackManager.shouldKeepTargetWhenImmobile(0, false));
-		assertFalse(AttackManager.shouldKeepTargetWhenImmobile(1, false));
-		assertFalse(AttackManager.shouldKeepTargetWhenImmobile(0, true));
+	void immobileNpcWithoutOffensiveSkillKeepsTarget() {
+		assertTrue(AttackManager.shouldKeepTargetWhenImmobile(false));
+		assertFalse(AttackManager.shouldKeepTargetWhenImmobile(true));
 	}
 
 	@Test
