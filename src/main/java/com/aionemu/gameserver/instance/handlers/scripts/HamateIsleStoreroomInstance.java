@@ -1,24 +1,15 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.flyring.FlyRing;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
-import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
-import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-
-/**
- * 哈马特岛储藏室副本事件处理器。
- * Instance event handler for Hamate Isle Storeroom.
- *
- * @author Encom
- */
+import com.aionemu.gameserver.world.zone.ZoneInstance;
+import com.aionemu.gameserver.world.zone.ZoneName;
 
 @InstanceID(300070000)
 public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
@@ -35,10 +26,6 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
-		spawnHamateIsleStoreroomRings();
-		spawnSelectedNpc("hamate.guard.1", 214780, 214781, 381.35986f, 510.61307f, 102.618126f, (byte) 111);
-		spawnSelectedNpc("hamate.guard.2", 214782, 214784, 625.4933f, 455.0907f, 102.63267f, (byte) 47);
-		spawnSelectedNpc("hamate.guard.3", 215449, 215450, 503.947f, 623.82227f, 103.695724f, (byte) 90);
 		if (runtimeState().getBoolean("hamate.expired", false)) {
 			deleteTreasureBoxes();
 			return;
@@ -64,60 +51,27 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 		}
 	}
 
-	private void spawnSelectedNpc(String key, int firstNpcId, int secondNpcId, float x, float y, float z, byte heading) {
-		int npcId = runtimeState().getInt(key, 0);
-		if (npcId == 0) {
-			npcId = Rnd.get(1, 2) == 1 ? firstNpcId : secondNpcId;
-			runtimeState().put(key, npcId);
-		}
-		spawn(npcId, x, y, z, heading);
-	}
-	private void spawnHamateIsleStoreroomRings() {
-        FlyRing f1 = new FlyRing(new FlyRingTemplate("HAMATE_ISLE_STOREROOM", mapId,
-        new Point3D(501.77, 409.53, 94.12),
-        new Point3D(503.93, 409.65, 98.9),
-        new Point3D(506.26, 409.7, 94.15), 10), instanceId);
-        f1.spawn();
-    }
-	
-	/**
-	 * 玩家通过飞行环时处理。
-	 * Handle a player passing a flying ring.
-	 *
-	 * 玩家 / player
-	 * @param flyingRing 飞行环标识 / flying-ring id
-	 * result
-	 */
 	@Override
-    public boolean onPassFlyingRing(Player player, String flyingRing) {
-        if (flyingRing.equals("HAMATE_ISLE_STOREROOM")) {
-		    if (runtimeState().getLong("hamate.deadline", 0) == 0) {
-				startHamateIsleStoreroomTimer();
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-					public void visit(Player player) {
-						if (player.isOnline()) {
-							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
-							// 龙族防护魔法结界已激活。 / The Balaur protective magic ward has been activated.
-							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_START_IDABRE);
-						}
-					}
-				});
-			}
+	public void onEnterZone(Player player, ZoneInstance zone) {
+		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("HAMATE_ISLE_STOREROOM_TIMER_300070000")) {
+			startHamateIsleStoreroomTimer();
 		}
-		return false;
 	}
 	
-	private void startHamateIsleStoreroomTimer() {
+	private synchronized void startHamateIsleStoreroomTimer() {
+		if (runtimeState().getLong("hamate.deadline", 0) != 0
+				|| runtimeState().getBoolean("hamate.expired", false)) {
+			return;
+		}
 		long deadline = System.currentTimeMillis() + 900_000;
 		runtimeState().put("hamate.deadline", deadline);
 		scheduleDeadline("treasure", deadline, this::expireTreasure);
+		instance.doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_START_IDABRE);
+			}
+		});
     }
 
 	private void expireTreasure() {

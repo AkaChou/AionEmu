@@ -35,12 +35,20 @@ class DarkPoetaInstanceTest {
 
 	@Test
 	void globalInstanceSpawnsAreNotRepeatedForEveryPlayer() throws Exception {
-		assertFalse(source("HamateIsleStoreroomInstance").contains("public void onEnterInstance"));
-		assertFalse(source("CarpusIsleStoreroomInstance").contains("public void onEnterInstance"));
+		assertEnterDoesNotSpawn("HamateIsleStoreroomInstance");
+		assertEnterDoesNotSpawn("CarpusIsleStoreroomInstance");
 		assertSpawnGuarded("DraupnirCaveInstance", "spawn(237276");
 		String eternal = source("TheEternalBastionInstance");
 		assertTrue(eternal.contains("runtimeState().getBoolean(STATE_PREFIX + \"completed\""));
 		assertFalse(eternal.contains("instanceReward.addPoints(20000)"));
+	}
+
+	private static void assertEnterDoesNotSpawn(String className) throws Exception {
+		String source = source(className);
+		int enter = source.indexOf("public void onEnterInstance");
+		int nextMethod = source.indexOf("\n\tprivate ", enter);
+		assertTrue(enter >= 0 && nextMethod > enter);
+		assertFalse(source.substring(enter, nextMethod).contains("spawn("));
 	}
 
 	private static void assertSpawnGuarded(String className, String spawnMarker) throws Exception {

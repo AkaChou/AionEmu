@@ -10,4 +10,14 @@
             <point x="468.44006" y="446.4018"/>
         </points>
     </zone>
+    <zone mapid="300050000" name="CARPUS_ISLE_STOREROOM_TIMER_300050000" area_type="POLYGON" zone_type="SUB" priority="17" flags="2">
+        <points bottom="196.759430" top="214.759430">
+            <point x="478.164185" y="560.796875"/>
+            <point x="480.370941" y="536.151001"/>
+            <point x="532.100769" y="536.464966"/>
+            <point x="533.403320" y="596.967468"/>
+            <point x="480.606323" y="596.619080"/>
+            <point x="478.644928" y="576.355713"/>
+        </points>
+    </zone>
 </zones>

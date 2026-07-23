@@ -2,22 +2,14 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.flyring.FlyRing;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
-import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
-import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-
-/**
- * 卡普斯岛储藏室副本事件处理器。
- * Instance event handler for Carpus Isle Storeroom.
- *
- * @author Encom
- */
+import com.aionemu.gameserver.world.zone.ZoneInstance;
+import com.aionemu.gameserver.world.zone.ZoneName;
 
 @InstanceID(300050000)
 public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
@@ -34,7 +26,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
-        spawnCarpusIsleStoreroomRings();
 		if (runtimeState().getBoolean("carpus.expired", false)) {
 			deleteTreasureBoxes();
 			return;
@@ -59,52 +50,28 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 				new SM_QUEST_ACTION(0, (int) ((deadline - System.currentTimeMillis()) / 1000)));
 		}
 	}
-	private void spawnCarpusIsleStoreroomRings() {
-        FlyRing f1 = new FlyRing(new FlyRingTemplate("CARPUS_ISLE_STOREROOM", mapId,
-        new Point3D(479.24, 572.57, 202.72),
-        new Point3D(477.95, 567.64, 212.9),
-        new Point3D(477.97, 563.35, 202.12), 10), instanceId);
-        f1.spawn();
-    }
-	
-	/**
-	 * 玩家通过飞行环时处理。
-	 * Handle a player passing a flying ring.
-	 *
-	 * 玩家 / player
-	 * @param flyingRing 飞行环标识 / flying-ring id
-	 * result
-	 */
+
 	@Override
-    public boolean onPassFlyingRing(Player player, String flyingRing) {
-        if (flyingRing.equals("CARPUS_ISLE_STOREROOM")) {
-		    if (runtimeState().getLong("carpus.deadline", 0) == 0) {
-				startCarpusIsleStoreroomChamberTimer();
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-					public void visit(Player player) {
-						if (player.isOnline()) {
-							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
-							// 龙族防护魔法结界已激活。 / The Balaur protective magic ward has been activated.
-							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_START_IDABRE);
-						}
-					}
-				});
-			}
+	public void onEnterZone(Player player, ZoneInstance zone) {
+		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("CARPUS_ISLE_STOREROOM_TIMER_300050000")) {
+			startCarpusIsleStoreroomChamberTimer();
 		}
-		return false;
 	}
 	
-	private void startCarpusIsleStoreroomChamberTimer() {
+	private synchronized void startCarpusIsleStoreroomChamberTimer() {
+		if (runtimeState().getLong("carpus.deadline", 0) != 0
+				|| runtimeState().getBoolean("carpus.expired", false)) {
+			return;
+		}
 		long deadline = System.currentTimeMillis() + 900_000;
 		runtimeState().put("carpus.deadline", deadline);
 		scheduleDeadline("treasure", deadline, this::expireTreasure);
+		instance.doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_START_IDABRE);
+			}
+		});
     }
 
 	private void expireTreasure() {

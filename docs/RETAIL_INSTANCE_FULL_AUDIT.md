@@ -37,6 +37,26 @@
 - `RetailPatternAI2Test` 验证 `256686/256688/256693/256694` 的 Pattern 在当前真端数据、技能与 walker 下均可接管；`InstanceHandlerRecoveryMigrationTest` 锁定 124 点、关键坐标、AI/技能、掉落、出口、无条件世界和 Handler 边界。
 - `NochsanaFortressGateTemplateTest` 锁定 `256694 race=DRAGON_CASTLE_DOOR`，保证两族攻城兵器都能选择城门。自动化验证不替代 GM 实测。
 
+## Asteria / Roah Upper Storerooms（300050000 / 300070000）
+
+### 真端证据
+
+- `idabre_up_asteria/world_N.xml` 与 `idabre_up_rhoo/world_N.xml` 分别定义 49/44 个无条件出生点，其中 40/39 个为概率选择池；坐标、朝向、walker 与候选概率均以真端 world 为准。
+- `283080/Ab_RaceCheck` 在进入攻击状态时生产 `LIGHTIN/DARKIN`，`856595/IDAb_Race_Check` 在发现玩家时生产 `racecheck=1/2`；两图条件世界均声明并消费这三项变量。
+- `206087/206088` 的真端 sensory polygon 进入时广播 `1400243` 并启动 900 秒计时，到期广播 `1400244`，分别生成 `281069/281074`。
+
+### 已完成
+
+- 静态出生改为真端选择池，删除 Roah Handler 中三组错误手工随机出生；保留真端源 Z，不将其描述为 GEO 校正。
+- 将两组真端 sensory polygon 写为高优先级子区域，Handler 由 `onEnterZone` 一次性启动持久化 deadline，恢复后继续调度，后来进入玩家同步剩余秒数；删除原飞行环近似触发。
+- 到期继续由 Handler 直接清理宝箱：`281069/281074 -> 281070 -> 6631` 的 Pattern 已存在，但对应宝箱自定义 AI 尚无可靠消费者，当前不能只生成清箱 NPC 后删除桥接。
+- `coverage.xml` 明确记录静态池、条件变量、AI、精确计时区域与 Handler 桥接的实际 ownership。
+
+### 验证范围
+
+- `AbyssStoreroomRetailMigrationTest` 锁定点数、随机池、条件变量生产链、真端 polygon、一次性计时入口、deadline 恢复/同步和已删除的飞行环及错误出生。
+- XML 数据加载、专项测试和主源码编译用于自动化验证；GM 实测和线上副本压测不在本窗口范围内。
+
 ## Dark Poeta（300040000）
 
 ### 真端证据
