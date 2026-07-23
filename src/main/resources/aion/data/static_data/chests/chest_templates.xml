@@ -497,6 +497,15 @@
 	<!-- ISLE OF ROOTS STOREROOM-
 	GRAVE OF STEEL STOREROOM-
 	TWILIGHT BATTELFIELD STOREROOM CHEST -->
+	<chest npcid="700540">
+		<keyitem id="1" itemid="0" quantity="1"/>
+	</chest>
+	<chest npcid="700542">
+		<keyitem id="1" itemid="0" quantity="1"/>
+	</chest>
+	<chest npcid="700544">
+		<keyitem id="1" itemid="0" quantity="1"/>
+	</chest>
 	<chest npcid="254574">
         <keyitem id="1" itemid="0" quantity="1"/>
     </chest>

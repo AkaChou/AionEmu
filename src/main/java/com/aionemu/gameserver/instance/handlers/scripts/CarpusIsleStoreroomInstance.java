@@ -2,22 +2,15 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.flyring.FlyRing;
-import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * 卡普斯岛储藏室副本事件处理器。
@@ -29,8 +22,8 @@ import java.util.Set;
 @InstanceID(300050000)
 public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 {
-	/** carpus isle storeroom treasure box suscess / carpus isle storeroom treasure box suscess */
-		private final List<Npc> treasureBoxes = new ArrayList<>();
+	private static final int[] TREASURE_BOX_IDS = { 700475, 700476, 700477, 701483, 701488,
+		702850, 702851, 702852, 702853, 702855 };
 	
 	/**
 	 * 副本创建时初始化逻辑。
@@ -42,52 +35,30 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
         spawnCarpusIsleStoreroomRings();
-		if (!runtimeState().getBoolean("carpus.expired", false)) {
-			treasureBoxes.add((Npc) spawn(700475, 524.4908f, 706.2591f, 191.8985f, (byte) 90));
-			treasureBoxes.add((Npc) spawn(700476, 522.22754f, 421.55646f, 199.75935f, (byte) 29));
-			treasureBoxes.add((Npc) spawn(700477, 671.581f, 565.1735f, 206.14534f, (byte) 60));
-			long deadline = runtimeState().getLong("carpus.deadline", 0);
-			if (deadline > 0) {
-				scheduleDeadline("treasure", deadline, this::expireTreasure);
-			}
+		if (runtimeState().getBoolean("carpus.expired", false)) {
+			deleteTreasureBoxes();
+			return;
+		}
+		long deadline = runtimeState().getLong("carpus.deadline", 0);
+		if (deadline > 0) {
+			scheduleDeadline("treasure", deadline, this::expireTreasure);
 		}
     }
-	/**
-	 * NPC 掉落表注册时处理。
-	 * Handle NPC drop-table registration.
-	 *
-	 * npc
-	 */
-	
-	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-		switch (npcId) {
-			case 214762: //Dakaer Tactician.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000033, 1)); //Golden Abyss Key.
-					}
-				}
-			break;
-			case 214766: //Dakaer Chanter.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000034, 1)); //Jeweled Abyss Key.
-					}
-				}
-			break;
-			case 215444: //Ebonlord Kiriel.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000035, 1)); //Magic Abyss Key.
-					}
-				}
-			break;
+
+	@Override
+	public void onEnterInstance(Player player) {
+		super.onEnterInstance(player);
+		long deadline = runtimeState().getLong("carpus.deadline", 0);
+		if (runtimeState().getBoolean("carpus.expired", false)) {
+			return;
+		}
+		if (deadline > 0 && deadline <= System.currentTimeMillis()) {
+			expireTreasure();
+		} else if (deadline > System.currentTimeMillis()) {
+			PacketSendUtility.sendPacket(player,
+				new SM_QUEST_ACTION(0, (int) ((deadline - System.currentTimeMillis()) / 1000)));
 		}
 	}
-	
 	private void spawnCarpusIsleStoreroomRings() {
         FlyRing f1 = new FlyRing(new FlyRingTemplate("CARPUS_ISLE_STOREROOM", mapId,
         new Point3D(479.24, 572.57, 202.72),
@@ -137,10 +108,18 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
     }
 
 	private void expireTreasure() {
+		if (runtimeState().getBoolean("carpus.expired", false)) {
+			return;
+		}
 		runtimeState().put("carpus.expired", true);
 		sendMsg(1400244);
-		treasureBoxes.forEach(box -> box.getController().onDelete());
-		treasureBoxes.clear();
+		deleteTreasureBoxes();
+	}
+
+	private void deleteTreasureBoxes() {
+		for (int npcId : TREASURE_BOX_IDS) {
+			instance.getNpcs(npcId).forEach(npc -> npc.getController().onDelete());
+		}
 	}
 	
 	private void sendMsg(final String str) {
@@ -164,11 +143,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	@Override
-	public void onLeaveInstance(Player player) {
-		removeItems(player);
-	}
-	
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.

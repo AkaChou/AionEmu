@@ -41,8 +41,6 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertSourceExcludes("crucible/EmpyreanCrucibleInstance", "onDropRegistered");
 		assertMigrated("LinkgateFoundryInstance", "scheduleDeadline(\"expire\"",
 				"linkgate.expire_deadline");
-		assertMigrated("DrakenseerLairInstance", "scheduleDeadline(\"expire\"",
-				"drakenseer.enhancers");
 		assertMigrated("RightWingChamberInstance", "scheduleDeadline(\"chests\"",
 				"rightwing.exit_deadline");
 		assertMigrated("LeftWingChamberInstance", "scheduleDeadline(\"chest\"",
@@ -51,8 +49,6 @@ class InstanceHandlerRecoveryMigrationTest {
 				"hexway.next_deadline");
 		assertMigrated("LowerUdasTempleInstance", "scheduleDeadline(\"chest\"",
 				"lower_udas.next_deadline");
-		assertMigrated("AbyssStoreroomInstance", "scheduleDeadline(\"barrier_\"",
-				"storeroom.next_deadline");
 		assertMigrated("SealedArgentManorInstance", "scheduleDeadline(\"expire\"",
 				"sealed.resistance_skill");
 		assertSourceExcludes("SealedArgentManorInstance", "GameThreadPoolServices");

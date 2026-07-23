@@ -227,7 +227,6 @@ class RetailPatternAI2Test {
 				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 					"301500000:" + npcId);
 			}
-
 			SkillNpc roomController = new ObjenesisStd().newInstance(SkillNpc.class);
 			roomController.npcId = 857824;
 			roomController.worldId = 301570000;
@@ -256,6 +255,44 @@ class RetailPatternAI2Test {
 				231.63109f, 511.9707f, 468.80215f, (byte) 0, 0, null, 0, 0);
 			highdeva.skillList = skillList(DataManager.NPC_SKILL_DATA.getNpcSkillList(857785).getNpcSkills());
 			assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(857785), highdeva));
+
+			for (int npcId : new int[] { 703154, 857973, 857974, 857975, 857976, 857977, 248970, 248972, 248976, 220450 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 301620000;
+				npc.objectTemplate = new NpcTemplate();
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				if (npcId == 857973) {
+					npc.spawnTemplate.setX(298.666992f);
+					npc.spawnTemplate.setY(258.273102f);
+					npc.spawnTemplate.setZ(324.24118f);
+				}
+				npc.skillList = new NpcSkillList(npc);
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"301620000:" + npcId);
+			}
+			Map<Integer, int[]> storeroomNpcs = Map.of(
+				300120000, new int[] { 215414, 215146, 215148, 215157, 215160, 215178, 215179, 281288, 700546 },
+				300130000, new int[] { 215415, 215188, 215190, 215191, 215201, 215202, 215203, 215213, 215215,
+					215221, 215222, 281288, 700547 },
+				300140000, new int[] { 215413, 215102, 215103, 215105, 215114, 215115, 215117, 215127, 215129,
+					215135, 215136, 281288, 700545 });
+			for (var entry : storeroomNpcs.entrySet()) {
+				for (int npcId : entry.getValue()) {
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = entry.getKey();
+					npc.objectTemplate = new NpcTemplate();
+					setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+					npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+					if (npcId == 215135 || npcId == 215178 || npcId == 215221) {
+						npc.spawnTemplate.setWalkerId("retail:" + entry.getKey() + ":drakanminiboss_path");
+					}
+					npc.skillList = new NpcSkillList(npc);
+					assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+						entry.getKey() + ":" + npcId);
+				}
+			}
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
 			DataManager.NPC_SKILL_DATA = previousNpcSkills;
