@@ -260,12 +260,24 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void pathMovementKeepsItsPathHeight() {
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(true, true, true, true, new float[][] {{1, 2, 3}}));
-		assertTrue(NpcMoveController.shouldAdjustGeoHeight(true, true, true, true, null));
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(true, false, true, true, null));
-		assertTrue(NpcMoveController.shouldAdjustGeoHeight(true, false, false, false, null));
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(true, false, false, true, null));
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, true, true, true, null));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(true, true, true, new float[][] {{1, 2, 3}}));
+		assertTrue(NpcMoveController.shouldAdjustGeoHeight(true, true, true, null));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, true, true, null));
+		assertTrue(NpcMoveController.shouldAdjustGeoHeight(false, false, false, null));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, false, true, null));
+	}
+
+	@Test
+	void directGroundMovementChecksGeoPassabilityBeforeUpdatingPosition() throws Exception {
+		String source = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java"));
+		String method = source.substring(source.indexOf("private void moveToLocation"),
+				source.indexOf("void sampleStuckShadow"));
+		int passabilityCheck = method.indexOf("canMoveStraight(owner, newX, newY, newZ)");
+
+		assertTrue(passabilityCheck >= 0);
+		assertTrue(method.indexOf("stopForPath();", passabilityCheck) > passabilityCheck);
+		assertTrue(passabilityCheck < method.indexOf("world().updatePosition"));
 	}
 
 	@Test

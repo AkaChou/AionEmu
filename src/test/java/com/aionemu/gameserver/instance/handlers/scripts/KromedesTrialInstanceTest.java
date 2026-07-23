@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -8,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.model.Race;
 
 class KromedesTrialInstanceTest {
 
@@ -21,6 +24,12 @@ class KromedesTrialInstanceTest {
 			"src/main/resources/aion/definitions/compact/ai/ai-strings.xml");
 	private static final Path SPAWNS = Path.of(
 			"src/main/resources/aion/data/static_data/spawns/Instances/300230000_Kromede's_Trial.xml");
+
+	@Test
+	void usesTheRetailTransformationForEachRace() {
+		assertEquals(19220, KromedesTrialInstance.transformationFor(Race.ELYOS));
+		assertEquals(19270, KromedesTrialInstance.transformationFor(Race.ASMODIANS));
+	}
 
 	@Test
 	void finalBossSelectionUsesRetailAngryJudgeMessageChain() throws IOException {

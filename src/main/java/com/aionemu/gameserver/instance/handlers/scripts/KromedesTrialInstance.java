@@ -18,18 +18,9 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 克罗米德斯试炼副本事件处理器。
- * Instance event handler for Kromedes Trial.
- *
- * @author Encom
- */
-
 @InstanceID(300230000)
 public class KromedesTrialInstance extends GeneralInstanceHandler
 {
-	/** 技能种族 / skill race */
-		private Race skillRace;
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
 	
@@ -41,10 +32,14 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onEnterInstance(Player player) {
-		final int transformation = skillRace == Race.ASMODIANS ? 19270 : 19220;
+		final int transformation = transformationFor(player.getRace());
 		GameEngineServices.skillEngine().applyEffectDirectly(transformation, player, player, 3600000 * 1);
 		sendMovie(player, 453);
 		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/kromedeTrial.xhtml"));
+	}
+
+	static int transformationFor(Race race) {
+		return race == Race.ASMODIANS ? 19270 : 19220;
 	}
 	
 	/**

@@ -26,3 +26,27 @@
 - 服务端提交：本次 `refactor(instance): restore retail Drakenseer Lair`
 - 数据验证：`12` 个变量、`133` 条条件、`133` 个出生槽、`100` 条 Wave 条件，拒绝条件为 `0`；核心 Pattern 全部可启用。
 - 删除的错误机制：手写 FlyRing 计时、三塔死亡计数、强制技能 `21791`、手写 Boss 出口与自定义掉落。
+
+## Beshmundir Temple
+
+- 地图：`300170000`
+- 状态：`HYBRID`；真端数据接管全部阶段出生，Handler 仅保留两项没有数据消费者的交互桥接。
+- 权威证据：`idcatacombs/world_N.xml`、当前静态/条件出生、`30208/30308` 任务工作物品和 `30231/30331` 钥匙奖励。
+- 所有权：祭坛 `730274` 与蓝焰门 `730290` 由真端数据出生；`799506` 不存在于该地图 world/静态/条件出生，故仍由祭坛完成回调生成。任务结算回收 `182209610/182209710`，门交互消耗 `185000091`。
+- 验证：`BeshmundirTempleInstanceTest` 锁定两项桥接的无替代依据与旧 Handler 机制已删除。
+
+## Kromede's Trial
+
+- 地图：`300230000`
+- 状态：`HYBRID`；真端 world、Pattern、任务和静态出生接管主要流程，Handler 保留入口与无数据消费者的交互桥接。
+- 权威证据：`idcromede/world_N.xml`、`Cromede_Relic1/2` Pattern、`19220/19270` 变身与 `19247/19248` 遗物技能模板。
+- 所有权：遗物与石门由真端数据出生；使用遗物后的玩家增益、石门即时删除、入口变身/影片说明以及离开清理仍由 Handler 承接。入口变身现按每名玩家的实际种族选择，魔族使用 `19270`。
+- 验证：`KromedesTrialInstanceTest` 覆盖两族变身映射及既有的 Pattern/任务所有权边界。
+
+## Raksang Ruins
+
+- 地图：`300610000`
+- 状态：真端 Pattern + 条件出生接管；Handler 不再处理 NPC 死亡或出口生成。
+- 权威证据：`IDRaksha_solo/world_N.xml` 的 `IDRaksha_Door_5F_Boss_Exit_SPG`，以及 `NpcAIPatterns_TamesSolo_KJS.xml` 的 `IDRaksha_Re_Boss_KJS`。
+- 所有权：Boss `236306` 被击杀后由 Pattern 写入 `idraksha_clear=1`，条件出生在 `619.643005/685.139893/527.079773` 生成出口 `730445`。
+- 数据验证：`22` 个变量、`109` 条条件；专项测试锁定生产链、真端出口坐标与错误手工回调删除。

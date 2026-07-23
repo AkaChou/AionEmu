@@ -2,7 +2,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -10,9 +9,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
-import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -50,26 +47,6 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
-	}
-
-	@Override
-	public void onDropRegistered(Npc npc) {
-		Set<DropItem> drops = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-		switch (npc.getNpcId()) {
-			case 237190 -> drops.add(GameWorldServices.dropRegistrationService()
-					.regDropItem(1, 0, npc.getNpcId(), 185000242, 1));
-			case 702816 -> {
-				drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 188054117, 1));
-				drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 188054118, 1));
-				drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 166100008, 5));
-				drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 166100011, 5));
-				drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 162000119, 2));
-				drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 162000122, 2));
-				drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 162000120, 2));
-				drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npc.getNpcId(), 162000123, 2));
-			}
-			case 237193, 237194 -> addBossDrop(drops, npc.getNpcId());
-		}
 	}
 
 	@Override
@@ -400,23 +377,6 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 				case 188054116 -> reward.setLesserArgentManorBox(count);
 			}
 		}
-	}
-
-	private void addBossDrop(Set<DropItem> drops, int npcId) {
-		int roll = runtimeState().getInt("sealed.boss_drop", 0);
-		if (roll == 0) {
-			roll = Rnd.get(1, 5);
-			runtimeState().put("sealed.boss_drop", roll);
-		}
-		int itemId = switch (roll) {
-			case 1 -> 190080005;
-			case 2 -> 190080006;
-			case 3 -> 190080007;
-			case 4 -> 190080008;
-			default -> 190200000;
-		};
-		int count = roll == 5 ? 50 : 2;
-		drops.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, itemId, count));
 	}
 
 	private InstanceScoreType scoreType() {

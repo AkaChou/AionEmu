@@ -8,4 +8,12 @@
             <point x="833.55853" y="303.02"/>
         </points>
     </zone>
+    <zone mapid="300080000" name="LEFT_WING_CHAMBER_TIMER_300080000" area_type="POLYGON" zone_type="SUB" priority="17" flags="2">
+        <points bottom="350.000000" top="380.000000">
+            <point x="518.667480" y="570.844910"/>
+            <point x="518.961060" y="601.927246"/>
+            <point x="576.131897" y="602.158569"/>
+            <point x="576.131958" y="570.516724"/>
+        </points>
+    </zone>
 </zones>

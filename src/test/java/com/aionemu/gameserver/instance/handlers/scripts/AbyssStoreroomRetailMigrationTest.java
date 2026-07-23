@@ -144,6 +144,33 @@ class AbyssStoreroomRetailMigrationTest {
 		assertTrue(hamateTimerZone.contains("x=\"499.636536\" y=\"410.997559\""));
 		assertTrue(hamateTimerZone.contains("x=\"473.416016\" y=\"466.433838\""));
 
+		String[] lowerZoneFiles = { "zones_300060000.xml", "zones_300080000.xml", "zones_300090000.xml" };
+		String[] lowerZoneNames = { "SULFUR_TREE_NEST_TIMER_300060000", "LEFT_WING_CHAMBER_TIMER_300080000",
+			"RIGHT_WING_CHAMBER_TIMER_300090000" };
+		String[] lowerZoneHeights = { "bottom=\"160.000000\" top=\"180.000000\"",
+			"bottom=\"350.000000\" top=\"380.000000\"", "bottom=\"100.000000\" top=\"130.000000\"" };
+		String[][] lowerZonePoints = {
+			{ "443.120331,380.000000", "480.593506,380.026062", "528.160156,383.527344",
+				"543.018860,404.392731", "546.612183,434.819427", "381.118286,434.744507",
+				"383.683289,404.708862", "398.858093,383.843475" },
+			{ "518.667480,570.844910", "518.961060,601.927246", "576.131897,602.158569",
+				"576.131958,570.516724" },
+			{ "186.231094,305.222046", "207.269241,350.633484", "246.538422,360.804810",
+				"283.890503,360.786163", "321.142273,349.957031", "339.833496,305.306549" }
+		};
+		for (int i = 0; i < lowerZoneFiles.length; i++) {
+			String zones = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/zones/" + lowerZoneFiles[i]));
+			String timerZone = block(zones, "<zone mapid=\"", "</zone>", zones.indexOf(lowerZoneNames[i]));
+			assertTrue(timerZone.contains(lowerZoneHeights[i]), lowerZoneNames[i]);
+			assertEquals(lowerZonePoints[i].length, count(timerZone, "<point "), lowerZoneNames[i]);
+			for (String point : lowerZonePoints[i]) {
+				String[] coordinates = point.split(",");
+				assertTrue(timerZone.contains("x=\"" + coordinates[0] + "\" y=\"" + coordinates[1] + "\""),
+					lowerZoneNames[i] + ": " + point);
+			}
+		}
+
 		String npcAi = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/ai/npc-ai.xml"));
 		assertTrue(npcAi.contains("<npc id=\"283080\" name=\"Ab_RaceCheck\" ai=\"Ab_RaceCheck\""));
@@ -194,25 +221,43 @@ class AbyssStoreroomRetailMigrationTest {
 		assertTrue(hamate.contains("runtimeState().getLong(\"hamate.deadline\", 0) != 0"));
 		assertFalse(hamate.contains("spawnSelectedNpc"));
 		assertFalse(hamate.contains("Rnd."));
-		String left = Files.readString(HANDLERS.resolve("LeftWingChamberInstance.java"));
-		assertTrue(left.contains("CHEST_STAGE_COUNT = 6"));
-		assertFalse(left.contains("CHEST_POSITIONS"));
-		String right = Files.readString(HANDLERS.resolve("RightWingChamberInstance.java"));
-		assertTrue(right.contains("CHEST_DURATION = 15 * 60_000L"));
-		assertFalse(right.contains("spawnTreasureBoxes"));
 		String sulfur = Files.readString(HANDLERS.resolve("SulfurTreeNestInstance.java"));
-		assertTrue(sulfur.contains("else if (deadline > 0 && deadline <= System.currentTimeMillis())"));
-		assertTrue(sulfur.contains("expire();"));
+		String left = Files.readString(HANDLERS.resolve("LeftWingChamberInstance.java"));
+		String right = Files.readString(HANDLERS.resolve("RightWingChamberInstance.java"));
+		String[] lowerHandlers = { sulfur, left, right };
+		String[] lowerHandlerNames = { "sulfur", "leftwing", "rightwing" };
+		for (int i = 0; i < lowerHandlers.length; i++) {
+			String handler = lowerHandlers[i];
+			assertTrue(handler.contains("public void onEnterZone(Player player, ZoneInstance zone)"));
+			assertTrue(handler.contains("private synchronized void startTimer()"));
+			assertTrue(handler.contains("System.currentTimeMillis() + 900_000"));
+			assertTrue(handler.contains("runtimeState().getLong(\"" + lowerHandlerNames[i] + ".deadline\", 0)"));
+			assertTrue(handler.contains("scheduleDeadline(\"treasure\", deadline, this::expireTreasure)"));
+			assertTrue(handler.contains("if (deadline > 0 && deadline <= System.currentTimeMillis())"));
+			assertTrue(handler.contains("(deadline - System.currentTimeMillis()) / 1000"));
+			assertTrue(handler.contains("new SM_QUEST_ACTION(0, 900)"));
+			assertTrue(handler.contains("STR_MSG_INSTANCE_START_IDABRE"));
+			assertTrue(handler.contains("sendMsg(1400244)"));
+			assertTrue(handler.contains("deleteTreasureBoxes()"));
+			String enterInstance = block(handler, "public void onEnterInstance", "\n\t}");
+			assertTrue(enterInstance.contains("syncTimer(player)"));
+			assertFalse(enterInstance.contains("startTimer()"));
+			for (String legacy : new String[] { "FlyRing", "onPassFlyingRing", "onDie(", "CHEST_STAGE",
+				"TeleportService2", "EXIT_DELAY", "215424", "219617" }) {
+				assertFalse(handler.contains(legacy), lowerHandlerNames[i] + ": " + legacy);
+			}
+		}
+		assertTrue(sulfur.contains("SULFUR_TREE_NEST_TIMER_300060000"));
+		assertTrue(left.contains("LEFT_WING_CHAMBER_TIMER_300080000"));
+		assertTrue(right.contains("RIGHT_WING_CHAMBER_TIMER_300090000"));
 
 		String coverage = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
 		for (int worldId : worldIds) {
 			String world = block(coverage, "<world ", "/>", coverage.indexOf("id=\"" + worldId + "\""));
 			assertTrue(world.contains("behavior=\"HANDLER\""), Integer.toString(worldId));
-			if (worldId == 300050000 || worldId == 300070000) {
-				assertTrue(world.contains("exact timer zone"), Integer.toString(worldId));
-				assertTrue(world.contains("persistent 15-minute deadline"), Integer.toString(worldId));
-			}
+			assertTrue(world.contains("exact timer zone"), Integer.toString(worldId));
+			assertTrue(world.contains("persistent 15-minute deadline"), Integer.toString(worldId));
 		}
 	}
 

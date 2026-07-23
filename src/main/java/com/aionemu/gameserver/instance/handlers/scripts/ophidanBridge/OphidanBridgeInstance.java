@@ -3,7 +3,6 @@ package com.aionemu.gameserver.instance.handlers.scripts.ophidanBridge;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -13,15 +12,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.Map;
 import java.util.Set;
-
-/**
- * 奥菲丹桥副本事件处理器。
- * Instance event handler for Ophidan Bridge.
- *
- * @author Encom
- */
 
 @InstanceID(300590000)
 public class OphidanBridgeInstance extends GeneralInstanceHandler
@@ -141,65 +132,17 @@ public class OphidanBridgeInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	/**
-	 * NPC 掉落表注册时处理。
-	 * Handle NPC drop-table registration.
-	 *
-	 * npc
-	 */
-	
+	@Override
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-		switch (npcId) {
-			case 235759: //Fugitive Mazikin Leader.
-			case 235763: //Runaway Hirakiki Leader.
-			case 235767: //Escapee Asachin Leader.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    if (player.getCommonData().getRace() == Race.ELYOS) {
-						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 182215759, 1)); //The Piece Carried By The Fugitive.
-						} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-							dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 182215760, 1)); //The Piece Carried By The Fugitive.
-					    } switch (Rnd.get(1, 3)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053708, 1)); //Stolen Shelter Consumables Bundle.
-				            break;
-					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053709, 1)); //Stolen Shelter Ancient Coin Bundle.
-				            break;
-					        case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053710, 1)); //Captured Shelter Relics Bundle.
-				            break;
-						}
-					}
-				}
-			break;
-			case 235768: //Spirited Velkur.
-			case 235769: //Velkur Aethercaster.
-			case 235770: //Velkur Aetherpriest.
-			case 235771: //Velkur Aetherknife.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052612, 1)); //Vera's Treasure Crate.
-					}
-				}
-			break;
-			case 702658: //修道院箱子。 / Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
-		    break;
-			case 702659: //高级修道院箱子。 / Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
-		    break;
-			case 802180: //Ophidan Bridge Opportunity Bundle.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
-			break;
+		if (npcId != 802180) {
+			return;
 		}
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
+		dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
+		dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
+		dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
 	}
 	
 	/**

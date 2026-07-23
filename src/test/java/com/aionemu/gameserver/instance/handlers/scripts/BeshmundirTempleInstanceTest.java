@@ -27,6 +27,7 @@ class BeshmundirTempleInstanceTest {
 		"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml");
 	private static final Path SPAWNS = Path.of(
 		"src/main/resources/aion/data/static_data/spawns/Instances/300170000_Beshmundir_Temple.xml");
+	private static final Path QUESTS = Path.of("src/main/resources/aion/definitions/compact/quests/quest_data.xml");
 
 	@Test
 	void summonsRespondentOnlyForActiveQuestWithOil() {
@@ -44,10 +45,31 @@ class BeshmundirTempleInstanceTest {
 		String source = Files.readString(HANDLER);
 		assertTrue(source.contains("case 730274 ->"));
 		assertTrue(source.contains("case 730290 ->"));
+		assertTrue(source.contains("spawn(799506, 1360, 390, 250, (byte) 183)"));
 		for (String forbidden : new String[] { "Future<?>", "onDropRegistered", "onDie(", "GameThreadPoolServices",
 				"macunbelloSoul", "warriorMonument", "sendMovie(", "sendMsgByRace" }) {
 			assertFalse(source.contains(forbidden), forbidden);
 		}
+	}
+
+	@Test
+	void questAndKeyBridgesHaveNoRetailDataReplacement() throws Exception {
+		var spawnDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(SPAWNS.toFile());
+		var conditionDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(CONDITIONS.toFile());
+		Set<Integer> staticNpcs = npcIds(spawnDocument.getElementsByTagName("spawn"), "npc_id");
+		Element world = world(conditionDocument, "300170000");
+		Set<Integer> conditionalNpcs = npcIds(world.getElementsByTagName("npc"), "id");
+
+		assertTrue(staticNpcs.contains(730274));
+		assertTrue(conditionalNpcs.contains(730290));
+		assertFalse(staticNpcs.contains(799506));
+		assertFalse(conditionalNpcs.contains(799506));
+
+		var questDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(QUESTS.toFile());
+		assertTrue(questHasItem(questDocument, 30208, "quest_work_item", 182209610));
+		assertTrue(questHasItem(questDocument, 30308, "quest_work_item", 182209710));
+		assertTrue(questHasItem(questDocument, 30231, "reward_item", 185000091));
+		assertTrue(questHasItem(questDocument, 30331, "reward_item", 185000091));
 	}
 
 	@Test
@@ -123,6 +145,36 @@ class BeshmundirTempleInstanceTest {
 		managed.retainAll(legacy);
 		assertTrue(managed.isEmpty(), managed.toString());
 		assertTrue(legacy.contains(216586));
+	}
+
+	private static Element world(org.w3c.dom.Document document, String worldId) {
+		for (Element candidate : elements(document.getElementsByTagName("world"))) {
+			if (worldId.equals(candidate.getAttribute("id"))) {
+				return candidate;
+			}
+		}
+		throw new AssertionError("Missing world " + worldId);
+	}
+
+	private static Set<Integer> npcIds(NodeList nodes, String attribute) {
+		Set<Integer> ids = new HashSet<>();
+		for (Element npc : elements(nodes)) {
+			ids.add(Integer.parseInt(npc.getAttribute(attribute)));
+		}
+		return ids;
+	}
+
+	private static boolean questHasItem(org.w3c.dom.Document document, int questId, String itemElement, int itemId) {
+		for (Element quest : elements(document.getElementsByTagName("quest"))) {
+			if (Integer.toString(questId).equals(quest.getAttribute("id"))) {
+				for (Element item : elements(quest.getElementsByTagName(itemElement))) {
+					if (Integer.toString(itemId).equals(item.getAttribute("item_id"))) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	private static Iterable<Element> elements(NodeList nodes) {

@@ -1,11 +1,7 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import java.util.Set;
-
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
@@ -51,33 +47,6 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler {
 			long deadline = runtimeState().getLong("lower_udas.next_deadline", 0);
 			if (deadline > 0) {
 				scheduleDeadline("chest", deadline, this::expireNextChest);
-			}
-		}
-	}
-
-	@Override
-	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-		switch (npcId) {
-			case 702658 -> dropItems.add(GameWorldServices.dropRegistrationService()
-					.regDropItem(1, 0, npcId, 188053579, 1));
-			case 702659 -> dropItems.add(GameWorldServices.dropRegistrationService()
-					.regDropItem(1, 0, npcId, 188053580, 1));
-			case 215796 -> dropItems.add(GameWorldServices.dropRegistrationService()
-					.regDropItem(1, 0, npcId, 185000087, 1));
-			case 215786 -> dropItems.add(GameWorldServices.dropRegistrationService()
-					.regDropItem(1, 0, npcId, 185000086, 1));
-			case 215797, 216149, 216150 -> dropItems.add(GameWorldServices.dropRegistrationService()
-					.regDropItem(1, 0, npcId, 188052306, 1));
-			case 215783, 215795 -> {
-				for (Player player : instance.getPlayersInside()) {
-					if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService()
-								.regDropItem(index++, player.getObjectId(), npcId, 188053788, 1));
-					}
-				}
 			}
 		}
 	}

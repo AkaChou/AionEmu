@@ -29310,6 +29310,7 @@
   <world id="300610000" name="IDRaksha_solo">
     <variable name="bomb_box_spawn"/>
     <variable name="idraksha_3f_envoyspawn"/>
+    <variable name="idraksha_clear"/>
     <variable name="idraksha_dust1"/>
     <variable name="idraksha_dust2"/>
     <variable name="idraksha_nmd_despawn"/>
@@ -30126,6 +30127,13 @@
       <group probability="1000">
         <slot>
           <npc id="236097" probability="10000" x="339.272552" y="813.445618" z="152.98526" heading="320" initial_delay="76" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11588" expression="idraksha_clear == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDRaksha_solo/world_N.xml#IDRaksha_Door_5F_Boss_Exit_SPG">
+      <group probability="1000">
+        <slot>
+          <npc id="730445" probability="10000" x="619.643005" y="685.139893" z="527.079773" heading="240" initial_delay="1" initial_delay_extra="1" idle_live_range="-1" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>

@@ -78,26 +78,7 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
 		switch (npcId) {
-			case 835730: //IDAbRe_Core_03_TreasureBox01.
-			case 835732: //IDAbRe_Core_03_TreasureBox03.
-			case 835733: //IDAbRe_Core_03_TreasureBox04.
-				switch (Rnd.get(1, 4)) {
-					case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058115, 1)); //?    .
-				    break;
-					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058116, 1)); //?  ?  .
-				    break;
-					case 3:
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058117, 1)); //?     ??.
-					break;
-					case 4:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058118, 1)); //?   .
-					break;
-				}
-			break;
 			case 835784: //IDAb1_Core_03_Stone_01.
 			case 835785: //IDAb1_Core_03_Stone_02.
 			case 835786: //IDAb1_Core_03_Stone_03.
@@ -127,44 +108,6 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000531, 1)); //IDAbRe_Core_03_Move_Item_Skill.
 			break;
 			*/
-			case 248533: //IDAbRe_Core_03_Key_Drakan_High_As_An.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000317, 1)); //item_core_03_key_01.
-			break;
-			case 248013: // .
-				switch (Rnd.get(1, 6)) {
-					case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058117, 1)); //?     ??.
-				    break;
-					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058118, 1)); //?   .
-				    break;
-					case 3:
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //.
-					break;
-					case 4:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058130, 1)); //?  ?   ??.
-					break;
-					case 5:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058131, 1)); //?  ?   ??.
-					break;
-					case 6:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058132, 1)); //?  ?   ??.
-					break;
-				} switch (Rnd.get(1, 4)) {
-					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 5)); //低级随从契约。 / Lesser Minion Contract.
-					break;
-					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 5)); //高级随从契约。 / Greater Minion Contract.
-					break;
-					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 5)); //大型随从契约。 / Major Minion Contract.
-					break;
-					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 5)); //可爱随从契约。 / Cute Minion Contract.
-					break;
-				}
-			break;
 		}
 	}
 	

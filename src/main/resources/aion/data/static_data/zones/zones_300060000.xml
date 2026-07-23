@@ -8,4 +8,16 @@
             <point x="600.0973" y="306.0957"/>
         </points>
     </zone>
+    <zone mapid="300060000" name="SULFUR_TREE_NEST_TIMER_300060000" area_type="POLYGON" zone_type="SUB" priority="17" flags="2">
+        <points bottom="160.000000" top="180.000000">
+            <point x="443.120331" y="380.000000"/>
+            <point x="480.593506" y="380.026062"/>
+            <point x="528.160156" y="383.527344"/>
+            <point x="543.018860" y="404.392731"/>
+            <point x="546.612183" y="434.819427"/>
+            <point x="381.118286" y="434.744507"/>
+            <point x="383.683289" y="404.708862"/>
+            <point x="398.858093" y="383.843475"/>
+        </points>
+    </zone>
 </zones>

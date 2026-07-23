@@ -82,15 +82,6 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 					}
 				}
 			break;
-			case 220470: //Covetous Fallen Guardian.
-			case 220471: //Covetous Fallen Guardian.
-			case 220472: //Covetous Fallen Guardian.
-			case 220594: //Covetous Fallen Guardian.
-			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000266, 1)); //Earthen Malachite.
-			break;
-			case 834091: //Box With Sun Seal.
-			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000267, 1)); //Sun Quartz.
-			break;
         }
     }
 	

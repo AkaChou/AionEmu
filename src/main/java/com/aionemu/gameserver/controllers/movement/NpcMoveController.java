@@ -375,10 +375,9 @@ public class NpcMoveController
                 targetY + (float) Math.sin(angle) * radius, targetZ};
     }
 
-    static boolean shouldAdjustGeoHeight(boolean pathfindingAllowed, boolean enhancedHomeReturn, boolean returning,
-            boolean spawnDestination, float[][] path) {
-        return pathfindingAllowed && path == null
-                && (enhancedHomeReturn && returning || !returning && !spawnDestination);
+    static boolean shouldAdjustGeoHeight(boolean enhancedHomeReturn, boolean returning, boolean spawnDestination,
+            float[][] path) {
+        return path == null && (enhancedHomeReturn && returning || !returning && !spawnDestination);
     }
 
     /**
@@ -776,27 +775,33 @@ public class NpcMoveController
         float newX = (this.targetDestX - ownerX) * distFraction + ownerX;
         float newY = (this.targetDestY - ownerY) * distFraction + ownerY;
         float newZ = (this.targetDestZ - ownerZ) * distFraction + ownerZ;
-        if (pathStopSent) {
-            pathStopSent = false;
-            directionChanged = true;
-        }
         if (ownerX == newX && ownerY == newY && ((Npc)this.owner).getSpawn().getRandomWalk() > 0) {
             return;
         }
         boolean returning = owner.getAi2().getState() == AIState.RETURNING;
         SpawnTemplate spawn = owner.getSpawn();
         boolean spawnDestination = spawn.getX() == targetDestX && spawn.getY() == targetDestY && spawn.getZ() == targetDestZ;
-        if (shouldAdjustGeoHeight(GameWorldServices.pathService().allowsPathfinding(owner),
-                AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination, path)
-                && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
-                && !GameWorldServices.pathService().usesSpatialPath(owner)
-                && owner.getAi2().getSubState() != AISubState.WALK_PATH
-                && owner.getGameStats().checkGeoNeedUpdate()) {
-            float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 0, owner.getInstanceId());
-            if (Math.abs(newZ - geoZ) > 1) {
-                directionChanged = true;
+        PathService pathService = GameWorldServices.pathService();
+        boolean directGroundMove = path == null && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
+                && !pathService.usesSpatialPath(owner) && owner.getAi2().getSubState() != AISubState.WALK_PATH;
+        if (directGroundMove) {
+            if (shouldAdjustGeoHeight(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination, path)
+                    && owner.getGameStats().checkGeoNeedUpdate()) {
+                float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 0,
+                        owner.getInstanceId());
+                if (Math.abs(newZ - geoZ) > 1) {
+                    directionChanged = true;
+                }
+                newZ = geoZ;
             }
-            newZ = geoZ;
+            if (!pathService.canMoveStraight(owner, newX, newY, newZ)) {
+                stopForPath();
+                return;
+            }
+        }
+        if (pathStopSent) {
+            pathStopSent = false;
+            directionChanged = true;
         }
         if (((Npc)this.owner).getAi2().isLogging()) {
             AI2Logger.moveinfo((Creature)this.owner, "newX=" + newX + " newY=" + newY + " newZ=" + newZ + " mask=" + this.movementMask);

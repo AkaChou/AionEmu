@@ -40,12 +40,10 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertSourceExcludes("crucible/EmpyreanCrucibleInstance", "onDropRegistered");
 		assertMigrated("LinkgateFoundryInstance", "scheduleDeadline(\"expire\"",
 				"linkgate.expire_deadline");
-		assertMigrated("RightWingChamberInstance", "scheduleDeadline(\"chests\"",
-				"rightwing.exit_deadline");
-		assertMigrated("LeftWingChamberInstance", "scheduleDeadline(\"chest\"",
-				"leftwing.next_deadline");
-		assertMigrated("TheHexwayInstance", "scheduleDeadline(\"chest\"",
-				"hexway.next_deadline");
+		assertMigrated("RightWingChamberInstance", "scheduleDeadline(\"treasure\"",
+				"rightwing.deadline");
+		assertMigrated("LeftWingChamberInstance", "scheduleDeadline(\"treasure\"",
+				"leftwing.deadline");
 		assertMigrated("LowerUdasTempleInstance", "scheduleDeadline(\"chest\"",
 				"lower_udas.next_deadline");
 		assertMigrated("SealedArgentManorInstance", "scheduleDeadline(\"expire\"",
@@ -302,6 +300,471 @@ class InstanceHandlerRecoveryMigrationTest {
 		for (String npcId : new String[] { "215782", "215783", "215793", "730217", "700706", "730272" }) {
 			assertFalse(staticSpawns.contains("npc_id=\"" + npcId + "\""));
 		}
+	}
+
+	@Test
+	void lowerUdasUsesCompactDropsWithoutPrivateInjection() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/LowerUdasTempleInstance.java"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertFalse(handler.contains("GameWorldServices"));
+		for (String privateDrop : new String[] { "188053579", "188053580", "188052306", "188053788" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+
+		String bosses = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_005.xml"));
+		assertTrue(npcDropBlock(bosses, "215786").contains("item_id=\"185000086\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(bosses, "215796").contains("item_id=\"185000087\" chance=\"10.00\""));
+		assertTrue(npcDropBlock(bosses, "215797").contains("item_id=\"188052306\" chance=\"20.00\""));
+
+		String chests = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_006.xml"));
+		assertTrue(npcDropBlock(chests, "216149").contains("IDTEMPLE_BOX_ACCESSORY_HEAD_A_N_U1_52A"));
+		assertTrue(npcDropBlock(chests, "216150").contains("IDTEMPLE_BOX_ACCESSORY_HEAD_A_N_U1_52A"));
+
+		String eventChests = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(eventChests, "702658").contains("item_id=\"188053579\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(eventChests, "702659").contains("item_id=\"188053580\" chance=\"100.00\""));
+		assertFalse(bosses.contains("188053788"));
+		assertFalse(chests.contains("188053788"));
+		assertFalse(eventChests.contains("188053788"));
+	}
+
+	@Test
+	void sealedArgentManorUsesCompactDropsWithoutPrivateBossRewards() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SealedArgentManorInstance.java"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertFalse(handler.contains("GameWorldServices"));
+		for (String privateDrop : new String[] { "190080005", "190080006", "190080007", "190080008",
+				"190200000" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+
+		String keys = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_013.xml"));
+		assertTrue(npcDropBlock(keys, "237190").contains("item_id=\"185000242\" chance=\"100.00\""));
+		assertFalse(keys.contains("npc_id=\"237193\""));
+		assertFalse(keys.contains("npc_id=\"237194\""));
+
+		String chests = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		String chest = npcDropBlock(chests, "702816");
+		assertTrue(chest.contains("item_id=\"188054117\" chance=\"100.00\""));
+		assertTrue(chest.contains("item_id=\"188054118\" chance=\"45.00\""));
+		assertTrue(chest.contains("IDELEMENTAL_GOODS_BOX_65A"));
+		assertTrue(chest.contains("IDELEMENTAL_SUBMATTER_BOX_65A"));
+	}
+
+	@Test
+	void mirashSanctuaryUsesCompactDropsWithoutPrivateBossRewards() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/MirashSanctuaryInstance.java"));
+		assertTrue(handler.contains("case 835784"));
+		for (String privateDrop : new String[] { "188058115", "188058116", "188058117", "188058118",
+				"188058130", "188058131", "188058132", "190080005", "190080006", "190080007",
+				"190080008", "190200000" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+
+		String bosses = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_017.xml"));
+		String boss = npcDropBlock(bosses, "248013");
+		assertTrue(boss.contains("item_id=\"188058117\" chance=\"100.00\""));
+		assertTrue(boss.contains("item_id=\"188058118\" chance=\"100.00\""));
+		assertTrue(boss.contains("item_id=\"190200000\" chance=\"100.00\""));
+		assertTrue(boss.contains("ABYSS_70_ALL_IDABRE_CORE_03"));
+		assertTrue(npcDropBlock(bosses, "248533").contains("item_id=\"185000317\" chance=\"100.00\""));
+
+		String chests = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(chests, "835730").contains("item_id=\"188058116\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(chests, "835732").contains("item_id=\"182006892\" chance=\"0.10\""));
+		assertTrue(npcDropBlock(chests, "835733").contains("item_id=\"182006892\" chance=\"0.10\""));
+	}
+
+	@Test
+	void cradleOfEternityUsesCompactKeyDropsWithoutRemovingUnverifiedBossRewards() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CradleOfEternityInstance.java"));
+		assertTrue(handler.contains("case 220526"));
+		assertFalse(handler.contains("regDropItem(1, 0, npcId, 185000266, 1)"));
+		assertFalse(handler.contains("regDropItem(1, 0, npcId, 185000267, 1)"));
+
+		String guardians = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_009.xml"));
+		for (String npcId : new String[] { "220470", "220471", "220472", "220594" }) {
+			assertTrue(npcDropBlock(guardians, npcId).contains("item_id=\"185000266\" chance=\"100.00\""), npcId);
+		}
+
+		String chest = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(chest, "834091").contains("item_id=\"185000267\" chance=\"100.00\""));
+	}
+
+	@Test
+	void linkgateFoundryUsesCompactDropsWithoutPrivateHandlerFlow() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/LinkgateFoundryInstance.java"));
+		assertFalse(handler.contains("onDropRegistered"));
+		for (String privateDrop : new String[] { "188053789", "188053238", "188053239", "190080005",
+				"190080006", "190080007", "190080008", "190200000" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+
+		String baseDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_011.xml"));
+		String volatileBelsagos = npcDropBlock(baseDrops, "233898");
+		assertTrue(volatileBelsagos.contains("item_id=\"186000236\" chance=\"100.00\" min_amount=\"12\""));
+		assertTrue(volatileBelsagos.contains("item_id=\"188053295\" chance=\"1.20\""));
+		assertTrue(npcDropBlock(baseDrops, "234194").contains("item_id=\"188052973\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(baseDrops, "234195").contains("item_id=\"188052974\" chance=\"100.00\""));
+
+		String bosses = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_012.xml"));
+		assertTrue(npcDropBlock(bosses, "234990").contains("item_id=\"188053331\" chance=\"100.00\""));
+		String furiousBelsagos = npcDropBlock(bosses, "234991");
+		assertTrue(furiousBelsagos.contains("item_id=\"186000236\" chance=\"100.00\" min_amount=\"12\""));
+		assertTrue(furiousBelsagos.contains("item_id=\"188053295\" chance=\"1.20\""));
+	}
+
+	@Test
+	void archivesOfEternityUsesCompactDropsWithoutPrivateHandlerFlow() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ArchivesOfEternityInstance.java"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertTrue(handler.contains("spawnHistoriesOfAtreia"));
+		for (String privateDrop : new String[] { "188058413", "166040001", "190080005", "190080006",
+				"190080007", "190080008", "190200000" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+
+		String bosses = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_026.xml"));
+		for (String npcId : new String[] { "857452", "857456", "857459" }) {
+			assertTrue(npcDropBlock(bosses, npcId).contains("item_id=\"188057928\" chance=\"100.00\""), npcId);
+		}
+		for (String npcId : new String[] { "857460", "857462", "857464" }) {
+			assertTrue(npcDropBlock(bosses, npcId).contains("item_id=\"188057929\" chance=\"100.00\""), npcId);
+		}
+		assertTrue(npcDropBlock(bosses, "857460").contains("item_id=\"182215992\" chance=\"100.00\""));
+
+		String objects = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(objects, "806139").contains("IDETERNITY01_ARMOR_LOOK_E_70A"));
+		for (String npcId : new String[] { "703131", "703132", "703133", "703149", "703150", "703151", "703134" }) {
+			assertTrue(npcDropBlock(objects, npcId).contains("IDETERNITY01_"), npcId);
+		}
+
+		String groups = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/common_drop_groups.xml"));
+		assertTrue(groups.contains("IDETERNITY01_QUEST_BOOK_L_01A"));
+		assertTrue(groups.contains("item_id=\"188100300\" chance=\"20.00\""));
+		assertTrue(groups.contains("IDETERNITY01_QUEST_BOOK_D_03A"));
+		assertTrue(groups.contains("item_id=\"188100329\" chance=\"20.00\""));
+		assertTrue(groups.contains("IDETERNITY01_KEY_BOOK_N_75A"));
+	}
+
+	@Test
+	void esoterraceUsesCompactDropsWithoutPrivateHandlerFlow() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EsoterraceInstance.java"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertTrue(handler.contains("case 217206"));
+		assertTrue(handler.contains("spawn(701025"));
+		for (String privateDrop : new String[] { "188053789", "190020089", "190020148", "190020204",
+				"190070004", "190070012" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+
+		String bossDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_007.xml"));
+		String surama = npcDropBlock(bossDrops, "217206");
+		assertTrue(surama.contains("IDLDF4_REWARD_WEAPON_A_N_U1_55A"));
+		assertFalse(surama.contains("188053789"));
+
+		String boxDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		String sundries = npcDropBlock(boxDrops, "701025");
+		assertTrue(sundries.contains("item_id=\"190000050\" chance=\"73.55\""));
+		assertTrue(sundries.contains("item_id=\"188058280\" chance=\"70.00\""));
+	}
+
+	@Test
+	void theobomosLabUsesCompactDropsWhileKeepingUnmodeledQuestFlows() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheobomosLabInstance.java"));
+		assertTrue(handler.contains("case 700422"));
+		assertTrue(handler.contains("182208053"));
+		assertTrue(handler.contains("case 237247"));
+		for (String privateDrop : new String[] { "185000016", "185000025", "185000023", "185000022",
+				"185000021", "188053788", "188053083", "188054176", "188054180", "185000015",
+				"166050023", "166050024", "166050025", "166050026", "166050027", "166050028",
+				"166050029", "166050030", "166050031", "166050032", "166050033", "166050034",
+				"166050035", "166050036", "166050037", "166050038" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+
+		String drops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_013.xml"));
+		for (String[] expected : new String[][] { { "237108", "185000016" }, { "237110", "185000025" },
+				{ "237112", "185000023" }, { "237113", "185000022" }, { "237114", "185000021" } }) {
+			assertTrue(npcDropBlock(drops, expected[0]).contains("item_id=\"" + expected[1] + "\" chance=\"100.00\""),
+					expected[0]);
+		}
+		assertTrue(npcDropBlock(drops, "237111").contains("item_id=\"185000015\" chance=\"100.00\""));
+		String ifrit = npcDropBlock(drops, "237251");
+		assertTrue(ifrit.contains("item_id=\"188054176\" chance=\"40.00\""));
+		assertTrue(ifrit.contains("item_id=\"188054180\" chance=\"60.00\""));
+
+		String eventChests = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(eventChests, "702658").contains("item_id=\"188053579\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(eventChests, "702659").contains("item_id=\"188053580\" chance=\"100.00\""));
+	}
+
+	@Test
+	void occupiedRentusBaseUsesCompactDropsWithoutPrivateHandlerFlow() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/OccupiedRentusBaseInstance.java"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertTrue(handler.contains("spawnOccupiedDirectFiringGunIDYun"));
+		assertTrue(handler.contains("handleUseItemFinish"));
+		for (String privateDrop : new String[] { "188053789", "170170033", "170030052", "188053083",
+				"188053703", "188053704", "188053705", "185000229" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+
+		String bossDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_012.xml"));
+		String vasharti = npcDropBlock(bossDrops, "236300");
+		assertTrue(vasharti.contains("item_id=\"188053702\" chance=\"100.00\""));
+		assertTrue(vasharti.contains("item_id=\"188053706\" chance=\"100.00\""));
+		assertTrue(vasharti.contains("IDYUN_HARD_HEAD_E_65A"));
+
+		String jewelryDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_008.xml"));
+		String jewelry = npcDropBlock(jewelryDrops, "218572");
+		assertTrue(jewelry.contains("item_id=\"170195109\" chance=\"10.00\""));
+		assertTrue(jewelry.contains("IDYUN_HEAD_N_U1_60A"));
+
+		String objectDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(objectDrops, "833048").contains("item_id=\"188053706\" chance=\"33.30\""));
+		assertTrue(npcDropBlock(objectDrops, "702658").contains("item_id=\"188053579\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(objectDrops, "702659").contains("item_id=\"188053580\" chance=\"100.00\""));
+	}
+
+	@Test
+	void rentusBaseUsesCompactDropsWithoutPrivateHandlerFlow() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/RentusBaseInstance.java"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertTrue(handler.contains("spawnDirectFiringGunIDYun"));
+		assertTrue(handler.contains("handleUseItemFinish"));
+		for (String privateDrop : new String[] { "185000228", "188053789", "170170033", "188053083" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+
+		String bossDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_007.xml"));
+		String vasharti = npcDropBlock(bossDrops, "217313");
+		assertTrue(vasharti.contains("item_id=\"170030052\" chance=\"10.00\""));
+		assertTrue(vasharti.contains("IDYUN_Nmd_HEAD_N_E1_60A"));
+
+		String jewelryDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_008.xml"));
+		String jewelry = npcDropBlock(jewelryDrops, "218572");
+		assertTrue(jewelry.contains("item_id=\"170195109\" chance=\"10.00\""));
+		assertTrue(jewelry.contains("IDYUN_HEAD_N_U1_60A"));
+
+		String objectDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(objectDrops, "833047").contains("item_id=\"170030052\" chance=\"3.33\""));
+		assertTrue(npcDropBlock(objectDrops, "702658").contains("item_id=\"188053579\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(objectDrops, "702659").contains("item_id=\"188053580\" chance=\"100.00\""));
+	}
+
+	@Test
+	void sauroSupplyBaseUsesCompactDropsWhileKeepingOpportunityBundleAndKeyPrompt() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SauroSupplyBaseInstance.java"));
+		assertTrue(handler.contains("npcId == 230847"));
+		assertTrue(handler.contains("sendMsg(1401946"));
+		assertTrue(handler.contains("npcId != 802181"));
+		for (String privateDrop : new String[] { "188053219", "188052578", "188052582", "188053789",
+				"188053083", "188053211", "188053579", "188053580" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+		for (String privateRegistration : new String[] { "regDropItem(1, 0, npcId, 185000176, 1)",
+				"regDropItem(1, 0, npcId, 185000177, 1)", "regDropItem(1, 0, npcId, 185000178, 1)",
+				"regDropItem(index++, player.getObjectId(), npcId, 185000179, 1)" }) {
+			assertFalse(handler.contains(privateRegistration), privateRegistration);
+		}
+		for (String retainedDrop : new String[] { "186000051, 30", "186000052, 30", "186000236, 50",
+				"186000237, 50" }) {
+			assertTrue(handler.contains(retainedDrop), retainedDrop);
+		}
+
+		String baseDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_010.xml"));
+		for (String[] expected : new String[][] { { "230846", "IDVRITRABASE_SHUGOTHIEF" },
+				{ "230849", "IDVRITRABASE_WEAPON_U1_65A" }, { "230850", "IDVRITRABASE_ACCESSORY_U1_65A" },
+				{ "230851", "IDVRITRABASE_WPAR_U1_65A" }, { "230852", "IDVRITRABASE_ARAC_U1_65A" },
+				{ "230853", "IDVRITRABASE_ARMOR_U1_65A" }, { "230857", "IDVRITRABASE_WPAR_E1_65A" },
+				{ "230858", "IDVRITRABASE_WPAR_M1_65A" } }) {
+			assertTrue(npcDropBlock(baseDrops, expected[0]).contains(expected[1]), expected[0]);
+		}
+		assertTrue(npcDropBlock(baseDrops, "230847").contains("item_id=\"185000179\" chance=\"100.00\""));
+
+		String commanderDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_011.xml"));
+		assertTrue(npcDropBlock(commanderDrops, "233258").contains("IDVRITRABASE_WPAR_U1_65A"));
+
+		String chestDrops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(chestDrops, "702658").contains("item_id=\"188053579\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(chestDrops, "702659").contains("item_id=\"188053580\" chance=\"100.00\""));
+	}
+
+	@Test
+	void danuarSanctuariesUseCompactDropsWhileKeepingCannonballsAndKeyPrompt() throws Exception {
+		for (String[] expected : new String[][] { { "DanuarSanctuaryInstance", "235600" },
+				{ "SeizedDanuarSanctuaryInstance", "235574" } }) {
+			String handler = Files.readString(Path.of(
+					"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + expected[0] + ".java"));
+			assertTrue(handler.contains("npcId == 233391"), expected[0]);
+			assertTrue(handler.contains("sendMsg(1401946"), expected[0]);
+			assertTrue(handler.contains("npcId != " + expected[1]), expected[0]);
+			assertTrue(handler.contains("regDropItem(1, 0, npcId, 186000254, 1)"), expected[0]);
+			for (String privateDrop : new String[] { "188053789", "188053579", "188053580", "169405254",
+					"152012580" }) {
+				assertFalse(handler.contains(privateDrop), expected[0] + ':' + privateDrop);
+			}
+		}
+
+		String bosses = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_012.xml"));
+		for (String npcId : new String[] { "235624", "235625", "235626" }) {
+			assertTrue(npcDropBlock(bosses, npcId).contains("item_id=\"188052613\" chance=\"100.00\""), npcId);
+		}
+		for (String npcId : new String[] { "235619", "235620", "235621" }) {
+			assertTrue(npcDropBlock(bosses, npcId).contains("item_id=\"188053710\" chance=\"100.00\""), npcId);
+		}
+		for (String npcId : new String[] { "235658", "235655" }) {
+			assertTrue(npcDropBlock(bosses, npcId).contains("item_id=\"185000174\" chance=\"100.00\""), npcId);
+		}
+
+		String objects = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_011.xml"));
+		assertTrue(npcDropBlock(objects, "233391").contains("item_id=\"188052656\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(objects, "233185").contains("item_id=\"188052581\" chance=\"25.00\""));
+		for (String npcId : new String[] { "233190", "233191", "233192" }) {
+			assertTrue(npcDropBlock(objects, npcId).contains("IDUNDER02H_TREASURE"), npcId);
+		}
+
+		String eventChests = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(eventChests, "702658").contains("item_id=\"188053579\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(eventChests, "702659").contains("item_id=\"188053580\" chance=\"100.00\""));
+
+		String disassembly = Files.readString(Path.of("src/main/resources/aion/data/static_data/items/disassembly_items.xml"));
+		assertTrue(disassembly.contains("disassemblyItem_Id=\"188052656\""));
+		for (String key : new String[] { "185000181", "185000182", "185000183" }) {
+			assertTrue(disassembly.contains("itemId=\"" + key + "\""), key);
+		}
+	}
+
+	@Test
+	void ophidanBridgesUseCompactDropsWhileKeepingOpportunityBundle() throws Exception {
+		for (String className : new String[] { "OphidanBridgeInstance", "Lucky_OphidanBridgeInstance" }) {
+			String handler = Files.readString(Path.of(
+					"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ophidanBridge/" + className + ".java"));
+			assertTrue(handler.contains("npcId != 802180"), className);
+			for (String retainedDrop : new String[] { "186000051, 30", "186000052, 30", "186000236, 50",
+					"186000237, 50" }) {
+				assertTrue(handler.contains(retainedDrop), className + ':' + retainedDrop);
+			}
+			for (String privateDrop : new String[] { "182215759", "182215760", "188053708", "188053709",
+					"188053710", "188053789", "188052612", "188053579", "188053580" }) {
+				assertFalse(handler.contains(privateDrop), className + ':' + privateDrop);
+			}
+		}
+
+		String drops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_012.xml"));
+		for (String npcId : new String[] { "235759", "235763", "235767" }) {
+			String leader = npcDropBlock(drops, npcId);
+			assertTrue(leader.contains("item_id=\"182215759\" chance=\"80.00\""), npcId);
+			assertTrue(leader.contains("item_id=\"182215760\" chance=\"80.00\""), npcId);
+		}
+		for (String npcId : new String[] { "235768", "235769", "235770", "235771" }) {
+			assertTrue(npcDropBlock(drops, npcId).contains("item_id=\"188052612\" chance=\"100.00\""), npcId);
+		}
+
+		String chests = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(chests, "702658").contains("item_id=\"188053579\" chance=\"100.00\""));
+		assertTrue(npcDropBlock(chests, "702659").contains("item_id=\"188053580\" chance=\"100.00\""));
+	}
+
+	@Test
+	void padmarashkaCaveUsesCompactDropsWithoutPrivateBossRewards() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/PadmarashkaCaveInstance.java"));
+		assertFalse(handler.contains("onDropRegistered"));
+		for (String privateDrop : new String[] { "188053789", "188057935", "100001640", "100101258",
+				"102001175", "115001680", "115001794" }) {
+			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+
+		String drops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_008.xml"));
+		String padmarashka = npcDropBlock(drops, "218756");
+		assertTrue(padmarashka.contains("IDDRAMATA_EQUIP_N_E1_55A"));
+		assertTrue(padmarashka.contains("IDDRAMATA_ARMOR_N_U2_55A"));
+	}
+
+	@Test
+	void hexwayUsesRetailStaticChestsWithoutPrivateHandlerFlow() throws Exception {
+		String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheHexwayInstance.java"));
+		for (String legacy : new String[] { "onDropRegistered", "scheduleDeadline", "CHEST_", "701664", "185000129",
+				"GameWorldServices", "onInstanceCreate", "onEnterInstance", "219609" }) {
+			assertFalse(handler.contains(legacy), legacy);
+		}
+		assertTrue(handler.contains("npc.getNpcId() == 219617"));
+
+		String drops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_008.xml"));
+		assertFalse(npcDropBlock(drops, "219609").contains("18500013"));
+		assertTrue(npcDropBlock(drops, "219610").contains("item_id=\"185000135\" chance=\"100.00\""));
+
+		String spawns = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/spawns/Instances/300700000_The_Hexway.xml"));
+		String soloA = spawnBlock(spawns, "701662");
+		assertFalse(soloA.contains("respawn_time="));
+		assertEquals(6, count(soloA, "<spot "));
+		assertEquals(6, count(soloA, "z=\"366.120148\""));
+
+		String soloB = spawnBlock(spawns, "701663");
+		assertTrue(soloB.startsWith("<spawn npc_id=\"701663\" pool=\"1\">"));
+		assertFalse(soloB.contains("respawn_time="));
+		assertEquals(5, count(soloB, "<spot "));
+		for (String position : new String[] { "x=\"227.478607\" y=\"423.795471\" z=\"366.320160\" h=\"8\"",
+				"x=\"205.742401\" y=\"486.374512\" z=\"366.320160\" h=\"5\"",
+				"x=\"193.947632\" y=\"552.009888\" z=\"366.320160\" h=\"1\"",
+				"x=\"193.586792\" y=\"619.047424\" z=\"366.320160\" h=\"118\"",
+				"x=\"205.529861\" y=\"684.402527\" z=\"366.320160\" h=\"115\"" }) {
+			assertTrue(soloB.contains(position), position);
+		}
+
+		String party = spawnBlock(spawns, "701664");
+		assertFalse(party.contains("respawn_time="));
+		assertEquals(1, count(party, "<spot "));
+		assertTrue(party.contains("x=\"230.309158\" y=\"746.760254\" z=\"366.120148\" h=\"111\""));
 	}
 
 	@Test

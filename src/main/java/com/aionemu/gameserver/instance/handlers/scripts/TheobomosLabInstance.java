@@ -30,35 +30,13 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 	 * npc
 	 */
 	@Override
-    public void onDropRegistered(Npc npc) {
+	public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
         switch (npcId) {
-			case 237108: //Frozen Harint.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000016, 1)); //Fire Key.
-		    break;
-			case 237110: //Naughty Pocaching.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000025, 1)); //Laboratory Key.
-		    break;
-			case 237112: //Wistful Syripne.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000023, 1)); //Syripne's Key.
-		    break;
-			case 237113: //Soul Spirit Nomura.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000022, 1)); //Nomura's Key.
-		    break;
-			case 237114: //Water Spirit Undine.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000021, 1)); //Undine's Key.
-		    break;
 			case 700422: //Faded Book.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182208053, 1)); //Research Center Document.
-		    break;
-			case 702658: //修道院箱子。 / Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
-		    break;
-			case 702659: //高级修道院箱子。 / Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
-		    break;
+			    break;
 			case 237247: //Watcher Cracked Nuhas.
 				switch (Rnd.get(1, 3)) {
 				    case 1:
@@ -71,82 +49,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000020, 1)); //Wind Key.
 					break;
 				}
-		    break;
-			case 237251: //Corrupted Ifrit.
-			    for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-					} switch (Rnd.get(1, 2)) {
-				        case 1:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054176, 1)); //Master Triroan's Weapon Box.
-					    break;
-					    case 2:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054180, 1)); //Master Accessory Relic Boxx.
-					    break;
-					}
-				}
-			break;
-			case 237118: //Titan Protector.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000015, 1)); //Laboratory Chest Key.
-		    break;
-			case 237119: //Antique Treasure Chest.
-				switch (Rnd.get(1, 8)) {
-					case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050023, 2)); //Noble Blue Idian: Physical Attack.
-					break;
-					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050024, 2)); //Noble Blue Idian: Magical Attack.
-					break;
-					case 3:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050025, 2)); //Noble Blue Idian: Physical Defense.
-					break;
-					case 4:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050026, 2)); //Noble Blue Idian: Magical Defense.
-					break;
-					case 5:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050027, 2)); //Noble Blue Idian: Assistance.
-					break;
-					case 6:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050028, 2)); //Noble Blue Idian: Resistance.
-					break;
-					case 7:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050029, 2)); //Noble Blue Idian: Physical Magical Attack.
-					break;
-					case 8:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050030, 2)); //Noble Blue Idian: Physical Magical Defense.
-					break;
-				}
-			break;
-			case 237120: //Antique Treasure Chest.
-			case 237121: //Antique Treasure Chest.
-				switch (Rnd.get(1, 8)) {
-					case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050031, 2)); //Esoteric Idian: Physical Attack.
-					break;
-					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050032, 2)); //Esoteric Idian: Magical Attack.
-					break;
-					case 3:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050033, 2)); //Esoteric Idian: Physical Defense.
-					break;
-					case 4:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050034, 2)); //Esoteric Idian: Magical Defense.
-					break;
-					case 5:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050035, 2)); //Esoteric Idian: Assistance.
-					break;
-					case 6:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050036, 2)); //Esoteric Idian: Resistance.
-					break;
-					case 7:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050037, 2)); //Esoteric Idian: Physical Magical Attack.
-					break;
-					case 8:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050038, 2)); //Esoteric Idian: Physical Magical Defense.
-					break;
-				}
-			break;
+			    break;
         }
     }
 	

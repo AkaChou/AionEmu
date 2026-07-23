@@ -57,6 +57,63 @@
 - `AbyssStoreroomRetailMigrationTest` 锁定点数、随机池、条件变量生产链、真端 polygon、一次性计时入口、deadline 恢复/同步和已删除的飞行环及错误出生。
 - XML 数据加载、专项测试和主源码编译用于自动化验证；GM 实测和线上副本压测不在本窗口范围内。
 
+## Sulfur / Left Wing / Right Wing Lower Storerooms（300060000 / 300080000 / 300090000）
+
+### 真端证据
+
+- `idabre_low_divine/world_N.xml`、`idabre_low_wciel/world_N.xml`、`idabre_low_eciel/world_N.xml` 分别由 sensory NPC `206091/206089/206090` 首次发现玩家后启动 900000ms 计时，并在开始时广播 `1400243`。
+- 三图计时到期均广播 `1400244`，随后分别关联清箱 NPC `281077/281075/281076`；真端没有强制退出、Boss 死亡后分阶段删箱或进图立即计时流程。
+- 三组 sensory polygon 分别为 8/4/6 点，高度范围为 `160..180`、`350..380`、`100..130`；坐标逐点取自真端 world。
+- 恢复源码 `MainServer_ScriptDLL64/fun/fun_725.cpp` 与 `fun_730.cpp` 的对应触发路径均调用精确 `900000` 毫秒调度。
+
+### 已完成
+
+- 写入三组高优先级真端计时区域，由 `onEnterZone` 一次性启动持久化 15 分钟 deadline；副本恢复后继续调度，后来进入的玩家同步剩余秒数。
+- 到期由 Handler 直接清理三图全部真端宝箱，并发送开始/结束系统消息；当前数据链尚不能可靠消费真端清箱 NPC，因此保留与上层仓库一致的最小桥接。
+- 删除 Sulfur 飞行环近似触发和强制销毁、Left Wing 的 Boss 死亡触发与每 5 分钟分阶段删箱、Right Wing 的进图即启动与强制传送退出。
+- `coverage.xml` 明确记录条件/静态出生、AI、掉落、精确计时区域和持久 deadline 的实际 ownership。
+
+### 验证范围
+
+- `AbyssStoreroomRetailMigrationTest` 锁定三组完整 polygon、900 秒一次性触发、deadline 恢复/同步、开始/到期消息、直接清箱及旧错误路径删除。
+- XML schema、条件出生/AI loader、Pattern AI、专项测试和主源码编译用于自动化验证；GM 实测和线上副本压测不在本窗口范围内。
+
+## Lower Udas Temple（300160000）
+
+### 真端证据
+
+- `idtemple_low/world_N.xml` 与 compact NPC AI 覆盖副本静态/条件出生及 `215783/215795/215796/215797` 的真端 Pattern；`216149/216150` 均为 Udas 宝箱模板。
+- compact `npc_drops` 已定义 `702658/702659` 的活动箱、`215786/215796` 的钥匙、`215797` 的 20% 贡献包，以及两种 Udas 宝箱自身的掉落组。
+- `188053788` 在真端/客户端数据中仅作为物品模板存在，当前恢复源码和 compact 掉落中没有将它归属给 Lower Udas Boss 的证据。
+
+### 已完成
+
+- 删除 Handler 对 Boss、宝箱和活动箱的手工掉落注册，恢复 compact 掉落的概率、掉落组与所有权，避免额外 100% 掉落和每位玩家强制获得 `188053788`。
+- 保留现有 12 箱 deadline 和钥匙清理；真端 world 不含对应静态宝箱，恢复脚本尚未还原其完整生命周期，当前不将该机制误标为已接管。
+
+### 验证范围
+
+- `InstanceHandlerRecoveryMigrationTest` 锁定 Handler 不再注入私服掉落，并锁定所有替代 compact 掉落。
+- 真端宝箱生命周期仍需继续从 ScriptDLL 恢复或实机验证；本阶段不以掉落修复替代该机制的完成声明。
+
+## The Hexway（300700000）
+
+### 真端证据
+
+- `idunderpassre/world_N.xml` 定义 6 个固定 `IDUnderpassRe_Treasurebox_Solo_A`、1 个从 5 个等概率候选中选择的 `Solo_B`，以及 1 个固定 `Treasurebox_Party`；三组均为 `no_respawn=TRUE`。
+- 5 个 `Solo_B` 候选由同一 `spawn_group` 的 `select_prob=2000` 选择，故静态生成使用 `pool="1"` 保留一选一语义。
+- compact `npc_drops` 不给 `219609` 分配 `185000130..185000135`；`219610` 固定掉落 `185000135`。旧 Handler 向 `219609` 额外随机注入六把钥匙没有真端所有权。
+
+### 已完成
+
+- 删除首领死亡后生成 12 个 Party 箱、5 分钟逐箱销毁/倒计时，以及错误的随机钥匙掉落注入。
+- 将静态宝箱改为真端无重生的 6 个 Solo A、5 选 1 Solo B 和 1 个 Party 箱，坐标、朝向和源高度均取自真端 world。
+- 保留 `219617` 路障死亡后的清理；其现有生命周期尚未由恢复脚本还原，当前不将该桥接误标为静态数据已完全接管。
+
+### 验证范围
+
+- `InstanceHandlerRecoveryMigrationTest` 锁定 Handler 不再管理宝箱或掉落、`219609/219610` 的 compact 掉落所有权，以及三组静态宝箱的数量、随机池、无重生和真端坐标。
+
 ## Dark Poeta（300040000）
 
 ### 真端证据
@@ -164,6 +221,58 @@
 - 删除 Handler 的重复掉落、实例创建随机出生和旧自定义物品注入，合并 Kromede 重复公告。
 - 保留真端 world 未接管的三档宝箱死亡后出生流程。
 - `FireTempleRetailMigrationTest` 锁定稀有出生、纯 `214094` 点、Handler 删除项和保留的宝箱流程。
+
+## Beshmundir Temple（300170000）
+
+### 真端证据
+
+- `/Users/mc/IdeaProjects/58Server/Map/Worlds/idcatacombs/world_N.xml` 将祭坛 `730274/IDCatacombs_Altar_Q30208` 作为普通与困难页的常驻对象出生；蓝焰门 `730290/IDCatacombs_door3` 则在 `SpecialServer_Cond == 0` 时出生。当前静态/条件数据分别保留祭坛和门的真端位置。
+- `799506/IDCatacombs_NPC_DrakanUtra` 仅有 NPC 模板；它不在该地图的真端 world、当前静态出生或条件出生中。`30208/30308` 任务脚本只注册它的对话，因此没有可替代 Handler 的数据生产者。
+- `30208/30308` 分别将 `182209610/182209710` 定义为任务工作物品；任务完成时由通用结算回收。`185000091` 是 `30231/30331` 的真端任务奖励，且物品模板为 Incinerator Key。
+
+### 保留边界
+
+- Handler 只保留祭坛完成交互后、持有进行中任务工作物品时生成一次 `799506` 的桥接，以及蓝焰门消耗 `185000091` 后删除门的桥接。
+- 所有其它 Boss、门、波次、掉落与阶段出生继续由真端条件出生、Pattern 和静态数据负责；未恢复出数据消费者的两条交互不删除或扩展。
+
+### 验证范围
+
+- `BeshmundirTempleInstanceTest` 锁定祭坛/门的数据所有权、`799506` 没有地图数据生产者、两族任务工作物品与钥匙任务奖励，以及 Handler 没有旧版私服机制残留。
+
+## Kromede's Trial（300230000）
+
+### 真端证据
+
+- `/Users/mc/IdeaProjects/58Server/Map/Worlds/idcromede/world_N.xml` 包含红色遗物 `282095`、蓝色遗物 `282093` 与封印石门 `700835` 的真端出生；当前静态出生保留相同对象和位置。
+- compact NPC AI 将两件遗物分别绑定到 `Cromede_Relic1/2`，但 Pattern 只处理死亡/消息事件，没有完成使用物品后向玩家施放增益的动作。`19247/Cromede_PhyDefUp_Long` 与 `19248/Cromede_MagDefUP_Long` 的真端技能模板分别定义物理防御与四属性抗性增益，因此 Handler 的遗物交互仍是最小桥接。
+- `19220/Polymorph_cromede` 与 `19270/Polymorph_cromede_dark` 是两套独立真端变身模板。原 Handler 以从未赋值的 `skillRace` 选择它们，导致所有玩家进入时都使用 `19220`。
+
+### 已完成
+
+- 删除无效实例级种族状态，按进入玩家的实际种族选择 `19220/19270`；魔族不再误用天族变身。
+- 保留遗物增益、石门死亡后立即删除、离开/登出清理副本钥匙与道具，以及入口影片/说明页；这些路径当前均没有可替代的真端数据消费者。
+
+### 验证范围
+
+- `KromedesTrialInstanceTest` 锁定两族变身映射，并继续锁定 Pattern 已接管的首领选择、受伤 NPC、感应提示、任务影片和已删除的私服掉落/出生。
+
+## Raksang Ruins（300610000）
+
+### 真端证据
+
+- `/Users/mc/IdeaProjects/58Server/Map/Worlds/IDRaksha_solo/world_N.xml` 的 `IDRaksha_Door_5F_Boss_Exit_SPG` 在 `idraksha_clear == 1` 时生成出口 `730445`，坐标为 `619.643005/685.139893/527.079773`、朝向 `240`。
+- `NpcAIPatterns_TamesSolo_KJS.xml` 的 `IDRaksha_Re_Boss_KJS` 在 Boss `236306` 被击杀时写入 `idraksha_clear=1`；compact Pattern 已保留这项动作。
+- 原条件世界缺少该变量和出口出生，致使 Pattern 因变量未声明而不能接管；原 Handler 则在错误的 `648.5508/700.05725/522.0487` 手工生成出口。
+
+### 已完成
+
+- 条件世界新增 `idraksha_clear` 与真端出口条件出生（共 22 个变量、109 条条件），完整保留延迟、`idle_live_range=-1` 与战斗状态反出生语义。
+- 删除 Raksang Handler 的 Boss 死亡回调；出口现在由真端 Pattern 和条件出生链生成。
+
+### 验证范围
+
+- `RaksangRuinsRetailMigrationTest` 锁定变量声明、Boss Pattern 生产链、出口条件出生的真端坐标与手工回调删除。
+- 条件出生加载、Pattern AI、专项测试和主源码编译用于自动化验证；GM 实测仍应覆盖击杀 Boss 后的出口可见与可交互性。
 
 ## 未闭环
 

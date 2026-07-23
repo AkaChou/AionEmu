@@ -17,20 +17,11 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-/**
- * 达努亚尔圣所副本事件处理器。
- * Instance event handler for Danuar Sanctuary.
- *
- * @author Encom
- */
 
 @InstanceID(301380000)
 public class DanuarSanctuaryInstance extends GeneralInstanceHandler
@@ -112,112 +103,18 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
         spawn(danuarGuard3, 932.1827f, 876.7008f, 305.45746f, (byte) 92);
         spawn(danuarGuard3, 949.92975f, 903.508f, 299.75253f, (byte) 93);
     }
-	/**
-	 * NPC 掉落表注册时处理。
-	 * Handle NPC drop-table registration.
-	 *
-	 * npc
-	 */
-	
+	@Override
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-		switch (npcId) {
-			case 702658: //修道院箱子。 / Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
-		    break;
-			case 702659: //高级修道院箱子。 / Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
-		    break;
-			case 235600: //Shulack Mercenary Cannon Chief.
-			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000254, 1)); //Seal Breaking Magic Cannonball.
-			break;
-			case 235658: //Bodyguard Yatakin.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000174, 1)); //Sentry Post Of Eternity Key.
-			break;
-			case 235624: //Warmage Suyaroka.
-			case 235625: //Chief Medic Tagnu.
-			case 235626: //Virulent Ukahim.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052572, 1)); //Conquerer's Ancient Manastone Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053998, 1)); //Ornate Enchantment Stone Bundle.
-					}
-				}
-			break;
-			case 233391: //Sanctuary Keybox.
-				// 请谨慎选择。钥匙一经选定无法更改。 / Be careful in your selection. The key cannot be changed once it is chosen.
-				sendMsg(1401946, 0, false, 25, 0);
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000181, 1)); //The Catacombs Key.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000182, 1)); //The Crypts Key.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000183, 1)); //The Charnels Key.
-					}
-				}
-			break;
-			case 233185: //Danuar Sanctuary Jar.
-			case 233190: //Stone Treasure Box I.
-			case 233191: //Stone Treasure Box II.
-			case 233192: //Stone Treasure Box III.
-				switch (Rnd.get(1, 5)) {
-				    case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 169405254, 2)); //Earth Trace.
-				    break;
-					case 2:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012592, 2)); //Earth Scrap.
-				    break;
-					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012613, 2)); //Burning Vitality.
-				    break;
-					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 169405267, 2)); //Flame Vitality.
-				    break;
-					case 5:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 169405268, 2)); //Lightning Vitality.
-				    break;
-				} switch (Rnd.get(1, 12)) {
-				    case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012580, 2)); //Fire Mote.
-				    break;
-					case 2:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012581, 2)); //Fire Breath.
-				    break;
-					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012582, 2)); //Fire Fragment.
-					break;
-					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012583, 2)); //Fire Source.
-				    break;
-					case 5:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012584, 2)); //Water Source.
-				    break;
-					case 6:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012585, 2)); //Wind Mote.
-				    break;
-					case 7:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012586, 2)); //Wind Breath.
-				    break;
-					case 8:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012587, 2)); //Wind Eternity.
-				    break;
-					case 9:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012589, 2)); //Wind Source.
-					break;
-					case 10:
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012588, 2)); //Wind Fragment.
-					break;
-					case 11:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012590, 2)); //Wind Origin.
-					break;
-					case 12:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152012591, 2)); //Water Fragment.
-				    break;
-				}
-			break;
+		if (npcId == 233391) {
+			sendMsg(1401946, 0, false, 25, 0);
+			return;
 		}
+		if (npcId != 235600) {
+			return;
+		}
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000254, 1)); //Seal Breaking Magic Cannonball.
 	}
 	
 	/**
