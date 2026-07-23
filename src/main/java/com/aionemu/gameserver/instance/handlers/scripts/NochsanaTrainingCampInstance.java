@@ -17,7 +17,7 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler {
     @Override
     public void handleUseItemFinish(Player player, Npc npc) {
         if (npc.getNpcId() == 700437) {
-            GameEngineServices.skillEngine().getSkill(npc, 276, 10, player).useNoAnimationSkill();
+            GameEngineServices.skillEngine().getSkill(npc, 276, 16, player).useNoAnimationSkill();
         }
     }
 }

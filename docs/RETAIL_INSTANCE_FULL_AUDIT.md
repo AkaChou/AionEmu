@@ -16,6 +16,27 @@
 - 删除旧四 Boss 串行出生、错误解锁条件、手工阶段出生和重复静态出生。
 - `SmolderingFireTempleRetailMigrationTest` 锁定变量、条件、页面映射、关键阶段与 Handler ownership。
 
+## Nochsana Training Camp（300030000）
+
+### 真端证据
+
+- `/Users/mc/IdeaProjects/58Server/Map/Worlds/idab1_minicastle/world_N.xml` 包含 124 个 territory 与 124 个 NPC，且没有条件区或随机 spawn group；仓库静态出生原有 122 点，缺少 `256686` 的 `328.757874/285.468597/386.559998` 和 `256688` 的 `338.743591/284.947327/386.559998`。
+- compact `npc-ai.xml`、`npcaipatterns.xml` 与 `npc-skills.xml` 分别绑定 `256686/256688/256693/256694` 的 `DrGuard_AeB/DrGuard_PeB/MiBGuard_ChiefC/MiDoor` Pattern 和真端技能组；城门死亡后两条 EventPath 由现有 Nochsana walker 数据提供。
+- 真端 `npcs_npcs.xml` 将神器 `700437` 绑定 `NPC_ShieldofCompassion`（技能 `276`、等级 `16`）；`700438` 的静态出口及天魔两族返回路径由 `portal_template2.xml` 接管。
+- compact 掉落覆盖 `256686/256688/256693`，任务 `3732/4732` 继续以城门 `256694` 和将军 `256693` 的击杀顺序推进；旧 Handler 的活动箱与支援包没有真端依据。
+
+### 已完成
+
+- 补入两个缺失的真端静态出生点，完整点数由 122 恢复为 124；坐标、朝向与 `random_walk=2` 均取自真端 world。
+- 允许没有 walker 的真端 `on_wake_up -> goto_waypoint 0` 视为出生点唤醒，从而使 `256686` 不再退回通用攻击 AI；Nochsana 四个关键战斗 NPC 的 Pattern 接管已由专项测试锁定。
+- 将神器桥接从错误的技能等级 10 修正为真端等级 16；Handler 仍只保留该数据运行时暂未分发的交互，不再生成 Boss、出口或私服掉落。
+- `coverage.xml` 明确记录静态世界、AI、掉落、出口、任务与神器桥接的实际 ownership。
+
+### 验证范围
+
+- `RetailPatternAI2Test` 验证 `256686/256688/256693/256694` 的 Pattern 在当前真端数据、技能与 walker 下均可接管；`InstanceHandlerRecoveryMigrationTest` 锁定 124 点、关键坐标、AI/技能、掉落、出口、无条件世界和 Handler 边界。
+- `NochsanaFortressGateTemplateTest` 锁定 `256694 race=DRAGON_CASTLE_DOOR`，保证两族攻城兵器都能选择城门。自动化验证不替代 GM 实测。
+
 ## Dark Poeta（300040000）
 
 ### 真端证据

@@ -354,16 +354,64 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertFalse(handler.contains("onDropRegistered"));
 		assertFalse(handler.contains("188053787"));
 		assertFalse(handler.contains("188051138"));
+		assertFalse(handler.contains("spawn("));
 		assertTrue(handler.contains("npc.getNpcId() == 700437"));
-		assertTrue(handler.contains("getSkill(npc, 276, 10, player)"));
+		assertTrue(handler.contains("getSkill(npc, 276, 16, player)"));
 
 		String staticSpawns = Files.readString(Path.of(
 			"src/main/resources/aion/data/static_data/spawns/Instances/300030000_Nochsana_Training_Camp.xml"));
+		assertEquals(124, count(staticSpawns, "<spot "));
+		assertTrue(spawnBlock(staticSpawns, "256686").contains(
+			"x=\"328.757874\" y=\"285.468597\" z=\"386.559998\" h=\"26\" random_walk=\"2\""));
+		assertTrue(spawnBlock(staticSpawns, "256688").contains(
+			"x=\"338.743591\" y=\"284.947327\" z=\"386.559998\" h=\"25\" random_walk=\"2\""));
 		assertTrue(staticSpawns.contains("npc_id=\"700437\""));
 		assertTrue(staticSpawns.contains("npc_id=\"700438\""));
-		assertTrue(Files.readString(Path.of(
-			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_019.xml"))
-			.contains("npc_id=\"256693\""));
+
+		String npcAi = Files.readString(Path.of("src/main/resources/aion/definitions/compact/ai/npc-ai.xml"));
+		for (String binding : new String[] { "id=\"256686\" name=\"Mini_Castle_LizardmanAs_26_Ae\" ai=\"DrGuard_AeB\"",
+				"id=\"256688\" name=\"Mini_Castle_LizardmanPr_26_Ae\" ai=\"DrGuard_PeB\"",
+				"id=\"256693\" name=\"Mini_Castle_DrakanFi_27_Ah\" ai=\"MiBGuard_ChiefC_ver40\"",
+				"id=\"256694\" name=\"Mini_Castle_Door_Dr\" ai=\"MiDoor\"" }) {
+			assertTrue(npcAi.contains(binding), binding);
+		}
+		String patterns = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npcaipatterns.xml"));
+		for (String pattern : new String[] { "DrGuard_AeB", "DrGuard_PeB", "MiBGuard_ChiefC", "MiDoor" }) {
+			assertTrue(patterns.contains("<name>" + pattern + "</name>"), pattern);
+		}
+		String npcSkills = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/skills/npc-skills.xml"));
+		for (String assignment : new String[] { "npc_ids=\"256686 290154\"", "npc_ids=\"256688 290156\"",
+				"npc_ids=\"256693 290161\"", "npc_ids=\"700437\"" }) {
+			assertTrue(npcSkills.contains(assignment), assignment);
+		}
+		assertTrue(npcSkills.contains("name=\"NPC_ShieldofCompassion\" id=\"276\" level=\"16\""));
+
+		String drops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_019.xml"));
+		for (String npcId : new String[] { "256686", "256688", "256693" }) {
+			assertTrue(npcDropBlock(drops, npcId).contains("<drop "), npcId);
+		}
+		String portals = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/portals/portal_template2.xml"));
+		assertTrue(portals.contains("<portal_use npc_id=\"700438\">"));
+		assertTrue(portals.contains("<portal_path loc_id=\"2100202\" race=\"ELYOS\"/>"));
+		assertTrue(portals.contains("<portal_path loc_id=\"2200205\" race=\"ASMODIANS\"/>"));
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		assertFalse(conditions.contains("<world id=\"300030000\""));
+		for (String quest : new String[] { "eltnen/_3732General_Mania.java", "morheim/_4732General_Malevolence.java" }) {
+			String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/quest/handlers/" + quest));
+			assertTrue(source.contains("registerQuestNpc(256694).addOnKillEvent"), quest);
+			assertTrue(source.contains("registerQuestNpc(256693).addOnKillEvent"), quest);
+			assertTrue(source.contains("defaultOnKillEvent(env, 256694, 0, 1)"), quest);
+			assertTrue(source.contains("defaultOnKillEvent(env, 256693, 1, true)"), quest);
+		}
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(coverage.contains("behavior_source=\"retail world/static spawns/AI/drops/portal/quests; handler artifact skill bridge\""));
 	}
 
 	@Test
