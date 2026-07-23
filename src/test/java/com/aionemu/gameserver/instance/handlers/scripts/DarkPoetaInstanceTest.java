@@ -30,6 +30,8 @@ class DarkPoetaInstanceTest {
 	void mapsMarabataControllersToTheirNearbyBoss() {
 		for (int npcId = 700439; npcId <= 700447; npcId++) {
 			assertEquals(214849 + (npcId - 700439) / 3, DarkPoetaInstance.marabataBossId(npcId));
+			assertEquals((npcId - 700439) % 3 == 1 ? 18556 : 18110,
+				DarkPoetaInstance.marabataEffectId(npcId));
 		}
 	}
 

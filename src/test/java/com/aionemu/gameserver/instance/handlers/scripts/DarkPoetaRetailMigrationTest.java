@@ -112,6 +112,8 @@ class DarkPoetaRetailMigrationTest {
 
 		String staticSpawns = Files.readString(Path.of(
 				"src/main/resources/aion/data/static_data/spawns/Instances/300040000_Dark_Poeta.xml"));
+		assertTrue(spawnBlock(staticSpawns, "214894")
+			.contains("x=\"237.596\" y=\"420.791\" z=\"105.0\""));
 		String fighter = spawnBlock(staticSpawns, "215429");
 		String assassin = spawnBlock(staticSpawns, "215430");
 		assertTrue(fighter.contains("difficult_id=\"1\""));

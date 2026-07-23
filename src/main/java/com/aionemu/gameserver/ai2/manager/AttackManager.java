@@ -146,14 +146,13 @@ public class AttackManager {
 			npc.getMoveController().moveToTargetObject();
 			return;
 		}
-		if (!shouldKeepTargetWhenImmobile(npc.getObjectTemplate().getStatsTemplate().getMaxDamage(),
-				hasOffensiveSkill(npc.getSkillList()))) {
+		if (!shouldKeepTargetWhenImmobile(hasOffensiveSkill(npc.getSkillList()))) {
 			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
 		}
 	}
 
-	static boolean shouldKeepTargetWhenImmobile(int maxDamage, boolean hasOffensiveSkill) {
-		return maxDamage == 0 && !hasOffensiveSkill;
+	static boolean shouldKeepTargetWhenImmobile(boolean hasOffensiveSkill) {
+		return !hasOffensiveSkill;
 	}
 
 	private static boolean hasOffensiveSkill(NpcSkillList skills) {
