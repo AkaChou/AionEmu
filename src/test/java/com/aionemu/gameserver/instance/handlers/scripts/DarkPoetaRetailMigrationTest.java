@@ -27,12 +27,25 @@ class DarkPoetaRetailMigrationTest {
 		String conditions = Files.readString(Path.of(
 				"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
 		String world = worldBlock(conditions, "300040000");
-		assertEquals(67, count(world, "<condition "));
-		assertEquals(16, count(world, "<variable "));
+		assertEquals(73, count(world, "<condition "));
+		assertEquals(20, count(world, "<variable "));
 		for (String variable : new String[] { "avanq_die", "svanq_die", "boss_kill", "grade", "light", "dark",
-				"master_boss", "middleboss_a_kill", "middleboss_b_kill", "middleboss_c_kill", "nagaboss_kill" }) {
+				"master_boss", "middleboss_a_kill", "middleboss_b_kill", "middleboss_c_kill", "nagaboss_kill",
+				"vanq", "aboss_die", "sboss_die", "specialserver_cond" }) {
 			assertTrue(world.contains(variable), variable);
 		}
+		for (String source : new String[] { "#3", "#4", "#5", "#18", "#19", "#28" }) {
+			assertTrue(world.contains("source=\"idlf1/world_N.xml" + source + "\""), source);
+		}
+		assertTrue(world.contains("npc id=\"206478\""));
+		assertEquals(3, count(world, "npc id=\"206478\""));
+		assertEquals(2, count(world, "npc id=\"856603\""));
+		assertEquals(1, count(world, "npc id=\"237373\""));
+		assertEquals(3, count(world, "<sensory_area bottom=\"133.198227\" top=\"433.198242\">"));
+		assertTrue(world.contains("(vanq == 4) &amp;&amp; (sboss_die == 1)"));
+		assertFalse(world.contains("(vanq == 4) &amp;&amp; (sboss_die == 1))"));
+		assertTrue(world.contains("(vanq == 4) &amp;&amp; (aboss_die == 1)"));
+		assertFalse(world.contains("(vanq == 4) &amp;&amp; (aboss_die == 1))"));
 
 		String patterns = Files.readString(Path.of(
 				"src/main/resources/aion/definitions/compact/ai/npcaipatterns.xml"));
@@ -68,7 +81,8 @@ class DarkPoetaRetailMigrationTest {
 				"InstanceSettlementService.darkPoetaGatherScore", "DataManager.RETAIL_AI_DATA.getNpcScore",
 				"setCondition(\"grade\"", "setCondition(\"boss_kill\"",
 				"setCondition(\"nagaboss_kill\"", "setCondition(\"middleboss_a_kill\"",
-				"setCondition(\"middleboss_b_kill\"", "setCondition(\"middleboss_c_kill\"" }) {
+				"setCondition(\"middleboss_b_kill\"", "setCondition(\"middleboss_c_kill\"",
+				"setCondition(\"specialserver_cond\"", "spawnPage == 2 ? 1 : 0" }) {
 			assertTrue(handler.contains(required), required);
 		}
 		assertFalse(handler.contains("onDropRegistered"));
