@@ -81,6 +81,20 @@
 - 删除 Handler 的重复掉落、Pot 定时器、首领/亡魂/出口手工流程和错误 Abbey 箱子逻辑。
 - `AdmaStrongholdRetailMigrationTest` 锁定条件、关键 NPC、随机 Pot、出口与 Handler 残留。
 
+## Fire Temple（320100000）
+
+### 真端证据
+
+- `iddf2_dflame/world_N.xml` 提供五个独立 named 组，以及 `214621` 的 10% 真端出生点；原 Handler 的 `212845` 分支没有真端依据。
+- 真端掉落已覆盖稀有首领与宝箱公共掉落，Handler 注入属于重复私服逻辑。
+
+### 已完成
+
+- 用 `alternate_id/select_prob` 写入六个真端稀有出生，并补回纯 `214094` 静态点。
+- 删除 Handler 的重复掉落、实例创建随机出生和旧自定义物品注入，合并 Kromede 重复公告。
+- 保留真端 world 未接管的三档宝箱死亡后出生流程。
+- `FireTempleRetailMigrationTest` 锁定稀有出生、纯 `214094` 点、Handler 删除项和保留的宝箱流程。
+
 ## 未闭环
 
 - 其余生产副本仍需按同样 ownership 证据逐图处理；单图完成不代表全部区域完成。
