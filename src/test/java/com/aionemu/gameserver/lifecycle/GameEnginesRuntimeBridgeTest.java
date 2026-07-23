@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.scriptEngine.ScriptEngine;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
@@ -69,6 +70,7 @@ class GameEnginesRuntimeBridgeTest {
             provider(SkillEngine.class, instance(SkillEngine.class)),
             provider(InstanceEngine.class, instance(InstanceEngine.class)),
             provider(AI2Engine.class, instance(AI2Engine.class)),
+            provider(ScriptEngine.class, instance(ScriptEngine.class)),
             provider(ChatProcessor.class, instance(ChatProcessor.class))
         );
 
@@ -87,6 +89,7 @@ class GameEnginesRuntimeBridgeTest {
             provider(SkillEngine.class, skillEngine),
             provider(InstanceEngine.class, instance(InstanceEngine.class)),
             provider(AI2Engine.class, instance(AI2Engine.class)),
+            provider(ScriptEngine.class, instance(ScriptEngine.class)),
             provider(ChatProcessor.class, instance(ChatProcessor.class))
         );
 
@@ -104,6 +107,7 @@ class GameEnginesRuntimeBridgeTest {
             prototypeProvider(SkillEngine.class),
             provider(InstanceEngine.class, instance(InstanceEngine.class)),
             provider(AI2Engine.class, instance(AI2Engine.class)),
+            provider(ScriptEngine.class, instance(ScriptEngine.class)),
             provider(ChatProcessor.class, instance(ChatProcessor.class))
         );
 
@@ -124,6 +128,7 @@ class GameEnginesRuntimeBridgeTest {
             provider(SkillEngine.class, instance(SkillEngine.class)),
             provider(InstanceEngine.class, instanceEngine),
             provider(AI2Engine.class, ai2Engine),
+            provider(ScriptEngine.class, instance(ScriptEngine.class)),
             provider(ChatProcessor.class, chatProcessor)
         );
 

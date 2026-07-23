@@ -965,7 +965,7 @@ public class EffectController {
 		Iterator<Effect> iterator = iterator();
 		while (iterator.hasNext()) {
 			Effect effect = iterator.next();
-			if (effect != null) {
+			if (effect != null && !effect.isStopped()) {
 				effects.add(effect);
 			}
 		}
@@ -982,7 +982,7 @@ public class EffectController {
 		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
 			@Override
 			public boolean apply(Effect effect) {
-				return effect.getSkillTemplate().getTargetSlot() != SkillTargetSlot.NOSHOW;
+				return !effect.isStopped() && effect.getSkillTemplate().getTargetSlot() != SkillTargetSlot.NOSHOW;
 			}
 		});
 	}

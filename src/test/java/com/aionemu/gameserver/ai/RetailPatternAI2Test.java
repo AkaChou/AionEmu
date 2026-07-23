@@ -10,6 +10,7 @@ import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.controllers.movement.NpcMoveController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
+import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RetailAiData;
 import com.aionemu.gameserver.dataholders.RetailAiData.Operation;
 import com.aionemu.gameserver.dataholders.RetailAiData.Pattern;
@@ -18,6 +19,7 @@ import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.WalkerData;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.instance.handlers.scripts.pvparenas.HarmonyArenaInstance;
+import com.aionemu.gameserver.instance.handlers.scripts.pvparenas.PvPArenaInstance;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -55,6 +57,7 @@ import jakarta.xml.bind.JAXBContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -66,6 +69,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -105,6 +109,17 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void ignoresRemovedDynamicSpawnWithoutAnActiveRegion() throws ReflectiveOperationException {
+		Npc npc = new ObjenesisStd().newInstance(Npc.class);
+		SpawnTemplate spawn = new ObjenesisStd().newInstance(SpawnTemplate.class);
+		spawn.setRuntimeLifecycleKey("retail.pattern.ai.entity:1.spawn.1.");
+		npc.setSpawn(spawn);
+		setField(VisibleObject.class, npc, "position", new WorldPosition(300170000));
+
+		assertDoesNotThrow(() -> RetailPatternAI2.onDynamicSpawnRemoved(npc));
+	}
+
+	@Test
 	void restoresThePreviouslySelectedWakeUpRuleWithoutReevaluatingConditions() {
 		Rule first = flagRule("FLAGVARI_FIRST");
 		Rule selected = flagRule("FLAGVARI_SELECTED");
@@ -122,11 +137,14 @@ class RetailPatternAI2Test {
 		RetailAiData previous = DataManager.RETAIL_AI_DATA;
 		NpcSkillData previousNpcSkills = DataManager.NPC_SKILL_DATA;
 		WalkerData previousWalkers = DataManager.WALKER_DATA;
+		QuestsData previousQuests = DataManager.QUEST_DATA;
 		try {
 			System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
 			XmlDataLoader loader = new XmlDataLoader();
 			DataManager.RETAIL_AI_DATA = loader.loadRetailAiData();
 			DataManager.NPC_SKILL_DATA = loader.loadNpcSkillData();
+			DataManager.QUEST_DATA = (QuestsData) JAXBContext.newInstance(QuestsData.class).createUnmarshaller()
+				.unmarshal(Path.of("src/main/resources/aion/definitions/compact/quests/quest_data.xml").toFile());
 			DataManager.WALKER_DATA = (WalkerData) JAXBContext.newInstance(WalkerData.class).createUnmarshaller()
 				.unmarshal(Path.of("src/main/resources/aion/definitions/compact/ai/ai-waypoints.xml").toFile());
 			DataManager.WALKER_DATA.merge((WalkerData) JAXBContext.newInstance(WalkerData.class).createUnmarshaller()
@@ -135,7 +153,7 @@ class RetailPatternAI2Test {
 			DataManager.WALKER_DATA.merge((WalkerData) JAXBContext.newInstance(WalkerData.class).createUnmarshaller()
 				.unmarshal(Path.of("src/main/resources/aion/data/static_data/npc_walker/300030000_Nochsana_Training_Camp_Walkers.xml")
 					.toFile()));
-			for (int npcId : new int[] { 256686, 256688, 256693, 256694 }) {
+				for (int npcId : new int[] { 256686, 256688, 256693, 256694 }) {
 				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
 				npc.npcId = npcId;
 				npc.worldId = 300030000;
@@ -143,31 +161,408 @@ class RetailPatternAI2Test {
 				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
 				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
 				npc.skillList = new NpcSkillList(npc);
-				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
-					"300030000:" + npcId);
+					assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+						"300030000:" + npcId);
+				}
+				for (int npcId : new int[] { 701625, 701922 }) {
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = 300540000;
+					npc.objectTemplate = new NpcTemplate();
+					npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+					npc.skillList = new NpcSkillList(npc);
+					Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+					assertEquals("IDF5_TD_AddWave_01", pattern.name());
+					assertTrue(RetailPatternAI2.supports(pattern, npc),
+						"300540000:" + npcId + " " + RetailPatternAI2.unsupportedReason(pattern, npc));
+				}
+				for (int[] binding : new int[][] { { 282093, 0 }, { 282095, 0 }, { 282084, 19273 }, { 282085, 19274 } }) {
+					int npcId = binding[0];
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = 300230000;
+					npc.objectTemplate = new NpcTemplate();
+					setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+					npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+					npc.skillList = new NpcSkillList(npc);
+					if (binding[1] != 0) {
+						assertEquals(binding[1], npc.skillList.getSkillByIndex(0).getSkillId());
+					}
+					Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+					assertTrue(RetailPatternAI2.supports(pattern, npc),
+						"300230000:" + npcId + " " + RetailPatternAI2.unsupportedReason(pattern, npc));
+				}
+				for (int npcId : new int[] { 215782, 215783, 215788, 215789, 215790, 281655 }) {
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = 300150000;
+					npc.objectTemplate = new NpcTemplate();
+					setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+					npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+					var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+					npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+					Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+					assertNotNull(pattern, "300150000:" + npcId);
+					assertTrue(RetailPatternAI2.supports(pattern, npc),
+						"300150000:" + npcId + " " + RetailPatternAI2.unsupportedReason(pattern, npc));
+				}
+				Map<Integer, int[]> abyssalSplinterNpcs = Map.of(
+				300220000, new int[] { 700856, 700957, 282010 },
+				300600000, new int[] { 700856, 700957, 219578 });
+			Map<Integer, String> abyssalSplinterPatterns = Map.of(
+				700856, "IDAbRe_Artifact_BossN",
+				700957, "IDAbRe_Artifact_BossH",
+				282010, "IDAbRe_Core_NamedA0",
+				219578, "IDAbRe_Core_NamedA0_02");
+			for (var entry : abyssalSplinterNpcs.entrySet()) {
+				for (int npcId : entry.getValue()) {
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = entry.getKey();
+					npc.objectTemplate = new NpcTemplate();
+					npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+					var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+					npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+					Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+					assertNotNull(pattern, entry.getKey() + ":" + npcId);
+					assertEquals(abyssalSplinterPatterns.get(npcId), pattern.name());
+					assertTrue(RetailPatternAI2.supports(pattern, npc),
+						entry.getKey() + ":" + npcId + " " + RetailPatternAI2.unsupportedReason(pattern, npc));
+				}
 			}
-			SkillNpc coin = new ObjenesisStd().newInstance(SkillNpc.class);
-			coin.npcId = 207101;
-			coin.worldId = 300450000;
-			coin.objectTemplate = new NpcTemplate();
-			coin.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
-			coin.spawnTemplate.setX(485.950287f);
-			coin.spawnTemplate.setY(1761.13232f);
-			coin.spawnTemplate.setZ(177.32695f);
+			SkillNpc hameroon = new ObjenesisStd().newInstance(SkillNpc.class);
+			hameroon.npcId = 216922;
+			hameroon.worldId = 300200000;
+			hameroon.objectTemplate = new NpcTemplate();
+			setField(NpcTemplate.class, hameroon.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+			hameroon.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+			hameroon.skillList = skillList(DataManager.NPC_SKILL_DATA.getNpcSkillList(216922).getNpcSkills());
+			Pattern hameroonPattern = DataManager.RETAIL_AI_DATA.getPattern(216922);
+			assertNotNull(hameroonPattern);
+			assertEquals("IDNovice_Hameroon", hameroonPattern.name());
+			assertTrue(RetailPatternAI2.supports(hameroonPattern, hameroon), "300200000:216922");
 			WorldMapInstance harmony = new ObjenesisStd().newInstance(TestWorldMapInstance.class);
 			harmony.setInstanceHandler(new HarmonyArenaInstance());
-			coin.position = new WorldPosition(300450000) {
-				@Override
-				public WorldMapInstance getWorldMapInstance() {
-					return harmony;
+			for (int npcId : new int[] {
+					207099, 207101, 207102, 207116, 207117, 219277, 219278, 219279, 219280, 219281, 219282,
+					219283, 219284, 219285, 219328, 219481, 219485, 219486, 219648, 219649, 219650,
+					219652, 243678, 243679, 243680 }) {
+				SkillNpc harmonyNpc = new ObjenesisStd().newInstance(SkillNpc.class);
+				harmonyNpc.npcId = npcId;
+				harmonyNpc.worldId = 300450000;
+				harmonyNpc.objectTemplate = new NpcTemplate();
+				if (npcId >= 219000) {
+					setField(NpcTemplate.class, harmonyNpc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
 				}
-			};
-			assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(207101), coin));
+				harmonyNpc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				if (npcId == 207101) {
+					harmonyNpc.spawnTemplate.setX(485.950287f);
+					harmonyNpc.spawnTemplate.setY(1761.13232f);
+					harmonyNpc.spawnTemplate.setZ(177.32695f);
+				} else if (Set.of(219277, 219278, 219279, 219648, 243678).contains(npcId)) {
+					harmonyNpc.spawnTemplate.setWalkerId("retail:300450000:spg_path_s5_mob_2");
+				} else if (Set.of(219283, 219284, 219285, 219650, 243680).contains(npcId)) {
+					harmonyNpc.spawnTemplate.setWalkerId("retail:300450000:s6_path_mob01");
+				}
+				var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+				if (npcSkills != null) {
+					harmonyNpc.skillList = skillList(npcSkills.getNpcSkills());
+				}
+				harmonyNpc.position = new WorldPosition(300450000) {
+					@Override
+					public WorldMapInstance getWorldMapInstance() {
+						return harmony;
+					}
+				};
+				Pattern harmonyPattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertTrue(RetailPatternAI2.supports(harmonyPattern, harmonyNpc),
+					"300450000:" + npcId + " " + RetailPatternAI2.unsupportedReason(harmonyPattern, harmonyNpc));
+			}
+			WorldMapInstance soloArena = new ObjenesisStd().newInstance(TestWorldMapInstance.class);
+			soloArena.setInstanceHandler(new PvPArenaInstance());
+			Map<Integer, int[]> soloArenaNpcs = Map.of(
+				300350000, new int[] { 207102, 701173, 701174, 701187, 701188 },
+				300360000, new int[] { 207102, 243675, 243676 },
+				300420000, new int[] { 207102, 701173, 701174, 701187, 701188 },
+				300430000, new int[] { 207102, 243675, 243676 },
+				300550000, new int[] { 243675, 243676 });
+			for (var entry : soloArenaNpcs.entrySet()) {
+				for (int npcId : entry.getValue()) {
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = entry.getKey();
+					npc.objectTemplate = new NpcTemplate();
+					if (npcId >= 219000) {
+						setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+					}
+					npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+					var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+					npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+					npc.position = new WorldPosition(entry.getKey()) {
+						@Override
+						public WorldMapInstance getWorldMapInstance() {
+							return soloArena;
+						}
+					};
+					Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+					assertTrue(RetailPatternAI2.supports(pattern, npc),
+						entry.getKey() + ":" + npcId + " " + RetailPatternAI2.unsupportedReason(pattern, npc));
+				}
+			}
+			SkillNpc shugoTransform = new ObjenesisStd().newInstance(SkillNpc.class);
+			shugoTransform.npcId = 831095;
+			shugoTransform.worldId = 300560000;
+			shugoTransform.objectTemplate = new NpcTemplate();
+			shugoTransform.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+			var shugoSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(831095).getNpcSkills();
+			assertEquals(List.of(21094, 21103), shugoSkills.stream().map(NpcSkillTemplate::getSkillid).toList());
+			shugoTransform.skillList = skillList(shugoSkills);
+			Pattern shugoPattern = DataManager.RETAIL_AI_DATA.getPattern(831095);
+			assertEquals("IDDF2Flying_event01_inviNPC04", shugoPattern.name());
+				assertTrue(RetailPatternAI2.supports(shugoPattern, shugoTransform),
+					RetailPatternAI2.unsupportedReason(shugoPattern, shugoTransform));
+				for (int npcId : new int[] {
+						856054, 235756, 235757, 235758, 235759, 235760, 235761, 235762, 235763, 235764,
+						235765, 235766, 235767, 235768, 235769, 235770, 235771, 235772, 235773, 235774,
+						235775, 235776, 235777, 235778, 235779, 235780, 235781, 235782, 235787, 235788,
+						235789 }) {
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = 300590000;
+					npc.objectTemplate = new NpcTemplate();
+					if (npcId != 856054) {
+						setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+					}
+					npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+					npc.spawnTemplate.setWalkerId("retail:300590000:pathrunway_path01");
+					var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+					npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+					Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+					assertNotNull(pattern, "300590000:" + npcId);
+					assertTrue(RetailPatternAI2.supports(pattern, npc),
+						"300590000:" + npcId + " " + RetailPatternAI2.unsupportedReason(pattern, npc));
+				}
+				for (int npcId : new int[] { 217185, 217195, 217204, 217205, 217206, 217281, 217282, 217283,
+						217284, 217289, 282295 }) {
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = 300250000;
+					npc.objectTemplate = new NpcTemplate();
+					setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+					npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+					var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+					npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+					Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+					String reason = RetailPatternAI2.unsupportedReason(pattern, npc);
+					if (Set.of(217185, 217195, 217205, 217282, 217289).contains(npcId)) {
+						assertNotNull(reason, "300250000:" + npcId);
+					} else {
+						assertNull(reason, "300250000:" + npcId + " " + reason);
+				}
+			}
+			for (int npcId : new int[] { 855952, 217313, 217315, 217316, 217317, 282394, 283000, 283001,
+					702677, 702678, 702679, 702680, 702681, 702682, 702683, 702684, 702685, 702686, 702687, 702688 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 300280000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+				npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertNotNull(pattern, "300280000:" + npcId);
+				String reason = RetailPatternAI2.unsupportedReason(pattern, npc);
+				if (npcId == 217313) {
+					assertEquals("missing NPC waypoint path", reason);
+				} else {
+					assertNull(reason, "300280000:" + npcId + " " + reason);
+				}
+			}
+			for (int npcId : new int[] { 855952, 701151, 701152, 282394, 283000, 283001,
+					702677, 702678, 702679, 702680, 702681, 702682, 702683, 702684, 702685, 702686, 702687, 702688 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 300620000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+				npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertNotNull(pattern, "300620000:" + npcId);
+				assertTrue(RetailPatternAI2.supports(pattern, npc),
+					"300620000:" + npcId + " " + RetailPatternAI2.unsupportedReason(pattern, npc));
+			}
+			SkillNpc occupiedVasharti = new ObjenesisStd().newInstance(SkillNpc.class);
+			occupiedVasharti.npcId = 236300;
+			occupiedVasharti.worldId = 300620000;
+			occupiedVasharti.objectTemplate = new NpcTemplate();
+			setField(NpcTemplate.class, occupiedVasharti.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+			occupiedVasharti.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+			occupiedVasharti.skillList = skillList(DataManager.NPC_SKILL_DATA.getNpcSkillList(236300).getNpcSkills());
+			assertEquals("missing NPC waypoint path",
+				RetailPatternAI2.unsupportedReason(DataManager.RETAIL_AI_DATA.getPattern(236300), occupiedVasharti));
+			List<String> danuarSupport = new ArrayList<>();
+			for (int[] binding : new int[][] {
+					{ 301110000, 284377, 284378, 284379, 231304, 284383, 231305 },
+					{ 301330000, 284377, 284378, 284379, 231304, 284383, 231305 },
+					{ 301360000, 284377, 284378, 284379, 234690, 855244, 234691 } }) {
+				for (int i = 1; i < binding.length; i++) {
+					int npcId = binding[i];
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = binding[0];
+					npc.objectTemplate = new NpcTemplate();
+					setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+					npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+					var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+					npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+					Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+					String reason = pattern == null ? "missing pattern" : RetailPatternAI2.unsupportedReason(pattern, npc);
+					danuarSupport.add(binding[0] + ":" + npcId + ":" + (reason == null ? "supported" : "unsupported"));
+				}
+			}
+			assertEquals(List.of(
+					"301110000:284377:supported", "301110000:284378:supported",
+					"301110000:284379:unsupported", "301110000:231304:supported",
+					"301110000:284383:supported", "301110000:231305:unsupported",
+					"301330000:284377:supported", "301330000:284378:supported",
+					"301330000:284379:unsupported", "301330000:231304:supported",
+					"301330000:284383:supported", "301330000:231305:unsupported",
+					"301360000:284377:supported", "301360000:284378:supported",
+					"301360000:284379:unsupported", "301360000:234690:unsupported",
+					"301360000:855244:supported", "301360000:234691:unsupported"),
+				danuarSupport);
+			List<String> draupnirSupport = new ArrayList<>();
+			for (int npcId : new int[] { 213776, 237264, 213778, 237265, 213779, 237266, 213802, 237267,
+					236929, 236900, 702857, 702858, 702861, 237275 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 320080000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+				npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				String reason = pattern == null ? "missing pattern" : RetailPatternAI2.unsupportedReason(pattern, npc);
+				draupnirSupport.add(npcId + ":" + (reason == null ? "supported" : reason));
+			}
+			assertEquals(List.of(
+				"213776:supported", "237264:supported", "213778:supported", "237265:supported",
+				"213779:supported", "237266:supported", "213802:supported", "237267:supported",
+				"236929:supported", "236900:supported", "702857:supported", "702858:supported",
+				"702861:supported", "237275:supported"), draupnirSupport);
+			for (int npcId : new int[] { 701001, 701002, 701003, 701004 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 301510000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				npc.skillList = skillList(DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId).getNpcSkills());
+				assertNull(RetailPatternAI2.unsupportedReason(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"301510000:" + npcId);
+			}
+			List<String> linkgateSupport = new ArrayList<>();
+			for (int npcId : new int[] { 233887, 233898, 234193, 234990, 234991 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 301270000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+				npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				String reason = pattern == null ? "missing pattern" : RetailPatternAI2.unsupportedReason(pattern, npc);
+				linkgateSupport.add(npcId + ":" + (reason == null ? "supported" : reason));
+			}
+			assertEquals(List.of(
+				"233887:supported",
+				"233898:missing condition variable Boss_Die",
+				"234193:supported",
+				"234990:missing condition variable Boss_Die",
+				"234991:missing condition variable Boss_Die"), linkgateSupport);
+			List<String> mirashSupport = new ArrayList<>();
+			for (int npcId : new int[] { 248013, 248382, 248389, 248427, 248435, 248533, 835784, 835785 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 301720000;
+				npc.objectTemplate = new NpcTemplate();
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				if (npcId == 248389) {
+					npc.spawnTemplate.setWalkerId("retail:301720000:npcpathzone_a_40");
+				}
+				var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+				npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				String reason = pattern == null ? "missing pattern" : RetailPatternAI2.unsupportedReason(pattern, npc);
+				mirashSupport.add(npcId + ":" + (reason == null ? "supported" : reason));
+			}
+				assertEquals(List.of(
+					"248013:supported", "248382:supported", "248389:supported", "248427:supported",
+					"248435:supported", "248533:missing NPC waypoint path", "835784:supported", "835785:supported"),
+					mirashSupport);
+				List<String> sauroSupport = new ArrayList<>();
+				for (int npcId : new int[] { 230791, 230818, 230849, 230850, 230851, 230852, 230853, 230857, 230858,
+						233255, 284673 }) {
+					SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+					npc.npcId = npcId;
+					npc.worldId = 301130000;
+					npc.objectTemplate = new NpcTemplate();
+					setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+					npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+					var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+					npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+					Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+					String reason = pattern == null ? "missing pattern" : RetailPatternAI2.unsupportedReason(pattern, npc);
+					sauroSupport.add(npcId + ":" + (reason == null ? "supported" : reason));
+				}
+					assertEquals(List.of(
+						"230791:supported", "230818:supported", "230849:supported", "230850:supported",
+						"230851:supported", "230852:supported", "230853:supported", "230857:supported",
+						"230858:supported", "233255:supported", "284673:supported"), sauroSupport);
+					List<String> seizedSupport = new ArrayList<>();
+					for (int npcId : new int[] { 233084, 233187, 235619, 235620, 235621 }) {
+						SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+						npc.npcId = npcId;
+						npc.worldId = 301140000;
+						npc.objectTemplate = new NpcTemplate();
+						setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+						npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+						var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+						npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+						Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+						String reason = pattern == null ? "missing pattern" : RetailPatternAI2.unsupportedReason(pattern, npc);
+						seizedSupport.add(npcId + ":" + (reason == null ? "supported" : reason));
+					}
+					assertEquals(List.of("233084:supported", "233187:supported", "235619:supported",
+						"235620:supported", "235621:supported"), seizedSupport);
+					List<String> fissureSupport = new ArrayList<>();
+			for (int npcId : new int[] { 245415, 245422, 245827 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 302100000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+				npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				String reason = pattern == null ? "missing pattern" : RetailPatternAI2.unsupportedReason(pattern, npc);
+				fissureSupport.add(npcId + ":" + (reason == null ? "supported" : reason));
+			}
+			assertEquals(List.of(
+				"245415:supported",
+				"245422:missing condition variable shadow_kill",
+				"245827:supported"), fissureSupport);
 			Pattern dranaLump = DataManager.RETAIL_AI_DATA.getPattern(281178);
 			assertEquals("IDLF1_SpallerCtrl", dranaLump.name());
 			assertTrue(RetailPatternAI2.supports(dranaLump));
 			for (int npcId : new int[] { 214849, 214850, 214851, 214864, 214894, 214895, 214896, 214897,
-					214904, 215280, 215281, 215284, 237372, 237373, 281178, 281246, 281249, 281258, 281259,
+					214904, 215280, 215281, 237372, 237373, 281178, 281246, 281249, 281258, 281259,
 					700439, 700440, 700441, 700442, 700443, 700444, 700445, 700446, 700447 }) {
 				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
 				npc.npcId = npcId;
@@ -192,6 +587,23 @@ class RetailPatternAI2Test {
 					assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 						worldId + ":" + npcId);
 				}
+			}
+			// Raksang Ruins 六个传送 NPC 由 Tames_Solo_*_Teleporter Pattern 接管，替代已删除的 ProquraAI2/AbisoAI2。
+			for (int npcId : new int[] { 206378, 206379, 206380, 206395, 206396, 206397 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 300610000;
+				npc.objectTemplate = new NpcTemplate();
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				npc.spawnTemplate.setX(818f);
+				npc.spawnTemplate.setY(932f);
+				npc.spawnTemplate.setZ(1208f);
+				npc.skillList = new NpcSkillList(npc);
+				Pattern teleporterPattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertNotNull(teleporterPattern, "pattern for " + npcId);
+				assertTrue(teleporterPattern.name().startsWith("Tames_Solo_") && teleporterPattern.name().endsWith("_Teleporter"),
+					npcId + " -> " + teleporterPattern.name());
+				assertTrue(RetailPatternAI2.supports(teleporterPattern, npc), "300610000:" + npcId);
 			}
 			for (int npcId : new int[] { 216157, 216158, 216159, 216160, 216161, 216162, 216163, 216164, 216165, 216168, 216169, 216182, 216183,
 					216238, 216239, 216240, 216241, 216245, 216246, 216247, 216248, 216249, 216250, 216263, 216264,
@@ -241,6 +653,55 @@ class RetailPatternAI2Test {
 				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 					"301500000:" + npcId);
 			}
+			for (int npcId : new int[] { 220526, 220534, 220593 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 301550000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				npc.skillList = skillList(DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId).getNpcSkills());
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"301550000:" + npcId);
+			}
+			for (int npcId : new int[] { 246418, 246440, 247075 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 301560000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				npc.skillList = skillList(DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId).getNpcSkills());
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"301560000:" + npcId);
+			}
+			for (int npcId : new int[] { 246443, 246747 }) {
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId)),
+					"301560000:" + npcId);
+			}
+			for (int npcId : new int[] { 246444, 246754, 247022 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 301560000;
+				npc.objectTemplate = new NpcTemplate();
+				setField(NpcTemplate.class, npc.objectTemplate, "npcTemplateType", NpcTemplateType.MONSTER);
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				if (npcId == 247022) {
+					npc.spawnTemplate.setX(402.143219f);
+					npc.spawnTemplate.setY(1021.43549f);
+					npc.spawnTemplate.setZ(723.194702f);
+				}
+				npc.skillList = new NpcSkillList(npc);
+				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
+					"301560000:" + npcId);
+			}
+			SkillNpc sanctuaryRaceController = new ObjenesisStd().newInstance(SkillNpc.class);
+			sanctuaryRaceController.npcId = 703092;
+			sanctuaryRaceController.worldId = 301580000;
+			sanctuaryRaceController.objectTemplate = new NpcTemplate();
+			sanctuaryRaceController.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+			sanctuaryRaceController.skillList = new NpcSkillList(sanctuaryRaceController);
+			assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(703092), sanctuaryRaceController));
 			SkillNpc roomController = new ObjenesisStd().newInstance(SkillNpc.class);
 			roomController.npcId = 857824;
 			roomController.worldId = 301570000;
@@ -311,6 +772,159 @@ class RetailPatternAI2Test {
 			DataManager.RETAIL_AI_DATA = previous;
 			DataManager.NPC_SKILL_DATA = previousNpcSkills;
 			DataManager.WALKER_DATA = previousWalkers;
+			DataManager.QUEST_DATA = previousQuests;
+			if (previousDefinitions == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previousDefinitions);
+			}
+		}
+	}
+
+	@Test
+	void locksPadmarashkaCaveRuntimeOwnershipBoundaries() throws Exception {
+		String previousDefinitions = System.getProperty("aion.game.definitions.dir");
+		RetailAiData previous = DataManager.RETAIL_AI_DATA;
+		NpcSkillData previousNpcSkills = DataManager.NPC_SKILL_DATA;
+		try {
+			System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+			XmlDataLoader loader = new XmlDataLoader();
+			DataManager.RETAIL_AI_DATA = loader.loadRetailAiData();
+			DataManager.NPC_SKILL_DATA = loader.loadNpcSkillData();
+			for (int npcId : new int[] { 218670, 218671, 218672, 218673, 218674, 218756, 282613, 282614 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 320150000;
+				npc.objectTemplate = new NpcTemplate();
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+				npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertNotNull(pattern, Integer.toString(npcId));
+				String reason = RetailPatternAI2.unsupportedReason(pattern, npc);
+				if (Set.of(218670, 218671, 218673, 218674).contains(npcId)) {
+					assertNull(reason, npcId + ":" + reason);
+				} else if (npcId == 218672) {
+					assertEquals("missing NPC skill SKILLI_INDEX_7", reason);
+				} else if (npcId == 218756) {
+					assertEquals("missing condition variable Phage", reason);
+				} else {
+					assertEquals("missing condition variable egg_die", reason);
+				}
+			}
+
+			String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/PadmarashkaCaveInstance.java"));
+			for (String retained : new String[] { "padma.deadline", "padma.complete", "padma.expired", "padma.eggs",
+					"padma.protectors", "scheduleDeadline(\"expire\"", "case 218756", "case 282613", "case 282614",
+					"case 218670", "case 218671", "case 218673", "case 218674", "removeEffect(19186)", "sendMovie(player, 488)" }) {
+				assertTrue(handler.contains(retained), retained);
+			}
+
+			String ownership = Files.readAllLines(Path.of(
+				"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+				.filter(line -> line.contains("id=\"320150000\"")).findFirst().orElseThrow();
+			assertTrue(ownership.contains("Pattern owns combat for 218670/218671/218673/218674"));
+			assertTrue(ownership.contains("218672 skill-slot fallback and Padmarashka/egg condition-variable fallbacks retain script AI"));
+			assertTrue(ownership.contains("handler owns persistent timer/protector shield/egg count/boss completion/movie 488"));
+		} finally {
+			DataManager.RETAIL_AI_DATA = previous;
+			DataManager.NPC_SKILL_DATA = previousNpcSkills;
+			if (previousDefinitions == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previousDefinitions);
+			}
+		}
+	}
+
+	@Test
+	void locksTransidiumAnnexFallbackOwnership() throws Exception {
+		String previousDefinitions = System.getProperty("aion.game.definitions.dir");
+		RetailAiData previous = DataManager.RETAIL_AI_DATA;
+		NpcSkillData previousNpcSkills = DataManager.NPC_SKILL_DATA;
+		try {
+			System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+			XmlDataLoader loader = new XmlDataLoader();
+			DataManager.RETAIL_AI_DATA = loader.loadRetailAiData();
+			DataManager.NPC_SKILL_DATA = loader.loadNpcSkillData();
+			Map<Integer, Integer> vehicleSkills = Map.of(
+				297331, 21582, 297332, 21589, 297333, 21590, 297334, 21591,
+				297472, 21579, 297473, 21586, 297474, 21587, 297475, 21588);
+			for (var entry : vehicleSkills.entrySet()) {
+				int npcId = entry.getKey();
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 400030000;
+				npc.objectTemplate = new NpcTemplate();
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				npc.skillList = skillList(DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId).getNpcSkills());
+				assertEquals(entry.getValue(), npc.skillList.getSkillByIndex(0).getSkillId(), Integer.toString(npcId));
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertEquals(List.of("use_skill", "despawn_self"),
+					pattern.event("on_talked_by_user").getFirst().actions().stream().map(Operation::type).toList());
+				assertTrue(RetailPatternAI2.supports(pattern, npc), Integer.toString(npcId));
+			}
+			for (int npcId : new int[] { 277225, 277226, 277227, 277228 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 400030000;
+				npc.objectTemplate = new NpcTemplate();
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				var skills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId).getNpcSkills();
+				assertEquals(List.of(20378, 20381, 20383), skills.stream().map(NpcSkillTemplate::getSkillid).toList());
+				npc.skillList = skillList(skills);
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertTrue(pattern.event("on_talked_by_user").isEmpty());
+				assertTrue(RetailPatternAI2.supports(pattern, npc), Integer.toString(npcId));
+			}
+			for (int npcId : new int[] { 277224, 297304 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 400030000;
+				npc.objectTemplate = new NpcTemplate();
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				var npcSkills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
+				npc.skillList = npcSkills == null ? new NpcSkillList(npc) : skillList(npcSkills.getNpcSkills());
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertNotNull(pattern, Integer.toString(npcId));
+				assertEquals(npcId == 277224 ? "unknown NPC name Pucio_al" : "missing condition variable NPC_TANK_A",
+					RetailPatternAI2.unsupportedReason(pattern, npc));
+			}
+
+			String conditions = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+			String world = conditions.substring(conditions.indexOf("<world id=\"400030000\""),
+				conditions.indexOf("</world>", conditions.indexOf("<world id=\"400030000\"")));
+			assertEquals(8, (world.length() - world.replace("<variable ", "").length()) / "<variable ".length());
+			assertEquals(58, (world.length() - world.replace("<condition ", "").length()) / "<condition ".length());
+			assertTrue(world.contains("expression=\"GAB1_SUB_BASE == 1\""));
+
+			String spawns = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/spawns/Npcs/400030000_Transidium Annex.xml"));
+			assertFalse(spawns.contains("npc_id=\"297304\""));
+			assertTrue(spawns.contains("npc_id=\"277224\""));
+
+			String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TransidiumAnnexInstance.java"));
+			for (String retained : new String[] { "transidium.start_deadline", "transidium.return_deadline",
+					"transidium.hangar_barricade", "scheduleDeadline(\"start\"", "scheduleDeadline(\"return\"",
+					"onDropRegistered", "case 297306", "case 297307", "case 297308", "case 297309",
+					"case 297310", "case 297311", "case 297312", "case 297313", "case 277229", "case 277224",
+					"removeEffects" }) {
+				assertTrue(handler.contains(retained), retained);
+			}
+			assertFalse(handler.contains("void handleUseItemFinish"));
+
+			String ownership = Files.readAllLines(Path.of(
+				"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+				.filter(line -> line.contains("id=\"400030000\"")).findFirst().orElseThrow();
+			assertTrue(ownership.contains("58 retail condition slots remain unreachable without start NPC 297304"));
+			assertTrue(ownership.contains("start Pattern misses NPC_TANK_A and boss Pattern misses Pucio_al/Hnikar_a1"));
+			assertTrue(ownership.contains("handler retains race/start/doors/controllers/returns/barricades/boss/drop/completion/cleanup"));
+		} finally {
+			DataManager.RETAIL_AI_DATA = previous;
+			DataManager.NPC_SKILL_DATA = previousNpcSkills;
 			if (previousDefinitions == null) {
 				System.clearProperty("aion.game.definitions.dir");
 			} else {

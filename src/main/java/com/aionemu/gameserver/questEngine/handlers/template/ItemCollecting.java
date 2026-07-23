@@ -34,6 +34,12 @@ public class ItemCollecting extends QuestHandler {
 	private final int startDialogId2;
 	/** 接取时发放、领奖时回收的任务物品 ID，0 表示无 / quest item given on start and removed on reward, 0 if none */
 	private final int itemId;
+	/** 收集成功对话页 / collect-success dialog page */
+	private final int checkOkDialogId;
+	/** 收集失败对话页 / collect-failure dialog page */
+	private final int checkFailDialogId;
+	/** 已进入奖励状态时的对话页 / reward-state dialog page */
+	private final int rewardDialogId;
 
 	/**
 	 * 构造物品收集任务处理器。
@@ -49,7 +55,7 @@ public class ItemCollecting extends QuestHandler {
 	 * @param startDialogId2 交任务对话页 / turn-in dialog page
 	 * quest item id
 	 */
-	public ItemCollecting(int questId, List<Integer> startNpcIds, int nextNpcId, List<Integer> actionItemIds, List<Integer> endNpcIds, int questMovie, int startDialogId, int startDialogId2, int itemId) {
+	public ItemCollecting(int questId, List<Integer> startNpcIds, int nextNpcId, List<Integer> actionItemIds, List<Integer> endNpcIds, int questMovie, int startDialogId, int startDialogId2, int itemId, int checkOkDialogId, int checkFailDialogId, int rewardDialogId) {
 		super(questId);
 		startNpcs.addAll(startNpcIds);
 		startNpcs.remove(0);
@@ -68,6 +74,9 @@ public class ItemCollecting extends QuestHandler {
 		this.startDialogId = startDialogId;
 		this.startDialogId2 = startDialogId2;
 		this.itemId = itemId;
+		this.checkOkDialogId = checkOkDialogId;
+		this.checkFailDialogId = checkFailDialogId;
+		this.rewardDialogId = rewardDialogId;
 	}
 
 	/**
@@ -131,7 +140,12 @@ public class ItemCollecting extends QuestHandler {
 					if (itemId != 0) {
 						giveQuestItem(env, itemId, 1);
 					}
-					return sendQuestStartDialog(env);
+					boolean handled = sendQuestStartDialog(env);
+					QuestState started = player.getQuestStateList().getQuestState(getQuestId());
+					if (handled && dialog == QuestDialog.ACCEPT_QUEST_SIMPLE && questMovie != 0 && started != null && started.getStatus() == QuestStatus.START) {
+						playQuestMovie(env, questMovie);
+					}
+					return handled;
 				}
 				}
 			}
@@ -152,7 +166,7 @@ public class ItemCollecting extends QuestHandler {
 					return sendQuestDialog(env, startDialogId2 != 0 ? startDialogId2 : 2375);
 				}
 				case CHECK_COLLECTED_ITEMS: {
-					return checkQuestItems(env, var, var, true, 5, 2716);
+					return checkQuestItems(env, var, var, true, checkOkDialogId, checkFailDialogId);
 				}
 				case CHECK_COLLECTED_ITEMS_SIMPLE: {
 					return checkQuestItemsSimple(env, var, var, true, 5, 0, 0);
@@ -180,6 +194,9 @@ public class ItemCollecting extends QuestHandler {
 			}
 		} else if (qs.getStatus() == QuestStatus.REWARD) {
 			if (endNpcs.contains(targetId)) {
+				if (rewardDialogId != 0 && dialog == QuestDialog.START_DIALOG) {
+					return sendQuestDialog(env, rewardDialogId);
+				}
 				if (itemId != 0) {
 					removeQuestItem(env, itemId, 1);
 				}

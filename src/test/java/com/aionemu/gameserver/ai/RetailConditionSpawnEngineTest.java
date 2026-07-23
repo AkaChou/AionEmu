@@ -9,6 +9,7 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawn;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnChoice;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
+import com.aionemu.gameserver.configs.main.InstanceConfig;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -63,7 +64,7 @@ class RetailConditionSpawnEngineTest {
 		AI2Engine ai2Engine = new AI2Engine();
 		ai2Engine.registerAI(DummyAI2.class);
 		GameEngineServices engineServices = new GameEngineServices(null, null, null,
-			provider(AI2Engine.class, ai2Engine), null);
+			provider(AI2Engine.class, ai2Engine), null, null);
 		GameWorldBootstrapServices worldServices = new GameWorldBootstrapServices(
 			provider(IDFactory.class, OBJENESIS.newInstance(TestIdFactory.class)), null, null, null,
 			provider(World.class, world));
@@ -109,6 +110,20 @@ class RetailConditionSpawnEngineTest {
 		assertThrows(IllegalArgumentException.class, () -> RetailConditionSpawnEngine.evaluate(
 			"(1131_rewardcon_l_set == 1) && (1131_mistoff == 1) && (1132_mistoff == 1) && (1141_mistoff == 1",
 			Map.of("1131_rewardcon_l_set", 1, "1131_mistoff", 1, "1132_mistoff", 1, "1141_mistoff", 1)));
+	}
+
+	@Test
+	void persistsConfiguredSpecialServerConditionAtInstanceInitialization() throws ReflectiveOperationException {
+		int previous = InstanceConfig.SPECIAL_SERVER_COND;
+		try (TestContext context = new TestContext(conditionNpc(0, 0))) {
+			InstanceConfig.SPECIAL_SERVER_COND = 1;
+			RetailConditionSpawnEngine.initialize(context.instance);
+
+			assertEquals(1, context.instance.getRuntimeState()
+				.getInt("retail.condition.variable.specialserver_cond", 0));
+		} finally {
+			InstanceConfig.SPECIAL_SERVER_COND = previous;
+		}
 	}
 
 	@Test
@@ -286,7 +301,7 @@ class RetailConditionSpawnEngineTest {
 		ConditionSpawn condition = condition(0, 255, npc);
 		return new RetailAiData(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
 			Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(WORLD_ID, List.of(condition)),
-			Map.of(WORLD_ID, Set.of("wave")), Map.of(), Map.of());
+				Map.of(WORLD_ID, Set.of("wave", "specialserver_cond")), Map.of(), Map.of());
 	}
 
 	private static ConditionSpawn condition(int pageStart, int pageEnd) {
@@ -435,7 +450,7 @@ class RetailConditionSpawnEngineTest {
 			threadPoolServices = new GameThreadPoolServices(beans.getBeanProvider(ThreadPoolManager.class));
 			AI2Engine ai2Engine = new AI2Engine();
 			ai2Engine.registerAI(DummyAI2.class);
-			engineServices = new GameEngineServices(null, null, null, provider(AI2Engine.class, ai2Engine), null);
+			engineServices = new GameEngineServices(null, null, null, provider(AI2Engine.class, ai2Engine), null, null);
 			worldServices = new GameWorldBootstrapServices(
 				provider(IDFactory.class, OBJENESIS.newInstance(TestIdFactory.class)), null, null, null,
 				provider(World.class, world));

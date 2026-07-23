@@ -41,6 +41,10 @@ class ScalingDropDataTest {
 
 		assertNotNull(data.getScalingDrop(219640));
 		assertEquals(4, data.getScalingDrop(835733).getSets().size());
+		assertEquals(1000, data.getScalingDrop(835733).getSets().get(0).getRate());
+		assertEquals(1000, data.getScalingDrop(835733).getSets().get(1).getRate());
+		assertEquals(1000, data.getScalingDrop(835733).getSets().get(2).getRate());
+		assertEquals(200, data.getScalingDrop(835733).getSets().get(3).getRate());
 		assertEquals(185000295, data.getScalingDrop(246327).getSets().getFirst().getItems().getFirst().getId());
 	}
 }

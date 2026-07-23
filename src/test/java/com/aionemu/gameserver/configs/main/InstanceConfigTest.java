@@ -16,6 +16,7 @@ class InstanceConfigTest {
 	@Test
 	void bindsAndParsesInstanceProperties() throws Exception {
 		boolean allowSoloEntry = InstanceConfig.ALLOW_SOLO_ENTRY;
+		int specialServerCond = InstanceConfig.SPECIAL_SERVER_COND;
 		double cooldownRate = InstanceConfig.COOLDOWN_RATE;
 		int destroyDelay = InstanceConfig.DESTROY_DELAY_SECONDS;
 		int soloDestroyDelay = InstanceConfig.SOLO_DESTROY_DELAY_SECONDS;
@@ -26,6 +27,7 @@ class InstanceConfigTest {
 		String scalingMaps = getPrivateString("scalingExcludedMaps");
 		Properties properties = new Properties();
 		properties.setProperty("gameserver.instance.allow_solo_entry", "false");
+		properties.setProperty("gameserver.instance.special_server_cond", "1");
 		properties.setProperty("gameserver.instances.cooldown.rate", "0.01");
 		properties.setProperty("gameserver.instances.cooldown.filter", "300080000, 0");
 		properties.setProperty("gameserver.instance.destroy_delay_seconds", "90");
@@ -40,6 +42,7 @@ class InstanceConfigTest {
 			InstanceConfig.refresh();
 
 			assertFalse(InstanceConfig.ALLOW_SOLO_ENTRY);
+			assertEquals(1, InstanceConfig.SPECIAL_SERVER_COND);
 			assertEquals(0.01, InstanceConfig.COOLDOWN_RATE);
 			assertTrue(InstanceConfig.isCooldownExcluded(300080000));
 			assertFalse(InstanceConfig.isCooldownExcluded(300060000));
@@ -51,6 +54,7 @@ class InstanceConfigTest {
 			assertTrue(InstanceConfig.isScalingExcluded(300060000));
 		} finally {
 			InstanceConfig.ALLOW_SOLO_ENTRY = allowSoloEntry;
+			InstanceConfig.SPECIAL_SERVER_COND = specialServerCond;
 			InstanceConfig.COOLDOWN_RATE = cooldownRate;
 			InstanceConfig.DESTROY_DELAY_SECONDS = destroyDelay;
 			InstanceConfig.SOLO_DESTROY_DELAY_SECONDS = soloDestroyDelay;
@@ -59,6 +63,18 @@ class InstanceConfigTest {
 			InstanceConfig.SCALING_DMG_FLOOR = dmgFloor;
 			setPrivateString("cooldownExcludedMaps", cooldownMaps);
 			setPrivateString("scalingExcludedMaps", scalingMaps);
+			InstanceConfig.refresh();
+		}
+	}
+
+	@Test
+	void rejectsInvalidSpecialServerCondition() {
+		int specialServerCond = InstanceConfig.SPECIAL_SERVER_COND;
+		try {
+			InstanceConfig.SPECIAL_SERVER_COND = 2;
+			assertThrows(IllegalArgumentException.class, InstanceConfig::refresh);
+		} finally {
+			InstanceConfig.SPECIAL_SERVER_COND = specialServerCond;
 			InstanceConfig.refresh();
 		}
 	}

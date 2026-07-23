@@ -5,7 +5,6 @@ import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.flyring.FlyRing;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
@@ -49,9 +48,5 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler {
 	private void cleanup(Player player) {
 		player.getEffectController().removeEffect(17649);
 		player.getEffectController().removeEffect(17672);
-		Storage storage = player.getInventory();
-		for (int itemId : new int[] { 185000302, 185000303, 185000304, 185000309, 188100423, 188100424 }) {
-			storage.decreaseByItemId(itemId, storage.getItemCountByItemId(itemId));
-		}
 	}
 }

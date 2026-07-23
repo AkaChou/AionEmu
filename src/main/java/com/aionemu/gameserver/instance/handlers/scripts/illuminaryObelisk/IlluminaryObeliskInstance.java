@@ -9,16 +9,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 @InstanceID(301230000)
 public class IlluminaryObeliskInstance extends GeneralInstanceHandler {
 	@Override
-	public void onLeaveInstance(Player player) {
-		removeItems(player);
-	}
-
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-
-	@Override
 	public void onExitInstance(Player player) {
 		removeItems(player);
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());

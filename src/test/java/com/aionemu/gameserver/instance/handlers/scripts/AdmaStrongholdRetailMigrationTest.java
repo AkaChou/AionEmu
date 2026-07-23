@@ -37,9 +37,26 @@ class AdmaStrongholdRetailMigrationTest {
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AdmaStrongholdInstance.java"));
 		for (String legacy : new String[] { "onDropRegistered", "onDie", "scheduleDeadline", "spawnReaper",
 			"spawnExit", "case 237239", "case 237240", "case 237241", "case 237242", "case 237243", "case 237244",
-			"702658", "702659" }) {
+			"702658", "702659", "onPlayerLogOut" }) {
 			assertFalse(handler.contains(legacy), legacy);
 		}
+		for (String retained : new String[] { "case 700396", "case 700397", "removeEffect(18462)",
+			"removeEffect(18463)", "185000026", "185000032", "onLeaveInstance" }) {
+			assertTrue(handler.contains(retained), retained);
+		}
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (int itemId = 185000026; itemId <= 185000032; itemId++) {
+			assertFalse(itemTemplateBlock(items, Integer.toString(itemId)).contains("ownership_world"),
+				Integer.toString(itemId));
+		}
+
+		String ownership = Files.readAllLines(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+			.filter(line -> line.contains("id=\"320130000\"")).findFirst().orElseThrow();
+		assertTrue(ownership.contains("retail condition/static spawns and Pattern own stages/bosses/exit"));
+		assertTrue(ownership.contains(
+			"handler only clears use-item effects 18462/18463 and instance items 185000026..185000032 on leave"));
 	}
 
 	private static String block(String source, String startToken, String endToken) {
@@ -50,5 +67,14 @@ class AdmaStrongholdRetailMigrationTest {
 
 	private static int count(String source, String token) {
 		return (source.length() - source.replace(token, "").length()) / token.length();
+	}
+
+	private static String itemTemplateBlock(String source, String itemId) {
+		int start = source.indexOf("<item_template id=\"" + itemId + "\"");
+		assertTrue(start >= 0);
+		int startTagEnd = source.indexOf('>', start);
+		int end = source.charAt(startTagEnd - 1) == '/' ? startTagEnd + 1
+			: source.indexOf("</item_template>", startTagEnd) + "</item_template>".length();
+		return source.substring(start, end);
 	}
 }

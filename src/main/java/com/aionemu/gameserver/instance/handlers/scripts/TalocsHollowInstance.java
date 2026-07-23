@@ -6,8 +6,6 @@ import java.util.Set;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.summons.UnsummonType;
@@ -31,20 +29,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler {
 	}
 
 	@Override
-	public void handleUseItemFinish(Player player, Npc npc) {
-		int skillId = switch (npc.getNpcId()) {
-			case 700940 -> 19229;
-			case 700941 -> 19230;
-			default -> 0;
-		};
-		if (skillId != 0) {
-			if (GameEngineServices.skillEngine().getSkill(npc, skillId, 1, player).useNoAnimationSkill()) {
-				npc.getController().onDelete();
-			}
-		}
-	}
-
-	@Override
 	public void onEnterZone(Player player, ZoneInstance zone) {
 		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("KINQUIDS_DEN_300190000")) {
 			sendMovie(player, 463);
@@ -55,7 +39,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler {
 
 	@Override
 	public void onPlayerLogOut(Player player) {
-		cleanupPlayer(player);
+		cleanupEffects(player);
 	}
 
 	@Override
@@ -74,6 +58,10 @@ public class TalocsHollowInstance extends GeneralInstanceHandler {
 		for (int itemId : new int[] { 164000137, 164000138, 164000139 }) {
 			storage.decreaseByItemId(itemId, storage.getItemCountByItemId(itemId));
 		}
+		cleanupEffects(player);
+	}
+
+	private void cleanupEffects(Player player) {
 		PlayerEffectController effects = player.getEffectController();
 		effects.removeEffect(10251);
 		effects.removeEffect(10252);

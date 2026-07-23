@@ -90,7 +90,7 @@ class BastionOfSoulsMigrationTest {
 	}
 
 	@Test
-	void handlerRetainsOnlyFlyingRingAndPlayerCleanup() throws Exception {
+	void handlerRetainsOnlyFlyingRingAndEffectCleanup() throws Exception {
 		String source = Files.readString(HANDLER);
 		for (String legacy : new String[] { "Future", "GameThreadPoolServices", "public void onDie(",
 			"handleUseItemFinish(", "ItemService.addItem", "startBatiskanBastiel", "SpawnBastionRace",
@@ -98,9 +98,19 @@ class BastionOfSoulsMigrationTest {
 			assertFalse(source.contains(legacy), legacy);
 		}
 		for (String retained : new String[] { "BASTION_OF_SOULS", "SM_PLAY_MOVIE(0, 957)", "17649", "17672",
-			"185000302", "185000303", "185000304", "185000309", "188100423", "188100424" }) {
+				"onPlayerLogOut", "onLeaveInstance" }) {
 			assertTrue(source.contains(retained), retained);
 		}
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (int itemId : new int[] { 185000302, 185000303, 185000304, 185000309, 188100423, 188100424 }) {
+			assertFalse(source.contains(Integer.toString(itemId)), Integer.toString(itemId));
+			assertTrue(itemTemplateBlock(items, itemId).contains("ownership_world=\"302340000\""),
+				Integer.toString(itemId));
+		}
+		String instanceService = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java"));
+		assertTrue(instanceService.contains("getOwnershipWorld() == player.getWorldId()"));
 
 		Document staticSpawns = parse(
 			"src/main/resources/aion/data/static_data/spawns/Instances/302340000_Bastion_Of_Souls.xml");
@@ -117,5 +127,10 @@ class BastionOfSoulsMigrationTest {
 
 	private static boolean exists(Document document, String expression) throws Exception {
 		return (boolean) XPathFactory.newInstance().newXPath().evaluate(expression, document, XPathConstants.BOOLEAN);
+	}
+
+	private static String itemTemplateBlock(String items, int itemId) {
+		int start = items.indexOf("<item_template id=\"" + itemId + "\"");
+		return items.substring(start, items.indexOf("</item_template>", start));
 	}
 }

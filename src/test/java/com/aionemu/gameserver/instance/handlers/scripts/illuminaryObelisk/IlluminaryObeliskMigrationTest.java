@@ -1,30 +1,46 @@
 package com.aionemu.gameserver.instance.handlers.scripts.illuminaryObelisk;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 class IlluminaryObeliskMigrationTest {
 	private static final Path HANDLERS = Path.of(
 		"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/illuminaryObelisk");
 
 	@Test
-	void handlersOnlyKeepInstanceItemCleanup() throws Exception {
+	void handlersKeepOnlyTheirActualExitItemOwners() throws Exception {
 		for (String file : new String[] { "IlluminaryObeliskInstance.java",
 			"Infernal_IlluminaryObeliskInstance.java" }) {
 			String source = Files.readString(HANDLERS.resolve(file));
 			assertTrue(source.contains("decreaseByItemId(164000289"));
 			assertTrue(source.contains("decreaseByItemId(164000290"));
 			assertTrue(source.contains("moveToInstanceExit"));
+			assertTrue(source.contains("onExitInstance(Player player) {\n\t\tremoveItems(player);"));
+			assertFalse(source.contains("onPlayerLogOut("));
 			for (String legacy : new String[] { "Future<", "GameThreadPoolServices", "onDropRegistered",
 				"handleUseItemFinish", "onDie(", "spawn(", "sendMessage(", "StaticDoor" }) {
 				assertFalse(source.contains(legacy), file + " still contains " + legacy);
 			}
+		}
+		assertFalse(Files.readString(HANDLERS.resolve("IlluminaryObeliskInstance.java"))
+			.contains("onLeaveInstance("));
+		assertTrue(Files.readString(HANDLERS.resolve("Infernal_IlluminaryObeliskInstance.java"))
+			.contains("onLeaveInstance(Player player) {\n\t\tremoveItems(player);"));
+	}
+
+	@Test
+	void temporaryItemsBelongToTheFormalWorld() throws Exception {
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (int itemId : new int[] { 164000289, 164000290 }) {
+			int start = items.indexOf("<item_template id=\"" + itemId + "\"");
+			String item = items.substring(start, items.indexOf("</item_template>", start));
+			assertTrue(item.contains("ownership_world=\"301230000\""), Integer.toString(itemId));
 		}
 	}
 

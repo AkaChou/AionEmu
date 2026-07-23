@@ -62,10 +62,21 @@ class SmolderingFireTempleRetailMigrationTest {
 		assertTrue(handler.contains("case 244095, 245198 -> setDoorState(8, true)"));
 		assertTrue(handler.contains("case 244100, 245203 -> startSettlement(kill.killedAt())"));
 		assertTrue(handler.contains("Math.max(killTime(244100), killTime(245203))"));
-		for (String legacy : new String[] { "spawnBoss", "spawnOnce", "guardianUnlocked",
-				"smolder.guardian_unlocked_at", "SCORE_NPCS", "BOSS_X", "834066", "834067", "834068" }) {
-			assertFalse(handler.contains(legacy), legacy);
-		}
+			for (String legacy : new String[] { "spawnBoss", "spawnOnce", "guardianUnlocked",
+					"smolder.guardian_unlocked_at", "SCORE_NPCS", "BOSS_X", "834066", "834067", "834068",
+					"removeItems", "decreaseByItemId" }) {
+				assertFalse(handler.contains(legacy), legacy);
+			}
+			String items = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+			for (int itemId : new int[] { 162002085, 162002086, 162002087, 162002088, 162002089, 162002090,
+					185000270 }) {
+				assertTrue(itemTemplateBlock(items, itemId).contains("ownership_world=\"302000000\""),
+					Integer.toString(itemId));
+			}
+			String instanceService = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java"));
+			assertTrue(instanceService.contains("getOwnershipWorld() == player.getWorldId()"));
 
 		String spawns = Files.readString(SPAWNS);
 		for (String retained : new String[] { "244094", "244095", "244096", "244435", "834055", "834056",
@@ -87,5 +98,10 @@ class SmolderingFireTempleRetailMigrationTest {
 
 	private static int count(String value, String token) {
 		return (value.length() - value.replace(token, "").length()) / token.length();
+	}
+
+	private static String itemTemplateBlock(String items, int itemId) {
+		int start = items.indexOf("<item_template id=\"" + itemId + "\"");
+		return items.substring(start, items.indexOf("</item_template>", start));
 	}
 }

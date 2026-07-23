@@ -15,7 +15,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 
 	@Override
 	public void onPlayerLogOut(Player player) {
-		cleanup(player);
+		removeEffects(player);
 	}
 
 	@Override
@@ -26,6 +26,10 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	private static void cleanup(Player player) {
 		var inventory = player.getInventory();
 		inventory.decreaseByItemId(185000219, inventory.getItemCountByItemId(185000219));
+		removeEffects(player);
+	}
+
+	private static void removeEffects(Player player) {
 		player.getEffectController().removeEffect(22778);
 		player.getEffectController().removeEffect(22779);
 	}

@@ -17,6 +17,7 @@ out/
 .cursor/
 .codegraph/
 .codex
+.claude
 
 # Runtime logs and pid files
 log/
@@ -48,3 +49,5 @@ log
 /login
 
 /src/main/resources/aion/data/static_data/npc_drops.zip
+/src/main/resources/aion/definitions/compact/instance/manifest.xml
+/.mcp.json

@@ -45,54 +45,6 @@
 	<monster_hunt id="36518" start_npc_ids="0" end_npc_ids="799837 799838" reward="true">
 		<monster end_var="1" var="0" npc_ids="216622"/>
 	</monster_hunt>
-	<monster_hunt id="36531" start_npc_ids="0" end_npc_ids="804948" reward="true">
-		<monster end_var="1" var="0" npc_ids="236642"/>
-	</monster_hunt>
-	<monster_hunt id="36532" start_npc_ids="0" end_npc_ids="804949" reward="true">
-		<monster end_var="1" var="0" npc_ids="236643"/>
-	</monster_hunt>
-	<monster_hunt id="36533" start_npc_ids="0" end_npc_ids="804949" reward="true">
-		<monster end_var="1" var="0" npc_ids="236644"/>
-	</monster_hunt>
-	<monster_hunt id="36534" start_npc_ids="0" end_npc_ids="804950" reward="true">
-		<monster end_var="1" var="0" npc_ids="236645"/>
-	</monster_hunt>
-	<monster_hunt id="36535" start_npc_ids="0" end_npc_ids="804952" reward="true">
-		<monster end_var="1" var="0" npc_ids="236646"/>
-	</monster_hunt>
-	<monster_hunt id="36536" start_npc_ids="0" end_npc_ids="804948" reward="true">
-		<monster end_var="1" var="0" npc_ids="236647"/>
-	</monster_hunt>
-	<monster_hunt id="36539" start_npc_ids="0" end_npc_ids="804952" reward="true">
-		<monster end_var="1" var="0" npc_ids="236648"/>
-	</monster_hunt>
-	<monster_hunt id="36540" start_npc_ids="0" end_npc_ids="804952" reward="true">
-		<monster end_var="1" var="0" npc_ids="236649"/>
-	</monster_hunt>
-	<monster_hunt id="36541" start_npc_ids="0" end_npc_ids="804951" reward="true">
-		<monster end_var="1" var="0" npc_ids="236650"/>
-	</monster_hunt>
-	<monster_hunt id="36542" start_npc_ids="0" end_npc_ids="804951" reward="true">
-		<monster end_var="1" var="0" npc_ids="236651"/>
-	</monster_hunt>
-	<monster_hunt id="36543" start_npc_ids="0" end_npc_ids="804954" reward="true">
-		<monster end_var="1" var="0" npc_ids="236652"/>
-	</monster_hunt>
-	<monster_hunt id="36544" start_npc_ids="0" end_npc_ids="804951" reward="true">
-		<monster end_var="1" var="0" npc_ids="236653"/>
-	</monster_hunt>
-	<monster_hunt id="36545" start_npc_ids="0" end_npc_ids="804948" reward="true">
-		<monster end_var="1" var="0" npc_ids="220045"/>
-	</monster_hunt>
-	<monster_hunt id="36546" start_npc_ids="0" end_npc_ids="804948" reward="true">
-		<monster end_var="1" var="0" npc_ids="220046"/>
-	</monster_hunt>
-	<monster_hunt id="36547" start_npc_ids="0" end_npc_ids="804948" reward="true">
-		<monster end_var="1" var="0" npc_ids="220049"/>
-	</monster_hunt>
-	<monster_hunt id="36548" start_npc_ids="0" end_npc_ids="804948" reward="true">
-		<monster end_var="1" var="0" npc_ids="220053"/>
-	</monster_hunt>
 	
 	<kill_spawned id="36504" start_npc_ids="0" end_npc_ids="799837 799838">
 		<spawned_monster end_var="1" var="0" spawner_object="700759" npc_ids="216608"/>

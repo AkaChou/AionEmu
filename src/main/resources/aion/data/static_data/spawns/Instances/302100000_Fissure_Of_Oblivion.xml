@@ -12,10 +12,6 @@
 		<spawn npc_id="245825">
 			<spot x="624.6823" y="517.36346" z="339.70737" h="1"/>
 		</spawn>
-		<!-- IDTransform_Deva_Fi_Gossip_05 -->
-		<spawn npc_id="245827">
-			<spot x="501.6951" y="455.3373" z="321.75" h="112"/>
-		</spawn>
 		<!-- IDTransform_Cinema_God_Kaisinel_75 -->
 		<spawn npc_id="246059">
 			<spot x="640.3993" y="474.3437" z="340.87436" h="71"/>

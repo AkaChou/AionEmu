@@ -45,6 +45,15 @@ class DragonLordRefugeRetailMigrationTest {
 
 		assertMinimalHandler("DragonLordRefugeInstance.java");
 		assertMinimalHandler("AnguishedDragonLordRefugeInstance.java");
+
+		var coverage = Files.readAllLines(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		for (String worldId : new String[] { "300520000", "300630000" }) {
+			String ownership = coverage.stream().filter(line -> line.contains("id=\"" + worldId + "\""))
+				.findFirst().orElseThrow();
+			assertTrue(ownership.contains("retail condition/static spawns and Pattern own"), worldId);
+			assertTrue(ownership.contains("handler only removes effects 20932/20936 on logout/leave"), worldId);
+		}
 	}
 
 	@Test

@@ -22,14 +22,11 @@ import java.util.Set;
  */
 
 @InstanceID(301360000)
-public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
-{
+public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler {
 	/** 理念击杀 / idean killed */
-		private int ideanKilled;
+	private int ideanKilled;
 	/** 克隆莫多尔已击杀 / clone modor killed */
-		private int cloneModorKilled;
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	protected boolean isInstanceDestroyed = false;
+	private int cloneModorKilled;
 
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
@@ -46,7 +43,15 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 		}
 		restoreBombDeadlines();
 	}
-	
+
+	@Override
+	public boolean supportsRetailPattern(int npcId) {
+		return switch (npcId) {
+			case 284377, 284378, 284379, 234690, 234691 -> false;
+			default -> true;
+		};
+	}
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -54,31 +59,31 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 	 * npc
 	 */
 	@Override
-    public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+	public void onDropRegistered(Npc npc) {
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
-        switch (npcId) {
-            case 701795: //[Infernal] Danuar Reliquary Box.
-                for (Player player: instance.getPlayersInside()) {
-                    if (player.isOnline()) {
+		switch (npcId) {
+			case 701795: //[Infernal] Danuar Reliquary Box.
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052388, 1)); //Modor's Equipment Box.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053099, 1)); //Pure Modor's Equipment Crux Box.
-                    }
-                }
-            break;
-        }
-    }
-	
-   /**
+					}
+				}
+				break;
+		}
+	}
+
+	/**
 	 * 莫多尔启动了达努亚怨念炸弹 / Modor activated the Danuar Bomb of grudge
 	 */
 	private void startInfernalReliquaryTimer() {
 		if (runtimeState().getLong("danuar.bomb_deadline", 0) != 0) {
 			return;
-		}
+	}
 		long deadline = System.currentTimeMillis() + 900_000;
 		runtimeState().put("danuar.bomb_deadline", deadline);
 		restoreBombDeadlines();
@@ -99,7 +104,6 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 		runtimeState().put("danuar.expired", true);
 		sendRaceMessage(1401678);
 		instance.doOnAllPlayers((Visitor<Player>) this::onExitInstance);
-		onInstanceDestroy();
 	}
 	
 	/**
@@ -111,56 +115,29 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 	@Override
 	public void onDie(Npc npc) {
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			case 284380:
-			case 284381:
-			case 284382:
-			case 284659:
-			case 284660:
-			case 284662:
-			case 284663:
-			case 284664:
-			    despawnNpc(npc);
-			break;
 			case 284377: //Danuar Reliquary Novun.
 			case 284378: //Idean Lapilima.
 			case 284379: //Idean Obscura.
-				ideanKilled ++;
+				ideanKilled++;
 				runtimeState().put("danuar.idean_killed", ideanKilled);
 				runtimeState().put("danuar.dead." + npc.getNpcId(), true);
-				if (ideanKilled == 1) {
-				} else if (ideanKilled == 2) {
-				} else if (ideanKilled == 3) {
-				    spawn(234690, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //Vengeful Modor.
+				if (ideanKilled == 3) {
+					spawn(234690, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //Vengeful Modor.
 					startInfernalReliquaryTimer();
-					instance.doOnAllPlayers(new Visitor<Player>() {
-					    /**
-					     * 处理 visit。
-					     * Handle visit.
-					     *
-					     * @param player 玩家 / player
-					     */
-					    @Override
-					    public void visit(Player player) {
-						    if (player.isOnline()) {
-							    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); //15 Minutes.
-						    }
-					    }
-				    });
+					instance.doOnAllPlayers(player -> {
+						if (player.isOnline()) {
+							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); //15 Minutes.
+						}
+					});
 				}
-				despawnNpc(npc);
-			break;
+					break;
 			case 855244: //Clone's Modor.
-				cloneModorKilled ++;
+				cloneModorKilled++;
 				runtimeState().put("danuar.clone_killed", cloneModorKilled);
-				if (cloneModorKilled == 1) {
-				} else if (cloneModorKilled == 2) {
-				} else if (cloneModorKilled == 3) {
-				} else if (cloneModorKilled == 4) {
-				} else if (cloneModorKilled == 5) {
-				    spawn(234691, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //Crazed Modor.
+				if (cloneModorKilled == 5) {
+					spawn(234691, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //Crazed Modor.
 				}
-				despawnNpc(npc);
-			break;
+				break;
 			case 234691: //Crazed Modor.
 				completeReliquary();
 			break;
@@ -203,43 +180,6 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 		instance.doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(messageId)));
 	}
 	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
-	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
-	 *
-	 * message
-	 * 阵营 / race
-	 * time
-	 */
-	
-	/**
-	 * 副本销毁时清理资源。
-	 * Clean up resources when the instance is destroyed.
-	 */
-	@Override
-	public void onInstanceDestroy() {
-		isInstanceDestroyed = true;
-	}
-	
-	private void despawnNpc(Npc npc) {
-		if (npc != null) {
-			npc.getController().onDelete();
-		}
-	}
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.

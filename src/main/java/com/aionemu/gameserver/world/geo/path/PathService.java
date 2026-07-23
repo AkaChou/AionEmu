@@ -86,6 +86,7 @@ public final class PathService implements DisposableBean {
 	private final ConcurrentHashMap<Long, AtomicLong> obstacleVersions = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<PathCacheKey, PathCacheEntry> resultCache = new ConcurrentHashMap<>();
 	private final ThreadPoolExecutor pathfinders;
+	private long instanceLifecycleVersion;
 
 	public PathService() {
 		int workers = workerCount(GeoDataConfig.GEO_PATH_WORKERS, Runtime.getRuntime().availableProcessors());
@@ -348,7 +349,8 @@ public final class PathService implements DisposableBean {
 		obstacleVersions.computeIfAbsent(obstacleKey(worldId, instanceId), ignored -> new AtomicLong()).incrementAndGet();
 	}
 
-	public void instanceDestroyed(int worldId, int instanceId) {
+	public synchronized void instanceDestroyed(int worldId, int instanceId) {
+		instanceLifecycleVersion++;
 		obstacleVersions.remove(obstacleKey(worldId, instanceId));
 		resultCache.keySet().removeIf(key -> key.worldId() == worldId && key.instanceId() == instanceId);
 	}
@@ -415,7 +417,7 @@ public final class PathService implements DisposableBean {
 		CompletableFuture<float[][]> result = executeAsync(priority, () -> {
 			float[][] path = request.spatial() ? findSpatialPath(request) : findGroundPath(owner, request);
 			if (usesResultCache(request.blockedSegment())) {
-				putCachedPath(key, path);
+				putCachedPath(request.lifecycleVersion(), key, path);
 			}
 			return path;
 		});
@@ -432,7 +434,7 @@ public final class PathService implements DisposableBean {
 		return result;
 	}
 
-	private PathRequest snapshot(Creature owner, float targetX, float targetY, float targetZ,
+	private synchronized PathRequest snapshot(Creature owner, float targetX, float targetY, float targetZ,
 			BlockedSegment blockedSegment) {
 		int worldId = owner.getWorldId();
 		int instanceId = owner.getInstanceId();
@@ -443,7 +445,8 @@ public final class PathService implements DisposableBean {
 		WaterArea water = flying ? null : waterArea(owner, startX, startY, startZ);
 		BlockedSegment activeBlockedSegment = blockedSegment != null && blockedSegment.active(System.currentTimeMillis())
 				? blockedSegment : null;
-		return new PathRequest(worldId, instanceId, obstacleVersion(worldId, instanceId), startX, startY, startZ,
+		return new PathRequest(worldId, instanceId, obstacleVersion(worldId, instanceId), instanceLifecycleVersion,
+				startX, startY, startZ,
 				targetX, targetY, targetZ, flying || water != null, Math.max(0.5f, owner.getCollision()), water,
 				activeBlockedSegment);
 	}
@@ -475,7 +478,10 @@ public final class PathService implements DisposableBean {
 		return entry;
 	}
 
-	private void putCachedPath(PathCacheKey key, float[][] path) {
+	private synchronized void putCachedPath(long lifecycleVersion, PathCacheKey key, float[][] path) {
+		if (lifecycleVersion != instanceLifecycleVersion) {
+			return;
+		}
 		// null 也缓存：短时间避免重复对「无路」全量 A*。
 		resultCache.put(key, new PathCacheEntry(copyPath(path), System.currentTimeMillis() + RESULT_CACHE_TTL_MS));
 		if (resultCache.size() > RESULT_CACHE_MAX) {
@@ -1063,7 +1069,8 @@ public final class PathService implements DisposableBean {
 			long pathsAfterSmooth, long geoSegmentChecks, long geoSegmentRejected, int queued, int active,
 			long averageQueueMicros, long averageMicros) {}
 
-	private record PathRequest(int worldId, int instanceId, long obstacleVersion, float startX, float startY, float startZ,
+	private record PathRequest(int worldId, int instanceId, long obstacleVersion, long lifecycleVersion,
+			float startX, float startY, float startZ,
 			float targetX, float targetY, float targetZ, boolean spatial, float clearance, WaterArea water,
 			BlockedSegment blockedSegment) {}
 

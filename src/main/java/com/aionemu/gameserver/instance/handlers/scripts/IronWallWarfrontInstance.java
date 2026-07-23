@@ -584,7 +584,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 			playerReward.updateLogOutTime();
 			persistPlayer(playerReward);
 		}
-		removeItems(player);
 	}
 
 	@Override

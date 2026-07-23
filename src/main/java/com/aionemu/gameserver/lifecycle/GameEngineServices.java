@@ -3,6 +3,7 @@ package com.aionemu.gameserver.lifecycle;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.scriptEngine.ScriptEngine;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import org.springframework.beans.factory.DisposableBean;
@@ -38,6 +39,11 @@ public final class GameEngineServices implements DisposableBean {
      */
     private static volatile ObjectProvider<AI2Engine> ai2EngineProvider;
     /**
+     * 脚本引擎的 Spring 提供者。
+     * Spring provider for the script engine.
+     */
+    private static volatile ObjectProvider<ScriptEngine> scriptEngineProvider;
+    /**
      * 聊天处理器的 Spring 提供者。
      * Spring provider for the chat processor.
      */
@@ -51,21 +57,25 @@ public final class GameEngineServices implements DisposableBean {
      * @param skillEngineProvider 技能引擎提供者 / Skill-engine provider
      * @param instanceEngineProvider 副本引擎提供者 / Instance-engine provider
      * @param ai2EngineProvider AI2 引擎提供者 / AI2-engine provider
+     * @param scriptEngineProvider 脚本引擎提供者 / Script-engine provider
      * @param chatProcessorProvider 聊天处理器提供者 / Chat-processor provider
      */
     public GameEngineServices(ObjectProvider<QuestEngine> questEngineProvider,
             ObjectProvider<SkillEngine> skillEngineProvider, ObjectProvider<InstanceEngine> instanceEngineProvider,
-            ObjectProvider<AI2Engine> ai2EngineProvider, ObjectProvider<ChatProcessor> chatProcessorProvider) {
+            ObjectProvider<AI2Engine> ai2EngineProvider, ObjectProvider<ScriptEngine> scriptEngineProvider,
+            ObjectProvider<ChatProcessor> chatProcessorProvider) {
         GameEngineServices.questEngineProvider = questEngineProvider;
         GameEngineServices.skillEngineProvider = skillEngineProvider;
         resolvedSkillEngine = null;
         GameEngineServices.instanceEngineProvider = instanceEngineProvider;
         GameEngineServices.ai2EngineProvider = ai2EngineProvider;
+        GameEngineServices.scriptEngineProvider = scriptEngineProvider;
         GameEngineServices.chatProcessorProvider = chatProcessorProvider;
         QuestEngine.setInstanceProvider(questEngineProvider);
         SkillEngine.setInstanceProvider(skillEngineProvider);
         InstanceEngine.setInstanceProvider(instanceEngineProvider);
         AI2Engine.setInstanceProvider(ai2EngineProvider);
+        ScriptEngine.setInstanceProvider(scriptEngineProvider);
         ChatProcessor.setInstanceProvider(chatProcessorProvider);
     }
 
@@ -130,6 +140,20 @@ public final class GameEngineServices implements DisposableBean {
     }
 
     /**
+     * 解析脚本引擎：优先 Spring 提供者，否则单例。
+     * Resolve the script engine: prefer Spring provider, otherwise singleton.
+     *
+     * @return 脚本引擎 / Script engine
+     */
+    public static ScriptEngine scriptEngine() {
+        ObjectProvider<ScriptEngine> provider = scriptEngineProvider;
+        if (provider == null) {
+            return ScriptEngine.getInstance();
+        }
+        return provider.getIfAvailable(ScriptEngine::getInstance);
+    }
+
+    /**
      * 解析聊天处理器：优先 Spring 提供者，否则单例。
      * Resolve the chat processor: prefer Spring provider, otherwise singleton.
      *
@@ -154,11 +178,13 @@ public final class GameEngineServices implements DisposableBean {
         resolvedSkillEngine = null;
         instanceEngineProvider = null;
         ai2EngineProvider = null;
+        scriptEngineProvider = null;
         chatProcessorProvider = null;
         QuestEngine.setInstanceProvider(null);
         SkillEngine.setInstanceProvider(null);
         InstanceEngine.setInstanceProvider(null);
         AI2Engine.setInstanceProvider(null);
+        ScriptEngine.setInstanceProvider(null);
         ChatProcessor.setInstanceProvider(null);
     }
 }

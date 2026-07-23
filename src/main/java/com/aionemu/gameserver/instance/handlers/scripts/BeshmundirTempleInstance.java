@@ -50,11 +50,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler {
 	}
 
 	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-
-	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}

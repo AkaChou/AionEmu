@@ -38,7 +38,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 特拉斯无渊号副本事件处理器。
@@ -86,6 +88,8 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	private void addPlayerToReward(Player player) {
 		DredgionPlayerReward reward = restorePlayerReward(player.getObjectId());
 		dredgionReward.addPlayerReward(reward);
+		runtimeState().put(playerState(player.getObjectId(), "race"), player.getRace().name());
+		persistPlayerReward(reward);
 	}
 	
 	private boolean containPlayer(Integer object) {
@@ -110,6 +114,26 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		runtimeState().put(playerState(playerId, "pvp"), reward.getPvPKills());
 		runtimeState().put(playerState(playerId, "monster"), reward.getMonsterKills());
 		runtimeState().put(playerState(playerId, "zones"), ((DredgionPlayerReward) reward).getZoneCaptured());
+	}
+
+	private void restorePlayers() {
+		Set<Integer> players = new HashSet<>();
+		for (String key : runtimeState().snapshot(STATE + "player.").keySet()) {
+			String suffix = key.substring((STATE + "player.").length());
+			int separator = suffix.indexOf('.');
+			if (separator > 0) players.add(Integer.parseInt(suffix.substring(0, separator)));
+		}
+		for (int playerId : players) dredgionReward.addPlayerReward(restorePlayerReward(playerId));
+	}
+
+	private Race playerRace(int playerId) {
+		String race = runtimeState().get(playerState(playerId, "race"));
+		return race == null ? null : Race.valueOf(race);
+	}
+
+	private RewardPlan rewardPlan(InstancePlayerReward playerReward, Race race) {
+		return InstanceSettlementService.dredgionPlan(playerReward.getPoints(), RateConfig.DREDGION_REWARD_RATE,
+				race == dredgionReward.getWinningRace(), dredgionReward.getWinnerPoints(), dredgionReward.getLooserPoints());
 	}
 
 	private void onDieSurkan(Npc npc, Player mostPlayerDamage) {
@@ -144,7 +168,12 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		}
 		scheduleDeadline("start", startedAt + 60_000, this::startProgress);
 		scheduleDeadline("teleport", startedAt + 600_000, this::activateCentralTeleporters);
-		scheduleDeadline("named", startedAt + 900_000, this::spawnTimedNamed);
+		long namedDeadline = runtimeState().getLong(STATE + "named_deadline", 0);
+		if (namedDeadline == 0) {
+			namedDeadline = startedAt + Rnd.get(750, 1000) * 1000L;
+			runtimeState().put(STATE + "named_deadline", namedDeadline);
+		}
+		scheduleDeadline("named", namedDeadline, this::spawnTimedNamed);
 		scheduleDeadline("finish", startedAt + 3_600_000, this::finishByScore);
 		long bossFinish = runtimeState().getLong(STATE + "boss_finish_deadline", 0);
 		if (bossFinish > 0) scheduleDeadline("boss_finish", bossFinish, this::finishByScore);
@@ -175,8 +204,8 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 				|| runtimeState().getBoolean(STATE + "teleporters", false)) return;
 		runtimeState().put(STATE + "teleporters", true);
 		sendMsgByRace(1401424, Race.PC_ALL, 0);
-		spawn(730558, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34);
-		spawn(730559, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9);
+		spawn(730558, 415.033875f, 174.003876f, 433.94046f, (byte) 0, 34);
+		spawn(730559, 572.038208f, 185.252136f, 433.94046f, (byte) 0, 10);
 	}
 
 	private void spawnTimedNamed() {
@@ -184,7 +213,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 				|| runtimeState().getBoolean(STATE + "timed_named", false)) return;
 		runtimeState().put(STATE + "timed_named", true);
 		sendMsgByRace(1401417, Race.PC_ALL, 0);
-		spawn(219270, 485.4811f, 313.925f, 403.71857f, (byte) 36);
+		spawn(219270, 484.663666f, 314.207001f, 404.458649f, (byte) 30);
 	}
 
 	private void finishByScore() {
@@ -380,6 +409,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		if (!containPlayer(player.getObjectId())) {
 			addPlayerToReward(player);
 		}
+		runtimeState().put(playerState(player.getObjectId(), "race"), player.getRace().name());
 		if (runtimeState().getBoolean(STATE + "settled", false)) settlePlayer(player);
 		sendPacket();
 	}
@@ -400,13 +430,14 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		String winner = runtimeState().get(STATE + "winner");
 		if (winner != null) dredgionReward.setWinningRace(Race.valueOf(winner));
 		dredgionReward.setInstanceScoreType(InstanceScoreType.valueOf(runtimeState().get(STATE + "phase", "PREPARING")));
+		restorePlayers();
 		for (var entry : runtimeState().snapshot(STATE + "room.").entrySet()) {
 			captureRoom(Race.valueOf(entry.getValue()), Integer.parseInt(entry.getKey().substring((STATE + "room.").length())));
 		}
 		RetailConditionSpawnEngine.initialize(instance);
 		startInstanceTask();
 		restoreDynamicObjects();
-		if (runtimeState().getBoolean(STATE + "settled", false)) scheduleExit();
+		if (runtimeState().getBoolean(STATE + "settled", false)) doReward();
 	}
 	/**
 	 * 停止副本并结算。
@@ -431,8 +462,17 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 */
 	
 	public void doReward() {
-		for (Player player : instance.getPlayersInside()) {
-			settlePlayer(player);
+		for (DredgionPlayerReward playerReward : List.copyOf(dredgionReward.getInstanceRewards())) {
+			Player player = instance.getPlayer(playerReward.getOwner());
+			if (player != null) {
+				settlePlayer(player);
+			} else {
+				Race race = playerRace(playerReward.getOwner());
+				if (race != null) {
+					InstanceSettlementService.queue(instance, playerReward.getOwner(), "dredgion",
+							rewardPlan(playerReward, race));
+				}
+			}
 		}
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
@@ -620,10 +660,8 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 
 	private void settlePlayer(Player player) {
 		InstancePlayerReward playerReward = getPlayerReward(player);
-		float abyssPoint = playerReward.getPoints() * RateConfig.DREDGION_REWARD_RATE;
-		abyssPoint += player.getRace().equals(dredgionReward.getWinningRace())
-			? dredgionReward.getWinnerPoints() : dredgionReward.getLooserPoints();
-		RewardPlan plan = new RewardPlan(List.of(), 0, 0, Math.max(0, (int) abyssPoint), 0);
+		runtimeState().put(playerState(player.getObjectId(), "race"), player.getRace().name());
+		RewardPlan plan = rewardPlan(playerReward, player.getRace());
 		if (InstanceSettlementService.settle(instance.getDynamicInstance().getInstanceUid(), player, "dredgion", plan)) {
 			GameEngineServices.questEngine().onDredgionReward(new QuestEnv(null, player, 0, 0));
 		}
@@ -649,8 +687,8 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	private void restoreDynamicObjects() {
 		if (runtimeState().getBoolean(STATE + "settled", false)) return;
 		if (runtimeState().getBoolean(STATE + "teleporters", false)) {
-			spawn(730558, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34);
-			spawn(730559, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9);
+			spawn(730558, 415.033875f, 174.003876f, 433.94046f, (byte) 0, 34);
+			spawn(730559, 572.038208f, 185.252136f, 433.94046f, (byte) 0, 10);
 		}
 		if (runtimeState().getBoolean(STATE + "opening_spawned", false)) {
 			int side = runtimeState().getInt(STATE + "opening_side", 1);
@@ -665,7 +703,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		}
 		if (runtimeState().getBoolean(STATE + "timed_named", false)
 				&& !runtimeState().getBoolean(STATE + "dead.219270", false)) {
-			spawn(219270, 485.4811f, 313.925f, 403.71857f, (byte) 36);
+			spawn(219270, 484.663666f, 314.207001f, 404.458649f, (byte) 30);
 		}
 		if (runtimeState().getBoolean(STATE + "secret_chest", false)
 				&& !runtimeState().getBoolean(STATE + "dead.701455", false)) {

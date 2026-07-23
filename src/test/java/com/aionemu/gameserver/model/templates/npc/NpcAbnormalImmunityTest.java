@@ -18,6 +18,7 @@ class NpcAbnormalImmunityTest {
 		NpcTemplate all = template("Stat_ArAll");
 		assertTrue(all.isImmuneTo(StatEnum.SLEEP_RESISTANCE));
 		assertTrue(all.isImmuneTo(StatEnum.PULLED_RESISTANCE));
+		assertTrue(all.isImmuneTo(StatEnum.SIMPLE_ROOT_RESISTANCE));
 		assertFalse(all.isImmuneTo(StatEnum.STUMBLE_RESISTANCE));
 		assertFalse(all.isImmuneTo(StatEnum.OPENAREIAL_RESISTANCE));
 
@@ -30,6 +31,7 @@ class NpcAbnormalImmunityTest {
 
 		NpcTemplate boss = template("Stat_ArAll,Stat_ArStunLike");
 		assertTrue(boss.isImmuneTo(StatEnum.SLEEP_RESISTANCE));
+		assertTrue(boss.isImmuneTo(StatEnum.SIMPLE_ROOT_RESISTANCE));
 		assertTrue(boss.isImmuneTo(StatEnum.STUMBLE_RESISTANCE));
 		assertTrue(boss.isImmuneTo(StatEnum.OPENAREIAL_RESISTANCE));
 	}

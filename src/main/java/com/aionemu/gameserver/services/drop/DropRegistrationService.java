@@ -361,7 +361,7 @@ public class DropRegistrationService {
 			if (!set.matches(player)) {
 				continue;
 			}
-			float chance = modifiers.calculateDropChance(set.getRate() / 10f, true);
+			float chance = modifiers.calculateScalingDropChance(set.getRate() / 10f);
 			if (Rnd.get() * 100 >= chance) {
 				continue;
 			}

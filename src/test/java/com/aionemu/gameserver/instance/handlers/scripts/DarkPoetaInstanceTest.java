@@ -39,7 +39,9 @@ class DarkPoetaInstanceTest {
 	void globalInstanceSpawnsAreNotRepeatedForEveryPlayer() throws Exception {
 		assertEnterDoesNotSpawn("HamateIsleStoreroomInstance");
 		assertEnterDoesNotSpawn("CarpusIsleStoreroomInstance");
-		assertSpawnGuarded("DraupnirCaveInstance", "spawn(237276");
+		String draupnir = source("DraupnirCaveInstance");
+		int deadlineGuard = draupnir.indexOf("runtimeState().getLong(\"draupnir.phantasm_deadline\"");
+		assertTrue(deadlineGuard >= 0 && draupnir.indexOf("spawn(237276", deadlineGuard) > deadlineGuard);
 		String eternal = source("TheEternalBastionInstance");
 		assertTrue(eternal.contains("runtimeState().getBoolean(STATE_PREFIX + \"completed\""));
 		assertFalse(eternal.contains("instanceReward.addPoints(20000)"));
@@ -51,16 +53,6 @@ class DarkPoetaInstanceTest {
 		int nextMethod = source.indexOf("\n\tprivate ", enter);
 		assertTrue(enter >= 0 && nextMethod > enter);
 		assertFalse(source.substring(enter, nextMethod).contains("spawn("));
-	}
-
-	private static void assertSpawnGuarded(String className, String spawnMarker) throws Exception {
-		String source = source(className);
-		int enter = source.indexOf("public void onEnterInstance");
-		int guard = source.indexOf("if (spawnRace != null)", enter);
-		int assignment = source.indexOf("spawnRace = player.getRace();", guard);
-		int spawn = source.indexOf(spawnMarker, assignment);
-
-		assertTrue(enter >= 0 && guard > enter && assignment > guard && spawn > assignment);
 	}
 
 	private static String source(String className) throws Exception {

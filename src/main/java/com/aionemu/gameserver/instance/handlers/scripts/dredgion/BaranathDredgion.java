@@ -36,7 +36,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 巴拉纳特无渊号副本事件处理器。
@@ -82,18 +84,19 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	}
 	
 	private void addPlayerToReward(Player player) {
-		DredgionPlayerReward reward = new DredgionPlayerReward(player.getObjectId());
-		reward.addPoints(runtimeState().getInt(playerState(player.getObjectId(), "points"), 0));
-		for (int i = 0; i < runtimeState().getInt(playerState(player.getObjectId(), "pvp"), 0); i++) {
-			reward.addPvPKillToPlayer();
-		}
-		for (int i = 0; i < runtimeState().getInt(playerState(player.getObjectId(), "monster"), 0); i++) {
-			reward.addMonsterKillToPlayer();
-		}
-		for (int i = 0; i < runtimeState().getInt(playerState(player.getObjectId(), "zones"), 0); i++) {
-			reward.captureZone();
-		}
+		DredgionPlayerReward reward = restorePlayerReward(player.getObjectId());
 		dredgionReward.addPlayerReward(reward);
+		runtimeState().put(playerState(player.getObjectId(), "race"), player.getRace().name());
+		persistPlayerReward(reward);
+	}
+
+	private DredgionPlayerReward restorePlayerReward(int playerId) {
+		DredgionPlayerReward reward = new DredgionPlayerReward(playerId);
+		reward.addPoints(runtimeState().getInt(playerState(playerId, "points"), 0));
+		for (int i = 0; i < runtimeState().getInt(playerState(playerId, "pvp"), 0); i++) reward.addPvPKillToPlayer();
+		for (int i = 0; i < runtimeState().getInt(playerState(playerId, "monster"), 0); i++) reward.addMonsterKillToPlayer();
+		for (int i = 0; i < runtimeState().getInt(playerState(playerId, "zones"), 0); i++) reward.captureZone();
+		return reward;
 	}
 	
 	private boolean containPlayer(Integer object) {
@@ -310,6 +313,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		if (!containPlayer(player.getObjectId())) {
 			addPlayerToReward(player);
 		}
+		runtimeState().put(playerState(player.getObjectId(), "race"), player.getRace().name());
 		if (runtimeState().getBoolean(STATE + "settled", false)) {
 			settlePlayer(player);
 		}
@@ -335,11 +339,12 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		}
 		String phase = runtimeState().get(STATE + "phase", "PREPARING");
 		dredgionReward.setInstanceScoreType(InstanceScoreType.valueOf(phase));
+		restorePlayers();
 		for (var entry : runtimeState().snapshot(STATE + "room.").entrySet()) {
 			captureRoom(Race.valueOf(entry.getValue()), Integer.parseInt(entry.getKey().substring((STATE + "room.").length())));
 		}
 		if (runtimeState().getBoolean(STATE + "settled", false)) {
-			scheduleExit();
+			doReward();
 		} else {
 			RetailConditionSpawnEngine.initialize(instance);
 			startInstanceTask();
@@ -370,8 +375,17 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	 */
 	
 	public void doReward() {
-		for (Player player : instance.getPlayersInside()) {
-			settlePlayer(player);
+		for (DredgionPlayerReward playerReward : List.copyOf(dredgionReward.getInstanceRewards())) {
+			Player player = instance.getPlayer(playerReward.getOwner());
+			if (player != null) {
+				settlePlayer(player);
+			} else {
+				Race race = playerRace(playerReward.getOwner());
+				if (race != null) {
+					InstanceSettlementService.queue(instance, playerReward.getOwner(), "dredgion",
+							rewardPlan(playerReward, race));
+				}
+			}
 		}
 		RetailConditionSpawnEngine.clear(instance);
 		for (Npc npc : instance.getNpcs()) {
@@ -571,12 +585,34 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		runtimeState().put(playerState(playerId, "zones"), ((DredgionPlayerReward) reward).getZoneCaptured());
 	}
 
+	private void restorePlayers() {
+		Set<Integer> players = new HashSet<>();
+		for (String key : runtimeState().snapshot(STATE + "player.").keySet()) {
+			String suffix = key.substring((STATE + "player.").length());
+			int separator = suffix.indexOf('.');
+			if (separator > 0) {
+				players.add(Integer.parseInt(suffix.substring(0, separator)));
+			}
+		}
+		for (int playerId : players) {
+			dredgionReward.addPlayerReward(restorePlayerReward(playerId));
+		}
+	}
+
+	private Race playerRace(int playerId) {
+		String race = runtimeState().get(playerState(playerId, "race"));
+		return race == null ? null : Race.valueOf(race);
+	}
+
+	private RewardPlan rewardPlan(InstancePlayerReward playerReward, Race race) {
+		return InstanceSettlementService.dredgionPlan(playerReward.getPoints(), RateConfig.DREDGION_REWARD_RATE,
+				race == dredgionReward.getWinningRace(), dredgionReward.getWinnerPoints(), dredgionReward.getLooserPoints());
+	}
+
 	private void settlePlayer(Player player) {
 		InstancePlayerReward playerReward = getPlayerReward(player);
-		float abyssPoint = playerReward.getPoints() * RateConfig.DREDGION_REWARD_RATE;
-		abyssPoint += player.getRace().equals(dredgionReward.getWinningRace())
-			? dredgionReward.getWinnerPoints() : dredgionReward.getLooserPoints();
-		RewardPlan plan = new RewardPlan(List.of(), 0, 0, Math.max(0, (int) abyssPoint), 0);
+		runtimeState().put(playerState(player.getObjectId(), "race"), player.getRace().name());
+		RewardPlan plan = rewardPlan(playerReward, player.getRace());
 		if (InstanceSettlementService.settle(instance.getDynamicInstance().getInstanceUid(), player, "dredgion", plan)) {
 			GameEngineServices.questEngine().onDredgionReward(new QuestEnv(null, player, 0, 0));
 		}

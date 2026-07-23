@@ -6094,7 +6094,7 @@
   <quest id="1986" name="A Costume On Consignment" nameId="1102986" minlevel_permitted="20" max_repeat_count="1" cannot_share="false" race_permitted="ELYOS" category="QUEST">
     <rewards gold="3310" exp="50008"/>
   </quest>
-  <quest id="1987" name="A Bigger Warehouse" nameId="1102987" minlevel_permitted="29" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SIGNIFICANT">
+  <quest id="1987" name="A Bigger Warehouse" nameId="1102987" minlevel_permitted="29" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" combineskill="-1" combine_skillpoint="400" category="SIGNIFICANT">
     <rewards extend_inventory="2" exp="291412"/>
   </quest>
   <quest id="1988" name="A Meeting with a Sage" nameId="1102988" minlevel_permitted="30" max_repeat_count="1" cannot_share="false" race_permitted="ELYOS" category="QUEST">
@@ -7423,7 +7423,7 @@
     <quest_drop npc_id="210551" item_id="182203251" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="210552" item_id="182203251" chance="100" drop_each_member="1"/>
   </quest>
-  <quest id="2278" name="A Secret Proposal" nameId="1103378" minlevel_permitted="16" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="2278" name="A Secret Proposal" nameId="1103378" minlevel_permitted="17" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="13870" exp="48600"/>
     <start_conditions>
       <finished quest_id="2208"/>
@@ -7432,7 +7432,7 @@
       <quest_work_item item_id="182203254" count="1"/>
     </quest_work_items>
   </quest>
-  <quest id="2279" name="Solid Proof" nameId="1103379" minlevel_permitted="16" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="2279" name="Solid Proof" nameId="1103379" minlevel_permitted="17" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="6420" exp="38100"/>
     <start_conditions>
       <finished quest_id="2278"/>
@@ -8688,7 +8688,7 @@
     <quest_drop npc_id="212965" item_id="182204249" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="212967" item_id="182204249" chance="100" drop_each_member="1"/>
   </quest>
-  <quest id="2421" name="阿斯盖尔的嘱托" nameId="1103621" minlevel_permitted="20" max_repeat_count="1" cannot_share="true" cannot_giveup="false" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="2421" name="阿斯盖尔的嘱托" nameId="1103621" minlevel_permitted="30" max_repeat_count="1" cannot_share="true" cannot_giveup="false" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="50008" gold="15880">
       <reward_item item_id="186000007" count="1"/>
     </rewards>
@@ -9022,7 +9022,7 @@
       <reward_item item_id="186000007" count="1"/>
     </rewards>
   </quest>
-  <quest id="2458" name="Roast Gadill For A Friend" nameId="1103658" minlevel_permitted="23" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="2458" name="Roast Gadill For A Friend" nameId="1103658" minlevel_permitted="22" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="4470" exp="20020">
       <reward_item item_id="186000007" count="1"/>
     </rewards>
@@ -12802,7 +12802,7 @@
       <quest_work_item item_id="182207064" count="1"/>
     </quest_work_items>
   </quest>
-  <quest id="2985" name="An Expert's Reward" nameId="1104185" minlevel_permitted="29" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SIGNIFICANT">
+  <quest id="2985" name="An Expert's Reward" nameId="1104185" minlevel_permitted="29" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" combineskill="-1" combine_skillpoint="400" category="SIGNIFICANT">
     <rewards extend_inventory="2" exp="291412"/>
   </quest>
   <quest id="2988" name="The Wise in Disguise" nameId="1104188" minlevel_permitted="30" max_repeat_count="1" cannot_share="false" race_permitted="ASMODIANS" category="QUEST">
@@ -13280,7 +13280,7 @@
     </rewards>
     <quest_drop npc_id="214570" item_id="182208023" chance="100" drop_each_member="1"/>
   </quest>
-  <quest id="3035" name="Enhancing The Stone" nameId="1113034" minlevel_permitted="47" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
+  <quest id="3035" name="Enhancing The Stone" nameId="1113034" minlevel_permitted="46" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
     <rewards gold="44360" exp="6937236">
       <reward_item item_id="186000005" count="4"/>
     </rewards>
@@ -16029,7 +16029,11 @@
       <quest_work_item item_id="182206107" count="1"/>
     </quest_work_items>
   </quest>
-  <quest id="3959" name="Epilogue" nameId="1103080" minlevel_permitted="50" max_repeat_count="1" cannot_share="false" race_permitted="ELYOS" category="QUEST"/>
+  <quest id="3959" name="Epilogue" nameId="1103080" minlevel_permitted="50" max_repeat_count="1" cannot_share="false" race_permitted="ELYOS" category="QUEST">
+    <start_conditions>
+      <finished quest_id="1099"/>
+    </start_conditions>
+  </quest>
   <quest id="3960" name="Goodwill Of Kuruminerk" nameId="1103081" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="738671"/>
     <start_conditions>
@@ -19307,7 +19311,11 @@
       <quest_work_item item_id="182207134" count="1"/>
     </quest_work_items>
   </quest>
-  <quest id="4963" name="Epilogue" nameId="1104284" minlevel_permitted="50" max_repeat_count="1" cannot_share="false" race_permitted="ASMODIANS" category="QUEST"/>
+  <quest id="4963" name="Epilogue" nameId="1104284" minlevel_permitted="50" max_repeat_count="1" cannot_share="false" race_permitted="ASMODIANS" category="QUEST">
+    <start_conditions>
+      <finished quest_id="2099"/>
+    </start_conditions>
+  </quest>
   <quest id="4964" name="Payrinrinerk's Information" nameId="1104285" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="738671"/>
     <start_conditions>
@@ -48947,7 +48955,7 @@
       <selectable_reward_item item_id="160001343" count="15"/>
     </rewards>
   </quest>
-  <quest id="30504" name="[Group] The Search For Paios" nameId="1135497" minlevel_permitted="57" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
+  <quest id="30504" name="[Group] The Search For Paios" nameId="1135497" minlevel_permitted="60" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards gold="299160" exp="6907092">
       <selectable_reward_item item_id="164000066" count="15"/>
       <selectable_reward_item item_id="164000121" count="15"/>
@@ -49030,7 +49038,7 @@
       <selectable_reward_item item_id="160002341" count="15"/>
     </rewards>
   </quest>
-  <quest id="30554" name="[Group] Saving Private Paios" nameId="1135511" minlevel_permitted="57" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="30554" name="[Group] Saving Private Paios" nameId="1135511" minlevel_permitted="60" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="897480" exp="6907092">
       <selectable_reward_item item_id="164000066" count="15"/>
       <selectable_reward_item item_id="164000121" count="15"/>
@@ -60118,7 +60126,7 @@
     </rewards>
   </quest>
   <quest id="80766" name="[Daily] Asmodian Reinforcement Request" nameId="1185883" minlevel_permitted="65" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
-    <rewards gp="3"/>
+    <rewards gp="10"/>
   </quest>
   <quest id="80767" name="[Daily] Withdraw the Asmodian Soul" nameId="1185884" minlevel_permitted="65" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT" repeat_cycle="ALL">
     <collect_items>

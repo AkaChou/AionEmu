@@ -313,6 +313,33 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler {
 	}
 
 	@Override
+	public boolean supportsRetailNpcScore(int npcId, int scoreApplyType) {
+		return npcId == 833914 && scoreApplyType == 1 || npcId == 833922 && scoreApplyType == 2;
+	}
+
+	@Override
+	public synchronized boolean onRetailNpcScore(Player player, Npc npc, int scoreApplyType, int points) {
+		if (!supportsRetailNpcScore(npc.getNpcId(), scoreApplyType) || !reward.isStartProgress() || points == 0) {
+			return false;
+		}
+		String stableKey = npc.getSpawn() == null ? null : npc.getSpawn().getStableKey();
+		String eventKey = scoreEventKey(stableKey, npc.getObjectId());
+		if (runtimeState().getBoolean(eventKey, false)) {
+			return true;
+		}
+		runtimeState().put(eventKey, true);
+		reward.addPointsByRace(scoreApplyType == 1 ? Race.ELYOS : Race.ASMODIANS, points);
+		persistTeamState();
+		sendScorePacket(player.getObjectId());
+		return true;
+	}
+
+	static String scoreEventKey(String stableKey, int objectId) {
+		return "landmark.score.event."
+			+ (stableKey == null || stableKey.isBlank() ? "object." + objectId : stableKey);
+	}
+
+	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		int points = switch (npc.getNpcId()) {
 			case 833898 -> 1000;
@@ -418,7 +445,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler {
 			playerReward.updateLogOutTime();
 			persistPlayer(playerReward);
 		}
-		removeItems(player);
 	}
 
 	@Override
@@ -428,7 +454,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler {
 			playerReward.updateLogOutTime();
 			persistPlayer(playerReward);
 		}
-		removeItems(player);
 	}
 
 	@Override

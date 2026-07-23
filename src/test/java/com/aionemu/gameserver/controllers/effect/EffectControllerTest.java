@@ -85,6 +85,20 @@ class EffectControllerTest {
 	}
 
 	@Test
+	void stoppedEffectIsNotBroadcastBeforeControllerRemovalCompletes() {
+		TestCreature creature = new TestCreature();
+		TestEffectController controller = new TestEffectController(creature);
+		creature.setEffectController(controller);
+		Effect effect = lifecycleEffect(creature, "stopped", 10, new EndTrackingEffectTemplate(false));
+		controller.addEffect(effect);
+
+		setField(effect, "isStopped", true);
+
+		assertTrue(controller.getAbnormalEffects().isEmpty());
+		assertTrue(controller.getAbnormalEffectsToShow().isEmpty());
+	}
+
+	@Test
 	void failedStartCleansControllerAndAbnormalState() {
 		TestCreature creature = new TestCreature();
 		TestEffectController controller = new TestEffectController(creature);

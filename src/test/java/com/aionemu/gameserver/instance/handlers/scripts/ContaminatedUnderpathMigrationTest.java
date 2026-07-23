@@ -24,6 +24,19 @@ class ContaminatedUnderpathMigrationTest {
 	}
 
 	@Test
+	void eventRetailConditionsOwnBothFinalBosses() throws Exception {
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = conditions.substring(conditions.indexOf("<world id=\"301631000\""));
+		world = world.substring(0, world.indexOf("</world>"));
+		assertTrue(world.contains("<variable name=\"wave_4_start\"/>"));
+		assertTrue(world.contains("Wave_4_Start == 1) &amp;&amp; (SpecialServer_Cond == 0"));
+		assertTrue(world.contains("Wave_4_Start == 1) &amp;&amp; (SpecialServer_Cond == 1"));
+		assertTrue(world.contains("npc id=\"248525\""));
+		assertTrue(world.contains("npc id=\"248947\""));
+	}
+
+	@Test
 	void inactiveHardMapHasNoPrivateServerHandlerOrSpawns() throws Exception {
 		assertFalse(Files.exists(HANDLERS.resolve("event/IDEvent_Def_HInstance.java")));
 		assertFalse(Files.exists(Path.of(
@@ -43,6 +56,20 @@ class ContaminatedUnderpathMigrationTest {
 		assertFalse(inactiveHardMap);
 	}
 
+	@Test
+	void itemOwnershipPreservesLogoutAndPersistentEventCurrency() throws Exception {
+		for (String relative : new String[] { "event/Event_ContaminatedUnderpathInstance.java",
+			"luna/ContaminatedUnderpathInstance.java" }) {
+			assertFalse(Files.readString(HANDLERS.resolve(relative)).contains("decreaseByItemId"), relative);
+		}
+
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		assertTrue(item(items, "182007405").contains("ownership_world=\"301630000\""));
+		assertFalse(item(items, "186000470").contains("ownership_world"));
+		assertFalse(item(items, "186000495").contains("ownership_world"));
+	}
+
 	private static void assertMigrated(String relative, String startVariable, String settlement) throws Exception {
 		String source = Files.readString(HANDLERS.resolve(relative));
 		assertTrue(source.contains("RetailConditionSpawnEngine.setVariable(instance, \"" + startVariable + "\""), relative);
@@ -58,5 +85,10 @@ class ContaminatedUnderpathMigrationTest {
 			"startContaminedUnderPath", "spawn(" }) {
 			assertFalse(source.contains(legacy), relative + ": " + legacy);
 		}
+	}
+
+	private static String item(String source, String itemId) {
+		int start = source.indexOf("<item_template id=\"" + itemId + "\"");
+		return source.substring(start, source.indexOf("</item_template>", start));
 	}
 }

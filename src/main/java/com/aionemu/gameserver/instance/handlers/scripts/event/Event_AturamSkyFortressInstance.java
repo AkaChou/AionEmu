@@ -36,7 +36,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler {
 
 	@Override
 	public void onPlayerLogOut(Player player) {
-		cleanup(player);
+		removeEffects(player);
 	}
 
 	@Override

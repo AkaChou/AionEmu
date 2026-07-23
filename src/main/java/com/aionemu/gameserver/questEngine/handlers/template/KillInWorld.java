@@ -36,6 +36,8 @@ public class KillInWorld extends QuestHandler {
 	private final int killAmount;
 	/** 入侵世界 ID，0 表示不启用进图自动接取 / invasion world id, 0 disables enter-world auto-start */
 	private final int invasionWorldId;
+	/** 已进入奖励状态时的对话页 / reward-state dialog page */
+	private final int rewardDialogId;
 
 	/**
 	 * 构造指定世界击杀任务处理器。
@@ -49,7 +51,7 @@ public class KillInWorld extends QuestHandler {
 	 * invasion world id
 	 */
 	public KillInWorld(int questId, List<Integer> endNpcIds, List<Integer> startNpcIds, List<Integer> worldIds,
-			int killAmount, int invasionWorld) {
+			int killAmount, int invasionWorld, int rewardDialogId) {
 		super(questId);
 		if (startNpcIds != null) {
 			this.startNpcs.addAll(startNpcIds);
@@ -66,6 +68,7 @@ public class KillInWorld extends QuestHandler {
 		this.worldIds.remove(0);
 		this.killAmount = killAmount;
 		this.invasionWorldId = invasionWorld;
+		this.rewardDialogId = rewardDialogId;
 	}
 
 	/**
@@ -124,6 +127,9 @@ public class KillInWorld extends QuestHandler {
 			}
 		} else if (qs != null && qs.getStatus() == QuestStatus.REWARD) {
 			if (endNpcs.contains(targetId)) {
+				if (rewardDialogId != 0 && dialog == QuestDialog.START_DIALOG) {
+					return sendQuestDialog(env, rewardDialogId);
+				}
 				return sendQuestEndDialog(env);
 			}
 		}

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -27,8 +28,6 @@ import java.util.Map;
 @InstanceID(300250000)
 public class EsoterraceInstance extends GeneralInstanceHandler
 {
-	/** lab manager killed / lab manager killed */
-		private int labManagerKilled;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
@@ -111,27 +110,12 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				spawn(703054, 392.27563f, 543.89026f, 318.3265f, (byte) 18); //Windstream B
 				spawn(701023, 1264.862061f, 644.995178f, 296.831818f, (byte) 0, 112); //Large Entwined Chest.
             break;
-			case 217282: //Esoterrace Investigator.
-			case 217283: //Senior Lab Researcher.
-			case 217284: //Lab Supervisor.
-				labManagerKilled++;
-				if (labManagerKilled == 1) {
-					doors.get(367).setOpen(false);
-				} else if (labManagerKilled == 2) {
-					doors.get(69).setOpen(false);
-				} else if (labManagerKilled == 3) {
-					doors.get(111).setOpen(true);
-					// 通往实验室院子的门现已打开。 / The door to the Laboratory Yard is now open.
-					sendMsg(1400920, 0, false, 25, 0);
-					// 德拉纳生产实验室通道现已开放。 / The Drana Production Lab walkway is now open.
-					sendMsg(1400923, 0, false, 25, 6000);
-				}
+			case 217282: //Esoterrace Investigator: missing Retail skill slots.
+				RetailConditionSpawnEngine.setVariable(instance, "IDF4Re_Dra_02_KeyNamed_Kill", 0, 1);
+				RetailConditionSpawnEngine.setVariable(instance, "Drana_2nd_gate_1", 0, 1);
+				// 击败所有德拉纳生产实验室区段管理员以打开实验室院子门。 / Defeat all Drana Production Lab Section Managers to open the Laboratory Yard door.
+				sendMsg(1400919, 0, false, 25, 0);
 			break;
-			case 217281: //Lab Gatekeeper.
-				doors.get(70).setOpen(true);
-				// 通往实验室空调室的门现已打开。 / The door to the Laboratory Air Conditioning Room is now open.
-				sendMsg(1400921, 0, false, 25, 0);
-            break;
 			case 286930: //Esoterrace Mage.
                 despawnNpc(npc);
 				spawn(799580, 1034.11f, 985.01f, 327.35095f, (byte) 105); //Keening Sirokin.
@@ -167,21 +151,14 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				// 实验室通风口现已打开。 / The Laboratory Ventilator is now open.
 				sendMsg(1400922, 0, false, 25, 0);
 			break;
-			case 217289: //Esoterrace Biolab Watchman.
+			case 217289: //Esoterrace Biolab Watchman: missing Retail skill slot 0.
 				doors.get(122).setOpen(true);
 				// 生物实验室外墙已坍塌。 / The outer wall of the Bio Lab has collapsed.
 				sendMsg(1400924, 0, false, 25, 0);
-            break;
+			break;
 		   /**
 	 * 击败“凯克斯克拉”后刷新宝箱，含欧比斯遗物与白金勋章等。 / When "Kexkra" is defeated, a treasure chest will spawn containing Abyss relics and Platinum Medals. In addition, the treasure chest has a chance to contain Fabled armor from the Surama set
 	 */
-			case 217204: //Kexkra.
-			    despawnNpc(npc);
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Esoterrace>");
-				spawn(701044, 1341.19f, 1181.25f, 51.515f, (byte) 67); //Esoterrace Dimensional Rift Exit.
-				spawn(701027, 1326.7705f, 1173.1145f, 51.493996f, (byte) 70, 726); //Laboratory Treasure Chest.
-				spawn(701027, 1321.9897f, 1179.5394f, 51.493996f, (byte) 79, 727); //Laboratory Treasure Chest.
-            break;
 			case 217205: //Kexkra Prototype.
 			    despawnNpc(npc);
 				sendMovie(player, 472);
@@ -191,12 +168,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 		   /**
 	 * 开战面对“凯克斯克拉原型”；随后典狱长苏拉玛会加入战斗。 / Players will start this encounter facing the "Kexkra Prototype" As the encounter wears on, an event will cause Warden Surama to join the battle. When Warden Surama is defeated, two treasure chests will spawn, one of which has a chance to contain Fabled armor from the Surama series, and the other Fabled weapons from the Surama series
 	 */
-            case 217206: //Warden Surama.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Esoterrace>");
-				spawn(701044, 1341.19f, 1181.25f, 51.515f, (byte) 67); //Esoterrace Dimensional Rift Exit.
-				spawn(701027, 1326.7705f, 1173.1145f, 51.493996f, (byte) 70, 726); //Laboratory Treasure Chest.
-				spawn(701027, 1321.9897f, 1179.5394f, 51.493996f, (byte) 79, 727); //Laboratory Treasure Chest.
-            break;
         }
     }
 	
@@ -223,18 +194,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 		removeItems(player);
 	}
 	
-	/**
-	 * 玩家从该副本登出时处理。
-	 * Handle a player logging out from this instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-	
-	private void sendMovie(Player player, int movie) {
+		private void sendMovie(Player player, int movie) {
 		if (!movies.contains(movie)) {
 			movies.add(movie);
 			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));

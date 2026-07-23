@@ -38,6 +38,9 @@ public class ReportToMany extends QuestHandler {
 	private final int maxVar;
 	/** NPC ID 到汇报信息的映射 / map of NPC id to report info */
 	private final Map<Integer, NpcInfos> npcInfos;
+	private final int timeoutSeconds;
+	private final int timeoutStartVar;
+	private final int timeoutResetVar;
 
 	/**
 	 * 构造多段汇报任务处理器。
@@ -52,7 +55,8 @@ public class ReportToMany extends QuestHandler {
 	 * @param endDialog 结束对话页 / end dialog page
 	 * max var
 	 */
-	public ReportToMany(int questId, int startItem, List<Integer> startNpcIds, List<Integer> endNpcIds, Map<Integer, NpcInfos> npcInfos, int startDialog, int endDialog, int maxVar) {
+	public ReportToMany(int questId, int startItem, List<Integer> startNpcIds, List<Integer> endNpcIds, Map<Integer, NpcInfos> npcInfos, int startDialog, int endDialog, int maxVar,
+			int timeoutSeconds, int timeoutStartVar, int timeoutResetVar) {
 		super(questId);
 		this.startItem = startItem;
 		if (startNpcIds != null) {
@@ -67,6 +71,9 @@ public class ReportToMany extends QuestHandler {
 		this.startDialog = startDialog;
 		this.endDialog = endDialog;
 		this.maxVar = maxVar;
+		this.timeoutSeconds = timeoutSeconds;
+		this.timeoutStartVar = timeoutStartVar;
+		this.timeoutResetVar = timeoutResetVar;
 	}
 
 	/**
@@ -139,22 +146,29 @@ public class ReportToMany extends QuestHandler {
 					}
 					if (dialog == QuestDialog.START_DIALOG) {
 						return sendQuestDialog(env, targetNpcInfo.getQuestDialog());
-					} else if (dialog.id() == targetNpcInfo.getQuestDialog() + 1 && targetNpcInfo.getMovie() != 0) {
-						sendQuestDialog(env, targetNpcInfo.getQuestDialog() + 1);
-						return playQuestMovie(env, targetNpcInfo.getMovie());
-					} else if (dialog.id() == closeDialog) {
-						if ((dialog != QuestDialog.CHECK_COLLECTED_ITEMS && dialog != QuestDialog.CHECK_COLLECTED_ITEMS_SIMPLE) || QuestService.collectItemCheck(env, true)) {
-							if (var == maxVar) {
-								qs.setStatus(QuestStatus.REWARD);
-							    updateQuestStatus(env);
-								if (closeDialog == 1009 || closeDialog == 20002 || closeDialog == 39) {
-									return sendQuestDialog(env, 5);
+						} else if (dialog.id() == targetNpcInfo.getQuestDialog() + 1 && targetNpcInfo.getMovie() != 0) {
+							sendQuestDialog(env, targetNpcInfo.getQuestDialog() + 1);
+							return playQuestMovie(env, targetNpcInfo.getMovie());
+						} else if (dialog.id() == closeDialog) {
+							if ((dialog != QuestDialog.CHECK_COLLECTED_ITEMS && dialog != QuestDialog.CHECK_COLLECTED_ITEMS_SIMPLE) || QuestService.collectItemCheck(env, true)) {
+								if (var == maxVar) {
+									if (timeoutSeconds > 0) {
+										QuestService.questTimerEnd(env);
+									}
+									qs.setStatus(QuestStatus.REWARD);
+									updateQuestStatus(env);
+									if (closeDialog == 1009 || closeDialog == 20002 || closeDialog == 39) {
+										return sendQuestDialog(env, 5);
+									}
+								} else {
+									int nextVar = var + 1;
+									qs.setQuestVarById(0, nextVar);
+									updateQuestStatus(env);
+									if (timeoutSeconds > 0 && nextVar == timeoutStartVar) {
+										QuestService.questTimerStart(env, timeoutSeconds);
+									}
 								}
-							} else {
-								qs.setQuestVarById(0, var + 1);
-							    updateQuestStatus(env);
 							}
-						}
 						return sendQuestSelectionDialog(env);
 					}
 				}
@@ -202,5 +216,16 @@ public class ReportToMany extends QuestHandler {
 			}
 		}
 		return HandlerResult.UNKNOWN;
+	}
+
+	@Override
+	public boolean onQuestTimerEndEvent(QuestEnv env) {
+		QuestState qs = env.getPlayer().getQuestStateList().getQuestState(getQuestId());
+		if (timeoutSeconds > 0 && qs != null && qs.getStatus() == QuestStatus.START && qs.getQuestVarById(0) == timeoutStartVar) {
+			qs.setQuestVarById(0, timeoutResetVar);
+			updateQuestStatus(env);
+			return true;
+		}
+		return false;
 	}
 }

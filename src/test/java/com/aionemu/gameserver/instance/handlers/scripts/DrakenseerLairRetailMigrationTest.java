@@ -41,12 +41,9 @@ class DrakenseerLairRetailMigrationTest {
 		assertTrue(staticSpawns.contains("<spawn npc_id=\"703154\" respawn_time=\"1\">"));
 		assertFalse(staticSpawns.contains("entity_id="));
 
-		String handler = Files.readString(Path.of(
-			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DrakenseerLairInstance.java"));
-		for (String legacy : new String[] { "FlyRing", "onPassFlyingRing", "onDropRegistered", "onDie(",
-				"spawn(", "21791", "806240", "drakenseer." }) {
-			assertFalse(handler.contains(legacy), legacy);
-		}
+		// Drakenseer's Lair 已无 Instance Handler，retail 条件出生 + Pattern 接管全部流程。
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DrakenseerLairInstance.java")));
 
 		String drops = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_009.xml"));

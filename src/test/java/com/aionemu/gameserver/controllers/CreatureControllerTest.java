@@ -1,14 +1,20 @@
 package com.aionemu.gameserver.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.skillengine.model.Skill;
+import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.world.knownlist.KnownList;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.objenesis.ObjenesisStd;
 
 class CreatureControllerTest {
 
@@ -50,7 +56,60 @@ class CreatureControllerTest {
 		assertFalse(respawn.isCancelled());
 	}
 
+	@Test
+	void cancelCurrentSkillUsesSingleCastingSkillSnapshot() {
+		TestCreatureController controller = new TestCreatureController();
+		TestCreature creature = new ObjenesisStd().newInstance(TestCreature.class);
+		controller.setOwner(creature);
+		creature.setFirstCastingSkill(new Skill(new SkillTemplate(), creature, 1, creature, null));
+
+		assertDoesNotThrow(controller::cancelCurrentSkill);
+		assertEquals(1, creature.getCastingSkillReadCount());
+	}
+
 	private static class TestCreatureController extends CreatureController<Creature> {
+	}
+
+	private static class TestCreature extends Creature {
+		private Skill firstCastingSkill;
+		private int castingSkillReadCount;
+
+		private TestCreature() {
+			super(0, null, null, null, null);
+		}
+
+		private void setFirstCastingSkill(Skill skill) {
+			firstCastingSkill = skill;
+		}
+
+		private int getCastingSkillReadCount() {
+			return castingSkillReadCount;
+		}
+
+		@Override
+		public Skill getCastingSkill() {
+			return ++castingSkillReadCount == 1 ? firstCastingSkill : null;
+		}
+
+		@Override
+		public AI2 getAi2() {
+			return null;
+		}
+
+		@Override
+		public KnownList getKnownList() {
+			return new KnownList(this);
+		}
+
+		@Override
+		public String getName() {
+			return "test";
+		}
+
+		@Override
+		public byte getLevel() {
+			return 1;
+		}
 	}
 
 	private static class CallbackFuture extends NoopFuture {

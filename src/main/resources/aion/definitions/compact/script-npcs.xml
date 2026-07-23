@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<script_npcs>
+  <use_skill npc_id="700940" skill_id="19229" skill_level="1" despawn_on_success="true"/>
+  <use_skill npc_id="700941" skill_id="19230" skill_level="1" despawn_on_success="true"/>
+</script_npcs>

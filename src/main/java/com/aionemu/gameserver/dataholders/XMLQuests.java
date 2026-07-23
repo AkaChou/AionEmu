@@ -23,7 +23,6 @@ public class XMLQuests {
 	@XmlElements({
 			@XmlElement(name = "report_to", type = com.aionemu.gameserver.questEngine.handlers.models.ReportToData.class),
 			@XmlElement(name = "monster_hunt", type = com.aionemu.gameserver.questEngine.handlers.models.MonsterHuntData.class),
-			@XmlElement(name = "xml_quest", type = com.aionemu.gameserver.questEngine.handlers.models.XmlQuestData.class),
 			@XmlElement(name = "item_collecting", type = com.aionemu.gameserver.questEngine.handlers.models.ItemCollectingData.class),
 			@XmlElement(name = "relic_rewards", type = com.aionemu.gameserver.questEngine.handlers.models.RelicRewardsData.class),
 			@XmlElement(name = "crafting_rewards", type = com.aionemu.gameserver.questEngine.handlers.models.CraftingRewardsData.class),
@@ -33,8 +32,9 @@ public class XMLQuests {
 			@XmlElement(name = "kill_spawned", type = com.aionemu.gameserver.questEngine.handlers.models.KillSpawnedData.class),
 			@XmlElement(name = "mentor_monster_hunt", type = com.aionemu.gameserver.questEngine.handlers.models.MentorMonsterHuntData.class),
 			@XmlElement(name = "fountain_rewards", type = com.aionemu.gameserver.questEngine.handlers.models.FountainRewardsData.class),
-			@XmlElement(name = "item_order", type = com.aionemu.gameserver.questEngine.handlers.models.ItemOrdersData.class),
-			@XmlElement(name = "work_order", type = com.aionemu.gameserver.questEngine.handlers.models.WorkOrdersData.class) })
+				@XmlElement(name = "item_order", type = com.aionemu.gameserver.questEngine.handlers.models.ItemOrdersData.class),
+				@XmlElement(name = "data_driven_quest", type = com.aionemu.gameserver.questEngine.handlers.models.DataDrivenQuestData.class),
+				@XmlElement(name = "work_order", type = com.aionemu.gameserver.questEngine.handlers.models.WorkOrdersData.class) })
 	protected List<XMLQuest> data;
 
 	/**

@@ -3,6 +3,7 @@ package com.aionemu.gameserver.lifecycle;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.scriptEngine.ScriptEngine;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
@@ -37,6 +38,11 @@ public class GameEnginesRuntimeBridge {
      * AI2-engine provider.
      */
     private ObjectProvider<AI2Engine> ai2EngineProvider;
+    /**
+     * 脚本引擎提供者。
+     * Script-engine provider.
+     */
+    private ObjectProvider<ScriptEngine> scriptEngineProvider;
     /**
      * 聊天处理器提供者。
      * Chat-processor provider.
@@ -90,6 +96,17 @@ public class GameEnginesRuntimeBridge {
     @Autowired(required = false)
     void setAi2EngineProvider(ObjectProvider<AI2Engine> ai2EngineProvider) {
         this.ai2EngineProvider = ai2EngineProvider;
+    }
+
+    /**
+     * 可选注入脚本引擎提供者。
+     * Optionally inject the script-engine provider.
+     *
+     * @param scriptEngineProvider 脚本引擎提供者 / Script-engine provider
+     */
+    @Autowired(required = false)
+    void setScriptEngineProvider(ObjectProvider<ScriptEngine> scriptEngineProvider) {
+        this.scriptEngineProvider = scriptEngineProvider;
     }
 
     /**
@@ -164,6 +181,19 @@ public class GameEnginesRuntimeBridge {
             return GameEngineServiceFallbacks.ai2Engine();
         }
         return ai2EngineProvider.getIfAvailable(GameEngineServiceFallbacks::ai2Engine);
+    }
+
+    /**
+     * 解析脚本引擎。
+     * Resolve the script engine.
+     *
+     * @return 脚本引擎 / Script engine
+     */
+    public ScriptEngine scriptEngine() {
+        if (scriptEngineProvider == null) {
+            return GameEngineServiceFallbacks.scriptEngine();
+        }
+        return scriptEngineProvider.getIfAvailable(GameEngineServiceFallbacks::scriptEngine);
     }
 
     /**

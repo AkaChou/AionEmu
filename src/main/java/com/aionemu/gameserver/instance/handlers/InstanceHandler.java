@@ -210,6 +210,9 @@ public interface InstanceHandler {
 	 */
 	void handleUseItemFinish(Player player, Npc npcId);
 
+	/** 返回当前副本是否允许通用真端 Pattern 接管该 NPC。 */
+	boolean supportsRetailPattern(int npcId);
+
 	/** 返回当前副本是否能按真端语义消费该 NPC 的计分动作。 */
 	boolean supportsRetailNpcScore(int npcId, int scoreApplyType);
 

@@ -50,6 +50,13 @@ class NightmareCircusRetailMigrationTest {
 				"spawn(", "onInstanceCreate", "onEnterInstance", "onReviveEvent", "sendMovie" }) {
 			assertFalse(handler.contains(legacy), legacy);
 		}
+
+		String ownership = Files.readAllLines(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+			.filter(line -> line.contains("id=\"301200000\"")).findFirst().orElseThrow();
+		assertTrue(ownership.contains("retail condition/static spawns own the circus flow"));
+		assertTrue(ownership.contains(
+			"handler only removes effects 21469/21470/21471/21472 on logout/leave"));
 	}
 
 	private static String worldBlock(String xml, String worldId) {

@@ -38,5 +38,12 @@ class FireTempleRetailMigrationTest {
 		for (String chestId : new String[] { "833523", "833524", "833525" }) {
 			assertTrue(handler.contains(chestId), chestId);
 		}
+
+		String ownership = Files.readAllLines(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+			.filter(line -> line.contains("id=\"320100000\"")).findFirst().orElseThrow();
+		assertTrue(ownership.contains("retail static spawn pools own named variants"));
+		assertTrue(ownership.contains(
+			"handler only selects/announces/spawns Kromede treasure chest 833523/833524/833525"));
 	}
 }

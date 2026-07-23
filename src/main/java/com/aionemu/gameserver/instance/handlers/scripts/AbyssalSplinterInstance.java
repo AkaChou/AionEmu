@@ -8,11 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 
 	@Override
-	public void onPlayerLogOut(Player player) {
-		removeFragment(player);
-	}
-
-	@Override
 	public void onLeaveInstance(Player player) {
 		removeFragment(player);
 	}

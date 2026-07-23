@@ -17,12 +17,6 @@ import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/**
- * Tiamat Stronghold 副本 NPC AI：Kahrun（@AIName "kahrun"），继承 NpcAI2。
- * Tiamat Stronghold instance NPC AI: Kahrun (@AIName "kahrun"), extends NpcAI2.
- *
- * @author Encom
- */
 @AIName("kahrun")
 public class KahrunAI2 extends NpcAI2
 {
@@ -47,8 +41,14 @@ public class KahrunAI2 extends NpcAI2
 			public void run() {
 				Npc fileLadderCGF = getPosition().getWorldMapInstance().getNpc(730612);
 				Npc aionFXPostGlow = getPosition().getWorldMapInstance().getNpc(730694);
+				if (fileLadderCGF == null || aionFXPostGlow == null) {
+					return;
+				}
 				Npc kharunReianLeader = (Npc)spawn(800335, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 60);
-			    kharunReianLeader.setTarget(aionFXPostGlow);
+				if (kharunReianLeader == null) {
+					return;
+				}
+				kharunReianLeader.setTarget(aionFXPostGlow);
 			    // 退后。我来处理这屏障。 / Stand back. I will take care of this barrier.
 				GameFeatureServices.npcShoutsService().sendMsg(kharunReianLeader, 1500596, kharunReianLeader.getObjectId(), 0, 1000);
 				GameEngineServices.skillEngine().getSkill(kharunReianLeader, 20943, 60, aionFXPostGlow).useNoAnimationSkill();

@@ -57,6 +57,15 @@ public class ReportToManyData extends XMLQuest {
 	@XmlAttribute(name = "end_dialog_id")
 	protected int endDialog;
 
+	@XmlAttribute(name = "timeout_seconds")
+	protected int timeoutSeconds;
+
+	@XmlAttribute(name = "timeout_start_var")
+	protected int timeoutStartVar;
+
+	@XmlAttribute(name = "timeout_reset_var")
+	protected int timeoutResetVar;
+
 	/**
 	 * 中间各步 NPC 对话配置列表。
 	 * Intermediate NPC dialogue step configs.
@@ -80,7 +89,8 @@ public class ReportToManyData extends XMLQuest {
 				maxVar = mi.getVar();
 			}
 		}
-		ReportToMany template = new ReportToMany(id, startItemId, startNpcIds, endNpcIds, NpcInfo, startDialog, endDialog, maxVar);
+		ReportToMany template = new ReportToMany(id, startItemId, startNpcIds, endNpcIds, NpcInfo, startDialog, endDialog, maxVar,
+				timeoutSeconds, timeoutStartVar, timeoutResetVar);
 		questEngine.addQuestHandler(template);
 	}
 }

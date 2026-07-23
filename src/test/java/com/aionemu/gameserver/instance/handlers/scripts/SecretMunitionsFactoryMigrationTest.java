@@ -35,4 +35,18 @@ class SecretMunitionsFactoryMigrationTest {
 		assertTrue(packet.contains("plan.items().get(slot).itemId()"));
 		assertFalse(packet.contains("188055648"));
 	}
+
+	@Test
+	void handlerPreservesForeignAndLogoutItems() throws Exception {
+		assertFalse(Files.readString(HANDLER).contains("decreaseByItemId"));
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		assertTrue(item(items, "164000418").contains("ownership_world=\"302330000\""));
+		assertTrue(item(items, "164002362").contains("ownership_world=\"301640000\""));
+	}
+
+	private static String item(String source, String itemId) {
+		int start = source.indexOf("<item_template id=\"" + itemId + "\"");
+		return source.substring(start, source.indexOf("</item_template>", start));
+	}
 }

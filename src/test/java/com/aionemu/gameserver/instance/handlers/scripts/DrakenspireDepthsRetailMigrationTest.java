@@ -41,11 +41,28 @@ class DrakenspireDepthsRetailMigrationTest {
 			assertTrue(questPatterns.contains("<name>" + pattern + "</name>"), pattern);
 		}
 
-		assertMinimalHandler("DrakenspireDepthsInstance.java");
-		String questHandler = assertMinimalHandler("DrakenspireDepthsQInstance.java");
-		assertTrue(questHandler.contains("185000219"));
-		assertTrue(questHandler.contains("22778"));
-		assertTrue(questHandler.contains("22779"));
+			assertMinimalHandler("DrakenspireDepthsInstance.java");
+			String questHandler = assertMinimalHandler("DrakenspireDepthsQInstance.java");
+			assertTrue(questHandler.contains("185000219"));
+			assertTrue(questHandler.contains("22778"));
+			assertTrue(questHandler.contains("22779"));
+			assertTrue(questHandler.contains("onPlayerLogOut(Player player) {\n\t\tremoveEffects(player);"));
+			assertTrue(questHandler.contains("onLeaveInstance(Player player) {\n\t\tcleanup(player);"));
+			String items = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+			assertTrue(itemTemplateBlock(items, 185000219).contains("ownership_world=\"301390000\""));
+
+		var coverage = Files.readAllLines(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		String normalOwnership = coverage.stream().filter(line -> line.contains("id=\"301390000\""))
+			.findFirst().orElseThrow();
+		assertTrue(normalOwnership.contains("retail static/condition spawns and Pattern own waves, twins, Orisza and Beritra flow"));
+		assertTrue(normalOwnership.contains("855461 Pattern remains rejected because waypoint-start pathname is empty"));
+		assertTrue(normalOwnership.contains("handler only owns exit"));
+		String questOwnership = coverage.stream().filter(line -> line.contains("id=\"301520000\""))
+			.findFirst().orElseThrow();
+		assertTrue(questOwnership.contains("retail static/condition spawns and Pattern own quest waves, twins and Beritra flow"));
+			assertTrue(questOwnership.contains("handler owns normal-leave item 185000219 cleanup, logout/leave effects 22778-22779 and exit"));
 	}
 
 	private static String assertMinimalHandler(String file) throws Exception {
@@ -68,5 +85,10 @@ class DrakenspireDepthsRetailMigrationTest {
 
 	private static int count(String value, String token) {
 		return (value.length() - value.replace(token, "").length()) / token.length();
+	}
+
+	private static String itemTemplateBlock(String items, int itemId) {
+		int start = items.indexOf("<item_template id=\"" + itemId + "\"");
+		return items.substring(start, items.indexOf("</item_template>", start));
 	}
 }

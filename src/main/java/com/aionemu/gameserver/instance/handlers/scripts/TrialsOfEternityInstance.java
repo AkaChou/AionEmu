@@ -4,15 +4,12 @@ import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 @InstanceID(301560000)
 public class TrialsOfEternityInstance extends GeneralInstanceHandler {
-
-	private static final int[] INSTANCE_ITEMS = { 185000297, 185000298, 185000299, 185000300, 185000301 };
 
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -26,20 +23,4 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler {
 		}
 	}
 
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-
-	@Override
-	public void onLeaveInstance(Player player) {
-		removeItems(player);
-	}
-
-	private void removeItems(Player player) {
-		Storage storage = player.getInventory();
-		for (int itemId : INSTANCE_ITEMS) {
-			storage.decreaseByItemId(itemId, storage.getItemCountByItemId(itemId));
-		}
-	}
 }

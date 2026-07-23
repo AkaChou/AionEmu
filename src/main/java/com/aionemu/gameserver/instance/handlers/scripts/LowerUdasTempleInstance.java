@@ -132,11 +132,6 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler {
 		removeItems(player);
 	}
 
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000086, storage.getItemCountByItemId(185000086));

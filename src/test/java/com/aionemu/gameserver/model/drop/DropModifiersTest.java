@@ -32,6 +32,16 @@ class DropModifiersTest {
 	}
 
 	@Test
+	void keepsGuaranteedScalingDropsGuaranteed() {
+		DropModifiers modifiers = new DropModifiers();
+		modifiers.setBoostDropRate(0.1f);
+		modifiers.setReductionDropRate(0f);
+
+		assertEquals(100f, modifiers.calculateScalingDropChance(100f));
+		assertEquals(0f, modifiers.calculateScalingDropChance(20f));
+	}
+
+	@Test
 	void itemNoReduceOverridesGroupLevelReduction() throws Exception {
 		DropGroup group = JAXBContext.newInstance(DropGroup.class)
 				.createUnmarshaller()

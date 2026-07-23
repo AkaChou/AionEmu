@@ -105154,7 +105154,7 @@
     <actions>
       <skilluse level="1" skillid="17619"/>
     </actions>
-    <uselimits usedelay="10000" usedelayid="1" ownership_world="164002390"/>
+    <uselimits usedelay="10000" usedelayid="1" ownership_world="302330000"/>
   </item_template>
   <item_template id="164002391" name="skill_idab1_ere_bomb_01" level="1" mask="12354" category="KEY" max_stack_count="10" item_type="NORMAL" quality="UNIQUE" price="5" race="PC_ALL" restrict="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1" desc="1738337" activate_target="TARGET" activate_count="1" name_desc="skill_idab1_ere_bomb_01">
     <actions>

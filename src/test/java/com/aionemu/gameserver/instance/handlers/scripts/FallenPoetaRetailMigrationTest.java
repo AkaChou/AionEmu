@@ -36,12 +36,25 @@ class FallenPoetaRetailMigrationTest {
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FallenPoetaInstance.java"));
 		assertFalse(handler.contains("GameThreadPoolServices"));
 		assertFalse(handler.contains("Future"));
-		assertFalse(handler.contains("onDropRegistered"));
-		assertFalse(handler.contains("onDie"));
-		assertFalse(handler.contains("spawn("));
-		assertTrue(handler.contains("164002346"));
-		assertTrue(handler.contains("21805"));
-		assertTrue(handler.contains("21806"));
+			assertFalse(handler.contains("onDropRegistered"));
+			assertFalse(handler.contains("onDie"));
+			assertFalse(handler.contains("spawn("));
+			assertFalse(handler.contains("164002346"));
+			assertTrue(handler.contains("21805"));
+			assertTrue(handler.contains("21806"));
+			String items = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+			assertTrue(itemTemplateBlock(items, 164002346).contains("ownership_world=\"301660000\""));
+			String instanceService = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java"));
+			assertTrue(instanceService.contains("getOwnershipWorld() == player.getWorldId()"));
+
+		String ownership = Files.readAllLines(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+			.filter(line -> line.contains("id=\"301660000\"")).findFirst().orElseThrow();
+		assertTrue(ownership.contains("retail condition spawns and Pattern own barriers/waves/boss"));
+			assertTrue(ownership.contains("ownership_world item 164002346 cleanup"));
+			assertTrue(ownership.contains("handler only removes effects 21805/21806 on logout/leave"));
 	}
 
 	private static String worldBlock(String xml, String worldId) {
@@ -52,5 +65,10 @@ class FallenPoetaRetailMigrationTest {
 
 	private static int count(String value, String token) {
 		return (value.length() - value.replace(token, "").length()) / token.length();
+	}
+
+	private static String itemTemplateBlock(String items, int itemId) {
+		int start = items.indexOf("<item_template id=\"" + itemId + "\"");
+		return items.substring(start, items.indexOf("</item_template>", start));
 	}
 }

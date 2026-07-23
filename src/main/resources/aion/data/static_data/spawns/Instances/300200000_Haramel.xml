@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Parsed By Angry Catster
- -->
 <spawns>
   <spawn_map map_id="300200000">
     <spawn npc_id="216902">
@@ -44,7 +41,7 @@
       <spot x="189.482254" y="307.180511" z="142.7657" entity_id="114"/>
       <spot x="258.964600" y="332.233368" z="142.7657" entity_id="55"/>
     </spawn>
-    <spawn npc_id="799524">
+    <spawn npc_id="799524" respawn_time="1">
       <spot x="289.776031" y="422.453094" z="89.55631" h="90"/>
     </spawn>
     <spawn npc_id="216898">
@@ -92,7 +89,7 @@
       <spot x="220.562042" y="314.491882" z="141.89229" h="93"/>
       <spot x="216.866745" y="318.527313" z="141.89233" h="100"/>
     </spawn>
-    <spawn npc_id="730321">
+    <spawn npc_id="730321" respawn_time="60">
       <spot x="220.868271" y="213.262894" z="89.27873" entity_id="79"/>
     </spawn>
     <spawn npc_id="216925">
@@ -167,10 +164,10 @@
     <spawn npc_id="216922">
       <spot x="224.126617" y="275.123138" z="144.77586" h="30"/>
     </spawn>
-    <spawn npc_id="730320">
+    <spawn npc_id="730320" respawn_time="60">
       <spot x="185.738083" y="20.143583" z="144.22356" entity_id="117"/>
     </spawn>
-    <spawn npc_id="799522">
+    <spawn npc_id="799522" respawn_time="1">
       <spot x="141.775848" y="21.467367" z="144.2455"/>
     </spawn>
     <spawn npc_id="216921">
@@ -195,7 +192,7 @@
     <spawn npc_id="216916">
       <spot x="200.165283" y="306.725281" z="142.7657" h="30" walker_id="NPCPathIDNovice_Mob_42"/>
     </spawn>
-    <spawn npc_id="799523">
+    <spawn npc_id="799523" respawn_time="1">
       <spot x="228.415649" y="160.876221" z="137.05888" h="60"/>
     </spawn>
     <spawn npc_id="216915">

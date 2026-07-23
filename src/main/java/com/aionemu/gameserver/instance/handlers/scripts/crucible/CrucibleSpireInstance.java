@@ -25,13 +25,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.*;
 
-/**
- * 熔炉尖塔副本事件处理器。
- * Instance event handler for Crucible Spire.
- *
- * @author Encom
- */
-
 @InstanceID(302400000)
 public class CrucibleSpireInstance extends GeneralInstanceHandler {
 	private static final String FLOOR_CONTROLLER_DEADLINE = "infinity.floor_controller_deadline";
@@ -122,7 +115,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         if (spawnRace == null) {
             spawnRace = player.getRace();
             RetailConditionSpawnEngine.setVariable(instance, "race", spawnRace == Race.ELYOS ? 1 : 2, 0);
-            spawnInggrilInggness1();
             int pfloor = player.getFloor();
             sendPacket(player, "Condition_Infinity_PRE_SEASON_Floor", pfloor);
             sendPacket(player, "Condition_Infinity_THIS_SEASON_Floor", pfloor + 1);
@@ -158,15 +150,10 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         RetailConditionSpawnEngine.setVariable(instance, variable, floor, 0);
         PacketSendUtility.sendPacket(player, new SM_CONDITION_VARIABLE(player, variable, floor));
     }
-    
-    private void spawnInggrilInggness1() {
-        final int Inggril_Inggness1 = spawnRace == Race.ASMODIANS ? 247386 : 247376;
-        spawn(Inggril_Inggness1, 255.26721f, 249.49001f, 242.03000f, (byte) 60);
-    }
-    
-    private void spawnInggrilInggness2() {
-        final int Inggril_Inggness2 = spawnRace == Race.ASMODIANS ? 247386 : 247376;
-        spawn(Inggril_Inggness2, 255.26721f, 249.49001f, 242.03000f, (byte) 60);
+
+    private void restoreFailureController() {
+        int npcId = spawnRace == Race.ASMODIANS ? 247386 : 247376;
+        spawn(npcId, 255.26721f, 249.49001f, 242.03000f, (byte) 60);
     }
     
     private void teleportCrucibleFloor(Player player) {
@@ -405,18 +392,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
     /**
-     * 玩家从该副本登出时处理。
-     * Handle a player logging out from this instance.
-     *
-     * @param player 玩家 / player
-     */
-    
-    public void onPlayerLogOut(Player player) {
-        removeItems(player);
-        TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
-    }
-    
-    /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.
      */
@@ -459,7 +434,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         for (Npc npc: instance.getNpcs()) {
             npc.getController().onDelete();
         }
-        spawnInggrilInggness2();
+        restoreFailureController();
         player.getGameStats().updateStatsAndSpeedVisually();
         PlayerReviveService.revive(player, 100, 100, false, 0);
         PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);

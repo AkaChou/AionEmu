@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RaksangRuinsRetailMigrationTest {
 
 	@Test
-	void retailDataOwnsRaksangWavesDoorsBossAndExit() throws Exception {
+	void retailDataOwnsRaksangWavesDoorsBossExitAndTeleporters() throws Exception {
 		String conditions = Files.readString(Path.of(
 				"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
 		String world = worldBlock(conditions, "300610000");
@@ -34,13 +34,41 @@ class RaksangRuinsRetailMigrationTest {
 		assertTrue(patterns.contains("<set_condition_spawn_variable><string>idraksha_clear</string>"
 				+ "<set>1</set><modify>0</modify></set_condition_spawn_variable>"));
 
-		String handler = Files.readString(Path.of(
-				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/RaksangRuinsInstance.java"));
-		assertFalse(handler.contains("GameThreadPoolServices"));
-		assertFalse(handler.contains("Future"));
-		assertFalse(handler.contains("onDropRegistered"));
-		assertFalse(handler.contains("onDie"));
-		assertFalse(handler.contains("730445"));
+		// 六个传送 NPC（206378-380 Abiso / 206395-397 Proqura）的传送逻辑由真端
+		// Tames_Solo_*_Teleporter Pattern 接管：on_hyperlink_clicked 传送至 Alias_Start_A/B/C
+		// 并启用 QuestArea_Course_A/B/C。旧 ProquraAI2/AbisoAI2 桥接已删除。
+		for (String teleporter : new String[] { "Tames_Solo_A_Teleporter", "Tames_Solo_B_Teleporter",
+				"Tames_Solo_C_Teleporter" }) {
+			assertTrue(patterns.contains("<name>" + teleporter + "</name>"), teleporter);
+		}
+		assertTrue(patterns.contains("<alias>Alias_Start_A</alias>")
+				|| patterns.contains("alias>Alias_Start_A</alias"));
+		String aliases = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/ai/ai-location-aliases.xml"));
+		for (String alias : new String[] { "Alias_Start_A", "Alias_Start_B", "Alias_Start_C" }) {
+			assertTrue(aliases.contains("world_id=\"300610000\" world_name=\"idraksha_solo\" name=\"" + alias + "\""),
+				alias);
+		}
+		String areas = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/ai/ai-areas.xml"));
+		for (String area : new String[] { "QuestArea_Course_A", "QuestArea_Course_B", "QuestArea_Course_C" }) {
+			assertTrue(areas.contains("world_id=\"300610000\" world_name=\"idraksha_solo\" name=\"" + area + "\""),
+				area);
+		}
+
+		// 旧 Java 桥接已删除：无副本 Handler、无逐 NPC 传送 AI2。
+		assertFalse(Files.exists(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/RaksangRuinsInstance.java")));
+		assertFalse(Files.exists(Path.of(
+				"src/main/java/com/aionemu/gameserver/ai/instance/raksangRuins/ProquraAI2.java")));
+		assertFalse(Files.exists(Path.of(
+				"src/main/java/com/aionemu/gameserver/ai/instance/raksangRuins/AbisoAI2.java")));
+		String npcs = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/npcs/npc_template.xml"));
+		for (int npcId : new int[] { 206378, 206379, 206380, 206395, 206396, 206397 }) {
+			assertFalse(npcs.contains("npc_id=\"" + npcId + "\" ai=\"abiso\"")
+					|| npcs.contains("npc_id=\"" + npcId + "\" ai=\"proqura\""), "legacy ai for " + npcId);
+		}
 	}
 
 	private static String worldBlock(String xml, String worldId) {

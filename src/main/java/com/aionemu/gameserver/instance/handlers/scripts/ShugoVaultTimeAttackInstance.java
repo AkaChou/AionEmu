@@ -15,7 +15,6 @@ import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.ShugoEmperorVaultReward;
 import com.aionemu.gameserver.model.instance.playerreward.ShugoEmperorVaultPlayerReward;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceDeadlineScheduler;
@@ -33,10 +32,6 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 	private static final int SAFE_KEY = 185000268;
 	private static final String REWARD_VARIABLE = "IDSweep_Reward";
 	private static final String S_REWARD_VARIABLE = "IDSweep_Reward_S";
-	private static final int[] VAULT_CONSUMABLES = { 162002031, 162002032, 162002033, 162002034, 162002035,
-			162002036 };
-	private static final int[] SAFE_CONSUMABLES = { 162002079, 162002080, 162002081, 162002082, 162002083,
-			162002084 };
 	private static final int[] TRANSFORMATION_EFFECTS = { 21829, 21830, 21831, 21832, 21833, 21834 };
 
 	private ShugoEmperorVaultReward instanceReward;
@@ -48,6 +43,9 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 		restoreScore();
 		instanceReward.setInstanceScoreType(scoreType());
 		restoreDeadline();
+		if (runtimeState().getBoolean(state("completed"), false)) {
+			settlePlayers();
+		}
 	}
 
 	@Override
@@ -116,14 +114,12 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 
 	@Override
 	public void onLeaveInstance(Player player) {
-		removeItems(player);
 		removeEffects(player);
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
 
 	@Override
 	public void onPlayerLogOut(Player player) {
-		removeItems(player);
 		removeEffects(player);
 	}
 
@@ -199,9 +195,7 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 		cancelDeadline("expire");
 		cancelDeadline("settle");
 		despawnScoredNpcs();
-		for (Player player : instance.getPlayersInside()) {
-			doReward(player);
-		}
+		settlePlayers();
 		sendScore(0, 0);
 	}
 
@@ -313,6 +307,7 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 	}
 
 	private ShugoEmperorVaultPlayerReward getOrCreatePlayerReward(int playerId) {
+		runtimeState().put(state("participant." + playerId), true);
 		ShugoEmperorVaultPlayerReward reward = (ShugoEmperorVaultPlayerReward) instanceReward.getPlayerReward(playerId);
 		if (reward == null) {
 			reward = new ShugoEmperorVaultPlayerReward(playerId);
@@ -354,16 +349,6 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 		}
 	}
 
-	private void removeItems(Player player) {
-		Storage inventory = player.getInventory();
-		int[] consumables = mapId == SAFE_MAP ? SAFE_CONSUMABLES : VAULT_CONSUMABLES;
-		int key = rewardItemId();
-		inventory.decreaseByItemId(key, inventory.getItemCountByItemId(key));
-		for (int itemId : consumables) {
-			inventory.decreaseByItemId(itemId, inventory.getItemCountByItemId(itemId));
-		}
-	}
-
 	private static void removeEffects(Player player) {
 		PlayerEffectController effects = player.getEffectController();
 		for (int skillId : TRANSFORMATION_EFFECTS) {
@@ -385,6 +370,18 @@ abstract class ShugoVaultTimeAttackInstance extends GeneralInstanceHandler {
 
 	private String playerRewardKey(int playerId) {
 		return state("player." + playerId + ".rewarded");
+	}
+
+	private void settlePlayers() {
+		RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, instanceReward.getRank());
+		String prefix = state("participant.");
+		for (String key : runtimeState().snapshot(prefix).keySet()) {
+			int playerId = Integer.parseInt(key.substring(prefix.length()));
+			InstanceSettlementService.queue(instance, playerId, "timeattack", plan);
+		}
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
 	}
 
 	private static void delete(Npc npc) {

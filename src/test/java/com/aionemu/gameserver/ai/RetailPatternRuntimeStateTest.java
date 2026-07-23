@@ -60,7 +60,7 @@ class RetailPatternRuntimeStateTest {
 		}
 
 		@Override
-		public WorldMapInstance getWorldMapInstance() {
+		public WorldMapInstance getWorldMapInstanceOrNull() {
 			return instance;
 		}
 	}

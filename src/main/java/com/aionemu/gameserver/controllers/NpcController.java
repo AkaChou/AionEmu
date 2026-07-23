@@ -152,6 +152,13 @@ public class NpcController extends CreatureController<Npc> {
 	public void onBeforeSpawn() {
 		super.onBeforeSpawn();
 		Npc owner = getOwner();
+		var instance = owner.getPosition().getWorldMapInstanceOrNull();
+		if (owner.getAi2() instanceof RetailPatternAI2 && instance != null && instance.getInstanceHandler() != null
+				&& !instance.getInstanceHandler().supportsRetailPattern(owner.getNpcId())) {
+			var model = owner.getSpawn().getModel();
+			String fallback = model != null && model.getAi() != null ? model.getAi() : owner.getObjectTemplate().getAi();
+			GameEngineServices.ai2Engine().setupAI(fallback, owner);
+		}
 
 		// 从 NPC 模板设置状态 / set state from npc templates
 		if (owner.getObjectTemplate().getState() != 0) {

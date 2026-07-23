@@ -57,6 +57,9 @@ public final class RetailDirectPortalEngine {
 		ACTIVE.put(id, active);
 		BY_NPC.put(start.getObjectId(), active);
 		BY_NPC.put(destination.getObjectId(), active);
+		if (definition.invadeType() == 6) {
+			setInvadeAreas(active, true);
+		}
 		active.expiry = GameThreadPoolServices.threadPoolManager().schedule(
 			() -> closeIfActive(id, active), definition.time() * 1000L);
 		return true;
@@ -108,6 +111,7 @@ public final class RetailDirectPortalEngine {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_DIRECT_PORTAL_LEVEL_LIMIT);
 			return;
 		}
+		boolean exhausted;
 		synchronized (active) {
 			if (active.closed) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_DIRECT_PORTAL_NO_PORTAL);
@@ -118,17 +122,47 @@ public final class RetailDirectPortalEngine {
 				return;
 			}
 			active.remaining--;
+			exhausted = active.remaining == 0;
 		}
 		DirectPortalPoint point = active.destinationPoint;
 		boolean teleported = TeleportService2.teleportTo(player, definition.destination().worldId(), point.x(), point.y(),
-			point.z(), MathUtil.convertDegreeToHeading(point.direction()), TeleportAnimation.BEAM_ANIMATION);
+			point.z(), MathUtil.convertDegreeToHeading(point.direction()), animationFor(definition.invadeType()));
 		if (!teleported) {
 			synchronized (active) {
 				if (!active.closed) {
 					active.remaining++;
 				}
 			}
+			return;
 		}
+		SM_SYSTEM_MESSAGE notice = noticeFor(definition.invadeType());
+		if (notice != null) {
+			PacketSendUtility.sendPacket(player, notice);
+		}
+		if (exhausted && closesWhenExhausted(definition.invadeType())) {
+			closeIfActive(definition.id(), active);
+		}
+	}
+
+	static TeleportAnimation animationFor(int invadeType) {
+		return switch (invadeType) {
+			case 1, 2, 3, 6 -> TeleportAnimation.INVASION_PORTAL;
+			default -> TeleportAnimation.DIRECT_PORTAL;
+		};
+	}
+
+	static boolean closesWhenExhausted(int invadeType) {
+		return invadeType != 6;
+	}
+
+	static SM_SYSTEM_MESSAGE noticeFor(int invadeType) {
+		return switch (invadeType) {
+			case 1 -> SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_OPEN_NOTICE;
+			case 2 -> SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN_NOTICE;
+			case 3 -> SM_SYSTEM_MESSAGE.STR_MSG_SVS_DIRECT_PORTAL_CLOSE_TIMER_5S;
+			case 6 -> SM_SYSTEM_MESSAGE.STR_MSG_RVR_DIRECT_PORTAL_OPEN_NOTICE;
+			default -> null;
+		};
 	}
 
 	static DirectPortalPoint selectPoint(DirectPortalEndpoint endpoint) {
@@ -171,6 +205,9 @@ public final class RetailDirectPortalEngine {
 		synchronized (active) {
 			active.closed = true;
 		}
+		if (active.definition.invadeType() == 6) {
+			setInvadeAreas(active, false);
+		}
 		BY_NPC.remove(active.start.getObjectId());
 		BY_NPC.remove(active.destination.getObjectId());
 		if (active.expiry != null) {
@@ -178,6 +215,20 @@ public final class RetailDirectPortalEngine {
 		}
 		delete(active.start);
 		delete(active.destination);
+	}
+
+	private static void setInvadeAreas(ActivePortal active, boolean enabled) {
+		setInvadeAreas(active.start, "InvadePortalStart_" + active.definition.id(), enabled);
+		setInvadeAreas(active.destination, "InvadePortalDest_" + active.definition.id(), enabled);
+	}
+
+	private static void setInvadeAreas(Npc portal, String prefix, boolean enabled) {
+		var instance = portal.getPosition().getWorldMapInstance();
+		RetailAreaEngine.setEnabled(instance, "AI_CONTROL_AREA_QUESTSCRIPT", prefix + "_QuestArea", enabled);
+		RetailAreaEngine.setEnabled(instance, "AI_CONTROL_AREA_RESURRECT", prefix + "_ResurrectArea", enabled);
+		for (String suffix : new String[] { "_AtkGroupOnArea", "_AtkGroupOffArea", "_DefGroupOnArea", "_DefGroupOffArea" }) {
+			RetailAreaEngine.setEnabled(instance, "AI_CONTROL_AREA_GROUPCTRL", prefix + suffix, enabled);
+		}
 	}
 
 	private static void delete(Npc npc) {

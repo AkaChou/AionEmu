@@ -21,6 +21,13 @@ public class InstanceConfig {
 	public static boolean ALLOW_SOLO_ENTRY;
 
 	/**
+	 * 真端 SpecialServer_Cond 环境值（0=普通服务，1=特殊服务）。
+	 * Retail SpecialServer_Cond environment value (0=regular, 1=special).
+	 */
+	@Property(key = "gameserver.instance.special_server_cond", defaultValue = "0")
+	public static int SPECIAL_SERVER_COND;
+
+	/**
 	 * 副本冷却倍率。
 	 * Instance cooldown rate multiplier.
 	 */
@@ -93,6 +100,9 @@ public class InstanceConfig {
 	 * Validates config values and refreshes exclusion map sets.
 	 */
 	public static void refresh() {
+		if (SPECIAL_SERVER_COND != 0 && SPECIAL_SERVER_COND != 1) {
+			throw new IllegalArgumentException("Instance SpecialServer_Cond must be 0 or 1");
+		}
 		if (!Double.isFinite(COOLDOWN_RATE) || COOLDOWN_RATE < 0 || COOLDOWN_RATE > 1
 				|| COOLDOWN_RATE > 0 && COOLDOWN_RATE < 0.01) {
 			throw new IllegalArgumentException("Instance cooldown rate must be 0 or between 0.01 and 1");

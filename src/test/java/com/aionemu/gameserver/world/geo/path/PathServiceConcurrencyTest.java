@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -77,6 +79,62 @@ class PathServiceConcurrencyTest {
 
 		assertEquals(0, service.obstacleVersion(100, 1));
 		assertEquals(0, service.obstacleVersion(100, 2));
+	}
+
+	@Test
+	void destroyedInstanceRejectsLateCacheWrites() throws Exception {
+		PathService service = new PathService();
+		try {
+			Field lifecycleVersion = PathService.class.getDeclaredField("instanceLifecycleVersion");
+			lifecycleVersion.setAccessible(true);
+			long requestVersion = lifecycleVersion.getLong(service);
+			var key = PathService.pathCacheKey(100, 1, 0, false, 0, 0, 0, 10, 10, 0);
+			Method putCachedPath = PathService.class.getDeclaredMethod("putCachedPath", long.class,
+					PathService.PathCacheKey.class, float[][].class);
+			putCachedPath.setAccessible(true);
+
+			service.instanceDestroyed(100, 1);
+			putCachedPath.invoke(service, requestVersion, key, new float[][] {{10, 10, 0}});
+
+			Field resultCache = PathService.class.getDeclaredField("resultCache");
+			resultCache.setAccessible(true);
+			assertTrue(((Map<?, ?>) resultCache.get(service)).isEmpty());
+		} finally {
+			service.destroy();
+		}
+	}
+
+	@Test
+	void rejectsBurstsBeyondTheBoundedQueue() throws Exception {
+		int oldTimeout = GeoDataConfig.GEO_PATH_TIMEOUT_MS;
+		GeoDataConfig.GEO_PATH_TIMEOUT_MS = 5_000;
+		PathService service = new PathService();
+		CountDownLatch workersStarted = new CountDownLatch(workerCount(service));
+		CountDownLatch releaseWorkers = new CountDownLatch(1);
+		try {
+			int capacity = PathService.queueCapacity(GeoDataConfig.GEO_PATH_QUEUE_CAPACITY);
+			for (int i = 0; i < capacity; i++) {
+				service.executeAsync(1, () -> {
+					workersStarted.countDown();
+					try {
+						releaseWorkers.await();
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+					return null;
+				});
+			}
+			assertTrue(workersStarted.await(1, TimeUnit.SECONDS));
+
+			ExecutionException failure = assertThrows(ExecutionException.class,
+					() -> service.executeAsync(1, () -> null).get(1, TimeUnit.SECONDS));
+			assertTrue(failure.getCause() instanceof RejectedExecutionException);
+			assertEquals(1, service.metrics().rejected());
+		} finally {
+			releaseWorkers.countDown();
+			service.destroy();
+			GeoDataConfig.GEO_PATH_TIMEOUT_MS = oldTimeout;
+		}
 	}
 
 	@Test

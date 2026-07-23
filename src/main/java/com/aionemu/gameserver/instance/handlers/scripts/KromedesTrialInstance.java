@@ -43,25 +43,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	}
 	
 	/**
-	 * 玩家对 NPC 使用物品完成时处理。
-	 * Handle item-use finish on an NPC.
-	 *
-	 * 玩家 / player
-	 * npc
-	 */
-	@Override
-	public void handleUseItemFinish(Player player, Npc npc) {
-		switch (npc.getNpcId()) {
-			case 282093: //Mana Relic.
-				GameEngineServices.skillEngine().getSkill(npc, 19248, 1, player).useNoAnimationSkill(); //Mana Relic Effect.
-			break;
-			case 282095: //Strength Relic.
-			    GameEngineServices.skillEngine().getSkill(npc, 19247, 1, player).useNoAnimationSkill(); //Strength Relic Effect.
-			break;
-		}
-	}
-	
-	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
 	 *
@@ -81,7 +62,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
-		removeItems(player);
 		removeEffects(player);
 	}
 	
@@ -114,15 +94,11 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 */
 	
 	public void removeItems(Player player) {
-        Storage storage = player.getInventory();
-        storage.decreaseByItemId(185000101, storage.getItemCountByItemId(185000101)); //Secret Safe Key.
+		Storage storage = player.getInventory();
+		storage.decreaseByItemId(185000101, storage.getItemCountByItemId(185000101)); //Secret Safe Key.
 		storage.decreaseByItemId(185000102, storage.getItemCountByItemId(185000102)); //Kaliga's Key.
-        storage.decreaseByItemId(185000109, storage.getItemCountByItemId(185000109)); //Relic Key.
-		storage.decreaseByItemId(164000140, storage.getItemCountByItemId(164000140)); //Explosive Bead.
-		storage.decreaseByItemId(164000141, storage.getItemCountByItemId(164000141)); //Silver Blade Rotan.
-        storage.decreaseByItemId(164000142, storage.getItemCountByItemId(164000142)); //Sapping Pollen.
-		storage.decreaseByItemId(164000143, storage.getItemCountByItemId(164000143)); //Maga's Potion.
-    }
+		storage.decreaseByItemId(185000109, storage.getItemCountByItemId(185000109)); //Relic Key.
+	}
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.

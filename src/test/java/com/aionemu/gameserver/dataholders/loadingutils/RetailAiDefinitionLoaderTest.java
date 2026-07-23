@@ -127,8 +127,8 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(11038, data.conditionSpawnCount());
-		assertEquals(192, data.sensoryAreaCount());
+		assertEquals(12483, data.conditionSpawnCount());
+		assertEquals(217, data.sensoryAreaCount());
 		assertTrue(RetailPatternAI2.supports(data.getPattern(283080)));
 		assertTrue(RetailPatternAI2.supports(data.getPattern(856595)));
 		var bossDoorPattern = data.getPattern(206163);
@@ -159,6 +159,9 @@ class RetailAiDefinitionLoaderTest {
 				assertNotNull(data.findLocationAlias(controller.exitWorldId(), controller.exitAlias()), controller.name()));
 		}
 		assertEquals(30, data.directPortalCount());
+		for (int missingPortalId = 97; missingPortalId <= 128; missingPortalId++) {
+			assertNull(data.getDirectPortal(missingPortalId), Integer.toString(missingPortalId));
+		}
 		assertEquals(92, data.npcPartyCount());
 		assertEquals(278, data.npcPartyMemberCount());
 		assertEquals(91, data.getNpcParties(300540000).size());
@@ -175,6 +178,9 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(288, data.dynamicAreaCount());
 		assertEquals(12655, java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(RetailPatternAI2::supports).count());
+		assertTrue(data.supportsConditionVariable(220110000, "DF6_QuestNPC_Spawn"));
+		assertTrue(data.supportsConditionVariable(220110000, "QuestNpc_Sun_Dark_To_Light"));
+		assertEquals(151, data.getConditionSpawns(220110000).size());
 		for (int npcId : new int[] { 214159, 219040, 220426, 231073, 231092, 231093, 231094, 231095, 233259,
 				251812, 251813, 251814, 257300, 257305, 257310, 855729 }) {
 			assertTrue(RetailPatternAI2.supports(data.getPattern(npcId)), data.getPattern(npcId).name());
@@ -364,7 +370,7 @@ class RetailAiDefinitionLoaderTest {
 			Path.of("src/main/resources/aion/definitions/compact/ai/ai-waypoints.xml").toFile(),
 			Path.of("src/main/resources/aion/definitions/schemas/ai-waypoints.xsd").toFile());
 
-		assertEquals(3103, data.size());
+		assertEquals(3104, data.size());
 		var rudra = data.getWalkerTemplate("retail:300170000:npcpathpath_rudrawindc1");
 		assertNotNull(rudra);
 		assertEquals(557.167297f, rudra.getRouteSteps().get(0).getX());

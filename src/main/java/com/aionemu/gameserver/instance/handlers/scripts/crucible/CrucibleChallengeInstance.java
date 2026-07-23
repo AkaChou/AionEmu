@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.playerreward.CruciblePlayerReward;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -95,16 +94,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance {
 	}
 
 	@Override
-	public void onLeaveInstance(Player player) {
-		removeItems(player);
-	}
-
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-
-	@Override
 	public void onExitInstance(Player player) {
 		removeItems(player);
 		InstanceService.destroyInstance(instance);
@@ -128,9 +117,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance {
 	}
 
 	private static void removeItems(Player player) {
-		Storage storage = player.getInventory();
-		for (int itemId : new int[] { 186000124, 186000125, 186000134 }) {
-			storage.decreaseByItemId(itemId, storage.getItemCountByItemId(itemId));
-		}
+		var inventory = player.getInventory();
+		inventory.decreaseByItemId(186000134, inventory.getItemCountByItemId(186000134));
 	}
 }

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -45,8 +44,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		doors = instance.getDoors();
-		spawnDanuarSanctuaryBoss();
-    }
+	}
 	
 	/**
 	 * 玩家进入副本时处理。
@@ -179,15 +177,8 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 				spawnInfernalBoulder();
 			break;
-			case 235624: //Warmage Suyaroka.
-			case 235625: //Chief Medic Tagnu.
-			case 235626: //Virulent Ukahim.
-/* 				spawnAbbeyNobleBox(); */
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Danuar Sanctuary>");
-				spawn(701876, 1057.1633f, 557.6902f, 284.73123f, (byte) 30); //Danuar Sanctuary Exit.
-			break;
-        }
-    }
+		}
+	}
 	
 	private void spawnAbbeyNobleBox() {
 	    switch (Rnd.get(1, 2)) {
@@ -200,67 +191,17 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 		}
 	}
 	
-	private void spawnDanuarSanctuaryBoss() {
-	    switch (Rnd.get(1, 3)) {
-		    case 1:
-				spawn(235624, 1056.5698f, 693.86584f, 282.0391f, (byte) 30); //Warmage Suyaroka.
-			break;
-			case 2:
-				spawn(235625, 1045.4534f, 682.2679f, 282.0391f, (byte) 60); //Chief Medic Tagnu.
-			break;
-			case 3:
-				spawn(235626, 1056.4889f, 670.9826f, 282.0391f, (byte) 91); //Virulent Ukahim.
-			break;
-		}
-	}
-	
 	private void spawnInfernalBoulder() {
 		SpawnTemplate sturdyInfernalBoulder = SpawnEngine.addNewSingleTimeSpawn(301380000, 233187, 906.1991f, 859.88177f, 278.64731f, (byte) 37);
 		sturdyInfernalBoulder.setEntityId(1699);
 		objects.put(233187, SpawnEngine.spawnObject(sturdyInfernalBoulder, instanceId));
 	}
-	/**
-	 * 移除相关物品。
-	 * Remove related items.
-	 *
-	 * @param player 玩家 / player
-	 */
-	
-	public void removeItems(Player player) {
-        Storage storage = player.getInventory();
-        storage.decreaseByItemId(185000181, storage.getItemCountByItemId(185000181)); //The Catacombs Key.
-		storage.decreaseByItemId(185000182, storage.getItemCountByItemId(185000182)); //The Crypts Key.
-        storage.decreaseByItemId(185000183, storage.getItemCountByItemId(185000183)); //The Charnels Key.
-    }
-	
 	private void sendMovie(Player player, int movie) {
         if (!movies.contains(movie)) {
              movies.add(movie);
              PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
         }
     }
-	
-	/**
-	 * 玩家离开副本时处理。
-	 * Handle a player leaving the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onLeaveInstance(Player player) {
-		removeItems(player);
-	}
-	
-	/**
-	 * 玩家从该副本登出时处理。
-	 * Handle a player logging out from this instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
 	
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {

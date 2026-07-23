@@ -167,10 +167,6 @@
 		<spawn npc_id="230853">
 			<spot x="146.53566" y="429.89893" z="150.77364" h="119"/>
 		</spawn>
-		<!-- Guard Captain Ahuradim's -->
-		<spawn npc_id="230857">
-			<spot x="703.3685" y="889.8764" z="411.537" h="60"/>
-		</spawn>
 		<!-- The Brigade General Sheba's -->
 		<spawn npc_id="230858">
 			<spot x="899.7731" y="889.8521" z="411.5367" h="75"/>

@@ -53,19 +53,27 @@ class TrialsOfEternityMigrationTest {
 	}
 
 	@Test
-	void handlerOnlyKeepsRestrictedLibraryAndInstanceItemCleanup() throws Exception {
-		String source = Files.readString(HANDLER);
-		for (String required : new String[] { "npc.getNpcId() != 731736", "decreaseByItemId(185000297, 1)",
-				"TeleportService2.teleportTo", "new SM_SYSTEM_MESSAGE(1404075)", "onPlayerLogOut", "onLeaveInstance",
-				"185000298", "185000299", "185000300", "185000301" }) {
-			assertTrue(source.contains(required), required);
+		void handlerOnlyKeepsRestrictedLibraryInteraction() throws Exception {
+			String source = Files.readString(HANDLER);
+			for (String required : new String[] { "npc.getNpcId() != 731736", "decreaseByItemId(185000297, 1)",
+					"TeleportService2.teleportTo", "new SM_SYSTEM_MESSAGE(1404075)" }) {
+				assertTrue(source.contains(required), required);
+			}
+			for (String legacy : new String[] { "Future", "GameThreadPoolServices", "ThreadPoolManager", "spawn(",
+					"onDie", "onDropRegistered", "onPassFlyingRing", "AbyssPointsService", "ItemService.addItem",
+					"SM_PLAY_MOVIE", "StaticDoor", "731751", "731752", "onPlayerLogOut", "onLeaveInstance" }) {
+				assertFalse(source.contains(legacy), legacy);
+			}
+			String items = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+			for (int itemId = 185000297; itemId <= 185000301; itemId++) {
+				assertTrue(itemTemplateBlock(items, itemId).contains("ownership_world=\"301560000\""),
+					Integer.toString(itemId));
+			}
+			String instanceService = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java"));
+			assertTrue(instanceService.contains("getOwnershipWorld() == player.getWorldId()"));
 		}
-		for (String legacy : new String[] { "Future", "GameThreadPoolServices", "ThreadPoolManager", "spawn(",
-				"onDie", "onDropRegistered", "onPassFlyingRing", "AbyssPointsService", "ItemService.addItem",
-				"SM_PLAY_MOVIE", "StaticDoor", "731751", "731752" }) {
-			assertFalse(source.contains(legacy), legacy);
-		}
-	}
 
 	private static String worldBlock(String xml, String worldId) {
 		int start = xml.indexOf("<world id=\"" + worldId + "\"");
@@ -75,5 +83,10 @@ class TrialsOfEternityMigrationTest {
 
 	private static int count(String value, String token) {
 		return (value.length() - value.replace(token, "").length()) / token.length();
+	}
+
+	private static String itemTemplateBlock(String items, int itemId) {
+		int start = items.indexOf("<item_template id=\"" + itemId + "\"");
+		return items.substring(start, items.indexOf("</item_template>", start));
 	}
 }

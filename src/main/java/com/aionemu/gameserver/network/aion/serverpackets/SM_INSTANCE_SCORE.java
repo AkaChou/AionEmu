@@ -383,13 +383,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 11:
-				int TeamScore = kbr.getPointsByRace(kbpr.getRace()).intValue();
-				int OppositeTeamScore = kbr.getPointsByRace(kbpr.getRace()).intValue();
 				writeC(0);
 				writeD(kbr.getPvpKillsByRace(kbpr.getRace()).intValue());
-				writeD(TeamScore);
+				writeD(kbr.getPointsByRace(kbpr.getRace()).intValue());
 				writeD(kbpr.getRace().getRaceId());
-				writeD(TeamScore == OppositeTeamScore ? 65535 : 0);
+				writeD(leadingRaceId(kbr.getPointsByRace(Race.ELYOS).intValue(),
+						kbr.getPointsByRace(Race.ASMODIANS).intValue()));
 				break;
 			}
 			break;
@@ -483,13 +482,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 11:
-				int TeamScore2 = eobr.getPointsByRace(eobpr.getRace()).intValue();
-				int OppositeTeamScore2 = eobr.getPointsByRace(eobpr.getRace()).intValue();
 				writeC(0);
 				writeD(eobr.getPvpKillsByRace(eobpr.getRace()).intValue());
-				writeD(TeamScore2);
+				writeD(eobr.getPointsByRace(eobpr.getRace()).intValue());
 				writeD(eobpr.getRace().getRaceId());
-				writeD(TeamScore2 == OppositeTeamScore2 ? 65535 : 0);
+				writeD(leadingRaceId(eobr.getPointsByRace(Race.ELYOS).intValue(),
+						eobr.getPointsByRace(Race.ASMODIANS).intValue()));
 				break;
 			}
 			break;
@@ -573,14 +571,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 11:
-				int TeamScore3 = iwwr.getPointsByRace(iwwpr.getRace()).intValue();
-				Race opposingRace = iwwpr.getRace() == Race.ELYOS ? Race.ASMODIANS : Race.ELYOS;
-				int OppositeTeamScore3 = iwwr.getPointsByRace(opposingRace).intValue();
 				writeC(0);
 				writeD(iwwr.getPvpKillsByRace(iwwpr.getRace()).intValue());
-				writeD(TeamScore3);
+				writeD(iwwr.getPointsByRace(iwwpr.getRace()).intValue());
 				writeD(iwwpr.getRace().getRaceId());
-				writeD(TeamScore3 == OppositeTeamScore3 ? 65535 : 0);
+				writeD(leadingRaceId(iwwr.getPointsByRace(Race.ELYOS).intValue(),
+						iwwr.getPointsByRace(Race.ASMODIANS).intValue()));
 				break;
 			}
 			break;
@@ -664,13 +660,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 11:
-				int TeamScore4 = idr.getPointsByRace(idpr.getRace()).intValue();
-				int OppositeTeamScore4 = idr.getPointsByRace(idpr.getRace()).intValue();
 				writeC(0);
 				writeD(idr.getPvpKillsByRace(idpr.getRace()).intValue());
-				writeD(TeamScore4);
+				writeD(idr.getPointsByRace(idpr.getRace()).intValue());
 				writeD(idpr.getRace().getRaceId());
-				writeD(TeamScore4 == OppositeTeamScore4 ? 65535 : 0);
+				writeD(leadingRaceId(idr.getPointsByRace(Race.ELYOS).intValue(),
+						idr.getPointsByRace(Race.ASMODIANS).intValue()));
 				break;
 			}
 			break;
@@ -754,13 +749,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 11:
-				int TeamScore5 = lmr.getPointsByRace(lmpr.getRace()).intValue();
-				int OppositeTeamScore5 = lmr.getPointsByRace(lmpr.getRace()).intValue();
 				writeC(0);
 				writeD(lmr.getPvpKillsByRace(lmpr.getRace()).intValue());
-				writeD(TeamScore5);
+				writeD(lmr.getPointsByRace(lmpr.getRace()).intValue());
 				writeD(lmpr.getRace().getRaceId());
-				writeD(TeamScore5 == OppositeTeamScore5 ? 65535 : 0);
+				writeD(leadingRaceId(lmr.getPointsByRace(Race.ELYOS).intValue(),
+						lmr.getPointsByRace(Race.ASMODIANS).intValue()));
 				break;
 			}
 			break;
@@ -844,14 +838,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 11:
-				int TeamScore6 = ecr.getPointsByRace(ecpr.getRace()).intValue();
-				Race oppositeRace = ecpr.getRace() == Race.ELYOS ? Race.ASMODIANS : Race.ELYOS;
-				int OppositeTeamScore6 = ecr.getPointsByRace(oppositeRace).intValue();
 				writeC(0);
 				writeD(ecr.getPvpKillsByRace(ecpr.getRace()).intValue());
-				writeD(TeamScore6);
+				writeD(ecr.getPointsByRace(ecpr.getRace()).intValue());
 				writeD(ecpr.getRace().getRaceId());
-				writeD(TeamScore6 == OppositeTeamScore6 ? 65535 : 0);
+				writeD(leadingRaceId(ecr.getPointsByRace(Race.ELYOS).intValue(),
+						ecr.getPointsByRace(Race.ASMODIANS).intValue()));
 				break;
 			}
 			break;
@@ -900,7 +892,8 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 					writeD(0);
 					writeD(treasure.getPointsByRace(treasurePlayer.getRace()));
 					writeD(treasurePlayer.getRace().getRaceId());
-					writeD(treasure.isPreparing() ? 65535 : 1);
+					writeD(leadingRaceId(treasure.getPointsByRace(Race.ELYOS),
+							treasure.getPointsByRace(Race.ASMODIANS)));
 					break;
 			}
 			break;
@@ -1207,6 +1200,11 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 			writeD(0);
 			break;
 		}
+	}
+
+	private static int leadingRaceId(int elyosScore, int asmodiansScore) {
+		return elyosScore == asmodiansScore ? 65535
+				: elyosScore > asmodiansScore ? Race.ELYOS.getRaceId() : Race.ASMODIANS.getRaceId();
 	}
 
 	private void writeArenaReward(PvPArenaPlayerReward reward) {

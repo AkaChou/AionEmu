@@ -34,7 +34,9 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 		if (!instanceReward.isStartProgress()) {
 			return;
 		}
-		getPlayerReward(player.getObjectId()).addPoints(1250);
+		var reward = getPlayerReward(player.getObjectId());
+		reward.addPoints(1250);
+		persistPlayer(reward);
 		sendPacket();
 		int nameId = gatherable.getObjectTemplate().getNameId();
 		DescriptionId name = new DescriptionId(nameId * 2 + 1);
@@ -99,6 +101,8 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 			if (npc != null && npc.isSpawned()) {
 				npc.getController().scheduleRespawn();
 				npc.getController().onDelete();
+				playerReward.addPoints(250);
+				persistPlayer(playerReward);
 				sendSystemMsg(player, npc, 250);
 				sendPacket();
 			}
@@ -108,6 +112,7 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 				npc.getController().scheduleRespawn();
 				npc.getController().onDelete();
 				playerReward.addPoints(250);
+				persistPlayer(playerReward);
 				sendSystemMsg(player, npc, 250);
 				sendPacket();
 			}
@@ -117,6 +122,7 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 				npc.getController().scheduleRespawn();
 				npc.getController().onDelete();
 				playerReward.addPoints(250);
+				persistPlayer(playerReward);
 				sendSystemMsg(player, npc, 250);
 				sendPacket();
 			}

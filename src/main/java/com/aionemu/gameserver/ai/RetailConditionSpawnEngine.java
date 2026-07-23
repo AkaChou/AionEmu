@@ -6,6 +6,7 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawn;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnChoice;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
+import com.aionemu.gameserver.configs.main.InstanceConfig;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -55,7 +56,16 @@ public final class RetailConditionSpawnEngine {
 		}
 		State state = state(instance);
 		synchronized (state) {
+			initializeEnvironment(instance, state);
 			evaluate(instance, state);
+		}
+	}
+
+	private static void initializeEnvironment(WorldMapInstance instance, State state) {
+		if (supports(instance.getMapId(), "SpecialServer_Cond")) {
+			int value = InstanceConfig.SPECIAL_SERVER_COND;
+			state.variables.put("specialserver_cond", value);
+			state.runtime.put(variableKey("specialserver_cond"), value);
 		}
 	}
 

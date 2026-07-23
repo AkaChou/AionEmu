@@ -14,11 +14,6 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler {
 	}
 
 	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-
-	@Override
 	public void onExitInstance(Player player) {
 		removeItems(player);
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());

@@ -351,12 +351,6 @@
 		<spawn npc_id="702321" respawn_time="1">
 		  <spot x="565.819702" y="173.773056" z="432.2851"/>
 		</spawn>
-		<spawn npc_id="801989" respawn_time="1">
-		  <spot x="415.033875" y="174.003876" z="432.53998"/>
-		</spawn>
-		<spawn npc_id="801990" respawn_time="1">
-		  <spot x="572.038208" y="185.252136" z="432.57486"/>
-		</spawn>
 		<spawn npc_id="243795">
 		  <spot x="553.193054" y="281.244659" z="410.834076" h="90" random_walk="2"/>
 		</spawn>

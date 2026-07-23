@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -18,13 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.*;
-
-/**
- * 米拉什圣所副本事件处理器。
- * Instance event handler for Mirash Sanctuary.
- *
- * @author Encom
- */
 
 @InstanceID(301720000)
 public class MirashSanctuaryInstance extends GeneralInstanceHandler
@@ -58,16 +50,6 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 		restoreWave();
     }
 	
-	/**
-	 * 玩家进入副本时处理。
-	 * Handle a player entering the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onEnterInstance(final Player player) {
-		super.onInstanceCreate(instance);
-	}
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -179,28 +161,6 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 	}
 	
 	/**
-	 * 玩家离开副本时处理。
-	 * Handle a player leaving the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onLeaveInstance(Player player) {
-		removeItems(player);
-	}
-	
-	/**
-	 * 玩家从该副本登出时处理。
-	 * Handle a player logging out from this instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-	
-	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
 	 */
@@ -213,11 +173,6 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
-	}
-	
-	private void removeItems(Player player) {
-		Storage storage = player.getInventory();
-		storage.decreaseByItemId(164000531, storage.getItemCountByItemId(164000531));
 	}
 	
 }

@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.SecretMunitionsFactoryReward;
 import com.aionemu.gameserver.model.instance.playerreward.SecretMunitionsFactoryPlayerReward;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService;
@@ -35,6 +34,9 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 		restoreScore();
 		instanceReward.setInstanceScoreType(scoreType());
 		restoreDeadlines();
+		if (runtimeState().getBoolean(STATE + "completed", false)) {
+			settlePlayers();
+		}
 	}
 
 	@Override
@@ -168,9 +170,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 		cancelDeadline("prepare");
 		cancelDeadline("expire");
 		cancelDeadline("settle");
-		for (Player player : instance.getPlayersInside()) {
-			doReward(player);
-		}
+		settlePlayers();
 		sendScore(null, 0, 0);
 	}
 
@@ -215,6 +215,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 	}
 
 	private SecretMunitionsFactoryPlayerReward getOrCreatePlayerReward(int playerId) {
+		runtimeState().put(playerKey(playerId), true);
 		SecretMunitionsFactoryPlayerReward reward =
 			(SecretMunitionsFactoryPlayerReward) instanceReward.getPlayerReward(playerId);
 		if (reward == null) {
@@ -229,6 +230,21 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 
 	private String playerRewardKey(int playerId) {
 		return STATE + "reward." + playerId;
+	}
+
+	private String playerKey(int playerId) {
+		return STATE + "player." + playerId;
+	}
+
+	private void settlePlayers() {
+		var plan = InstanceSettlementService.lunaPlan(mapId, instanceReward.getRank());
+		for (String key : runtimeState().snapshot(STATE + "player.").keySet()) {
+			int playerId = Integer.parseInt(key.substring((STATE + "player.").length()));
+			InstanceSettlementService.queue(instance, playerId, "luna", plan);
+		}
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
 	}
 
 	private void sendScore(Player only, int nameId, int points) {
@@ -265,9 +281,6 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 	}
 
 	private void cleanupPlayer(Player player) {
-		Storage storage = player.getInventory();
-		storage.decreaseByItemId(164000418, storage.getItemCountByItemId(164000418));
-		storage.decreaseByItemId(164002362, storage.getItemCountByItemId(164002362));
 		PlayerEffectController effects = player.getEffectController();
 		effects.removeEffect(21347);
 		effects.removeEffect(21348);

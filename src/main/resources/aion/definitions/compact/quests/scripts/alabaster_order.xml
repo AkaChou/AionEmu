@@ -59,21 +59,6 @@
 		<npc_infos var="1" npc_id="799800" quest_dialog="2375" close_dialog="1009"/>
 		<npc_infos var="1" npc_id="799801" quest_dialog="2375" close_dialog="1009"/>
 	</report_to_many>
-	<!-- [일일] 푸른 안개 습지 지역 정보 확인 -->
-	<report_to_many id="35055" end_npc_ids="804942">
-		<npc_infos var="0" npc_id="804874" quest_dialog="1352"/>
-		<npc_infos var="1" npc_id="804942" quest_dialog="2375" close_dialog="1009"/>
-	</report_to_many>
-	<!-- [일일] 용제의 외정원 지역 정보 확인 -->
-	<report_to_many id="35056" end_npc_ids="804943">
-		<npc_infos var="0" npc_id="804704" quest_dialog="1352"/>
-		<npc_infos var="1" npc_id="804943" quest_dialog="2375" close_dialog="1009"/>
-	</report_to_many>
-	<!-- [일일] 태고의 이끼 숲 지역 정보 확인 -->
-	<report_to_many id="35057" end_npc_ids="804944">
-		<npc_infos var="0" npc_id="804709" quest_dialog="1352"/>
-		<npc_infos var="1" npc_id="804944" quest_dialog="2375" close_dialog="1009"/>
-	</report_to_many>
 	
 	<item_collecting id="35007" start_npc_ids="0" end_npc_ids="799805" action_item_ids="700788"/>
 	<item_collecting id="35008" start_npc_ids="0" end_npc_ids="799805" action_item_ids="700789"/>
@@ -133,41 +118,5 @@
 	</monster_hunt>
 	<monster_hunt id="35051" start_npc_ids="0" end_npc_ids="799800 799801">
 		<monster end_var="5" var="0" npc_ids="215863"/>
-	</monster_hunt>
-	<!-- [일일] 시그니아의 결계석을 파괴하라 -->
-	<monster_hunt id="35052" start_npc_ids="0" end_npc_ids="804941">
-		<monster end_var="5" var="0" npc_ids="702760"/>
-	</monster_hunt>
-	<!-- [일일] 언덕 베스파의 방해 -->
-	<monster_hunt id="35058" start_npc_ids="0" end_npc_ids="804941">
-		<monster end_var="10" var="0" npc_ids="235803 235804"/>
-	</monster_hunt>
-	<!-- [일일] 칼날가시 킬루스의 방해 -->
-	<monster_hunt id="35059" start_npc_ids="0" end_npc_ids="804942">
-		<monster end_var="10" var="0" npc_ids="235817 235818"/>
-	</monster_hunt>
-	<!-- [일일] 가시촉수 네펜데스의 방해 -->
-	<monster_hunt id="35060" start_npc_ids="0" end_npc_ids="804945">
-		<monster end_var="10" var="0" npc_ids="235861"/>
-	</monster_hunt>
-	<!-- [일일] 집게발 아라니드의 방해 -->
-	<monster_hunt id="35061" start_npc_ids="0" end_npc_ids="804943">
-		<monster end_var="10" var="0" npc_ids="235874 235875"/>
-	</monster_hunt>
-	<!-- [일일] 황혼 씨페토의 방해 -->
-	<monster_hunt id="35062" start_npc_ids="0" end_npc_ids="804944">
-		<monster end_var="10" var="0" npc_ids="235878 235879"/>
-	</monster_hunt>
-	<!-- [일일] 악취나는 네펜데스의 방해 -->
-	<monster_hunt id="35063" start_npc_ids="0" end_npc_ids="804946">
-		<monster end_var="10" var="0" npc_ids="235899"/>
-	</monster_hunt>
-	<!-- [일일] 잿빛가시 옥타사이트의 방해 -->
-	<monster_hunt id="35064" start_npc_ids="0" end_npc_ids="804946">
-		<monster end_var="10" var="0" npc_ids="235902 235903"/>
-	</monster_hunt>
-	<!-- [일일] 송곳턱 프릴파이맘의 방해 -->
-	<monster_hunt id="35065" start_npc_ids="0" end_npc_ids="804947">
-		<monster end_var="10" var="0" npc_ids="235943"/>
 	</monster_hunt>
 </quest_scripts>

@@ -41,6 +41,9 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 		restoreScore();
 		instanceReward.setInstanceScoreType(scoreType());
 		restoreWorldState();
+		if (runtimeState().getBoolean("sealed.completed", false)) {
+			settlePlayers();
+		}
 		restoreDeadline();
 	}
 
@@ -51,12 +54,8 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
-		switch (npc.getNpcId()) {
-			case 701001 -> GameEngineServices.skillEngine().getSkill(npc, 19316, 60, player).useNoAnimationSkill();
-			case 701002 -> GameEngineServices.skillEngine().getSkill(npc, 19317, 60, player).useNoAnimationSkill();
-			case 701003 -> GameEngineServices.skillEngine().getSkill(npc, 19318, 60, player).useNoAnimationSkill();
-			case 701004 -> GameEngineServices.skillEngine().getSkill(npc, 19319, 60, player).useNoAnimationSkill();
-			case 856547 -> activateHetgolem(player, npc);
+		if (npc.getNpcId() == 856547) {
+			activateHetgolem(player, npc);
 		}
 	}
 
@@ -200,9 +199,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 		cancelDeadline("expire");
 		cancelDeadline("settle");
 		despawnScoredNpcs();
-		for (Player player : instance.getPlayersInside()) {
-			doReward(player);
-		}
+		settlePlayers();
 		sendScore(0, 0);
 	}
 
@@ -355,6 +352,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 	}
 
 	private SealedArgentManorPlayerReward getOrCreatePlayerReward(int playerId) {
+		runtimeState().put("sealed.participant." + playerId, true);
 		SealedArgentManorPlayerReward reward = (SealedArgentManorPlayerReward) instanceReward.getPlayerReward(playerId);
 		if (reward == null) {
 			reward = new SealedArgentManorPlayerReward(playerId);
@@ -420,6 +418,18 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 
 	private static String playerRewardKey(int playerId) {
 		return "sealed.player." + playerId + ".rewarded";
+	}
+
+	private void settlePlayers() {
+		RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, instanceReward.getRank());
+		String prefix = "sealed.participant.";
+		for (String key : runtimeState().snapshot(prefix).keySet()) {
+			int playerId = Integer.parseInt(key.substring(prefix.length()));
+			InstanceSettlementService.queue(instance, playerId, "timeattack", plan);
+		}
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
 	}
 
 	private void restoreScore() {

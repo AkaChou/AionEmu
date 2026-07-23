@@ -826,7 +826,7 @@ public class NpcMoveController
                 this.movementMask = newMask;
             }
             lastMoveBroadcastAt = now;
-            PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner.getObjectId(), ownerX, ownerY, ownerZ,
+            PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner.getObjectId(), owner.getX(), owner.getY(), owner.getZ(),
                     targetDestX, targetDestY, targetDestZ, heading, movementMask));
         }
     }

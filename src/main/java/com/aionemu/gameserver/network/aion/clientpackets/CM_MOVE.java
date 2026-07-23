@@ -94,7 +94,7 @@ public class CM_MOVE extends AionClientPacket {
 		if (player.getLifeStats().isAlreadyDead()) {
 			return;
 		}
-		if (player.getEffectController().isUnderFear()) {
+		if (player.getEffectController().isUnderFear() || player.getEffectController().isConfused()) {
 			return;
 		}
 		PlayerMoveController m = player.getMoveController();

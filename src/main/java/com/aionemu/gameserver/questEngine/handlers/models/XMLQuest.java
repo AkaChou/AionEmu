@@ -17,7 +17,7 @@ import lombok.Getter;
 @Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestScriptData")
-@XmlSeeAlso({ ReportToData.class, RelicRewardsData.class, CraftingRewardsData.class, ReportToManyData.class, MonsterHuntData.class, ItemCollectingData.class, WorkOrdersData.class, XmlQuestData.class, MentorMonsterHuntData.class, ItemOrdersData.class, FountainRewardsData.class, SkillUseData.class })
+@XmlSeeAlso({ ReportToData.class, RelicRewardsData.class, CraftingRewardsData.class, ReportToManyData.class, MonsterHuntData.class, ItemCollectingData.class, WorkOrdersData.class, MentorMonsterHuntData.class, ItemOrdersData.class, FountainRewardsData.class, SkillUseData.class, DataDrivenQuestData.class })
 public abstract class XMLQuest {
 
 	/**
@@ -33,6 +33,10 @@ public abstract class XMLQuest {
 	 */
 	@XmlAttribute(name = "movie", required = false)
 	protected int questMovie;
+
+	/** Whether this definition was generated from the retail quest data. */
+	@XmlAttribute(name = "retail")
+	protected boolean retail;
 
 	/**
 	 * 将本 XML 配置注册为 {@link QuestEngine} 中的模板任务处理器。

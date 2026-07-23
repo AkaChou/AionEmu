@@ -62,16 +62,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance {
 	}
 
 	@Override
-	public void onLeaveInstance(Player player) {
-		removeItems(player);
-	}
-
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-
-	@Override
 	public void onExitInstance(Player player) {
 		removeItems(player);
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
@@ -102,7 +92,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance {
 
 	private static void removeItems(Player player) {
 		Storage storage = player.getInventory();
-		for (int itemId : new int[] { 186000124, 186000125, 186000134 }) {
+		for (int itemId : new int[] { 186000124, 186000125 }) {
 			storage.decreaseByItemId(itemId, storage.getItemCountByItemId(itemId));
 		}
 	}

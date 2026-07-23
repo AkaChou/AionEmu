@@ -51,4 +51,8 @@ public class DropModifiers {
 		}
 		return Math.min(chance * boostDropRate, 100f);
 	}
+
+	public float calculateScalingDropChance(float chance) {
+		return chance == 100f ? 100f : calculateDropChance(chance, true);
+	}
 }

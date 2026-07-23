@@ -26,6 +26,7 @@ class TheEternalBastionMigrationTest {
 		assertFalse(source.contains("startInstanceTask"));
 		assertFalse(source.contains("spawn("));
 		assertFalse(source.contains("onDropRegistered"));
+		assertFalse(source.contains("handleUseItemFinish"));
 		assertFalse(source.contains("802185"));
 		assertFalse(source.contains("186000051"));
 		assertFalse(source.contains("186000052"));
@@ -53,5 +54,26 @@ class TheEternalBastionMigrationTest {
 		assertTrue(rewardRow.contains("base_score=\"20000\""));
 		assertTrue(rewardRow.contains("s_score_minimum=\"90000\""));
 		assertTrue(rewardRow.contains("time_limit=\"1800\""));
+	}
+
+	@Test
+	void temporaryItemsSurviveLogoutButAreRemovedOnDirectExit() throws Exception {
+		String handler = Files.readString(HANDLER);
+		assertTrue(method(handler, "onLeaveInstance").contains("removeItems(player)"));
+		assertFalse(method(handler, "onPlayerLogOut").contains("removeItems(player)"));
+		assertTrue(method(handler, "exitPlayers").contains("onLeaveInstance(player)"));
+
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (String itemId : new String[] { "185000137", "182006996", "182006997" }) {
+			int start = items.indexOf("<item_template id=\"" + itemId + "\"");
+			String item = items.substring(start, items.indexOf("</item_template>", start));
+			assertTrue(item.contains("ownership_world=\"300540000\""), itemId);
+		}
+	}
+
+	private static String method(String source, String name) {
+		int start = source.indexOf(name + "(");
+		return source.substring(start, source.indexOf("\n\t}", start));
 	}
 }

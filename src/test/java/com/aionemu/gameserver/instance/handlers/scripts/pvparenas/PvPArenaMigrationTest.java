@@ -5,8 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.util.HexFormat;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -16,6 +19,8 @@ class PvPArenaMigrationTest {
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas");
 	private static final Path CONDITION_SPAWNS = Path.of(
 			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml");
+	private static final Path INSTANCE_SPAWNS = Path.of("src/main/resources/aion/data/static_data/spawns/Instances");
+	private static final Path GATHER_SPAWNS = Path.of("src/main/resources/aion/data/static_data/spawns/Gather");
 
 	@Test
 	void arenaChildrenCannotRestoreHardcodedSettlement() throws IOException {
@@ -110,19 +115,143 @@ class PvPArenaMigrationTest {
 	}
 
 	@Test
-	void harmonyCoinScoreUsesTeamPathAndObjectIdIdempotence() throws IOException {
+	void harmonyRetailScoresUseUniquePersistentTeamPath() throws IOException {
 		String source = Files.readString(HANDLERS.resolve("HarmonyArenaInstance.java"));
-		assertTrue(source.contains("return npcId == 207101 && scoreApplyType == 0;"));
+		for (String required : List.of(
+			"case 207099, 207101, 207102, 207116, 207117", "219277, 219278, 219279",
+			"219328, 219481, 219485, 219486", "243678, 243679, 243680")) {
+			assertTrue(source.contains(required), required);
+		}
+		assertFalse(source.contains("consumedScoreNpcs"));
 		int start = source.indexOf("public synchronized boolean onRetailNpcScore(");
 		String score = source.substring(start, source.indexOf("private int getTime()", start));
-		assertTrue(score.contains("consumedScoreNpcs.add(npc.getObjectId())"));
+		assertTrue(score.contains("npc.getSpawn().getStableKey()"));
+		assertTrue(score.contains("runtimeState().put(eventKey, true)"));
 		assertTrue(score.contains("restoreGroup(group)"));
 		assertTrue(score.contains("group.addPoints(points)"));
 		assertTrue(score.contains("persistGroup(group)"));
 		assertTrue(score.contains("sendSystemMsg(player, npc, points)"));
 		assertTrue(score.contains("instanceReward.sendPacket(10, player.getObjectId())"));
 		assertTrue(score.contains("finishBattle(true)"));
-		assertFalse(score.contains("stableKey"));
+
+		String first = HarmonyArenaInstance.scoreEventKey("condition:1:generation.1", 100);
+		assertEquals(first, HarmonyArenaInstance.scoreEventKey("condition:1:generation.1", 101));
+		assertFalse(first.equals(HarmonyArenaInstance.scoreEventKey("condition:1:generation.2", 100)));
+		assertEquals("arena.score.event.object.100", HarmonyArenaInstance.scoreEventKey(null, 100));
+
+		String death = source.substring(source.indexOf("public void onDie(Npc npc)"),
+			source.indexOf("protected void sendSystemMsg", source.indexOf("public void onDie(Npc npc)")));
+		assertTrue(death.contains("supportsRetailNpcScore(npc.getNpcId(), 0)"));
+		String interaction = source.substring(source.indexOf("public void handleUseItemFinish(Player player, Npc npc)"),
+			source.indexOf("private void scheduleRound()", source.indexOf("public void handleUseItemFinish(Player player, Npc npc)")));
+		assertTrue(interaction.contains("supportsRetailNpcScore(npc.getNpcId(), 0)"));
+	}
+
+	@Test
+	void soloArenaRetailSpawnsMatchMapFamilyOwnership() throws Exception {
+		String conditions = Files.readString(CONDITION_SPAWNS);
+		for (int worldId : new int[] { 300350000, 300420000 }) {
+			String world = world(conditions, worldId);
+			assertEquals(5, count(world, "<variable "));
+			assertEquals(10, count(world, "<condition "));
+			assertEquals(10, count(world, "<slot>"));
+		}
+		assertFalse(conditions.contains("<world id=\"300360000\""));
+		assertFalse(conditions.contains("<world id=\"300430000\""));
+			String glory = world(conditions, 300550000);
+			assertEquals(2, count(glory, "<variable "));
+			assertEquals(21, count(glory, "<condition "));
+			assertEquals(21, count(glory, "<slot>"));
+			assertEquals(17, count(glory, "source=\"idarena_glory/world_N.xml#unconditional-random-"));
+			assertEquals(2, count(glory, "<party probability=\"5000\""));
+			assertEquals(7, count(glory, "id=\"207102\""));
+			for (int npcId : new int[] { 219502, 219503, 219504, 219540, 219541, 219542, 219653, 219654, 243675, 243676 }) {
+				assertEquals(8, count(glory, "id=\"" + npcId + "\""), Integer.toString(npcId));
+			}
+			for (int npcId : new int[] { 701216, 701221, 701226 }) {
+				assertEquals(4, count(glory, "id=\"" + npcId + "\""), Integer.toString(npcId));
+			}
+			assertEquals(8, count(glory, "id=\"701852\""));
+			for (int page : new int[] { 1, 11, 21, 31, 41 }) {
+				assertEquals(3, count(glory, "page_start=\"" + page + "\" page_end=\"" + page + "\""));
+			}
+			String gloryPools = glory.substring(glory.indexOf("<condition id=\"300550001\""));
+			assertEquals("b107c1bfc7a14c69541516e7eb8bc5288d71161bea36a90d74d7b3c2989d1ddd",
+				HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+					.digest(gloryPools.getBytes(StandardCharsets.UTF_8))));
+
+		for (String name : List.of("300350000_Arena_Of_Chaos.xml", "300420000_Chaos_Training_Grounds.xml")) {
+			String source = Files.readString(INSTANCE_SPAWNS.resolve(name));
+			for (int npcId : new int[] { 207102, 701169, 701170, 701171, 701172, 701212 }) {
+				assertTrue(source.contains("npc_id=\"" + npcId + "\""), name + ":" + npcId);
+			}
+			String gather = Files.readString(GATHER_SPAWNS.resolve(name));
+			assertTrue(gather.contains("npc_id=\"405000\""), name);
+			assertTrue(gather.contains("npc_id=\"405001\""), name);
+		}
+		for (String name : List.of("300360000_Arena_Of_Discipline.xml", "300430000_Discipline_Training_Grounds.xml")) {
+			String source = Files.readString(INSTANCE_SPAWNS.resolve(name));
+			for (int npcId : new int[] { 207102, 243675, 243676 }) {
+				assertTrue(source.contains("npc_id=\"" + npcId + "\""), name + ":" + npcId);
+			}
+			assertFalse(Files.exists(GATHER_SPAWNS.resolve(name)), name);
+		}
+			String glorySpawns = Files.readString(INSTANCE_SPAWNS.resolve("300550000_Arena_Of_Glory.xml"));
+			for (int npcId : new int[] { 207047, 218710, 218789, 218793 }) {
+				assertTrue(glorySpawns.contains("npc_id=\"" + npcId + "\""), "300550000:" + npcId);
+			}
+			for (int npcId : new int[] { 218757, 243675, 243676 }) {
+				assertFalse(glorySpawns.contains("npc_id=\"" + npcId + "\""), "300550000:" + npcId);
+			}
+			assertFalse(Files.exists(GATHER_SPAWNS.resolve("300550000_Arena_Of_Glory.xml")));
+	}
+
+	@Test
+	void soloArenaScoresUseUniquePersistentOwnerPath() throws IOException {
+		String source = Files.readString(HANDLERS.resolve("PvPArenaInstance.java"));
+		int supportStart = source.indexOf("public boolean supportsRetailNpcScore(");
+		String support = source.substring(supportStart, source.indexOf("public synchronized boolean onRetailNpcScore(", supportStart));
+		for (int npcId : new int[] { 207102, 219502, 219503, 219504, 219540, 219541, 219542, 219653, 219654,
+				243675, 243676, 701173, 701174, 701187, 701188, 701216, 701221, 701226, 701852 }) {
+			assertTrue(support.contains(Integer.toString(npcId)), Integer.toString(npcId));
+		}
+		assertFalse(support.contains("701169"));
+		assertFalse(support.contains("701212"));
+
+		int scoreStart = source.indexOf("public synchronized boolean onRetailNpcScore(");
+		String score = source.substring(scoreStart, source.indexOf("public InstanceReward", scoreStart));
+		assertTrue(score.contains("npc.getSpawn().getStableKey()"));
+		assertTrue(score.contains("runtimeState().put(eventKey, true)"));
+		assertTrue(score.contains("reward.addPoints(points)"));
+		assertTrue(score.contains("persistPlayer(reward)"));
+		assertTrue(score.contains("spawnBlessedRelics(30000)"));
+		assertTrue(score.contains("spawnCursedRelics(30000)"));
+		assertTrue(score.contains("instanceReward.hasCapPoints()"));
+
+		String first = PvPArenaInstance.scoreEventKey("spawn:1:generation.1", 100);
+		assertEquals(first, PvPArenaInstance.scoreEventKey("spawn:1:generation.1", 101));
+		assertFalse(first.equals(PvPArenaInstance.scoreEventKey("spawn:1:generation.2", 100)));
+		assertEquals("arena.score.event.object.100", PvPArenaInstance.scoreEventKey(null, 100));
+
+		String death = source.substring(source.indexOf("public void onDie(Npc npc)"),
+			source.indexOf("public void onEnterInstance", source.indexOf("public void onDie(Npc npc)")));
+		assertTrue(death.contains("npc.getAi2() instanceof RetailPatternAI2"));
+		assertTrue(death.contains("supportsRetailNpcScore(npc.getNpcId(), 0)"));
+		String interaction = source.substring(source.indexOf("public void handleUseItemFinish(Player player, Npc npc)"),
+			source.indexOf("private void scheduleRound()", source.indexOf("public void handleUseItemFinish(Player player, Npc npc)")));
+		assertTrue(interaction.contains("npc.getAi2() instanceof RetailPatternAI2"));
+		assertTrue(interaction.contains("supportsRetailNpcScore(npc.getNpcId(), 0)"));
+
+		for (String name : List.of("ArenaOfChaosInstance.java", "ChaosTrainingGroundsInstance.java")) {
+			assertTrue(Files.readString(HANDLERS.resolve(name)).contains("persistPlayer(reward)"), name);
+		}
+		String training = Files.readString(HANDLERS.resolve("ChaosTrainingGroundsInstance.java"));
+		String rings = training.substring(training.indexOf("public boolean onPassFlyingRing("));
+		assertEquals(3, count(rings, "playerReward.addPoints(250)"));
+		assertEquals(3, count(rings, "persistPlayer(playerReward)"));
+		for (String name : List.of("ArenaOfDisciplineInstance.java", "DisciplineTrainingGroundsInstance.java")) {
+			assertFalse(Files.readString(HANDLERS.resolve(name)).contains("onGather("), name);
+		}
 	}
 
 	private static String world(String source, int id) {

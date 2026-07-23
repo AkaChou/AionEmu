@@ -3,6 +3,7 @@ package com.aionemu.gameserver.lifecycle;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.scriptEngine.ScriptEngine;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
@@ -61,6 +62,16 @@ final class GameEngineServiceFallbacks {
     }
 
     /**
+     * 返回脚本引擎回退实例。
+     * Return the script-engine fallback instance.
+     *
+     * @return 脚本引擎 / Script engine
+     */
+    static ScriptEngine scriptEngine() {
+        return ScriptEngineFallback.INSTANCE;
+    }
+
+    /**
      * 返回聊天处理器回退实例。
      * Return the chat-processor fallback instance.
      *
@@ -110,6 +121,14 @@ final class GameEngineServiceFallbacks {
      */
     private static final class Ai2EngineFallback {
         private static final AI2Engine INSTANCE = AI2Engine.getInstance();
+    }
+
+    /**
+     * 脚本引擎懒加载回退持有者。
+     * Lazy fallback holder for the script engine.
+     */
+    private static final class ScriptEngineFallback {
+        private static final ScriptEngine INSTANCE = ScriptEngine.getInstance();
     }
 
     /**

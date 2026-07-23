@@ -35,6 +35,9 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		instanceReward = new StonespearReachReward(mapId, instanceId);
 		restoreScore();
 		instanceReward.setInstanceScoreType(scoreType());
+		if (runtimeState().getBoolean(state("completed"), false)) {
+			settlePlayers();
+		}
 		restoreDeadline();
 	}
 
@@ -175,9 +178,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		runtimeState().put(state("completed"), true);
 		cancelDeadline("prepare");
 		cancelDeadline("expire");
-		for (Player player : instance.getPlayersInside()) {
-			doReward(player);
-		}
+		settlePlayers();
 		sendScore(0, 0);
 	}
 
@@ -262,6 +263,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 
 	private StonespearReachPlayerReward getOrCreatePlayerReward(int playerId) {
+		runtimeState().put(state("participant." + playerId), true);
 		StonespearReachPlayerReward playerReward =
 			(StonespearReachPlayerReward) instanceReward.getPlayerReward(playerId);
 		if (playerReward == null) {
@@ -280,5 +282,17 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 
 	private static String playerRewardKey(int playerId) {
 		return state("player." + playerId + ".rewarded");
+	}
+
+	private void settlePlayers() {
+		RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, instanceReward.getRank());
+		String prefix = state("participant.");
+		for (String key : runtimeState().snapshot(prefix).keySet()) {
+			int playerId = Integer.parseInt(key.substring(prefix.length()));
+			InstanceSettlementService.queue(instance, playerId, "timeattack", plan);
+		}
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
 	}
 }

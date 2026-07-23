@@ -122,9 +122,17 @@ class DarkPoetaRetailMigrationTest {
 		assertEquals(2, count(fighter, "<spot "));
 		assertTrue(assassin.contains("difficult_id=\"1\""));
 		assertTrue(assassin.contains("x=\"610.017883\" y=\"213.537796\""));
-		assertTrue(assassin.contains("x=\"470.791779\" y=\"378.285004\""));
-		assertEquals(2, count(assassin, "<spot "));
-	}
+			assertTrue(assassin.contains("x=\"470.791779\" y=\"378.285004\""));
+			assertEquals(2, count(assassin, "<spot "));
+
+			String ownership = Files.readAllLines(Path.of(
+				"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+				.filter(line -> line.contains("id=\"300040000\"")).findFirst().orElseThrow();
+			assertTrue(ownership.contains("retail condition/static spawns and Pattern own phases/combat"));
+			assertTrue(ownership.contains("npc-scores and npc_drops own points/drops"));
+			assertTrue(ownership.contains(
+				"handler owns spawn-page/race variables, timers/door, idempotent kill/gather scoring, condition progress, Marabata controller lifecycle, movies, rank/settlement and exit recovery"));
+		}
 
 	private static String worldBlock(String xml, String worldId) {
 		int start = xml.indexOf("<world id=\"" + worldId + "\"");

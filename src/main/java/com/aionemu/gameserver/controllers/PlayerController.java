@@ -906,12 +906,11 @@ public class PlayerController extends CreatureController<Player> {
 	 */
 	@Override
 	public void cancelCurrentSkill() {
-		if (getOwner().getCastingSkill() == null) {
-			return;
-		}
-
 		Player player = getOwner();
 		Skill castingSkill = player.getCastingSkill();
+		if (castingSkill == null) {
+			return;
+		}
 		castingSkill.cancelCast();
 		player.removeSkillCoolDown(castingSkill.getSkillTemplate().getDelayId());
 		player.setCasting(null);

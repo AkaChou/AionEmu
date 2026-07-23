@@ -20,7 +20,6 @@ import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -205,11 +204,6 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 		}
 	}
 	
-	private void removeItems(Player player) {
-		Storage storage = player.getInventory();
-		storage.decreaseByItemId(185000196, storage.getItemCountByItemId(185000196)); //Abyss Gap Sealing Key's.
-	}
-	
 	private void scheduleLinkgateTimer(long deadline) {
 		scheduleWarning("warning_15", deadline - 15 * 60_000L, 1402454);
 		scheduleWarning("warning_10", deadline - 10 * 60_000L, 1402455);
@@ -240,16 +234,6 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 			npcs.clear();
 		}
 		sendMsg(1402461);
-	}
-	
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-	
-	@Override
-	public void onLeaveInstance(Player player) {
-		removeItems(player);
 	}
 	
 }

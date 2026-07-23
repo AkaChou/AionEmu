@@ -652,19 +652,18 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 *
 	 */
 	public void cancelCurrentSkill() {
-		if (getOwner().getCastingSkill() == null) {
-			return;
-		}
-
 		Creature creature = getOwner();
 		Skill castingSkill = creature.getCastingSkill();
+		if (castingSkill == null) {
+			return;
+		}
 		castingSkill.cancelCast();
 		creature.removeSkillCoolDown(castingSkill.getSkillTemplate().getDelayId());
 		creature.setCasting(null);
 		PacketSendUtility.broadcastPacketAndReceive(creature,
 				new SM_SKILL_CANCEL(creature, castingSkill.getSkillTemplate().getSkillId()));
-		if (getOwner().getAi2() instanceof NpcAI2) {
-			NpcAI2 npcAI = (NpcAI2) getOwner().getAi2();
+		if (creature.getAi2() instanceof NpcAI2) {
+			NpcAI2 npcAI = (NpcAI2) creature.getAi2();
 			npcAI.setSubStateIfNot(AISubState.NONE);
 			npcAI.onGeneralEvent(AIEventType.ATTACK_COMPLETE);
 			if (creature.getSkillNumber() > 0) {

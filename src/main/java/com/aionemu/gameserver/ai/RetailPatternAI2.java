@@ -207,9 +207,67 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private record PendingCutsceneTeleport(int cutsceneId, String alias) {
 	}
 
-	public static boolean supports(Pattern pattern) {
-		return supports(pattern, false);
-	}
+		public static boolean supports(Pattern pattern) {
+			return supports(pattern, false);
+		}
+
+		/**
+		 * 返回 Pattern 未被通用 Retail AI 执行器接管的首个原因；完整时返回 {@code null}。
+		 * Returns the first reason a pattern is not handled by the generic Retail AI executor.
+		 */
+		public static String unsupportedReason(Pattern pattern) {
+			if (pattern == null) {
+				return "missing pattern";
+			}
+			for (Map.Entry<String, List<Rule>> event : pattern.events().entrySet().stream()
+					.sorted(Map.Entry.comparingByKey()).toList()) {
+				if (!SUPPORTED_EVENTS.contains(event.getKey())) {
+					return "unsupported event " + event.getKey();
+				}
+				for (Rule rule : event.getValue()) {
+					if (!(rule.category() == null || rule.category().isBlank()
+						|| Set.of("PLANNED", "DIRECT", "INSTANT").contains(rule.category()))) {
+						return "unsupported category " + rule.category() + " in " + event.getKey();
+					}
+					for (Operation condition : rule.conditions()) {
+						if (!supportsCondition(event.getKey(), condition)) {
+							return "unsupported condition " + condition.type() + " in " + event.getKey();
+						}
+					}
+					for (Operation action : rule.actions()) {
+						if (!supportsAction(event.getKey(), action, true)) {
+							return "unsupported action " + action.type() + " in " + event.getKey();
+						}
+					}
+					if (!supportsNpcPartyRule(event.getKey(), rule)) {
+						return "unsupported NPC-party rule in " + event.getKey();
+					}
+					if (!TARGET_EVENTS.contains(event.getKey()) && rule.actions().stream()
+						.anyMatch(RetailPatternAI2::usesEventTarget)) {
+						return "event target is unavailable in " + event.getKey();
+					}
+					if (TERMINAL_EVENTS.contains(event.getKey())
+						&& hasUnsupportedActionsAfterSkill(event.getKey(), rule.actions())) {
+						return "action follows terminal skill in " + event.getKey();
+					}
+				}
+			}
+			return supports(pattern, true) ? null : "missing Retail AI runtime data";
+		}
+
+		/**
+		 * 返回绑定到具体 NPC 后的首个缺口；用于区分 Pattern 结构缺口和运行时数据缺口。
+		 */
+		public static String unsupportedReason(Pattern pattern, Npc npc) {
+			String reason = unsupportedReason(pattern);
+			if (reason != null) {
+				return reason;
+			}
+			if (DataManager.RETAIL_AI_DATA == null) {
+				return "Retail AI data is not loaded";
+			}
+			return runtimeUnsupportedReason(pattern, npc);
+		}
 
 	private static boolean supports(Pattern pattern, boolean allowNpcScore) {
 		if (pattern == null) {
@@ -236,153 +294,155 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	public static boolean supports(Pattern pattern, Npc npc) {
-		if (!supports(pattern, true) || DataManager.RETAIL_AI_DATA == null) {
-			return false;
-		}
+		return unsupportedReason(pattern, npc) == null;
+	}
+
+	private static String runtimeUnsupportedReason(Pattern pattern, Npc npc) {
 		com.aionemu.gameserver.dataholders.RetailAiData.Npc definition = npc == null ? null
 			: DataManager.RETAIL_AI_DATA.getNpc(npc.getNpcId());
 		if (!hasCompleteGaugeData(pattern, definition)) {
-			return false;
+			return "missing NPC gauge talk delay";
 		}
 		NpcTemplateType npcType = npc == null ? null : npc.getObjectTemplate().getNpcTemplateType();
 		if (!hasCompleteWakeUpData(pattern, npcType)) {
-			return false;
+			return "wake-up events require a monster NPC";
 		}
 		if (!hasCompleteMasterData(pattern, npc)) {
-			return false;
+			return "missing NPC master";
 		}
 		if (!hasCompleteNpcPartyData(pattern, npc)) {
-			return false;
+			return "missing NPC party";
 		}
 		if (!hasWorldSceneConsumer(pattern, npc == null ? 0 : npc.getWorldId())) {
-			return false;
+			return "missing world-scene consumer";
 		}
 		if (!Collections.disjoint(pattern.events().keySet(), SENSORY_EVENTS)
-			&& DataManager.RETAIL_AI_DATA.findSensoryArea(npc.getWorldId(), npc.getNpcId(), npc.getSpawn().getX(),
-				npc.getSpawn().getY(), npc.getSpawn().getZ()) == null) {
-			return false;
+			&& (npc == null || npc.getSpawn() == null || DataManager.RETAIL_AI_DATA.findSensoryArea(npc.getWorldId(), npc.getNpcId(), npc.getSpawn().getX(),
+				npc.getSpawn().getY(), npc.getSpawn().getZ()) == null)) {
+			return "missing sensory area";
 		}
 		WalkerTemplate npcWalker = walker(npc);
 		if (pattern.events().containsKey("on_arrived_at_waypoint") && !hasWaypoints(npcWalker)) {
-			return false;
+			return "missing NPC waypoint path";
 		}
 		if (pattern.events().containsKey("on_arrived_at_point")
 			&& pattern.events().values().stream().flatMap(List::stream).flatMap(rule -> rule.actions().stream())
 				.noneMatch(action -> action.type().equals("goto_alias"))) {
-			return false;
+			return "arrival-at-point event has no alias movement";
 		}
 		for (Map.Entry<String, List<Rule>> event : pattern.events().entrySet()) {
 			for (Rule rule : event.getValue()) {
 				for (Operation operation : concat(rule.conditions(), rule.actions())) {
 					if ((operation.type().equals("goto_next_waypoint") || operation.type().equals("is_last_waypoint"))
 						&& !hasWaypoints(npcWalker)) {
-						return false;
+						return "missing NPC waypoint path";
 					}
 					if (operation.type().equals("goto_waypoint")) {
 						int waypoint = integer(operation, "waypoint");
 						if (hasWaypoints(npcWalker) ? waypoint >= npcWalker.getRouteSteps().size()
 							: !event.getKey().equals("on_wake_up") || waypoint != 0) {
-							return false;
+							return "invalid waypoint " + waypoint;
 						}
 					}
 					if (operation.type().equals("is_waypoint_index")
 						&& (!hasWaypoints(npcWalker) || integer(operation, "index") >= npcWalker.getRouteSteps().size())) {
-						return false;
+						return "invalid waypoint index " + integer(operation, "index");
 					}
 					if ((isSkillAction(operation) || operation.type().equals("is_skill_count_left"))
-						&& skill(npc.getSkillList(), operation) == null) {
-						return false;
+						&& (npc == null || skill(npc.getSkillList(), operation) == null)) {
+						return "missing NPC skill " + value(operation, "skill");
 					}
 					if ((operation.type().equals("spawn") || operation.type().equals("spawn_on_target")
 						|| operation.type().equals("spawn_on_target_by_attacker_indicator")
 						|| operation.type().equals("spawn_on_multi_target") || operation.type().equals("despawn_by_nameid"))
 						&& DataManager.RETAIL_AI_DATA.findNpcId(value(operation,
 							operation.type().equals("despawn_by_nameid") ? "target_npc_nameid" : "npc_nameid")) == null) {
-						return false;
+						return "unknown NPC name " + value(operation,
+							operation.type().equals("despawn_by_nameid") ? "target_npc_nameid" : "npc_nameid");
 					}
 					if (operation.type().equals("spawn") && !value(operation, "pathname").isBlank()) {
 						String walkerId = retailWalkerId(npc.getWorldId(), value(operation, "pathname"));
 						WalkerTemplate walker = DataManager.WALKER_DATA == null ? null
 							: DataManager.WALKER_DATA.getWalkerTemplate(walkerId);
 						if (walker == null || walker.getRouteSteps() == null || walker.getRouteSteps().isEmpty()) {
-							return false;
+							return "missing spawned NPC path " + value(operation, "pathname");
 						}
 					}
 					if (operation.type().equals("activate_skillarea")
 						&& !DataManager.RETAIL_AI_DATA.hasSkillArea(integer(operation, "areaid"))) {
-						return false;
+						return "missing skill area " + integer(operation, "areaid");
 					}
 					if ((operation.type().equals("open_directportal") || operation.type().equals("open_directportal_by_user")
 						|| operation.type().equals("close_directportal"))
 						&& !DataManager.RETAIL_AI_DATA.hasDirectPortal(integer(operation, "direct_portal_id"))) {
-						return false;
+						return "missing direct portal " + integer(operation, "direct_portal_id");
 					}
 					if (operation.type().equals("open_directportal_by_user")) {
 						var portal = DataManager.RETAIL_AI_DATA.getDirectPortal(integer(operation, "direct_portal_id"));
 						if (portal == null || portal.needItem().isBlank() || portal.groupId() <= 0 || portal.invadeType() != 5
 							|| DataManager.ITEM_DATA == null || DataManager.ITEM_DATA.getItemTemplate(portal.needItem()) == null) {
-							return false;
+							return "incomplete player direct portal " + integer(operation, "direct_portal_id");
 						}
 					}
 						if (operation.type().equals("enable_area") && !RetailAreaEngine.supports(npc.getWorldId(),
 							value(operation, "area_type"), value(operation, "area_name"))) {
-							return false;
+							return "missing area " + value(operation, "area_name");
 						}
 						if (operation.type().equals("on_off_windpath")
 							&& !RetailWindstreamEngine.supports(npc.getWorldId(), integer(operation, "groupid"))) {
-							return false;
+							return "missing windstream group " + integer(operation, "groupid");
 						}
 						if (operation.type().equals("on_off_moving_collision")
 							&& !RetailDynamicAreaEngine.supports(npc.getWorldId(), value(operation, "type"),
 								integer(operation, "sunzoneid"))) {
-							return false;
+							return "missing moving collision " + value(operation, "type") + ":" + integer(operation, "sunzoneid");
 						}
 					if ((operation.type().equals("say") || operation.type().equals("say_to_all") || operation.type().equals("shout_to_all")
 						|| operation.type().equals("display_system_message")
 						|| operation.type().equals("send_system_msg_by_user_indicator")
 						|| operation.type().equals("send_system_msg"))
 						&& DataManager.RETAIL_AI_DATA.findStringId(value(operation, "string_id")) == null) {
-						return false;
+						return "missing AI string " + value(operation, "string_id");
 					}
 					if (operation.type().equals("display_system_message") && !value(operation, "area_name").isBlank()
 						&& !DataManager.RETAIL_AI_DATA.hasArea(value(operation, "area_name"))) {
-						return false;
+						return "missing message area " + value(operation, "area_name");
 					}
 					if (operation.type().equals("set_condition_spawn_variable")
 						&& !RetailConditionSpawnEngine.supports(npc.getWorldId(), value(operation, "string"))) {
-						return false;
+						return "missing condition variable " + value(operation, "string");
 					}
 					if (operation.type().equals("set_condition_spawn_variable_to_world")
 						&& !RetailConditionSpawnEngine.supports(value(operation, "worldid"), value(operation, "string"))) {
-						return false;
+						return "missing cross-world condition variable " + value(operation, "worldid") + ":" + value(operation, "string");
 					}
 					if (Set.of("give_item_by_user_indicator", "give_item_by_obj_indicator").contains(operation.type())
 						&& (DataManager.ITEM_DATA == null
 							|| DataManager.ITEM_DATA.getItemTemplate(value(operation, "item_id")) == null)) {
-						return false;
+						return "missing item " + value(operation, "item_id");
 					}
 					if (operation.type().equals("give_score")) {
 						if (npc == null) {
-							return false;
+							return "missing NPC context for score";
 						}
 						var score = DataManager.RETAIL_AI_DATA.getNpcScore(npc.getNpcId());
 						if (!supportsNpcScore(npc, score)) {
-							return false;
+							return "missing score consumer";
 						}
 					}
 					if ((operation.type().equals("teleport_target_alias") || operation.type().equals("goto_alias"))
 						&& DataManager.RETAIL_AI_DATA.findLocationAlias(npc.getWorldId(), value(operation, "alias")) == null) {
-						return false;
+						return "missing location alias " + value(operation, "alias");
 					}
 					if (operation.type().equals("play_cutscene_by_user_indicator")
 						&& !value(operation, "teleport_alias").isBlank()
 						&& DataManager.RETAIL_AI_DATA.findLocationAlias(npc.getWorldId(), value(operation, "teleport_alias")) == null) {
-						return false;
+						return "missing cutscene location alias " + value(operation, "teleport_alias");
 					}
 				}
 			}
 		}
-		return true;
+		return null;
 	}
 
 	@Override
@@ -2362,6 +2422,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	private void spawnAt(Operation action, int npcId, float x, float y, float z, byte heading, Creature attackTarget,
 			String walkerId) {
+		if (getPosition().getMapRegion() == null || GameWorldBootstrapServices.world().getWorldMap(getOwner().getWorldId())
+				.getWorldMapInstanceById(getOwner().getInstanceId()) == null) {
+			return;
+		}
 		int count = Math.max(1, integer(action, "num_to_spawn"));
 		float range = decimal(action, "spawn_range");
 		String generation = nextSpawnGeneration(action);
@@ -2495,11 +2559,14 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	public static void onDynamicSpawnRemoved(Npc npc) {
 		if (npc == null || npc.getSpawn() == null || npc.getSpawn().getRuntimeLifecycleKey() == null
-				|| npc.getPosition() == null || npc.getPosition().getWorldMapInstance() == null) {
+				|| npc.getPosition() == null) {
 			return;
 		}
-		npc.getPosition().getWorldMapInstance().getRuntimeState()
-			.removePrefix(npc.getSpawn().getRuntimeLifecycleKey());
+		var instance = npc.getPosition().getWorldMapInstanceOrNull();
+		if (instance == null) {
+			return;
+		}
+		instance.getRuntimeState().removePrefix(npc.getSpawn().getRuntimeLifecycleKey());
 	}
 
 	private void despawnForLifecycle(VisibleObject object) {

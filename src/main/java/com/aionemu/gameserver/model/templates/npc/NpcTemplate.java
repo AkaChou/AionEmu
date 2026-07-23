@@ -256,6 +256,7 @@ public class NpcTemplate extends VisibleObjectTemplate {
 			case BIND_RESISTANCE -> 1 << 20;
 			case DEFORM_RESISTANCE -> 1 << 21;
 			case PULLED_RESISTANCE -> 1 << 22;
+			case SIMPLE_ROOT_RESISTANCE -> 1 << 24;
 			default -> 0;
 		};
 		return (abnormalImmunity & mask) != 0;

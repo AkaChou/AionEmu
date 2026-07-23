@@ -29,7 +29,9 @@ public class ArenaOfChaosInstance extends PvPArenaInstance
 		if (!instanceReward.isStartProgress()) {
 			return;
 		}
-		getPlayerReward(player.getObjectId()).addPoints(1250);
+		var reward = getPlayerReward(player.getObjectId());
+		reward.addPoints(1250);
+		persistPlayer(reward);
 		sendPacket();
 		int nameId = gatherable.getObjectTemplate().getNameId();
 		DescriptionId name = new DescriptionId(nameId * 2 + 1);

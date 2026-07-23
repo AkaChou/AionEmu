@@ -122,21 +122,17 @@
 			<spot x="657.78296" y="522.60864" z="593.7199" h="94"/>
 		</spawn>
 		<!-- Steel Wall -->
-		<spawn npc_id="235786">
-			<spot x="753.21399" y="521.01813" z="577.5498" entity_id="33"/>
-		</spawn>
+			<spawn npc_id="235786">
+				<spot x="753.21399" y="521.01813" z="577.5498" entity_id="33"/>
+			</spawn>
+			<!-- Spirited Velkur; retail Pattern replaces it when the runaway route succeeds. -->
+			<spawn npc_id="235768">
+				<spot x="322.421967" y="491.168427" z="613.944885" h="0"/>
+			</spawn>
 		<!-- Greater Blessed Relics -->
 		<spawn npc_id="831990">
             <spot x="771.0679" y="558.71533" z="573.0" h="4"/>
         </spawn>
-		<!-- Control Center Corridor -->
-		<spawn npc_id="731544">
-			<spot x="436.19977" y="496.52478" z="605.33521" entity_id="7"/>
-		</spawn>
-		<!-- Access Route Corridor -->
-		<spawn npc_id="731545">
-			<spot x="372.49017" y="492.02713" z="606.46307" entity_id="34"/>
-		</spawn>
 		<!-- IDLDF5_Under_01_FOBJ_Vritra_Box_Q16977a -->
 		<spawn npc_id="702959">
 			<spot x="304.56586" y="474.08414" z="607.9541" entity_id="36"/>

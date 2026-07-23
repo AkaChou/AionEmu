@@ -22,7 +22,6 @@ import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.SmolderingReward;
 import com.aionemu.gameserver.model.instance.playerreward.SmolderingPlayerReward;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService;
@@ -47,6 +46,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 		reconcileProgress();
 		if (runtimeState().getBoolean("smolder.completed", false)) {
 			despawnScoredNpcs();
+			settlePlayers();
 		}
 		restoreDeadline();
 	}
@@ -168,14 +168,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 
 	@Override
 	public void onLeaveInstance(Player player) {
-		removeItems(player);
 		removeEffects(player);
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
 
 	@Override
 	public void onPlayerLogOut(Player player) {
-		removeItems(player);
 		removeEffects(player);
 	}
 
@@ -245,9 +243,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 		cancelDeadline("expire");
 		cancelDeadline("settle");
 		despawnScoredNpcs();
-		for (Player player : instance.getPlayersInside()) {
-			doReward(player);
-		}
+		settlePlayers();
 		sendScore(0, 0);
 	}
 
@@ -356,6 +352,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 	}
 
 	private SmolderingPlayerReward getOrCreatePlayerReward(int playerId) {
+		runtimeState().put("smolder.participant." + playerId, true);
 		SmolderingPlayerReward reward = (SmolderingPlayerReward) instanceReward.getPlayerReward(playerId);
 		if (reward == null) {
 			reward = new SmolderingPlayerReward(playerId);
@@ -415,14 +412,6 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 		GameEngineServices.skillEngine().getSkill(npc, skillId, 1, player).useNoAnimationSkill();
 	}
 
-	private static void removeItems(Player player) {
-		Storage inventory = player.getInventory();
-		for (int itemId = 162002085; itemId <= 162002090; itemId++) {
-			inventory.decreaseByItemId(itemId, inventory.getItemCountByItemId(itemId));
-		}
-		inventory.decreaseByItemId(185000270, inventory.getItemCountByItemId(185000270));
-	}
-
 	private static void removeEffects(Player player) {
 		PlayerEffectController effects = player.getEffectController();
 		for (int skillId = 21375; skillId <= 21380; skillId++) {
@@ -432,6 +421,18 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 
 	private static String playerRewardKey(int playerId) {
 		return "smolder.player." + playerId + ".rewarded";
+	}
+
+	private void settlePlayers() {
+		RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, instanceReward.getRank());
+		String prefix = "smolder.participant.";
+		for (String key : runtimeState().snapshot(prefix).keySet()) {
+			int playerId = Integer.parseInt(key.substring(prefix.length()));
+			InstanceSettlementService.queue(instance, playerId, "timeattack", plan);
+		}
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
 	}
 
 	private static String killKey(Npc npc) {

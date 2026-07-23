@@ -5,12 +5,8 @@ import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.player.PlayerReviveService;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.Set;
 
@@ -27,29 +23,6 @@ public class OphidanBridgeInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		switch (Rnd.get(1, 3)) {
-			case 1:
-				spawn(235780, 751.4241f, 527.29016f, 576.37476f, (byte) 33); //Fugitive Mazikin.
-			break;
-			case 2:
-				spawn(235781, 751.4241f, 527.29016f, 576.37476f, (byte) 33); //Runaway Hirakiki.
-			break;
-			case 3:
-				spawn(235782, 751.4241f, 527.29016f, 576.37476f, (byte) 33); //Escapee Asachin.
-			break;
-		} switch (Rnd.get(1, 4)) {
-			case 1:
-				spawn(235768, 318.23724f, 488.92276f, 607.64343f, (byte) 1); //Spirited Velkur.
-			break;
-			case 2:
-				spawn(235769, 318.23724f, 488.92276f, 607.64343f, (byte) 1); //Velkur Aethercaster.
-			break;
-			case 3:
-				spawn(235770, 318.23724f, 488.92276f, 607.64343f, (byte) 1); //Velkur Aetherpriest.
-			break;
-			case 4:
-				spawn(235771, 318.23724f, 488.92276f, 607.64343f, (byte) 1); //Velkur Aetherknife.
-			break;
-		} switch (Rnd.get(1, 3)) {
 			case 1:
 				spawn(235721, 673.0f, 472.0f, 599.3125f, (byte) 0); //Post Defense Drakenclaw.
 			break;
@@ -104,32 +77,6 @@ public class OphidanBridgeInstance extends GeneralInstanceHandler
 			case 6:
 				spawn(235748, 480.99368f, 524.84326f, 597.43713f, (byte) 10); //Post Defense Swiftrunner.
 			break;
-		} switch (Rnd.get(1, 4)) {
-			case 1:
-				spawn(235772, 672.9581f, 468.63168f, 599.4349f, (byte) 1); //Hakara.
-			break;
-			case 2:
-				spawn(235773, 672.9581f, 468.63168f, 599.4349f, (byte) 1); //Zubala.
-			break;
-			case 3:
-				spawn(235774, 672.9581f, 468.63168f, 599.4349f, (byte) 1); //Visha.
-			break;
-			case 4:
-				spawn(235775, 672.9581f, 468.63168f, 599.4349f, (byte) 1); //Bahapa.
-			break;
-		} switch (Rnd.get(1, 4)) {
-			case 1:
-				spawn(235776, 552.2419f, 512.9514f, 610.10693f, (byte) 26); //Hakara.
-			break;
-			case 2:
-				spawn(235777, 552.2419f, 512.9514f, 610.10693f, (byte) 26); //Zubala.
-			break;
-			case 3:
-				spawn(235778, 552.2419f, 512.9514f, 610.10693f, (byte) 26); //Visha.
-			break;
-			case 4:
-				spawn(235779, 552.2419f, 512.9514f, 610.10693f, (byte) 26); //Bahapa.
-			break;
 		}
 	}
 	@Override
@@ -153,48 +100,13 @@ public class OphidanBridgeInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
-		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 235768: //Spirited Velkur.
 			case 235769: //Velkur Aethercaster.
 			case 235770: //Velkur Aetherpriest.
 			case 235771: //Velkur Aetherknife.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Ophidan Bridge>");
-/* 				switch (Rnd.get(1, 2)) {
-		            case 1:
-				        spawn(702658, 349.57327f, 495.25214f, 606.76013f, (byte) 91); //修道院箱子。 / Abbey Box.
-					break;
-					case 2:
-					    spawn(702659, 349.57327f, 495.25214f, 606.76013f, (byte) 91); //高级修道院箱子。 / Noble Abbey Box.
-					break;
-				} */
-				spawn(730868, 350.18478f, 490.73065f, 606.34015f, (byte) 1); //Ophidan Bridge Exit.
 				spawn(802180, 350.39514f, 486.26636f, 606.75397f, (byte) 32); //Ophidan Bridge Opportunity Bundle.
-            break;
-			case 235786: //Steel Wall.
-				despawnNpc(npc);
 			break;
 		}
-	}
-	
-	private void despawnNpc(Npc npc) {
-		if (npc != null) {
-			npc.getController().onDelete();
-		}
-	}
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
 	}
 }

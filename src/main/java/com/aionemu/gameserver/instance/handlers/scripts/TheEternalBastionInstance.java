@@ -4,7 +4,6 @@ import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -38,6 +37,9 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 		instanceReward = new EternalBastionReward(mapId, instanceId);
 		restoreScore();
 		instanceReward.setInstanceScoreType(scoreType());
+		if (runtimeState().getBoolean(STATE_PREFIX + "completed", false)) {
+			settlePlayers();
+		}
 		restoreDeadline();
 	}
 
@@ -90,22 +92,6 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 	}
 
 	@Override
-	public void handleUseItemFinish(Player player, Npc npc) {
-		switch (npc.getNpcId()) {
-			case 701625 -> {
-				delete(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21065, 60, player).useNoAnimationSkill();
-			}
-			case 701922 -> {
-				delete(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21066, 60, player).useNoAnimationSkill();
-			}
-			default -> {
-			}
-		}
-	}
-
-	@Override
 	public void doReward(Player player) {
 		if (!runtimeState().getBoolean(STATE_PREFIX + "completed", false)) {
 			return;
@@ -137,7 +123,6 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 
 	@Override
 	public void onPlayerLogOut(Player player) {
-		removeItems(player);
 		removeEffects(player);
 	}
 
@@ -195,9 +180,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 		runtimeState().put(STATE_PREFIX + "completed", true);
 		cancelDeadline("prepare");
 		cancelDeadline("expire");
-		for (Player player : instance.getPlayersInside()) {
-			doReward(player);
-		}
+		settlePlayers();
 		sendScore(0, 0);
 		long exitDeadline = finishAt + EXIT_DELAY;
 		runtimeState().put(STATE_PREFIX + "exit_deadline", exitDeadline);
@@ -283,6 +266,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 	}
 
 	private EternalBastionPlayerReward getOrCreatePlayerReward(int playerId) {
+		runtimeState().put(STATE_PREFIX + "participant." + playerId, true);
 		EternalBastionPlayerReward reward = (EternalBastionPlayerReward) instanceReward.getPlayerReward(playerId);
 		if (reward == null) {
 			reward = new EternalBastionPlayerReward(playerId);
@@ -296,6 +280,18 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 
 	private static String playerRewardKey(int playerId) {
 		return STATE_PREFIX + "player." + playerId + ".rewarded";
+	}
+
+	private void settlePlayers() {
+		RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, instanceReward.getRank());
+		String prefix = STATE_PREFIX + "participant.";
+		for (String key : runtimeState().snapshot(prefix).keySet()) {
+			int playerId = Integer.parseInt(key.substring(prefix.length()));
+			InstanceSettlementService.queue(instance, playerId, "timeattack", plan);
+		}
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
 	}
 
 	private static void delete(Npc npc) {

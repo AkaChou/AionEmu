@@ -386,23 +386,33 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 
 	@Override
 	public boolean supportsRetailNpcScore(int npcId, int scoreApplyType) {
-		return scoreApplyType >= 0 && scoreApplyType <= 2 && switch (npcId) {
-			case 232855, 232856, 730878, 730879, 730880, 801766, 801767, 801818, 801819, 801820, 801821,
-				801903 -> true;
+		return scoreApplyType == 0 && switch (npcId) {
+			case 730861, 730878, 801766, 801767, 801818, 801819, 801820, 801821 -> true;
 			default -> false;
 		};
 	}
 
 	@Override
-	public boolean onRetailNpcScore(Player player, Npc npc, int scoreApplyType, int points) {
-		if (!supportsRetailNpcScore(npc.getNpcId(), scoreApplyType)) {
+	public synchronized boolean onRetailNpcScore(Player player, Npc npc, int scoreApplyType, int points) {
+		if (!supportsRetailNpcScore(npc.getNpcId(), scoreApplyType) || !reward.isStartProgress() || points == 0) {
 			return false;
 		}
+		String stableKey = npc.getSpawn() == null ? null : npc.getSpawn().getStableKey();
+		String eventKey = scoreEventKey(stableKey, npc.getObjectId());
+		if (runtimeState().getBoolean(eventKey, false)) {
+			return true;
+		}
+		runtimeState().put(eventKey, true);
 		applyNpcScore(player, npc, scoreApplyType, points);
 		if (scoreLimitReached()) {
 			finishBattle();
 		}
 		return true;
+	}
+
+	static String scoreEventKey(String stableKey, int objectId) {
+		return STATE_PREFIX + "score.event."
+			+ (stableKey == null || stableKey.isBlank() ? "object." + objectId : stableKey);
 	}
 
 	@Override

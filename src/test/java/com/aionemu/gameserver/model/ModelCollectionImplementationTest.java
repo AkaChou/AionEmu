@@ -177,7 +177,6 @@ class ModelCollectionImplementationTest {
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KumukiCaveInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AbyssalSplinterInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ShugoImperialTombInstance.java",
-				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DrakenseerLairInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AturamSkyFortressInstance.java");
 		for (String sourcePath : instanceScripts) {
 			assertSourceOmits(sourcePath, "FastList<Future<?>>");

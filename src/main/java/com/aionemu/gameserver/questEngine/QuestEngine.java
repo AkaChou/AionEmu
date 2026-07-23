@@ -7,8 +7,10 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +27,7 @@ import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -47,6 +50,7 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
+import com.aionemu.gameserver.scriptEngine.ScriptQuest;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
@@ -56,8 +60,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.commons.utils.collections.IntArrayList;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.commons.utils.collections.IntProcedure;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * 任务引擎单例：加载脚本处理器、维护事件注册表，并向已注册处理器分发各类游戏事件。
@@ -1574,8 +1576,9 @@ public class QuestEngine implements GameEngine {
 	 * @param questId
 	 * @return 处理器；不存在时 null / Handler, or {@code null}
 	 */
-	private QuestHandler getQuestHandlerByQuestId(int questId) {
-		return questHandlers.get(questId);
+	QuestHandler getQuestHandlerByQuestId(int questId) {
+		ScriptQuest scriptQuest = GameEngineServices.scriptEngine().getRegistry().getScriptQuest(questId);
+		return scriptQuest != null ? scriptQuest.getHandler() : questHandlers.get(questId);
 	}
 
 	/**
@@ -1586,7 +1589,7 @@ public class QuestEngine implements GameEngine {
 	 * Whether present
 	 */
 	public boolean isHaveHandler(int questId) {
-		return questHandlers.containsKey(questId);
+		return getQuestHandlerByQuestId(questId) != null;
 	}
 
 	/**
@@ -1602,6 +1605,39 @@ public class QuestEngine implements GameEngine {
 			log.warn(I18n.get("log.6928c2152c98", questId));
 		}
 		questHandlers.put(questId, questHandler);
+	}
+
+	/**
+	 * 注册 XML 任务并将其处理器移交给统一脚本注册表。
+	 * Register an XML quest and transfer its handler to the unified script registry.
+	 */
+	void registerScriptQuest(XMLQuest xmlQuest) {
+		int questId = xmlQuest.getId();
+		QuestHandler previous = questHandlers.remove(questId);
+		try {
+			xmlQuest.register(this);
+			QuestHandler handler = questHandlers.get(questId);
+			if (handler == null) {
+				throw new GameServerError("XML quest " + questId + " did not register a handler.");
+			}
+			GameEngineServices.scriptEngine().getRegistry().registerScriptQuest(() -> handler);
+		} finally {
+			questHandlers.remove(questId);
+			if (previous != null) {
+				questHandlers.put(questId, previous);
+			}
+		}
+	}
+
+	static List<XMLQuest> selectScriptQuests(Collection<XMLQuest> scripts) {
+		Map<Integer, XMLQuest> selected = new LinkedHashMap<>();
+		for (XMLQuest script : scripts) {
+			XMLQuest previous = selected.get(script.getId());
+			if (previous == null || script.isRetail() || !previous.isRetail()) {
+				selected.put(script.getId(), script);
+			}
+		}
+		return List.copyOf(selected.values());
 	}
 
 	/**
@@ -1657,11 +1693,13 @@ public class QuestEngine implements GameEngine {
 
 		try {
 			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.quest.handlers"));
+			GameEngineServices.scriptEngine().getRegistry().clearScriptQuests();
 			XMLQuests xmlQuests = DataManager.XML_QUESTS;
-			for (XMLQuest xmlQuest : xmlQuests.getQuest()) {
-				xmlQuest.register(this);
+			for (XMLQuest xmlQuest : selectScriptQuests(xmlQuests.getQuest())) {
+				registerScriptQuest(xmlQuest);
 			}
-			log.info(I18n.get("log.490b5f534bb2", questHandlers.size()));
+			log.info(I18n.get("log.490b5f534bb2", questHandlers.size()
+					+ GameEngineServices.scriptEngine().getRegistry().scriptQuestCount()));
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize quest handlers.", e);
 		} finally {
@@ -1756,6 +1794,7 @@ public class QuestEngine implements GameEngine {
 		questRideAction.clear();
 		questOnCreativityPoint.clear();
 		questHandlers.clear();
+		GameEngineServices.scriptEngine().getRegistry().clearScriptQuests();
 	}
 
 	/**

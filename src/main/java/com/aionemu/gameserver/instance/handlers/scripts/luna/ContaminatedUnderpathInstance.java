@@ -14,7 +14,6 @@ import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.ContaminatedUnderpathReward;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.playerreward.ContaminatedUnderpathPlayerReward;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService;
@@ -37,6 +36,9 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler {
 		restoreScore();
 		instanceReward.setInstanceScoreType(scoreType());
 		restoreDeadlines();
+		if (runtimeState().getBoolean(STATE + "completed", false)) {
+			settlePlayers();
+		}
 	}
 
 	@Override
@@ -185,9 +187,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler {
 		cancelDeadline("prepare");
 		cancelDeadline("expire");
 		cancelDeadline("settle");
-		for (Player player : instance.getPlayersInside()) {
-			doReward(player);
-		}
+		settlePlayers();
 		sendScore(null, 0, 0);
 	}
 
@@ -232,6 +232,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler {
 	}
 
 	private ContaminatedUnderpathPlayerReward getOrCreatePlayerReward(int playerId) {
+		runtimeState().put(playerKey(playerId), true);
 		ContaminatedUnderpathPlayerReward reward = (ContaminatedUnderpathPlayerReward) instanceReward.getPlayerReward(playerId);
 		if (reward == null) {
 			reward = new ContaminatedUnderpathPlayerReward(playerId);
@@ -245,6 +246,21 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler {
 
 	private String playerRewardKey(int playerId) {
 		return STATE + "reward." + playerId;
+	}
+
+	private String playerKey(int playerId) {
+		return STATE + "player." + playerId;
+	}
+
+	private void settlePlayers() {
+		RewardPlan plan = InstanceSettlementService.lunaPlan(mapId, instanceReward.getRank());
+		for (String key : runtimeState().snapshot(STATE + "player.").keySet()) {
+			int playerId = Integer.parseInt(key.substring((STATE + "player.").length()));
+			InstanceSettlementService.queue(instance, playerId, "luna", plan);
+		}
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
 	}
 
 	private void sendScore(Player only, int nameId, int points) {
@@ -281,8 +297,6 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler {
 	}
 
 	private void cleanupPlayer(Player player) {
-		Storage storage = player.getInventory();
-		storage.decreaseByItemId(182007405, storage.getItemCountByItemId(182007405));
 		PlayerEffectController effects = player.getEffectController();
 		effects.removeEffect(21345);
 		effects.removeEffect(21346);

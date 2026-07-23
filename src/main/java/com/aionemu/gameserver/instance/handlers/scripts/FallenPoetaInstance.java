@@ -18,8 +18,6 @@ public class FallenPoetaInstance extends GeneralInstanceHandler {
 	}
 
 	private static void cleanup(Player player) {
-		var inventory = player.getInventory();
-		inventory.decreaseByItemId(164002346, inventory.getItemCountByItemId(164002346));
 		player.getEffectController().removeEffect(21805);
 		player.getEffectController().removeEffect(21806);
 	}

@@ -337,62 +337,6 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 		openDoor(179);
     }
 	
-	/**
-	 * 玩家对 NPC 使用物品完成时处理。
-	 * Handle item-use finish on an NPC.
-	 *
-	 * 玩家 / player
-	 * npc
-	 */
-	@Override
-	public void handleUseItemFinish(Player player, Npc npc) {
-		switch (npc.getNpcId()) {
-			case 277225: //Belus Camp Defense Cannon.
-			case 277226: //Aspida Camp Defense Cannon.
-			case 277227: //Atanatos Camp Defense Cannon.
-			case 277228: //Disilon Camp Defense Cannon.
-			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21652, 60, player).useNoAnimationSkill(); //Armaments Thief.
-			break;
-			//** ///////// / /////////* *//
-			//** ///////// / /////////* *//
-			case 297331: //Belus Chariot.
-			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21582, 60, player).useNoAnimationSkill(); //Board The Chariot.
-			break;
-			case 297332: //Aspida Chariot.
-			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21589, 60, player).useNoAnimationSkill(); //Board The Chariot.
-			break;
-			case 297333: //Atanatos Chariot.
-			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21590, 60, player).useNoAnimationSkill(); //Board The Chariot.
-			break;
-			case 297334: //Disilon Chariot.
-			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21591, 60, player).useNoAnimationSkill(); //Board The Chariot.
-			break;
-			//** ///////// / /////////* *//
-			//** ///////// / /////////* *//
-			case 297472: //Belus Chariot.
-			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21579, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
-			break;
-			case 297473: //Aspida Chariot.
-                despawnNpc(npc);			
-				GameEngineServices.skillEngine().getSkill(npc, 21586, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
-			break;
-			case 297474: //Atanatos Chariot.
-			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21587, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
-			break;
-			case 297475: //Disilon Chariot.
-				despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21588, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
-			break;
-		}
-	}
-	
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21728);

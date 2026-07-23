@@ -143,6 +143,13 @@ class InstanceSettlementServiceTest {
 	}
 
 	@Test
+	void buildsDredgionRewardsForWinnerLoserAndNegativeScores() {
+		assertEquals(3_500, InstanceSettlementService.dredgionPlan(1_000, 0.5f, true, 3_000, 1_500).ap());
+		assertEquals(2_000, InstanceSettlementService.dredgionPlan(1_000, 0.5f, false, 3_000, 1_500).ap());
+		assertEquals(0, InstanceSettlementService.dredgionPlan(-10_000, 1, false, 3_000, 1_500).ap());
+	}
+
+	@Test
 	void buildsBattlegroundRewardsFromRetailResultAndContribution() {
 		RewardPlan winner = InstanceSettlementService.battlegroundPlan(301120000, 0, BattleResult.WIN,
 				1, 20_000, 0, 0);
@@ -283,6 +290,7 @@ class InstanceSettlementServiceTest {
 		for (String relative : TIME_ATTACK_HANDLERS) {
 			String source = Files.readString(handlers.resolve(relative));
 			assertTrue(source.contains("InstanceSettlementService.settleTimeAttack("), relative);
+			assertTrue(source.contains("InstanceSettlementService.queue(instance, playerId, \"timeattack\", plan)"), relative);
 			Matcher rank = CHECK_RANK.matcher(source);
 			assertTrue(rank.find(), relative);
 			assertTrue(rank.group(1).contains("InstanceSettlementService.timeAttackRank("), relative);
@@ -293,6 +301,8 @@ class InstanceSettlementServiceTest {
 		assertFalse(fissureEvent.contains("Future<?>"));
 		String shugoShared = Files.readString(handlers.resolve("ShugoVaultTimeAttackInstance.java"));
 		assertTrue(shugoShared.contains("InstanceSettlementService.settleTimeAttack("));
+		assertTrue(shugoShared.contains("InstanceSettlementService.queue(instance, playerId, \"timeattack\", plan)"));
+		assertTrue(shugoShared.contains("runtimeState().snapshot(prefix)"));
 		assertTrue(shugoShared.contains("InstanceSettlementService.timeAttackRank("));
 		for (String relative : List.of("TheShugoEmperorVaultInstance.java", "EmperorTrillirunerkSafeInstance.java")) {
 			String source = Files.readString(handlers.resolve(relative));

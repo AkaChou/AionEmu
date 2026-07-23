@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
@@ -29,11 +30,17 @@ class CrucibleSpireMigrationTest {
 		assertFalse(source.contains("GameThreadPoolServices"));
 		assertFalse(source.contains("spawnNextFloor"));
 		assertFalse(source.contains("spawn(247249"));
+			assertFalse(source.contains("spawnInggrilInggness1"));
+			assertFalse(source.contains("onPlayerLogOut"));
+			assertTrue(source.contains("restoreFailureController"));
 
 		String conditions = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
 		int start = conditions.indexOf("<world id=\"302400000\"");
 		String world = conditions.substring(start, conditions.indexOf("</world>", start));
+		assertEquals(55, occurrences(world, "<variable "));
+		assertEquals(798, occurrences(world, "<condition "));
+		assertEquals(798, occurrences(world, "<npc "));
 		for (String variable : new String[] { "condition_infinity_this_season_floor_reward", "fire",
 			"pre_season_check", "pre_season_reset", "timeattack_play_start" }) {
 			assertTrue(world.contains("<variable name=\"" + variable + "\"/>"), variable);
@@ -48,5 +55,11 @@ class CrucibleSpireMigrationTest {
 		}
 		assertTrue(world.contains("<npc id=\"247312\""));
 		assertTrue(world.contains("<npc id=\"247350\""));
+		assertTrue(world.contains("((race == 1) &amp;&amp; (Condition_Infinity_THIS_SEASON_Floor == 1))"));
+		assertTrue(world.contains("((race == 2) &amp;&amp; (Condition_Infinity_THIS_SEASON_Floor == 1))"));
+	}
+
+	private static int occurrences(String text, String token) {
+		return text.split(java.util.regex.Pattern.quote(token), -1).length - 1;
 	}
 }

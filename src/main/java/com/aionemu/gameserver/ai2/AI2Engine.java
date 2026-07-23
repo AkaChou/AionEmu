@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +21,7 @@ import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.ai.RetailPatternAI2;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.RetailAiData;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -36,6 +38,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 public class AI2Engine implements GameEngine {
 
 	private static volatile ObjectProvider<AI2Engine> instanceProvider;
+	private static final Map<String, Boolean> reportedRetailFallbacks = new ConcurrentHashMap<>();
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<String, Class<? extends AbstractAI>>();
 
 	/**
@@ -56,6 +59,7 @@ public class AI2Engine implements GameEngine {
 			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.ai"));
 			log.info(I18n.get("log.ab0828fed65a", aiMap.size()));
 			validateScripts();
+			validateRetailPatterns();
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize ai handlers.", e);
 		} finally {
@@ -122,8 +126,30 @@ public class AI2Engine implements GameEngine {
 	}
 
 	static String selectNpcAi(String fallback, int npcId, Npc npc) {
+		if (npc != null && npc.getPosition() != null) {
+			var instance = npc.getPosition().getWorldMapInstanceOrNull();
+			if (instance != null && instance.getInstanceHandler() != null
+					&& !instance.getInstanceHandler().supportsRetailPattern(npcId)) {
+				return fallback;
+			}
+		}
 		var pattern = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getPattern(npcId);
-		return RetailPatternAI2.supports(pattern, npc) ? "retail_pattern" : fallback;
+		if (RetailPatternAI2.supports(pattern, npc)) {
+			return "retail_pattern";
+		}
+		if (pattern != null) {
+			reportRetailFallback(npcId, npc, pattern, fallback);
+		}
+		return fallback;
+	}
+
+	private static void reportRetailFallback(int npcId, Npc npc, RetailAiData.Pattern pattern, String fallback) {
+		int worldId = npc == null ? 0 : npc.getWorldId();
+		String reason = RetailPatternAI2.unsupportedReason(pattern, npc);
+		String key = worldId + ":" + npcId + ":" + reason;
+		if (reportedRetailFallbacks.putIfAbsent(key, Boolean.TRUE) == null) {
+			log.warn(I18n.get("log.retailPatternFallback", worldId, npcId, pattern.name(), reason, fallback));
+		}
 	}
 
 	String selectRegisteredNpcAi(String fallback, Npc npc) {
@@ -162,6 +188,27 @@ public class AI2Engine implements GameEngine {
 		}
 		if (npcAINames.size() > 0) {
 			log.warn(I18n.get("log.84b7db63f072", StringUtils.join(npcAINames, ", ")));
+		}
+	}
+
+	/**
+	 * 统计未被通用 Retail AI 执行器接管的 NPC Pattern 原因分组，启动期输出覆盖缺口。
+	 * Summarizes why NPC patterns fall back to legacy AI, logging coverage gaps at startup.
+	 */
+	private void validateRetailPatterns() {
+		if (DataManager.RETAIL_AI_DATA == null) {
+			return;
+		}
+		Map<String, Integer> unsupported = new HashMap<>();
+		for (NpcTemplate npcTemplate : DataManager.NPC_DATA.getNpcData().values()) {
+			RetailAiData.Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcTemplate.getTemplateId());
+			String reason = RetailPatternAI2.unsupportedReason(pattern);
+			if (reason != null) {
+				unsupported.merge(reason, 1, Integer::sum);
+			}
+		}
+		if (!unsupported.isEmpty()) {
+			log.warn(I18n.get("log.retailPatternCoverage", unsupported.size(), unsupported));
 		}
 	}
 

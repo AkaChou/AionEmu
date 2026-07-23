@@ -142,9 +142,35 @@ class BeshmundirTempleInstanceTest {
 		for (Element spawn : elements(spawnDocument.getElementsByTagName("spawn"))) {
 			legacy.add(Integer.parseInt(spawn.getAttribute("npc_id")));
 		}
-		managed.retainAll(legacy);
-		assertTrue(managed.isEmpty(), managed.toString());
-		assertTrue(legacy.contains(216586));
+			managed.retainAll(legacy);
+			assertTrue(managed.isEmpty(), managed.toString());
+			assertTrue(legacy.contains(216586));
+
+			String ownership = Files.readAllLines(Path.of(
+				"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+				.filter(line -> line.contains("id=\"300170000\"")).findFirst().orElseThrow();
+			assertTrue(ownership.contains("retail condition/static spawns and Pattern own bosses/doors/waves/drops"));
+			assertTrue(ownership.contains("handler only bridges altar 730274 to missing respondent 799506 for active quest oil"));
+			assertTrue(ownership.contains("consumes key 185000091 for blue-flame door 730290"));
+			assertTrue(ownership.contains("clears non-owned-world keys 185000091..185000096 on leave while preserving retail logout"));
+
+			String handler = Files.readString(HANDLER);
+			assertTrue(handler.contains("onLeaveInstance"));
+			assertFalse(handler.contains("onPlayerLogOut"));
+			String items = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+			for (int itemId = 185000091; itemId <= 185000096; itemId++) {
+				assertFalse(itemTemplateBlock(items, itemId).contains("ownership_world"), Integer.toString(itemId));
+			}
+		}
+
+	private static String itemTemplateBlock(String source, int itemId) {
+		int start = source.indexOf("<item_template id=\"" + itemId + "\"");
+		assertTrue(start >= 0);
+		int startTagEnd = source.indexOf('>', start);
+		int end = source.charAt(startTagEnd - 1) == '/' ? startTagEnd + 1
+			: source.indexOf("</item_template>", startTagEnd) + "</item_template>".length();
+		return source.substring(start, end);
 	}
 
 	private static Element world(org.w3c.dom.Document document, String worldId) {

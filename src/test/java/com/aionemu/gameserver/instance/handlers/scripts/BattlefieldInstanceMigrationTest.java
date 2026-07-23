@@ -35,9 +35,17 @@ class BattlefieldInstanceMigrationTest {
 		assertTrue(handler.contains("runtimeState().put(STATE_PREFIX + \"phase\""));
 		assertTrue(handler.contains("InstanceSettlementService.queueBattleground"));
 		assertTrue(handler.contains("DataManager.RETAIL_AI_DATA.getNpcScore"));
+		assertTrue(handler.contains("case 730861, 730878, 801766, 801767, 801818, 801819, 801820, 801821 -> true"));
+		assertTrue(handler.contains("npc.getSpawn().getStableKey()"));
+		assertFalse(handler.contains("case 232855, 232856"));
 		assertFalse(handler.contains("Future<?>"));
 		assertFalse(handler.contains("GameThreadPoolServices"));
 		assertFalse(handler.contains("spawn("));
+
+		String firstScore = KamarBattlefieldInstance.scoreEventKey("static:301120000:730861:1", 100);
+		assertEquals(firstScore, KamarBattlefieldInstance.scoreEventKey("static:301120000:730861:1", 101));
+		assertFalse(firstScore.equals(KamarBattlefieldInstance.scoreEventKey("static:301120000:730861:2", 100)));
+		assertEquals("kamar.score.event.object.100", KamarBattlefieldInstance.scoreEventKey(null, 100));
 
 		String rewards = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/instance/rewards.xml"));
@@ -92,6 +100,7 @@ class BattlefieldInstanceMigrationTest {
 		assertTrue(handler.contains("InstanceSettlementService.queueBattleground"));
 		assertTrue(handler.contains("DataManager.RETAIL_AI_DATA.getNpcScore"));
 		assertTrue(handler.contains("scheduleBombardment"));
+		assertTrue(handler.contains("spawn(855240"));
 		assertTrue(handler.contains("decreaseByItemId(164000277, 1)"));
 		assertTrue(handler.contains("decreaseByItemId(164000278, 1)"));
 		assertFalse(handler.contains("Future<?>"));
@@ -99,6 +108,22 @@ class BattlefieldInstanceMigrationTest {
 		assertFalse(handler.contains("onDropRegistered"));
 		assertFalse(handler.contains("onEnterZone"));
 		assertFalse(handler.contains("powerGenerator"));
+		assertFalse(handler.contains("spawn(233"));
+
+		String definitions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String engulfed = worldConditions(definitions, 301210000);
+		assertEquals(37, occurrences(engulfed, "<variable "));
+		assertEquals(90, occurrences(engulfed, "<condition "));
+		assertEquals(90, occurrences(engulfed, "<slot>"));
+		assertEquals(90, occurrences(engulfed, "<npc "));
+		assertTrue(engulfed.contains("<npc id=\"233491\""));
+
+		String spawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/301210000_Engulfed_Ophidan_Bridge.xml"));
+		for (String npcId : new String[] { "233473", "233856", "701945", "701947", "802044" }) {
+			assertTrue(spawns.contains("npc_id=\"" + npcId + "\""), npcId);
+		}
 
 		String rewards = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/instance/rewards.xml"));
@@ -118,6 +143,62 @@ class BattlefieldInstanceMigrationTest {
 		for (String npcId : new String[] { "701974", "701975", "701976" }) {
 			assertTrue(drops.contains("<npc_drop npc_id=\"" + npcId + "\">"));
 		}
+	}
+
+	@Test
+	void ironWallUsesRetailPopulationAndPersistentLifecycle() throws Exception {
+		String handler = handler("IronWallWarfrontInstance");
+		for (String required : new String[] {
+			"scheduleDeadline(\"adjustment\"", "scheduleDeadline(\"preparation\"",
+			"scheduleDeadline(\"battle\"", "scheduleDeadline(\"exit\"",
+			"InstanceSettlementService.queueBattleground", "consumeNpcScore", "scoreEventKey",
+			"setDoorState(doorId, true)", "removeItems(player)"
+		}) {
+			assertTrue(handler.contains(required), required);
+		}
+		for (String legacy : new String[] { "Future<", "GameThreadPoolServices", "SpawnEngine", "spawn(" }) {
+			assertFalse(handler.contains(legacy), legacy);
+		}
+		assertTrue(method(handler, "onLeaveInstance").contains("removeItems(player)"));
+		assertFalse(method(handler, "onPlayerLogOut").contains("removeItems(player)"));
+
+		String first = IronWallWarfrontInstance.scoreEventKey("condition:7582:generation.1", 1);
+		assertEquals(first, IronWallWarfrontInstance.scoreEventKey("condition:7582:generation.1", 2));
+		assertFalse(first.equals(IronWallWarfrontInstance.scoreEventKey("condition:7582:generation.2", 1)));
+
+		String definitions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String ironWall = worldConditions(definitions, 301220000);
+		assertEquals(28, occurrences(ironWall, "<variable "));
+		assertEquals(486, occurrences(ironWall, "<condition "));
+		assertEquals(486, occurrences(ironWall, "<slot>"));
+		assertEquals(542, occurrences(ironWall, "<npc "));
+		assertTrue(ironWall.contains("<npc id=\"233544\""));
+		assertTrue(ironWall.contains("<npc id=\"233548\""));
+
+		String spawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/301220000_Iron_Wall_Warfront.xml"));
+		for (String npcId : new String[] { "233537", "233564", "233567", "701660", "831328", "831329", "831330" }) {
+			assertTrue(spawns.contains("npc_id=\"" + npcId + "\""), npcId);
+		}
+		String drops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		String ammoBox = drops.substring(drops.indexOf("<npc_drop npc_id=\"831329\""));
+		ammoBox = ammoBox.substring(0, ammoBox.indexOf("</npc_drop>"));
+		assertTrue(ammoBox.contains("item_id=\"182006996\""));
+		assertTrue(ammoBox.contains("item_id=\"182006997\""));
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (int itemId : new int[] { 185000137, 182006996, 182006997 }) {
+			assertTrue(item(items, itemId).contains("ownership_world=\"300540000\""));
+		}
+
+		String rewards = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/rewards.xml"));
+		assertTrue(rewards.contains("name=\"IDF5_TD_War\" pc_die_score=\"0\" pc_kill_score=\"200\""));
+		String scores = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npc-scores.xml"));
+		assertTrue(scores.contains("npc_id=\"233498\" name=\"IDF5_TD_War_Dark_Officer_01_Ae2\""));
 	}
 
 	@Test
@@ -192,23 +273,26 @@ class BattlefieldInstanceMigrationTest {
 		assertTrue(rewards.contains("name=\"IDEternity_War_SP\" pc_die_score=\"0\" pc_kill_score=\"5\""));
 		assertTrue(rewards.contains("spawn_page=\"2\" spawn_type=\"0\" wait_time=\"180\" wait_time_after_noenemy=\"60\""));
 
-		String packet = Files.readString(Path.of(
-			"src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_INSTANCE_SCORE.java"));
-		assertTrue(packet.contains("Race oppositeRace = ecpr.getRace() == Race.ELYOS"));
 		String reward = Files.readString(Path.of(
 			"src/main/java/com/aionemu/gameserver/model/instance/instancereward/EvergaleCanyonReward.java"));
 		assertFalse(reward.contains("instanceTime"));
 		assertFalse(reward.contains("capPoints"));
 
-		for (String quest : new String[] {
-			"_13962Legendary_Black_Market_Trader", "_23962Rumors_About_The_Black_Market_Trader"
-		}) {
-			String source = Files.readString(Path.of(
-				"src/main/java/com/aionemu/gameserver/quest/handlers/evergale_canyon/" + quest + ".java"));
-			for (String npcId : new String[] { "835385", "835447", "835474", "835476", "835478", "835480" }) {
-				assertTrue(source.contains(npcId), quest + ':' + npcId);
+		String quests = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/quests/scripts/zz_retail_simple_quests.xml"));
+		for (String questId : new String[] { "13962", "23962" }) {
+			String quest = questDefinition(quests, questId);
+			assertTrue(quest.contains("<step type=\"ENTER_AREA\" ids=\"835385\""));
+			for (String legacyTarget : new String[] { "835447", "835474", "835476", "835478", "835480" }) {
+				assertFalse(quest.contains(legacyTarget), questId + ':' + legacyTarget);
 			}
 		}
+	}
+
+	private static String questDefinition(String definitions, String questId) {
+		int start = definitions.indexOf("id=\"" + questId + "\"");
+		int end = definitions.indexOf("</data_driven_quest>", start);
+		return definitions.substring(start, end);
 	}
 
 	private static String worldConditions(String definitions, int worldId) {
@@ -220,6 +304,16 @@ class BattlefieldInstanceMigrationTest {
 	private static String handler(String name) throws Exception {
 		return Files.readString(Path.of(
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + name + ".java"));
+	}
+
+	private static String method(String source, String name) {
+		int start = source.indexOf(name + "(");
+		return source.substring(start, source.indexOf("\n\t}", start));
+	}
+
+	private static String item(String source, int itemId) {
+		int start = source.indexOf("<item_template id=\"" + itemId + "\"");
+		return source.substring(start, source.indexOf("</item_template>", start));
 	}
 
 	private static int occurrences(String value, String needle) {

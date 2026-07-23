@@ -33,6 +33,7 @@ class RetailInstanceDataTest {
 		assertEquals("DATA_ONLY", data.coverage(310020000).value("behavior"));
 		assertEquals("EVENT", data.coverage(600080000).value("behavior"));
 		assertEquals("HOUSING", data.coverage(720010000).value("behavior"));
+		assertEquals("EXCLUDED_NON_PRODUCTION", data.coverage(300260000).value("behavior"));
 		assertEquals("EXCLUDED_NON_PRODUCTION", data.coverage(900210000).value("behavior"));
 		assertEquals("TOURNAMENT", data.coverage(302320000).value("behavior"));
 		assertNotNull(data.coverage(302320000).value("behavior_source"));

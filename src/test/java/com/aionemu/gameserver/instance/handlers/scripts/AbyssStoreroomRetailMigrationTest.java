@@ -64,20 +64,24 @@ class AbyssStoreroomRetailMigrationTest {
 			assertFalse(drops.contains(wrong), wrong);
 		}
 
-		String handler = Files.readString(Path.of(
-			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AbyssStoreroomInstance.java"));
-		assertTrue(handler.contains("onPlayerLogOut"));
-		for (String legacy : new String[] { "onLeaveInstance", "onDropRegistered", "onDie(", "scheduleDeadline",
-			"spawn(", "CHEST_STAGE_DURATION", "Config" }) {
-			assertFalse(handler.contains(legacy), legacy);
+		for (String handler : new String[] { "AbyssStoreroomInstance.java", "GraveOfSteelStoreroomInstance.java",
+			"TwilightBattlefieldStoreroomInstance.java", "IsleOfRootsStoreroomInstance.java" }) {
+			assertFalse(Files.exists(HANDLERS.resolve(handler)), handler);
+		}
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (int itemId = 185000056; itemId <= 185000070; itemId++) {
+			String item = block(items, "<item_template id=\"" + itemId + "\"", "</item_template>");
+			int worldId = itemId <= 185000060 ? 300140000 : itemId <= 185000065 ? 300120000 : 300130000;
+			assertTrue(item.contains("ownership_world=\"" + worldId + "\""), Integer.toString(itemId));
 		}
 
 		String coverage = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
 		for (int worldId : worldIds) {
 			String world = block(coverage, "<world ", "/>", coverage.indexOf("id=\"" + worldId + "\""));
-			assertTrue(world.contains("behavior=\"HANDLER\""), Integer.toString(worldId));
-			assertTrue(world.contains("handler logout key cleanup"), Integer.toString(worldId));
+			assertTrue(world.contains("behavior=\"RETAIL_AI_QUEST\""), Integer.toString(worldId));
+			assertTrue(world.contains("ownership_world keys own complete flow"), Integer.toString(worldId));
 		}
 	}
 
@@ -179,6 +183,22 @@ class AbyssStoreroomRetailMigrationTest {
 			"src/main/resources/aion/definitions/compact/ai/npcaipatterns.xml"));
 		assertTrue(raceAttackPattern.contains("<string>LIGHTIN</string><set>1</set>"));
 		assertTrue(raceAttackPattern.contains("<string>DARKIN</string><set>1</set>"));
+		StringBuilder patterns = new StringBuilder();
+		try (var files = Files.list(Path.of("src/main/resources/aion/definitions/compact/ai"))) {
+			for (Path path : files.filter(file -> file.getFileName().toString().startsWith("npcaipatterns")
+					&& file.getFileName().toString().endsWith(".xml")).toList()) {
+				patterns.append(Files.readString(path));
+			}
+		}
+		for (String trigger : new String[] { "ABRwd_DespawnBox", "ABRwd_SpawnBoxA", "ABRwd_SpawnBoxB",
+				"ABRwd_SpawnBoxC", "ABRwd_SpawnBoxD", "ABRwd_SpawnBoxE" }) {
+			assertTrue(patterns.indexOf("<name>" + trigger + "</name>") >= 0, trigger);
+		}
+		for (String missingConsumer : new String[] { "AI_IDREWARD_FobjDrop", "AI_IDREWARD_FobjDropdice",
+				"IDAB1_1221_TreasureBox_A", "IDAB1_1251_TreasureBox_A" }) {
+			assertTrue(npcAi.contains("ai=\"" + missingConsumer + "\""), missingConsumer);
+			assertFalse(patterns.indexOf("<name>" + missingConsumer + "</name>") >= 0, missingConsumer);
+		}
 		String raceSightPattern = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/ai/npcaipatterns_ab1_ver49_ssh.xml"));
 		assertTrue(raceSightPattern.contains("<string>racecheck</string><set>1</set>"));
@@ -194,15 +214,19 @@ class AbyssStoreroomRetailMigrationTest {
 		for (int itemId = 185000033; itemId <= 185000038; itemId++) {
 			assertTrue(drops.contains("item_id=\"" + itemId + "\""), Integer.toString(itemId));
 		}
-		for (String ownership : new String[] { "ownership_world=\"300050000\"",
-			"ownership_world=\"300070000\"" }) {
-			assertTrue(items.contains(ownership), ownership);
+		for (int itemId = 185000033; itemId <= 185000038; itemId++) {
+			int worldId = itemId <= 185000035 ? 300050000 : 300070000;
+			String item = block(items, "<item_template id=\"" + itemId + "\"", "</item_template>");
+			assertTrue(item.contains("ownership_world=\"" + worldId + "\""), Integer.toString(itemId));
 		}
+		String instanceService = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java"));
+		assertTrue(instanceService.contains("getOwnershipWorld() == player.getWorldId()"));
 
 		String carpus = Files.readString(HANDLERS.resolve("CarpusIsleStoreroomInstance.java"));
 		String hamate = Files.readString(HANDLERS.resolve("HamateIsleStoreroomInstance.java"));
 		for (String handler : new String[] { carpus, hamate }) {
-			assertTrue(handler.contains("onPlayerLogOut"));
+			assertFalse(handler.contains("onPlayerLogOut"));
 			assertTrue(handler.contains("new SM_QUEST_ACTION"));
 			assertTrue(handler.contains("public void onEnterZone(Player player, ZoneInstance zone)"));
 			assertTrue(handler.contains("private synchronized void start"));
@@ -258,8 +282,9 @@ class AbyssStoreroomRetailMigrationTest {
 			assertTrue(world.contains("behavior=\"HANDLER\""), Integer.toString(worldId));
 			assertTrue(world.contains("exact timer zone"), Integer.toString(worldId));
 			assertTrue(world.contains("persistent 15-minute deadline"), Integer.toString(worldId));
+				assertTrue(world.contains("direct chest cleanup"), Integer.toString(worldId));
+			}
 		}
-	}
 
 	private static String block(String source, String startToken, String endToken) {
 		int start = source.indexOf(startToken);

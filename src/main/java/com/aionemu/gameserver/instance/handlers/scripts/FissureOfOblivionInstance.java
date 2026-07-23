@@ -29,6 +29,9 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
 		instanceReward = new FissureOfOblivionReward(mapId, instanceId);
 		restoreScore();
 		instanceReward.setInstanceScoreType(scoreType());
+		if (runtimeState().getBoolean("fissure.completed", false)) {
+			settlePlayers();
+		}
 		restoreDeadlines();
 	}
 
@@ -186,10 +189,8 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
 		cancelDeadline("prepare");
 		cancelDeadline("expire");
 		cancelDeadline("settle");
-		for (Player player : instance.getPlayersInside()) {
-			doReward(player);
-			sendScore(player, 0, 0);
-		}
+		settlePlayers();
+		sendScore(null, 0, 0);
 	}
 
 	private void restoreDeadlines() {
@@ -226,6 +227,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
 	}
 
 	private FissureOfOblivionPlayerReward getOrCreatePlayerReward(Player player) {
+		runtimeState().put("fissure.participant." + player.getObjectId(), true);
 		FissureOfOblivionPlayerReward reward = (FissureOfOblivionPlayerReward) instanceReward
 			.getPlayerReward(player.getObjectId());
 		if (reward == null) {
@@ -240,6 +242,18 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
 
 	private String playerKey(Player player) {
 		return "fissure.reward." + player.getObjectId();
+	}
+
+	private void settlePlayers() {
+		var plan = InstanceSettlementService.timeAttackPlan(mapId, instanceReward.getRank());
+		String prefix = "fissure.participant.";
+		for (String key : runtimeState().snapshot(prefix).keySet()) {
+			int playerId = Integer.parseInt(key.substring(prefix.length()));
+			InstanceSettlementService.queue(instance, playerId, "timeattack", plan);
+		}
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
 	}
 
 	private void sendScore(Player only, int nameId, int points) {

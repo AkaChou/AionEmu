@@ -46,7 +46,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	private static final String BATTLE = "BATTLE";
 	private static final String FINISHED = "FINISHED";
 	private static final long EXIT_DELAY = 60_000;
-	private final Set<Integer> consumedScoreNpcs = new HashSet<>();
 
 	/** 副本奖励对象 / instance reward object */
 	protected HarmonyArenaReward instanceReward;
@@ -180,7 +179,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
-		if (npc.getAggroList().getMostPlayerDamage() == null) {
+		if (supportsRetailNpcScore(npc.getNpcId(), 0) || npc.getAggroList().getMostPlayerDamage() == null) {
 			return;
 		}
 		updatePoints(npc);
@@ -207,17 +206,28 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 
 	@Override
 	public boolean supportsRetailNpcScore(int npcId, int scoreApplyType) {
-		return npcId == 207101 && scoreApplyType == 0;
+		return scoreApplyType == 0 && switch (npcId) {
+			case 207099, 207101, 207102, 207116, 207117,
+				219277, 219278, 219279, 219280, 219281, 219282, 219283, 219284, 219285,
+				219328, 219481, 219485, 219486, 219648, 219649, 219650, 219652,
+				243678, 243679, 243680 -> true;
+			default -> false;
+		};
 	}
 
 	@Override
 	public synchronized boolean onRetailNpcScore(Player player, Npc npc, int scoreApplyType, int points) {
 		HarmonyGroupReward group = instanceReward.getHarmonyGroupReward(player.getObjectId());
 		if (!instanceReward.isStartProgress() || group == null
-				|| !supportsRetailNpcScore(npc.getNpcId(), scoreApplyType)
-				|| !consumedScoreNpcs.add(npc.getObjectId())) {
+				|| !supportsRetailNpcScore(npc.getNpcId(), scoreApplyType) || points == 0) {
 			return false;
 		}
+		String stableKey = npc.getSpawn() == null ? null : npc.getSpawn().getStableKey();
+		String eventKey = scoreEventKey(stableKey, npc.getObjectId());
+		if (runtimeState().getBoolean(eventKey, false)) {
+			return true;
+		}
+		runtimeState().put(eventKey, true);
 		restoreGroup(group);
 		group.addPoints(points);
 		persistGroup(group);
@@ -227,6 +237,11 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			finishBattle(true);
 		}
 		return true;
+	}
+
+	static String scoreEventKey(String stableKey, int objectId) {
+		return STATE + "score.event."
+			+ (stableKey == null || stableKey.isBlank() ? "object." + objectId : stableKey);
 	}
 	
 	private int getTime() {
@@ -560,7 +575,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	public void handleUseItemFinish(Player player, Npc npc) {
 		final Integer object = player.getObjectId();
 		final HarmonyGroupReward group = instanceReward.getHarmonyGroupReward(object);
-		if (!instanceReward.isStartProgress() || group == null) {
+		if (!instanceReward.isStartProgress() || group == null || supportsRetailNpcScore(npc.getNpcId(), 0)) {
 			return;
 		}
 		restoreGroup(group);

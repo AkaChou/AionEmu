@@ -170,6 +170,10 @@ public class WorldPosition {
 		return mapRegion.getParent();
 	}
 
+	public WorldMapInstance getWorldMapInstanceOrNull() {
+		return mapRegion == null ? null : mapRegion.getParent();
+	}
+
 	/**
 	 * 对象是否已生成。
 	 * Whether the object is spawned.

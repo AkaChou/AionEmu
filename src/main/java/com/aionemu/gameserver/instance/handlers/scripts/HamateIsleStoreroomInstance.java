@@ -3,7 +3,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -104,27 +103,4 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 		});
 	}
 	
-	/**
-	 * 玩家离开副本时处理。
-	 * Handle a player leaving the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	/**
-	 * 玩家从该副本登出时处理。
-	 * Handle a player logging out from this instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeItems(player);
-	}
-	
-    private void removeItems(Player player) {
-        Storage storage = player.getInventory();
-        storage.decreaseByItemId(185000036, storage.getItemCountByItemId(185000036)); //Golden Ruins Of Roah Key.
-        storage.decreaseByItemId(185000037, storage.getItemCountByItemId(185000037)); //Jeweled Ruins Of Roah Key.
-        storage.decreaseByItemId(185000038, storage.getItemCountByItemId(185000038)); //Magic Ruins Of Roah Key.
-    }
 }

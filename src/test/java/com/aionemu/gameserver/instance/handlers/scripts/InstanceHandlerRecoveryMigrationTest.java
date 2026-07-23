@@ -15,16 +15,14 @@ class InstanceHandlerRecoveryMigrationTest {
 	@Test
 	void migratedHandlersUsePersistentDeadlinesAndState() throws Exception {
 		assertMigrated("PadmarashkaCaveInstance", "scheduleDeadline(\"expire\"", "padma.protectors");
-		assertMigrated("CradleOfEternityInstance", "scheduleDeadline(\"start\"", "cradle.covetous_complete");
-		assertSourceContains("CradleOfEternityInstance", "cradle.sun_revealed");
-		assertSourceExcludes("CradleOfEternityInstance", "GameThreadPoolServices");
 		assertMigrated("TransidiumAnnexInstance", "scheduleDeadline(\"start\"", "transidium.hangar_barricade");
 		assertSourceContains("TransidiumAnnexInstance", "scheduleDeadline(\"return\"");
 		assertSourceContains("TransidiumAnnexInstance", "transidium.return_deadline");
 		assertSourceContains("TransidiumAnnexInstance", "transidium.return_complete");
 		assertSourceExcludes("TransidiumAnnexInstance", "GameThreadPoolServices");
 		assertMigrated("TheobomosLabInstance", "scheduleDeadline(\"stone\"", "theobomos.ifrit_deadline");
-		assertMigrated("DraupnirCaveInstance", "scheduleDeadline(\"gate_raid_2\"", "draupnir.adjutants");
+		assertMigrated("DraupnirCaveInstance", "scheduleDeadline(\"phantasm\"",
+			"draupnir.phantasm_deadline");
 		assertSourceExcludes("DraupnirCaveInstance", "GameThreadPoolServices");
 		assertSourceExcludes("RentusBaseInstance", "GameThreadPoolServices");
 		assertSourceExcludes("RentusBaseInstance", "case 217292");
@@ -54,9 +52,6 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertSourceExcludes("SmolderingFireTempleInstance", "GameThreadPoolServices");
 		assertNoFuture("AbyssalSplinterInstance");
 		assertNoFuture("UnstableAbyssalSplinterInstance");
-		assertNoFuture("GraveOfSteelStoreroomInstance");
-		assertNoFuture("IsleOfRootsStoreroomInstance");
-		assertNoFuture("TwilightBattlefieldStoreroomInstance");
 		assertNoFuture("TalocsHollowInstance");
 		assertNoFuture("BeshmundirTempleInstance");
 		assertNoFuture("KumukiCaveInstance");
@@ -74,6 +69,49 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertSourceContains("DarkPoetaInstance", "DataManager.RETAIL_AI_DATA.getNpcScore");
 		assertSourceExcludes("DarkPoetaInstance", "GameThreadPoolServices");
 		assertNoFuture("DarkPoetaInstance");
+	}
+
+	@Test
+	void abyssalSplinterUsesRetailArtifactAndDayshadeTriggers() throws Exception {
+		Path ai = Path.of("src/main/java/com/aionemu/gameserver/ai/instance/abyssalSplinter");
+		for (String removed : new String[] {
+				"Artifact_Of_ProtectionAI2.java", "DayshadeAI2.java", "Unstable_DayshadeAI2.java" }) {
+			assertFalse(Files.exists(ai.resolve(removed)), removed);
+		}
+
+		String npcTemplates = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/npcs/npc_template.xml"));
+		for (int npcId : new int[] { 700856, 282010, 219578 }) {
+			assertTrue(Pattern.compile("<npc_template npc_id=\"" + npcId + "\"[^>]* ai=\"general\"")
+				.matcher(npcTemplates).find(), Integer.toString(npcId));
+		}
+
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		for (String condition : new String[] {
+				"expression=\"ArtifactCore_Die == 3\"", "expression=\"NmdD_Spawn == 1\"",
+				"expression=\"NmdD_Spawn_Hard == 1\"", "expression=\"LightDark_Spawn == 1\"" }) {
+			assertTrue(conditions.contains(condition), condition);
+		}
+
+		String handler = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AbyssalSplinterInstance.java"));
+		assertTrue(handler.contains("185000104"));
+		assertTrue(handler.contains("onLeaveInstance"));
+		assertFalse(handler.contains("onPlayerLogOut"));
+		assertFalse(handler.contains("spawn("));
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		assertFalse(itemTemplateBlock(items, "185000104").contains("ownership_world"));
+		String doors = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/staticdoors/staticdoor_templates.xml"));
+		String keyedDoor = "keyid=\"185000104\" doorid=\"19\"";
+		assertEquals(2, (doors.length() - doors.replace(keyedDoor, "").length()) / keyedDoor.length());
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertEquals(2, coverage.lines().filter(line -> line.contains("id=\"300220000\"")
+			|| line.contains("id=\"300600000\"")).filter(line -> line.contains(
+				"clears non-owned-world item 185000104 on leave while preserving retail logout")).count());
 	}
 
 	@Test
@@ -259,6 +297,20 @@ class InstanceHandlerRecoveryMigrationTest {
 		String staticSpawns = Files.readString(Path.of(
 				"src/main/resources/aion/data/static_data/spawns/Instances/301590000_Emperor_Trillirunerk_Safe.xml"));
 		assertFalse(staticSpawns.matches("(?s).*npc_id=\"235[0-9]+\".*"));
+
+		String handler = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ShugoVaultTimeAttackInstance.java"));
+		assertFalse(handler.contains("decreaseByItemId"));
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (int itemId : new int[] { 185000222, 162002031, 162002032, 162002033, 162002034, 162002035,
+			162002036 }) {
+			assertTrue(itemTemplateBlock(items, Integer.toString(itemId)).contains("ownership_world=\"301400000\""));
+		}
+		for (int itemId : new int[] { 185000268, 162002079, 162002080, 162002081, 162002082, 162002083,
+			162002084 }) {
+			assertTrue(itemTemplateBlock(items, Integer.toString(itemId)).contains("ownership_world=\"301590000\""));
+		}
 	}
 
 	@Test
@@ -275,10 +327,18 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertEquals(14, count(udas, "<condition "));
 
 		String handler = Files.readString(Path.of(
-				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UdasTempleInstance.java"));
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UdasTempleInstance.java"));
+		assertTrue(handler.contains("onLeaveInstance"));
+		assertFalse(handler.contains("onPlayerLogOut"));
 		assertFalse(handler.contains("GameThreadPoolServices"));
 		assertFalse(handler.contains("onDropRegistered"));
 		assertFalse(handler.contains("onDie"));
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (String key : new String[] { "185000083", "185000084", "185000085" }) {
+			assertTrue(handler.contains(key), key);
+			assertFalse(itemTemplateBlock(items, key).contains("ownership_world"), key);
+		}
 
 		String staticSpawns = Files.readString(Path.of(
 				"src/main/resources/aion/data/static_data/spawns/Instances/300150000_Udas_Temple.xml"));
@@ -297,10 +357,25 @@ class InstanceHandlerRecoveryMigrationTest {
 		String level53Skinmenders = spawnBlock(staticSpawns, "215808");
 		assertEquals(7, count(level53Skinmenders, "<spot "));
 		assertFalse(level53Skinmenders.contains("respawn_time="));
-		for (String npcId : new String[] { "215782", "215783", "215793", "730217", "700706", "730272" }) {
-			assertFalse(staticSpawns.contains("npc_id=\"" + npcId + "\""));
+			for (String npcId : new String[] { "215782", "215783", "215793", "730217", "700706", "730272" }) {
+				assertFalse(staticSpawns.contains("npc_id=\"" + npcId + "\""));
+			}
+
+			String drops = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_005.xml"));
+			for (String[] key : new String[][] { { "215787", "185000083" }, { "215782", "185000084" },
+					{ "215791", "185000085" } }) {
+				assertTrue(npcDropBlock(drops, key[0])
+					.contains("item_id=\"" + key[1] + "\" chance=\"100.00\""));
+			}
+
+			String doors = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/staticdoors/staticdoor_templates.xml"));
+			for (String[] door : new String[][] { { "185000083", "97" }, { "185000084", "102" },
+					{ "185000085", "121" } }) {
+				assertTrue(doors.contains("keyid=\"" + door[0] + "\" doorid=\"" + door[1] + "\""));
+			}
 		}
-	}
 
 	@Test
 	void lowerUdasUsesCompactDropsWithoutPrivateInjection() throws Exception {
@@ -308,8 +383,15 @@ class InstanceHandlerRecoveryMigrationTest {
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/LowerUdasTempleInstance.java"));
 		assertFalse(handler.contains("onDropRegistered"));
 		assertFalse(handler.contains("GameWorldServices"));
+		assertFalse(handler.contains("onPlayerLogOut"));
+		assertTrue(handler.contains("onLeaveInstance"));
 		for (String privateDrop : new String[] { "188053579", "188053580", "188052306", "188053788" }) {
 			assertFalse(handler.contains(privateDrop), privateDrop);
+		}
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (String key : new String[] { "185000086", "185000087" }) {
+			assertFalse(itemTemplateBlock(items, key).contains("ownership_world"), key);
 		}
 
 		String bosses = Files.readString(Path.of(
@@ -330,18 +412,55 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertFalse(bosses.contains("188053788"));
 		assertFalse(chests.contains("188053788"));
 		assertFalse(eventChests.contains("188053788"));
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(coverage.contains("handler owns persistent 12-chest lifecycle and clears non-owned-world keys "
+			+ "185000086..185000087 on leave while preserving retail logout"));
 	}
 
 	@Test
-	void sealedArgentManorUsesCompactDropsWithoutPrivateBossRewards() throws Exception {
+	void sealedArgentManorUsesRetailDataAndKeepsTimeAttackHandler() throws Exception {
 		String handler = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SealedArgentManorInstance.java"));
 		assertFalse(handler.contains("onDropRegistered"));
 		assertFalse(handler.contains("GameWorldServices"));
+		for (String duplicate : new String[] { "case 701001", "case 701002", "case 701003", "case 701004" }) {
+			assertFalse(handler.contains(duplicate), duplicate);
+		}
+		assertTrue(handler.contains("npc.getNpcId() == 856547"));
 		for (String privateDrop : new String[] { "190080005", "190080006", "190080007", "190080008",
 				"190200000" }) {
 			assertFalse(handler.contains(privateDrop), privateDrop);
 		}
+
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = worldBlock(conditions, "301510000");
+		assertEquals(3, count(world, "<variable "));
+		assertEquals(28, count(world, "<condition "));
+		assertEquals(28, count(world, "<slot>"));
+		for (String expected : new String[] { "key_monster == 6", "teleport_01 == 3", "teleport_02 == 3",
+				"npc id=\"731648\"", "npc id=\"856573\"" }) {
+			assertTrue(world.contains(expected), expected);
+		}
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/301510000_Sealed_Argent_Manor.xml"));
+		assertFalse(staticSpawns.contains("<spawn npc_id=\"731648\">"));
+		for (String npcId : new String[] { "701001", "701002", "701003", "701004", "856547" }) {
+			assertTrue(staticSpawns.contains("<spawn npc_id=\"" + npcId + "\">"), npcId);
+		}
+
+		String patterns = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npcaipatterns_idelemental_2_e_ssh.xml"));
+		assertTrue(patterns.contains("<string>key_monster</string>"));
+		assertTrue(patterns.contains("<string>teleport_01</string>"));
+		assertTrue(patterns.contains("<string>teleport_02</string>"));
+		String deform = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npcaipatterns_idelemental_hue.xml"));
+		assertTrue(deform.contains("<name>IDHouse_Hidden_NPC_Deform</name>"));
+		assertTrue(deform.contains("<skill>SKILLI_INDEX_0</skill>"));
 
 		String keys = Files.readString(Path.of(
 				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_013.xml"));
@@ -359,10 +478,225 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void linkgateFoundryKeepsOnlyUnmodeledTimedPopulationAndCompletion() throws Exception {
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		assertFalse(conditions.contains("<world id=\"301270000\""));
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/301270000_Linkgate_Foundry.xml"));
+		for (String retailActor : new String[] { "234193", "702590", "702591", "804629", "855259",
+				"234992" }) {
+			assertTrue(staticSpawns.contains("npc_id=\"" + retailActor + "\""), retailActor);
+		}
+		for (String handlerActor : new String[] { "233887", "233888", "233889", "233890", "233891",
+				"233892", "233893", "233895", "233896", "233897", "702338" }) {
+			assertFalse(staticSpawns.contains("npc_id=\"" + handlerActor + "\""), handlerActor);
+		}
+
+		String handler = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/LinkgateFoundryInstance.java"));
+		for (String required : new String[] { "linkgate.expire_deadline", "scheduleDeadline(\"expire\"",
+				"spawn(233887", "spawn(233888", "spawn(233897", "spawn(702338", "linkgate.complete" }) {
+			assertTrue(handler.contains(required), required);
+		}
+		assertFalse(handler.contains("GameThreadPoolServices"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertFalse(handler.contains("185000196"));
+		assertFalse(handler.contains("onPlayerLogOut"));
+		assertFalse(handler.contains("onLeaveInstance"));
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		assertTrue(itemTemplateBlock(items, "185000196").contains("ownership_world=\"301270000\""));
+		String instanceService = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java"));
+		assertTrue(instanceService.contains("getOwnershipWorld() == player.getWorldId()"));
+
+		String patterns = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npcaipatterns_idldf4_re_01_ssh.xml"));
+		for (String pattern : new String[] { "IDLDF4_Re_01_PhyBoss", "IDLDF4_Re_01_EasyBoss",
+				"IDLDF4_Re_01_HardBoss", "IDLDF4_Re_01_NoShowNPC_01", "IDLDF4_Re_01_room_in" }) {
+			assertTrue(patterns.contains("<name>" + pattern + "</name>"), pattern);
+		}
+
+		String drops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_011.xml"))
+			+ Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_012.xml"));
+		for (String npcId : new String[] { "233898", "234194", "234195", "234990", "234991", "234992" }) {
+			assertTrue(drops.contains("<npc_drop npc_id=\"" + npcId + "\">"), npcId);
+		}
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(coverage.contains("ownership_world key 185000196 and shared leave flow own key cleanup"));
+	}
+
+	@Test
+	void sauroSupplyBaseUsesRetailActorsAndPersistentHandlerFallbacks() throws Exception {
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = worldBlock(conditions, "301130000");
+		assertEquals(10, count(world, "<variable "));
+		assertEquals(28, count(world, "<condition "));
+		assertEquals(28, count(world, "<slot>"));
+		for (String expected : new String[] { "OBJ_GATE_SELECTION == 1", "GATECONTROL_B4 &lt;= 1",
+				"BRIDGE_BOSS &gt;= 1", "npc id=\"730872\"", "npc id=\"230857\"", "npc id=\"233255\"" }) {
+			assertTrue(world.contains(expected), expected);
+		}
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/301130000_Sauro_Supply_Base.xml"));
+		assertFalse(staticSpawns.contains("<spawn npc_id=\"230857\">"));
+		for (String retained : new String[] { "230797", "230853", "230858", "233255" }) {
+			assertTrue(staticSpawns.contains("<spawn npc_id=\"" + retained + "\">"), retained);
+		}
+
+		String handler = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SauroSupplyBaseInstance.java"));
+		for (String required : new String[] { "sauro.warning_start", "scheduleDeadline(key, deadline",
+				"sauro.thief_spawn", "sauro.thief_killed", "sauro.kurmata_side", "sauro.completion_boss",
+				"setDoorState(383, true)", "setDoorState(59, true)", "setDoorState(382, true)",
+				"setDoorState(387, true)", "setDoorState(372, true)", "setDoorState(375, true)",
+				"setDoorState(378, true)", "setDoorState(388, true)", "setDoorState(376, true)",
+				"sendMsg(1401915", "sendMsg(1401922", "spawn(230846", "spawn(801967", "spawn(802181",
+					"npcId == 230847", "186000051", "186000237" }) {
+			assertTrue(handler.contains(required), required);
+		}
+		for (String duplicate : new String[] { "doors.get(", "spawn(730872", "spawn(230797", "sendMsg(1401914",
+				"sendMsg(1401916", "sendMsg(1401917", "sendMsg(1401918", "sendMsg(1401919", "sendMsg(1401920",
+				"sendMsg(1401921" }) {
+			assertFalse(handler.contains(duplicate), duplicate);
+		}
+		assertFalse(handler.contains("onPlayerLogOut"));
+		assertFalse(handler.contains("onLeaveInstance"));
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (int itemId = 185000176; itemId <= 185000179; itemId++) {
+			assertTrue(itemTemplateBlock(items, Integer.toString(itemId)).contains("ownership_world=\"301130000\""),
+				Integer.toString(itemId));
+		}
+		String instanceService = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java"));
+		assertTrue(instanceService.contains("getOwnershipWorld() == player.getWorldId()"));
+	}
+
+	@Test
+	void seizedDanuarSanctuaryUsesRetailActorsAndPersistentHandlerFallbacks() throws Exception {
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = worldBlock(conditions, "301140000");
+		assertEquals(5, count(world, "<variable "));
+		assertEquals(7, count(world, "<condition "));
+		assertEquals(7, count(world, "<slot>"));
+		for (String expected : new String[] { "csetportal", "pr_reset01", "cSetPortal == 3",
+				"npc id=\"701876\"", "npc id=\"233087\"", "npc id=\"730866\"" }) {
+			assertTrue(world.contains(expected), expected);
+		}
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/301140000_Seized_Danuar_Sanctuary.xml"));
+		for (String selectedBoss : new String[] { "235619", "235620", "235621" }) {
+			assertFalse(staticSpawns.contains("<spawn npc_id=\"" + selectedBoss + "\">"), selectedBoss);
+		}
+		for (String retained : new String[] { "233084", "233187", "233188", "233391", "235574", "701859",
+				"701860", "701863", "701864" }) {
+			assertTrue(staticSpawns.contains("<spawn npc_id=\"" + retained + "\">"), retained);
+		}
+
+		String handler = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SeizedDanuarSanctuaryInstance.java"));
+		for (String required : new String[] { "seized.warning_start", "scheduleDeadline(\"warning.",
+				"seized.race", "seized.boss_id", "seized.boss_dead", "spawnBoss()", "spawnRaceActors()",
+				"case 701859", "case 701860", "case 701863", "case 701864", "188052613", "186000254" }) {
+			assertTrue(handler.contains(required), required);
+		}
+			for (String duplicate : new String[] { "seizedDanuarSanctuaryBoss", "spawnAbbeyNobleBox",
+					"spawnSturdyBoulder", "spawn(233085", "spawn(233187", "spawn(701876", "spawn(702658", "spawn(702659",
+					"super.onInstanceCreate(instance);\n\t\t// 贝里特拉" }) {
+				assertFalse(handler.contains(duplicate), duplicate);
+			}
+			assertFalse(handler.contains("185000181"));
+			assertFalse(handler.contains("onPlayerLogOut"));
+			assertFalse(handler.contains("onLeaveInstance"));
+			String items = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+			for (int itemId = 185000181; itemId <= 185000183; itemId++) {
+				assertTrue(itemTemplateBlock(items, Integer.toString(itemId)).contains("ownership_world=\"301140000\""),
+					Integer.toString(itemId));
+			}
+			String instanceService = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java"));
+			assertTrue(instanceService.contains("getOwnershipWorld() == player.getWorldId()"));
+		}
+
+	@Test
+	void fissureOfOblivionUsesRetailConditionActorsAndKeepsTimeAttackLedger() throws Exception {
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = worldBlock(conditions, "302100000");
+		assertEquals(2, count(world, "<variable "));
+		assertEquals(4, count(world, "<condition "));
+		assertEquals(4, count(world, "<slot>"));
+		for (String expected : new String[] { "door_open == 1", "worldraid_on == 1", "npc id=\"245827\"",
+				"npc id=\"245412\"" }) {
+			assertTrue(world.contains(expected), expected);
+		}
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/302100000_Fissure_Of_Oblivion.xml"));
+		assertFalse(staticSpawns.contains("<spawn npc_id=\"245827\">"));
+		assertTrue(staticSpawns.contains("<spawn npc_id=\"245411\" respawn_time=\"0\">"));
+
+		String handler = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FissureOfOblivionInstance.java"));
+		for (String required : new String[] { "setVariable(instance, \"door_open\", 1, 0)",
+				"DataManager.RETAIL_AI_DATA.getNpcScore", "fissure.kill.", "scheduleDeadline(\"prepare\"",
+				"scheduleDeadline(\"expire\"", "scheduleDeadline(\"settle\"", "InstanceSettlementService.timeAttackRank",
+				"InstanceSettlementService.settleTimeAttack", "applyEffectDirectly(4831" }) {
+			assertTrue(handler.contains(required), required);
+		}
+		assertFalse(handler.contains("spawn("));
+		assertFalse(handler.contains("GameThreadPoolServices"));
+		assertFalse(handler.contains("onDropRegistered"));
+	}
+
+	@Test
 	void mirashSanctuaryUsesCompactDropsWithoutPrivateBossRewards() throws Exception {
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = worldBlock(conditions, "301720000");
+		assertEquals(12, count(world, "<variable "));
+		assertEquals(138, count(world, "<condition "));
+		assertEquals(138, count(world, "<slot>"));
+		for (String variable : new String[] { "boss_die", "doll_time", "resurrect_set", "resurrect_statue" }) {
+			assertTrue(world.contains("<variable name=\"" + variable + "\"/>"), variable);
+		}
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/301720000_Mirash_Sanctuary.xml"));
+		for (String conditionActor : new String[] { "248423", "248424", "248426", "248472", "835732", "835784",
+				"835785" }) {
+			assertFalse(staticSpawns.contains("<spawn npc_id=\"" + conditionActor + "\">"), conditionActor);
+		}
+		for (String retainedActor : new String[] { "248013", "248382", "248389", "248427", "248435", "248444",
+				"248445", "248446", "248447", "835786", "835787", "835788", "835789" }) {
+			assertTrue(staticSpawns.contains("<spawn npc_id=\"" + retainedActor + "\">"), retainedActor);
+		}
+		assertTrue(staticSpawns.contains("walker_id=\"retail:301720000:npcpathzone_a_40\""));
+
 		String handler = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/MirashSanctuaryInstance.java"));
 		assertTrue(handler.contains("case 835784"));
+		for (String retained : new String[] { "spawn(248533", "player.getSkillList().addSkill(player, 11333, 1)",
+				"spawn(835733", "scheduleDeadline(\"wave\"", "spawn(248385", "spawn(248449", "spawn(248452" }) {
+			assertTrue(handler.contains(retained), retained);
+		}
+			assertFalse(handler.contains("void onEnterInstance"));
+			assertFalse(handler.contains("onPlayerLogOut("));
+			assertFalse(handler.contains("onLeaveInstance("));
+			assertFalse(handler.contains("decreaseByItemId"));
+			assertFalse(handler.contains("GameThreadPoolServices"));
 		for (String privateDrop : new String[] { "188058115", "188058116", "188058117", "188058118",
 				"188058130", "188058131", "188058132", "190080005", "190080006", "190080007",
 				"190080008", "190200000" }) {
@@ -382,14 +716,17 @@ class InstanceHandlerRecoveryMigrationTest {
 				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
 		assertTrue(npcDropBlock(chests, "835730").contains("item_id=\"188058116\" chance=\"100.00\""));
 		assertTrue(npcDropBlock(chests, "835732").contains("item_id=\"182006892\" chance=\"0.10\""));
-		assertTrue(npcDropBlock(chests, "835733").contains("item_id=\"182006892\" chance=\"0.10\""));
-	}
+			assertTrue(npcDropBlock(chests, "835733").contains("item_id=\"182006892\" chance=\"0.10\""));
+
+			String items = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+			assertTrue(itemTemplateBlock(items, "164000531").contains("ownership_world=\"301720000\""));
+		}
 
 	@Test
 	void cradleOfEternityUsesCompactKeyDropsWithoutRemovingUnverifiedBossRewards() throws Exception {
 		String handler = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CradleOfEternityInstance.java"));
-		assertTrue(handler.contains("case 220526"));
 		assertFalse(handler.contains("regDropItem(1, 0, npcId, 185000266, 1)"));
 		assertFalse(handler.contains("regDropItem(1, 0, npcId, 185000267, 1)"));
 
@@ -435,7 +772,6 @@ class InstanceHandlerRecoveryMigrationTest {
 		String handler = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ArchivesOfEternityInstance.java"));
 		assertFalse(handler.contains("onDropRegistered"));
-		assertTrue(handler.contains("spawnHistoriesOfAtreia"));
 		for (String privateDrop : new String[] { "188058413", "166040001", "190080005", "190080006",
 				"190080007", "190080008", "190200000" }) {
 			assertFalse(handler.contains(privateDrop), privateDrop);
@@ -472,7 +808,6 @@ class InstanceHandlerRecoveryMigrationTest {
 		String handler = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EsoterraceInstance.java"));
 		assertFalse(handler.contains("onDropRegistered"));
-		assertTrue(handler.contains("case 217206"));
 		assertTrue(handler.contains("spawn(701025"));
 		for (String privateDrop : new String[] { "188053789", "190020089", "190020148", "190020204",
 				"190070004", "190070012" }) {
@@ -530,12 +865,33 @@ class InstanceHandlerRecoveryMigrationTest {
 		String handler = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/OccupiedRentusBaseInstance.java"));
 		assertFalse(handler.contains("onDropRegistered"));
-		assertTrue(handler.contains("spawnOccupiedDirectFiringGunIDYun"));
+		assertFalse(handler.contains("spawnOccupiedDirectFiringGunIDYun"));
 		assertTrue(handler.contains("handleUseItemFinish"));
+		for (String removed : new String[] { "case 282394", "case 283000", "case 701151", "case 702677",
+				"21805", "21806" }) {
+			assertFalse(handler.contains(removed), removed);
+		}
+		for (String retained : new String[] { "case 236300", "case 236299", "case 236302", "case 701097",
+				"case 701100" }) {
+			assertTrue(handler.contains(retained), retained);
+		}
 		for (String privateDrop : new String[] { "188053789", "170170033", "170030052", "188053083",
 				"188053703", "188053704", "188053705", "185000229" }) {
 			assertFalse(handler.contains(privateDrop), privateDrop);
 		}
+
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = worldBlock(conditions, "300620000");
+		assertEquals(5, count(world, "<variable "));
+		assertEquals(21, count(world, "<condition "));
+		assertTrue(world.contains("<variable name=\"weapon\"/>"));
+		for (int npcId = 702677; npcId <= 702688; npcId++) {
+			assertTrue(world.contains("npc id=\"" + npcId + "\""), Integer.toString(npcId));
+		}
+		String spawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/300620000_Occupied_Rentus_Base.xml"));
+		assertTrue(spawns.contains("<spawn npc_id=\"855952\" respawn_time=\"1\">"));
 
 		String bossDrops = Files.readString(Path.of(
 				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_012.xml"));
@@ -558,11 +914,53 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void danuarReliquaryFamilyKeepsOneTrueSpawnAndExplicitFallbackOwners() throws Exception {
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		for (String[] map : new String[][] {
+				{ "301110000", "301110000_Danuar_Reliquary.xml", "DanuarReliquaryInstance.java", "231304", "231305" },
+				{ "301330000", "301330000_Lucky_Danuar_Reliquary.xml", "Lucky_DanuarReliquaryInstance.java", "231304", "231305" },
+				{ "301360000", "301360000_Infernal_Danuar_Reliquary.xml", "Infernal_DanuarReliquaryInstance.java", "234690", "234691" } }) {
+			String world = worldBlock(conditions, map[0]);
+			assertEquals(8, count(world, "<variable "), map[0]);
+			assertEquals(12, count(world, "<condition "), map[0]);
+			assertTrue(world.contains("expression=\"BossSpawn &gt;= 1\""), map[0]);
+			assertTrue(world.contains("expression=\"RealBoss_Spawn &gt;= 1\""), map[0]);
+
+			String spawns = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/spawns/Instances/" + map[1]));
+			for (String[] actor : new String[][] {
+					{ "284377", "255.346802", "263.149109" },
+					{ "284378", "248.034348", "263.183685" },
+					{ "284379", "262.166168", "266.094604" } }) {
+				String spawn = spawnBlock(spawns, actor[0]);
+				assertEquals(1, count(spawn, "<spot "), map[0] + ':' + actor[0]);
+				assertTrue(spawn.contains("x=\"" + actor[1] + "\" y=\"" + actor[2] + "\""), map[0] + ':' + actor[0]);
+			}
+
+			String handler = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/danuarReliquary/" + map[2]));
+			assertTrue(handler.contains("case 284377, 284378, 284379, " + map[3] + ", " + map[4] + " -> false;"), map[0]);
+			assertTrue(handler.contains("if (ideanKilled == 3)"), map[0]);
+			assertTrue(handler.contains("if (cloneModorKilled == 5)"), map[0]);
+			assertTrue(handler.contains("danuar.bomb_deadline"), map[0]);
+			assertTrue(handler.contains("danuar.complete"), map[0]);
+			assertTrue(handler.contains("onDropRegistered"), map[0]);
+			for (String removed : new String[] { "case 284380", "ideanKilled == 1", "cloneModorKilled == 1",
+					"despawnNpc(", "isInstanceDestroyed" }) {
+				assertFalse(handler.contains(removed), map[0] + ':' + removed);
+			}
+			assertTrue(coverage.contains("id=\"" + map[0] + "\" local_name="), map[0]);
+		}
+	}
+
+	@Test
 	void rentusBaseUsesCompactDropsWithoutPrivateHandlerFlow() throws Exception {
 		String handler = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/RentusBaseInstance.java"));
 		assertFalse(handler.contains("onDropRegistered"));
-		assertTrue(handler.contains("spawnDirectFiringGunIDYun"));
 		assertTrue(handler.contains("handleUseItemFinish"));
 		for (String privateDrop : new String[] { "185000228", "188053789", "170170033", "188053083" }) {
 			assertFalse(handler.contains(privateDrop), privateDrop);
@@ -729,13 +1127,8 @@ class InstanceHandlerRecoveryMigrationTest {
 
 	@Test
 	void hexwayUsesRetailStaticChestsWithoutPrivateHandlerFlow() throws Exception {
-		String handler = Files.readString(Path.of(
-				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheHexwayInstance.java"));
-		for (String legacy : new String[] { "onDropRegistered", "scheduleDeadline", "CHEST_", "701664", "185000129",
-				"GameWorldServices", "onInstanceCreate", "onEnterInstance", "219609" }) {
-			assertFalse(handler.contains(legacy), legacy);
-		}
-		assertTrue(handler.contains("npc.getNpcId() == 219617"));
+		assertFalse(Files.exists(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheHexwayInstance.java")));
 
 		String drops = Files.readString(Path.of(
 				"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_008.xml"));
@@ -765,6 +1158,24 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertFalse(party.contains("respawn_time="));
 		assertEquals(1, count(party, "<spot "));
 		assertTrue(party.contains("x=\"230.309158\" y=\"746.760254\" z=\"366.120148\" h=\"111\""));
+
+		String barricades = spawnBlock(spawns, "219617");
+		assertFalse(barricades.contains("respawn_time="));
+		assertEquals(6, count(barricades, "<spot "));
+		for (String position : new String[] {
+				"x=\"444.011108\" y=\"620.643494\" z=\"355.732452\" h=\"115\" entity_id=\"220\"",
+				"x=\"396.820923\" y=\"633.329285\" z=\"362.000000\" h=\"115\" entity_id=\"224\"",
+				"x=\"345.244781\" y=\"647.194885\" z=\"364.000000\" h=\"115\" entity_id=\"225\"",
+				"x=\"301.717224\" y=\"658.548218\" z=\"363.968414\" h=\"115\" entity_id=\"226\"",
+				"x=\"315.944244\" y=\"608.552917\" z=\"364.000000\" h=\"118\" entity_id=\"227\"",
+				"x=\"440.580597\" y=\"573.919678\" z=\"356.000000\" h=\"1\" entity_id=\"228\"" }) {
+			assertTrue(barricades.contains(position), position);
+		}
+
+		String coverage = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(Pattern.compile("<world\\b(?=[^>]*\\bid=\"300700000\")(?=[^>]*\\bbehavior=\"RETAIL_AI_QUEST\")"
+				+ "(?=[^>]*no instance handler)[^>]*/>").matcher(coverage).find());
 	}
 
 	@Test
@@ -792,12 +1203,23 @@ class InstanceHandlerRecoveryMigrationTest {
 		String staticSpawns = Files.readString(Path.of(
 				"src/main/resources/aion/data/static_data/spawns/Instances/300200000_Haramel.xml"));
 		assertTrue(staticSpawns.contains("npc_id=\"216922\""));
+		for (String spawn : new String[] { "<spawn npc_id=\"799522\" respawn_time=\"1\">",
+				"<spawn npc_id=\"799523\" respawn_time=\"1\">",
+				"<spawn npc_id=\"799524\" respawn_time=\"1\">",
+				"<spawn npc_id=\"730320\" respawn_time=\"60\">",
+				"<spawn npc_id=\"730321\" respawn_time=\"60\">" }) {
+			assertTrue(staticSpawns.contains(spawn), spawn);
+		}
 		assertFalse(staticSpawns.contains("npc_id=\"700829\""));
 		assertFalse(staticSpawns.contains("npc_id=\"700852\""));
 		assertFalse(Files.exists(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/HaramelInstance.java")));
 		assertFalse(Files.exists(Path.of(
 				"src/test/java/com/aionemu/gameserver/instance/handlers/scripts/HaramelInstanceTest.java")));
+
+		String npcAi = Files.readString(Path.of("src/main/resources/aion/definitions/compact/ai/npc-ai.xml"));
+		assertTrue(npcAi.contains("id=\"216922\" name=\"IDNovice_07_DarkDevaKn_Named_20_an\""
+				+ " ai=\"idnovice_Hameroon\""));
 
 		String pattern = Files.readString(Path.of(
 				"src/main/resources/aion/definitions/compact/ai/npcaipatterns_ldf4_pjw.xml"));
@@ -812,14 +1234,8 @@ class InstanceHandlerRecoveryMigrationTest {
 
 	@Test
 	void nochsanaUsesRetailWorldFlowWithoutPrivateDrops() throws Exception {
-		String handler = Files.readString(Path.of(
-			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/NochsanaTrainingCampInstance.java"));
-		assertFalse(handler.contains("onDropRegistered"));
-		assertFalse(handler.contains("188053787"));
-		assertFalse(handler.contains("188051138"));
-		assertFalse(handler.contains("spawn("));
-		assertTrue(handler.contains("npc.getNpcId() == 700437"));
-		assertTrue(handler.contains("getSkill(npc, 276, 16, player)"));
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/NochsanaTrainingCampInstance.java")));
 
 		String staticSpawns = Files.readString(Path.of(
 			"src/main/resources/aion/data/static_data/spawns/Instances/300030000_Nochsana_Training_Camp.xml"));
@@ -832,6 +1248,11 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertTrue(staticSpawns.contains("npc_id=\"700438\""));
 
 		String npcAi = Files.readString(Path.of("src/main/resources/aion/definitions/compact/ai/npc-ai.xml"));
+		assertTrue(npcAi.contains("id=\"700437\" name=\"IDAB1_MiniCastle_Artifact_Nohsana\" ai=\"NPC_AI_ProtectBuff\""));
+		String npcSkills = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/skills/npc-skills.xml"));
+		assertTrue(npcSkills.contains("<group id=\"NS_412D96C9DA081C94\"><skill name=\"NPC_ShieldofCompassion\" id=\"276\" level=\"16\""));
+		assertTrue(npcSkills.contains("<assign group=\"NS_412D96C9DA081C94\" npc_ids=\"700437\"/>"));
 		for (String binding : new String[] { "id=\"256686\" name=\"Mini_Castle_LizardmanAs_26_Ae\" ai=\"DrGuard_AeB\"",
 				"id=\"256688\" name=\"Mini_Castle_LizardmanPr_26_Ae\" ai=\"DrGuard_PeB\"",
 				"id=\"256693\" name=\"Mini_Castle_DrakanFi_27_Ah\" ai=\"MiBGuard_ChiefC_ver40\"",
@@ -843,8 +1264,6 @@ class InstanceHandlerRecoveryMigrationTest {
 		for (String pattern : new String[] { "DrGuard_AeB", "DrGuard_PeB", "MiBGuard_ChiefC", "MiDoor" }) {
 			assertTrue(patterns.contains("<name>" + pattern + "</name>"), pattern);
 		}
-		String npcSkills = Files.readString(Path.of(
-			"src/main/resources/aion/definitions/compact/skills/npc-skills.xml"));
 		for (String assignment : new String[] { "npc_ids=\"256686 290154\"", "npc_ids=\"256688 290156\"",
 				"npc_ids=\"256693 290161\"", "npc_ids=\"700437\"" }) {
 			assertTrue(npcSkills.contains(assignment), assignment);
@@ -874,7 +1293,7 @@ class InstanceHandlerRecoveryMigrationTest {
 
 		String coverage = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
-		assertTrue(coverage.contains("behavior_source=\"retail world/static spawns/AI/drops/portal/quests; handler artifact skill bridge\""));
+		assertTrue(coverage.contains("behavior=\"RETAIL_AI_QUEST\" behavior_source=\"retail world/static spawns/AI/skill action/drops/portal/quests own complete flow\""));
 	}
 
 	@Test
@@ -951,10 +1370,13 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertFalse(handler.contains("188053787"));
 		assertFalse(handler.contains("onDie"));
 		assertFalse(handler.contains("GameWorldServices"));
-		assertTrue(handler.contains("onPlayerLogOut"));
+		assertFalse(handler.contains("onPlayerLogOut"));
 		assertTrue(handler.contains("onLeaveInstance"));
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
 		for (int itemId = 185000001; itemId <= 185000005; itemId++) {
 			assertTrue(handler.contains(Integer.toString(itemId)));
+			assertFalse(itemTemplateBlock(items, Integer.toString(itemId)).contains("ownership_world"));
 		}
 
 		String drops = Files.readString(Path.of(
@@ -969,6 +1391,17 @@ class InstanceHandlerRecoveryMigrationTest {
 		}
 		assertFalse(npcDropBlock(drops, "212202").contains("item_id=\"185000005\""));
 		assertFalse(npcDropBlock(drops, "212211").contains("item_id=\"188053787\""));
+
+		String doors = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/staticdoors/staticdoor_templates.xml"));
+		int doorStart = doors.indexOf("<world world=\"310050000\">");
+		String labDoors = doors.substring(doorStart, doors.indexOf("</world>", doorStart));
+		for (int itemId = 185000001; itemId <= 185000005; itemId++) {
+			assertTrue(labDoors.contains("keyid=\"" + itemId + "\""));
+		}
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(coverage.contains("handler only clears non-owned-world keys 185000001..185000005 on leave while preserving retail logout"));
 	}
 
 	@Test
@@ -1055,6 +1488,9 @@ class InstanceHandlerRecoveryMigrationTest {
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheobomosTestChamberInstance.java"));
 		assertTrue(handler.contains("npc.getNpcId() == 220426"));
 		assertTrue(handler.contains("spawn(806221"));
+		assertTrue(handler.contains("theobomos_test_chamber.reward_spawned"));
+		assertTrue(handler.contains("runtimeState().getBoolean(REWARD_SPAWNED"));
+		assertTrue(handler.contains("runtimeState().put(REWARD_SPAWNED, true)"));
 		assertFalse(handler.contains("GameThreadPoolServices"));
 		assertFalse(handler.contains("onDropRegistered"));
 		assertFalse(handler.contains("StaticDoor"));
@@ -1154,6 +1590,15 @@ class InstanceHandlerRecoveryMigrationTest {
 			.matcher(source);
 		assertTrue(matcher.find());
 		return matcher.group();
+	}
+
+	private static String itemTemplateBlock(String source, String itemId) {
+		int start = source.indexOf("<item_template id=\"" + itemId + "\"");
+		assertTrue(start >= 0);
+		int startTagEnd = source.indexOf('>', start);
+		int end = source.charAt(startTagEnd - 1) == '/' ? startTagEnd + 1
+			: source.indexOf("</item_template>", startTagEnd) + "</item_template>".length();
+		return source.substring(start, end);
 	}
 
 	private static String spawnBlock(String source, String npcId) {

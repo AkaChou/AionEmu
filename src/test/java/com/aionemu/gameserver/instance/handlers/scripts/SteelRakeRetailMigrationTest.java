@@ -86,11 +86,19 @@ class SteelRakeRetailMigrationTest {
 		assertTrue(groggetDrops.contains("item_id=\"188051416\" chance=\"50.06\""));
 		assertFalse(groggetDrops.contains("188053787"));
 
-		String patterns = Files.readString(Path.of(
-				"src/main/resources/aion/definitions/compact/ai/npcaipatterns_idshulackship_kjs.xml"));
-		assertTrue(patterns.contains("<name>IDSShip_KK</name>"));
-		assertTrue(patterns.contains("<set_condition_spawn_variable><string>Lever_ver30</string><set>1</set><modify>0</modify>"));
-	}
+			String patterns = Files.readString(Path.of(
+					"src/main/resources/aion/definitions/compact/ai/npcaipatterns_idshulackship_kjs.xml"));
+			assertTrue(patterns.contains("<name>IDSShip_KK</name>"));
+			assertTrue(patterns.contains("<set_condition_spawn_variable><string>Lever_ver30</string><set>1</set><modify>0</modify>"));
+
+			String ownership = Files.readAllLines(Path.of(
+				"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+				.filter(line -> line.contains("id=\"300100000\"")).findFirst().orElseThrow();
+			assertTrue(ownership.contains("retail condition/static spawns, waypoint pools and Pattern own encounter/random spawns"));
+			assertTrue(ownership.contains("npc_drops owns loot"));
+			assertTrue(ownership.contains(
+				"handler only bridges 214968 death to IDSHULACKSHIP_PH_KILL and exits players"));
+		}
 
 	private static String worldBlock(String xml, String worldId) {
 		int start = xml.indexOf("<world id=\"" + worldId + "\"");

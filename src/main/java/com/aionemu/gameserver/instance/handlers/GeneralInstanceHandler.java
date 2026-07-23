@@ -348,6 +348,11 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	}
 
 	@Override
+	public boolean supportsRetailPattern(int npcId) {
+		return true;
+	}
+
+	@Override
 	public boolean supportsRetailNpcScore(int npcId, int scoreApplyType) {
 		return false;
 	}

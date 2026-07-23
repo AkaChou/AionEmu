@@ -121,10 +121,6 @@
 		<spawn npc_id="233319">
 			<spot x="657.78296" y="522.60864" z="593.7199" h="94"/>
 		</spawn>
-		<!-- Spirited Velkur -->
-		<spawn npc_id="235768">
-            <spot x="318.23724" y="488.92276" z="607.64343" h="1"/>
-        </spawn>
 		<!-- Steel Wall -->
 		<spawn npc_id="235786">
 			<spot x="753.21399" y="521.01813" z="577.5498" entity_id="33"/>

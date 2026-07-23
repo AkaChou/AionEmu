@@ -32,12 +32,26 @@ class KumukiCaveInstanceTest {
 		"src/main/resources/aion/definitions/compact/ai/npcaipatterns_idevent_solo_ydy.xml");
 
 	@Test
-	void handlerKeepsOnlyTheRetailKeyDoorAndPlayerCleanup() throws Exception {
+	void handlerKeepsOnlyTheRetailKeyDoorAndOwnerlessItemCleanup() throws Exception {
 		String source = Files.readString(HANDLER);
-		for (String required : new String[] { "703424", "185000295", "185000296", "186000459", "164002390",
+		for (String required : new String[] { "703424", "185000295", "186000459",
 				"16973", "16974", "17619", "17623", "1403686" }) {
 			assertTrue(source.contains(required), required);
 		}
+		assertFalse(source.contains("185000296"));
+		assertFalse(source.contains("164002390"));
+		assertTrue(source.contains("onPlayerLogOut(Player player) {\n\t\tremoveEffects(player);"));
+		assertTrue(source.contains("onLeaveInstance(Player player) {\n\t\tremovePlayerState(player);"));
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (int itemId : new int[] { 185000295, 185000296, 164002390 }) {
+			assertTrue(itemTemplateBlock(items, itemId).contains("ownership_world=\"302330000\""),
+				Integer.toString(itemId));
+		}
+		assertFalse(itemTemplateBlock(items, 186000459).contains("ownership_world"));
+		String instanceService = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java"));
+		assertTrue(instanceService.contains("getOwnershipWorld() == player.getWorldId()"));
 		for (String forbidden : new String[] { "Future", "onDropRegistered", "onDie(", "spawn(", "sendMovie",
 				"SM_PLAY_MOVIE", "GameThreadPoolServices", "sendMsg", "poppySaved", "doors" }) {
 			assertFalse(source.contains(forbidden), forbidden);
@@ -202,5 +216,12 @@ class KumukiCaveInstanceTest {
 				return (Element) nodes.item(index++);
 			}
 		};
+	}
+
+	private static String itemTemplateBlock(String items, int itemId) {
+		int start = items.indexOf("<item_template id=\"" + itemId + "\"");
+		int openingEnd = items.indexOf('>', start);
+		return items.charAt(openingEnd - 1) == '/' ? items.substring(start, openingEnd)
+			: items.substring(start, items.indexOf("</item_template>", openingEnd));
 	}
 }

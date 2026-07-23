@@ -11,9 +11,12 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.RequestResponseHandler;
+import com.aionemu.gameserver.model.skill.NpcSkillEntry;
+import com.aionemu.gameserver.model.skill.NpcSkillList;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.scriptEngine.ScriptNpc;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -127,8 +130,51 @@ public class AI2Actions {
 	 * 玩家 / player
 	 */
 	public static void handleUseItemFinish(AbstractAI ai2, Player player) {
-		ai2.getPosition().getWorldMapInstance().getInstanceHandler().handleUseItemFinish(player,
-				((Npc) ai2.getOwner()));
+		Npc npc = (Npc) ai2.getOwner();
+		if (dispatchScriptNpcItemUseFinish(npc.getNpcId(), player, npc)) {
+			return;
+		}
+		if (dispatchRetailProtectBuffItemUse(npc, player)) {
+			return;
+		}
+		ai2.getPosition().getWorldMapInstance().getInstanceHandler().handleUseItemFinish(player, npc);
+	}
+
+	/**
+	 * Dispatches the common ScriptNpc consumer before the legacy instance fallback.
+	 */
+	static boolean dispatchScriptNpcItemUseFinish(int npcId, Player player, Npc npc) {
+		ScriptNpc script = GameEngineServices.scriptEngine().getRegistry().getScriptNpc(npcId);
+		return script != null && script.onItemUseFinish(player, npc);
+	}
+
+	/** Executes the retail protect-buff action from the NPC AI and skill slot data. */
+	static boolean dispatchRetailProtectBuffItemUse(Npc npc, Player player) {
+		NpcSkillEntry selected = selectRetailProtectBuffSkill(npc.getObjectTemplate().getAi(), npc.getSkillList());
+		if (selected == null || DataManager.SKILL_DATA.getSkillTemplate(selected.getSkillId()) == null) {
+			return false;
+		}
+		GameEngineServices.skillEngine().getSkill(npc, selected.getSkillId(), selected.getSkillLevel(), player)
+			.useNoAnimationSkill();
+		return true;
+	}
+
+	static NpcSkillEntry selectRetailProtectBuffSkill(String aiName, NpcSkillList skills) {
+		if (!"NPC_AI_ProtectBuff".equals(aiName)) {
+			return null;
+		}
+		NpcSkillEntry selected = null;
+		for (int i = 0; i < skills.size(); i++) {
+			NpcSkillEntry entry = skills.getSkillByIndex(i);
+			if (entry == null) {
+				continue;
+			}
+			if (selected != null || entry.getSkillId() <= 0 || entry.getSkillLevel() <= 0) {
+				return null;
+			}
+			selected = entry;
+		}
+		return selected;
 	}
 
 	/**

@@ -5,7 +5,6 @@ import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.flyring.FlyRing;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -36,23 +35,16 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler {
 
 	@Override
 	public void onPlayerLogOut(Player player) {
-		cleanup(player);
+		removeEffects(player);
 	}
 
 	@Override
 	public void onLeaveInstance(Player player) {
-		cleanup(player);
+		removeEffects(player);
 	}
 
 	private void spawnRing(String name, Point3D center, Point3D min, Point3D max, int radius) {
 		new FlyRing(new FlyRingTemplate(name, mapId, center, min, max, radius), instanceId).spawn();
-	}
-
-	private void cleanup(Player player) {
-		Storage storage = player.getInventory();
-		storage.decreaseByItemId(164000163, storage.getItemCountByItemId(164000163));
-		storage.decreaseByItemId(164000202, storage.getItemCountByItemId(164000202));
-		removeEffects(player);
 	}
 
 	private void removeEffects(Player player) {

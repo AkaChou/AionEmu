@@ -36,8 +36,25 @@ class DraupnirCaveRetailMigrationTest {
 
 		String handler = Files.readString(Path.of(
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DraupnirCaveInstance.java"));
-		for (String legacy : new String[] { "onDropRegistered", "spawnRewardChest", "702658", "702659" }) {
+		for (String legacy : new String[] { "onDie", "handleUseItemFinish", "spawnCommanderBakarma",
+				"236900", "236929", "237275", "702857", "702858", "805736", "805737",
+				"draupnir.adjutants", "draupnir.chargers", "draupnir.race" }) {
 			assertFalse(handler.contains(legacy), legacy);
+		}
+		assertTrue(handler.contains("draupnir.phantasm_deadline"));
+		assertTrue(handler.contains("spawn(237276"));
+
+		String npcAi = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npc-ai.xml"));
+		assertTrue(npcAi.contains("id=\"702858\" name=\"IDDF3_Dragon_artifact_boost_entrance\""
+			+ " ai=\"IDDF3_T_Control_01\""));
+		assertTrue(npcAi.contains("id=\"702861\" name=\"IDDF3_Dragon_entrance_racecheck\""
+			+ " ai=\"IDDF3_T_Control_05\""));
+		String patterns = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/npcaipatterns_iddf3_dragon_sp_ydy.xml"));
+		for (String producer : new String[] { "IDDF3_Dragon_entrance_racecheck", "IDDF3_Dragon_Veris_E",
+				"IDDF3_Dragon_Unfelhaitz_E", "IDDF3_dragon_t_boss", "IDDF3_dragon_t_waveend" }) {
+			assertTrue(patterns.contains(producer), producer);
 		}
 	}
 

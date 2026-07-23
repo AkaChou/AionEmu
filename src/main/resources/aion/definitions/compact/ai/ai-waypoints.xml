@@ -41917,6 +41917,17 @@
     <routestep step="2" x="314.5" y="591.5" z="543.516052" rest_time="5000"/>
     <routestep step="3" x="359.5" y="591.5" z="543.516052" rest_time="5000"/>
   </walker_template>
+  <walker_template route_id="retail:301720000:npcpathzone_a_40" pool="1"><!-- IDAbRe_Core_03 -->
+    <routestep step="1" x="281" y="575" z="549.599976"/>
+    <routestep step="2" x="281" y="579.5" z="549.599976"/>
+    <routestep step="3" x="283" y="583.5" z="549.599976"/>
+    <routestep step="4" x="286.5" y="586" z="549.599976"/>
+    <routestep step="5" x="290" y="588" z="549.599976"/>
+    <routestep step="6" x="286.5" y="586" z="549.599976"/>
+    <routestep step="7" x="283" y="583.5" z="549.599976"/>
+    <routestep step="8" x="281" y="579.5" z="549.599976"/>
+    <routestep step="9" x="281" y="575" z="549.599976"/>
+  </walker_template>
   <walker_template route_id="retail:301720000:npcpathzone_a_44" pool="1"><!-- IDAbRe_Core_03 -->
     <routestep step="1" x="359.5" y="589.5" z="545.016052"/>
     <routestep step="2" x="314.5" y="589.5" z="545.016052" rest_time="5000"/>

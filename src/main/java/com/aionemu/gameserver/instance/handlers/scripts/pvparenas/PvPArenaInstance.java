@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.function.IntConsumer;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.ai.RetailPatternAI2;
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -143,6 +144,9 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
+		if (npc.getAi2() instanceof RetailPatternAI2 && supportsRetailNpcScore(npc.getNpcId(), 0)) {
+			return;
+		}
 		if (npc.getAggroList().getMostPlayerDamage() == null) {
 			return;
 		}
@@ -222,6 +226,46 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	private int getNpcBonus(int npcId) {
 		var score = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getNpcScore(npcId);
 		return score == null || score.scoreApplyType() != 0 || score.equalizingScore() != 0 ? 0 : score.value();
+	}
+
+	@Override
+	public boolean supportsRetailNpcScore(int npcId, int scoreApplyType) {
+		return scoreApplyType == 0 && getNpcBonus(npcId) != 0 && switch (npcId) {
+			case 207102, 219502, 219503, 219504, 219540, 219541, 219542, 219653, 219654, 243675, 243676,
+				701173, 701174, 701187, 701188, 701216, 701221, 701226, 701852 -> true;
+			default -> false;
+		};
+	}
+
+	@Override
+	public synchronized boolean onRetailNpcScore(Player player, Npc npc, int scoreApplyType, int points) {
+		if (!instanceReward.isStartProgress() || !supportsRetailNpcScore(npc.getNpcId(), scoreApplyType) || points == 0) {
+			return false;
+		}
+		String stableKey = npc.getSpawn() == null ? null : npc.getSpawn().getStableKey();
+		String eventKey = scoreEventKey(stableKey, npc.getObjectId());
+		if (runtimeState().getBoolean(eventKey, false)) {
+			return true;
+		}
+		runtimeState().put(eventKey, true);
+		PvPArenaPlayerReward reward = getPlayerReward(player.getObjectId());
+		reward.addPoints(points);
+		persistPlayer(reward);
+		sendSystemMsg(player, npc, points);
+		switch (npc.getNpcId()) {
+			case 701173, 701187 -> spawnBlessedRelics(30000);
+			case 701174, 701188 -> spawnCursedRelics(30000);
+		}
+		if (instanceReward.hasCapPoints()) {
+			reward();
+		}
+		sendPacket();
+		return true;
+	}
+
+	static String scoreEventKey(String stableKey, int objectId) {
+		return stableKey == null || stableKey.isBlank() ? STATE + "score.event.object." + objectId
+				: STATE + "score.event." + stableKey;
 	}
 	
 	/**
@@ -605,6 +649,9 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
+		if (npc.getAi2() instanceof RetailPatternAI2 && supportsRetailNpcScore(npc.getNpcId(), 0)) {
+			return;
+		}
 		switch(npc.getNpcId()) {
 			case 701169: //Plaza Flame Thrower.
 			    despawnNpc(npc);
@@ -713,7 +760,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		return reward;
 	}
 
-	private void persistPlayer(PvPArenaPlayerReward reward) {
+	protected void persistPlayer(PvPArenaPlayerReward reward) {
 		int playerId = reward.getOwner();
 		runtimeState().put(playerKey(playerId, "points"), reward.getPoints());
 		runtimeState().put(playerKey(playerId, "pvp_kills"), reward.getPvPKills());

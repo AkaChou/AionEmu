@@ -56,6 +56,10 @@ public class KillInWorldData extends XMLQuest {
 	@XmlAttribute(name = "invasion_world")
 	protected int invasionWorld;
 
+	/** 已进入奖励状态时的对话页 / reward-state dialog page. */
+	@XmlAttribute(name = "reward_dialog_id")
+	protected int rewardDialogId;
+
 	/**
 	 * 注册 {@link KillInWorld} 模板；若 worlds 仅含 0 则展开为全部地图。
 	 * Registers the {@link KillInWorld} template; expands worlds containing only 0 to all maps.
@@ -72,7 +76,7 @@ public class KillInWorldData extends XMLQuest {
 				worldIds.add(template.getMapId());
 			}
 		}
-		KillInWorld template = new KillInWorld(id, endNpcIds, startNpcIds, worldIds, amount, invasionWorld);
+		KillInWorld template = new KillInWorld(id, endNpcIds, startNpcIds, worldIds, amount, invasionWorld, rewardDialogId);
 		questEngine.addQuestHandler(template);
 	}
 }

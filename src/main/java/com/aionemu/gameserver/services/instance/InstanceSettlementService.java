@@ -189,6 +189,12 @@ public final class InstanceSettlementService {
 				tournament.intValue(prefix + "_gp", 0));
 	}
 
+	public static RewardPlan dredgionPlan(int playerPoints, float rewardRate, boolean winner,
+			int winnerPoints, int loserPoints) {
+		float abyssPoints = playerPoints * rewardRate + (winner ? winnerPoints : loserPoints);
+		return new RewardPlan(List.of(), 0, 0, Math.max(0, (int) abyssPoints), 0);
+	}
+
 	public static RewardPlan battlegroundPlan(int worldId, int spawnPage, BattleResult result, double bonusRate,
 			int teamScore, int calculateMask, int minimumTeamSize) {
 		if (!Double.isFinite(bonusRate) || bonusRate < 0 || bonusRate > 1) {

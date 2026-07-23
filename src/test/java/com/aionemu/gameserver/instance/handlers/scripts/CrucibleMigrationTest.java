@@ -53,6 +53,14 @@ class CrucibleMigrationTest {
 		assertTrue(solo.contains("scheduleDeadline(\"revive.\""));
 		assertTrue(solo.contains("InstanceSettlementService.settleCrucible"));
 		assertTrue(group.contains("InstanceSettlementService.settleCrucible"));
+		for (String source : new String[] { solo, group }) {
+			assertFalse(source.contains("onPlayerLogOut("));
+			assertFalse(source.contains("onLeaveInstance("));
+			assertTrue(source.contains("onExitInstance(Player player) {\n\t\tremoveItems(player);"));
+		}
+		assertFalse(solo.contains("186000124"));
+		assertFalse(solo.contains("186000125"));
+		assertFalse(group.contains("186000134"));
 
 		for (String source : new String[] { solo, group }) {
 			for (String legacy : new String[] { "GameThreadPoolServices", "Future<", "onDropRegistered",
@@ -60,6 +68,28 @@ class CrucibleMigrationTest {
 				assertFalse(source.contains(legacy), legacy);
 			}
 		}
+
+		String groupOwnership = Files.readAllLines(Path.of(
+				"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+				.filter(line -> line.contains("id=\"300300000\"")).findFirst().orElseThrow();
+		assertTrue(groupOwnership.contains("retail condition spawns and Pattern own all ten stages"));
+		assertTrue(groupOwnership.contains("shared Crucible handler owns persistent idempotent NPC scoring"));
+		assertTrue(groupOwnership.contains("explicit-exit item cleanup while logout preserves items"));
+		String soloOwnership = Files.readAllLines(Path.of(
+				"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+				.filter(line -> line.contains("id=\"300320000\"")).findFirst().orElseThrow();
+		assertTrue(soloOwnership.contains("retail condition spawns and Pattern own five-stage encounters"));
+		assertTrue(soloOwnership.contains("shared Crucible handler owns persistent idempotent NPC scoring"));
+		assertTrue(soloOwnership.contains("explicit-exit item cleanup while logout preserves items"));
+	}
+
+	@Test
+	void temporaryItemsUseTheirActualCrucibleWorlds() throws Exception {
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		assertTrue(item(items, 186000124).contains("ownership_world=\"300300000\""));
+		assertTrue(item(items, 186000125).contains("ownership_world=\"300300000\""));
+		assertTrue(item(items, 186000134).contains("ownership_world=\"300320000\""));
 	}
 
 	@Test
@@ -132,5 +162,10 @@ class CrucibleMigrationTest {
 
 	private static int count(String text, String token) {
 		return (text.length() - text.replace(token, "").length()) / token.length();
+	}
+
+	private static String item(String source, int itemId) {
+		int start = source.indexOf("<item_template id=\"" + itemId + "\"");
+		return source.substring(start, source.indexOf("</item_template>", start));
 	}
 }

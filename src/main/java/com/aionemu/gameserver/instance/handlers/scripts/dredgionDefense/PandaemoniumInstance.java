@@ -17,7 +17,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler {
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeEffects(player);
-		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
 
 	@Override

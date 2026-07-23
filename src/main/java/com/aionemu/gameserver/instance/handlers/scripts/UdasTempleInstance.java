@@ -12,11 +12,6 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
 		removeKeys(player);
 	}
 
-	@Override
-	public void onPlayerLogOut(Player player) {
-		removeKeys(player);
-	}
-
 	private static void removeKeys(Player player) {
 		var inventory = player.getInventory();
 		inventory.decreaseByItemId(185000083, inventory.getItemCountByItemId(185000083));

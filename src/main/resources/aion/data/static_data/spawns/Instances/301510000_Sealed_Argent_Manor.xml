@@ -131,10 +131,6 @@
 		<spawn npc_id="702862">
 			<spot x="829.00000" y="1407.0000" z="195.06926" entity_id="135"/>
 		</spawn>
-		<!-- Alchemical Lab Passage -->
-		<spawn npc_id="731648">
-			<spot x="880.69727" y="1090.5541" z="91.25827" h="5"/>
-		</spawn>
 		<!-- Experimental Lab Passage -->
 		<spawn npc_id="731649">
 			<spot x="821.06775" y="1140.4376" z="54.090305" h="89"/>

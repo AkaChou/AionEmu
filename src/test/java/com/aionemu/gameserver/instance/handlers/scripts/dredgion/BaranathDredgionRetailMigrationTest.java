@@ -129,11 +129,19 @@ class BaranathDredgionRetailMigrationTest {
 		for (String npcId : new String[] { "214823", "215085", "215093", "215390", "215391", "215427" }) {
 			assertTrue(scores.contains("npc_id=\"" + npcId + "\""), "score " + npcId);
 		}
-		for (String npcId : new String[] { "215085", "215093", "215390", "215391", "215427" }) {
-			assertTrue(drops.contains("<npc_drop npc_id=\"" + npcId + "\">"), "drop " + npcId);
+			for (String npcId : new String[] { "215085", "215093", "215390", "215391", "215427" }) {
+				assertTrue(drops.contains("<npc_drop npc_id=\"" + npcId + "\">"), "drop " + npcId);
+			}
+			assertFalse(drops.contains("<npc_drop npc_id=\"214823\">"));
+
+			String ownership = Files.readAllLines(Path.of(
+				"src/main/resources/aion/definitions/compact/instance/coverage.xml")).stream()
+				.filter(line -> line.contains("id=\"300110000\"")).findFirst().orElseThrow();
+			assertTrue(ownership.contains("retail condition/static pools, waypoint and Pattern own PvE spawns"));
+			assertTrue(ownership.contains("npc-scores/npc_drops/quest data own PvE points/loot/objectives"));
+			assertTrue(ownership.contains(
+				"handler owns Dredgion preparation/timers, variable bridges, Surkana rooms, faction/PvP/NPC scoring, revive, captain settlement, rewards and exit recovery"));
 		}
-		assertFalse(drops.contains("<npc_drop npc_id=\"214823\">"));
-	}
 
 	private static void assertPair(String world, int pool, String first, String second, String x, String y) {
 		String condition = conditionBlock(world, "idab1_dreadgion/world_N.xml#unconditional-random-" + pool);

@@ -20,10 +20,14 @@ class ShugoImperialTombMigrationTest {
 		assertFalse(handler.contains("RetailConditionSpawnEngine"));
 		for (String removed : new String[] {
 			"scheduleRaid", "spawnRaidNpc", "RAID_WAVE_OFFSETS", "tomb.kills.", "spawn(219", "Future<?>",
-			"GameThreadPoolServices", "onDropRegistered", "regDropItem", ".started_at", "startConditionStage"
+			"GameThreadPoolServices", "onDropRegistered", "regDropItem", ".started_at", "startConditionStage",
+			"handleUseItemFinish", "GameEngineServices.skillEngine()"
 		}) {
 			assertFalse(handler.contains(removed), removed);
 		}
+		assertTrue(handler.contains("removeEffect(21094)"));
+		assertTrue(handler.contains("removeEffect(21103)"));
+		assertFalse(handler.contains("decreaseByItemId"));
 
 		String ai = Files.readString(Path.of(
 			"src/main/java/com/aionemu/gameserver/ai/instance/shugoImperialTomb/ShugoImperialTombStageStarterAI2.java"));
@@ -68,7 +72,7 @@ class ShugoImperialTombMigrationTest {
 
 		String staticSpawns = Files.readString(Path.of(
 			"src/main/resources/aion/data/static_data/spawns/Instances/300560000_Shugo_Imperial_Tomb.xml"));
-		for (int npcId : new int[] { 831110, 831111, 831112 }) {
+		for (int npcId : new int[] { 831095, 831110, 831111, 831112 }) {
 			assertTrue(staticSpawns.contains("npc_id=\"" + npcId + "\""));
 		}
 		String templates = Files.readString(Path.of("src/main/resources/aion/data/static_data/npcs/npc_template.xml"));
@@ -76,5 +80,22 @@ class ShugoImperialTombMigrationTest {
 			assertTrue(Pattern.compile("npc_id=\"" + npcId + "\"[^>]+ai=\"shugo_imperial_tomb_stage_starter\"")
 				.matcher(templates).find());
 		}
+	}
+
+	@Test
+	void temporaryTagsAndPersistentCoinUseDifferentOwners() throws Exception {
+		String items = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+		for (int itemId = 182006989; itemId <= 182006991; itemId++) {
+			assertTrue(item(items, itemId).contains("ownership_world=\"300560000\""), Integer.toString(itemId));
+		}
+		assertFalse(item(items, 182006999).contains("ownership_world"));
+	}
+
+	private static String item(String source, int itemId) {
+		int start = source.indexOf("<item_template id=\"" + itemId + "\"");
+		int openEnd = source.indexOf('>', start);
+		return source.charAt(openEnd - 1) == '/' ? source.substring(start, openEnd + 1)
+			: source.substring(start, source.indexOf("</item_template>", openEnd));
 	}
 }

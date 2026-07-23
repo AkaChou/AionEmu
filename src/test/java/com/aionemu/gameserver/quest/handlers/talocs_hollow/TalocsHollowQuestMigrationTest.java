@@ -18,6 +18,8 @@ class TalocsHollowQuestMigrationTest {
 
 	private static final Path HANDLER = Path.of(
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TalocsHollowInstance.java");
+	private static final Path SCRIPT_NPCS = Path.of(
+			"src/main/resources/aion/definitions/compact/script-npcs.xml");
 	private static final Path ELYOS_QUEST = Path.of(
 			"src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_10032Help_In_The_Hollow.java");
 	private static final Path ASMODIAN_QUEST = Path.of(
@@ -34,20 +36,30 @@ class TalocsHollowQuestMigrationTest {
 	}
 
 	@Test
-	void handlerKeepsOnlyRetailGapsAndUsesRetailHealingSkills() throws Exception {
+	void scriptNpcOwnsRetailHealingSkillsAndHandlerKeepsPlayerLifecycle() throws Exception {
 		String source = Files.readString(HANDLER);
-		assertTrue(source.contains("case 700940 -> 19229"));
-		assertTrue(source.contains("case 700941 -> 19230"));
-		assertTrue(source.contains("if (GameEngineServices.skillEngine().getSkill(npc, skillId, 1, player).useNoAnimationSkill())"));
+		String scripts = Files.readString(SCRIPT_NPCS);
+		assertTrue(scripts.contains("npc_id=\"700940\" skill_id=\"19229\" skill_level=\"1\" despawn_on_success=\"true\""));
+		assertTrue(scripts.contains("npc_id=\"700941\" skill_id=\"19230\" skill_level=\"1\" despawn_on_success=\"true\""));
+		assertFalse(source.contains("handleUseItemFinish"));
 		assertTrue(source.contains("sendMovie(player, 434)"));
 		assertTrue(source.contains("sendMovie(player, 438)"));
 		assertTrue(source.contains("sendMovie(player, 463)"));
 		assertTrue(source.contains("sendMovie(player, 464)"));
-		for (String forbidden : new String[] { "onDropRegistered", "onDie(", "increaseHp(", "Future<?>",
-				"182215618", "182215619", "182215592", "182215593", "188900011", "170170044",
-				"HTMLService", "sendMsgByRace", "spawnHugeInsectEgg" }) {
-			assertFalse(source.contains(forbidden), forbidden);
-		}
+			for (String forbidden : new String[] { "onDropRegistered", "onDie(", "increaseHp(", "Future<?>",
+					"182215618", "182215619", "182215592", "182215593", "188900011", "170170044",
+					"HTMLService", "sendMsgByRace", "spawnHugeInsectEgg" }) {
+				assertFalse(source.contains(forbidden), forbidden);
+			}
+			assertTrue(source.contains("onPlayerLogOut(Player player) {\n\t\tcleanupEffects(player);"));
+			assertTrue(source.contains("onLeaveInstance(Player player) {\n\t\tcleanupPlayer(player);"));
+			String items = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml"));
+			for (int itemId = 164000137; itemId <= 164000139; itemId++) {
+				String item = items.substring(items.indexOf("<item_template id=\"" + itemId + "\""),
+					items.indexOf("</item_template>", items.indexOf("<item_template id=\"" + itemId + "\"")));
+				assertFalse(item.contains("ownership_world"), Integer.toString(itemId));
+			}
 	}
 
 	@Test

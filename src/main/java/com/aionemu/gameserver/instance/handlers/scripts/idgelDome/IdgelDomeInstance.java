@@ -424,7 +424,6 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 			playerReward.updateLogOutTime();
 			persistPlayer(playerReward);
 		}
-		removeItems(player);
 	}
 
 	@Override
@@ -434,7 +433,6 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 			playerReward.updateLogOutTime();
 			persistPlayer(playerReward);
 		}
-		removeItems(player);
 	}
 
 	@Override

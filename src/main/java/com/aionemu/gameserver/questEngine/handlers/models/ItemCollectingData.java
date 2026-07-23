@@ -67,6 +67,18 @@ public class ItemCollectingData extends XMLQuest {
 	@XmlAttribute(name = "item_id")
 	protected int itemId;
 
+	/** 收集成功对话页 / collect-success dialog page. */
+	@XmlAttribute(name = "check_ok_dialog_id")
+	protected int checkOkDialogId = 5;
+
+	/** 收集失败对话页 / collect-failure dialog page. */
+	@XmlAttribute(name = "check_fail_dialog_id")
+	protected int checkFailDialogId = 2716;
+
+	/** 已进入奖励状态时的对话页 / reward-state dialog page. */
+	@XmlAttribute(name = "reward_dialog_id")
+	protected int rewardDialogId;
+
 	/**
 	 * 注册 {@link ItemCollecting} 模板处理器。
 	 * Registers the {@link ItemCollecting} template handler.
@@ -76,7 +88,7 @@ public class ItemCollectingData extends XMLQuest {
 	@Override
 	public void register(QuestEngine questEngine) {
 		ItemCollecting template = new ItemCollecting(id, startNpcIds, nextNpcId, actionItemIds, endNpcIds, questMovie,
-				startDialogId, startDialogId2, itemId);
+				startDialogId, startDialogId2, itemId, checkOkDialogId, checkFailDialogId, rewardDialogId);
 		questEngine.addQuestHandler(template);
 	}
 }

@@ -72,13 +72,13 @@ public class RateConfig {
 	 * 高级会员任务经验倍率。
 	 * Premium quest XP rate.
 	 */
-	@Property(key = "gameserver.rate.premium.quest.xp", defaultValue = "2")
+	@Property(key = "gameserver.rate.premium.quest.xp", defaultValue = "1")
 	public static float PREMIUM_QUEST_XP_RATE;
 	/**
 	 * VIP 任务经验倍率。
 	 * VIP quest XP rate.
 	 */
-	@Property(key = "gameserver.rate.vip.quest.xp", defaultValue = "3")
+	@Property(key = "gameserver.rate.vip.quest.xp", defaultValue = "1")
 	public static float VIP_QUEST_XP_RATE;
 	/**
 	 * 普通玩家采集经验倍率。
@@ -144,13 +144,13 @@ public class RateConfig {
 	 * 高级会员任务基纳倍率。
 	 * Premium quest kinah rate.
 	 */
-	@Property(key = "gameserver.rate.premium.quest.kinah", defaultValue = "2")
+	@Property(key = "gameserver.rate.premium.quest.kinah", defaultValue = "1")
 	public static float PREMIUM_QUEST_KINAH_RATE;
 	/**
 	 * VIP 任务基纳倍率。
 	 * VIP quest kinah rate.
 	 */
-	@Property(key = "gameserver.rate.vip.quest.kinah", defaultValue = "3")
+	@Property(key = "gameserver.rate.vip.quest.kinah", defaultValue = "1")
 	public static float VIP_QUEST_KINAH_RATE;
 	/**
 	 * 普通玩家掉落倍率。
@@ -162,13 +162,13 @@ public class RateConfig {
 	 * 高级会员掉落倍率。
 	 * Premium drop rate.
 	 */
-	@Property(key = "gameserver.rate.premium.drop", defaultValue = "2")
+	@Property(key = "gameserver.rate.premium.drop", defaultValue = "1")
 	public static float PREMIUM_DROP_RATE;
 	/**
 	 * VIP 掉落倍率。
 	 * VIP drop rate.
 	 */
-	@Property(key = "gameserver.rate.vip.drop", defaultValue = "3")
+	@Property(key = "gameserver.rate.vip.drop", defaultValue = "1")
 	public static float VIP_DROP_RATE;
 	/**
 	 * 普通玩家 AP 获取倍率。
@@ -234,13 +234,13 @@ public class RateConfig {
 	 * 高级会员 NPC AP 倍率。
 	 * Premium AP rate from NPCs.
 	 */
-	@Property(key = "gameserver.rate.premium.ap.npc", defaultValue = "2")
+	@Property(key = "gameserver.rate.premium.ap.npc", defaultValue = "1")
 	public static float PREMIUM_AP_NPC_RATE;
 	/**
 	 * VIP NPC AP 倍率。
 	 * VIP AP rate from NPCs.
 	 */
-	@Property(key = "gameserver.rate.vip.ap.npc", defaultValue = "3")
+	@Property(key = "gameserver.rate.vip.ap.npc", defaultValue = "1")
 	public static float VIP_AP_NPC_RATE;
 	/**
 	 * 普通玩家 NPC DP 倍率。
@@ -282,7 +282,7 @@ public class RateConfig {
 	 * 战舰奖励倍率。
 	 * Dredgion reward rate.
 	 */
-	@Property(key = "gameserver.rate.dredgion", defaultValue = "1.6")
+	@Property(key = "gameserver.rate.dredgion", defaultValue = "1")
 	public static float DREDGION_REWARD_RATE;
 
 	/**
@@ -387,13 +387,13 @@ public class RateConfig {
 	 * 高级会员任务 AP 倍率。
 	 * Premium quest AP rate.
 	 */
-	@Property(key = "gameserver.rate.premium.quest.ap", defaultValue = "2")
+	@Property(key = "gameserver.rate.premium.quest.ap", defaultValue = "1")
 	public static float PREMIUM_QUEST_AP_RATE;
 	/**
 	 * VIP 任务 AP 倍率。
 	 * VIP quest AP rate.
 	 */
-	@Property(key = "gameserver.rate.vip.quest.ap", defaultValue = "3")
+	@Property(key = "gameserver.rate.vip.quest.ap", defaultValue = "1")
 	public static float VIP_QUEST_AP_RATE;
 
 	/**
@@ -406,13 +406,13 @@ public class RateConfig {
 	 * 高级会员任务荣耀点倍率。
 	 * Premium quest glory point rate.
 	 */
-	@Property(key = "gameserver.rate.premium.quest.gp", defaultValue = "2")
+	@Property(key = "gameserver.rate.premium.quest.gp", defaultValue = "1")
 	public static float PREMIUM_QUEST_GP_RATE;
 	/**
 	 * VIP 任务荣耀点倍率。
 	 * VIP quest glory point rate.
 	 */
-	@Property(key = "gameserver.rate.vip.quest.gp", defaultValue = "3")
+	@Property(key = "gameserver.rate.vip.quest.gp", defaultValue = "1")
 	public static float VIP_QUEST_GP_RATE;
 
 	/**

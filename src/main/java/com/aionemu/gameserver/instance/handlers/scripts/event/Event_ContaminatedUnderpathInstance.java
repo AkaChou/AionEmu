@@ -14,7 +14,6 @@ import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.IDEventDefReward;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.playerreward.IDEventDefPlayerReward;
-import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService;
@@ -26,6 +25,7 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler {
 	private static final String STATE = "event_underpath.";
 	private static final int FINAL_BOSS = 248525;
+	private static final int SPECIAL_FINAL_BOSS = 248947;
 	private static final long SETTLEMENT_DELAY = 5_000L;
 
 	private IDEventDefReward instanceReward;
@@ -37,6 +37,9 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 		restoreScore();
 		instanceReward.setInstanceScoreType(scoreType());
 		restoreDeadlines();
+		if (runtimeState().getBoolean(STATE + "completed", false)) {
+			settlePlayers();
+		}
 	}
 
 	@Override
@@ -83,7 +86,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sendScore(null, npc.getObjectTemplate().getNameId(), score.value());
 			}
 		}
-		if (npc.getNpcId() == FINAL_BOSS) {
+		if (npc.getNpcId() == FINAL_BOSS || npc.getNpcId() == SPECIAL_FINAL_BOSS) {
 			startSettlement(System.currentTimeMillis());
 		}
 	}
@@ -186,9 +189,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 		cancelDeadline("prepare");
 		cancelDeadline("expire");
 		cancelDeadline("settle");
-		for (Player player : instance.getPlayersInside()) {
-			doReward(player);
-		}
+		settlePlayers();
 		sendScore(null, 0, 0);
 	}
 
@@ -238,6 +239,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 	}
 
 	private IDEventDefPlayerReward getOrCreatePlayerReward(int playerId) {
+		runtimeState().put(playerKey(playerId), true);
 		IDEventDefPlayerReward reward = (IDEventDefPlayerReward) instanceReward.getPlayerReward(playerId);
 		if (reward == null) {
 			reward = new IDEventDefPlayerReward(playerId);
@@ -251,6 +253,21 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 
 	private String playerRewardKey(int playerId) {
 		return STATE + "reward." + playerId;
+	}
+
+	private String playerKey(int playerId) {
+		return STATE + "player." + playerId;
+	}
+
+	private void settlePlayers() {
+		RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, instanceReward.getRank());
+		for (String key : runtimeState().snapshot(STATE + "player.").keySet()) {
+			int playerId = Integer.parseInt(key.substring((STATE + "player.").length()));
+			InstanceSettlementService.queue(instance, playerId, "timeattack", plan);
+		}
+		for (Player player : instance.getPlayersInside()) {
+			doReward(player);
+		}
 	}
 
 	private void sendScore(Player only, int nameId, int points) {
@@ -287,9 +304,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 	}
 
 	private void cleanupPlayer(Player player) {
-		Storage storage = player.getInventory();
-		storage.decreaseByItemId(186000470, storage.getItemCountByItemId(186000470));
-		storage.decreaseByItemId(186000495, storage.getItemCountByItemId(186000495));
 		PlayerEffectController effects = player.getEffectController();
 		for (int skillId = 4935; skillId <= 4944; skillId++) {
 			effects.removeEffect(skillId);
