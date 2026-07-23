@@ -46075,27 +46075,141 @@
     </condition>
   </world>
   <world id="300110000" name="idab1_dreadgion">
+    <variable name="idab1_dreadgion_teleport_17minuteslater"/>
     <variable name="surkana_8"/>
     <variable name="switch_1_destroyed"/>
     <variable name="switch_2_destroyed"/>
+    <variable name="teleport_1_destroyed"/>
+    <variable name="teleport_2_destroyed"/>
+    <variable name="teleport_3_destroyed"/>
+    <condition id="11574" expression="TELEPORT_1_DESTROYED == 1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <npc id="730187" probability="10000" x="398.361389" y="160.270599" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11575" expression="IDAB1_Dreadgion_TELEPORT_17MINUTESLATER == 1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="730214" probability="10000" x="567.360168" y="175.282623" z="433.92926" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
     <condition id="2360" expression="SWITCH_1_DESTROYED == 1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#3">
       <group probability="1000">
         <slot>
-          <npc id="700501" probability="10000" x="448.539429" y="493.63681" z="395.9375" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="700501" probability="10000" x="448.539429" y="493.63681" z="395.9375" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11576" expression="IDAB1_Dreadgion_TELEPORT_17MINUTESLATER == 1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#4">
+      <group probability="1000">
+        <slot>
+          <npc id="730213" probability="10000" x="402.332336" y="175.003662" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11577" expression="TELEPORT_3_DESTROYED == 1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#5">
+      <group probability="1000">
+        <slot>
+          <npc id="730197" probability="10000" x="484.948883" y="761.510498" z="389.837708" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11578" expression="TELEPORT_2_DESTROYED == 1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#6">
+      <group probability="1000">
+        <slot>
+          <npc id="730188" probability="10000" x="571.886963" y="160.790802" z="433.92926" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="15" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="2361" expression="Surkana_8 &gt;= 5" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#7">
       <group probability="1000">
         <slot>
-          <npc id="214823" probability="10000" x="485.211609" y="807.46875" z="418" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="214823" probability="10000" x="485.211609" y="807.46875" z="418" heading="90" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>
     <condition id="2362" expression="SWITCH_2_DESTROYED == 1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#8">
       <group probability="1000">
         <slot>
-          <npc id="700502" probability="10000" x="521.112915" y="493.670349" z="396.35495" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="700502" probability="10000" x="521.112915" y="493.670349" z="396.35495" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11579" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#unconditional-random-1">
+      <group probability="1000">
+        <slot>
+          <npc id="215391" probability="8750" x="415.276886" y="282.021606" z="411" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="120" despawn_at_attack_state="true"/>
+          <npc id="215391" probability="1250" x="556.535339" y="279.291809" z="411" heading="180" initial_delay="1" initial_delay_extra="1" respawn_time="120" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11580" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#unconditional-random-2">
+      <group probability="1000">
+        <slot>
+          <npc id="798327" probability="5000" x="380.00824" y="697.24823" z="405.945343" heading="30" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+          <npc id="798328" probability="5000" x="380.00824" y="697.24823" z="405.945343" heading="30" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11581" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#unconditional-random-3">
+      <group probability="1000">
+        <slot>
+          <npc id="798325" probability="5000" x="589.893555" y="697.263428" z="405.945343" heading="150" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+          <npc id="798326" probability="5000" x="589.893555" y="697.263428" z="405.945343" heading="150" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11582" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#unconditional-random-4">
+      <group probability="1000">
+        <slot>
+          <npc id="798329" probability="5000" x="591.781738" y="711.621399" z="405.945343" heading="180" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+          <npc id="798330" probability="5000" x="591.781738" y="711.621399" z="405.945343" heading="180" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11583" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#unconditional-random-5">
+      <group probability="1000">
+        <slot>
+          <npc id="215093" probability="10000" x="485.417267" y="319.098633" z="405" heading="270" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11584" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#unconditional-random-6">
+      <group probability="1000">
+        <slot>
+          <npc id="215390" probability="10000" x="460.611206" y="877.78595" z="408" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:300110000:path_idab1_drd_17" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11585" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#unconditional-random-7">
+      <group probability="1000">
+        <slot>
+          <npc id="215427" probability="10000" x="504.50238" y="607.622375" z="393.730011" heading="210" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11586" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#unconditional-random-8">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idab1_dreadgion/world_N.xml#unconditional-random-8:g1:s1:p1">
+            <npc id="798323" probability="10000" x="377.175385" y="704.659302" z="405.945343" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+            <npc id="798327" probability="10000" x="592.777283" y="704.227356" z="405.945343" heading="180" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idab1_dreadgion/world_N.xml#unconditional-random-8:g1:s1:p2">
+            <npc id="798328" probability="10000" x="377.175385" y="704.659302" z="405.945343" heading="0" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+            <npc id="798324" probability="10000" x="592.777283" y="704.227356" z="405.945343" heading="180" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="11587" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idab1_dreadgion/world_N.xml#unconditional-random-9">
+      <group probability="1000">
+        <slot>
+          <npc id="798323" probability="5000" x="378.52005" y="712.347778" z="405.945343" heading="340" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
+          <npc id="798324" probability="5000" x="378.52005" y="712.347778" z="405.945343" heading="340" initial_delay="1" initial_delay_extra="1" respawn_time="120" respawn_time_extra="30" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>

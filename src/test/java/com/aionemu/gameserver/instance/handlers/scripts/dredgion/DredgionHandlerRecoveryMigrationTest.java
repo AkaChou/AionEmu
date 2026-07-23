@@ -15,8 +15,8 @@ class DredgionHandlerRecoveryMigrationTest {
 		assertMigrated("BaranathDredgion", "baranath.");
 		String source = readSource("BaranathDredgion");
 		assertTrue(source.contains("runtimeState().getLong(STATE + \"boss_finish_deadline\""));
-		assertTrue(source.contains("scheduleDeadline(\"teleport\", startedAt + 600_000"));
-		assertFalse(source.contains("startedAt + 1_020_000"));
+		assertTrue(source.contains("scheduleDeadline(\"teleport\", startedAt + 1_020_000"));
+		assertFalse(source.contains("startedAt + 600_000"));
 	}
 
 	@Test

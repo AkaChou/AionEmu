@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!-- 
-	Baranath Dredgion Spawn By (Encom)
--->
 <spawns>
 	<spawn_map map_id="300110000">
 		<!-- Navigator Nevikah -->
@@ -39,10 +36,6 @@
 	    <!-- Gun Captain Ankrana -->
 	    <spawn npc_id="215092">
 			<spot x="577.79663" y="568.3712" z="408.84637" h="85"/>
-	    </spawn>
-		<!-- Supervisor Lakhane -->
-	    <spawn npc_id="215427">
-			<spot x="484.7845" y="597.18066" z="390.94467" h="91"/>
 	    </spawn>
 		<!-- Baranath Mariner -->
 		<spawn npc_id="214806">
@@ -185,30 +178,6 @@
 			<spot h="27" z="410.46527" y="257.11908" x="546.0164"/>
 		</spawn>
 		
-		<!-- Captured Elyos Scholar -->
-	    <spawn npc_id="798323">
-			<spot h="12" z="404.07404" y="697.2394" x="379.97067"/>
-	    </spawn>
-		<!-- Captured Guardian -->
-	    <spawn npc_id="798324">
-			<spot h="2" z="404.0627" y="704.67755" x="377.18872"/>
-	    </spawn>
-		<!-- Captured Guardian -->
-	    <spawn npc_id="798325">
-			<spot h="115" z="404.07965" y="712.07794" x="378.59412"/>
-	    </spawn>
-	    <!-- Captured Asmodian Scholar -->
-	    <spawn npc_id="798327">
-			<spot h="67" z="403.99908" y="711.7572" x="592.0324"/>
-	    </spawn>
-	    <!-- Captured Archon -->
-	    <spawn npc_id="798328">
-			<spot h="58" z="404.02875" y="704.1823" x="592.24786"/>
-	    </spawn>
-		<!-- Captured Archon -->
-	    <spawn npc_id="798329">
-			<spot h="47" z="403.97375" y="697.3513" x="590.0814"/>
-	    </spawn>
 	    <!-- Exhausted Shugo -->
 	    <spawn npc_id="730196">
 			<spot x="388.76578" y="173.58968" z="432.5741" h="52"/>

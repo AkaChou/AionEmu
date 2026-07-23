@@ -59,6 +59,27 @@
 - `SteelRakeRetailMigrationTest` 锁定变量、15 条条件、真端概率/坐标、waypoint、固定 Named、静态去重、Pattern 和掉落 ownership。
 - 条件出生与 waypoint XML 已通过 schema；Loader、Condition Engine 和 Steel Rake 专项测试通过。GM 实测和线上副本压测不在本窗口范围内。
 
+## Baranath Dredgion（300110000）
+
+### 真端证据
+
+- `/Users/mc/IdeaProjects/58Server/Map/Worlds/idab1_dreadgion/world_N.xml` 定义 8 条条件出生和 9 个无条件选择池；条件变量覆盖三个传送发生器、两个护盾开关、Surkana 计数与 17 分钟 WorldTimer。
+- 恢复源码 `server58-source/MainServer_Server64/fun/fun_055.cpp` 证明 `700505/700506` 分别写入 `TELEPORT_1_DESTROYED/TELEPORT_2_DESTROYED`，`700507/700508` 分别写入 `SWITCH_1_DESTROYED/SWITCH_2_DESTROYED`，`215085` 写入 `TELEPORT_3_DESTROYED`；旧 Handler 将第三传送器错误绑定到 `215427`。
+- 真端无条件池包含 `215391` 的 87.5%/12.5% 两点选择、四组囚犯 50/50 选择、一组 50/50 Party，以及固定 `215093/215390/215427`；`215390` 使用 `Path_IDAb1_Drd_17` 的 24 点巡逻路径。
+- compact NPC AI/Pattern 已覆盖舰长和关键 Named 的技能行为，`npc-scores.xml` 覆盖关键计分，`npc_drops` 覆盖五个可选 Named；`214823` 没有真端掉落行，走积分、任务和副本结算。真端 world 与恢复源码均不存在旧 Handler 的五 Named 击杀后生成 `701455` 路径。
+
+### 已完成
+
+- 将 `300110000` 条件世界扩为 7 个变量、17 条条件，完整保留真端概率、Party、坐标、朝向、初始延迟、120 秒刷新、额外刷新时间和战斗状态反出生。
+- 补入 `retail:300110000:path_idab1_drd_17` 的 24 点路径，并删除静态 `215427` 与 `798323..798330` 重叠出生。
+- 17 分钟 deadline 只写真端计时变量；发电机和 `215085` 死亡只写真端变量，传送器、护盾、舰长、Named 和囚犯全部由条件引擎创建与恢复；结算和销毁时清理条件引擎，阻止延迟刷新在结束后回生。
+- 删除错误 10 分钟传送器、`215391` 五五开、`215086/215390` 二选一、`215082/215093` 舱壁二选一、`215427 -> 730197`、手工恢复分支及无真端依据的 `701455` 奖励箱。
+
+### 验证范围
+
+- `BaranathDredgionRetailMigrationTest` 锁定 8 条真端条件、9 个选择池、Party、Waypoint、静态去重、变量生产者，以及 AI/技能、分数、掉落、任务物品和舰长对话/击杀 ownership。
+- 条件出生与 waypoint XML 已通过 schema；Loader、Condition Engine、Pattern AI、Handler 恢复和 Baranath 专项测试通过，主源码编译通过。GM 实测和线上 6v6 压测仍需按验收手册执行，不以自动化结果代替。
+
 ## Draupnir Cave（320080000）
 
 ### 真端证据

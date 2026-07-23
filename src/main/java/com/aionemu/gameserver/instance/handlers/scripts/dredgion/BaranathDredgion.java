@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -132,7 +131,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			runtimeState().put(STATE + "phase", "PREPARING");
 		}
 		scheduleDeadline("start", startedAt + 60_000, this::startProgress);
-		scheduleDeadline("teleport", startedAt + 600_000, this::activateCentralTeleporters);
+		scheduleDeadline("teleport", startedAt + 1_020_000, this::activateTimedTeleporters);
 		scheduleDeadline("finish", startedAt + 3_600_000, this::finishByScore);
 		long bossFinish = runtimeState().getLong(STATE + "boss_finish_deadline", 0);
 		if (bossFinish > 0) scheduleDeadline("boss_finish", bossFinish, this::finishByScore);
@@ -147,39 +146,15 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		dredgionReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 		sendMsgByRace(1400595, Race.PC_ALL, 0);
 		sendMsgByRace(1400596, Race.PC_ALL, 0);
-		spawnOpeningNamed();
 		sendPacket();
 	}
 
-	private void spawnOpeningNamed() {
-		if (runtimeState().getBoolean(STATE + "opening_spawned", false)) {
-			return;
+	private void activateTimedTeleporters() {
+		if (!runtimeState().getBoolean(STATE + "settled", false)) {
+			sendMsgByRace(1400265, Race.PC_ALL, 0);
+			RetailConditionSpawnEngine.setVariable(instance,
+				"idab1_dreadgion_teleport_17minuteslater", 1, 0);
 		}
-		runtimeState().put(STATE + "opening_spawned", true);
-		int side = runtimeState().getInt(STATE + "opening_side", 0);
-		if (side == 0) {
-			side = Rnd.get(1, 2);
-			runtimeState().put(STATE + "opening_side", side);
-		}
-		spawn(215391, side == 1 ? 415.2769f : 556.53534f, side == 1 ? 282.0216f : 279.2918f,
-			409.7311f, side == 1 ? (byte) 118 : (byte) 33);
-		int captain = runtimeState().getInt(STATE + "opening_captain", 0);
-		if (captain == 0) {
-			captain = Rnd.get(1, 2) == 1 ? 215086 : 215390;
-			runtimeState().put(STATE + "opening_captain", captain);
-		}
-		spawn(captain, 485.25455f, 877.04614f, 405.01407f, (byte) 90);
-	}
-
-	private void activateCentralTeleporters() {
-		if (runtimeState().getBoolean(STATE + "settled", false)
-				|| runtimeState().getBoolean(STATE + "teleporters", false)) {
-			return;
-		}
-		runtimeState().put(STATE + "teleporters", true);
-		sendMsgByRace(1400265, Race.PC_ALL, 0);
-		spawn(730187, 402.33234f, 175.00366f, 433.94046f, (byte) 0, 10);
-		spawn(730188, 567.36017f, 175.28262f, 433.92926f, (byte) 0, 9);
 	}
 
 	private void finishByScore() {
@@ -196,23 +171,46 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	 */
 	@Override
     public void onDie(Npc npc) {
+		int npcId = npc.getNpcId();
+		switch (npcId) {
+			case 215085 -> {
+				sendMsgByRace(1400234, Race.PC_ALL, 0);
+				RetailConditionSpawnEngine.setVariable(instance, "teleport_3_destroyed", 1, 0);
+			}
+			case 700505 -> {
+				sendMsgByRace(1400228, Race.PC_ALL, 0);
+				RetailConditionSpawnEngine.setVariable(instance, "teleport_1_destroyed", 1, 0);
+			}
+			case 700506 -> {
+				sendMsgByRace(1400229, Race.PC_ALL, 0);
+				RetailConditionSpawnEngine.setVariable(instance, "teleport_2_destroyed", 1, 0);
+			}
+			case 700507 -> {
+				sendMsgByRace(1400226, Race.PC_ALL, 0);
+				RetailConditionSpawnEngine.setVariable(instance, "switch_1_destroyed", 1, 0);
+			}
+			case 700508 -> {
+				sendMsgByRace(1400227, Race.PC_ALL, 0);
+				RetailConditionSpawnEngine.setVariable(instance, "switch_2_destroyed", 1, 0);
+			}
+		}
 		int point = retailScore(npc);
 		Player mostPlayerDamage = npc.getAggroList().getMostPlayerDamage();
         if (mostPlayerDamage == null) {
             return;
         }
-		Race race = mostPlayerDamage.getRace();
-		runtimeState().put(STATE + "dead." + npc.getNpcId(), true);
-		switch (npc.getObjectTemplate().getTemplateId()) {
+		switch (npcId) {
 		   /**
 	 * 解救囚犯：击杀囚室命名怪可获得房间钥匙。 / Rescue Prisoners: olding the named monster of a prisoner receiving chamber can accommodate prisoners get a room key. When you open the container chamber prisoner standing in the room with the key to rescue the prisoners to obtain a score of 100 points. Conversely, it is possible to obtain a 100-point touch the opponent, like captive species
 	 */
 		    case 798323: //Captured Elyos Scholar.
             case 798324: //Captured Guardian.
             case 798325: //Captured Guardian.
+			case 798326: //Captured Guardian.
 			case 798327: //Captured Asmodian Scholar.
             case 798328: //Captured Archon.
             case 798329: //Captured Archon.
+			case 798330: //Captured Archon.
 				despawnNpc(npc);
             break;
 		   /**
@@ -267,95 +265,16 @@ public class BaranathDredgion extends GeneralInstanceHandler
 				// 右舷船长室门已被摧毁。 / The Starboard Captain's Cabin Door has been destroyed.
 				sendMsgByRace(1400231, Race.PC_ALL, 0);
 			break;
-		   /**
-	 * 船长室传送装置：在兵营击败监督者拉卡内后激活。 / Captain’s Cabin Teleport Device: This teleporter activates when "Supervisor Lakhane" is defeated in the Barracks. Only the race that defeated "Supervisor Lakhane" can use this teleporter
-	 */
-			case 215427: //Supervisor Lakhane.
-				// 中庭尽头生成了可持续 3 分钟的船长室传送装置。 / A Captain's Cabin Teleport Device that lasts for 3 minutes has been generated at the end of the Atrium.
-				sendMsgByRace(1400234, Race.PC_ALL, 0);
-				runtimeState().put(STATE + "captain_teleporter", true);
-				spawn(730197, 484.72f, 761.41998f, 388.66f, (byte) 0, 91); //Captain's Cabin Teleport Device.
-            break;
-		   /**
-	 * 补给室传送器：兵营中传送发生器被摧毁后激活 / Supply Room Teleporter: This teleporter activates after the destruction of the Teleporter Generator in the Barracks
-	 */
-			case 700505: //Portside Teleporter Generator.
-                despawnNpc(npc);
-				// 左舷中央传送器已在逃生舱口生成。 / A Portside Central Teleporter has been generated at the Escape Hatch.
-				sendMsgByRace(1400228, Race.PC_ALL, 0);
-				runtimeState().put(STATE + "supply_port", true);
-				spawn(730213, 402.33429f, 175.11707f, 432.2988f, (byte) 0, 64); //No.1 Nuclear Control Room Teleporter.
-            break;
-			case 700506: //Starboard Teleporter Generator.
-                despawnNpc(npc);
-				// 右舷中央传送器已在副逃生舱口生成。 / A Starboard Central Teleporter has been generated at the Secondary Escape Hatch.
-				sendMsgByRace(1400229, Race.PC_ALL, 0);
-				runtimeState().put(STATE + "supply_starboard", true);
-				spawn(730214, 567.59119f, 175.19655f, 432.29999f, (byte) 0, 65); //No.2 Nuclear Control Room Teleporter.
-            break;
-		   /**
-	 * 每台护盾发生器需要 3 个理念物品，共 12 个 / Defense Shield Generator: When the Defense Shield Generator on the Weapons Deck or Lower Weapons deck is demolished, a shield appears in Ready Room 1 or 2. This shield blocks access to the center of the Baranath Dredgion. The Ready Room is the shortest route to the center of the Dredgion, and the quickest route to the opposing race’s area. Different tactics can be used in this area to maximize the Group’s accumulation of points. For example, if one Group decides to destroy the opposing Group’s Shield Generator, it will make it difficult for the opposing Group to reach the center of the Dredgion. In some cases, it might wiser for one Group to destroy their own Defense Shield Generator, and delay engagement with the opposing race in order to accumulate more points
-	 */
 			case 700501: //Portside Defense Shield.
 			case 700502: //Starboard Defense Shield.
-				despawnNpc(npc);
-			break;
+			case 700505: //Portside Teleporter Generator.
+			case 700506: //Starboard Teleporter Generator.
 			case 700507: //Portside Defense Shield Generator.
-				despawnNpc(npc);
-				// 左舷防御护盾已在准备室 1 生成。 / The Portside Defense Shield has been generated in Ready Room 1.
-				sendMsgByRace(1400226, Race.PC_ALL, 0);
-				RetailConditionSpawnEngine.setVariable(instance, "switch_1_destroyed", 1, 0);
-	
-			break;
 			case 700508: //Starboard Defense Shield Generator.
-				despawnNpc(npc);
-				// 右舷防御护盾已在准备室 2 生成。 / The Starboard Defense Shield has been generated in Ready Room 2.
-				sendMsgByRace(1400227, Race.PC_ALL, 0);
-				RetailConditionSpawnEngine.setVariable(instance, "switch_2_destroyed", 1, 0);
-				
-			break;
-		   /**
-	 * 舱壁：哨兵开战时激活护盾，阻挡入口。 / The Bulkhead: These shields are activated by the Baranath Churl when first encountered at the beginning of the battle. These shields block the entrance from the Armories to Gravity Control, and can be demolished with attacks, but also have a significant amount of health. Groups often opt to move around the shields instead of demolishing them. It’s worth noting that after a certain amount of time has passed, Technician Sarpa spawns in the Gravity Control room, and gives 1,000 points when defeated. There is also a chance that Adjutant Kalanadi, a Hero grade Named Monster, will spawn. Adjutant Kalanadi has a chance to drop Fabled and Heroic accessories
-	 */
 			case 700598: //Port Bulkhead.
 			case 700599: //Starboard Bulkhead.
-				int bulkhead = runtimeState().getInt(STATE + "bulkhead", 0) + 1;
-				runtimeState().put(STATE + "bulkhead", bulkhead);
-				if (bulkhead == 2) {
-					int named = Rnd.get(1, 2) == 1 ? 215082 : 215093;
-					runtimeState().put(STATE + "bulkhead_named", named);
-					if (named == 215082) {
-						spawn(named, 456.3946f, 319.65912f, 402.69315f, (byte) 28);
-					} else {
-						spawn(named, 513.9867f, 319.86224f, 402.68634f, (byte) 4);
-					}
-				}
 				despawnNpc(npc);
 			break;
-			case 215083: //Navigator Nevikah.
-			case 215084: //Assistant Malakun.
-			case 215085: //Adjutant Kundhan.
-			case 215087: //Sentinel Garkusa.
-			case 215088: //Prison Guard Mahnena.
-			case 215089: //Air Captain Girana.
-			case 215090: //Vice Air Captain Kai.
-			case 215091: //Vice Gun Captain Zha.
-			case 215092: //Gun Captain Ankrana.
-				int secretCache = runtimeState().getInt(STATE + "secret_cache", 0) + 1;
-				runtimeState().put(STATE + "secret_cache", secretCache);
-				if (secretCache == 5) {
-				    // 战舰宝箱已出现在投放区！ / A Dredgion Treasure Chest has appeared in the Drop Zone!
-					sendMsgByRace(1401421, Race.PC_ALL, 0);
-					runtimeState().put(STATE + "secret_chest", true);
-					spawn(701455, 482.82455f, 496.16556f, 397.28323f, (byte) 92); //Dredgion Opportunity Bundle.
-				}
-            break;
-			case 215082: //Technician Sarpa.
-			case 215086: //First Mate Aznaya.
-			case 215093: //Adjutant Kalanadi.
-			case 215390: //Auditor Nirshaka.
-			case 215391: //Quartermaster Vujara.
-            break;
             case 214823: //Captain Adhati.
 				long finishDeadline = System.currentTimeMillis() + 30_000;
 				runtimeState().put(STATE + "boss_finish_deadline", finishDeadline);
@@ -419,11 +338,11 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		for (var entry : runtimeState().snapshot(STATE + "room.").entrySet()) {
 			captureRoom(Race.valueOf(entry.getValue()), Integer.parseInt(entry.getKey().substring((STATE + "room.").length())));
 		}
-		RetailConditionSpawnEngine.initialize(instance);
-		startInstanceTask();
-		restoreDynamicObjects();
 		if (runtimeState().getBoolean(STATE + "settled", false)) {
 			scheduleExit();
+		} else {
+			RetailConditionSpawnEngine.initialize(instance);
+			startInstanceTask();
 		}
 	}
 	/**
@@ -454,6 +373,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		for (Player player : instance.getPlayersInside()) {
 			settlePlayer(player);
 		}
+		RetailConditionSpawnEngine.clear(instance);
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
@@ -605,6 +525,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onInstanceDestroy() {
+		RetailConditionSpawnEngine.clear(instance);
 		dredgionReward.clear();
 	}
 	/**
@@ -678,48 +599,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		});
 	}
 
-	private void restoreDynamicObjects() {
-		if (runtimeState().getBoolean(STATE + "settled", false)) return;
-		if (runtimeState().getBoolean(STATE + "teleporters", false)) {
-			spawn(730187, 402.33234f, 175.00366f, 433.94046f, (byte) 0, 10);
-			spawn(730188, 567.36017f, 175.28262f, 433.92926f, (byte) 0, 9);
-		}
-		if (runtimeState().getBoolean(STATE + "captain_teleporter", false)
-				&& !runtimeState().getBoolean(STATE + "dead.730197", false)) {
-			spawn(730197, 484.72f, 761.41998f, 388.66f, (byte) 0, 91);
-		}
-		if (runtimeState().getBoolean(STATE + "opening_spawned", false)) {
-			int side = runtimeState().getInt(STATE + "opening_side", 1);
-			if (!runtimeState().getBoolean(STATE + "dead.215391", false)) {
-				spawn(215391, side == 1 ? 415.2769f : 556.53534f, side == 1 ? 282.0216f : 279.2918f,
-					409.7311f, side == 1 ? (byte) 118 : (byte) 33);
-			}
-			int captain = runtimeState().getInt(STATE + "opening_captain", 215086);
-			if (!runtimeState().getBoolean(STATE + "dead." + captain, false)) {
-				spawn(captain, 485.25455f, 877.04614f, 405.01407f, (byte) 90);
-			}
-		}
-		if (runtimeState().getBoolean(STATE + "supply_port", false)
-				&& !runtimeState().getBoolean(STATE + "dead.730213", false)) {
-			spawn(730213, 402.33429f, 175.11707f, 432.2988f, (byte) 0, 64);
-		}
-		if (runtimeState().getBoolean(STATE + "supply_starboard", false)
-				&& !runtimeState().getBoolean(STATE + "dead.730214", false)) {
-			spawn(730214, 567.59119f, 175.19655f, 432.29999f, (byte) 0, 65);
-		}
-		if (runtimeState().getBoolean(STATE + "secret_chest", false)
-				&& !runtimeState().getBoolean(STATE + "dead.701455", false)) {
-			spawn(701455, 482.82455f, 496.16556f, 397.28323f, (byte) 92);
-		}
-		int named = runtimeState().getInt(STATE + "bulkhead_named", 0);
-		if (named > 0 && !runtimeState().getBoolean(STATE + "dead." + named, false)) {
-			if (named == 215082) {
-				spawn(named, 456.3946f, 319.65912f, 402.69315f, (byte) 28);
-			} else if (named == 215093) {
-				spawn(named, 513.9867f, 319.86224f, 402.68634f, (byte) 4);
-			}
-		}
-	}
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -736,21 +615,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			}
 		});
     }
-	
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 	
 	/**
 	 * 返回本副本奖励对象。
