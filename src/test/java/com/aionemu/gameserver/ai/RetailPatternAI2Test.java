@@ -17,6 +17,7 @@ import com.aionemu.gameserver.dataholders.RetailAiData.Rule;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.WalkerData;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
+import com.aionemu.gameserver.instance.handlers.scripts.pvparenas.HarmonyArenaInstance;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -44,6 +45,9 @@ import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.world.WorldMapInstance;
+import com.aionemu.gameserver.world.WorldPosition;
+import com.aionemu.gameserver.world.MapRegion;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
@@ -128,6 +132,23 @@ class RetailPatternAI2Test {
 			DataManager.WALKER_DATA.merge((WalkerData) JAXBContext.newInstance(WalkerData.class).createUnmarshaller()
 				.unmarshal(Path.of("src/main/resources/aion/data/static_data/npc_walker/300100000_Steel Rake_Walkers.xml")
 					.toFile()));
+			SkillNpc coin = new ObjenesisStd().newInstance(SkillNpc.class);
+			coin.npcId = 207101;
+			coin.worldId = 300450000;
+			coin.objectTemplate = new NpcTemplate();
+			coin.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+			coin.spawnTemplate.setX(485.950287f);
+			coin.spawnTemplate.setY(1761.13232f);
+			coin.spawnTemplate.setZ(177.32695f);
+			WorldMapInstance harmony = new ObjenesisStd().newInstance(TestWorldMapInstance.class);
+			harmony.setInstanceHandler(new HarmonyArenaInstance());
+			coin.position = new WorldPosition(300450000) {
+				@Override
+				public WorldMapInstance getWorldMapInstance() {
+					return harmony;
+				}
+			};
+			assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(207101), coin));
 			Pattern dranaLump = DataManager.RETAIL_AI_DATA.getPattern(281178);
 			assertEquals("IDLF1_SpallerCtrl", dranaLump.name());
 			assertTrue(RetailPatternAI2.supports(dranaLump));
@@ -2022,6 +2043,7 @@ class RetailPatternAI2Test {
 		private int worldId;
 		private NpcTemplate objectTemplate;
 		private SpawnTemplate spawnTemplate;
+		private WorldPosition position;
 		private RecordingNpcController controller;
 		private NpcSkillList skillList;
 
@@ -2055,6 +2077,11 @@ class RetailPatternAI2Test {
 		}
 
 		@Override
+		public WorldPosition getPosition() {
+			return position;
+		}
+
+		@Override
 		public NpcSkillList getSkillList() {
 			return skillList;
 		}
@@ -2062,6 +2089,18 @@ class RetailPatternAI2Test {
 		@Override
 		public void setTarget(VisibleObject target) {
 		}
+	}
+
+	private static final class TestWorldMapInstance extends WorldMapInstance {
+		private TestWorldMapInstance() {
+			super(null, 0);
+		}
+
+		@Override public MapRegion getRegion(float x, float y, float z) { return null; }
+		@Override protected MapRegion createMapRegion(int regionId) { return null; }
+		@Override protected void initMapRegions() { }
+		@Override public boolean isPersonal() { return false; }
+		@Override public int getOwnerId() { return 0; }
 	}
 
 	private static final class RecordingNpcController extends NpcController {

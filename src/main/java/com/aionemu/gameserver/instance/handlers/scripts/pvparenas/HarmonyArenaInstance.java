@@ -46,6 +46,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	private static final String BATTLE = "BATTLE";
 	private static final String FINISHED = "FINISHED";
 	private static final long EXIT_DELAY = 60_000;
+	private final Set<Integer> consumedScoreNpcs = new HashSet<>();
 
 	/** 副本奖励对象 / instance reward object */
 	protected HarmonyArenaReward instanceReward;
@@ -203,6 +204,30 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		var score = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getNpcScore(npcId);
 		return score == null || score.scoreApplyType() != 0 || score.equalizingScore() != 0 ? 0 : score.value();
 	}
+
+	@Override
+	public boolean supportsRetailNpcScore(int npcId, int scoreApplyType) {
+		return npcId == 207101 && scoreApplyType == 0;
+	}
+
+	@Override
+	public synchronized boolean onRetailNpcScore(Player player, Npc npc, int scoreApplyType, int points) {
+		HarmonyGroupReward group = instanceReward.getHarmonyGroupReward(player.getObjectId());
+		if (!instanceReward.isStartProgress() || group == null
+				|| !supportsRetailNpcScore(npc.getNpcId(), scoreApplyType)
+				|| !consumedScoreNpcs.add(npc.getObjectId())) {
+			return false;
+		}
+		restoreGroup(group);
+		group.addPoints(points);
+		persistGroup(group);
+		sendSystemMsg(player, npc, points);
+		instanceReward.sendPacket(10, player.getObjectId());
+		if (instanceReward.hasCapPoints()) {
+			finishBattle(true);
+		}
+		return true;
+	}
 	
 	private int getTime() {
 		return instanceReward.getTime();
@@ -245,7 +270,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		instanceReward = new HarmonyArenaReward(mapId, instanceId, instance);
-		spawnRings();
 		restoreLifecycle();
 	}
 
@@ -330,14 +354,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		}
 		scheduleRound();
 	}
-	/**
-	 * 处理 spawnRings。
-	 * Handle spawnRings.
-	 */
-	
-	protected void spawnRings() {
-	}
-	
 	private boolean canStart() {
 		if (instanceReward.getParticipatingGroups().size() < 2) {
 			// 独自一人时无法使用。 / Unavailable to use when you're alone.
@@ -557,6 +573,9 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		persistGroup(group);
 		sendSystemMsg(player, npc, rewardetPoints);
 		instanceReward.sendPacket(10, object);
+		if (instanceReward.hasCapPoints()) {
+			finishBattle(true);
+		}
 	}
 
 	private void scheduleRound() {

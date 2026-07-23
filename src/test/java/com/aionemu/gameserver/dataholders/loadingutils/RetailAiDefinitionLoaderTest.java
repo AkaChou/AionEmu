@@ -115,8 +115,8 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(9250, data.conditionSpawnCount());
-		assertEquals(67, data.sensoryAreaCount());
+		assertEquals(9652, data.conditionSpawnCount());
+		assertEquals(188, data.sensoryAreaCount());
 		var bossDoorPattern = data.getPattern(206163);
 		assertNotNull(bossDoorPattern);
 		assertTrue(RetailPatternAI2.supports(bossDoorPattern));
@@ -231,6 +231,27 @@ class RetailAiDefinitionLoaderTest {
 		}
 		assertEquals("SKILLCTG_HEAL", data.getSkillCategory(245));
 		assertEquals(1250, data.getNpcScore(232855).value());
+		assertNotNull(data.getPattern(207101));
+		assertEquals(100, data.getNpcScore(207101).value());
+		int[] harmonyWorlds = { 300450000, 300570000, 301100000 };
+		int[] harmonySlots = { 693, 691, 691 };
+		for (int i = 0; i < harmonyWorlds.length; i++) {
+			int worldId = harmonyWorlds[i];
+			assertEquals(134, data.getConditionSpawns(worldId).size());
+			assertEquals(harmonySlots[i], data.getConditionSpawns(worldId).stream()
+				.flatMap(spawn -> spawn.groups().stream()).flatMap(group -> group.slots().stream()).count());
+			long coins = data.getConditionSpawns(worldId).stream().flatMap(spawn -> spawn.groups().stream())
+				.flatMap(group -> group.slots().stream()).flatMap(java.util.List::stream)
+				.flatMap(choice -> choice.members().stream()).filter(npc -> npc.id() == 207101).count();
+			assertEquals(36, coins);
+			long coinSensoryAreas = data.getConditionSpawns(worldId).stream().flatMap(spawn -> spawn.groups().stream())
+				.flatMap(group -> group.slots().stream()).flatMap(java.util.List::stream)
+				.flatMap(choice -> choice.members().stream())
+				.filter(npc -> npc.id() == 207101 && npc.sensoryArea() != null).count();
+			assertEquals(36, coinSensoryAreas);
+			assertTrue(data.supportsConditionVariable(worldId, "s1_lever"));
+			assertTrue(data.supportsConditionVariable(worldId, "s2_track"));
+		}
 			for (String variable : new String[] { "Condition_S1_L", "Condition_S1_D", "Condition_S2A",
 					"Condition_S2B", "Condition_S3A", "Condition_S3B", "Condition_S4A", "Condition_S4B",
 					"hidden_L", "hidden_D", "STAGE" }) {
@@ -329,7 +350,7 @@ class RetailAiDefinitionLoaderTest {
 			Path.of("src/main/resources/aion/definitions/compact/ai/ai-waypoints.xml").toFile(),
 			Path.of("src/main/resources/aion/definitions/schemas/ai-waypoints.xsd").toFile());
 
-		assertEquals(3075, data.size());
+		assertEquals(3102, data.size());
 		var rudra = data.getWalkerTemplate("retail:300170000:npcpathpath_rudrawindc1");
 		assertNotNull(rudra);
 		assertEquals(557.167297f, rudra.getRouteSteps().get(0).getX());

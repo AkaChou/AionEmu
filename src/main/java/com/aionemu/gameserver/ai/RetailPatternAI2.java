@@ -2815,7 +2815,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		return switch (target) {
 			case "USERI_TALKER" -> event.equals("on_talked_by_user");
 			case "USERI_KILLER" -> event.equals("on_killed_by_user");
-			case "USERI_EVENT_MAKER" -> Set.of("on_die", "on_killed_by_user").contains(event);
+			case "USERI_EVENT_MAKER" -> Set.of("on_die", "on_killed_by_user", "on_user_enter_sensory_area",
+				"on_user_leave_sensory_area").contains(event);
 			default -> false;
 		};
 	}
