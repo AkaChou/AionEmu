@@ -81726,4 +81726,191 @@
       </group>
     </condition>
   </world>
+  <world id="300100000" name="idshulackship">
+    <variable name="idshulackship_ph_kill"/>
+    <variable name="lever_ver30"/>
+    <condition id="9785" expression="IDSHULACKSHIP_PH_KILL == 1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <npc id="215069" probability="10000" x="473.177826" y="508.965637" z="1034.71997" heading="1" initial_delay="0" initial_delay_extra="0" walker="retail:300100000:idship_mobpath_shulackasfirstmateknmd_45_ae" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9786" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#unconditional-party-1">
+      <group probability="1000">
+        <slot>
+          <party probability="4500" token="idshulackship/world_N.xml#unconditional-party-1:g1:s1:p1">
+            <npc id="219032" probability="10000" x="463.124115" y="512.749939" z="953.665344" heading="1" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="219003" probability="10000" x="502.858521" y="548.550232" z="953.665344" heading="260" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="500" token="idshulackship/world_N.xml#unconditional-party-1:g1:s1:p2">
+            <npc id="219039" probability="10000" x="463.124115" y="512.749939" z="953.665344" heading="1" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="219003" probability="10000" x="502.858521" y="548.550232" z="953.665344" heading="260" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="4500" token="idshulackship/world_N.xml#unconditional-party-1:g1:s1:p3">
+            <npc id="219032" probability="10000" x="502.858521" y="548.550232" z="953.665344" heading="260" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="219003" probability="10000" x="463.124115" y="512.749939" z="953.665344" heading="1" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="500" token="idshulackship/world_N.xml#unconditional-party-1:g1:s1:p4">
+            <npc id="219039" probability="10000" x="502.858521" y="548.550232" z="953.665344" heading="260" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="219003" probability="10000" x="463.124115" y="512.749939" z="953.665344" heading="1" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9787" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#unconditional-party-5">
+      <group probability="1000">
+        <slot>
+          <party probability="5000" token="idshulackship/world_N.xml#unconditional-party-5:g1:s1:p1">
+            <npc id="215067" probability="10000" x="521.149292" y="466.552094" z="1034.46973" heading="1" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215068" probability="10000" x="521.141785" y="468.397339" z="1034.46973" heading="1" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+          <party probability="5000" token="idshulackship/world_N.xml#unconditional-party-5:g1:s1:p2">
+            <npc id="215067" probability="10000" x="635.792786" y="541.592896" z="1034.46973" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+            <npc id="215068" probability="10000" x="635.800842" y="539.36322" z="1034.46973" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9788" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#unconditional-random-2">
+      <group probability="1000">
+        <slot>
+          <npc id="215420" probability="8000" x="451.161041" y="575.93811" z="888.774719" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215421" probability="2000" x="451.161041" y="575.93811" z="888.774719" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9789" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#unconditional-random-3">
+      <group probability="1000">
+        <slot>
+          <npc id="215021" probability="5000" x="316.850769" y="574.410034" z="901.700989" heading="180" initial_delay="1" initial_delay_extra="1" walker="retail:300100000:npcpathidshulackship_npc76" despawn_at_attack_state="true"/>
+          <npc id="215073" probability="5000" x="316.850769" y="574.410034" z="901.700989" heading="180" initial_delay="1" initial_delay_extra="1" walker="retail:300100000:npcpathidshulackship_npc76" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9790" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#unconditional-random-4">
+      <group probability="1000">
+        <slot>
+          <npc id="219030" probability="5000" x="435.348419" y="530.322266" z="947.665344" heading="135" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="219031" probability="5000" x="435.348419" y="530.322266" z="947.665344" heading="135" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9791" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#unconditional-random-7">
+      <group probability="1000">
+        <slot>
+          <npc id="215420" probability="8000" x="471.094513" y="576.663208" z="888.774719" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215421" probability="2000" x="471.094513" y="576.663208" z="888.774719" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9792" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#unconditional-random-8">
+      <group probability="1000">
+        <slot>
+          <npc id="215054" probability="1500" x="461.93335" y="510.545654" z="879.832275" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215055" probability="2000" x="461.93335" y="510.545654" z="879.832275" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215076" probability="1500" x="461.93335" y="510.545654" z="879.832275" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215077" probability="1000" x="461.93335" y="510.545654" z="879.832275" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215074" probability="2000" x="461.93335" y="510.545654" z="879.832275" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215075" probability="2000" x="461.93335" y="510.545654" z="879.832275" heading="270" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9793" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="one" source="idshulackship/world_N.xml#unconditional-random-9">
+      <group probability="334">
+        <slot>
+          <npc id="215425" probability="8000" x="523.722656" y="443.097168" z="1023" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215426" probability="1900" x="523.722656" y="443.097168" z="1023" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215422" probability="100" x="523.722656" y="443.097168" z="1023" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+      <group probability="333">
+        <slot>
+          <npc id="215425" probability="8000" x="568.637817" y="437.550293" z="1023" heading="45" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215426" probability="1900" x="568.637817" y="437.550293" z="1023" heading="45" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215422" probability="100" x="568.637817" y="437.550293" z="1023" heading="45" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+      <group probability="333">
+        <slot>
+          <npc id="215425" probability="8000" x="551.505737" y="437.656677" z="1023" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215426" probability="1900" x="551.505737" y="437.656677" z="1023" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215422" probability="100" x="551.505737" y="437.656677" z="1023" heading="90" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9794" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="one" source="idshulackship/world_N.xml#unconditional-random-10">
+      <group probability="334">
+        <slot>
+          <npc id="215425" probability="8000" x="575.295715" y="579.010071" z="1023" heading="271" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215426" probability="1900" x="575.295715" y="579.010071" z="1023" heading="271" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215422" probability="100" x="575.295715" y="579.010071" z="1023" heading="271" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+      <group probability="333">
+        <slot>
+          <npc id="215425" probability="8000" x="528.184937" y="574.895752" z="1023" heading="315" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215426" probability="1900" x="528.184937" y="574.895752" z="1023" heading="315" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215422" probability="100" x="528.184937" y="574.895752" z="1023" heading="315" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+      <group probability="333">
+        <slot>
+          <npc id="215425" probability="8000" x="552.573059" y="579.536743" z="1023" heading="280" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215426" probability="1900" x="552.573059" y="579.536743" z="1023" heading="280" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215422" probability="100" x="552.573059" y="579.536743" z="1023" heading="280" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9795" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="one" source="idshulackship/world_N.xml#unconditional-random-11">
+      <group probability="500">
+        <slot>
+          <npc id="215425" probability="8000" x="487.103607" y="561.346313" z="1034" heading="359" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215426" probability="1900" x="487.103607" y="561.346313" z="1034" heading="359" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215422" probability="100" x="487.103607" y="561.346313" z="1034" heading="359" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+      <group probability="500">
+        <slot>
+          <npc id="215425" probability="8000" x="502.672241" y="477.821289" z="1034" heading="359" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215426" probability="1900" x="502.672241" y="477.821289" z="1034" heading="359" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215422" probability="100" x="502.672241" y="477.821289" z="1034" heading="359" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9796" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#unconditional-random-12">
+      <group probability="1000">
+        <slot>
+          <npc id="215420" probability="8000" x="472.588226" y="514.175476" z="878.447327" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215421" probability="2000" x="472.588226" y="514.175476" z="878.447327" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9797" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#unconditional-random-13">
+      <group probability="1000">
+        <slot>
+          <npc id="215420" probability="8000" x="450.945343" y="515.008362" z="878.447327" heading="135" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="215421" probability="2000" x="450.945343" y="515.008362" z="878.447327" heading="135" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9798" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#unconditional-random-14">
+      <group probability="1000">
+        <slot>
+          <npc id="215041" probability="8000" x="516.198364" y="489.708008" z="886.854858" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+          <npc id="798376" probability="2000" x="516.198364" y="489.708008" z="886.854858" heading="180" initial_delay="1" initial_delay_extra="1" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="9799" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="idshulackship/world_N.xml#fixed-retail-named">
+      <group probability="1000">
+        <slot>
+          <npc id="219028" probability="10000" x="727.222107" y="541.030029" z="945" heading="180" initial_delay="1" initial_delay_extra="0" respawn_time="60" respawn_time_extra="15" despawn_at_attack_state="true"/>
+        </slot>
+        <slot>
+          <npc id="219029" probability="10000" x="740.972595" y="458.115265" z="945" heading="180" initial_delay="1" initial_delay_extra="0" respawn_time="60" respawn_time_extra="15" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+  </world>
 </condition_spawns>

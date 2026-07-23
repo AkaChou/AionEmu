@@ -115,7 +115,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(9235, data.conditionSpawnCount());
+		assertEquals(9250, data.conditionSpawnCount());
 		assertEquals(67, data.sensoryAreaCount());
 		var bossDoorPattern = data.getPattern(206163);
 		assertNotNull(bossDoorPattern);
@@ -317,6 +317,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(true, RetailPatternAI2.supports(data.getPattern(212283)));
 		assertEquals(true, RetailPatternAI2.supports(data.getPattern(212874)));
 		assertEquals(true, RetailPatternAI2.supports(data.getPattern(216264)));
+		assertEquals(true, RetailPatternAI2.supports(data.getPattern(219033)));
 		assertEquals(true, RetailPatternAI2.supports(data.getPattern(230820)));
 		assertEquals(true, RetailPatternAI2.supports(data.getPattern(282420)));
 		assertEquals(true, RetailPatternAI2.supports(data.getPattern(219358)));
@@ -328,7 +329,7 @@ class RetailAiDefinitionLoaderTest {
 			Path.of("src/main/resources/aion/definitions/compact/ai/ai-waypoints.xml").toFile(),
 			Path.of("src/main/resources/aion/definitions/schemas/ai-waypoints.xsd").toFile());
 
-		assertEquals(3074, data.size());
+		assertEquals(3075, data.size());
 		var rudra = data.getWalkerTemplate("retail:300170000:npcpathpath_rudrawindc1");
 		assertNotNull(rudra);
 		assertEquals(557.167297f, rudra.getRouteSteps().get(0).getX());

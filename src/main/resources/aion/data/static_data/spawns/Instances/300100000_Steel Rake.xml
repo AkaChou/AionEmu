@@ -15,18 +15,10 @@
 			<spot x="556.104" y="437.708" z="882.068" h="7"/>
 			<spot x="589.625" y="553.047" z="1021.8" h="45"/>
 		</spawn>
-		<!-- Freed Genie -->
-		<spawn npc_id="215073">
-			<spot x="314.98" y="572.7" z="900.98566" h="60" walker_id="2268A8A72939C226F48BF02794C3F518FE23E2B6"/>
-		</spawn>
 		<!-- Steel Rake Archer -->
 		<spawn npc_id="214976">
 			<spot x="519.952" y="491.561" z="951.704" h="60"/>
 			<spot x="468.368" y="514.239" z="952.533" h="60"/>
-		</spawn>
-		<!-- Firelord Kadomch -->
-		<spawn npc_id="215072">
-			<spot x="435.348" y="530.322" z="946.658" h="45"/>
 		</spawn>
 		<!-- Steel Rake Sniper -->
 		<spawn npc_id="214977">
@@ -186,7 +178,6 @@
 			<spot x="511.599" y="486.338" z="886.408" h="30"/>
 			<spot x="515.225" y="493.46" z="885.76" h="15"/>
 			<spot x="517.678" y="485.832" z="886.398" h="83"/>
-			<spot x="516.198" y="489.708" z="885.76" h="60"/>
 		</spawn>
 		<!-- Steel Rake Priest -->
 		<spawn npc_id="215009">
@@ -253,7 +244,6 @@
 			<spot x="720.702" y="492.727" z="1013.12" h="63"/>
 			<spot x="490.333" y="462.764" z="1033.31"/>
 			<spot x="559.333" y="461.616" z="1022.02"/>
-			<spot x="314.98" y="572.7" z="900.98566" h="60" walker_id="2268A8A72939C226F48BF02794C3F518FE23E2B6"/>
 		</spawn>
 		<!-- Flame Wing Griffon -->
 		<spawn npc_id="215051">
@@ -442,10 +432,6 @@
 		<spawn npc_id="215070">
 			<spot x="755.777" y="509.02" z="1012.3" h="60"/>
 		</spawn>
-		<!-- Chief Mate Menekiki -->
-		<spawn npc_id="215069">
-			<spot x="473.178" y="508.966" z="1032.84"/>
-		</spawn>
 		<!-- Calydon Shaman -->
 		<spawn npc_id="215036">
 			<spot x="413.432" y="532.043" z="947.204" h="10"/>
@@ -624,11 +610,6 @@
 		<!-- Steel Rake Pirate -->
 		<spawn npc_id="214926">
 			<spot x="615.273" y="439.175" z="1031.04" h="82"/>
-		</spawn>
-		<!-- Treasure Box -->
-		<spawn npc_id="215421">
-			<spot x="450.945" y="515.008" z="877.618" h="45"/>
-			<spot x="472.588" y="514.175" z="877.618" h="60"/>
 		</spawn>
 		<!-- Steel Rake Pirate -->
 		<spawn npc_id="214927">

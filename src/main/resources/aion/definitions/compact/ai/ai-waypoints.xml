@@ -48645,4 +48645,22 @@
     <routestep step="6" x="1875.22119" y="169.096603" z="246.17688"/>
     <routestep step="7" x="1839.44214" y="142.419769" z="246.17688"/>
   </walker_template>
+  <walker_template route_id="retail:300100000:npcpathidshulackship_npc76" pool="1"><!-- idshulackship -->
+    <routestep step="1" x="314.976379" y="572.697937" z="901.801025" rest_time="1000"/>
+    <routestep step="2" x="314.05957" y="570.57428" z="901.801025" rest_time="1000"/>
+    <routestep step="3" x="314.05069" y="568.150696" z="901.700989" rest_time="1000"/>
+    <routestep step="4" x="315.19046" y="565.945251" z="901.700989" rest_time="1000"/>
+    <routestep step="5" x="316.813019" y="564.69751" z="901.801025" rest_time="1000"/>
+    <routestep step="6" x="319.080414" y="564.048279" z="901.801025" rest_time="1000"/>
+    <routestep step="7" x="321.119568" y="564.264343" z="901.700989" rest_time="1000"/>
+    <routestep step="8" x="323.183289" y="565.360535" z="901.700989" rest_time="1000"/>
+    <routestep step="9" x="324.423859" y="567.210815" z="901.700989" rest_time="1000"/>
+    <routestep step="10" x="324.906769" y="569.216675" z="901.700989" rest_time="1000"/>
+    <routestep step="11" x="324.685944" y="571.310791" z="901.700989" rest_time="1000"/>
+    <routestep step="12" x="323.893494" y="572.703125" z="901.801025" rest_time="1000"/>
+    <routestep step="13" x="322.746338" y="573.973694" z="901.801025" rest_time="1000"/>
+    <routestep step="14" x="320.866302" y="574.688477" z="901.700989" rest_time="1000"/>
+    <routestep step="15" x="318.764862" y="574.919067" z="901.700989" rest_time="1000"/>
+    <routestep step="16" x="316.985901" y="574.49292" z="901.801025" rest_time="1000"/>
+  </walker_template>
 </npc_walker>
