@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -32,20 +33,13 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 @InstanceID(302000000)
 public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 	private static final long SETTLEMENT_DELAY = 3_000L;
-	private static final float BOSS_X = 416.1324f;
-	private static final float BOSS_Y = 97.165924f;
-	private static final float BOSS_Z = 117.19401f;
-	private static final byte BOSS_HEADING = 50;
-	private static final int[] SCORE_NPCS = {
-			244084, 244085, 244086, 244087, 244088, 244089, 244091, 244092,
-			244093, 244094, 244095, 244096, 244097, 244098, 244099, 244100
-	};
 
 	private SmolderingReward instanceReward;
 
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
+		RetailConditionSpawnEngine.initialize(instance);
 		instanceReward = new SmolderingReward(mapId, instanceId);
 		restoreScore();
 		instanceReward.setInstanceScoreType(scoreType());
@@ -79,7 +73,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 			}
 			return;
 		}
-		if (npcId < 834058 || npcId > 834061) {
+		if (npcId != 834058 && npcId != 834212) {
 			return;
 		}
 		String key = "smolder.chest_drop." + positionKey(npc.getSpawn().getX(), npc.getSpawn().getY(), npc.getSpawn().getZ());
@@ -109,8 +103,8 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 		KillEvent kill = recordKill(npc, score.value());
 		delete(npc);
 		switch (npc.getNpcId()) {
-			case 244095 -> setDoorState(8, true);
-			case 244100 -> startSettlement(kill.killedAt());
+			case 244095, 245198 -> setDoorState(8, true);
+			case 244100, 245203 -> startSettlement(kill.killedAt());
 			default -> { }
 		}
 		reconcileProgress();
@@ -244,6 +238,9 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		runtimeState().put("smolder.rank", rank);
 		runtimeState().put("smolder.completed", true);
+		if (!RetailConditionSpawnEngine.setVariable(instance, "IDDF2_Dflame_Event_Reward", 1, 0)) {
+			throw new IllegalStateException("Missing Smoldering Fire Temple reward condition variable");
+		}
 		cancelDeadline("prepare");
 		cancelDeadline("expire");
 		cancelDeadline("settle");
@@ -258,7 +255,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 		if (runtimeState().getBoolean("smolder.completed", false)) {
 			return;
 		}
-		long finalBossKilledAt = killTime(244100, BOSS_X, BOSS_Y, BOSS_Z);
+		long finalBossKilledAt = Math.max(killTime(244100), killTime(245203));
 		if (finalBossKilledAt > 0) {
 			long settlement = runtimeState().getLong("smolder.settle_deadline", 0);
 			if (settlement == 0) {
@@ -289,53 +286,8 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 	}
 
 	private void reconcileProgress() {
-		if (killCount(244095) > 0) {
+		if (killCount(244095) > 0 || killCount(245198) > 0) {
 			setDoorState(8, true);
-		}
-		if (killCount(244096) > 0) {
-			spawnOnce(834067, 292.34671f, 166.54131f, 119.53692f, (byte) 0, 40);
-		}
-		if (killCount(244097) > 0) {
-			spawnOnce(834066, 169.24069f, 417.3511f, 140.77321f, (byte) 0, 3);
-		}
-		if (killCount(244100) > 0) {
-			spawnOnce(834068, BOSS_X, BOSS_Y, BOSS_Z, BOSS_HEADING, 0);
-		}
-		if (runtimeState().getBoolean("smolder.completed", false) || !guardianUnlocked()) {
-			return;
-		}
-		if (killCount(244097) == 0) {
-			spawnBoss(244097);
-		} else if (killCount(244098) == 0) {
-			spawnBoss(244098);
-		} else if (killCount(244099) == 0) {
-			spawnBoss(244099);
-		} else if (killCount(244100) == 0) {
-			spawnBoss(244100);
-		}
-	}
-
-	private boolean guardianUnlocked() {
-		return killCount(244093) >= 12 || runtimeState().getLong("smolder.guardian_unlocked_at", 0) > 0;
-	}
-
-	private void spawnBoss(int npcId) {
-		for (int bossId = 244097; bossId <= 244100; bossId++) {
-			if (getNpc(bossId) != null) {
-				return;
-			}
-		}
-		spawn(npcId, BOSS_X, BOSS_Y, BOSS_Z, BOSS_HEADING);
-	}
-
-	private void spawnOnce(int npcId, float x, float y, float z, byte heading, int entityId) {
-		if (getNpc(npcId) != null) {
-			return;
-		}
-		if (entityId > 0) {
-			spawn(npcId, x, y, z, heading, entityId);
-		} else {
-			spawn(npcId, x, y, z, heading);
 		}
 	}
 
@@ -361,9 +313,6 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 		boolean counted = instanceReward.getInstanceScoreType().isStartProgress();
 		KillEvent event = new KillEvent(counted ? retailScore : 0, counted, System.currentTimeMillis(), true, counted);
 		runtimeState().put(key, event.encode());
-		if (npc.getNpcId() == 244093 && killCount(244093) >= 12) {
-			runtimeState().put("smolder.guardian_unlocked_at", event.killedAt());
-		}
 		if (counted) {
 			instanceReward.addPoints(retailScore);
 			instanceReward.addNpcKill();
@@ -375,9 +324,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 		return runtimeState().snapshot("smolder.kill." + npcId + '.').size();
 	}
 
-	private long killTime(int npcId, float x, float y, float z) {
-		String value = runtimeState().get(killKey(npcId, x, y, z));
-		return value == null ? 0 : KillEvent.decode(value).killedAt();
+	private long killTime(int npcId) {
+		long killedAt = 0;
+		for (String value : runtimeState().snapshot("smolder.kill." + npcId + '.').values()) {
+			killedAt = Math.max(killedAt, KillEvent.decode(value).killedAt());
+		}
+		return killedAt;
 	}
 
 	private boolean hasKillEvent(Npc npc) {
@@ -386,11 +338,8 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 
 	private void despawnScoredNpcs() {
 		for (Npc npc : npcs()) {
-			for (int scoreNpc : SCORE_NPCS) {
-				if (npc.getNpcId() == scoreNpc) {
-					delete(npc);
-					break;
-				}
+			if (DataManager.RETAIL_AI_DATA.getNpcScore(npc.getNpcId()) != null) {
+				delete(npc);
 			}
 		}
 	}

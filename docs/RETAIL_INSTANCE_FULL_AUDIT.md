@@ -4,9 +4,17 @@
 
 ## Smoldering Fire Temple（302000000）
 
+### 真端证据
+
+- `IDDF2_Dflame_Event/world_N.xml` 定义 11 个变量、672 条条件出生；普通/Master 分别使用 `spawn_page=1/2`。
+- 真端 Pattern 推进三个阶段、Boss 房四波和最终 Boss；结算统一使用 `IDDF2_Dflame_Event_Reward`。
+
 ### 已完成
 
-- 真端普通/Master 条件出生、Pattern、奖励门控、结算恢复和静态去重已完成，并在独立窗口提交。
+- 写入 672 条真端条件出生，保留页面、表达式、延迟、重生、walker 和反出生语义。
+- Handler 初始化条件引擎并在完成时写入奖励变量；结算清理按真端 NPC score ownership 处理普通与 Master 模板。
+- 删除旧四 Boss 串行出生、错误解锁条件、手工阶段出生和重复静态出生。
+- `SmolderingFireTempleRetailMigrationTest` 锁定变量、条件、页面映射、关键阶段与 Handler ownership。
 
 ## Dark Poeta（300040000）
 
