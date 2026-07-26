@@ -1366,6 +1366,7 @@ public class Skill {
 		}
 
 		if (!preUsageCheck()) {
+			effector.getController().cancelCurrentSkill();
 			return;
 		}
 		for (Creature effected : effectedList) {
