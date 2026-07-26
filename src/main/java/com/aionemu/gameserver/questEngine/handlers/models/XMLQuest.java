@@ -38,6 +38,10 @@ public abstract class XMLQuest {
 	@XmlAttribute(name = "retail")
 	protected boolean retail;
 
+	/** Whether this definition is a hand-written patch overriding generated data. */
+	@XmlAttribute(name = "patch")
+	protected boolean patch;
+
 	/**
 	 * 将本 XML 配置注册为 {@link QuestEngine} 中的模板任务处理器。
 	 * Registers this XML configuration as a template quest handler in {@link QuestEngine}.

@@ -87,7 +87,7 @@ public class BeshmundirsWalkAI2 extends ActionItemNpcAI2
 	private void moveToInstance(Player player) {
 		PortalUse portalUse = DataManager.PORTAL2_DATA.getPortalUse(getNpcId());
 		if (portalUse != null) {
-			PortalPath portalPath = portalUse.getPortalPath(player.getRace());
+			PortalPath portalPath = portalUse.getPortalPath(player.getRace(), player.getWorldId());
 			if (portalPath != null) {
 				PortalService.port(portalPath, player, getObjectId());
 			}

@@ -40,9 +40,6 @@
 		<monster var="0" npc_ids="231284 231285 231286" end_var="10"/>
 		<monster var="0" npc_ids="231287 231288 231289" end_var="10"/>
 	</monster_hunt>
-	<!-- [일일] 상급 단체원: 광산의 안전 (Elyos Only) -->
-	<item_collecting id="39716" start_npc_ids="0" end_npc_ids="800936 800937 800938"/>
-	
 	<!-- Meet The Merry And Green handled by script (Asmodians Only) -->
 	<!-- [Daily] Blowing The Whistle (Asmodians Only) -->
 	<item_collecting id="49701" start_npc_ids="0" end_npc_ids="800934 800935" action_item_ids="701565"/>
@@ -79,6 +76,4 @@
 		<monster var="0" npc_ids="231284 231285 231286" end_var="10"/>
 		<monster var="0" npc_ids="231287 231288 231289" end_var="10"/>
 	</monster_hunt>
-	<!-- [일일] 상급 단체원: 광산의 안전 (Asmodians Only) -->
-	<item_collecting id="49716" start_npc_ids="0" end_npc_ids="800934 800935"/>
 </quest_scripts>

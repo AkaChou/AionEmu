@@ -5,7 +5,6 @@ import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
@@ -16,7 +15,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 秘境露台副本事件处理器。
@@ -28,8 +26,6 @@ import java.util.Map;
 @InstanceID(300250000)
 public class EsoterraceInstance extends GeneralInstanceHandler
 {
-	/** 门映射 / door map */
-	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
 	
@@ -53,7 +49,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
-        doors = instance.getDoors();
     }
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
@@ -66,7 +61,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
 			case 282295: //Command Gate Control.
-				doors.get(39).setOpen(true);
+				setDoorState(39, true);
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsg(1401839, 0, false, 25, 0);
 			break;
@@ -127,18 +122,18 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 			case 217195: //Captain Murugan.
 				switch (Rnd.get(1, 2)) {
 				    case 1:
-						doors.get(45).setOpen(true);
+						setDoorState(45, true);
 						// 守门人倒下，左侧门已打开！ / With the gatekeeper down, the door on the left is open!
 						sendMsg(1401229, 0, false, 25, 0);
 					break;
 			        case 2:
-						doors.get(67).setOpen(true);
+						setDoorState(67, true);
 						// 守门人倒下，右侧门已打开！ / With the gatekeeper down, the door on the right is open!
 						sendMsg(1401230, 0, false, 25, 0);
 					break;
 				}
-				doors.get(52).setOpen(true);
-				doors.get(70).setOpen(true);
+				setDoorState(52, true);
+				setDoorState(70, true);
 				// 苏卡纳蒸汽喷射产生了上升气流。 / The Surkana Steam Jet has generated an updraft.
 				sendMsg(1400997, 0, false, 25, 6000);
 				spawn(703056, 392.27563f, 543.89026f, 318.3265f, (byte) 18); //Windstream C
@@ -152,7 +147,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				sendMsg(1400922, 0, false, 25, 0);
 			break;
 			case 217289: //Esoterrace Biolab Watchman: missing Retail skill slot 0.
-				doors.get(122).setOpen(true);
+				setDoorState(122, true);
 				// 生物实验室外墙已坍塌。 / The outer wall of the Bio Lab has collapsed.
 				sendMsg(1400924, 0, false, 25, 0);
 			break;
@@ -207,8 +202,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
      */
     @Override
     public void onInstanceDestroy() {
-        doors.clear();
-		movies.clear();
+			movies.clear();
     }
 	
 	private void removeItems(Player player) {

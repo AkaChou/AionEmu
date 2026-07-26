@@ -1,0 +1,5125 @@
+{
+  "version": 2,
+  "provenance": {
+    "kind": "AUDIT_PROJECTION",
+    "input": "src/main/resources/aion/definitions/compact/instance/coverage.xml",
+    "authoritative_retail_evidence": false
+  },
+  "summary": {
+    "production_worlds": 139,
+    "dimensions": 10,
+    "batches": 68,
+    "registered_handler_worlds": 99,
+    "behavior_handler_worlds": 86,
+    "worlds_with_handler_dimensions": 79,
+    "handler_dimensions_total": 278,
+    "handler_owned_by_dimension": {
+      "entry": 0,
+      "spawn": 15,
+      "ai": 0,
+      "path": 1,
+      "door": 38,
+      "stage": 61,
+      "score": 35,
+      "reward": 14,
+      "exit": 58,
+      "recovery": 56
+    },
+    "owners_by_dimension": {
+      "entry": {
+        "EVENT_AI": 1,
+        "HOUSING_SERVICE": 2,
+        "INSTANCE_SYSTEM": 9,
+        "MATCHMAKER": 28,
+        "NON_PRODUCTION": 2,
+        "PORTAL_REJECTED": 6,
+        "RETAIL_PORTAL": 65,
+        "SCRIPT_QUEST": 18,
+        "TOURNAMENT_SERVICE": 8
+      },
+      "spawn": {
+        "EVENT_AI": 1,
+        "HANDLER": 15,
+        "HOUSING_SERVICE": 2,
+        "NON_PRODUCTION": 2,
+        "RETAIL_DATA": 102,
+        "SCRIPT_QUEST": 17
+      },
+      "ai": {
+        "EVENT_AI": 1,
+        "NON_PRODUCTION": 2,
+        "NOT_APPLICABLE": 2,
+        "RETAIL_PATTERN": 98,
+        "SCRIPT_AI": 19,
+        "SCRIPT_QUEST": 17
+      },
+      "path": {
+        "HANDLER": 1,
+        "NON_PRODUCTION": 2,
+        "RETAIL_DATA": 31,
+        "RUNTIME_PATHING": 104,
+        "SCRIPT_AI": 1
+      },
+      "door": {
+        "EVENT_AI": 1,
+        "HANDLER": 38,
+        "HOUSING_SERVICE": 2,
+        "NON_PRODUCTION": 2,
+        "NOT_APPLICABLE": 31,
+        "RETAIL_DATA": 23,
+        "RETAIL_PATTERN": 16,
+        "SCRIPT_AI": 1,
+        "SCRIPT_QUEST": 17,
+        "TOURNAMENT_SERVICE": 8
+      },
+      "stage": {
+        "EVENT_AI": 1,
+        "HANDLER": 61,
+        "NON_PRODUCTION": 2,
+        "NOT_APPLICABLE": 4,
+        "RETAIL_PATTERN": 45,
+        "SCRIPT_AI": 1,
+        "SCRIPT_QUEST": 17,
+        "TOURNAMENT_SERVICE": 8
+      },
+      "score": {
+        "EVENT_AI": 1,
+        "HANDLER": 35,
+        "NON_PRODUCTION": 2,
+        "NOT_APPLICABLE": 91,
+        "RETAIL_PATTERN": 2,
+        "TOURNAMENT_SERVICE": 8
+      },
+      "reward": {
+        "EVENT_AI": 1,
+        "HANDLER": 14,
+        "NON_PRODUCTION": 2,
+        "NOT_APPLICABLE": 4,
+        "RETAIL_DROPS": 55,
+        "RETAIL_PATTERN": 2,
+        "SCRIPT_QUEST": 18,
+        "SETTLEMENT_SERVICE": 35,
+        "TOURNAMENT_SERVICE": 8
+      },
+      "exit": {
+        "EVENT_AI": 1,
+        "HANDLER": 58,
+        "HOUSING_SERVICE": 2,
+        "INSTANCE_EXIT_DATA": 39,
+        "NON_PRODUCTION": 2,
+        "NOT_APPLICABLE": 2,
+        "RETAIL_DATA": 1,
+        "RETAIL_PATTERN": 5,
+        "RETAIL_PORTAL": 2,
+        "SCRIPT_AI": 2,
+        "SCRIPT_QUEST": 17,
+        "TOURNAMENT_SERVICE": 8
+      },
+      "recovery": {
+        "EVENT_AI": 1,
+        "HANDLER": 56,
+        "HOUSING_SERVICE": 2,
+        "NON_PRODUCTION": 2,
+        "QUEST_STATE": 17,
+        "RECOVERY_REJECTED": 2,
+        "RETAIL_DATA": 2,
+        "STATELESS": 49,
+        "TOURNAMENT_SERVICE": 8
+      }
+    }
+  },
+  "batches": [
+    {
+      "id": "B001",
+      "count": 1,
+      "dimensions": {
+        "entry": "EVENT_AI",
+        "spawn": "EVENT_AI",
+        "ai": "EVENT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "EVENT_AI",
+        "stage": "EVENT_AI",
+        "score": "EVENT_AI",
+        "reward": "EVENT_AI",
+        "exit": "EVENT_AI",
+        "recovery": "EVENT_AI"
+      },
+      "world_ids": [
+        600080000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B002",
+      "count": 2,
+      "dimensions": {
+        "entry": "NON_PRODUCTION",
+        "spawn": "NON_PRODUCTION",
+        "ai": "NON_PRODUCTION",
+        "path": "NON_PRODUCTION",
+        "door": "NON_PRODUCTION",
+        "stage": "NON_PRODUCTION",
+        "score": "NON_PRODUCTION",
+        "reward": "NON_PRODUCTION",
+        "exit": "NON_PRODUCTION",
+        "recovery": "NON_PRODUCTION"
+      },
+      "world_ids": [
+        900210000,
+        900230000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java"
+      ]
+    },
+    {
+      "id": "B003",
+      "count": 2,
+      "dimensions": {
+        "entry": "HOUSING_SERVICE",
+        "spawn": "HOUSING_SERVICE",
+        "ai": "NOT_APPLICABLE",
+        "path": "RUNTIME_PATHING",
+        "door": "HOUSING_SERVICE",
+        "stage": "NOT_APPLICABLE",
+        "score": "NOT_APPLICABLE",
+        "reward": "NOT_APPLICABLE",
+        "exit": "HOUSING_SERVICE",
+        "recovery": "HOUSING_SERVICE"
+      },
+      "world_ids": [
+        720010000,
+        730010000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B004",
+      "count": 1,
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        301630000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/luna/ContaminatedUnderpathInstance.java"
+      ]
+    },
+    {
+      "id": "B005",
+      "count": 1,
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        301700000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TreasureIslandOfCourageInstance.java"
+      ]
+    },
+    {
+      "id": "B006",
+      "count": 10,
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300110000,
+        300210000,
+        300440000,
+        300450000,
+        300570000,
+        301100000,
+        301220000,
+        301650000,
+        301670000,
+        302350000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EvergaleCanyonInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/IronWallWarfrontInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/OphidanWarpathInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/AshunatalDredgionInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/BaranathDredgion.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/ChantraDredgionInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/TerathDredgionInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/ArenaOfHarmonyInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/HarmonyTrainingGroundInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/UnityTrainingGroundInstance.java"
+      ]
+    },
+    {
+      "id": "B007",
+      "count": 2,
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300550000,
+        301310000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/idgelDome/IdgelDomeInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/ArenaOfGloryInstance.java"
+      ]
+    },
+    {
+      "id": "B008",
+      "count": 7,
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300350000,
+        300360000,
+        300420000,
+        300430000,
+        301120000,
+        301210000,
+        301680000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EngulfedOphidanBridgeInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KamarBattlefieldInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/idgelDome/IdgelDomeLandmarkInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/ArenaOfChaosInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/ArenaOfDisciplineInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/ChaosTrainingGroundsInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/DisciplineTrainingGroundsInstance.java"
+      ]
+    },
+    {
+      "id": "B009",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        301631000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/Event_ContaminatedUnderpathInstance.java"
+      ]
+    },
+    {
+      "id": "B010",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "RECOVERY_REJECTED"
+      },
+      "world_ids": [
+        301320000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ophidanBridge/Lucky_OphidanBridgeInstance.java"
+      ]
+    },
+    {
+      "id": "B011",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        301130000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SauroSupplyBaseInstance.java"
+      ]
+    },
+    {
+      "id": "B012",
+      "count": 5,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300040000,
+        301400000,
+        301590000,
+        302000000,
+        302100000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DarkPoetaInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EmperorTrillirunerkSafeInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FissureOfOblivionInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SmolderingFireTempleInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheShugoEmperorVaultInstance.java"
+      ]
+    },
+    {
+      "id": "B013",
+      "count": 3,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300240000,
+        300241000,
+        302330000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AturamSkyFortressInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KumukiCaveInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/Event_AturamSkyFortressInstance.java"
+      ]
+    },
+    {
+      "id": "B014",
+      "count": 2,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300170000,
+        300510000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/BeshmundirTempleInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TiamatStrongholdInstance.java"
+      ]
+    },
+    {
+      "id": "B015",
+      "count": 2,
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300060000,
+        300090000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/RightWingChamberInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SulfurTreeNestInstance.java"
+      ]
+    },
+    {
+      "id": "B016",
+      "count": 2,
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "RETAIL_PATTERN",
+        "reward": "RETAIL_PATTERN",
+        "exit": "HANDLER",
+        "recovery": "RETAIL_DATA"
+      },
+      "world_ids": [
+        302200000,
+        302300000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgionDefense/PandaemoniumInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgionDefense/SanctumInstance.java"
+      ]
+    },
+    {
+      "id": "B017",
+      "count": 3,
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300800000,
+        310090000,
+        310100000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B018",
+      "count": 2,
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PATTERN",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        310160000,
+        320160000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B019",
+      "count": 1,
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "NOT_APPLICABLE",
+        "stage": "NOT_APPLICABLE",
+        "score": "NOT_APPLICABLE",
+        "reward": "NOT_APPLICABLE",
+        "exit": "NOT_APPLICABLE",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        310020000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B020",
+      "count": 1,
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "NOT_APPLICABLE",
+        "score": "NOT_APPLICABLE",
+        "reward": "NOT_APPLICABLE",
+        "exit": "NOT_APPLICABLE",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        310060000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B021",
+      "count": 3,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300300000,
+        300320000,
+        301500000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/StonespearReachInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/crucible/CrucibleChallengeInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/crucible/EmpyreanCrucibleInstance.java"
+      ]
+    },
+    {
+      "id": "B022",
+      "count": 2,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300050000,
+        300070000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CarpusIsleStoreroomInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/HamateIsleStoreroomInstance.java"
+      ]
+    },
+    {
+      "id": "B023",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        320080000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DraupnirCaveInstance.java"
+      ]
+    },
+    {
+      "id": "B024",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        320100000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FireTempleInstance.java"
+      ]
+    },
+    {
+      "id": "B025",
+      "count": 2,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        301200000,
+        301620000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/NightmareCircusInstance.java"
+      ]
+    },
+    {
+      "id": "B026",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PORTAL",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300030000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B027",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "SCRIPT_AI",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300200000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B028",
+      "count": 1,
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        301580000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B029",
+      "count": 1,
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        301640000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/luna/SecretMunitionsFactoryInstance.java"
+      ]
+    },
+    {
+      "id": "B030",
+      "count": 1,
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300080000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/LeftWingChamberInstance.java"
+      ]
+    },
+    {
+      "id": "B031",
+      "count": 1,
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        320110000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B032",
+      "count": 1,
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "RETAIL_PATTERN",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        301140000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SeizedDanuarSanctuaryInstance.java"
+      ]
+    },
+    {
+      "id": "B033",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        302400000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/crucible/CrucibleSpireInstance.java"
+      ]
+    },
+    {
+      "id": "B034",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300100000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/steelRake/SteelRakeInstance.java"
+      ]
+    },
+    {
+      "id": "B035",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        310110000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheobomosLabInstance.java"
+      ]
+    },
+    {
+      "id": "B036",
+      "count": 3,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300540000,
+        301510000,
+        302110000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SealedArgentManorInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheEternalBastionInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/Opportunity_FissureOfOblivionInstance.java"
+      ]
+    },
+    {
+      "id": "B037",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "RECOVERY_REJECTED"
+      },
+      "world_ids": [
+        301380000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DanuarSanctuaryInstance.java"
+      ]
+    },
+    {
+      "id": "B038",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300230000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KromedesTrialInstance.java"
+      ]
+    },
+    {
+      "id": "B039",
+      "count": 7,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300120000,
+        300130000,
+        300140000,
+        300190000,
+        300700000,
+        301660000,
+        310050000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AetherogeneticsLabInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FallenPoetaInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TalocsHollowInstance.java"
+      ]
+    },
+    {
+      "id": "B040",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "RETAIL_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300590000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ophidanBridge/OphidanBridgeInstance.java"
+      ]
+    },
+    {
+      "id": "B041",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PATTERN",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        320130000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AdmaStrongholdInstance.java"
+      ]
+    },
+    {
+      "id": "B042",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "SCRIPT_AI",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300460000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B043",
+      "count": 1,
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        301520000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DrakenspireDepthsQInstance.java"
+      ]
+    },
+    {
+      "id": "B044",
+      "count": 1,
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        301600000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B045",
+      "count": 4,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        301230000,
+        301370000,
+        301560000,
+        302340000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/BastionOfSoulsInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TrialsOfEternityInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/illuminaryObelisk/IlluminaryObeliskInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/illuminaryObelisk/Infernal_IlluminaryObeliskInstance.java"
+      ]
+    },
+    {
+      "id": "B046",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300160000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/LowerUdasTempleInstance.java"
+      ]
+    },
+    {
+      "id": "B047",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        301550000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CradleOfEternityInstance.java"
+      ]
+    },
+    {
+      "id": "B048",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300150000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UdasTempleInstance.java"
+      ]
+    },
+    {
+      "id": "B049",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PATTERN",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        301610000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheobomosTestChamberInstance.java"
+      ]
+    },
+    {
+      "id": "B050",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PORTAL",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300610000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B051",
+      "count": 8,
+      "dimensions": {
+        "entry": "TOURNAMENT_SERVICE",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "TOURNAMENT_SERVICE",
+        "stage": "TOURNAMENT_SERVICE",
+        "score": "TOURNAMENT_SERVICE",
+        "reward": "TOURNAMENT_SERVICE",
+        "exit": "TOURNAMENT_SERVICE",
+        "recovery": "TOURNAMENT_SERVICE"
+      },
+      "world_ids": [
+        302310000,
+        302320000,
+        302360000,
+        302370000,
+        302380000,
+        302390000,
+        302410000,
+        302420000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java"
+      ]
+    },
+    {
+      "id": "B052",
+      "count": 1,
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "HANDLER",
+        "ai": "SCRIPT_AI",
+        "path": "HANDLER",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        400030000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TransidiumAnnexInstance.java"
+      ]
+    },
+    {
+      "id": "B053",
+      "count": 1,
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300620000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/OccupiedRentusBaseInstance.java"
+      ]
+    },
+    {
+      "id": "B054",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300280000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/RentusBaseInstance.java"
+      ]
+    },
+    {
+      "id": "B055",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        300250000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EsoterraceInstance.java"
+      ]
+    },
+    {
+      "id": "B056",
+      "count": 1,
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "NOT_APPLICABLE",
+        "stage": "SCRIPT_AI",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300560000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ShugoImperialTombInstance.java"
+      ]
+    },
+    {
+      "id": "B057",
+      "count": 1,
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300630000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AnguishedDragonLordRefugeInstance.java"
+      ]
+    },
+    {
+      "id": "B058",
+      "count": 3,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        301110000,
+        301330000,
+        301360000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/danuarReliquary/DanuarReliquaryInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/danuarReliquary/Infernal_DanuarReliquaryInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/danuarReliquary/Lucky_DanuarReliquaryInstance.java"
+      ]
+    },
+    {
+      "id": "B059",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        301270000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/LinkgateFoundryInstance.java"
+      ]
+    },
+    {
+      "id": "B060",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        320150000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/PadmarashkaCaveInstance.java"
+      ]
+    },
+    {
+      "id": "B061",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300520000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DragonLordRefugeInstance.java"
+      ]
+    },
+    {
+      "id": "B062",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300480000
+      ],
+      "handlers": []
+    },
+    {
+      "id": "B063",
+      "count": 1,
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        301570000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ArchivesOfEternityQInstance.java"
+      ]
+    },
+    {
+      "id": "B064",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_PATTERN",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "world_ids": [
+        301720000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/MirashSanctuaryInstance.java"
+      ]
+    },
+    {
+      "id": "B065",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "SCRIPT_AI",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        301390000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DrakenspireDepthsInstance.java"
+      ]
+    },
+    {
+      "id": "B066",
+      "count": 2,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        300220000,
+        300600000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AbyssalSplinterInstance.java",
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UnstableAbyssalSplinterInstance.java"
+      ]
+    },
+    {
+      "id": "B067",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "SCRIPT_AI",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        301540000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ArchivesOfEternityInstance.java"
+      ]
+    },
+    {
+      "id": "B068",
+      "count": 17,
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "world_ids": [
+        301340000,
+        301690000,
+        310010000,
+        310030000,
+        310040000,
+        310070000,
+        310080000,
+        310120000,
+        320010000,
+        320020000,
+        320030000,
+        320040000,
+        320050000,
+        320070000,
+        320090000,
+        320120000,
+        320140000
+      ],
+      "handlers": []
+    }
+  ],
+  "worlds": [
+    {
+      "world_id": 300030000,
+      "local_name": "Nochsana Training Camp",
+      "retail_name": "idab1_minicastle",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "retail world/static spawns/AI/skill action/drops/portal/quests own complete flow",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PORTAL",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B026"
+    },
+    {
+      "world_id": 300040000,
+      "local_name": "Dark Poeta",
+      "retail_name": "idlf1",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns and Pattern own phases/combat; npc-scores and npc_drops own points/drops; handler owns spawn-page/race variables, timers/door, idempotent kill/gather scoring, condition progress, Marabata controller lifecycle, movies, rank/settlement and exit recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DarkPoetaInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B012"
+    },
+    {
+      "world_id": 300050000,
+      "local_name": "Carpus Isle Storeroom",
+      "retail_name": "idabre_up_asteria",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawn pools/condition variables/AI/drops/ownership_world key cleanup and exact timer zone; handler persistent 15-minute deadline/direct chest cleanup",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CarpusIsleStoreroomInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "recovery"
+      ],
+      "batch_id": "B022"
+    },
+    {
+      "world_id": 300060000,
+      "local_name": "Sulfur Tree Nest",
+      "retail_name": "idabre_low_divine",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns/AI/drops and exact timer zone; handler persistent 15-minute deadline/direct chest cleanup",
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SulfurTreeNestInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "recovery"
+      ],
+      "batch_id": "B015"
+    },
+    {
+      "world_id": 300070000,
+      "local_name": "Hamate Isle Storeroom",
+      "retail_name": "idabre_up_rhoo",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawn pools/condition variables/AI/drops/ownership_world key cleanup and exact timer zone; handler persistent 15-minute deadline/direct chest cleanup",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/HamateIsleStoreroomInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "recovery"
+      ],
+      "batch_id": "B022"
+    },
+    {
+      "world_id": 300080000,
+      "local_name": "Left Wing Chamber",
+      "retail_name": "idabre_low_wciel",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns/AI/drops and exact timer zone; handler persistent 15-minute deadline/direct chest cleanup",
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/LeftWingChamberInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "recovery"
+      ],
+      "batch_id": "B030"
+    },
+    {
+      "world_id": 300090000,
+      "local_name": "Right Wing Chamber",
+      "retail_name": "idabre_low_eciel",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns/AI/drops and exact timer zone; handler persistent 15-minute deadline/direct chest cleanup",
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/RightWingChamberInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "recovery"
+      ],
+      "batch_id": "B015"
+    },
+    {
+      "world_id": 300100000,
+      "local_name": "Steel Rake",
+      "retail_name": "idshulackship",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns, waypoint pools and Pattern own encounter/random spawns; npc_drops owns loot; handler only bridges 214968 death to IDSHULACKSHIP_PH_KILL and exits players",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/steelRake/SteelRakeInstance.java",
+      "handler_dimensions": [
+        "exit"
+      ],
+      "batch_id": "B034"
+    },
+    {
+      "world_id": 300110000,
+      "local_name": "Baranath Dredgion",
+      "retail_name": "idab1_dreadgion",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static pools, waypoint and Pattern own PvE spawns; npc-scores/npc_drops/quest data own PvE points/loot/objectives; handler owns Dredgion preparation/timers, variable bridges, Surkana rooms, faction/PvP/NPC scoring, revive, captain settlement, rewards and exit recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/BaranathDredgion.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B006"
+    },
+    {
+      "world_id": 300120000,
+      "local_name": "Grave Of Steel Storeroom",
+      "retail_name": "idabre_up3_dkisas",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "retail condition/static spawns, AI, drops and ownership_world keys own complete flow",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B039"
+    },
+    {
+      "world_id": 300130000,
+      "local_name": "Twilight Battlefield Storeroom",
+      "retail_name": "idabre_up3_lamiren",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "retail condition/static spawns, AI, drops and ownership_world keys own complete flow",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B039"
+    },
+    {
+      "world_id": 300140000,
+      "local_name": "Isle Of Roots Storeroom",
+      "retail_name": "idabre_up3_crotan",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "retail condition/static spawns, AI, drops and ownership_world keys own complete flow",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B039"
+    },
+    {
+      "world_id": 300150000,
+      "local_name": "Udas Temple",
+      "retail_name": "idtemple_up",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, Pattern, key drops and static doors own encounters, boss/teleporter progress and three keyed rooms; handler only removes non-owned-world keys 185000083..185000085 on leave, preserving retail logout",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UdasTempleInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B048"
+    },
+    {
+      "world_id": 300160000,
+      "local_name": "Lower Udas Temple",
+      "retail_name": "idtemple_low",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, Pattern and npc_drops own encounters/loot; handler owns persistent 12-chest lifecycle and clears non-owned-world keys 185000086..185000087 on leave while preserving retail logout; full retail chest producer remains unverified",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/LowerUdasTempleInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "stage",
+        "recovery"
+      ],
+      "batch_id": "B046"
+    },
+    {
+      "world_id": 300170000,
+      "local_name": "Beshmundir Temple",
+      "retail_name": "idcatacombs",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns and Pattern own bosses/doors/waves/drops; handler only bridges altar 730274 to missing respondent 799506 for active quest oil, consumes key 185000091 for blue-flame door 730290, and clears non-owned-world keys 185000091..185000096 on leave while preserving retail logout",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/BeshmundirTempleInstance.java",
+      "handler_dimensions": [
+        "door"
+      ],
+      "batch_id": "B014"
+    },
+    {
+      "world_id": 300190000,
+      "local_name": "Taloc's Hollow",
+      "retail_name": "idelim",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, Pattern, doors, drops and quest items plus ScriptNpc healing; handler owns movies, normal-leave ownerless-item cleanup and logout/leave effect/summon cleanup",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TalocsHollowInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B039"
+    },
+    {
+      "world_id": 300200000,
+      "local_name": "Haramel",
+      "retail_name": "idnovice",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "retail static spawns/AI Pattern/drops; TowerLiftAI2 unverified upper landing bridge",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "SCRIPT_AI",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B027"
+    },
+    {
+      "world_id": 300210000,
+      "local_name": "Chantra Dredgion",
+      "retail_name": "iddreadgion_02",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, waypoint, Pattern and npc-scores/npc_drops own PvE content; handler owns preparation/timers, delayed retail teleporter/named spawns, variable bridges, Surkana rooms, faction/PvP/NPC scoring, revive, captain settlement, rewards and exit recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/ChantraDredgionInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B006"
+    },
+    {
+      "world_id": 300220000,
+      "local_name": "Abyssal Splinter",
+      "retail_name": "idabre_core",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns and Pattern own artifact/Dayshade triggers; 6 skill-slot-deficient bosses retain generic fallback; handler only clears non-owned-world item 185000104 on leave while preserving retail logout",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AbyssalSplinterInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B066"
+    },
+    {
+      "world_id": 300230000,
+      "local_name": "Kromede Trial",
+      "retail_name": "idcromede",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns, Pattern, sensory area and quests own combat, wounded NPCs, boss selection, treasury hint and final movies/completion plus ownership_world item cleanup; Pattern owns the 282093/282095 relic death and 282084/282085 cleanse chain; handler owns entry transformation/movie/UI, stone-door delete, manor movie/hint, normal-leave ownerless-key cleanup and logout/leave effect cleanup",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KromedesTrialInstance.java",
+      "handler_dimensions": [
+        "stage"
+      ],
+      "batch_id": "B038"
+    },
+    {
+      "world_id": 300240000,
+      "local_name": "Aturam Sky Fortress",
+      "retail_name": "idstation",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, waypoint and Pattern own encounters and door variables; handler only owns three flying rings, ring effect cleanup and door 177 opening; ownership_world clears both temporary items on normal leave while logout preserves them",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AturamSkyFortressInstance.java",
+      "handler_dimensions": [
+        "door"
+      ],
+      "batch_id": "B013"
+    },
+    {
+      "world_id": 300241000,
+      "local_name": "[Event] Aturam Sky Fortress",
+      "retail_name": "idstation_event",
+      "behavior": "EVENT",
+      "behavior_source": "retail static/condition spawns, waypoint and Pattern own encounters and door variables; handler only owns three flying rings, ring effect cleanup and door 177 opening; normal leave clears two items owned by formal world while logout preserves them",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/Event_AturamSkyFortressInstance.java",
+      "handler_dimensions": [
+        "door"
+      ],
+      "batch_id": "B013"
+    },
+    {
+      "world_id": 300250000,
+      "local_name": "Esoterrace",
+      "retail_name": "idf4re_drana",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns and supported Pattern own proven boss rewards, key-manager progress and doors; handler retains unsupported Pattern fallbacks, movies, legacy windstreams and normal-leave item cleanup",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EsoterraceInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "recovery"
+      ],
+      "batch_id": "B055"
+    },
+    {
+      "world_id": 300280000,
+      "local_name": "Rentus Base",
+      "retail_name": "idyun",
+      "behavior": "HANDLER",
+      "behavior_source": "retail race controller and condition spawns own faction siege weapons; Pattern owns oil-cask spill and supported combat; handler retains Vasharti waypoint fallback, boss completion/movie/rewards, bridge/door bridges, consumables and legacy interactions",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/RentusBaseInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "reward",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B054"
+    },
+    {
+      "world_id": 300300000,
+      "local_name": "Empyrean Crucible",
+      "retail_name": "idarena",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns and Pattern own all ten stages; Recordkeeper bridge owns retail stage variables/world-scene protocol; shared Crucible handler owns persistent idempotent NPC scoring; group handler owns revive routing, protocol, settlement and explicit-exit item cleanup while logout preserves items",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/crucible/EmpyreanCrucibleInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B021"
+    },
+    {
+      "world_id": 300320000,
+      "local_name": "Crucible Challenge",
+      "retail_name": "idarena_solo",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns and Pattern own five-stage encounters; Recordkeeper and rift bridges own retail stage/hidden variables; shared Crucible handler owns persistent idempotent NPC scoring; solo handler owns unsupported bonus-rift portal, delayed revive, settlement and explicit-exit item cleanup while logout preserves items",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/crucible/CrucibleChallengeInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B021"
+    },
+    {
+      "world_id": 300350000,
+      "local_name": "Arena Of Chaos",
+      "retail_name": "idarena_pvp01",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition/gather spawns and Pattern own Chaos actors; shared PvP Arena handler owns persistent idempotent Pattern scoring, legacy interaction/flight-ring bridges, relic respawn, rounds, settlement and recovery; map handler owns 1250-point gathering",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/ArenaOfChaosInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B008"
+    },
+    {
+      "world_id": 300360000,
+      "local_name": "Arena Of Discipline",
+      "retail_name": "idarena_pvp02",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns and Pattern own Discipline actors; shared PvP Arena handler owns persistent idempotent Pattern scoring, legacy interaction bridges, rounds, settlement and recovery; no gather spawn or handler owner exists",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/ArenaOfDisciplineInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B008"
+    },
+    {
+      "world_id": 300420000,
+      "local_name": "Chaos Training Grounds",
+      "retail_name": "idarena_pvp01_t",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition/gather spawns and Pattern own Chaos actors; shared PvP Arena handler owns persistent idempotent Pattern scoring, legacy interaction bridges, relic respawn, rounds, settlement and recovery; map handler owns 1250-point gathering and three persistent 250-point flight rings",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/ChaosTrainingGroundsInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B008"
+    },
+    {
+      "world_id": 300430000,
+      "local_name": "Discipline Training Grounds",
+      "retail_name": "idarena_pvp02_t",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns and Pattern own Discipline actors; shared PvP Arena handler owns persistent idempotent Pattern scoring, legacy interaction bridges, rounds, settlement and recovery; no gather spawn or handler owner exists",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/DisciplineTrainingGroundsInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B008"
+    },
+    {
+      "world_id": 300440000,
+      "local_name": "Terath Dredgion",
+      "retail_name": "iddreadgion_03",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, waypoint, Pattern and npc-scores/npc_drops own PvE content; handler owns preparation/timers, delayed retail teleporter/named spawns, variable bridges, Surkana rooms, faction/PvP/NPC scoring, revive, captain settlement, rewards and exit recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/TerathDredgionInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B006"
+    },
+    {
+      "world_id": 300450000,
+      "local_name": "Arena Of Harmony",
+      "retail_name": "idarena_team01",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, waypoint and Pattern own actors and 25 reachable score actions; shared Harmony handler owns preparation, three rounds/zones, doors, persistent idempotent team/player/NPC scoring, revive, settlement and exit recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/ArenaOfHarmonyInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B006"
+    },
+    {
+      "world_id": 300460000,
+      "local_name": "Steel Rake Cabin",
+      "retail_name": "idshulackship_solo",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/ai/instance/steelRake/AccountantCabinExitAI2.java",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "SCRIPT_AI",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B042"
+    },
+    {
+      "world_id": 300480000,
+      "local_name": "Sealed Danuar Mysticarium",
+      "retail_name": "idldf5re_solo",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/ai/instance/sealedDanuarMysticarium/Internal_Teleport_DeviceAI2.java",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B062"
+    },
+    {
+      "world_id": 300510000,
+      "local_name": "Tiamat Stronghold",
+      "retail_name": "idtiamat_1",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, Pattern and drops own phases, waves, bosses, teleports and treasure; handler only bridges NoAction shifter 701523 item-use completion to door 22",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TiamatStrongholdInstance.java",
+      "handler_dimensions": [
+        "door"
+      ],
+      "batch_id": "B014"
+    },
+    {
+      "world_id": 300520000,
+      "local_name": "Dragon Lord's Refuge",
+      "retail_name": "idtiamat_2",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns and Pattern own phases/bosses/teleports/treasure; Kahrun/timer script AIs own remaining bridges; handler only removes effects 20932/20936 on logout/leave",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DragonLordRefugeInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B061"
+    },
+    {
+      "world_id": 300540000,
+      "local_name": "Eternal Bastion",
+      "retail_name": "idldf5b_td",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, 91 NPC parties, Pattern, npc-scores and drops own waves/actors/combat/loot, including the complete 701625/701922 add-wave action chain; handler owns persistent time attack, score/rank, completion/failure, settlement, direct-exit item cleanup, effect cleanup and exit recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheEternalBastionInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B036"
+    },
+    {
+      "world_id": 300550000,
+      "local_name": "Arena Of Glory",
+      "retail_name": "idarena_glory",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns and Pattern own S4/S6 variables plus 17 page-filtered random pools, Party selection and supported combat; legacy static spawns retain non-pool base actors; shared PvP Arena handler owns relic respawn, persistent idempotent Pattern scoring, Glory positions/rates, rounds, settlement and recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/ArenaOfGloryInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B007"
+    },
+    {
+      "world_id": 300560000,
+      "local_name": "Shugo Imperial Tomb",
+      "retail_name": "iddf2flying_event01",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns, waypoint and Pattern own 453 wave conditions and stage progress; stage-starter AI bridges three missing dialogs to Condition_S2/S3/S4; Pattern owns race-specific 831095 transformation; ownership_world clears three temporary tags on normal leave while logout preserves them, permanent Shugo Coin is never cleared; handler only clears transformation effects and sends the exit message",
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "NOT_APPLICABLE",
+        "stage": "SCRIPT_AI",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ShugoImperialTombInstance.java",
+      "handler_dimensions": [
+        "exit"
+      ],
+      "batch_id": "B056"
+    },
+    {
+      "world_id": 300570000,
+      "local_name": "Harmony Training Grounds",
+      "retail_name": "idarena_team01_t",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, waypoint and Pattern own actors and 25 reachable score actions; shared Harmony handler owns preparation, three rounds/zones, doors, persistent idempotent team/player/NPC scoring, revive, settlement and exit recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/HarmonyTrainingGroundInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B006"
+    },
+    {
+      "world_id": 300590000,
+      "local_name": "Ophidan Bridge",
+      "retail_name": "idldf5_under_01",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static controller/normal boss, condition spawns, waypoint and Pattern own runaway route, middle/final boss variants, bridge doors and exit; handler retains four legacy defense random pools because full unconditional spawn import is absent, plus opportunity bundle/drop bridge",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "RETAIL_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ophidanBridge/OphidanBridgeInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "reward"
+      ],
+      "batch_id": "B040"
+    },
+    {
+      "world_id": 300600000,
+      "local_name": "Unstable Abyssal Splinter",
+      "retail_name": "idabre_core_02",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns and Pattern own artifact/Dayshade triggers; 4 skill-slot-deficient bosses retain generic fallback; handler only clears non-owned-world item 185000104 on leave while preserving retail logout",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UnstableAbyssalSplinterInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B066"
+    },
+    {
+      "world_id": 300610000,
+      "local_name": "Raksang Ruins",
+      "retail_name": "idraksha_solo",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "retail AI Pattern Tames_Solo_*_Teleporter + condition spawns; teleport aliases Alias_Start_A/B/C",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PORTAL",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B050"
+    },
+    {
+      "world_id": 300620000,
+      "local_name": "Occupied Rentus Base",
+      "retail_name": "idyun_hard",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, waypoint, Pattern and drops own race-specific siege weapons, rations, oil and supported combat; handler retains initial/three boss door bridges, Vasharti completion/movie/exit/Reian bridge because its waypoint start is empty and Ariana4 is missing, and NoAction/missing-Pattern quest interactions 701097/701100",
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/OccupiedRentusBaseInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "reward",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B053"
+    },
+    {
+      "world_id": 300630000,
+      "local_name": "Anguished Dragon Lord's Refuge",
+      "retail_name": "idtiamat_2_hard",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns and Pattern own phases/bosses/teleports/treasure; Kahrun/timer script AIs own remaining bridges; handler only removes effects 20932/20936 on logout/leave",
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AnguishedDragonLordRefugeInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B057"
+    },
+    {
+      "world_id": 300700000,
+      "local_name": "The Hexway",
+      "retail_name": "idunderpassre",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "retail world/static spawns/AI/drops; no instance handler",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B039"
+    },
+    {
+      "world_id": 300800000,
+      "local_name": "Infinity Shard",
+      "retail_name": "idruneweapon",
+      "behavior": "MATCHMAKER",
+      "behavior_source": "matchmaker.xml:324",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B017"
+    },
+    {
+      "world_id": 301100000,
+      "local_name": "Unity Training Grounds",
+      "retail_name": "idarena_team01_t2",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, waypoint and Pattern own actors and 25 reachable score actions; shared Harmony handler owns preparation, three rounds/zones, doors, persistent idempotent team/player/NPC scoring, revive, settlement and exit recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/pvparenas/UnityTrainingGroundInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B006"
+    },
+    {
+      "world_id": 301110000,
+      "local_name": "Danuar Reliquary",
+      "retail_name": "idldf5_under_rune",
+      "behavior": "HANDLER",
+      "behavior_source": "retail unique static spawns and complete clone/add Pattern own data-backed actors; handler/custom AI own the initial trio, two-stage Modor chain, persistent 15-minute deadline, completion, private drops, exit and recovery because the full condition chain still lacks skill/path/area dependencies",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/danuarReliquary/DanuarReliquaryInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "stage",
+        "reward",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B058"
+    },
+    {
+      "world_id": 301120000,
+      "local_name": "Kamar Battlefield",
+      "retail_name": "idkamar",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, Pattern, npc-scores and npc_drops own actors, interaction points and loot; handler owns preparation/battle timers, doors, persistent idempotent Pattern score, legacy kill/PvP score, revive, settlement and exit recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KamarBattlefieldInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B008"
+    },
+    {
+      "world_id": 301130000,
+      "local_name": "Sauro Supply Base",
+      "retail_name": "idvritra_base",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns and supported Pattern own gate variants, bosses, teleporter, combat/messages and ownership_world key cleanup; handler owns unmatched local door IDs, persistent warnings/random thief/side gate, completion exits, private bundle drops and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SauroSupplyBaseInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "reward",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B011"
+    },
+    {
+      "world_id": 301140000,
+      "local_name": "Seized Danuar Sanctuary",
+      "retail_name": "idldf5_under_02",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, Pattern and npc_drops own coffins, wind-box rock, random final boss combat, final exit, standard loot and ownership_world key cleanup; handler owns persistent warning/race-guard/random-boss selection, four keystone interactions, private cannonball drop and recovery",
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "RETAIL_PATTERN",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SeizedDanuarSanctuaryInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "reward",
+        "recovery"
+      ],
+      "batch_id": "B032"
+    },
+    {
+      "world_id": 301200000,
+      "local_name": "The Nightmare Circus",
+      "retail_name": "idasteria_iu_world",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns own the circus flow; handler only removes effects 21469/21470/21471/21472 on logout/leave",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/NightmareCircusInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B025"
+    },
+    {
+      "world_id": 301210000,
+      "local_name": "Engulfed Ophidan Bridge",
+      "retail_name": "idldf5_under_01_war",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns and Pattern own battlefield actors and control flow; handler owns persistent preparation/battle/exit lifecycle, NPC score fallback, player ammunition/cannon effects, private bombardment, doors, settlement, cleanup and recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EngulfedOphidanBridgeInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B008"
+    },
+    {
+      "world_id": 301220000,
+      "local_name": "Iron Wall Warfront",
+      "retail_name": "idf5_td_war",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns and Pattern own battlefield actors, patrols and boss production; static ammo boxes produce three cross-world Eternal Bastion items, so handler clears them on normal leave while logout preserves them; handler owns persistent adjustment/preparation/battle/exit lifecycle, retail score consumption, settlement, doors and recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/IronWallWarfrontInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B006"
+    },
+    {
+      "world_id": 301230000,
+      "local_name": "Illuminary Obelisk",
+      "retail_name": "idldf5_under_03",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns, Pattern and npc_drops own waves, timers, bosses, resources and event boxes; ownership_world owns normal-leave item cleanup; handler only owns explicit-exit item cleanup/teleport while logout preserves items",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/illuminaryObelisk/IlluminaryObeliskInstance.java",
+      "handler_dimensions": [
+        "exit"
+      ],
+      "batch_id": "B045"
+    },
+    {
+      "world_id": 301270000,
+      "local_name": "Linkgate Foundry",
+      "retail_name": "idldf4re_01",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns, supported Pattern and npc_drops own room controls, normal combat and loot; ownership_world key 185000196 and shared leave flow own key cleanup; three boss Patterns missing Boss_Die stay fallback; handler owns the unmodeled 20-minute population, warnings/expiry, boss-completion exit and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/LinkgateFoundryInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "stage",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B059"
+    },
+    {
+      "world_id": 301310000,
+      "local_name": "Idgel Dome",
+      "retail_name": "idldf5_fortress_re",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static switches and npc_drops own initial controls and supply items; ownership_world clears three temporary items on normal leave while logout preserves them, explicit exit still clears them; handler owns unmodeled timed supplies, Kunax/high-guard and trap spawns, persistent battlefield lifecycle/score/settlement, doors and recovery because no retail condition-spawn producer exists",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/idgelDome/IdgelDomeInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B007"
+    },
+    {
+      "world_id": 301320000,
+      "local_name": "Lucky Ophidan Bridge",
+      "retail_name": "idldf5_under_01_pc",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns, seven imported condition slots and Pattern own available actors; the compact world lacks the true-server ra_* runaway/middle-boss condition closure, so handler owns eight random pools, completion chest/exit/opportunity bundle/drop and steel-wall cleanup; duplicate static 235768 is removed",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "RECOVERY_REJECTED"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ophidanBridge/Lucky_OphidanBridgeInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "door",
+        "stage",
+        "reward",
+        "exit"
+      ],
+      "batch_id": "B010"
+    },
+    {
+      "world_id": 301330000,
+      "local_name": "Lucky Danuar Reliquary",
+      "retail_name": "idldf5_under_rune_pc",
+      "behavior": "HANDLER",
+      "behavior_source": "retail unique static spawns and complete clone/add Pattern own data-backed actors; handler/custom AI own the initial trio, two-stage Modor chain, persistent 15-minute deadline, completion, private drops, exit and recovery because the full condition chain still lacks skill/path/area dependencies",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/danuarReliquary/Lucky_DanuarReliquaryInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "stage",
+        "reward",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B058"
+    },
+    {
+      "world_id": 301340000,
+      "local_name": "Linkgate Foundry",
+      "retail_name": "idldf4re_01_q",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/omen_of_chaos/_10101Dismal_Developments.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 301360000,
+      "local_name": "[Infernal] Danuar Reliquary",
+      "retail_name": "idldf5_under_rune_h",
+      "behavior": "HANDLER",
+      "behavior_source": "retail unique static spawns and complete clone/add Pattern own data-backed actors; handler/custom AI own the initial trio, two-stage Modor chain, persistent 15-minute deadline, completion, private drops, exit and recovery because the full condition chain still lacks skill/path/area/variable dependencies",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/danuarReliquary/Infernal_DanuarReliquaryInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "stage",
+        "reward",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B058"
+    },
+    {
+      "world_id": 301370000,
+      "local_name": "[Infernal] Illuminary Obelisk",
+      "retail_name": "idldf5_under_03_h",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns, Pattern and npc_drops own waves, timers, bosses, resources and event boxes; handler owns normal/explicit exit item cleanup because items belong to formal world, plus exit teleport; logout preserves items",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/illuminaryObelisk/Infernal_IlluminaryObeliskInstance.java",
+      "handler_dimensions": [
+        "exit"
+      ],
+      "batch_id": "B045"
+    },
+    {
+      "world_id": 301380000,
+      "local_name": "Danuar Sanctuary",
+      "retail_name": "idldf5_under_02_e",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, the true-server 3333/3333/3334 final-boss random group and Pattern own the final encounter; handler retains race guards, unmodeled key interactions, timed notices and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "RECOVERY_REJECTED"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DanuarSanctuaryInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "stage",
+        "reward",
+        "exit"
+      ],
+      "batch_id": "B037"
+    },
+    {
+      "world_id": 301390000,
+      "local_name": "Drakenspire Depths",
+      "retail_name": "idseal",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns and Pattern own waves, twins, Orisza and Beritra flow; 855461 Pattern remains rejected because waypoint-start pathname is empty; handler only owns exit",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "SCRIPT_AI",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DrakenspireDepthsInstance.java",
+      "handler_dimensions": [
+        "exit"
+      ],
+      "batch_id": "B065"
+    },
+    {
+      "world_id": 301400000,
+      "local_name": "The Shugo Emperor's Vault",
+      "retail_name": "idsweep",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns, Pattern and npc-scores own actors, waves and score values; ownership_world clears seven temporary items on normal leave while logout preserves them; shared IDSweep handler owns persistent prepare/run/settlement deadlines, door start, idempotent kill score, rank/reward variables, player rewards, effect cleanup and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheShugoEmperorVaultInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B012"
+    },
+    {
+      "world_id": 301500000,
+      "local_name": "Stonespear Reach",
+      "retail_name": "idlegion",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns, seven condition variables, Legion Pattern and npc-scores own actors, final boss and combat scoring; handler owns persistent time-attack lifecycle, score idempotency, settlement, revive, exit and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/StonespearReachInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B021"
+    },
+    {
+      "world_id": 301510000,
+      "local_name": "Sealed Argent Manor",
+      "retail_name": "idelemental_2_e",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns, Pattern, npc-scores and drops own actors, variable doors, transformation effects and loot; handler owns persistent time attack, profession boss, cage/Hetgolem bridges, score, rewards and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SealedArgentManorInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B036"
+    },
+    {
+      "world_id": 301520000,
+      "local_name": "Drakenspire Depths",
+      "retail_name": "idseal_q",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns and Pattern own quest waves, twins and Beritra flow; handler owns normal-leave item 185000219 cleanup, logout/leave effects 22778-22779 and exit",
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DrakenspireDepthsQInstance.java",
+      "handler_dimensions": [
+        "exit"
+      ],
+      "batch_id": "B043"
+    },
+    {
+      "world_id": 301540000,
+      "local_name": "Archives Of Eternity",
+      "retail_name": "ideternity_01",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns/AI; handler Book1/2/3 race bridge for unsupported move-area spawns; Book4 static pool; malformed source #532 Road_Set remains unimported",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "SCRIPT_AI",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ArchivesOfEternityInstance.java",
+      "handler_dimensions": [
+        "stage"
+      ],
+      "batch_id": "B067"
+    },
+    {
+      "world_id": 301550000,
+      "local_name": "Cradle Of Eternity",
+      "retail_name": "ideternity_02",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns/AI; handler Sun Altar item-to-variable bridge and leave effect cleanup",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CradleOfEternityInstance.java",
+      "handler_dimensions": [
+        "stage"
+      ],
+      "batch_id": "B047"
+    },
+    {
+      "world_id": 301560000,
+      "local_name": "Trials Of Eternity",
+      "retail_name": "ideternity_03",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns/AI and ownership_world item cleanup; handler only owns restricted-library key teleport",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TrialsOfEternityInstance.java",
+      "handler_dimensions": [
+        "exit"
+      ],
+      "batch_id": "B045"
+    },
+    {
+      "world_id": 301570000,
+      "local_name": "Archives Of Eternity",
+      "retail_name": "ideternity_q",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns/AI; handler SCENE=13 core bridge; quests provide USER_RACE/USER_GENDER and two Asmodian-only actors",
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ArchivesOfEternityQInstance.java",
+      "handler_dimensions": [
+        "stage"
+      ],
+      "batch_id": "B063"
+    },
+    {
+      "world_id": 301580000,
+      "local_name": "Sanctuary Dungeon",
+      "retail_name": "idf6_op",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "retail AI/condition spawns; archdaeva quests 10520/20520 enter the map",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B028"
+    },
+    {
+      "world_id": 301590000,
+      "local_name": "Emperor Trillirunerk's Safe",
+      "retail_name": "idsweep_02",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns, Pattern and npc-scores own actors, waves and score values; ownership_world clears seven temporary items on normal leave while logout preserves them; shared IDSweep handler owns persistent prepare/run/settlement deadlines, door start, idempotent kill score, rank/reward variables, player rewards, effect cleanup and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EmperorTrillirunerkSafeInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B012"
+    },
+    {
+      "world_id": 301600000,
+      "local_name": "Adma's Fall",
+      "retail_name": "idf6_adma",
+      "behavior": "MATCHMAKER",
+      "behavior_source": "matchmaker.xml:354",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B044"
+    },
+    {
+      "world_id": 301610000,
+      "local_name": "Theobomos Test Chamber",
+      "retail_name": "idf6_lap",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, Pattern and npc_drops own bosses, variables, exit and loot; handler only owns persistent idempotent 220426 death to 806221 reward-chest spawn and restart recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PATTERN",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheobomosTestChamberInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "recovery"
+      ],
+      "batch_id": "B049"
+    },
+    {
+      "world_id": 301620000,
+      "local_name": "Drakenseer's Lair",
+      "retail_name": "idf6_dragon",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "retail condition spawns + Pattern; no instance handler",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B025"
+    },
+    {
+      "world_id": 301630000,
+      "local_name": "Contaminated Underpath",
+      "retail_name": "idluna_def",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns and Pattern own Luna phase waves, paths, final boss and reward actors; ownership_world clears the temporary item on normal leave while logout preserves it; handler owns door-28 start, persistent time attack/score/settlement, effect cleanup and recovery",
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/luna/ContaminatedUnderpathInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B004"
+    },
+    {
+      "world_id": 301631000,
+      "local_name": "[Event] Contaminated Underpath",
+      "retail_name": "idevent_def",
+      "behavior": "EVENT",
+      "behavior_source": "retail condition spawns and Pattern own waves and normal/special final actors; persistent dungeon currency and cash key have no world ownership; handler only owns door-57 start, persistent object-id score consumption, settlement/rewards, effect cleanup and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/Event_ContaminatedUnderpathInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B009"
+    },
+    {
+      "world_id": 301640000,
+      "local_name": "Secret Munitions Factory",
+      "retail_name": "idluna_siege",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns, waypoints and Pattern own data-backed Luna actors; ownership_world clears the Luna oil tank on normal leave while logout preserves it, and the foreign Kumuki bomb is never cleared here; handler owns persistent time attack/object-id score/final-boss settlement, Luna rewards, effect cleanup and recovery",
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/luna/SecretMunitionsFactoryInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B029"
+    },
+    {
+      "world_id": 301650000,
+      "local_name": "Ashunatal Dredgion",
+      "retail_name": "iddreadgion_04",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, waypoint, Pattern and npc-scores/npc_drops own PvE content; handler owns preparation/timers, delayed retail teleporter/named spawns, variable bridges, Surkana rooms, faction/PvP/NPC scoring, revive, captain settlement, rewards and exit recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/AshunatalDredgionInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B006"
+    },
+    {
+      "world_id": 301660000,
+      "local_name": "Fallen Poeta",
+      "retail_name": "idf6_lf1",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns and Pattern own barriers/waves/boss plus ownership_world item 164002346 cleanup; handler only removes effects 21805/21806 on logout/leave",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FallenPoetaInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B039"
+    },
+    {
+      "world_id": 301670000,
+      "local_name": "Ophidan Warpath",
+      "retail_name": "idldf5_under_02_war",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, waypoint and Pattern own battlefield actors; handler owns persistent battle lifecycle, score thresholds, revive, settlement, offline rewards and recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/OphidanWarpathInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B006"
+    },
+    {
+      "world_id": 301680000,
+      "local_name": "Idgel Dome Landmark",
+      "retail_name": "idldf5_fortress_war",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, Pattern and npc-scores own actors and two 30000-point terminal objectives; ownership_world clears two temporary items on normal leave while logout preserves them, explicit exit still clears them; handler owns preparation/battle/supply timers, start doors/supplies, persistent idempotent terminal score, legacy PvP/normal-monster score, revive, settlement and exit recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/idgelDome/IdgelDomeLandmarkInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B008"
+    },
+    {
+      "world_id": 301690000,
+      "local_name": "Aether Mine",
+      "retail_name": "idf6_q",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/archdaeva/_10529Protection_Artifact_2.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 301700000,
+      "local_name": "IDRun",
+      "retail_name": "idrun",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns own proven scene objects; compact data lacks the true-server idrun_treasure_despawn producer, so handler owns stages, chests, settlement, cleanup and recovery",
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TreasureIslandOfCourageInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B005"
+    },
+    {
+      "world_id": 301720000,
+      "local_name": "Mirash Sanctuary",
+      "retail_name": "idabre_core_03",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns and supported Pattern own doll layouts, boss hazards and standard combat/drops; key carrier Pattern missing a true-server waypoint stays rejected; handler owns random key carrier, delayed assault wave, resurrection chain, skill bridge, private stone drops and recovery; ownership_world clears the temporary item on normal leave while logout preserves it",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "SCRIPT_AI",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_PATTERN",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/MirashSanctuaryInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "stage",
+        "reward",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B064"
+    },
+    {
+      "world_id": 302000000,
+      "local_name": "Smoldering Fire Temple",
+      "retail_name": "iddf2_dflame_event",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns, Pattern, npc-scores and drops own stages, actors, combat, score values and standard loot; ownership_world owns item cleanup; handler owns condition/reward bridges, persistent time attack, idempotent scoring, doors, transformations, private drops, settlement, effect cleanup and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SmolderingFireTempleInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B012"
+    },
+    {
+      "world_id": 302100000,
+      "local_name": "Fissure Of Oblivion",
+      "retail_name": "idtransform",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns, supported Pattern and npc-scores own base actors, door-gated 245827 and score values; worldraid_on producers missing shadow_kill stay rejected; handler owns door bridge, persistent time attack, idempotent scoring, completion, rewards, cleanup and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FissureOfOblivionInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B012"
+    },
+    {
+      "world_id": 302110000,
+      "local_name": "[Opportunity] Fissure Of Oblivion",
+      "retail_name": "idtransform_event",
+      "behavior": "EVENT",
+      "behavior_source": "inherits Fissure Of Oblivion lifecycle; retail static spawns, Pattern and npc-scores own actors/combat, while the shared handler owns door, time attack, score, rewards, cleanup and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/Opportunity_FissureOfOblivionInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B036"
+    },
+    {
+      "world_id": 302200000,
+      "local_name": "Dredgion Defense: Sanctum",
+      "retail_name": "idlc1_dreadgion",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns and Pattern own invasion timers, waves, objectives and S-F rank state; true-server UNIONMATCH instance data owns logout reentry; handler only owns player death protocol, effects 18290/18300 cleanup and explicit exit",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "RETAIL_PATTERN",
+        "reward": "RETAIL_PATTERN",
+        "exit": "HANDLER",
+        "recovery": "RETAIL_DATA"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgionDefense/SanctumInstance.java",
+      "handler_dimensions": [
+        "exit"
+      ],
+      "batch_id": "B016"
+    },
+    {
+      "world_id": 302300000,
+      "local_name": "Dredgion Defense: Pandaemonium",
+      "retail_name": "iddc1_dreadgion",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns and Pattern own invasion timers, waves, objectives and S-F rank state; true-server UNIONMATCH instance data owns logout reentry; handler only owns player death protocol, effects 18290/18300 cleanup and explicit exit",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "RETAIL_PATTERN",
+        "reward": "RETAIL_PATTERN",
+        "exit": "HANDLER",
+        "recovery": "RETAIL_DATA"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgionDefense/PandaemoniumInstance.java",
+      "handler_dimensions": [
+        "exit"
+      ],
+      "batch_id": "B016"
+    },
+    {
+      "world_id": 302310000,
+      "local_name": "Arena Of Tenacity",
+      "retail_name": "idtm_arena_01",
+      "behavior": "TOURNAMENT",
+      "behavior_source": "instant_dungeon_tournament.xml:2:stage",
+      "dimensions": {
+        "entry": "TOURNAMENT_SERVICE",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "TOURNAMENT_SERVICE",
+        "stage": "TOURNAMENT_SERVICE",
+        "score": "TOURNAMENT_SERVICE",
+        "reward": "TOURNAMENT_SERVICE",
+        "exit": "TOURNAMENT_SERVICE",
+        "recovery": "TOURNAMENT_SERVICE"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B051"
+    },
+    {
+      "world_id": 302320000,
+      "local_name": "Hall Of Tenacity",
+      "retail_name": "idtm_lobby_01",
+      "behavior": "TOURNAMENT",
+      "behavior_source": "instant_dungeon_tournament.xml:2:lobby",
+      "dimensions": {
+        "entry": "TOURNAMENT_SERVICE",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "TOURNAMENT_SERVICE",
+        "stage": "TOURNAMENT_SERVICE",
+        "score": "TOURNAMENT_SERVICE",
+        "reward": "TOURNAMENT_SERVICE",
+        "exit": "TOURNAMENT_SERVICE",
+        "recovery": "TOURNAMENT_SERVICE"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B051"
+    },
+    {
+      "world_id": 302330000,
+      "local_name": "Kumuki Cave",
+      "retail_name": "idevent_solo",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns, waypoints and Pattern own pages, waves, timers, movies and boss chains; ownership_world owns three item cleanups; handler only owns 703424 consuming key 185000295, normal-leave ownerless item 186000459 cleanup and logout/leave effect cleanup",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KumukiCaveInstance.java",
+      "handler_dimensions": [
+        "door"
+      ],
+      "batch_id": "B013"
+    },
+    {
+      "world_id": 302340000,
+      "local_name": "Bastion Of Souls",
+      "retail_name": "idab1_ere",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static/condition spawns, Pattern and npc_drops own encounters, final bosses, keys, chests and exits; ownership_world owns item cleanup; handler only owns the flight-ring statdown/teleport/movie bridge and player effect cleanup",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/BastionOfSoulsInstance.java",
+      "handler_dimensions": [
+        "exit"
+      ],
+      "batch_id": "B045"
+    },
+    {
+      "world_id": 302350000,
+      "local_name": "Evergale Canyon",
+      "retail_name": "ideternity_war",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns, waypoint and Pattern own battlefield actors and page variants; handler owns persistent population/battle lifecycle, score, revive, settlement, offline rewards and recovery",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EvergaleCanyonInstance.java",
+      "handler_dimensions": [
+        "door",
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B006"
+    },
+    {
+      "world_id": 302360000,
+      "local_name": "Grand Unity Arena",
+      "retail_name": "idtm_arenae_01",
+      "behavior": "TOURNAMENT",
+      "behavior_source": "instant_dungeon_tournament.xml:3:stage",
+      "dimensions": {
+        "entry": "TOURNAMENT_SERVICE",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "TOURNAMENT_SERVICE",
+        "stage": "TOURNAMENT_SERVICE",
+        "score": "TOURNAMENT_SERVICE",
+        "reward": "TOURNAMENT_SERVICE",
+        "exit": "TOURNAMENT_SERVICE",
+        "recovery": "TOURNAMENT_SERVICE"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B051"
+    },
+    {
+      "world_id": 302370000,
+      "local_name": "Grand Arena Group Camp",
+      "retail_name": "idtm_lobbye_01",
+      "behavior": "TOURNAMENT",
+      "behavior_source": "instant_dungeon_tournament.xml:3:lobby",
+      "dimensions": {
+        "entry": "TOURNAMENT_SERVICE",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "TOURNAMENT_SERVICE",
+        "stage": "TOURNAMENT_SERVICE",
+        "score": "TOURNAMENT_SERVICE",
+        "reward": "TOURNAMENT_SERVICE",
+        "exit": "TOURNAMENT_SERVICE",
+        "recovery": "TOURNAMENT_SERVICE"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B051"
+    },
+    {
+      "world_id": 302380000,
+      "local_name": "Grand Arena Of Tenacity",
+      "retail_name": "idtm_arenap_01",
+      "behavior": "TOURNAMENT",
+      "behavior_source": "instant_dungeon_tournament.xml:4:stage",
+      "dimensions": {
+        "entry": "TOURNAMENT_SERVICE",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "TOURNAMENT_SERVICE",
+        "stage": "TOURNAMENT_SERVICE",
+        "score": "TOURNAMENT_SERVICE",
+        "reward": "TOURNAMENT_SERVICE",
+        "exit": "TOURNAMENT_SERVICE",
+        "recovery": "TOURNAMENT_SERVICE"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B051"
+    },
+    {
+      "world_id": 302390000,
+      "local_name": "Grand Arena Training Camp",
+      "retail_name": "idtm_lobbyp_01",
+      "behavior": "TOURNAMENT",
+      "behavior_source": "instant_dungeon_tournament.xml:4:lobby",
+      "dimensions": {
+        "entry": "TOURNAMENT_SERVICE",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "TOURNAMENT_SERVICE",
+        "stage": "TOURNAMENT_SERVICE",
+        "score": "TOURNAMENT_SERVICE",
+        "reward": "TOURNAMENT_SERVICE",
+        "exit": "TOURNAMENT_SERVICE",
+        "recovery": "TOURNAMENT_SERVICE"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B051"
+    },
+    {
+      "world_id": 302400000,
+      "local_name": "Crucible Spire",
+      "retail_name": "idinfinity",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition spawns and Pattern own race/floor actors and paths; true-server Infinity instance data and logout item flags preserve reentry state; handler owns persistent floor/rewards, flight-ring teleport, failure-controller restoration, explicit-exit cleanup and recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "HANDLER",
+        "reward": "SETTLEMENT_SERVICE",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/crucible/CrucibleSpireInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "score",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B033"
+    },
+    {
+      "world_id": 302410000,
+      "local_name": "Grand Arena Of Tenacity",
+      "retail_name": "idtm_arenap_02",
+      "behavior": "TOURNAMENT",
+      "behavior_source": "instant_dungeon_tournament.xml:5:stage",
+      "dimensions": {
+        "entry": "TOURNAMENT_SERVICE",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "TOURNAMENT_SERVICE",
+        "stage": "TOURNAMENT_SERVICE",
+        "score": "TOURNAMENT_SERVICE",
+        "reward": "TOURNAMENT_SERVICE",
+        "exit": "TOURNAMENT_SERVICE",
+        "recovery": "TOURNAMENT_SERVICE"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B051"
+    },
+    {
+      "world_id": 302420000,
+      "local_name": "Grand Arena Training Camp",
+      "retail_name": "idtm_lobbyp_02",
+      "behavior": "TOURNAMENT",
+      "behavior_source": "instant_dungeon_tournament.xml:5:lobby",
+      "dimensions": {
+        "entry": "TOURNAMENT_SERVICE",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "TOURNAMENT_SERVICE",
+        "stage": "TOURNAMENT_SERVICE",
+        "score": "TOURNAMENT_SERVICE",
+        "reward": "TOURNAMENT_SERVICE",
+        "exit": "TOURNAMENT_SERVICE",
+        "recovery": "TOURNAMENT_SERVICE"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B051"
+    },
+    {
+      "world_id": 310010000,
+      "local_name": "Karamatis A",
+      "retail_name": "idabprol1",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/ascension/_1006Ascension.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 310020000,
+      "local_name": "Karamatis B",
+      "retail_name": "idabprol2",
+      "behavior": "DATA_ONLY",
+      "behavior_source": "instance_creation.xml:14; no production entry or quest consumer",
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "NOT_APPLICABLE",
+        "stage": "NOT_APPLICABLE",
+        "score": "NOT_APPLICABLE",
+        "reward": "NOT_APPLICABLE",
+        "exit": "NOT_APPLICABLE",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B019"
+    },
+    {
+      "world_id": 310030000,
+      "local_name": "Aerdina",
+      "retail_name": "idabgatel1",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/mission/_14016A_Gate_Agape.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 310040000,
+      "local_name": "Geranaia",
+      "retail_name": "idabgatel2",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/mission/_14026A_Lone_Defense.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 310050000,
+      "local_name": "Aetherogenetics Lab",
+      "retail_name": "idlf3lp",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns, Pattern, npc_drops and static doors own encounters, five key drops and keyed doors; handler only clears non-owned-world keys 185000001..185000005 on leave while preserving retail logout",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AetherogeneticsLabInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B039"
+    },
+    {
+      "world_id": 310060000,
+      "local_name": "Fragment Of Darkness",
+      "retail_name": "idlf1b",
+      "behavior": "DATA_ONLY",
+      "behavior_source": "world_maps.xml:special_world; obsolete quest scene has no production entry",
+      "dimensions": {
+        "entry": "PORTAL_REJECTED",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "NOT_APPLICABLE",
+        "score": "NOT_APPLICABLE",
+        "reward": "NOT_APPLICABLE",
+        "exit": "NOT_APPLICABLE",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B020"
+    },
+    {
+      "world_id": 310070000,
+      "local_name": "Sliver Of Darkness",
+      "retail_name": "idlf1b_stigma",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_1929A_Sliver_Of_Darkness.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 310080000,
+      "local_name": "Sanctum Underground Arena",
+      "retail_name": "idlc1_arena",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/abyss_entry/_1922Deliveron_Your_Promises.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 310090000,
+      "local_name": "Indratu Fortress",
+      "retail_name": "idlf3_castle_indratoo",
+      "behavior": "MATCHMAKER",
+      "behavior_source": "matchmaker.xml:315,matchmaker.xml:404",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B017"
+    },
+    {
+      "world_id": 310100000,
+      "local_name": "Azoturan Fortress",
+      "retail_name": "idlf3_castle_lehpar",
+      "behavior": "MATCHMAKER",
+      "behavior_source": "matchmaker.xml:334,matchmaker.xml:405",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B017"
+    },
+    {
+      "world_id": 310110000,
+      "local_name": "Theobomos Lab",
+      "retail_name": "idlf2a_lab",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns, Pattern, skill area and npc_drops own base actors, combat and standard loot; handler owns random chest, 700422/237247 private drops, timed stone, Watcher/Ifrit sequence, exit and persistent recovery",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheobomosLabInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "stage",
+        "reward",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B035"
+    },
+    {
+      "world_id": 310120000,
+      "local_name": "Ataxiar A",
+      "retail_name": "idabprol3",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/bare_truth/_14030Retrieved_Memory.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 310160000,
+      "local_name": "Divine Tower L",
+      "retail_name": "idab1_heroes_l",
+      "behavior": "MATCHMAKER",
+      "behavior_source": "matchmaker.xml:419",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PATTERN",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B018"
+    },
+    {
+      "world_id": 320010000,
+      "local_name": "Ataxiar B",
+      "retail_name": "idabprod1",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/ishalgen/_2002Wheres_Rae.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 320020000,
+      "local_name": "Ataxiar C",
+      "retail_name": "idabprod2",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/ascension/_2008Ascension.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 320030000,
+      "local_name": "Bregirun",
+      "retail_name": "idabgated1",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/mission/_24016A_Strange_New_Threat.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 320040000,
+      "local_name": "Nidalber",
+      "retail_name": "idabgated2",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/mission/_24026A_Hand_From_Each_Side.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 320050000,
+      "local_name": "Sky Temple Interior",
+      "retail_name": "iddf2flying",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/mission/_24023A_Blazing_Rescue.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 320070000,
+      "local_name": "Space Of Destiny",
+      "retail_name": "idspace",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/stigma_vision/_2900No_Escaping_Destiny.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 320080000,
+      "local_name": "Draupnir Cave",
+      "retail_name": "iddf3_dragon",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns and Pattern own mode selection, adjutants, bosses, gate waves and race entry; handler only owns the persistent 237276 entry-phantasm deadline and hint",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DraupnirCaveInstance.java",
+      "handler_dimensions": [
+        "recovery"
+      ],
+      "batch_id": "B023"
+    },
+    {
+      "world_id": 320090000,
+      "local_name": "Triniel Underground Arena",
+      "retail_name": "iddc1_arena",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/abyss_entry/_2947Following_Through.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 320100000,
+      "local_name": "Fire Temple",
+      "retail_name": "iddf2_dflame",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawn pools own named variants; handler only selects/announces/spawns Kromede treasure chest 833523/833524/833525",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "HANDLER",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FireTempleInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "reward"
+      ],
+      "batch_id": "B024"
+    },
+    {
+      "world_id": 320110000,
+      "local_name": "Alquimia Research Center",
+      "retail_name": "iddf3_lp",
+      "behavior": "MATCHMAKER",
+      "behavior_source": "matchmaker.xml:323,matchmaker.xml:407",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B031"
+    },
+    {
+      "world_id": 320120000,
+      "local_name": "Shadow Court Dungeon",
+      "retail_name": "iddc1_arena_3f",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/mission/_24046The_Shadow_Calls.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 320130000,
+      "local_name": "Adma Stronghold",
+      "retail_name": "iddf2a_adma",
+      "behavior": "HANDLER",
+      "behavior_source": "retail condition/static spawns and Pattern own stages/bosses/exit; handler only clears use-item effects 18462/18463 and instance items 185000026..185000032 on leave",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_DATA",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PATTERN",
+        "recovery": "STATELESS"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AdmaStrongholdInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B041"
+    },
+    {
+      "world_id": 320140000,
+      "local_name": "Ataxiar D",
+      "retail_name": "idabprod3",
+      "behavior": "RETAIL_AI_QUEST",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/quest/handlers/clash_of_destiny/_24030Showdown_With_Destiny.java",
+      "dimensions": {
+        "entry": "SCRIPT_QUEST",
+        "spawn": "SCRIPT_QUEST",
+        "ai": "SCRIPT_QUEST",
+        "path": "RUNTIME_PATHING",
+        "door": "SCRIPT_QUEST",
+        "stage": "SCRIPT_QUEST",
+        "score": "NOT_APPLICABLE",
+        "reward": "SCRIPT_QUEST",
+        "exit": "SCRIPT_QUEST",
+        "recovery": "QUEST_STATE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B068"
+    },
+    {
+      "world_id": 320150000,
+      "local_name": "Padmarashka's Cave",
+      "retail_name": "iddramata_01",
+      "behavior": "HANDLER",
+      "behavior_source": "retail static spawns; Pattern owns combat for 218670/218671/218673/218674; 218672 skill-slot fallback and Padmarashka/egg condition-variable fallbacks retain script AI; handler owns persistent timer/protector shield/egg count/boss completion/movie 488; quest 11295 owns cutscene eligibility",
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "SCRIPT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "NOT_APPLICABLE",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/PadmarashkaCaveInstance.java",
+      "handler_dimensions": [
+        "stage",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B060"
+    },
+    {
+      "world_id": 320160000,
+      "local_name": "Divine Tower D",
+      "retail_name": "idab1_heroes_d",
+      "behavior": "MATCHMAKER",
+      "behavior_source": "matchmaker.xml:421",
+      "dimensions": {
+        "entry": "MATCHMAKER",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RETAIL_DATA",
+        "door": "NOT_APPLICABLE",
+        "stage": "RETAIL_PATTERN",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "RETAIL_PATTERN",
+        "recovery": "STATELESS"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B018"
+    },
+    {
+      "world_id": 400030000,
+      "local_name": "Transidium Annex",
+      "retail_name": "gab1_sub",
+      "behavior": "HANDLER",
+      "behavior_source": "static/base spawns; Pattern owns eight 297331..297334/297472..297475 vehicle skill-and-despawn interactions; 277225..277228 are Pattern combat cannons with no retail interaction; 58 retail condition slots remain unreachable without start NPC 297304; start Pattern misses NPC_TANK_A and boss Pattern misses Pucio_al/Hnikar_a1; handler retains race/start/doors/controllers/returns/barricades/boss/drop/completion/cleanup",
+      "dimensions": {
+        "entry": "INSTANCE_SYSTEM",
+        "spawn": "HANDLER",
+        "ai": "SCRIPT_AI",
+        "path": "HANDLER",
+        "door": "HANDLER",
+        "stage": "HANDLER",
+        "score": "NOT_APPLICABLE",
+        "reward": "HANDLER",
+        "exit": "HANDLER",
+        "recovery": "HANDLER"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TransidiumAnnexInstance.java",
+      "handler_dimensions": [
+        "spawn",
+        "path",
+        "door",
+        "stage",
+        "reward",
+        "exit",
+        "recovery"
+      ],
+      "batch_id": "B052"
+    },
+    {
+      "world_id": 600080000,
+      "local_name": "Live Party Concert Hall",
+      "retail_name": "idiu",
+      "behavior": "EVENT",
+      "behavior_source": "src/main/java/com/aionemu/gameserver/ai/event/Live_Party_Concert_HallAI2.java",
+      "dimensions": {
+        "entry": "EVENT_AI",
+        "spawn": "EVENT_AI",
+        "ai": "EVENT_AI",
+        "path": "RUNTIME_PATHING",
+        "door": "EVENT_AI",
+        "stage": "EVENT_AI",
+        "score": "EVENT_AI",
+        "reward": "EVENT_AI",
+        "exit": "EVENT_AI",
+        "recovery": "EVENT_AI"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B001"
+    },
+    {
+      "world_id": 720010000,
+      "local_name": "Oriel Studio",
+      "retail_name": "housing_idlf_personal",
+      "behavior": "HOUSING",
+      "behavior_source": "HousingService",
+      "dimensions": {
+        "entry": "HOUSING_SERVICE",
+        "spawn": "HOUSING_SERVICE",
+        "ai": "NOT_APPLICABLE",
+        "path": "RUNTIME_PATHING",
+        "door": "HOUSING_SERVICE",
+        "stage": "NOT_APPLICABLE",
+        "score": "NOT_APPLICABLE",
+        "reward": "NOT_APPLICABLE",
+        "exit": "HOUSING_SERVICE",
+        "recovery": "HOUSING_SERVICE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B003"
+    },
+    {
+      "world_id": 730010000,
+      "local_name": "Pernon Studio",
+      "retail_name": "housing_iddf_personal",
+      "behavior": "HOUSING",
+      "behavior_source": "HousingService",
+      "dimensions": {
+        "entry": "HOUSING_SERVICE",
+        "spawn": "HOUSING_SERVICE",
+        "ai": "NOT_APPLICABLE",
+        "path": "RUNTIME_PATHING",
+        "door": "HOUSING_SERVICE",
+        "stage": "NOT_APPLICABLE",
+        "score": "NOT_APPLICABLE",
+        "reward": "NOT_APPLICABLE",
+        "exit": "HOUSING_SERVICE",
+        "recovery": "HOUSING_SERVICE"
+      },
+      "handler": "",
+      "handler_dimensions": [],
+      "batch_id": "B003"
+    },
+    {
+      "world_id": 900210000,
+      "local_name": "Tournament Stage Test",
+      "retail_name": "idtournament_stage_test",
+      "behavior": "EXCLUDED_NON_PRODUCTION",
+      "behavior_source": "world_maps.xml:test_world",
+      "dimensions": {
+        "entry": "NON_PRODUCTION",
+        "spawn": "NON_PRODUCTION",
+        "ai": "NON_PRODUCTION",
+        "path": "NON_PRODUCTION",
+        "door": "NON_PRODUCTION",
+        "stage": "NON_PRODUCTION",
+        "score": "NON_PRODUCTION",
+        "reward": "NON_PRODUCTION",
+        "exit": "NON_PRODUCTION",
+        "recovery": "NON_PRODUCTION"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B002"
+    },
+    {
+      "world_id": 900230000,
+      "local_name": "Tournament Lobby Test",
+      "retail_name": "idtournament_lobby_test",
+      "behavior": "EXCLUDED_NON_PRODUCTION",
+      "behavior_source": "world_maps.xml:test_world",
+      "dimensions": {
+        "entry": "NON_PRODUCTION",
+        "spawn": "NON_PRODUCTION",
+        "ai": "NON_PRODUCTION",
+        "path": "NON_PRODUCTION",
+        "door": "NON_PRODUCTION",
+        "stage": "NON_PRODUCTION",
+        "score": "NON_PRODUCTION",
+        "reward": "NON_PRODUCTION",
+        "exit": "NON_PRODUCTION",
+        "recovery": "NON_PRODUCTION"
+      },
+      "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TournamentInstance.java",
+      "handler_dimensions": [],
+      "batch_id": "B002"
+    }
+  ]
+}

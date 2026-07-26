@@ -2,6 +2,7 @@ package com.aionemu.gameserver.instance.handlers;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -15,6 +16,7 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.services.instance.InstanceDeadlineScheduler;
+import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -67,7 +69,8 @@ public class GeneralInstanceHandler implements InstanceHandler {
 		InstanceDeadlineScheduler.cancel(instance, getClass().getName() + '.' + key);
 	}
 
-	protected final void setDoorState(int entityId, boolean open) {
+	@Override
+	public final void setDoorState(int entityId, boolean open) {
 		StaticDoor door = instance.getDoors().get(entityId);
 		if (door == null) {
 			throw new IllegalStateException("Missing instance door entity " + entityId + " in world " + mapId);
@@ -260,10 +263,16 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * 默认退出：instance_exit 数据有条目时按数据传出（CM_INSTANCE_LEAVE 离开按钮）；
+	 * 无条目保持无操作，行为交由子类或对应服务（战场/竞技）负责。
+	 * Default exit: teleports via instance_exit data when an entry exists for this map
+	 * (CM_INSTANCE_LEAVE button); without data it stays a no-op for subclass/service-owned flows.
 	 */
 	@Override
 	public void onExitInstance(Player player) {
+		if (DataManager.INSTANCE_EXIT_DATA.getInstanceExit(mapId, player.getRace()) != null) {
+			TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
+		}
 	}
 
 	/**

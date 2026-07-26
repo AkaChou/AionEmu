@@ -71,12 +71,12 @@ class RetailGiveScoreClosureTest {
 			String report = String.join("\n", bindings);
 
 			assertEquals(13, worlds.size(), report);
-			assertEquals(50, npcs.size(), report);
-			assertEquals(111, bindings.size(), report);
-			assertEquals(Map.of("on_killed_by_user", 64L, "on_talked_by_user", 30L,
+			assertEquals(58, npcs.size(), report);
+			assertEquals(129, bindings.size(), report);
+			assertEquals(Map.of("on_killed_by_user", 64L, "on_talked_by_user", 48L,
 				"on_die", 14L, "on_user_enter_sensory_area", 3L), events, report);
-			assertEquals(Map.of(0, 109L, 1, 1L, 2, 1L), applyTypes, report);
-			assertEquals("944fad23e9f95c1332b799296f8794843ecf06dd76a9106429e56f64d0856485",
+			assertEquals(Map.of(0, 127L, 1, 1L, 2, 1L), applyTypes, report);
+			assertEquals("d95f7f3a0cc24f23e8d3d2d15f6e94384ca447b30a7f09194c5c921175e43635",
 				HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
 					.digest(report.getBytes(StandardCharsets.UTF_8))), report);
 		} finally {

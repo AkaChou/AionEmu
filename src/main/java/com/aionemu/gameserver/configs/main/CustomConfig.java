@@ -1,5 +1,10 @@
 package com.aionemu.gameserver.configs.main;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.aionemu.commons.configuration.Property;
 
 /**
@@ -678,4 +683,26 @@ public class CustomConfig {
 	 */
 	@Property(key = "gameserver.disable.teleport.npcs", defaultValue = "0")
 	public static String DISABLE_TELEPORTER_NPCS;
+
+	/**
+	 * 禁用真端生成任务定义的任务 ID 列表（逗号分隔）；被禁用的任务回退到旧 XML 或 Java 处理器。
+	 * Comma-separated quest IDs whose retail-generated definitions are disabled; they fall back to legacy XML or Java handlers.
+	 */
+	@Property(key = "gameserver.quest.retail_disabled_ids", defaultValue = "")
+	public static String RETAIL_DISABLED_QUEST_IDS;
+
+	/**
+	 * 解析禁用真端任务 ID 集合。
+	 * Parses the disabled retail quest ID set.
+	 */
+	public static Set<Integer> retailDisabledQuestIds() {
+		if (RETAIL_DISABLED_QUEST_IDS == null || RETAIL_DISABLED_QUEST_IDS.isBlank()) {
+			return Collections.emptySet();
+		}
+		return Arrays.stream(RETAIL_DISABLED_QUEST_IDS.split(","))
+				.map(String::trim)
+				.filter(id -> !id.isEmpty())
+				.map(Integer::valueOf)
+				.collect(Collectors.toUnmodifiableSet());
+	}
 }

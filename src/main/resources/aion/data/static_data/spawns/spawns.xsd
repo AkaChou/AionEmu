@@ -466,7 +466,15 @@
 		<xs:attribute name="handler" type="SpawnHandlerType"/>
 		<xs:attribute name="custom" type="xs:boolean" use="optional" default="false"/>
 		<xs:attribute name="difficult_id" type="xs:byte"/>
+		<xs:attribute name="spawn_page" type="SpawnPage"/>
+		<xs:attribute name="spawn_page_end" type="SpawnPage"/>
+		<xs:attribute name="initial_delay" type="xs:nonNegativeInteger"/>
 	</xs:complexType>
+	<xs:simpleType name="SpawnPage">
+		<xs:restriction base="xs:byte">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:complexType name="SpawnSpotTemplate">
 		<xs:sequence>
 			<xs:element name="temporary_spawn" type="TemporarySpawn" minOccurs="0" maxOccurs="1"/>

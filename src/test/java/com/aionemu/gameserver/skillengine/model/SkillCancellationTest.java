@@ -14,10 +14,13 @@ import java.util.concurrent.FutureTask;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
+import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.controllers.effect.EffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.skillengine.condition.Condition;
+import com.aionemu.gameserver.skillengine.condition.Conditions;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.properties.FirstTargetAttribute;
 
@@ -57,6 +60,31 @@ class SkillCancellationTest {
 		invokeEndCast(skill);
 
 		assertSame(skill, caster.getCastingSkill());
+	}
+
+	@Test
+	void failedEndCastConditionCancelsCurrentSkill() throws Exception {
+		TestCreature caster = new ObjenesisStd().newInstance(TestCreature.class);
+		caster.controller = new TestCreatureController();
+		caster.controller.setOwner(caster);
+		SkillTemplate template = new SkillTemplate();
+		template.activationAttribute = ActivationAttribute.PASSIVE;
+		Conditions conditions = new Conditions();
+		conditions.getConditions().add(new Condition() {
+			@Override
+			public boolean validate(Skill skill) {
+				return false;
+			}
+		});
+		setField(template, "useconditions", conditions);
+		Skill skill = new Skill(template, caster, 1, caster, null);
+		skill.setFirstTargetAttribute(FirstTargetAttribute.ME);
+		caster.setCasting(skill);
+
+		invokeEndCast(skill);
+
+		assertTrue(caster.controller.cancelled);
+		assertNull(caster.getCastingSkill());
 	}
 
 	@Test
@@ -158,6 +186,7 @@ class SkillCancellationTest {
 	}
 
 	private static final class TestCreature extends Creature {
+		private TestCreatureController controller;
 
 		private TestCreature() {
 			super(1, null, null, null, null);
@@ -171,6 +200,21 @@ class SkillCancellationTest {
 		@Override
 		public byte getLevel() {
 			return 1;
+		}
+
+		@Override
+		public TestCreatureController getController() {
+			return controller;
+		}
+	}
+
+	private static final class TestCreatureController extends CreatureController<TestCreature> {
+		private boolean cancelled;
+
+		@Override
+		public void cancelCurrentSkill() {
+			cancelled = true;
+			getOwner().setCasting(null);
 		}
 	}
 }

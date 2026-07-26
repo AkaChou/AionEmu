@@ -45,7 +45,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		if (isStart.compareAndSet(false, true)) {
 			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 342051, getObjectId(), 0, 1000);
-			getPosition().getWorldMapInstance().getDoors().get(535).setOpen(false);
+			getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(535, false);
 			startBasicSkillTask();
 		}
 		checkPercentage(getLifeStats().getHpPercentage());

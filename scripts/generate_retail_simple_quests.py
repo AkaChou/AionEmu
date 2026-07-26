@@ -9,14 +9,37 @@ import json
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from types import SimpleNamespace
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_RETAIL = Path("/Users/mc/IdeaProjects/58Server/Map/XML")
+DEFAULT_RETAIL = Path("/Users/mc/IdeaProjects/58Server-new/Map/XML")
 DEFAULT_RETAIL_SCRIPT = Path("/Users/mc/IdeaProjects/58Server/server58-source/MainServer_ScriptDLL64/fun")
+DEFAULT_CLIENT_QUEST = Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml")
+DEFAULT_RETAIL_REGION = "China"
+LEGACY_RETAIL_DATA_ROOTS = (
+	Path("/Users/mc/IdeaProjects/58Server/Map/XML").resolve(),
+)
 DEFAULT_QUEST_DATA = ROOT / "src/main/resources/aion/definitions/compact/quests/quest_data.xml"
 DEFAULT_OUTPUT = ROOT / "src/main/resources/aion/definitions/compact/quests/scripts/zz_retail_simple_quests.xml"
 DEFAULT_REPORT = DEFAULT_OUTPUT.with_suffix(".report.json")
+DEFAULT_REFERENCE_GRAPH = ROOT / "scripts/retail-reference-graph.json"
+QUEST_SOURCE_FILES = (
+	"Quest_SimpleHunt.xml",
+	"Quest_SimpleSerialHunt.xml",
+	"Quest_SimpleTalk.xml",
+	"Quest_SimpleCollectItem.xml",
+	"Quest_SimpleUseItem.xml",
+	"Quest_SimpleItemPlay.xml",
+	"Quest_CombineTask.xml",
+	"data_driven_quest.xml",
+	"npcfactions_quest.xml",
+	"challenge_task.xml",
+	"npcs.xml",
+	"Items.xml",
+	"quest.xml",
+	"combine_recipe.xml",
+)
 IGNORED_FIELDS = {"dev_name", "con_quest"}
 BASE_FIELDS = {"acquired_npc_name", "reward_npc_name"}
 GENERATED_TEMPLATE_TAGS = {"data_driven_quest", "item_collecting", "item_order", "kill_in_world", "monster_hunt", "report_to", "report_to_many", "work_order"}
@@ -158,6 +181,15 @@ COMPILED_SIMPLE_TALKS = {
 		"base": {"minlevel_permitted": "17", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"gold": "6620", "exp": "91950"}, "reward_items": (("188100335", "14"),), "work_items": (("182200568", "1"), ("182200569", "1")), "finished_quests": ("1219",)},
 		"evidence": ((363, ("DAT_181249090",)), (368, ("DAT_18133a410",)), (374, ("L\"shugo_Lender_LF2_01\"",)), (545, (",0x4c4,3,0,0",)), (556, (",0x4c4,3,1,0",)), (574, (",0x4c4,0,0xffffffff,0",)), (600, (",0x4c4,4,0xffffffff,0",)), (719, ("case 0x4c4:", "uVar2 = 0x4c4")), (755, ("+ 0x1a8", "0x4c4")), (822, ("FUN_180cab520(0x4c4", "0xadc28f8")), (840, ("FUN_180cabb10(0x4c4",)), (851, ("FUN_180cabb10(0x4c4",)), (856, ("FUN_180caca90(0x4c4", "0xadc28f8")))
 	},
+	1319: {
+		"quest_hex": "0x527", "race": "pc_light", "base_race": "ELYOS",
+		"start": "Prorite", "start_id": 203908, "end": "Prorite", "end_id": 203908,
+		"talks": [("Krato", 203923), ("Hebestis", 203910), ("Benos", 203906), ("Diokles", 203915), ("TusKeos", 203907), ("Shugo_LF2_6", 798050), ("Shugo_LF2_5", 798049), ("shugo_Lender_LF2_01", 205240)], "data_driven": True, "start_dialog_id": 1011,
+		"steps": [{"type": "TALK", "names": ["Krato"], "dialog_id": 1693}, {"type": "TALK", "names": ["Hebestis"], "dialog_id": 2034}, {"type": "TALK", "names": ["Benos"], "dialog_id": 2375}, {"type": "TALK", "names": ["Diokles"], "dialog_id": 2716}, {"type": "TALK", "names": ["TusKeos"], "dialog_id": 3057}, {"type": "TALK", "names": ["Shugo_LF2_6"], "dialog_id": 3398}, {"type": "TALK", "names": ["Shugo_LF2_5"], "dialog_id": 3739}, {"type": "TALK", "names": ["shugo_Lender_LF2_01"], "dialog_id": 4080}],
+		"retail": {"name": "Q1319", "max_repeat_count": "1", "minlevel_permitted": "19", "reward_exp1": "30000", "reward_gold1": "0", "race_permitted": "pc_light"},
+		"base": {"minlevel_permitted": "19", "max_repeat_count": "1", "cannot_share": "false", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"exp": "30000", "title": "9"}, "reward_items": (), "work_items": (("182201370", "1"),)},
+		"evidence": ((693, (",0x527,0,0xffffffff,0)",)), (703, (",0x527,3,0,0)",)), (706, (",0x527,3,1,0)",)), (708, (",0x527,3,2,0)",)), (710, (",0x527,3,3,0)",)), (712, (",0x527,3,4,0)",)), (713, (",0x527,3,5,0)",)), (714, (",0x527,3,6,0)",)), (714, (",0x527,3,7,0)",)), (699, (",0x527,4,0xffffffff,0)",)), (895, (",0x69d,0x527)",)), (897, (",0x7f2,0x527)",)), (899, (",0x947,0x527)",)), (900, (",0xa9c,0x527)",)), (901, (",0xbf1,0x527)",)), (901, (",0xd46,0x527)",)), (901, (",0xe9b,0x527)",)), (888, (",0xff0,0x527)",))),
+	},
 	1553: {
 		"quest_hex": "0x611", "race": "pc_light", "base_race": "ELYOS", "start": "Diana", "start_id": 203786,
 		"end": "Piera", "end_id": 204584, "talks": [("DF2_NPC_TalkingMirror", 730051), ("Perento", 204500)], "data_driven": True,
@@ -194,6 +226,15 @@ COMPILED_SIMPLE_TALKS = {
 		"talk": {"acquired_npc_name": "Lycan_Messenger", "give_item": "ITEM_DOC_QUEST_2207A 1", "talk_npc1": "Lycan_Interpreter", "talk_npc2": "Sueron", "remove_item2": "ITEM_DOC_QUEST_2207A 1", "reward_npc_name": "Lycan_Interpreter", "con_quest": "2208"},
 		"base": {"minlevel_permitted": "10", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "IMPORTANT", "rewards": {"exp": "18809"}, "reward_items": (("162000048", "5"),), "work_items": (("182203257", "1"),)},
 		"evidence": ((359, ("L\"Lycan_Interpreter\"",)), (359, ("L\"Lycan_Messenger\"",)), (366, ("L\"Sueron\"",)), (542, (",0x89f,3,0,0",)), (556, (",0x89f,3,1,0",)), (557, (",0x89f,3,2,0",)), (569, (",0x89f,0,0xffffffff,0",)), (589, (",0x89f,4,0xffffffff,0",)), (817, ("FUN_180cab520(0x89f", "0xadc3379", "1")), (838, ("FUN_180cabb10(0x89f",)), (851, ("FUN_180cabb10(0x89f",)), (852, ("FUN_180cabb10(0x89f",)), (855, ("FUN_180caca90(0x89f", "0xadc3379", "1")), (858, ("+ 0x1b8", "0x89f")))
+	},
+	2114: {
+		"quest_hex": "0x842", "race": "pc_dark", "base_race": "ASMODIANS",
+		"start": "Motgar", "start_id": 203533, "end": "Motgar", "end_id": 203533,
+		"talks": [],
+		"stages": [(["spakyD_4_n"], 10), (["MutaD_4_n", "MutaD_5_n"], 10)],
+		"retail": {"name": "Q2114", "max_repeat_count": "1", "minlevel_permitted": "4", "reward_exp1": "2145", "reward_gold1": "760", "reward_item1_1": "shop_food_d_maxmp_10a 3", "race_permitted": "pc_dark"},
+		"base": {"minlevel_permitted": "4", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"gold": "760", "exp": "2145"}, "reward_items": (("160003504", "3"), ("169300002", "50")), "work_items": (), "finished_quests": ("2110",)},
+		"evidence": ((630, ('L"spakyD_4_n",0x842',)), (625, ('L"MutaD_4_n",0x842',)), (625, ('L"MutaD_5_n",0x842',)), (692, (",0x842,0,0xffffffff,0)",)), (698, (",0x842,4,0xffffffff,0)",))),
 	},
 	2278: {
 		"quest_hex": "0x8e6", "race": "pc_dark", "base_race": "ASMODIANS", "start": "Lycan_Messenger", "start_id": 203590,
@@ -238,6 +279,23 @@ COMPILED_SIMPLE_TALKS = {
 		"base": {"minlevel_permitted": "47", "max_repeat_count": "1", "cannot_share": "false", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"exp": "3884596"}, "reward_items": (("164000093", "3"), ("186000005", "4")), "work_items": (("182208027", "1"),)},
 		"evidence": ((350, ("L\"Grynos\"",)), (352, ("L\"Ixion\"",)), (538, (",0xbdd,3,0,0",)), (554, (",0xbdd,3,1,0",)), (564, (",0xbdd,0,0xffffffff,0",)), (584, (",0xbdd,4,0xffffffff,0",)), (812, ("FUN_180cab520(0xbdd",)), (834, ("FUN_180cabb10(0xbdd",)), (849, ("FUN_180cabb10(0xbdd",)))
 	},
+	3044: {
+		"quest_hex": "0xbe4", "race": "pc_light", "base_race": "ELYOS",
+		"start": "LF2A_Wanted_Q3044", "start_id": 730145, "end": "Pygmalion", "end_id": 798206,
+		"talks": [("Pygmalion", 798206)], "data_driven": True,
+		"retail": {"name": "Q3044", "max_repeat_count": "1", "minlevel_permitted": "46", "reward_exp1": "3360640", "reward_gold1": "26210", "reward_item1_1": "coin_05 4", "race_permitted": "pc_light"},
+		"base": {"minlevel_permitted": "46", "max_repeat_count": "1", "cannot_share": "false", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"gold": "26210", "exp": "3360640"}, "reward_items": (("186000005", "4"),), "work_items": ()},
+		"evidence": ((621, ('L"LF2A_Wanted_Q3044",0xbe4',)), (626, ('L"Pygmalion",0xbe4',)), (691, (",0xbe4,0,0xffffffff,0)",)), (699, (",0xbe4,4,0xffffffff,0)",)), (704, (",0xbe4,3,0,0)",)), (882, ("FUN_180caf640(0xbe4", "FUN_180caf350(0xbe4")), (888, ("FUN_180caf350(0xbe4",)), (893, ("FUN_180caf740(0xbe4", "0x3f1", "FUN_180caf3c0(0xbe4"))),
+	},
+	3056: {
+		"quest_hex": "0xbf0", "race": "pc_light", "base_race": "ELYOS",
+		"start": "LF2A_Wanted_Q3056", "start_id": 730147, "end": "Siraus", "end_id": 798213,
+		"talks": [("Siraus", 798213)], "data_driven": True,
+		"steps": [{"type": "TALK", "names": ["Siraus"]}, {"type": "HUNT", "names": ["LF2A_SpectreFxQ_50_An"], "amount": 1}],
+		"retail": {"name": "Q3056", "max_repeat_count": "1", "minlevel_permitted": "49", "reward_exp1": "5390338", "reward_gold1": "0", "reward_item1_1": "coin_06 6", "race_permitted": "pc_light"},
+		"base": {"minlevel_permitted": "49", "max_repeat_count": "1", "cannot_share": "false", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"exp": "5390338"}, "reward_items": (("186000018", "6"),), "work_items": ()},
+		"evidence": ((621, ('L"LF2A_Wanted_Q3056",0xbf0',)), (621, ('L"LF2A_SpectreFxQ_50_An",0xbf0',)), (627, ('L"Siraus",0xbf0',)), (691, (",0xbf0,0,0xffffffff,0)",)), (704, (",0xbf0,3,0,0)",)), (700, (",0xbf0,4,0xffffffff,0)",))),
+	},
 	3020: {
 		"quest_hex": "0xbcc", "race": "pc_light", "base_race": "ELYOS", "start": "Ankises", "start_id": 798143,
 		"end": "Ankises", "end_id": 798143, "talks": [("NPC_Agrint_Tartagan", 798149)], "data_driven": True, "movie": 363,
@@ -246,6 +304,15 @@ COMPILED_SIMPLE_TALKS = {
 		"talk": {"acquired_npc_name": "Ankises", "give_item": "ITEM_QUEST_3020A 1", "talk_npc1": "NPC_Agrint_Tartagan", "remove_item1": "ITEM_QUEST_3020A 1", "reward_npc_name": "Ankises", "cutsceneid1": "363", "cs1_haction": "1007"},
 		"base": {"minlevel_permitted": "21", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"gold": "6480", "exp": "80494"}, "reward_items": (("186000002", "1"),), "work_items": (("182208011", "1"),)},
 		"evidence": ((344, ("L\"Ankises\"",)), (360, ("L\"NPC_Agrint_Tartagan\"",)), (543, (",0xbcc,3,0,0",)), (553, (",0xbcc,3,1,0",)), (560, (",0xbcc,0,0xffffffff,0",)), (580, (",0xbcc,4,0xffffffff,0",)), (808, ("FUN_180cab520(0xbcc", "0xadc460b", "1", "FUN_180cacb30(0xbcc")), (838, ("FUN_180cabb10(0xbcc", "FUN_180cacb30(0xbcc")), (848, ("FUN_180cabb10(0xbcc", "FUN_180cacb30(0xbcc")), (853, ("FUN_180caca90(0xbcc", "0xadc460b", "1")))
+	},
+	3031: {
+		"quest_hex": "0xbd7", "race": "pc_light", "base_race": "ELYOS",
+		"start": "LF2A_Wanted_Q3031", "start_id": 730144, "end": "Eunomia", "end_id": 798172,
+		"talks": [],
+		"stages": [(["LF2A_TesinonSeamanM_46_An", "LF2A_TesinonSeamanM_47_An"], 15), (["LF2A_TesinonSeamanR_46_An", "LF2A_TesinonSeamanR_47_An"], 12)],
+		"retail": {"name": "Q3031", "max_repeat_count": "1", "minlevel_permitted": "46", "reward_exp1": "6620429", "reward_gold1": "61620", "reward_item1_1": "coin_05 4", "race_permitted": "pc_light"},
+		"base": {"minlevel_permitted": "46", "max_repeat_count": "1", "cannot_share": "false", "race_permitted": "ELYOS", "category": "IMPORTANT", "rewards": {"gold": "61620", "exp": "6620429"}, "reward_items": (("186000005", "4"),), "work_items": ()},
+		"evidence": ((621, ('L"LF2A_Wanted_Q3031",0xbd7)',)), (614, ('L"Eunomia",0xbd7)',)), (621, ('L"LF2A_TesinonSeamanM_46_An",0xbd7)',)), (621, ('L"LF2A_TesinonSeamanR_46_An",0xbd7)',)), (691, (",0xbd7,0,0xffffffff,0)",)), (716, (",0xbd7,3,0xc3c0,0)",)), (696, (",0xbd7,4,0xffffffff,0)",)), (867, ("FUN_180caa850(0xbd7", "0xf,2)")), (867, ("FUN_180caa850(0xbd7", "0xc,3)"))),
 	},
 	3076: {
 		"quest_hex": "0xc04", "race": "pc_light", "base_race": "ELYOS", "start": "Atropos", "start_id": 798155,
@@ -273,6 +340,14 @@ COMPILED_SIMPLE_TALKS = {
 		"talk": {"acquired_npc_name": "kistig", "talk_npc1": "Honir", "talk_npc2": "Moreinen", "give_item2": "ITEM_QUEST_2428A 1", "reward_npc_name": "kistig"},
 		"base": {"minlevel_permitted": "23", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"gold": "31680", "exp": "128850"}, "reward_items": (("152232142", "1"), ("186000007", "1")), "selectable_reward_items": (("122001288", "1"), ("122001289", "1")), "work_items": (("182204216", "1"),), "finished_quests": ("2427",)},
 		"evidence": ((351, ("DAT_18124edf0",)), (360, ("L\"Moreinen\"",)), (374, ("L\"kistig\"",)), (537, (",0x97c,3,0,0",)), (555, (",0x97c,3,1,0",)), (558, (",0x97c,3,2,0",)), (579, (",0x97c,0,0xffffffff,0",)), (600, (",0x97c,4,0xffffffff,0",)), (827, ("FUN_180cab520(0x97c",)), (833, ("FUN_180cabb10(0x97c",)), (850, ("FUN_180cabb10(0x97c",)), (853, ("FUN_180cabb10(0x97c",)))
+	},
+	2449: {
+		"quest_hex": "0x991", "race": "pc_dark", "base_race": "ASMODIANS",
+		"start": "Shugo_DF2_4", "start_id": 798080, "end": "Shugo_DF2_4", "end_id": 798080,
+		"talks": [("Shugo_DF2_15", 798115)], "data_driven": True,
+		"retail": {"name": "Q2449", "max_repeat_count": "1", "minlevel_permitted": "37", "reward_exp1": "1496758", "reward_gold1": "0", "reward_item1_1": "coin_d_04 3", "race_permitted": "pc_dark"},
+		"base": {"minlevel_permitted": "37", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"exp": "1496758"}, "reward_items": (("186000009", "3"),), "selectable_reward_items": (("111100768", "1"), ("111300773", "1"), ("111500756", "1"), ("111600748", "1")), "work_items": (), "finished_quests": ("2448",)},
+		"evidence": ((627, ('L"Shugo_DF2_4",0x991',)), (627, ('L"Shugo_DF2_15",0x991',)), (693, (",0x991,0,0xffffffff,0)",)), (699, (",0x991,4,0xffffffff,0)",)), (704, (",0x991,3,0,0)",)), (883, ("FUN_180caf640(0x991", "FUN_180caf350(0x991")), (889, ("FUN_180caf6c0(0x991",)), (894, ("FUN_180caf740(0x991", "FUN_180caf3c0(0x991")), (905, (",0x3eb,0x991)",)), (909, (",0x3ec,0x991)",))),
 	},
 	2421: {
 		"quest_hex": "0x975", "race": "pc_dark", "base_race": "ASMODIANS", "start": "Asgeirr", "start_id": 204309,
@@ -317,6 +392,15 @@ COMPILED_SIMPLE_TALKS = {
 		"talk": {"acquired_npc_name": "Pucio", "talk_npc1": "Naiting", "talk_npc2": "Lionel", "talk_npc3": "LF4_FOBJ_Q11010A", "give_item3": "ITEM_QUEST_11010A 1", "reward_npc_name": "Naiting"},
 		"base": {"minlevel_permitted": "50", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"gold": "5690", "exp": "2924378"}, "reward_items": (("186000018", "6"),), "work_items": (("182206713", "1"),)},
 		"evidence": ((357, ("L\"LF4_FOBJ_Q11010A\"",)), (358, ("L\"Lionel\"",)), (360, ("L\"Naiting\"",)), (362, ("L\"Pucio\"",)), (543, (",0x2b02,3,0,0",)), (555, (",0x2b02,3,1,0",)), (557, (",0x2b02,3,2,0",)), (558, (",0x2b02,3,3,0",)), (570, (",0x2b02,0,0xffffffff,0",)), (590, (",0x2b02,4,0xffffffff,0",)), (819, ("FUN_180cab520(0x2b02",)), (838, ("FUN_180cabb10(0x2b02",)), (850, ("FUN_180cabb10(0x2b02",)), (852, ("FUN_180cabb10(0x2b02",)), (853, ("FUN_180cabb10(0x2b02",)))
+	},
+	14200: {
+		"quest_hex": "0x3778", "race": "pc_light", "base_race": "ELYOS",
+		"start": "Atropos", "start_id": 798155, "end": "Atropos", "end_id": 798155,
+		"talks": [], "data_driven": True,
+		"steps": [{"type": "HUNT", "names": ["LF2a_FOBJ_Q1092"], "amount": 3}],
+		"retail": {"name": "Q14200", "max_repeat_count": "1", "minlevel_permitted": "45", "reward_exp1": "1181639", "reward_gold1": "65400", "reward_item1_1": "potion_hp_mp_50a 20", "race_permitted": "pc_light"},
+		"base": {"minlevel_permitted": "45", "max_repeat_count": "1", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"gold": "65400", "exp": "1181639"}, "reward_items": (("162000050", "20"), ("188053060", "2")), "work_items": ()},
+		"evidence": ((145, ('L"Atropos",0x3778',)), (183, ('L"LF2a_FOBJ_Q1092",0x3778',)), (314, (",0x3778,0,0xffffffff,0)",)), (301, (",0x3778,3,0x40000000,0)",)), (308, (",0x3778,3,3,0)",)), (325, (",0x3778,4,0xffffffff,0)",)), (772, ("FUN_180cb13b0(0x3778",))),
 	},
 	2512: {
 		"quest_hex": "0x9d0", "race": "pc_dark", "base_race": "ASMODIANS", "start": "Loki", "start_id": 204703,
@@ -385,6 +469,15 @@ COMPILED_SIMPLE_TALKS = {
 		"base": {"minlevel_permitted": "51", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"gold": "27840", "exp": "1495244"}, "reward_items": (), "work_items": (("182206116", "1"), ("182206117", "1"), ("182206118", "1")), "finished_quests": ("3972",)},
 		"evidence": ((343, ("L\"Andu\"",)), (347, ("L\"Daphnis\"",)), (359, ("L\"Mesalina\"",)), (367, ("L\"Tersites\"",)), (369, ("&DAT_18124cc30",)), (548, (",0xf85,3,0,0",)), (554, (",0xf85,3,1,0",)), (557, (",0xf85,3,2,0",)), (558, (",0xf85,3,3,0",)), (574, (",0xf85,0,0xffffffff,0",)), (590, (",0xf85,4,0xffffffff,0",)), (807, ("+ 0x1a8", "0xf85")), (822, ("FUN_180cab520(0xf85", "0,0")), (844, ("FUN_180cabb10(0xf85",)), (849, ("FUN_180cabb10(0xf85",)), (851, ("FUN_180cabb10(0xf85",)), (853, ("FUN_180cabb10(0xf85",)), (858, ("+ 0x1b8", "0xf85")))
 	},
+	4011: {
+		"quest_hex": "0xfab", "race": "pc_dark", "base_race": "ASMODIANS",
+		"start": "DF2A_FOBJ_Q4011", "start_id": 730139, "end": "Dettil", "end_id": 205132,
+		"talks": [("Dettil", 205132), ("Kaindal", 203522)], "data_driven": True, "start_dialog_id": 1011,
+		"steps": [{"type": "TALK", "names": ["Dettil"], "dialog_id": 1352}, {"type": "TALK", "names": ["Kaindal"], "dialog_id": 1693}],
+		"retail": {"name": "Q4011", "max_repeat_count": "1", "minlevel_permitted": "23", "reward_exp1": "117433", "reward_gold1": "10760", "reward_item1_1": "food_d_maxhp_20a 6", "race_permitted": "pc_dark"},
+		"base": {"minlevel_permitted": "23", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"gold": "10760", "exp": "117433"}, "reward_items": (("160002003", "6"), ("186000007", "1")), "work_items": (("182209004", "1"),)},
+		"evidence": ((612, ('L"DF2A_FOBJ_Q4011",0xfab',)), (614, ('L"Dettil",0xfab',)), (619, ('L"Kaindal",0xfab',)), (690, (",0xfab,0,0xffffffff,3)",)), (696, (",0xfab,4,0xffffffff,0)",)), (702, (",0xfab,3,0,0)",)), (707, (",0xfab,3,1,0)",)), (880, (",0x3f3,0xfab)", "FUN_180caf350(0xfab")), (886, ("FUN_180caf6c0(0xfab",)), (892, (",0x548,0xfab)", "FUN_180caf3c0(0xfab")), (896, (",0x69d,0xfab)", "FUN_180caf3c0(0xfab"))),
+	},
 	4052: {
 		"quest_hex": "0xfd4", "race": "pc_dark", "base_race": "ASMODIANS", "start": "DF2a_NPC_Moai", "start_id": 730152,
 		"end": "DF2a_NPC_Moai", "end_id": 730152, "talks": [("DF2a_NPC_Bumbum_Lin", 205179), ("DF2a_NPC_Bumbum_Jin", 205166), ("DF2a_NPC_Bumbum_Chan", 205197)], "data_driven": True,
@@ -402,6 +495,14 @@ COMPILED_SIMPLE_TALKS = {
 		"talk": {"give_item1": "ITEM_QUEST_1469A 1"},
 		"base": {"minlevel_permitted": "30", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "IMPORTANT", "rewards": {"exp": "1244918"}, "reward_items": (("162000050", "20"), ("188053405", "6"), ("186000003", "35")), "work_items": (("182201386", "1"),)},
 		"evidence": ((350, ("L\"Hagne\"",)), (368, ("L\"TreasureGuardianQ_36_Ae\"",)), (547, (",0x5bd,3,0,0",)), (564, (",0x5bd,0,0xffffffff,0",)), (584, (",0x5bd,4,0xffffffff,0",)), (812, ("FUN_180cab520(0x5bd",)), (843, ("FUN_180cabb10(0x5bd",)), (849, ("FUN_180cabb10(0x5bd",)), (857, ("0x5bd", "0x1b8")))
+	},
+	1472: {
+		"quest_hex": "0x5c0", "race": "pc_light", "base_race": "ELYOS",
+		"start": "Valerius", "start_id": 203903, "end": "Valerius", "end_id": 203903,
+		"talks": [("Shugo_DF2_14", 798114)], "data_driven": True,
+		"retail": {"name": "Q1472", "max_repeat_count": "1", "minlevel_permitted": "38", "reward_exp1": "2108696", "reward_gold1": "0", "reward_item1_1": "medal_07 4", "race_permitted": "pc_light"},
+		"base": {"minlevel_permitted": "38", "max_repeat_count": "1", "cannot_share": "false", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"exp": "2108696", "ap": "100"}, "reward_items": (("186000469", "4"),), "selectable_reward_items": (("122000904", "1"), ("122000905", "1")), "work_items": ()},
+		"evidence": ((629, ('L"Valerius",0x5c0',)), (627, ('L"Shugo_DF2_14",0x5c0',)), (694, (",0x5c0,0,0xffffffff,0)",)), (704, (",0x5c0,3,0,0)",)), (700, (",0x5c0,4,0xffffffff,0)",)), (884, ("FUN_180caf640(0x5c0", "FUN_180caf350(0x5c0")), (890, ("FUN_180caf6c0(0x5c0",)), (894, ("FUN_180caf740(0x5c0", "FUN_180caf3c0(0x5c0")), (906, (",0x3eb,0x5c0)",)), (909, (",0x3ec,0x5c0)",))),
 	},
 	1483: {
 		"quest_hex": "0x5cb", "race": "pc_light", "base_race": "ELYOS", "start": "Shugo_LF2_13", "start_id": 798126,
@@ -443,6 +544,35 @@ COMPILED_SIMPLE_TALKS = {
 		"base": {"minlevel_permitted": "61", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"gold": "133740", "exp": "2807767"}, "reward_items": (), "work_items": ()},
 		"evidence": ((352, ("L\"IDLDF5_Under_01_War_Moiro_E\"",)), (354, ("L\"LDF5_Under_Timarchus_E\"",)), (565, (",0x4253,0,0xffffffff,0",)), (539, (",0x4253,3,0,0",)), (587, (",0x4253,4,0xffffffff,0",)), (813, ("FUN_180cab520(0x4253", "FUN_180cacb30(0x4253")), (835, ("FUN_180cabb10(0x4253", "FUN_180cacb30(0x4253")))
 	},
+	18208: {
+		"quest_hex": "0x4720", "race": "pc_light", "base_race": "ELYOS",
+		"start": "Inggril", "start_id": 205316, "end": "Molfus", "end_id": 205309,
+		"talks": [], "data_driven": True,
+		"steps": [{"type": "HUNT", "names": ["IDArena_Solo_S6_VanqJr_55_An"], "amount": 5},
+			{"type": "HUNT", "names": ["IDArena_Solo_H1_DrakanAs_noble_55_Ae", "IDArena_Solo_H2_TempleD_Fi_55_Ae"], "amount": 1}],
+		"retail": {"name": "Q18208", "max_repeat_count": "1", "minlevel_permitted": "50", "reward_exp1": "7448473", "reward_gold1": "0", "reward_item1_1": "coin_arena_01 100", "race_permitted": "pc_light"},
+		"base": {"minlevel_permitted": "50", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"exp": "7448473"}, "reward_items": (("186000130", "100"),), "work_items": (), "finished_quests": ("18207",)},
+		"evidence": ((619, ('L"Inggril",0x4720',)), (624, ('L"Molfus",0x4720',)), (617, ('L"IDArena_Solo_S6_VanqJr_55_An",0x4720',)), (616, ('L"IDArena_Solo_H1_DrakanAs_noble_55_Ae",0x4720',)), (616, ('L"IDArena_Solo_H2_TempleD_Fi_55_Ae",0x4720',)), (691, (",0x4720,0,0xffffffff,0)",)), (715, (",0x4720,3,0x1001,0)",)), (698, (",0x4720,4,0xffffffff,0)",))),
+	},
+	18209: {
+		"quest_hex": "0x4721", "race": "pc_light", "base_race": "ELYOS",
+		"start": "Molfus", "start_id": 205309, "end": "Molfus", "end_id": 205309,
+		"talks": [], "data_driven": True,
+		"steps": [{"type": "HUNT", "names": ["IDArena_Solo_S6_VanqJr_55_An"], "amount": 5},
+			{"type": "HUNT", "names": ["IDArena_Solo_H1_DrakanAs_noble_55_Ae", "IDArena_Solo_H2_TempleD_Fi_55_Ae"], "amount": 1}],
+		"retail": {"name": "Q18209", "max_repeat_count": "255", "minlevel_permitted": "50", "reward_exp1": "5213931", "reward_gold1": "0", "reward_item1_1": "coin_arena_01 100", "race_permitted": "pc_light"},
+		"base": {"minlevel_permitted": "50", "max_repeat_count": "255", "cannot_share": "true", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"exp": "5213931"}, "reward_items": (("186000130", "100"),), "work_items": (), "finished_quests": ("18208",)},
+		"evidence": ((624, ('L"Molfus",0x4721',)), (617, ('L"IDArena_Solo_S6_VanqJr_55_An",0x4721',)), (616, ('L"IDArena_Solo_H1_DrakanAs_noble_55_Ae",0x4721',)), (616, ('L"IDArena_Solo_H2_TempleD_Fi_55_Ae",0x4721',)), (692, (",0x4721,0,0xffffffff,0)",)), (715, (",0x4721,3,0x1001,0)",)), (698, (",0x4721,4,0xffffffff,0)",))),
+	},
+	24155: {
+		"quest_hex": "0x5e5b", "race": "pc_dark", "base_race": "ASMODIANS",
+		"start": "Hod", "start_id": 204701, "end": "Hod", "end_id": 204701,
+		"talks": [], "data_driven": True,
+		"steps": [{"type": "HUNT", "names": ["DF3_DragonObelisk_Q2060A"], "amount": 3}],
+		"retail": {"name": "Q24155", "max_repeat_count": "1", "minlevel_permitted": "39", "reward_exp1": "1567048", "reward_gold1": "119880", "reward_item1_1": "wrap_quest_matter_option_40d 1", "race_permitted": "pc_dark"},
+		"base": {"minlevel_permitted": "39", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"gold": "119880", "exp": "1567048"}, "reward_items": (("188053063", "1"),), "work_items": ()},
+		"evidence": ((148, ('L"DF3_DragonObelisk_Q2060A",0x5e5b',)), (316, (",0x5e5b,0,0xffffffff,0)",)), (301, (",0x5e5b,3,0x40000000,0)",)), (308, (",0x5e5b,3,3,0)",)), (327, (",0x5e5b,4,0xffffffff,0)",))),
+	},
 	26979: {
 		"quest_hex": "0x6963", "race": "pc_dark", "base_race": "ASMODIANS", "start": "IDLDF5_Under_01_War_Atea_E", "start_id": 802026,
 		"end": "LDF5_Under_Undgankt_E", "end_id": 801764, "talks": [], "kind": "item_collecting", "movie": 887,
@@ -451,8 +581,73 @@ COMPILED_SIMPLE_TALKS = {
 		"base": {"minlevel_permitted": "61", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"gold": "133740", "exp": "2807767"}, "reward_items": (), "work_items": ()},
 		"evidence": ((352, ("L\"IDLDF5_Under_01_War_Atea_E\"",)), (354, ("L\"LDF5_Under_Undgankt_E\"",)), (565, (",0x6963,0,0xffffffff,0",)), (539, (",0x6963,3,0,0",)), (587, (",0x6963,4,0xffffffff,0",)), (813, ("FUN_180cab520(0x6963", "FUN_180cacb30(0x6963")), (835, ("FUN_180cabb10(0x6963", "FUN_180cacb30(0x6963")))
 	},
+	28209: {
+		"quest_hex": "0x6e31", "race": "pc_dark", "base_race": "ASMODIANS",
+		"start": "Anja", "start_id": 205321, "end": "Anja", "end_id": 205321,
+		"talks": [], "data_driven": True,
+		"steps": [{"type": "HUNT", "names": ["IDArena_Solo_S6_VanqJr_55_An"], "amount": 5},
+			{"type": "HUNT", "names": ["IDArena_Solo_H1_DrakanAs_noble_55_Ae", "IDArena_Solo_H2_TempleL_Fi_55_Ae"], "amount": 1}],
+		"retail": {"name": "Q28209", "max_repeat_count": "255", "minlevel_permitted": "50", "reward_exp1": "5213931", "reward_gold1": "0", "reward_item1_1": "coin_arena_01 100", "race_permitted": "pc_dark"},
+		"base": {"minlevel_permitted": "50", "max_repeat_count": "255", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"exp": "5213931"}, "reward_items": (("186000130", "100"),), "work_items": (), "finished_quests": ("28208",)},
+		"evidence": ((617, ('L"IDArena_Solo_S6_VanqJr_55_An",0x6e31',)), (616, ('L"IDArena_Solo_H1_DrakanAs_noble_55_Ae",0x6e31',)), (617, ('L"IDArena_Solo_H2_TempleL_Fi_55_Ae",0x6e31',)), (689, (",0x6e31,0,0xffffffff,0)",)), (715, (",0x6e31,3,0x1001,0)",)), (694, (",0x6e31,4,0xffffffff,0)",))),
+	},
+	28208: {
+		"quest_hex": "0x6e30", "race": "pc_dark", "base_race": "ASMODIANS",
+		"start": "Inggness", "start_id": 205320, "end": "Anja", "end_id": 205321,
+		"talks": [], "data_driven": True,
+		"steps": [{"type": "HUNT", "names": ["IDArena_Solo_S6_VanqJr_55_An"], "amount": 5},
+			{"type": "HUNT", "names": ["IDArena_Solo_H1_DrakanAs_noble_55_Ae", "IDArena_Solo_H2_TempleL_Fi_55_Ae"], "amount": 1}],
+		"retail": {"name": "Q28208", "max_repeat_count": "1", "minlevel_permitted": "50", "reward_exp1": "7448473", "reward_gold1": "0", "reward_item1_1": "coin_arena_01 100", "race_permitted": "pc_dark"},
+		"base": {"minlevel_permitted": "50", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"exp": "7448473"}, "reward_items": (("186000130", "100"),), "work_items": (), "finished_quests": ("28207",)},
+		"evidence": ((619, ('L"Inggness",0x6e30',)), (617, ('L"IDArena_Solo_S6_VanqJr_55_An",0x6e30',)), (616, ('L"IDArena_Solo_H1_DrakanAs_noble_55_Ae",0x6e30',)), (617, ('L"IDArena_Solo_H2_TempleL_Fi_55_Ae",0x6e30',)), (691, (",0x6e30,0,0xffffffff,0)",)), (715, (",0x6e30,3,0x1001,0)",)), (694, (",0x6e30,4,0xffffffff,0)",))),
+	},
 }
 COMPILED_SIMPLE_TALK_SOURCE_NUMBERS = tuple(sorted({number for data in COMPILED_SIMPLE_TALKS.values() for number, _ in data["evidence"]}))
+# 德雷得奇安副本内线性任务：领取->对话->物件(获取情报)->击杀 Boss->报告领奖。
+# 光暗对偶共享物件 NPC 与击杀目标，仅起止 NPC 与奖励按种族区分。
+COMPILED_DREDGION_CAPTAIN_HUNTS = {
+	3711: {
+		"quest_hex": "0xe7f", "race": "pc_light", "base_race": "ELYOS",
+		"start": "Taranis", "start_id": 278501,
+		"talk_npc": "Maias", "talk_npc_id": 279045,
+		"object": "IDAB1_Dreadgion_ShugoExhausted_Q3711", "object_id": 730196,
+		"target": "IDAb1_Dreadgion_DrakanBoss_50_Ah", "target_id": 214823,
+		"retail": {"name": "Q3711", "max_repeat_count": "1", "minlevel_permitted": "46", "maxlevel_permitted": "50",
+			"reward_exp1": "3884596", "reward_gold1": "118580", "reward_abyss_point1": "1500",
+			"reward_item1_1": "soulstone_a_resurrect_self_01 5", "reward_item1_2": "coin_05 1", "reward_item1_3": "wrap_l_coin_platinum_3_0 1",
+			"race_permitted": "pc_light"},
+		"base": {"minlevel_permitted": "46", "maxlevel_permitted": "50", "max_repeat_count": "1", "cannot_share": "false", "race_permitted": "ELYOS", "category": "QUEST",
+			"rewards": {"gold": "118580", "exp": "3884596", "ap": "1500"},
+			"reward_items": (("161000004", "5"), ("186000005", "1"), ("188050830", "1"))},
+		"evidence": ((616, ("L\"IDAB1_Dreadgion_ShugoExhausted_Q3711\",0xe7f",)), (616, ("L\"IDAb1_Dreadgion_DrakanBoss_50_Ah\",0xe7f",)),
+			(624, ("L\"Maias\",0xe7f",)), (628, ("L\"Taranis\",0xe7f",)),
+			(693, (",0xe7f,0,0xffffffff,0)",)), (703, (",0xe7f,3,0,0)",)), (707, (",0xe7f,3,1,0)",)), (700, (",0xe7f,4,0xffffffff,0)",)),
+			(866, (",0xe7f,2,2,1,1",))),
+	},
+	4711: {
+		"quest_hex": "0x1267", "race": "pc_dark", "base_race": "ASMODIANS",
+		"start": "Votan", "start_id": 278001,
+		"talk_npc": "Henir", "talk_npc_id": 279042,
+		"object": "IDAB1_Dreadgion_ShugoExhausted_Q3711", "object_id": 730196,
+		"target": "IDAb1_Dreadgion_DrakanBoss_50_Ah", "target_id": 214823,
+		"retail": {"name": "Q4711", "max_repeat_count": "1", "minlevel_permitted": "46", "maxlevel_permitted": "50",
+			"reward_exp1": "3732496", "reward_gold1": "118580", "reward_abyss_point1": "1500",
+			"reward_item1_1": "soulstone_a_resurrect_self_01 5", "reward_item1_2": "coin_d_05 1", "reward_item1_3": "wrap_d_coin_platinum_3_0 1",
+			"race_permitted": "pc_dark"},
+		"base": {"minlevel_permitted": "46", "maxlevel_permitted": "50", "max_repeat_count": "1", "cannot_share": "false", "race_permitted": "ASMODIANS", "category": "QUEST",
+			"rewards": {"gold": "118580", "exp": "3732496", "ap": "1500"},
+			"reward_items": (("161000004", "5"), ("186000010", "1"), ("188050920", "1"))},
+		"evidence": ((616, ("L\"IDAB1_Dreadgion_ShugoExhausted_Q3711\",0x1267",)), (616, ("L\"IDAb1_Dreadgion_DrakanBoss_50_Ah\",0x1267",)),
+			(616, ("L\"Henir\",0x1267",)), (630, ("L\"Votan\",0x1267",)),
+			(694, (",0x1267,0,0xffffffff,0)",)), (702, (",0x1267,3,0,0)",)), (707, (",0x1267,3,1,0)",)), (701, (",0x1267,4,0xffffffff,0)",)),
+			(866, (",0x1267,2,2,1,1",))),
+	},
+}
+COMPILED_DREDGION_CAPTAIN_NPCS = {
+	"Taranis": 278501, "Maias": 279045, "Votan": 278001, "Henir": 279042,
+	"IDAB1_Dreadgion_ShugoExhausted_Q3711": 730196, "IDAb1_Dreadgion_DrakanBoss_50_Ah": 214823,
+}
+COMPILED_DREDGION_CAPTAIN_SOURCE_NUMBERS = (616, 624, 628, 630, 693, 694, 700, 701, 702, 703, 707, 866)
 COMPILED_SURAMA_HUNTS = {
 	30708: ("0x77f4", "pc_light", "ELYOS"),
 	30758: ("0x7826", "pc_dark", "ASMODIANS"),
@@ -573,25 +768,42 @@ def parse_cutscene(value: str) -> int | None:
 	return None if match is None or int(match.group(1)) == 0 else int(match.group(1))
 
 
-def parse_absolute_spawns(value: str) -> list[tuple[str, int, int, int | float, int | float, int | float, int]] | None:
+def parse_timer(value: str) -> tuple[int, int] | None:
+	parts = re.split(r"[\s,]+", value.strip())
+	if len(parts) != 3 or any(re.fullmatch(r"\d+", part) is None for part in parts):
+		return None
+	seconds, destination, unknown = map(int, parts)
+	return (seconds, destination) if seconds > 0 and unknown == 0 else None
+
+
+def parse_spawns(value: str) -> list[tuple[str, int, int, int | float | None, int | float | None, int | float | None, int | None]] | None:
 	result = []
 	number = r"-?\d+(?:\.\d+)?"
-	pattern = re.compile(
+	absolute_pattern = re.compile(
 		rf"Absolute\s+([^,]+?)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*({number})\s+({number})\s+({number})\s+(\d+)",
 		re.IGNORECASE,
 	)
+	relative_pattern = re.compile(r"Relative\s+([^,]+?)\s*,\s*(\d+)\s*,\s*(\d+)", re.IGNORECASE)
 	for action in (part.strip() for part in value.split(";")):
 		if not action:
 			continue
-		match = pattern.fullmatch(action)
+		match = absolute_pattern.fullmatch(action)
+		if match is not None:
+			name, count, lifetime, x, y, z, heading = match.groups()
+			count, lifetime, heading = map(int, (count, lifetime, heading))
+			if count == 0 or lifetime == 0 or heading > 255:
+				return None
+			coords = tuple(float(part) if "." in part else int(part) for part in (x, y, z))
+			result.append((name, count, lifetime, *coords, heading))
+			continue
+		match = relative_pattern.fullmatch(action)
 		if match is None:
 			return None
-		name, count, lifetime, x, y, z, heading = match.groups()
-		count, lifetime, heading = map(int, (count, lifetime, heading))
-		if count == 0 or lifetime == 0 or heading > 255:
+		name, count, lifetime = match.groups()
+		count, lifetime = map(int, (count, lifetime))
+		if count == 0 or lifetime == 0:
 			return None
-		coords = tuple(float(part) if "." in part else int(part) for part in (x, y, z))
-		result.append((name, count, lifetime, *coords, heading))
+		result.append((name, count, lifetime, None, None, None, None))
 	return result or None
 
 
@@ -605,7 +817,9 @@ def supported_extra_actions(fields: dict[str, str], phase: str) -> dict[str, obj
 		elif action == "cutscene" and phase == "progress":
 			parsed = parse_cutscene(value)
 		elif action == "spawn_npc" and phase == "progress":
-			parsed = parse_absolute_spawns(value)
+			parsed = parse_spawns(value)
+		elif action == "timer" and phase == "progress":
+			parsed = parse_timer(value)
 		else:
 			return None
 		if parsed is None:
@@ -657,8 +871,71 @@ def sha256(path: Path) -> str:
 	return digest.hexdigest()
 
 
+def _case_insensitive_file(directory: Path, name: str) -> Path | None:
+	if not directory.is_dir():
+		return None
+	wanted = name.casefold()
+	return next((path for path in directory.iterdir() if path.is_file() and path.name.casefold() == wanted), None)
+
+
+def source_file(source: Path, name: str, region: str = DEFAULT_RETAIL_REGION,
+		prefer_common: bool = False) -> tuple[Path, str]:
+	source = source.expanduser().resolve()
+	common = _case_insensitive_file(source, name)
+	if prefer_common and common is not None:
+		return common, "common"
+	regional = _case_insensitive_file(source / region, name)
+	if regional is not None:
+		return regional, region
+	if common is not None:
+		return common, "common"
+	raise FileNotFoundError(f"missing retail file: {name} (source={source}, region={region})")
+
+
+def source_logical_path(source: Path, path: Path, region: str) -> str:
+	source = source.expanduser().resolve()
+	path = path.expanduser().resolve()
+	try:
+		return path.relative_to(source).as_posix()
+	except ValueError:
+		return f"{region}/{path.name}" if region != "common" else path.name
+
+
+def record_count(path: Path) -> int:
+	return sum(1 for _ in ET.parse(path).getroot())
+
+
+def describe_source(source: Path, name: str, path: Path, region: str) -> dict[str, object]:
+	return {
+		"name": name,
+		"logical_path": source_logical_path(source, path, region),
+		"region": region,
+		"path": str(path.resolve()),
+		"sha256": sha256(path),
+		"records": record_count(path),
+	}
+
+
+def assert_not_legacy_data_root(source: Path) -> None:
+	resolved = source.expanduser().resolve()
+	if resolved in LEGACY_RETAIL_DATA_ROOTS:
+		raise SystemExit(f"refusing legacy retail data root: {resolved}; use {DEFAULT_RETAIL}")
+
+
 def current_quest_ids(path: Path) -> set[int]:
 	return {int(node.attrib["id"]) for node in ET.parse(path).getroot().findall("quest")}
+
+
+def validate_client_quest_coverage(server_ids: set[int], client_quest: Path) -> set[int]:
+	client_ids = {
+		int(node.findtext("id"))
+		for node in ET.parse(client_quest).getroot().findall("quest")
+		if (node.findtext("id") or "").isdigit()
+	}
+	missing = server_ids - client_ids
+	if missing:
+		raise ValueError(f"server quest definitions contain IDs absent from client quest.xml: {sorted(missing)}")
+	return client_ids
 
 
 def existing_java_handler_ids(root: Path = ROOT) -> set[int]:
@@ -775,14 +1052,14 @@ def existing_handler_ids(legacy_dir: Path = DEFAULT_OUTPUT.parent, root: Path = 
 	return set(legacy_xml_definitions(legacy_dir)) | existing_java_handler_ids(root)
 
 
-def retail_source_ids(retail: Path) -> set[int]:
+def retail_source_ids(retail: Path, region: str = DEFAULT_RETAIL_REGION) -> set[int]:
 	result = {
 		int(node.attrib["id"])
 		for name in ("Quest_SimpleHunt.xml", "Quest_SimpleTalk.xml", "Quest_SimpleCollectItem.xml", "Quest_SimpleUseItem.xml", "Quest_SimpleItemPlay.xml", "Quest_CombineTask.xml")
-		for node in ET.parse(retail / name).getroot()
+		for node in ET.parse(source_file(retail, name, region)[0]).getroot()
 	}
 	result.update(
-		int(value) for node in ET.parse(retail / "data_driven_quest.xml").getroot()
+		int(value) for node in ET.parse(source_file(retail, "data_driven_quest.xml", region)[0]).getroot()
 		if (value := node.findtext("id")) and value.isdigit()
 	)
 	return result
@@ -791,10 +1068,9 @@ def retail_source_ids(retail: Path) -> set[int]:
 def audit_legacy_xml(legacy_dir: Path, enabled_ids: set[int], generated_ids: set[int], java_handler_ids: set[int],
 		retail_ids: set[int], unresolved_ids: set[int], unsupported_ids: set[int], invalid_ids: set[int]) -> tuple[dict[str, dict[str, str]], dict[str, object]]:
 	definitions = legacy_xml_definitions(legacy_dir)
+	# 被生成产物遮蔽的旧定义是三层机制的预期状态：retail 覆盖 legacy，legacy 保留为回退。
 	shadowed_ids = set(definitions) & generated_ids
-	if shadowed_ids:
-		raise ValueError(f"legacy XML quests are shadowed by generated XML: {sorted(shadowed_ids)}")
-	retained_ids = set(definitions)
+	retained_ids = set(definitions) - shadowed_ids
 	overlap = retained_ids & java_handler_ids
 	if overlap:
 		raise ValueError(f"quest ids have both XML and Java owners: {sorted(overlap)}")
@@ -824,7 +1100,7 @@ def audit_legacy_xml(legacy_dir: Path, enabled_ids: set[int], generated_ids: set
 	return details, {
 		"files": len({definition["file"] for definition in definitions.values()}),
 		"definitions": len(definitions),
-		"shadowed_by_generated": 0,
+		"shadowed_by_generated": len(shadowed_ids),
 		"retained": len(retained_ids),
 		"reasons": reasons,
 		"dispositions": dispositions,
@@ -915,6 +1191,46 @@ def simple_talks(path: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[str,
 				"item": give_item,
 			}
 	return result, stats, skipped
+
+
+def resolve_sentinel_starts(quests: dict[int, dict[str, object]], stats: dict[str, int], skipped: dict[str, object],
+		sentinel: str, closed_ids: set[int], reason: str) -> None:
+	"""获取哨兵（_faction_ / _challengetask_）：任务由对应系统发放（NPC 势力每日池、挑战任务列表），
+	无起始 NPC。闭包集合由调用侧按双侧权威表求交；不在集合内则以原因码隔离，继续由旧实现兜底。"""
+	for quest_id in sorted(quests):
+		if quests[quest_id].get("start") != sentinel:
+			continue
+		if quest_id in closed_ids:
+			quests[quest_id]["start"] = None
+		else:
+			del quests[quest_id]
+			stats["unsupported"] += 1
+			skipped["unsupported"][str(quest_id)] = [reason]
+
+
+def reference_owners(path: Path) -> tuple[dict[str, set[int]], dict[int, tuple[str, tuple[int, ...]]]]:
+	graph = json.loads(path.read_text(encoding="utf-8"))
+	if graph.get("projection") != "runtime_scope":
+		raise ValueError("quest generation requires a runtime-scope reference graph")
+	owners: dict[str, set[int]] = {}
+	aliases: dict[int, tuple[str, tuple[int, ...]]] = {}
+	for reference in graph.get("references", []):
+		if reference.get("status") != "RESOLVED":
+			raise ValueError(f"open reference graph entry {reference.get('consumer')}")
+		consumer = reference.get("consumer", {})
+		if consumer.get("type") != "quest":
+			continue
+		quest_id = int(consumer["id"])
+		kind = str(reference.get("kind"))
+		owners.setdefault(kind, set()).add(quest_id)
+		if kind == "npc_quest_alias":
+			targets = reference.get("targets", [])
+			ids = tuple(sorted({int(target["id"]) for target in targets if target.get("type") == "npc"}))
+			binding = (str(reference.get("raw", "")).casefold(), ids)
+			if not binding[0] or not ids or quest_id in aliases and aliases[quest_id] != binding:
+				raise ValueError(f"invalid NPC alias reference for quest {quest_id}")
+			aliases[quest_id] = binding
+	return owners, aliases
 
 
 def simple_collects(path: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[str, object]], dict[str, int], dict[str, object]]:
@@ -1192,6 +1508,8 @@ def data_driven_complex(path: Path, enabled_ids: set[int], handled_ids: set[int]
 				actions["movie"] = movie
 			if spawns := actions.pop("spawn_npc", None):
 				actions["spawns"] = spawns
+			if timer := actions.pop("timer", None):
+				actions["timer_seconds"], actions["timer_destination_progress"] = timer
 			if category == "talk" and value:
 				steps.append({"type": "TALK", "names": [value], **actions})
 			elif category == "collectitem" and value and (not step.get("value5_progress_") or step["value5_progress_"].isdigit()):
@@ -1222,6 +1540,77 @@ def data_driven_complex(path: Path, enabled_ids: set[int], handled_ids: set[int]
 				"start_remove_item": acquire_actions.get("remove_item"), "steps": steps,
 			}
 	return result
+
+
+def data_driven_shape_audit(path: Path) -> tuple[dict[str, object], list[dict[str, object]]]:
+	root = ET.parse(path).getroot()
+	nodes = [node for node in root if (node.findtext("id") or "").isdigit()]
+	quest_ids = {int(node.findtext("id")) for node in nodes}
+	if len(nodes) != len(quest_ids):
+		raise ValueError("data-driven quest ids must be unique integers")
+
+	rules: dict[int, str] = {}
+
+	def assign(rule: str, quests: dict[int, dict[str, object]]) -> None:
+		overlap = set(quests) & set(rules)
+		if overlap:
+			raise ValueError(f"data-driven mapping rules overlap: {sorted(overlap)}")
+		rules.update({quest_id: rule for quest_id in quests})
+
+	talks = data_driven_talks(path, quest_ids)[0]
+	for rule in ("data_driven_report", "data_driven_talk"):
+		assign(rule, {quest_id: quest for quest_id, quest in talks.items() if quest["source"] == rule})
+	assign("data_driven_hunt", data_driven_hunts(path, quest_ids)[0])
+	assign("data_driven_collect", data_driven_collects(path, quest_ids)[0])
+	assign("data_driven_pvp", data_driven_pvps(path, quest_ids)[0])
+	assign("data_driven_item_play", data_driven_item_plays(path, quest_ids)[0])
+	assign("data_driven_complex", data_driven_complex(path, quest_ids, set(rules)))
+
+	def phase_shape(node: ET.Element, phase: str) -> tuple[str, tuple[int, ...], tuple[int, ...], tuple[str, ...]]:
+		category_tag = f"category_{phase}_"
+		value_tags = {f"value{slot}_{phase}_" for slot in range(11)}
+		present = tuple(slot for slot in range(11) if node.find(f"value{slot}_{phase}_") is not None)
+		nonempty = tuple(slot for slot in present if (node.findtext(f"value{slot}_{phase}_") or "").strip())
+		ignored = {"id", "name", "dev_name", "reward_npc_name", "progress_info", category_tag, *value_tags}
+		other_fields = tuple(child.tag for child in node if child.tag not in ignored)
+		return ((node.findtext(category_tag) or "").strip().casefold(), present, nonempty, other_fields)
+
+	groups: dict[tuple[object, ...], dict[str, object]] = {}
+	for node in nodes:
+		quest_id = int(node.findtext("id"))
+		shape = (phase_shape(node, "acquire"), tuple(phase_shape(step, "progress") for step in node.findall("./progress_info/data")))
+		group = groups.setdefault(shape, {
+			"current_parser_candidate_quest_ids": [], "semantic_gap_quest_ids": [], "mapping_rules": {},
+		})
+		if rule := rules.get(quest_id):
+			group["current_parser_candidate_quest_ids"].append(quest_id)
+			mapping_rules = group["mapping_rules"]
+			mapping_rules[rule] = mapping_rules.get(rule, 0) + 1
+		else:
+			group["semantic_gap_quest_ids"].append(quest_id)
+
+	def describe(shape: tuple[str, tuple[int, ...], tuple[int, ...], tuple[str, ...]]) -> dict[str, object]:
+		category, present, nonempty, other_fields = shape
+		return {
+			"category": category, "present_slots": list(present), "nonempty_slots": list(nonempty),
+			"other_fields": list(other_fields),
+		}
+
+	details = []
+	for (acquire, progress), group in sorted(groups.items(), key=lambda entry: repr(entry[0])):
+		details.append({
+			"acquire": describe(acquire), "progress": [describe(step) for step in progress],
+			"current_parser_candidate": len(group["current_parser_candidate_quest_ids"]),
+			"semantic_gap": len(group["semantic_gap_quest_ids"]),
+			**group,
+		})
+	rule_counts = {rule: sum(mapped == rule for mapped in rules.values()) for rule in sorted(set(rules.values()))}
+	return {
+		"source_records": len(quest_ids), "source_shapes": len(details),
+		"candidate_scope": "parser_only", "current_parser_candidate": len(rules),
+		"semantic_gap": len(quest_ids - set(rules)),
+		"mapping_rules": rule_counts,
+	}, details
 
 
 def compiled_item_buyers(retail_quest: Path, script_root: Path, quest_data: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[str, object]], dict[str, list[str]]]:
@@ -2138,8 +2527,15 @@ def compiled_simple_talks(retail_quest: Path, retail_talk: Path, retail_use_item
 			result[quest_id] = {
 				"kind": "data_driven_simple", "source": "compiled_script_simple_talk", "start_type": data.get("start_type", "TALK"),
 				"start": data["start"], "end": data["end"], "start_give_item": data.get("start_give_item"),
+				"start_dialog_id": data.get("start_dialog_id"),
 				"movie": data.get("movie"),
 				"steps": data.get("steps") or [{"type": "TALK", "names": [data["talks"][0][0]], "give_item": data.get("step_give_item"), "remove_item": data.get("step_remove_item")}],
+			}
+		elif data.get("stages"):
+			# 并行击杀目标：monster_hunt 模板按 var 分槽独立计数，不能压成线性 step 链。
+			result[quest_id] = {
+				"kind": "monster_hunt", "source": "compiled_script_simple_talk",
+				"start": data["start"], "end": data["end"], "stages": [(list(names), int(count)) for names, count in data["stages"]],
 			}
 		else:
 			result[quest_id] = {
@@ -2205,6 +2601,58 @@ def compiled_surama_hunts(retail_quest: Path, retail_npcs: Path, retail_items: P
 		result[quest_id] = {
 			"source": "compiled_script_surama_hunt", "start": "IDTiamat_Surama_1", "end": "IDTiamat_Murugan_4",
 			"stages": [(["IDTiamat_Drakan_Surama_1", "IDTiamat_Drakan_Surama_2", "IDTiamat_Drakan_Surama_3"], 5)],
+		}
+	return result, skipped
+
+
+def compiled_dredgion_captain_hunts(retail_quest: Path, retail_npcs: Path, retail_items: Path, script_root: Path,
+		quest_data: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[str, object]], dict[str, list[str]]]:
+	result: dict[int, dict[str, object]] = {}
+	skipped: dict[str, list[str]] = {}
+	retail_nodes = {
+		int(node.findtext("id")): {child.tag: (child.text or "").strip() for child in node}
+		for node in ET.parse(retail_quest).getroot()
+		if (node.findtext("id") or "").isdigit()
+	}
+	base_nodes = {int(node.attrib["id"]): node for node in ET.parse(quest_data).getroot().findall("quest")}
+	npc_index, _ = npc_indexes(retail_npcs, set(COMPILED_DREDGION_CAPTAIN_NPCS), set())
+	item_names = {name for data in COMPILED_DREDGION_CAPTAIN_HUNTS.values() for field in ("reward",) for key in data["retail"] if key.startswith("reward_item") for name in [data["retail"][key].split()[0]]}
+	retail_item_ids = item_ids(retail_items, item_names)
+	sources = {
+		number: (path.read_text(encoding="utf-8") if (path := script_root / f"fun_{number:03d}.cpp").is_file() else "")
+		for number in COMPILED_DREDGION_CAPTAIN_SOURCE_NUMBERS
+	}
+	for quest_id, data in COMPILED_DREDGION_CAPTAIN_HUNTS.items():
+		if quest_id not in enabled_ids:
+			continue
+		fields = retail_nodes.get(quest_id, {})
+		reasons = [f"quest.xml:{field}" for field, expected in data["retail"].items() if fields.get(field) != expected]
+		base = base_nodes.get(quest_id)
+		rewards = None if base is None else base.find("rewards")
+		if (base is None or any(base.attrib.get(field) != expected for field, expected in data["base"].items() if field not in {"rewards", "reward_items"})
+				or rewards is None or rewards.attrib != data["base"]["rewards"]
+				or tuple((node.attrib.get("item_id"), node.attrib.get("count")) for node in rewards.findall("reward_item")) != data["base"]["reward_items"]):
+			reasons.append("quest_data.xml:task_and_rewards")
+		for name, expected_id in COMPILED_DREDGION_CAPTAIN_NPCS.items():
+			if npc_index.get(name.casefold()) != (expected_id,):
+				reasons.append(f"npcs.xml:{name}")
+		for name in item_names:
+			if not retail_item_ids.get(name.casefold()):
+				reasons.append(f"Items.xml:{name}")
+		for number, tokens in data["evidence"]:
+			if not has_function_evidence(sources[number], data["quest_hex"], tokens):
+				reasons.append(f"script:fun_{number:03d}")
+		if reasons:
+			skipped[str(quest_id)] = sorted(set(reasons))
+			continue
+		result[quest_id] = {
+			"source": "compiled_script_dredgion_captain_hunt", "kind": "data_driven_complex",
+			"start_type": "TALK", "start": data["start"], "end": data["start"],
+			"steps": [
+				{"type": "TALK", "names": [data["talk_npc"]]},
+				{"type": "ACTION", "actions": [data["object"]]},
+				{"type": "HUNT", "names": [data["target"]], "amount": 1},
+			],
 		}
 	return result, skipped
 
@@ -2573,7 +3021,10 @@ def retail_hunts(path: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[str,
 			stats["missing_base"] += 1
 			continue
 		fields = {child.tag: (child.text or "").strip() for child in node}
-		unsupported = sorted(set(fields) - hunt_fields())
+		# talk_npc1 与 reward_npc_name 同名时只是重复点名交还 NPC（ScriptDLL 相位 3/4 同挂该 NPC，
+		# 无独立中间站），不携带额外语义；不同名则是真中间站，继续按不支持隔离。
+		redundant = {"talk_npc1"} if fields.get("talk_npc1") and fields["talk_npc1"] == fields.get("reward_npc_name") else set()
+		unsupported = sorted(set(fields) - hunt_fields() - redundant)
 		if unsupported:
 			stats["unsupported"] += 1
 			skipped["unsupported"][str(quest_id)] = unsupported
@@ -2750,13 +3201,95 @@ def retail_work_orders(task_path: Path, retail_quest_path: Path, quest_data_path
 	return result, stats, invalid
 
 
+def compiled_sink(quest: dict[str, object], default: str) -> str:
+	kind = quest.get("kind")
+	if kind == "data_driven_simple":
+		return "data"
+	if kind in ("item_collecting", "report_to", "report_to_many"):
+		return "simple"
+	if kind == "monster_hunt":
+		return "hunt"
+	return default
+
+
+def runtime_projection(value: object, casefold_references: bool = False) -> object:
+	if isinstance(value, dict):
+		return tuple(sorted(
+			(key, runtime_projection(item, key in {
+				"start", "end", "names", "actions", "talks", "objects", "stages", "item", "evidence_item",
+				"give_item", "remove_item", "start_give_item", "start_remove_item", "spawns",
+			})) for key, item in value.items()
+			if key != "source" and item is not None
+		))
+	if isinstance(value, (list, tuple)):
+		return tuple(runtime_projection(item, casefold_references) for item in value)
+	return value.casefold() if casefold_references and isinstance(value, str) else value
+
+
+def reclaim_generic_projections(compiled: dict[int, dict[str, object]], generic_by_sink: dict[str, dict[int, dict[str, object]]],
+		default_sink: str) -> tuple[dict[int, dict[str, object]], list[int]]:
+	reclaimed = [
+		quest_id for quest_id, quest in compiled.items()
+		if (generic := generic_by_sink[compiled_sink(quest, default_sink)].get(quest_id)) is not None
+		and runtime_projection(generic) == runtime_projection(quest)
+	]
+	return {quest_id: quest for quest_id, quest in compiled.items() if quest_id not in reclaimed}, sorted(reclaimed)
+
+
+# 能力族注册表：新增一族只需 ①写 COMPILED_* 数据与 compiled_*() 校验函数（推荐参照
+# compiled_simple_talks 的"证据全在数据表"形态）②在此登记一行；其余（调用、并集、分桶、
+# 账目、eligible/generated/skipped、script_sources）全部由注册表驱动。
+# 字段：(source 标签, ScriptDLL 源码编号, 无 kind 条目的默认桶 data/hunt,
+#        需从通用族收回的账目 {桶: "full"|"unsupported"}, 构造器)
+COMPILED_FAMILIES = (
+	("compiled_script_collect", COMPILED_ITEM_BUYER_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_item_buyers(c.retail_quest, c.script, c.quest_data, c.enabled)),
+	("compiled_script_timed_report", COMPILED_FIREWORK_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_firework_reports(c.retail_quest, c.script, c.quest_data, c.enabled)),
+	("compiled_script_action_talk", COMPILED_DEBRIS_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_debris_rescues(c.retail_quest, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_world_collect", COMPILED_WORLD_COLLECT_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_world_collects(c.retail_quest, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_get_item", COMPILED_GROWTH_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_growth_quests(c.retail_quest, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_sensory_complete", COMPILED_SENSORY_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_sensory_completes(c.retail_quest, c.npc, c.script, c.quest_data, c.enabled)),
+	("compiled_script_action_progress", COMPILED_PAIOS_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_paios_rescues(c.retail_quest, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_housing_talk", COMPILED_HOUSING_FLOWER_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_housing_flower_visits(c.retail_quest, c.npc, c.script, c.quest_data, c.enabled)),
+	("compiled_script_scorched_tree", COMPILED_SCORCHED_TREE_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_scorched_tree_actions(c.retail_quest, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_kaldor_arrival", COMPILED_KALDOR_ARRIVAL_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_kaldor_arrivals(c.retail_quest, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_coalescence_complete", COMPILED_COALESCENCE_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_coalescence_completes(c.retail_quest, c.npc, c.script, c.quest_data, c.enabled)),
+	("compiled_script_bastion_movie", COMPILED_BASTION_MOVIE_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_bastion_movies(c.retail_quest, c.npc, c.script, c.quest_data, c.enabled)),
+	("compiled_script_simple_talk", COMPILED_SIMPLE_TALK_SOURCE_NUMBERS, "data", {"talk": "full", "use_item": "full"},
+		lambda c: compiled_simple_talks(c.retail_quest, c.talk, c.use_item, c.npc, c.script, c.quest_data, c.enabled)),
+	("compiled_script_surama_hunt", COMPILED_SURAMA_SOURCE_NUMBERS, "hunt", {},
+		lambda c: compiled_surama_hunts(c.retail_quest, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_dredgion_captain_hunt", COMPILED_DREDGION_CAPTAIN_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_dredgion_captain_hunts(c.retail_quest, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_arena_item_play", COMPILED_ARENA_ITEM_PLAY_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_arena_item_plays(c.retail_quest, c.item_play, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_christmas_courier_hunt", COMPILED_CHRISTMAS_COURIER_SOURCE_NUMBERS, "hunt", {},
+		lambda c: compiled_christmas_courier_hunts(c.retail_quest, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_dredgion_control_hunt", COMPILED_DREDGION_CONTROL_SOURCE_NUMBERS, "data", {"hunt": "unsupported"},
+		lambda c: compiled_dredgion_control_hunts(c.retail_quest, c.hunt, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+	("compiled_script_dredgion_navigation_hunt", COMPILED_DREDGION_NAVIGATION_SOURCE_NUMBERS, "data", {},
+		lambda c: compiled_dredgion_navigation_hunts(c.retail_quest, c.serial_hunt, c.npc, c.item, c.script, c.quest_data, c.enabled)),
+)
+
+
 def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, object]], pvps: dict[int, dict[str, object]], use_items: dict[int, dict[str, object]], data_quests: dict[int, dict[str, object]], exact_index: dict[str, tuple[int, ...]], aliases: dict[str, tuple[int, ...]], item_index: dict[str, tuple[int, ...]], sources: tuple[Path, ...], work_orders: dict[int, dict[str, object]] | None = None) -> tuple[bytes, dict[str, list[str]], dict[str, int]]:
 	root = ET.Element("quest_scripts", {
 		"xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
 		"xsi:noNamespaceSchemaLocation": "../../../schemas/quest_script_data.xsd",
 	})
 	unresolved: dict[str, list[str]] = {}
-	generated = {"talk": 0, "collect": 0, "hunt": 0, "use_item": 0, "work_order": 0, "data_driven_report": 0, "data_driven_talk": 0, "data_driven_hunt": 0, "data_driven_collect": 0, "data_driven_pvp": 0, "data_driven_item_play": 0, "data_driven_complex": 0, "compiled_script_collect": 0, "compiled_script_timed_report": 0, "compiled_script_action_talk": 0, "compiled_script_action_progress": 0, "compiled_script_world_collect": 0, "compiled_script_get_item": 0, "compiled_script_sensory_complete": 0, "compiled_script_housing_talk": 0, "compiled_script_scorched_tree": 0, "compiled_script_kaldor_arrival": 0, "compiled_script_coalescence_complete": 0, "compiled_script_bastion_movie": 0, "compiled_script_simple_talk": 0, "compiled_script_surama_hunt": 0, "compiled_script_christmas_courier_hunt": 0, "compiled_script_arena_item_play": 0, "compiled_script_dredgion_control_hunt": 0, "compiled_script_dredgion_navigation_hunt": 0}
+	generated = {"talk": 0, "collect": 0, "hunt": 0, "use_item": 0, "work_order": 0, "data_driven_report": 0, "data_driven_talk": 0, "data_driven_hunt": 0, "data_driven_collect": 0, "data_driven_pvp": 0, "data_driven_item_play": 0, "data_driven_complex": 0, **{label: 0 for label, *_ in COMPILED_FAMILIES}}
 	for kind in ("item_collecting", "report_to", "report_to_many"):
 		for quest_id, quest in sorted(simple.items()):
 			if quest["kind"] != kind:
@@ -2777,6 +3310,9 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 			if quest.get("start"):
 				start = exact_index.get(str(quest["start"]).casefold()) or aliases[str(quest["start"]).casefold()]
 				attrs["start_npc_ids"] = " ".join(map(str, start))
+			else:
+				# 势力每日任务无起始 NPC；照旧 XML 形态写 0 占位（模型属性为必填）。
+				attrs["start_npc_ids"] = "0"
 			if quest.get("movie"):
 				attrs["movie"] = str(quest["movie"])
 			objects = quest.get("objects", [])
@@ -2838,12 +3374,12 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 			})
 		generated[str(hunt.get("source") or "hunt")] += 1
 	for quest_id, pvp in sorted(pvps.items()):
-		start_name = str(pvp["start"]).casefold()
+		start_name = str(pvp["start"]).casefold() if pvp.get("start") else None
 		end_name = str(pvp["end"]).casefold()
-		if start_name not in exact_index and start_name not in aliases or end_name not in exact_index and end_name not in aliases:
+		if start_name is not None and start_name not in exact_index and start_name not in aliases or end_name not in exact_index and end_name not in aliases:
 			unresolved[str(quest_id)] = sorted(name for name in (str(pvp["start"]), str(pvp["end"])) if name.casefold() not in exact_index and name.casefold() not in aliases)
 			continue
-		start = exact_index.get(start_name) or aliases[start_name]
+		start = (0,) if start_name is None else exact_index.get(start_name) or aliases[start_name]
 		end = exact_index.get(end_name) or aliases[end_name]
 		ET.SubElement(root, "kill_in_world", {
 			"id": str(quest_id), "retail": "true", "start_npc_ids": " ".join(map(str, start)),
@@ -2853,8 +3389,12 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 		generated["data_driven_pvp"] += 1
 	for quest_id, quest in sorted(use_items.items()):
 		item_name = str(quest["item"])
-		npc_names = [str(quest["end"]), *map(str, quest["talks"])]
-		missing = [f"npc:{name}" for name in npc_names if len(exact_index.get(name.casefold()) or aliases.get(name.casefold(), ())) != 1]
+		end_name = str(quest["end"])
+		resolved_end = exact_index.get(end_name.casefold()) or aliases.get(end_name.casefold(), ())
+		end_ids = quest.get("end_ids") or resolved_end
+		missing = [] if quest.get("end_ids") or len(resolved_end) == 1 else [f"npc:{end_name}"]
+		missing.extend(f"npc:{name}" for name in map(str, quest["talks"])
+			if len(exact_index.get(name.casefold()) or aliases.get(name.casefold(), ())) != 1)
 		if len(item_index.get(item_name.casefold(), ())) != 1:
 			missing.append(f"item:{item_name}")
 		if missing:
@@ -2863,8 +3403,8 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 		attrs = {
 			"id": str(quest_id), "retail": "true",
 			"start_item_id": str(item_index[item_name.casefold()][0]),
-			"end_npc_id": str((exact_index.get(str(quest["end"]).casefold()) or aliases[str(quest["end"]).casefold()])[0]),
 		}
+		attrs["end_npc_id" if len(end_ids) == 1 else "end_npc_ids"] = " ".join(map(str, end_ids))
 		for index, name in enumerate(quest["talks"], 1):
 			attrs[f"talk_npc_id{index}"] = str((exact_index.get(str(name).casefold()) or aliases[str(name).casefold()])[0])
 		ET.SubElement(root, "item_order", attrs)
@@ -2909,6 +3449,8 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 			attrs["world_id"] = str(quest["world_id"])
 		if quest.get("reset_world_id"):
 			attrs["reset_world_id"] = str(quest["reset_world_id"])
+		if quest.get("start_dialog_id"):
+			attrs["start_dialog_id"] = str(quest["start_dialog_id"])
 		if quest.get("start") and quest["start_type"] in ("TALK", "SENSORY_COMPLETE"):
 			attrs["start_ids"] = " ".join(map(str, exact_index.get(str(quest["start"]).casefold()) or aliases[str(quest["start"]).casefold()]))
 		elif quest.get("start") and quest["start_type"] == "ITEM_PLAY":
@@ -2924,6 +3466,8 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 		element = ET.SubElement(root, "data_driven_quest", attrs)
 		for step in quest["steps"]:
 			step_attrs = {"type": str(step["type"])}
+			if step.get("dialog_id"):
+				step_attrs["dialog_id"] = str(step["dialog_id"])
 			if step.get("names"):
 				ids = sorted({npc_id for name in step["names"] for npc_id in (exact_index.get(str(name).casefold()) or aliases[str(name).casefold()])})
 				step_attrs["ids"] = " ".join(map(str, ids))
@@ -2946,6 +3490,9 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 					"teleport_world_id": str(world_id), "teleport_x": str(x), "teleport_y": str(y),
 					"teleport_z": str(z), "teleport_heading": str(heading),
 				})
+			if step.get("timer_seconds"):
+				step_attrs["timer_seconds"] = str(step["timer_seconds"])
+				step_attrs["timer_destination_progress"] = str(step["timer_destination_progress"])
 			if step.get("world_id"):
 				step_attrs["world_id"] = str(step["world_id"])
 			if step.get("item"):
@@ -2961,10 +3508,12 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 			step_element = ET.SubElement(element, "step", step_attrs)
 			for name, count, lifetime, x, y, z, heading in step.get("spawns", []):
 				npc_id = (exact_index.get(str(name).casefold()) or aliases[str(name).casefold()])[0]
-				ET.SubElement(step_element, "spawn", {
-					"npc_id": str(npc_id), "count": str(count), "lifetime_seconds": str(lifetime),
-					"x": str(x), "y": str(y), "z": str(z), "heading": str(heading),
-				})
+				spawn_attrs = {"npc_id": str(npc_id), "count": str(count), "lifetime_seconds": str(lifetime)}
+				if x is None:
+					spawn_attrs["relative"] = "true"
+				else:
+					spawn_attrs.update({"x": str(x), "y": str(y), "z": str(z), "heading": str(heading)})
+				ET.SubElement(step_element, "spawn", spawn_attrs)
 		generated[str(quest.get("source") or "data_driven_complex")] += 1
 	for quest_id, quest in sorted((work_orders or {}).items()):
 		element = ET.SubElement(root, "work_order", {
@@ -2981,24 +3530,36 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 
 
 def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAIL_SCRIPT,
-		legacy_dir: Path = DEFAULT_OUTPUT.parent) -> tuple[bytes, dict[str, object]]:
-	hunt_file = retail / "Quest_SimpleHunt.xml"
-	serial_hunt_file = retail / "Quest_SimpleSerialHunt.xml"
-	talk_file = retail / "Quest_SimpleTalk.xml"
-	collect_file = retail / "Quest_SimpleCollectItem.xml"
-	use_item_file = retail / "Quest_SimpleUseItem.xml"
-	item_play_file = retail / "Quest_SimpleItemPlay.xml"
-	work_order_file = retail / "Quest_CombineTask.xml"
-	data_driven_file = retail / "data_driven_quest.xml"
-	npc_file = retail / "npcs.xml"
-	item_file = retail / "Items.xml"
-	retail_quest_file = retail / "quest.xml"
-	recipe_file = retail / "combine_recipe.xml"
+		legacy_dir: Path = DEFAULT_OUTPUT.parent, client_quest: Path | None = None,
+		region: str = DEFAULT_RETAIL_REGION, reference_graph: Path | None = None) -> tuple[bytes, dict[str, object]]:
+	assert_not_legacy_data_root(retail)
+	selected = {
+		name: source_file(retail, name, region, prefer_common=name == "quest.xml")
+		for name in QUEST_SOURCE_FILES
+	}
+	hunt_file = selected["Quest_SimpleHunt.xml"][0]
+	serial_hunt_file = selected["Quest_SimpleSerialHunt.xml"][0]
+	talk_file = selected["Quest_SimpleTalk.xml"][0]
+	collect_file = selected["Quest_SimpleCollectItem.xml"][0]
+	use_item_file = selected["Quest_SimpleUseItem.xml"][0]
+	item_play_file = selected["Quest_SimpleItemPlay.xml"][0]
+	work_order_file = selected["Quest_CombineTask.xml"][0]
+	data_driven_file = selected["data_driven_quest.xml"][0]
+	npc_file = selected["npcs.xml"][0]
+	item_file = selected["Items.xml"][0]
+	retail_quest_file = selected["quest.xml"][0]
+	recipe_file = selected["combine_recipe.xml"][0]
+	source_manifest = [
+		describe_source(retail, name, path, file_region)
+		for name, (path, file_region) in selected.items()
+	]
 	action_coverage = data_driven_action_coverage(data_driven_file)
+	shape_summary, shape_details = data_driven_shape_audit(data_driven_file)
 	enabled_ids = current_quest_ids(quest_data)
 	java_handler_ids = existing_java_handler_ids()
 	xml_owned_ids = enabled_ids - java_handler_ids
 	legacy_ids = set(legacy_xml_definitions(legacy_dir))
+	client_ids = validate_client_quest_coverage(enabled_ids | java_handler_ids | legacy_ids, client_quest) if client_quest is not None else None
 	simple_hunts, hunt_stats, hunt_skipped = retail_hunts(hunt_file, xml_owned_ids)
 	talks, talk_stats, talk_skipped = simple_talks(talk_file, xml_owned_ids)
 	collects, collect_stats, collect_skipped = simple_collects(collect_file, xml_owned_ids)
@@ -3009,73 +3570,85 @@ def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAI
 	data_collects, data_collect_candidates, data_collect_missing_base = data_driven_collects(data_driven_file, xml_owned_ids)
 	pvps, pvp_candidates, pvp_missing_base = data_driven_pvps(data_driven_file, xml_owned_ids)
 	data_item_plays, data_item_play_candidates, data_item_play_missing_base = data_driven_item_plays(data_driven_file, xml_owned_ids)
-	compiled_collects, compiled_collect_skipped = compiled_item_buyers(retail_quest_file, retail_script, quest_data, xml_owned_ids)
-	compiled_reports, compiled_report_skipped = compiled_firework_reports(retail_quest_file, retail_script, quest_data, xml_owned_ids)
-	compiled_rescues, compiled_rescue_skipped = compiled_debris_rescues(retail_quest_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_worlds, compiled_world_skipped = compiled_world_collects(retail_quest_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_growths, compiled_growth_skipped = compiled_growth_quests(retail_quest_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_sensory, compiled_sensory_skipped = compiled_sensory_completes(retail_quest_file, npc_file, retail_script, quest_data, xml_owned_ids)
-	compiled_paios, compiled_paios_skipped = compiled_paios_rescues(retail_quest_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_housing, compiled_housing_skipped = compiled_housing_flower_visits(retail_quest_file, npc_file, retail_script, quest_data, xml_owned_ids)
-	compiled_trees, compiled_tree_skipped = compiled_scorched_tree_actions(retail_quest_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_arrivals, compiled_arrival_skipped = compiled_kaldor_arrivals(retail_quest_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_coalescence, compiled_coalescence_skipped = compiled_coalescence_completes(retail_quest_file, npc_file, retail_script, quest_data, xml_owned_ids)
-	compiled_bastion, compiled_bastion_skipped = compiled_bastion_movies(retail_quest_file, npc_file, retail_script, quest_data, xml_owned_ids)
-	compiled_simple_talk_quests, compiled_simple_talk_skipped = compiled_simple_talks(retail_quest_file, talk_file, use_item_file, npc_file, retail_script, quest_data, xml_owned_ids)
-	compiled_surama, compiled_surama_skipped = compiled_surama_hunts(retail_quest_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_arena, compiled_arena_skipped = compiled_arena_item_plays(retail_quest_file, item_play_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_christmas, compiled_christmas_skipped = compiled_christmas_courier_hunts(retail_quest_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_dredgion_control, compiled_dredgion_control_skipped = compiled_dredgion_control_hunts(retail_quest_file, hunt_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_dredgion_navigation, compiled_dredgion_navigation_skipped = compiled_dredgion_navigation_hunts(retail_quest_file, serial_hunt_file, npc_file, item_file, retail_script, quest_data, xml_owned_ids)
-	compiled_ids = set().union(*(set(quests) for quests in (
-		compiled_collects, compiled_reports, compiled_rescues, compiled_worlds, compiled_growths, compiled_sensory,
-		compiled_paios, compiled_housing, compiled_trees, compiled_arrivals, compiled_coalescence, compiled_bastion,
-		compiled_simple_talk_quests, compiled_surama, compiled_arena, compiled_christmas, compiled_dredgion_control,
-		compiled_dredgion_navigation,
-	)))
+	faction_quest_file = selected["npcfactions_quest.xml"][0]
+	retail_faction_quests = {int(node.attrib["quest_id"]) for node in ET.parse(faction_quest_file).getroot() if node.attrib.get("quest_id", "").isdigit()}
+	quest_factions = {int(node.attrib["id"]): int(node.attrib["npcfaction_id"]) for node in ET.parse(quest_data).getroot().findall("quest") if node.attrib.get("npcfaction_id", "").isdigit()}
+	faction_ids = {int(node.attrib["id"]) for node in ET.parse(ROOT / "src/main/resources/aion/data/static_data/npc_factions/npc_factions.xml").getroot() if node.attrib.get("id", "").isdigit()}
+	faction_closed = {quest_id for quest_id in retail_faction_quests if quest_factions.get(quest_id) in faction_ids}
+	challenge_file = selected["challenge_task.xml"][0]
+	retail_challenge_quests = {int(node.text) for node in ET.parse(challenge_file).getroot().iter("quest_id") if (node.text or "").strip().isdigit()}
+	aion_challenge_quests = {int(node.attrib["id"]) for node in ET.parse(ROOT / "src/main/resources/aion/definitions/compact/quests/challenge_tasks.xml").getroot().iter("quest") if node.attrib.get("id", "").isdigit()}
+	challenge_closed = retail_challenge_quests & aion_challenge_quests
+	owners, npc_alias_owners = reference_owners(reference_graph) if reference_graph else ({}, {})
+	if reference_graph:
+		faction_closed &= owners.get("faction", set())
+		challenge_closed &= owners.get("challenge_task", set())
+	for quests, stats_map, skipped_map in ((simple_hunts, hunt_stats, hunt_skipped), (collects, collect_stats, collect_skipped)):
+		resolve_sentinel_starts(quests, stats_map, skipped_map, "_faction_", faction_closed, "blocked_faction_binding")
+		resolve_sentinel_starts(quests, stats_map, skipped_map, "_challengetask_", challenge_closed, "blocked_challenge_binding")
+		resolve_sentinel_starts(quests, stats_map, skipped_map, "_area_", owners.get("area", set()), "blocked_area_binding")
+	# PVP 无独立账本：闭包成立则置空 start，否则保持哨兵名（unresolved 报告原因可见）。
+	for quest_id, pvp in pvps.items():
+		if pvp.get("start") == "_challengetask_" and quest_id in challenge_closed:
+			pvp["start"] = None
+	ctx = SimpleNamespace(retail_quest=retail_quest_file, talk=talk_file, use_item=use_item_file,
+		item_play=item_play_file, hunt=hunt_file, serial_hunt=serial_hunt_file, npc=npc_file,
+		item=item_file, script=retail_script, quest_data=quest_data, enabled=xml_owned_ids)
+	generic_by_sink: dict[str, dict[int, dict[str, object]]] = {"simple": {}, "hunt": {}, "data": {}}
+	for default_sink, quests in (("hunt", simple_hunts), ("simple", talks), ("simple", collects),
+			("data", simple_item_play_quests), ("simple", data_talks), ("hunt", data_hunts), ("simple", data_collects)):
+		for quest_id, quest in quests.items():
+			if quest_id not in legacy_ids:
+				generic_by_sink[compiled_sink(quest, default_sink)][quest_id] = quest
+	compiled_results: dict[str, dict[int, dict[str, object]]] = {}
+	compiled_skipped: dict[str, list[str]] = {}
+	generic_reclaims: dict[str, list[int]] = {}
+	bucket_families: dict[str, dict[str, dict[int, dict[str, object]]]] = {"simple": {}, "hunt": {}, "data": {}}
+	for label, _, default_sink, _, build in COMPILED_FAMILIES:
+		result, family_skipped = build(ctx)
+		result, reclaimed = reclaim_generic_projections(result, generic_by_sink, default_sink)
+		compiled_results[label] = result
+		if reclaimed:
+			generic_reclaims[label] = reclaimed
+		compiled_skipped.update(family_skipped)
+		for quest_id, quest in result.items():
+			bucket_families[compiled_sink(quest, default_sink)].setdefault(label, {})[quest_id] = quest
+	compiled_ids = set().union(*(set(result) for result in compiled_results.values()))
 	talks = {quest_id: quest for quest_id, quest in talks.items() if quest_id not in legacy_ids | compiled_ids}
-	for quest_id in compiled_simple_talk_quests:
-		for skipped, stats in ((talk_skipped, talk_stats), (use_item_skipped, use_item_stats)):
-			if skipped["unsupported"].pop(str(quest_id), None) is not None:
-				stats["unsupported"] -= 1
-			if quest_id in skipped["invalid"]:
-				skipped["invalid"].remove(quest_id)
-				stats["invalid"] -= 1
-	for quest_id in compiled_dredgion_control:
-		if hunt_skipped["unsupported"].pop(str(quest_id), None) is not None:
-			hunt_stats["unsupported"] -= 1
-	compiled_data_simple_talks = {quest_id: quest for quest_id, quest in compiled_simple_talk_quests.items() if quest["kind"] == "data_driven_simple"}
-	compiled_report_simple_talks = {quest_id: quest for quest_id, quest in compiled_simple_talk_quests.items() if quest["kind"] != "data_driven_simple"}
+	reclaim_targets = {"talk": (talk_skipped, talk_stats), "use_item": (use_item_skipped, use_item_stats), "hunt": (hunt_skipped, hunt_stats)}
+	for label, _, _, reclaim_spec, _ in COMPILED_FAMILIES:
+		for bucket_name, mode in reclaim_spec.items():
+			skipped_map, stats_map = reclaim_targets[bucket_name]
+			for quest_id in compiled_results[label]:
+				if skipped_map["unsupported"].pop(str(quest_id), None) is not None:
+					stats_map["unsupported"] -= 1
+				if mode == "full" and quest_id in skipped_map["invalid"]:
+					skipped_map["invalid"].remove(quest_id)
+					stats_map["invalid"] -= 1
 	work_orders, work_order_stats, work_order_skipped = retail_work_orders(
 		work_order_file, retail_quest_file, quest_data, npc_file, item_file, recipe_file, xml_owned_ids)
 	handled_ids = set(simple_hunts) | set(talks) | set(collects) | set(use_items) | set(simple_item_play_quests) | set(data_talks) | set(data_hunts) | set(data_collects) | set(pvps) | set(data_item_plays) | compiled_ids | set(work_orders)
 	data_quests = data_driven_complex(data_driven_file, xml_owned_ids, handled_ids)
-	data_quests.update(compiled_rescues)
-	data_quests.update(compiled_worlds)
-	data_quests.update(compiled_growths)
-	data_quests.update(compiled_sensory)
-	data_quests.update(compiled_paios)
-	data_quests.update(compiled_housing)
-	data_quests.update(compiled_trees)
-	data_quests.update(compiled_arrivals)
-	data_quests.update(compiled_coalescence)
-	data_quests.update(compiled_bastion)
-	data_quests.update(compiled_data_simple_talks)
-	data_quests.update(compiled_arena)
-	data_quests.update(compiled_dredgion_control)
-	data_quests.update(compiled_dredgion_navigation)
+	for family in bucket_families["data"].values():
+		data_quests.update(family)
 	simple_data_quests = {quest_id: quest for quest_id, quest in talks.items() if quest["kind"] == "data_driven_simple"}
 	simple_data_quests.update({quest_id: quest for quest_id, quest in data_talks.items() if quest["kind"] == "data_driven_simple"})
 	simple_data_quests.update(simple_item_play_quests)
 	data_quests.update(simple_data_quests)
-	families = (set(simple_hunts), set(talks), set(collects), set(use_items), set(simple_item_play_quests), set(data_talks), set(data_hunts), set(data_collects), set(pvps), set(data_item_plays), set(compiled_collects), set(compiled_reports), set(compiled_report_simple_talks), set(compiled_surama), set(compiled_christmas), set(data_quests) - set(simple_data_quests), set(work_orders))
+	families = (set(simple_hunts), set(talks), set(collects), set(use_items), set(simple_item_play_quests), set(data_talks), set(data_hunts), set(data_collects), set(pvps), set(data_item_plays),
+		*(set(family) for bucket in ("simple", "hunt") for family in bucket_families[bucket].values()),
+		set(data_quests) - set(simple_data_quests), set(work_orders))
 	duplicates = set().union(*(left & right for index, left in enumerate(families) for right in families[index + 1:]))
 	if duplicates:
 		raise ValueError(f"duplicate retail quest ids: {sorted(duplicates)}")
-	hunts = {**simple_hunts, **data_hunts, **compiled_surama, **compiled_christmas}
+	hunts = {**simple_hunts, **data_hunts}
+	for family in bucket_families["hunt"].values():
+		hunts.update(family)
 	simple = {**{quest_id: quest for quest_id, quest in talks.items() if quest["kind"] != "data_driven_simple"}, **collects,
 		**{quest_id: quest for quest_id, quest in data_talks.items() if quest["kind"] != "data_driven_simple"},
-		**data_collects, **compiled_collects, **compiled_reports, **compiled_report_simple_talks}
+		**data_collects}
+	for family in bucket_families["simple"].values():
+		simple.update(family)
 	use_items.update(data_item_plays)
 	exact_names = {str(hunt[key]) for hunt in hunts.values() for key in ("start", "end") if hunt.get(key)}
 	target_names: set[str] = set()
@@ -3101,7 +3674,16 @@ def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAI
 		for step in quest["steps"]:
 			exact_names.update(map(str, step.get("names", [])))
 			exact_names.update(map(str, step.get("actions", [])))
+			exact_names.update(str(spawn[0]) for spawn in step.get("spawns", []))
 	exact_index, aliases = npc_indexes(npc_file, exact_names, target_names)
+	for quest_id, (name, ids) in npc_alias_owners.items():
+		quest = use_items.get(quest_id)
+		if quest is None:
+			continue
+		resolved = exact_index.get(name) or aliases.get(name, ())
+		if str(quest["end"]).casefold() != name or resolved != ids:
+			raise ValueError(f"NPC alias reference drift for quest {quest_id}")
+		quest["end_ids"] = ids
 	item_names = {str(quest["item"]) for quest in use_items.values()}
 	for quest in simple.values():
 		if quest.get("item"):
@@ -3123,10 +3705,14 @@ def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAI
 			if step.get("remove_item"):
 				item_names.add(str(step["remove_item"][0]))
 	items = item_ids(item_file, item_names)
-	script_sources = tuple(path for number in sorted(set(COMPILED_ITEM_BUYER_SOURCE_NUMBERS + COMPILED_FIREWORK_SOURCE_NUMBERS + COMPILED_DEBRIS_SOURCE_NUMBERS + COMPILED_WORLD_COLLECT_SOURCE_NUMBERS + COMPILED_GROWTH_SOURCE_NUMBERS + COMPILED_SENSORY_SOURCE_NUMBERS + COMPILED_PAIOS_SOURCE_NUMBERS + COMPILED_HOUSING_FLOWER_SOURCE_NUMBERS + COMPILED_SCORCHED_TREE_SOURCE_NUMBERS + COMPILED_KALDOR_ARRIVAL_SOURCE_NUMBERS + COMPILED_COALESCENCE_SOURCE_NUMBERS + COMPILED_BASTION_MOVIE_SOURCE_NUMBERS + COMPILED_SIMPLE_TALK_SOURCE_NUMBERS + COMPILED_SURAMA_SOURCE_NUMBERS + COMPILED_CHRISTMAS_COURIER_SOURCE_NUMBERS + COMPILED_ARENA_ITEM_PLAY_SOURCE_NUMBERS + COMPILED_DREDGION_CONTROL_SOURCE_NUMBERS + COMPILED_DREDGION_NAVIGATION_SOURCE_NUMBERS)) if (path := retail_script / f"fun_{number:03d}.cpp").is_file())
+	script_sources = tuple(path for number in sorted({number for _, numbers, *_ in COMPILED_FAMILIES for number in numbers}) if (path := retail_script / f"fun_{number:03d}.cpp").is_file())
+	sources = (hunt_file, serial_hunt_file, talk_file, collect_file, use_item_file, item_play_file, work_order_file,
+		data_driven_file, npc_file, item_file, retail_quest_file, recipe_file, quest_data, *script_sources)
+	if reference_graph:
+		sources += (reference_graph,)
 	content, unresolved, generated = render(
 		simple, hunts, pvps, use_items, data_quests, exact_index, aliases, items,
-		(hunt_file, serial_hunt_file, talk_file, collect_file, use_item_file, item_play_file, work_order_file, data_driven_file, npc_file, item_file, retail_quest_file, recipe_file, quest_data, *script_sources),
+		sources,
 		work_orders,
 	)
 	generated_ids = {int(node.attrib["id"]) for node in ET.fromstring(content.split(b"-->\n", 1)[1])}
@@ -3136,7 +3722,7 @@ def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAI
 		for quest_id in skipped["unsupported"]
 	}
 	legacy_details, legacy_stats = audit_legacy_xml(
-		legacy_dir, enabled_ids, generated_ids, java_handler_ids, retail_source_ids(retail),
+		legacy_dir, enabled_ids, generated_ids, java_handler_ids, retail_source_ids(retail, region),
 		{int(quest_id) for quest_id in unresolved}, unsupported_ids,
 		{int(quest_id) for skipped in (hunt_skipped, talk_skipped, collect_skipped, use_item_skipped) for quest_id in skipped["invalid"]} | {int(quest_id) for quest_id in work_order_skipped},
 	)
@@ -3170,9 +3756,20 @@ def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAI
 			reason = "compiled_retail_script_unavailable"
 		isolated[str(quest_id)] = reason
 	stats = {
-		"data_driven_actions": action_coverage,
+		"authority": {
+			"data_root": str(retail.expanduser().resolve()),
+			"script_root": str(retail_script.expanduser().resolve()),
+			"region": region,
+			"sources": source_manifest,
+		},
+		"client_authority": None if client_ids is None else {
+			"quest_ids": len(client_ids), "sha256": sha256(client_quest), "server_outside": 0,
+		},
+			"data_driven_actions": action_coverage,
+			"data_driven_shapes": shape_summary,
+			"generic_reclaims": generic_reclaims,
 		"retail": {"hunt": hunt_stats["retail"], "talk": talk_stats["retail"], "collect": collect_stats["retail"], "use_item": use_item_stats["retail"], "work_order": work_order_stats["retail"], **data_talk_candidates, "data_driven_hunt": data_hunt_candidates, "data_driven_collect": data_collect_candidates, "data_driven_pvp": pvp_candidates, "data_driven_item_play": data_item_play_candidates},
-		"eligible": {"hunt": len(simple_hunts), "talk": len(talks), "collect": len(collects), "use_item": len(use_items) - len(data_item_plays), "work_order": len(work_orders), **{source: sum(quest.get("source") == source for quest in data_talks.values()) for source in data_talk_candidates}, "data_driven_hunt": len(data_hunts), "data_driven_collect": len(data_collects), "data_driven_pvp": len(pvps), "data_driven_item_play": len(data_item_plays), "data_driven_complex": len(data_quests) - len(compiled_rescues) - len(compiled_worlds) - len(compiled_growths) - len(compiled_sensory) - len(compiled_paios) - len(compiled_housing) - len(compiled_trees) - len(compiled_arrivals) - len(compiled_coalescence) - len(compiled_bastion) - len(compiled_data_simple_talks) - len(compiled_arena) - len(compiled_dredgion_control) - len(compiled_dredgion_navigation), "compiled_script_collect": len(compiled_collects), "compiled_script_timed_report": len(compiled_reports), "compiled_script_action_talk": len(compiled_rescues), "compiled_script_action_progress": len(compiled_paios), "compiled_script_world_collect": len(compiled_worlds), "compiled_script_get_item": len(compiled_growths), "compiled_script_sensory_complete": len(compiled_sensory), "compiled_script_housing_talk": len(compiled_housing), "compiled_script_scorched_tree": len(compiled_trees), "compiled_script_kaldor_arrival": len(compiled_arrivals), "compiled_script_coalescence_complete": len(compiled_coalescence), "compiled_script_bastion_movie": len(compiled_bastion), "compiled_script_simple_talk": len(compiled_simple_talk_quests), "compiled_script_surama_hunt": len(compiled_surama), "compiled_script_christmas_courier_hunt": len(compiled_christmas), "compiled_script_arena_item_play": len(compiled_arena), "compiled_script_dredgion_control_hunt": len(compiled_dredgion_control), "compiled_script_dredgion_navigation_hunt": len(compiled_dredgion_navigation)},
+		"eligible": {"hunt": len(simple_hunts), "talk": len(talks), "collect": len(collects), "use_item": len(use_items) - len(data_item_plays), "work_order": len(work_orders), **{source: sum(quest.get("source") == source for quest in data_talks.values()) for source in data_talk_candidates}, "data_driven_hunt": len(data_hunts), "data_driven_collect": len(data_collects), "data_driven_pvp": len(pvps), "data_driven_item_play": len(data_item_plays), "data_driven_complex": len(data_quests) - sum(len(family) for family in bucket_families["data"].values()), **{label: len(compiled_results[label]) for label, *_ in COMPILED_FAMILIES}},
 		"generated": {**generated, "total": sum(generated.values())},
 		"missing_base": hunt_stats["missing_base"] + talk_stats["missing_base"] + collect_stats["missing_base"] + use_item_stats["missing_base"] + work_order_stats["missing_base"] + data_talk_missing_base + data_hunt_missing_base + data_collect_missing_base + pvp_missing_base + data_item_play_missing_base,
 		"unsupported": hunt_stats["unsupported"] + talk_stats["unsupported"] + collect_stats["unsupported"] + use_item_stats["unsupported"],
@@ -3190,26 +3787,31 @@ def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAI
 		"invalid": {
 			"hunt": hunt_skipped["invalid"], "talk": talk_skipped["invalid"], "collect": collect_skipped["invalid"], "use_item": use_item_skipped["invalid"], "work_order": work_order_skipped,
 		},
-			"compiled_script": {**compiled_collect_skipped, **compiled_report_skipped, **compiled_rescue_skipped, **compiled_world_skipped, **compiled_growth_skipped, **compiled_sensory_skipped, **compiled_paios_skipped, **compiled_housing_skipped, **compiled_tree_skipped, **compiled_arrival_skipped, **compiled_coalescence_skipped, **compiled_bastion_skipped, **compiled_simple_talk_skipped, **compiled_surama_skipped, **compiled_christmas_skipped, **compiled_arena_skipped, **compiled_dredgion_control_skipped, **compiled_dredgion_navigation_skipped},
+			"compiled_script": dict(compiled_skipped),
 			"compiled_script_isolation_details": {str(quest_id): COMPILED_ISOLATION_DETAILS[quest_id] for quest_id in sorted(COMPILED_ISOLATION_DETAILS) if str(quest_id) in isolated},
 			"java_handlers": java_details,
 			"legacy_xml": legacy_details,
 		"unresolved": unresolved,
 		"isolated": isolated,
 	}
-	return content, {"stats": stats, "skipped": skipped}
+	return content, {"stats": stats, "skipped": skipped, "data_driven_shapes": shape_details}
 
 
 def main() -> int:
 	parser = argparse.ArgumentParser(description=__doc__)
 	parser.add_argument("--retail", type=Path, default=DEFAULT_RETAIL)
+	parser.add_argument("--region", default=DEFAULT_RETAIL_REGION)
 	parser.add_argument("--retail-script", type=Path, default=DEFAULT_RETAIL_SCRIPT)
+	parser.add_argument("--client-quest", type=Path, default=DEFAULT_CLIENT_QUEST)
 	parser.add_argument("--quest-data", type=Path, default=DEFAULT_QUEST_DATA)
 	parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
 	parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
+	parser.add_argument("--reference-graph", type=Path, default=DEFAULT_REFERENCE_GRAPH)
 	parser.add_argument("--check", action="store_true")
 	args = parser.parse_args()
-	content, report = generate(args.retail, args.quest_data, args.retail_script, args.output.parent)
+	content, report = generate(args.retail, args.quest_data, args.retail_script, args.output.parent,
+		args.client_quest, args.region, args.reference_graph)
+	report["output_sha256"] = hashlib.sha256(content).hexdigest()
 	report_content = (json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
 	if args.check:
 		if not args.output.is_file() or args.output.read_bytes() != content or not args.report.is_file() or args.report.read_bytes() != report_content:

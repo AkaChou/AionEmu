@@ -134,8 +134,8 @@ class RetailAiSkillSlotClosureTest {
 			}
 		}
 
-			assertEquals(Map.of("missing_assignment", 828, "out_of_range", 1620), issues);
-			assertEquals(2448, issues.values().stream().mapToInt(Integer::intValue).sum());
+			assertEquals(Map.of("missing_assignment", 828, "out_of_range", 1620, "orphan", 7), issues);
+			assertEquals(2455, issues.values().stream().mapToInt(Integer::intValue).sum());
 
 		Map<Integer, Set<Integer>> instanceNpcs = loadInstanceNpcs();
 		Map<String, Integer> instanceIssues = new HashMap<>();
@@ -151,12 +151,12 @@ class RetailAiSkillSlotClosureTest {
 				details.add(world.getKey() + ":" + npcId + ":" + mappings.get(npcId) + ":" + issue);
 			}));
 		String report = String.join("\n", details);
-			assertEquals(Map.of("missing_assignment", 54, "out_of_range", 88), instanceIssues, report);
+			assertEquals(Map.of("missing_assignment", 54, "out_of_range", 90), instanceIssues, report);
 			assertEquals(35, affectedWorlds.size(), report);
-			assertEquals(137, affectedNpcs.size(), report);
-			assertEquals(142, details.size(), report);
-			assertEquals("86d7bb543783cd601c040d61df58438cfbecdf6c7c3ada0c537417e4eacf6f47",
-			HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(report.getBytes(StandardCharsets.UTF_8))), report);
+			assertEquals(139, affectedNpcs.size(), report);
+			assertEquals(144, details.size(), report);
+			assertEquals("5b29857f7430107f210ed05da8f3da11a3e9f705986e1167f1115b2fef9acd75",
+				HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(report.getBytes(StandardCharsets.UTF_8))), report);
 	}
 
 	@Test
@@ -278,14 +278,14 @@ class RetailAiSkillSlotClosureTest {
 				Map.entry("spawn_on_target", 488L), Map.entry("spawn_on_target_by_attacker_indicator", 64L)),
 				patternCounts);
 			assertEquals(Map.ofEntries(
-				Map.entry("activate_skillarea", 33L), Map.entry("change_world_scene_status", 89L),
+				Map.entry("activate_skillarea", 34L), Map.entry("change_world_scene_status", 89L),
 				Map.entry("despawn_by_nameid", 75L), Map.entry("enable_area", 45L),
 				Map.entry("on_off_moving_collision", 17L), Map.entry("on_off_windpath", 2L),
-				Map.entry("spawn", 1185L), Map.entry("spawn_on_multi_target", 59L),
-				Map.entry("spawn_on_target", 211L), Map.entry("spawn_on_target_by_attacker_indicator", 55L)),
+				Map.entry("spawn", 1197L), Map.entry("spawn_on_multi_target", 61L),
+				Map.entry("spawn_on_target", 215L), Map.entry("spawn_on_target_by_attacker_indicator", 55L)),
 				bindingCounts);
-			assertEquals(1771, bindings.size());
-			assertEquals("43ce9315b04aa84426d3ddd66c557158f0a04a812c65ceeffb3ab254320bc3b3",
+			assertEquals(1790, bindings.size());
+			assertEquals("fa12cb4e745e171e9e58c8d28c3ceab4bace8c65b3ab798370e3e533eb4dacdc",
 				hashReport(bindings));
 		} finally {
 			if (previousDefinitions == null) {

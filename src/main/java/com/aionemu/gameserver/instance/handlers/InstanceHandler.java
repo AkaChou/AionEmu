@@ -72,6 +72,9 @@ public interface InstanceHandler {
 	 */
 	void onOpenDoor(Player player, int door);
 
+	/** 持久化并应用副本门状态。 */
+	void setDoorState(int entityId, boolean open);
+
 	/**
 	 * 玩家进入区域时回调。
 	 * Called when a player enters a zone.

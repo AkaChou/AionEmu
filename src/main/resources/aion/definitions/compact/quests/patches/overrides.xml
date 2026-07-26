@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	人工补丁覆盖层 / Hand-written patch override layer
+
+	契约 / Contract:
+	- 生成层 zz_retail_*.xml 是机器产物，禁止手改（重跑生成器必覆盖，门禁测试会拦截手改）。
+	- 需要偏离生成数据时，在本目录添加同 quest id 的完整定义并标记 patch="true"，
+	  加载时按 patch > retail > legacy 优先级覆盖。
+	- 仅需临时禁用某个生成任务（回退旧实现）时，用配置 gameserver.quest.retail_disabled_ids。
+	- 同一 quest id 在补丁层内只允许出现一次（门禁测试校验）。
+
+	示例 / Example:
+	<data_driven_quest id="1127" patch="true" start_type="TALK" ... />
+-->
+<quest_scripts/>

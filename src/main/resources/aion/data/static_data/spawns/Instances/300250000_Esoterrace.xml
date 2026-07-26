@@ -514,10 +514,12 @@
 		<!-- Ventilator -->
 		<spawn npc_id="282293">
 		    <spot x="877.132" y="1100.94" z="362.811" entity_id="40"/>
+		  <spot x="877.131592" y="1100.937134" z="365.403687" random_walk="2"/>
 		</spawn>
 		<!-- Command Gate -->
 		<spawn npc_id="282295">
 		    <spot x="1273.98" y="1146.29" z="188.325" entity_id="76"/>
+		  <spot x="1273.984863" y="1146.292725" z="190.978653" random_walk="2"/>
 		</spawn>
 		<!-- Bypass Device -->
 		<spawn npc_id="282297">
@@ -559,6 +561,9 @@
 		</spawn>
 		<spawn npc_id="217192">
 		  <spot x="1108.165894" y="465.402039" z="267.79773" h="16" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="282175" respawn_time="1">
+		  <spot x="1316.354614" y="1170.752075" z="53.203529" random_walk="2"/>
 		</spawn>
 	</spawn_map>
 </spawns>

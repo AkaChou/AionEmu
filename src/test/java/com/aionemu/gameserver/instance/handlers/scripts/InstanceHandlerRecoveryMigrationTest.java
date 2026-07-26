@@ -72,6 +72,23 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void legacyInstanceAiDoorsUsePersistentHandlerState() throws Exception {
+		Pattern direct = Pattern.compile("getDoors\\(\\)\\.get\\(\\s*\\d+\\s*\\)\\.setOpen\\(");
+		Pattern persistent = Pattern.compile("getInstanceHandler\\(\\)\\.setDoorState\\(\\s*\\d+\\s*,");
+		long directCalls = 0;
+		long persistentCalls = 0;
+		try (var files = Files.walk(Path.of("src/main/java/com/aionemu/gameserver/ai/instance"))) {
+			for (Path file : files.filter(path -> path.toString().endsWith(".java")).toList()) {
+				String source = Files.readString(file);
+				directCalls += direct.matcher(source).results().count();
+				persistentCalls += persistent.matcher(source).results().count();
+			}
+		}
+		assertEquals(0, directCalls);
+		assertEquals(33, persistentCalls);
+	}
+
+	@Test
 	void abyssalSplinterUsesRetailArtifactAndDayshadeTriggers() throws Exception {
 		Path ai = Path.of("src/main/java/com/aionemu/gameserver/ai/instance/abyssalSplinter");
 		for (String removed : new String[] {

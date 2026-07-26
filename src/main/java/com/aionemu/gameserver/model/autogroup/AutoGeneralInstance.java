@@ -92,7 +92,7 @@ public class AutoGeneralInstance extends AutoInstance {
 	@Override
 	public void onPressEnter(Player player) {
 		int worldId = instance.getMapId();
-		PortalPath portal = DataManager.PORTAL2_DATA.getPortalDialog(worldId, 10000, player.getRace());
+		PortalPath portal = DataManager.PORTAL2_DATA.getPortalDialog(worldId, 10000, player.getRace(), player.getWorldId());
 		if (portal == null) {
 			return;
 		}

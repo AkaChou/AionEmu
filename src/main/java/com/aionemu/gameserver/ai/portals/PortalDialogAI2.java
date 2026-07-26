@@ -99,7 +99,8 @@ public class PortalDialogAI2 extends PortalAI2 {
 			}
 		} else {
 			if (questId == 0) {
-				PortalPath portalPath = DataManager.PORTAL2_DATA.getPortalDialog(getNpcId(), dialogId, player.getRace());
+					PortalPath portalPath = DataManager.PORTAL2_DATA.getPortalDialog(getNpcId(), dialogId, player.getRace(),
+							player.getWorldId());
 				if (portalPath != null) {
 					PortalService.port(portalPath, player, getObjectId());
 				}

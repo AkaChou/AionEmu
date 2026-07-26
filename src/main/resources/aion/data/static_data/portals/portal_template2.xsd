@@ -40,6 +40,9 @@
 		<xs:attribute name="siege_id" type="xs:int"/>
 		<xs:attribute name="race" type="Race" default="PC_ALL"/>
 		<xs:attribute name="err_group" type="xs:int"/>
+		<xs:attribute name="source_world_id" type="xs:int"/>
+		<xs:attribute name="animation" type="xs:string"/>
+		<xs:attribute name="destination_alias" type="xs:string"/>
 	</xs:complexType>
 	<xs:complexType name="PortalReq">
 		<xs:sequence>

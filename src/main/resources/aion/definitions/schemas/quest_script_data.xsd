@@ -67,15 +67,18 @@
 		<xs:attribute name="give_item_count" type="xs:int"/>
 		<xs:attribute name="remove_item_id" type="xs:int"/>
 		<xs:attribute name="remove_item_count" type="xs:int"/>
+		<xs:attribute name="timer_seconds" type="xs:positiveInteger"/>
+		<xs:attribute name="timer_destination_progress" type="xs:nonNegativeInteger"/>
 	</xs:complexType>
 	<xs:complexType name="DataDrivenQuestSpawn">
 		<xs:attribute name="npc_id" type="xs:int" use="required"/>
 		<xs:attribute name="count" type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="lifetime_seconds" type="xs:positiveInteger" use="required"/>
-		<xs:attribute name="x" type="xs:float" use="required"/>
-		<xs:attribute name="y" type="xs:float" use="required"/>
-		<xs:attribute name="z" type="xs:float" use="required"/>
-		<xs:attribute name="heading" type="xs:unsignedByte" use="required"/>
+		<xs:attribute name="relative" type="xs:boolean" default="false"/>
+		<xs:attribute name="x" type="xs:float"/>
+		<xs:attribute name="y" type="xs:float"/>
+		<xs:attribute name="z" type="xs:float"/>
+		<xs:attribute name="heading" type="xs:unsignedByte"/>
 	</xs:complexType>
 	<xs:simpleType name="DataDrivenQuestStepType">
 		<xs:restriction base="xs:string">
@@ -96,6 +99,7 @@
 		<xs:attribute name="movie" type="xs:int" use="optional"/>
 		<xs:attribute name="mission" type="xs:boolean" use="optional" default="false"/>
 		<xs:attribute name="retail" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="patch" type="xs:boolean" use="optional" default="false"/>
 	</xs:complexType>
 	<xs:complexType name="ItemCollectingData">
 		<xs:complexContent>
@@ -245,7 +249,8 @@
 				<xs:attribute name="start_item_id" type="xs:int" use="required"/>
 				<xs:attribute name="talk_npc_id1" type="xs:int" default="0"/>
 				<xs:attribute name="talk_npc_id2" type="xs:int" default="0"/>
-				<xs:attribute name="end_npc_id" type="xs:int" use="required"/>
+				<xs:attribute name="end_npc_id" type="xs:int" default="0"/>
+				<xs:attribute name="end_npc_ids" type="IntListType"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

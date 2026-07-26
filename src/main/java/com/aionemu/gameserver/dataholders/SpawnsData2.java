@@ -84,6 +84,7 @@ public class SpawnsData2 {
 	protected List<SpawnMap> templates;
 
 	private IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
+	private IntObjectHashMap<LinkedHashMap<Spawn, SpawnGroup2>> allSpawnGroups = new IntObjectHashMap<LinkedHashMap<Spawn, SpawnGroup2>>();
 	private IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
 	private IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
 	private IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
@@ -117,6 +118,20 @@ public class SpawnsData2 {
 		return worldSpawns;
 	}
 
+	private void indexWorldSpawn(int mapId, Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> worldSpawns,
+			SpawnGroup2 spawnGroup, Spawn spawn) {
+		LinkedHashMap<Spawn, SpawnGroup2> groups = allSpawnGroups.get(mapId);
+		if (groups == null) {
+			groups = new LinkedHashMap<>();
+			allSpawnGroups.put(mapId, groups);
+		}
+		if (spawn.isCustom()) {
+			groups.entrySet().removeIf(entry -> entry.getKey().getNpcId() == spawn.getNpcId());
+		}
+		groups.put(spawn, spawnGroup);
+		worldSpawns.put(spawn.getNpcId(), new SimpleEntry<>(spawnGroup, spawn));
+	}
+
 	private List<SpawnGroup2> spawnGroupsFor(IntObjectHashMap<List<SpawnGroup2>> spawnMaps, int id) {
 		List<SpawnGroup2> spawnGroups = spawnMaps.get(id);
 		if (spawnGroups == null) {
@@ -148,7 +163,8 @@ public class SpawnsData2 {
 					} else if (customs.containsKey(spawn.getNpcId())) {
 						continue;
 					}
-					worldSpawns.put(spawn.getNpcId(), new SimpleEntry(new SpawnGroup2(mapId, spawn), spawn));
+					SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn);
+					indexWorldSpawn(mapId, worldSpawns, spawnGroup, spawn);
 				}
 				for (SiegeSpawn SiegeSpawn : spawnMap.getSiegeSpawns()) {
 					int siegeId = SiegeSpawn.getSiegeId();
@@ -169,7 +185,7 @@ public class SpawnsData2 {
 								}
 								SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, siegeId, race.getSiegeRace(),
 										mod.getSiegeModType());
-								worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+								indexWorldSpawn(mapId, worldSpawns, spawnGroup, spawn);
 								siegeSpawnGroups.add(spawnGroup);
 							}
 						}
@@ -197,7 +213,7 @@ public class SpawnsData2 {
 								}
 								SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, legionDominionId,
 										race.getLegionDominionRace(), mod.getLegionDominionModType());
-								worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+								indexWorldSpawn(mapId, worldSpawns, spawnGroup, spawn);
 								legionDominionSpawnGroups.add(spawnGroup);
 							}
 						}
@@ -217,7 +233,7 @@ public class SpawnsData2 {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, baseId, simpleRace.getBaseRace());
-							worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+							indexWorldSpawn(mapId, worldSpawns, spawnGroup, spawn);
 							baseSpawnGroups.add(spawnGroup);
 						}
 					}
@@ -237,7 +253,7 @@ public class SpawnsData2 {
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, outpostId, simpleRace.getBaseRace(),
 									0);
-							worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+							indexWorldSpawn(mapId, worldSpawns, spawnGroup, spawn);
 							outpostSpawnGroups.add(spawnGroup);
 						}
 					}
@@ -255,7 +271,7 @@ public class SpawnsData2 {
 							continue;
 						}
 						SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id);
-						worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+						indexWorldSpawn(mapId, worldSpawns, spawnGroup, spawn);
 						riftSpawnGroups.add(spawnGroup);
 					}
 				}
@@ -691,14 +707,10 @@ public class SpawnsData2 {
 	 * @return 刷怪组列表，不存在则为空列表 / spawn groups, or empty list
 	 */
 	public List<SpawnGroup2> getSpawnsByWorldId(int worldId) {
-		if (!allSpawnMaps.containsKey(worldId)) {
+		if (!allSpawnGroups.containsKey(worldId)) {
 			return Collections.emptyList();
 		}
-		List<SpawnGroup2> result = new ArrayList<SpawnGroup2>();
-		for (SimpleEntry<SpawnGroup2, Spawn> spawnEntry : allSpawnMaps.get(worldId).values()) {
-			result.add(spawnEntry.getKey());
-		}
-		return result;
+		return new ArrayList<>(allSpawnGroups.get(worldId).values());
 	}
 
 	/**
@@ -1210,7 +1222,10 @@ public class SpawnsData2 {
 				continue;
 			}
 			if (entry.getValue().getEventTemplate().equals(visObj.getSpawn().getEventTemplate())) {
-				allSpawnMaps.get(visObj.getWorldId()).remove(entry);
+				allSpawnMaps.get(visObj.getWorldId()).remove(visObj.getObjectTemplate().getTemplateId());
+				if (allSpawnGroups.containsKey(visObj.getWorldId())) {
+					allSpawnGroups.get(visObj.getWorldId()).remove(entry.getValue());
+				}
 			}
 		}
 	}

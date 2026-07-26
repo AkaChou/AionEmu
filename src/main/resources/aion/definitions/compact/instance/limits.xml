@@ -5,18 +5,18 @@
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="3" coolt_tbl_id="3" desc="STR_ZONE_NAME_IDDF2_Dflame" enter_min_level_dark="27" enter_min_level_light="27" exit_alias_1="IDDF2_Dflame_Out_01" exit_alias_2="IDDF2_Dflame_Out_02" exit_world_1="LF2" exit_world_2="DF2" f2p_coolt_tbl_id="1003" id="3" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDDF2_Dflame" world_id="320100000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="4" coolt_tbl_id="4" desc="STR_ZONE_NAME_IDLF3lp" enter_min_level_dark="35" enter_min_level_light="35" exit_alias_1="IDLF3lp_Out_01" exit_alias_2="IDLF3lp_Out_02" exit_world_1="LF3" exit_world_2="LF3" f2p_coolt_tbl_id="1004" id="4" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLF3lp" world_id="310050000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="5" coolt_tbl_id="5" desc="STR_ZONE_NAME_IDDF3_lp" enter_min_level_dark="35" enter_min_level_light="35" exit_alias_1="IDDF3_lp_Out_01" exit_alias_2="IDDF3_lp_Out_02" exit_world_1="DF3" exit_world_2="DF3" f2p_coolt_tbl_id="1005" id="5" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDDF3_lp" world_id="320110000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="6" coolt_tbl_id="6" desc="STR_ZONE_NAME_IDLF2A_Lab" enter_min_level_dark="46" enter_min_level_light="46" f2p_coolt_tbl_id="1006" id="6" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLF2A_Lab" world_id="310110000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="7" coolt_tbl_id="7" desc="STR_ZONE_NAME_IDDF2A_Adma" enter_min_level_dark="46" enter_min_level_light="46" f2p_coolt_tbl_id="1007" id="7" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDDF2A_Adma" world_id="320130000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="6" coolt_tbl_id="6" desc="STR_ZONE_NAME_IDLF2A_Lab" enter_min_level_dark="88" enter_min_level_light="88" f2p_coolt_tbl_id="1006" id="6" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLF2A_Lab" world_id="310110000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="7" coolt_tbl_id="7" desc="STR_ZONE_NAME_IDDF2A_Adma" enter_min_level_dark="88" enter_min_level_light="88" f2p_coolt_tbl_id="1007" id="7" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDDF2A_Adma" world_id="320130000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="8" coolt_tbl_id="8" desc="STR_ZONE_NAME_IDAb1_MiniCastle" enter_min_level_dark="25" enter_min_level_light="25" f2p_coolt_tbl_id="1008" id="8" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAb1_MiniCastle" world_id="300030000" />
   <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="9" coolt_tbl_id="9" desc="STR_ZONE_NAME_IDLF1" enter_min_level_dark="48" enter_min_level_light="48" exit_alias_1="LF3_IDLF1_OUTAREA_01" exit_alias_2="DF3_IDLF1_OUTAREA_01" exit_world_1="LF3" exit_world_2="DF3" f2p_coolt_tbl_id="1009" id="9" indun_type="lf1" max_member_dark="6" max_member_light="6" name="IDLF1" world_id="300040000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="10" coolt_tbl_id="10" desc="STR_ZONE_NAME_IDAbRe_Low_Divine" enter_min_level_dark="45" enter_min_level_light="45" f2p_coolt_tbl_id="1010" id="10" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Low_Divine" world_id="300060000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="11" coolt_tbl_id="11" desc="STR_ZONE_NAME_IDAbRe_Low_Eciel" enter_min_level_dark="45" enter_min_level_light="45" f2p_coolt_tbl_id="1011" id="11" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Low_Eciel" world_id="300090000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="12" coolt_tbl_id="12" desc="STR_ZONE_NAME_IDAbRe_Low_Wciel" enter_min_level_dark="45" enter_min_level_light="45" f2p_coolt_tbl_id="1012" id="12" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Low_Wciel" world_id="300080000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="13" coolt_tbl_id="13" desc="STR_ZONE_NAME_IDAbRe_Up_Asteria_SP" enter_min_level_dark="45" enter_min_level_light="45" f2p_coolt_tbl_id="1013" id="13" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up_Asteria" world_id="300050000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="14" coolt_tbl_id="14" desc="STR_ZONE_NAME_IDAbRe_Up_Rhoo_SP" enter_min_level_dark="45" enter_min_level_light="45" f2p_coolt_tbl_id="1014" id="14" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up_Rhoo" world_id="300070000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="15" coolt_tbl_id="15" desc="STR_ZONE_NAME_IDAbRe_Up3_Crotan_SP" enter_min_level_dark="45" enter_min_level_light="45" f2p_coolt_tbl_id="1015" id="15" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Crotan" world_id="300140000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="16" coolt_tbl_id="16" desc="STR_ZONE_NAME_IDAbRe_Up3_Dkisas_SP" enter_min_level_dark="45" enter_min_level_light="45" f2p_coolt_tbl_id="1016" id="16" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Dkisas" world_id="300120000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="17" coolt_tbl_id="17" desc="STR_ZONE_NAME_IDAbRe_Up3_Lamiren_SP" enter_min_level_dark="45" enter_min_level_light="45" f2p_coolt_tbl_id="1017" id="17" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Lamiren" world_id="300130000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="10" coolt_tbl_id="10" desc="STR_ZONE_NAME_IDAbRe_Low_Divine" enter_min_level_dark="88" enter_min_level_light="88" f2p_coolt_tbl_id="1010" id="10" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Low_Divine" world_id="300060000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="11" coolt_tbl_id="11" desc="STR_ZONE_NAME_IDAbRe_Low_Eciel" enter_min_level_dark="88" enter_min_level_light="88" f2p_coolt_tbl_id="1011" id="11" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Low_Eciel" world_id="300090000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="12" coolt_tbl_id="12" desc="STR_ZONE_NAME_IDAbRe_Low_Wciel" enter_min_level_dark="88" enter_min_level_light="88" f2p_coolt_tbl_id="1012" id="12" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Low_Wciel" world_id="300080000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="13" coolt_tbl_id="13" desc="STR_ZONE_NAME_IDAbRe_Up_Asteria_SP" enter_min_level_dark="51" enter_min_level_light="51" f2p_coolt_tbl_id="1013" id="13" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up_Asteria" world_id="300050000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="14" coolt_tbl_id="14" desc="STR_ZONE_NAME_IDAbRe_Up_Rhoo_SP" enter_min_level_dark="51" enter_min_level_light="51" f2p_coolt_tbl_id="1014" id="14" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up_Rhoo" world_id="300070000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="15" coolt_tbl_id="15" desc="STR_ZONE_NAME_IDAbRe_Up3_Crotan_SP" enter_min_level_dark="51" enter_min_level_light="51" f2p_coolt_tbl_id="1015" id="15" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Crotan" world_id="300140000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="16" coolt_tbl_id="16" desc="STR_ZONE_NAME_IDAbRe_Up3_Dkisas_SP" enter_min_level_dark="51" enter_min_level_light="51" f2p_coolt_tbl_id="1016" id="16" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Dkisas" world_id="300120000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="17" coolt_tbl_id="17" desc="STR_ZONE_NAME_IDAbRe_Up3_Lamiren_SP" enter_min_level_dark="51" enter_min_level_light="51" f2p_coolt_tbl_id="1017" id="17" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Lamiren" world_id="300130000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="18" coolt_tbl_id="18" desc="STR_ZONE_NAME_IDShulackShip" enter_min_level_dark="40" enter_min_level_light="40" f2p_coolt_tbl_id="1018" id="18" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDShulackShip" world_id="300100000" />
   <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="19" coolt_tbl_id="19" desc="STR_ZONE_NAME_IDAb1_Dreadgion" enter_max_level_dark="50" enter_max_level_light="50" enter_min_level_dark="46" enter_min_level_light="46" exit_alias_1="AB1_IDAB1_DREADGION_OUTAREA_01" exit_alias_2="AB1_IDAB1_DREADGION_OUTAREA_02" exit_world_1="Ab1" exit_world_2="Ab1" f2p_coolt_tbl_id="1019" id="19" indun_type="dreadgion" max_member_dark="6" max_member_light="6" name="IDAb1_Dreadgion" share_max_member="1" world_id="300110000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="20" coolt_tbl_id="20" desc="STR_ZONE_NAME_IdAbGateL1" enter_min_level_light="15" f2p_coolt_tbl_id="1020" id="20" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDABGATEL1" world_id="310030000" />
@@ -43,117 +43,135 @@
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="41" coolt_tbl_id="41" desc="STR_ZONE_NAME_IDLF1B_Stigma" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1041" id="41" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDLF1B_stigma" world_id="310070000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="42" coolt_tbl_id="42" desc="STR_ZONE_NAME_IDSpace" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1042" id="42" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDSpace" world_id="320070000" />
   <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="43" coolt_tbl_id="43" desc="STR_ZONE_NAME_IDDreadgion_02" enter_max_level_dark="55" enter_max_level_light="55" enter_min_level_dark="51" enter_min_level_light="51" exit_alias_1="LF4_IDDreadgion_02_OUTAREA_01" exit_alias_2="DF4_IDDreadgion_02_OUTAREA_02" exit_world_1="LF4" exit_world_2="DF4" f2p_coolt_tbl_id="1043" id="43" indun_type="dreadgion" max_member_dark="6" max_member_light="6" name="IDDreadgion_02" share_max_member="1" world_id="300210000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" desc="STR_ZONE_NAME_IDAbRe_Core" enter_min_level_dark="50" enter_min_level_light="50" id="44" indun_type="normal" max_member_dark="12" max_member_light="12" name="IDAbRe_Core" world_id="300220000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="44" coolt_tbl_id="44" desc="STR_ZONE_NAME_IDAbRe_Core" enter_min_level_dark="55" enter_min_level_light="55" f2p_coolt_tbl_id="1170" id="44" indun_type="normal" max_member_dark="12" max_member_light="12" name="IDAbRe_Core" world_id="300220000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="45" coolt_tbl_id="45" desc="STR_ZONE_NAME_IDCromede" enter_min_level_dark="37" enter_min_level_light="37" f2p_coolt_tbl_id="1045" id="45" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDCromede" world_id="300230000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="46" coolt_tbl_id="46" desc="STR_ZONE_NAME_IDNovice" enter_min_level_dark="16" enter_min_level_light="16" f2p_coolt_tbl_id="1046" id="46" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDNovice" world_id="300200000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="49" coolt_tbl_id="49" desc="STR_ZONE_NAME_IDYun" enter_min_level_dark="57" enter_min_level_light="57" f2p_coolt_tbl_id="1049" id="49" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDYun" world_id="300280000" />
-  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="50" coolt_tbl_id="50" desc="STR_ZONE_NAME_IDStation" enter_min_level_dark="55" enter_min_level_light="55" f2p_coolt_tbl_id="1050" id="50" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDStation" world_id="300240000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="51" coolt_tbl_id="51" desc="STR_ZONE_NAME_idf4re_drana" enter_min_level_dark="50" enter_min_level_light="50" f2p_coolt_tbl_id="1051" id="51" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDF4Re_Drana" world_id="300250000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="49" coolt_tbl_id="49" desc="STR_ZONE_NAME_IDYun" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1049" id="49" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDYun" world_id="300280000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="50" coolt_tbl_id="50" desc="STR_ZONE_NAME_IDStation" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1050" id="50" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDStation" world_id="300240000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="51" coolt_tbl_id="51" desc="STR_ZONE_NAME_idf4re_drana" enter_min_level_dark="51" enter_min_level_light="51" f2p_coolt_tbl_id="1051" id="51" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDF4Re_Drana" world_id="300250000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="52" coolt_tbl_id="52" desc="STR_ZONE_NAME_IDTest_Dungeon" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1052" id="52" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDTest_Dungeon" world_id="300020000" />
   <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="53" coolt_tbl_id="53" desc="STR_ZONE_NAME_IDTest_Dungeon" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1053" id="53" indun_type="normal" max_member_dark="6" max_member_light="6" name="test_mrt_idzone" world_id="300290000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="54" coolt_tbl_id="54" desc="STR_ZONE_NAME_IDArena" enter_min_level_dark="50" enter_min_level_light="50" exit_alias_1="IDArena_Out_01" exit_alias_2="IDArena_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1054" id="54" indun_type="arena" max_member_dark="6" max_member_light="6" name="IDArena" world_id="300300000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="54" coolt_tbl_id="54" desc="STR_ZONE_NAME_IDArena" enter_min_level_dark="80" enter_min_level_light="80" exit_alias_1="IDArena_Out_01" exit_alias_2="IDArena_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1054" id="54" indun_type="arena" max_member_dark="6" max_member_light="6" name="IDArena" world_id="300300000" />
   <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="55" coolt_tbl_id="55" desc="STR_ZONE_NAME_IDTest_Dungeon" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1055" id="55" indun_type="arena" max_member_dark="48" max_member_light="48" name="Test_IDArena" world_id="900120000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="57" coolt_tbl_id="57" desc="STR_ZONE_NAME_IDArena_Solo" enter_min_level_dark="50" enter_min_level_light="50" exit_alias_1="IDArena_Solo_Out_01" exit_alias_2="IDArena_Solo_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1057" id="57" indun_type="arena" max_member_dark="1" max_member_light="1" name="IDArena_Solo" world_id="300320000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="57" coolt_tbl_id="57" desc="STR_ZONE_NAME_IDArena_Solo" enter_min_level_dark="80" enter_min_level_light="80" exit_alias_1="IDArena_Solo_Out_01" exit_alias_2="IDArena_Solo_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1057" id="57" indun_type="arena" max_member_dark="1" max_member_light="1" name="IDArena_Solo" world_id="300320000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="58" coolt_tbl_id="58" desc="STR_ZONE_NAME_housing_idlf_personal" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1058" id="58" indun_type="normal" max_member_dark="1" max_member_light="1" name="housing_idlf_personal" world_id="720010000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="59" coolt_tbl_id="59" desc="STR_ZONE_NAME_housing_iddf_personal" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1059" id="59" indun_type="normal" max_member_dark="1" max_member_light="1" name="housing_iddf_personal" world_id="730010000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="60" coolt_tbl_id="60" desc="STR_ZONE_NAME_IDArena_pvp01" enter_min_level_dark="51" enter_min_level_light="51" exit_alias_1="IDArena_pvp01_Out_01" exit_alias_2="IDArena_pvp01_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1060" id="61" indun_type="arenapvp" max_member_dark="8" max_member_light="8" name="IDArena_pvp01" share_max_member="2" world_id="300350000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="61" coolt_tbl_id="61" desc="STR_ZONE_NAME_IDArena_pvp02" enter_min_level_dark="51" enter_min_level_light="51" exit_alias_1="IDArena_pvp02_Out_01" exit_alias_2="IDArena_pvp02_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1061" id="62" indun_type="arenapvp" max_member_dark="2" max_member_light="2" name="IDArena_pvp02" share_max_member="2" world_id="300360000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="60" coolt_tbl_id="60" desc="STR_ZONE_NAME_IDArena_pvp01" enter_min_level_dark="80" enter_min_level_light="80" exit_alias_1="IDArena_pvp01_Out_01" exit_alias_2="IDArena_pvp01_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1060" id="61" indun_type="arenapvp" max_member_dark="8" max_member_light="8" name="IDArena_pvp01" share_max_member="2" world_id="300350000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="61" coolt_tbl_id="61" desc="STR_ZONE_NAME_IDArena_pvp02" enter_min_level_dark="80" enter_min_level_light="80" exit_alias_1="IDArena_pvp02_Out_01" exit_alias_2="IDArena_pvp02_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1061" id="62" indun_type="arenapvp" max_member_dark="2" max_member_light="2" name="IDArena_pvp02" share_max_member="2" world_id="300360000" />
   <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="66" coolt_tbl_id="66" desc="STR_ZONE_NAME_IDDramata_01" enter_min_level_dark="55" enter_min_level_light="55" f2p_coolt_tbl_id="1066" id="68" indun_type="normal" max_member_dark="12" max_member_light="12" name="IDDramata_01" world_id="320150000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="67" coolt_tbl_id="67" desc="STR_ZONE_NAME_IDArena_pvp01_T" enter_min_level_dark="51" enter_min_level_light="51" exit_alias_1="IDArena_pvp01_T_Out_01" exit_alias_2="IDArena_pvp01_T_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1067" id="69" indun_type="arenapvp" max_member_dark="8" max_member_light="8" name="IDArena_pvp01_T" share_max_member="2" world_id="300420000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="68" coolt_tbl_id="68" desc="STR_ZONE_NAME_IDArena_pvp02_T" enter_min_level_dark="51" enter_min_level_light="51" exit_alias_1="IDArena_pvp02_T_Out_01" exit_alias_2="IDArena_pvp02_T_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1068" id="70" indun_type="arenapvp" max_member_dark="2" max_member_light="2" name="IDArena_pvp02_T" share_max_member="2" world_id="300430000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="67" coolt_tbl_id="67" desc="STR_ZONE_NAME_IDArena_pvp01_T" enter_min_level_dark="88" enter_min_level_light="88" exit_alias_1="IDArena_pvp01_T_Out_01" exit_alias_2="IDArena_pvp01_T_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1067" id="69" indun_type="arenapvp" max_member_dark="8" max_member_light="8" name="IDArena_pvp01_T" share_max_member="2" world_id="300420000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="68" coolt_tbl_id="68" desc="STR_ZONE_NAME_IDArena_pvp02_T" enter_min_level_dark="88" enter_min_level_light="88" exit_alias_1="IDArena_pvp02_T_Out_01" exit_alias_2="IDArena_pvp02_T_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1068" id="70" indun_type="arenapvp" max_member_dark="2" max_member_light="2" name="IDArena_pvp02_T" share_max_member="2" world_id="300430000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="70" coolt_tbl_id="70" desc="STR_ZONE_NAME_IDDreadgion_03" enter_max_level_dark="65" enter_max_level_light="65" enter_min_level_dark="56" enter_min_level_light="56" exit_alias_1="LF5_IDDreadgion_03_Out_Area" exit_alias_2="DF5_IDDreadgion_03_Out_Area" exit_world_1="LF5" exit_world_2="DF5" f2p_coolt_tbl_id="1070" id="73" indun_type="dreadgion" max_member_dark="6" max_member_light="6" name="IDDreadgion_03" share_max_member="1" world_id="300440000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="71" coolt_tbl_id="71" desc="STR_ZONE_NAME_IDArena_team01" enter_min_level_dark="51" enter_min_level_light="51" exit_alias_1="IDArena_team01_Out_01" exit_alias_2="IDArena_team01_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1071" id="74" indun_type="arenateam" max_member_dark="6" max_member_light="6" name="IDArena_team01" share_max_member="2" world_id="300450000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="71" coolt_tbl_id="71" desc="STR_ZONE_NAME_IDArena_team01" enter_min_level_dark="80" enter_min_level_light="80" exit_alias_1="IDArena_team01_Out_01" exit_alias_2="IDArena_team01_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1071" id="74" indun_type="arenateam" max_member_dark="6" max_member_light="6" name="IDArena_team01" share_max_member="2" world_id="300450000" />
   <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="72" coolt_tbl_id="72" desc="STR_ZONE_NAME_IDShulackShip_Solo" enter_min_level_dark="40" enter_min_level_light="40" f2p_coolt_tbl_id="1072" id="75" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDShulackShip_Solo" world_id="300460000" />
-  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="74" coolt_tbl_id="74" desc="STR_ZONE_NAME_IDLDF5RE_solo" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1074" id="77" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDLDF5RE_Solo" world_id="300480000" />
-  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="77" coolt_tbl_id="77" desc="STR_ZONE_NAME_IDTiamat_1" enter_min_level_dark="57" enter_min_level_light="57" f2p_coolt_tbl_id="1077" id="80" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDTiamat_1" world_id="300510000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="78" coolt_tbl_id="78" desc="STR_ZONE_NAME_IDTiamat_2" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1078" id="81" indun_type="normal" max_member_dark="12" max_member_light="12" name="IDTiamat_2" world_id="300520000" />
-  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="80" coolt_tbl_id="80" desc="STR_ZONE_NAME_IDLDF5b_TD" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1080" id="83" indun_type="score" max_member_dark="24" max_member_light="24" name="IDLDF5b_TD" world_id="300540000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="81" coolt_tbl_id="81" desc="STR_ZONE_NAME_IDArena_Glory" enter_min_level_dark="56" enter_min_level_light="56" exit_alias_1="IDArena_Glory_Out_01" exit_alias_2="IDArena_Glory_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1081" id="84" indun_type="arenapvp" max_member_dark="4" max_member_light="4" name="IDArena_Glory" share_max_member="2" world_id="300550000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="74" coolt_tbl_id="74" desc="STR_ZONE_NAME_IDLDF5RE_solo" enter_min_level_dark="88" enter_min_level_light="88" f2p_coolt_tbl_id="1074" id="77" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDLDF5RE_Solo" world_id="300480000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="77" coolt_tbl_id="77" desc="STR_ZONE_NAME_IDTiamat_1" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1077" id="80" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDTiamat_1" world_id="300510000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="78" coolt_tbl_id="78" desc="STR_ZONE_NAME_IDTiamat_2" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1078" id="81" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDTiamat_2" world_id="300520000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="79" coolt_tbl_id="79" desc="STR_ZONE_NAME_IDLDF5RE_02" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1079" id="82" indun_type="score" max_member_dark="6" max_member_light="6" name="IDLDF5Re_02" world_id="300530000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="80" coolt_tbl_id="80" desc="STR_ZONE_NAME_IDLDF5b_TD" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1080" id="83" indun_type="score" max_member_dark="6" max_member_light="6" name="IDLDF5b_TD" world_id="300540000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="81" coolt_tbl_id="81" desc="STR_ZONE_NAME_IDArena_Glory" enter_min_level_dark="80" enter_min_level_light="80" exit_alias_1="IDArena_Glory_Out_01" exit_alias_2="IDArena_Glory_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1081" id="84" indun_type="arenapvp" max_member_dark="4" max_member_light="4" name="IDArena_Glory" share_max_member="2" world_id="300550000" />
   <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="82" coolt_tbl_id="82" desc="STR_ZONE_NAME_IDDF2Flying_Event01" enter_min_level_dark="45" enter_min_level_light="45" f2p_coolt_tbl_id="1082" id="85" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDDF2Flying_Event01" world_id="300560000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="83" coolt_tbl_id="83" desc="STR_ZONE_NAME_IDArena_team01_T" enter_min_level_dark="51" enter_min_level_light="51" exit_alias_1="IDArena_team01_T_Out_01" exit_alias_2="IDArena_team01_T_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1083" id="86" indun_type="arenateam" max_member_dark="6" max_member_light="6" name="IDArena_team01_T" share_max_member="2" world_id="300570000" />
-  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="100" coolt_tbl_id="100" desc="STR_ZONE_NAME_IDLDF5_Under_01" enter_min_level_dark="63" enter_min_level_light="63" f2p_coolt_tbl_id="1100" id="88" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_01" world_id="300590000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="83" coolt_tbl_id="83" desc="STR_ZONE_NAME_IDArena_team01_T" enter_min_level_dark="88" enter_min_level_light="88" exit_alias_1="IDArena_team01_T_Out_01" exit_alias_2="IDArena_team01_T_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1083" id="86" indun_type="arenateam" max_member_dark="6" max_member_light="6" name="IDArena_team01_T" share_max_member="2" world_id="300570000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="99" coolt_tbl_id="99" desc="STR_ZONE_NAME_IDLDF5RE_03" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1099" id="87" indun_type="score" max_member_dark="6" max_member_light="6" name="IDLDF5Re_03" world_id="300580000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="100" coolt_tbl_id="100" desc="STR_ZONE_NAME_IDLDF5_Under_01" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1100" id="88" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_01" world_id="300590000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="52" coolt_tbl_id="52" desc="STR_ZONE_NAME_IDTest_Dungeon" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1074" id="89" indun_type="score" max_member_dark="1" max_member_light="1" name="IDLDF5RE_test" world_id="900130000" />
   <instance_rule can_enter_mentor="TRUE" desc="STR_ZONE_NAME_IDAbRe_Core_02" enter_min_level_dark="60" enter_min_level_light="60" id="90" indun_type="normal" max_member_dark="12" max_member_light="12" name="IDAbRe_Core_02" world_id="300600000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="85" coolt_tbl_id="85" desc="STR_ZONE_NAME_IDUnderpassRe" enter_min_level_dark="55" enter_min_level_light="55" f2p_coolt_tbl_id="1085" id="91" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDUnderpassRe" world_id="300700000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="86" coolt_tbl_id="86" desc="STR_ZONE_Name_Test_KGW" enter_max_level_dark="65" enter_max_level_light="65" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1086" id="92" indun_type="normal" max_member_dark="6" max_member_light="6" name="Test_KGW" world_id="900140000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="87" coolt_tbl_id="87" desc="STR_ZONE_Name_Test_Basic_Mj" enter_max_level_dark="65" enter_max_level_light="65" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1087" id="93" indun_type="normal" max_member_dark="6" max_member_light="6" name="Test_Basic_Mj" world_id="900150000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="90" coolt_tbl_id="90" desc="STR_ZONE_NAME_IDRuneweapon" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1090" id="94" indun_type="normal" max_member_dark="12" max_member_light="12" name="IDRuneweapon" world_id="300800000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="92" coolt_tbl_id="92" desc="STR_ZONE_NAME_IDArena_team01_T2" enter_min_level_dark="51" enter_min_level_light="51" exit_alias_1="IDArena_team01_T2_Out_01" exit_alias_2="IDArena_Team01_T2_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1092" id="97" indun_type="arenateam" max_member_dark="4" max_member_light="4" name="IDArena_team01_T2" share_max_member="2" world_id="301100000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="91" coolt_tbl_id="91" desc="STR_ZONE_NAME_IDRuneweapon_Q" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1091" id="95" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDRuneweapon_Q" world_id="300900000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="88" coolt_tbl_id="88" desc="STR_ZONE_NAME_IDLDF5RE_solo_Q" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1088" id="96" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDLDF5RE_Solo_Q" world_id="301000000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="92" coolt_tbl_id="92" desc="STR_ZONE_NAME_IDArena_team01_T2" enter_min_level_dark="88" enter_min_level_light="88" exit_alias_1="IDArena_team01_T2_Out_01" exit_alias_2="IDArena_Team01_T2_Out_02" exit_world_1="Arena_L_Lobby" exit_world_2="Arena_D_Lobby" f2p_coolt_tbl_id="1092" id="97" indun_type="arenateam" max_member_dark="4" max_member_light="4" name="IDArena_team01_T2" share_max_member="2" world_id="301100000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="89" coolt_tbl_id="89" desc="STR_ZONE_NAME_IDShulack_Rose_Solo_01" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1089" id="98" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDShulack_Rose_Solo_01" world_id="301010000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="93" coolt_tbl_id="93" desc="STR_ZONE_NAME_IDLDF5_Under_Rune" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1093" id="99" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_Rune" world_id="301110000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="94" coolt_tbl_id="94" desc="STR_ZONE_NAME_IDKamar" enter_max_level_dark="75" enter_max_level_light="75" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1094" id="100" indun_type="battlefield" max_member_dark="12" max_member_light="12" name="IDKamar" share_max_member="1" world_id="301120000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="94" coolt_tbl_id="94" desc="STR_ZONE_NAME_IDKamar" enter_max_level_dark="80" enter_max_level_light="80" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1094" id="100" indun_type="battlefield" max_member_dark="12" max_member_light="12" name="IDKamar" share_max_member="1" world_id="301120000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="95" coolt_tbl_id="95" desc="STR_ZONE_NAME_IDShulack_Rose_Solo_02" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1095" id="101" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDShulack_Rose_Solo_02" world_id="301020000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="96" coolt_tbl_id="96" desc="STR_ZONE_NAME_IDVritra_Base" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1096" id="103" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDVritra_Base" world_id="301130000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="97" coolt_tbl_id="97" desc="STR_ZONE_NAME_IDLDF5_Under_02" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1097" id="104" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_02" world_id="301140000" />
-  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="102" coolt_tbl_id="102" desc="STR_ZONE_NAME_IDAsteria_IU_Party" enter_min_level_dark="30" enter_min_level_light="30" f2p_coolt_tbl_id="1102" id="109" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAsteria_IU_Party" world_id="301160000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="106" coolt_tbl_id="106" desc="STR_ZONE_NAME_IDAsteria_IU_World" enter_min_level_dark="30" enter_min_level_light="30" f2p_coolt_tbl_id="1106" id="113" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAsteria_IU_World" world_id="301200000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="89" coolt_tbl_id="89" desc="STR_ZONE_NAME_IDShulack_Rose_01" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1089" id="105" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDShulack_Rose_01" world_id="301030000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="95" coolt_tbl_id="95" desc="STR_ZONE_NAME_IDShulack_Rose_02" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1095" id="106" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDShulack_Rose_02" world_id="301040000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="98" coolt_tbl_id="98" desc="STR_ZONE_NAME_IDShulack_Rose_03" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1098" id="107" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDShulack_Rose_03" world_id="301050000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="102" coolt_tbl_id="102" desc="STR_ZONE_NAME_IDAsteria_IU_Party" enter_min_level_dark="50" enter_min_level_light="50" f2p_coolt_tbl_id="1102" id="109" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAsteria_IU_Party" world_id="301160000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="79" coolt_tbl_id="103" desc="STR_ZONE_NAME_IDLDF5RE_02_L" enter_guild="TRUE" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1103" id="110" indun_type="score" max_member_dark="6" max_member_light="6" name="IDLDF5Re_02_L" world_id="301170000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="99" coolt_tbl_id="104" desc="STR_ZONE_NAME_IDLDF5RE_03_L" enter_guild="TRUE" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1104" id="111" indun_type="score" max_member_dark="6" max_member_light="6" name="IDLDF5Re_03_L" world_id="301180000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="74" coolt_tbl_id="105" desc="STR_ZONE_NAME_IDLDF5RE_Solo_L" enter_guild="TRUE" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1105" id="112" indun_type="score" max_member_dark="1" max_member_light="1" name="IDLDF5RE_Solo_L" world_id="301190000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="106" coolt_tbl_id="106" desc="STR_ZONE_NAME_IDAsteria_IU_World" enter_min_level_dark="50" enter_min_level_light="50" f2p_coolt_tbl_id="1106" id="113" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAsteria_IU_World" world_id="301200000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="107" coolt_tbl_id="107" desc="STR_ZONE_NAME_IDLDF5_Under_01_War" enter_max_level_dark="65" enter_max_level_light="65" enter_min_level_dark="61" enter_min_level_light="61" f2p_coolt_tbl_id="1107" id="114" indun_type="battlefield" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_01_War" share_max_member="1" world_id="301210000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="108" coolt_tbl_id="108" desc="STR_ZONE_NAME_IDF5_TD_War" enter_max_level_dark="75" enter_max_level_light="75" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1108" id="115" indun_type="battlefield" max_member_dark="24" max_member_light="24" name="IDF5_TD_War" share_max_member="1" world_id="301220000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="108" coolt_tbl_id="108" desc="STR_ZONE_NAME_IDF5_TD_War" enter_max_level_dark="75" enter_max_level_light="75" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1108" id="115" indun_type="battlefield" max_member_dark="24" max_member_light="24" name="IDF5_TD_War" share_max_member="1" world_id="301220000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="109" coolt_tbl_id="109" desc="STR_ZONE_NAME_IDLDF5_Under_03" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1109" id="116" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_03" world_id="301230000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="110" coolt_tbl_id="110" desc="STR_ZONE_NAME_IDAbRe_Up3_Crotan_02" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1110" id="117" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Crotan_02" world_id="301260000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="111" coolt_tbl_id="111" desc="STR_ZONE_NAME_IDAbRe_Up3_Dkisas_02" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1111" id="118" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Dkisas_02" world_id="301240000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="112" coolt_tbl_id="112" desc="STR_ZONE_NAME_IDAbRe_Up3_Lamiren_02" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1112" id="119" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Lamiren_02" world_id="301250000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="113" coolt_tbl_id="113" desc="STR_ZONE_NAME_Test_TagMatch" enter_max_level_dark="65" enter_max_level_light="65" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1113" id="120" indun_type="timeattack" max_member_dark="6" max_member_light="6" name="Test_TagMatch" world_id="900190000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="114" coolt_tbl_id="114" desc="STR_ZONE_NAME_IDLDF4Re_01" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1114" id="121" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDLDF4Re_01" world_id="301270000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="110" coolt_tbl_id="115" desc="STR_ZONE_NAME_IDAbRe_Up3_Crotan_02_N" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1115" id="122" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Crotan_02_N" world_id="301300000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="111" coolt_tbl_id="116" desc="STR_ZONE_NAME_IDAbRe_Up3_Dkisas_02_N" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1116" id="123" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Dkisas_02_N" world_id="301280000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="112" coolt_tbl_id="117" desc="STR_ZONE_NAME_IDAbRe_Up3_Lamiren_02_N" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1117" id="124" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAbRe_Up3_Lamiren_02_N" world_id="301290000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="118" coolt_tbl_id="118" desc="STR_ZONE_NAME_IDLDF5_Fortress_Re" enter_max_level_dark="65" enter_max_level_light="65" enter_min_level_dark="61" enter_min_level_light="61" f2p_coolt_tbl_id="1118" id="125" indun_type="battlefield" max_member_dark="6" max_member_light="6" name="IDLDF5_Fortress_Re" share_max_member="1" world_id="301310000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="119" coolt_tbl_id="119" desc="STR_ZONE_NAME_IDLDF5_Under_01_PC" enter_min_level_dark="63" enter_min_level_light="63" f2p_coolt_tbl_id="1119" id="126" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_01_PC" world_id="301320000" />
-  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="120" coolt_tbl_id="120" desc="STR_ZONE_NAME_IDLDF5_Under_Rune_PC" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1120" id="127" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_Rune_PC" world_id="301330000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="120" coolt_tbl_id="120" desc="STR_ZONE_NAME_IDLDF5_Under_Rune_PC" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1120" id="127" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_Rune_PC" world_id="301330000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="121" coolt_tbl_id="121" desc="STR_ZONE_NAME_test_timeattack" enter_max_level_dark="65" enter_max_level_light="65" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1121" id="128" indun_type="timeattack" max_member_dark="6" max_member_light="6" name="test_timeattack" world_id="900200000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="122" coolt_tbl_id="122" desc="STR_ZONE_NAME_IDLDF4Re_01" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1122" id="129" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDLDF4Re_01_Q" world_id="301340000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="124" coolt_tbl_id="124" desc="STR_ZONE_NAME_IDLDF5_Under_Rune_H" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1124" id="131" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_Rune_H" world_id="301360000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="125" coolt_tbl_id="125" desc="STR_ZONE_NAME_IDLDF5_Under_03_Hard" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1125" id="132" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_03_H" world_id="301370000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="999" coolt_tbl_id="121" desc="STR_ZONE_NAME_IDTournament_Test" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1121" id="133" indun_type="tournament" max_member_dark="255" max_member_light="255" name="IDTournament_Stage_Test" world_id="900210000" />
-  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="126" coolt_tbl_id="126" desc="STR_ZONE_NAME_IDLDF5_Under_02_E" enter_min_level_dark="63" enter_min_level_light="63" f2p_coolt_tbl_id="1126" id="134" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_02_E" world_id="301380000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="126" coolt_tbl_id="126" desc="STR_ZONE_NAME_IDLDF5_Under_02_E" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1126" id="134" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_02_E" world_id="301380000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="127" coolt_tbl_id="127" desc="STR_ZONE_NAME_IDSeal" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1127" id="135" indun_type="normal" max_member_dark="12" max_member_light="12" name="IDSeal" world_id="301390000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="128" coolt_tbl_id="128" desc="STR_ZONE_NAME_IDSweep" enter_min_level_dark="40" enter_min_level_light="40" f2p_coolt_tbl_id="1128" id="136" indun_type="score" max_member_dark="3" max_member_light="3" name="IDSweep" world_id="301400000" />
-  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="129" coolt_tbl_id="129" desc="STR_ZONE_NAME_IDRaksha_solo" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1129" id="137" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDRaksha_solo" world_id="300610000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="129" coolt_tbl_id="129" desc="STR_ZONE_NAME_IDRaksha_solo" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1129" id="137" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDRaksha_solo" world_id="300610000" />
   <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="130" coolt_tbl_id="130" desc="STR_ZONE_NAME_IDYun_hard" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1130" id="138" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDYun_Hard" world_id="300620000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="131" coolt_tbl_id="131" desc="STR_ZONE_NAME_IDLegion_main" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1131" id="139" indun_type="score" max_member_dark="12" max_member_light="12" name="IDLegion" world_id="301500000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="FALSE" coolt_sync_id="131" coolt_tbl_id="131" desc="STR_ZONE_NAME_IDLegion_main" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1131" id="139" indun_type="score" max_member_dark="12" max_member_light="12" name="IDLegion" world_id="301500000" />
   <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="132" coolt_tbl_id="132" desc="STR_ZONE_NAME_IDTiamat_2_Hard" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1132" id="140" indun_type="normal" max_member_dark="12" max_member_light="12" name="IDTiamat_2_Hard" world_id="300630000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="999" coolt_tbl_id="121" desc="STR_ZONE_NAME_IDTournament_Test_Lobby" enter_min_level_dark="1" enter_min_level_light="1" f2p_coolt_tbl_id="1121" id="141" indun_type="tournament" max_member_dark="255" max_member_light="255" name="IDTournament_Lobby_Test" world_id="900230000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="133" coolt_tbl_id="133" desc="STR_ZONE_NAME_IDElemental_2_E" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1133" id="142" indun_type="score" max_member_dark="1" max_member_light="1" name="IDElemental_2_E" world_id="301510000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="134" coolt_tbl_id="134" desc="STR_ZONE_NAME_IDSeal_Q" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1134" id="143" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDSeal_Q" world_id="301520000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="136" coolt_tbl_id="136" desc="STR_ZONE_NAME_IDEternity_01" enter_min_level_dark="66" enter_min_level_light="66" exit_alias_1="LF6_Start_Alias" exit_alias_2="DF6_Start_Alias" exit_world_1="LF6" exit_world_2="DF6" f2p_coolt_tbl_id="1136" id="145" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDEternity_01" world_id="301540000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="137" coolt_tbl_id="137" desc="STR_ZONE_NAME_IDEternity_02" enter_min_level_dark="66" enter_min_level_light="66" exit_alias_1="LF6_Start_Alias" exit_alias_2="DF6_Start_Alias" exit_world_1="LF6" exit_world_2="DF6" f2p_coolt_tbl_id="1137" id="146" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDEternity_02" world_id="301550000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="138" coolt_tbl_id="138" desc="STR_ZONE_NAME_IDEternity_03" enter_min_level_dark="66" enter_min_level_light="66" exit_alias_1="LF6_Start_Alias" exit_alias_2="DF6_Start_Alias" exit_world_1="LF6" exit_world_2="DF6" f2p_coolt_tbl_id="1138" id="147" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDEternity_03" ui_gauge_max="100" world_id="301560000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="138" coolt_tbl_id="138" desc="STR_ZONE_NAME_IDEternity_03" enter_min_level_dark="80" enter_min_level_light="80" exit_alias_1="LF6_Start_Alias" exit_alias_2="DF6_Start_Alias" exit_world_1="LF6" exit_world_2="DF6" f2p_coolt_tbl_id="1138" id="147" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDEternity_03" ui_gauge_max="100" world_id="301560000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="139" coolt_tbl_id="139" desc="STR_ZONE_NAME_IDEternity_01_Q" enter_min_level_dark="65" enter_min_level_light="65" exit_alias_1="LF6_Start_Alias_Q" exit_alias_2="DF6_Start_Alias_Q" exit_world_1="LF6" exit_world_2="DF6" f2p_coolt_tbl_id="1139" id="148" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDEternity_Q" world_id="301570000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="140" coolt_tbl_id="140" desc="STR_ZONE_NAME_IDF6_OP" enter_min_level_dark="65" enter_min_level_light="65" f2p_coolt_tbl_id="1140" id="149" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDF6_OP" world_id="301580000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="141" coolt_tbl_id="141" desc="STR_ZONE_NAME_IDSweep_02" enter_min_level_dark="45" enter_min_level_light="45" f2p_coolt_tbl_id="1141" id="150" indun_type="score" max_member_dark="3" max_member_light="3" name="IDSweep_02" world_id="301590000" />
   <instance_rule can_enter_mentor="FALSE" desc="STR_ZONE_NAME_IDTournament_Test_Lobby" enter_max_level_dark="65" enter_max_level_light="65" enter_min_level_dark="65" enter_min_level_light="65" id="151" indun_type="tournament" max_member_dark="12" max_member_light="12" name="IDTournament_Test_01" world_id="900240000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="142" coolt_tbl_id="142" desc="STR_ZONE_NAME_IDF6_Adma" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1142" id="152" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDF6_Adma" world_id="301600000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="143" coolt_tbl_id="143" desc="STR_ZONE_NAME_IDF6_Lap" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1143" id="153" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDF6_Lap" world_id="301610000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="144" coolt_tbl_id="144" desc="STR_ZONE_NAME_IDF6_Dragon" enter_min_level_dark="69" enter_min_level_light="69" f2p_coolt_tbl_id="1144" id="154" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDF6_Dragon" world_id="301620000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="142" coolt_tbl_id="142" desc="STR_ZONE_NAME_IDF6_Adma" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1142" id="152" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDF6_Adma" world_id="301600000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="143" coolt_tbl_id="143" desc="STR_ZONE_NAME_IDF6_Lap" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1143" id="153" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDF6_Lap" world_id="301610000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="144" coolt_tbl_id="144" desc="STR_ZONE_NAME_IDF6_Dragon" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1144" id="154" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDF6_Dragon" world_id="301620000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="145" coolt_tbl_id="145" desc="STR_ZONE_NAME_IDLuna_def" enter_min_level_dark="10" enter_min_level_light="10" f2p_coolt_tbl_id="1145" id="155" indun_type="score" max_member_dark="1" max_member_light="1" name="IDLuna_def" world_id="301630000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="145" coolt_tbl_id="145" desc="STR_ZONE_NAME_IDLuna_siege" enter_min_level_dark="10" enter_min_level_light="10" f2p_coolt_tbl_id="1145" id="156" indun_type="score" max_member_dark="1" max_member_light="1" name="IDLuna_siege" world_id="301640000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="147" coolt_tbl_id="147" desc="STR_ZONE_NAME_IDDreadgion_04" enter_max_level_dark="75" enter_max_level_light="75" enter_min_level_dark="66" enter_min_level_light="66" exit_alias_1="LF5_IDDreadgion_03_Out_Area" exit_alias_2="DF5_IDDreadgion_03_Out_Area" exit_world_1="LF5" exit_world_2="DF5" f2p_coolt_tbl_id="1147" id="157" indun_type="dreadgion" max_member_dark="6" max_member_light="6" name="IDDreadgion_04" share_max_member="1" world_id="301650000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="148" coolt_tbl_id="148" desc="STR_ZONE_NAME_IDF6_LF1" enter_min_level_dark="72" enter_min_level_light="72" f2p_coolt_tbl_id="1148" id="158" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDF6_LF1" world_id="301660000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="149" coolt_tbl_id="149" desc="STR_ZONE_NAME_IDLDF5_Under_02_War" enter_max_level_dark="75" enter_max_level_light="75" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1149" id="159" indun_type="battlefield" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_02_War" share_max_member="1" world_id="301670000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="147" coolt_tbl_id="147" desc="STR_ZONE_NAME_IDDreadgion_04" enter_max_level_dark="80" enter_max_level_light="80" enter_min_level_dark="80" enter_min_level_light="80" exit_alias_1="LF5_IDDreadgion_03_Out_Area" exit_alias_2="DF5_IDDreadgion_03_Out_Area" exit_world_1="LF5" exit_world_2="DF5" f2p_coolt_tbl_id="1147" id="157" indun_type="dreadgion" max_member_dark="6" max_member_light="6" name="IDDreadgion_04" share_max_member="1" world_id="301650000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="148" coolt_tbl_id="148" desc="STR_ZONE_NAME_IDF6_LF1" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1148" id="158" indun_type="normal" max_member_dark="3" max_member_light="3" name="IDF6_LF1" world_id="301660000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="149" coolt_tbl_id="149" desc="STR_ZONE_NAME_IDLDF5_Under_02_War" enter_max_level_dark="80" enter_max_level_light="80" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1149" id="159" indun_type="battlefield" max_member_dark="6" max_member_light="6" name="IDLDF5_Under_02_War" share_max_member="1" world_id="301670000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="150" coolt_tbl_id="150" desc="STR_ZONE_NAME_IDLDF5_Fortress_War" enter_max_level_dark="75" enter_max_level_light="75" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1150" id="160" indun_type="battlefield" max_member_dark="6" max_member_light="6" name="IDLDF5_Fortress_War" share_max_member="1" world_id="301680000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="151" coolt_tbl_id="151" desc="STR_ZONE_NAME_IDDF2_Dflame_Event" enter_min_level_dark="40" enter_min_level_light="40" f2p_coolt_tbl_id="1151" id="161" indun_type="score" max_member_dark="3" max_member_light="3" name="IDDF2_Dflame_Event" world_id="302000000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="152" coolt_tbl_id="152" desc="STR_ZONE_NAME_IDF6_Q" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1152" id="162" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDF6_Q" world_id="301690000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="153" coolt_tbl_id="153" desc="STR_ZONE_NAME_IDTransform" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1153" id="163" indun_type="score" max_member_dark="1" max_member_light="1" name="IDTransform" world_id="302100000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="153" coolt_tbl_id="153" desc="STR_ZONE_NAME_IDTransform" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1153" id="163" indun_type="score" max_member_dark="1" max_member_light="1" name="IDTransform" world_id="302100000" />
   <instance_rule can_enter_mentor="FALSE" desc="STR_ZONE_NAME_IDTM_Arena_01" enter_min_level_dark="66" enter_min_level_light="66" id="166" indun_type="tournament" max_member_dark="32" max_member_light="32" name="IDTM_Arena_01" world_id="302310000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="157" coolt_tbl_id="157" desc="STR_ZONE_NAME_IDTM_Lobby_01" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1157" id="167" indun_type="tournament" max_member_dark="32" max_member_light="32" name="IDTM_Lobby_01" world_id="302320000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="157" coolt_tbl_id="157" desc="STR_ZONE_NAME_IDTM_Lobby_01" enter_min_level_dark="50" enter_min_level_light="50" f2p_coolt_tbl_id="1157" id="167" indun_type="tournament" max_member_dark="32" max_member_light="32" name="IDTM_Lobby_01" world_id="302320000" />
   <instance_rule can_enter_mentor="TRUE" coolt_sync_id="156" coolt_tbl_id="156" desc="STR_ZONE_NAME_IDEvent_Solo" enter_min_level_dark="46" enter_min_level_light="46" f2p_coolt_tbl_id="1156" id="168" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDEvent_Solo" world_id="302330000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="158" coolt_tbl_id="158" desc="STR_ZONE_NAME_IDAb1_Ere" enter_max_level_dark="75" enter_max_level_light="75" enter_min_level_dark="66" enter_min_level_light="66" exit_alias_1="L_UPOP_OUT" exit_alias_2="D_UPOP_OUT" exit_world_1="Ab1" exit_world_2="Ab1" f2p_coolt_tbl_id="1158" id="169" indun_type="normal" max_member_dark="12" max_member_light="12" name="IDAb1_Ere" ui_gauge_max="12" world_id="302340000" />
-  <instance_rule bonus_time="1200" bonus_warpoint="30" can_enter_mentor="FALSE" coolt_sync_id="159" coolt_tbl_id="159" desc="STR_ZONE_NAME_IDEternity_War" enter_max_level_dark="75" enter_max_level_light="75" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1159" id="170" indun_type="battlefield" intrusion_warpoint="30" max_member_dark="96" max_member_light="96" name="IDEternity_War" pc_kill_warpoint="50" share_max_member="1" using_warpoint="1" warpoint="30" world_id="302350000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="158" coolt_tbl_id="158" desc="STR_ZONE_NAME_IDAb1_Ere" enter_max_level_dark="75" enter_max_level_light="75" enter_min_level_dark="66" enter_min_level_light="66" exit_alias_1="L_UPOP_OUT" exit_alias_2="D_UPOP_OUT" exit_world_1="Ab1" exit_world_2="Ab1" f2p_coolt_tbl_id="1158" id="169" indun_type="normal" max_member_dark="24" max_member_light="24" name="IDAb1_Ere" ui_gauge_max="12" world_id="302340000" />
+  <instance_rule bonus_time="1200" bonus_warpoint="30" can_enter_mentor="FALSE" coolt_sync_id="159" coolt_tbl_id="159" desc="STR_ZONE_NAME_IDEternity_War" enter_max_level_dark="75" enter_max_level_light="75" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1159" id="170" indun_type="battlefield" intrusion_warpoint="30" max_member_dark="72" max_member_light="72" name="IDEternity_War" pc_kill_warpoint="50" share_max_member="1" using_warpoint="1" warpoint="30" world_id="302350000" />
   <instance_rule can_enter_mentor="FALSE" desc="STR_ZONE_NAME_IDTM_ArenaE_01" enter_min_level_dark="66" enter_min_level_light="66" id="171" indun_type="tournament" max_member_dark="96" max_member_light="96" name="IDTM_ArenaE_01" world_id="302360000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="160" coolt_tbl_id="160" desc="STR_ZONE_NAME_IDTM_LobbyE_01" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1160" id="172" indun_type="tournament" max_member_dark="96" max_member_light="96" name="IDTM_LobbyE_01" world_id="302370000" />
   <instance_rule can_enter_mentor="FALSE" desc="STR_ZONE_NAME_IDTM_ArenaP_01" enter_min_level_dark="66" enter_min_level_light="66" id="173" indun_type="tournament" max_member_dark="48" max_member_light="48" name="IDTM_ArenaP_01" world_id="302380000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="161" coolt_tbl_id="161" desc="STR_ZONE_NAME_IDTM_LobbyP_01" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1161" id="174" indun_type="tournament" max_member_dark="48" max_member_light="48" name="IDTM_LobbyP_01" world_id="302390000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="161" coolt_tbl_id="161" desc="STR_ZONE_NAME_IDTM_LobbyP_01" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1161" id="174" indun_type="tournament" max_member_dark="48" max_member_light="48" name="IDTM_LobbyP_01" world_id="302390000" />
   <instance_rule can_enter_mentor="FALSE" desc="STR_ZONE_NAME_IDTM_ArenaP_02" enter_min_level_dark="66" enter_min_level_light="66" id="175" indun_type="tournament" max_member_dark="48" max_member_light="48" name="IDTM_ArenaP_02" world_id="302410000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="162" coolt_tbl_id="162" desc="STR_ZONE_NAME_IDTM_LobbyP_02" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1162" id="176" indun_type="tournament" max_member_dark="48" max_member_light="48" name="IDTM_LobbyP_02" world_id="302420000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="163" coolt_tbl_id="163" desc="STR_ZONE_NAME_IDInfinity" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1163" id="177" indun_type="timeattack" max_member_dark="1" max_member_light="1" name="IDInfinity" ui_gauge_max="10" world_id="302400000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="164" coolt_tbl_id="164" desc="STR_ZONE_NAME_IDRun" enter_min_level_dark="10" enter_min_level_light="10" f2p_coolt_tbl_id="1164" id="178" indun_type="battlefield" max_member_dark="3" max_member_light="3" name="IDRun" world_id="301700000" />
-  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="165" coolt_tbl_id="165" desc="STR_ZONE_NAME_IDTransform_event" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1153" id="179" indun_type="score" max_member_dark="1" max_member_light="1" name="IDTransform_event" world_id="302110000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="166" coolt_tbl_id="166" desc="STR_ZONE_NAME_IDAb1_Heroes_L" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1166" id="180" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAb1_Heroes_L" world_id="310160000" />
-  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="167" coolt_tbl_id="167" desc="STR_ZONE_NAME_IDAbre_Core_03" enter_min_level_dark="66" enter_min_level_light="66" f2p_coolt_tbl_id="1167" id="181" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDAbRe_Core_03" world_id="301720000" />
-  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="168" coolt_tbl_id="168" desc="STR_ZONE_NAME_IDAb1_Heroes_D" enter_min_level_dark="66" enter_min_level_light="65" f2p_coolt_tbl_id="1168" id="182" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAb1_Heroes_D" world_id="320160000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="162" coolt_tbl_id="162" desc="STR_ZONE_NAME_IDTM_LobbyP_02" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1162" id="176" indun_type="tournament" max_member_dark="48" max_member_light="48" name="IDTM_LobbyP_02" world_id="302420000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="163" coolt_tbl_id="163" desc="STR_ZONE_NAME_IDInfinity" enter_min_level_dark="88" enter_min_level_light="88" f2p_coolt_tbl_id="1163" id="177" indun_type="timeattack" max_member_dark="1" max_member_light="1" name="IDInfinity" ui_gauge_max="10" world_id="302400000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="164" coolt_tbl_id="164" desc="STR_ZONE_NAME_IDRun" enter_min_level_dark="60" enter_min_level_light="60" f2p_coolt_tbl_id="1164" id="178" indun_type="battlefield" max_member_dark="3" max_member_light="3" name="IDRun" world_id="301700000" />
+  <instance_rule can_enter_mentor="FALSE" coolt_sync_id="165" coolt_tbl_id="165" desc="STR_ZONE_NAME_IDTransform_event" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1153" id="179" indun_type="score" max_member_dark="1" max_member_light="1" name="IDTransform_event" world_id="302110000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="166" coolt_tbl_id="166" desc="STR_ZONE_NAME_IDAb1_Heroes_L" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1166" id="180" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAb1_Heroes_L" world_id="310160000" />
+  <instance_rule can_enter_mentor="TRUE" coolt_sync_id="167" coolt_tbl_id="167" desc="STR_ZONE_NAME_IDAbre_Core_03" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1167" id="181" indun_type="normal" max_member_dark="1" max_member_light="1" name="IDAbRe_Core_03" world_id="301720000" />
+  <instance_rule bm_restrict_category="1" can_enter_mentor="TRUE" coolt_sync_id="168" coolt_tbl_id="168" desc="STR_ZONE_NAME_IDAb1_Heroes_D" enter_min_level_dark="80" enter_min_level_light="80" f2p_coolt_tbl_id="1168" id="182" indun_type="normal" max_member_dark="6" max_member_light="6" name="IDAb1_Heroes_D" world_id="320160000" />
   <instance_rule can_enter_mentor="FALSE" coolt_sync_id="169" coolt_tbl_id="169" desc="STR_ZONE_NAME_IDEvent_def" enter_min_level_dark="46" enter_min_level_light="46" f2p_coolt_tbl_id="1145" id="183" indun_type="score" max_member_dark="1" max_member_light="1" name="IDEvent_def" ui_gauge_max="3" using_warpoint="1" world_id="301631000" />
-  <cooldown id="1" maxcount="5" name="IDLF3_Castle_Indratoo" type="Daily" value="900" />
-  <cooldown id="2" maxcount="5" name="IDDF3_Dragon" type="Daily" value="900" />
-  <cooldown id="3" maxcount="0" name="IDDF2_Dflame" type="Daily" value="900" />
-  <cooldown id="4" maxcount="16" name="IDLF3lp" type="Daily" value="900" />
-  <cooldown id="5" maxcount="16" name="IDDF3_lp" type="Daily" value="900" />
-  <cooldown id="6" maxcount="16" name="IDLF2A_Lab" type="Daily" value="900" />
-  <cooldown id="7" maxcount="16" name="IDDF2A_Adma" type="Daily" value="900" />
-  <cooldown id="8" maxcount="5" name="IDAb1_MiniCastle" type="Daily" value="900" />
-  <cooldown id="9" maxcount="2" name="IDLF1" type="Daily" value="900" />
+  <cooldown id="1" maxcount="2" name="IDLF3_Castle_Indratoo" type="Daily" value="900" />
+  <cooldown id="2" maxcount="1" name="IDDF3_Dragon" type="Daily" value="900" />
+  <cooldown id="3" maxcount="1" name="IDDF2_Dflame" type="Daily" value="900" />
+  <cooldown id="4" maxcount="7" name="IDLF3lp" type="Daily" value="900" />
+  <cooldown id="5" maxcount="7" name="IDDF3_lp" type="Daily" value="900" />
+  <cooldown id="6" maxcount="1" name="IDLF2A_Lab" type="Daily" value="900" />
+  <cooldown id="7" maxcount="1" name="IDDF2A_Adma" type="Daily" value="900" />
+  <cooldown id="8" maxcount="2" name="IDAb1_MiniCastle" type="Daily" value="900" />
+  <cooldown id="9" maxcount="1" name="IDLF1" type="Daily" value="900" />
   <cooldown id="10" maxcount="1" name="IDAbRe_Low_Divine" type="Daily" value="900" />
   <cooldown id="11" maxcount="1" name="IDAbRe_Low_Eciel" type="Daily" value="900" />
   <cooldown id="12" maxcount="1" name="IDAbRe_Low_Wciel" type="Daily" value="900" />
@@ -162,17 +180,17 @@
   <cooldown id="15" maxcount="1" name="IDAbRe_Up3_Crotan" type="Daily" value="900" />
   <cooldown id="16" maxcount="1" name="IDAbRe_Up3_Dkisas" type="Daily" value="900" />
   <cooldown id="17" maxcount="1" name="IDAbRe_Up3_Lamiren" type="Daily" value="900" />
-  <cooldown id="18" maxcount="5" name="IDShulackShip" type="Daily" value="900" />
-  <cooldown id="19" maxcount="3" name="IDAb1_Dreadgion" type="Daily" value="900" />
+  <cooldown id="18" maxcount="2" name="IDShulackShip" type="Daily" value="900" />
+  <cooldown id="19" maxcount="2" name="IDAb1_Dreadgion" type="Daily" value="900" />
   <cooldown id="20" maxcount="1" name="IDABGATEL1" type="Relative" value="0" />
   <cooldown id="21" maxcount="1" name="IDABGATEL2" type="Relative" value="0" />
   <cooldown id="22" maxcount="1" name="IDABGATED1" type="Relative" value="0" />
   <cooldown id="23" maxcount="1" name="IDABGATED2" type="Relative" value="0" />
   <cooldown id="24" maxcount="1" name="IDDF2FLYING" type="Relative" value="0" />
-  <cooldown id="25" maxcount="5" name="IDLF3_CASTLE_LEHPAR" type="Daily" value="900" />
-  <cooldown id="26" maxcount="5" name="IDTemple_Up" type="Daily" value="900" />
-  <cooldown id="27" maxcount="5" name="IDTemple_Low" type="Daily" value="900" />
-  <cooldown id="28" maxcount="2" name="IDCatacombs" type="Daily" value="900" />
+  <cooldown id="25" maxcount="1" name="IDLF3_CASTLE_LEHPAR" type="Daily" value="900" />
+  <cooldown id="26" maxcount="1" name="IDTemple_Up" type="Daily" value="900" />
+  <cooldown id="27" maxcount="1" name="IDTemple_Low" type="Daily" value="900" />
+  <cooldown id="28" maxcount="1" name="IDCatacombs" type="Daily" value="900" />
   <cooldown id="29" maxcount="1" name="IDElim" type="Daily" value="900" />
   <cooldown id="30" maxcount="1" name="IDAbproL1" type="Relative" value="0" />
   <cooldown id="31" maxcount="1" name="IDAbproL2" type="Relative" value="0" />
@@ -188,10 +206,11 @@
   <cooldown id="41" maxcount="1" name="IDLF1B_stigma" type="Relative" value="0" />
   <cooldown id="42" maxcount="1" name="IDSpace" type="Relative" value="0" />
   <cooldown id="43" maxcount="3" name="IDDreadgion_02" type="Daily" value="900" />
-  <cooldown id="45" maxcount="5" name="IDCromede" type="Daily" value="900" />
-  <cooldown id="46" maxcount="16" name="IDNovice" type="Daily" value="900" />
-  <cooldown id="49" maxcount="3" name="IDYun" type="Daily" value="900" />
-  <cooldown id="50" maxcount="3" name="IDStation" type="Daily" value="900" />
+  <cooldown id="44" maxcount="1" name="IDAbRe_Core" type="Daily" value="900" />
+  <cooldown id="45" maxcount="2" name="IDCromede" type="Daily" value="900" />
+  <cooldown id="46" maxcount="7" name="IDNovice" type="Daily" value="900" />
+  <cooldown id="49" maxcount="1" name="IDYun" type="Daily" value="900" />
+  <cooldown id="50" maxcount="1" name="IDStation" type="Daily" value="900" />
   <cooldown id="51" maxcount="1" name="IDF4Re_Drana" type="Daily" value="900" />
   <cooldown id="52" maxcount="1" name="IDTest_Dungeon" type="Relative" value="0" />
   <cooldown id="53" maxcount="1" name="test_mrt_idzone" type="Relative" value="0" />
@@ -200,60 +219,76 @@
   <cooldown id="57" maxcount="1" name="IDArena_Solo" type="Daily" value="900" />
   <cooldown id="58" maxcount="1" name="housing_idlf_personal" type="Relative" value="0" />
   <cooldown id="59" maxcount="1" name="housing_iddf_personal" type="Relative" value="0" />
-  <cooldown id="60" maxcount="5" name="IDArena_pvp01" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="61" maxcount="5" name="IDArena_pvp02" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="66" maxcount="1" name="IDDramata_01" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="60" maxcount="1" name="IDArena_pvp01" type="Daily" value="900" />
+  <cooldown id="61" maxcount="1" name="IDArena_pvp02" type="Daily" value="900" />
+  <cooldown id="66" maxcount="5" name="IDDramata_01" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="67" maxcount="0" name="IDArena_pvp01_T" type="Daily" value="900" />
   <cooldown id="68" maxcount="0" name="IDArena_pvp02_T" type="Daily" value="900" />
   <cooldown id="70" maxcount="3" name="IDDreadgion_03" type="Daily" value="900" />
-  <cooldown id="71" maxcount="5" name="IDArena_team01" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="72" maxcount="5" name="IDShulackShip_Solo" type="Daily" value="900" />
+  <cooldown id="71" maxcount="1" name="IDArena_team01" type="Daily" value="900" />
+  <cooldown id="72" maxcount="2" name="IDShulackShip_Solo" type="Daily" value="900" />
+  <cooldown id="73" maxcount="1" name="IDTiamat_Reward" type="Daily" value="900" />
   <cooldown id="74" maxcount="1" name="IDLDF5RE_Solo" type="Relative" value="0" />
   <cooldown id="77" maxcount="1" name="IDTiamat_1" type="Daily" value="900" />
-  <cooldown id="78" maxcount="5" name="IDTiamat_2" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="78" maxcount="1" name="IDTiamat_2" type="Daily" value="900" />
+  <cooldown id="79" maxcount="1" name="IDLDF5Re_02" type="Daily" value="900" />
   <cooldown id="80" maxcount="1" name="IDLDF5b_TD" type="Daily" value="900" />
-  <cooldown id="81" maxcount="0" name="IDArena_Glory" type="Daily" value="900" />
+  <cooldown id="81" maxcount="1" name="IDArena_Glory" type="Daily" value="900" />
   <cooldown id="82" maxcount="1" name="IDDF2Flying_Event01" type="Daily" value="0" />
   <cooldown id="83" maxcount="0" name="IDArena_team01_T" type="Daily" value="900" />
-  <cooldown id="85" maxcount="1" name="IDUnderpassRe" type="Daily" value="900" />
+  <cooldown id="85" maxcount="5" name="IDUnderpassRe" type="Daily" value="900" />
   <cooldown id="86" maxcount="1" name="Test_Kgw" type="Relative" value="0" />
   <cooldown id="87" maxcount="1" name="Test_Basic_Mj" type="Relative" value="0" />
-  <cooldown id="90" maxcount="2" name="IDRuneweapon" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="88" maxcount="1" name="IDLDF5RE_solo_Q" type="Relative" value="0" />
+  <cooldown id="89" maxcount="1" name="IDShulack_Rose_1F" type="Daily" value="900" />
+  <cooldown id="90" maxcount="1" name="IDRuneweapon" type="Daily" value="900" />
   <cooldown id="92" maxcount="0" name="IDArena_Team01_T2" type="Daily" value="900" />
-  <cooldown id="93" maxcount="4" name="IDLDF5_Under_Rune" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="94" maxcount="1" name="IDKamar" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="93" maxcount="1" name="IDLDF5_Under_Rune" type="Daily" value="900" />
+  <cooldown id="94" maxcount="1" name="IDKamar" type="Daily" typevalue="Wed" value="900" />
+  <cooldown id="95" maxcount="1" name="IDShulack_Rose_2F" type="Daily" value="900" />
   <cooldown id="96" maxcount="1" name="IDVritra_Base" type="Daily" value="900" />
   <cooldown id="97" maxcount="1" name="IDLDF5_Under_02" type="Daily" value="900" />
-  <cooldown id="100" maxcount="4" name="IDLDF5_Under_01" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="102" maxcount="1" name="IDAsteria_IU_Party" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="106" maxcount="1" name="IDAsteria_IU_World" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="98" maxcount="1" name="IDShulack_Rose_3F" type="Daily" value="900" />
+  <cooldown id="99" maxcount="1" name="IDLDF5Re_03" type="Daily" value="900" />
+  <cooldown id="100" luna_cost="luna_dungeon_add_03" maxcount="1" name="IDLDF5_Under_01" type="Daily" typevalue="Wed" value="900" />
+  <cooldown id="102" maxcount="1" name="IDAsteria_IU_Party" type="Relative" value="0" />
+  <cooldown id="103" maxcount="1" name="IDLDF5Re_02_L" type="Daily" value="900" />
+  <cooldown id="104" maxcount="1" name="IDLDF5Re_03_L" type="Daily" value="900" />
+  <cooldown id="105" maxcount="1" name="IDLDF5RE_Solo_L" type="Daily" value="900" />
+  <cooldown id="106" maxcount="1" name="IDAsteria_IU_World" type="Daily" value="0" />
   <cooldown id="107" maxcount="1" name="IDLDF5_Under_01_War" type="Daily" value="900" />
   <cooldown id="108" maxcount="1" name="IDF5_TD_War" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="109" maxcount="4" name="IDLDF5_Under_03" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="110" maxcount="1" name="IDAbRe_Up3_Crotan_02" type="Daily" value="900" />
+  <cooldown id="111" maxcount="1" name="IDAbRe_Up3_Dkisas_02" type="Daily" value="900" />
+  <cooldown id="112" maxcount="1" name="IDAbRe_Up3_Lamiren_02" type="Daily" value="900" />
   <cooldown id="113" maxcount="10" name="Test_TagMatch" type="Relative" value="0" />
   <cooldown id="114" maxcount="1" name="IDLDF4Re_01" type="Daily" value="900" />
+  <cooldown id="115" maxcount="1" name="IDAbRe_Up3_Crotan_02_N" type="Daily" value="900" />
+  <cooldown id="116" maxcount="1" name="IDAbRe_Up3_Dkisas_02_N" type="Daily" value="900" />
+  <cooldown id="117" maxcount="1" name="IDAbRe_Up3_Lamiren_02_N" type="Daily" value="900" />
   <cooldown id="118" maxcount="1" name="IDLDF5_Fortress_Re" type="Daily" value="900" />
-  <cooldown id="119" maxcount="1" name="IDLDF5_Under_01_PC" type="Daily" value="0" />
-  <cooldown id="120" maxcount="1" name="IDLDF5_Under_Rune_PC" type="Daily" value="0" />
-  <cooldown id="121" maxcount="10" name="test_timeattack" type="Relative" value="0" />
+  <cooldown id="119" maxcount="1" name="IDLDF5_Under_01_PC" type="Relative" value="0" />
+  <cooldown id="120" maxcount="1" name="IDLDF5_Under_Rune_PC" type="Relative" value="0" />
+  <cooldown id="121" maxcount="1" name="test_timeattack" type="Relative" value="0" />
   <cooldown id="122" maxcount="1" name="IDLDF4Re_01_Q" type="Relative" value="0" />
-  <cooldown id="124" maxcount="4" name="IDLDF5_Under_Rune_H" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="124" maxcount="1" name="IDLDF5_Under_Rune_H" type="Daily" value="900" />
   <cooldown id="125" maxcount="4" name="IDLDF5_Under_03_H" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="126" maxcount="1" name="IDLDF5_Under_02_E" type="Daily" value="900" />
-  <cooldown id="127" maxcount="2" name="IDSeal" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="128" maxcount="1" name="IDSweep" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="126" luna_cost="luna_dungeon_add_03" maxcount="1" name="IDLDF5_Under_02_E" type="Daily" value="900" />
+  <cooldown id="127" maxcount="1" name="IDSeal" type="Daily" value="900" />
+  <cooldown id="128" maxcount="1" name="IDSweep" type="Daily" value="0" />
   <cooldown id="129" maxcount="3" name="IDRaksha_solo" type="Daily" value="900" />
   <cooldown id="130" maxcount="1" name="IDYun_Hard" type="Daily" value="900" />
   <cooldown id="131" maxcount="1" name="IDLegion" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="132" maxcount="1" name="IDTiamat_2_Hard" type="Daily" value="900" />
   <cooldown id="133" maxcount="7" name="IDElemental_2_E" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="134" maxcount="1" name="IDSeal_Q" type="Relative" value="0" />
-  <cooldown extra_count_buildup="4" extra_count_buildup_dailyreset="FALSE" extra_count_buildup_level="8" id="136" maxcount="4" name="IDEternity_01" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown extra_count_buildup="4" extra_count_buildup_dailyreset="FALSE" extra_count_buildup_level="8" id="137" maxcount="4" name="IDEternity_02" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="138" maxcount="4" name="IDEternity_03" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown extra_count_buildup="4" extra_count_buildup_dailyreset="FALSE" extra_count_buildup_level="8" id="136" luna_cost="luna_dungeon_add_02" maxcount="4" name="IDEternity_01" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown extra_count_buildup="4" extra_count_buildup_dailyreset="FALSE" extra_count_buildup_level="8" id="137" luna_cost="luna_dungeon_add_02" maxcount="4" name="IDEternity_02" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown extra_count_buildup="4" extra_count_buildup_dailyreset="FALSE" extra_count_buildup_level="8" id="138" luna_cost="luna_dungeon_add_02" maxcount="4" name="IDEternity_03" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="139" maxcount="1" name="IDEternity_Q" type="Relative" value="0" />
   <cooldown id="140" maxcount="1" name="IDF6_OP" type="Relative" value="0" />
-  <cooldown id="141" maxcount="1" name="IDSweep_02" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="141" maxcount="1" name="IDSweep_02" type="Relative" value="900" />
   <cooldown extra_count_buildup="2" extra_count_buildup_dailyreset="FALSE" extra_count_buildup_level="6" id="142" maxcount="2" name="IDF6_Adma" type="Weekly" typevalue="Wed" value="900" />
   <cooldown extra_count_buildup="2" extra_count_buildup_dailyreset="FALSE" extra_count_buildup_level="6" id="143" maxcount="2" name="IDF6_Lap" type="Weekly" typevalue="Wed" value="900" />
   <cooldown extra_count_buildup="3" extra_count_buildup_dailyreset="FALSE" extra_count_buildup_level="7" id="144" maxcount="3" name="IDF6_Dragon" type="Weekly" typevalue="Wed" value="900" />
@@ -265,24 +300,24 @@
   <cooldown id="150" maxcount="1" name="IDLDF5_Fortress_War" type="Daily" value="900" />
   <cooldown id="151" maxcount="1" name="IDDF2_Dflame_Event" type="Daily" value="900" />
   <cooldown id="152" maxcount="1" name="IDF6_Q" type="Relative" value="0" />
-  <cooldown extra_count_buildup="1" extra_count_buildup_dailyreset="FALSE" extra_count_buildup_level="5" id="153" maxcount="1" name="IDTransform" type="Daily" value="900" />
-  <cooldown id="154" maxcount="0" name="IDLC1_dreadgion" type="Daily" value="900" />
-  <cooldown id="155" maxcount="0" name="IDDC1_dreadgion" type="Daily" value="900" />
-  <cooldown id="156" maxcount="1" name="IDEvent_Solo" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="157" maxcount="4" name="IDTM_Lobby_01" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown extra_count_buildup="1" extra_count_buildup_dailyreset="FALSE" extra_count_buildup_level="5" id="153" luna_cost="luna_dungeon_add_01" maxcount="1" name="IDTransform" type="Daily" value="900" />
+  <cooldown id="154" maxcount="1" name="IDLC1_dreadgion" type="Relative" value="0" />
+  <cooldown id="155" maxcount="1" name="IDDC1_dreadgion" type="Relative" value="0" />
+  <cooldown id="156" maxcount="1" name="IDEvent_Solo" type="Daily" value="900" />
+  <cooldown id="157" maxcount="1" name="IDTM_Lobby_01" type="Daily" value="900" />
   <cooldown id="158" maxcount="4" name="IDAb1_Ere" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="159" maxcount="1" name="IDEternity_War" type="Relative" value="15" />
+  <cooldown id="159" maxcount="99" name="IDEternity_War" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="160" maxcount="2" name="IDTM_LobbyE_01" type="Relative" value="0" />
-  <cooldown id="161" maxcount="4" name="IDTM_LobbyP_01" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="162" maxcount="2" name="IDTM_LobbyP_02" type="Relative" value="0" />
+  <cooldown id="161" maxcount="2" name="IDTM_LobbyP_01" type="Daily" value="900" />
+  <cooldown id="162" maxcount="2" name="IDTM_LobbyP_02" type="Daily" value="900" />
   <cooldown id="163" maxcount="3" name="IDInfinity" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="164" maxcount="0" name="IDRun" type="Daily" value="900" />
+  <cooldown id="164" maxcount="1" name="IDRun" type="Daily" value="900" />
   <cooldown id="165" maxcount="2" name="IDTransform_event" type="Daily" value="900" />
   <cooldown id="166" maxcount="4" name="IDAb1_Heroes_L" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="167" maxcount="4" name="IDAbRe_Core_03" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="167" maxcount="1" name="IDAbRe_Core_03" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="168" maxcount="4" name="IDAb1_Heroes_D" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="169" maxcount="1" name="IDEvent_def" type="Daily" value="900" />
-  <cooldown id="1001" maxcount="1" name="F2P_IDLF3_Castle_Indratoo" type="Daily" value="900" />
+  <cooldown id="1001" maxcount="10" name="F2P_IDLF3_Castle_Indratoo" type="Daily" value="900" />
   <cooldown id="1002" maxcount="1" name="F2P_IDDF3_Dragon" type="Relative" value="240" />
   <cooldown id="1003" maxcount="1" name="F2P_IDDF2_Dflame" type="Relative" value="30" />
   <cooldown id="1004" maxcount="1" name="F2P_IDLF3lp" type="Relative" value="30" />
@@ -327,8 +362,8 @@
   <cooldown id="1043" maxcount="1" name="F2P_IDDreadgion_02" type="Relative" value="1320" />
   <cooldown id="1045" maxcount="1" name="F2P_IDCromede" type="Relative" value="360" />
   <cooldown id="1046" maxcount="1" name="F2P_IDNovice" type="Relative" value="90" />
-  <cooldown id="1049" maxcount="3" name="F2P_IDYun" type="Daily" value="900" />
-  <cooldown id="1050" maxcount="3" name="F2P_IDStation" type="Daily" value="900" />
+  <cooldown id="1049" maxcount="2" name="F2P_IDYun" type="Daily" value="900" />
+  <cooldown id="1050" maxcount="1" name="F2P_IDStation" type="Daily" value="900" />
   <cooldown id="1051" maxcount="1" name="F2P_IDF4Re_Drana" type="Daily" value="900" />
   <cooldown id="1052" maxcount="1" name="F2P_IDTest_Dungeon" type="Relative" value="0" />
   <cooldown id="1053" maxcount="1" name="test_mrt_F2P_IDzone" type="Relative" value="0" />
@@ -339,58 +374,74 @@
   <cooldown id="1059" maxcount="1" name="housing_F2P_IDdf_personal" type="Relative" value="0" />
   <cooldown id="1060" maxcount="5" name="F2P_IDArena_pvp01" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="1061" maxcount="5" name="F2P_IDArena_pvp02" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="1066" maxcount="1" name="F2P_IDDramata_01" type="Relative" value="10080" />
+  <cooldown id="1066" maxcount="5" name="F2P_IDDramata_01" type="Relative" value="10080" />
   <cooldown id="1067" maxcount="1" name="F2P_IDArena_pvp01_T" type="Relative" value="15" />
   <cooldown id="1068" maxcount="1" name="F2P_IDArena_pvp02_T" type="Relative" value="15" />
   <cooldown id="1070" maxcount="1" name="F2P_IDDreadgion_03" type="Relative" value="1320" />
   <cooldown id="1071" maxcount="5" name="F2P_IDArena_team01" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="1072" maxcount="1" name="F2P_IDShulackShip_Solo" type="Relative" value="0" />
+  <cooldown id="1073" maxcount="1" name="F2P_IDTiamat_Reward" type="Daily" value="900" />
   <cooldown id="1074" maxcount="1" name="F2P_IDLDF5RE_Solo" type="Relative" value="7080" />
   <cooldown id="1077" maxcount="1" name="F2P_IDTiamat_1" type="Daily" value="900" />
   <cooldown id="1078" maxcount="1" name="F2P_IDTiamat_2" type="Weekly" typevalue="Mon,Wed,Fri,Sat,Sun" value="900" />
+  <cooldown id="1079" maxcount="1" name="F2P_IDLDF5Re_02" type="Relative" value="7080" />
   <cooldown id="1080" maxcount="1" name="F2P_IDLDF5b_TD" type="Relative" value="0" />
   <cooldown id="1081" maxcount="1" name="F2P_IDArena_Glory" type="Relative" value="1" />
   <cooldown id="1082" maxcount="1" name="F2P_IDDF2Flying_Event01" type="Relative" value="0" />
   <cooldown id="1083" maxcount="1" name="F2P_IDArena_team01_T" type="Relative" value="15" />
-  <cooldown id="1085" maxcount="1" name="F2P_IDUnderpassRe" type="Daily" value="900" />
+  <cooldown id="1085" maxcount="5" name="F2P_IDUnderpassRe" type="Daily" value="900" />
   <cooldown id="1086" maxcount="1" name="F2P_Test_Kgw" type="Relative" value="0" />
   <cooldown id="1087" maxcount="1" name="F2P_Test_Basic_Mj" type="Relative" value="0" />
+  <cooldown id="1088" maxcount="1" name="F2P_IDLDF5RE_solo_Q" type="Relative" value="1" />
+  <cooldown id="1089" maxcount="1" name="F2P_IDShulack_Rose_1F" type="Daily" value="900" />
   <cooldown id="1090" maxcount="1" name="F2P_IDRuneweapon" type="Relative" value="7080" />
   <cooldown id="1092" maxcount="1" name="F2P_IDArena_Team01_T2" type="Relative" value="15" />
   <cooldown id="1093" maxcount="1" name="F2P_IDLDF5_Under_Rune" type="Relative" value="7080" />
-  <cooldown id="1094" maxcount="1" name="F2P_IDKamar" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="1094" maxcount="1" name="F2P_IDKamar" type="Daily" typevalue="Wed" value="900" />
+  <cooldown id="1095" maxcount="1" name="F2P_IDShulack_Rose_2F" type="Daily" value="900" />
   <cooldown id="1096" maxcount="1" name="F2P_IDVritra_Base" type="Relative" value="0" />
   <cooldown id="1097" maxcount="1" name="F2P_IDLDF5_Under_02" type="Weekly" typevalue="Tue,Thu,Sat,Sun" value="7080" />
-  <cooldown id="1100" maxcount="1" name="F2P_IDLDF5_Under_01" type="Weekly" typevalue="Mon,Wed,Fri,Sun" value="7080" />
+  <cooldown id="1098" maxcount="1" name="F2P_IDShulack_Rose_3F" type="Daily" value="900" />
+  <cooldown id="1099" maxcount="1" name="F2P_IDLDF5Re_03" type="Relative" value="7080" />
+  <cooldown id="1100" luna_cost="luna_dungeon_add_03" maxcount="1" name="F2P_IDLDF5_Under_01" type="Weekly" typevalue="Mon,Wed,Fri,Sun" value="7080" />
   <cooldown id="1102" maxcount="1" name="F2P_IDAsteria_IU_Party" type="Relative" value="0" />
+  <cooldown id="1103" maxcount="1" name="F2P_IDLDF5Re_02_L" type="Relative" value="7080" />
+  <cooldown id="1104" maxcount="1" name="F2P_IDLDF5Re_03_L" type="Relative" value="7080" />
+  <cooldown id="1105" maxcount="1" name="F2P_IDLDF5RE_Solo_L" type="Relative" value="7080" />
   <cooldown id="1106" maxcount="1" name="F2P_IDAsteria_IU_World" type="Relative" value="0" />
   <cooldown id="1107" maxcount="1" name="F2P_IDLDF5_Under_01_War" type="Daily" value="7080" />
   <cooldown id="1108" maxcount="1" name="F2P_IDF5_TD_War" type="Daily" value="1" />
   <cooldown id="1109" maxcount="1" name="F2P_IDLDF5_Under_03" type="Weekly" typevalue="Tue,Thu,Sat,Sun" value="7080" />
+  <cooldown id="1110" maxcount="1" name="F2P_IDAbRe_Up3_Crotan_02" type="Relative" value="4200" />
+  <cooldown id="1111" maxcount="1" name="F2P_IDAbRe_Up3_Dkisas_02" type="Relative" value="4200" />
+  <cooldown id="1112" maxcount="1" name="F2P_IDAbRe_Up3_Lamiren_02" type="Relative" value="4200" />
   <cooldown id="1113" maxcount="10" name="F2P_Test_TagMatch" type="Relative" value="0" />
   <cooldown id="1114" maxcount="1" name="F2P_IDLDF4Re_01" type="Relative" value="7080" />
+  <cooldown id="1115" maxcount="1" name="F2P_IDAbRe_Up3_Crotan_02_N" type="Relative" value="4200" />
+  <cooldown id="1116" maxcount="1" name="F2P_IDAbRe_Up3_Dkisas_02_N" type="Relative" value="4200" />
+  <cooldown id="1117" maxcount="1" name="F2P_IDAbRe_Up3_Lamiren_02_N" type="Relative" value="4200" />
   <cooldown id="1118" maxcount="1" name="F2P_IDLDF5_Fortress_Re" type="Daily" value="7080" />
-  <cooldown id="1119" maxcount="1" name="F2P_IDLDF5_Under_01_PC" type="Weekly" typevalue="Mon,Wed,Fri,Sun" value="0" />
+  <cooldown id="1119" maxcount="1" name="F2P_IDLDF5_Under_01_PC" type="Relative" value="0" />
   <cooldown id="1120" maxcount="1" name="F2P_IDLDF5_Under_Rune_PC" type="Relative" value="0" />
   <cooldown id="1121" maxcount="1" name="F2P_test_timeattack" type="Relative" value="0" />
   <cooldown id="1122" maxcount="1" name="F2P_IDLDF4Re_01_Q" type="Relative" value="7080" />
   <cooldown id="1124" maxcount="1" name="F2P_IDLDF5_Under_Rune_H" type="Relative" value="7080" />
   <cooldown id="1125" maxcount="1" name="F2P_IDLDF5_Under_03_H" type="Weekly" typevalue="Tue,Thu,Sat,Sun" value="7080" />
-  <cooldown id="1126" maxcount="1" name="F2P_IDLDF5_Under_02_E" type="Weekly" typevalue="Tue,Thu,Sat,Sun" value="7080" />
+  <cooldown id="1126" luna_cost="luna_dungeon_add_03" maxcount="1" name="F2P_IDLDF5_Under_02_E" type="Weekly" typevalue="Tue,Thu,Sat,Sun" value="7080" />
   <cooldown id="1127" maxcount="2" name="F2P_IDSeal" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="1128" maxcount="1" name="F2P_IDSweep" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="1128" maxcount="1" name="F2P_IDSweep" type="Daily" value="900" />
   <cooldown id="1129" maxcount="3" name="F2P_IDRaksha_solo" type="Daily" value="900" />
   <cooldown id="1130" maxcount="1" name="F2P_IDYun_Hard" type="Daily" value="900" />
   <cooldown id="1131" maxcount="1" name="F2P_IDLegion" type="Weekly" typevalue="Wed" value="7080" />
   <cooldown id="1132" maxcount="1" name="F2P_IDTiamat_2_Hard" type="Daily" value="900" />
   <cooldown id="1133" maxcount="7" name="F2P_IDElemental_2_E" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="1134" maxcount="1" name="F2P_IDSeal_Q" type="Relative" value="0" />
-  <cooldown id="1136" maxcount="4" name="F2P_IDEternity_01" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="1137" maxcount="4" name="F2P_IDEternity_02" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="1138" maxcount="4" name="F2P_IDEternity_03" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="1136" luna_cost="luna_dungeon_add_02" maxcount="4" name="F2P_IDEternity_01" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="1137" luna_cost="luna_dungeon_add_02" maxcount="4" name="F2P_IDEternity_02" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="1138" luna_cost="luna_dungeon_add_02" maxcount="4" name="F2P_IDEternity_03" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="1139" maxcount="1" name="F2P_IDEternity_Q" type="Relative" value="0" />
   <cooldown id="1140" maxcount="1" name="F2P_IDF6_OP" type="Relative" value="7080" />
-  <cooldown id="1141" maxcount="1" name="F2P_IDSweep_02" type="Daily" value="900" />
+  <cooldown id="1141" maxcount="1" name="F2P_IDSweep_02" type="Relative" value="900" />
   <cooldown id="1142" maxcount="2" name="F2P_IDF6_Adma" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="1143" maxcount="2" name="F2P_IDF6_Lap" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="1144" maxcount="3" name="F2P_IDF6_Dragon" type="Weekly" typevalue="Wed" value="900" />
@@ -402,19 +453,22 @@
   <cooldown id="1150" maxcount="1" name="F2P_IDLDF5_Fortress_War" type="Daily" value="7080" />
   <cooldown id="1151" maxcount="1" name="F2P_IDDF2_Dflame_Event" type="Daily" value="900" />
   <cooldown id="1152" maxcount="1" name="F2P_IDF6_Q" type="Relative" value="7080" />
-  <cooldown id="1153" maxcount="1" name="F2P_IDTransform" type="Daily" value="900" />
-  <cooldown id="1154" maxcount="0" name="F2P_IDLC1_dreadgion" type="Daily" value="900" />
-  <cooldown id="1155" maxcount="0" name="F2P_IDDC1_dreadgion" type="Daily" value="900" />
+  <cooldown id="1153" luna_cost="luna_dungeon_add_01" maxcount="1" name="F2P_IDTransform" type="Daily" value="900" />
+  <cooldown id="1154" maxcount="1" name="F2P_IDLC1_dreadgion" type="Relative" value="0" />
+  <cooldown id="1155" maxcount="1" name="F2P_IDDC1_dreadgion" type="Relative" value="0" />
   <cooldown id="1156" maxcount="1" name="F2P_IDEvent_Solo" type="Daily" value="900" />
-  <cooldown id="1157" maxcount="4" name="F2P_IDTM_Lobby_01" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="1157" maxcount="1" name="F2P_IDTM_Lobby_01" type="Daily" value="900" />
   <cooldown id="1158" maxcount="4" name="F2P_IDAb1_Ere" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="1159" maxcount="1" name="F2P_IDEternity_War" type="Relative" value="15" />
+  <cooldown id="1159" maxcount="99" name="F2P_IDEternity_War" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="1160" maxcount="2" name="F2P_IDTM_LobbyE_01" type="Relative" value="0" />
-  <cooldown id="1161" maxcount="4" name="F2P_IDTM_LobbyP_01" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="1162" maxcount="2" name="F2P_IDTM_LobbyP_02" type="Relative" value="0" />
+  <cooldown id="1161" maxcount="1" name="F2P_IDTM_LobbyP_01" type="Daily" value="900" />
+  <cooldown id="1162" maxcount="1" name="F2P_IDTM_LobbyP_02" type="Daily" value="900" />
   <cooldown id="1163" maxcount="3" name="F2P_IDInfinity" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="1164" maxcount="1" name="F2P_IDRun" type="Daily" value="900" />
+  <cooldown id="1165" maxcount="2" name="F2P_IDTransform_event" type="Daily" value="900" />
   <cooldown id="1166" maxcount="1" name="F2P_IDAb1_Heroes_L" type="Weekly" typevalue="Wed" value="900" />
-  <cooldown id="1167" maxcount="4" name="F2P_IDAbRe_Core_03" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="1167" maxcount="1" name="F2P_IDAbRe_Core_03" type="Weekly" typevalue="Wed" value="900" />
   <cooldown id="1168" maxcount="1" name="F2P_IDAb1_Heroes_D" type="Weekly" typevalue="Wed" value="900" />
+  <cooldown id="1169" maxcount="1" name="F2P_IDEvent_def" type="Daily" value="900" />
+  <cooldown id="1170" maxcount="1" name="F2P_IDAbRe_Core" type="Relative" value="1320" />
 </retail_instance_limits>

@@ -1670,6 +1670,15 @@
 	<!-- *********************************************** -->
 	<!-- **************** PORTAL DIALOG **************** -->
 	<!-- *********************************************** -->
+	<!-- Retail ScriptDLL transports. Shared NPCs are selected by source world. -->
+	<portal_dialog npc_id="730321">
+		<portal_path dialog="10000" loc_id="3002002" source_world_id="300200000" animation="BEAM_ANIMATION"/>
+		<portal_path dialog="10000" loc_id="3023302" source_world_id="302330000" animation="BEAM_ANIMATION"/>
+	</portal_dialog>
+	<portal_dialog npc_id="730538">
+		<portal_path dialog="10000" loc_id="3002401" source_world_id="300240000" animation="BEAM_ANIMATION"/>
+		<portal_path dialog="10000" loc_id="3002411" source_world_id="300241000" animation="BEAM_ANIMATION"/>
+	</portal_dialog>
 	<!-- Verteron Abyss Gate: Verteron To Aerdina [Q14016 A Gate Agape] -->
 	<portal_dialog npc_id="700088">
 		<portal_path dialog="10000" loc_id="3100300" instance="true">
@@ -2477,8 +2486,12 @@
 		<portal_path dialog="10000" loc_id="3005104"/>
 	</portal_dialog>
 	<!-- Gravity Lab Exit -->
-    <portal_dialog npc_id="801533">
+	<portal_dialog npc_id="801533">
 		<portal_path dialog="10000" loc_id="3005105"/>
+	</portal_dialog>
+	<!-- Tahabata Statue -->
+	<portal_dialog npc_id="730641" teleport_dialog_id="1352">
+		<portal_path dialog="10000" loc_id="3005106" source_world_id="300510000"/>
 	</portal_dialog>
 	<!-- TIAMAT STRONGHOLD END -->
 	
@@ -3889,15 +3902,11 @@
 	</portal_dialog>
 	<!-- Prologue To Knowledge ==> Atreia History Archives -->
 	<portal_dialog npc_id="731811">
-		<portal_path dialog="104" loc_id="3015433">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015433" destination_alias="Alias_3rd_Boss_Room_In_1"/>
 	</portal_dialog>
 	<!-- Prologue To Knowledge ==> Archives All Knowledge -->
 	<portal_dialog npc_id="731812">
-		<portal_path dialog="104" loc_id="3015434">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015434" destination_alias="Alias_4th_Boss_Room_In_2"/>
 	</portal_dialog>
 	<!-- ARCHIVES OF ETERNITY 5.0 END -->
 	
@@ -3929,30 +3938,22 @@
 	<!-- Geodesis To
 	<Walking Path> -->
 	<portal_dialog npc_id="806036">
-		<portal_path dialog="104" loc_id="3015506">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015506"/>
 	</portal_dialog>
 	<!-- Geodesis To
 	<To The Garden Temple> -->
 	<portal_dialog npc_id="806037">
-		<portal_path dialog="104" loc_id="3015507">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015507"/>
 	</portal_dialog>
 	<!-- Geodesis To
 	<To The Library Gap> -->
 	<portal_dialog npc_id="834043">
-		<portal_path dialog="104" loc_id="3015508">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015508"/>
 	</portal_dialog>
 	<!-- Geodesis To
 	<To The Verdant Center> -->
 	<portal_dialog npc_id="834044">
-		<portal_path dialog="104" loc_id="3015509">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015509"/>
 	</portal_dialog>
 	<!-- CRADLE OF ETERNITY 5.1 END -->
 	
@@ -3971,33 +3972,23 @@
 	</portal_dialog>
 	<!-- IDEternity_03_Teleporter_A -->
 	<portal_dialog npc_id="731731">
-		<portal_path dialog="104" loc_id="3015603">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015603"/>
 	</portal_dialog>
 	<!-- IDEternity_03_Teleporter_B -->
 	<portal_dialog npc_id="731732">
-		<portal_path dialog="104" loc_id="3015604">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015604"/>
 	</portal_dialog>
 	<!-- IDEternity_03_Teleporter_C -->
 	<portal_dialog npc_id="731733">
-		<portal_path dialog="104" loc_id="3015605">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015605"/>
 	</portal_dialog>
 	<!-- IDEternity_03_Teleporter_D -->
 	<portal_dialog npc_id="731734">
-		<portal_path dialog="104" loc_id="3015606">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015606"/>
 	</portal_dialog>
 	<!-- IDEternity_03_Teleporter_E -->
 	<portal_dialog npc_id="731735">
-		<portal_path dialog="104" loc_id="3015607">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015607"/>
 	</portal_dialog>
 	<!-- TRIALS OF ETERNITY 5.5 END -->
 	
@@ -4118,87 +4109,63 @@
 	<!-- Animar
 	<Teleport Support Soldier> -->
 	<portal_dialog npc_id="833843">
-		<portal_path dialog="104" loc_id="3016605">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016605" race="ELYOS"/>
 	</portal_dialog>
 	<!-- Kantil
 	<Teleport Support Soldier> -->
 	<portal_dialog npc_id="833844">
-		<portal_path dialog="104" loc_id="3016605">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016605" race="ASMODIANS"/>
 	</portal_dialog>
 	<!-- Animar
 	<Teleport Support Soldier> -->
 	<portal_dialog npc_id="833854">
-		<portal_path dialog="104" loc_id="3016601">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016601" race="ELYOS"/>
 	</portal_dialog>
 	<!-- Animar
 	<Teleport Support Soldier> -->
 	<portal_dialog npc_id="833855">
-		<portal_path dialog="104" loc_id="3016602">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016602" race="ELYOS"/>
 	</portal_dialog>
 	<!-- Animar
 	<Teleport Support Soldier> -->
 	<portal_dialog npc_id="833856">
-		<portal_path dialog="104" loc_id="3016603">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016603" race="ELYOS"/>
 	</portal_dialog>
 	<!-- Animar
 	<Teleport Support Soldier> -->
 	<portal_dialog npc_id="833857">
-		<portal_path dialog="104" loc_id="3016604">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016604" race="ELYOS"/>
 	</portal_dialog>
 	<!-- Kantil
 	<Teleport Support Soldier> -->
 	<portal_dialog npc_id="833858">
-		<portal_path dialog="104" loc_id="3016601">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016601" race="ASMODIANS"/>
 	</portal_dialog>
 	<!-- Kantil
 	<Teleport Support Soldier> -->
 	<portal_dialog npc_id="833859">
-		<portal_path dialog="104" loc_id="3016602">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016602" race="ASMODIANS"/>
 	</portal_dialog>
 	<!-- Kantil
 	<Teleport Support Soldier> -->
 	<portal_dialog npc_id="833860">
-		<portal_path dialog="104" loc_id="3016603">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016603" race="ASMODIANS"/>
 	</portal_dialog>
 	<!-- Kantil
 	<Teleport Support Soldier> -->
 	<portal_dialog npc_id="833861">
-		<portal_path dialog="104" loc_id="3016604">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016604" race="ASMODIANS"/>
 	</portal_dialog>
 	<!-- FALLEN POETA 5.1 END -->
 	
 	<!-- OPHIDAN WARPATH 5.1 -->
 	<!-- Southern Cave Teleporter -->
 	<portal_dialog npc_id="806272">
-		<portal_path dialog="104" loc_id="3016700" race="ASMODIANS">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016702"/>
 	</portal_dialog>
 	<!-- Northern Cave Teleporter -->
 	<portal_dialog npc_id="806273">
-		<portal_path dialog="104" loc_id="3016701" race="ELYOS">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016703"/>
 	</portal_dialog>
 	<!-- Cave Teleport Statue -->
 	<portal_dialog npc_id="806274">
@@ -4223,15 +4190,11 @@
 	<!-- IDGEL DOME LANDMARK 5.1 -->
 	<!-- Central Square Teleporter [Asmodians] -->
 	<portal_dialog npc_id="806303">
-		<portal_path dialog="104" loc_id="3016800" race="ASMODIANS">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016800"/>
 	</portal_dialog>
 	<!-- Central Square Teleporter [Elyos] -->
 	<portal_dialog npc_id="806304">
-		<portal_path dialog="104" loc_id="3016801" race="ELYOS">
-		    <portal_req min_level="66"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3016801"/>
 	</portal_dialog>
 	<!-- IDGEL DOME LANDMARK 5.1 END -->
 	
@@ -4814,9 +4777,7 @@
 	</portal_dialog>
 	<!-- Mischievous Gretel -->
 	<portal_dialog npc_id="835130">
-		<portal_path dialog="104" loc_id="3023301">
-		    <portal_req min_level="46" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3023301"/>
 	</portal_dialog>
 	<!-- KUMUKI CAVE 5.3 END -->
 	

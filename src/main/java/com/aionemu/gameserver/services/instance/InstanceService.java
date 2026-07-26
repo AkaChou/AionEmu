@@ -96,7 +96,8 @@ public class InstanceService {
 					difficulty);
 			map.addInstance(nextInstanceId, worldMapInstance);
 			added = true;
-			SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), dynamic.getSpawnPage(), personalOwnerId);
+			SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), dynamic.getDifficulty(),
+				dynamic.getSpawnPage(), personalOwnerId);
 			GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance);
 			startInstanceChecker(worldMapInstance);
 			return worldMapInstance;

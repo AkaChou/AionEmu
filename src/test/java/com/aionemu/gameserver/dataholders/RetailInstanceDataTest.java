@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dataholders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
 
@@ -18,11 +19,13 @@ class RetailInstanceDataTest {
 			new File("src/main/resources/aion/definitions/compact/instance"),
 			new File("src/main/resources/aion/definitions/schemas/retail-instance-data.xsd"));
 
-		assertEquals(378, data.definitionCount());
-		assertEquals(145, data.limitCount());
-		assertEquals(272, data.cooldownCount());
-		assertEquals(158, data.matchCount());
+		assertEquals(377, data.definitionCount());
+		assertEquals(163, data.limitCount());
+		assertEquals(308, data.cooldownCount());
+		assertEquals(162, data.matchCount());
 		assertEquals(1, data.teamMatchCount());
+		assertNull(data.definition(418));
+		assertNull(data.match(418));
 		assertEquals(6, data.definitionsForWorld(300040000).size());
 		assertEquals(9, data.limit(300040000).requiredInt("id"));
 		assertEquals(300040000, data.match(6).requiredInt("world_id"));
@@ -46,7 +49,7 @@ class RetailInstanceDataTest {
 		assertEquals(364, data.tournamentForStageWorld(302360000).requiredInt("stage_creation_id"));
 		assertEquals(5, data.tournament(2).value("stage_start_01").split(";").length);
 		assertEquals(2, data.tournament(2).requiredInt("round_1_win_kill_point"));
-		assertEquals(186000454, data.tournament(2).requiredInt("round_5_item1_id"));
+		assertEquals(186000242, data.tournament(2).requiredInt("round_5_item1_id"));
 		assertEquals("TOURNAMENT", data.match(129).value("handler"));
 		assertEquals(322, data.lunaDungeon(1).requiredInt("creation_id"));
 		assertEquals(301640000, data.lunaDungeon(2).requiredInt("world_id"));

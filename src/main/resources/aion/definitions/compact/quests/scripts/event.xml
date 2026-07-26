@@ -172,8 +172,6 @@
 	<item_collecting start_npc_ids="831167" id="80265"/>
 	<!-- [Event] Exquisite Birthday Banquet -->
 	<item_collecting start_npc_ids="831167" id="80266"/>
-	<!-- [이벤트] 놀러와요, 메이드 카페 -->
-	<item_collecting start_npc_ids="799763" id="80267"/>
 	<!-- [Event] Durability Test (Asmodians Only) -->
 	<monster_hunt start_npc_ids="831085" id="80283">
         <monster var="0" npc_ids="219508 219509 219510" end_var="18"/>

@@ -33,10 +33,10 @@ public class PortalUse {
 	}
 
 	/** 获取传送门路径。 / Returns the portal path. */
-	public PortalPath getPortalPath(Race race) {
+	public PortalPath getPortalPath(Race race, int sourceWorldId) {
 		if (portalPath != null) {
 			for (PortalPath path : portalPath) {
-				if (path.getRace().equals(race) || path.getRace().equals(Race.PC_ALL)) {
+				if (path.matches(race, sourceWorldId)) {
 					return path;
 				}
 			}

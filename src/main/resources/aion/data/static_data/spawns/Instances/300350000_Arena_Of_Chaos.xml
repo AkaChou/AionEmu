@@ -38,9 +38,6 @@
 		    <spot x="693.061096" y="1752.479248" z="186.750" h="00"/>
         </spawn>
 	    <!-- Recovery Relics -->
-        <spawn npc_id="207102">
-            <spot x="663.554199" y="266.000" z="514.000" h="00"/>
-        </spawn>
 	    <!-- Chest -->
 	    <spawn npc_id="218784">
             <spot x="1844.9539" y="1733.6978" z="300.24158" h="83"/>
@@ -48,7 +45,6 @@
 	    <!-- Chest -->
 	    <spawn npc_id="218785">
             <spot x="674.38727" y="1779.0579" z="149.16173" h="0"/>
-	      <spot x="670.627747" y="1784.521484" z="171.412109"/>
         </spawn>
 	    <!-- Chest -->
 	    <spawn npc_id="218786">
@@ -57,7 +53,6 @@
 	    <!-- Chest -->
 	    <spawn npc_id="218787">
             <spot x="1932.8398" y="1228.9512" z="269.78003" h="112"/>
-	      <spot x="1330.459961" y="1079.429443" z="341.476532" h="68"/>
         </spawn>
 	    <!-- Chest -->
         <spawn npc_id="218788">
@@ -66,7 +61,6 @@
 	    <!-- Chest -->
         <spawn npc_id="218789">
             <spot x="659.8856" y="265.7473" z="512.60205" h="60"/>
-          <spot x="1967.367920" y="1270.822632" z="286.588287" h="68"/>
         </spawn>
 		<!-- Acid Sprayer -->
 		<spawn npc_id="207047" respawn_time="30">
@@ -86,7 +80,6 @@
             <spot x="675.2075" y="1797.3944" z="144.875" h="66"/>
             <spot x="656.23663" y="1778.2115" z="144.875" h="92"/>
             <spot x="672.0658" y="1750.3683" z="144.875" h="30"/>
-			<spot x="667.323425" y="1809.098999" z="156.222900" h="00"/>
         </spawn>
 	    <!-- Mumu Rake Gatherer -->
 	    <spawn npc_id="243665">
@@ -166,81 +159,6 @@
         <spawn npc_id="243681">
             <spot x="1949.0746" y="947.5323" z="223.82704" h="106"/>
         </spawn>
-        <spawn npc_id="207037" respawn_time="0">
-          <spot x="1936.739990" y="930.914612" z="223.930481" h="68"/>
-          <spot x="1378.206299" y="1067.568848" z="342.231873" h="68"/>
-          <spot x="684.934875" y="287.261414" z="515.145508" h="68"/>
-          <spot x="1847.943237" y="1689.713257" z="301.544006" h="68"/>
-          <spot x="1295.575806" y="1099.614136" z="342.231873" h="68"/>
-          <spot x="1961.238403" y="949.168335" z="224.808411" h="68"/>
-          <spot x="1291.301392" y="1089.196167" z="342.231873" h="68"/>
-          <spot x="1937.253784" y="1221.539307" z="271.329620" h="68"/>
-          <spot x="1837.499878" y="1775.558105" z="301.334900" h="68"/>
-          <spot x="1290.854126" y="1079.385498" z="342.231873" h="68"/>
-          <spot x="1961.462036" y="930.687927" z="223.930481" h="68"/>
-          <spot x="1379.832886" y="1086.910034" z="342.231873" h="68"/>
-          <spot x="690.692566" y="283.874817" z="515.451782" h="68"/>
-          <spot x="680.585815" y="287.570862" z="513.591003" h="68"/>
-          <spot x="1302.159424" y="1037.405396" z="342.231873" h="68"/>
-          <spot x="1885.702515" y="1738.447998" z="301.067596" h="68"/>
-          <spot x="1300.844727" y="1059.090576" z="342.231873" h="68"/>
-          <spot x="1936.665283" y="949.682251" z="223.930481" h="68"/>
-          <spot x="1940.646118" y="1233.312744" z="271.329620" h="68"/>
-          <spot x="1936.614380" y="962.812073" z="223.930481" h="68"/>
-          <spot x="1961.536133" y="943.621399" z="223.930481" h="68"/>
-          <spot x="689.563904" y="239.379166" z="515.451782" h="68"/>
-          <spot x="686.051270" y="245.771301" z="514.908752" h="68"/>
-          <spot x="1934.732788" y="1263.660645" z="273.614624" h="68"/>
-          <spot x="1870.853760" y="1700.205444" z="301.560028" h="68"/>
-          <spot x="1799.838745" y="1727.583862" z="301.933685" h="68"/>
-          <spot x="1381.217773" y="1060.327026" z="342.231873" h="68"/>
-          <spot x="1299.461670" y="1048.159668" z="342.231873" h="68"/>
-          <spot x="1936.771851" y="943.688660" z="223.930481" h="68"/>
-          <spot x="1925.571777" y="1224.078125" z="271.329620" h="68"/>
-          <spot x="1959.952881" y="1260.330566" z="289.093567" h="68"/>
-          <spot x="685.963562" y="281.459442" z="515.886902" h="68"/>
-          <spot x="689.614868" y="249.157898" z="515.451782" h="68"/>
-          <spot x="1375.421509" y="1096.307007" z="342.231873" h="68"/>
-          <spot x="1814.625854" y="1765.767212" z="301.075378" h="68"/>
-          <spot x="1877.834473" y="1205.784668" z="270.851501" h="68"/>
-          <spot x="680.407715" y="240.686737" z="512.861572" h="68"/>
-          <spot x="1379.548096" y="1076.722534" z="342.231873" h="68"/>
-          <spot x="1809.490967" y="1704.247192" z="301.933685" h="68"/>
-          <spot x="1875.781738" y="1761.683105" z="300.910614" h="68"/>
-          <spot x="688.948853" y="287.408783" z="515.451782" h="68"/>
-          <spot x="690.015625" y="244.767868" z="515.451782" h="68"/>
-          <spot x="1961.401855" y="962.707153" z="223.930481" h="68"/>
-          <spot x="1978.630615" y="1283.067505" z="286.750641" h="68"/>
-          <spot x="691.101257" y="279.876099" z="515.451782" h="68"/>
-          <spot x="1378.140503" y="1052.129517" z="342.231873" h="68"/>
-          <spot x="685.484497" y="240.785004" z="514.908752" h="68"/>
-          <spot x="1928.937256" y="1237.321045" z="271.251221" h="68"/>
-        </spawn>
-        <spawn npc_id="207038" respawn_time="0">
-          <spot x="1948.876221" y="950.328552" z="224.832687" h="68"/>
-        </spawn>
-        <spawn npc_id="207051" respawn_time="0">
-          <spot x="1842.292969" y="1730.858887" z="301.576172" h="68"/>
-        </spawn>
-        <spawn npc_id="218793" respawn_time="0">
-          <spot x="630.583740" y="249.669556" z="508.344330" h="68"/>
-        </spawn>
-        <spawn npc_id="247508" respawn_time="0">
-          <spot x="1877.587769" y="1207.770752" z="271.531494"/>
-          <spot x="1837.587769" y="1770.770752" z="301.531494"/>
-          <spot x="687.587769" y="283.770752" z="515.531494"/>
-          <spot x="1817.587769" y="1761.770752" z="301.531494"/>
-          <spot x="1376.587769" y="1059.770752" z="341.531494"/>
-          <spot x="1295.587769" y="1090.770752" z="341.531494"/>
-          <spot x="1375.587769" y="1085.770752" z="341.531494"/>
-          <spot x="1881.587769" y="1737.770752" z="301.531494"/>
-          <spot x="1932.587769" y="1228.770752" z="271.531494"/>
-          <spot x="1295.587769" y="1047.770752" z="341.531494"/>
-          <spot x="1847.587769" y="1694.770752" z="301.531494"/>
-          <spot x="1813.587769" y="1707.770752" z="301.531494"/>
-          <spot x="1949.587769" y="946.770752" z="224.531494"/>
-          <spot x="687.587769" y="242.770752" z="515.531494"/>
-        </spawn>
         <spawn npc_id="701175" respawn_time="60">
           <spot x="1797.077881" y="1727.117065" z="302.435791" h="5"/>
           <spot x="1808.156860" y="1702.757202" z="302.435791" h="15"/>
@@ -272,6 +190,387 @@
         <spawn npc_id="701192" respawn_time="60">
           <spot x="1889.189575" y="1738.574829" z="300.820251" h="65"/>
           <spot x="1877.920044" y="1763.199951" z="300.819946" h="75"/>
+        </spawn>
+        <spawn npc_id="207035" respawn_time="1" spawn_page="1" initial_delay="130">
+          <spot x="676.274353" y="1777.855957" z="151.322464" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207035" respawn_time="1" spawn_page="11" initial_delay="130">
+          <spot x="676.274353" y="1777.855957" z="151.322464" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207035" respawn_time="1" spawn_page="21" initial_delay="130">
+          <spot x="676.274353" y="1777.855957" z="151.322464" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207035" respawn_time="1" spawn_page="31" initial_delay="130">
+          <spot x="676.274353" y="1777.855957" z="151.322464" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207035" respawn_time="1" spawn_page="41" initial_delay="130">
+          <spot x="676.274353" y="1777.855957" z="151.322464" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207036" respawn_time="1" spawn_page="1" initial_delay="130">
+          <spot x="673.624817" y="1777.997314" z="170.122086" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207036" respawn_time="1" spawn_page="11" initial_delay="130">
+          <spot x="673.624817" y="1777.997314" z="170.122086" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207036" respawn_time="1" spawn_page="21" initial_delay="130">
+          <spot x="673.624817" y="1777.997314" z="170.122086" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207036" respawn_time="1" spawn_page="31" initial_delay="130">
+          <spot x="673.624817" y="1777.997314" z="170.122086" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207036" respawn_time="1" spawn_page="41" initial_delay="130">
+          <spot x="673.624817" y="1777.997314" z="170.122086" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207050" spawn_page="1" initial_delay="125">
+          <spot x="679.169922" y="1776.821167" z="171.156952" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207050" spawn_page="11" initial_delay="125">
+          <spot x="679.169922" y="1776.821167" z="171.156952" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207050" spawn_page="21" initial_delay="125">
+          <spot x="679.169922" y="1776.821167" z="171.156952" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207050" spawn_page="31" initial_delay="125">
+          <spot x="679.169922" y="1776.821167" z="171.156952" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218685" respawn_time="85" spawn_page="1" initial_delay="133">
+          <spot x="1949.625732" y="927.296143" z="224.045074" h="30" random_walk="2"/>
+          <spot x="1942.479248" y="964.353333" z="224.921234" h="90" random_walk="2"/>
+          <spot x="1956.888794" y="964.103577" z="224.536728" h="90" random_walk="2"/>
+          <spot x="1949.627319" y="964.210938" z="224.446701" h="90" random_walk="2"/>
+          <spot x="1942.477661" y="927.320129" z="223.807083" h="30" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218690" respawn_time="60" spawn_page="1" initial_delay="133">
+          <spot x="1927.182739" y="869.697388" z="232.112396" h="30" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218698" respawn_time="85" spawn_page="11" initial_delay="133">
+          <spot x="1949.625732" y="927.296143" z="224.045074" h="30" random_walk="2"/>
+          <spot x="1942.479248" y="964.353333" z="224.921234" h="90" random_walk="2"/>
+          <spot x="1956.888794" y="964.103577" z="224.536728" h="90" random_walk="2"/>
+          <spot x="1949.627319" y="964.210938" z="224.446701" h="90" random_walk="2"/>
+          <spot x="1942.477661" y="927.320129" z="223.807083" h="30" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218703" respawn_time="60" spawn_page="11" initial_delay="133">
+          <spot x="1927.182739" y="869.697388" z="232.112396" h="30" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218711" respawn_time="85" spawn_page="21" initial_delay="133">
+          <spot x="1949.625732" y="927.296143" z="224.045074" h="30" random_walk="2"/>
+          <spot x="1942.479248" y="964.353333" z="224.921234" h="90" random_walk="2"/>
+          <spot x="1956.888794" y="964.103577" z="224.536728" h="90" random_walk="2"/>
+          <spot x="1949.627319" y="964.210938" z="224.446701" h="90" random_walk="2"/>
+          <spot x="1942.477661" y="927.320129" z="223.807083" h="30" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218716" respawn_time="60" spawn_page="21" initial_delay="133">
+          <spot x="1927.182739" y="869.697388" z="232.112396" h="30" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="233049" respawn_time="85" spawn_page="31" initial_delay="133">
+          <spot x="1949.625732" y="927.296143" z="224.045074" h="30" random_walk="2"/>
+          <spot x="1942.479248" y="964.353333" z="224.921234" h="90" random_walk="2"/>
+          <spot x="1956.888794" y="964.103577" z="224.536728" h="90" random_walk="2"/>
+          <spot x="1949.627319" y="964.210938" z="224.446701" h="90" random_walk="2"/>
+          <spot x="1942.477661" y="927.320129" z="223.807083" h="30" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="233054" respawn_time="60" spawn_page="31" initial_delay="133">
+          <spot x="1927.182739" y="869.697388" z="232.112396" h="30" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="243668" respawn_time="85" spawn_page="41" initial_delay="133">
+          <spot x="1949.625732" y="927.296143" z="224.045074" h="30" random_walk="2"/>
+          <spot x="1942.479248" y="964.353333" z="224.921234" h="90" random_walk="2"/>
+          <spot x="1956.888794" y="964.103577" z="224.536728" h="90" random_walk="2"/>
+          <spot x="1949.627319" y="964.210938" z="224.446701" h="90" random_walk="2"/>
+          <spot x="1942.477661" y="927.320129" z="223.807083" h="30" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="243673" respawn_time="60" spawn_page="41" initial_delay="133">
+          <spot x="1927.182739" y="869.697388" z="232.112396" h="30" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701179" spawn_page="1" initial_delay="130">
+          <spot x="688.302795" y="1794.086548" z="145.750000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701179" respawn_time="1" spawn_page="1" initial_delay="130">
+          <spot x="664.061096" y="1766.229248" z="145.500000" random_walk="2"/>
+          <spot x="701.349609" y="1777.519409" z="145.750000" random_walk="2"/>
+          <spot x="651.601013" y="1767.815308" z="145.500000" random_walk="2"/>
+          <spot x="651.784973" y="1776.683960" z="145.500000" random_walk="2"/>
+          <spot x="700.999146" y="1772.732056" z="145.750000" random_walk="2"/>
+          <spot x="686.584167" y="1809.775024" z="145.500000" random_walk="2"/>
+          <spot x="682.849976" y="1747.554565" z="145.500000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701180" spawn_page="1" initial_delay="130">
+          <spot x="652.699768" y="1800.278442" z="172.753082" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701180" respawn_time="1" spawn_page="1" initial_delay="130">
+          <spot x="667.323425" y="1809.098999" z="156.222900" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701181" respawn_time="45" spawn_page="1" initial_delay="1">
+          <spot x="674.516785" y="1778.427979" z="204.693054" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701185" respawn_time="60" spawn_page="1" initial_delay="1">
+          <spot x="705.689636" y="1777.496948" z="175.250000" h="60" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701193" spawn_page="11" initial_delay="130">
+          <spot x="688.302795" y="1794.086548" z="145.750000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701193" respawn_time="1" spawn_page="11" initial_delay="130">
+          <spot x="664.061096" y="1766.229248" z="145.500000" random_walk="2"/>
+          <spot x="701.349609" y="1777.519409" z="145.750000" random_walk="2"/>
+          <spot x="651.601013" y="1767.815308" z="145.500000" random_walk="2"/>
+          <spot x="651.784973" y="1776.683960" z="145.500000" random_walk="2"/>
+          <spot x="700.999146" y="1772.732056" z="145.750000" random_walk="2"/>
+          <spot x="686.584167" y="1809.775024" z="145.500000" random_walk="2"/>
+          <spot x="682.849976" y="1747.554565" z="145.500000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701194" spawn_page="11" initial_delay="130">
+          <spot x="652.699768" y="1800.278442" z="172.753082" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701194" respawn_time="1" spawn_page="1" initial_delay="130">
+          <spot x="700.406250" y="1755.927734" z="162.541183" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701194" respawn_time="1" spawn_page="11" initial_delay="130">
+          <spot x="700.406250" y="1755.927734" z="162.541183" random_walk="2"/>
+          <spot x="667.323425" y="1809.098999" z="156.222900" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701194" respawn_time="1" spawn_page="21" initial_delay="130">
+          <spot x="700.406250" y="1755.927734" z="162.541183" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701195" respawn_time="45" spawn_page="11" initial_delay="1">
+          <spot x="674.516785" y="1778.427979" z="204.693054" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701199" respawn_time="60" spawn_page="11" initial_delay="1">
+          <spot x="705.689636" y="1777.496948" z="175.250000" h="60" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701207" spawn_page="21" initial_delay="130">
+          <spot x="688.302795" y="1794.086548" z="145.750000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701207" respawn_time="1" spawn_page="21" initial_delay="130">
+          <spot x="664.061096" y="1766.229248" z="145.500000" random_walk="2"/>
+          <spot x="701.349609" y="1777.519409" z="145.750000" random_walk="2"/>
+          <spot x="651.601013" y="1767.815308" z="145.500000" random_walk="2"/>
+          <spot x="651.784973" y="1776.683960" z="145.500000" random_walk="2"/>
+          <spot x="700.999146" y="1772.732056" z="145.750000" random_walk="2"/>
+          <spot x="686.584167" y="1809.775024" z="145.500000" random_walk="2"/>
+          <spot x="682.849976" y="1747.554565" z="145.500000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701208" spawn_page="21" initial_delay="130">
+          <spot x="652.699768" y="1800.278442" z="172.753082" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701208" respawn_time="1" spawn_page="21" initial_delay="130">
+          <spot x="667.323425" y="1809.098999" z="156.222900" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701209" respawn_time="45" spawn_page="21" initial_delay="1">
+          <spot x="674.516785" y="1778.427979" z="204.693054" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701213" respawn_time="60" spawn_page="21" initial_delay="1">
+          <spot x="705.689636" y="1777.496948" z="175.250000" h="60" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701317" respawn_time="30" spawn_page="1" initial_delay="1">
+          <spot x="663.554199" y="266.000000" z="514.000000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701318" respawn_time="30" spawn_page="11" initial_delay="1">
+          <spot x="663.554199" y="266.000000" z="514.000000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701319" respawn_time="30" spawn_page="21" initial_delay="1">
+          <spot x="663.554199" y="266.000000" z="514.000000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701321" respawn_time="60" spawn_page="1" initial_delay="1">
+          <spot x="646.755737" y="1777.519897" z="185.750000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701322" respawn_time="60" spawn_page="11" initial_delay="1">
+          <spot x="646.755737" y="1777.519897" z="185.750000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701323" respawn_time="60" spawn_page="21" initial_delay="1">
+          <spot x="646.755737" y="1777.519897" z="185.750000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701840" spawn_page="31" initial_delay="130">
+          <spot x="688.302795" y="1794.086548" z="145.750000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701840" spawn_page="41" initial_delay="130">
+          <spot x="688.302795" y="1794.086548" z="145.750000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701840" respawn_time="1" spawn_page="31" initial_delay="130">
+          <spot x="664.061096" y="1766.229248" z="145.500000" random_walk="2"/>
+          <spot x="701.349609" y="1777.519409" z="145.750000" random_walk="2"/>
+          <spot x="651.601013" y="1767.815308" z="145.500000" random_walk="2"/>
+          <spot x="651.784973" y="1776.683960" z="145.500000" random_walk="2"/>
+          <spot x="700.999146" y="1772.732056" z="145.750000" random_walk="2"/>
+          <spot x="686.584167" y="1809.775024" z="145.500000" random_walk="2"/>
+          <spot x="682.849976" y="1747.554565" z="145.500000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701840" respawn_time="1" spawn_page="41" initial_delay="130">
+          <spot x="664.061096" y="1766.229248" z="145.500000" random_walk="2"/>
+          <spot x="651.601013" y="1767.815308" z="145.500000" random_walk="2"/>
+          <spot x="651.784973" y="1776.683960" z="145.500000" random_walk="2"/>
+          <spot x="700.999146" y="1772.732056" z="145.750000" random_walk="2"/>
+          <spot x="686.584167" y="1809.775024" z="145.500000" random_walk="2"/>
+          <spot x="682.849976" y="1747.554565" z="145.500000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701841" spawn_page="31" initial_delay="130">
+          <spot x="652.699768" y="1800.278442" z="172.753082" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701841" spawn_page="41" initial_delay="130">
+          <spot x="652.699768" y="1800.278442" z="172.753082" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701841" respawn_time="1" spawn_page="31" initial_delay="130">
+          <spot x="700.406250" y="1755.927734" z="162.541183" random_walk="2"/>
+          <spot x="667.323425" y="1809.098999" z="156.222900" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701841" respawn_time="1" spawn_page="41" initial_delay="130">
+          <spot x="700.406250" y="1755.927734" z="162.541183" random_walk="2"/>
+          <spot x="667.323425" y="1809.098999" z="156.222900" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701842" respawn_time="45" spawn_page="31" initial_delay="1">
+          <spot x="674.516785" y="1778.427979" z="204.693054" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701842" respawn_time="45" spawn_page="41" initial_delay="1">
+          <spot x="674.516785" y="1778.427979" z="204.693054" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701846" respawn_time="60" spawn_page="31" initial_delay="1">
+          <spot x="705.689636" y="1777.496948" z="175.250000" h="60" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701846" respawn_time="60" spawn_page="41" initial_delay="1">
+          <spot x="705.689636" y="1777.496948" z="175.250000" h="60" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701848" respawn_time="30" spawn_page="31" initial_delay="1">
+          <spot x="663.554199" y="266.000000" z="514.000000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701848" respawn_time="30" spawn_page="41" initial_delay="1">
+          <spot x="663.554199" y="266.000000" z="514.000000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701849" respawn_time="60" spawn_page="31" initial_delay="1">
+          <spot x="646.755737" y="1777.519897" z="185.750000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701849" respawn_time="60" spawn_page="41" initial_delay="1">
+          <spot x="646.755737" y="1777.519897" z="185.750000" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207037" spawn_page="1" spawn_page_end="41">
+          <spot x="1936.739990" y="930.914612" z="223.930481" h="68" random_walk="2"/>
+          <spot x="1378.206299" y="1067.568848" z="342.231873" h="68" random_walk="2"/>
+          <spot x="1860.189697" y="1776.370605" z="311.943329" h="68" random_walk="2"/>
+          <spot x="2006.587769" y="891.770752" z="232.531494" h="68" random_walk="2"/>
+          <spot x="684.934875" y="287.261414" z="515.145508" h="68" random_walk="2"/>
+          <spot x="1887.126953" y="1716.288696" z="311.881897" h="68" random_walk="2"/>
+          <spot x="1826.125488" y="1689.734619" z="313.008484" h="68" random_walk="2"/>
+          <spot x="1847.943237" y="1689.713257" z="301.544006" h="68" random_walk="2"/>
+          <spot x="1295.575806" y="1099.614136" z="342.231873" h="68" random_walk="2"/>
+          <spot x="1961.238403" y="949.168335" z="224.808411" h="68" random_walk="2"/>
+          <spot x="1291.301392" y="1089.196167" z="342.231873" h="68" random_walk="2"/>
+          <spot x="1937.253784" y="1221.539307" z="271.329620" h="68" random_walk="2"/>
+          <spot x="1837.499878" y="1775.558105" z="301.334900" h="68" random_walk="2"/>
+          <spot x="1290.854126" y="1079.385498" z="342.231873" h="68" random_walk="2"/>
+          <spot x="1961.462036" y="930.687927" z="223.930481" h="68" random_walk="2"/>
+          <spot x="1379.832886" y="1086.910034" z="342.231873" h="68" random_walk="2"/>
+          <spot x="690.692566" y="283.874817" z="515.451782" h="68" random_walk="2"/>
+          <spot x="680.585815" y="287.570862" z="513.591003" h="68" random_walk="2"/>
+          <spot x="1302.159424" y="1037.405396" z="342.231873" h="68" random_walk="2"/>
+          <spot x="1885.702515" y="1738.447998" z="301.067596" h="68" random_walk="2"/>
+          <spot x="1300.844727" y="1059.090576" z="342.231873" h="68" random_walk="2"/>
+          <spot x="1936.665283" y="949.682251" z="223.930481" h="68" random_walk="2"/>
+          <spot x="1905.830811" y="1236.106079" z="289.093567" h="68" random_walk="2"/>
+          <spot x="1940.646118" y="1233.312744" z="271.329620" h="68" random_walk="2"/>
+          <spot x="1936.614380" y="962.812073" z="223.930481" h="68" random_walk="2"/>
+          <spot x="1961.536133" y="943.621399" z="223.930481" h="68" random_walk="2"/>
+          <spot x="689.563904" y="239.379166" z="515.451782" h="68" random_walk="2"/>
+          <spot x="686.051270" y="245.771301" z="514.908752" h="68" random_walk="2"/>
+          <spot x="1934.732788" y="1263.660645" z="273.614624" h="68" random_walk="2"/>
+          <spot x="1870.853760" y="1700.205444" z="301.560028" h="68" random_walk="2"/>
+          <spot x="1799.838745" y="1727.583862" z="301.933685" h="68" random_walk="2"/>
+          <spot x="1381.217773" y="1060.327026" z="342.231873" h="68" random_walk="2"/>
+          <spot x="1299.461670" y="1048.159668" z="342.231873" h="68" random_walk="2"/>
+          <spot x="1936.771851" y="943.688660" z="223.930481" h="68" random_walk="2"/>
+          <spot x="1925.571777" y="1224.078125" z="271.329620" h="68" random_walk="2"/>
+          <spot x="1959.952881" y="1260.330566" z="289.093567" h="68" random_walk="2"/>
+          <spot x="1983.226440" y="1002.143616" z="229.552002" h="68" random_walk="2"/>
+          <spot x="685.963562" y="281.459442" z="515.886902" h="68" random_walk="2"/>
+          <spot x="689.614868" y="249.157898" z="515.451782" h="68" random_walk="2"/>
+          <spot x="1375.421509" y="1096.307007" z="342.231873" h="68" random_walk="2"/>
+          <spot x="1814.625854" y="1765.767212" z="301.075378" h="68" random_walk="2"/>
+          <spot x="1877.834473" y="1205.784668" z="270.851501" h="68" random_walk="2"/>
+          <spot x="1989.594360" y="1192.975342" z="273.994385" h="68" random_walk="2"/>
+          <spot x="1891.121948" y="1001.913574" z="231.821655" h="68" random_walk="2"/>
+          <spot x="1943.069580" y="885.521790" z="232.915207" h="68" random_walk="2"/>
+          <spot x="680.407715" y="240.686737" z="512.861572" h="68" random_walk="2"/>
+          <spot x="1379.548096" y="1076.722534" z="342.231873" h="68" random_walk="2"/>
+          <spot x="1809.490967" y="1704.247192" z="301.933685" h="68" random_walk="2"/>
+          <spot x="1905.047974" y="1258.041382" z="289.511688" h="68" random_walk="2"/>
+          <spot x="1875.781738" y="1761.683105" z="300.910614" h="68" random_walk="2"/>
+          <spot x="1930.021118" y="1157.235840" z="281.624298" h="68" random_walk="2"/>
+          <spot x="688.948853" y="287.408783" z="515.451782" h="68" random_walk="2"/>
+          <spot x="690.015625" y="244.767868" z="515.451782" h="68" random_walk="2"/>
+          <spot x="1961.401855" y="962.707153" z="223.930481" h="68" random_walk="2"/>
+          <spot x="1978.630615" y="1283.067505" z="286.750641" h="68" random_walk="2"/>
+          <spot x="691.101257" y="279.876099" z="515.451782" h="68" random_walk="2"/>
+          <spot x="1378.140503" y="1052.129517" z="342.231873" h="68" random_walk="2"/>
+          <spot x="685.484497" y="240.785004" z="514.908752" h="68" random_walk="2"/>
+          <spot x="1928.937256" y="1237.321045" z="271.251221" h="68" random_walk="2"/>
+          <spot x="1799.274780" y="1750.179077" z="313.008484" h="68" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207038" spawn_page="1" spawn_page_end="41">
+          <spot x="1948.876221" y="950.328552" z="224.832687" h="68" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207047" spawn_page="1" spawn_page_end="41">
+          <spot x="1979.886108" y="1191.147949" z="274.541290" h="90" random_walk="2"/>
+          <spot x="1881.247559" y="1224.776733" z="271.243866" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="207051" spawn_page="1" spawn_page_end="41" initial_delay="131">
+          <spot x="1842.292969" y="1730.858887" z="301.576172" h="68" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218783" spawn_page="1" spawn_page_end="41" initial_delay="140">
+          <spot x="1868.005127" y="1703.708618" z="301.289520" h="68" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218785" spawn_page="1" spawn_page_end="41">
+          <spot x="670.627747" y="1784.521484" z="171.412109" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218787" spawn_page="1" spawn_page_end="41">
+          <spot x="1330.459961" y="1079.429443" z="341.476532" h="68" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218789" spawn_page="1" spawn_page_end="41">
+          <spot x="1967.367920" y="1270.822632" z="286.588287" h="68" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="218793" spawn_page="1" spawn_page_end="41">
+          <spot x="630.583740" y="249.669556" z="508.344330" h="68" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="247508" spawn_page="1" spawn_page_end="41">
+          <spot x="1877.587769" y="1207.770752" z="271.531494" random_walk="2"/>
+          <spot x="1837.587769" y="1770.770752" z="301.531494" random_walk="2"/>
+          <spot x="1804.587769" y="1727.770752" z="301.531494" random_walk="2"/>
+          <spot x="1905.587769" y="1235.770752" z="289.531494" random_walk="2"/>
+          <spot x="1929.587769" y="1157.770752" z="281.531494" random_walk="2"/>
+          <spot x="1867.587769" y="1703.770752" z="301.531494" random_walk="2"/>
+          <spot x="1942.587769" y="885.770752" z="232.531494" random_walk="2"/>
+          <spot x="2005.587769" y="891.770752" z="232.531494" random_walk="2"/>
+          <spot x="1904.587769" y="1257.770752" z="289.531494" random_walk="2"/>
+          <spot x="687.587769" y="283.770752" z="515.531494" random_walk="2"/>
+          <spot x="1891.587769" y="1001.770813" z="231.531494" random_walk="2"/>
+          <spot x="1817.587769" y="1761.770752" z="301.531494" random_walk="2"/>
+          <spot x="1871.587769" y="1757.770752" z="301.531494" random_walk="2"/>
+          <spot x="1860.587769" y="1776.770752" z="312.531494" random_walk="2"/>
+          <spot x="1376.587769" y="1059.770752" z="341.531494" random_walk="2"/>
+          <spot x="1799.587769" y="1749.770752" z="312.531494" random_walk="2"/>
+          <spot x="1825.587769" y="1689.770752" z="312.531494" random_walk="2"/>
+          <spot x="1295.587769" y="1090.770752" z="341.531494" random_walk="2"/>
+          <spot x="1886.587769" y="1715.770752" z="312.531494" random_walk="2"/>
+          <spot x="1978.587769" y="1281.770752" z="287.531494" random_walk="2"/>
+          <spot x="1375.587769" y="1085.770752" z="341.531494" random_walk="2"/>
+          <spot x="1881.587769" y="1737.770752" z="301.531494" random_walk="2"/>
+          <spot x="1932.587769" y="1228.770752" z="271.531494" random_walk="2"/>
+          <spot x="1295.587769" y="1047.770752" z="341.531494" random_walk="2"/>
+          <spot x="1989.587769" y="1193.770752" z="274.531494" random_walk="2"/>
+          <spot x="1847.587769" y="1694.770752" z="301.531494" random_walk="2"/>
+          <spot x="1982.587769" y="1002.770813" z="229.531494" random_walk="2"/>
+          <spot x="1813.587769" y="1707.770752" z="301.531494" random_walk="2"/>
+          <spot x="1949.587769" y="946.770752" z="224.531494" random_walk="2"/>
+          <spot x="687.587769" y="242.770752" z="515.531494" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701169" respawn_time="45" spawn_page="1" spawn_page_end="41" initial_delay="1">
+          <spot x="1803.475830" y="1716.913086" z="312.500000" h="68" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701170" respawn_time="45" spawn_page="1" spawn_page_end="41" initial_delay="1">
+          <spot x="1826.589844" y="1773.080322" z="312.500000" h="38" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701171" respawn_time="45" spawn_page="1" spawn_page_end="41" initial_delay="1">
+          <spot x="1859.583130" y="1693.731934" z="312.500000" h="96" random_walk="2"/>
+        </spawn>
+        <spawn npc_id="701172" respawn_time="45" spawn_page="1" spawn_page_end="41" initial_delay="1">
+          <spot x="1882.873413" y="1749.328247" z="312.500000" h="6" random_walk="2"/>
         </spawn>
 	</spawn_map>
 </spawns>

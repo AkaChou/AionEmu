@@ -36,7 +36,7 @@ public class Celestial_Observation_Chamber_PassageAI2 extends NpcAI2
 	
 	private void observationChamberDoor() {
 		AI2Actions.deleteOwner(Celestial_Observation_Chamber_PassageAI2.this);
-		getPosition().getWorldMapInstance().getDoors().get(210).setOpen(true);
+		getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(210, true);
     }
 	
 	@Override

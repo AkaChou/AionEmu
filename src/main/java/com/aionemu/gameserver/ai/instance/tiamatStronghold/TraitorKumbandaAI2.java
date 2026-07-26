@@ -44,7 +44,7 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
 			spawn(283088, 880.1549f, 1319.4822f, 394.534f, (byte) 60);
-			getPosition().getWorldMapInstance().getDoors().get(369).setOpen(false);
+			getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(369, false);
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
@@ -173,7 +173,7 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 		if (p != null) {
 			deleteNpcs(p.getWorldMapInstance().getNpcs(283086)); //Time Accelerator.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(283088)); //Time Slow.
-			p.getWorldMapInstance().getDoors().get(369).setOpen(true);
+			p.getWorldMapInstance().getInstanceHandler().setDoorState(369, true);
 		}
 		super.handleDied();
 	}

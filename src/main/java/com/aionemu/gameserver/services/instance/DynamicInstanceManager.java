@@ -252,7 +252,8 @@ public final class DynamicInstanceManager {
 		map.addInstance(dynamic.getRuntimeInstanceId(), instance);
 		map.reserveInstanceId(dynamic.getRuntimeInstanceId());
 		try {
-			SpawnEngine.spawnInstance(dynamic.getWorldId(), dynamic.getRuntimeInstanceId(), dynamic.getSpawnPage(), personalOwner);
+			SpawnEngine.spawnInstance(dynamic.getWorldId(), dynamic.getRuntimeInstanceId(), dynamic.getDifficulty(),
+				dynamic.getSpawnPage(), personalOwner);
 			for (DynamicInstanceMember member : members) {
 				if (member.isPermitted() && (member.getLeftAt() == 0 || member.getReentryUntil() == 0
 						|| member.getReentryUntil() >= now)) {

@@ -31,7 +31,7 @@ public class KinquidAI2 extends AggressiveNpcAI2
 	protected void handleCreatureAggro(Creature creature) {
 		super.handleCreatureAggro(creature);
 		if (isHome.compareAndSet(true, false)) {
-			getPosition().getWorldMapInstance().getDoors().get(48).setOpen(false);
+			getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(48, false);
 			check();
 			cancelSkillTask();
 			startSkillTask();
@@ -42,7 +42,7 @@ public class KinquidAI2 extends AggressiveNpcAI2
 	protected void handleBackHome() {
 		cancelSkillTask();
 		isHome.set(true);
-		getPosition().getWorldMapInstance().getDoors().get(48).setOpen(true);
+		getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(48, true);
 		super.handleBackHome();
 		despawnDestroyer();
 	}
@@ -56,7 +56,7 @@ public class KinquidAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		super.handleDied();
-		getPosition().getWorldMapInstance().getDoors().get(48).setOpen(true);
+		getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(48, true);
 		cancelSkillTask();
 	}
 	

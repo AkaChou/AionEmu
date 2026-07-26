@@ -24,6 +24,7 @@ import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
 import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.gameserver.GameServerError;
+import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
@@ -1630,14 +1631,31 @@ public class QuestEngine implements GameEngine {
 	}
 
 	static List<XMLQuest> selectScriptQuests(Collection<XMLQuest> scripts) {
+		return selectScriptQuests(scripts, CustomConfig.retailDisabledQuestIds());
+	}
+
+	/**
+	 * 三级优先选择：patch（人工补丁）> retail（生成数据）> legacy（旧 XML），同级后者覆盖前者。
+	 * 禁用集中的 retail 条目被跳过，自动回退到 legacy XML 或 Java 处理器；patch 条目不受禁用影响。
+	 * Three-tier selection: patch > retail > legacy, last-wins within a tier. Disabled retail
+	 * entries are skipped (falling back to legacy XML or Java handlers); patches are unaffected.
+	 */
+	static List<XMLQuest> selectScriptQuests(Collection<XMLQuest> scripts, Set<Integer> disabledRetailIds) {
 		Map<Integer, XMLQuest> selected = new LinkedHashMap<>();
 		for (XMLQuest script : scripts) {
+			if (script.isRetail() && !script.isPatch() && disabledRetailIds.contains(script.getId())) {
+				continue;
+			}
 			XMLQuest previous = selected.get(script.getId());
-			if (previous == null || script.isRetail() || !previous.isRetail()) {
+			if (previous == null || rank(script) >= rank(previous)) {
 				selected.put(script.getId(), script);
 			}
 		}
 		return List.copyOf(selected.values());
+	}
+
+	private static int rank(XMLQuest script) {
+		return script.isPatch() ? 2 : script.isRetail() ? 1 : 0;
 	}
 
 	/**

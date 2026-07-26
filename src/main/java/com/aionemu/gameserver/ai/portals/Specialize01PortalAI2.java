@@ -56,7 +56,7 @@ public class Specialize01PortalAI2 extends PortalAI2
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		} else {
 			if (questId == 0) {
-				PortalPath portalPath = DataManager.PORTAL2_DATA.getPortalDialog(getNpcId(), dialogId, player.getRace());
+				PortalPath portalPath = DataManager.PORTAL2_DATA.getPortalDialog(getNpcId(), dialogId, player.getRace(), player.getWorldId());
 				if (portalPath != null) {
 					PortalService.port(portalPath, player, getObjectId());
 				}

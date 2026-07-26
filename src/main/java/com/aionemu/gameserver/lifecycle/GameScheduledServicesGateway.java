@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.ai.RetailDirectPortalEngine;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.utils.Util;
 import org.springframework.beans.factory.ObjectProvider;
@@ -64,6 +65,7 @@ public class GameScheduledServicesGateway {
         if (runtimeBridge.isImperialTombEnabled()) {
             shugoImperialTombSpawnManager(runtimeBridge).start();
         }
+        RetailDirectPortalEngine.startScheduler();
     }
 
     /**

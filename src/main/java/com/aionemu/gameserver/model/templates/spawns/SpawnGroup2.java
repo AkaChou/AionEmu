@@ -67,6 +67,9 @@ public class SpawnGroup2 extends AbstractLockManager {
 	private int npcId;
 	private int pool;
 	private byte difficultId;
+	private Byte spawnPage;
+	private Byte spawnPageEnd;
+	private int initialDelay;
 	private TemporarySpawn temporarySpawn;
 	private int respawnTime;
 	private SpawnHandlerType handlerType;
@@ -330,12 +333,16 @@ public class SpawnGroup2 extends AbstractLockManager {
 	}
 
 	private void initializing(Spawn spawn) {
+		spawn.validateSpawnPageRange();
 		temporarySpawn = spawn.getTemporarySpawn();
 		respawnTime = spawn.getRespawnTime();
 		pool = spawn.getPool();
 		npcId = spawn.getNpcId();
 		handlerType = spawn.getSpawnHandlerType();
 		difficultId = spawn.getDifficultId();
+		spawnPage = spawn.getSpawnPage();
+		spawnPageEnd = spawn.getSpawnPageEnd();
+		initialDelay = spawn.getInitialDelay();
 		if (hasPool()) {
 			poolUsedTemplates = new HashMap<Integer, HashMap<SpawnTemplate, Boolean>>();
 		}
@@ -479,5 +486,23 @@ public class SpawnGroup2 extends AbstractLockManager {
 	/** 返回 difficult id / Returns the difficult id */
 	public byte getDifficultId() {
 		return difficultId;
+	}
+
+	public Byte getSpawnPage() {
+		return spawnPage;
+	}
+
+	public Byte getSpawnPageEnd() {
+		return spawnPageEnd;
+	}
+
+	public int getInitialDelay() {
+		return initialDelay;
+	}
+
+	public boolean matchesInstance(int difficultId, int spawnPage) {
+		return (this.difficultId == 0 || this.difficultId == difficultId)
+				&& (this.spawnPage == null
+						|| (spawnPage >= this.spawnPage && spawnPage <= (spawnPageEnd == null ? this.spawnPage : spawnPageEnd)));
 	}
 }

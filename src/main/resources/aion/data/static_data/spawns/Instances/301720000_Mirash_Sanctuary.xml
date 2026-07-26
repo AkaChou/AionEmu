@@ -29,6 +29,7 @@
 		<!-- IDAbRe_Core_03_Witch_Boss_Ae -->
 		<spawn npc_id="248013">
 		    <spot h="32" z="544.28406" y="437.23602" x="281.97717"/>
+		  <spot x="281.871887" y="437.531677" z="544.842651" h="30" random_walk="2"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_Bonus_Drakan_Fi_An -->
 		<spawn npc_id="248381">
@@ -214,21 +215,93 @@
 		<spawn npc_id="206659" respawn_time="1">
 		  <spot x="605.105957" y="577.005798" z="533.15"/>
 		</spawn>
-		<spawn npc_id="835690" respawn_time="1">
-		  <spot x="770.998352" y="836.178894" z="520.644" h="60"/>
-		</spawn>
 		<spawn npc_id="248399">
 		  <spot x="449.075531" y="589.949829" z="538.2016" h="90" random_walk="2"/>
 		  <spot x="406.075531" y="580.949829" z="540.8067" h="90" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="248432">
-		  <spot x="637.391785" y="590.187134" z="533.99603" random_walk="2"/>
+		<spawn npc_id="248001" initial_delay="1">
+		  <spot x="808.877441" y="797.378906" z="517.015137" h="45" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="248434">
-		  <spot x="454.997711" y="589.789917" z="537.4944" random_walk="2"/>
+		<spawn npc_id="248003" initial_delay="1">
+		  <spot x="809.377441" y="764.878906" z="517.015137" h="105" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="248435">
-		  <spot x="282.000000" y="553.250000" z="547.9942" h="30" random_walk="2"/>
+		<spawn npc_id="248004" initial_delay="1">
+		  <spot x="810.877441" y="762.378906" z="517.015137" h="45" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248005" initial_delay="1">
+		  <spot x="806.877441" y="799.378906" z="517.015137" h="105" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248007" initial_delay="1">
+		  <spot x="723.000000" y="738.500000" z="527.015137" h="110" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248381" initial_delay="1">
+		  <spot x="755.000000" y="774.000000" z="527.015137" h="90" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248382" initial_delay="1">
+		  <spot x="798.000000" y="779.000000" z="521.015137" h="30" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248383" initial_delay="1">
+		  <spot x="797.877441" y="755.878906" z="521.015137" h="30" random_walk="2"/>
+		  <spot x="767.000000" y="786.000000" z="521.015137" random_walk="2"/>
+		  <spot x="779.000000" y="778.000000" z="521.015137" h="60" random_walk="2"/>
+		  <spot x="668.321045" y="595.000000" z="536.015137" h="30" random_walk="2"/>
+		  <spot x="690.767578" y="655.227722" z="531.560791" h="60" random_walk="2"/>
+		  <spot x="779.000000" y="786.000000" z="521.015137" h="60" random_walk="2"/>
+		  <spot x="767.000000" y="778.000000" z="521.015137" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248384" initial_delay="1">
+		  <spot x="705.000000" y="721.000000" z="529.015137" h="30" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248385" initial_delay="1">
+		  <spot x="690.757874" y="658.000000" z="531.560791" h="60" random_walk="2"/>
+		  <spot x="357.000000" y="585.000000" z="544.015137" h="30" random_walk="2"/>
+		  <spot x="685.480591" y="630.827637" z="531.310791" h="60" random_walk="2"/>
+		  <spot x="663.727417" y="626.371826" z="533.442139" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248387" initial_delay="1">
+		  <spot x="713.000000" y="721.000000" z="529.015137" h="30" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248427" initial_delay="1">
+		  <spot x="771.020203" y="815.567200" z="521.015137" h="60" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248432" initial_delay="1">
+		  <spot x="637.391785" y="590.187134" z="537.670837" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248434" initial_delay="1">
+		  <spot x="454.997711" y="589.789917" z="537.670837" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248435" initial_delay="1">
+		  <spot x="282.000000" y="553.250000" z="549.765137" h="30" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="248466" initial_delay="1">
+		  <spot x="674.602356" y="659.164185" z="534.455078" h="115" random_walk="2"/>
+		  <spot x="579.338806" y="600.653625" z="541.462219" h="111" random_walk="2"/>
+		  <spot x="720.705139" y="719.924377" z="531.437805" h="30" random_walk="2"/>
+		  <spot x="347.818481" y="597.017700" z="547.618591" h="90" random_walk="2"/>
+		  <spot x="295.335419" y="449.134460" z="548.732788" h="75" random_walk="2"/>
+		  <spot x="798.140808" y="758.000000" z="519.056519" h="30" random_walk="2"/>
+		  <spot x="765.022278" y="759.254456" z="526.311157" random_walk="2"/>
+		  <spot x="295.456879" y="426.030640" z="548.732788" h="45" random_walk="2"/>
+		  <spot x="593.143982" y="566.136536" z="541.462219" h="21" random_walk="2"/>
+		  <spot x="268.625580" y="449.337677" z="548.732788" h="105" random_walk="2"/>
+		  <spot x="268.850342" y="425.749725" z="548.732788" h="15" random_walk="2"/>
+		  <spot x="348.056519" y="583.608398" z="547.618591" h="30" random_walk="2"/>
+		  <spot x="614.243835" y="614.191101" z="541.462219" h="83" random_walk="2"/>
+		  <spot x="628.198303" y="579.923828" z="541.462219" h="50" random_walk="2"/>
+		  <spot x="519.929077" y="596.923401" z="541.560242" h="90" random_walk="2"/>
+		  <spot x="519.971375" y="583.538330" z="541.560242" h="30" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="731844" initial_delay="1">
+		  <spot x="427.197021" y="596.826050" z="540.929443" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="731845" initial_delay="1">
+		  <spot x="281.887543" y="398.218658" z="548.732788" h="30" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="835690" initial_delay="1">
+		  <spot x="770.998352" y="836.178894" z="521.015137" h="60" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="835732" respawn_time="120" initial_delay="300">
+		  <spot x="798.140808" y="764.500000" z="519.056519" h="30" random_walk="2"/>
 		</spawn>
 	</spawn_map>
 </spawns>

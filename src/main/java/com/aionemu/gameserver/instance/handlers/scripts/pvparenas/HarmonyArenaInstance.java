@@ -425,7 +425,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	private void openDoors() {
 		for (StaticDoor door : instance.getDoors().values()) {
 			if (door != null) {
-				door.setOpen(true);
+				setDoorState(door.getSpawn().getEntityId(), true);
 			}
 		}
 	}

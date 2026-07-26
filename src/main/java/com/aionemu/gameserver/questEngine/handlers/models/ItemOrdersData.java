@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.handlers.models;
 
+import java.util.List;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -41,8 +43,11 @@ public class ItemOrdersData extends XMLQuest {
 	 * 交还任务的结束 NPC ID。
 	 * End NPC id for turn-in.
 	 */
-	@XmlAttribute(name = "end_npc_id", required = true)
+	@XmlAttribute(name = "end_npc_id")
 	protected int endNpcId;
+
+	@XmlAttribute(name = "end_npc_ids")
+	protected List<Integer> endNpcIds;
 
 	/**
 	 * 注册 {@link ItemOrders} 模板处理器。
@@ -52,7 +57,8 @@ public class ItemOrdersData extends XMLQuest {
 	 */
 	@Override
 	public void register(QuestEngine questEngine) {
-		ItemOrders template = new ItemOrders(id, startItemId, talkNpc1, talkNpc2, endNpcId);
+		ItemOrders template = new ItemOrders(id, startItemId, talkNpc1, talkNpc2,
+				endNpcIds == null ? List.of(endNpcId) : endNpcIds);
 		questEngine.addQuestHandler(template);
 	}
 }

@@ -182,8 +182,20 @@ class PvPArenaMigrationTest {
 
 		for (String name : List.of("300350000_Arena_Of_Chaos.xml", "300420000_Chaos_Training_Grounds.xml")) {
 			String source = Files.readString(INSTANCE_SPAWNS.resolve(name));
-			for (int npcId : new int[] { 207102, 701169, 701170, 701171, 701172, 701212 }) {
+			assertFalse(source.contains("npc_id=\"207102\""), name);
+			for (int npcId : new int[] { 701169, 701170, 701171, 701172, 701212 }) {
 				assertTrue(source.contains("npc_id=\"" + npcId + "\""), name + ":" + npcId);
+			}
+			for (String spawn : List.of(
+					"<spawn npc_id=\"701181\" respawn_time=\"45\" spawn_page=\"1\" initial_delay=\"1\">",
+					"<spawn npc_id=\"701195\" respawn_time=\"45\" spawn_page=\"11\" initial_delay=\"1\">",
+					"<spawn npc_id=\"701209\" respawn_time=\"45\" spawn_page=\"21\" initial_delay=\"1\">",
+					"<spawn npc_id=\"701317\" respawn_time=\"30\" spawn_page=\"1\" initial_delay=\"1\">",
+					"<spawn npc_id=\"701318\" respawn_time=\"30\" spawn_page=\"11\" initial_delay=\"1\">",
+					"<spawn npc_id=\"701319\" respawn_time=\"30\" spawn_page=\"21\" initial_delay=\"1\">",
+					"<spawn npc_id=\"701842\" respawn_time=\"45\" spawn_page=\"31\" initial_delay=\"1\">",
+					"<spawn npc_id=\"701848\" respawn_time=\"30\" spawn_page=\"31\" initial_delay=\"1\">")) {
+				assertTrue(source.contains(spawn), name + ":" + spawn);
 			}
 			String gather = Files.readString(GATHER_SPAWNS.resolve(name));
 			assertTrue(gather.contains("npc_id=\"405000\""), name);
@@ -212,7 +224,8 @@ class PvPArenaMigrationTest {
 		int supportStart = source.indexOf("public boolean supportsRetailNpcScore(");
 		String support = source.substring(supportStart, source.indexOf("public synchronized boolean onRetailNpcScore(", supportStart));
 		for (int npcId : new int[] { 207102, 219502, 219503, 219504, 219540, 219541, 219542, 219653, 219654,
-				243675, 243676, 701173, 701174, 701187, 701188, 701216, 701221, 701226, 701852 }) {
+				243675, 243676, 701173, 701174, 701181, 701187, 701188, 701195, 701209, 701216, 701221, 701226,
+				701317, 701318, 701319, 701842, 701848, 701852 }) {
 			assertTrue(support.contains(Integer.toString(npcId)), Integer.toString(npcId));
 		}
 		assertFalse(support.contains("701169"));

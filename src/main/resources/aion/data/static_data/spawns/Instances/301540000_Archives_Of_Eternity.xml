@@ -838,33 +838,33 @@
 		<spawn npc_id="206535">
 		  <spot x="723.700623" y="512.148132" z="471.146790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="247518">
-		  <spot x="730.568909" y="514.380493" z="470.001129" random_walk="2"/>
-		</spawn>
-		<spawn npc_id="702900">
-		  <spot x="727.075623" y="512.148132" z="471.146790" random_walk="2"/>
-		</spawn>
 		<spawn npc_id="703107" respawn_time="1">
 		  <spot x="461.712708" y="672.648132" z="470.646790" random_walk="2"/>
 		  <spot x="460.587708" y="351.648132" z="470.646790" random_walk="2"/>
 		  <spot x="552.337708" y="512.398132" z="470.646790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="703141">
+		<spawn npc_id="247518" initial_delay="1">
+		  <spot x="730.568909" y="514.380493" z="470.001129" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="702900" initial_delay="1">
+		  <spot x="727.075623" y="512.148132" z="471.146790" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="703141" initial_delay="1">
 		  <spot x="727.075623" y="508.148132" z="471.146790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857770" respawn_time="1">
+		<spawn npc_id="857770" respawn_time="1" initial_delay="1">
 		  <spot x="460.845215" y="671.889282" z="469.396790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857771" respawn_time="1">
+		<spawn npc_id="857771" respawn_time="1" initial_delay="1">
 		  <spot x="552.837708" y="511.898132" z="469.396790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857772" respawn_time="1">
+		<spawn npc_id="857772" respawn_time="1" initial_delay="1">
 		  <spot x="460.837708" y="352.523132" z="469.396790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857773" respawn_time="1">
+		<spawn npc_id="857773" respawn_time="1" initial_delay="1">
 		  <spot x="256.337708" y="512.648132" z="469.396790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857866" respawn_time="1">
+		<spawn npc_id="857866" respawn_time="1" initial_delay="1">
 		  <spot x="552.845215" y="511.889282" z="469.896790" random_walk="2"/>
 		  <spot x="460.720215" y="352.514282" z="469.896790" random_walk="2"/>
 		  <spot x="460.845215" y="671.889282" z="469.896790" random_walk="2"/>

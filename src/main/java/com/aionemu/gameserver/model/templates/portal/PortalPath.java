@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.TeleportAnimation;
 
 /**
  * 传送门路径模板（静态数据/XML）。
@@ -34,6 +35,12 @@ public class PortalPath {
 	protected Race race = Race.PC_ALL;
 	@XmlAttribute(name = "err_group")
 	protected int errGroup;
+	@XmlAttribute(name = "source_world_id")
+	protected int sourceWorldId;
+	@XmlAttribute(name = "animation")
+	protected TeleportAnimation animation = TeleportAnimation.FIRE_ANIMATION;
+	@XmlAttribute(name = "destination_alias")
+	protected String destinationAlias = "";
 
 	/** 返回 portal req / Returns the portal req */
 	public PortalReq getPortalReq() {
@@ -94,4 +101,18 @@ public class PortalPath {
 	public int getErrGroup() {
 		return errGroup;
 	}
+
+	public boolean matches(Race race, int sourceWorldId) {
+		return (this.sourceWorldId == 0 || this.sourceWorldId == sourceWorldId)
+				&& (this.race == Race.PC_ALL || this.race == race);
+	}
+
+	public TeleportAnimation getAnimation() {
+		return animation;
+	}
+
+	public String getDestinationAlias() {
+		return destinationAlias;
+	}
+
 }

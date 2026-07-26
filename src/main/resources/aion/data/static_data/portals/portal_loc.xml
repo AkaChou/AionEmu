@@ -439,8 +439,9 @@
 	<!-- Taloc's Hollow -->
 	<portal_loc world_id="300190000" loc_id="3001900" x="199.87788" y="212.72118" z="1098.889" h="0"/>
 	<!-- Haramel -->
-	<portal_loc world_id="300200000" loc_id="3002000" x="172.0000" y="20.0000" z="144.22" h="0"/> <!-- Haramel Entrance -->
-	<portal_loc world_id="300200000" loc_id="3002001" x="216.6916" y="213.28465" z="89.27873" h="0"/> <!-- Tower Lift Exit -->
+		<portal_loc world_id="300200000" loc_id="3002000" x="172.0000" y="20.0000" z="144.22" h="0"/> <!-- Haramel Entrance -->
+		<portal_loc world_id="300200000" loc_id="3002001" x="216.6916" y="213.28465" z="89.27873" h="0"/> <!-- Tower Lift Exit -->
+		<portal_loc world_id="300200000" loc_id="3002002" x="220" y="213" z="127" h="60"/> <!-- Tower Lift Upper -->
 	<!-- Chantra Dredgion -->
 	<portal_loc world_id="300210000" loc_id="3002101" x="388.42188" y="643.05597" z="411.8904" h="25"/> <!-- Walkway A -->
 	<portal_loc world_id="300210000" loc_id="3002102" x="468.90094" y="495.59647" z="397.8092" h="25"/> <!-- Drop Zone A -->
@@ -452,9 +453,11 @@
 	<!-- Kromede's Trial -->
 	<portal_loc world_id="300230000" loc_id="3002300" x="244.98566" y="244.14162" z="189.52058" h="0"/>
 	<!-- Aturam Sky Fortress -->
-	<portal_loc world_id="300240000" loc_id="3002400" x="555.591" y="536.1958" z="600.8177" h="59"/>
-	<!-- [Event] Aturam Sky Fortress -->
-	<portal_loc world_id="300241000" loc_id="3002410" x="555.591" y="536.1958" z="600.8177" h="59"/>
+		<portal_loc world_id="300240000" loc_id="3002400" x="555.591" y="536.1958" z="600.8177" h="59"/>
+		<portal_loc world_id="300240000" loc_id="3002401" x="691.534302" y="457.016998" z="656.622314" h="52"/> <!-- Lift Upper -->
+		<!-- [Event] Aturam Sky Fortress -->
+		<portal_loc world_id="300241000" loc_id="3002410" x="555.591" y="536.1958" z="600.8177" h="59"/>
+		<portal_loc world_id="300241000" loc_id="3002411" x="691.534302" y="457.016998" z="656.622314" h="52"/> <!-- Lift Upper -->
 	<!-- Esoterrace 5.3 -->
 	<portal_loc world_id="300250000" loc_id="3002500" x="333.0000" y="437.0000" z="326.0000" h="0"/>
 	<!-- Elementis Forest -->
@@ -484,8 +487,9 @@
 	<portal_loc world_id="300510000" loc_id="3005100" x="1581.6545" y="1068.9741" z="492.00992" h="61"/>
 	<portal_loc world_id="300510000" loc_id="3005101" x="1054.6545" y="1070.212" z="496.86157" h="0"/>
 	<portal_loc world_id="300510000" loc_id="3005102" x="1097.5931" y="1067.535" z="497.2256" h="52"/>
-	<portal_loc world_id="300510000" loc_id="3005104" x="1030.83" y="490.4" z="442.2" h="90"/>
-	<portal_loc world_id="300510000" loc_id="3005105" x="1030.7" y="498.4" z="443" h="30"/>
+	<portal_loc world_id="300510000" loc_id="3005104" x="1030.219849" y="491.685699" z="444.347076" h="90"/>
+	<portal_loc world_id="300510000" loc_id="3005105" x="1030.378906" y="499.824188" z="444.316223" h="30"/>
+	<portal_loc world_id="300510000" loc_id="3005106" x="1056.221436" y="1068.803955" z="788.206726" h="0"/>
 	<!-- Dragon Lord Refuge 4.3 -->
 	<portal_loc world_id="300520000" loc_id="3005200" x="503.44748" y="524.0377" z="240.26653" h="0"/>
 	<!-- The Eternal Bastion 4.8 -->
@@ -598,19 +602,19 @@
 	<portal_loc world_id="301550000" loc_id="3015503" x="211.96362" y="1240.3477" z="825.32336" h="116"/> <!-- Entrance To Vid’s Secret Library -->
 	<portal_loc world_id="301550000" loc_id="3015504" x="446.71033" y="1365.4307" z="913.3278" h="20"/> <!-- Vid’s Secret Library Exit -->
 	<portal_loc world_id="301550000" loc_id="3015505" x="602.30615" y="556.31586" z="509.43015" h="87"/> <!-- Entrance To The Spring Of Knowledge -->
-	<portal_loc world_id="301550000" loc_id="3015506" x="971.2885" y="774.761" z="1042.4146" h="59"/> <!-- The Walking Path's -->
-	<portal_loc world_id="301550000" loc_id="3015507" x="709.68024" y="1194.2897" z="1035.7778" h="43"/> <!-- Garden Temple -->
-	<portal_loc world_id="301550000" loc_id="3015508" x="559.64844" y="1427.6077" z="826.1996" h="70"/> <!-- The Library Gap -->
-	<portal_loc world_id="301550000" loc_id="3015509" x="756.2201" y="859.12823" z="577.9667" h="62"/> <!-- The Verdant Center -->
+	<portal_loc world_id="301550000" loc_id="3015506" x="979.472412" y="774.540588" z="1046.433472" h="60"/> <!-- The Walking Path's -->
+	<portal_loc world_id="301550000" loc_id="3015507" x="711.264038" y="1192.229614" z="1036.798462" h="45"/> <!-- Garden Temple -->
+	<portal_loc world_id="301550000" loc_id="3015508" x="559.424377" y="1426.447876" z="830.084106" h="75"/> <!-- The Library Gap -->
+	<portal_loc world_id="301550000" loc_id="3015509" x="755.131592" y="858.440430" z="579.523804" h="66"/> <!-- The Verdant Center -->
 	<!-- Trials Of Eternity 5.5 -->
 	<portal_loc world_id="301560000" loc_id="3015600" x="1235.5623" y="1026.647" z="761.1762" h="60"/> <!-- Trials Of Eternity Entrance -->
 	<portal_loc world_id="301560000" loc_id="3015601" x="222.54535" y="1025.4542" z="706.75494" h="60"/> <!-- IDEternity_03_Dimension_Boss_Portal_01 -->
 	<portal_loc world_id="301560000" loc_id="3015602" x="227.4602" y="636.6689" z="712.8079" h="55"/> <!-- IDEternity_03_Dimension_Boss_Portal_02 -->
-	<portal_loc world_id="301560000" loc_id="3015603" x="927.72296" y="1056.3187" z="751.6501" h="74"/> <!-- Zone B -->
-	<portal_loc world_id="301560000" loc_id="3015604" x="914.71704" y="1335.9772" z="747.4713" h="77"/> <!-- Zone C -->
-	<portal_loc world_id="301560000" loc_id="3015605" x="569.9354" y="1321.2402" z="721.64844" h="15"/> <!-- Zone D -->
-	<portal_loc world_id="301560000" loc_id="3015606" x="545.6873" y="1124.493" z="710.66907" h="74"/> <!-- Zone E -->
-	<portal_loc world_id="301560000" loc_id="3015607" x="243.8941" y="1025.466" z="711.01337" h="60"/> <!-- Boss Final -->
+	<portal_loc world_id="301560000" loc_id="3015603" x="932.333740" y="1060.000000" z="753.533569" h="30"/> <!-- Zone B -->
+	<portal_loc world_id="301560000" loc_id="3015604" x="919.082336" y="1335.092651" z="751.656433" h="75"/> <!-- Zone C -->
+	<portal_loc world_id="301560000" loc_id="3015605" x="572.419250" y="1317.766724" z="725.193970" h="45"/> <!-- Zone D -->
+	<portal_loc world_id="301560000" loc_id="3015606" x="545.799927" y="1131.439575" z="711.549377" h="90"/> <!-- Zone E -->
+	<portal_loc world_id="301560000" loc_id="3015607" x="481.299286" y="1025.810059" z="713.110657" h="60"/> <!-- Boss Final -->
 	<!-- Emperor Trillirunerk's Safe 4.9.1 -->
 	<portal_loc world_id="301590000" loc_id="3015900" x="543.20166" y="294.48053" z="400.56976" h="23"/>
 	<!-- Adma's Fall 5.0 -->
@@ -631,18 +635,20 @@
 	<portal_loc world_id="301650000" loc_id="3016505" x="485.29318" y="852.864" z="417.44208" h="91"/> <!-- Captain's Cabin -->
 	<!-- Fallen Poeta 5.1 -->
 	<portal_loc world_id="301660000" loc_id="3016600" x="306.17940" y="911.22560" z="105.55610" h="46"/> <!-- Fallen Poeta Entrance -->
-	<portal_loc world_id="301660000" loc_id="3016601" x="190.53264" y="908.67630" z="102.25000" h="82"/> <!-- Dark Spore Road's 1st Gate -->
-	<portal_loc world_id="301660000" loc_id="3016602" x="250.11502" y="771.19890" z="102.06774" h="84"/> <!-- Dark Spore Road's 2nd Gate -->
-	<portal_loc world_id="301660000" loc_id="3016603" x="244.40724" y="624.13934" z="103.97455" h="99"/> <!-- Dark Spore Road's 3rd Gate -->
-	<portal_loc world_id="301660000" loc_id="3016604" x="222.61717" y="469.12466" z="111.91903" h="87"/> <!-- Dark Spore Road's 4th Gate -->
-	<portal_loc world_id="301660000" loc_id="3016605" x="296.18668" y="920.55030" z="105.34061" h="44"/> <!-- Spore Road Assembly Area -->
+	<portal_loc world_id="301660000" loc_id="3016601" x="221.785339" y="913.625671" z="103.111183" h="56"/> <!-- Dark Spore Road's 1st Gate -->
+	<portal_loc world_id="301660000" loc_id="3016602" x="248.239655" y="808.358948" z="107.323151" h="90"/> <!-- Dark Spore Road's 2nd Gate -->
+	<portal_loc world_id="301660000" loc_id="3016603" x="214.376190" y="621.652405" z="108.721092" h="10"/> <!-- Dark Spore Road's 3rd Gate -->
+	<portal_loc world_id="301660000" loc_id="3016604" x="214.337906" y="505.488007" z="116.367142" h="105"/> <!-- Dark Spore Road's 4th Gate -->
+	<portal_loc world_id="301660000" loc_id="3016605" x="295.066956" y="921.600037" z="107.593628" h="45"/> <!-- Spore Road Assembly Area -->
 	<portal_loc world_id="301660000" loc_id="3016606" x="1191.1211" y="1247.1170" z="141.19753" h="79"/> <!-- Boss Entrance -->
 	<!-- Ophidan Warpath 5.1 -->
 	<portal_loc world_id="301670000" loc_id="3016700" x="616.41034" y="511.17276" z="592.0526" h="42"/> <!-- Cave South -->
 	<portal_loc world_id="301670000" loc_id="3016701" x="584.2129" y="475.97488" z="620.76105" h="82"/> <!-- Cave North -->
+	<portal_loc world_id="301670000" loc_id="3016702" x="618.015869" y="510.003937" z="594.430847" h="45"/> <!-- Southern Cave Teleporter -->
+	<portal_loc world_id="301670000" loc_id="3016703" x="582.946655" y="473.872925" z="621.824707" h="90"/> <!-- Northern Cave Teleporter -->
 	<!-- Idgel Dome Landmark 5.1 -->
-	<portal_loc world_id="301680000" loc_id="3016800" x="253.0558" y="246.32085" z="92.94253" h="15"/> <!-- Center A -->
-	<portal_loc world_id="301680000" loc_id="3016801" x="276.20248" y="271.6099" z="92.4253" h="75"/> <!-- Center E -->
+	<portal_loc world_id="301680000" loc_id="3016800" x="290.232025" y="233.120544" z="90.601646" h="46"/> <!-- Center A -->
+	<portal_loc world_id="301680000" loc_id="3016801" x="238.262192" y="285.216553" z="90.601646" h="110"/> <!-- Center E -->
 	<!-- Mirash Sanctuary 5.8 -->
 	<portal_loc world_id="301720000" loc_id="3017200" x="770.8157" y="819.0407" z="518.875" h="90"/> <!-- Mirash Sanctuary Entrance -->
 	<portal_loc world_id="301720000" loc_id="3017201" x="762.83875" y="758.68567" z="525.76245" h="60"/> <!-- Fix Ladder Mirash Sanctuary -->
@@ -665,8 +671,9 @@
 	<portal_loc world_id="302300000" loc_id="3023001" x="834.0617" y="2346.8477" z="93.52324" h="89"/> <!-- Dreadgion Invade -->
 	<portal_loc world_id="302300000" loc_id="3023002" x="1275.622" y="1163.4197" z="215.21492" h="30"/> <!-- Dreadgion Invade Exit -->
 	<!-- Kumuki Cave 5.3 -->
-	<portal_loc world_id="302330000" loc_id="3023300" x="172.0000" y="20.0000" z="144.22" h="0"/> <!-- Kumuki Cave Entrance -->
-	<portal_loc world_id="302330000" loc_id="3023301" x="223.94576" y="358.96796" z="141.73924" h="90"/> <!-- Mischievous Gretel Teleport -->
+		<portal_loc world_id="302330000" loc_id="3023300" x="172.0000" y="20.0000" z="144.22" h="0"/> <!-- Kumuki Cave Entrance -->
+		<portal_loc world_id="302330000" loc_id="3023301" x="223.848312" y="357.048798" z="143.100006" h="90"/> <!-- Mischievous Gretel Teleport -->
+		<portal_loc world_id="302330000" loc_id="3023302" x="220" y="213" z="127" h="60"/> <!-- Tower Lift Upper -->
 	<!-- Bastion Of Souls 5.5 -->
 	<portal_loc world_id="302340000" loc_id="3023400" x="1318.0001" y="1360.4885" z="494.7607" h="71"/> <!-- Bastion Of Souls Entrance -->
 	<!-- Crucible Spire 5.6 -->

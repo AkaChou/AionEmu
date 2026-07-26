@@ -53,6 +53,63 @@ class RetailQuestRuntimeSmokeTest {
 	}
 
 	@Test
+	void generatedOutputMatchesReportHash() throws Exception {
+		String report = java.nio.file.Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/quests/scripts/zz_retail_simple_quests.report.json"));
+		java.util.regex.Matcher matcher = java.util.regex.Pattern
+				.compile("\"output_sha256\": \"([0-9a-f]{64})\"").matcher(report);
+		assertTrue(matcher.find(), "report 缺少 output_sha256，请重跑 scripts/generate_retail_simple_quests.py");
+		byte[] output = java.nio.file.Files.readAllBytes(Path.of(
+				"src/main/resources/aion/definitions/compact/quests/scripts/zz_retail_simple_quests.xml"));
+		String actual = java.util.HexFormat.of()
+				.formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(output));
+		assertEquals(matcher.group(1), actual,
+				"生成产物被手改或与报告脱节；生成层只读，请改 patches/ 覆盖层或重跑 scripts/generate_retail_simple_quests.py");
+	}
+
+	@Test
+	void factionDailyQuestGeneratesWithoutStartNpc() throws Exception {
+		// _faction_ 哨兵任务：由 NPC 势力每日池发放，无起始 NPC（start_npc_ids="0"，照旧 XML 形态）。
+		XMLQuest quest = retailQuests.getQuest().stream()
+				.filter(definition -> definition.getId() == 35007).findFirst().orElseThrow();
+		assertTrue(quest.isRetail());
+		assertEquals("ItemCollectingData", quest.getClass().getSimpleName());
+		assertEquals(List.of(0), readField(quest, "startNpcIds"));
+		assertEquals(List.of(799805), readField(quest, "endNpcIds"));
+		assertEquals(List.of(700788), readField(quest, "actionItemIds"));
+	}
+
+	@Test
+	void challengeTaskQuestGeneratesWithoutStartNpc() throws Exception {
+		// _challengetask_ 哨兵任务：由挑战任务列表（军团/城镇）发放，无起始 NPC。
+		XMLQuest quest = retailQuests.getQuest().stream()
+				.filter(definition -> definition.getId() == 17000).findFirst().orElseThrow();
+		assertTrue(quest.isRetail());
+		assertEquals("MonsterHuntData", quest.getClass().getSimpleName());
+		assertEquals(List.of(0), readField(quest, "startNpcIds"));
+		assertEquals(List.of(800447), readField(quest, "endNpcIds"));
+	}
+
+	@Test
+	void patchLayerEntriesAreExplicitAndUnique() throws Exception {
+		Unmarshaller unmarshaller = JAXBContext.newInstance(StaticData.class).createUnmarshaller();
+		java.util.Set<Integer> ids = new java.util.HashSet<>();
+		try (var paths = java.nio.file.Files.walk(Path.of("src/main/resources/aion/definitions/compact/quests/patches"))) {
+			for (Path path : paths.filter(p -> p.toString().endsWith(".xml")).sorted().toList()) {
+				XMLQuests quests = (XMLQuests) unmarshaller.unmarshal(path.toFile());
+				if (quests.getQuest() == null) {
+					continue;
+				}
+				for (XMLQuest quest : quests.getQuest()) {
+					assertTrue(quest.isPatch(), "patches 层条目必须标记 patch=\"true\"：quest " + quest.getId());
+					assertTrue(ids.add(quest.getId()),
+							"patches 层同一 quest id 出现多次（目录文件顺序不确定，覆盖结果不可预测）：quest " + quest.getId());
+				}
+			}
+		}
+	}
+
+	@Test
 	void legacyAncientCubeRunsThroughDataDrivenQuest() {
 		DataDrivenQuestData definition = definition(legacyQuests, 1127);
 		assertEquals(1011, definition.getStartDialogId());
@@ -612,6 +669,48 @@ class RetailQuestRuntimeSmokeTest {
 	}
 
 	@Test
+	void relativeSpawnsUseRetailData() {
+		for (var entry : Map.of(25084, List.of(804926, 804927, 220038, 300),
+				30721, List.of(804704, 804870, 236654, 120),
+				30771, List.of(804728, 804871, 236654, 120)).entrySet()) {
+			DataDrivenQuestData definition = definition(entry.getKey());
+			assertEquals(List.of(entry.getValue().get(0)), definition.getStartIds());
+			assertEquals(List.of(entry.getValue().get(1)), definition.getEndNpcIds());
+			DataDrivenQuestData.Spawn spawn = definition.getSteps().stream()
+					.flatMap(step -> step.getSpawns().stream()).findFirst().orElseThrow();
+			assertTrue(spawn.isRelative());
+			assertEquals(entry.getValue().get(2), spawn.getNpcId());
+			assertEquals(2, spawn.getCount());
+			assertEquals(entry.getValue().get(3), spawn.getLifetimeSeconds());
+		}
+
+		RecordingDataDrivenQuest quest = new RecordingDataDrivenQuest(definition(25084));
+		Player player = playerWithState(25084, 2);
+		assertTrue(quest.onAddAggroListEvent(env(player, 25084, 206403, QuestDialog.NULL, 0)));
+		assertEquals(2, quest.spawnCount);
+		assertTrue(quest.spawnRelative);
+		assertEquals(List.of(220038, 300, 0.0f, 0.0f, 0.0f, 0), quest.spawn);
+		assertEquals(QuestStatus.REWARD, state(player, 25084).getStatus());
+	}
+
+	@Test
+	void fieldRaidTrackingUsesRetailData() {
+		for (var entry : Map.of(15670, List.of(806114, 806093, 731793, 703434, 703435, 703436, 703437),
+				25670, List.of(806116, 806105, 731794, 703439, 703440, 703441, 703442)).entrySet()) {
+			DataDrivenQuestData definition = definition(entry.getKey());
+			assertEquals("TALK", definition.getStartType());
+			assertEquals(List.of(entry.getValue().get(0)), definition.getStartIds());
+			assertEquals(List.of(entry.getValue().get(0)), definition.getEndNpcIds());
+			assertEquals(List.of("TALK", "COLLECT_ITEM", "TALK"),
+					definition.getSteps().stream().map(DataDrivenQuestData.Step::getType).toList());
+			assertEquals(List.of(entry.getValue().get(1)), definition.getSteps().get(0).getIds());
+			assertEquals(List.of(entry.getValue().get(1)), definition.getSteps().get(1).getIds());
+			assertEquals(entry.getValue().subList(3, 7), definition.getSteps().get(1).getActionIds());
+			assertEquals(List.of(entry.getValue().get(2)), definition.getSteps().get(2).getIds());
+		}
+	}
+
+	@Test
 	void compiledPaiosRescuesAdvanceAtColumnAndResetOnRentusReentry() {
 		for (int questId : List.of(30504, 30554)) {
 			DataDrivenQuestData definition = definition(questId);
@@ -879,6 +978,36 @@ class RetailQuestRuntimeSmokeTest {
 	}
 
 	@Test
+	void timedRetailQuest13945StartsAndRollsBackUntilDestination() {
+		DataDrivenQuestData definition = definition(13945);
+		assertEquals(2700, definition.getSteps().get(0).getTimerSeconds());
+		assertEquals(2, definition.getSteps().get(0).getTimerDestinationProgress());
+		RecordingDataDrivenQuest quest = new RecordingDataDrivenQuest(definition);
+		Player player = playerWithState(13945, 0);
+
+		assertTrue(quest.onDialogEvent(env(player, 13945, 836179, QuestDialog.NULL, 10000)));
+		assertEquals(1, state(player, 13945).getQuestVarById(0));
+		assertEquals(2700, quest.timerSeconds);
+		state(player, 13945).setQuestVarById(1, 1);
+		assertTrue(quest.onQuestTimerEndEvent(env(player, 13945, 0, QuestDialog.NULL, 0)));
+		assertEquals(0, state(player, 13945).getQuestVarById(0));
+		assertEquals(0, state(player, 13945).getQuestVarById(1));
+
+		assertTrue(quest.onDialogEvent(env(player, 13945, 836179, QuestDialog.NULL, 10000)));
+		assertTrue(quest.onKillEvent(env(player, 13945, 884544, QuestDialog.NULL, 0)));
+		assertTrue(quest.onKillEvent(env(player, 13945, 884544, QuestDialog.NULL, 0)));
+		assertEquals(QuestStatus.REWARD, state(player, 13945).getStatus());
+		assertFalse(quest.onQuestTimerEndEvent(env(player, 13945, 0, QuestDialog.NULL, 0)));
+
+		state(player, 13945).setStatus(QuestStatus.START);
+		state(player, 13945).setQuestVarById(0, 1);
+		state(player, 13945).setQuestVarById(1, 1);
+		assertTrue(quest.onLogOutEvent(env(player, 13945, 0, QuestDialog.NULL, 0)));
+		assertEquals(0, state(player, 13945).getQuestVarById(0));
+		assertEquals(0, state(player, 13945).getQuestVarById(1));
+	}
+
+	@Test
 	void enterAreaAdvancesRetailQuest15322() {
 		RecordingDataDrivenQuest quest = quest(15322);
 		Player player = playerWithState(15322, 0);
@@ -1009,8 +1138,10 @@ class RetailQuestRuntimeSmokeTest {
 		private int givenItemId;
 		private int givenItemCount;
 		private int spawnCount;
+		private boolean spawnRelative;
 		private List<Number> spawn;
 		private List<Integer> teleport;
+		private int timerSeconds;
 
 		private RecordingDataDrivenQuest(DataDrivenQuestData data) {
 			super(data);
@@ -1066,8 +1197,14 @@ class RetailQuestRuntimeSmokeTest {
 		}
 
 		@Override
+		protected void startTimer(QuestEnv env, int seconds) {
+			timerSeconds = seconds;
+		}
+
+		@Override
 		protected void spawn(QuestEnv env, DataDrivenQuestData.Spawn spawn) {
 			spawnCount++;
+			spawnRelative = spawn.isRelative();
 			this.spawn = List.of(spawn.getNpcId(), spawn.getLifetimeSeconds(), spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getHeading());
 		}
 

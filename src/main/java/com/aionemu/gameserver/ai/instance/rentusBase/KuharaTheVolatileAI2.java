@@ -58,8 +58,8 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isHome.compareAndSet(true, false)) {
-			getPosition().getWorldMapInstance().getDoors().get(43).setOpen(true);
-			getPosition().getWorldMapInstance().getDoors().get(150).setOpen(false);
+			getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(43, true);
+			getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(150, false);
 			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500393, getObjectId(), 0, 0);
 			startActivEvent();
 			startBarrelEvent();
@@ -266,8 +266,8 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 		cancelActiveEventTask();
 		cancelBarrelEventTask();
 		cancelBombEventTask();
-		getPosition().getWorldMapInstance().getDoors().get(43).setOpen(false);
-		getPosition().getWorldMapInstance().getDoors().get(150).setOpen(true);
+		getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(43, false);
+		getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(150, true);
 		super.handleBackHome();
 	}
 	
@@ -282,8 +282,8 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282395)); //Spilled Oil.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282396)); //Kuhara Bomb.
 			spawn(219215, p.getX(), p.getY(), p.getZ(), p.getHeading()); //Kuhara Treasure Box.
-			p.getWorldMapInstance().getDoors().get(43).setOpen(false);
-			p.getWorldMapInstance().getDoors().get(150).setOpen(true);
+			p.getWorldMapInstance().getInstanceHandler().setDoorState(43, false);
+			p.getWorldMapInstance().getInstanceHandler().setDoorState(150, true);
 		}
 		super.handleDied();
 		AI2Actions.deleteOwner(this);

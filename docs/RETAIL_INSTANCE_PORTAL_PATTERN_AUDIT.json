@@ -1,0 +1,594 @@
+{
+  "version": 1,
+  "authority": {
+    "mappings": "src/main/resources/aion/definitions/compact/ai/npc-ai.xml",
+    "patterns": "src/main/resources/aion/definitions/compact/ai/npcaipatterns*.xml",
+    "aliases": "src/main/resources/aion/definitions/compact/ai/ai-location-aliases.xml",
+    "runtime_proof": "RetailPatternAI2Test#retailInstancePatternsUseCompleteConditionVariables"
+  },
+  "summary": {
+    "REJECT_NO_RETAIL_PATTERN": 39,
+    "REJECT_INCOMPLETE_RETAIL_PATTERN": 1,
+    "SUPPORTED_RETAIL_PATTERN": 8
+  },
+  "entries": [
+    {
+      "npc_id": 205426,
+      "world_ids": [
+        300300000
+      ],
+      "mapped_pattern": "IDArena_5th_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205427,
+      "world_ids": [
+        300300000
+      ],
+      "mapped_pattern": "IDArena_6th_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205428,
+      "world_ids": [
+        300300000
+      ],
+      "mapped_pattern": "IDArena_7th_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205429,
+      "world_ids": [
+        300300000
+      ],
+      "mapped_pattern": "IDArena_8th_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205430,
+      "world_ids": [
+        300300000
+      ],
+      "mapped_pattern": "IDArena_9th_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205431,
+      "world_ids": [
+        300300000
+      ],
+      "mapped_pattern": "IDArena_10th_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205663,
+      "world_ids": [
+        300320000
+      ],
+      "mapped_pattern": "IDArena_Solo_4B_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205682,
+      "world_ids": [
+        300320000
+      ],
+      "mapped_pattern": "IDArena_Solo_1st_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205683,
+      "world_ids": [
+        300320000
+      ],
+      "mapped_pattern": "IDArena_Solo_2nd_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205684,
+      "world_ids": [
+        300320000
+      ],
+      "mapped_pattern": "IDArena_Solo_3rd_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205685,
+      "world_ids": [
+        300320000
+      ],
+      "mapped_pattern": "IDArena_Solo_4th_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205686,
+      "world_ids": [
+        300320000
+      ],
+      "mapped_pattern": "IDArena_Solo_5th_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 205687,
+      "world_ids": [
+        300320000
+      ],
+      "mapped_pattern": "IDArena_Solo_6th_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 247386,
+      "world_ids": [
+        302400000
+      ],
+      "mapped_pattern": "IDInfinity_Teleport_Odd_Number",
+      "status": "REJECT_INCOMPLETE_RETAIL_PATTERN",
+      "reason": "missing NPC skill SKILLI_INDEX_0"
+    },
+    {
+      "npc_id": 700455,
+      "world_ids": [
+        300080000,
+        300700000
+      ],
+      "mapped_pattern": "ReturnToEntrance",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 700924,
+      "world_ids": [
+        300230000
+      ],
+      "mapped_pattern": "IDCromede_bookcase_door_in",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 700966,
+      "world_ids": [
+        300160000
+      ],
+      "mapped_pattern": "IDTemple_Low_Portal",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 701871,
+      "world_ids": [
+        301140000,
+        301380000
+      ],
+      "mapped_pattern": "IDF5_U2_Teleporter_1",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 701872,
+      "world_ids": [
+        301140000,
+        301380000
+      ],
+      "mapped_pattern": "IDF5_U2_Teleporter_2",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 701873,
+      "world_ids": [
+        301140000,
+        301380000
+      ],
+      "mapped_pattern": "IDF5_U2_Teleporter_3",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 701984,
+      "world_ids": [
+        301210000
+      ],
+      "mapped_pattern": "IDLDF5_Under_01_War_HeroSwitch_01",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 701985,
+      "world_ids": [
+        301210000
+      ],
+      "mapped_pattern": "IDLDF5_Under_01_War_HeroSwitch_01",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 701986,
+      "world_ids": [
+        301210000
+      ],
+      "mapped_pattern": "IDLDF5_Under_01_War_HeroSwitch_02",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 701987,
+      "world_ids": [
+        301210000
+      ],
+      "mapped_pattern": "IDLDF5_Under_01_War_HeroSwitch_02",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 702591,
+      "world_ids": [
+        301270000
+      ],
+      "mapped_pattern": "IDLDF4Re_01_room_out",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 702660,
+      "world_ids": [
+        300240000,
+        300241000
+      ],
+      "mapped_pattern": "IDStation_Lobby_Teleport",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 730199,
+      "world_ids": [
+        300100000,
+        300460000
+      ],
+      "mapped_pattern": "AI_IDShip_2F_BossRoom_Door",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 730390,
+      "world_ids": [
+        300240000,
+        300241000
+      ],
+      "mapped_pattern": "IDStation_ShulackAirplane_Move",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 730460,
+      "world_ids": [
+        300320000
+      ],
+      "mapped_pattern": "IDArena_Solo_Bonus_Out",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 730625,
+      "world_ids": [
+        300520000,
+        300630000
+      ],
+      "mapped_pattern": "IDTiamat_FOBJ_Teleport_T2",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 730872,
+      "world_ids": [
+        301130000
+      ],
+      "mapped_pattern": "IDVritra_Base_Boss_Teleporter",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 731584,
+      "world_ids": [
+        300480000
+      ],
+      "mapped_pattern": "IDLDF5Re_Solo_Set",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 799573,
+      "world_ids": [
+        300300000
+      ],
+      "mapped_pattern": "IDArena_1st_Resurrect_NPC",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 802023,
+      "world_ids": [
+        301210000
+      ],
+      "mapped_pattern": "IDLDF5_Under_01_War_FOBJ_TeleportStatue_1",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 806053,
+      "world_ids": [
+        301550000
+      ],
+      "mapped_pattern": "ReturnToEntrance",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 831114,
+      "world_ids": [
+        300560000
+      ],
+      "mapped_pattern": "IDEvent01_B_MC_End",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 831115,
+      "world_ids": [
+        300560000
+      ],
+      "mapped_pattern": "IDEvent01_C_MC_End",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 831350,
+      "world_ids": [
+        300560000
+      ],
+      "mapped_pattern": "IDDF2Flying_Event01_Treasure_Room",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 832924,
+      "world_ids": [
+        301400000,
+        301590000
+      ],
+      "mapped_pattern": "IDSweep_IN_Stage2_NPC01",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 832932,
+      "world_ids": [
+        301400000,
+        301590000
+      ],
+      "mapped_pattern": "IDSweep_Treasure_Room",
+      "status": "REJECT_NO_RETAIL_PATTERN",
+      "reason": "mapped retail pattern is absent from generated pattern definitions"
+    },
+    {
+      "npc_id": 835277,
+      "world_ids": [
+        302350000
+      ],
+      "mapped_pattern": "IDEternity_War_Teleport_Li_01",
+      "status": "SUPPORTED_RETAIL_PATTERN",
+      "pattern_source": "npcaipatterns_ideternity_war_jsm.xml",
+      "teleport_actions": [
+        {
+          "event": "on_talked_by_user",
+          "conditions": [
+            {
+              "type": "is_race",
+              "fields": {
+                "from": "OBJI_TALKER",
+                "race_type": "pc_light"
+              }
+            }
+          ],
+          "alias": "IDEternity_W_Tele_ItoOP_L_Up",
+          "target": "OBJI_TALKER",
+          "showfx": "TRUE"
+        }
+      ]
+    },
+    {
+      "npc_id": 835278,
+      "world_ids": [
+        302350000
+      ],
+      "mapped_pattern": "IDEternity_War_Teleport_Li_02",
+      "status": "SUPPORTED_RETAIL_PATTERN",
+      "pattern_source": "npcaipatterns_ideternity_war_jsm.xml",
+      "teleport_actions": [
+        {
+          "event": "on_talked_by_user",
+          "conditions": [
+            {
+              "type": "is_race",
+              "fields": {
+                "from": "OBJI_TALKER",
+                "race_type": "pc_light"
+              }
+            }
+          ],
+          "alias": "IDEternity_W_Tele_ItoOP_L_Up",
+          "target": "OBJI_TALKER",
+          "showfx": "TRUE"
+        }
+      ]
+    },
+    {
+      "npc_id": 835279,
+      "world_ids": [
+        302350000
+      ],
+      "mapped_pattern": "IDEternity_War_Teleport_Li_03",
+      "status": "SUPPORTED_RETAIL_PATTERN",
+      "pattern_source": "npcaipatterns_ideternity_war_jsm.xml",
+      "teleport_actions": [
+        {
+          "event": "on_talked_by_user",
+          "conditions": [
+            {
+              "type": "is_race",
+              "fields": {
+                "from": "OBJI_TALKER",
+                "race_type": "pc_light"
+              }
+            }
+          ],
+          "alias": "IDEternity_W_Tele_ItoOP_L_Up",
+          "target": "OBJI_TALKER",
+          "showfx": "TRUE"
+        }
+      ]
+    },
+    {
+      "npc_id": 835280,
+      "world_ids": [
+        302350000
+      ],
+      "mapped_pattern": "IDEternity_War_Teleport_Li_04",
+      "status": "SUPPORTED_RETAIL_PATTERN",
+      "pattern_source": "npcaipatterns_ideternity_war_jsm.xml",
+      "teleport_actions": [
+        {
+          "event": "on_talked_by_user",
+          "conditions": [
+            {
+              "type": "is_race",
+              "fields": {
+                "from": "OBJI_TALKER",
+                "race_type": "pc_light"
+              }
+            }
+          ],
+          "alias": "IDEternity_W_Tele_ItoOP_L_Up",
+          "target": "OBJI_TALKER",
+          "showfx": "TRUE"
+        }
+      ]
+    },
+    {
+      "npc_id": 835289,
+      "world_ids": [
+        302350000
+      ],
+      "mapped_pattern": "IDEternity_War_Teleport_Da_01",
+      "status": "SUPPORTED_RETAIL_PATTERN",
+      "pattern_source": "npcaipatterns_ideternity_war_jsm.xml",
+      "teleport_actions": [
+        {
+          "event": "on_talked_by_user",
+          "conditions": [
+            {
+              "type": "is_race",
+              "fields": {
+                "from": "OBJI_TALKER",
+                "race_type": "pc_dark"
+              }
+            }
+          ],
+          "alias": "IDEternity_W_Tele_ItoOP_L_Up",
+          "target": "OBJI_TALKER",
+          "showfx": "TRUE"
+        }
+      ]
+    },
+    {
+      "npc_id": 835290,
+      "world_ids": [
+        302350000
+      ],
+      "mapped_pattern": "IDEternity_War_Teleport_Da_02",
+      "status": "SUPPORTED_RETAIL_PATTERN",
+      "pattern_source": "npcaipatterns_ideternity_war_jsm.xml",
+      "teleport_actions": [
+        {
+          "event": "on_talked_by_user",
+          "conditions": [
+            {
+              "type": "is_race",
+              "fields": {
+                "from": "OBJI_TALKER",
+                "race_type": "pc_dark"
+              }
+            }
+          ],
+          "alias": "IDEternity_W_Tele_ItoOP_L_Up",
+          "target": "OBJI_TALKER",
+          "showfx": "TRUE"
+        }
+      ]
+    },
+    {
+      "npc_id": 835291,
+      "world_ids": [
+        302350000
+      ],
+      "mapped_pattern": "IDEternity_War_Teleport_Da_03",
+      "status": "SUPPORTED_RETAIL_PATTERN",
+      "pattern_source": "npcaipatterns_ideternity_war_jsm.xml",
+      "teleport_actions": [
+        {
+          "event": "on_talked_by_user",
+          "conditions": [
+            {
+              "type": "is_race",
+              "fields": {
+                "from": "OBJI_TALKER",
+                "race_type": "pc_dark"
+              }
+            }
+          ],
+          "alias": "IDEternity_W_Tele_ItoOP_L_Up",
+          "target": "OBJI_TALKER",
+          "showfx": "TRUE"
+        }
+      ]
+    },
+    {
+      "npc_id": 835292,
+      "world_ids": [
+        302350000
+      ],
+      "mapped_pattern": "IDEternity_War_Teleport_Da_04",
+      "status": "SUPPORTED_RETAIL_PATTERN",
+      "pattern_source": "npcaipatterns_ideternity_war_jsm.xml",
+      "teleport_actions": [
+        {
+          "event": "on_talked_by_user",
+          "conditions": [
+            {
+              "type": "is_race",
+              "fields": {
+                "from": "OBJI_TALKER",
+                "race_type": "pc_dark"
+              }
+            }
+          ],
+          "alias": "IDEternity_W_Tele_ItoOP_L_Up",
+          "target": "OBJI_TALKER",
+          "showfx": "TRUE"
+        }
+      ]
+    }
+  ]
+}

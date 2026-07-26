@@ -1,6 +1,2172 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <direct_portals version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/direct-portals.xsd">
-  <portal id="73" name="From_DF5_A_To_LF5_A" time="3595" count="24" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0">
+  <portal id="5" name="From_LF2_1_OP_To_DF2_A1" time="3600" count="12" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0">
+    <start world_id="210020000" world_name="LF2" npc_id="700137">
+      <group weight="100">
+        <point x="225.580002" y="2943.80786" z="156.600006" dir="285"/>
+      </group>
+    </start>
+    <destination world_id="220020000" world_name="DF2" npc_id="700138">
+      <group weight="40">
+        <point x="633.134583" y="187.571625" z="526" dir="120"/>
+      </group>
+      <group weight="40">
+        <point x="666.734558" y="2070.43872" z="392.5" dir="290"/>
+      </group>
+      <group weight="30">
+        <point x="1527.49561" y="1130.13049" z="155" dir="340"/>
+      </group>
+      <group weight="30">
+        <point x="2979.26782" y="833.687744" z="369" dir="110"/>
+      </group>
+      <group weight="30">
+        <point x="764.318115" y="1887.34863" z="366" dir="110"/>
+      </group>
+      <group weight="40">
+        <point x="2893.88208" y="800.90564" z="378" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="292.860809" y="256.279419" z="471" dir="90"/>
+      </group>
+      <group weight="40">
+        <point x="2655.14575" y="2112.14478" z="121.503464" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="563.9646" y="1910.27917" z="430" dir="220"/>
+      </group>
+      <group weight="40">
+        <point x="1462.30347" y="1277.33252" z="226" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="2467.94824" y="2398.24023" z="126.996582" dir="220"/>
+      </group>
+      <group weight="34">
+        <point x="2320.10425" y="2844.44653" z="230" dir="150"/>
+      </group>
+      <group weight="33">
+        <point x="2072.60693" y="2556.25635" z="260" dir="0"/>
+      </group>
+      <group weight="30">
+        <point x="1280.96423" y="1116.02124" z="242.5" dir="20"/>
+      </group>
+      <group weight="30">
+        <point x="3022.94312" y="881.253723" z="363.99762" dir="270"/>
+      </group>
+      <group weight="30">
+        <point x="1149.88391" y="1576.68933" z="257" dir="270"/>
+      </group>
+      <group weight="33">
+        <point x="2303.29077" y="2623.70508" z="211.497345" dir="220"/>
+      </group>
+      <group weight="30">
+        <point x="1791.10657" y="1075.09668" z="48" dir="60"/>
+      </group>
+      <group weight="30">
+        <point x="342.861877" y="477.091888" z="430.5" dir="250"/>
+      </group>
+      <group weight="40">
+        <point x="1821.1228" y="1275.30737" z="48" dir="150"/>
+      </group>
+      <group weight="30">
+        <point x="2579.91992" y="2045.5675" z="121.00103" dir="110"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="6" name="From_LF2_2_F1_To_DF2_B1" time="3600" count="20" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0">
+    <start world_id="210020000" world_name="LF2" npc_id="700137">
+      <group weight="100">
+        <point x="768.292908" y="1881.09497" z="265.299988" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="220020000" world_name="DF2" npc_id="700138">
+      <group weight="40">
+        <point x="633.134583" y="187.571625" z="526" dir="120"/>
+      </group>
+      <group weight="40">
+        <point x="666.734558" y="2070.43872" z="392.5" dir="290"/>
+      </group>
+      <group weight="30">
+        <point x="1527.49561" y="1130.13049" z="155" dir="340"/>
+      </group>
+      <group weight="30">
+        <point x="2979.26782" y="833.687744" z="369" dir="110"/>
+      </group>
+      <group weight="30">
+        <point x="764.318115" y="1887.34863" z="366" dir="110"/>
+      </group>
+      <group weight="40">
+        <point x="2893.88208" y="800.90564" z="378" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="292.860809" y="256.279419" z="471" dir="90"/>
+      </group>
+      <group weight="40">
+        <point x="2655.14575" y="2112.14478" z="121.503464" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="563.9646" y="1910.27917" z="430" dir="220"/>
+      </group>
+      <group weight="40">
+        <point x="1462.30347" y="1277.33252" z="226" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="2467.94824" y="2398.24023" z="126.996582" dir="220"/>
+      </group>
+      <group weight="34">
+        <point x="2320.10425" y="2844.44653" z="230" dir="150"/>
+      </group>
+      <group weight="33">
+        <point x="2072.60693" y="2556.25635" z="260" dir="0"/>
+      </group>
+      <group weight="30">
+        <point x="1280.96423" y="1116.02124" z="242.5" dir="20"/>
+      </group>
+      <group weight="30">
+        <point x="3022.94312" y="881.253723" z="363.99762" dir="270"/>
+      </group>
+      <group weight="30">
+        <point x="1149.88391" y="1576.68933" z="257" dir="270"/>
+      </group>
+      <group weight="33">
+        <point x="2303.29077" y="2623.70508" z="211.497345" dir="220"/>
+      </group>
+      <group weight="30">
+        <point x="1791.10657" y="1075.09668" z="48" dir="60"/>
+      </group>
+      <group weight="30">
+        <point x="342.861877" y="477.091888" z="430.5" dir="250"/>
+      </group>
+      <group weight="40">
+        <point x="1821.1228" y="1275.30737" z="48" dir="150"/>
+      </group>
+      <group weight="30">
+        <point x="2579.91992" y="2045.5675" z="121.00103" dir="110"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="7" name="From_LF2_3_G3_To_DF2_B3" time="3600" count="35" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0">
+    <start world_id="210020000" world_name="LF2" npc_id="700137">
+      <group weight="100">
+        <point x="1639.89221" y="1724.0564" z="345.200012" dir="1"/>
+      </group>
+    </start>
+    <destination world_id="220020000" world_name="DF2" npc_id="700138">
+      <group weight="40">
+        <point x="633.134583" y="187.571625" z="526" dir="120"/>
+      </group>
+      <group weight="40">
+        <point x="666.734558" y="2070.43872" z="392.5" dir="290"/>
+      </group>
+      <group weight="30">
+        <point x="1527.49561" y="1130.13049" z="155" dir="340"/>
+      </group>
+      <group weight="30">
+        <point x="2979.26782" y="833.687744" z="369" dir="110"/>
+      </group>
+      <group weight="30">
+        <point x="764.318115" y="1887.34863" z="366" dir="110"/>
+      </group>
+      <group weight="40">
+        <point x="2893.88208" y="800.90564" z="378" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="292.860809" y="256.279419" z="471" dir="90"/>
+      </group>
+      <group weight="40">
+        <point x="2655.14575" y="2112.14478" z="121.503464" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="563.9646" y="1910.27917" z="430" dir="220"/>
+      </group>
+      <group weight="40">
+        <point x="1462.30347" y="1277.33252" z="226" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="2467.94824" y="2398.24023" z="126.996582" dir="220"/>
+      </group>
+      <group weight="34">
+        <point x="2320.10425" y="2844.44653" z="230" dir="150"/>
+      </group>
+      <group weight="33">
+        <point x="2072.60693" y="2556.25635" z="260" dir="0"/>
+      </group>
+      <group weight="30">
+        <point x="1280.96423" y="1116.02124" z="242.5" dir="20"/>
+      </group>
+      <group weight="30">
+        <point x="3022.94312" y="881.253723" z="363.99762" dir="270"/>
+      </group>
+      <group weight="30">
+        <point x="1149.88391" y="1576.68933" z="257" dir="270"/>
+      </group>
+      <group weight="33">
+        <point x="2303.29077" y="2623.70508" z="211.497345" dir="220"/>
+      </group>
+      <group weight="30">
+        <point x="1791.10657" y="1075.09668" z="48" dir="60"/>
+      </group>
+      <group weight="30">
+        <point x="342.861877" y="477.091888" z="430.5" dir="250"/>
+      </group>
+      <group weight="40">
+        <point x="1821.1228" y="1275.30737" z="48" dir="150"/>
+      </group>
+      <group weight="30">
+        <point x="2579.91992" y="2045.5675" z="121.00103" dir="110"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="8" name="From_LF2_4_C2_To_DF2_C5" time="3600" count="35" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0">
+    <start world_id="210020000" world_name="LF2" npc_id="700137">
+      <group weight="100">
+        <point x="1038.21997" y="49.59" z="318.799988" dir="90"/>
+      </group>
+    </start>
+    <destination world_id="220020000" world_name="DF2" npc_id="700138">
+      <group weight="40">
+        <point x="633.134583" y="187.571625" z="526" dir="120"/>
+      </group>
+      <group weight="40">
+        <point x="666.734558" y="2070.43872" z="392.5" dir="290"/>
+      </group>
+      <group weight="30">
+        <point x="1527.49561" y="1130.13049" z="155" dir="340"/>
+      </group>
+      <group weight="30">
+        <point x="2979.26782" y="833.687744" z="369" dir="110"/>
+      </group>
+      <group weight="30">
+        <point x="764.318115" y="1887.34863" z="366" dir="110"/>
+      </group>
+      <group weight="40">
+        <point x="2893.88208" y="800.90564" z="378" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="292.860809" y="256.279419" z="471" dir="90"/>
+      </group>
+      <group weight="40">
+        <point x="2655.14575" y="2112.14478" z="121.503464" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="563.9646" y="1910.27917" z="430" dir="220"/>
+      </group>
+      <group weight="40">
+        <point x="1462.30347" y="1277.33252" z="226" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="2467.94824" y="2398.24023" z="126.996582" dir="220"/>
+      </group>
+      <group weight="34">
+        <point x="2320.10425" y="2844.44653" z="230" dir="150"/>
+      </group>
+      <group weight="33">
+        <point x="2072.60693" y="2556.25635" z="260" dir="0"/>
+      </group>
+      <group weight="30">
+        <point x="1280.96423" y="1116.02124" z="242.5" dir="20"/>
+      </group>
+      <group weight="30">
+        <point x="3022.94312" y="881.253723" z="363.99762" dir="270"/>
+      </group>
+      <group weight="30">
+        <point x="1149.88391" y="1576.68933" z="257" dir="270"/>
+      </group>
+      <group weight="33">
+        <point x="2303.29077" y="2623.70508" z="211.497345" dir="220"/>
+      </group>
+      <group weight="30">
+        <point x="1791.10657" y="1075.09668" z="48" dir="60"/>
+      </group>
+      <group weight="30">
+        <point x="342.861877" y="477.091888" z="430.5" dir="250"/>
+      </group>
+      <group weight="40">
+        <point x="1821.1228" y="1275.30737" z="48" dir="150"/>
+      </group>
+      <group weight="30">
+        <point x="2579.91992" y="2045.5675" z="121.00103" dir="110"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="9" name="From_LF2_5_D_To_DF2_C4" time="3600" count="45" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0">
+    <start world_id="210020000" world_name="LF2" npc_id="700137">
+      <group weight="100">
+        <point x="1532.45618" y="485.707428" z="363.700012" dir="160"/>
+      </group>
+    </start>
+    <destination world_id="220020000" world_name="DF2" npc_id="700138">
+      <group weight="40">
+        <point x="633.134583" y="187.571625" z="526" dir="120"/>
+      </group>
+      <group weight="40">
+        <point x="666.734558" y="2070.43872" z="392.5" dir="290"/>
+      </group>
+      <group weight="30">
+        <point x="1527.49561" y="1130.13049" z="155" dir="340"/>
+      </group>
+      <group weight="30">
+        <point x="2979.26782" y="833.687744" z="369" dir="110"/>
+      </group>
+      <group weight="30">
+        <point x="764.318115" y="1887.34863" z="366" dir="110"/>
+      </group>
+      <group weight="40">
+        <point x="2893.88208" y="800.90564" z="378" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="292.860809" y="256.279419" z="471" dir="90"/>
+      </group>
+      <group weight="40">
+        <point x="2655.14575" y="2112.14478" z="121.503464" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="563.9646" y="1910.27917" z="430" dir="220"/>
+      </group>
+      <group weight="40">
+        <point x="1462.30347" y="1277.33252" z="226" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="2467.94824" y="2398.24023" z="126.996582" dir="220"/>
+      </group>
+      <group weight="34">
+        <point x="2320.10425" y="2844.44653" z="230" dir="150"/>
+      </group>
+      <group weight="33">
+        <point x="2072.60693" y="2556.25635" z="260" dir="0"/>
+      </group>
+      <group weight="30">
+        <point x="1280.96423" y="1116.02124" z="242.5" dir="20"/>
+      </group>
+      <group weight="30">
+        <point x="3022.94312" y="881.253723" z="363.99762" dir="270"/>
+      </group>
+      <group weight="30">
+        <point x="1149.88391" y="1576.68933" z="257" dir="270"/>
+      </group>
+      <group weight="33">
+        <point x="2303.29077" y="2623.70508" z="211.497345" dir="220"/>
+      </group>
+      <group weight="30">
+        <point x="1791.10657" y="1075.09668" z="48" dir="60"/>
+      </group>
+      <group weight="30">
+        <point x="342.861877" y="477.091888" z="430.5" dir="250"/>
+      </group>
+      <group weight="40">
+        <point x="1821.1228" y="1275.30737" z="48" dir="150"/>
+      </group>
+      <group weight="30">
+        <point x="2579.91992" y="2045.5675" z="121.00103" dir="110"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="10" name="From_LF2_6_J_To_DF2_D3" time="3600" count="50" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0">
+    <start world_id="210020000" world_name="LF2" npc_id="700137">
+      <group weight="100">
+        <point x="2210.18408" y="2604.56665" z="271.630005" dir="1"/>
+      </group>
+    </start>
+    <destination world_id="220020000" world_name="DF2" npc_id="700138">
+      <group weight="40">
+        <point x="633.134583" y="187.571625" z="526" dir="120"/>
+      </group>
+      <group weight="40">
+        <point x="666.734558" y="2070.43872" z="392.5" dir="290"/>
+      </group>
+      <group weight="30">
+        <point x="1527.49561" y="1130.13049" z="155" dir="340"/>
+      </group>
+      <group weight="30">
+        <point x="2979.26782" y="833.687744" z="369" dir="110"/>
+      </group>
+      <group weight="30">
+        <point x="764.318115" y="1887.34863" z="366" dir="110"/>
+      </group>
+      <group weight="40">
+        <point x="2893.88208" y="800.90564" z="378" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="292.860809" y="256.279419" z="471" dir="90"/>
+      </group>
+      <group weight="40">
+        <point x="2655.14575" y="2112.14478" z="121.503464" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="563.9646" y="1910.27917" z="430" dir="220"/>
+      </group>
+      <group weight="40">
+        <point x="1462.30347" y="1277.33252" z="226" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="2467.94824" y="2398.24023" z="126.996582" dir="220"/>
+      </group>
+      <group weight="34">
+        <point x="2320.10425" y="2844.44653" z="230" dir="150"/>
+      </group>
+      <group weight="33">
+        <point x="2072.60693" y="2556.25635" z="260" dir="0"/>
+      </group>
+      <group weight="30">
+        <point x="1280.96423" y="1116.02124" z="242.5" dir="20"/>
+      </group>
+      <group weight="30">
+        <point x="3022.94312" y="881.253723" z="363.99762" dir="270"/>
+      </group>
+      <group weight="30">
+        <point x="1149.88391" y="1576.68933" z="257" dir="270"/>
+      </group>
+      <group weight="33">
+        <point x="2303.29077" y="2623.70508" z="211.497345" dir="220"/>
+      </group>
+      <group weight="30">
+        <point x="1791.10657" y="1075.09668" z="48" dir="60"/>
+      </group>
+      <group weight="30">
+        <point x="342.861877" y="477.091888" z="430.5" dir="250"/>
+      </group>
+      <group weight="40">
+        <point x="1821.1228" y="1275.30737" z="48" dir="150"/>
+      </group>
+      <group weight="30">
+        <point x="2579.91992" y="2045.5675" z="121.00103" dir="110"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="11" name="From_LF2_7_K_To_DF2_E4" time="3600" count="50" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0">
+    <start world_id="210020000" world_name="LF2" npc_id="700137">
+      <group weight="100">
+        <point x="2176.14282" y="557.244141" z="435.299988" dir="25"/>
+      </group>
+    </start>
+    <destination world_id="220020000" world_name="DF2" npc_id="700138">
+      <group weight="40">
+        <point x="633.134583" y="187.571625" z="526" dir="120"/>
+      </group>
+      <group weight="40">
+        <point x="666.734558" y="2070.43872" z="392.5" dir="290"/>
+      </group>
+      <group weight="30">
+        <point x="1527.49561" y="1130.13049" z="155" dir="340"/>
+      </group>
+      <group weight="30">
+        <point x="2979.26782" y="833.687744" z="369" dir="110"/>
+      </group>
+      <group weight="30">
+        <point x="764.318115" y="1887.34863" z="366" dir="110"/>
+      </group>
+      <group weight="40">
+        <point x="2893.88208" y="800.90564" z="378" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="292.860809" y="256.279419" z="471" dir="90"/>
+      </group>
+      <group weight="40">
+        <point x="2655.14575" y="2112.14478" z="121.503464" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="563.9646" y="1910.27917" z="430" dir="220"/>
+      </group>
+      <group weight="40">
+        <point x="1462.30347" y="1277.33252" z="226" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="2467.94824" y="2398.24023" z="126.996582" dir="220"/>
+      </group>
+      <group weight="34">
+        <point x="2320.10425" y="2844.44653" z="230" dir="150"/>
+      </group>
+      <group weight="33">
+        <point x="2072.60693" y="2556.25635" z="260" dir="0"/>
+      </group>
+      <group weight="30">
+        <point x="1280.96423" y="1116.02124" z="242.5" dir="20"/>
+      </group>
+      <group weight="30">
+        <point x="3022.94312" y="881.253723" z="363.99762" dir="270"/>
+      </group>
+      <group weight="30">
+        <point x="1149.88391" y="1576.68933" z="257" dir="270"/>
+      </group>
+      <group weight="33">
+        <point x="2303.29077" y="2623.70508" z="211.497345" dir="220"/>
+      </group>
+      <group weight="30">
+        <point x="1791.10657" y="1075.09668" z="48" dir="60"/>
+      </group>
+      <group weight="30">
+        <point x="342.861877" y="477.091888" z="430.5" dir="250"/>
+      </group>
+      <group weight="40">
+        <point x="1821.1228" y="1275.30737" z="48" dir="150"/>
+      </group>
+      <group weight="30">
+        <point x="2579.91992" y="2045.5675" z="121.00103" dir="110"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="12" name="From_DF2_1_OP_To_LF2_A1" time="3600" count="12" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0">
+    <start world_id="220020000" world_name="DF2" npc_id="700137">
+      <group weight="0">
+        <point x="453.874908" y="2308.07349" z="440.057739" dir="150"/>
+      </group>
+    </start>
+    <destination world_id="210020000" world_name="LF2" npc_id="700138">
+      <group weight="100">
+        <point x="606.486938" y="99.375732" z="309.936707" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2395.35181" y="2270.70068" z="278.700012" dir="25"/>
+      </group>
+      <group weight="100">
+        <point x="203.147507" y="946.083374" z="312.455505" dir="315"/>
+      </group>
+      <group weight="100">
+        <point x="440.473114" y="1232.63928" z="287" dir="355"/>
+      </group>
+      <group weight="100">
+        <point x="1468.8772" y="2445.73218" z="289.5" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1453.56836" y="2442.44605" z="289" dir="5"/>
+      </group>
+      <group weight="100">
+        <point x="2453.23071" y="2350.72583" z="271.100006" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="2429.66699" y="2253.09375" z="271.200012" dir="133"/>
+      </group>
+      <group weight="100">
+        <point x="647.71875" y="2749.15698" z="253.699997" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="1426.97839" y="415.581146" z="366.600006" dir="40"/>
+      </group>
+      <group weight="100">
+        <point x="738.957397" y="2740.46436" z="245.899994" dir="225"/>
+      </group>
+      <group weight="100">
+        <point x="1404.92004" y="2419.24341" z="288.5" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="186.535812" y="541.069336" z="321.744812" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2499.64502" y="667.058167" z="361.799988" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="699.704407" y="2673.15649" z="251" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1429" y="369" z="368.899994" dir="80"/>
+      </group>
+      <group weight="100">
+        <point x="2510.2478" y="679.281738" z="352.899994" dir="135"/>
+      </group>
+      <group weight="100">
+        <point x="123.944679" y="1460.91284" z="290" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1386.09998" y="411.255096" z="370" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2474.98877" y="640.933777" z="365.899994" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="155.482422" y="1656.05322" z="267" dir="185"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="13" name="From_DF2_2_B1_To_LF2_C1" time="3600" count="20" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0">
+    <start world_id="220020000" world_name="DF2" npc_id="700137">
+      <group weight="0">
+        <point x="771.070435" y="912.614807" z="330" dir="150"/>
+      </group>
+    </start>
+    <destination world_id="210020000" world_name="LF2" npc_id="700138">
+      <group weight="100">
+        <point x="606.486938" y="99.375732" z="309.936707" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2395.35181" y="2270.70068" z="278.700012" dir="25"/>
+      </group>
+      <group weight="100">
+        <point x="203.147507" y="946.083374" z="312.455505" dir="315"/>
+      </group>
+      <group weight="100">
+        <point x="440.473114" y="1232.63928" z="287" dir="355"/>
+      </group>
+      <group weight="100">
+        <point x="1468.8772" y="2445.73218" z="289.5" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1453.56836" y="2442.44605" z="289" dir="5"/>
+      </group>
+      <group weight="100">
+        <point x="2453.23071" y="2350.72583" z="271.100006" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="2429.66699" y="2253.09375" z="271.200012" dir="133"/>
+      </group>
+      <group weight="100">
+        <point x="647.71875" y="2749.15698" z="253.699997" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="1426.97839" y="415.581146" z="366.600006" dir="40"/>
+      </group>
+      <group weight="100">
+        <point x="738.957397" y="2740.46436" z="245.899994" dir="225"/>
+      </group>
+      <group weight="100">
+        <point x="1404.92004" y="2419.24341" z="288.5" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="186.535812" y="541.069336" z="321.744812" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2499.64502" y="667.058167" z="361.799988" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="699.704407" y="2673.15649" z="251" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1429" y="369" z="368.899994" dir="80"/>
+      </group>
+      <group weight="100">
+        <point x="2510.2478" y="679.281738" z="352.899994" dir="135"/>
+      </group>
+      <group weight="100">
+        <point x="123.944679" y="1460.91284" z="290" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1386.09998" y="411.255096" z="370" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2474.98877" y="640.933777" z="365.899994" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="155.482422" y="1656.05322" z="267" dir="185"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="14" name="From_DF2_3_B3_To_LF2_H" time="3600" count="35" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0">
+    <start world_id="220020000" world_name="DF2" npc_id="700137">
+      <group weight="0">
+        <point x="227.902451" y="488.454132" z="438" dir="70"/>
+      </group>
+    </start>
+    <destination world_id="210020000" world_name="LF2" npc_id="700138">
+      <group weight="100">
+        <point x="606.486938" y="99.375732" z="309.936707" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2395.35181" y="2270.70068" z="278.700012" dir="25"/>
+      </group>
+      <group weight="100">
+        <point x="203.147507" y="946.083374" z="312.455505" dir="315"/>
+      </group>
+      <group weight="100">
+        <point x="440.473114" y="1232.63928" z="287" dir="355"/>
+      </group>
+      <group weight="100">
+        <point x="1468.8772" y="2445.73218" z="289.5" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1453.56836" y="2442.44605" z="289" dir="5"/>
+      </group>
+      <group weight="100">
+        <point x="2453.23071" y="2350.72583" z="271.100006" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="2429.66699" y="2253.09375" z="271.200012" dir="133"/>
+      </group>
+      <group weight="100">
+        <point x="647.71875" y="2749.15698" z="253.699997" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="1426.97839" y="415.581146" z="366.600006" dir="40"/>
+      </group>
+      <group weight="100">
+        <point x="738.957397" y="2740.46436" z="245.899994" dir="225"/>
+      </group>
+      <group weight="100">
+        <point x="1404.92004" y="2419.24341" z="288.5" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="186.535812" y="541.069336" z="321.744812" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2499.64502" y="667.058167" z="361.799988" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="699.704407" y="2673.15649" z="251" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1429" y="369" z="368.899994" dir="80"/>
+      </group>
+      <group weight="100">
+        <point x="2510.2478" y="679.281738" z="352.899994" dir="135"/>
+      </group>
+      <group weight="100">
+        <point x="123.944679" y="1460.91284" z="290" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1386.09998" y="411.255096" z="370" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2474.98877" y="640.933777" z="365.899994" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="155.482422" y="1656.05322" z="267" dir="185"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="15" name="From_DF2_4_C5_To_LF2_C3" time="3600" count="35" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0">
+    <start world_id="220020000" world_name="DF2" npc_id="700137">
+      <group weight="0">
+        <point x="1668.37634" y="1462.59924" z="165" dir="90"/>
+      </group>
+    </start>
+    <destination world_id="210020000" world_name="LF2" npc_id="700138">
+      <group weight="100">
+        <point x="606.486938" y="99.375732" z="309.936707" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2395.35181" y="2270.70068" z="278.700012" dir="25"/>
+      </group>
+      <group weight="100">
+        <point x="203.147507" y="946.083374" z="312.455505" dir="315"/>
+      </group>
+      <group weight="100">
+        <point x="440.473114" y="1232.63928" z="287" dir="355"/>
+      </group>
+      <group weight="100">
+        <point x="1468.8772" y="2445.73218" z="289.5" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1453.56836" y="2442.44605" z="289" dir="5"/>
+      </group>
+      <group weight="100">
+        <point x="2453.23071" y="2350.72583" z="271.100006" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="2429.66699" y="2253.09375" z="271.200012" dir="133"/>
+      </group>
+      <group weight="100">
+        <point x="647.71875" y="2749.15698" z="253.699997" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="1426.97839" y="415.581146" z="366.600006" dir="40"/>
+      </group>
+      <group weight="100">
+        <point x="738.957397" y="2740.46436" z="245.899994" dir="225"/>
+      </group>
+      <group weight="100">
+        <point x="1404.92004" y="2419.24341" z="288.5" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="186.535812" y="541.069336" z="321.744812" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2499.64502" y="667.058167" z="361.799988" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="699.704407" y="2673.15649" z="251" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1429" y="369" z="368.899994" dir="80"/>
+      </group>
+      <group weight="100">
+        <point x="2510.2478" y="679.281738" z="352.899994" dir="135"/>
+      </group>
+      <group weight="100">
+        <point x="123.944679" y="1460.91284" z="290" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1386.09998" y="411.255096" z="370" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2474.98877" y="640.933777" z="365.899994" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="155.482422" y="1656.05322" z="267" dir="185"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="16" name="From_DF2_5_C5_To_LF2_D" time="3600" count="45" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0">
+    <start world_id="220020000" world_name="DF2" npc_id="700137">
+      <group weight="0">
+        <point x="1729.70984" y="1067.35681" z="124" dir="120"/>
+      </group>
+    </start>
+    <destination world_id="210020000" world_name="LF2" npc_id="700138">
+      <group weight="100">
+        <point x="606.486938" y="99.375732" z="309.936707" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2395.35181" y="2270.70068" z="278.700012" dir="25"/>
+      </group>
+      <group weight="100">
+        <point x="203.147507" y="946.083374" z="312.455505" dir="315"/>
+      </group>
+      <group weight="100">
+        <point x="440.473114" y="1232.63928" z="287" dir="355"/>
+      </group>
+      <group weight="100">
+        <point x="1468.8772" y="2445.73218" z="289.5" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1453.56836" y="2442.44605" z="289" dir="5"/>
+      </group>
+      <group weight="100">
+        <point x="2453.23071" y="2350.72583" z="271.100006" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="2429.66699" y="2253.09375" z="271.200012" dir="133"/>
+      </group>
+      <group weight="100">
+        <point x="647.71875" y="2749.15698" z="253.699997" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="1426.97839" y="415.581146" z="366.600006" dir="40"/>
+      </group>
+      <group weight="100">
+        <point x="738.957397" y="2740.46436" z="245.899994" dir="225"/>
+      </group>
+      <group weight="100">
+        <point x="1404.92004" y="2419.24341" z="288.5" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="186.535812" y="541.069336" z="321.744812" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2499.64502" y="667.058167" z="361.799988" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="699.704407" y="2673.15649" z="251" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1429" y="369" z="368.899994" dir="80"/>
+      </group>
+      <group weight="100">
+        <point x="2510.2478" y="679.281738" z="352.899994" dir="135"/>
+      </group>
+      <group weight="100">
+        <point x="123.944679" y="1460.91284" z="290" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1386.09998" y="411.255096" z="370" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2474.98877" y="640.933777" z="365.899994" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="155.482422" y="1656.05322" z="267" dir="185"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="17" name="From_DF2_6_D3_To_LF2_J" time="3600" count="50" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0">
+    <start world_id="220020000" world_name="DF2" npc_id="700137">
+      <group weight="0">
+        <point x="2356.19385" y="2336.72827" z="115.099998" dir="340"/>
+      </group>
+    </start>
+    <destination world_id="210020000" world_name="LF2" npc_id="700138">
+      <group weight="100">
+        <point x="606.486938" y="99.375732" z="309.936707" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2395.35181" y="2270.70068" z="278.700012" dir="25"/>
+      </group>
+      <group weight="100">
+        <point x="203.147507" y="946.083374" z="312.455505" dir="315"/>
+      </group>
+      <group weight="100">
+        <point x="440.473114" y="1232.63928" z="287" dir="355"/>
+      </group>
+      <group weight="100">
+        <point x="1468.8772" y="2445.73218" z="289.5" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1453.56836" y="2442.44605" z="289" dir="5"/>
+      </group>
+      <group weight="100">
+        <point x="2453.23071" y="2350.72583" z="271.100006" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="2429.66699" y="2253.09375" z="271.200012" dir="133"/>
+      </group>
+      <group weight="100">
+        <point x="647.71875" y="2749.15698" z="253.699997" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="1426.97839" y="415.581146" z="366.600006" dir="40"/>
+      </group>
+      <group weight="100">
+        <point x="738.957397" y="2740.46436" z="245.899994" dir="225"/>
+      </group>
+      <group weight="100">
+        <point x="1404.92004" y="2419.24341" z="288.5" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="186.535812" y="541.069336" z="321.744812" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2499.64502" y="667.058167" z="361.799988" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="699.704407" y="2673.15649" z="251" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1429" y="369" z="368.899994" dir="80"/>
+      </group>
+      <group weight="100">
+        <point x="2510.2478" y="679.281738" z="352.899994" dir="135"/>
+      </group>
+      <group weight="100">
+        <point x="123.944679" y="1460.91284" z="290" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1386.09998" y="411.255096" z="370" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2474.98877" y="640.933777" z="365.899994" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="155.482422" y="1656.05322" z="267" dir="185"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="18" name="From_DF2_7_E4_To_LF2_K" time="3600" count="50" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0">
+    <start world_id="220020000" world_name="DF2" npc_id="700137">
+      <group weight="0">
+        <point x="2488.9436" y="657.681946" z="260" dir="310"/>
+      </group>
+    </start>
+    <destination world_id="210020000" world_name="LF2" npc_id="700138">
+      <group weight="100">
+        <point x="606.486938" y="99.375732" z="309.936707" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2395.35181" y="2270.70068" z="278.700012" dir="25"/>
+      </group>
+      <group weight="100">
+        <point x="203.147507" y="946.083374" z="312.455505" dir="315"/>
+      </group>
+      <group weight="100">
+        <point x="440.473114" y="1232.63928" z="287" dir="355"/>
+      </group>
+      <group weight="100">
+        <point x="1468.8772" y="2445.73218" z="289.5" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1453.56836" y="2442.44605" z="289" dir="5"/>
+      </group>
+      <group weight="100">
+        <point x="2453.23071" y="2350.72583" z="271.100006" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="2429.66699" y="2253.09375" z="271.200012" dir="133"/>
+      </group>
+      <group weight="100">
+        <point x="647.71875" y="2749.15698" z="253.699997" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="1426.97839" y="415.581146" z="366.600006" dir="40"/>
+      </group>
+      <group weight="100">
+        <point x="738.957397" y="2740.46436" z="245.899994" dir="225"/>
+      </group>
+      <group weight="100">
+        <point x="1404.92004" y="2419.24341" z="288.5" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="186.535812" y="541.069336" z="321.744812" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2499.64502" y="667.058167" z="361.799988" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="699.704407" y="2673.15649" z="251" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1429" y="369" z="368.899994" dir="80"/>
+      </group>
+      <group weight="100">
+        <point x="2510.2478" y="679.281738" z="352.899994" dir="135"/>
+      </group>
+      <group weight="100">
+        <point x="123.944679" y="1460.91284" z="290" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1386.09998" y="411.255096" z="370" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="2474.98877" y="640.933777" z="365.899994" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="155.482422" y="1656.05322" z="267" dir="185"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="19" name="From_LF3_1_A_To_DF3_A" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210040000" world_name="LF3" npc_id="700137">
+      <group weight="100">
+        <point x="2564.87427" y="509.58429" z="387" dir="90"/>
+      </group>
+    </start>
+    <destination world_id="220040000" world_name="DF3" npc_id="700138">
+      <group weight="100">
+        <point x="1976.90271" y="2762.80444" z="595" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="2699.07544" y="2355.2251" z="597.104736" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1614.47937" y="649.514771" z="367.949402" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="779.851685" y="483.380005" z="313.404694" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1389.2085" y="2344.17163" z="648.755371" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2163.56714" y="448.52655" z="377.826843" dir="230"/>
+      </group>
+      <group weight="100">
+        <point x="2507.38647" y="295.210266" z="293.425171" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="548.945923" y="1602.85608" z="222.641098" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="2533.05249" y="1694.34619" z="418.279846" dir="220"/>
+      </group>
+      <group weight="100">
+        <point x="361.860779" y="1947.04394" z="212.301117" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2868.50098" y="2698.14941" z="683.770935" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1073.88599" y="2020.19592" z="273.827179" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1812.21069" y="1848.12231" z="589.381104" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1260.90002" y="302.869995" z="292" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2806.11572" y="1106.94153" z="375.617554" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="100.629997" y="1090.15002" z="297.914368" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="1066.87598" y="644.154785" z="361.843048" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2507.04224" y="2917.51978" z="691.803406" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1114.52002" y="291.98999" z="322" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="1845.01196" y="447.499634" z="355.758575" dir="230"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="20" name="From_LF3_2_B_To_DF3_B" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210040000" world_name="LF3" npc_id="700137">
+      <group weight="0">
+        <point x="1311.52808" y="1495.46619" z="115" dir="260"/>
+      </group>
+    </start>
+    <destination world_id="220040000" world_name="DF3" npc_id="700138">
+      <group weight="100">
+        <point x="1976.90271" y="2762.80444" z="595" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="2699.07544" y="2355.2251" z="597.104736" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1614.47937" y="649.514771" z="367.949402" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="779.851685" y="483.380005" z="313.404694" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1389.2085" y="2344.17163" z="648.755371" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2163.56714" y="448.52655" z="377.826843" dir="230"/>
+      </group>
+      <group weight="100">
+        <point x="2507.38647" y="295.210266" z="293.425171" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="548.945923" y="1602.85608" z="222.641098" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="2533.05249" y="1694.34619" z="418.279846" dir="220"/>
+      </group>
+      <group weight="100">
+        <point x="361.860779" y="1947.04394" z="212.301117" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2868.50098" y="2698.14941" z="683.770935" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1073.88599" y="2020.19592" z="273.827179" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1812.21069" y="1848.12231" z="589.381104" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1260.90002" y="302.869995" z="292" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2806.11572" y="1106.94153" z="375.617554" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="100.629997" y="1090.15002" z="297.914368" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="1066.87598" y="644.154785" z="361.843048" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2507.04224" y="2917.51978" z="691.803406" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1114.52002" y="291.98999" z="322" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="1845.01196" y="447.499634" z="355.758575" dir="230"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="21" name="From_LF3_3_C1_To_DF3_C1" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210040000" world_name="LF3" npc_id="700137">
+      <group weight="0">
+        <point x="1174.97156" y="663.670166" z="135" dir="160"/>
+      </group>
+    </start>
+    <destination world_id="220040000" world_name="DF3" npc_id="700138">
+      <group weight="100">
+        <point x="1976.90271" y="2762.80444" z="595" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="2699.07544" y="2355.2251" z="597.104736" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1614.47937" y="649.514771" z="367.949402" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="779.851685" y="483.380005" z="313.404694" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1389.2085" y="2344.17163" z="648.755371" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2163.56714" y="448.52655" z="377.826843" dir="230"/>
+      </group>
+      <group weight="100">
+        <point x="2507.38647" y="295.210266" z="293.425171" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="548.945923" y="1602.85608" z="222.641098" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="2533.05249" y="1694.34619" z="418.279846" dir="220"/>
+      </group>
+      <group weight="100">
+        <point x="361.860779" y="1947.04394" z="212.301117" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2868.50098" y="2698.14941" z="683.770935" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1073.88599" y="2020.19592" z="273.827179" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1812.21069" y="1848.12231" z="589.381104" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1260.90002" y="302.869995" z="292" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2806.11572" y="1106.94153" z="375.617554" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="100.629997" y="1090.15002" z="297.914368" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="1066.87598" y="644.154785" z="361.843048" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2507.04224" y="2917.51978" z="691.803406" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1114.52002" y="291.98999" z="322" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="1845.01196" y="447.499634" z="355.758575" dir="230"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="22" name="From_LF3_4_C2_To_DF3_C2" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210040000" world_name="LF3" npc_id="700137">
+      <group weight="0">
+        <point x="655.143921" y="1889.04968" z="115.099998" dir="280"/>
+      </group>
+    </start>
+    <destination world_id="220040000" world_name="DF3" npc_id="700138">
+      <group weight="100">
+        <point x="1976.90271" y="2762.80444" z="595" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="2699.07544" y="2355.2251" z="597.104736" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1614.47937" y="649.514771" z="367.949402" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="779.851685" y="483.380005" z="313.404694" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1389.2085" y="2344.17163" z="648.755371" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2163.56714" y="448.52655" z="377.826843" dir="230"/>
+      </group>
+      <group weight="100">
+        <point x="2507.38647" y="295.210266" z="293.425171" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="548.945923" y="1602.85608" z="222.641098" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="2533.05249" y="1694.34619" z="418.279846" dir="220"/>
+      </group>
+      <group weight="100">
+        <point x="361.860779" y="1947.04394" z="212.301117" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2868.50098" y="2698.14941" z="683.770935" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1073.88599" y="2020.19592" z="273.827179" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1812.21069" y="1848.12231" z="589.381104" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1260.90002" y="302.869995" z="292" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2806.11572" y="1106.94153" z="375.617554" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="100.629997" y="1090.15002" z="297.914368" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="1066.87598" y="644.154785" z="361.843048" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2507.04224" y="2917.51978" z="691.803406" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1114.52002" y="291.98999" z="322" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="1845.01196" y="447.499634" z="355.758575" dir="230"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="23" name="From_LF3_5_D1_To_DF3_D1" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100">
+    <start world_id="210040000" world_name="LF3" npc_id="700137">
+      <group weight="0">
+        <point x="738.338501" y="2480.146" z="140.5" dir="130"/>
+      </group>
+    </start>
+    <destination world_id="220040000" world_name="DF3" npc_id="700138">
+      <group weight="100">
+        <point x="1976.90271" y="2762.80444" z="595" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="2699.07544" y="2355.2251" z="597.104736" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1614.47937" y="649.514771" z="367.949402" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="779.851685" y="483.380005" z="313.404694" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1389.2085" y="2344.17163" z="648.755371" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2163.56714" y="448.52655" z="377.826843" dir="230"/>
+      </group>
+      <group weight="100">
+        <point x="2507.38647" y="295.210266" z="293.425171" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="548.945923" y="1602.85608" z="222.641098" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="2533.05249" y="1694.34619" z="418.279846" dir="220"/>
+      </group>
+      <group weight="100">
+        <point x="361.860779" y="1947.04394" z="212.301117" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2868.50098" y="2698.14941" z="683.770935" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1073.88599" y="2020.19592" z="273.827179" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1812.21069" y="1848.12231" z="589.381104" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1260.90002" y="302.869995" z="292" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2806.11572" y="1106.94153" z="375.617554" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="100.629997" y="1090.15002" z="297.914368" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="1066.87598" y="644.154785" z="361.843048" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2507.04224" y="2917.51978" z="691.803406" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1114.52002" y="291.98999" z="322" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="1845.01196" y="447.499634" z="355.758575" dir="230"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="24" name="From_LF3_6_D2_To_DF3_D2" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210040000" world_name="LF3" npc_id="700137">
+      <group weight="0">
+        <point x="533.526978" y="560.140503" z="143.100006" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220040000" world_name="DF3" npc_id="700138">
+      <group weight="100">
+        <point x="1976.90271" y="2762.80444" z="595" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="2699.07544" y="2355.2251" z="597.104736" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1614.47937" y="649.514771" z="367.949402" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="779.851685" y="483.380005" z="313.404694" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1389.2085" y="2344.17163" z="648.755371" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2163.56714" y="448.52655" z="377.826843" dir="230"/>
+      </group>
+      <group weight="100">
+        <point x="2507.38647" y="295.210266" z="293.425171" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="548.945923" y="1602.85608" z="222.641098" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="2533.05249" y="1694.34619" z="418.279846" dir="220"/>
+      </group>
+      <group weight="100">
+        <point x="361.860779" y="1947.04394" z="212.301117" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2868.50098" y="2698.14941" z="683.770935" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1073.88599" y="2020.19592" z="273.827179" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1812.21069" y="1848.12231" z="589.381104" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1260.90002" y="302.869995" z="292" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2806.11572" y="1106.94153" z="375.617554" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="100.629997" y="1090.15002" z="297.914368" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="1066.87598" y="644.154785" z="361.843048" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2507.04224" y="2917.51978" z="691.803406" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1114.52002" y="291.98999" z="322" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="1845.01196" y="447.499634" z="355.758575" dir="230"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="25" name="From_LF3_7_E_To_DF3_E" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210040000" world_name="LF3" npc_id="700137">
+      <group weight="0">
+        <point x="2788.31763" y="2115.3208" z="141.079132" dir="150"/>
+      </group>
+    </start>
+    <destination world_id="220040000" world_name="DF3" npc_id="700138">
+      <group weight="100">
+        <point x="1976.90271" y="2762.80444" z="595" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="2699.07544" y="2355.2251" z="597.104736" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1614.47937" y="649.514771" z="367.949402" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="779.851685" y="483.380005" z="313.404694" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1389.2085" y="2344.17163" z="648.755371" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2163.56714" y="448.52655" z="377.826843" dir="230"/>
+      </group>
+      <group weight="100">
+        <point x="2507.38647" y="295.210266" z="293.425171" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="548.945923" y="1602.85608" z="222.641098" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="2533.05249" y="1694.34619" z="418.279846" dir="220"/>
+      </group>
+      <group weight="100">
+        <point x="361.860779" y="1947.04394" z="212.301117" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2868.50098" y="2698.14941" z="683.770935" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1073.88599" y="2020.19592" z="273.827179" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1812.21069" y="1848.12231" z="589.381104" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1260.90002" y="302.869995" z="292" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2806.11572" y="1106.94153" z="375.617554" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="100.629997" y="1090.15002" z="297.914368" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="1066.87598" y="644.154785" z="361.843048" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2507.04224" y="2917.51978" z="691.803406" dir="300"/>
+      </group>
+      <group weight="100">
+        <point x="1114.52002" y="291.98999" z="322" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="1845.01196" y="447.499634" z="355.758575" dir="230"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="26" name="From_DF3_1_A_To_LF3_A" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220040000" world_name="DF3" npc_id="700137">
+      <group weight="100">
+        <point x="225.634201" y="170.779175" z="241.965424" dir="45"/>
+      </group>
+    </start>
+    <destination world_id="210040000" world_name="LF3" npc_id="700138">
+      <group weight="100">
+        <point x="712.186157" y="2857.79663" z="109.964737" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="356.69928" y="349.312897" z="133.100006" dir="10"/>
+      </group>
+      <group weight="100">
+        <point x="1030.77722" y="2513.62183" z="140" dir="250"/>
+      </group>
+      <group weight="100">
+        <point x="1230.25671" y="426.776215" z="122" dir="160"/>
+      </group>
+      <group weight="100">
+        <point x="1779.55713" y="584.654541" z="103" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1840.1969" y="2652.02051" z="148" dir="290"/>
+      </group>
+      <group weight="100">
+        <point x="335.802887" y="436.031342" z="128.761688" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1708.02515" y="1720.94544" z="110" dir="150"/>
+      </group>
+      <group weight="100">
+        <point x="1772.00879" y="1148.51636" z="174" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="1953.18127" y="1839.13538" z="125" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="436.380829" y="1015.33508" z="122" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="518.774109" y="2263.22607" z="147" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="522.530579" y="1644.60535" z="104" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="883.6922" y="1349.71252" z="103.099998" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="802.439636" y="2176.24145" z="120" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="424.20813" y="2666.10644" z="118" dir="100"/>
+      </group>
+      <group weight="100">
+        <point x="2053.96973" y="417.197296" z="232" dir="50"/>
+      </group>
+      <group weight="100">
+        <point x="1923.30811" y="2663.70459" z="140.5" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="892.158508" y="958.557739" z="140.100006" dir="200"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="27" name="From_DF3_2_B_To_LF3_B" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220040000" world_name="DF3" npc_id="700137">
+      <group weight="0">
+        <point x="1367.26294" y="735.726807" z="275.700378" dir="180"/>
+      </group>
+    </start>
+    <destination world_id="210040000" world_name="LF3" npc_id="700138">
+      <group weight="100">
+        <point x="712.186157" y="2857.79663" z="109.964737" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="356.69928" y="349.312897" z="133.100006" dir="10"/>
+      </group>
+      <group weight="100">
+        <point x="1030.77722" y="2513.62183" z="140" dir="250"/>
+      </group>
+      <group weight="100">
+        <point x="1230.25671" y="426.776215" z="122" dir="160"/>
+      </group>
+      <group weight="100">
+        <point x="1779.55713" y="584.654541" z="103" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1840.1969" y="2652.02051" z="148" dir="290"/>
+      </group>
+      <group weight="100">
+        <point x="335.802887" y="436.031342" z="128.761688" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1708.02515" y="1720.94544" z="110" dir="150"/>
+      </group>
+      <group weight="100">
+        <point x="1772.00879" y="1148.51636" z="174" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="1953.18127" y="1839.13538" z="125" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="436.380829" y="1015.33508" z="122" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="518.774109" y="2263.22607" z="147" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="522.530579" y="1644.60535" z="104" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="883.6922" y="1349.71252" z="103.099998" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="802.439636" y="2176.24145" z="120" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="424.20813" y="2666.10644" z="118" dir="100"/>
+      </group>
+      <group weight="100">
+        <point x="2053.96973" y="417.197296" z="232" dir="50"/>
+      </group>
+      <group weight="100">
+        <point x="1923.30811" y="2663.70459" z="140.5" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="892.158508" y="958.557739" z="140.100006" dir="200"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="28" name="From_DF3_3_C1_To_LF3_C1" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220040000" world_name="DF3" npc_id="700137">
+      <group weight="0">
+        <point x="719.648499" y="2245.34399" z="246.014526" dir="180"/>
+      </group>
+    </start>
+    <destination world_id="210040000" world_name="LF3" npc_id="700138">
+      <group weight="100">
+        <point x="712.186157" y="2857.79663" z="109.964737" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="356.69928" y="349.312897" z="133.100006" dir="10"/>
+      </group>
+      <group weight="100">
+        <point x="1030.77722" y="2513.62183" z="140" dir="250"/>
+      </group>
+      <group weight="100">
+        <point x="1230.25671" y="426.776215" z="122" dir="160"/>
+      </group>
+      <group weight="100">
+        <point x="1779.55713" y="584.654541" z="103" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1840.1969" y="2652.02051" z="148" dir="290"/>
+      </group>
+      <group weight="100">
+        <point x="335.802887" y="436.031342" z="128.761688" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1708.02515" y="1720.94544" z="110" dir="150"/>
+      </group>
+      <group weight="100">
+        <point x="1772.00879" y="1148.51636" z="174" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="1953.18127" y="1839.13538" z="125" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="436.380829" y="1015.33508" z="122" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="518.774109" y="2263.22607" z="147" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="522.530579" y="1644.60535" z="104" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="883.6922" y="1349.71252" z="103.099998" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="802.439636" y="2176.24145" z="120" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="424.20813" y="2666.10644" z="118" dir="100"/>
+      </group>
+      <group weight="100">
+        <point x="2053.96973" y="417.197296" z="232" dir="50"/>
+      </group>
+      <group weight="100">
+        <point x="1923.30811" y="2663.70459" z="140.5" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="892.158508" y="958.557739" z="140.100006" dir="200"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="29" name="From_DF3_4_C2_To_LF3_C2" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220040000" world_name="DF3" npc_id="700137">
+      <group weight="0">
+        <point x="2079.15894" y="206.102814" z="383.341278" dir="130"/>
+      </group>
+    </start>
+    <destination world_id="210040000" world_name="LF3" npc_id="700138">
+      <group weight="100">
+        <point x="712.186157" y="2857.79663" z="109.964737" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="356.69928" y="349.312897" z="133.100006" dir="10"/>
+      </group>
+      <group weight="100">
+        <point x="1030.77722" y="2513.62183" z="140" dir="250"/>
+      </group>
+      <group weight="100">
+        <point x="1230.25671" y="426.776215" z="122" dir="160"/>
+      </group>
+      <group weight="100">
+        <point x="1779.55713" y="584.654541" z="103" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1840.1969" y="2652.02051" z="148" dir="290"/>
+      </group>
+      <group weight="100">
+        <point x="335.802887" y="436.031342" z="128.761688" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1708.02515" y="1720.94544" z="110" dir="150"/>
+      </group>
+      <group weight="100">
+        <point x="1772.00879" y="1148.51636" z="174" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="1953.18127" y="1839.13538" z="125" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="436.380829" y="1015.33508" z="122" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="518.774109" y="2263.22607" z="147" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="522.530579" y="1644.60535" z="104" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="883.6922" y="1349.71252" z="103.099998" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="802.439636" y="2176.24145" z="120" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="424.20813" y="2666.10644" z="118" dir="100"/>
+      </group>
+      <group weight="100">
+        <point x="2053.96973" y="417.197296" z="232" dir="50"/>
+      </group>
+      <group weight="100">
+        <point x="1923.30811" y="2663.70459" z="140.5" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="892.158508" y="958.557739" z="140.100006" dir="200"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="30" name="From_DF3_5_D1_To_LF3_D1" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220040000" world_name="DF3" npc_id="700137">
+      <group weight="0">
+        <point x="2828.55493" y="579.583435" z="510.71582" dir="90"/>
+      </group>
+    </start>
+    <destination world_id="210040000" world_name="LF3" npc_id="700138">
+      <group weight="100">
+        <point x="712.186157" y="2857.79663" z="109.964737" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="356.69928" y="349.312897" z="133.100006" dir="10"/>
+      </group>
+      <group weight="100">
+        <point x="1030.77722" y="2513.62183" z="140" dir="250"/>
+      </group>
+      <group weight="100">
+        <point x="1230.25671" y="426.776215" z="122" dir="160"/>
+      </group>
+      <group weight="100">
+        <point x="1779.55713" y="584.654541" z="103" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1840.1969" y="2652.02051" z="148" dir="290"/>
+      </group>
+      <group weight="100">
+        <point x="335.802887" y="436.031342" z="128.761688" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1708.02515" y="1720.94544" z="110" dir="150"/>
+      </group>
+      <group weight="100">
+        <point x="1772.00879" y="1148.51636" z="174" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="1953.18127" y="1839.13538" z="125" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="436.380829" y="1015.33508" z="122" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="518.774109" y="2263.22607" z="147" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="522.530579" y="1644.60535" z="104" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="883.6922" y="1349.71252" z="103.099998" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="802.439636" y="2176.24145" z="120" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="424.20813" y="2666.10644" z="118" dir="100"/>
+      </group>
+      <group weight="100">
+        <point x="2053.96973" y="417.197296" z="232" dir="50"/>
+      </group>
+      <group weight="100">
+        <point x="1923.30811" y="2663.70459" z="140.5" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="892.158508" y="958.557739" z="140.100006" dir="200"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="31" name="From_DF3_6_D2_To_LF3_D2" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220040000" world_name="DF3" npc_id="700137">
+      <group weight="0">
+        <point x="2737.19653" y="2601.15161" z="656.563477" dir="300"/>
+      </group>
+    </start>
+    <destination world_id="210040000" world_name="LF3" npc_id="700138">
+      <group weight="100">
+        <point x="712.186157" y="2857.79663" z="109.964737" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="356.69928" y="349.312897" z="133.100006" dir="10"/>
+      </group>
+      <group weight="100">
+        <point x="1030.77722" y="2513.62183" z="140" dir="250"/>
+      </group>
+      <group weight="100">
+        <point x="1230.25671" y="426.776215" z="122" dir="160"/>
+      </group>
+      <group weight="100">
+        <point x="1779.55713" y="584.654541" z="103" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1840.1969" y="2652.02051" z="148" dir="290"/>
+      </group>
+      <group weight="100">
+        <point x="335.802887" y="436.031342" z="128.761688" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1708.02515" y="1720.94544" z="110" dir="150"/>
+      </group>
+      <group weight="100">
+        <point x="1772.00879" y="1148.51636" z="174" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="1953.18127" y="1839.13538" z="125" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="436.380829" y="1015.33508" z="122" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="518.774109" y="2263.22607" z="147" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="522.530579" y="1644.60535" z="104" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="883.6922" y="1349.71252" z="103.099998" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="802.439636" y="2176.24145" z="120" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="424.20813" y="2666.10644" z="118" dir="100"/>
+      </group>
+      <group weight="100">
+        <point x="2053.96973" y="417.197296" z="232" dir="50"/>
+      </group>
+      <group weight="100">
+        <point x="1923.30811" y="2663.70459" z="140.5" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="892.158508" y="958.557739" z="140.100006" dir="200"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="32" name="From_DF3_7_E_To_LF3_E" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220040000" world_name="DF3" npc_id="700137">
+      <group weight="0">
+        <point x="1570.56604" y="2011.05164" z="582.379761" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="210040000" world_name="LF3" npc_id="700138">
+      <group weight="100">
+        <point x="712.186157" y="2857.79663" z="109.964737" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="356.69928" y="349.312897" z="133.100006" dir="10"/>
+      </group>
+      <group weight="100">
+        <point x="1030.77722" y="2513.62183" z="140" dir="250"/>
+      </group>
+      <group weight="100">
+        <point x="1230.25671" y="426.776215" z="122" dir="160"/>
+      </group>
+      <group weight="100">
+        <point x="1779.55713" y="584.654541" z="103" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1840.1969" y="2652.02051" z="148" dir="290"/>
+      </group>
+      <group weight="100">
+        <point x="335.802887" y="436.031342" z="128.761688" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1708.02515" y="1720.94544" z="110" dir="150"/>
+      </group>
+      <group weight="100">
+        <point x="1772.00879" y="1148.51636" z="174" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="1953.18127" y="1839.13538" z="125" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="436.380829" y="1015.33508" z="122" dir="240"/>
+      </group>
+      <group weight="100">
+        <point x="518.774109" y="2263.22607" z="147" dir="200"/>
+      </group>
+      <group weight="100">
+        <point x="522.530579" y="1644.60535" z="104" dir="140"/>
+      </group>
+      <group weight="100">
+        <point x="883.6922" y="1349.71252" z="103.099998" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="802.439636" y="2176.24145" z="120" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="424.20813" y="2666.10644" z="118" dir="100"/>
+      </group>
+      <group weight="100">
+        <point x="2053.96973" y="417.197296" z="232" dir="50"/>
+      </group>
+      <group weight="100">
+        <point x="1923.30811" y="2663.70459" z="140.5" dir="320"/>
+      </group>
+      <group weight="100">
+        <point x="892.158508" y="958.557739" z="140.100006" dir="200"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="41" name="From_Arena_L_lobby_To_DF2A" time="7200" count="24" min_level="45" max_level="255" need_item="" group_id="0" invade_type="1" close_force_out="true" recount="true" title_id="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+    <start world_id="110070000" world_name="Arena_L_lobby" npc_id="831141">
+      <group weight="0">
+        <point x="452.396393" y="232.425232" z="128.21402" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220050000" world_name="DF2A" npc_id="831142">
+      <group weight="0">
+        <point x="2239.46191" y="2797.94678" z="78.538712" dir="135"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="42" name="From_Arena_D_lobby_To_LF2A" time="7200" count="24" min_level="45" max_level="255" need_item="" group_id="0" invade_type="1" close_force_out="true" recount="true" title_id="0" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0">
+    <start world_id="120080000" world_name="Arena_D_lobby" npc_id="831143">
+      <group weight="0">
+        <point x="563.944336" y="207.791885" z="94.554642" dir="180"/>
+      </group>
+    </start>
+    <destination world_id="210060000" world_name="LF2A" npc_id="831144">
+      <group weight="0">
+        <point x="954.807007" y="2430.68286" z="109.372543" dir="225"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="45" name="From_LF4_B2_To_DF4_B1" time="3000" count="99" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100">
+    <start world_id="210050000" world_name="LF4" npc_id="700137">
+      <group weight="0">
+        <point x="2269.95215" y="1440.82263" z="202.207336" dir="90"/>
+      </group>
+    </start>
+    <destination world_id="220070000" world_name="DF4" npc_id="700138">
+      <group weight="30">
+        <point x="162.211761" y="1491.94019" z="368.662354" dir="90"/>
+      </group>
+      <group weight="30">
+        <point x="90.064247" y="1900.26953" z="402.604187" dir="0"/>
+      </group>
+      <group weight="30">
+        <point x="153.181458" y="1972.05957" z="386.586517" dir="310"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="46" name="From_LF4_B7_To_DF4_B5" time="3000" count="99" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100">
+    <start world_id="210050000" world_name="LF4" npc_id="700137">
+      <group weight="0">
+        <point x="854.432922" y="1286.39246" z="428.976135" dir="180"/>
+      </group>
+    </start>
+    <destination world_id="220070000" world_name="DF4" npc_id="700138">
+      <group weight="30">
+        <point x="2407.479" y="1829.70911" z="404.706879" dir="260"/>
+      </group>
+      <group weight="30">
+        <point x="2070.59204" y="1728.83215" z="390.482574" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="2204.38477" y="1533.18201" z="378.831696" dir="120"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="47" name="From_LF4_C4_To_DF4_C1" time="3000" count="99" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100">
+    <start world_id="210050000" world_name="LF4" npc_id="700137">
+      <group weight="0">
+        <point x="2025.07788" y="2086.32519" z="298.706207" dir="90"/>
+      </group>
+    </start>
+    <destination world_id="220070000" world_name="DF4" npc_id="700138">
+      <group weight="30">
+        <point x="396.164581" y="1225.74695" z="305.434509" dir="320"/>
+      </group>
+      <group weight="30">
+        <point x="667.940979" y="1553.7323" z="283.609192" dir="270"/>
+      </group>
+      <group weight="30">
+        <point x="581.815796" y="1559.09631" z="282.37674" dir="180"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="48" name="From_LF4_C2_To_DF4_C5" time="3000" count="99" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100">
+    <start world_id="210050000" world_name="LF4" npc_id="700137">
+      <group weight="0">
+        <point x="561.614563" y="1867.43188" z="334.226746" dir="310"/>
+      </group>
+    </start>
+    <destination world_id="220070000" world_name="DF4" npc_id="700138">
+      <group weight="30">
+        <point x="2273.62231" y="852.723083" z="194.337036" dir="210"/>
+      </group>
+      <group weight="30">
+        <point x="2580.25" y="624.416077" z="147.172592" dir="40"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="49" name="From_DF4_B1_To_LF4_B1" time="3000" count="99" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100">
+    <start world_id="220070000" world_name="DF4" npc_id="700137">
+      <group weight="0">
+        <point x="492.099365" y="1897.73181" z="388.955933" dir="220"/>
+      </group>
+    </start>
+    <destination world_id="210050000" world_name="LF4" npc_id="700138">
+      <group weight="30">
+        <point x="2865.15503" y="1328.94629" z="359.194824" dir="330"/>
+      </group>
+      <group weight="30">
+        <point x="2893.74145" y="1087.23132" z="371.646301" dir="210"/>
+      </group>
+      <group weight="30">
+        <point x="2584.36011" y="977.480774" z="395.526398" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="50" name="From_DF4_B5_To_LF4_B5" time="3000" count="99" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100">
+    <start world_id="220070000" world_name="DF4" npc_id="700137">
+      <group weight="0">
+        <point x="2230.02295" y="1744.95483" z="407.0672" dir="340"/>
+      </group>
+    </start>
+    <destination world_id="210050000" world_name="LF4" npc_id="700138">
+      <group weight="30">
+        <point x="637.163635" y="770.072266" z="408.144806" dir="140"/>
+      </group>
+      <group weight="30">
+        <point x="558.475708" y="846.516602" z="456.766846" dir="90"/>
+      </group>
+      <group weight="30">
+        <point x="437.395721" y="984.31012" z="392.910767" dir="50"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="51" name="From_DF4_C2_To_LF4_C5" time="3000" count="99" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100">
+    <start world_id="220070000" world_name="DF4" npc_id="700137">
+      <group weight="0">
+        <point x="839.3349" y="1210.74646" z="280.382507" dir="250"/>
+      </group>
+    </start>
+    <destination world_id="210050000" world_name="LF4" npc_id="700138">
+      <group weight="30">
+        <point x="2582.07202" y="1898.65222" z="226.21524" dir="50"/>
+      </group>
+      <group weight="30">
+        <point x="2820.23047" y="1994.95862" z="191.832642" dir="180"/>
+      </group>
+      <group weight="30">
+        <point x="2687.10425" y="1638.80102" z="194.293945" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="52" name="From_DF4_C4_To_LF4_C1" time="3000" count="99" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0,100,100">
+    <start world_id="220070000" world_name="DF4" npc_id="700137">
+      <group weight="0">
+        <point x="2627.90161" y="988.379395" z="301.106934" dir="160"/>
+      </group>
+    </start>
+    <destination world_id="210050000" world_name="LF4" npc_id="700138">
+      <group weight="30">
+        <point x="1066.16272" y="2163.05518" z="342.887756" dir="310"/>
+      </group>
+      <group weight="30">
+        <point x="1141.37524" y="2131.6394" z="344.771027" dir="200"/>
+      </group>
+      <group weight="30">
+        <point x="1085.57776" y="2027.9491" z="341.868927" dir="70"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="69" name="From_GAb1_01_To_GAb1_Sub" time="4200" count="100" min_level="66" max_level="255" need_item="" group_id="0" invade_type="3" close_force_out="true" recount="true" title_id="275" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0">
+    <start world_id="400020000" world_name="GAb1_01" npc_id="802219">
+      <group weight="0">
+        <point x="1024.1593" y="1076.23999" z="1531.62781" dir="270"/>
+      </group>
+    </start>
+    <destination world_id="400030000" world_name="GAB1_Sub" npc_id="802220">
+      <group weight="0">
+        <point x="276.337708" y="281.124054" z="680.382141" dir="45"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="70" name="From_GAb1_02_To_GAb1_Sub" time="4200" count="100" min_level="66" max_level="255" need_item="" group_id="0" invade_type="3" close_force_out="true" recount="true" title_id="275" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0">
+    <start world_id="400040000" world_name="GAb1_02" npc_id="802219">
+      <group weight="0">
+        <point x="1024.1593" y="1076.23999" z="1531.42297" dir="270"/>
+      </group>
+    </start>
+    <destination world_id="400030000" world_name="GAB1_Sub" npc_id="802222">
+      <group weight="0">
+        <point x="277.019623" y="743.673584" z="681.00592" dir="315"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="71" name="From_GAb1_03_To_GAb1_Sub" time="4200" count="100" min_level="66" max_level="255" need_item="" group_id="0" invade_type="3" close_force_out="true" recount="true" title_id="275" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0">
+    <start world_id="400050000" world_name="GAb1_03" npc_id="802219">
+      <group weight="0">
+        <point x="1024.1593" y="1076.23999" z="1531.44189" dir="270"/>
+      </group>
+    </start>
+    <destination world_id="400030000" world_name="GAB1_Sub" npc_id="802224">
+      <group weight="0">
+        <point x="740.446655" y="747.124817" z="680.446472" dir="225"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="72" name="From_GAb1_04_To_GAb1_Sub" time="4200" count="100" min_level="66" max_level="255" need_item="" group_id="0" invade_type="3" close_force_out="true" recount="true" title_id="275" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0">
+    <start world_id="400060000" world_name="GAb1_04" npc_id="802219">
+      <group weight="0">
+        <point x="1024.1593" y="1076.23999" z="1531.6228" dir="270"/>
+      </group>
+    </start>
+    <destination world_id="400030000" world_name="GAB1_Sub" npc_id="802226">
+      <group weight="0">
+        <point x="742.477783" y="282.011353" z="680.551208" dir="135"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="73" name="From_DF5_A_To_LF5_A" time="3595" count="24" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
     <start world_id="220080000" world_name="DF5" npc_id="700137">
       <group weight="100">
         <point x="115.345329" y="2609.84619" z="132.288681" dir="90"/>
@@ -18,7 +2184,7 @@
       </group>
     </destination>
   </portal>
-  <portal id="74" name="From_DF5_B_To_LF5_B" time="3595" count="72" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0">
+  <portal id="74" name="From_DF5_B_To_LF5_B" time="3595" count="72" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
     <start world_id="220080000" world_name="DF5" npc_id="700137">
       <group weight="100">
         <point x="1308.29822" y="2396.42163" z="285.473999" dir="90"/>
@@ -33,6 +2199,132 @@
       </group>
       <group weight="100">
         <point x="1910.37146" y="487.898376" z="560.771667" dir="225"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="75" name="From_DF5_D_To_LF5_D" time="3595" count="96" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220080000" world_name="DF5" npc_id="700137">
+      <group weight="100">
+        <point x="2326.04736" y="1177.00061" z="325.64798" dir="90"/>
+      </group>
+    </start>
+    <destination world_id="210070000" world_name="LF5" npc_id="700138">
+      <group weight="100">
+        <point x="730.221985" y="1508.84399" z="471.320313" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="825.250977" y="1807.97046" z="479.615234" dir="225"/>
+      </group>
+      <group weight="100">
+        <point x="294.473297" y="1642.71484" z="476.580902" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="76" name="From_DF5_F_To_LF5_F" time="3595" count="96" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220080000" world_name="DF5" npc_id="700137">
+      <group weight="100">
+        <point x="118.375031" y="1463.73291" z="315.776947" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="210070000" world_name="LF5" npc_id="700138">
+      <group weight="100">
+        <point x="1898.51685" y="1055.13171" z="456.512543" dir="135"/>
+      </group>
+      <group weight="100">
+        <point x="2021.35852" y="1321.0011" z="452.095795" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="1851.7915" y="1354.69141" z="463.350708" dir="350"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="77" name="From_DF5_H_To_LF5_H" time="3595" count="96" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220080000" world_name="DF5" npc_id="700137">
+      <group weight="100">
+        <point x="1076.91602" y="657.250854" z="227.569519" dir="225"/>
+      </group>
+    </start>
+    <destination world_id="210070000" world_name="LF5" npc_id="700138">
+      <group weight="100">
+        <point x="1776.81934" y="2534.35303" z="338.30954" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="1870.9845" y="2867.11084" z="319.960205" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="2403.43262" y="2530.95532" z="312.607269" dir="135"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="78" name="From_DF5_J_To_LF5_J" time="3595" count="9999" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220080000" world_name="DF5" npc_id="700137">
+      <group weight="100">
+        <point x="2415.46143" y="163.098022" z="252.863068" dir="90"/>
+      </group>
+    </start>
+    <destination world_id="210070000" world_name="LF5" npc_id="700138">
+      <group weight="100">
+        <point x="786.392212" y="2917.97168" z="319.241882" dir="315"/>
+      </group>
+      <group weight="100">
+        <point x="946.564697" y="2540.59351" z="343.045929" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="507.681335" y="2304.43774" z="343.590698" dir="90"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="79" name="From_DF5_P1_To_LF5_P1" time="3595" count="9999" min_level="55" max_level="255" need_item="" group_id="0" invade_type="4" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+    <start world_id="220080000" world_name="DF5" npc_id="702723">
+      <group weight="100">
+        <point x="2866.20093" y="2398.22607" z="178.479218" dir="135"/>
+      </group>
+    </start>
+    <destination world_id="210070000" world_name="LF5" npc_id="702724">
+      <group weight="100">
+        <point x="484.738831" y="598.327515" z="445.655701" dir="135"/>
+      </group>
+      <group weight="100">
+        <point x="349.014313" y="474.532806" z="448.596588" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="213.5672" y="612.784058" z="429.984711" dir="45"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="80" name="From_DF5_P2_To_LF5_P2" time="3595" count="9999" min_level="55" max_level="255" need_item="" group_id="0" invade_type="4" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+    <start world_id="220080000" world_name="DF5" npc_id="702723">
+      <group weight="100">
+        <point x="1793.5022" y="1245.6637" z="222.574585" dir="225"/>
+      </group>
+    </start>
+    <destination world_id="210070000" world_name="LF5" npc_id="702724">
+      <group weight="100">
+        <point x="1264.89539" y="2073.65942" z="204.779724" dir="315"/>
+      </group>
+      <group weight="100">
+        <point x="1856.03711" y="2087.3313" z="203.44902" dir="225"/>
+      </group>
+      <group weight="100">
+        <point x="1691.04614" y="2091.07202" z="195.540329" dir="225"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="81" name="From_DF5_I_To_LF5_I" time="3595" count="9999" min_level="55" max_level="255" need_item="" group_id="0" invade_type="4" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0">
+    <start world_id="220080000" world_name="DF5" npc_id="702723">
+      <group weight="100">
+        <point x="97.661758" y="142.235901" z="168.098602" dir="90"/>
+      </group>
+    </start>
+    <destination world_id="210070000" world_name="LF5" npc_id="702724">
+      <group weight="100">
+        <point x="2869.73999" y="2419.13599" z="233.744598" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2585.37524" y="2225.53613" z="260.814362" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2586.10644" y="2639.16821" z="267.171509" dir="340"/>
       </group>
     </destination>
   </portal>
@@ -90,6 +2382,168 @@
       </group>
     </destination>
   </portal>
+  <portal id="85" name="From_LF5_A_To_DF5_A" time="3595" count="24" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210070000" world_name="LF5" npc_id="700137">
+      <group weight="100">
+        <point x="2680.28857" y="363.258453" z="573.547974" dir="90"/>
+      </group>
+    </start>
+    <destination world_id="220080000" world_name="DF5" npc_id="700138">
+      <group weight="100">
+        <point x="602.57959" y="2703.21704" z="216.282776" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="808.690796" y="2671.60352" z="257.680634" dir="90"/>
+      </group>
+      <group weight="100">
+        <point x="103.202606" y="2461.10962" z="201.350021" dir="90"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="86" name="From_LF5_B_To_DF5_B" time="3595" count="72" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210070000" world_name="LF5" npc_id="700137">
+      <group weight="100">
+        <point x="1746.40906" y="140.650574" z="542.166382" dir="45"/>
+      </group>
+    </start>
+    <destination world_id="220080000" world_name="DF5" npc_id="700138">
+      <group weight="100">
+        <point x="954.063721" y="2551.19653" z="302.14624" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="1617.09851" y="2894.61304" z="243.952545" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1388.43445" y="2654.39673" z="303.989197" dir="90"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="87" name="From_LF5_D_To_DF5_D" time="3595" count="96" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210070000" world_name="LF5" npc_id="700137">
+      <group weight="100">
+        <point x="791.855225" y="1866.11169" z="463.740967" dir="270"/>
+      </group>
+    </start>
+    <destination world_id="220080000" world_name="DF5" npc_id="700138">
+      <group weight="100">
+        <point x="2739.66211" y="1591.5354" z="347.855133" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2414.74145" y="1667.09619" z="366.747803" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="2618.60644" y="1788.55591" z="357.376282" dir="180"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="88" name="From_LF5_F_To_DF5_F" time="3595" count="96" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210070000" world_name="LF5" npc_id="700137">
+      <group weight="100">
+        <point x="2054.07031" y="1433.61853" z="428.19574" dir="300"/>
+      </group>
+    </start>
+    <destination world_id="220080000" world_name="DF5" npc_id="700138">
+      <group weight="100">
+        <point x="110.213669" y="1633.05835" z="310.951324" dir="315"/>
+      </group>
+      <group weight="100">
+        <point x="232.778763" y="1363.85071" z="328.365234" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="320.196808" y="1880.31763" z="319.951385" dir="270"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="89" name="From_LF5_H_To_DF5_H" time="3595" count="96" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210070000" world_name="LF5" npc_id="700137">
+      <group weight="100">
+        <point x="1913.03235" y="2674.07251" z="326.465851" dir="270"/>
+      </group>
+    </start>
+    <destination world_id="220080000" world_name="DF5" npc_id="700138">
+      <group weight="100">
+        <point x="1915.15405" y="548.250122" z="262.722961" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="1136.59949" y="435.036102" z="274.824524" dir="45"/>
+      </group>
+      <group weight="100">
+        <point x="1839.35584" y="482.851959" z="249.646606" dir="315"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="90" name="From_LF5_J_To_DF5_J" time="3595" count="9999" min_level="55" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="210070000" world_name="LF5" npc_id="700137">
+      <group weight="100">
+        <point x="921.86084" y="2380.64624" z="290.722076" dir="110"/>
+      </group>
+    </start>
+    <destination world_id="220080000" world_name="DF5" npc_id="700138">
+      <group weight="100">
+        <point x="2731.42993" y="973.45459" z="289.347504" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2249.2771" y="524.733337" z="261.166321" dir="270"/>
+      </group>
+      <group weight="100">
+        <point x="2828.62598" y="850.939514" z="263.637512" dir="180"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="91" name="From_LF5_P1_To_DF5_P1" time="3595" count="9999" min_level="55" max_level="255" need_item="" group_id="0" invade_type="4" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+    <start world_id="210070000" world_name="LF5" npc_id="702723">
+      <group weight="100">
+        <point x="421.316437" y="880.168213" z="417.839294" dir="270"/>
+      </group>
+    </start>
+    <destination world_id="220080000" world_name="DF5" npc_id="702724">
+      <group weight="50">
+        <point x="2730.34155" y="2737.1106" z="229.215073" dir="180"/>
+      </group>
+      <group weight="50">
+        <point x="2855.70898" y="2550.7583" z="260.375214" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="2667.44556" y="2521.97339" z="215.827942" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="92" name="From_LF5_P2_To_DF5_P2" time="3595" count="9999" min_level="55" max_level="255" need_item="" group_id="0" invade_type="4" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+    <start world_id="210070000" world_name="LF5" npc_id="702723">
+      <group weight="100">
+        <point x="2006.16602" y="1736.83972" z="195.097198" dir="270"/>
+      </group>
+    </start>
+    <destination world_id="220080000" world_name="DF5" npc_id="702724">
+      <group weight="100">
+        <point x="1941.89893" y="839.049194" z="186.858963" dir="180"/>
+      </group>
+      <group weight="100">
+        <point x="1927.25342" y="1017.12042" z="187.883148" dir="180"/>
+      </group>
+      <group weight="50">
+        <point x="1626.33081" y="1287.64062" z="259.060028" dir="270"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="93" name="From_LF5_I_To_DF5_I" time="3595" count="9999" min_level="55" max_level="255" need_item="" group_id="0" invade_type="4" schedule="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0">
+    <start world_id="210070000" world_name="LF5" npc_id="702723">
+      <group weight="100">
+        <point x="2949.88037" y="2852.93896" z="276.336395" dir="180"/>
+      </group>
+    </start>
+    <destination world_id="220080000" world_name="DF5" npc_id="702724">
+      <group weight="100">
+        <point x="151.867676" y="104.204193" z="229.874786" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="131.928421" y="366.53183" z="221.98703" dir="0"/>
+      </group>
+      <group weight="100">
+        <point x="674.149841" y="657.85553" z="282.85022" dir="180"/>
+      </group>
+    </destination>
+  </portal>
   <portal id="94" name="From_LF5_Vil1_To_DF5_Vil1" time="3595" count="72" min_level="55" max_level="255" need_item="key_f5_legion_potal_01" group_id="22" invade_type="5">
     <start world_id="210070000" world_name="LF5" npc_id="702721">
       <group weight="100">
@@ -141,6 +2595,126 @@
       </group>
       <group weight="100">
         <point x="649.009949" y="949.762207" z="260.861267" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="131" name="From_DF6_2_B1_To_LF6_B1" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="2354.33081" y="2259.30029" z="1119.62939" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="132" name="From_DF6_2_B2_To_LF6_B2" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="2646.93677" y="2714.12915" z="1119.56934" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="133" name="From_DF6_2_C_To_LF6_C" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="2550.4668" y="1423.58374" z="1119.56934" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="134" name="From_DF6_2_D_To_LF6_D" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="2536.19897" y="494.507507" z="1119.56934" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="135" name="From_DF6_2_E_To_LF6_E" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="1505.5835" y="309.765167" z="1072.55164" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="136" name="From_DF6_2_F1_To_LF6_F1" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="676.87262" y="958.987976" z="1119.89734" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="137" name="From_DF6_2_F2_To_LF6_F2" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="271.468567" y="431.260376" z="1119.89734" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="138" name="From_DF6_2_G_To_LF6_G" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="468.020447" y="1684.76221" z="1119.89734" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="139" name="From_DF6_2_H_To_LF6_H" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="651.1026" y="2578.61499" z="1119.89734" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="140" name="From_DF6_2_I_To_LF6_I" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="1615.49829" y="2645.5769" z="1119.89734" dir="0"/>
       </group>
     </destination>
   </portal>
@@ -418,6 +2992,138 @@
       </group>
     </destination>
   </portal>
+  <portal id="152" name="From_DF6_5_OP_To_LF6_Ship" time="3595" count="24" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="833766">
+      <group weight="100">
+        <point x="1650.76416" y="1980.2019" z="202.507813" dir="290"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="1410.78088" y="1428.08997" z="1342.44128" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="156" name="From_LF6_2_B1_To_DF6_B1" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="1947.33618" y="1100.68665" z="882.648926" dir="45"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="157" name="From_LF6_2_B2_To_DF6_B2" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="2556.38574" y="285.661621" z="885.473816" dir="270"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="158" name="From_LF6_2_C_To_DF6_C" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="2469.1477" y="1989.38245" z="846.562561" dir="135"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="159" name="From_LF6_2_D_To_DF6_D" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="2222.72607" y="2989.46045" z="934.805054" dir="290"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="160" name="From_LF6_2_E_To_DF6_E" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="1616.04053" y="2966.79785" z="789.80072" dir="100"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="161" name="From_LF6_2_F1_To_DF6_F1" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="839.309631" y="2382.82935" z="812.749451" dir="135"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="162" name="From_LF6_2_F2_To_DF6_F2" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="251.398529" y="2855.60596" z="846.647766" dir="135"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="163" name="From_LF6_2_G_To_DF6_G" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="436.340027" y="1609.33301" z="922.268188" dir="135"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="164" name="From_LF6_2_H_To_DF6_H" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="506.601349" y="577.845581" z="923.185913" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="165" name="From_LF6_2_I_To_DF6_I" time="1795" count="6" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="1707.40674" y="649.69928" z="954.644043" dir="225"/>
+      </group>
+    </destination>
+  </portal>
   <portal id="166" name="From_LF6_3_B1_To_DF6_B1" time="595" count="24" min_level="66" max_level="255" need_item="" group_id="0" invade_type="0">
     <start world_id="210100000" world_name="LF6" npc_id="700137">
       <group weight="100">
@@ -676,6 +3382,54 @@
       <group weight="100">
         <point x="1890.32556" y="1697.84412" z="249.401306" dir="0"/>
         <point x="1890.32556" y="1697.84412" z="249.813324" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="177" name="From_LF6_5_OP_To_DF6_Ship" time="3595" count="24" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="833766">
+      <group weight="100">
+        <point x="1515.97351" y="1393.05688" z="338.101501" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="1456.4126" y="1603.09595" z="1022.36389" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="219" name="From_LF6_Raid_To_DF6_Raid" time="3600" count="24" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="210100000" world_name="LF6" npc_id="835522">
+      <group weight="100">
+        <point x="2713.35571" y="1428.40808" z="228.639862" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="220110000" world_name="DF6" npc_id="833767">
+      <group weight="100">
+        <point x="2540.93286" y="1911.68494" z="270.254761" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="220" name="From_DF6_Raid_To_LF6_Raid" time="3600" count="24" min_level="66" max_level="255" need_item="" group_id="0" invade_type="6" close_force_out="true" recount="true" title_id="0">
+    <start world_id="220110000" world_name="DF6" npc_id="835523">
+      <group weight="100">
+        <point x="2471.52539" y="1803.95386" z="217.543289" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="210100000" world_name="LF6" npc_id="833767">
+      <group weight="100">
+        <point x="2658.97217" y="1510.61511" z="255.001663" dir="0"/>
+      </group>
+    </destination>
+  </portal>
+  <portal id="222" name="From_DF3_48_E_To_LF3_F" time="3000" count="9999" min_level="20" max_level="255" need_item="" group_id="0" invade_type="0" schedule="100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100">
+    <start world_id="220040000" world_name="DF3" npc_id="700137">
+      <group weight="0">
+        <point x="2435.56604" y="2037.05164" z="590.379761" dir="0"/>
+      </group>
+    </start>
+    <destination world_id="210040000" world_name="LF3" npc_id="700138">
+      <group weight="100">
+        <point x="2500.00879" y="2686.51636" z="205" dir="330"/>
       </group>
     </destination>
   </portal>

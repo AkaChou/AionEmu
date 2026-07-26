@@ -13,6 +13,32 @@ SPEC.loader.exec_module(MODULE)
 
 
 class RetailSimpleQuestGeneratorTest(unittest.TestCase):
+	def test_client_quest_coverage_rejects_server_only_ids(self):
+		with tempfile.TemporaryDirectory() as directory:
+			path = Path(directory) / "quest.xml"
+			path.write_text("<quests><quest><id>1</id></quest></quests>")
+
+			self.assertEqual({1}, MODULE.validate_client_quest_coverage({1}, path))
+			with self.assertRaisesRegex(ValueError, r"absent from client quest.xml: \[2\]"):
+				MODULE.validate_client_quest_coverage({1, 2}, path)
+
+	def test_runtime_reference_graph_closes_area_and_multi_npc_alias(self):
+		with tempfile.TemporaryDirectory() as directory:
+			path = Path(directory) / "reference-graph.json"
+			path.write_text('{"projection":"runtime_scope","references":['
+				'{"consumer":{"type":"quest","id":6},"kind":"area","status":"RESOLVED"},'
+				'{"consumer":{"type":"quest","id":7},"kind":"npc_quest_alias","raw":"Alias",'
+				'"status":"RESOLVED","targets":[{"type":"npc","id":10},{"type":"npc","id":11}]}]}')
+
+			owners, aliases = MODULE.reference_owners(path)
+			self.assertEqual({6}, owners["area"])
+			self.assertEqual(("alias", (10, 11)), aliases[7])
+			content, unresolved, _ = MODULE.render({}, {}, {}, {
+				7: {"item": "Letter", "end": "Alias", "end_ids": aliases[7][1], "talks": []},
+			}, {}, {}, {"alias": (10, 11)}, {"letter": (1,)}, ())
+			self.assertEqual({}, unresolved)
+			self.assertIn(b'end_npc_ids="10 11"', content)
+
 	def test_extra_action_slots_follow_retail_progress_categories(self):
 		self.assertEqual({}, MODULE.normalized_extra_actions({
 			"category_progress_": "PVP", "value3_progress_": "5",
@@ -27,8 +53,8 @@ class RetailSimpleQuestGeneratorTest(unittest.TestCase):
 				"value4_progress_": "Cutscene 940", "value5_progress_": "Relative Npc, 1, 100",
 				"value6_progress_": "ignored",
 			}, "progress"))
-		self.assertIsNone(MODULE.parse_absolute_spawns("Relative Npc, 1, 100"))
-		self.assertIsNone(MODULE.parse_absolute_spawns("Absolute Npc, 1, 100, 1 2 3 285"))
+		self.assertEqual([("Npc", 1, 100, None, None, None, None)], MODULE.parse_spawns("Relative Npc, 1, 100"))
+		self.assertIsNone(MODULE.parse_spawns("Absolute Npc, 1, 100, 1 2 3 285"))
 
 	def test_data_driven_complex_compiles_typed_teleport_and_cutscene(self):
 		with tempfile.TemporaryDirectory() as directory:
@@ -40,7 +66,8 @@ class RetailSimpleQuestGeneratorTest(unittest.TestCase):
 				<category_progress_>Talk</category_progress_><value0_progress_>Middle</value0_progress_>
 				<value3_progress_>210050000 1440 407 553 90</value3_progress_>
 				<value4_progress_>Cutscene 502</value4_progress_>
-				<value5_progress_>Absolute SpawnA, 2, 30, 10.9 20.1 30 40;Absolute SpawnB, 1, 5, -1.9 2 3 4</value5_progress_>
+				<value5_progress_>Absolute SpawnA, 2, 30, 10.9 20.1 30 40;Relative SpawnB, 1, 5</value5_progress_>
+				<value10_progress_>2700, 2, 0</value10_progress_>
 				</data></progress_info></quest_data_driven></quest_data_drivens>""")
 
 			quests = MODULE.data_driven_complex(path, {1}, set())
@@ -48,10 +75,12 @@ class RetailSimpleQuestGeneratorTest(unittest.TestCase):
 			self.assertEqual((210050000, 1440, 407, 553, 90), quests[1]["steps"][0]["teleport"])
 			self.assertEqual(502, quests[1]["steps"][0]["movie"])
 			self.assertEqual([
-				("SpawnA", 2, 30, 10.9, 20.1, 30, 40), ("SpawnB", 1, 5, -1.9, 2, 3, 4),
+				("SpawnA", 2, 30, 10.9, 20.1, 30, 40), ("SpawnB", 1, 5, None, None, None, None),
 			], quests[1]["steps"][0]["spawns"])
 			self.assertEqual({"total": 1, "supported": 1}, MODULE.data_driven_action_coverage(path)["teleport"])
 			self.assertEqual({"total": 1, "supported": 1}, MODULE.data_driven_action_coverage(path)["spawn_npc"])
+			self.assertEqual({"total": 1, "supported": 1}, MODULE.data_driven_action_coverage(path)["timer"])
+			self.assertIsNone(MODULE.parse_timer("2700, 2, 1"))
 			content, unresolved, _ = MODULE.render(
 				{}, {}, {}, {}, quests,
 				{"start": (1,), "middle": (2,), "end": (3,), "spawna": (4,), "spawnb": (5,)}, {}, {}, ())
@@ -60,11 +89,56 @@ class RetailSimpleQuestGeneratorTest(unittest.TestCase):
 			self.assertEqual({
 				"type": "TALK", "ids": "2", "movie": "502", "teleport_world_id": "210050000",
 				"teleport_x": "1440", "teleport_y": "407", "teleport_z": "553", "teleport_heading": "90",
+				"timer_seconds": "2700", "timer_destination_progress": "2",
 			}, step.attrib)
 			self.assertEqual([
 				{"npc_id": "4", "count": "2", "lifetime_seconds": "30", "x": "10.9", "y": "20.1", "z": "30", "heading": "40"},
-				{"npc_id": "5", "count": "1", "lifetime_seconds": "5", "x": "-1.9", "y": "2", "z": "3", "heading": "4"},
+				{"npc_id": "5", "count": "1", "lifetime_seconds": "5", "relative": "true"},
 			], [node.attrib for node in step])
+
+	def test_data_driven_shape_audit_preserves_empty_slot_presence_and_rejects_unknown_semantics(self):
+		with tempfile.TemporaryDirectory() as directory:
+			path = Path(directory) / "data_driven_quest.xml"
+			path.write_text("""<quest_data_drivens>
+				<quest_data_driven><id>1</id><name>Q1</name><dev_name>Supported</dev_name>
+					<category_acquire_>Talk</category_acquire_><value0_acquire_>Start</value0_acquire_>
+					<reward_npc_name>End</reward_npc_name></quest_data_driven>
+				<quest_data_driven><id>2</id><name>Q2</name><dev_name>Unknown</dev_name>
+					<category_acquire_>LevelUp</category_acquire_><value0_acquire_>10</value0_acquire_>
+					<value1_acquire_/><reward_npc_name>End</reward_npc_name></quest_data_driven>
+			</quest_data_drivens>""")
+
+			summary, shapes = MODULE.data_driven_shape_audit(path)
+
+			self.assertEqual({
+				"source_records": 2, "source_shapes": 2, "candidate_scope": "parser_only",
+				"current_parser_candidate": 1, "semantic_gap": 1,
+				"mapping_rules": {"data_driven_report": 1},
+			}, summary)
+			unknown = next(shape for shape in shapes if shape["semantic_gap_quest_ids"] == [2])
+			self.assertEqual([0, 1], unknown["acquire"]["present_slots"])
+			self.assertEqual([0], unknown["acquire"]["nonempty_slots"])
+			self.assertEqual([], unknown["acquire"]["other_fields"])
+
+	def test_generic_projection_reclaims_only_equivalent_compiled_behavior(self):
+		generic = {
+			1: {"kind": "data_driven_simple", "source": "simple_talk", "start_type": "TALK", "start": "Npc",
+				"steps": [{"type": "TALK", "names": ["Target"], "give_item": ("ITEM_A", 1), "remove_item": None}]},
+			2: {"kind": "data_driven_simple", "start_type": "TALK", "start": "Npc", "start_give_item": ("ITEM_A", 1),
+				"steps": [{"type": "TALK", "names": ["Target"]}]},
+		}
+		compiled = {
+			1: {"kind": "data_driven_simple", "source": "compiled", "start_type": "TALK", "start": "NPC",
+				"steps": [{"type": "TALK", "names": ["target"], "give_item": ("item_a", 1)}]},
+			2: {"kind": "data_driven_simple", "source": "compiled", "start_type": "TALK", "start": "Npc",
+				"steps": [{"type": "TALK", "names": ["Target"], "give_item": ("ITEM_A", 1)}]},
+		}
+
+		retained, reclaimed = MODULE.reclaim_generic_projections(compiled, {"simple": {}, "hunt": {}, "data": generic}, "data")
+
+		self.assertEqual([1], reclaimed)
+		self.assertEqual({2: compiled[2]}, retained)
+		self.assertNotEqual(MODULE.runtime_projection({"type": "TALK"}), MODULE.runtime_projection({"type": "talk"}))
 
 	def test_simple_talk_fields_compile_cutscene_and_step_items(self):
 		with tempfile.TemporaryDirectory() as directory:
@@ -533,7 +607,7 @@ class RetailSimpleQuestGeneratorTest(unittest.TestCase):
 				'<quest_data_driven><id>9</id><name>Q9</name><dev_name>Talk</dev_name>'
 				'<category_acquire_>Talk</category_acquire_><value0_acquire_>Start</value0_acquire_>'
 				'<reward_npc_name>End</reward_npc_name><progress_info><data><category_progress_>Talk</category_progress_>'
-				'<value0_progress_>Middle</value0_progress_></data><data><category_progress_>Talk</category_progress_>'
+				'<value0_progress_>Middle</value0_progress_><value5_progress_>Relative SpawnOnly, 1, 5</value5_progress_></data><data><category_progress_>Talk</category_progress_>'
 				'<value0_progress_>Middle</value0_progress_></data></progress_info></quest_data_driven>'
 				'<quest_data_driven><id>10</id><name>Q10</name><dev_name>Hunt</dev_name><con_quest>11</con_quest>'
 				'<category_acquire_>Talk</category_acquire_><value0_acquire_>GroupedStart</value0_acquire_>'
@@ -572,7 +646,8 @@ class RetailSimpleQuestGeneratorTest(unittest.TestCase):
 				'<npc><id>13</id><name>GroupedStartA</name><quest_ai_name>GroupedStart</quest_ai_name></npc>'
 				'<npc><id>14</id><name>GroupedStartB</name><quest_ai_name>GroupedStart</quest_ai_name></npc>'
 				'<npc><id>20</id><name>MobA</name></npc><npc><id>21</id><name>AliasTarget</name><quest_ai_name>MobB</quest_ai_name></npc>'
-				'<npc><id>30</id><name>Object</name></npc><npc><id>50</id><name>CrafterA</name></npc><npc><id>51</id><name>CrafterB</name></npc></npcs>')
+				'<npc><id>30</id><name>Object</name></npc><npc><id>31</id><name>SpawnOnly</name></npc>'
+				'<npc><id>50</id><name>CrafterA</name></npc><npc><id>51</id><name>CrafterB</name></npc></npcs>')
 
 			legacy_dir = root / "scripts"
 			legacy_dir.mkdir()
@@ -588,6 +663,7 @@ class RetailSimpleQuestGeneratorTest(unittest.TestCase):
 			self.assertEqual({"var": "0", "npc_id": "12", "quest_dialog": "1352"}, quests[6][0].attrib)
 			self.assertEqual("data_driven_quest", quests[9].tag)
 			self.assertEqual(["12", "12"], [step.attrib["ids"] for step in quests[9]])
+			self.assertEqual({"npc_id": "31", "count": "1", "lifetime_seconds": "5", "relative": "true"}, quests[9][0][0].attrib)
 			self.assertEqual({"id": "1", "retail": "true", "start_npc_ids": "10", "end_npc_ids": "11"}, quests[1].attrib)
 			self.assertEqual({"var": "0", "end_var": "3", "npc_ids": "20 21"}, quests[1][0].attrib)
 			self.assertEqual({"id": "10", "retail": "true", "start_npc_ids": "13 14", "end_npc_ids": "11"}, quests[10].attrib)
@@ -614,7 +690,8 @@ class RetailSimpleQuestGeneratorTest(unittest.TestCase):
 			self.assertEqual(14, stats["generated"]["total"])
 			self.assertEqual(1, stats["generated"]["work_order"])
 			self.assertEqual(1, stats["generated"]["data_driven_report"])
-			self.assertEqual(2, stats["generated"]["data_driven_talk"])
+			self.assertEqual(1, stats["generated"]["data_driven_talk"])
+			self.assertEqual(1, stats["generated"]["data_driven_complex"])
 			self.assertEqual(2, stats["generated"]["data_driven_hunt"])
 			self.assertEqual(1, stats["generated"]["data_driven_collect"])
 			self.assertEqual(1, stats["generated"]["data_driven_pvp"])
@@ -1311,6 +1388,67 @@ class RetailSimpleQuestGeneratorTest(unittest.TestCase):
 			sources[877].append(f"// @q{quest_id}_state\n{quest_hex} param_1[3] != 0 + 0x4b8")
 		for number, lines in sources.items():
 			(script_root / f"fun_{number:03d}.cpp").write_text("\n".join(lines))
+
+
+class RetailAuthoritySourceTest(unittest.TestCase):
+	def test_generators_use_china_over_common_without_replacing_client_authority(self):
+		self.assertEqual(Path("/Users/mc/IdeaProjects/58Server-new/Map/XML"), MODULE.DEFAULT_RETAIL)
+		self.assertEqual(Path("/Users/mc/PycharmProjects/unpak/Quest_unpacked/quest.xml"), MODULE.DEFAULT_CLIENT_QUEST)
+		self.assertEqual("China", MODULE.DEFAULT_RETAIL_REGION)
+		with tempfile.TemporaryDirectory() as directory:
+			root = Path(directory)
+			(root / "China").mkdir()
+			(root / "items.xml").write_text("<items><item><id>1</id></item></items>")
+			(root / "China" / "Items.xml").write_text(
+				"<items><item><id>9</id></item><item><id>8</id></item></items>")
+			path, region = MODULE.source_file(root, "Items.xml")
+			self.assertEqual((root / "China" / "Items.xml").resolve(), path)
+			self.assertEqual("China", region)
+			self.assertEqual(2, MODULE.record_count(path))
+			self.assertEqual("China/Items.xml", MODULE.describe_source(root, "Items.xml", path, region)["logical_path"])
+			(root / "quest.xml").write_text("<quests><quest><id>1</id></quest></quests>")
+			(root / "China" / "quest.xml").write_text("<quests><quest><id>2</id></quest></quests>")
+			path, region = MODULE.source_file(root, "quest.xml", prefer_common=True)
+			self.assertEqual((root / "quest.xml").resolve(), path)
+			self.assertEqual("common", region)
+		with self.assertRaises(SystemExit):
+			MODULE.assert_not_legacy_data_root(MODULE.LEGACY_RETAIL_DATA_ROOTS[0])
+
+	def test_instance_generator_uses_the_same_authority_rule(self):
+		script = Path(__file__).with_name("generate_retail_instance_data.py")
+		spec = importlib.util.spec_from_file_location("retail_instances", script)
+		instance = importlib.util.module_from_spec(spec)
+		assert spec.loader
+		spec.loader.exec_module(instance)
+		self.assertEqual(Path("/Users/mc/IdeaProjects/58Server-new/Map/XML"), instance.DEFAULT_SOURCE)
+		with tempfile.TemporaryDirectory() as directory:
+			root = Path(directory)
+			(root / "China").mkdir()
+			(root / "instance_cooltime2.xml").write_text("<rows/>")
+			(root / "China" / "Instance_Cooltime2.xml").write_text(
+				"<rows><row><id>1070</id><name>F2P_IDDreadgion_03</name></row>"
+				"<row><id>1070</id><name>F2P_IDAbRe_Core</name></row></rows>")
+			path, region = instance.source_file(root, "instance_cooltime2.xml")
+			self.assertEqual("China", region)
+			self.assertEqual(2, instance.record_count(path))
+			path, region, rows, table, duplicates, fallback = instance.validated_table_source(
+				root, "instance_cooltime2.xml", "China")
+			self.assertEqual((root / "China" / "Instance_Cooltime2.xml").resolve(), path.resolve())
+			self.assertEqual("China", region)
+			self.assertEqual(2, len(rows))
+			self.assertEqual(["1070", "1170"], [row["id"] for row in table])
+			self.assertEqual(0, duplicates)
+			self.assertEqual("F2P_IDAbRe_Core:id:1070->1170", fallback["source_corrections"])
+			(root / "luna_indun.xml").write_text("<rows><row><active>1</active></row></rows>")
+			(root / "China" / "luna_indun.xml").write_text("<rows><row><active>0</active></row></rows>")
+			path, region = instance.source_file(root, "luna_indun.xml", prefer_common=True)
+			self.assertEqual((root / "luna_indun.xml").resolve(), path.resolve())
+			self.assertEqual("common", region)
+			broken = root / "broken.xml"
+			broken.write_bytes(b"<rows><row/></rows>\x00")
+			self.assertEqual("unavailable", instance.record_metadata(broken)["records"])
+		with self.assertRaises(SystemExit):
+			instance.assert_not_legacy_data_root(instance.LEGACY_SOURCE_ROOTS[0])
 
 
 if __name__ == "__main__":

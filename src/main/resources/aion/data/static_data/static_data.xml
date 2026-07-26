@@ -86,6 +86,7 @@
 	<import file="../../definitions/compact/quests/quest_data.xml"/>
 	<quest_scripts>
 		<import file="../../definitions/compact/quests/scripts" skipRoot="true"/>
+		<import file="../../definitions/compact/quests/patches" skipRoot="true"/>
 	</quest_scripts>
 	<import file="recipe/recipe_templates.xml"/>
 	<import file="luna/luna_templates.xml"/>

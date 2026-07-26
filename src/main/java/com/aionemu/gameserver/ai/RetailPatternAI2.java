@@ -1666,10 +1666,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void controlDoor(Operation action) {
-		var door = getPosition().getWorldMapInstance().getDoors().get(integer(action, "id"));
-		if (door != null) {
-			boolean open = integer(action, "method") == 1;
-			runtimeState().put("door." + integer(action, "id"), open);
+		int retailId = integer(action, "id");
+		boolean open = integer(action, "method") == 1;
+		for (var door : getPosition().getWorldMapInstance().getRetailDoors(retailId)) {
+			runtimeState().put("door." + door.getSpawn().getEntityId(), open);
 			door.setOpen(open);
 		}
 	}

@@ -1,0 +1,212 @@
+{
+  "version": 1,
+  "authority": {
+    "runtime": "src/main/java/com/aionemu/gameserver",
+    "matrix": "docs/RETAIL_INSTANCE_PORTAL_MATRIX.json"
+  },
+  "summary": {
+    "REJECT_RUNTIME_ADDRESS_DESTINATION": 4,
+    "REJECT_RUNTIME_EVENT_TRIGGER": 23,
+    "REJECT_RUNTIME_RELATIVE_DESTINATION": 11
+  },
+  "legacy_ai": [
+    {
+      "owner": "src/main/java/com/aionemu/gameserver/ai/siege/Castle_GateAI2.java",
+      "conversion": "REJECT_RUNTIME_RELATIVE_DESTINATION",
+      "reason": "destination is a ten-meter displacement from the player's current position and heading, not a static portal endpoint",
+      "source": "Castle_GateAI2#moveToAcross",
+      "raw_call": "responder, worldId, responder.getX() + x, responder.getY() + y, responder.getZ(), (byte) 0",
+      "trigger": {
+        "event": "accepted STR_ASK_PASS_BY_GATE request",
+        "producer": "handleUseItemFinish"
+      },
+      "teleport": {
+        "api": "teleportTo",
+        "arguments": 6,
+        "instance": "SERVICE_DEFAULT",
+        "heading": "FIXED",
+        "animation": "BEAM_ANIMATION"
+      },
+      "destination_model": {
+        "kind": "RELATIVE_CURRENT_POSITION",
+        "world": "CURRENT",
+        "x": "PLAYER_X + cos(PLAYER_HEADING) * 10",
+        "y": "PLAYER_Y + sin(PLAYER_HEADING) * 10",
+        "z": "PLAYER_Z",
+        "heading": "0"
+      },
+      "bindings": [
+        { "world_id": 300030000, "npc_id": 256694 },
+        { "world_id": 300080000, "npc_id": 219617 },
+        { "world_id": 300700000, "npc_id": 219617 },
+        { "world_id": 301220000, "npc_id": 233564 },
+        { "world_id": 301220000, "npc_id": 233565 },
+        { "world_id": 301220000, "npc_id": 233566 },
+        { "world_id": 301220000, "npc_id": 233567 },
+        { "world_id": 301220000, "npc_id": 233568 },
+        { "world_id": 301220000, "npc_id": 233569 },
+        { "world_id": 310090000, "npc_id": 700372 },
+        { "world_id": 310100000, "npc_id": 700373 }
+      ]
+    },
+    {
+      "owner": "src/main/java/com/aionemu/gameserver/ai/housing/StudioPortalAI2.java",
+      "conversion": "REJECT_RUNTIME_ADDRESS_DESTINATION",
+      "reason": "destination map, instance, coordinates, and heading come from the current studio owner's persisted housing address",
+      "source": "StudioPortalAI2#handleUseItemFinish",
+      "raw_call": "player, exitMapId, instanceId, x, y, z, heading, TeleportAnimation.BEAM_ANIMATION",
+      "trigger": {
+        "event": "handleUseItemFinish",
+        "producer": "housing studio portal"
+      },
+      "teleport": {
+        "api": "teleportTo",
+        "arguments": 8,
+        "instance": "RUNTIME_ADDRESS",
+        "heading": "RUNTIME_ADDRESS",
+        "animation": "TeleportAnimation.BEAM_ANIMATION"
+      },
+      "destination_model": {
+        "kind": "HOUSING_ADDRESS",
+        "provider": "HouseAddress",
+        "branches": [
+          "CURRENT_STUDIO_OWNER_EXIT",
+          "PLAYER_STUDIO_ENTRY"
+        ]
+      },
+      "bindings": [
+        { "world_id": 720010000, "npc_id": 830228 },
+        { "world_id": 720010000, "npc_id": 830229 },
+        { "world_id": 730010000, "npc_id": 830558 },
+        { "world_id": 730010000, "npc_id": 830559 }
+      ]
+    }
+  ],
+  "handlers": [
+    {
+      "owner": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/crucible/EmpyreanCrucibleInstance.java",
+      "world_id": 300300000,
+      "conversion": "REJECT_RUNTIME_EVENT_TRIGGER",
+      "reason": "revive routing depends on the player's current training-room zone and has no portal-definition trigger",
+      "source": "EmpyreanCrucibleInstance#onReviveEvent -> moveToReadyRoom",
+      "raw_call": "player, mapId, instanceId, x, y, z, heading",
+      "trigger": {
+        "event": "onReviveEvent",
+        "selection": "PLAYER_ZONE"
+      },
+      "teleport": {
+        "api": "teleportTo",
+        "arguments": 7,
+        "instance": "CURRENT",
+        "heading": "FIXED",
+        "animation": "BEAM_ANIMATION"
+      },
+      "routes": [
+        { "condition": "TRAINING_ROOM_05_300300000", "destination": { "complete": true, "world_id": 300300000, "x": "1260.9495", "y": "832.87317", "z": "358.60562", "heading": "92" } },
+        { "condition": "TRAINING_ROOM_06_300300000", "destination": { "complete": true, "world_id": 300300000, "x": "1592.8813", "y": "149.78166", "z": "128.81355", "heading": "117" } },
+        { "condition": "TRAINING_ROOM_07_300300000", "destination": { "complete": true, "world_id": 300300000, "x": "1820.8805", "y": "795.80914", "z": "470.18304", "heading": "51" } },
+        { "condition": "TRAINING_ROOM_08_300300000", "destination": { "complete": true, "world_id": 300300000, "x": "1780.103", "y": "1723.458", "z": "304.039", "heading": "53" } },
+        { "condition": "TRAINING_ROOM_09_300300000", "destination": { "complete": true, "world_id": 300300000, "x": "1359.5046", "y": "1751.7952", "z": "319.59406", "heading": "30" } },
+        { "condition": "TRAINING_ROOM_10_300300000", "destination": { "complete": true, "world_id": 300300000, "x": "1755.709", "y": "1253.4136", "z": "394.2378", "heading": "33" } },
+        { "condition": "DEFAULT", "destination": { "complete": true, "world_id": 300300000, "x": "381.41684", "y": "346.78162", "z": "96.74763", "heading": "43" } }
+      ]
+    },
+    {
+      "owner": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/crucible/CrucibleChallengeInstance.java",
+      "world_id": 300320000,
+      "conversion": "REJECT_RUNTIME_EVENT_TRIGGER",
+      "reason": "revive routing consumes a zone-derived runtime state captured when the player dies",
+      "source": "CrucibleChallengeInstance#onDie(Player) -> onReviveEvent",
+      "raw_call": "player, mapId, instanceId, x, y, z, heading",
+      "trigger": {
+        "event": "onReviveEvent",
+        "selection": "revive_position captured on player death"
+      },
+      "teleport": {
+        "api": "teleportTo",
+        "arguments": 7,
+        "instance": "CURRENT",
+        "heading": "FIXED",
+        "animation": "BEAM_ANIMATION"
+      },
+      "routes": [
+        { "condition": "revive_position=1 from TRAINING_ROOM_01_300320000", "destination": { "complete": true, "world_id": 300320000, "x": "380.35417", "y": "1663.3583", "z": "97.60156", "heading": "0" } },
+        { "condition": "revive_position=2 from TRAINING_ROOM_02_300320000", "destination": { "complete": true, "world_id": 300320000, "x": "1819.8119", "y": "304.92932", "z": "469.4142", "heading": "0" } },
+        { "condition": "revive_position=3 from TRAINING_ROOM_03_300320000", "destination": { "complete": true, "world_id": 300320000, "x": "1354.9386", "y": "1748.1531", "z": "318.6173", "heading": "70" } },
+        { "condition": "revive_position=4 from TRAINING_ROOM_04B_300320000", "destination": { "complete": true, "world_id": 300320000, "x": "1294.1417", "y": "234.49684", "z": "406.0368", "heading": "0" } },
+        { "condition": "revive_position=5 from TRAINING_ROOM_04A_300320000", "destination": { "complete": true, "world_id": 300320000, "x": "1307.3776", "y": "790.7324", "z": "437.29678", "heading": "0" } },
+        { "condition": "revive_position=6 from TRAINING_ROOM_05_300320000", "destination": { "complete": true, "world_id": 300320000, "x": "381.7477", "y": "346.63913", "z": "96.74763", "heading": "0" } },
+        { "condition": "revive_position=7 from TRAINING_ROOM_06_300320000", "destination": { "complete": true, "world_id": 300320000, "x": "1750.2677", "y": "1253.5453", "z": "389.11765", "heading": "10" } }
+      ]
+    },
+    {
+      "owner": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/StonespearReachInstance.java",
+      "world_id": 301500000,
+      "conversion": "REJECT_RUNTIME_EVENT_TRIGGER",
+      "reason": "the route is owned by the instance revive callback rather than a portal object",
+      "source": "StonespearReachInstance#onReviveEvent",
+      "raw_call": "player, mapId, instanceId, 196.80058f, 264.41388f, 97.461075f, (byte) 0",
+      "trigger": { "event": "onReviveEvent", "selection": "ALWAYS" },
+      "teleport": { "api": "teleportTo", "arguments": 7, "instance": "CURRENT", "heading": "FIXED", "animation": "BEAM_ANIMATION" },
+      "routes": [
+        { "condition": "ALWAYS", "destination": { "complete": true, "world_id": 301500000, "x": "196.80058", "y": "264.41388", "z": "97.461075", "heading": "0" } }
+      ]
+    },
+    {
+      "owner": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TrialsOfEternityInstance.java",
+      "world_id": 301560000,
+      "conversion": "REJECT_RUNTIME_EVENT_TRIGGER",
+      "reason": "the route requires a handler-owned NPC interaction and successful item consumption",
+      "source": "TrialsOfEternityInstance#handleUseItemFinish",
+      "raw_call": "player, mapId, instanceId, 522.7508f, 1217.3593f, 724.3436f, (byte) 61",
+      "trigger": { "event": "handleUseItemFinish", "npc_id": 731736, "item_id": 185000297 },
+      "teleport": { "api": "teleportTo", "arguments": 7, "instance": "CURRENT", "heading": "FIXED", "animation": "BEAM_ANIMATION" },
+      "routes": [
+        { "condition": "item consumed", "destination": { "complete": true, "world_id": 301560000, "x": "522.7508", "y": "1217.3593", "z": "724.3436", "heading": "61" } }
+      ]
+    },
+    {
+      "owner": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/BastionOfSoulsInstance.java",
+      "world_id": 302340000,
+      "conversion": "REJECT_RUNTIME_EVENT_TRIGGER",
+      "reason": "the route is coupled to a named flying-ring callback and its condition-spawn side effect",
+      "source": "BastionOfSoulsInstance#onPassFlyingRing",
+      "raw_call": "player, mapId, instanceId, 1183.3602f, 734.0874f, 433.22742f, (byte) 90",
+      "trigger": { "event": "onPassFlyingRing", "ring": "BASTION_OF_SOULS" },
+      "teleport": { "api": "teleportTo", "arguments": 7, "instance": "CURRENT", "heading": "FIXED", "animation": "BEAM_ANIMATION" },
+      "routes": [
+        { "condition": "ring matched", "destination": { "complete": true, "world_id": 302340000, "x": "1183.3602", "y": "734.0874", "z": "433.22742", "heading": "90" } }
+      ]
+    },
+    {
+      "owner": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/crucible/CrucibleSpireInstance.java",
+      "world_id": 302400000,
+      "conversion": "REJECT_RUNTIME_EVENT_TRIGGER",
+      "reason": "the flying-ring callback selects a floor-dependent destination and performs floor-controller state changes",
+      "source": "CrucibleSpireInstance#onPassFlyingRing -> teleportCrucibleFloor",
+      "raw_call": "player, mapId, instanceId, x, y, z, h",
+      "trigger": { "event": "onPassFlyingRing", "ring": "FLOOR", "selection": "PLAYER_FLOOR" },
+      "teleport": { "api": "teleportTo", "arguments": 7, "instance": "CURRENT", "heading": "FIXED", "animation": "BEAM_ANIMATION" },
+      "routes": [
+        { "condition": "1 <= floor <= 38", "destination": { "complete": true, "world_id": 302400000, "x": "219.33264", "y": "1249.4528", "z": "240.85301", "heading": "0" } },
+        { "condition": "floor = 39", "destination": { "complete": true, "world_id": 302400000, "x": "210.42656", "y": "249.58434", "z": "971.3951", "heading": "0" } }
+      ]
+    },
+    {
+      "owner": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TransidiumAnnexInstance.java",
+      "world_id": 400030000,
+      "conversion": "REJECT_RUNTIME_EVENT_TRIGGER",
+      "reason": "the return world is selected by the destroyed controller and persisted until a scheduled fifteen-second callback",
+      "source": "TransidiumAnnexInstance#onDie -> beginReturn -> finishReturn",
+      "raw_call": "player, worldId, 1023.73315f, 1023.5483f, 1530.4855f, (byte) 27",
+      "trigger": { "event": "scheduled return", "delay_ms": 15000, "selection": "DESTROYED_CONTROLLER" },
+      "teleport": { "api": "teleportTo", "arguments": 6, "instance": "SERVICE_DEFAULT", "heading": "FIXED", "animation": "BEAM_ANIMATION" },
+      "routes": [
+        { "condition": "npc_id=297306", "destination": { "complete": true, "world_id": 400020000, "x": "1023.73315", "y": "1023.5483", "z": "1530.4855", "heading": "27" } },
+        { "condition": "npc_id=297307", "destination": { "complete": true, "world_id": 400040000, "x": "1023.73315", "y": "1023.5483", "z": "1530.4855", "heading": "27" } },
+        { "condition": "npc_id=297308", "destination": { "complete": true, "world_id": 400050000, "x": "1023.73315", "y": "1023.5483", "z": "1530.4855", "heading": "27" } },
+        { "condition": "npc_id=297309", "destination": { "complete": true, "world_id": 400060000, "x": "1023.73315", "y": "1023.5483", "z": "1530.4855", "heading": "27" } }
+      ]
+    }
+  ]
+}

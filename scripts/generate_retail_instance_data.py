@@ -11,7 +11,18 @@ import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
 from pathlib import Path
 
+import generate_retail_instance_door_matrix as door_matrix
 
+
+DEFAULT_SOURCE = Path("/Users/mc/IdeaProjects/58Server-new/Map/XML")
+DEFAULT_REGION = "China"
+LEGACY_SOURCE_ROOTS = (
+    Path("/Users/mc/IdeaProjects/58Server/Map/XML").resolve(),
+)
+SOURCE_ROW_CORRECTIONS = {
+    ("instance_cooltime2.xml", "F2P_IDAbRe_Core", "id", "1070"): "1170",
+}
+EXPECTED_UNMAPPED_MATCHMAKERS = {("418", "IDAb1_Ere_LOCAL_FORCEMATCH")}
 TABLES = (
     "instance_creation.xml",
     "instance_restrict.xml",
@@ -108,6 +119,10 @@ SPECIAL_INSTANCE_WORLDS = {
     730010000: "Pernon 住宅个人空间，由 HousingService 管理",
 }
 NON_PRODUCTION_INSTANCE_WORLDS = {900210000, 900230000}
+PRESERVED_COVERAGE_WORLDS = {300260000}
+SOURCE_COVERAGE_FIELDS = (
+    "id", "local_name", "retail_name", "classification", "creation_ids", "cooltime_id", "matchmaker_ids", "reason",
+)
 HOUSING_INSTANCE_WORLDS = {720010000, 730010000}
 EVENT_INSTANCE_WORLDS = {600080000}
 BEHAVIORS = (
@@ -120,6 +135,8 @@ BEHAVIORS = (
     "DATA_ONLY",
     "EXCLUDED_NON_PRODUCTION",
 )
+CLASS_DECLARATION = re.compile(r"\bclass\s+(\w+)(?:\s+extends\s+([\w.]+))?")
+HANDLER_PATH_MARKERS = ("moveTo(", "moveToLocation(", "PathService", "TeleportService")
 
 
 def sha256(path: Path) -> str:
@@ -130,9 +147,51 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def source_file(source: Path, name: str) -> tuple[Path, str]:
-    regional = source / "China" / name
-    return (regional, "China") if regional.is_file() else (source / name, "base")
+def _case_insensitive_file(directory: Path, name: str) -> Path | None:
+    if not directory.is_dir():
+        return None
+    wanted = name.casefold()
+    return next((path for path in directory.iterdir() if path.is_file() and path.name.casefold() == wanted), None)
+
+
+def source_file(source: Path, name: str, region: str = DEFAULT_REGION,
+                prefer_common: bool = False) -> tuple[Path, str]:
+    source = source.expanduser().resolve()
+    common = _case_insensitive_file(source, name)
+    if prefer_common and common is not None:
+        return common, "common"
+    regional = _case_insensitive_file(source / region, name)
+    if regional is not None:
+        return regional, region
+    if common is not None:
+        return common, "common"
+    raise FileNotFoundError(f"missing retail file: {name} (source={source}, region={region})")
+
+
+def source_logical_path(source: Path, path: Path, region: str) -> str:
+    source = source.expanduser().resolve()
+    path = path.expanduser().resolve()
+    try:
+        return path.relative_to(source).as_posix()
+    except ValueError:
+        return f"{region}/{path.name}" if region != "common" else path.name
+
+
+def record_count(path: Path) -> int:
+    return sum(1 for _ in ET.parse(path).getroot())
+
+
+def record_metadata(path: Path) -> dict[str, str]:
+    try:
+        return {"records": str(record_count(path))}
+    except ET.ParseError as error:
+        return {"records": "unavailable", "parse_error": str(error)}
+
+
+def assert_not_legacy_data_root(source: Path) -> None:
+    resolved = source.expanduser().resolve()
+    if resolved in LEGACY_SOURCE_ROOTS:
+        raise SystemExit(f"refusing legacy retail data root: {resolved}; use {DEFAULT_SOURCE}")
 
 
 def read_rows(path: Path) -> list[dict[str, str]]:
@@ -167,6 +226,24 @@ def dedupe_rows(rows: list[dict[str, str]], table: str) -> tuple[list[dict[str, 
         else:
             raise ValueError(f"{table}: conflicting duplicate id {identifier}")
     return list(result.values()), duplicates
+
+
+def validated_table_source(source: Path, name: str, region: str) -> tuple[
+        Path, str, list[dict[str, str]], list[dict[str, str]], int, dict[str, str]]:
+    path, file_region = source_file(source, name, region, prefer_common=name == "luna_indun.xml")
+    source_rows = read_rows(path)
+    rows = []
+    corrections = []
+    for source_row in source_rows:
+        row = dict(source_row)
+        for (table, row_name, field, old_value), new_value in SOURCE_ROW_CORRECTIONS.items():
+            if name == table and row.get("name") == row_name and row.get(field) == old_value:
+                row[field] = new_value
+                corrections.append(f"{row_name}:{field}:{old_value}->{new_value}")
+        rows.append(row)
+    table, duplicates = dedupe_rows(rows, name)
+    notes = {"source_corrections": ",".join(corrections)} if corrections else {}
+    return path, file_region, source_rows, table, duplicates, notes
 
 
 def unique_names(rows: list[dict[str, str]], table: str) -> dict[str, dict[str, str]]:
@@ -235,14 +312,54 @@ def instance_handlers(aionemu: Path, active: set[int]) -> dict[int, Path]:
     return result
 
 
-def java_world_references(root: Path, active: set[int]) -> dict[int, Path]:
+def handler_path_owners(aionemu: Path, handlers: dict[int, Path]) -> dict[int, str]:
+    root = aionemu / "src/main/java/com/aionemu/gameserver/instance/handlers/scripts"
+    classes = {}
+    paths = {}
+    for path in sorted(root.rglob("*.java")):
+        source = path.read_text(encoding="utf-8")
+        match = CLASS_DECLARATION.search(source)
+        if match is None or match.group(1) in classes:
+            raise ValueError(f"invalid instance handler class: {path}")
+        class_name = match.group(1)
+        classes[class_name] = ((match.group(2) or "").rsplit(".", 1)[-1], source)
+        paths[path.relative_to(aionemu)] = class_name
+    result = {}
+    for world_id, path in handlers.items():
+        class_name = paths[path]
+        seen = set()
+        owner = "RUNTIME_PATHING"
+        while class_name in classes and class_name not in seen:
+            seen.add(class_name)
+            class_name, source = classes[class_name]
+            if any(marker in source for marker in HANDLER_PATH_MARKERS):
+                owner = "HANDLER"
+                break
+        result[world_id] = owner
+    return result
+
+
+def java_world_references(aionemu: Path, relative_root: Path, active: set[int]) -> dict[int, Path]:
+    root = aionemu / relative_root
     result = {}
     for path in sorted(root.rglob("*.java")):
         for value in re.findall(r"\b\d{9}\b", path.read_text(encoding="utf-8")):
             world_id = int(value)
             if world_id in active:
-                result.setdefault(world_id, path)
+                result.setdefault(world_id, path.relative_to(aionemu))
     return result
+
+
+def validate_behavior_source(value: str, world_id: int) -> None:
+    if re.search(r"(?:^|[,;])\s*(?:/|[A-Za-z]:[\\/])", value):
+        raise ValueError(f"absolute behavior_source for {world_id}: {value}")
+
+
+def replace_dimension_owner(value: str, dimension: str, owner: str) -> str:
+    parts = [part.split(":", 1) for part in value.split(",")]
+    if any(len(part) != 2 for part in parts) or sum(part[0] == dimension for part in parts) != 1:
+        raise ValueError(f"invalid {dimension} dimension owner: {value}")
+    return ",".join(f"{name}:{owner if name == dimension else current}" for name, current in parts)
 
 
 def attributes(row: dict[str, str], extra: dict[str, object] | None = None) -> dict[str, str]:
@@ -429,18 +546,23 @@ def instance_bonus_attributes(row: dict[str, str]) -> list[dict[str, str]]:
     return result
 
 
-def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[str, int]:
-    selected = {name: source_file(source, name) for name in TABLES}
-    for name, (path, _region) in selected.items():
-        if not path.is_file():
-            raise FileNotFoundError(f"missing retail table: {name}")
-    source_rows = {name: read_rows(path) for name, (path, _region) in selected.items()}
+def generate(source: Path, client: Path, aionemu: Path, output: Path,
+             region: str = DEFAULT_REGION) -> dict[str, int]:
+    assert_not_legacy_data_root(source)
+    selected = {}
+    source_rows = {}
     duplicate_rows = {}
     tables = {}
-    for name, rows in source_rows.items():
-        tables[name], duplicate_rows[name] = dedupe_rows(rows, name)
+    source_fallbacks = {}
+    for name in TABLES:
+        path, file_region, rows, table, duplicates, fallback = validated_table_source(source, name, region)
+        selected[name] = (path, file_region)
+        source_rows[name] = rows
+        tables[name] = table
+        duplicate_rows[name] = duplicates
+        source_fallbacks[name] = fallback
     by_id = {name: positive_ids(rows, name) for name, rows in tables.items()}
-    object_path, object_region = source_file(source, "Objects.xml")
+    object_path, object_region = source_file(source, "Objects.xml", region)
     gather_names = {
         row["name_id"].casefold() for row in tables["npc_scores.xml"]
         if row.get("type", "").casefold() == "gather" and row.get("name_id")
@@ -448,7 +570,15 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
     gather_ids = resolve_object_ids(object_path, gather_names)
     creations_by_name = unique_names(tables["instance_creation.xml"], "instance_creation.xml")
     restrictions_by_name = unique_names(tables["instance_restrict.xml"], "instance_restrict.xml")
-    worlds = world_ids(source / "China" / "ID" / "WorldId.xml")
+    regional_world = source / region / "ID" / "WorldId.xml"
+    common_world = source / "ID" / "WorldId.xml"
+    if regional_world.is_file():
+        world_path, world_region = regional_world, region
+    elif common_world.is_file():
+        world_path, world_region = common_world, "common"
+    else:
+        raise FileNotFoundError(f"missing retail file: ID/WorldId.xml (source={source}, region={region})")
+    worlds = world_ids(world_path)
     tournaments_by_id = positive_ids(tables["instant_dungeon_tournament.xml"], "instant_dungeon_tournament.xml")
     if set(tournaments_by_id) != {"1", "2", "3", "4", "5"}:
         raise ValueError("instant_dungeon_tournament.xml must contain exactly ids 1..5")
@@ -519,17 +649,37 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
             value = row.get(field)
             if value and value.casefold() not in restrictions_by_name:
                 raise ValueError(f"unmapped restriction {value} in creation {row['id']}")
+    active = local_instance_worlds(aionemu / "src/main/resources/aion/data/static_data/world_maps.xml")
+    if len(active) != 139:
+        raise ValueError(f"expected 139 active instance worlds, found {len(active)}")
     cooldowns = by_id["instance_cooltime2.xml"]
+    unmapped_cooltime_worlds = {
+        row["name"] for row in tables["instance_cooltime.xml"] if row["name"].casefold() not in worlds
+    }
+    inactive_cooltime_worlds = {
+        row["name"] for row in tables["instance_cooltime.xml"]
+        if worlds.get(row["name"].casefold()) not in active and row["name"] not in unmapped_cooltime_worlds
+    }
+    out_of_scope_cooltime_worlds = unmapped_cooltime_worlds | inactive_cooltime_worlds
     for row in tables["instance_cooltime.xml"]:
-        if row["name"].casefold() not in worlds:
-            raise ValueError(f"unmapped cooltime world: {row['name']}")
+        if row["name"] in out_of_scope_cooltime_worlds:
+            continue
         for field in ("coolt_tbl_id", "f2p_coolt_tbl_id"):
             value = row.get(field)
             if value and value not in cooldowns:
                 raise ValueError(f"missing {field}={value} for {row['name']}")
-    for row in tables["matchmaker.xml"]:
-        if row.get("insname", "").casefold() not in creations_by_name:
-            raise ValueError(f"unmapped matchmaker creation: {row.get('insname')}")
+    unmapped_matchmakers = {
+        (row["id"], row.get("insname", "")) for row in tables["matchmaker.xml"]
+        if row.get("insname", "").casefold() not in creations_by_name
+    }
+    if unmapped_matchmakers != EXPECTED_UNMAPPED_MATCHMAKERS:
+        raise ValueError(f"unexpected unmapped matchmakers: {sorted(unmapped_matchmakers)}")
+    tables["matchmaker.xml"] = [
+        row for row in tables["matchmaker.xml"] if (row["id"], row.get("insname", "")) not in unmapped_matchmakers
+    ]
+    by_id["matchmaker.xml"] = positive_ids(tables["matchmaker.xml"], "matchmaker.xml")
+    source_fallbacks["matchmaker.xml"]["excluded_unmapped_rows"] = ",".join(
+        f"{identifier}:{name}" for identifier, name in sorted(unmapped_matchmakers))
     tournament_matches = {
         int(row["id"]): tournaments_by_lobby[row["insname"].casefold()]["id"]
         for row in tables["matchmaker.xml"]
@@ -538,7 +688,7 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
     if set(tournament_matches) != TOURNAMENT_MATCH_IDS:
         raise ValueError(f"unexpected tournament matchmakers: {sorted(tournament_matches)}")
 
-    item_source, _item_region = source_file(source, "items.xml")
+    item_source, item_region = source_file(source, "items.xml", region)
     wanted_items = referenced_item_names(tables)
     wanted_items.update(
         value.casefold()
@@ -549,6 +699,13 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
     )
     item_ids = resolve_items(item_source, wanted_items)
     missing_items = sorted(wanted_items - item_ids.keys())
+    item_fallback_source = None
+    if missing_items:
+        fallback_path, fallback_region = source_file(source, "item_etc.xml", region)
+        fallback_ids = resolve_items(fallback_path, set(missing_items))
+        item_ids.update(fallback_ids)
+        item_fallback_source = ("item_etc.xml", fallback_path, fallback_region)
+        missing_items = sorted(wanted_items - item_ids.keys())
     if missing_items:
         raise ValueError(f"unmapped retail items: {', '.join(missing_items[:20])}")
 
@@ -558,7 +715,7 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
         matches_by_creation[row["insname"].casefold()].append(row)
 
     match_ids = {int(row["id"]) for row in tables["matchmaker.xml"]}
-    npc_path, npc_region = source_file(source, "npcs.xml")
+    npc_path, npc_region = source_file(source, "npcs.xml", region)
     match_npcs, custom_match_npcs = resolve_match_npcs(npc_path, match_ids)
     string_names = {
         row[field]
@@ -566,7 +723,7 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
         for field in ("desc", "desc_info")
         if row.get(field)
     }
-    strings_path = source / "strings.xml"
+    strings_path, strings_region = source_file(source, "strings.xml", region)
     string_ids = resolve_string_ids(strings_path, string_names)
 
     definitions = ET.Element("retail_instances", {"version": "1"})
@@ -590,6 +747,8 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
     limits = ET.Element("retail_instance_limits", {"version": "1"})
     schema(limits)
     for row in sorted(tables["instance_cooltime.xml"], key=lambda value: int(value["id"])):
+        if row["name"] in unmapped_cooltime_worlds:
+            continue
         ET.SubElement(limits, "instance_rule", attributes(row, {"world_id": worlds[row["name"].casefold()]}))
     for row in sorted(tables["instance_cooltime2.xml"], key=lambda value: int(value["id"])):
         ET.SubElement(limits, "cooldown", attributes(row))
@@ -663,9 +822,6 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
             ET.SubElement(table, "row", attributes(row, extra))
     write_xml(rewards, output / "rewards.xml")
 
-    active = local_instance_worlds(aionemu / "src/main/resources/aion/data/static_data/world_maps.xml")
-    if len(active) != 139:
-        raise ValueError(f"expected 139 active instance worlds, found {len(active)}")
     creation_ids_by_world = defaultdict(list)
     for row in tables["instance_creation.xml"]:
         creation_ids_by_world[worlds[row["worldname"].casefold()]].append(row["id"])
@@ -673,10 +829,11 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
     if unexplained:
         raise ValueError(f"active instance worlds without retail definition: {sorted(unexplained)}")
     handlers = instance_handlers(aionemu, set(active))
+    path_owners = handler_path_owners(aionemu, handlers)
     quest_references = java_world_references(
-        aionemu / "src/main/java/com/aionemu/gameserver/quest", set(active))
+        aionemu, Path("src/main/java/com/aionemu/gameserver/quest"), set(active))
     ai_references = java_world_references(
-        aionemu / "src/main/java/com/aionemu/gameserver/ai", set(active))
+        aionemu, Path("src/main/java/com/aionemu/gameserver/ai"), set(active))
     tournament_sources = defaultdict(list)
     for tournament_id, extra in tournament_extras.items():
         tournament_sources[int(extra["lobby_world_id"])].append(
@@ -692,10 +849,31 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
         if creation:
             match_sources[worlds[creation["worldname"].casefold()]].append(
                 f"team_match_maker.xml:{row['id']}")
+    coverage_path = aionemu / "src/main/resources/aion/definitions/compact/instance/coverage.xml"
+    audited_coverage = {
+        int(row.attrib["id"]): dict(row.attrib)
+        for row in ET.parse(coverage_path).getroot().findall("world")
+    }
+    door_owners = {
+        int(world["world_id"]): str(world["suggested_owner"])
+        for world in door_matrix.build(aionemu)["worlds"]
+    }
+    if set(door_owners) != set(active):
+        raise ValueError("retail door ownership does not cover all active instance worlds")
+    missing_preserved = PRESERVED_COVERAGE_WORLDS - set(audited_coverage)
+    if missing_preserved:
+        raise ValueError(f"missing preserved instance coverage: {sorted(missing_preserved)}")
+    coverage_worlds = set(active) | PRESERVED_COVERAGE_WORLDS
     behaviors = Counter()
     coverage = ET.Element("retail_instance_coverage", {"version": "1"})
     schema(coverage)
-    for world_id, local_name in sorted(active.items()):
+    for world_id in sorted(coverage_worlds):
+        if world_id not in active:
+            preserved = audited_coverage[world_id]
+            behaviors[preserved["behavior"]] += 1
+            ET.SubElement(coverage, "world", preserved)
+            continue
+        local_name = active[world_id]
         creation_ids = creation_ids_by_world.get(world_id, [])
         world_name = next((name for name, value in worlds.items() if value == world_id), "")
         cool = cool_by_world.get(world_name)
@@ -724,8 +902,7 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
             behavior = "DATA_ONLY"
             behavior_source = (f"instance_creation.xml:{','.join(creation_ids)}"
                                if creation_ids else "world_maps.xml:special_world")
-        behaviors[behavior] += 1
-        ET.SubElement(coverage, "world", attributes({}, {
+        generated = attributes({}, {
             "id": world_id,
             "local_name": local_name,
             "retail_name": world_name,
@@ -736,32 +913,65 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
             "behavior": behavior,
             "behavior_source": behavior_source,
             "reason": SPECIAL_INSTANCE_WORLDS.get(world_id),
-        }))
-    if sum(behaviors.values()) != 139 or set(behaviors) - set(BEHAVIORS):
+        })
+        if audited := audited_coverage.get(world_id):
+            merged = dict(audited)
+            for field in SOURCE_COVERAGE_FIELDS:
+                if field in generated:
+                    merged[field] = generated[field]
+                else:
+                    merged.pop(field, None)
+            generated = merged
+        generated["dimension_owners"] = replace_dimension_owner(
+            generated.get("dimension_owners", ""), "door", door_owners[world_id])
+        if "path:HANDLER" in generated["dimension_owners"].split(","):
+            generated["dimension_owners"] = replace_dimension_owner(
+                generated["dimension_owners"], "path", path_owners[world_id])
+        validate_behavior_source(generated["behavior_source"], world_id)
+        behaviors[generated["behavior"]] += 1
+        ET.SubElement(coverage, "world", generated)
+    if sum(behaviors.values()) != len(coverage_worlds) or set(behaviors) - set(BEHAVIORS):
         raise ValueError(f"invalid instance behavior closure: {dict(behaviors)}")
     write_xml(coverage, output / "coverage.xml")
 
-    manifest = ET.Element("retail_instance_manifest", {"version": "1", "region": "China"})
+    manifest = ET.Element("retail_instance_manifest", {
+        "version": "1",
+        "region": region,
+        "data_root": str(source.expanduser().resolve()),
+    })
     schema(manifest)
     for name in TABLES:
-        path, region = selected[name]
+        path, file_region = selected[name]
         ET.SubElement(manifest, "source", {
             "name": name,
-            "region": region,
-            "path": str(path),
+            "logical_path": source_logical_path(source, path, file_region),
+            "region": file_region,
+            "path": str(path.resolve()),
             "sha256": sha256(path),
             "records": str(len(source_rows[name])),
             "effective_records": str(len(tables[name])),
             "duplicate_records": str(duplicate_rows[name]),
+            **source_fallbacks[name],
         })
-    for name, path, region in (("npcs.xml", npc_path, npc_region), ("strings.xml", strings_path, "base"),
-                               ("Objects.xml", object_path, object_region)):
-        ET.SubElement(manifest, "source", {
+    supplemental_sources = () if item_fallback_source is None else (item_fallback_source,)
+    for name, path, file_region in (
+        ("npcs.xml", npc_path, npc_region),
+        ("items.xml", item_source, item_region),
+        ("strings.xml", strings_path, strings_region),
+        ("Objects.xml", object_path, object_region),
+        ("ID/WorldId.xml", world_path, world_region),
+    ) + supplemental_sources:
+        metadata = {
             "name": name,
-            "region": region,
-            "path": str(path),
+            "logical_path": source_logical_path(source, path, file_region),
+            "region": file_region,
+            "path": str(path.resolve()),
             "sha256": sha256(path),
-        })
+            **record_metadata(path),
+        }
+        if item_fallback_source is not None and name == item_fallback_source[0]:
+            metadata["usage"] = "early_stop_missing_item_lookup"
+        ET.SubElement(manifest, "source", metadata)
     for relative in CLIENT_FILES:
         path = client / relative
         if not path.is_file():
@@ -775,6 +985,8 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
         ET.SubElement(manifest, "launch", {"file": relative, "arguments": launch_args(client / relative)})
     ET.SubElement(manifest, "validation", {
         "active_instance_worlds": str(len(active)),
+        "coverage_instance_worlds": str(len(coverage_worlds)),
+        "coverage_standard_worlds": str(len(coverage_worlds) - len(SPECIAL_INSTANCE_WORLDS)),
         "standard_instance_worlds": str(len(set(active) & set(creation_ids_by_world))),
         "special_instance_worlds": str(len(set(active) & set(SPECIAL_INSTANCE_WORLDS))),
         "creation_world_mappings": str(len(tables["instance_creation.xml"])),
@@ -787,6 +999,8 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path) -> dict[st
         "luna_dungeon_mappings": str(len(luna_extras)),
         "instance_bonus_attributes": str(len(tables["instance_bonusattr.xml"])),
         "resolved_item_names": str(len(item_ids)),
+        "out_of_scope_cooltime_worlds": ",".join(sorted(out_of_scope_cooltime_worlds)),
+        "unmapped_cooltime_worlds": ",".join(sorted(unmapped_cooltime_worlds)),
         "behavior_total_worlds": str(sum(behaviors.values())),
         **{f"behavior_{behavior.lower()}_worlds": str(behaviors[behavior]) for behavior in BEHAVIORS},
         "unresolved_references": "0",
@@ -805,7 +1019,8 @@ def compare(expected: Path, actual: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--source", type=Path, default=Path("/Users/mc/IdeaProjects/58Server/Map/XML"))
+    parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
+    parser.add_argument("--region", default=DEFAULT_REGION)
     parser.add_argument("--client", type=Path, default=Path("/Users/mc/IdeaProjects/5.8客户端"))
     parser.add_argument("--aionemu", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--output", type=Path)
@@ -815,10 +1030,10 @@ def main() -> None:
     if args.check:
         with tempfile.TemporaryDirectory() as directory:
             generated = Path(directory)
-            counts = generate(args.source, args.client, args.aionemu, generated)
+            counts = generate(args.source, args.client, args.aionemu, generated, args.region)
             compare(output, generated)
     else:
-        counts = generate(args.source, args.client, args.aionemu, output)
+        counts = generate(args.source, args.client, args.aionemu, output, args.region)
     print(f"retail instance data: {counts['active']} active worlds, {counts['standard']} standard, {counts['special']} special")
 
 

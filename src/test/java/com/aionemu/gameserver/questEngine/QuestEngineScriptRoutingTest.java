@@ -95,6 +95,28 @@ class QuestEngineScriptRoutingTest {
 	}
 
 	@Test
+	void patchXmlQuestWinsRegardlessOfImportOrder() {
+		XMLQuest patch = xmlQuest(handler(1000), false, true);
+		XMLQuest retail = xmlQuest(handler(1000), true);
+		XMLQuest legacy = xmlQuest(handler(1000), false);
+
+		assertEquals(List.of(patch), List.copyOf(QuestEngine.selectScriptQuests(List.of(patch, retail, legacy))));
+		assertEquals(List.of(patch), List.copyOf(QuestEngine.selectScriptQuests(List.of(legacy, retail, patch))));
+		assertEquals(List.of(patch), List.copyOf(QuestEngine.selectScriptQuests(List.of(retail, patch, legacy))));
+	}
+
+	@Test
+	void disabledRetailQuestFallsBackToLegacyWhilePatchIsUnaffected() {
+		XMLQuest retail = xmlQuest(handler(1000), true);
+		XMLQuest legacy = xmlQuest(handler(1000), false);
+		XMLQuest patch = xmlQuest(handler(2000), true, true);
+
+		assertEquals(List.of(legacy), List.copyOf(QuestEngine.selectScriptQuests(List.of(retail, legacy), Set.of(1000))));
+		assertEquals(List.of(), List.copyOf(QuestEngine.selectScriptQuests(List.of(retail), Set.of(1000))));
+		assertEquals(List.of(patch), List.copyOf(QuestEngine.selectScriptQuests(List.of(patch), Set.of(2000))));
+	}
+
+	@Test
 	void allXmlQuestDefinitionsTransferToScriptRegistry() throws Exception {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(StaticData.class).createUnmarshaller();
 		QuestsData previousQuestData = DataManager.QUEST_DATA;
@@ -109,10 +131,15 @@ class QuestEngineScriptRoutingTest {
 					"src/main/resources/aion/data/static_data/npcs/npc_template.xml").toFile());
 			Set<Integer> questIds = new HashSet<>();
 			List<XMLQuest> definitions = new ArrayList<>();
-			try (var paths = Files.walk(Path.of("src/main/resources/aion/definitions/compact/quests/scripts"))) {
-				for (Path path : paths.filter(p -> p.toString().endsWith(".xml")).sorted().toList()) {
-					XMLQuests quests = (XMLQuests) unmarshaller.unmarshal(path.toFile());
-					definitions.addAll(quests.getQuest());
+			for (String dir : List.of("src/main/resources/aion/definitions/compact/quests/scripts",
+					"src/main/resources/aion/definitions/compact/quests/patches")) {
+				try (var paths = Files.walk(Path.of(dir))) {
+					for (Path path : paths.filter(p -> p.toString().endsWith(".xml")).sorted().toList()) {
+						XMLQuests quests = (XMLQuests) unmarshaller.unmarshal(path.toFile());
+						if (quests.getQuest() != null) {
+							definitions.addAll(quests.getQuest());
+						}
+					}
 				}
 			}
 			for (XMLQuest quest : QuestEngine.selectScriptQuests(definitions)) {
@@ -121,6 +148,17 @@ class QuestEngineScriptRoutingTest {
 			}
 
 			assertEquals(questIds.size(), GameEngineServices.scriptEngine().getRegistry().scriptQuestCount());
+
+			// 生成产物与报告所有权对账：漂移（手改产物、报告未随生成更新）在此变红。
+			// Reconciles generated ownership against the report: drift (hand-edited output, stale report) fails here.
+			String report = Files.readString(Path.of(
+					"src/main/resources/aion/definitions/compact/quests/scripts/zz_retail_simple_quests.report.json"));
+			List<XMLQuest> selectedWithoutPatches = QuestEngine.selectScriptQuests(
+					definitions.stream().filter(quest -> !quest.isPatch()).toList(), Set.of());
+			assertEquals(reportNumber(report, "generated_xml"),
+					selectedWithoutPatches.stream().filter(XMLQuest::isRetail).count());
+			assertEquals(reportNumber(report, "legacy_xml"),
+					selectedWithoutPatches.stream().filter(quest -> !quest.isRetail()).count());
 		} finally {
 			DataManager.QUEST_DATA = previousQuestData;
 			DataManager.WORLD_MAPS_DATA = previousWorldMapsData;
@@ -136,15 +174,26 @@ class QuestEngineScriptRoutingTest {
 		};
 	}
 
+	private static long reportNumber(String report, String key) {
+		java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("\"" + key + "\": (\\d+)").matcher(report);
+		assertTrue(matcher.find(), "report key not found: " + key);
+		return Long.parseLong(matcher.group(1));
+	}
+
 	private XMLQuest xmlQuest(QuestHandler handler) {
 		return xmlQuest(handler, false);
 	}
 
 	private XMLQuest xmlQuest(QuestHandler handler, boolean retailSource) {
+		return xmlQuest(handler, retailSource, false);
+	}
+
+	private XMLQuest xmlQuest(QuestHandler handler, boolean retailSource, boolean patchSource) {
 		return new XMLQuest() {
 			{
 				id = handler.getQuestId();
 				retail = retailSource;
+				patch = patchSource;
 			}
 
 			@Override

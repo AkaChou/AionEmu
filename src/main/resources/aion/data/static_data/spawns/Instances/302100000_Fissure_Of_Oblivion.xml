@@ -7,6 +7,7 @@
 		<!-- IDTransform_Deva_Fi_Gossip_01 -->
 		<spawn npc_id="245823">
 			<spot x="912.9346" y="463.08658" z="352.96" h="106"/>
+		  <spot x="911.330872" y="462.524109" z="353.272491" h="116" random_walk="2"/>
 		</spawn>
 		<!-- IDTransform_Deva_Fi_Gossip_03 -->
 		<spawn npc_id="245825">
@@ -361,6 +362,9 @@
 		</spawn>
 		<spawn npc_id="834195" respawn_time="0">
 		  <spot x="923.752808" y="463.109985" z="353.995056" h="75"/>
+		</spawn>
+		<spawn npc_id="245206">
+		  <spot x="721.988037" y="513.997559" z="342.472839" h="30" random_walk="2"/>
 		</spawn>
 	</spawn_map>
 </spawns>

@@ -23,5 +23,8 @@
 		<spawn npc_id="284386" respawn_time="1">
 		  <spot x="253.063568" y="257.250732" z="243.191971"/>
 		</spawn>
+		<spawn npc_id="231304" initial_delay="1">
+		  <spot x="255.490631" y="293.357849" z="257.820831" h="90" random_walk="2"/>
+		</spawn>
 	</spawn_map>
 </spawns>

@@ -5,6 +5,7 @@ import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.ai.RetailNpcPartyEngine;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
@@ -44,6 +45,7 @@ import com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns.Zorsh
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.world.World;
+import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
@@ -381,7 +383,7 @@ public class SpawnEngine {
 	 * difficulty id
 	 */
 	public static void spawnInstance(int worldId, int instanceId, int difficultId) {
-		spawnInstance(worldId, instanceId, difficultId, 0);
+		spawnInstance(worldId, instanceId, difficultId, 0, 0);
 	}
 
 	/**
@@ -394,61 +396,88 @@ public class SpawnEngine {
 	 * @param ownerId 房屋所有者 ID / house owner id
 	 */
 	public static void spawnInstance(int worldId, int instanceId, int difficultId, int ownerId) {
+		spawnInstance(worldId, instanceId, difficultId, 0, ownerId);
+	}
+
+	public static void spawnInstance(int worldId, int instanceId, int difficultId, int spawnPage, int ownerId) {
 		List<SpawnGroup2> worldSpawns = DataManager.SPAWNS_DATA2.getSpawnsByWorldId(worldId);
 		WorldMapTemplate worldTemplate = DataManager.WORLD_MAPS_DATA.getTemplate(worldId);
+		WorldMapInstance instance = GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(instanceId);
+		long now = System.currentTimeMillis();
+		long startedAt = instance != null && instance.getDynamicInstance() != null
+			? instance.getDynamicInstance().getCreatedAt() : now;
 		StaticDoorSpawnManager.spawnTemplate(worldId, instanceId);
 		int spawnedCounter = 0;
 		if (worldSpawns != null) {
 			for (int groupIndex = 0; groupIndex < worldSpawns.size(); groupIndex++) {
 				SpawnGroup2 spawn = worldSpawns.get(groupIndex);
-				int difficult = spawn.getDifficultId();
-				if (difficult != 0 && difficult != difficultId) {
+				if (!spawn.matchesInstance(difficultId, spawnPage)) {
 					continue;
 				}
-
-				// 副本中禁用临时生成，TemporarySpawnEngine / Disable temporary spawns in instances, TemporarySpawnEngine
-				// 不支持移除生成 / doesn't support removing spawns
-				if (spawn.isTemporarySpawn() && !worldTemplate.isInstance()) {
-					TemporarySpawnEngine.addSpawnGroup(spawn, instanceId);
+				long delay = initialSpawnDelayMillis(spawn.getInitialDelay(), startedAt, now);
+				if (delay > 0) {
+					int delayedGroupIndex = groupIndex;
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						if (isCurrentInstance(instance)) {
+							spawnGroup(spawn, instanceId, delayedGroupIndex, worldTemplate);
+						}
+					}, delay);
+					spawnedCounter += spawn.hasPool() ? spawn.getPool() : spawn.getSpawnTemplates().size();
 					continue;
 				}
-
-				if (spawn.getHandlerType() != null) {
-					switch (spawn.getHandlerType()) {
-					case RIFT:
-					case VOLATILE_RIFT:
-						RiftManager.addRiftSpawnTemplate(spawn);
-						break;
-					case STATIC:
-						StaticObjectSpawnManager.spawnTemplate(spawn, instanceId);
-					default:
-						break;
-					}
-				} else if (spawn.hasPool() && checkPool(spawn)) {
-					for (int i = 0; i < spawn.getPool(); i++) {
-						SpawnTemplate template = spawn.getRndTemplate(instanceId);
-						if (template == null)
-							break;
-						assignStableKey(template, groupIndex, spawn.getSpawnTemplates().indexOf(template));
-						spawnObject(template, instanceId);
-						spawnedCounter++;
-					}
-				} else {
-					for (int templateIndex = 0; templateIndex < spawn.getSpawnTemplates().size(); templateIndex++) {
-						SpawnTemplate template = spawn.getSpawnTemplates().get(templateIndex);
-						assignStableKey(template, groupIndex, templateIndex);
-						spawnObject(template, instanceId);
-						spawnedCounter++;
-					}
-				}
+				spawnedCounter += spawnGroup(spawn, instanceId, groupIndex, worldTemplate);
 			}
 			WalkerFormator.organizeAndSpawn(worldId, instanceId);
 		}
 		log.info(I18n.get("log.1a270a579228", worldId, instanceId, spawnedCounter));
 		GameHousingServices.housingService().spawnHouses(worldId, instanceId, ownerId);
-		var instance = GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(instanceId);
 		RetailNpcPartyEngine.initialize(instance);
 		RetailConditionSpawnEngine.initialize(instance);
+	}
+
+	static long initialSpawnDelayMillis(int initialDelay, long startedAt, long now) {
+		return initialDelay <= 0 ? 0 : Math.max(0, startedAt + initialDelay * 1000L - now);
+	}
+
+	private static boolean isCurrentInstance(WorldMapInstance instance) {
+		return instance != null && GameWorldBootstrapServices.world().getWorldMap(instance.getMapId())
+			.getWorldMapInstanceById(instance.getInstanceId()) == instance;
+	}
+
+	private static int spawnGroup(SpawnGroup2 spawn, int instanceId, int groupIndex, WorldMapTemplate worldTemplate) {
+		// 副本中禁用临时生成，TemporarySpawnEngine / Disable temporary spawns in instances, TemporarySpawnEngine
+		// 不支持移除生成 / doesn't support removing spawns
+		if (spawn.isTemporarySpawn() && !worldTemplate.isInstance()) {
+			TemporarySpawnEngine.addSpawnGroup(spawn, instanceId);
+			return 0;
+		}
+		if (spawn.getHandlerType() != null) {
+			switch (spawn.getHandlerType()) {
+				case RIFT, VOLATILE_RIFT -> RiftManager.addRiftSpawnTemplate(spawn);
+				case STATIC -> StaticObjectSpawnManager.spawnTemplate(spawn, instanceId);
+			}
+			return 0;
+		}
+		int spawned = 0;
+		if (spawn.hasPool() && checkPool(spawn)) {
+			for (int i = 0; i < spawn.getPool(); i++) {
+				SpawnTemplate template = spawn.getRndTemplate(instanceId);
+				if (template == null) {
+					break;
+				}
+				assignStableKey(template, groupIndex, spawn.getSpawnTemplates().indexOf(template));
+				spawnObject(template, instanceId);
+				spawned++;
+			}
+		} else {
+			for (int templateIndex = 0; templateIndex < spawn.getSpawnTemplates().size(); templateIndex++) {
+				SpawnTemplate template = spawn.getSpawnTemplates().get(templateIndex);
+				assignStableKey(template, groupIndex, templateIndex);
+				spawnObject(template, instanceId);
+				spawned++;
+			}
+		}
+		return spawned;
 	}
 
 	static void assignStableKey(SpawnTemplate template, int groupIndex, int templateIndex) {

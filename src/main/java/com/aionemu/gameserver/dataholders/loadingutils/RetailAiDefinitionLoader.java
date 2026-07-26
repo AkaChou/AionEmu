@@ -243,7 +243,9 @@ final class RetailAiDefinitionLoader {
 			XMLStreamReader reader = factory.createXMLStreamReader(stream);
 			int id = 0;
 			String name = null;
-			int time = 0, count = 0, minLevel = 0, maxLevel = 0, groupId = 0, invadeType = 0;
+			int time = 0, count = 0, minLevel = 0, maxLevel = 0, groupId = 0, invadeType = 0, titleId = 0;
+			boolean closeForceOut = false, recount = false;
+			List<Integer> schedule = List.of();
 			int worldId = 0, npcId = 0, weight = 0;
 			String needItem = null;
 			List<DirectPortalGroup> groups = null;
@@ -263,6 +265,16 @@ final class RetailAiDefinitionLoader {
 							needItem = attribute(reader, "need_item", "");
 							groupId = Integer.parseInt(attribute(reader, "group_id", "0"));
 							invadeType = Integer.parseInt(attribute(reader, "invade_type", "0"));
+							closeForceOut = Boolean.parseBoolean(attribute(reader, "close_force_out", "false"));
+							recount = Boolean.parseBoolean(attribute(reader, "recount", "false"));
+							titleId = Integer.parseInt(attribute(reader, "title_id", "0"));
+							String values = attribute(reader, "schedule", "");
+							schedule = values.isEmpty() ? List.of()
+								: Arrays.stream(values.split(",", -1)).map(Integer::parseInt).toList();
+							if (!schedule.isEmpty() && (schedule.size() != 7 * 24
+									|| schedule.stream().anyMatch(value -> value < 0 || value > 100))) {
+								throw new IllegalStateException("Invalid retail direct portal schedule: " + id);
+							}
 						}
 						case "start", "destination" -> {
 							worldId = Integer.parseInt(attribute(reader, "world_id"));
@@ -283,7 +295,7 @@ final class RetailAiDefinitionLoader {
 						case "start" -> start = new DirectPortalEndpoint(worldId, npcId, groups);
 						case "destination" -> {
 							DirectPortal portal = new DirectPortal(id, name, time, count, minLevel, maxLevel,
-								needItem, groupId, invadeType, start,
+								needItem, groupId, invadeType, closeForceOut, recount, titleId, schedule, start,
 								new DirectPortalEndpoint(worldId, npcId, groups));
 							if (portals.put(id, portal) != null) {
 								throw new IllegalStateException("Duplicate retail direct portal: " + id);

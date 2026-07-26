@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dataholders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
@@ -36,6 +37,58 @@ class SpawnsData2IndexTest {
 		assertEquals(102, spawns.get(0).getNpcId());
 		assertEquals(101, spawns.get(1).getNpcId());
 		assertTrue(data.getSpawnsForNpc(100, 101).isCustom());
+	}
+
+	@Test
+	void keepsDifficultySpawnPageAndInitialDelayIndependent() throws Exception {
+		List<SpawnGroup2> spawns = unmarshal("""
+			<spawns><spawn_map map_id="100">
+				<spawn npc_id="101" difficult_id="2" spawn_page="11" initial_delay="130"/>
+				<spawn npc_id="102"/>
+			</spawn_map></spawns>
+			""").getSpawnsByWorldId(100);
+		SpawnGroup2 spawn = spawns.getFirst();
+
+		assertEquals(2, spawn.getDifficultId());
+		assertEquals(11, spawn.getSpawnPage().intValue());
+		assertEquals(130, spawn.getInitialDelay());
+		assertTrue(spawn.matchesInstance(2, 11));
+		assertFalse(spawn.matchesInstance(1, 11));
+		assertFalse(spawn.matchesInstance(2, 1));
+		assertTrue(spawns.get(1).matchesInstance(2, 11));
+	}
+
+	@Test
+	void keepsDuplicateNpcPageGroupsAndMatchesClosedRanges() throws Exception {
+		List<SpawnGroup2> spawns = unmarshal("""
+			<spawns><spawn_map map_id="100">
+				<spawn npc_id="101" spawn_page="0" spawn_page_end="1"/>
+				<spawn npc_id="101" spawn_page="2"/>
+				<spawn npc_id="102"/>
+			</spawn_map></spawns>
+			""").getSpawnsByWorldId(100);
+
+		assertEquals(3, spawns.size());
+		assertTrue(spawns.get(0).matchesInstance(0, 0));
+		assertTrue(spawns.get(0).matchesInstance(0, 1));
+		assertFalse(spawns.get(0).matchesInstance(0, 2));
+		assertTrue(spawns.get(1).matchesInstance(0, 2));
+		assertFalse(spawns.get(1).matchesInstance(0, 0));
+		assertTrue(spawns.get(2).matchesInstance(0, 41));
+	}
+
+	@Test
+	void rejectsInvalidSpawnPageRanges() {
+		assertThrows(Exception.class, () -> unmarshal("""
+			<spawns><spawn_map map_id="100">
+				<spawn npc_id="101" spawn_page="2" spawn_page_end="1"/>
+			</spawn_map></spawns>
+			"""));
+		assertThrows(Exception.class, () -> unmarshal("""
+			<spawns><spawn_map map_id="100">
+				<spawn npc_id="101" spawn_page_end="1"/>
+			</spawn_map></spawns>
+			"""));
 	}
 
 	@Test

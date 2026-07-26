@@ -32,7 +32,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			getPosition().getWorldMapInstance().getDoors().get(610).setOpen(false);
+			getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(610, false);
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}

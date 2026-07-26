@@ -41,4 +41,11 @@ class SpawnEngineStableKeyTest {
 			throw new AssertionError("Non-NPC spawns must not be projected");
 		}));
 	}
+
+	@Test
+	void resumesInitialSpawnDelayFromInstanceCreationTime() {
+		assertEquals(5_000, SpawnEngine.initialSpawnDelayMillis(10, 100_000, 105_000));
+		assertEquals(0, SpawnEngine.initialSpawnDelayMillis(10, 100_000, 111_000));
+		assertEquals(0, SpawnEngine.initialSpawnDelayMillis(0, 100_000, 100_000));
+	}
 }

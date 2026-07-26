@@ -992,6 +992,21 @@ public final class QuestService {
 		return object;
 	}
 
+	/** Spawns a timed quest object at a retail-compatible random walkable point within five metres of the player. */
+	public static VisibleObject addNewSpawnForSeconds(Player player, int templateId, int lifetimeSeconds) {
+		var point = MathUtil.get2DPointInsideCircle(player.getX(), player.getY(), 5);
+		float x = point.x;
+		float y = point.y;
+		float z = GameWorldServices.geoService().getZ(player.getWorldId(), x, y, player.getZ(), 100, player.getInstanceId());
+		if (!GameWorldServices.pathService().canMoveStraight(player, x, y, z)) {
+			x = player.getX();
+			y = player.getY();
+			z = player.getZ();
+		}
+		return addNewSpawnForSeconds(player.getWorldId(), player.getInstanceId(), templateId, x, y, z, (byte) 0,
+				lifetimeSeconds);
+	}
+
 	/**
 	 * 生成限时任务 NPC，到时后自动 despawn。
 	 * Spawns a timed quest NPC that despawns after the given minutes.

@@ -1,5 +1,9 @@
 package com.aionemu.gameserver.questEngine.handlers.template;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -29,8 +33,8 @@ public class ItemOrders extends QuestHandler {
 	private final int talkNpc1;
 	/** 途经对话 NPC 2，0 表示无 / second talk NPC, 0 if none */
 	private final int talkNpc2;
-	/** 结束 NPC ID / end NPC id */
-	private final int endNpcId;
+	/** 结束 NPC IDs / end NPC ids */
+	private final Set<Integer> endNpcIds = new HashSet<>();
 
 	/**
 	 * 构造物品指令任务处理器。
@@ -43,12 +47,20 @@ public class ItemOrders extends QuestHandler {
 	 * end NPC
 	 */
 	public ItemOrders(int questId, int startItemId, int talkNpc1, int talkNpc2, int endNpcId) {
+		this(questId, startItemId, talkNpc1, talkNpc2, List.of(endNpcId));
+	}
+
+	public ItemOrders(int questId, int startItemId, int talkNpc1, int talkNpc2, List<Integer> endNpcIds) {
 		super(questId);
 		this.startItemId = startItemId;
 		this.questId = questId;
 		this.talkNpc1 = talkNpc1;
 		this.talkNpc2 = talkNpc2;
-		this.endNpcId = endNpcId;
+		this.endNpcIds.addAll(endNpcIds);
+		this.endNpcIds.remove(0);
+		if (this.endNpcIds.isEmpty()) {
+			throw new IllegalArgumentException("ItemOrders requires an end NPC");
+		}
 	}
 
 	/**
@@ -57,7 +69,9 @@ public class ItemOrders extends QuestHandler {
 	 */
 	@Override
 	public void register() {
-		qe.registerQuestNpc(endNpcId).addOnTalkEvent(questId);
+		for (int endNpcId : endNpcIds) {
+			qe.registerQuestNpc(endNpcId).addOnTalkEvent(questId);
+		}
 		qe.registerQuestItem(startItemId, questId);
 		if (talkNpc1 != 0) {
 			qe.registerQuestNpc(talkNpc1).addOnTalkEvent(questId);
@@ -102,7 +116,7 @@ public class ItemOrders extends QuestHandler {
 					return sendQuestStartDialog(env);
 				}
 			}
-		} else if (targetId == endNpcId) {
+		} else if (endNpcIds.contains(targetId)) {
 			if (qs != null) {
 				if (env.getDialog() == QuestDialog.START_DIALOG && qs.getStatus() == QuestStatus.START) {
 					return sendQuestDialog(env, 2375);

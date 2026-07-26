@@ -409,8 +409,8 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * 本实例内静态门（物理 ID 或真端逻辑 ID → 门）。
-	 * Static doors in this instance (physical or retail logical ID → door).
+	 * 本实例内静态门（物理 ID → 门）。
+	 * Static doors in this instance (physical ID → door).
 	 *
 	 * door map
 	 */
@@ -421,9 +421,17 @@ public abstract class WorldMapInstance {
 			if (obj instanceof StaticDoor) {
 				StaticDoor door = (StaticDoor) obj;
 				doors.put(door.getSpawn().getEntityId(), door);
-				if (door.getObjectTemplate().getRetailId() > 0) {
-					doors.put(door.getObjectTemplate().getRetailId(), door);
-				}
+			}
+		}
+		return doors;
+	}
+
+	public List<StaticDoor> getRetailDoors(int retailId) {
+		List<StaticDoor> doors = new ArrayList<>();
+		for (Iterator<VisibleObject> iter = objectIterator(); iter.hasNext();) {
+			VisibleObject obj = iter.next();
+			if (obj instanceof StaticDoor door && door.getObjectTemplate().getRetailId() == retailId) {
+				doors.add(door);
 			}
 		}
 		return doors;

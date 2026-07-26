@@ -10,6 +10,7 @@ import com.aionemu.gameserver.dataholders.RetailAiData.DirectPortalGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.DirectPortalPoint;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -21,6 +22,8 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -30,8 +33,43 @@ public final class RetailDirectPortalEngine {
 
 	private static final Map<Integer, ActivePortal> ACTIVE = new HashMap<>();
 	private static final Map<Integer, ActivePortal> BY_NPC = new HashMap<>();
+	private static long lastScheduleCheck;
 
 	private RetailDirectPortalEngine() {
+	}
+
+	public static void startScheduler() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(RetailDirectPortalEngine::checkScheduledPortals,
+			40_000, 40_000);
+	}
+
+	private static void checkScheduledPortals() {
+		checkScheduledPortals(LocalDateTime.now(), System.currentTimeMillis() / 1000);
+	}
+
+	static synchronized void checkScheduledPortals(LocalDateTime now, long epochSecond) {
+		if (now.getMinute() != 0 || epochSecond < lastScheduleCheck + 3600 || DataManager.RETAIL_AI_DATA == null) {
+			return;
+		}
+		lastScheduleCheck = epochSecond;
+		int index = scheduleIndex(now.getDayOfWeek(), now.getHour());
+		for (DirectPortal definition : DataManager.RETAIL_AI_DATA.directPortals()) {
+			if (!definition.schedule().isEmpty() && shouldOpen(definition.schedule().get(index), Rnd.get(100))) {
+				open(definition.id());
+			}
+		}
+	}
+
+	static int scheduleIndex(DayOfWeek day, int hour) {
+		return (day.getValue() - 1) * 24 + hour;
+	}
+
+	static boolean shouldOpen(int probability, int roll) {
+		return roll < probability;
+	}
+
+	public static boolean open(int id) {
+		return open(id, null);
 	}
 
 	public static synchronized boolean open(int id, Npc owner) {
@@ -111,12 +149,17 @@ public final class RetailDirectPortalEngine {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_DIRECT_PORTAL_LEVEL_LIMIT);
 			return;
 		}
+		if (definition.titleId() > 0 && !player.getTitleList().contains(definition.titleId())) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_DIRECT_PORTAL_NOT_TITLE);
+			return;
+		}
 		boolean exhausted;
 		synchronized (active) {
 			if (active.closed) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_DIRECT_PORTAL_NO_PORTAL);
 				return;
 			}
+			recountDepartedPlayers(active);
 			if (active.remaining == 0) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_DIRECT_PORTAL_USE_COUNT_LIMIT);
 				return;
@@ -124,6 +167,8 @@ public final class RetailDirectPortalEngine {
 			active.remaining--;
 			exhausted = active.remaining == 0;
 		}
+		Origin origin = new Origin(player.getWorldId(), player.getInstanceId(), player.getX(), player.getY(),
+			player.getZ(), player.getHeading());
 		DirectPortalPoint point = active.destinationPoint;
 		boolean teleported = TeleportService2.teleportTo(player, definition.destination().worldId(), point.x(), point.y(),
 			point.z(), MathUtil.convertDegreeToHeading(point.direction()), animationFor(definition.invadeType()));
@@ -135,11 +180,16 @@ public final class RetailDirectPortalEngine {
 			}
 			return;
 		}
+		if (definition.closeForceOut()) {
+			synchronized (active) {
+				active.origins.put(player.getObjectId(), origin);
+			}
+		}
 		SM_SYSTEM_MESSAGE notice = noticeFor(definition.invadeType());
 		if (notice != null) {
 			PacketSendUtility.sendPacket(player, notice);
 		}
-		if (exhausted && closesWhenExhausted(definition.invadeType())) {
+		if (exhausted && closesWhenExhausted(definition.invadeType(), definition.recount())) {
 			closeIfActive(definition.id(), active);
 		}
 	}
@@ -151,8 +201,8 @@ public final class RetailDirectPortalEngine {
 		};
 	}
 
-	static boolean closesWhenExhausted(int invadeType) {
-		return invadeType != 6;
+	static boolean closesWhenExhausted(int invadeType, boolean recount) {
+		return !recount && invadeType != 6;
 	}
 
 	static SM_SYSTEM_MESSAGE noticeFor(int invadeType) {
@@ -184,7 +234,7 @@ public final class RetailDirectPortalEngine {
 	}
 
 	private static Npc spawn(DirectPortalEndpoint endpoint, DirectPortalPoint point, Npc owner) {
-		int instanceId = owner.getWorldId() == endpoint.worldId() ? owner.getInstanceId() : 1;
+		int instanceId = owner != null && owner.getWorldId() == endpoint.worldId() ? owner.getInstanceId() : 1;
 		VisibleObject object = SpawnEngine.spawnObject(SpawnEngine.addNewSingleTimeSpawn(endpoint.worldId(), endpoint.npcId(),
 			point.x(), point.y(), point.z(), MathUtil.convertDegreeToHeading(point.direction())), instanceId);
 		if (!(object instanceof Npc npc)) {
@@ -205,6 +255,7 @@ public final class RetailDirectPortalEngine {
 		synchronized (active) {
 			active.closed = true;
 		}
+		forceOutPlayers(active);
 		if (active.definition.invadeType() == 6) {
 			setInvadeAreas(active, false);
 		}
@@ -215,6 +266,35 @@ public final class RetailDirectPortalEngine {
 		}
 		delete(active.start);
 		delete(active.destination);
+	}
+
+	private static void recountDepartedPlayers(ActivePortal active) {
+		if (!active.definition.recount()) {
+			return;
+		}
+		int destinationWorldId = active.definition.destination().worldId();
+		int destinationInstanceId = active.destination.getInstanceId();
+		active.origins.entrySet().removeIf(entry -> {
+			Player player = GameWorldBootstrapServices.world().findPlayer(entry.getKey());
+			if (player != null && player.getWorldId() == destinationWorldId && player.getInstanceId() == destinationInstanceId) {
+				return false;
+			}
+			active.remaining++;
+			return true;
+		});
+	}
+
+	private static void forceOutPlayers(ActivePortal active) {
+		if (!active.definition.closeForceOut()) {
+			return;
+		}
+		for (Player player : active.destination.getPosition().getWorldMapInstance().getPlayersInside()) {
+			Origin origin = active.origins.get(player.getObjectId());
+			if (origin != null) {
+				TeleportService2.teleportTo(player, origin.worldId(), origin.instanceId(), origin.x(), origin.y(), origin.z(),
+					origin.heading(), TeleportAnimation.DIRECT_PORTAL);
+			}
+		}
 	}
 
 	private static void setInvadeAreas(ActivePortal active, boolean enabled) {
@@ -242,6 +322,7 @@ public final class RetailDirectPortalEngine {
 		private final Npc start;
 		private final Npc destination;
 		private final DirectPortalPoint destinationPoint;
+		private final Map<Integer, Origin> origins = new HashMap<>();
 		private int remaining;
 		private volatile boolean closed;
 		private Future<?> expiry;
@@ -253,5 +334,8 @@ public final class RetailDirectPortalEngine {
 			this.destinationPoint = destinationPoint;
 			remaining = definition.count();
 		}
+	}
+
+	private record Origin(int worldId, int instanceId, float x, float y, float z, byte heading) {
 	}
 }

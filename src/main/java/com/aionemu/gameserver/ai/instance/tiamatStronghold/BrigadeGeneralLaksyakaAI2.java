@@ -44,7 +44,7 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			getPosition().getWorldMapInstance().getDoors().get(56).setOpen(false);
+			getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(56, false);
 		} if (!isFinalBuff && getOwner().getLifeStats().getHpPercentage() <= 25) {
 			isFinalBuff = true;
 			AI2Actions.useSkill(this, 20731);

@@ -234,15 +234,39 @@
 		<spawn npc_id="206427" respawn_time="1">
 		  <spot x="904.629761" y="385.639893" z="1647.3086" h="90"/>
 		</spawn>
-		<spawn npc_id="207130" respawn_time="1">
-		  <spot x="329.295441" y="182.960342" z="1687.2552" h="60"/>
+		<spawn npc_id="207130">
+		  <spot x="329.295441" y="182.960342" z="1688.298462" h="60" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="702827" respawn_time="1">
-		  <spot x="592.024841" y="181.322739" z="1683.7301" h="45"/>
-		  <spot x="635.500122" y="905.020386" z="1600.5023" h="90"/>
+		<spawn npc_id="237224" initial_delay="1">
+		  <spot x="775.781677" y="262.181152" z="1702.402100" h="71" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="805377" respawn_time="1">
-		  <spot x="635.500122" y="957.020386" z="1616.2687" h="90"/>
+		<spawn npc_id="237225" initial_delay="1">
+		  <spot x="894.346252" y="287.307037" z="1715.984497" h="75" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="237226" initial_delay="1">
+		  <spot x="856.273743" y="362.042877" z="1724.002319" h="90" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="237227" initial_delay="1">
+		  <spot x="787.000061" y="379.672791" z="1698.299561" h="90" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="237228" initial_delay="1">
+		  <spot x="531.088501" y="212.438065" z="1683.411621" h="60" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="237229" initial_delay="1">
+		  <spot x="530.858398" y="151.868103" z="1683.411621" h="60" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="237230" initial_delay="1">
+		  <spot x="811.850159" y="568.007629" z="1707.200562" h="90" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="702827" initial_delay="1">
+		  <spot x="592.024841" y="181.322739" z="1685.613892" h="45" random_walk="2"/>
+		  <spot x="635.500122" y="905.020386" z="1601.910278" h="90" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="731580" initial_delay="1">
+		  <spot x="809.731140" y="598.521606" z="1708.170410" h="90" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="805377" respawn_time="1" initial_delay="1">
+		  <spot x="635.500122" y="957.020386" z="1617.910278" h="90" random_walk="2"/>
 		</spawn>
 	</spawn_map>
 </spawns>

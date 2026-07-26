@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import org.junit.jupiter.api.Test;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +35,7 @@ class RetailDirectPortalEngineTest {
 		assertEquals(0x12, TeleportAnimation.INVASION_PORTAL.getEndAnimationId());
 		for (int type : new int[] { 0, 4, 5 }) {
 			assertEquals(TeleportAnimation.DIRECT_PORTAL, RetailDirectPortalEngine.animationFor(type));
-			assertTrue(RetailDirectPortalEngine.closesWhenExhausted(type));
+				assertTrue(RetailDirectPortalEngine.closesWhenExhausted(type, false));
 			assertNull(RetailDirectPortalEngine.noticeFor(type));
 		}
 		for (int type : new int[] { 1, 2, 3, 6 }) {
@@ -48,6 +49,18 @@ class RetailDirectPortalEngineTest {
 			RetailDirectPortalEngine.noticeFor(3));
 		assertSame(SM_SYSTEM_MESSAGE.STR_MSG_RVR_DIRECT_PORTAL_OPEN_NOTICE,
 			RetailDirectPortalEngine.noticeFor(6));
-		assertFalse(RetailDirectPortalEngine.closesWhenExhausted(6));
+			assertFalse(RetailDirectPortalEngine.closesWhenExhausted(6, false));
+			assertFalse(RetailDirectPortalEngine.closesWhenExhausted(1, true));
+			assertFalse(RetailDirectPortalEngine.closesWhenExhausted(3, true));
+	}
+
+	@Test
+	void followsRetailHourlyScheduleSemantics() {
+		assertEquals(0, RetailDirectPortalEngine.scheduleIndex(DayOfWeek.MONDAY, 0));
+		assertEquals(167, RetailDirectPortalEngine.scheduleIndex(DayOfWeek.SUNDAY, 23));
+		assertFalse(RetailDirectPortalEngine.shouldOpen(0, 0));
+		assertTrue(RetailDirectPortalEngine.shouldOpen(1, 0));
+		assertFalse(RetailDirectPortalEngine.shouldOpen(1, 1));
+		assertTrue(RetailDirectPortalEngine.shouldOpen(100, 99));
 	}
 }

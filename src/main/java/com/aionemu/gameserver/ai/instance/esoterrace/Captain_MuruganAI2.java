@@ -34,7 +34,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			getPosition().getWorldMapInstance().getDoors().get(70).setOpen(false);
+			getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(70, false);
 			startTaskEvent();
 		}
 	}

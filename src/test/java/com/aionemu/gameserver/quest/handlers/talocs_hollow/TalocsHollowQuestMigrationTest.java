@@ -100,10 +100,10 @@ class TalocsHollowQuestMigrationTest {
 		for (int index = 0; index < doors.getLength(); index++) {
 			Element door = (Element) doors.item(index);
 			switch (door.getAttribute("doorid")) {
-				case "7" -> assertEquals("2:0x1", door.getAttribute("retailid") + ':' + door.getAttribute("state"));
-				case "48" -> assertEquals("1:0x1", door.getAttribute("retailid") + ':' + door.getAttribute("state"));
-				case "49" -> assertEquals("0x1", door.getAttribute("state"));
-				case "180" -> assertEquals("0x2", door.getAttribute("state"));
+					case "7" -> assertEquals("2:0x5", door.getAttribute("retailid") + ':' + door.getAttribute("state"));
+					case "48" -> assertEquals("1:0x5", door.getAttribute("retailid") + ':' + door.getAttribute("state"));
+					case "49" -> assertEquals("0x5", door.getAttribute("state"));
+					case "180" -> assertEquals("0x6", door.getAttribute("state"));
 				default -> throw new AssertionError(door.getAttribute("doorid"));
 			}
 		}

@@ -122,7 +122,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(3495, data.stringCount());
 		assertEquals(135, data.areaCount());
 		assertEquals(18, data.resurrectAreaCount());
-		assertEquals(231, data.questAreaCount());
+		assertEquals(235, data.questAreaCount());
 		assertEquals(1, data.limitAreaCount());
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
@@ -158,7 +158,7 @@ class RetailAiDefinitionLoaderTest {
 			data.getGroupControllers(worldId).stream().filter(controller -> controller.exitWorldId() > 0).forEach(controller ->
 				assertNotNull(data.findLocationAlias(controller.exitWorldId(), controller.exitAlias()), controller.name()));
 		}
-		assertEquals(30, data.directPortalCount());
+		assertEquals(113, data.directPortalCount());
 		for (int missingPortalId = 97; missingPortalId <= 128; missingPortalId++) {
 			assertNull(data.getDirectPortal(missingPortalId), Integer.toString(missingPortalId));
 		}
@@ -170,11 +170,29 @@ class RetailAiDefinitionLoaderTest {
 		assertNotNull(portal);
 		assertEquals(220080000, portal.start().worldId());
 		assertEquals(3, portal.destination().groups().size());
+		assertFalse(portal.closeForceOut());
+		assertFalse(portal.recount());
+		assertEquals(0, portal.titleId());
+		var scheduledPortal = data.getDirectPortal(5);
+		assertNotNull(scheduledPortal);
+		assertEquals(168, scheduledPortal.schedule().size());
+		assertEquals(100, scheduledPortal.schedule().get(13));
+		var titlePortal = data.getDirectPortal(69);
+		assertNotNull(titlePortal);
+		assertTrue(titlePortal.closeForceOut());
+		assertTrue(titlePortal.recount());
+		assertEquals(275, titlePortal.titleId());
+		var interactivePortal = data.getDirectPortal(81);
+		assertNotNull(interactivePortal);
+		assertEquals(4, interactivePortal.invadeType());
+		assertEquals(220080000, interactivePortal.start().worldId());
+		assertEquals(210070000, interactivePortal.destination().worldId());
 		var userPortal = data.getDirectPortal(82);
 		assertNotNull(userPortal);
 		assertEquals("key_f5_legion_potal_d01", userPortal.needItem());
 		assertEquals(11, userPortal.groupId());
 		assertEquals(5, userPortal.invadeType());
+		assertTrue(userPortal.schedule().isEmpty());
 		assertEquals(288, data.dynamicAreaCount());
 		assertEquals(12655, java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(RetailPatternAI2::supports).count());

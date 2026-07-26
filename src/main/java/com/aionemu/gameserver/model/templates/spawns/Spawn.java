@@ -40,6 +40,15 @@ public class Spawn {
 	@XmlAttribute(name = "difficult_id")
 	private byte difficultId;
 
+	@XmlAttribute(name = "spawn_page")
+	private Byte spawnPage;
+
+	@XmlAttribute(name = "spawn_page_end")
+	private Byte spawnPageEnd;
+
+	@XmlAttribute(name = "initial_delay")
+	private int initialDelay;
+
 	@XmlElement(name = "temporary_spawn")
 	private TemporarySpawn temporaySpawn;
 
@@ -142,5 +151,27 @@ public class Spawn {
 	/** 返回 difficult id / Returns the difficult id */
 	public byte getDifficultId() {
 		return difficultId;
+	}
+
+	public Byte getSpawnPage() {
+		return spawnPage;
+	}
+
+	public Byte getSpawnPageEnd() {
+		return spawnPageEnd;
+	}
+
+	public void validateSpawnPageRange() {
+		if (spawnPageEnd != null && spawnPage == null) {
+			throw new IllegalArgumentException("spawn_page_end requires spawn_page for NPC " + npcId);
+		}
+		if (spawnPage != null && (spawnPage < 0 || (spawnPageEnd != null && spawnPageEnd < spawnPage))) {
+			throw new IllegalArgumentException("Invalid spawn page range for NPC " + npcId + ": "
+					+ spawnPage + ".." + spawnPageEnd);
+		}
+	}
+
+	public int getInitialDelay() {
+		return initialDelay;
 	}
 }

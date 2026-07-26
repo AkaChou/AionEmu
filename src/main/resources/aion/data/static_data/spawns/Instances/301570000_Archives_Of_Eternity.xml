@@ -6,6 +6,9 @@
 			<spot x="669.3294" y="436.02066" z="468.8671" h="1"/>
             <spot x="669.66797" y="432.1197" z="468.8671" h="2"/>
             <spot x="670.577" y="427.66458" z="468.8671" h="5"/>
+		  <spot x="669.803711" y="436.221527" z="469.625000" random_walk="2"/>
+		  <spot x="669.653564" y="428.010101" z="469.625000" random_walk="2"/>
+		  <spot x="669.730652" y="431.983612" z="469.625000" random_walk="2"/>
 		</spawn>
 		<!-- IDEternity_Q_Sado_Fi_N_65_An_01 -->
 		<spawn npc_id="857783">
@@ -14,14 +17,17 @@
 		<!-- IDEternity_Q_FOBJ_Q10521_A -->
 		<spawn npc_id="731667">
 			<spot x="460.74020" y="373.06628" z="470.14615" entity_id="60"/>
+		  <spot x="460.906342" y="373.486267" z="469.940979" random_walk="2"/>
 		</spawn>
 		<!-- IDEternity_Q_FOBJ_Q10521_B -->
 		<spawn npc_id="731668">
 			<spot x="552.90057" y="533.48358" z="470.13376" entity_id="63"/>
+		  <spot x="553.070007" y="533.435181" z="469.896790" random_walk="2"/>
 		</spawn>
 		<!-- IDEternity_Q_FOBJ_Q10521_C -->
 		<spawn npc_id="731669">
 			<spot x="460.83914" y="692.77423" z="470.13565" entity_id="62"/>
+		  <spot x="461.192566" y="693.529419" z="470.396790" random_walk="2"/>
 		</spawn>
 		<spawn npc_id="206489" respawn_time="1">
 		  <spot x="690.122559" y="431.211182" z="468.80524"/>
@@ -32,16 +38,19 @@
 		<spawn npc_id="206491" respawn_time="1">
 		  <spot x="366.210327" y="511.708008" z="468.87393"/>
 		</spawn>
-		<spawn npc_id="857827">
+		<spawn npc_id="857783" initial_delay="1">
+		  <spot x="544.977173" y="339.557068" z="469.500000" h="18" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="857827" initial_delay="1">
 		  <spot x="505.645569" y="432.780182" z="469.896790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857828">
+		<spawn npc_id="857828" initial_delay="1">
 		  <spot x="550.520569" y="513.655151" z="473.021790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857830">
+		<spawn npc_id="857830" initial_delay="1">
 		  <spot x="460.721222" y="673.640503" z="469.896790" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="857832">
+		<spawn npc_id="857832" initial_delay="1">
 		  <spot x="365.813568" y="507.876740" z="469.896790" random_walk="2"/>
 		</spawn>
     </spawn_map>

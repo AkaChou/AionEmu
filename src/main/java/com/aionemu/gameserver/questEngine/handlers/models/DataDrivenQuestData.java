@@ -147,6 +147,10 @@ public class DataDrivenQuestData extends XMLQuest {
 		private int removeItemId;
 		@XmlAttribute(name = "remove_item_count")
 		private int removeItemCount;
+		@XmlAttribute(name = "timer_seconds")
+		private int timerSeconds;
+		@XmlAttribute(name = "timer_destination_progress")
+		private int timerDestinationProgress;
 
 		public String getType() {
 			return type;
@@ -227,6 +231,14 @@ public class DataDrivenQuestData extends XMLQuest {
 		public int getRemoveItemCount() {
 			return removeItemCount;
 		}
+
+		public int getTimerSeconds() {
+			return timerSeconds;
+		}
+
+		public int getTimerDestinationProgress() {
+			return timerDestinationProgress;
+		}
 	}
 
 	@XmlAccessorType(XmlAccessType.FIELD)
@@ -239,13 +251,15 @@ public class DataDrivenQuestData extends XMLQuest {
 		private int count;
 		@XmlAttribute(name = "lifetime_seconds", required = true)
 		private int lifetimeSeconds;
-		@XmlAttribute(name = "x", required = true)
+		@XmlAttribute(name = "relative")
+		private boolean relative;
+		@XmlAttribute(name = "x")
 		private float x;
-		@XmlAttribute(name = "y", required = true)
+		@XmlAttribute(name = "y")
 		private float y;
-		@XmlAttribute(name = "z", required = true)
+		@XmlAttribute(name = "z")
 		private float z;
-		@XmlAttribute(name = "heading", required = true)
+		@XmlAttribute(name = "heading")
 		private int heading;
 
 		public int getNpcId() {
@@ -258,6 +272,10 @@ public class DataDrivenQuestData extends XMLQuest {
 
 		public int getLifetimeSeconds() {
 			return lifetimeSeconds;
+		}
+
+		public boolean isRelative() {
+			return relative;
 		}
 
 		public float getX() {

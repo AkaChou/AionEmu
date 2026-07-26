@@ -88,12 +88,11 @@ public class Portal2Data {
 	 * 阵营 / race
 	 * @return 传送路径，不匹配则为 null / portal path or null
 	 */
-	public PortalPath getPortalDialog(int npcId, int dialogId, Race race) {
+	public PortalPath getPortalDialog(int npcId, int dialogId, Race race, int sourceWorldId) {
 		PortalDialog portal = portalDialogs.get(npcId);
 		if (portal != null) {
 			for (PortalPath path : portal.getPortalPath()) {
-				if (path.getDialog() == dialogId
-						&& (race.equals(path.getRace()) || path.getRace().equals(Race.PC_ALL))) {
+					if (path.getDialog() == dialogId && path.matches(race, sourceWorldId)) {
 					return path;
 				}
 			}

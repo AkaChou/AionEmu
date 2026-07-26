@@ -232,7 +232,8 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	public boolean supportsRetailNpcScore(int npcId, int scoreApplyType) {
 		return scoreApplyType == 0 && getNpcBonus(npcId) != 0 && switch (npcId) {
 			case 207102, 219502, 219503, 219504, 219540, 219541, 219542, 219653, 219654, 243675, 243676,
-				701173, 701174, 701187, 701188, 701216, 701221, 701226, 701852 -> true;
+				701173, 701174, 701181, 701187, 701188, 701195, 701209, 701216, 701221, 701226,
+				701317, 701318, 701319, 701842, 701848, 701852 -> true;
 			default -> false;
 		};
 	}
@@ -428,7 +429,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	private void openDoors() {
 		for (StaticDoor door : instance.getDoors().values()) {
 			if (door != null) {
-				door.setOpen(true);
+				setDoorState(door.getSpawn().getEntityId(), true);
 			}
 		}
 	}

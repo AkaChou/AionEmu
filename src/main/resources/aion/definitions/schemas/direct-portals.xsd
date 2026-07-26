@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="portalSchedule">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="((100|[0-9]{1,2}),){167}(100|[0-9]{1,2})"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:complexType name="portalEndpoint">
     <xs:sequence>
       <xs:element name="group" minOccurs="1" maxOccurs="unbounded">
@@ -40,6 +45,10 @@
             <xs:attribute name="need_item" type="xs:string" use="required"/>
             <xs:attribute name="group_id" type="xs:nonNegativeInteger" use="required"/>
             <xs:attribute name="invade_type" type="xs:nonNegativeInteger" use="required"/>
+            <xs:attribute name="close_force_out" type="xs:boolean" use="optional"/>
+            <xs:attribute name="recount" type="xs:boolean" use="optional"/>
+            <xs:attribute name="title_id" type="xs:nonNegativeInteger" use="optional"/>
+            <xs:attribute name="schedule" type="portalSchedule" use="optional"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>

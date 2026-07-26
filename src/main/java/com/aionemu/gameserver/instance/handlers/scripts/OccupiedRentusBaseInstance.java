@@ -5,7 +5,6 @@ import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.skillengine.model.Effect;
@@ -15,7 +14,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 被占领的伦图斯基地副本事件处理器。
@@ -26,8 +24,6 @@ import java.util.Map;
 
 @InstanceID(300620000)
 public class OccupiedRentusBaseInstance extends GeneralInstanceHandler {
-	/** 门映射 / door map */
-	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
 	private final List<Integer> movies = new ArrayList<>();
 	/**
@@ -39,8 +35,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler {
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
-		doors = instance.getDoors();
-		doors.get(54).setOpen(true);
+		setDoorState(54, true);
 	}
 	
 	/**
@@ -66,11 +61,11 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler {
 				Npc yunNmdPortalClew65Ae = instance.getNpc(236301);
 				if (isDead(yunNmdPortalFi65Ae) && isDead(yunNmdPortalClew65Ae)) {
 					deleteNpc(701156);
-					doors.get(145).setOpen(true);
+					setDoorState(145, true);
 				}
 				break;
 			case 236302: //Archmagus Upadi.
-				doors.get(70).setOpen(true);
+				setDoorState(70, true);
 				break;
 			}
 		}

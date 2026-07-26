@@ -61,8 +61,8 @@ public class Esoterrace_AlarmAI2 extends AggressiveNpcAI2
 							if (!isAlreadyDead()) {
 								despawn();
 								announceBridgeRaised();
-								getPosition().getWorldMapInstance().getDoors().get(69).setOpen(true);
-								getPosition().getWorldMapInstance().getDoors().get(367).setOpen(true);
+								getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(69, true);
+								getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(367, true);
 							}
 						}
 					}, 12000);

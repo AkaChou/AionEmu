@@ -28,7 +28,6 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
-import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -663,16 +662,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		return dredgionReward;
 	}
 	
-	/**
-	 * 玩家请求退出副本时处理。
-	 * Handle a player exit request.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-    public void onExitInstance(Player player) {
-        TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
-    }
 	
 	/**
 	 * 玩家离开副本时处理。

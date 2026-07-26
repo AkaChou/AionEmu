@@ -7,7 +7,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.skillengine.model.Effect;
@@ -17,7 +16,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 伦图斯基地副本事件处理器。
@@ -29,8 +27,6 @@ import java.util.Map;
 @InstanceID(300280000)
 public class RentusBaseInstance extends GeneralInstanceHandler
 {
-	/** 门映射 / door map */
-	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
 	/**
@@ -48,8 +44,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
-		doors = instance.getDoors();
-		doors.get(54).setOpen(true);
+		setDoorState(54, true);
 	}
 	
 	/**
@@ -83,11 +78,11 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			    Npc ambusherKiriana = instance.getNpc(217316);
 			    if (isDead(umathaTheCrazed) && isDead(ambusherKiriana)) {
 				    deleteNpc(701156);
-					doors.get(145).setOpen(true);
+					setDoorState(145, true);
 			    }
 			break;
 			case 217317: //Archmagus Upadi.
-			    doors.get(70).setOpen(true);
+			    setDoorState(70, true);
 			break;
 			case 283000: //Kiss Of Fire.
 			case 283001: //Kiss Of Ice.

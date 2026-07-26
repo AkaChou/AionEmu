@@ -86,7 +86,7 @@ public class PortalAI2 extends ActionItemNpcAI2
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		if (portalUse != null) {
-			PortalPath portalPath = portalUse.getPortalPath(player.getRace());
+				PortalPath portalPath = portalUse.getPortalPath(player.getRace(), player.getWorldId());
 			if (portalPath != null) {
 				PortalService.port(portalPath, player, getObjectId());
 			}

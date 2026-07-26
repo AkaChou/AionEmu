@@ -4,8 +4,8 @@
 		<spawn npc_id="703092" respawn_time="1">
 			<spot x="432.973297" y="490.474091" z="102.525612" random_walk="2"/>
 		</spawn>
-		<spawn npc_id="806118" respawn_time="1">
-			<spot x="433.021118" y="475.930206" z="100.888962" random_walk="2"/>
+		<spawn npc_id="806118">
+		  <spot x="433.021118" y="475.930206" z="100.888962" random_walk="2"/>
 		</spawn>
 	</spawn_map>
 </spawns>

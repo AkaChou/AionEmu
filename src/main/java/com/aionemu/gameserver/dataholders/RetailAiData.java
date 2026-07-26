@@ -347,6 +347,10 @@ public final class RetailAiData {
 		return directPortals.size();
 	}
 
+	public Iterable<DirectPortal> directPortals() {
+		return directPortals.values();
+	}
+
 	public List<NpcParty> getNpcParties(int worldId) {
 		return npcPartiesByWorld.getOrDefault(worldId, List.of());
 	}
@@ -467,8 +471,11 @@ public final class RetailAiData {
 	}
 
 	public record DirectPortal(int id, String name, int time, int count, int minLevel, int maxLevel,
-			String needItem, int groupId, int invadeType,
-			DirectPortalEndpoint start, DirectPortalEndpoint destination) {
+			String needItem, int groupId, int invadeType, boolean closeForceOut, boolean recount, int titleId,
+			List<Integer> schedule, DirectPortalEndpoint start, DirectPortalEndpoint destination) {
+		public DirectPortal {
+			schedule = List.copyOf(schedule);
+		}
 	}
 
 	public record DirectPortalEndpoint(int worldId, int npcId, List<DirectPortalGroup> groups) {

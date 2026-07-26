@@ -72,6 +72,10 @@ public class DataDrivenQuest extends QuestHandler {
 				case "GET_ITEM" -> qe.registerGetingItem(step.getItemId(), getQuestId());
 			}
 		}
+		if (steps.stream().anyMatch(step -> step.getTimerSeconds() > 0)) {
+			qe.registerOnQuestTimerEnd(getQuestId());
+			qe.registerOnLogOut(getQuestId());
+		}
 	}
 
 	@Override
@@ -232,6 +236,16 @@ public class DataDrivenQuest extends QuestHandler {
 		return onEnterWorldEvent(env);
 	}
 
+	@Override
+	public boolean onQuestTimerEndEvent(QuestEnv env) {
+		return resetTimerProgress(env);
+	}
+
+	@Override
+	public boolean onLogOutEvent(QuestEnv env) {
+		return resetTimerProgress(env);
+	}
+
 	protected boolean startWorldActive(QuestEnv env) {
 		return QuestService.startQuest(env);
 	}
@@ -336,7 +350,32 @@ public class DataDrivenQuest extends QuestHandler {
 			qs.setStatus(QuestStatus.REWARD);
 		}
 		updateQuestStatus(env);
+		if (step.getTimerSeconds() > 0) {
+			startTimer(env, step.getTimerSeconds());
+		}
 		return true;
+	}
+
+	private boolean resetTimerProgress(QuestEnv env) {
+		QuestState qs = activeState(env);
+		if (qs == null) {
+			return false;
+		}
+		int current = qs.getQuestVarById(0);
+		for (int source = 0; source < steps.size(); source++) {
+			Step step = steps.get(source);
+			if (step.getTimerSeconds() > 0 && source < current && current < step.getTimerDestinationProgress()) {
+				qs.setQuestVarById(0, source);
+				qs.setQuestVarById(1, 0);
+				updateQuestStatus(env);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected void startTimer(QuestEnv env, int seconds) {
+		QuestService.questTimerStart(env, seconds);
 	}
 
 	protected boolean teleport(QuestEnv env, Step step) {
@@ -345,8 +384,12 @@ public class DataDrivenQuest extends QuestHandler {
 	}
 
 	protected void spawn(QuestEnv env, Spawn spawn) {
-		QuestService.addNewSpawnForSeconds(env.getPlayer().getWorldId(), env.getPlayer().getInstanceId(), spawn.getNpcId(),
-				spawn.getX(), spawn.getY(), spawn.getZ(), (byte) spawn.getHeading(), spawn.getLifetimeSeconds());
+		if (spawn.isRelative()) {
+			QuestService.addNewSpawnForSeconds(env.getPlayer(), spawn.getNpcId(), spawn.getLifetimeSeconds());
+		} else {
+			QuestService.addNewSpawnForSeconds(env.getPlayer().getWorldId(), env.getPlayer().getInstanceId(), spawn.getNpcId(),
+					spawn.getX(), spawn.getY(), spawn.getZ(), (byte) spawn.getHeading(), spawn.getLifetimeSeconds());
+		}
 	}
 
 }

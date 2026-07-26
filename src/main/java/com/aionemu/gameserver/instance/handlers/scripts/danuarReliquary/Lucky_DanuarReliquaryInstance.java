@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -180,14 +179,4 @@ public class Lucky_DanuarReliquaryInstance extends GeneralInstanceHandler {
 		instance.doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(messageId)));
 	}
 	
-	/**
-	 * 玩家请求退出副本时处理。
-	 * Handle a player exit request.
-	 *
-	 * @param player 玩家 / player
-	 */
-	
-	public void onExitInstance(Player player) {
-		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
-	}
 }

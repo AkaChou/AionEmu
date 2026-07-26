@@ -68,5 +68,23 @@
 		  <spot x="223.533508" y="206.048782" z="79.86219"/>
 		  <spot x="239.786591" y="233.325119" z="92.98285"/>
 		</spawn>
+		<spawn npc_id="234751" initial_delay="420">
+		  <spot x="250.637192" y="244.033600" z="94.840950" h="75" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="234751" initial_delay="720">
+		  <spot x="273.763733" y="258.954224" z="94.840950" h="15" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="234752" initial_delay="420">
+		  <spot x="264.939301" y="267.924133" z="94.840950" h="45" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="234753" initial_delay="420">
+		  <spot x="278.261902" y="273.789642" z="94.840950" h="15" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="234753" initial_delay="720">
+		  <spot x="256.338928" y="259.022095" z="94.840950" h="75" random_walk="2"/>
+		</spawn>
+		<spawn npc_id="234754" initial_delay="420">
+		  <spot x="264.971527" y="249.829453" z="94.840950" h="105" random_walk="2"/>
+		</spawn>
 	</spawn_map>
 </spawns>

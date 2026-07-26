@@ -1,0 +1,745 @@
+{
+  "version": 1,
+  "authority": {
+    "world_data": "58Server/Map/Worlds",
+    "world_selection": "world_N.xml preferred, world.xml fallback",
+    "npc_data": "aion_drop/converted_staticdata_v2/modules/npcs/compact",
+    "ai_data": "aion_drop/converted_staticdata_v2/modules/ai/compact/ai",
+    "consumer": "RetailConditionSpawnEngine"
+  },
+  "summary": {
+    "requested_npcs": 11,
+    "located_npcs": 11,
+    "entries": 13,
+    "entries_by_status": {
+      "REJECT_CONDITION_STRUCTURE": 4,
+      "REJECT_UNMODELED_CONDITION_TRIGGER": 9
+    }
+  },
+  "missing_condition_npc_ids": [],
+  "no_retail_start_npc_ids": [
+    730276,
+    730322,
+    730399,
+    800507,
+    800508,
+    801285,
+    801286,
+    801287,
+    801288,
+    801808,
+    801809,
+    801810,
+    802162,
+    802163,
+    802164,
+    802165,
+    802219,
+    802221,
+    802223,
+    802225,
+    806055,
+    806056,
+    806057,
+    806058,
+    831117,
+    831131,
+    831547,
+    831548,
+    831549,
+    832753,
+    832754,
+    832755,
+    832756,
+    832757,
+    832758,
+    832759,
+    832760,
+    832761,
+    832762,
+    832763,
+    832764,
+    833026,
+    833027,
+    833028,
+    833029,
+    833030,
+    833031,
+    833032,
+    833033,
+    833034,
+    833035,
+    833036,
+    833037,
+    833049,
+    833050,
+    835261,
+    835262,
+    835263,
+    835265,
+    835266,
+    835268,
+    835270
+  ],
+  "condition_entries": [
+    {
+      "world_id": 210070000,
+      "world_name": "LF5",
+      "npc_id": 731570,
+      "source": "LF5/world.xml#19",
+      "condition_index": 1,
+      "expression": "(InterServer_Cond == 0) && (SpecialServer_Cond == 0)",
+      "variables": [
+        "interserver_cond",
+        "specialserver_cond"
+      ],
+      "variable_producers": {
+        "interserver_cond": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "specialserver_cond": {
+          "owner": "READ_ONLY_CORE",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        }
+      },
+      "condition_list": {
+        "sequence": 19,
+        "entries": 1,
+        "structure": "single",
+        "allowed": true
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_UNMODELED_CONDITION_TRIGGER",
+      "unsupported_reasons": [
+        "variable interserver_cond has no retail action producer"
+      ]
+    },
+    {
+      "world_id": 210070000,
+      "world_name": "LF5",
+      "npc_id": 832991,
+      "source": "LF5/world.xml#41",
+      "condition_index": 1,
+      "expression": "(InterServer_Cond == 0) && (SpecialServer_Cond == 0)",
+      "variables": [
+        "interserver_cond",
+        "specialserver_cond"
+      ],
+      "variable_producers": {
+        "interserver_cond": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "specialserver_cond": {
+          "owner": "READ_ONLY_CORE",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        }
+      },
+      "condition_list": {
+        "sequence": 41,
+        "entries": 1,
+        "structure": "single",
+        "allowed": true
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_UNMODELED_CONDITION_TRIGGER",
+      "unsupported_reasons": [
+        "variable interserver_cond has no retail action producer"
+      ]
+    },
+    {
+      "world_id": 210070000,
+      "world_name": "LF5",
+      "npc_id": 832995,
+      "source": "LF5/world.xml#77",
+      "condition_index": 1,
+      "expression": "(InterServer_Cond == 0) && (SpecialServer_Cond == 0)",
+      "variables": [
+        "interserver_cond",
+        "specialserver_cond"
+      ],
+      "variable_producers": {
+        "interserver_cond": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "specialserver_cond": {
+          "owner": "READ_ONLY_CORE",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        }
+      },
+      "condition_list": {
+        "sequence": 77,
+        "entries": 1,
+        "structure": "single",
+        "allowed": true
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_UNMODELED_CONDITION_TRIGGER",
+      "unsupported_reasons": [
+        "variable interserver_cond has no retail action producer"
+      ]
+    },
+    {
+      "world_id": 210070000,
+      "world_name": "LF5",
+      "npc_id": 832997,
+      "source": "LF5/world.xml#307",
+      "condition_index": 1,
+      "expression": "(InterServer_Cond == 0) && (SpecialServer_Cond == 0)",
+      "variables": [
+        "interserver_cond",
+        "specialserver_cond"
+      ],
+      "variable_producers": {
+        "interserver_cond": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "specialserver_cond": {
+          "owner": "READ_ONLY_CORE",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        }
+      },
+      "condition_list": {
+        "sequence": 307,
+        "entries": 1,
+        "structure": "single",
+        "allowed": true
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_UNMODELED_CONDITION_TRIGGER",
+      "unsupported_reasons": [
+        "variable interserver_cond has no retail action producer"
+      ]
+    },
+    {
+      "world_id": 220050000,
+      "world_name": "df2a",
+      "npc_id": 730672,
+      "source": "df2a/world_N.xml#368",
+      "condition_index": 1,
+      "expression": "(InterServer_Cond == 0) && (SpecialServer_Cond == 0)",
+      "variables": [
+        "interserver_cond",
+        "specialserver_cond"
+      ],
+      "variable_producers": {
+        "interserver_cond": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "specialserver_cond": {
+          "owner": "READ_ONLY_CORE",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        }
+      },
+      "condition_list": {
+        "sequence": 368,
+        "entries": 1,
+        "structure": "single",
+        "allowed": true
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_UNMODELED_CONDITION_TRIGGER",
+      "unsupported_reasons": [
+        "variable interserver_cond has no retail action producer"
+      ]
+    },
+    {
+      "world_id": 220080000,
+      "world_name": "df5",
+      "npc_id": 731549,
+      "source": "df5/world_N.xml#150",
+      "condition_index": 2,
+      "expression": "(InterServer_Cond == 0) && (SpecialServer_Cond == 0)",
+      "variables": [
+        "interserver_cond",
+        "specialserver_cond"
+      ],
+      "variable_producers": {
+        "interserver_cond": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "specialserver_cond": {
+          "owner": "READ_ONLY_CORE",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        }
+      },
+      "condition_list": {
+        "sequence": 150,
+        "entries": 2,
+        "structure": "alternatives",
+        "allowed": false
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_CONDITION_STRUCTURE",
+      "unsupported_reasons": [
+        "condition list has alternatives"
+      ]
+    },
+    {
+      "world_id": 220080000,
+      "world_name": "df5",
+      "npc_id": 832992,
+      "source": "df5/world_N.xml#172",
+      "condition_index": 2,
+      "expression": "(InterServer_Cond == 0) && (SpecialServer_Cond == 0)",
+      "variables": [
+        "interserver_cond",
+        "specialserver_cond"
+      ],
+      "variable_producers": {
+        "interserver_cond": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "specialserver_cond": {
+          "owner": "READ_ONLY_CORE",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        }
+      },
+      "condition_list": {
+        "sequence": 172,
+        "entries": 2,
+        "structure": "alternatives",
+        "allowed": false
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_CONDITION_STRUCTURE",
+      "unsupported_reasons": [
+        "condition list has alternatives"
+      ]
+    },
+    {
+      "world_id": 220080000,
+      "world_name": "df5",
+      "npc_id": 832996,
+      "source": "df5/world_N.xml#178",
+      "condition_index": 2,
+      "expression": "(InterServer_Cond == 0) && (SpecialServer_Cond == 0)",
+      "variables": [
+        "interserver_cond",
+        "specialserver_cond"
+      ],
+      "variable_producers": {
+        "interserver_cond": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "specialserver_cond": {
+          "owner": "READ_ONLY_CORE",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        }
+      },
+      "condition_list": {
+        "sequence": 178,
+        "entries": 2,
+        "structure": "alternatives",
+        "allowed": false
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_CONDITION_STRUCTURE",
+      "unsupported_reasons": [
+        "condition list has alternatives"
+      ]
+    },
+    {
+      "world_id": 220080000,
+      "world_name": "df5",
+      "npc_id": 832998,
+      "source": "df5/world_N.xml#123",
+      "condition_index": 2,
+      "expression": "(InterServer_Cond == 0) && (SpecialServer_Cond == 0)",
+      "variables": [
+        "interserver_cond",
+        "specialserver_cond"
+      ],
+      "variable_producers": {
+        "interserver_cond": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "specialserver_cond": {
+          "owner": "READ_ONLY_CORE",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        }
+      },
+      "condition_list": {
+        "sequence": 123,
+        "entries": 2,
+        "structure": "alternatives",
+        "allowed": false
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_CONDITION_STRUCTURE",
+      "unsupported_reasons": [
+        "condition list has alternatives"
+      ]
+    },
+    {
+      "world_id": 300480000,
+      "world_name": "idldf5re_solo",
+      "npc_id": 702715,
+      "source": "idldf5re_solo/world_N.xml#60",
+      "condition_index": 1,
+      "expression": "(game == 1)&&(timeout == 2)",
+      "variables": [
+        "game",
+        "timeout"
+      ],
+      "variable_producers": {
+        "game": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "timeout": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": true,
+          "anchored": false,
+          "npc_ids": [
+            206381,
+            206382,
+            206383,
+            206384,
+            219978,
+            219987,
+            856102,
+            856111
+          ],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": [
+            206381,
+            206382,
+            206383,
+            206384,
+            219978,
+            219987
+          ]
+        }
+      },
+      "condition_list": {
+        "sequence": 60,
+        "entries": 1,
+        "structure": "single",
+        "allowed": true
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_UNMODELED_CONDITION_TRIGGER",
+      "unsupported_reasons": [
+        "variable game has no retail action producer"
+      ]
+    },
+    {
+      "world_id": 300480000,
+      "world_name": "idldf5re_solo",
+      "npc_id": 702717,
+      "source": "idldf5re_solo/world_N.xml#1",
+      "condition_index": 1,
+      "expression": "game == 1",
+      "variables": [
+        "game"
+      ],
+      "variable_producers": {
+        "game": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        }
+      },
+      "condition_list": {
+        "sequence": 1,
+        "entries": 1,
+        "structure": "single",
+        "allowed": true
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_UNMODELED_CONDITION_TRIGGER",
+      "unsupported_reasons": [
+        "variable game has no retail action producer"
+      ]
+    },
+    {
+      "world_id": 300480000,
+      "world_name": "idldf5re_solo",
+      "npc_id": 702717,
+      "source": "idldf5re_solo/world_N.xml#128",
+      "condition_index": 1,
+      "expression": "boss2die == 1",
+      "variables": [
+        "boss2die"
+      ],
+      "variable_producers": {
+        "boss2die": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": true,
+          "anchored": false,
+          "npc_ids": [
+            219978,
+            856102
+          ],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": [
+            219978
+          ]
+        }
+      },
+      "condition_list": {
+        "sequence": 128,
+        "entries": 1,
+        "structure": "single",
+        "allowed": true
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_UNMODELED_CONDITION_TRIGGER",
+      "unsupported_reasons": [
+        "variable boss2die producer NPCs are condition-scoped"
+      ]
+    },
+    {
+      "world_id": 300480000,
+      "world_name": "idldf5re_solo",
+      "npc_id": 702717,
+      "source": "idldf5re_solo/world_N.xml#78",
+      "condition_index": 1,
+      "expression": "(game3score>=5)||(boss3die == 1)||((timeout == 2) && (game == 3))",
+      "variables": [
+        "boss3die",
+        "game",
+        "game3score",
+        "timeout"
+      ],
+      "variable_producers": {
+        "boss3die": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": true,
+          "anchored": false,
+          "npc_ids": [
+            219987,
+            856111
+          ],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": [
+            219987
+          ]
+        },
+        "game": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": false,
+          "anchored": false,
+          "npc_ids": [],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": []
+        },
+        "game3score": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": true,
+          "anchored": false,
+          "npc_ids": [
+            219979,
+            856103
+          ],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": [
+            219979
+          ]
+        },
+        "timeout": {
+          "owner": "RETAIL_PATTERN",
+          "action_declared": true,
+          "anchored": false,
+          "npc_ids": [
+            206381,
+            206382,
+            206383,
+            206384,
+            219978,
+            219987,
+            856102,
+            856111
+          ],
+          "world_unconditional_npc_ids": [],
+          "world_page_npc_ids": [],
+          "world_conditional_npc_ids": [
+            206381,
+            206382,
+            206383,
+            206384,
+            219978,
+            219987
+          ]
+        }
+      },
+      "condition_list": {
+        "sequence": 78,
+        "entries": 1,
+        "structure": "single",
+        "allowed": true
+      },
+      "spawn_page": {
+        "start": 0,
+        "end": 255
+      },
+      "runtime_consumer": "RetailConditionSpawnEngine",
+      "status": "REJECT_UNMODELED_CONDITION_TRIGGER",
+      "unsupported_reasons": [
+        "variable boss3die producer NPCs are condition-scoped",
+        "variable game has no retail action producer"
+      ]
+    }
+  ]
+}

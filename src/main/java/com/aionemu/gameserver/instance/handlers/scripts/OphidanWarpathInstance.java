@@ -30,7 +30,6 @@ import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService.BattleResult;
 import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
-import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -514,10 +513,5 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler {
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return reward;
-	}
-
-	@Override
-	public void onExitInstance(Player player) {
-		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
 }

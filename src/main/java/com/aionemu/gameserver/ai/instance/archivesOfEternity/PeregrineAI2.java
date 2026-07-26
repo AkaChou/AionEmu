@@ -45,17 +45,17 @@ public class PeregrineAI2 extends GeneralNpcAI2
 			    case 806149: //Peregrine.
 				    switch (Rnd.get(1, 3)) {
 					    case 1:
-						    getPosition().getWorldMapInstance().getDoors().get(349).setOpen(true);
+						    getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(349, true);
 							// 通往永恒档案的门已打开。 / The door to the Archives of Eternity has opened.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_01_Road_Set, 0);
 						break;
 						case 2:
-						    getPosition().getWorldMapInstance().getDoors().get(352).setOpen(true);
+						    getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(352, true);
 							// 通往永恒档案的门已打开。 / The door to the Archives of Eternity has opened.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_01_Road_Set, 0);
 						break;
 						case 3:
-						    getPosition().getWorldMapInstance().getDoors().get(359).setOpen(true);
+						    getPosition().getWorldMapInstance().getInstanceHandler().setDoorState(359, true);
 							// 通往永恒档案的门已打开。 / The door to the Archives of Eternity has opened.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_01_Road_Set, 0);
 						break;

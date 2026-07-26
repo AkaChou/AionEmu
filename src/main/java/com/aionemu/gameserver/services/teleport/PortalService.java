@@ -7,10 +7,12 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.List;
 
+import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.InstanceConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.RetailAiData.LocationAliasPoint;
 import com.aionemu.gameserver.dataholders.RetailInstanceData.Row;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -32,6 +34,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.instance.InstanceAdmissionService;
 import com.aionemu.gameserver.services.instance.InstanceAdmissionService.Admission;
 import com.aionemu.gameserver.services.instance.InstanceLimitService;
+import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
@@ -59,6 +62,16 @@ public class PortalService {
 		if (loc == null) {
 			log.warn(I18n.get("log.e07f399d3e8d", portalPath.getLocId()));
 			return;
+		}
+		LocationAliasPoint aliasDestination = null;
+		if (!portalPath.getDestinationAlias().isBlank()) {
+			List<LocationAliasPoint> points = DataManager.RETAIL_AI_DATA
+					.findLocationAlias(loc.getWorldId(), portalPath.getDestinationAlias());
+			if (points == null || points.isEmpty()) {
+				log.warn(I18n.get("log.f35e2f1a0b67", portalPath.getDestinationAlias(), loc.getWorldId()));
+				return;
+			}
+			aliasDestination = Rnd.get(points);
 		}
 		boolean instanceTitleReq = !player.havePermission(MembershipConfig.INSTANCES_TITLE_REQ);
 		boolean instanceRaceReq = !player.havePermission(MembershipConfig.INSTANCES_RACE_REQ);
@@ -104,7 +117,7 @@ public class PortalService {
 		}
 		if (!isInstance) {
 			if (InstanceAdmissionService.chargeNonInstancePortal(portalPath, player)) {
-				easyTransfer(player, loc);
+				easyTransfer(player, loc, aliasDestination, portalPath.getAnimation());
 			}
 			return;
 		}
@@ -113,7 +126,7 @@ public class PortalService {
 			return;
 		}
 		try {
-			if (!transfer(player, loc, admission.instance(), admission.reentry())) {
+			if (!transfer(player, loc, aliasDestination, admission.instance(), admission.reentry(), portalPath.getAnimation())) {
 				admission.rollback();
 			}
 		} catch (RuntimeException | Error e) {
@@ -250,10 +263,15 @@ public class PortalService {
 		return true;
 	}
 
-	private static boolean transfer(Player player, PortalLoc loc, WorldMapInstance instance, boolean reenter) {
-		player.setInstanceStartPos(loc.getX(), loc.getY(), loc.getZ());
-		if (!TeleportService2.teleportTo(player, loc.getWorldId(), instance.getInstanceId(), loc.getX(), loc.getY(),
-				loc.getZ(), loc.getH(), TeleportAnimation.FIRE_ANIMATION)) {
+	private static boolean transfer(Player player, PortalLoc loc, LocationAliasPoint aliasDestination,
+			WorldMapInstance instance, boolean reenter,
+			TeleportAnimation animation) {
+		float x = aliasDestination == null ? loc.getX() : aliasDestination.x();
+		float y = aliasDestination == null ? loc.getY() : aliasDestination.y();
+		float z = aliasDestination == null ? loc.getZ() : aliasDestination.z();
+		byte heading = aliasDestination == null ? loc.getH() : MathUtil.convertDegreeToHeading(aliasDestination.direction());
+		player.setInstanceStartPos(x, y, z);
+		if (!TeleportService2.teleportTo(player, loc.getWorldId(), instance.getInstanceId(), x, y, z, heading, animation)) {
 			return false;
 		}
 		if (!reenter) {
@@ -274,8 +292,12 @@ public class PortalService {
 		return true;
 	}
 
-	private static void easyTransfer(Player player, PortalLoc loc) {
-		TeleportService2.teleportTo(player, loc.getWorldId(), loc.getX(), loc.getY(), loc.getZ(), loc.getH(),
-				TeleportAnimation.FIRE_ANIMATION);
+	private static void easyTransfer(Player player, PortalLoc loc, LocationAliasPoint aliasDestination,
+			TeleportAnimation animation) {
+		float x = aliasDestination == null ? loc.getX() : aliasDestination.x();
+		float y = aliasDestination == null ? loc.getY() : aliasDestination.y();
+		float z = aliasDestination == null ? loc.getZ() : aliasDestination.z();
+		byte heading = aliasDestination == null ? loc.getH() : MathUtil.convertDegreeToHeading(aliasDestination.direction());
+		TeleportService2.teleportTo(player, loc.getWorldId(), x, y, z, heading, animation);
 	}
 }

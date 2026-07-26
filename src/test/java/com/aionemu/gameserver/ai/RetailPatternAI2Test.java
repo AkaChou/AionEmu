@@ -746,6 +746,28 @@ class RetailPatternAI2Test {
 				assertTrue(RetailPatternAI2.supports(DataManager.RETAIL_AI_DATA.getPattern(npcId), npc),
 					"301620000:" + npcId);
 			}
+			for (int npcId : new int[] { 835277, 835278, 835279, 835280, 835289, 835290, 835291, 835292 }) {
+				SkillNpc npc = new ObjenesisStd().newInstance(SkillNpc.class);
+				npc.npcId = npcId;
+				npc.worldId = 302350000;
+				npc.objectTemplate = new NpcTemplate();
+				npc.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+				npc.skillList = new NpcSkillList(npc);
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertNotNull(pattern, Integer.toString(npcId));
+				assertTrue(RetailPatternAI2.supports(pattern, npc),
+					npc.worldId + ":" + npcId + " " + RetailPatternAI2.unsupportedReason(pattern, npc));
+			}
+			SkillNpc chronomancer = new ObjenesisStd().newInstance(SkillNpc.class);
+			chronomancer.npcId = 247386;
+			chronomancer.worldId = 302400000;
+			chronomancer.objectTemplate = new NpcTemplate();
+			chronomancer.spawnTemplate = new ObjenesisStd().newInstance(SpawnTemplate.class);
+			chronomancer.skillList = new NpcSkillList(chronomancer);
+			Pattern chronomancerPattern = DataManager.RETAIL_AI_DATA.getPattern(247386);
+			assertNotNull(chronomancerPattern);
+			assertEquals("missing NPC skill SKILLI_INDEX_0",
+				RetailPatternAI2.unsupportedReason(chronomancerPattern, chronomancer));
 			Map<Integer, int[]> storeroomNpcs = Map.of(
 				300120000, new int[] { 215414, 215146, 215148, 215157, 215160, 215178, 215179, 281288, 700546 },
 				300130000, new int[] { 215415, 215188, 215190, 215191, 215201, 215202, 215203, 215213, 215215,
