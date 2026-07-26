@@ -104,9 +104,11 @@ public class DataDrivenQuestData extends XMLQuest {
 	}
 
 	@XmlAccessorType(XmlAccessType.FIELD)
-	@XmlType(name = "DataDrivenQuestStep")
+	@XmlType(name = "DataDrivenQuestStep", propOrder = "spawns")
 	public static class Step {
 
+		@XmlElement(name = "spawn")
+		private List<Spawn> spawns;
 		@XmlAttribute(name = "type", required = true)
 		private String type;
 		@XmlAttribute(name = "ids")
@@ -123,6 +125,16 @@ public class DataDrivenQuestData extends XMLQuest {
 		private int advanceDialogId;
 		@XmlAttribute(name = "movie")
 		private int movie;
+		@XmlAttribute(name = "teleport_world_id")
+		private int teleportWorldId;
+		@XmlAttribute(name = "teleport_x")
+		private int teleportX;
+		@XmlAttribute(name = "teleport_y")
+		private int teleportY;
+		@XmlAttribute(name = "teleport_z")
+		private int teleportZ;
+		@XmlAttribute(name = "teleport_heading")
+		private int teleportHeading;
 		@XmlAttribute(name = "world_id")
 		private int worldId;
 		@XmlAttribute(name = "item_id")
@@ -138,6 +150,10 @@ public class DataDrivenQuestData extends XMLQuest {
 
 		public String getType() {
 			return type;
+		}
+
+		public List<Spawn> getSpawns() {
+			return spawns == null ? List.of() : spawns;
 		}
 
 		public List<Integer> getIds() {
@@ -168,6 +184,26 @@ public class DataDrivenQuestData extends XMLQuest {
 			return movie;
 		}
 
+		public int getTeleportWorldId() {
+			return teleportWorldId;
+		}
+
+		public int getTeleportX() {
+			return teleportX;
+		}
+
+		public int getTeleportY() {
+			return teleportY;
+		}
+
+		public int getTeleportZ() {
+			return teleportZ;
+		}
+
+		public int getTeleportHeading() {
+			return teleportHeading;
+		}
+
 		public int getWorldId() {
 			return worldId;
 		}
@@ -190,6 +226,54 @@ public class DataDrivenQuestData extends XMLQuest {
 
 		public int getRemoveItemCount() {
 			return removeItemCount;
+		}
+	}
+
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(name = "DataDrivenQuestSpawn")
+	public static class Spawn {
+
+		@XmlAttribute(name = "npc_id", required = true)
+		private int npcId;
+		@XmlAttribute(name = "count", required = true)
+		private int count;
+		@XmlAttribute(name = "lifetime_seconds", required = true)
+		private int lifetimeSeconds;
+		@XmlAttribute(name = "x", required = true)
+		private float x;
+		@XmlAttribute(name = "y", required = true)
+		private float y;
+		@XmlAttribute(name = "z", required = true)
+		private float z;
+		@XmlAttribute(name = "heading", required = true)
+		private int heading;
+
+		public int getNpcId() {
+			return npcId;
+		}
+
+		public int getCount() {
+			return count;
+		}
+
+		public int getLifetimeSeconds() {
+			return lifetimeSeconds;
+		}
+
+		public float getX() {
+			return x;
+		}
+
+		public float getY() {
+			return y;
+		}
+
+		public float getZ() {
+			return z;
+		}
+
+		public int getHeading() {
+			return heading;
 		}
 	}
 }

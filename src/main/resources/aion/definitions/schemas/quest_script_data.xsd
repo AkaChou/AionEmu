@@ -45,6 +45,9 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="DataDrivenQuestStep">
+		<xs:sequence>
+			<xs:element name="spawn" type="DataDrivenQuestSpawn" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
 		<xs:attribute name="type" type="DataDrivenQuestStepType" use="required"/>
 		<xs:attribute name="ids" type="IntListType"/>
 		<xs:attribute name="action_ids" type="IntListType"/>
@@ -53,12 +56,26 @@
 		<xs:attribute name="dialog_id" type="xs:int"/>
 		<xs:attribute name="advance_dialog_id" type="xs:int"/>
 		<xs:attribute name="movie" type="xs:int"/>
+		<xs:attribute name="teleport_world_id" type="xs:int"/>
+		<xs:attribute name="teleport_x" type="xs:int"/>
+		<xs:attribute name="teleport_y" type="xs:int"/>
+		<xs:attribute name="teleport_z" type="xs:int"/>
+		<xs:attribute name="teleport_heading" type="xs:int"/>
 		<xs:attribute name="world_id" type="xs:int"/>
 		<xs:attribute name="item_id" type="xs:int"/>
 		<xs:attribute name="give_item_id" type="xs:int"/>
 		<xs:attribute name="give_item_count" type="xs:int"/>
 		<xs:attribute name="remove_item_id" type="xs:int"/>
 		<xs:attribute name="remove_item_count" type="xs:int"/>
+	</xs:complexType>
+	<xs:complexType name="DataDrivenQuestSpawn">
+		<xs:attribute name="npc_id" type="xs:int" use="required"/>
+		<xs:attribute name="count" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="lifetime_seconds" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="x" type="xs:float" use="required"/>
+		<xs:attribute name="y" type="xs:float" use="required"/>
+		<xs:attribute name="z" type="xs:float" use="required"/>
+		<xs:attribute name="heading" type="xs:unsignedByte" use="required"/>
 	</xs:complexType>
 	<xs:simpleType name="DataDrivenQuestStepType">
 		<xs:restriction base="xs:string">

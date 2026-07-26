@@ -4,12 +4,14 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.handlers.models.DataDrivenQuestData;
+import com.aionemu.gameserver.questEngine.handlers.models.DataDrivenQuestData.Spawn;
 import com.aionemu.gameserver.questEngine.handlers.models.DataDrivenQuestData.Step;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
+import com.aionemu.gameserver.services.teleport.TeleportService2;
 
 import java.util.HashSet;
 import java.util.List;
@@ -110,14 +112,9 @@ public class DataDrivenQuest extends QuestHandler {
 						return sendQuestDialog(env, step.getDialogId() == 0 ? 1011 + 341 * index : step.getDialogId());
 					}
 					if ("TALK".equals(step.getType()) && advances(step, env, index)) {
-						if (!applyItemChanges(env, step)) {
+						if (!advance(env, qs, index)) {
 							return false;
 						}
-						int movie = step.getMovie() == 0 ? data.getQuestMovie() : step.getMovie();
-						if (movie != 0) {
-							playQuestMovie(env, movie);
-						}
-						advance(env, qs, index);
 						return index + 1 == steps.size() && env.getDialog() == QuestDialog.SELECT_REWARD
 								? sendQuestEndDialog(env) : closeDialogWindow(env);
 					}
@@ -130,10 +127,7 @@ public class DataDrivenQuest extends QuestHandler {
 						env.getVisibleObject().getController().delete();
 					}
 					if ("ACTION".equals(step.getType())) {
-						if (!applyItemChanges(env, step)) {
-							return false;
-						}
-						advance(env, qs, index);
+						return advance(env, qs, index);
 					}
 					return true;
 				}
@@ -165,8 +159,7 @@ public class DataDrivenQuest extends QuestHandler {
 		int count = qs.getQuestVarById(1);
 		if (count + 1 >= step.getAmount()) {
 			qs.setQuestVarById(1, 0);
-			advance(env, qs, index);
-			return true;
+			return advance(env, qs, index);
 		}
 		return defaultOnKillEvent(env, step.getIds().stream().mapToInt(Integer::intValue).toArray(), count, count + 1, 1);
 	}
@@ -182,8 +175,7 @@ public class DataDrivenQuest extends QuestHandler {
 		}
 		int index = qs.getQuestVarById(0);
 		if (index < steps.size() && "ENTER_AREA".equals(steps.get(index).getType()) && steps.get(index).getIds().contains(env.getTargetId())) {
-			advance(env, qs, index);
-			return true;
+			return advance(env, qs, index);
 		}
 		return false;
 	}
@@ -196,8 +188,7 @@ public class DataDrivenQuest extends QuestHandler {
 		}
 		int index = qs.getQuestVarById(0);
 		if (index < steps.size() && "GET_ITEM".equals(steps.get(index).getType())) {
-			advance(env, qs, index);
-			return true;
+			return advance(env, qs, index);
 		}
 		return false;
 	}
@@ -231,8 +222,7 @@ public class DataDrivenQuest extends QuestHandler {
 		}
 		int index = qs.getQuestVarById(0);
 		if (index < steps.size() && "ENTER_WORLD".equals(steps.get(index).getType()) && steps.get(index).getWorldId() == env.getPlayer().getWorldId()) {
-			advance(env, qs, index);
-			return true;
+			return advance(env, qs, index);
 		}
 		return false;
 	}
@@ -283,8 +273,7 @@ public class DataDrivenQuest extends QuestHandler {
 		}
 		int index = qs.getQuestVarById(0);
 		if (index < steps.size() && "ITEM_PLAY".equals(steps.get(index).getType()) && steps.get(index).getItemId() == itemId) {
-			advance(env, qs, index);
-			return HandlerResult.SUCCESS;
+			return HandlerResult.fromBoolean(advance(env, qs, index));
 		}
 		return HandlerResult.UNKNOWN;
 	}
@@ -325,12 +314,39 @@ public class DataDrivenQuest extends QuestHandler {
 				: env.getDialogId() == step.getAdvanceDialogId();
 	}
 
-	private void advance(QuestEnv env, QuestState qs, int index) {
+	private boolean advance(QuestEnv env, QuestState qs, int index) {
+		Step step = steps.get(index);
+		if (!applyItemChanges(env, step)) {
+			return false;
+		}
+		if (step.getTeleportWorldId() != 0 && !teleport(env, step)) {
+			return false;
+		}
+		int movie = step.getMovie() == 0 && "TALK".equals(step.getType()) ? data.getQuestMovie() : step.getMovie();
+		if (movie != 0) {
+			playQuestMovie(env, movie);
+		}
+		for (Spawn spawn : step.getSpawns()) {
+			for (int i = 0; i < spawn.getCount(); i++) {
+				spawn(env, spawn);
+			}
+		}
 		qs.setQuestVarById(0, index + 1);
 		if (index + 1 == steps.size()) {
 			qs.setStatus(QuestStatus.REWARD);
 		}
 		updateQuestStatus(env);
+		return true;
+	}
+
+	protected boolean teleport(QuestEnv env, Step step) {
+		return TeleportService2.teleportTo(env.getPlayer(), step.getTeleportWorldId(), (float) step.getTeleportX(),
+				step.getTeleportY(), step.getTeleportZ(), (byte) step.getTeleportHeading());
+	}
+
+	protected void spawn(QuestEnv env, Spawn spawn) {
+		QuestService.addNewSpawnForSeconds(env.getPlayer().getWorldId(), env.getPlayer().getInstanceId(), spawn.getNpcId(),
+				spawn.getX(), spawn.getY(), spawn.getZ(), (byte) spawn.getHeading(), spawn.getLifetimeSeconds());
 	}
 
 }

@@ -1821,20 +1821,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "13954": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onAtDistanceEvent",
-          "onDialogEvent",
-          "onKillEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_13954Weeping_Soul.java",
-        "mechanisms": [
-          "item_mutation",
-          "spawn"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "13955": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -3299,18 +3285,6 @@
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_1670Invisible_Bridges.java",
         "mechanisms": [
           "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "16800": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent",
-          "onEnterZoneEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/archives_of_eternity/_16800Into_The_Archives.java",
-        "mechanisms": [
-          "movie"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -6145,20 +6119,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "23954": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onAtDistanceEvent",
-          "onDialogEvent",
-          "onKillEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/bastion_of_souls/_23954Weeping_Daeva_Soul.java",
-        "mechanisms": [
-          "item_mutation",
-          "spawn"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "23955": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -7736,18 +7696,6 @@
         ],
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_2669AtlaEscape.java",
         "mechanisms": [],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "26800": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent",
-          "onEnterZoneEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/archives_of_eternity/_26800A_Call_For_Champions.java",
-        "mechanisms": [
-          "movie"
-        ],
         "reason": "non_linear_or_side_effecting"
       },
       "26801": {
@@ -16293,6 +16241,48 @@
       "isolated": 23,
       "managed": 6476
     },
+    "data_driven_actions": {
+      "cutscene": {
+        "supported": 29,
+        "total": 51
+      },
+      "delay": {
+        "supported": 0,
+        "total": 20
+      },
+      "enter_instance": {
+        "supported": 0,
+        "total": 8
+      },
+      "give_item": {
+        "supported": 177,
+        "total": 186
+      },
+      "message": {
+        "supported": 0,
+        "total": 11
+      },
+      "message2": {
+        "supported": 0,
+        "total": 1
+      },
+      "remove_item": {
+        "supported": 54,
+        "total": 61
+      },
+      "spawn_npc": {
+        "supported": 14,
+        "total": 49
+      },
+      "teleport": {
+        "supported": 10,
+        "total": 11
+      },
+      "timer": {
+        "supported": 0,
+        "total": 33
+      }
+    },
     "eligible": {
       "collect": 174,
       "compiled_script_action_progress": 2,
@@ -16314,7 +16304,7 @@
       "compiled_script_timed_report": 2,
       "compiled_script_world_collect": 4,
       "data_driven_collect": 205,
-      "data_driven_complex": 344,
+      "data_driven_complex": 348,
       "data_driven_hunt": 693,
       "data_driven_item_play": 18,
       "data_driven_pvp": 61,
@@ -16346,7 +16336,7 @@
       "compiled_script_timed_report": 2,
       "compiled_script_world_collect": 4,
       "data_driven_collect": 205,
-      "data_driven_complex": 342,
+      "data_driven_complex": 346,
       "data_driven_hunt": 693,
       "data_driven_item_play": 18,
       "data_driven_pvp": 59,
@@ -16354,13 +16344,13 @@
       "data_driven_talk": 39,
       "hunt": 771,
       "talk": 1883,
-      "total": 5028,
+      "total": 5032,
       "use_item": 91,
       "work_order": 574
     },
     "invalid": 2,
     "java_handlers": {
-      "base_handlers": 835,
+      "base_handlers": 831,
       "constraint_dispositions": {
         "blocked_no_script_hit": 2,
         "evidence_audit": 41
@@ -16368,11 +16358,11 @@
       "dispositions": {
         "not_executable_without_base": 6,
         "retained_authoritative_gap": 43,
-        "retained_complex_semantics": 792
+        "retained_complex_semantics": 788
       },
       "event_signatures": {
         "AtDistance+Dialog": 3,
-        "AtDistance+Dialog+Kill": 8,
+        "AtDistance+Dialog+Kill": 6,
         "AtDistance+Dialog+KillInWorld": 88,
         "Attack+Dialog": 3,
         "Attack+Dialog+Die+EnterWorld+Kill+LvlUp+MovieEnd": 2,
@@ -16412,7 +16402,7 @@
         "Dialog+EnterWorld+LogOut+NpcLostTarget+NpcReachTarget": 1,
         "Dialog+EnterWorld+LvlUp": 12,
         "Dialog+EnterWorld+LvlUp+ZoneMissionEnd": 4,
-        "Dialog+EnterZone": 30,
+        "Dialog+EnterZone": 28,
         "Dialog+EnterZone+GetItem+Kill+LvlUp+MovieEnd+ZoneMissionEnd": 1,
         "Dialog+EnterZone+Kill": 18,
         "Dialog+EnterZone+Kill+LvlUp+MovieEnd+ZoneMissionEnd": 1,
@@ -16450,23 +16440,23 @@
         "EnterZone+MovieEnd": 2,
         "register_only": 6
       },
-      "handlers": 841,
+      "handlers": 837,
       "mechanisms": {
         "action": 31,
         "dynamic_reward": 34,
         "inherited": 6,
         "instance": 26,
         "item_condition": 255,
-        "item_mutation": 379,
-        "movie": 130,
+        "item_mutation": 377,
+        "movie": 128,
         "skill": 7,
-        "spawn": 75,
+        "spawn": 73,
         "teleport": 70,
         "timer": 51
       },
       "reasons": {
         "missing_compiled_trigger_chain": 43,
-        "non_linear_or_side_effecting": 792,
+        "non_linear_or_side_effecting": 788,
         "outside_base": 6
       }
     },
@@ -16492,21 +16482,21 @@
       "retained": 726,
       "shadowed_by_generated": 0
     },
-    "missing_base": 2304,
+    "missing_base": 2579,
     "ownership": {
-      "generated_xml": 5028,
-      "java_handlers": 835,
+      "generated_xml": 5032,
+      "java_handlers": 831,
       "legacy_xml": 726,
       "overlap": 0,
-      "selected_xml": 5754
+      "selected_xml": 5758
     },
     "retail": {
       "collect": 262,
-      "data_driven_collect": 268,
-      "data_driven_hunt": 784,
+      "data_driven_collect": 366,
+      "data_driven_hunt": 953,
       "data_driven_item_play": 19,
       "data_driven_pvp": 119,
-      "data_driven_report": 161,
+      "data_driven_report": 169,
       "data_driven_talk": 63,
       "hunt": 1863,
       "talk": 3152,

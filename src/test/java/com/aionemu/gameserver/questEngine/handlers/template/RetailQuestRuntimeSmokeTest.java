@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.List;
@@ -549,6 +550,68 @@ class RetailQuestRuntimeSmokeTest {
 	}
 
 	@Test
+	void typedStepActionsRunForNonTalkProgress() throws Exception {
+		Unmarshaller unmarshaller = JAXBContext.newInstance(StaticData.class).createUnmarshaller();
+		XMLQuests quests = (XMLQuests) unmarshaller.unmarshal(new StringReader("""
+				<quest_scripts><data_driven_quest id="900001" retail="true" start_type="TALK" start_ids="1" end_npc_ids="2">
+				  <step type="ENTER_AREA" ids="3" movie="502" teleport_world_id="210050000"
+				      teleport_x="1440" teleport_y="407" teleport_z="553" teleport_heading="90">
+				    <spawn npc_id="4" count="3" lifetime_seconds="30" x="10" y="20" z="30" heading="40"/>
+				  </step>
+				</data_driven_quest></quest_scripts>
+				"""));
+		DataDrivenQuestData definition = definition(quests, 900001);
+		DataDrivenQuestData.Step step = definition.getSteps().get(0);
+		assertEquals(210050000, step.getTeleportWorldId());
+		assertEquals(90, step.getTeleportHeading());
+		assertEquals(4, step.getSpawns().get(0).getNpcId());
+
+		RecordingDataDrivenQuest quest = new RecordingDataDrivenQuest(definition);
+		Player player = playerWithState(900001, 0);
+		assertTrue(quest.onAddAggroListEvent(env(player, 900001, 3, QuestDialog.NULL, 0)));
+		assertEquals(List.of(210050000, 1440, 407, 553, 90), quest.teleport);
+		assertEquals(502, quest.playedMovie);
+		assertEquals(3, quest.spawnCount);
+		assertEquals(List.of(4, 30, 10.0f, 20.0f, 30.0f, 40), quest.spawn);
+		assertEquals(QuestStatus.REWARD, state(player, 900001).getStatus());
+	}
+
+	@Test
+	void archivesArrivalCutscenesUseRetailData() {
+		for (var entry : Map.of(16800, List.of(806075, 806148, 206536, 806232, 931),
+				26800, List.of(806079, 806149, 206537, 806233, 932)).entrySet()) {
+			DataDrivenQuestData definition = definition(entry.getKey());
+			assertEquals("TALK", definition.getStartType());
+			assertEquals(List.of(entry.getValue().get(0)), definition.getStartIds());
+			assertEquals(List.of(entry.getValue().get(1)), definition.getEndNpcIds());
+			assertEquals(List.of(entry.getValue().get(2), entry.getValue().get(3), 206535),
+					definition.getSteps().stream().map(step -> step.getIds().get(0)).toList());
+			assertEquals(entry.getValue().get(4), definition.getSteps().get(2).getMovie());
+		}
+	}
+
+	@Test
+	void bastionSoulSpawnsUseRetailData() {
+		for (var entry : Map.of(13954, List.of(806590, 806582, 203840, 182216179, 1939, 1768, 576, 55),
+				23954, List.of(806599, 806591, 204153, 182216188, 988, 1161, 200, 29)).entrySet()) {
+			DataDrivenQuestData definition = definition(entry.getKey());
+			assertEquals("TALK", definition.getStartType());
+			assertEquals(List.of(entry.getValue().get(0)), definition.getStartIds());
+			assertEquals(List.of(entry.getValue().get(1)), definition.getEndNpcIds());
+			assertEquals(List.of(entry.getValue().get(0), entry.getValue().get(2), 247093, entry.getValue().get(2)),
+					definition.getSteps().stream().map(step -> step.getIds().get(0)).toList());
+			assertEquals(entry.getValue().get(3), definition.getSteps().get(0).getGiveItemId());
+			assertEquals(entry.getValue().get(3), definition.getSteps().get(1).getRemoveItemId());
+			DataDrivenQuestData.Spawn spawn = definition.getSteps().get(1).getSpawns().get(0);
+			assertEquals(247093, spawn.getNpcId());
+			assertEquals(3, spawn.getCount());
+			assertEquals(100, spawn.getLifetimeSeconds());
+			assertEquals(entry.getValue().subList(4, 7), List.of((int) spawn.getX(), (int) spawn.getY(), (int) spawn.getZ()));
+			assertEquals(entry.getValue().get(7), spawn.getHeading());
+		}
+	}
+
+	@Test
 	void compiledPaiosRescuesAdvanceAtColumnAndResetOnRentusReentry() {
 		for (int questId : List.of(30504, 30554)) {
 			DataDrivenQuestData definition = definition(questId);
@@ -945,6 +1008,9 @@ class RetailQuestRuntimeSmokeTest {
 		private int shownDialogId;
 		private int givenItemId;
 		private int givenItemCount;
+		private int spawnCount;
+		private List<Number> spawn;
+		private List<Integer> teleport;
 
 		private RecordingDataDrivenQuest(DataDrivenQuestData data) {
 			super(data);
@@ -991,6 +1057,18 @@ class RetailQuestRuntimeSmokeTest {
 		public boolean playQuestMovie(QuestEnv env, int movieId) {
 			playedMovie = movieId;
 			return true;
+		}
+
+		@Override
+		protected boolean teleport(QuestEnv env, DataDrivenQuestData.Step step) {
+			teleport = List.of(step.getTeleportWorldId(), step.getTeleportX(), step.getTeleportY(), step.getTeleportZ(), step.getTeleportHeading());
+			return true;
+		}
+
+		@Override
+		protected void spawn(QuestEnv env, DataDrivenQuestData.Spawn spawn) {
+			spawnCount++;
+			this.spawn = List.of(spawn.getNpcId(), spawn.getLifetimeSeconds(), spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getHeading());
 		}
 
 		@Override

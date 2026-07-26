@@ -153,7 +153,7 @@ COMPILED_SIMPLE_TALKS = {
 		"quest_hex": "0x4c4", "race": "pc_light", "base_race": "ELYOS", "start": "Une", "start_id": 203172,
 		"end": "shugo_Lender_LF2_01", "end_id": 205240, "talks": [("Shugo3", 798004)], "data_driven": True,
 		"start_give_item": ("quest_1220a", 1), "step_give_item": ("quest_1220b", 1), "step_remove_item": ("quest_1220a", 1),
-		"retail": {"name": "Q1220", "max_repeat_count": "1", "minlevel_permitted": "19", "finished_quest_cond1": "Q1219", "cannot_share": "1", "quest_work_item1": "quest_1220a", "quest_work_item2": "quest_1220b", "reward_exp1": "91950", "reward_gold1": "6620", "reward_item1_1": "assembly_matter_enchant_dust_01 14", "race_permitted": "pc_light"},
+		"retail": {"name": "Q1220", "max_repeat_count": "1", "minlevel_permitted": "17", "finished_quest_cond1": "Q1219", "cannot_share": "1", "quest_work_item1": "quest_1220a", "quest_work_item2": "quest_1220b", "reward_exp1": "91950", "reward_gold1": "6620", "reward_item1_1": "assembly_matter_enchant_dust_01 14", "race_permitted": "pc_light"},
 		"talk": {"acquired_npc_name": "Une", "give_item": "ITEM_QUEST_1220A 1", "talk_npc1": "Shugo3", "give_item1": "ITEM_QUEST_1220B 1", "remove_item1": "ITEM_QUEST_1220A 1", "reward_npc_name": "shugo_Lender_LF2_01"},
 		"base": {"minlevel_permitted": "17", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"gold": "6620", "exp": "91950"}, "reward_items": (("188100335", "14"),), "work_items": (("182200568", "1"), ("182200569", "1")), "finished_quests": ("1219",)},
 		"evidence": ((363, ("DAT_181249090",)), (368, ("DAT_18133a410",)), (374, ("L\"shugo_Lender_LF2_01\"",)), (545, (",0x4c4,3,0,0",)), (556, (",0x4c4,3,1,0",)), (574, (",0x4c4,0,0xffffffff,0",)), (600, (",0x4c4,4,0xffffffff,0",)), (719, ("case 0x4c4:", "uVar2 = 0x4c4")), (755, ("+ 0x1a8", "0x4c4")), (822, ("FUN_180cab520(0x4c4", "0xadc28f8")), (840, ("FUN_180cabb10(0x4c4",)), (851, ("FUN_180cabb10(0x4c4",)), (856, ("FUN_180caca90(0x4c4", "0xadc28f8")))
@@ -199,7 +199,7 @@ COMPILED_SIMPLE_TALKS = {
 		"quest_hex": "0x8e6", "race": "pc_dark", "base_race": "ASMODIANS", "start": "Lycan_Messenger", "start_id": 203590,
 		"end": "Sueron", "end_id": 203557, "talks": [("Sueron", 203557), ("Mimir", 204206), ("Balder", 204075)], "data_driven": True,
 		"steps": [{"type": "TALK", "names": ["Sueron"], "give_item": ("doc_quest_2278a", 1)}, {"type": "TALK", "names": ["Mimir"]}, {"type": "TALK", "names": ["Balder"], "remove_item": ("doc_quest_2278a", 1)}],
-		"retail": {"name": "Q2278", "max_repeat_count": "1", "minlevel_permitted": "17", "finished_quest_cond1": "Q2208", "cannot_share": "1", "quest_work_item1": "doc_quest_2278a", "reward_exp1": "48600", "reward_gold1": "13870", "race_permitted": "pc_dark"},
+		"retail": {"name": "Q2278", "max_repeat_count": "1", "minlevel_permitted": "16", "finished_quest_cond1": "Q2208", "cannot_share": "1", "quest_work_item1": "doc_quest_2278a", "reward_exp1": "48600", "reward_gold1": "13870", "race_permitted": "pc_dark"},
 		"talk": {"acquired_npc_name": "Lycan_Messenger", "talk_npc1": "Sueron", "give_item1": "ITEM_DOC_QUEST_2278A 1", "talk_npc2": "Mimir", "talk_npc3": "Balder", "remove_item3": "ITEM_DOC_QUEST_2278A 1", "reward_npc_name": "Sueron", "con_quest": "2279"},
 		"base": {"minlevel_permitted": "17", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"gold": "13870", "exp": "48600"}, "reward_items": (), "work_items": (("182203254", "1"),), "finished_quests": ("2208",)},
 		"evidence": ((344, ("L\"Balder\"",)), (359, ("L\"Lycan_Messenger\"",)), (359, ("L\"Mimir\"",)), (366, ("L\"Sueron\"",)), (546, (",0x8e6,3,0,0",)), (555, (",0x8e6,3,1,0",)), (557, (",0x8e6,3,2,0",)), (559, (",0x8e6,3,3,0",)), (569, (",0x8e6,0,0xffffffff,0",)), (594, (",0x8e6,4,0xffffffff,0",)), (817, ("FUN_180cab520(0x8e6",)), (842, ("FUN_180cabb10(0x8e6",)), (850, ("FUN_180cabb10(0x8e6",)), (852, ("FUN_180cabb10(0x8e6",)), (853, ("FUN_180cabb10(0x8e6",)), (859, ("+ 0x1b8", "0x8e6")))
@@ -208,7 +208,7 @@ COMPILED_SIMPLE_TALKS = {
 		"quest_hex": "0x8e7", "race": "pc_dark", "base_race": "ASMODIANS", "start": "Sueron", "start_id": 203557,
 		"end": "Sueron", "end_id": 203557, "talks": [("Lycan_Messenger", 203590), ("Soul_Zenkaka", 203682)], "data_driven": True,
 		"steps": [{"type": "TALK", "names": ["Lycan_Messenger"]}, {"type": "TALK", "names": ["Soul_Zenkaka"], "give_item": ("quest_2279a", 1)}],
-		"retail": {"name": "Q2279", "max_repeat_count": "1", "minlevel_permitted": "17", "finished_quest_cond1": "Q2278", "cannot_share": "1", "quest_work_item1": "quest_2279a", "reward_exp1": "38100", "reward_gold1": "6420", "race_permitted": "pc_dark"},
+		"retail": {"name": "Q2279", "max_repeat_count": "1", "minlevel_permitted": "16", "finished_quest_cond1": "Q2278", "cannot_share": "1", "quest_work_item1": "quest_2279a", "reward_exp1": "38100", "reward_gold1": "6420", "race_permitted": "pc_dark"},
 		"talk": {"acquired_npc_name": "Sueron", "talk_npc1": "Lycan_Messenger", "talk_npc2": "Soul_Zenkaka", "give_item2": "ITEM_QUEST_2279A 1", "reward_npc_name": "Sueron", "con_quest": "2282"},
 		"base": {"minlevel_permitted": "17", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"gold": "6420", "exp": "38100"}, "reward_items": (), "work_items": (("182203261", "1"),), "finished_quests": ("2278",)},
 		"evidence": ((359, ("L\"Lycan_Messenger\"",)), (366, ("L\"Soul_Zenkaka\"",)), (366, ("L\"Sueron\"",)), (542, (",0x8e7,3,0,0",)), (556, (",0x8e7,3,1,0",)), (558, (",0x8e7,3,2,0",)), (573, (",0x8e7,0,0xffffffff,0",)), (594, (",0x8e7,4,0xffffffff,0",)), (807, ("+ 0x1a8", "0x8e7")), (821, ("FUN_180cab520(0x8e7",)), (838, ("FUN_180cabb10(0x8e7",)), (851, ("FUN_180cabb10(0x8e7",)), (852, ("FUN_180cabb10(0x8e7",)), (859, ("+ 0x1b8", "0x8e7")))
@@ -278,7 +278,7 @@ COMPILED_SIMPLE_TALKS = {
 		"quest_hex": "0x975", "race": "pc_dark", "base_race": "ASMODIANS", "start": "Asgeirr", "start_id": 204309,
 		"end": "Asgeirr", "end_id": 204309, "talks": [("Kerupnise", 204187)], "data_driven": True, "movie": 132,
 		"start_give_item": ("quest_2421a", 1), "step_give_item": ("quest_2421b", 1), "step_remove_item": ("quest_2421a", 1),
-		"retail": {"name": "Q2421", "max_repeat_count": "1", "minlevel_permitted": "30", "cannot_share": "1", "quest_work_item1": "quest_2421a", "quest_work_item2": "quest_2421b", "reward_exp1": "50008", "reward_gold1": "15880", "reward_item1_1": "coin_d_02 1", "race_permitted": "pc_dark"},
+		"retail": {"name": "Q2421", "max_repeat_count": "1", "minlevel_permitted": "20", "cannot_share": "1", "quest_work_item1": "quest_2421a", "quest_work_item2": "quest_2421b", "reward_exp1": "50008", "reward_gold1": "15880", "reward_item1_1": "coin_d_02 1", "race_permitted": "pc_dark"},
 		"talk": {"acquired_npc_name": "Asgeirr", "give_item": "ITEM_QUEST_2421A 1", "talk_npc1": "Kerupnise", "give_item1": "ITEM_QUEST_2421B 1", "remove_item1": "ITEM_QUEST_2421A 1", "reward_npc_name": "Asgeirr", "cutsceneid1": "132", "cs1_haction": "1353"},
 		"base": {"minlevel_permitted": "30", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"exp": "50008", "gold": "15880"}, "reward_items": (("186000007", "1"),), "work_items": (("182204208", "1"), ("182204209", "1"))},
 		"evidence": ((344, ("L\"Asgeirr\"",)), (353, ("L\"Kerupnise\"",)), (538, (",0x975,3,0,0",)), (553, (",0x975,3,1,0",)), (560, (",0x975,0,0xffffffff,0",)), (580, (",0x975,4,0xffffffff,0",)), (808, ("FUN_180cab520(0x975", "0xadc3730", "1")), (834, ("FUN_180cabb10(0x975", "FUN_180cacb30(0x975")), (849, ("FUN_180cabb10(0x975", "FUN_180cacb30(0x975")), (853, ("FUN_180caca90(0x975", "0xadc3730", "1")))
@@ -287,7 +287,7 @@ COMPILED_SIMPLE_TALKS = {
 		"quest_hex": "0x99a", "race": "pc_dark", "base_race": "ASMODIANS", "start": "Lif", "start_id": 204379,
 		"end": "Lif", "end_id": 204379, "talks": [("DF2_NPC_Sprigg", 204386)], "data_driven": True,
 		"start_give_item": ("quest_2458a", 1), "step_give_item": ("doc_quest_2458b", 1), "step_remove_item": ("quest_2458a", 1),
-		"retail": {"name": "Q2458", "max_repeat_count": "1", "minlevel_permitted": "22", "finished_quest_cond1": "Q2457", "cannot_share": "1", "quest_work_item1": "quest_2458a", "quest_work_item2": "doc_quest_2458b", "reward_exp1": "20020", "reward_gold1": "4470", "reward_item1_1": "coin_d_02 1", "race_permitted": "pc_dark"},
+		"retail": {"name": "Q2458", "max_repeat_count": "1", "minlevel_permitted": "23", "finished_quest_cond1": "Q2457", "cannot_share": "1", "quest_work_item1": "quest_2458a", "quest_work_item2": "doc_quest_2458b", "reward_exp1": "20020", "reward_gold1": "4470", "reward_item1_1": "coin_d_02 1", "race_permitted": "pc_dark"},
 		"talk": {"acquired_npc_name": "Lif", "give_item": "ITEM_QUEST_2458A 1", "talk_npc1": "DF2_NPC_Sprigg", "give_item1": "ITEM_DOC_QUEST_2458B 1", "remove_item1": "ITEM_QUEST_2458A 1", "reward_npc_name": "Lif"},
 		"base": {"minlevel_permitted": "22", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ASMODIANS", "category": "QUEST", "rewards": {"gold": "4470", "exp": "20020"}, "reward_items": (("186000007", "1"),), "work_items": (("182204194", "1"), ("182204195", "1")), "finished_quests": ("2457",)},
 		"evidence": ((346, ("L\"DF2_NPC_Sprigg\"",)), (358, ("DAT_18133aba8",)), (534, (",0x99a,3,0,0",)), (555, (",0x99a,3,1,0",)), (568, (",0x99a,0,0xffffffff,0",)), (589, (",0x99a,4,0xffffffff,0",)), (806, ("+ 0x1a8", "0x99a")), (817, ("FUN_180cab520(0x99a", "0xadc3722", "1")), (830, ("FUN_180cabb10(0x99a",)), (850, ("FUN_180cabb10(0x99a",)), (855, ("FUN_180caca90(0x99a", "0xadc3722", "1")), (858, ("+ 0x1b8", "0x99a")))
@@ -371,7 +371,7 @@ COMPILED_SIMPLE_TALKS = {
 		"end": "Atropos", "end_id": 798155, "talks": [("Vatonia", 203830), ("Ab1_NPC_LugBug", 279029)], "data_driven": True,
 		"start_give_item": ("quest_3035a", 1),
 		"steps": [{"type": "TALK", "names": ["Vatonia"]}, {"type": "TALK", "names": ["Ab1_NPC_LugBug"], "give_item": ("quest_3035b", 1), "remove_item": ("quest_3035a", 1)}],
-		"retail": {"name": "Q3035", "max_repeat_count": "1", "minlevel_permitted": "46", "finished_quest_cond1": "Q3034", "cannot_share": "1", "quest_work_item1": "quest_3035a", "quest_work_item2": "quest_3035b", "reward_exp1": "6937236", "reward_gold1": "44360", "reward_item1_1": "coin_05 4", "race_permitted": "pc_light"},
+		"retail": {"name": "Q3035", "max_repeat_count": "1", "minlevel_permitted": "47", "finished_quest_cond1": "Q3034", "cannot_share": "1", "quest_work_item1": "quest_3035a", "quest_work_item2": "quest_3035b", "reward_exp1": "6937236", "reward_gold1": "44360", "reward_item1_1": "coin_05 4", "race_permitted": "pc_light"},
 		"talk": {"acquired_npc_name": "Atropos", "give_item": "ITEM_QUEST_3035A 1", "talk_npc1": "Vatonia", "talk_npc2": "Ab1_NPC_LugBug", "give_item2": "ITEM_QUEST_3035B 1", "remove_item2": "ITEM_QUEST_3035A 1", "reward_npc_name": "Atropos", "con_quest": "3036"},
 		"base": {"minlevel_permitted": "46", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "IMPORTANT", "rewards": {"gold": "44360", "exp": "6937236"}, "reward_items": (("186000005", "4"),), "work_items": (("182208024", "1"), ("182208025", "1")), "finished_quests": ("3034",)},
 		"evidence": ((343, ("L\"Ab1_NPC_LugBug\"",)), (344, ("L\"Atropos\"",)), (369, ("L\"Vatonia\"",)), (548, (",0xbdb,3,0,0",)), (553, (",0xbdb,3,1,0",)), (557, (",0xbdb,3,2,0",)), (560, (",0xbdb,0,0xffffffff,0",)), (580, (",0xbdb,4,0xffffffff,0",)), (804, ("+ 0x1a8", "0xbdb")), (809, ("FUN_180cab520(0xbdb", "0xadc4618", "1")), (844, ("FUN_180cabb10(0xbdb",)), (848, ("FUN_180cabb10(0xbdb",)), (852, ("FUN_180cabb10(0xbdb",)), (853, ("FUN_180caca90(0xbdb", "0xadc4618", "1")), (856, ("+ 0x1b8", "0xbdb")))
@@ -398,7 +398,7 @@ COMPILED_SIMPLE_TALKS = {
 		"quest_hex": "0x5bd", "race": "pc_light", "base_race": "ELYOS", "start": "Hagne", "start_id": 790004,
 		"end": "Hagne", "end_id": 790004, "talks": [("TreasureGuardianQ_36_Ae", 212878)], "data_driven": True,
 		"start_give_item": ("quest_1469a", 1),
-		"retail": {"name": "Q1469", "max_repeat_count": "1", "minlevel_permitted": "32", "cannot_share": "1", "quest_work_item1": "quest_1469a", "reward_exp1": "1244918", "reward_gold1": "0", "reward_item1_1": "potion_hp_mp_50a 20", "reward_item1_2": "wrap_scroll_speed_tq_reward 6", "reward_item1_3": "coin_03 35", "selectable_reward_item1_1": "ring_n_l1_tq_34a 1", "selectable_reward_item1_2": "ring_n_l1_tq_34b 1", "race_permitted": "pc_light"},
+		"retail": {"name": "Q1469", "max_repeat_count": "1", "minlevel_permitted": "30", "cannot_share": "1", "quest_work_item1": "quest_1469a", "reward_exp1": "1244918", "reward_gold1": "0", "reward_item1_1": "potion_hp_mp_50a 20", "reward_item1_2": "wrap_scroll_speed_tq_reward 6", "reward_item1_3": "coin_03 35", "selectable_reward_item1_1": "ring_n_l1_tq_34a 1", "selectable_reward_item1_2": "ring_n_l1_tq_34b 1", "race_permitted": "pc_light"},
 		"talk": {"give_item1": "ITEM_QUEST_1469A 1"},
 		"base": {"minlevel_permitted": "30", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "IMPORTANT", "rewards": {"exp": "1244918"}, "reward_items": (("162000050", "20"), ("188053405", "6"), ("186000003", "35")), "work_items": (("182201386", "1"),)},
 		"evidence": ((350, ("L\"Hagne\"",)), (368, ("L\"TreasureGuardianQ_36_Ae\"",)), (547, (",0x5bd,3,0,0",)), (564, (",0x5bd,0,0xffffffff,0",)), (584, (",0x5bd,4,0xffffffff,0",)), (812, ("FUN_180cab520(0x5bd",)), (843, ("FUN_180cabb10(0x5bd",)), (849, ("FUN_180cabb10(0x5bd",)), (857, ("0x5bd", "0x1b8")))
@@ -424,14 +424,14 @@ COMPILED_SIMPLE_TALKS = {
 	1422: {
 		"quest_hex": "0x58e", "race": "pc_light", "base_race": "ELYOS", "start": "Memnes", "start_id": 203912,
 		"end": "Memnes", "end_id": 203912, "talks": [("Laokones", 203731)],
-		"retail": {"name": "Q1422", "max_repeat_count": "1", "minlevel_permitted": "30", "reward_exp1": "50008", "reward_gold1": "15880", "reward_item1_1": "coin_02 1", "race_permitted": "pc_light"},
+		"retail": {"name": "Q1422", "max_repeat_count": "1", "minlevel_permitted": "20", "reward_exp1": "50008", "reward_gold1": "15880", "reward_item1_1": "coin_02 1", "race_permitted": "pc_light"},
 		"base": {"minlevel_permitted": "20", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "QUEST", "rewards": {"gold": "15880", "exp": "50008"}, "reward_items": (("186000002", "1"),), "work_items": (("182201389", "1"), ("182201390", "1"))},
 		"evidence": ((358, ("L\"Laokones\"",)), (359, ("L\"Memnes\"",)), (569, (",0x58e,0,0xffffffff,0",)), (541, (",0x58e,3,0,0",)), (555, (",0x58e,3,1,0",)), (589, (",0x58e,4,0xffffffff,0",)), (817, ("FUN_180cab520(0x58e", "0xadc2c2d")), (850, ("FUN_180cabb10(0x58e", "FUN_180cacb30(0x58e")), (855, ("FUN_180caca90(0x58e", "0xadc2c2d")))
 	},
 	1423: {
 		"quest_hex": "0x58f", "race": "pc_light", "base_race": "ELYOS", "start": "Marana", "start_id": 203983,
 		"end": "Marana", "end_id": 203983, "talks": [],
-		"retail": {"name": "Q1423", "max_repeat_count": "1", "minlevel_permitted": "30", "reward_exp1": "476911", "reward_gold1": "0", "reward_item1_1": "coin_03 9", "reward_item1_2": "potion_hp_mp_30a 10", "reward_item1_3": "potion_flytime_30a 10", "race_permitted": "pc_light"},
+		"retail": {"name": "Q1423", "max_repeat_count": "1", "minlevel_permitted": "29", "reward_exp1": "476911", "reward_gold1": "0", "reward_item1_1": "coin_03 9", "reward_item1_2": "potion_hp_mp_30a 10", "reward_item1_3": "potion_flytime_30a 10", "race_permitted": "pc_light"},
 		"base": {"minlevel_permitted": "29", "max_repeat_count": "1", "cannot_share": "true", "race_permitted": "ELYOS", "category": "IMPORTANT", "rewards": {"exp": "476911"}, "reward_items": (("186000003", "9"), ("162000048", "10"), ("162000025", "10")), "work_items": ()},
 		"evidence": ((624, ("L\"Marana\"",)), (692, (",0x58f,0,0xffffffff,0",)), (703, (",0x58f,3,0,0",)), (716, (",0x58f,4,0,0",)), (806, ("0x58f", "+ 0x1a8")), (878, ("0x58f", "0x947")), (883, ("0x3f3,0x58f", "0x3ef", "0x58f")), (893, ("0x3eb,0x58f", "0x1e0", "0x58f")), (905, ("0x58f", "0x3eb")), (909, ("0x3ec,0x58f",)))
 	},
@@ -537,6 +537,98 @@ COMPILED_CHRISTMAS_COURIER_SOURCE_NUMBERS = (611, 616, 620, 690, 691, 695, 697, 
 def parse_item_reference(value: str) -> tuple[str, int] | None:
 	match = re.fullmatch(r"(?:ITEM_)?(\S+)\s+(\d+)", value)
 	return None if match is None else (match.group(1), int(match.group(2)))
+
+
+EXTRA_ACTION_NAMES = {
+	1: "give_item", 2: "remove_item", 3: "teleport", 4: "cutscene", 5: "spawn_npc",
+	6: "delay", 7: "message", 8: "message2", 9: "enter_instance", 10: "timer",
+}
+EXTRA_ACTION_CATEGORIES = {"itemplay", "talk", "enterarea", "enterworld", "levelup", "talkfobj", "leveluplogin"}
+
+
+def normalized_extra_actions(fields: dict[str, str], phase: str) -> dict[str, str]:
+	category = fields.get(f"category_{phase}_", "").casefold()
+	if category == "hunt":
+		slots = (4, 5)
+	elif category in EXTRA_ACTION_CATEGORIES:
+		slots = range(1, 11)
+	else:
+		slots = ()
+	return {
+		EXTRA_ACTION_NAMES[slot]: value
+		for slot in slots if (value := fields.get(f"value{slot}_{phase}_"))
+	}
+
+
+def parse_teleport(value: str) -> tuple[int, int, int, int, int] | None:
+	parts = re.split(r"[\s,]+", value.strip())
+	if len(parts) != 5 or any(re.fullmatch(r"-?\d+", part) is None for part in parts):
+		return None
+	world_id, x, y, z, heading = map(int, parts)
+	return (world_id, x, y, z, heading) if world_id > 0 and 0 <= heading <= 255 else None
+
+
+def parse_cutscene(value: str) -> int | None:
+	match = re.fullmatch(r"Cutscene\s+(\d+)", value, re.IGNORECASE)
+	return None if match is None or int(match.group(1)) == 0 else int(match.group(1))
+
+
+def parse_absolute_spawns(value: str) -> list[tuple[str, int, int, int | float, int | float, int | float, int]] | None:
+	result = []
+	number = r"-?\d+(?:\.\d+)?"
+	pattern = re.compile(
+		rf"Absolute\s+([^,]+?)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*({number})\s+({number})\s+({number})\s+(\d+)",
+		re.IGNORECASE,
+	)
+	for action in (part.strip() for part in value.split(";")):
+		if not action:
+			continue
+		match = pattern.fullmatch(action)
+		if match is None:
+			return None
+		name, count, lifetime, x, y, z, heading = match.groups()
+		count, lifetime, heading = map(int, (count, lifetime, heading))
+		if count == 0 or lifetime == 0 or heading > 255:
+			return None
+		coords = tuple(float(part) if "." in part else int(part) for part in (x, y, z))
+		result.append((name, count, lifetime, *coords, heading))
+	return result or None
+
+
+def supported_extra_actions(fields: dict[str, str], phase: str) -> dict[str, object] | None:
+	result: dict[str, object] = {}
+	for action, value in normalized_extra_actions(fields, phase).items():
+		if action in {"give_item", "remove_item"}:
+			parsed = parse_item_reference(value)
+		elif action == "teleport" and phase == "progress":
+			parsed = parse_teleport(value)
+		elif action == "cutscene" and phase == "progress":
+			parsed = parse_cutscene(value)
+		elif action == "spawn_npc" and phase == "progress":
+			parsed = parse_absolute_spawns(value)
+		else:
+			return None
+		if parsed is None:
+			return None
+		result[action] = parsed
+	return result
+
+
+def data_driven_action_coverage(path: Path) -> dict[str, dict[str, int]]:
+	coverage = {name: {"total": 0, "supported": 0} for name in EXTRA_ACTION_NAMES.values()}
+	for quest in ET.parse(path).getroot():
+		phases = [("acquire", {child.tag: (child.text or "").strip() for child in quest if child.tag != "progress_info"})]
+		phases.extend(("progress", {child.tag: (child.text or "").strip() for child in step}) for step in quest.findall("./progress_info/data"))
+		for phase, fields in phases:
+			for action, value in normalized_extra_actions(fields, phase).items():
+				coverage[action]["total"] += 1
+				probe = dict(fields)
+				for slot, name in EXTRA_ACTION_NAMES.items():
+					if name != action:
+						probe.pop(f"value{slot}_{phase}_", None)
+				if supported_extra_actions(probe, phase) is not None:
+					coverage[action]["supported"] += 1
+	return {name: counts for name, counts in coverage.items() if counts["total"]}
 
 
 def has_function_evidence(source: str, anchor: str, tokens: tuple[str, ...]) -> bool:
@@ -1066,7 +1158,10 @@ def data_driven_item_plays(path: Path, enabled_ids: set[int]) -> tuple[dict[int,
 
 def data_driven_complex(path: Path, enabled_ids: set[int], handled_ids: set[int]) -> dict[int, dict[str, object]]:
 	result: dict[int, dict[str, object]] = {}
-	allowed = {"id", "name", "dev_name", "con_quest", "category_acquire_", "value0_acquire_", "value1_acquire_", "reward_npc_name"}
+	allowed = {"id", "name", "dev_name", "con_quest", "category_acquire_", "reward_npc_name"} | {
+		f"value{slot}_acquire_" for slot in range(11)
+	}
+	progress_fields = {"category_progress_"} | {f"value{slot}_progress_" for slot in range(11)}
 	for node in ET.parse(path).getroot():
 		fields = {child.tag: (child.text or "").strip() for child in node if child.tag != "progress_info"}
 		if not fields.get("id") or not fields["id"].isdigit():
@@ -1079,8 +1174,8 @@ def data_driven_complex(path: Path, enabled_ids: set[int], handled_ids: set[int]
 			continue
 		if acquire in {"talk", "itemplay"} and not fields.get("value0_acquire_") or acquire == "enterarea" and fields.get("value0_acquire_"):
 			continue
-		start_item = parse_item_reference(fields.get("value1_acquire_", "")) if fields.get("value1_acquire_") else None
-		if fields.get("value1_acquire_") and start_item is None:
+		acquire_actions = supported_extra_actions(fields, "acquire")
+		if acquire_actions is None:
 			continue
 		steps: list[dict[str, object]] = []
 		valid = True
@@ -1088,26 +1183,34 @@ def data_driven_complex(path: Path, enabled_ids: set[int], handled_ids: set[int]
 			step = {child.tag: (child.text or "").strip() for child in step_node}
 			category = step.get("category_progress_", "").casefold()
 			value = step.get("value0_progress_", "")
-			if category == "talk" and not set(step) - {"category_progress_", "value0_progress_", "value1_progress_"} and value:
-				give_item = parse_item_reference(step.get("value1_progress_", "")) if step.get("value1_progress_") else None
-				if step.get("value1_progress_") and give_item is None:
-					valid = False
-					break
-				steps.append({"type": "TALK", "names": [value], "give_item": give_item})
-			elif category == "collectitem" and not set(step) - {"category_progress_", "value0_progress_", "value1_progress_", "value2_progress_", "value5_progress_"} and value and (not step.get("value5_progress_") or step["value5_progress_"].isdigit()):
-				steps.append({"type": "COLLECT_ITEM", "names": [value], "actions": [step[key] for key in ("value1_progress_", "value2_progress_") if step.get(key)]})
-			elif category == "hunt" and set(step) <= {"category_progress_", "value0_progress_"}:
+			actions = supported_extra_actions(step, "progress")
+			if set(step) - progress_fields or actions is None:
+				valid = False
+				break
+			actions = dict(actions)
+			if movie := actions.pop("cutscene", None):
+				actions["movie"] = movie
+			if spawns := actions.pop("spawn_npc", None):
+				actions["spawns"] = spawns
+			if category == "talk" and value:
+				steps.append({"type": "TALK", "names": [value], **actions})
+			elif category == "collectitem" and value and (not step.get("value5_progress_") or step["value5_progress_"].isdigit()):
+				steps.append({
+					"type": "COLLECT_ITEM", "names": [value],
+					"actions": [step[f"value{slot}_progress_"] for slot in range(1, 5) if step.get(f"value{slot}_progress_")],
+				})
+			elif category == "hunt":
 				stages = parse_hunt_actions(value)
 				if stages is None or len({count for _, count in stages}) != 1:
 					valid = False
 					break
-				steps.append({"type": "HUNT", "names": [name for names, _ in stages for name in names], "amount": stages[0][1]})
-			elif category == "enterarea" and set(step) <= {"category_progress_", "value0_progress_"} and value:
-				steps.append({"type": "ENTER_AREA", "names": [value]})
-			elif category == "enterworld" and set(step) <= {"category_progress_", "value0_progress_"} and value.isdigit():
-				steps.append({"type": "ENTER_WORLD", "world_id": int(value)})
-			elif category == "itemplay" and set(step) <= {"category_progress_", "value0_progress_"} and value:
-				steps.append({"type": "ITEM_PLAY", "item": value.removeprefix("ITEM_")})
+				steps.append({"type": "HUNT", "names": [name for names, _ in stages for name in names], "amount": stages[0][1], **actions})
+			elif category == "enterarea" and value:
+				steps.append({"type": "ENTER_AREA", "names": [value], **actions})
+			elif category == "enterworld" and value.isdigit():
+				steps.append({"type": "ENTER_WORLD", "world_id": int(value), **actions})
+			elif category == "itemplay" and value:
+				steps.append({"type": "ITEM_PLAY", "item": value.removeprefix("ITEM_"), **actions})
 			else:
 				valid = False
 				break
@@ -1115,7 +1218,8 @@ def data_driven_complex(path: Path, enabled_ids: set[int], handled_ids: set[int]
 			result[quest_id] = {
 				"start_type": {"talk": "TALK", "itemplay": "ITEM_PLAY", "enterarea": "ENTER_AREA"}[acquire],
 				"start": fields.get("value0_acquire_"), "end": fields["reward_npc_name"],
-				"start_give_item": start_item, "steps": steps,
+				"start_give_item": acquire_actions.get("give_item"),
+				"start_remove_item": acquire_actions.get("remove_item"), "steps": steps,
 			}
 	return result
 
@@ -1540,7 +1644,7 @@ def compiled_paios_rescues(retail_quest: Path, retail_npcs: Path, retail_items: 
 		fields = retail_nodes.get(quest_id, {})
 		reasons = []
 		expected_fields = {
-			"name": f"Q{quest_id}", "minlevel_permitted": "60", "max_repeat_count": "1",
+			"name": f"Q{quest_id}", "minlevel_permitted": "57", "max_repeat_count": "1",
 			"finished_quest_cond1": f"Q{prerequisite}", "reward_exp1": "6907092",
 			"reward_gold1": str(reward_gold), "race_permitted": race,
 		}
@@ -2066,7 +2170,7 @@ def compiled_surama_hunts(retail_quest: Path, retail_npcs: Path, retail_items: P
 		if quest_id not in enabled_ids:
 			continue
 		fields = retail_nodes.get(quest_id, {})
-		expected_retail = {"name": f"Q{quest_id}", "max_repeat_count": "1", "minlevel_permitted": "60", "reward_exp1": "7086913", "reward_gold1": "0", "reward_item1_1": "tiamat_coin_01 1", "race_permitted": race}
+		expected_retail = {"name": f"Q{quest_id}", "max_repeat_count": "1", "minlevel_permitted": "57", "reward_exp1": "7086913", "reward_gold1": "0", "reward_item1_1": "tiamat_coin_01 1", "race_permitted": race}
 		reasons = [f"quest.xml:{field}" for field, expected in expected_retail.items() if fields.get(field) != expected]
 		base = base_nodes.get(quest_id)
 		rewards = None if base is None else base.find("rewards")
@@ -2137,7 +2241,7 @@ def compiled_arena_item_plays(retail_quest: Path, retail_item_play: Path, retail
 		(first_item, first_item_id), (second_item, second_item_id) = data["items"]
 		prerequisite = data["prerequisite"]
 		expected_retail = {
-			"name": f"Q{quest_id}", "max_repeat_count": "1", "minlevel_permitted": "46",
+			"name": f"Q{quest_id}", "max_repeat_count": "1", "minlevel_permitted": "51",
 			"finished_quest_cond1": f"Q{prerequisite}", "cannot_share": "1",
 			"quest_work_item1": f"{first_item} 1", "quest_work_item2": f"{second_item} 1",
 			"reward_exp1": "2010386", "reward_gold1": "92940", "reward_item1_1": "coin_arena_pvp_01 100",
@@ -2240,7 +2344,7 @@ def compiled_dredgion_control_hunts(retail_quest: Path, retail_hunt: Path, retai
 			continue
 		fields = retail_nodes.get(quest_id, {})
 		expected_retail = {
-			"name": f"Q{quest_id}", "max_repeat_count": "1", "minlevel_permitted": "60",
+			"name": f"Q{quest_id}", "max_repeat_count": "1", "minlevel_permitted": "57",
 			"reward_exp1": "7086913", "reward_gold1": "0", "reward_item1_1": "potion_hp_mp_50a 34",
 			"race_permitted": retail_race,
 		}
@@ -2786,6 +2890,8 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 			if step.get("remove_item"):
 				item_names.add(str(step["remove_item"][0]))
 		missing = [f"npc:{name}" for name in npc_names if name.casefold() not in exact_index and name.casefold() not in aliases]
+		spawn_names = {str(spawn[0]) for step in quest["steps"] for spawn in step.get("spawns", [])}
+		missing.extend(f"spawn:{name}" for name in spawn_names if len(exact_index.get(name.casefold()) or aliases.get(name.casefold(), ())) != 1)
 		missing.extend(f"item:{name}" for name in item_names if len(item_index.get(name.casefold(), ())) != 1)
 		if missing:
 			unresolved[str(quest_id)] = sorted(missing)
@@ -2834,6 +2940,12 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 				step_attrs["advance_dialog_id"] = str(step["advance_dialog_id"])
 			if step.get("movie"):
 				step_attrs["movie"] = str(step["movie"])
+			if step.get("teleport"):
+				world_id, x, y, z, heading = step["teleport"]
+				step_attrs.update({
+					"teleport_world_id": str(world_id), "teleport_x": str(x), "teleport_y": str(y),
+					"teleport_z": str(z), "teleport_heading": str(heading),
+				})
 			if step.get("world_id"):
 				step_attrs["world_id"] = str(step["world_id"])
 			if step.get("item"):
@@ -2846,7 +2958,13 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 				name, count = step["remove_item"]
 				step_attrs["remove_item_id"] = str(item_index[str(name).casefold()][0])
 				step_attrs["remove_item_count"] = str(count)
-			ET.SubElement(element, "step", step_attrs)
+			step_element = ET.SubElement(element, "step", step_attrs)
+			for name, count, lifetime, x, y, z, heading in step.get("spawns", []):
+				npc_id = (exact_index.get(str(name).casefold()) or aliases[str(name).casefold()])[0]
+				ET.SubElement(step_element, "spawn", {
+					"npc_id": str(npc_id), "count": str(count), "lifetime_seconds": str(lifetime),
+					"x": str(x), "y": str(y), "z": str(z), "heading": str(heading),
+				})
 		generated[str(quest.get("source") or "data_driven_complex")] += 1
 	for quest_id, quest in sorted((work_orders or {}).items()):
 		element = ET.SubElement(root, "work_order", {
@@ -2876,6 +2994,7 @@ def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAI
 	item_file = retail / "Items.xml"
 	retail_quest_file = retail / "quest.xml"
 	recipe_file = retail / "combine_recipe.xml"
+	action_coverage = data_driven_action_coverage(data_driven_file)
 	enabled_ids = current_quest_ids(quest_data)
 	java_handler_ids = existing_java_handler_ids()
 	xml_owned_ids = enabled_ids - java_handler_ids
@@ -3051,6 +3170,7 @@ def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAI
 			reason = "compiled_retail_script_unavailable"
 		isolated[str(quest_id)] = reason
 	stats = {
+		"data_driven_actions": action_coverage,
 		"retail": {"hunt": hunt_stats["retail"], "talk": talk_stats["retail"], "collect": collect_stats["retail"], "use_item": use_item_stats["retail"], "work_order": work_order_stats["retail"], **data_talk_candidates, "data_driven_hunt": data_hunt_candidates, "data_driven_collect": data_collect_candidates, "data_driven_pvp": pvp_candidates, "data_driven_item_play": data_item_play_candidates},
 		"eligible": {"hunt": len(simple_hunts), "talk": len(talks), "collect": len(collects), "use_item": len(use_items) - len(data_item_plays), "work_order": len(work_orders), **{source: sum(quest.get("source") == source for quest in data_talks.values()) for source in data_talk_candidates}, "data_driven_hunt": len(data_hunts), "data_driven_collect": len(data_collects), "data_driven_pvp": len(pvps), "data_driven_item_play": len(data_item_plays), "data_driven_complex": len(data_quests) - len(compiled_rescues) - len(compiled_worlds) - len(compiled_growths) - len(compiled_sensory) - len(compiled_paios) - len(compiled_housing) - len(compiled_trees) - len(compiled_arrivals) - len(compiled_coalescence) - len(compiled_bastion) - len(compiled_data_simple_talks) - len(compiled_arena) - len(compiled_dredgion_control) - len(compiled_dredgion_navigation), "compiled_script_collect": len(compiled_collects), "compiled_script_timed_report": len(compiled_reports), "compiled_script_action_talk": len(compiled_rescues), "compiled_script_action_progress": len(compiled_paios), "compiled_script_world_collect": len(compiled_worlds), "compiled_script_get_item": len(compiled_growths), "compiled_script_sensory_complete": len(compiled_sensory), "compiled_script_housing_talk": len(compiled_housing), "compiled_script_scorched_tree": len(compiled_trees), "compiled_script_kaldor_arrival": len(compiled_arrivals), "compiled_script_coalescence_complete": len(compiled_coalescence), "compiled_script_bastion_movie": len(compiled_bastion), "compiled_script_simple_talk": len(compiled_simple_talk_quests), "compiled_script_surama_hunt": len(compiled_surama), "compiled_script_christmas_courier_hunt": len(compiled_christmas), "compiled_script_arena_item_play": len(compiled_arena), "compiled_script_dredgion_control_hunt": len(compiled_dredgion_control), "compiled_script_dredgion_navigation_hunt": len(compiled_dredgion_navigation)},
 		"generated": {**generated, "total": sum(generated.values())},

@@ -13,6 +13,59 @@ SPEC.loader.exec_module(MODULE)
 
 
 class RetailSimpleQuestGeneratorTest(unittest.TestCase):
+	def test_extra_action_slots_follow_retail_progress_categories(self):
+		self.assertEqual({}, MODULE.normalized_extra_actions({
+			"category_progress_": "PVP", "value3_progress_": "5",
+		}, "progress"))
+		self.assertEqual({}, MODULE.normalized_extra_actions({
+			"category_progress_": "CollectItem", "value3_progress_": "ObjectC",
+			"value4_progress_": "ObjectD", "value5_progress_": "2",
+		}, "progress"))
+		self.assertEqual({"cutscene": "Cutscene 940", "spawn_npc": "Relative Npc, 1, 100"},
+			MODULE.normalized_extra_actions({
+				"category_progress_": "Hunt", "value3_progress_": "ignored",
+				"value4_progress_": "Cutscene 940", "value5_progress_": "Relative Npc, 1, 100",
+				"value6_progress_": "ignored",
+			}, "progress"))
+		self.assertIsNone(MODULE.parse_absolute_spawns("Relative Npc, 1, 100"))
+		self.assertIsNone(MODULE.parse_absolute_spawns("Absolute Npc, 1, 100, 1 2 3 285"))
+
+	def test_data_driven_complex_compiles_typed_teleport_and_cutscene(self):
+		with tempfile.TemporaryDirectory() as directory:
+			path = Path(directory) / "data_driven_quest.xml"
+			path.write_text("""<quest_data_drivens><quest_data_driven>
+				<id>1</id><name>Q1</name><dev_name>Typed actions</dev_name>
+				<category_acquire_>Talk</category_acquire_><value0_acquire_>Start</value0_acquire_>
+				<reward_npc_name>End</reward_npc_name><progress_info><data>
+				<category_progress_>Talk</category_progress_><value0_progress_>Middle</value0_progress_>
+				<value3_progress_>210050000 1440 407 553 90</value3_progress_>
+				<value4_progress_>Cutscene 502</value4_progress_>
+				<value5_progress_>Absolute SpawnA, 2, 30, 10.9 20.1 30 40;Absolute SpawnB, 1, 5, -1.9 2 3 4</value5_progress_>
+				</data></progress_info></quest_data_driven></quest_data_drivens>""")
+
+			quests = MODULE.data_driven_complex(path, {1}, set())
+
+			self.assertEqual((210050000, 1440, 407, 553, 90), quests[1]["steps"][0]["teleport"])
+			self.assertEqual(502, quests[1]["steps"][0]["movie"])
+			self.assertEqual([
+				("SpawnA", 2, 30, 10.9, 20.1, 30, 40), ("SpawnB", 1, 5, -1.9, 2, 3, 4),
+			], quests[1]["steps"][0]["spawns"])
+			self.assertEqual({"total": 1, "supported": 1}, MODULE.data_driven_action_coverage(path)["teleport"])
+			self.assertEqual({"total": 1, "supported": 1}, MODULE.data_driven_action_coverage(path)["spawn_npc"])
+			content, unresolved, _ = MODULE.render(
+				{}, {}, {}, {}, quests,
+				{"start": (1,), "middle": (2,), "end": (3,), "spawna": (4,), "spawnb": (5,)}, {}, {}, ())
+			self.assertEqual({}, unresolved)
+			step = ET.fromstring(content.split(b"-->\n", 1)[1])[0][0]
+			self.assertEqual({
+				"type": "TALK", "ids": "2", "movie": "502", "teleport_world_id": "210050000",
+				"teleport_x": "1440", "teleport_y": "407", "teleport_z": "553", "teleport_heading": "90",
+			}, step.attrib)
+			self.assertEqual([
+				{"npc_id": "4", "count": "2", "lifetime_seconds": "30", "x": "10.9", "y": "20.1", "z": "30", "heading": "40"},
+				{"npc_id": "5", "count": "1", "lifetime_seconds": "5", "x": "-1.9", "y": "2", "z": "3", "heading": "4"},
+			], [node.attrib for node in step])
+
 	def test_simple_talk_fields_compile_cutscene_and_step_items(self):
 		with tempfile.TemporaryDirectory() as directory:
 			path = Path(directory) / "Quest_SimpleTalk.xml"
@@ -914,7 +967,7 @@ class RetailSimpleQuestGeneratorTest(unittest.TestCase):
 			base_nodes = []
 			for quest_id, (_quest_hex, race, gold, prerequisite, *_rest) in MODULE.COMPILED_PAIOS_RESCUES.items():
 				quest_nodes.append(
-					f"<quest><id>{quest_id}</id><name>Q{quest_id}</name><minlevel_permitted>60</minlevel_permitted>"
+					f"<quest><id>{quest_id}</id><name>Q{quest_id}</name><minlevel_permitted>57</minlevel_permitted>"
 					f"<max_repeat_count>1</max_repeat_count><finished_quest_cond1>Q{prerequisite}</finished_quest_cond1>"
 					f"<reward_exp1>6907092</reward_exp1><reward_gold1>{gold}</reward_gold1>"
 					+ "".join(f"<selectable_reward_item1_{index}>{name} 15</selectable_reward_item1_{index}>" for index, (name, _) in enumerate(MODULE.COMPILED_PAIOS_REWARDS, 1))
