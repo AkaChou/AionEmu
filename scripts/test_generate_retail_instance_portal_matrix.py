@@ -31,6 +31,9 @@ class InstancePortalMatrixTest(unittest.TestCase):
                 "direct_portals": "docs/RETAIL_DIRECT_PORTAL_SOURCE_MATRIX.json",
                 "script_transports": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
             },
+            "retail_reference_projections": {
+                "script_transports": "docs/RETAIL_SCRIPT_TRANSPORT_REFERENCE_PROJECTION.json",
+            },
         }, self.report["provenance"])
         self.assertEqual({
             "production_worlds": 139,

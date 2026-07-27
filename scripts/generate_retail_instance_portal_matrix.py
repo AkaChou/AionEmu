@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -17,6 +18,7 @@ START_AUDIT = Path("docs/RETAIL_INSTANCE_PORTAL_START_AUDIT.json")
 PATTERN_AUDIT = Path("docs/RETAIL_INSTANCE_PORTAL_PATTERN_AUDIT.json")
 DYNAMIC_AUDIT = Path("docs/RETAIL_INSTANCE_PORTAL_DYNAMIC_AUDIT.json")
 TRANSPORT_SOURCE = Path("docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json")
+TRANSPORT_REFERENCE = Path("docs/RETAIL_SCRIPT_TRANSPORT_REFERENCE_PROJECTION.json")
 NUMBER = re.compile(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[fFdD])?")
 SPAWN_CALL = re.compile(
     rf"\bspawn\(\s*(\d{{6}})\s*,\s*({NUMBER.pattern})\s*,\s*({NUMBER.pattern})\s*,\s*({NUMBER.pattern})"
@@ -595,72 +597,81 @@ def route_allows_world(route: dict[str, object], world_id: int) -> bool:
 
 
 def source_transport_routes(root: Path, instance_world_ids: set[int]) -> dict[tuple[int, int, int], list[dict[str, object]]]:
-    document = json.loads((root / TRANSPORT_SOURCE).read_text(encoding="utf-8"))
-    provenance = document.get("provenance", {})
-    if (document.get("version") != 6 or provenance.get("kind") != "RETAIL_SOURCE_MATRIX"
-            or not provenance.get("authoritative_retail_evidence")):
-        raise ValueError("invalid retail ScriptDLL transport source matrix")
+    document = json.loads((root / TRANSPORT_REFERENCE).read_text(encoding="utf-8"))
+    authority = document.get("authority", {})
+    if document.get("version") != 4 or document.get("projection") != "script_transport":
+        raise ValueError("invalid retail ScriptDLL transport reference projection")
+    sources = [source for source in authority.get("sources", [])
+               if source.get("role") == "script_transport_source"]
+    source_path = root / TRANSPORT_SOURCE
+    if (len(sources) != 1 or sources[0].get("path") != source_path.name
+            or sources[0].get("size") != source_path.stat().st_size
+            or sources[0].get("sha256") != hashlib.sha256(source_path.read_bytes()).hexdigest()):
+        raise ValueError("stale retail ScriptDLL transport reference projection")
     grouped: dict[tuple[int, int, int], dict[str, dict[str, object]]] = defaultdict(dict)
-    for registration in document["registrations"]:
-        callback_features = registration.get("callback_features")
-        if registration["calls"] and (not callback_features or not callback_features.get("shape_id")
-                                      or "predicates" not in callback_features
-                                      or "operations" not in callback_features):
-            raise ValueError(f"ScriptDLL transport without callback features: {registration['script_name']}")
-        projection = registration.get("portal_service_projection")
+    for reference in document.get("references", []):
+        if (reference.get("family") != "script_transport"
+                or reference.get("kind") != "script_transport_endpoint"
+                or reference.get("status") != "RESOLVED"
+                or reference.get("route_status") != "ENDPOINT_PROVEN"):
+            continue
+        callback_features = reference.get("callback_features")
+        projection = reference.get("portal_service_projection")
+        if (not callback_features or not callback_features.get("shape_id")
+                or "predicates" not in callback_features or "operations" not in callback_features):
+            raise ValueError(f"ScriptDLL transport without callback features: {reference.get('script_name')}")
         if not projection or projection.get("status") not in {
                 "EXPRESSIBLE", "NOT_APPLICABLE", "REJECT_ROUTE_NOT_PROVEN", "REJECT_UNMODELED_CALLBACK_SHAPE"}:
-            raise ValueError(f"ScriptDLL transport without PortalService projection: {registration['script_name']}")
-        for call in registration["calls"]:
-            if call.get("domain_type") not in {"LIFT", "TELEPORT"} \
-                    or call.get("domain_type_source") not in {"AUDITED_RULE", "TRANSPORT_API"}:
-                raise ValueError(f"ScriptDLL transport without audited domain type: {registration['script_name']}")
-            event = call.get("event")
-            dialog = -1 if event is None else int(event["dialog"])
-            for route in call["routes"]:
-                if route["status"] != "ENDPOINT_PROVEN":
-                    continue
-                start = route["start"]
-                destination_world_id = int(route["destination"]["world_id"])
-                if int(start["world_id"]) not in instance_world_ids and destination_world_id not in instance_world_ids:
-                    continue
-                start_evidence = {
-                    "world_id": start["world_id"],
-                    "npc_id": start["npc_id"],
-                    "x": start["x"],
-                    "y": start["y"],
-                    "z": start["z"],
-                    "dir": start["dir"],
-                    "object_type": start["object_type"],
-                    "source": start["source"],
-                }
-                evidence = {
-                    "matrix": str(TRANSPORT_SOURCE),
-                    "script_name": registration["script_name"],
-                    "callback": registration["callback"],
-                    "registration_status": registration["status"],
-                    "registration_reasons": registration["reasons"],
-                    "registration_source": registration["registration_source"],
-                    "callback_source": call["source"],
-                    "callback_features": callback_features,
-                    "api_offset": call["api_offset"],
-                    "transport_type": call["transport_type"],
-                    "domain_type": call["domain_type"],
-                    "domain_type_source": call["domain_type_source"],
-                    "event": event,
-                    "portal_service_projection": projection,
-                    "starts": [start_evidence],
-                    "destination": route["destination"],
-                }
-                key = (int(start["npc_id"]), int(start["world_id"]), dialog)
-                identity = json.dumps({
-                    "callback": registration["callback"],
-                    "destination": route["destination"],
-                    "projection": projection,
-                }, sort_keys=True)
-                previous = grouped[key].setdefault(identity, evidence)
-                if previous is not evidence:
-                    previous["starts"].append(start_evidence)
+            raise ValueError(f"ScriptDLL transport without PortalService projection: {reference.get('script_name')}")
+        if (reference.get("domain_type") not in {"LIFT", "TELEPORT"}
+                or reference.get("domain_type_source") not in {"AUDITED_RULE", "TRANSPORT_API"}):
+            raise ValueError(f"ScriptDLL transport without audited domain type: {reference.get('script_name')}")
+        target = reference["targets"][0]
+        start = target["start"]
+        destination = target["destination"]
+        destination_world_id = int(destination["world_id"])
+        if int(start["world_id"]) not in instance_world_ids and destination_world_id not in instance_world_ids:
+            continue
+        event = reference.get("event")
+        dialog = -1 if event is None else int(event["dialog"])
+        start_evidence = {
+            "world_id": start["world_id"],
+            "npc_id": start["npc_id"],
+            "x": start["x"],
+            "y": start["y"],
+            "z": start["z"],
+            "dir": start["dir"],
+            "object_type": start["object_type"],
+            "source": start["source"],
+        }
+        evidence = {
+            "reference_projection": str(TRANSPORT_REFERENCE),
+            "source_matrix": str(TRANSPORT_SOURCE),
+            "script_name": reference["script_name"],
+            "callback": reference["callback"],
+            "registration_status": reference["registration_status"],
+            "registration_reasons": reference["registration_reasons"],
+            "registration_source": reference["registration_source"],
+            "callback_source": reference["callback_source"],
+            "callback_features": callback_features,
+            "api_offset": reference["api_offset"],
+            "transport_type": reference["transport_type"],
+            "domain_type": reference["domain_type"],
+            "domain_type_source": reference["domain_type_source"],
+            "event": event,
+            "portal_service_projection": projection,
+            "starts": [start_evidence],
+            "destination": destination,
+        }
+        key = (int(start["npc_id"]), int(start["world_id"]), dialog)
+        identity = json.dumps({
+            "callback": reference["callback"],
+            "destination": destination,
+            "projection": projection,
+        }, sort_keys=True)
+        previous = grouped[key].setdefault(identity, evidence)
+        if previous is not evidence:
+            previous["starts"].append(start_evidence)
     result = {}
     for key, bindings in grouped.items():
         result[key] = []
@@ -810,7 +821,8 @@ def script_transport_candidates(
                 "status": status,
                 "reason": reason,
                 "source": {
-                    "matrix": str(TRANSPORT_SOURCE),
+                    "reference_projection": str(TRANSPORT_REFERENCE),
+                    "source_matrix": str(TRANSPORT_SOURCE),
                     "registration": evidence["registration_source"],
                     "callback": evidence["callback_source"],
                 },
@@ -839,7 +851,7 @@ def transport_type(route: dict[str, object], evidence: dict[str, object] | None)
 
 def transport_type_source(route: dict[str, object], evidence: dict[str, object] | None) -> str:
     if evidence is not None:
-        return str(TRANSPORT_SOURCE)
+        return str(TRANSPORT_REFERENCE)
     return {
         "portal_use": "src/main/resources/aion/data/static_data/portals/portal_template2.xml",
         "portal_dialog": "src/main/resources/aion/data/static_data/portals/portal_template2.xml",
@@ -1167,6 +1179,9 @@ def build(root: Path) -> dict[str, object]:
             "retail_source_matrices": {
                 "direct_portals": "docs/RETAIL_DIRECT_PORTAL_SOURCE_MATRIX.json",
                 "script_transports": str(TRANSPORT_SOURCE),
+            },
+            "retail_reference_projections": {
+                "script_transports": str(TRANSPORT_REFERENCE),
             },
         },
         "summary": summary,
