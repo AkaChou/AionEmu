@@ -53,17 +53,17 @@
     "routes_by_transport_type": {
       "ADDRESS_TELEPORT": 4,
       "LIFT": 2,
-      "PORTAL_DIALOG": 351,
+      "PORTAL_DIALOG": 349,
       "PORTAL_USE": 299,
       "RELATIVE_TELEPORT": 11,
       "RETAIL_PATTERN_ALIAS": 8,
-      "SCRIPT_DIALOG_CURRENT_WORLD_ALIAS": 43,
+      "SCRIPT_DIALOG_CURRENT_WORLD_ALIAS": 45,
       "SCRIPT_TELEPORT": 95,
       "TELEPORTER": 16
     },
     "routes_by_type_status": {
-      "RETAIL_PROVEN": 45,
-      "RUNTIME_MODELED": 784
+      "RETAIL_PROVEN": 47,
+      "RUNTIME_MODELED": 782
     },
     "routes_by_endpoint_status": {
       "DYNAMIC_TO_INSTANCE_STATIC": 25,
@@ -85,11 +85,10 @@
       "RetailPatternAI2": 8,
       "TeleporterData/TeleportService2": 16
     },
-    "retail_transport_evidence": 45,
+    "retail_transport_evidence": 47,
     "script_transport_candidates": 137,
     "script_transport_candidates_by_status": {
-      "ALREADY_DATA_DRIVEN_RETAIL_PROVEN": 45,
-      "CONVERSION_READY": 2,
+      "ALREADY_DATA_DRIVEN_RETAIL_PROVEN": 47,
       "REJECT_MISSING_RUNTIME_START": 14,
       "REJECT_ROUTE_NOT_PROVEN": 38,
       "REJECT_RUNTIME_CONSUMER": 5,
@@ -4209,19 +4208,29 @@
           "destination": {
             "complete": true,
             "world_id": 301540000,
-            "x": "469.86370",
-            "y": "656.11130",
-            "z": "468.97745",
-            "heading": "40"
+            "alias": "teleport_01",
+            "points": [
+              {
+                "x": "481.901276",
+                "y": "671.779297",
+                "z": "470.100006",
+                "dir": "180"
+              },
+              {
+                "x": "482.328522",
+                "y": "671.677185",
+                "z": "470.100006",
+                "dir": "180"
+              }
+            ],
+            "source": "src/main/resources/aion/definitions/compact/ai/ai-location-aliases.xml"
           },
-          "requirements": {
-            "min_level": 66
-          },
+          "requirements": {},
           "conversion": "ALREADY_DATA_DRIVEN"
         }
       ],
-      "status": "CONVERSION_READY",
-      "reason": "retail callback is expressible by the existing PortalService consumer",
+      "status": "ALREADY_DATA_DRIVEN_RETAIL_PROVEN",
+      "reason": "destination and PortalService requirements match retail evidence",
       "source": {
         "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
         "registration": {
@@ -4284,19 +4293,29 @@
           "destination": {
             "complete": true,
             "world_id": 301540000,
-            "x": "571.98865",
-            "y": "511.95203",
-            "z": "468.97675",
-            "heading": "60"
+            "alias": "teleport_02",
+            "points": [
+              {
+                "x": "575.002747",
+                "y": "511.974487",
+                "z": "470.100006",
+                "dir": "120"
+              },
+              {
+                "x": "575.061279",
+                "y": "511.885437",
+                "z": "470.100006",
+                "dir": "120"
+              }
+            ],
+            "source": "src/main/resources/aion/definitions/compact/ai/ai-location-aliases.xml"
           },
-          "requirements": {
-            "min_level": 66
-          },
+          "requirements": {},
           "conversion": "ALREADY_DATA_DRIVEN"
         }
       ],
-      "status": "CONVERSION_READY",
-      "reason": "retail callback is expressible by the existing PortalService consumer",
+      "status": "ALREADY_DATA_DRIVEN_RETAIL_PROVEN",
+      "reason": "destination and PortalService requirements match retail evidence",
       "source": {
         "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
         "registration": {
@@ -8501,7 +8520,7 @@
     },
     {
       "id": "B002",
-      "count": 6,
+      "count": 8,
       "signature": {
         "mechanism": "portal_dialog",
         "transport_type": "SCRIPT_DIALOG_CURRENT_WORLD_ALIAS",
@@ -8631,7 +8650,7 @@
     },
     {
       "id": "B007",
-      "count": 4,
+      "count": 2,
       "signature": {
         "mechanism": "portal_dialog",
         "transport_type": "PORTAL_DIALOG",
@@ -41704,35 +41723,195 @@
           "destination": {
             "complete": true,
             "world_id": 301540000,
-            "x": "469.86370",
-            "y": "656.11130",
-            "z": "468.97745",
-            "heading": "40"
+            "alias": "teleport_01",
+            "points": [
+              {
+                "x": "481.901276",
+                "y": "671.779297",
+                "z": "470.100006",
+                "dir": "180"
+              },
+              {
+                "x": "482.328522",
+                "y": "671.677185",
+                "z": "470.100006",
+                "dir": "180"
+              }
+            ],
+            "source": "src/main/resources/aion/definitions/compact/ai/ai-location-aliases.xml"
           },
           "semantics": {
             "attributes": {
+              "destination_alias": "teleport_01",
               "dialog": "104",
-              "loc_id": "3015431"
+              "loc_id": "3015431",
+              "source_world_id": "301540000"
             },
-            "requirements": [
-              {
-                "attributes": {
-                  "err_level": "27",
-                  "min_level": "66"
-                },
-                "quests": [],
-                "items": []
-              }
-            ],
+            "requirements": [],
             "animation": "FIRE_ANIMATION"
           },
           "conversion": "ALREADY_DATA_DRIVEN",
-          "transport_type": "PORTAL_DIALOG",
-          "type_source": "src/main/resources/aion/data/static_data/portals/portal_template2.xml",
-          "type_status": "RUNTIME_MODELED",
+          "retail_transport_evidence": {
+            "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+            "script_name": "IDEternity_01_teleporter_01",
+            "callback": "FUN_180c71c70",
+            "registration_status": "ROUTE_PROVEN",
+            "registration_reasons": [],
+            "registration_source": {
+              "path": "fun/fun_003.cpp",
+              "line": 1643
+            },
+            "callback_source": {
+              "path": "fun/fun_722.cpp",
+              "line": 4339
+            },
+            "callback_features": {
+              "shape_id": "c773c543096b3491",
+              "predicates": [
+                {
+                  "kind": "IF",
+                  "expression": "*piVar3 != 0x68",
+                  "signature": "*_!=0x68",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4325
+                  }
+                },
+                {
+                  "kind": "IF",
+                  "expression": "iVar1 != 1",
+                  "signature": "_!=1",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4330
+                  }
+                },
+                {
+                  "kind": "IF",
+                  "expression": "iVar1 != 0",
+                  "signature": "_!=0",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4332
+                  }
+                }
+              ],
+              "operations": [
+                {
+                  "kind": "CALL",
+                  "call_type": "DIRECT",
+                  "target": "FUN_180c51a60",
+                  "raw": "FUN_180c51a60(param_1,plVar2);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4326
+                  }
+                },
+                {
+                  "kind": "READ",
+                  "call_type": "VIRTUAL",
+                  "target": "0x60",
+                  "raw": "(**(code **)(*plVar2 + 0x60))(plVar2);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4329
+                  }
+                },
+                {
+                  "kind": "READ",
+                  "call_type": "VIRTUAL",
+                  "target": "0x60",
+                  "raw": "(**(code **)(*plVar2 + 0x60))(plVar2);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4331
+                  }
+                },
+                {
+                  "kind": "CALL",
+                  "call_type": "VIRTUAL",
+                  "target": "0x188",
+                  "raw": "(**(code **)(*param_1 + 0x188))(param_1,plVar2,0x1b);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4335
+                  }
+                },
+                {
+                  "kind": "TRANSPORT",
+                  "call_type": "VIRTUAL",
+                  "target": "0x2e0",
+                  "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"teleport_01\",1);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4339
+                  }
+                },
+                {
+                  "kind": "CALL",
+                  "call_type": "VIRTUAL",
+                  "target": "0x5d8",
+                  "raw": "(**(code **)(*param_1 + 0x5d8))(param_1,plVar2,&DAT_18123ed8c);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4342
+                  }
+                }
+              ]
+            },
+            "api_offset": "0x2e0",
+            "transport_type": "CURRENT_WORLD_ALIAS",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
+            "event": {
+              "type": "DIALOG",
+              "code": 27,
+              "dialog": 104,
+              "evidence": "if (*piVar3 != 0x68)"
+            },
+            "portal_service_projection": {
+              "status": "EXPRESSIBLE",
+              "requirements": {}
+            },
+            "starts": [
+              {
+                "dir": "0",
+                "npc_id": 731809,
+                "object_type": "Npc",
+                "source": "Worlds/IDEternity_01/world.xml",
+                "world_id": 301540000,
+                "x": "737.267090",
+                "y": "512.086975",
+                "z": "469.915955"
+              }
+            ],
+            "destination": {
+              "complete": true,
+              "world_id": 301540000,
+              "alias": "teleport_01",
+              "points": [
+                {
+                  "x": "481.901276",
+                  "y": "671.779297",
+                  "z": "470.100006",
+                  "dir": "180"
+                },
+                {
+                  "x": "482.328522",
+                  "y": "671.677185",
+                  "z": "470.100006",
+                  "dir": "180"
+                }
+              ],
+              "source": "Worlds/IDEternity_01/world.xml"
+            }
+          },
+          "transport_type": "SCRIPT_DIALOG_CURRENT_WORLD_ALIAS",
+          "type_source": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+          "type_status": "RETAIL_PROVEN",
           "endpoint_status": "INSTANCE_CONDITIONAL_TO_INSTANCE_STATIC",
           "runtime_consumer": "PortalService",
-          "batch_id": "B007"
+          "batch_id": "B002"
         },
         {
           "npc_id": 731810,
@@ -41754,35 +41933,195 @@
           "destination": {
             "complete": true,
             "world_id": 301540000,
-            "x": "571.98865",
-            "y": "511.95203",
-            "z": "468.97675",
-            "heading": "60"
+            "alias": "teleport_02",
+            "points": [
+              {
+                "x": "575.002747",
+                "y": "511.974487",
+                "z": "470.100006",
+                "dir": "120"
+              },
+              {
+                "x": "575.061279",
+                "y": "511.885437",
+                "z": "470.100006",
+                "dir": "120"
+              }
+            ],
+            "source": "src/main/resources/aion/definitions/compact/ai/ai-location-aliases.xml"
           },
           "semantics": {
             "attributes": {
+              "destination_alias": "teleport_02",
               "dialog": "104",
-              "loc_id": "3015432"
+              "loc_id": "3015432",
+              "source_world_id": "301540000"
             },
-            "requirements": [
-              {
-                "attributes": {
-                  "err_level": "27",
-                  "min_level": "66"
-                },
-                "quests": [],
-                "items": []
-              }
-            ],
+            "requirements": [],
             "animation": "FIRE_ANIMATION"
           },
           "conversion": "ALREADY_DATA_DRIVEN",
-          "transport_type": "PORTAL_DIALOG",
-          "type_source": "src/main/resources/aion/data/static_data/portals/portal_template2.xml",
-          "type_status": "RUNTIME_MODELED",
+          "retail_transport_evidence": {
+            "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+            "script_name": "IDEternity_01_teleporter_02",
+            "callback": "FUN_180c71d40",
+            "registration_status": "ROUTE_PROVEN",
+            "registration_reasons": [],
+            "registration_source": {
+              "path": "fun/fun_003.cpp",
+              "line": 1654
+            },
+            "callback_source": {
+              "path": "fun/fun_722.cpp",
+              "line": 4371
+            },
+            "callback_features": {
+              "shape_id": "c773c543096b3491",
+              "predicates": [
+                {
+                  "kind": "IF",
+                  "expression": "*piVar3 != 0x68",
+                  "signature": "*_!=0x68",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4357
+                  }
+                },
+                {
+                  "kind": "IF",
+                  "expression": "iVar1 != 1",
+                  "signature": "_!=1",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4362
+                  }
+                },
+                {
+                  "kind": "IF",
+                  "expression": "iVar1 != 0",
+                  "signature": "_!=0",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4364
+                  }
+                }
+              ],
+              "operations": [
+                {
+                  "kind": "CALL",
+                  "call_type": "DIRECT",
+                  "target": "FUN_180c51a60",
+                  "raw": "FUN_180c51a60(param_1,plVar2);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4358
+                  }
+                },
+                {
+                  "kind": "READ",
+                  "call_type": "VIRTUAL",
+                  "target": "0x60",
+                  "raw": "(**(code **)(*plVar2 + 0x60))(plVar2);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4361
+                  }
+                },
+                {
+                  "kind": "READ",
+                  "call_type": "VIRTUAL",
+                  "target": "0x60",
+                  "raw": "(**(code **)(*plVar2 + 0x60))(plVar2);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4363
+                  }
+                },
+                {
+                  "kind": "CALL",
+                  "call_type": "VIRTUAL",
+                  "target": "0x188",
+                  "raw": "(**(code **)(*param_1 + 0x188))(param_1,plVar2,0x1b);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4367
+                  }
+                },
+                {
+                  "kind": "TRANSPORT",
+                  "call_type": "VIRTUAL",
+                  "target": "0x2e0",
+                  "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"teleport_02\",1);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4371
+                  }
+                },
+                {
+                  "kind": "CALL",
+                  "call_type": "VIRTUAL",
+                  "target": "0x5d8",
+                  "raw": "(**(code **)(*param_1 + 0x5d8))(param_1,plVar2,&DAT_18123ed8c);",
+                  "source": {
+                    "path": "fun/fun_722.cpp",
+                    "line": 4374
+                  }
+                }
+              ]
+            },
+            "api_offset": "0x2e0",
+            "transport_type": "CURRENT_WORLD_ALIAS",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
+            "event": {
+              "type": "DIALOG",
+              "code": 27,
+              "dialog": 104,
+              "evidence": "if (*piVar3 != 0x68)"
+            },
+            "portal_service_projection": {
+              "status": "EXPRESSIBLE",
+              "requirements": {}
+            },
+            "starts": [
+              {
+                "dir": "0",
+                "npc_id": 731810,
+                "object_type": "Npc",
+                "source": "Worlds/IDEternity_01/world.xml",
+                "world_id": 301540000,
+                "x": "737.267090",
+                "y": "512.086975",
+                "z": "469.915955"
+              }
+            ],
+            "destination": {
+              "complete": true,
+              "world_id": 301540000,
+              "alias": "teleport_02",
+              "points": [
+                {
+                  "x": "575.002747",
+                  "y": "511.974487",
+                  "z": "470.100006",
+                  "dir": "120"
+                },
+                {
+                  "x": "575.061279",
+                  "y": "511.885437",
+                  "z": "470.100006",
+                  "dir": "120"
+                }
+              ],
+              "source": "Worlds/IDEternity_01/world.xml"
+            }
+          },
+          "transport_type": "SCRIPT_DIALOG_CURRENT_WORLD_ALIAS",
+          "type_source": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+          "type_status": "RETAIL_PROVEN",
           "endpoint_status": "INSTANCE_CONDITIONAL_TO_INSTANCE_STATIC",
           "runtime_consumer": "PortalService",
-          "batch_id": "B007"
+          "batch_id": "B002"
         },
         {
           "npc_id": 731811,

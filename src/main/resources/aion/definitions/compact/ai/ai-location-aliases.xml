@@ -3,11 +3,59 @@
   <alias world_id="110070000" world_name="arena_l_lobby" name="AliasL_2">
     <point x="452.525757" y="237.108994" z="128.206314" dir="0"/>
   </alias>
+  <alias world_id="110070000" world_name="arena_l_lobby" name="Arena_L_Lobby_Area_4.7_In">
+    <point x="503.636932" y="415.661469" z="127.477097" dir="90"/>
+  </alias>
+  <alias world_id="110070000" world_name="arena_l_lobby" name="Arena_L_Lobby_Area_4.7_Out">
+    <point x="503.66684" y="411.95929" z="127.477097" dir="270"/>
+  </alias>
   <alias world_id="120080000" world_name="arena_d_lobby" name="AliasD_2">
     <point x="559.449036" y="207.833359" z="94.546936" dir="0"/>
   </alias>
+  <alias world_id="120080000" world_name="arena_d_lobby" name="Arena_D_Lobby_Area_4.7_In">
+    <point x="387.586731" y="250.699677" z="94.599998" dir="180"/>
+  </alias>
+  <alias world_id="120080000" world_name="arena_d_lobby" name="Arena_D_Lobby_Area_4.7_Out">
+    <point x="391.541229" y="250.661102" z="95.052589" dir="0"/>
+  </alias>
   <alias world_id="210040000" world_name="lf3" name="RVR_LF3_OP">
     <point x="2554.25879" y="346.274872" z="412.5" dir="0"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil1_1_In">
+    <point x="1324.15198" y="644.236572" z="585.099976" dir="45"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil1_1_Out">
+    <point x="1335.15198" y="630.236572" z="585.099976" dir="135"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil1_2_In">
+    <point x="1377.11755" y="659.600281" z="586.040649" dir="135"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil1_2_Out">
+    <point x="1375.64087" y="641.579956" z="585.099976" dir="270"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil2_1_In">
+    <point x="1229.53674" y="1628.51575" z="471.195038" dir="300"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil2_1_Out">
+    <point x="1215.40344" y="1626.40601" z="471.195038" dir="180"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil2_2_In">
+    <point x="1220.25903" y="1576.09839" z="471.195038" dir="180"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil2_2_Out">
+    <point x="1207.00061" y="1585.67493" z="471.195038" dir="150"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil3_1_In">
+    <point x="2329.72046" y="1538.68225" z="441.597839" dir="45"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil3_1_Out">
+    <point x="2337.22095" y="1525.73816" z="441.597839" dir="315"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil3_2_In">
+    <point x="2380.16016" y="1553.46655" z="441.597839" dir="135"/>
+  </alias>
+  <alias world_id="210070000" world_name="lf5" name="LF5_Vil3_2_Out">
+    <point x="2378.06885" y="1536.51209" z="441.597839" dir="225"/>
   </alias>
   <alias world_id="210100000" world_name="lf6" name="LF6_B1_Event_N_Out">
     <point x="2351.84668" y="2155.18848" z="279.364288" dir="0"/>
@@ -99,6 +147,13 @@
     <point x="1739.60046" y="2255.30859" z="386.728149" dir="0"/>
     <point x="1703.36084" y="2222.87158" z="386.72818" dir="0"/>
   </alias>
+  <alias world_id="210100000" world_name="lf6" name="LF6_OP_Event_B_Out">
+    <point x="1459.69348" y="1332.77063" z="340.38504" dir="0"/>
+    <point x="1423.86023" y="1300.6582" z="340.38504" dir="0"/>
+    <point x="1400.09363" y="1331.86755" z="340.38504" dir="0"/>
+    <point x="1404.04053" y="1261.91516" z="340.38504" dir="0"/>
+    <point x="1465.25488" y="1284.55896" z="340.38504" dir="0"/>
+  </alias>
   <alias world_id="210100000" world_name="lf6" name="LF6_Raid_Kick_D">
     <point x="2707.15845" y="1418.0188" z="233.857239" dir="160"/>
   </alias>
@@ -111,11 +166,57 @@
   <alias world_id="210130000" world_name="lf4_m" name="LF4_Teleporter_4.8_01">
     <point x="1080.14636" y="1519.14087" z="407.777893" dir="90"/>
   </alias>
+  <alias world_id="220010000" world_name="df1" name="DF1_Munin_Point">
+    <point x="385.743011" y="1890.61316" z="328.100006" dir="45"/>
+    <point x="388.70459" y="1892.94556" z="328.100006" dir="45"/>
+    <point x="388.659607" y="1889.4812" z="328.100006" dir="45"/>
+  </alias>
+  <alias world_id="220010000" world_name="df1" name="DF1_Three_Way_Point">
+    <point x="951.290588" y="1713.72888" z="260.511383" dir="75"/>
+    <point x="948.704773" y="1714.32739" z="260.511383" dir="75"/>
+    <point x="950.145874" y="1714.45239" z="260.511383" dir="75"/>
+  </alias>
   <alias world_id="220020000" world_name="df2" name="DF2_Teleport_1">
     <point x="1979.21252" y="852.863464" z="254.296082" dir="0"/>
   </alias>
   <alias world_id="220040000" world_name="df3" name="RVR_DF3_OP">
     <point x="409.357147" y="393.041534" z="223.602051" dir="0"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil1_1_In">
+    <point x="1768.03479" y="2591.31836" z="305.100006" dir="80"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil1_1_Out">
+    <point x="1766.57715" y="2585.53369" z="305.100006" dir="260"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil1_2_In">
+    <point x="1805.56714" y="2556.6311" z="305.100006" dir="20"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil1_2_Out">
+    <point x="1798.63013" y="2554.4602" z="305.100006" dir="160"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil2_1_In">
+    <point x="1440.75647" y="1740.5979" z="334.99646" dir="180"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil2_1_Out">
+    <point x="1448.45251" y="1739.84656" z="334.99646" dir="0"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil2_2_In">
+    <point x="1468.82788" y="1783.01843" z="334.99646" dir="100"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil2_2_Out">
+    <point x="1472.83691" y="1776.15454" z="334.99646" dir="260"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil3_1_In">
+    <point x="766.30957" y="1311.66711" z="257.384186" dir="80"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil3_1_Out">
+    <point x="763.560852" y="1304.01331" z="257.384186" dir="260"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil3_2_In">
+    <point x="799.459229" y="1272.67859" z="257.384186" dir="10"/>
+  </alias>
+  <alias world_id="220080000" world_name="df5" name="DF5_Vil3_2_Out">
+    <point x="791.911499" y="1271.1626" z="257.384186" dir="180"/>
   </alias>
   <alias world_id="220110000" world_name="df6" name="DF6_B1_Event_N_Out">
     <point x="2071.32153" y="785.638" z="268.100006" dir="0"/>
@@ -263,6 +364,42 @@
   </alias>
   <alias world_id="300280000" world_name="idyun" name="LocationsIDYun_siezeweapon6">
     <point x="412.880951" y="459.747375" z="153.876724" dir="0"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_04_START">
+    <point x="1260.15002" y="812.340027" z="365" dir="270"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_04_WAIT">
+    <point x="1260.13696" y="832.055481" z="365" dir="130"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_05_START">
+    <point x="1616.02478" y="154.43837" z="128.084564" dir="30"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_05_WAIT">
+    <point x="1596.60193" y="148.470963" z="130.300537" dir="230"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_06_START">
+    <point x="1793.92334" y="796.919983" z="472.380005" dir="180"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_06_WAIT">
+    <point x="1819.5426" y="796.741333" z="471.400787" dir="80"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_07_START">
+    <point x="1776.79273" y="1755.58972" z="305.653381" dir="90"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_07_WAIT">
+    <point x="1776.37781" y="1724.55176" z="305.653381" dir="340"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_08_START">
+    <point x="1320.45129" y="1738.48376" z="319.293182" dir="200"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_08_WAIT">
+    <point x="1359.50464" y="1751.79517" z="321.056976" dir="90"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_09_START">
+    <point x="1762.43018" y="1284.98755" z="397.206055" dir="45"/>
+  </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_09_WAIT">
+    <point x="1748.26306" y="1254.74817" z="395.45517" dir="315"/>
   </alias>
   <alias world_id="300350000" world_name="idarena_pvp01" name="IDArena_pvp01_morph_Alias1">
     <point x="705.378479" y="1777.52954" z="177.935425" dir="180"/>
@@ -613,6 +750,14 @@
   </alias>
   <alias world_id="301540000" world_name="ideternity_01" name="Alias_4th_Boss_Room_Out_3">
     <point x="292.790405" y="483.128204" z="470.100006" dir="300"/>
+  </alias>
+  <alias world_id="301540000" world_name="ideternity_01" name="teleport_01">
+    <point x="481.901276" y="671.779297" z="470.100006" dir="180"/>
+    <point x="482.328522" y="671.677185" z="470.100006" dir="180"/>
+  </alias>
+  <alias world_id="301540000" world_name="ideternity_01" name="teleport_02">
+    <point x="575.002747" y="511.974487" z="470.100006" dir="120"/>
+    <point x="575.061279" y="511.885437" z="470.100006" dir="120"/>
   </alias>
   <alias world_id="301540000" world_name="ideternity_01" name="teleport_03">
     <point x="482.164978" y="352.502045" z="470.100006" dir="180"/>

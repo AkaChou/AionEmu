@@ -3901,15 +3901,11 @@
 	</portal_dialog>
 	<!-- Prologue To Knowledge ==> Empyrean Lord's Archives -->
 	<portal_dialog npc_id="731809">
-		<portal_path dialog="104" loc_id="3015431">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015431" source_world_id="301540000" destination_alias="teleport_01"/>
 	</portal_dialog>
 	<!-- Prologue To Knowledge ==> Human History Archives -->
 	<portal_dialog npc_id="731810">
-		<portal_path dialog="104" loc_id="3015432">
-		    <portal_req min_level="66" err_level="27"/>
-		</portal_path>
+		<portal_path dialog="104" loc_id="3015432" source_world_id="301540000" destination_alias="teleport_02"/>
 	</portal_dialog>
 	<!-- Prologue To Knowledge ==> Atreia History Archives -->
 	<portal_dialog npc_id="731811">

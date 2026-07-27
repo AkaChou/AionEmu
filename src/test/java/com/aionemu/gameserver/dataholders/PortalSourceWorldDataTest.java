@@ -28,10 +28,17 @@ class PortalSourceWorldDataTest {
 		assertNull(data.getPortalDialog(730321, 10000, Race.ELYOS, 300240000));
 		assertEquals(3005106, data.getPortalDialog(730641, 10000, Race.ELYOS, 300510000).getLocId());
 		assertEquals(1352, data.getTeleportDialogId(730641));
-		assertAlias(data.getPortalDialog(731811, 104, Race.ELYOS, 301540000), 3015433,
-				"Alias_3rd_Boss_Room_In_1");
-		assertAlias(data.getPortalDialog(731812, 104, Race.ELYOS, 301540000), 3015434,
-				"Alias_4th_Boss_Room_In_2");
+			assertAlias(data.getPortalDialog(731811, 104, Race.ELYOS, 301540000), 3015433,
+					"Alias_3rd_Boss_Room_In_1");
+			assertAlias(data.getPortalDialog(731812, 104, Race.ELYOS, 301540000), 3015434,
+					"Alias_4th_Boss_Room_In_2");
+			PortalPath firstArchive = data.getPortalDialog(731809, 104, Race.ELYOS, 301540000);
+			assertAlias(firstArchive, 3015431, "teleport_01");
+			assertNull(firstArchive.getPortalReq());
+			PortalPath secondArchive = data.getPortalDialog(731810, 104, Race.ELYOS, 301540000);
+			assertAlias(secondArchive, 3015432, "teleport_02");
+			assertNull(secondArchive.getPortalReq());
+			assertNull(data.getPortalDialog(731809, 104, Race.ELYOS, 301540001));
 		assertAlias(data.getPortalDialog(805744, 104, Race.ELYOS, 301520000), 3015200,
 				"IDSeal_Q_Boss_Point");
 		assertAlias(data.getPortalDialog(834188, 104, Race.ELYOS, 302100000), 3021001,
