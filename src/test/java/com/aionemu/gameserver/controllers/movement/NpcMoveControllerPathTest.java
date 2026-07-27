@@ -246,14 +246,14 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
-	void pathMovePacketStartsAtThePreviousServerStep() throws Exception {
+	void pathMovePacketStartsAtTheUpdatedServerPosition() throws Exception {
 		String source = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java"));
 		String method = source.substring(source.indexOf("private void moveToLocation"),
 				source.indexOf("void sampleStuckShadow"));
 		String compact = method.replaceAll("\\s+", " ");
 
-		assertTrue(compact.contains("new SM_MOVE(owner.getObjectId(), ownerX, ownerY, ownerZ, "
+		assertTrue(compact.contains("new SM_MOVE(owner.getObjectId(), owner.getX(), owner.getY(), owner.getZ(), "
 				+ "targetDestX, targetDestY, targetDestZ, heading, movementMask)"));
 		assertFalse(method.contains("new SM_MOVE((Creature)this.owner)"));
 	}

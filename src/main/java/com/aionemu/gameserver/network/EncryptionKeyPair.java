@@ -120,6 +120,9 @@ public class EncryptionKeyPair {
 	 * @return 解密是否成功 / true if decryption succeeded
 	 */
 	public boolean decrypt(ByteBuffer buf) {
+		if (buf.remaining() < 5) {
+			return false;
+		}
 		final byte[] data = buf.array();
 		final int size = buf.remaining();
 		byte[] clientPacketKey = keys[CLIENT];

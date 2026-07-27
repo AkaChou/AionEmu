@@ -187,7 +187,6 @@ public class SM_PLAYER_SPAWN extends AionServerPacket {
 		} else {
 			writeC(0);
 		}
-		writeC(0);
 		writeD(0);
 		writeC(0);
 	}
