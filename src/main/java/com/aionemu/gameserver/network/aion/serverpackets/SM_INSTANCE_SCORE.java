@@ -903,7 +903,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 					.getInstanceRewards()) {
 				writeD(playerReward.getOwner());
 				writeD(playerReward.getPoints());
-				writeD(instanceScoreType.isEndProgress() ? 3 : 1);
+				writeD(playerReward.getParticipationState());
 				writeD(playerReward.getInsignia());
 				playerCount++;
 			}

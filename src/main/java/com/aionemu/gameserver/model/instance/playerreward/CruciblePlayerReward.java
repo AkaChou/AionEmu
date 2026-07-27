@@ -6,11 +6,16 @@ package com.aionemu.gameserver.model.instance.playerreward;
  */
 
 public class CruciblePlayerReward extends InstancePlayerReward {
+	public static final int PARTICIPATION_NONE = 0;
+	public static final int PARTICIPATION_PLAYING = 1;
+	public static final int PARTICIPATION_WAITING = 2;
+	public static final int PARTICIPATION_FINISHED = 3;
+
 	private int insignia;
 	private int spawnPosition;
 	private boolean isRewarded = false;
 	private boolean isPlayerLeave = false;
-	private boolean isPlayerDefeated = false;
+	private int participationState;
 
 	public CruciblePlayerReward(Integer object) {
 		super(object);
@@ -58,13 +63,16 @@ public class CruciblePlayerReward extends InstancePlayerReward {
 		isPlayerLeave = true;
 	}
 
-	/** 设置 player defeated / Sets the player defeated */
-	public void setPlayerDefeated(boolean value) {
-		isPlayerDefeated = value;
+	public synchronized int getParticipationState() {
+		return participationState;
 	}
 
-	/** 玩家是否已被击败 / Whether player defeated */
-	public boolean isPlayerDefeated() {
-		return isPlayerDefeated;
+	public synchronized void setParticipationState(int participationState) {
+		if (participationState < PARTICIPATION_NONE || participationState > PARTICIPATION_FINISHED) {
+			throw new IllegalArgumentException("Invalid Crucible participation state " + participationState);
+		}
+		if (this.participationState != PARTICIPATION_FINISHED) {
+			this.participationState = participationState;
+		}
 	}
 }

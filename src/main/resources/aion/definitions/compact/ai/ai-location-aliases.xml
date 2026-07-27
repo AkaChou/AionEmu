@@ -329,6 +329,9 @@
     <point x="529.25238" y="1297.26172" z="198" dir="0"/>
     <point x="530.399963" y="1298.9032" z="198" dir="0"/>
   </alias>
+  <alias world_id="300230000" world_name="idcromede" name="idcromede_alias_04">
+    <point x="591.864075" y="774.249146" z="216.395966" dir="0"/>
+  </alias>
   <alias world_id="300240000" world_name="idstation" name="IDStation_A_alias">
     <point x="605.075989" y="448.647491" z="655.309021" dir="90"/>
   </alias>
@@ -365,6 +368,9 @@
   <alias world_id="300280000" world_name="idyun" name="LocationsIDYun_siezeweapon6">
     <point x="412.880951" y="459.747375" z="153.876724" dir="0"/>
   </alias>
+  <alias world_id="300300000" world_name="idarena" name="STAGE_00_START">
+    <point x="354.786804" y="349.345673" z="103.529999" dir="180"/>
+  </alias>
   <alias world_id="300300000" world_name="idarena" name="STAGE_04_START">
     <point x="1260.15002" y="812.340027" z="365" dir="270"/>
   </alias>
@@ -400,6 +406,33 @@
   </alias>
   <alias world_id="300300000" world_name="idarena" name="STAGE_09_WAIT">
     <point x="1748.26306" y="1254.74817" z="395.45517" dir="315"/>
+  </alias>
+  <alias world_id="300320000" world_name="idarena_solo" name="STAGE_00_START">
+    <point x="357.102081" y="1662.70203" z="98.235237" dir="180"/>
+  </alias>
+  <alias world_id="300320000" world_name="idarena_solo" name="STAGE_01_START">
+    <point x="1796.55127" y="306.996704" z="472.110352" dir="180"/>
+  </alias>
+  <alias world_id="300320000" world_name="idarena_solo" name="STAGE_02_START">
+    <point x="1324.43298" y="1738.2279" z="321.073364" dir="210"/>
+  </alias>
+  <alias world_id="300320000" world_name="idarena_solo" name="STAGE_03_START">
+    <point x="1283.12463" y="791.668274" z="439.099365" dir="180"/>
+  </alias>
+  <alias world_id="300320000" world_name="idarena_solo" name="STAGE_04_START">
+    <point x="1270.88769" y="237.933075" z="407.598755" dir="180"/>
+  </alias>
+  <alias world_id="300320000" world_name="idarena_solo" name="STAGE_05_START">
+    <point x="357.987976" y="349.191162" z="99.956322" dir="180"/>
+  </alias>
+  <alias world_id="300320000" world_name="idarena_solo" name="STAGE_06_START">
+    <point x="1759.50037" y="1273.54138" z="390.718384" dir="30"/>
+  </alias>
+  <alias world_id="300320000" world_name="idarena_solo" name="STAGE_07_START">
+    <point x="1759.5946" y="1768.6449" z="390.718384" dir="50"/>
+  </alias>
+  <alias world_id="300320000" world_name="idarena_solo" name="STAGE_08_START">
+    <point x="1802.49536" y="796.456116" z="472.110352" dir="180"/>
   </alias>
   <alias world_id="300350000" world_name="idarena_pvp01" name="IDArena_pvp01_morph_Alias1">
     <point x="705.378479" y="1777.52954" z="177.935425" dir="180"/>
@@ -961,19 +994,19 @@
   <alias world_id="302110000" world_name="idtransform_event" name="IDTransform_Save_Point_03">
     <point x="408.898682" y="513.081055" z="349.319672" dir="180"/>
   </alias>
-  <alias world_id="302200000" world_name="idlc1" name="Location_Invade_Start_L">
-    <point x="946.540039" y="758.715576" z="2209.367676" dir="0"/>
-    <point x="946.926636" y="756.478516" z="2209.367676" dir="0"/>
-    <point x="944.438110" y="758.306641" z="2209.367676" dir="0"/>
-    <point x="946.542969" y="754.756348" z="2209.367676" dir="0"/>
-    <point x="944.707886" y="755.455688" z="2209.367676" dir="0"/>
+  <alias world_id="302200000" world_name="IDLC1_dreadgion" name="Location_Invade_Start_L">
+    <point x="946.540039" y="758.715576" z="2209.36768" dir="0"/>
+    <point x="946.926636" y="756.478516" z="2209.36768" dir="0"/>
+    <point x="944.43811" y="758.306641" z="2209.36768" dir="0"/>
+    <point x="946.542969" y="754.756348" z="2209.36768" dir="0"/>
+    <point x="944.707886" y="755.455688" z="2209.36768" dir="0"/>
   </alias>
-  <alias world_id="302300000" world_name="iddc1" name="Location_Invade_Start_D">
-    <point x="833.079285" y="2349.898926" z="95.163216" dir="0"/>
-    <point x="836.172913" y="2350.466309" z="95.163216" dir="0"/>
-    <point x="833.405273" y="2345.052246" z="95.163216" dir="0"/>
-    <point x="830.873901" y="2347.083984" z="95.163216" dir="0"/>
-    <point x="835.702271" y="2344.916748" z="95.163216" dir="0"/>
+  <alias world_id="302300000" world_name="iddc1_dreadgion" name="Location_Invade_Start_D">
+    <point x="833.079285" y="2349.89893" z="95.163216" dir="0"/>
+    <point x="836.172913" y="2350.46631" z="95.163216" dir="0"/>
+    <point x="833.405273" y="2345.05225" z="95.163216" dir="0"/>
+    <point x="830.873901" y="2347.08398" z="95.163216" dir="0"/>
+    <point x="835.702271" y="2344.91675" z="95.163216" dir="0"/>
   </alias>
   <alias world_id="302330000" world_name="idevent_solo" name="idevent_boss_end">
     <point x="223.848312" y="357.048798" z="143.100006" dir="270"/>

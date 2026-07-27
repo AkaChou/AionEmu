@@ -15,8 +15,8 @@
       {
         "path": "RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
         "role": "script_transport_source",
-        "sha256": "f125d5a8e8956c9b15141b7a830991c38322f3f743819f1a12fbc7e3ffb3fa3e",
-        "size": 4868729
+        "sha256": "5c638afe535c7108fa2445b0eb5722fbbccf780f25f9ee49ef840a6ea567c002",
+        "size": 4872399
       },
       {
         "path": "XML/China/ID/WorldId.xml",
@@ -42424,8 +42424,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000124
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_09_START\",1);",
       "registration_reasons": [],
@@ -42597,8 +42607,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000124
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_00_START\",1);",
       "registration_reasons": [],
@@ -43420,8 +43440,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000124
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_04_START\",1);",
       "registration_reasons": [],
@@ -43823,8 +43853,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000124
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_05_START\",1);",
       "registration_reasons": [],
@@ -44226,8 +44266,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000124
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_06_START\",1);",
       "registration_reasons": [],
@@ -44629,8 +44679,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000124
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_07_START\",1);",
       "registration_reasons": [],
@@ -45032,8 +45092,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000124
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_08_START\",1);",
       "registration_reasons": [],
@@ -85755,8 +85825,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000134
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_07_START\",1);",
       "registration_reasons": [],
@@ -85928,8 +86008,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000134
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_08_START\",1);",
       "registration_reasons": [],
@@ -86101,8 +86191,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000134
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_00_START\",1);",
       "registration_reasons": [],
@@ -86274,8 +86374,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000134
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_01_START\",1);",
       "registration_reasons": [],
@@ -86447,8 +86557,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000134
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_02_START\",1);",
       "registration_reasons": [],
@@ -86620,8 +86740,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000134
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_04_START\",1);",
       "registration_reasons": [],
@@ -86793,8 +86923,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000134
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_03_START\",1);",
       "registration_reasons": [],
@@ -86966,8 +87106,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000134
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_05_START\",1);",
       "registration_reasons": [],
@@ -87139,8 +87289,18 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "instance_action": "JOIN_PLAY",
+          "items": [
+            {
+              "consume": true,
+              "err_item": 1097,
+              "item_count": 1,
+              "item_id": 186000134
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2e0))(plVar2,L\"STAGE_06_START\",1);",
       "registration_reasons": [],
@@ -87985,6 +88145,7 @@
         "requirements": {
           "items": [
             {
+              "consume": false,
               "err_message_id": 1403685,
               "item_count": 1,
               "item_id": 185000283
@@ -88161,6 +88322,7 @@
         "requirements": {
           "items": [
             {
+              "consume": false,
               "err_message_id": 1403685,
               "item_count": 1,
               "item_id": 185000283
@@ -102247,6 +102409,7 @@
         "requirements": {
           "items": [
             {
+              "consume": false,
               "err_message_id": 1403685,
               "item_count": 1,
               "item_id": 185000282
@@ -102423,6 +102586,7 @@
         "requirements": {
           "items": [
             {
+              "consume": false,
               "err_message_id": 1403685,
               "item_count": 1,
               "item_id": 185000282

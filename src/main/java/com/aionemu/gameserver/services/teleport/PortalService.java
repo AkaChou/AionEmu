@@ -115,10 +115,23 @@ public class PortalService {
 				return;
 			}
 		}
+		String instanceAction = portalPath.getInstanceAction();
 		if (!isInstance) {
-			if (InstanceAdmissionService.chargeNonInstancePortal(portalPath, player)) {
-				easyTransfer(player, loc, aliasDestination, portalPath.getAnimation());
+			if (!InstanceAdmissionService.chargeNonInstancePortal(portalPath, player)) {
+				return;
 			}
+			if (!instanceAction.isBlank()) {
+				WorldMapInstance currentInstance = player.getPosition().getWorldMapInstance();
+				if (currentInstance == null || currentInstance.getInstanceHandler() == null
+						|| !currentInstance.getInstanceHandler().onRetailPortalAction(player, instanceAction)) {
+					InstanceAdmissionService.refundNonInstancePortal(portalPath, player);
+					return;
+				}
+			}
+			easyTransfer(player, loc, aliasDestination, portalPath.getAnimation());
+			return;
+		}
+		if (!instanceAction.isBlank()) {
 			return;
 		}
 		Admission admission = InstanceAdmissionService.admit(portalPath, loc, player);

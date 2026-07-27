@@ -2,12 +2,15 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.model.instance.playerreward.CruciblePlayerReward;
 
 class CrucibleMigrationTest {
 
@@ -41,7 +44,7 @@ class CrucibleMigrationTest {
 	}
 
 	@Test
-	void handlersKeepOnlyProtocolSettlementAndUnsupportedPortal() throws Exception {
+	void handlersKeepProtocolSettlementAndRetailPortalAction() throws Exception {
 		String base = Files.readString(HANDLERS.resolve("CrucibleInstance.java"));
 		String solo = Files.readString(HANDLERS.resolve("CrucibleChallengeInstance.java"));
 		String group = Files.readString(HANDLERS.resolve("EmpyreanCrucibleInstance.java"));
@@ -49,6 +52,8 @@ class CrucibleMigrationTest {
 		assertTrue(base.contains("DataManager.RETAIL_AI_DATA.getNpcScore"));
 		assertTrue(base.contains("RetailConditionSpawnEngine.consumeConditionSpawnDeath"));
 		assertTrue(base.contains("new SM_INSTANCE_STAGE_INFO"));
+		assertTrue(base.contains("onRetailPortalAction(Player player, String action)"));
+		assertTrue(base.contains("PARTICIPATION_PLAYING"));
 		assertTrue(solo.contains("spawn(730459"));
 		assertTrue(solo.contains("scheduleDeadline(\"revive.\""));
 		assertTrue(solo.contains("InstanceSettlementService.settleCrucible"));
@@ -58,6 +63,7 @@ class CrucibleMigrationTest {
 			assertFalse(source.contains("onLeaveInstance("));
 			assertTrue(source.contains("onExitInstance(Player player) {\n\t\tremoveItems(player);"));
 		}
+
 		assertFalse(solo.contains("186000124"));
 		assertFalse(solo.contains("186000125"));
 		assertFalse(group.contains("186000134"));
@@ -81,6 +87,35 @@ class CrucibleMigrationTest {
 		assertTrue(soloOwnership.contains("retail condition spawns and Pattern own five-stage encounters"));
 		assertTrue(soloOwnership.contains("shared Crucible handler owns persistent idempotent NPC scoring"));
 		assertTrue(soloOwnership.contains("explicit-exit item cleanup while logout preserves items"));
+	}
+
+	@Test
+	void participationStateIsValidatedAndTerminal() {
+		CruciblePlayerReward reward = new CruciblePlayerReward(1);
+		assertEquals(CruciblePlayerReward.PARTICIPATION_NONE, reward.getParticipationState());
+		reward.setParticipationState(CruciblePlayerReward.PARTICIPATION_WAITING);
+		assertEquals(CruciblePlayerReward.PARTICIPATION_WAITING, reward.getParticipationState());
+		reward.setParticipationState(CruciblePlayerReward.PARTICIPATION_FINISHED);
+		reward.setParticipationState(CruciblePlayerReward.PARTICIPATION_PLAYING);
+		assertEquals(CruciblePlayerReward.PARTICIPATION_FINISHED, reward.getParticipationState());
+		assertThrows(IllegalArgumentException.class, () -> new CruciblePlayerReward(2).setParticipationState(4));
+	}
+
+	@Test
+	void arenaReentryArbitersUseTheSharedPortalConsumer() throws Exception {
+		assertFalse(Files.exists(AI.resolve("empyreanCrucible/EmpyreanArbiterAI2.java")));
+		assertFalse(Files.exists(AI.resolve("crucibleChallenge/ArbiterAi2.java")));
+		String templates = Files.readString(Path.of("src/main/resources/aion/data/static_data/npcs/npc_template.xml"));
+		for (int npcId : new int[] { 799573, 205426, 205427, 205428, 205429, 205430, 205431, 205682,
+				205683, 205684, 205685, 205663, 205686, 205687, 205664, 205665 }) {
+			int start = templates.indexOf("npc_id=\"" + npcId + "\"");
+			assertTrue(start >= 0, Integer.toString(npcId));
+			assertTrue(templates.substring(start, templates.indexOf('>', start)).contains("ai=\"portal_dialog\""),
+					Integer.toString(npcId));
+		}
+		String packet = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_INSTANCE_SCORE.java"));
+		assertTrue(packet.contains("writeD(playerReward.getParticipationState())"));
 	}
 
 	@Test

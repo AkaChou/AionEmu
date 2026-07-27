@@ -64,7 +64,7 @@ public final class InstanceAdmissionService {
 
 		long kinah = requirement == null ? 0 : requirement.getKinahReq();
 		List<ItemReq> paidItems = requirement == null || requirement.getItemReq() == null
-				? List.of() : List.copyOf(requirement.getItemReq());
+				? List.of() : requirement.getItemReq().stream().filter(ItemReq::isConsume).toList();
 		boolean limitConsumed = false;
 		long paidKinah = 0;
 		List<ItemReq> chargedItems = new ArrayList<>();
@@ -221,7 +221,7 @@ public final class InstanceAdmissionService {
 		}
 		long kinah = requirement == null ? 0 : requirement.getKinahReq();
 		List<ItemReq> items = requirement == null || requirement.getItemReq() == null
-				? List.of() : List.copyOf(requirement.getItemReq());
+				? List.of() : requirement.getItemReq().stream().filter(ItemReq::isConsume).toList();
 		if (kinah > 0 && !player.getInventory().tryDecreaseKinah(kinah)) {
 			return false;
 		}
@@ -237,6 +237,21 @@ public final class InstanceAdmissionService {
 			paid.add(item);
 		}
 		return true;
+	}
+
+	public static void refundNonInstancePortal(PortalPath path, Player player) {
+		PortalReq requirement = path.getPortalReq();
+		if (requirement == null) {
+			return;
+		}
+		player.getInventory().increaseKinah(requirement.getKinahReq());
+		if (requirement.getItemReq() != null) {
+			for (ItemReq item : requirement.getItemReq()) {
+				if (item.isConsume()) {
+					ItemService.addItem(player, item.getItemId(), item.getItemCount());
+				}
+			}
+		}
 	}
 
 	private static boolean preflightMembers(List<Player> members, int worldId, WorldMapInstance instance) {

@@ -4,6 +4,7 @@ import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.model.DescriptionId;
+import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.StageType;
@@ -38,10 +39,20 @@ public class CrucibleInstance extends GeneralInstanceHandler {
 			CruciblePlayerReward reward = new CruciblePlayerReward(player.getObjectId());
 			reward.addPoints(runtimeState().getInt(playerKey(player.getObjectId(), "points"), 0));
 			reward.setInsignia(runtimeState().getInt(playerKey(player.getObjectId(), "insignia"), 0));
+			reward.setParticipationState(runtimeState().getInt(playerKey(player.getObjectId(), "participation"),
+					CruciblePlayerReward.PARTICIPATION_NONE));
 			if (runtimeState().getBoolean(playerKey(player.getObjectId(), "rewarded"), false)) {
 				reward.setRewarded();
 			}
 			instanceReward.addPlayerReward(reward);
+		}
+		CruciblePlayerReward reward = getPlayerReward(player.getObjectId());
+		if (reward.getParticipationState() == CruciblePlayerReward.PARTICIPATION_NONE) {
+			setParticipationState(reward, stageType == StageType.DEFAULT
+					? CruciblePlayerReward.PARTICIPATION_PLAYING : CruciblePlayerReward.PARTICIPATION_WAITING);
+			if (reward.getParticipationState() == CruciblePlayerReward.PARTICIPATION_WAITING) {
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ENTERED_BIRTHAREA_IDARENA);
+			}
 		}
 		sendScore(player);
 	}
@@ -92,6 +103,15 @@ public class CrucibleInstance extends GeneralInstanceHandler {
 	}
 
 	@Override
+	public boolean onDie(Player player, Creature lastAttacker) {
+		CruciblePlayerReward reward = getPlayerReward(player.getObjectId());
+		if (reward != null) {
+			setParticipationState(reward, CruciblePlayerReward.PARTICIPATION_WAITING);
+		}
+		return false;
+	}
+
+	@Override
 	public boolean onReviveEvent(Player player) {
 		player.getGameStats().updateStatsAndSpeedVisually();
 		PlayerReviveService.revive(player, 100, 100, false, 0);
@@ -117,6 +137,29 @@ public class CrucibleInstance extends GeneralInstanceHandler {
 		runtimeState().put(playerKey(reward.getOwner(), "rewarded"), true);
 	}
 
+	protected void setParticipationState(CruciblePlayerReward reward, int state) {
+		reward.setParticipationState(state);
+		runtimeState().put(playerKey(reward.getOwner(), "participation"), reward.getParticipationState());
+	}
+
+	@Override
+	public synchronized boolean onRetailPortalAction(Player player, String action) {
+		if (!"JOIN_PLAY".equals(action)) {
+			return false;
+		}
+		CruciblePlayerReward reward = getPlayerReward(player.getObjectId());
+		if (reward == null || reward.getParticipationState() == CruciblePlayerReward.PARTICIPATION_FINISHED) {
+			return false;
+		}
+		setParticipationState(reward, CruciblePlayerReward.PARTICIPATION_PLAYING);
+		for (Player target : instance.getPlayersInside()) {
+			PacketSendUtility.sendPacket(target,
+					SM_SYSTEM_MESSAGE.STR_MSG_FRIENDLY_MOVE_COMBATAREA_IDARENA(player.getName()));
+			sendScore(target);
+		}
+		return true;
+	}
+
 	protected void sendScore(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(instanceReward));
 		PacketSendUtility.sendPacket(player,
@@ -139,7 +182,8 @@ public class CrucibleInstance extends GeneralInstanceHandler {
 			return true;
 		}
 		for (CruciblePlayerReward reward : instanceReward.getInstanceRewards()) {
-			if (!reward.isRewarded()) {
+			if (!reward.isRewarded()
+					&& reward.getParticipationState() == CruciblePlayerReward.PARTICIPATION_PLAYING) {
 				reward.addPoints(points);
 				runtimeState().put(playerKey(reward.getOwner(), "points"), reward.getPoints());
 			}

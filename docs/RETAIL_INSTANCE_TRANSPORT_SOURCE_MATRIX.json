@@ -89,6 +89,9 @@
         "0x300": "inventory item count",
         "0x1d0": "consume inventory item",
         "0x2a8": "send missing-item system message"
+      },
+      "instance_calls": {
+        "0x590": "instance action"
       }
     }
   },
@@ -102,7 +105,7 @@
     "unique_callbacks": 757,
     "transport_calls": 520,
     "endpoint_proven_routes": 509,
-    "portal_service_expressible_routes": 140,
+    "portal_service_expressible_routes": 156,
     "callback_shapes": 262,
     "route_proven_callback_shapes": 32,
     "by_status": {
@@ -126,10 +129,10 @@
       "unsupported_argument_shape": 59
     },
     "portal_service_projection_by_status": {
-      "EXPRESSIBLE": 103,
+      "EXPRESSIBLE": 119,
       "NOT_APPLICABLE": 393,
       "REJECT_ROUTE_NOT_PROVEN": 280,
-      "REJECT_UNMODELED_CALLBACK_SHAPE": 42
+      "REJECT_UNMODELED_CALLBACK_SHAPE": 26
     }
   },
   "callback_shapes": [
@@ -70274,8 +70277,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000124,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -70747,8 +70760,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000124,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -72567,8 +72590,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000124,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -73274,8 +73307,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000124,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -74019,8 +74062,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000124,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -74726,8 +74779,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000124,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -75433,8 +75496,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000124,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -84109,8 +84182,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000134,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -84512,8 +84595,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000134,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -84934,8 +85027,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000134,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -85337,8 +85440,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000134,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -85740,8 +85853,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000134,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -86181,8 +86304,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000134,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -86564,8 +86697,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000134,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -87771,8 +87914,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000134,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -87976,8 +88129,18 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 186000134,
+              "item_count": 1,
+              "consume": true,
+              "err_item": 1097
+            }
+          ],
+          "instance_action": "JOIN_PLAY"
+        }
       }
     },
     {
@@ -92692,6 +92855,7 @@
             {
               "item_id": 185000283,
               "item_count": 1,
+              "consume": false,
               "err_message_id": 1403685
             }
           ]
@@ -108815,6 +108979,7 @@
             {
               "item_id": 185000282,
               "item_count": 1,
+              "consume": false,
               "err_message_id": 1403685
             }
           ]

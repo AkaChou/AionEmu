@@ -41,6 +41,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance {
 	public void doReward(Player player) {
 		CruciblePlayerReward reward = getPlayerReward(player.getObjectId());
 		if (!reward.isRewarded()) {
+			setParticipationState(reward, CruciblePlayerReward.PARTICIPATION_FINISHED);
 			var plan = InstanceSettlementService.cruciblePlan(mapId, reward.getPoints());
 			InstanceSettlementService.settleCrucible(instance, player, reward.getPoints());
 			markRewarded(reward, Math.toIntExact(plan.itemCount(186000130)));

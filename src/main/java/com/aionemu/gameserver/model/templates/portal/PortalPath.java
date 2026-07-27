@@ -41,6 +41,8 @@ public class PortalPath {
 	protected TeleportAnimation animation = TeleportAnimation.FIRE_ANIMATION;
 	@XmlAttribute(name = "destination_alias")
 	protected String destinationAlias = "";
+	@XmlAttribute(name = "instance_action")
+	protected String instanceAction = "";
 
 	/** 返回 portal req / Returns the portal req */
 	public PortalReq getPortalReq() {
@@ -113,6 +115,10 @@ public class PortalPath {
 
 	public String getDestinationAlias() {
 		return destinationAlias;
+	}
+
+	public String getInstanceAction() {
+		return instanceAction;
 	}
 
 }

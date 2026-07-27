@@ -372,8 +372,36 @@ def item_gate_requirements(shape_id: str | None,
         if value is None:
             return None
         values[target] = value
-    return {"items": [{"item_id": values["0x300"], "item_count": 1,
+    return {"items": [{"item_id": values["0x300"], "item_count": 1, "consume": False,
                        "err_message_id": values["0x2a8"]}]}
+
+
+def arena_reentry_requirements(shape_id: str | None,
+                               operations: list[dict[str, object]] | None) -> dict[str, object] | None:
+    if shape_id != "1f81f2a216ad13ba" or operations is None:
+        return None
+    calls = {}
+    for target, kind in (("0x300", "READ"), ("0x1d0", "READ"), ("0x590", "CALL"), ("0x188", "CALL")):
+        matches = [operation for operation in operations
+                   if operation["target"] == target and operation["kind"] == kind]
+        if len(matches) != 1:
+            return None
+        call = VIRTUAL_CALL.fullmatch(str(matches[0]["raw"]))
+        if call is None:
+            return None
+        calls[target] = split_args(call.group("args"))
+    checked_item = integer(calls["0x300"][1]) if len(calls["0x300"]) > 1 else None
+    consumed_item = integer(calls["0x1d0"][1]) if len(calls["0x1d0"]) > 2 else None
+    item_count = integer(calls["0x1d0"][2]) if len(calls["0x1d0"]) > 2 else None
+    action = WIDE_STRING.fullmatch(calls["0x590"][2]) if len(calls["0x590"]) > 2 else None
+    err_item = integer(calls["0x188"][2]) if len(calls["0x188"]) > 2 else None
+    if checked_item is None or checked_item != consumed_item or item_count is None or action is None or err_item is None:
+        return None
+    return {
+        "items": [{"item_id": checked_item, "item_count": item_count, "consume": True,
+                   "err_item": err_item}],
+        "instance_action": action.group(1),
+    }
 
 
 def portal_service_projection(status: str, shape_id: str | None,
@@ -382,6 +410,9 @@ def portal_service_projection(status: str, shape_id: str | None,
         return {"status": "NOT_APPLICABLE", "requirements": {}}
     if status != "ROUTE_PROVEN":
         return {"status": "REJECT_ROUTE_NOT_PROVEN", "requirements": {}}
+    arena_requirements = arena_reentry_requirements(shape_id, operations)
+    if arena_requirements is not None:
+        return {"status": "EXPRESSIBLE", "requirements": arena_requirements}
     item_requirements = item_gate_requirements(shape_id, operations)
     if item_requirements is not None:
         return {"status": "EXPRESSIBLE", "requirements": item_requirements}
@@ -742,6 +773,9 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
                     "0x300": "inventory item count",
                     "0x1d0": "consume inventory item",
                     "0x2a8": "send missing-item system message",
+                },
+                "instance_calls": {
+                    "0x590": "instance action",
                 },
             },
         },

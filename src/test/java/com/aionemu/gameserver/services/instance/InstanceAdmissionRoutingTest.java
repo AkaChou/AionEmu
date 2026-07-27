@@ -38,4 +38,15 @@ class InstanceAdmissionRoutingTest {
 		assertTrue(teleport.contains("InstanceAdmissionService.admitPersonal(player, worldId)"));
 		assertTrue(teleport.contains("admission.rollback()"));
 	}
+
+	@Test
+	void retailPortalActionRunsAfterPaymentAndRefundsRejection() throws IOException {
+		String admission = Files.readString(SOURCES.resolve("services/instance/InstanceAdmissionService.java"));
+		String portal = Files.readString(SOURCES.resolve("services/teleport/PortalService.java"));
+		int charge = portal.indexOf("chargeNonInstancePortal(portalPath, player)");
+		int action = portal.indexOf("onRetailPortalAction(player, instanceAction)");
+		assertTrue(charge >= 0 && charge < action);
+		assertTrue(portal.contains("refundNonInstancePortal(portalPath, player)"));
+		assertTrue(admission.contains("if (item.isConsume())"));
+	}
 }

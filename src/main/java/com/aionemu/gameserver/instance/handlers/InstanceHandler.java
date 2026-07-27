@@ -221,4 +221,9 @@ public interface InstanceHandler {
 
 	/** 将真端 NPC 分值交给当前副本的既有计分模型。 */
 	boolean onRetailNpcScore(Player player, Npc npc, int scoreApplyType, int points);
+
+	/** 执行门户携带的真端副本动作；未知动作必须拒绝。 */
+	default boolean onRetailPortalAction(Player player, String action) {
+		return false;
+	}
 }

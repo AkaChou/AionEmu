@@ -2182,6 +2182,120 @@
 			<portal_req min_level="50" err_level="27"/>
 		</portal_path>
 	</portal_dialog>
+	<!-- Empyrean Crucible reentry arbiters -->
+	<portal_dialog npc_id="799573">
+		<portal_path dialog="10000" loc_id="3003000" source_world_id="300300000" destination_alias="STAGE_00_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000124" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205426">
+		<portal_path dialog="10000" loc_id="3003000" source_world_id="300300000" destination_alias="STAGE_04_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000124" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205427">
+		<portal_path dialog="10000" loc_id="3003000" source_world_id="300300000" destination_alias="STAGE_05_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000124" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205428">
+		<portal_path dialog="10000" loc_id="3003000" source_world_id="300300000" destination_alias="STAGE_06_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000124" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205429">
+		<portal_path dialog="10000" loc_id="3003000" source_world_id="300300000" destination_alias="STAGE_07_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000124" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205430">
+		<portal_path dialog="10000" loc_id="3003000" source_world_id="300300000" destination_alias="STAGE_08_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000124" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205431">
+		<portal_path dialog="10000" loc_id="3003000" source_world_id="300300000" destination_alias="STAGE_09_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000124" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<!-- Crucible Challenge reentry arbiters -->
+	<portal_dialog npc_id="205682">
+		<portal_path dialog="10000" loc_id="3003200" source_world_id="300320000" destination_alias="STAGE_00_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000134" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205683">
+		<portal_path dialog="10000" loc_id="3003200" source_world_id="300320000" destination_alias="STAGE_01_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000134" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205684">
+		<portal_path dialog="10000" loc_id="3003200" source_world_id="300320000" destination_alias="STAGE_02_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000134" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205685">
+		<portal_path dialog="10000" loc_id="3003200" source_world_id="300320000" destination_alias="STAGE_03_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000134" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205663">
+		<portal_path dialog="10000" loc_id="3003200" source_world_id="300320000" destination_alias="STAGE_04_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000134" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205686">
+		<portal_path dialog="10000" loc_id="3003200" source_world_id="300320000" destination_alias="STAGE_05_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000134" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205687">
+		<portal_path dialog="10000" loc_id="3003200" source_world_id="300320000" destination_alias="STAGE_06_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000134" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205664">
+		<portal_path dialog="10000" loc_id="3003200" source_world_id="300320000" destination_alias="STAGE_07_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000134" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
+	<portal_dialog npc_id="205665">
+		<portal_path dialog="10000" loc_id="3003200" source_world_id="300320000" destination_alias="STAGE_08_START" instance_action="JOIN_PLAY">
+			<portal_req>
+				<item_req item_id="186000134" item_count="1" err_item="1097" consume="true"/>
+			</portal_req>
+		</portal_path>
+	</portal_dialog>
 	<!-- EMPYREAN CRUCIBLE END -->
 	
 	<!-- DARK POETA 4.9 -->
@@ -4813,7 +4927,7 @@
 	<portal_dialog npc_id="834320">
 		<portal_path dialog="10000" loc_id="3022001" source_world_id="302200000" destination_alias="Location_Invade_Start_L">
 			<portal_req>
-				<item_req item_id="185000282" item_count="1" err_message_id="1403685"/>
+				<item_req item_id="185000282" item_count="1" err_message_id="1403685" consume="false"/>
 			</portal_req>
 		</portal_path>
 	</portal_dialog>
@@ -4824,7 +4938,7 @@
 	<portal_dialog npc_id="834270">
 		<portal_path dialog="10000" loc_id="3023001" source_world_id="302300000" destination_alias="Location_Invade_Start_D">
 			<portal_req>
-				<item_req item_id="185000283" item_count="1" err_message_id="1403685"/>
+				<item_req item_id="185000283" item_count="1" err_message_id="1403685" consume="false"/>
 			</portal_req>
 		</portal_path>
 	</portal_dialog>

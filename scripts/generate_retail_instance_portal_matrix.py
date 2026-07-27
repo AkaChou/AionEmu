@@ -729,6 +729,8 @@ def portal_service_requirements(route: dict[str, object]) -> dict[str, object]:
     race = attributes.get("race")
     if race and race != "PC_ALL":
         result["race"] = race
+    if attributes.get("instance_action"):
+        result["instance_action"] = attributes["instance_action"]
     requirements = semantics.get("requirements", [])
     if requirements:
         requirement = requirements[0].get("attributes", {})
@@ -742,7 +744,10 @@ def portal_service_requirements(route: dict[str, object]) -> dict[str, object]:
             entry = {
                 "item_id": int(attributes["item_id"]),
                 "item_count": int(attributes.get("item_count", "1")),
+                "consume": attributes.get("consume", "true").lower() == "true",
             }
+            if "err_item" in attributes:
+                entry["err_item"] = int(attributes["err_item"])
             if "err_message_id" in attributes:
                 entry["err_message_id"] = int(attributes["err_message_id"])
             items.append(entry)

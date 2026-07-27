@@ -84,7 +84,8 @@ class RetailScriptTransportsTest(unittest.TestCase):
         )
         self.assertEqual(
             {"status": "EXPRESSIBLE", "requirements": {
-                "items": [{"item_id": 185000283, "item_count": 1, "err_message_id": 1403685}],
+                "items": [{"item_id": 185000283, "item_count": 1, "consume": False,
+                           "err_message_id": 1403685}],
             }},
             portal_service_projection("ROUTE_PROVEN", "ffee58d2fe09b860",
                                       [
@@ -92,6 +93,23 @@ class RetailScriptTransportsTest(unittest.TestCase):
                                               "(**(code **)(*plVar1 + 0x300))(plVar1,0xb06e15b);"},
                                           {"kind": "CALL", "target": "0x2a8", "raw":
                                               "(**(code **)(*plVar1 + 0x2a8))(plVar1,0x156b25,0x1e);"},
+                                      ]),
+        )
+        self.assertEqual(
+            {"status": "EXPRESSIBLE", "requirements": {
+                "items": [{"item_id": 186000134, "item_count": 1, "consume": True, "err_item": 1097}],
+                "instance_action": "JOIN_PLAY",
+            }},
+            portal_service_projection("ROUTE_PROVEN", "1f81f2a216ad13ba",
+                                      [
+                                          {"kind": "READ", "target": "0x300", "raw":
+                                              "(**(code **)(*plVar1 + 0x300))(plVar1,0xb162306);"},
+                                          {"kind": "READ", "target": "0x1d0", "raw":
+                                              "(**(code **)(*plVar1 + 0x1d0))(plVar1,0xb162306,1);"},
+                                          {"kind": "CALL", "target": "0x590", "raw":
+                                              "(**(code **)(*owner + 0x590))(owner,plVar1,L\"JOIN_PLAY\");"},
+                                          {"kind": "CALL", "target": "0x188", "raw":
+                                              "(**(code **)(*owner + 0x188))(owner,plVar1,0x449,0);"},
                                       ]),
         )
 

@@ -7,128 +7,11 @@
     "runtime_proof": "RetailPatternAI2Test#retailInstancePatternsUseCompleteConditionVariables"
   },
   "summary": {
-    "REJECT_NO_RETAIL_PATTERN": 38,
+    "REJECT_NO_RETAIL_PATTERN": 24,
     "REJECT_INCOMPLETE_RETAIL_PATTERN": 1,
     "SUPPORTED_RETAIL_PATTERN": 8
   },
   "entries": [
-    {
-      "npc_id": 205426,
-      "world_ids": [
-        300300000
-      ],
-      "mapped_pattern": "IDArena_5th_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205427,
-      "world_ids": [
-        300300000
-      ],
-      "mapped_pattern": "IDArena_6th_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205428,
-      "world_ids": [
-        300300000
-      ],
-      "mapped_pattern": "IDArena_7th_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205429,
-      "world_ids": [
-        300300000
-      ],
-      "mapped_pattern": "IDArena_8th_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205430,
-      "world_ids": [
-        300300000
-      ],
-      "mapped_pattern": "IDArena_9th_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205431,
-      "world_ids": [
-        300300000
-      ],
-      "mapped_pattern": "IDArena_10th_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205663,
-      "world_ids": [
-        300320000
-      ],
-      "mapped_pattern": "IDArena_Solo_4B_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205682,
-      "world_ids": [
-        300320000
-      ],
-      "mapped_pattern": "IDArena_Solo_1st_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205683,
-      "world_ids": [
-        300320000
-      ],
-      "mapped_pattern": "IDArena_Solo_2nd_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205684,
-      "world_ids": [
-        300320000
-      ],
-      "mapped_pattern": "IDArena_Solo_3rd_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205685,
-      "world_ids": [
-        300320000
-      ],
-      "mapped_pattern": "IDArena_Solo_4th_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205686,
-      "world_ids": [
-        300320000
-      ],
-      "mapped_pattern": "IDArena_Solo_5th_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 205687,
-      "world_ids": [
-        300320000
-      ],
-      "mapped_pattern": "IDArena_Solo_6th_Resurrect_NPC",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
     {
       "npc_id": 247386,
       "world_ids": [
@@ -295,15 +178,6 @@
         300480000
       ],
       "mapped_pattern": "IDLDF5Re_Solo_Set",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 799573,
-      "world_ids": [
-        300300000
-      ],
-      "mapped_pattern": "IDArena_1st_Resurrect_NPC",
       "status": "REJECT_NO_RETAIL_PATTERN",
       "reason": "mapped retail pattern is absent from generated pattern definitions"
     },

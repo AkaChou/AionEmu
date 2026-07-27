@@ -23,6 +23,8 @@ public class ItemReq {
 	protected int errItem;
 	@XmlAttribute(name = "err_message_id")
 	protected int errMessageId;
+	@XmlAttribute(name = "consume")
+	protected boolean consume = true;
 
 	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
@@ -51,5 +53,9 @@ public class ItemReq {
 
 	public int getErrMessageId() {
 		return errMessageId;
+	}
+
+	public boolean isConsume() {
+		return consume;
 	}
 }

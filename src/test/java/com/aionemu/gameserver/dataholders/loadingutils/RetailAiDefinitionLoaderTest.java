@@ -146,12 +146,16 @@ class RetailAiDefinitionLoaderTest {
 		assertNull(data.findSensoryArea(301550000, 220582, 0, 0, 0));
 		assertEquals(14458, data.skillCategoryCount());
 		assertEquals(2829, data.npcScoreCount());
-			assertEquals(442, data.locationAliasCount());
-		assertNotNull(data.findLocationAlias(301520000, "IDSeal_Q_Boss_Point"));
-		assertNotNull(data.findLocationAlias(302100000, "IDTransform_Save_Point_01"));
+			assertEquals(453, data.locationAliasCount());
+			assertNotNull(data.findLocationAlias(301520000, "IDSeal_Q_Boss_Point"));
+			assertNotNull(data.findLocationAlias(302100000, "IDTransform_Save_Point_01"));
 			assertNotNull(data.findLocationAlias(302110000, "IDTransform_Save_Point_03"));
 			assertNotNull(data.findLocationAlias(301540000, "teleport_01"));
 			assertNotNull(data.findLocationAlias(301540000, "teleport_02"));
+			assertNotNull(data.findLocationAlias(300300000, "STAGE_00_START"));
+			for (int stage = 0; stage <= 8; stage++) {
+				assertNotNull(data.findLocationAlias(300320000, "STAGE_0" + stage + "_START"));
+			}
 			assertEquals(5, data.findLocationAlias(302200000, "Location_Invade_Start_L").size());
 			assertEquals(5, data.findLocationAlias(302300000, "Location_Invade_Start_D").size());
 		assertEquals(52, data.getGroupControllers(210100000).stream()

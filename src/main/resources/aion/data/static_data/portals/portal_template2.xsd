@@ -43,6 +43,7 @@
 		<xs:attribute name="source_world_id" type="xs:int"/>
 		<xs:attribute name="animation" type="xs:string"/>
 		<xs:attribute name="destination_alias" type="xs:string"/>
+		<xs:attribute name="instance_action" type="xs:string"/>
 	</xs:complexType>
 	<xs:complexType name="PortalReq">
 		<xs:sequence>
@@ -65,5 +66,6 @@
 		<xs:attribute name="item_count" type="xs:int"/>
 		<xs:attribute name="err_item" type="xs:int"/>
 		<xs:attribute name="err_message_id" type="xs:int"/>
+		<xs:attribute name="consume" type="xs:boolean" default="true"/>
 	</xs:complexType>
 </xs:schema>
