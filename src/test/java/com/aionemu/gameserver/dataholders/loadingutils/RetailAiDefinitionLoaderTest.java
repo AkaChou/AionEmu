@@ -158,7 +158,7 @@ class RetailAiDefinitionLoaderTest {
 			data.getGroupControllers(worldId).stream().filter(controller -> controller.exitWorldId() > 0).forEach(controller ->
 				assertNotNull(data.findLocationAlias(controller.exitWorldId(), controller.exitAlias()), controller.name()));
 		}
-		assertEquals(113, data.directPortalCount());
+		assertEquals(157, data.directPortalCount());
 		for (int missingPortalId = 97; missingPortalId <= 128; missingPortalId++) {
 			assertNull(data.getDirectPortal(missingPortalId), Integer.toString(missingPortalId));
 		}
@@ -193,6 +193,10 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(11, userPortal.groupId());
 		assertEquals(5, userPortal.invadeType());
 		assertTrue(userPortal.schedule().isEmpty());
+		var paidPortal = data.getDirectPortal(179);
+		assertNotNull(paidPortal);
+		assertEquals(24, paidPortal.extraCount());
+		assertEquals(3000, paidPortal.extraCostAp());
 		assertEquals(288, data.dynamicAreaCount());
 		assertEquals(12655, java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(RetailPatternAI2::supports).count());
@@ -380,6 +384,36 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(true, RetailPatternAI2.supports(data.getPattern(230820)));
 		assertEquals(true, RetailPatternAI2.supports(data.getPattern(282420)));
 		assertEquals(true, RetailPatternAI2.supports(data.getPattern(219358)));
+	}
+
+	@Test
+	void rejectsInvalidDirectPortalExtraUseShapes() throws Exception {
+		Path patterns = Files.createDirectory(tempDir.resolve("portal-ai"));
+		Path mappings = tempDir.resolve("portal-npc-ai.xml");
+		Path strings = tempDir.resolve("portal-ai-strings.xml");
+		Path areas = tempDir.resolve("portal-ai-areas.xml");
+		Path portals = tempDir.resolve("direct-portals.xml");
+		Files.writeString(patterns.resolve("empty.xml"), "<static_bundle/>");
+		Files.writeString(mappings, "<npc_ai_mappings/>");
+		Files.writeString(strings, "<ai_strings/>");
+		Files.writeString(areas, "<ai_areas/>");
+
+		for (String attributes : new String[] {
+				"extra_count=\"24\" invade_type=\"0\"",
+				"extra_count=\"24\" extra_cost_ap=\"3000\" invade_type=\"1\"",
+				"extra_count=\"-1\" extra_cost_ap=\"-1\" invade_type=\"0\"" }) {
+			Files.writeString(portals, """
+				<direct_portals><portal id="1" name="test" time="60" count="1" min_level="1" max_level="65"
+					need_item="" %s>
+					<start world_id="210010000" npc_id="1"><group weight="0"><point x="1" y="2" z="3" dir="0"/></group></start>
+					<destination world_id="210010000" npc_id="2"><group weight="0"><point x="4" y="5" z="6" dir="0"/></group></destination>
+				</portal></direct_portals>
+				""".formatted(attributes));
+			IllegalStateException error = assertThrows(IllegalStateException.class,
+				() -> RetailAiDefinitionLoader.load(patterns.toFile(), mappings.toFile(), strings.toFile(), areas.toFile(),
+					null, null, null, portals.toFile(), null, null));
+			assertTrue(error.getCause().getMessage().contains("Invalid retail direct portal extra use"));
+		}
 	}
 
 	@Test

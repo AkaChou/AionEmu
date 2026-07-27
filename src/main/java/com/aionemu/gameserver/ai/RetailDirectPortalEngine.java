@@ -15,7 +15,9 @@ import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_DIRECT_PORTAL_USE_COUNT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -31,6 +33,8 @@ import java.util.concurrent.Future;
 @Slf4j
 public final class RetailDirectPortalEngine {
 
+	static final int USE_COUNT_LIMIT = -1;
+	static final int NOT_ENOUGH_AP = -2;
 	private static final Map<Integer, ActivePortal> ACTIVE = new HashMap<>();
 	private static final Map<Integer, ActivePortal> BY_NPC = new HashMap<>();
 	private static long lastScheduleCheck;
@@ -100,6 +104,7 @@ public final class RetailDirectPortalEngine {
 		}
 		active.expiry = GameThreadPoolServices.threadPoolManager().schedule(
 			() -> closeIfActive(id, active), definition.time() * 1000L);
+		broadcastUseCount(active);
 		return true;
 	}
 
@@ -131,7 +136,39 @@ public final class RetailDirectPortalEngine {
 		}
 	}
 
+	public static int extraCostFor(Npc npc) {
+		ActivePortal active;
+		synchronized (RetailDirectPortalEngine.class) {
+			active = BY_NPC.get(npc.getObjectId());
+		}
+		if (active == null || npc != active.start) {
+			return 0;
+		}
+		synchronized (active) {
+			return active.closed ? 0 : active.uses.extraCost(active.definition.extraCostAp());
+		}
+	}
+
+	public static void sendUseCount(Npc npc, Player player) {
+		ActivePortal active;
+		synchronized (RetailDirectPortalEngine.class) {
+			active = BY_NPC.get(npc.getObjectId());
+		}
+		if (active == null) {
+			return;
+		}
+		synchronized (active) {
+			if (!active.closed) {
+				PacketSendUtility.sendPacket(player, useCountPacket(active, npc == active.start));
+			}
+		}
+	}
+
 	public static void use(Npc npc, Player player) {
+		use(npc, player, false);
+	}
+
+	public static void use(Npc npc, Player player, boolean allowExtraUse) {
 		ActivePortal active;
 		synchronized (RetailDirectPortalEngine.class) {
 			active = BY_NPC.get(npc.getObjectId());
@@ -153,6 +190,7 @@ public final class RetailDirectPortalEngine {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_DIRECT_PORTAL_NOT_TITLE);
 			return;
 		}
+		int apCost;
 		boolean exhausted;
 		synchronized (active) {
 			if (active.closed) {
@@ -160,12 +198,28 @@ public final class RetailDirectPortalEngine {
 				return;
 			}
 			recountDepartedPlayers(active);
-			if (active.remaining == 0) {
+			apCost = active.uses.reserve(allowExtraUse, player.getAbyssRank().getAp(), definition.extraCostAp());
+			if (apCost == USE_COUNT_LIMIT) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_DIRECT_PORTAL_USE_COUNT_LIMIT);
 				return;
 			}
-			active.remaining--;
-			exhausted = active.remaining == 0;
+			if (apCost == NOT_ENOUGH_AP) {
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_ABYSSPOINT);
+				return;
+			}
+			exhausted = active.uses.exhausted();
+		}
+		if (apCost > 0) {
+			synchronized (player.getAbyssRank()) {
+				if (player.getAbyssRank().getAp() < apCost) {
+					synchronized (active) {
+						active.uses.release(apCost);
+					}
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_ABYSSPOINT);
+					return;
+				}
+				AbyssPointsService.addAp(player, -apCost);
+			}
 		}
 		Origin origin = new Origin(player.getWorldId(), player.getInstanceId(), player.getX(), player.getY(),
 			player.getZ(), player.getHeading());
@@ -173,9 +227,12 @@ public final class RetailDirectPortalEngine {
 		boolean teleported = TeleportService2.teleportTo(player, definition.destination().worldId(), point.x(), point.y(),
 			point.z(), MathUtil.convertDegreeToHeading(point.direction()), animationFor(definition.invadeType()));
 		if (!teleported) {
+			if (apCost > 0) {
+				AbyssPointsService.addAp(player, apCost);
+			}
 			synchronized (active) {
 				if (!active.closed) {
-					active.remaining++;
+					active.uses.release(apCost);
 				}
 			}
 			return;
@@ -191,7 +248,29 @@ public final class RetailDirectPortalEngine {
 		}
 		if (exhausted && closesWhenExhausted(definition.invadeType(), definition.recount())) {
 			closeIfActive(definition.id(), active);
+		} else {
+			broadcastUseCount(active);
 		}
+	}
+
+	private static void broadcastUseCount(ActivePortal active) {
+		SM_DIRECT_PORTAL_USE_COUNT startPacket;
+		SM_DIRECT_PORTAL_USE_COUNT destinationPacket;
+		synchronized (active) {
+			if (active.closed) {
+				return;
+			}
+			startPacket = useCountPacket(active, true);
+			destinationPacket = useCountPacket(active, false);
+		}
+		PacketSendUtility.broadcastPacket(active.start, startPacket);
+		PacketSendUtility.broadcastPacket(active.destination, destinationPacket);
+	}
+
+	private static SM_DIRECT_PORTAL_USE_COUNT useCountPacket(ActivePortal active, boolean startSide) {
+		return new SM_DIRECT_PORTAL_USE_COUNT(active.start.getObjectId(),
+			active.uses.used(active.definition.count()), active.remainingSeconds(), startSide,
+			active.definition.invadeType(), active.uses.extraUsed(active.definition.extraCount()));
 	}
 
 	static TeleportAnimation animationFor(int invadeType) {
@@ -279,7 +358,7 @@ public final class RetailDirectPortalEngine {
 			if (player != null && player.getWorldId() == destinationWorldId && player.getInstanceId() == destinationInstanceId) {
 				return false;
 			}
-			active.remaining++;
+			active.uses.recount();
 			return true;
 		});
 	}
@@ -323,7 +402,8 @@ public final class RetailDirectPortalEngine {
 		private final Npc destination;
 		private final DirectPortalPoint destinationPoint;
 		private final Map<Integer, Origin> origins = new HashMap<>();
-		private int remaining;
+		private final UseCounter uses;
+		private final long expiresAtMillis;
 		private volatile boolean closed;
 		private Future<?> expiry;
 
@@ -332,7 +412,65 @@ public final class RetailDirectPortalEngine {
 			this.start = start;
 			this.destination = destination;
 			this.destinationPoint = destinationPoint;
-			remaining = definition.count();
+			uses = new UseCounter(definition.count(), definition.extraCount());
+			expiresAtMillis = System.currentTimeMillis() + definition.time() * 1000L;
+		}
+
+		private int remainingSeconds() {
+			return (int) Math.max(0, (expiresAtMillis - System.currentTimeMillis()) / 1000);
+		}
+	}
+
+	static final class UseCounter {
+		private int remaining;
+		private int extraRemaining;
+
+		UseCounter(int remaining, int extraRemaining) {
+			this.remaining = remaining;
+			this.extraRemaining = extraRemaining;
+		}
+
+		int extraCost(int extraCostAp) {
+			return remaining == 0 && extraRemaining > 0 ? extraCostAp : 0;
+		}
+
+		int used(int count) {
+			return count - remaining;
+		}
+
+		int extraUsed(int extraCount) {
+			return extraCount - extraRemaining;
+		}
+
+		int reserve(boolean allowExtraUse, int availableAp, int extraCostAp) {
+			if (remaining > 0) {
+				remaining--;
+				return 0;
+			}
+			if (!allowExtraUse || extraRemaining == 0) {
+				return USE_COUNT_LIMIT;
+			}
+			if (availableAp < extraCostAp) {
+				return NOT_ENOUGH_AP;
+			}
+			extraRemaining--;
+			return extraCostAp;
+		}
+
+		void release(int apCost) {
+			if (apCost > 0) {
+				extraRemaining++;
+			} else {
+				remaining++;
+			}
+		}
+
+		void recount() {
+			remaining++;
+		}
+
+		boolean exhausted() {
+			return remaining == 0 && extraRemaining == 0;
 		}
 	}
 

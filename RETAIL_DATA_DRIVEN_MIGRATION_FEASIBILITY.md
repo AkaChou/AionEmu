@@ -1162,7 +1162,7 @@ shadow 通过后再切换 owner，不应直接删除 Handler 后在线试错。
 
 ### P2：建立全局引用图
 
-> 状态更新 2026-07-27：任务切片已闭合为 331/331 resolved。direct portal 门户切片也已从真端定义、world 端点、AI Pattern 和 DirectPortalMgr 语义生成：218 条定义中 192 条可达、26 条无已知消费者；135 条由 AI Pattern 消费、106 条由 DirectPortalMgr 时段概率消费、49 条重叠。113 条端点与语义闭合的定义已由现有 `RetailDirectPortalEngine` 消费，其中包含 52 条 manager-only 定义；其余 79 条继续因端点或特殊字段证据不足而拒绝。P2 仍未宣告完成，下一步继续扩展副本、AI 和 world 的其他引用族。
+> 状态更新 2026-07-27：任务切片已闭合为 331/331 resolved。direct portal 门户切片也已从真端定义、world 端点、AI Pattern 和 DirectPortalMgr 语义生成：218 条定义中 192 条可达、26 条无已知消费者；135 条由 AI Pattern 消费、106 条由 DirectPortalMgr 时段概率消费、49 条重叠。157 条端点与语义闭合的定义已由现有 `RetailDirectPortalEngine` 消费，其中包含 56 条 manager-only 定义；44 条 type 0 门户的普通次数、额外次数、AP 确认/扣费及 `0x117` 使用次数同步包已按 `DirectPortal.cpp` 和 `fun_045.cpp` 批量闭合。其余 35 条仅因端点缺失继续拒绝，特殊字段拒绝已归零。P2 仍未宣告完成，下一步继续扩展副本、AI 和 world 的其他引用族。
 
 > ScriptDLL NPC 对话传送切片已由 `generate_retail_script_transports.py` 从注册表、回调、`npcs.xml`、`WorldId.xml` 和 `Worlds/*/world.xml` 独立生成：150 个注册、142 个唯一回调、114 个传送调用；64 个不是传送，42 个完成事件/静态起点/API/终点路线闭包（80 条端点路线），44 个明确拒绝。生成器同时机械提取全部回调谓词、读取/调用操作并归并为 69 个结构族；42 个闭合路线集中在 11 个族。矩阵仍不解释谓词和非传送调用的业务语义，也不证明运行时消费者选择；因此不会据此自动扩大转换批次。
 

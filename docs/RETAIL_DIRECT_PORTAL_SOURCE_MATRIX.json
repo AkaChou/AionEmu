@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "provenance": {
     "kind": "RETAIL_SOURCE_MATRIX",
     "authoritative_retail_evidence": true,
@@ -13,7 +13,11 @@
         "MainServer_Server64/fun/fun_046.cpp"
       ]
     },
-    "world_ids": "XML/ID/WorldId.xml",
+    "extra_use_semantics": [
+      "MainServer_Server64/classes/Misc/DirectPortal.cpp",
+      "MainServer_Server64/fun/fun_045.cpp"
+    ],
+    "world_ids": "XML/China/ID/WorldId.xml",
     "npcs": "XML/China/npcs.xml",
     "titles": "XML/titles.xml",
     "reference_source_summary": {
@@ -31,18 +35,18 @@
     "direct_portal_manager_consumers": 106,
     "multi_consumer": 49,
     "reference_actions": 267,
-    "generated": 113,
-    "conversion_ready": 113,
-    "manager_conversion_ready": 61,
-    "rejected": 79,
+    "generated": 157,
+    "conversion_ready": 157,
+    "manager_conversion_ready": 105,
+    "rejected": 35,
     "complete_endpoints": 181,
     "incomplete_endpoints": 37,
-    "special_fields": 44,
+    "special_fields": 0,
     "missing_start_endpoint": 35,
     "missing_destination_endpoint": 34,
     "by_status": {
-      "GENERATED": 113,
-      "REJECTED": 79,
+      "GENERATED": 157,
+      "REJECTED": 35,
       "UNREFERENCED": 26
     },
     "by_type": {
@@ -78,8 +82,7 @@
     },
     "rejected_by_reason": {
       "missing_destination_endpoint": 34,
-      "missing_start_endpoint": 35,
-      "special_fields": 44
+      "missing_start_endpoint": 35
     }
   },
   "portals": [
@@ -563,6 +566,7 @@
         "sun_pm3": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -1046,6 +1050,7 @@
         "sun_pm3": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -1529,6 +1534,7 @@
         "sun_pm3": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -2012,6 +2018,7 @@
         "sun_pm3": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -2495,6 +2502,7 @@
         "sun_pm3": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -2978,6 +2986,7 @@
         "sun_pm3": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -3461,6 +3470,7 @@
         "sun_pm3": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -3944,6 +3954,7 @@
         "sun_pm5": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -4427,6 +4438,7 @@
         "sun_pm5": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -4910,6 +4922,7 @@
         "sun_pm5": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -5393,6 +5406,7 @@
         "sun_pm5": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -5876,6 +5890,7 @@
         "sun_pm5": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -6359,6 +6374,7 @@
         "sun_pm5": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -6842,6 +6858,7 @@
         "sun_pm5": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -7474,6 +7491,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -8108,6 +8126,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -8742,6 +8761,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -9376,6 +9396,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -10009,6 +10030,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -10643,6 +10665,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -11277,6 +11300,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -11900,6 +11924,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -12523,6 +12548,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -13146,6 +13172,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -13769,6 +13796,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -14392,6 +14420,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -15015,6 +15044,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -15638,6 +15668,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -15709,6 +15740,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": []
     },
@@ -15802,6 +15834,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": []
     },
@@ -15873,6 +15906,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": []
     },
@@ -15966,6 +16000,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": []
     },
@@ -16037,6 +16072,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": []
     },
@@ -16108,6 +16144,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": []
     },
@@ -16174,6 +16211,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -16243,6 +16281,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -16517,6 +16556,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -16788,6 +16828,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -16859,6 +16900,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": []
     },
@@ -16930,6 +16972,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": []
     },
@@ -17370,6 +17413,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -17810,6 +17854,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -18250,6 +18295,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -18679,6 +18725,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -19119,6 +19166,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -19559,6 +19607,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -19999,6 +20048,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -20439,6 +20489,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -20517,6 +20568,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -20597,6 +20649,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -20677,6 +20730,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -20757,6 +20811,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -20837,6 +20892,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -20917,6 +20973,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -20997,6 +21054,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -21077,6 +21135,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -21157,6 +21216,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -21237,6 +21297,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -21317,6 +21378,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -21397,6 +21459,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -21477,6 +21540,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -21557,6 +21621,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -21637,6 +21702,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -21717,6 +21783,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "special_fields"
@@ -21992,6 +22059,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -22265,6 +22333,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -22548,6 +22617,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -22831,6 +22901,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -23290,6 +23361,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -23749,6 +23821,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -24196,6 +24269,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -24643,6 +24717,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -25090,6 +25165,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -25537,6 +25613,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -25818,6 +25895,7 @@
         "tue_pm7": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -26099,6 +26177,7 @@
         "thu_pm7": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -26388,6 +26467,7 @@
         "sun_pm7": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -26498,6 +26578,7 @@
         "is_invade_portal": "5"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -26603,6 +26684,7 @@
         "is_invade_portal": "5"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -26708,6 +26790,7 @@
         "is_invade_portal": "5"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -27155,6 +27238,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -27602,6 +27686,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -28049,6 +28134,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -28496,6 +28582,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -28943,6 +29030,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -29390,6 +29478,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -29671,6 +29760,7 @@
         "mon_pm7": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -29952,6 +30042,7 @@
         "wed_pm7": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -30234,6 +30325,7 @@
         "sun_pm3": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -30339,6 +30431,7 @@
         "is_invade_portal": "5"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -30444,6 +30537,7 @@
         "is_invade_portal": "5"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -30549,6 +30643,7 @@
         "is_invade_portal": "5"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -30608,6 +30703,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -30670,6 +30766,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -30732,6 +30829,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -30794,6 +30892,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -30856,6 +30955,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -30918,6 +31018,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -30980,6 +31081,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31042,6 +31144,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31104,6 +31207,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31166,6 +31270,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31228,6 +31333,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31290,6 +31396,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31352,6 +31459,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31414,6 +31522,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31476,6 +31585,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31538,6 +31648,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31600,6 +31711,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31662,6 +31774,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31724,6 +31837,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31786,6 +31900,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31848,6 +31963,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31910,6 +32026,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -31972,6 +32089,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -32034,6 +32152,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -32096,6 +32215,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -32158,6 +32278,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -32220,6 +32341,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -32282,6 +32404,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -32344,6 +32467,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -32406,6 +32530,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -32468,6 +32593,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -32530,6 +32656,7 @@
       "destination_endpoint": false,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint",
@@ -33827,10 +33954,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 96,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 130,
@@ -35123,10 +35256,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 96,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 131,
@@ -35216,6 +35355,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -35307,6 +35447,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -35398,6 +35539,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -35489,6 +35631,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -35580,6 +35723,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -35671,6 +35815,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -35762,6 +35907,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -35853,6 +35999,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -35944,6 +36091,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -36035,6 +36183,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -36160,6 +36309,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -36303,6 +36453,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -36440,6 +36591,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -36565,6 +36717,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -36696,6 +36849,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -36845,6 +36999,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -36970,6 +37125,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -37095,6 +37251,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -37226,6 +37383,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -37357,6 +37515,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -37595,6 +37754,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -37686,6 +37846,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -37878,6 +38039,7 @@
         "is_invade_portal": "5"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "missing_start_endpoint"
@@ -39654,10 +39816,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 96,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 155,
@@ -41430,10 +41598,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 96,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 156,
@@ -41523,6 +41697,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -41614,6 +41789,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -41705,6 +41881,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -41796,6 +41973,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -41887,6 +42065,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -41978,6 +42157,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -42069,6 +42249,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -42160,6 +42341,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -42251,6 +42433,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -42342,6 +42525,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -42467,6 +42651,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -42592,6 +42777,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -42735,6 +42921,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -42884,6 +43071,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -43015,6 +43203,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -43134,6 +43323,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -43265,6 +43455,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -43396,6 +43587,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -43539,6 +43731,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -43700,6 +43893,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -43824,6 +44018,7 @@
       "destination_endpoint": true,
       "non_default_fields": {},
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -43915,6 +44110,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -43978,6 +44174,7 @@
         "is_invade_portal": "5"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "UNREFERENCED",
       "reasons": [
         "missing_destination_endpoint"
@@ -45384,10 +45581,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 180,
@@ -46790,10 +46993,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 181,
@@ -48207,10 +48416,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 182,
@@ -49619,10 +49834,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 183,
@@ -51031,10 +51252,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 184,
@@ -52443,10 +52670,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 185,
@@ -53877,10 +54110,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 186,
@@ -55289,10 +55528,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 187,
@@ -56701,10 +56946,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 188,
@@ -58113,10 +58364,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 189,
@@ -59525,10 +59782,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 190,
@@ -60937,10 +61200,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 191,
@@ -62349,10 +62618,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 192,
@@ -63766,10 +64041,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 193,
@@ -65178,10 +65459,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 194,
@@ -66590,10 +66877,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 195,
@@ -68007,10 +68300,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 196,
@@ -69419,10 +69718,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 197,
@@ -70825,10 +71130,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 198,
@@ -72237,10 +72548,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 199,
@@ -74145,10 +74462,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 200,
@@ -76053,10 +76376,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 201,
@@ -77961,10 +78290,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 202,
@@ -79874,10 +80209,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 203,
@@ -81782,10 +82123,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 204,
@@ -83690,10 +84037,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 205,
@@ -85603,10 +85956,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 206,
@@ -87511,10 +87870,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 207,
@@ -89419,10 +89784,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 208,
@@ -91327,10 +91698,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 209,
@@ -93235,10 +93612,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 210,
@@ -95143,10 +95526,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 211,
@@ -97056,10 +97445,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 212,
@@ -98964,10 +99359,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 213,
@@ -100872,10 +101273,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 214,
@@ -102780,10 +103187,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 215,
@@ -104688,10 +105101,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 216,
@@ -106601,10 +107020,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 217,
@@ -108509,10 +108934,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 218,
@@ -110417,10 +110848,16 @@
         "extra_npc_fx_bone": "FX_Bone",
         "extra_npc_fx": "env_effect.env_effect.directportal_AP"
       },
-      "status": "REJECTED",
-      "reasons": [
-        "special_fields"
-      ]
+      "extra_use": {
+        "count": 24,
+        "cost_ap": 3000,
+        "client_visual_fields": {
+          "extra_npc_fx": "env_effect.env_effect.directportal_AP",
+          "extra_npc_fx_bone": "FX_Bone"
+        }
+      },
+      "status": "GENERATED",
+      "reasons": []
     },
     {
       "id": 219,
@@ -110510,6 +110947,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -110601,6 +111039,7 @@
         "is_close_force_out": "TRUE",
         "is_recount": "TRUE"
       },
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     },
@@ -111016,6 +111455,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "REJECTED",
       "reasons": [
         "missing_start_endpoint"
@@ -111443,6 +111883,7 @@
         "sun_pm11": "100"
       },
       "special_fields": {},
+      "extra_use": {},
       "status": "GENERATED",
       "reasons": []
     }

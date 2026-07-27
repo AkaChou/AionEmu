@@ -249,6 +249,7 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_CHAR_BM_PACK_LIST.class, 0xFD, idSet); // 5.8
 		addPacketOpcode(SM_STONESPEAR_SIEGE.class, 0x12F, idSet); // 5.8
 		addPacketOpcode(SM_SERVER_IDS.class, 0x115, idSet); // 5.8
+		addPacketOpcode(SM_DIRECT_PORTAL_USE_COUNT.class, 0x117, idSet); // 5.8
 		addPacketOpcode(SM_TERRITORY_LIST.class, 0x131, idSet); // 5.8
 		addPacketOpcode(SM_UPGRADE_ARCADE.class, 0x12C, idSet); // 5.8
 		addPacketOpcode(SM_TOLL_INFO.class, 0x9F, idSet); // 5.8

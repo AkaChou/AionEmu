@@ -40,6 +40,8 @@
             <xs:attribute name="name" type="xs:string" use="required"/>
             <xs:attribute name="time" type="xs:positiveInteger" use="required"/>
             <xs:attribute name="count" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="extra_count" type="xs:nonNegativeInteger" use="optional"/>
+            <xs:attribute name="extra_cost_ap" type="xs:nonNegativeInteger" use="optional"/>
             <xs:attribute name="min_level" type="xs:nonNegativeInteger" use="required"/>
             <xs:attribute name="max_level" type="xs:positiveInteger" use="required"/>
             <xs:attribute name="need_item" type="xs:string" use="required"/>

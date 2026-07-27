@@ -470,7 +470,8 @@ public final class RetailAiData {
 			String race, int controlTargetType, int exitWorldId, String exitWorld, String exitAlias) {
 	}
 
-	public record DirectPortal(int id, String name, int time, int count, int minLevel, int maxLevel,
+	public record DirectPortal(int id, String name, int time, int count, int extraCount, int extraCostAp,
+			int minLevel, int maxLevel,
 			String needItem, int groupId, int invadeType, boolean closeForceOut, boolean recount, int titleId,
 			List<Integer> schedule, DirectPortalEndpoint start, DirectPortalEndpoint destination) {
 		public DirectPortal {

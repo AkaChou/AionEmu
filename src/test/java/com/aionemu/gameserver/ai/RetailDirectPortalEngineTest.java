@@ -63,4 +63,22 @@ class RetailDirectPortalEngineTest {
 		assertFalse(RetailDirectPortalEngine.shouldOpen(1, 1));
 		assertTrue(RetailDirectPortalEngine.shouldOpen(100, 99));
 	}
+
+	@Test
+	void usesFreeCountBeforePaidExtraCountAndCanRollBack() {
+		var uses = new RetailDirectPortalEngine.UseCounter(1, 2);
+
+		assertEquals(0, uses.reserve(false, 0, 3000));
+		assertEquals(1, uses.used(1));
+		assertEquals(0, uses.extraUsed(2));
+		assertEquals(3000, uses.extraCost(3000));
+		assertEquals(RetailDirectPortalEngine.USE_COUNT_LIMIT, uses.reserve(false, 3000, 3000));
+		assertEquals(RetailDirectPortalEngine.NOT_ENOUGH_AP, uses.reserve(true, 2999, 3000));
+		assertEquals(3000, uses.reserve(true, 3000, 3000));
+		uses.release(3000);
+		assertEquals(3000, uses.reserve(true, 3000, 3000));
+		assertEquals(3000, uses.reserve(true, 3000, 3000));
+		assertEquals(2, uses.extraUsed(2));
+		assertTrue(uses.exhausted());
+	}
 }

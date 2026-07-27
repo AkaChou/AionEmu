@@ -243,7 +243,8 @@ final class RetailAiDefinitionLoader {
 			XMLStreamReader reader = factory.createXMLStreamReader(stream);
 			int id = 0;
 			String name = null;
-			int time = 0, count = 0, minLevel = 0, maxLevel = 0, groupId = 0, invadeType = 0, titleId = 0;
+			int time = 0, count = 0, extraCount = 0, extraCostAp = 0, minLevel = 0, maxLevel = 0, groupId = 0;
+			int invadeType = 0, titleId = 0;
 			boolean closeForceOut = false, recount = false;
 			List<Integer> schedule = List.of();
 			int worldId = 0, npcId = 0, weight = 0;
@@ -260,6 +261,8 @@ final class RetailAiDefinitionLoader {
 							name = attribute(reader, "name");
 							time = Integer.parseInt(attribute(reader, "time"));
 							count = Integer.parseInt(attribute(reader, "count"));
+							extraCount = Integer.parseInt(attribute(reader, "extra_count", "0"));
+							extraCostAp = Integer.parseInt(attribute(reader, "extra_cost_ap", "0"));
 							minLevel = Integer.parseInt(attribute(reader, "min_level"));
 							maxLevel = Integer.parseInt(attribute(reader, "max_level"));
 							needItem = attribute(reader, "need_item", "");
@@ -274,6 +277,10 @@ final class RetailAiDefinitionLoader {
 							if (!schedule.isEmpty() && (schedule.size() != 7 * 24
 									|| schedule.stream().anyMatch(value -> value < 0 || value > 100))) {
 								throw new IllegalStateException("Invalid retail direct portal schedule: " + id);
+							}
+							if (extraCount < 0 || extraCostAp < 0 || (extraCount == 0) != (extraCostAp == 0)
+									|| extraCount > 0 && invadeType != 0) {
+								throw new IllegalStateException("Invalid retail direct portal extra use: " + id);
 							}
 						}
 						case "start", "destination" -> {
@@ -294,7 +301,8 @@ final class RetailAiDefinitionLoader {
 						case "group" -> groups.add(new DirectPortalGroup(weight, points));
 						case "start" -> start = new DirectPortalEndpoint(worldId, npcId, groups);
 						case "destination" -> {
-							DirectPortal portal = new DirectPortal(id, name, time, count, minLevel, maxLevel,
+							DirectPortal portal = new DirectPortal(id, name, time, count, extraCount, extraCostAp,
+								minLevel, maxLevel,
 								needItem, groupId, invadeType, closeForceOut, recount, titleId, schedule, start,
 								new DirectPortalEndpoint(worldId, npcId, groups));
 							if (portals.put(id, portal) != null) {
