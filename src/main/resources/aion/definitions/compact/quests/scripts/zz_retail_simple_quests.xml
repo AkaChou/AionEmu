@@ -4908,6 +4908,9 @@
     <monster var="0" end_var="9" npc_ids="210688" />
     <monster var="1" end_var="1" npc_ids="210316" />
   </monster_hunt>
+  <monster_hunt id="14123" retail="true" start_npc_ids="203933" end_npc_ids="203991">
+    <monster var="0" end_var="1" npc_ids="206360" />
+  </monster_hunt>
   <monster_hunt id="14124" retail="true" start_npc_ids="203946">
     <monster var="0" end_var="3" npc_ids="210946 210968" />
     <monster var="1" end_var="3" npc_ids="210947 210969" />

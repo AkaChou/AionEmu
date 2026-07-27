@@ -14585,7 +14585,7 @@
       "semantic_gap_quest_ids": []
     }
   ],
-  "output_sha256": "0da704b207c77f77e8aab212a683d7692f7b71f4adef0102b32d0be4fc32bbaf",
+  "output_sha256": "8d2b2dc2031ae09f66fe4719ac58a0be6eea0646da2f88622a5a2c874e6f4c19",
   "skipped": {
     "compiled_script": {},
     "compiled_script_isolation_details": {
@@ -16681,19 +16681,6 @@
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/eltnen/_14120The_Bucket_List.java",
         "mechanisms": [
           "item_condition"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "14123": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent",
-          "onEnterZoneEvent",
-          "onKillEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/eltnen/_14123The_Shadow_Of_Vengeance.java",
-        "mechanisms": [
-          "spawn"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -27079,7 +27066,7 @@
       "data_driven_pvp": 61,
       "data_driven_report": 141,
       "data_driven_talk": 39,
-      "hunt": 937,
+      "hunt": 938,
       "talk": 2066,
       "use_item": 93,
       "work_order": 574
@@ -27112,9 +27099,9 @@
       "data_driven_pvp": 61,
       "data_driven_report": 141,
       "data_driven_talk": 39,
-      "hunt": 937,
+      "hunt": 938,
       "talk": 1883,
-      "total": 5321,
+      "total": 5322,
       "use_item": 93,
       "work_order": 574
     },
@@ -27149,14 +27136,14 @@
     },
     "invalid": 2,
     "java_handlers": {
-      "base_handlers": 732,
+      "base_handlers": 731,
       "constraint_dispositions": {
         "evidence_audit": 9
       },
       "dispositions": {
         "not_executable_without_base": 4,
         "retained_authoritative_gap": 9,
-        "retained_complex_semantics": 723
+        "retained_complex_semantics": 722
       },
       "event_signatures": {
         "AtDistance+Dialog": 3,
@@ -27202,7 +27189,7 @@
         "Dialog+EnterWorld+LvlUp+ZoneMissionEnd": 4,
         "Dialog+EnterZone": 28,
         "Dialog+EnterZone+GetItem+Kill+LvlUp+MovieEnd+ZoneMissionEnd": 1,
-        "Dialog+EnterZone+Kill": 17,
+        "Dialog+EnterZone+Kill": 16,
         "Dialog+EnterZone+Kill+LvlUp+MovieEnd+ZoneMissionEnd": 1,
         "Dialog+EnterZone+Kill+LvlUp+ZoneMissionEnd": 11,
         "Dialog+EnterZone+KillInWorld": 26,
@@ -27238,7 +27225,7 @@
         "EnterZone+MovieEnd": 2,
         "register_only": 6
       },
-      "handlers": 736,
+      "handlers": 735,
       "mechanisms": {
         "action": 31,
         "dynamic_reward": 34,
@@ -27248,13 +27235,13 @@
         "item_mutation": 326,
         "movie": 125,
         "skill": 7,
-        "spawn": 70,
+        "spawn": 69,
         "teleport": 70,
         "timer": 49
       },
       "reasons": {
         "missing_compiled_trigger_chain": 9,
-        "non_linear_or_side_effecting": 723,
+        "non_linear_or_side_effecting": 722,
         "outside_base": 4
       }
     },
@@ -27278,13 +27265,13 @@
       "retained": 456,
       "shadowed_by_generated": 198
     },
-    "missing_base": 2509,
+    "missing_base": 2508,
     "ownership": {
-      "generated_xml": 5321,
-      "java_handlers": 732,
+      "generated_xml": 5322,
+      "java_handlers": 731,
       "legacy_xml": 456,
       "overlap": 0,
-      "selected_xml": 5777
+      "selected_xml": 5778
     },
     "retail": {
       "collect": 262,
