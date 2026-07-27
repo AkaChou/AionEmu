@@ -3,6 +3,7 @@ package com.aionemu.gameserver.controllers.movement;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -15,14 +16,62 @@ import java.util.Map;
 import org.objenesis.ObjenesisStd;
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.geometry.Point3D;
+import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
+import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.walker.RouteStep;
 import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
 
 class NpcMoveControllerPathTest {
+
+	@Test
+	void homeReturnReplacesAnAlreadyStartedPointMove() throws ReflectiveOperationException {
+		Npc owner = new ObjenesisStd().newInstance(Npc.class);
+		Field objectId = AionObject.class.getDeclaredField("objectId");
+		objectId.setAccessible(true);
+		objectId.set(owner, 210667);
+		owner.setAi2(new NpcAI2());
+		SpawnTemplate spawn = new SpawnTemplate(new SpawnGroup2(210010000, 210667),
+				1038.970f, 1127.112f, 118.437f, (byte) 0, 2, null, 0, 0);
+		owner.setSpawn(spawn);
+		NpcMoveController controller = new NpcMoveController(owner);
+		Field destination = NpcMoveController.class.getDeclaredField("destination");
+		destination.setAccessible(true);
+		destination.set(controller, Enum.valueOf(destination.getType().asSubclass(Enum.class), "POINT"));
+		Field cachedPath = NpcMoveController.class.getDeclaredField("cachedPath");
+		cachedPath.setAccessible(true);
+		cachedPath.set(controller, new float[][] {{1019.832f, 1140.955f, 118.042f}});
+		Field cachedPathValid = NpcMoveController.class.getDeclaredField("cachedPathValid");
+		cachedPathValid.setAccessible(true);
+		cachedPathValid.set(controller, true);
+		Field pointX = NpcMoveController.class.getDeclaredField("pointX");
+		Field pointY = NpcMoveController.class.getDeclaredField("pointY");
+		Field pointZ = NpcMoveController.class.getDeclaredField("pointZ");
+		pointX.setAccessible(true);
+		pointY.setAccessible(true);
+		pointZ.setAccessible(true);
+		controller.started.set(true);
+		MoveTaskManager moveTaskManager = GameMovementLoopServices.moveTaskManager();
+		moveTaskManager.removeCreature(owner);
+
+		try {
+			controller.moveToHome();
+
+			assertEquals("HOME", destination.get(controller).toString());
+			assertEquals(spawn.getX(), pointX.getFloat(controller));
+			assertEquals(spawn.getY(), pointY.getFloat(controller));
+			assertEquals(spawn.getZ(), pointZ.getFloat(controller));
+			assertTrue(controller.started.get());
+			assertFalse(cachedPathValid.getBoolean(controller));
+			assertNull(cachedPath.get(controller));
+		} finally {
+			moveTaskManager.removeCreature(owner);
+		}
+	}
 
 	@Test
 	void chaseReplacesAnActivePointMoveAndRestoresMoveRegistration() throws ReflectiveOperationException {

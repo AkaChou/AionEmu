@@ -263,6 +263,12 @@ public class CustomConfig {
 	@Property(key = "gameserver.magicboost.cap", defaultValue = "6500")
 	public static int MAGICBOOST_CAP;
 	/**
+	 * 呼唤特快邮差的冷却时间（秒）。
+	 * Express courier summon cooldown in seconds.
+	 */
+	@Property(key = "gameserver.express.mail.cooldown_seconds", defaultValue = "60")
+	public static int EXPRESS_MAIL_COOLDOWN_SECONDS;
+	/**
 	 * 是否启用时空裂隙。
 	 * Whether rifts are enabled.
 	 */

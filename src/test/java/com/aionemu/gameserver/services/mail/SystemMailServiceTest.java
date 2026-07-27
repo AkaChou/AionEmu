@@ -57,7 +57,7 @@ class SystemMailServiceTest {
 			GameWorldBootstrapServices bootstrapServices = new GameWorldBootstrapServices(
 					provider(IDFactory.class, idFactory), null, null, null, provider(World.class, world));
 			try {
-				SystemMailService service = new SystemMailService();
+				SystemMailService service = service();
 
 				assertDoesNotThrow(() -> service.sendMail("$$TEST", "Recipient", "Title", "Body", 0, 0, 0, 0,
 						LetterType.NORMAL));
@@ -90,7 +90,7 @@ class SystemMailServiceTest {
 			GameWorldBootstrapServices bootstrapServices = new GameWorldBootstrapServices(
 					provider(IDFactory.class, idFactory), null, null, null, provider(World.class, world));
 			try {
-				SystemMailService service = new SystemMailService();
+				SystemMailService service = service();
 
 				assertDoesNotThrow(() -> service.sendSystemMail("$$TEST", "Title", "Body", "Recipient", item(182400001),
 						0, 0, LetterType.EXPRESS));
@@ -110,6 +110,32 @@ class SystemMailServiceTest {
 		data.setOnline(true);
 		data.setMailboxLetters(mailboxLetters);
 		return data;
+	}
+
+	private static SystemMailService service() {
+		return new SystemMailService() {
+			@Override
+			protected boolean storeMail(PlayerCommonData recipientCommonData, Player recipient, Mailbox recipientMailbox,
+					Item attachedItem, Letter letter, Timestamp time) {
+				if (attachedItem != null
+						&& !DAOManager.getDAO(InventoryDAO.class).store(attachedItem, recipientCommonData.getPlayerObjId())) {
+					return false;
+				}
+				MailDAO mailDAO = DAOManager.getDAO(MailDAO.class);
+				if (!mailDAO.storeLetter(time, letter)) {
+					return false;
+				}
+				letter.setPersistState(PersistentState.UPDATED);
+				if (recipientMailbox == null) {
+					PlayerCommonData counterData = recipient != null && recipient.getCommonData() != null
+							? recipient.getCommonData() : recipientCommonData;
+					counterData.setMailboxLetters(counterData.getMailboxLetters() + 1);
+					mailDAO.updateOfflineMailCounter(counterData);
+					recipientCommonData.setMailboxLetters(counterData.getMailboxLetters());
+				}
+				return true;
+			}
+		};
 	}
 
 	private static Player playerWithCommonData(PlayerCommonData data) throws ReflectiveOperationException {

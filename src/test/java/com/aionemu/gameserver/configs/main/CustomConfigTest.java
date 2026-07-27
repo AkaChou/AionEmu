@@ -39,4 +39,26 @@ class CustomConfigTest {
 
 		assertEquals("6500", properties.getProperty("gameserver.magicboost.cap"));
 	}
+
+	@Test
+	void loadsExpressMailCooldown() {
+		ConfigurableProcessor.process(CustomConfig.class, new Properties());
+		assertEquals(60, CustomConfig.EXPRESS_MAIL_COOLDOWN_SECONDS);
+
+		Properties properties = new Properties();
+		properties.setProperty("gameserver.express.mail.cooldown_seconds", "30");
+		ConfigurableProcessor.process(CustomConfig.class, properties);
+
+		assertEquals(30, CustomConfig.EXPRESS_MAIL_COOLDOWN_SECONDS);
+	}
+
+	@Test
+	void customPropertiesDocumentsExpressMailCooldown() throws IOException {
+		Properties properties = new Properties();
+		try (InputStream in = Files.newInputStream(Path.of("src/main/resources/aion/config/main/custom.properties"))) {
+			properties.load(in);
+		}
+
+		assertEquals("60", properties.getProperty("gameserver.express.mail.cooldown_seconds"));
+	}
 }

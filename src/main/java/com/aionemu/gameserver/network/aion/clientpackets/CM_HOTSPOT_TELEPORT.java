@@ -7,6 +7,7 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOTSPOT_TELEPORT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -54,7 +55,9 @@ public class CM_HOTSPOT_TELEPORT extends AionClientPacket {
 		if (action == 1) {
 			GameWorldBootstrapServices.hotspotTeleportService().doTeleport(player, teleportId, price);
 		} else if (action == 2) {
-			player.getController().cancelTask(TaskId.HOTSPOT_TELEPORT);
+			if (player.getController().cancelTask(TaskId.HOTSPOT_TELEPORT) != null) {
+				HotspotTeleportService.cancelCastBar(player);
+			}
 			PacketSendUtility.broadcastPacketAndReceive(player, new SM_HOTSPOT_TELEPORT(2, player.getObjectId()));
 		}
 	}

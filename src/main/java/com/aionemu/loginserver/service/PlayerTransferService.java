@@ -2,12 +2,15 @@ package com.aionemu.loginserver.service;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;
@@ -159,12 +162,17 @@ public class PlayerTransferService {
         request.saccount = saccount;
         request.taskId = taskId;
 
-        transfers.put(taskId, request);
-
+        byte accountActivated = account.getActivated();
+        byte sourceAccountActivated = saccount.getActivated();
         account.setActivated((byte) 0);
         saccount.setActivated((byte) 0);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(account);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(saccount);
+        if (!persist(null, account, saccount)) {
+            account.setActivated(accountActivated);
+            saccount.setActivated(sourceAccountActivated);
+            return;
+        }
+
+        transfers.put(taskId, request);
 
         targetServer.getConnection().sendPacket(new SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus.SEND_INFO, request));
         log.info(I18n.get("log.36b9709a671f", task.targetServerId));
@@ -192,22 +200,34 @@ public class PlayerTransferService {
      * error reason
      */
     public void onError(int taskId, String reason) {
-        PlayerTransferRequest request = this.transfers.remove(taskId);
-        PlayerTransferTask task = this.tasks.remove(taskId);
+        PlayerTransferRequest request = this.transfers.get(taskId);
+        PlayerTransferTask task = this.tasks.get(taskId);
+        if (request == null || task == null) {
+            return;
+        }
+        byte oldStatus = task.status;
+        String oldComment = task.comment;
+        byte accountActivated = request.account.getActivated();
+        byte sourceAccountActivated = request.saccount.getActivated();
         task.status = PlayerTransferTask.STATUS_ERROR;
         task.comment = reason;
-        this.dao.update(task);
+        request.account.setActivated((byte) 1);
+        request.saccount.setActivated((byte) 1);
+        if (!persist(task, request.account, request.saccount)) {
+            task.status = oldStatus;
+            task.comment = oldComment;
+            request.account.setActivated(accountActivated);
+            request.saccount.setActivated(sourceAccountActivated);
+            return;
+        }
+        this.transfers.remove(taskId);
+        this.tasks.remove(taskId);
+
         GameServerInfo targetServer = GameServerTable.getGameServerInfo(request.targetServerId);
         if (targetServer == null || targetServer.getConnection() == null) {
             log.error(I18n.get("log.5bb70795354e", request.targetServerId));
             return;
         }
-
-        request.account.setActivated((byte) 1);
-        request.saccount.setActivated((byte) 1);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(request.account);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(request.saccount);
-
         targetServer.getConnection().sendPacket(new SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus.ERROR, taskId, reason));
     }
 
@@ -219,24 +239,60 @@ public class PlayerTransferService {
      * new player id
      */
     public void onOk(int taskId, int playerId) {
-        PlayerTransferRequest request = this.transfers.remove(taskId);
-        PlayerTransferTask task = this.tasks.remove(taskId);
+        PlayerTransferRequest request = this.transfers.get(taskId);
+        PlayerTransferTask task = this.tasks.get(taskId);
+        if (request == null || task == null) {
+            return;
+        }
+        byte oldStatus = task.status;
+        String oldComment = task.comment;
+        byte accountActivated = request.account.getActivated();
+        byte sourceAccountActivated = request.saccount.getActivated();
         task.status = PlayerTransferTask.STATUS_DONE;
         task.comment = "task done";
-        this.dao.update(task);
+        request.account.setActivated((byte) 1);
+        request.saccount.setActivated((byte) 1);
+        if (!persist(task, request.account, request.saccount)) {
+            task.status = oldStatus;
+            task.comment = oldComment;
+            request.account.setActivated(accountActivated);
+            request.saccount.setActivated(sourceAccountActivated);
+            return;
+        }
+        this.transfers.remove(taskId);
+        this.tasks.remove(taskId);
+        log.info(I18n.get("log.98edc435b70d", taskId));
+
         GameServerInfo sourceServer = GameServerTable.getGameServerInfo(request.serverId);
         if (sourceServer == null || sourceServer.getConnection() == null) {
             log.error(I18n.get("log.5bb70795354e", request.serverId));
             return;
         }
-
-        request.account.setActivated((byte) 1);
-        request.saccount.setActivated((byte) 1);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(request.account);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(request.saccount);
-        log.info(I18n.get("log.98edc435b70d", taskId));
         sourceServer.getConnection().sendPacket(new SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus.OK, request));
     }
+
+	private boolean persist(PlayerTransferTask task, Account... accounts) {
+		AccountDAO accountDAO = DAOManager.getDAO(AccountDAO.class);
+		try (Connection con = DatabaseFactory.getConnection()) {
+			con.setAutoCommit(false);
+			try {
+				if (task != null) {
+					this.dao.updateInTransaction(con, task);
+				}
+				for (Account account : accounts) {
+					accountDAO.updateInTransaction(con, account);
+				}
+				con.commit();
+			} catch (SQLException e) {
+				con.rollback();
+				throw e;
+			}
+			return true;
+		} catch (SQLException e) {
+			log.error(I18n.get("log.e0628bfd2f2b", task == null ? 0 : task.id, e));
+			return false;
+		}
+	}
 
     /**
      * 兼容旧单例的静态持有者。

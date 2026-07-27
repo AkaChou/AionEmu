@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,10 @@ public abstract class AbyssRankDAO implements DAO {
 	 * whether successful
 	 */
 	public abstract boolean storeAbyssRank(Player player);
+
+	public void storeInTransaction(Connection connection, int playerId, AbyssRank rank) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * 获取指定种族的玩家欧比斯排行榜。

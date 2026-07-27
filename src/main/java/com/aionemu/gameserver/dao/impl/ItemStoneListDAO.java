@@ -248,6 +248,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
             } catch (SQLException rollbackEx) {
                 log.error(I18n.get("log.469fdfa81ee5", rollbackEx));
             }
+            return;
         } finally {
             try {
                 if (con != null) {

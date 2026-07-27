@@ -54,6 +54,7 @@ import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.configs.main.ShutdownConfig;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
+import com.aionemu.gameserver.configs.main.TransportConfig;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
 import com.aionemu.gameserver.configs.main.WorldConfig;
 import com.aionemu.gameserver.configs.network.IPConfig;
@@ -224,6 +225,8 @@ public class Config {
 			ConfigurableProcessor.process(GeoDataConfig.class, mainProps);
 			ConfigurableProcessor.process(GroupConfig.class, mainProps);
 			ConfigurableProcessor.process(HousingConfig.class, mainProps);
+			ConfigurableProcessor.process(TransportConfig.class, mainProps);
+			TransportConfig.refresh();
 			ConfigurableProcessor.process(HTMLConfig.class, mainProps);
 			ConfigurableProcessor.process(InGameShopConfig.class, mainProps);
 			ConfigurableProcessor.process(InstanceConfig.class, mainProps);
@@ -311,6 +314,8 @@ public class Config {
 			ConfigurableProcessor.process(GeoDataConfig.class, mainProps);
 			ConfigurableProcessor.process(GroupConfig.class, mainProps);
 			ConfigurableProcessor.process(HousingConfig.class, mainProps);
+			ConfigurableProcessor.process(TransportConfig.class, mainProps);
+			TransportConfig.refresh();
 			ConfigurableProcessor.process(HTMLConfig.class, mainProps);
 			ConfigurableProcessor.process(InGameShopConfig.class, mainProps);
 			ConfigurableProcessor.process(InstanceConfig.class, mainProps);

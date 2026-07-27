@@ -112,12 +112,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
     @Override
     public boolean storeSkills(Player player) {
         List<PlayerSkillEntry> skillsActive = Lists.newArrayList(player.getSkillList().getAllSkills());
-        List<PlayerSkillEntry> skillsDeleted = Lists.newArrayList(player.getSkillList().getDeletedSkills());
-
-        store(player, skillsActive);
-        store(player, skillsDeleted);
-
-        return true;
+        skillsActive.addAll(Lists.newArrayList(player.getSkillList().getDeletedSkills()));
+        return store(player, skillsActive);
     }
 
     /**
@@ -127,28 +123,28 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * @param player 玩家 / player
      * @param skills 技能条目列表 / list of skill entries
      */
-    private void store(Player player, List<PlayerSkillEntry> skills) {
+    private boolean store(Player player, List<PlayerSkillEntry> skills) {
         try (Connection con = DatabaseFactory.getConnection()) {
             con.setAutoCommit(false);
-
-            deleteSkills(con, player, skills);
-            addSkills(con, player, skills);
-            updateSkills(con, player, skills);
-            updateSkinSkills(con, player, skills);
-
-            con.commit();
+            try {
+                deleteSkills(con, player, skills);
+                addSkills(con, player, skills);
+                updateSkills(con, player, skills);
+                updateSkinSkills(con, player, skills);
+                con.commit();
+            } catch (SQLException e) {
+                con.rollback();
+                throw e;
+            }
         } catch (SQLException e) {
             log.error(I18n.get("log.6790b402b724", player.getObjectId(), e));
-            try (Connection con = DatabaseFactory.getConnection()) {
-                con.rollback();
-            } catch (SQLException rollbackEx) {
-                log.error(I18n.get("log.56c17dcf4421", player.getObjectId(), rollbackEx));
-            }
+            return false;
         }
 
         for (PlayerSkillEntry skill : skills) {
             skill.setPersistentState(PersistentState.UPDATED);
         }
+        return true;
     }
 
     /**

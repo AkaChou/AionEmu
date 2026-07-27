@@ -154,21 +154,26 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     @Override
     public boolean storeAbyssRank(Player player) {
         AbyssRank rank = player.getAbyssRank();
-        boolean result = false;
-
-        switch (rank.getPersistentState()) {
-            case NEW:
-                result = addRank(player.getObjectId(), rank);
-                break;
-            case UPDATE_REQUIRED:
-                result = updateRank(player.getObjectId(), rank);
-                break;
-            default:
-                return true;
+        try (Connection con = DatabaseFactory.getConnection()) {
+            storeInTransaction(con, player.getObjectId(), rank);
+            rank.setPersistentState(PersistentState.UPDATED);
+            return true;
+        } catch (SQLException e) {
+            log.error(I18n.get("log.418d26f689fd", player.getObjectId(), e));
+            return false;
         }
+    }
 
-        rank.setPersistentState(PersistentState.UPDATED);
-        return result;
+    @Override
+    public void storeInTransaction(Connection con, int playerId, AbyssRank rank) throws SQLException {
+        boolean result = switch (rank.getPersistentState()) {
+            case NEW -> addRank(con, playerId, rank);
+            case UPDATE_REQUIRED -> updateRank(con, playerId, rank);
+            default -> true;
+        };
+        if (!result) {
+            throw new SQLException("No abyss rank row changed for player " + playerId);
+        }
     }
 
     /**
@@ -179,9 +184,8 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * @param rank 欧比斯军阶 / abyss rank
      * true on success
      */
-    private boolean addRank(final int objectId, final AbyssRank rank) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
+    private boolean addRank(Connection con, final int objectId, final AbyssRank rank) throws SQLException {
+        try (PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
 
             stmt.setInt(1, objectId);
             stmt.setInt(2, rank.getDailyAP());
@@ -200,12 +204,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
             stmt.setInt(15, rank.getLastAP());
             stmt.setInt(16, rank.getLastGP());
             stmt.setLong(17, rank.getLastUpdate());
-            stmt.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
-            log.error(I18n.get("log.32dfcd36569d", objectId, e));
-            return false;
+            return stmt.executeUpdate() > 0;
         }
     }
 
@@ -217,9 +216,8 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * @param rank 欧比斯军阶 / abyss rank
      * true on success
      */
-    private boolean updateRank(final int objectId, final AbyssRank rank) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
+    private boolean updateRank(Connection con, final int objectId, final AbyssRank rank) throws SQLException {
+        try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
 
             stmt.setInt(1, rank.getDailyAP());
             stmt.setInt(2, rank.getDailyGP());
@@ -238,12 +236,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
             stmt.setInt(15, rank.getLastGP());
             stmt.setLong(16, rank.getLastUpdate());
             stmt.setInt(17, objectId);
-            stmt.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
-            log.error(I18n.get("log.77672b720fdd", objectId, e));
-            return false;
+            return stmt.executeUpdate() > 0;
         }
     }
 
@@ -464,50 +457,50 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      */
     @Override
     public void updateRankList() {
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
+		try (Connection con = DatabaseFactory.getConnection()) {
+			con.setAutoCommit(false);
+			try {
 
-            // 更新天族玩家军阶 / Update Elyos player ranks
-            try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-                 PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
-                stmt1.execute();
-                stmt2.setString(1, "ELYOS");
-                stmt2.executeUpdate();
-            }
+				// 更新天族玩家军阶 / Update Elyos player ranks
+				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+					 PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
+					stmt1.execute();
+					stmt2.setString(1, "ELYOS");
+					stmt2.executeUpdate();
+				}
 
-            // 更新魔族玩家军阶 / Update Asmodian player ranks
-            try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-                 PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
-                stmt1.execute();
-                stmt2.setString(1, "ASMODIANS");
-                stmt2.executeUpdate();
-            }
+				// 更新魔族玩家军阶 / Update Asmodian player ranks
+				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+					 PreparedStatement stmt2 = con.prepareStatement(updatePlayerRankList())) {
+					stmt1.execute();
+					stmt2.setString(1, "ASMODIANS");
+					stmt2.executeUpdate();
+				}
 
-            // 更新天族军团军阶 / Update Elyos legion ranks
-            try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-                 PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
-                stmt1.execute();
-                stmt2.setString(1, "ELYOS");
-                stmt2.executeUpdate();
-            }
+				// 更新天族军团军阶 / Update Elyos legion ranks
+				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+					 PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
+					stmt1.execute();
+					stmt2.setString(1, "ELYOS");
+					stmt2.executeUpdate();
+				}
 
-            // 更新魔族军团军阶 / Update Asmodian legion ranks
-            try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
-                 PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
-                stmt1.execute();
-                stmt2.setString(1, "ASMODIANS");
-                stmt2.executeUpdate();
-            }
+				// 更新魔族军团军阶 / Update Asmodian legion ranks
+				try (PreparedStatement stmt1 = con.prepareStatement("SET @a:=0");
+					 PreparedStatement stmt2 = con.prepareStatement(updateLegionRankList())) {
+					stmt1.execute();
+					stmt2.setString(1, "ASMODIANS");
+					stmt2.executeUpdate();
+				}
 
-            con.commit();
-        } catch (SQLException e) {
-            log.error(I18n.get("log.4c4ea22ad393", e));
-            try (Connection con = DatabaseFactory.getConnection()) {
-                con.rollback();
-            } catch (SQLException ex) {
-                log.error(I18n.get("log.afb36a54e75c", ex));
-            }
-        }
+				con.commit();
+			} catch (SQLException e) {
+				con.rollback();
+				throw e;
+			}
+		} catch (SQLException e) {
+			log.error(I18n.get("log.4c4ea22ad393", e));
+		}
     }
 
     /**
@@ -522,26 +515,24 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
             return;
         }
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-
-            con.setAutoCommit(false);
-
-            for (Player player : listP) {
-                stmt.setInt(1, player.getObjectId());
-                stmt.addBatch();
-            }
-
-            stmt.executeBatch();
-            con.commit();
-        } catch (Exception e) {
-            log.error(I18n.get("log.19fd6d465738", e));
-            try (Connection con = DatabaseFactory.getConnection()) {
-                con.rollback();
-            } catch (SQLException ex) {
-                log.error(I18n.get("log.90b040471d76", ex));
-            }
-        }
+		try (Connection con = DatabaseFactory.getConnection()) {
+			con.setAutoCommit(false);
+			try {
+				try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
+					for (Player player : listP) {
+						stmt.setInt(1, player.getObjectId());
+						stmt.addBatch();
+					}
+					stmt.executeBatch();
+				}
+				con.commit();
+			} catch (SQLException e) {
+				con.rollback();
+				throw e;
+			}
+		} catch (SQLException e) {
+			log.error(I18n.get("log.19fd6d465738", e));
+		}
     }
 
     /**

@@ -3,7 +3,9 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -59,7 +61,7 @@ public class CM_READ_EXPRESS_MAIL extends AionClientPacket {
 				// 飞行中无法呼叫邮差。 / You cannot call a courier while flying.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_POSTMAN_UNABLE_IN_FLIGHT);
 				return;
-			} else if (player.getController().hasTask(TaskId.EXPRESS_MAIL_USE)) {
+			} else if (player.getController().hasScheduledTask(TaskId.EXPRESS_MAIL_USE)) {
 				// 请稍候再呼叫邮差。 / Please wait for a while before you call for the courier again.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_POSTMAN_UNABLE_IN_COOLTIME);
 				return;
@@ -69,7 +71,7 @@ public class CM_READ_EXPRESS_MAIL extends AionClientPacket {
 					@Override
 					public void run() {
 					}
-				}, 600000);
+				}, TimeUnit.SECONDS.toMillis(Math.max(0, CustomConfig.EXPRESS_MAIL_COOLDOWN_SECONDS)));
 				player.getController().addTask(TaskId.EXPRESS_MAIL_USE, task);
 			}
 			break;

@@ -170,30 +170,39 @@ public class AccountDAO extends com.aionemu.loginserver.dao.AccountDAO {
 
     @Override
     public boolean updateAccount(Account account) {
-        String query = "UPDATE account_data SET `name` = ?, `password` = ?, access_level = ?, " + "membership = ?, last_server = ?, last_ip = ?, last_mac = ?, ip_force = ?, " + "return_account = ?, return_end = ? WHERE `id` = ?";
-
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement st = con.prepareStatement(query)) {
-
-            st.setString(1, account.getName());
-            st.setString(2, account.getPasswordHash());
-            st.setByte(3, account.getAccessLevel());
-            st.setByte(4, account.getMembership());
-            st.setByte(5, account.getLastServer());
-            st.setString(6, account.getLastIp());
-            st.setString(7, account.getLastMac());
-            st.setString(8, account.getIpForce());
-            st.setByte(9, account.getReturn());
-            st.setTimestamp(10, account.getReturnEnd());
-            st.setInt(11, account.getId());
-
-            return st.executeUpdate() > 0;
+        try (Connection con = DatabaseFactory.getConnection()) {
+            updateInTransaction(con, account);
+            return true;
         } catch (SQLException e) {
             log.error(I18n.get("log.40f6bd6c99c5", account.getId(), e));
         }
 
         return false;
     }
+
+	@Override
+	public void updateInTransaction(Connection con, Account account) throws SQLException {
+		String query = "UPDATE account_data SET `name` = ?, `password` = ?, access_level = ?, membership = ?, "
+				+ "activated = ?, last_server = ?, last_ip = ?, last_mac = ?, ip_force = ?, return_account = ?, "
+				+ "return_end = ? WHERE `id` = ?";
+		try (PreparedStatement st = con.prepareStatement(query)) {
+			st.setString(1, account.getName());
+			st.setString(2, account.getPasswordHash());
+			st.setByte(3, account.getAccessLevel());
+			st.setByte(4, account.getMembership());
+			st.setByte(5, account.getActivated());
+			st.setByte(6, account.getLastServer());
+			st.setString(7, account.getLastIp());
+			st.setString(8, account.getLastMac());
+			st.setString(9, account.getIpForce());
+			st.setByte(10, account.getReturn());
+			st.setTimestamp(11, account.getReturnEnd());
+			st.setInt(12, account.getId());
+			if (st.executeUpdate() == 0) {
+				throw new SQLException("No account row changed for " + account.getId());
+			}
+		}
+	}
 
     @Override
     public boolean updateLastServer(final int accountId, final byte lastServer) {

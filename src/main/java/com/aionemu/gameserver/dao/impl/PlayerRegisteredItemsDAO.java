@@ -255,27 +255,24 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
             }
         }
         
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-            
-            deleteObjects(con, objectsToDelete);
-            deleteParts(con, partsToDelete);
-            storeObjects(con, objectsToUpdate, playerId, false);
-            storeParts(con, partsToUpdate, playerId, false);
-            storeObjects(con, objectsToAdd, playerId, true);
-            storeParts(con, partsToAdd, playerId, true);
-            
-            con.commit();
-            registry.setPersistentState(PersistentState.UPDATED);
-            
-        } catch (SQLException e) {
-            log.error(I18n.get("log.7c25eacf0aac", playerId, e));
-            try (Connection con = DatabaseFactory.getConnection()) {
-                con.rollback();
-            } catch (SQLException rollbackEx) {
-                log.error(I18n.get("log.9b2f8fa3f28b", playerId, rollbackEx));
-            }
-            return false;
+		try (Connection con = DatabaseFactory.getConnection()) {
+			con.setAutoCommit(false);
+			try {
+				deleteObjects(con, objectsToDelete);
+				deleteParts(con, partsToDelete);
+				storeObjects(con, objectsToUpdate, playerId, false);
+				storeParts(con, partsToUpdate, playerId, false);
+				storeObjects(con, objectsToAdd, playerId, true);
+				storeParts(con, partsToAdd, playerId, true);
+				con.commit();
+			} catch (SQLException e) {
+				con.rollback();
+				throw e;
+			}
+			registry.setPersistentState(PersistentState.UPDATED);
+		} catch (SQLException e) {
+			log.error(I18n.get("log.7c25eacf0aac", playerId, e));
+			return false;
         }
         
         // 更新状态 / Update states

@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -124,6 +127,19 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * whether successful
 	 */
 	public abstract boolean store(List<Item> items, Integer playerId, Integer accountId, Integer legionId);
+
+	public void storeInTransaction(Connection connection, List<Item> items, Integer playerId, Integer accountId,
+			Integer legionId) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	public void markStored(Collection<Item> items) {
+		for (Item item : items) {
+			if (item != null) {
+				item.setPersistentState(com.aionemu.gameserver.model.gameobjects.PersistentState.UPDATED);
+			}
+		}
+	}
 
 	/**
 	 * 删除玩家的全部物品。

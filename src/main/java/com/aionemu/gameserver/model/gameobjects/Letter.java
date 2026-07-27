@@ -146,6 +146,13 @@ public class Letter extends AionObject {
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
 	}
 
+	public void restoreAttachments(Item item, long kinah, long ap, PersistentState state) {
+		this.attachedItem = item;
+		this.attachedKinahCount = kinah;
+		this.attachedAPCount = ap;
+		this.persistentState = state;
+	}
+
 	/** 删除。 / Delete. */
 	public void delete() {
 		this.persistentState = PersistentState.DELETED;
