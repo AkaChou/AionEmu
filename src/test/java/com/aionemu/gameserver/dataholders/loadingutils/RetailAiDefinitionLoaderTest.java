@@ -121,7 +121,7 @@ class RetailAiDefinitionLoaderTest {
 		assertNotNull(sensoryArea);
 		assertTrue(sensoryArea.isInside3D(980, 774, 1046));
 		assertNull(data.findSensoryArea(301550000, 220582, 0, 0, 0));
-		assertEquals(14457, data.skillCategoryCount());
+		assertEquals(14458, data.skillCategoryCount());
 		assertEquals(2829, data.npcScoreCount());
 		assertEquals(356, data.locationAliasCount());
 		assertEquals(52, data.getGroupControllers(210100000).stream()
