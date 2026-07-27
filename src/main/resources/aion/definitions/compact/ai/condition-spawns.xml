@@ -41187,6 +41187,8 @@
     <variable name="mob3"/>
     <variable name="vritra"/>
     <variable name="wave_leader"/>
+    <variable name="race"/>
+    <variable name="scene"/>
     <condition id="1645" expression="1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="IDSeal_Q/world_N.xml#sensory-unconditional">
       <group probability="1000">
         <slot>
@@ -41589,6 +41591,20 @@
       <group probability="1000">
         <slot>
           <npc id="237216" probability="10000" x="837.272766" y="347.712646" z="1724.02551" heading="315" initial_delay="1" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="301630002" expression="(RACE ==  1) &amp;&amp; (SCENE == 17 )" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="IDSeal_Q/world_N.xml#13">
+      <group probability="1000">
+        <slot>
+          <npc id="805744" probability="10000" x="353.43634" y="186.759338" z="1686.1825" heading="180" initial_delay="1" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="301630003" expression="(RACE ==  2) &amp;&amp; (SCENE == 17 )" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="IDSeal_Q/world_N.xml#13">
+      <group probability="1000">
+        <slot>
+          <npc id="805745" probability="10000" x="353.43634" y="186.759338" z="1686.1825" heading="180" initial_delay="1" initial_delay_extra="0"/>
         </slot>
       </group>
     </condition>
@@ -46658,6 +46674,7 @@
   <world id="302100000" name="IDTransform">
     <variable name="door_open"/>
     <variable name="worldraid_on"/>
+    <variable name="save"/>
     <condition id="1753" expression="door_open == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTransform/world_N.xml#70">
       <group probability="1000">
         <slot>
@@ -46686,10 +46703,32 @@
         </slot>
       </group>
     </condition>
+    <condition id="301630004" expression="save == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTransform/world_N.xml#294">
+      <group probability="1000">
+        <slot>
+          <npc id="834188" probability="10000" x="855.506042" y="465.554016" z="352.725647" heading="315" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="301630005" expression="save == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTransform/world_N.xml#294">
+      <group probability="1000">
+        <slot>
+          <npc id="834189" probability="10000" x="855.506042" y="465.554016" z="352.725647" heading="315" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="301630006" expression="save == 3" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTransform/world_N.xml#294">
+      <group probability="1000">
+        <slot>
+          <npc id="834190" probability="10000" x="855.506042" y="465.554016" z="352.725647" heading="315" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
   </world>
   <world id="302110000" name="IDTransform_event">
     <variable name="door_open"/>
     <variable name="worldraid_on"/>
+    <variable name="save"/>
     <condition id="1757" expression="door_open == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTransform_event/world_N.xml#70">
       <group probability="1000">
         <slot>
@@ -46715,6 +46754,27 @@
       <group probability="1000">
         <slot>
           <npc id="245412" probability="10000" x="603.781006" y="603.685669" z="358.809265" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="301630007" expression="save == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTransform_event/world_N.xml#294">
+      <group probability="1000">
+        <slot>
+          <npc id="834188" probability="10000" x="855.506042" y="465.554016" z="352.725647" heading="315" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="301630008" expression="save == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTransform_event/world_N.xml#294">
+      <group probability="1000">
+        <slot>
+          <npc id="834189" probability="10000" x="855.506042" y="465.554016" z="352.725647" heading="315" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="301630009" expression="save == 3" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDTransform_event/world_N.xml#294">
+      <group probability="1000">
+        <slot>
+          <npc id="834190" probability="10000" x="855.506042" y="465.554016" z="352.725647" heading="315" initial_delay="0" initial_delay_extra="0" despawn_at_attack_state="true"/>
         </slot>
       </group>
     </condition>

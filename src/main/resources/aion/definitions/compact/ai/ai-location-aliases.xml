@@ -228,6 +228,24 @@
     <point x="529.25238" y="1297.26172" z="198" dir="0"/>
     <point x="530.399963" y="1298.9032" z="198" dir="0"/>
   </alias>
+  <alias world_id="300240000" world_name="idstation" name="IDStation_A_alias">
+    <point x="605.075989" y="448.647491" z="655.309021" dir="90"/>
+  </alias>
+  <alias world_id="300240000" world_name="idstation" name="IDStation_B_alias">
+    <point x="627.048096" y="347.043091" z="640.515991" dir="180"/>
+  </alias>
+  <alias world_id="300240000" world_name="idstation" name="IDStation_Entrance_Upper">
+    <point x="691.534302" y="457.016998" z="656.622314" dir="158"/>
+  </alias>
+  <alias world_id="300241000" world_name="idstation_event" name="IDStation_A_alias">
+    <point x="605.075989" y="448.647491" z="655.309021" dir="90"/>
+  </alias>
+  <alias world_id="300241000" world_name="idstation_event" name="IDStation_B_alias">
+    <point x="627.048096" y="347.043091" z="640.515991" dir="180"/>
+  </alias>
+  <alias world_id="300241000" world_name="idstation_event" name="IDStation_Entrance_Upper">
+    <point x="691.534302" y="457.016998" z="656.622314" dir="158"/>
+  </alias>
   <alias world_id="300280000" world_name="idyun" name="LocationsIDYun_siezeweapon1">
     <point x="451.224365" y="463.602264" z="154.77272" dir="0"/>
   </alias>
@@ -263,6 +281,15 @@
   </alias>
   <alias world_id="300480000" world_name="idldf5re_solo" name="game3_location">
     <point x="558.714355" y="436.226471" z="96.628883" dir="0"/>
+  </alias>
+  <alias world_id="300510000" world_name="idtiamat_1" name="Alias_IDTiamat_1_Reactor_In">
+    <point x="1030.21985" y="491.685699" z="444.347076" dir="270"/>
+  </alias>
+  <alias world_id="300510000" world_name="idtiamat_1" name="Alias_IDTiamat_1_Reactor_Out">
+    <point x="1030.37891" y="499.824188" z="444.316223" dir="90"/>
+  </alias>
+  <alias world_id="300510000" world_name="idtiamat_1" name="Alias_IDTiamat_FOBJ_Teleport_S6">
+    <point x="1056.22144" y="1068.80396" z="788.206726" dir="0"/>
   </alias>
   <alias world_id="300510000" world_name="idtiamat_1" name="Alias_IDTiamat_Tahabata">
     <point x="686.688477" y="1077.71875" z="504.548706" dir="0"/>
@@ -485,6 +512,14 @@
   <alias world_id="301380000" world_name="idldf5_under_02_e" name="Teleport_C">
     <point x="846.23645" y="991.91925" z="302.157227" dir="315"/>
   </alias>
+  <alias world_id="301400000" world_name="idsweep" name="Loc_Stage2_Enter">
+    <point x="425.174438" y="697.181641" z="401.404114" dir="130"/>
+  </alias>
+  <alias world_id="301520000" world_name="idseal_q" name="IDSeal_Q_Boss_Point">
+    <point x="175.533081" y="521.356384" z="1752.85754" dir="180"/>
+    <point x="173.320145" y="519.00293" z="1752.85754" dir="180"/>
+    <point x="175.5233" y="516.550171" z="1752.85754" dir="180"/>
+  </alias>
   <alias world_id="301540000" world_name="ideternity_01" name="Alias_1st_Boss_Room_In_1">
     <point x="481.901276" y="671.779297" z="470.100006" dir="180"/>
     <point x="482.328522" y="671.677185" z="470.100006" dir="180"/>
@@ -579,6 +614,44 @@
   <alias world_id="301540000" world_name="ideternity_01" name="Alias_4th_Boss_Room_Out_3">
     <point x="292.790405" y="483.128204" z="470.100006" dir="300"/>
   </alias>
+  <alias world_id="301540000" world_name="ideternity_01" name="teleport_03">
+    <point x="482.164978" y="352.502045" z="470.100006" dir="180"/>
+    <point x="482.311279" y="352.387543" z="470.100006" dir="180"/>
+  </alias>
+  <alias world_id="301540000" world_name="ideternity_01" name="teleport_04">
+    <point x="290.610046" y="512.06189" z="470.100006" dir="180"/>
+    <point x="290.811279" y="511.908569" z="470.100006" dir="180"/>
+  </alias>
+  <alias world_id="301550000" world_name="ideternity_02" name="IDEternity_02_Save_01">
+    <point x="979.472412" y="774.540588" z="1046.43347" dir="180"/>
+  </alias>
+  <alias world_id="301550000" world_name="ideternity_02" name="IDEternity_02_Save_02">
+    <point x="711.264038" y="1192.22961" z="1036.79846" dir="135"/>
+  </alias>
+  <alias world_id="301550000" world_name="ideternity_02" name="IDEternity_02_Save_03">
+    <point x="559.424377" y="1426.44788" z="830.084106" dir="225"/>
+  </alias>
+  <alias world_id="301550000" world_name="ideternity_02" name="IDEternity_02_Save_04">
+    <point x="755.131592" y="858.44043" z="579.523804" dir="200"/>
+  </alias>
+  <alias world_id="301560000" world_name="ideternity_03" name="IDEternity_03_Teleport_1">
+    <point x="932.33374" y="1060" z="753.533569" dir="90"/>
+  </alias>
+  <alias world_id="301560000" world_name="ideternity_03" name="IDEternity_03_Teleport_2">
+    <point x="919.082336" y="1335.09265" z="751.656433" dir="225"/>
+  </alias>
+  <alias world_id="301560000" world_name="ideternity_03" name="IDEternity_03_Teleport_3">
+    <point x="572.41925" y="1317.76672" z="725.19397" dir="135"/>
+  </alias>
+  <alias world_id="301560000" world_name="ideternity_03" name="IDEternity_03_Teleport_4">
+    <point x="545.799927" y="1131.43958" z="711.549377" dir="270"/>
+  </alias>
+  <alias world_id="301560000" world_name="ideternity_03" name="IDEternity_03_Teleport_5">
+    <point x="481.299286" y="1025.81006" z="713.110657" dir="180"/>
+  </alias>
+  <alias world_id="301590000" world_name="idsweep_02" name="Loc_Stage2_Enter">
+    <point x="425.768829" y="696.985474" z="401.404114" dir="130"/>
+  </alias>
   <alias world_id="301620000" world_name="idf6_dragon" name="IDDF3_Dragon_Area_4.9_1">
     <point x="298.943726" y="258.391998" z="322.820679" dir="0"/>
   </alias>
@@ -653,6 +726,21 @@
   <alias world_id="301660000" world_name="idf6_lf1" name="Alias_IDF6_LF1_Tahabata">
     <point x="212.352936" y="349.638" z="133.12088" dir="135"/>
   </alias>
+  <alias world_id="301660000" world_name="idf6_lf1" name="IDF6_LF1_Location_01">
+    <point x="295.066956" y="921.600037" z="107.593628" dir="135"/>
+  </alias>
+  <alias world_id="301660000" world_name="idf6_lf1" name="IDF6_LF1_Location_02">
+    <point x="221.785339" y="913.625671" z="103.111183" dir="170"/>
+  </alias>
+  <alias world_id="301660000" world_name="idf6_lf1" name="IDF6_LF1_Location_03">
+    <point x="248.239655" y="808.358948" z="107.323151" dir="270"/>
+  </alias>
+  <alias world_id="301660000" world_name="idf6_lf1" name="IDF6_LF1_Location_04">
+    <point x="214.37619" y="621.652405" z="108.721092" dir="30"/>
+  </alias>
+  <alias world_id="301660000" world_name="idf6_lf1" name="IDF6_LF1_Location_05">
+    <point x="214.337906" y="505.488007" z="116.367142" dir="315"/>
+  </alias>
   <alias world_id="301660000" world_name="idf6_lf1" name="IDLF1_T_WatchTower_73_An_01">
     <point x="215.36586" y="916.169983" z="106.295326" dir="45"/>
   </alias>
@@ -661,6 +749,12 @@
   </alias>
   <alias world_id="301660000" world_name="idf6_lf1" name="IDLF1_T_WatchTower_73_An_03">
     <point x="222.702148" y="627.186218" z="109.807541" dir="135"/>
+  </alias>
+  <alias world_id="301670000" world_name="idldf5_under_02_war" name="LocationsTeleport_Point02">
+    <point x="582.946655" y="473.872925" z="621.824707" dir="270"/>
+  </alias>
+  <alias world_id="301670000" world_name="idldf5_under_02_war" name="LocationsTeleport_Point03">
+    <point x="618.015869" y="510.003937" z="594.430847" dir="135"/>
   </alias>
   <alias world_id="301670000" world_name="idldf5_under_02_war" name="Move_Point01">
     <point x="674.185242" y="455.80899" z="602.281616" dir="0"/>
@@ -697,6 +791,33 @@
     <point x="479.226654" y="479.17099" z="607.469604" dir="180"/>
     <point x="457.813293" y="493.570679" z="607.469604" dir="180"/>
     <point x="485.460388" y="503.635803" z="607.469604" dir="180"/>
+  </alias>
+  <alias world_id="301680000" world_name="idldf5_fortress_war" name="TeleportPoint01">
+    <point x="290.232025" y="233.120544" z="90.601646" dir="140"/>
+  </alias>
+  <alias world_id="301680000" world_name="idldf5_fortress_war" name="TeleportPoint02">
+    <point x="238.262192" y="285.216553" z="90.601646" dir="330"/>
+  </alias>
+  <alias world_id="302100000" world_name="idtransform" name="IDTransform_Save_Point_01">
+    <point x="596.688354" y="563.901733" z="356.595978" dir="90"/>
+  </alias>
+  <alias world_id="302100000" world_name="idtransform" name="IDTransform_Save_Point_02">
+    <point x="517.759094" y="573.902344" z="322.395905" dir="270"/>
+  </alias>
+  <alias world_id="302100000" world_name="idtransform" name="IDTransform_Save_Point_03">
+    <point x="408.898682" y="513.081055" z="349.319672" dir="180"/>
+  </alias>
+  <alias world_id="302110000" world_name="idtransform_event" name="IDTransform_Save_Point_01">
+    <point x="596.688354" y="563.901733" z="356.595978" dir="90"/>
+  </alias>
+  <alias world_id="302110000" world_name="idtransform_event" name="IDTransform_Save_Point_02">
+    <point x="517.759094" y="573.902344" z="322.395905" dir="270"/>
+  </alias>
+  <alias world_id="302110000" world_name="idtransform_event" name="IDTransform_Save_Point_03">
+    <point x="408.898682" y="513.081055" z="349.319672" dir="180"/>
+  </alias>
+  <alias world_id="302330000" world_name="idevent_solo" name="idevent_boss_end">
+    <point x="223.848312" y="357.048798" z="143.100006" dir="270"/>
   </alias>
   <alias world_id="302340000" world_name="idab1_ere" name="IDAb1_EreAlias_02">
     <point x="1179.16138" y="737.702759" z="435.414703" dir="270"/>

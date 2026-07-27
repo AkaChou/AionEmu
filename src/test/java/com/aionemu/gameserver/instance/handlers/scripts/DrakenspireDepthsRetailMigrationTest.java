@@ -18,7 +18,7 @@ class DrakenspireDepthsRetailMigrationTest {
 		String normal = worldBlock(conditions, "301390000");
 		String quest = worldBlock(conditions, "301520000");
 		assertEquals(63, count(normal, "<condition "));
-		assertEquals(35, count(quest, "<condition "));
+			assertEquals(37, count(quest, "<condition "));
 		for (String variable : new String[] { "oritsa_summon", "twin_resurrect", "vritra_timer", "wake_timer" }) {
 			assertTrue(normal.contains(variable), variable);
 		}
@@ -35,11 +35,24 @@ class DrakenspireDepthsRetailMigrationTest {
 		for (String pattern : new String[] { "IDSeal_Boss_Lv1", "IDSeal_Wave1_Leader_Lv1", "IDSeal_Twin_P" }) {
 			assertTrue(normalPatterns.contains("<name>" + pattern + "</name>"), pattern);
 		}
-		String questPatterns = Files.readString(Path.of(
+			String questPatterns = Files.readString(Path.of(
 				"src/main/resources/aion/definitions/compact/ai/npcaipatterns_idseal_q_yjh.xml"));
 		for (String pattern : new String[] { "IDSeal_Q_keyNamed", "IDSeal_Q_Twin_P", "IDSeal_Q_Twin_M" }) {
-			assertTrue(questPatterns.contains("<name>" + pattern + "</name>"), pattern);
-		}
+				assertTrue(questPatterns.contains("<name>" + pattern + "</name>"), pattern);
+			}
+			String npcTemplates = Files.readString(Path.of(
+					"src/main/resources/aion/data/static_data/npcs/npc_template.xml"));
+			for (int npcId : new int[] { 805744, 805745 }) {
+				assertTrue(npcTemplates.matches("(?s).*npc_id=\"" + npcId + "\"[^>]*ai=\"portal_dialog\".*"),
+						Integer.toString(npcId));
+			}
+			assertTrue(npcTemplates.matches("(?s).*npc_id=\"805377\"[^>]*ai=\"general\".*"));
+			String portals = Files.readString(Path.of(
+					"src/main/resources/aion/data/static_data/portals/portal_template2.xml"));
+			for (int npcId : new int[] { 805744, 805745 }) {
+				assertTrue(portals.contains("<portal_dialog npc_id=\"" + npcId + "\">"), Integer.toString(npcId));
+			}
+			assertTrue(portals.contains("destination_alias=\"IDSeal_Q_Boss_Point\""));
 
 			assertMinimalHandler("DrakenspireDepthsInstance.java");
 			String questHandler = assertMinimalHandler("DrakenspireDepthsQInstance.java");
@@ -73,7 +86,7 @@ class DrakenspireDepthsRetailMigrationTest {
 		assertFalse(source.contains("onDropRegistered"));
 		assertFalse(source.contains("onDie"));
 		assertFalse(source.contains("spawn("));
-		assertTrue(source.contains("onExitInstance"));
+		assertTrue(source.contains("extends GeneralInstanceHandler"));
 		return source;
 	}
 

@@ -127,7 +127,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(12483, data.conditionSpawnCount());
+		assertEquals(12491, data.conditionSpawnCount());
 		assertEquals(217, data.sensoryAreaCount());
 		assertTrue(RetailPatternAI2.supports(data.getPattern(283080)));
 		assertTrue(RetailPatternAI2.supports(data.getPattern(856595)));
@@ -146,7 +146,10 @@ class RetailAiDefinitionLoaderTest {
 		assertNull(data.findSensoryArea(301550000, 220582, 0, 0, 0));
 		assertEquals(14458, data.skillCategoryCount());
 		assertEquals(2829, data.npcScoreCount());
-		assertEquals(356, data.locationAliasCount());
+		assertEquals(395, data.locationAliasCount());
+		assertNotNull(data.findLocationAlias(301520000, "IDSeal_Q_Boss_Point"));
+		assertNotNull(data.findLocationAlias(302100000, "IDTransform_Save_Point_01"));
+		assertNotNull(data.findLocationAlias(302110000, "IDTransform_Save_Point_03"));
 		assertEquals(52, data.getGroupControllers(210100000).stream()
 			.filter(controller -> controller.exitWorldId() > 0).count()
 			+ data.getGroupControllers(220110000).stream().filter(controller -> controller.exitWorldId() > 0).count()

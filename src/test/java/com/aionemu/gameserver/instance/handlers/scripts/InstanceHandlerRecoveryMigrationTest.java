@@ -651,14 +651,25 @@ class InstanceHandlerRecoveryMigrationTest {
 	void fissureOfOblivionUsesRetailConditionActorsAndKeepsTimeAttackLedger() throws Exception {
 		String conditions = Files.readString(Path.of(
 			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
-		String world = worldBlock(conditions, "302100000");
-		assertEquals(2, count(world, "<variable "));
-		assertEquals(4, count(world, "<condition "));
-		assertEquals(4, count(world, "<slot>"));
-		for (String expected : new String[] { "door_open == 1", "worldraid_on == 1", "npc id=\"245827\"",
-				"npc id=\"245412\"" }) {
-			assertTrue(world.contains(expected), expected);
-		}
+			for (String worldId : new String[] { "302100000", "302110000" }) {
+				String world = worldBlock(conditions, worldId);
+				assertEquals(3, count(world, "<variable "), worldId);
+				assertEquals(7, count(world, "<condition "), worldId);
+				assertEquals(7, count(world, "<slot>"), worldId);
+				for (String expected : new String[] { "door_open == 1", "worldraid_on == 1", "save == 1",
+						"save == 2", "save == 3", "npc id=\"245827\"", "npc id=\"245412\"",
+						"npc id=\"834188\"", "npc id=\"834189\"", "npc id=\"834190\"" }) {
+					assertTrue(world.contains(expected), worldId + ":" + expected);
+				}
+			}
+			String npcTemplates = Files.readString(Path.of(
+					"src/main/resources/aion/data/static_data/npcs/npc_template.xml"));
+			for (int npcId : new int[] { 834188, 834189, 834190 }) {
+				assertTrue(npcTemplates.matches("(?s).*npc_id=\"" + npcId + "\"[^>]*ai=\"portal_dialog\".*"),
+						Integer.toString(npcId));
+			}
+			assertFalse(Files.exists(Path.of(
+					"src/main/java/com/aionemu/gameserver/ai/instance/fissureOfOblivion/Teleport_StoneAI2.java")));
 
 		String staticSpawns = Files.readString(Path.of(
 			"src/main/resources/aion/data/static_data/spawns/Instances/302100000_Fissure_Of_Oblivion.xml"));

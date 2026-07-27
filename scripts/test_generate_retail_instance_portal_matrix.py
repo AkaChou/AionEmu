@@ -34,22 +34,22 @@ class InstancePortalMatrixTest(unittest.TestCase):
         }, self.report["provenance"])
         self.assertEqual({
             "production_worlds": 139,
-            "worlds_with_routes": 111,
-            "start_npcs": 327,
+            "worlds_with_routes": 112,
+            "start_npcs": 335,
             "dynamic_start_npcs": 15,
-            "routes": 819,
-            "batches": 88,
-            "routes_by_association": {"DESTINATION": 354, "START": 465},
+            "routes": 827,
+            "batches": 89,
+            "routes_by_association": {"DESTINATION": 354, "START": 473},
             "routes_by_mechanism": {
                 "handler": 23,
                 "legacy_ai": 89,
-                "portal_dialog": 384,
+                "portal_dialog": 392,
                 "portal_use": 299,
                 "retail_pattern_alias": 8,
                 "teleporter": 16,
             },
             "routes_by_conversion": {
-                "ALREADY_DATA_DRIVEN": 611,
+                "ALREADY_DATA_DRIVEN": 619,
                 "REJECT_INCOMPLETE_RETAIL_PATTERN": 2,
                 "REJECT_NO_RETAIL_PATTERN": 72,
                 "REJECT_NO_RETAIL_START": 85,
@@ -60,7 +60,7 @@ class InstancePortalMatrixTest(unittest.TestCase):
             },
             "routes_by_start_endpoint": {
                 "DYNAMIC": 44,
-                "INSTANCE_CONDITIONAL": 159,
+                "INSTANCE_CONDITIONAL": 167,
                 "INSTANCE_STATIC": 262,
                 "MISSING": 96,
                 "WORLD_CONDITIONAL": 62,
@@ -68,7 +68,7 @@ class InstancePortalMatrixTest(unittest.TestCase):
             },
             "routes_by_destination_endpoint": {
                 "DYNAMIC": 17,
-                "INSTANCE_STATIC": 617,
+                "INSTANCE_STATIC": 625,
                 "WORLD_STATIC": 185,
             },
             "routes_by_transport_type": {
@@ -78,16 +78,16 @@ class InstancePortalMatrixTest(unittest.TestCase):
                 "RELATIVE_TELEPORT": 11,
                 "RETAIL_PATTERN_ALIAS": 8,
                 "LIFT": 2,
-                "SCRIPT_DIALOG_CURRENT_WORLD_ALIAS": 31,
+                "SCRIPT_DIALOG_CURRENT_WORLD_ALIAS": 39,
                 "SCRIPT_TELEPORT": 97,
                 "TELEPORTER": 16,
             },
-            "routes_by_type_status": {"RETAIL_PROVEN": 33, "RUNTIME_MODELED": 786},
+            "routes_by_type_status": {"RETAIL_PROVEN": 41, "RUNTIME_MODELED": 786},
             "routes_by_endpoint_status": {
                 "DYNAMIC_TO_INSTANCE_STATIC": 25,
                 "DYNAMIC_TO_WORLD_STATIC": 19,
                 "INSTANCE_CONDITIONAL_TO_DYNAMIC": 2,
-                "INSTANCE_CONDITIONAL_TO_INSTANCE_STATIC": 103,
+                "INSTANCE_CONDITIONAL_TO_INSTANCE_STATIC": 111,
                 "INSTANCE_CONDITIONAL_TO_WORLD_STATIC": 54,
                 "INSTANCE_STATIC_TO_DYNAMIC": 15,
                 "INSTANCE_STATIC_TO_INSTANCE_STATIC": 135,
@@ -99,20 +99,20 @@ class InstancePortalMatrixTest(unittest.TestCase):
             "routes_by_runtime_consumer": {
                 "INSTANCE_HANDLER": 23,
                 "LEGACY_AI": 89,
-                "PortalService": 683,
+                "PortalService": 691,
                 "RetailPatternAI2": 8,
                 "TeleporterData/TeleportService2": 16,
             },
-            "retail_transport_evidence": 33,
+            "retail_transport_evidence": 41,
             "script_transport_candidates": 67,
             "script_transport_candidates_by_start_status": {
-                "MATCH": 40,
+                "MATCH": 48,
                 "MISMATCH": 17,
-                "MISSING": 10,
+                "MISSING": 2,
             },
             "script_transport_candidates_by_status": {
-                "ALREADY_DATA_DRIVEN_RETAIL_PROVEN": 33,
-                "REJECT_MISSING_RUNTIME_START": 10,
+                "ALREADY_DATA_DRIVEN_RETAIL_PROVEN": 41,
+                "REJECT_MISSING_RUNTIME_START": 2,
                 "REJECT_ROUTE_NOT_PROVEN": 10,
                 "REJECT_RUNTIME_CONSUMER": 9,
                 "REJECT_UNMODELED_CALLBACK_SHAPE": 5,
@@ -215,7 +215,7 @@ class InstancePortalMatrixTest(unittest.TestCase):
         self.assertEqual({(300200000, 730321), (302330000, 730321)},
                          {(route["start_world_id"], route["npc_id"]) for route in lifts})
         self.assertTrue(all(route["retail_transport_evidence"]["domain_type"] == "LIFT" for route in lifts))
-        self.assertEqual(33, sum(route["type_status"] == "RETAIL_PROVEN" for route in self.routes))
+        self.assertEqual(41, sum(route["type_status"] == "RETAIL_PROVEN" for route in self.routes))
 
     def test_script_transport_candidates_use_retail_portal_service_projection(self) -> None:
         candidates = self.report["script_transport_candidates"]
@@ -226,6 +226,14 @@ class InstancePortalMatrixTest(unittest.TestCase):
         self.assertEqual({"ALREADY_DATA_DRIVEN_RETAIL_PROVEN"},
                          {candidate["status"] for candidate in converted})
         self.assertTrue(all(candidate["callback_shape"] == "c0693a58b0486877" for candidate in converted))
+        save_points = [candidate for candidate in candidates
+                       if candidate["npc_id"] in {805744, 805745, 834188, 834189, 834190}]
+        self.assertEqual(8, len(save_points))
+        self.assertEqual({"ALREADY_DATA_DRIVEN_RETAIL_PROVEN"},
+                         {candidate["status"] for candidate in save_points})
+        self.assertTrue(all(candidate["callback_shape"] == "c773c543096b3491" for candidate in save_points))
+        quest_portal = next(candidate for candidate in candidates if candidate["npc_id"] == 805377)
+        self.assertEqual("REJECT_RUNTIME_CONSUMER", quest_portal["status"])
         custom = next(candidate for candidate in candidates if candidate["npc_id"] == 730641)
         self.assertEqual(("ALREADY_DATA_DRIVEN_RETAIL_PROVEN", "portal_dialog", "MISMATCH"),
                          (custom["status"], custom["runtime_ai"], custom["runtime_start_status"]))

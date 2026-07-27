@@ -557,9 +557,11 @@
 	<!-- Sealed Argent Manor 4.9.1 -->
 	<portal_loc world_id="301510000" loc_id="3015100" x="994.73615" y="1205.4276" z="65.640015" h="90"/>
 	<portal_loc world_id="301510000" loc_id="3015101" x="820.6399" y="1080.9615" z="53.671883" h="30"/> <!-- Alchemical Lab -->
-	<portal_loc world_id="301510000" loc_id="3015102" x="820.94037" y="1192.2145" z="94.360855" h="30"/> <!-- Experimental Lab -->
-	<portal_loc world_id="301510000" loc_id="3015103" x="818.93463" y="1444.1871" z="195.00311" h="90"/> <!-- Celestial Observation Chamber -->
-	<!-- Archives Of Eternity 5.0 -->
+		<portal_loc world_id="301510000" loc_id="3015102" x="820.94037" y="1192.2145" z="94.360855" h="30"/> <!-- Experimental Lab -->
+		<portal_loc world_id="301510000" loc_id="3015103" x="818.93463" y="1444.1871" z="195.00311" h="90"/> <!-- Celestial Observation Chamber -->
+		<!-- Drakenspire Depths Quest 4.9 -->
+		<portal_loc world_id="301520000" loc_id="3015200" x="175.533081" y="521.356384" z="1752.857544" h="60"/> <!-- IDSeal_Q_Boss_Point -->
+		<!-- Archives Of Eternity 5.0 -->
 	<portal_loc world_id="301540000" loc_id="3015400" x="755.08514" y="511.9180" z="468.99835" h="59"/> <!-- Prologue To Archives -->
 	<portal_loc world_id="301540000" loc_id="3015401" x="484.03696" y="671.5336" z="468.97745" h="59"/> <!-- IDEternity_01_1st_Boss_Room_In_01 -->
 	<portal_loc world_id="301540000" loc_id="3015402" x="472.38507" y="651.4673" z="468.97745" h="40"/> <!-- IDEternity_01_1st_Boss_Room_In_02 -->
@@ -658,10 +660,16 @@
 	<portal_loc world_id="302000000" loc_id="3020001" x="290.6537" y="170.14955" z="119.65499" h="98"/> <!-- Boss Room Entrance -->
 	<portal_loc world_id="302000000" loc_id="3020002" x="373.2139" y="119.04104" z="116.10973" h="115"/> <!-- Queen Room Entrance -->
 	<portal_loc world_id="302000000" loc_id="3020003" x="369.71548" y="250.30081" z="117.570244" h="27"/> <!-- Treasure Room Entrance -->
-	<!-- Fissure Of Oblivion 5.1 -->
-	<portal_loc world_id="302100000" loc_id="3021000" x="916.0000" y="461.0000" z="352.0000" h="0"/> <!-- Fissure Of Oblivion Entrance -->
-	<!-- [Opportunity] Fissure Of Oblivion -->
-	<portal_loc world_id="302110000" loc_id="3021100" x="916.00000" y="461.00000" z="352.00000" h="0"/> <!-- IDTransform Event Entrance -->
+		<!-- Fissure Of Oblivion 5.1 -->
+		<portal_loc world_id="302100000" loc_id="3021000" x="916.0000" y="461.0000" z="352.0000" h="0"/> <!-- Fissure Of Oblivion Entrance -->
+		<portal_loc world_id="302100000" loc_id="3021001" x="596.688354" y="563.901733" z="356.595978" h="30"/> <!-- IDTransform_Save_Point_01 -->
+		<portal_loc world_id="302100000" loc_id="3021002" x="517.759094" y="573.902344" z="322.395905" h="90"/> <!-- IDTransform_Save_Point_02 -->
+		<portal_loc world_id="302100000" loc_id="3021003" x="408.898682" y="513.081055" z="349.319672" h="60"/> <!-- IDTransform_Save_Point_03 -->
+		<!-- [Opportunity] Fissure Of Oblivion -->
+		<portal_loc world_id="302110000" loc_id="3021100" x="916.00000" y="461.00000" z="352.00000" h="0"/> <!-- IDTransform Event Entrance -->
+		<portal_loc world_id="302110000" loc_id="3021101" x="596.688354" y="563.901733" z="356.595978" h="30"/> <!-- IDTransform_Save_Point_01 -->
+		<portal_loc world_id="302110000" loc_id="3021102" x="517.759094" y="573.902344" z="322.395905" h="90"/> <!-- IDTransform_Save_Point_02 -->
+		<portal_loc world_id="302110000" loc_id="3021103" x="408.898682" y="513.081055" z="349.319672" h="60"/> <!-- IDTransform_Save_Point_03 -->
 	<!-- Dredgion Defense: Sanctum -->
 	<portal_loc world_id="302200000" loc_id="3022000" x="1532.6182" y="1511.6394" z="565.88257" h="60"/> <!-- Entrance -->
 	<portal_loc world_id="302200000" loc_id="3022001" x="947.4592" y="756.5462" z="2207.4856" h="4"/> <!-- Dreadgion Invade -->

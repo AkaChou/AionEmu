@@ -32,6 +32,13 @@ class PortalSourceWorldDataTest {
 				"Alias_3rd_Boss_Room_In_1");
 		assertAlias(data.getPortalDialog(731812, 104, Race.ELYOS, 301540000), 3015434,
 				"Alias_4th_Boss_Room_In_2");
+		assertAlias(data.getPortalDialog(805744, 104, Race.ELYOS, 301520000), 3015200,
+				"IDSeal_Q_Boss_Point");
+		assertAlias(data.getPortalDialog(834188, 104, Race.ELYOS, 302100000), 3021001,
+				"IDTransform_Save_Point_01");
+		assertAlias(data.getPortalDialog(834188, 104, Race.ELYOS, 302110000), 3021101,
+				"IDTransform_Save_Point_01");
+		assertNull(data.getPortalDialog(834188, 104, Race.ELYOS, 301520000));
 
 		PortalPath existing = data.getPortalDialog(700088, 10000, Race.ELYOS, 310030000);
 		assertNotNull(existing);

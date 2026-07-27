@@ -3849,9 +3849,20 @@
 		    <portal_req min_level="45" err_level="27"/>
 		</portal_path>
 	</portal_dialog>
-	<!-- RVR HEIRON/BELUSLAN 4.9 END -->
-	
-	<!-- ARCHIVES OF ETERNITY 5.0 -->
+		<!-- RVR HEIRON/BELUSLAN 4.9 END -->
+		
+		<!-- DRAKENSPIRE DEPTHS QUEST 4.9 -->
+		<!-- Beritra Boss Room Teleport [Elyos] -->
+		<portal_dialog npc_id="805744">
+			<portal_path dialog="104" loc_id="3015200" destination_alias="IDSeal_Q_Boss_Point"/>
+		</portal_dialog>
+		<!-- Beritra Boss Room Teleport [Asmodians] -->
+		<portal_dialog npc_id="805745">
+			<portal_path dialog="104" loc_id="3015200" destination_alias="IDSeal_Q_Boss_Point"/>
+		</portal_dialog>
+		<!-- DRAKENSPIRE DEPTHS QUEST 4.9 END -->
+		
+		<!-- ARCHIVES OF ETERNITY 5.0 -->
 	<!-- Archives Of Eternity [Elyos] -->
 	<portal_dialog npc_id="806028">
 		<portal_path dialog="10000" loc_id="3015400" player_count="6" instance="true" race="ELYOS">
@@ -4198,9 +4209,24 @@
 	</portal_dialog>
 	<!-- IDGEL DOME LANDMARK 5.1 END -->
 	
-	<!-- FISSURE OF OBLIVION 5.1 -->
-	<!-- [OPPORTUNITY] FISSURE OF OBLIVION 5.6 -->
-	<!-- Fissure Of Oblivion [Elyos] -->
+		<!-- FISSURE OF OBLIVION 5.1 -->
+		<!-- [OPPORTUNITY] FISSURE OF OBLIVION 5.6 -->
+		<!-- Orkia Aetheric Field Observatory Square Teleport Stone -->
+		<portal_dialog npc_id="834188">
+			<portal_path dialog="104" loc_id="3021001" source_world_id="302100000" destination_alias="IDTransform_Save_Point_01"/>
+			<portal_path dialog="104" loc_id="3021101" source_world_id="302110000" destination_alias="IDTransform_Save_Point_01"/>
+		</portal_dialog>
+		<!-- Fallen Orkia Fortress Teleport Stone -->
+		<portal_dialog npc_id="834189">
+			<portal_path dialog="104" loc_id="3021002" source_world_id="302100000" destination_alias="IDTransform_Save_Point_02"/>
+			<portal_path dialog="104" loc_id="3021102" source_world_id="302110000" destination_alias="IDTransform_Save_Point_02"/>
+		</portal_dialog>
+		<!-- Orkia Spire Teleport Stone -->
+		<portal_dialog npc_id="834190">
+			<portal_path dialog="104" loc_id="3021003" source_world_id="302100000" destination_alias="IDTransform_Save_Point_03"/>
+			<portal_path dialog="104" loc_id="3021103" source_world_id="302110000" destination_alias="IDTransform_Save_Point_03"/>
+		</portal_dialog>
+		<!-- Fissure Of Oblivion [Elyos] -->
 	<portal_dialog npc_id="834192">
 		<portal_path dialog="10000" loc_id="3021000" instance="true" race="ELYOS">
 		    <portal_req min_level="66" err_level="27"/>
