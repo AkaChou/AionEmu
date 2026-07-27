@@ -1237,7 +1237,7 @@ def simple_collects(path: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[s
 	result: dict[int, dict[str, object]] = {}
 	stats = {"retail": 0, "missing_base": 0, "unsupported": 0, "invalid": 0}
 	skipped: dict[str, object] = {"unsupported": {}, "invalid": []}
-	allowed = BASE_FIELDS | IGNORED_FIELDS | {"give_item", "party_drop"} | {f"object{index}" for index in range(1, 5)}
+	allowed = BASE_FIELDS | IGNORED_FIELDS | {"give_item", "party_drop", "talk_npc1", "talk_npc2", "talk_npc3"} | {f"object{index}" for index in range(1, 5)}
 	for node in ET.parse(path).getroot():
 		quest_id = int(node.attrib["id"])
 		stats["retail"] += 1
@@ -1262,6 +1262,7 @@ def simple_collects(path: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[s
 			"start": fields["acquired_npc_name"],
 			"end": fields["reward_npc_name"],
 			"objects": objects,
+			"talks": [fields[key] for key in ("talk_npc1", "talk_npc2", "talk_npc3") if fields.get(key)],
 			"item": give_item,
 		}
 	return result, stats, skipped

@@ -14585,7 +14585,7 @@
       "semantic_gap_quest_ids": []
     }
   ],
-  "output_sha256": "cabd169d5884490e954e0f0c00195b7088ddca0343ecef9500e7cd98748a7f52",
+  "output_sha256": "bad454f7f231ef391371a5250bd1644a5cd36a91a07a5e02e49b7c2986098dca",
   "skipped": {
     "compiled_script": {},
     "compiled_script_isolation_details": {
@@ -16626,28 +16626,6 @@
           "item_mutation",
           "movie",
           "skill"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "14120": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/eltnen/_14120The_Bucket_List.java",
-        "mechanisms": [
-          "item_condition"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "14150": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_14150Secrets_Of_The_Superus.java",
-        "mechanisms": [
-          "item_condition"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -26840,7 +26818,7 @@
       "source_shapes": 188
     },
     "eligible": {
-      "collect": 174,
+      "collect": 176,
       "compiled_script_action_progress": 2,
       "compiled_script_action_talk": 2,
       "compiled_script_arena_item_play": 2,
@@ -26873,7 +26851,7 @@
       "work_order": 574
     },
     "generated": {
-      "collect": 174,
+      "collect": 176,
       "compiled_script_action_progress": 2,
       "compiled_script_action_talk": 2,
       "compiled_script_arena_item_play": 2,
@@ -26903,7 +26881,7 @@
       "data_driven_talk": 39,
       "hunt": 938,
       "talk": 1883,
-      "total": 5340,
+      "total": 5342,
       "use_item": 93,
       "work_order": 574
     },
@@ -26938,14 +26916,14 @@
     },
     "invalid": 2,
     "java_handlers": {
-      "base_handlers": 713,
+      "base_handlers": 711,
       "constraint_dispositions": {
         "evidence_audit": 9
       },
       "dispositions": {
         "not_executable_without_base": 4,
         "retained_authoritative_gap": 9,
-        "retained_complex_semantics": 704
+        "retained_complex_semantics": 702
       },
       "event_signatures": {
         "AtDistance+Dialog": 3,
@@ -26955,7 +26933,7 @@
         "Attack+Dialog+Die+EnterWorld+Kill+LvlUp+MovieEnd": 2,
         "Attack+Dialog+LvlUp+ZoneMissionEnd": 1,
         "Attack+Dialog+MovieEnd": 1,
-        "Dialog": 189,
+        "Dialog": 187,
         "Dialog+Die+EnterWorld+EquipItem+Kill+LvlUp+MovieEnd": 2,
         "Dialog+Die+EnterWorld+Kill+LogOut+LvlUp+MovieEnd+ZoneMissionEnd": 1,
         "Dialog+Die+EnterWorld+Kill+LogOut+LvlUp+ZoneMissionEnd": 2,
@@ -27027,13 +27005,13 @@
         "EnterZone+MovieEnd": 2,
         "register_only": 6
       },
-      "handlers": 717,
+      "handlers": 715,
       "mechanisms": {
         "action": 31,
         "dynamic_reward": 34,
         "inherited": 6,
         "instance": 26,
-        "item_condition": 239,
+        "item_condition": 237,
         "item_mutation": 308,
         "movie": 125,
         "skill": 7,
@@ -27043,7 +27021,7 @@
       },
       "reasons": {
         "missing_compiled_trigger_chain": 9,
-        "non_linear_or_side_effecting": 704,
+        "non_linear_or_side_effecting": 702,
         "outside_base": 4
       }
     },
@@ -27067,13 +27045,13 @@
       "retained": 456,
       "shadowed_by_generated": 198
     },
-    "missing_base": 2498,
+    "missing_base": 2496,
     "ownership": {
-      "generated_xml": 5340,
-      "java_handlers": 713,
+      "generated_xml": 5342,
+      "java_handlers": 711,
       "legacy_xml": 456,
       "overlap": 0,
-      "selected_xml": 5796
+      "selected_xml": 5798
     },
     "retail": {
       "collect": 262,

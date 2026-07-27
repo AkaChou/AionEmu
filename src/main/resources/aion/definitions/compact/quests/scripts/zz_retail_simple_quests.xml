@@ -699,6 +699,12 @@
   <item_collecting id="13968" retail="true" end_npc_ids="835217" start_npc_ids="835217" start_dialog_id="4762" start_dialog_id2="1011" check_ok_dialog_id="10000" check_fail_dialog_id="10001" reward_dialog_id="10002" />
   <item_collecting id="14110" retail="true" end_npc_ids="203111" start_npc_ids="203111" />
   <item_collecting id="14113" retail="true" end_npc_ids="203178" start_npc_ids="203178" />
+  <item_collecting id="14120" retail="true" end_npc_ids="730019" start_npc_ids="203932" action_item_ids="700157">
+    <npc_infos var="0" npc_id="730020" quest_dialog="1352" />
+  </item_collecting>
+  <item_collecting id="14150" retail="true" end_npc_ids="204501" start_npc_ids="204501" action_item_ids="702423">
+    <npc_infos var="0" npc_id="204582" quest_dialog="1352" />
+  </item_collecting>
   <item_collecting id="15230" retail="true" end_npc_ids="805222" start_npc_ids="805222" start_dialog_id="4762" start_dialog_id2="1011" check_ok_dialog_id="10000" check_fail_dialog_id="10001" reward_dialog_id="10002" />
   <item_collecting id="15231" retail="true" end_npc_ids="805222" start_npc_ids="805222" start_dialog_id="4762" start_dialog_id2="1011" check_ok_dialog_id="10000" check_fail_dialog_id="10001" reward_dialog_id="10002" />
   <item_collecting id="15232" retail="true" end_npc_ids="805222" start_npc_ids="805222" start_dialog_id="4762" start_dialog_id2="1011" check_ok_dialog_id="10000" check_fail_dialog_id="10001" reward_dialog_id="10002" />
