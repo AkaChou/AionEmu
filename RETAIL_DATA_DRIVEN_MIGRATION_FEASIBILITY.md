@@ -1424,3 +1424,61 @@ coverage.xml 只能在这些维度均有证据后改变 owner。
 - 一套按行为维度切换所有权的严格门禁。
 
 完成这些后，迁移成本将从“每个任务或副本都改代码”，变成“补一种通用语义，自动接管所有同形数据”。这才是能够完成整体迁移、并长期跟随真端数据重生成的路径。
+
+## 19. Java handler 批量退役方法（实测）
+
+### 19.1 核心杠杆：xml_owned_ids 排除链
+
+生成器 `generate()` 第 3560 行：`xml_owned_ids = enabled_ids - java_handler_ids`。即**有 Java handler 的 quest 被主动排除**，生成器不会为其生成 XML。这意味着：删 Java handler 后，生成器会自动从真端脚本数据表（SimpleTalk/SimpleHunt/SimpleUseItem/...）生成 XML，无需逐个写 evidence。
+
+这是从“逐个退役”转向“O(能力族) 批量退役”的关键。
+
+### 19.2 批量退役流程（已验证）
+
+1. **交集分析**：`Java ∩ 真端脚本表`，找出有真端表定义但被 Java 占据的 quest。
+2. **形状抽样**：核对真端表形状是否被生成器现有函数支持（allowed 字段集 + 渲染模板）。
+3. **批量删 Java**：`git rm` 对应 handler 文件。
+4. **重生成**：`python3 scripts/generate_retail_simple_quests.py`，确认无并行 python 进程。
+5. **核对**：删了 N 个，total 应 +N、java -N、isolated 不变；偏差必须能归因为“真端形状未被生成器支持”。
+6. **恢复失败的**：删了但进 isolated/unsupported 的（形状不支持），`git checkout HEAD --` 恢复其 Java。
+7. **门禁**：Routing 7 + Smoke 58 全绿。
+8. **提交**：路径限定，不卷入并行工作线。
+
+### 19.3 实测结果（2026-07-27）
+
+| 批次 | 真端表 | 候选 | 成功 | 失败原因 |
+|------|--------|------|------|----------|
+| SimpleTalk | Quest_SimpleTalk.xml | 59 | 54 | 5 个 ScriptDLL-only 证据不足 |
+| SimpleHunt | Quest_SimpleHunt.xml | 4 | 1 | 3 个形状未映射（talk+give_item+hunt 混合） |
+| SimpleUseItem | Quest_SimpleUseItem.xml | 11 | 0 | 11 个有 talk_npc3/give_item，item_order 模板只支持 2 talk |
+| SimpleItemPlay | Quest_SimpleItemPlay.xml | 8 | 0 | 8 个形状未映射（acquired+give+use+reward） |
+| SimpleCollect | Quest_SimpleCollectItem.xml | 2 | 0 | 2 个形状未映射（talk+object+reward） |
+
+**净退役 55 个 Java handler（54 SimpleTalk + 1 SimpleHunt），门禁全绿。**
+
+### 19.4 下一批杠杆：形状映射扩展
+
+剩余 24 个简单表覆盖的 Java handler（11 SimpleUseItem + 8 SimpleItemPlay + 3 SimpleHunt + 2 SimpleCollect）真端形状已知，只是生成器映射规则不完整。按形状归类：
+
+- **11 SimpleUseItem**：use_item + 最多 3 talk_npc + give/remove_item + reward。`ItemOrdersData` 模板只支持 2 talk，需扩展为 data_driven_quest 步骤链（已支持任意多 TALK + give/remove_item 步骤）。
+- **8 SimpleItemPlay**：acquired_npc + give_item + use_item + reward。`data_driven_item_play` 函数需扩展解析 give_item 字段。
+- **3 SimpleHunt**：talk + give_item + monster hunt + reward 混合步骤，需 data_driven 步骤链。
+- **2 SimpleCollect**：talk + object(FOBJ) + reward，需 data_driven ACTION 步骤（已支持 ACTION 类型）。
+
+这些是 O(形状族) 的生成器扩展，每扩展一个形状映射，对应一批 Java handler 自动退役。
+
+### 19.5 最大长尾池：269 个 data_driven 覆盖的 Java handler
+
+790 个 Java handler 中，269 个在真端 `data_driven_quest.xml` 有定义。形状分布（acquire, progress）：
+- **120 EnterArea+PVP**（深渊/地图 PVP 击杀任务，最大类）
+- 18 none+PVP, 14 EnterArea+Hunt, 12 LevelUpLogIn+ItemPlay 等
+
+`data_driven_pvps` 函数当前只支持 `acquire=Talk + progress=PVP`（119 个已生成）。`acquire=EnterArea + progress=PVP` 的 120 个需要扩展为 `kill_in_world` 带 `invasionWorldId`（进入世界自动开始），但真端块无 world 字段--需从 ScriptDLL 或 quest.xml 区域推导。这是下一阶段的最大批量池。
+
+### 19.6 批量判定要点
+
+- **SimpleTalk 表形状被生成器完整支持**（54/59 成功率 92%）--安全批量池。
+- **SimpleUseItem/ItemPlay/Hunt/Collect 表形状多数未映射**（1/25 成功率 4%）--需先扩展生成器形状映射，不可直接删。
+- **删前必验证形状支持**：用 `Java ∩ 真端表` 交集 + 生成器 allowed 字段集核对，避免批量删后大面积隔离。
+- **5% 失败可接受**：恢复失败的 Java，不影响整体进度。
+
