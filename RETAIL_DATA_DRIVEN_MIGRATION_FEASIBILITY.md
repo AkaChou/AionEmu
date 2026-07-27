@@ -283,8 +283,14 @@ ScriptQuest 直接复用现有 XML QuestHandler，没有复制一套对话、击
 > vtable 间接 thunk），未解析目标为 0。NPCServer 的 `NPC_HOST`、`USER_HOST`、
 > `OBJECT_HOST`、`INTERFACE_REGISTRY`、`QUIT_CUTSCENE_CONTEXT` 五个接收者族均已绑定
 > 正确 vtable，并连续索引 217/133/10/10/4 个槽；39 个已使用事件槽全部命名，receiver
-> provenance 中不再存在 OTHER、UNKNOWN 或 UNRESOLVED。当前仍未知的 25,129 个 callback
-> 函数业务名和 170 个 operation catalog 条目属于下一阶段业务语义编译，继续阻断对应任务的
+> provenance 中不再存在 OTHER、UNKNOWN 或 UNRESOLVED。NPCServer 函数名和函数体已闭合
+> 全部生产已用 NPC_HOST/USER_HOST 虚槽；语义现覆盖 179/216 个 operation catalog 条目、
+> 39,464/39,888 次调用和 95,515/96,238 次注册，1,631 个机械 shape 中 1,569 个完全
+> 映射。当前仍未知的 25,129 个 callback 函数业务名和 37 个 operation catalog 条目全部
+> 属于直接 helper，进入下一阶段能力族闭合；对应 62 个 shape 继续阻断运行时接管。
+> `ADD_QUEST_TIMER`、`DELETE_QUEST_TIMER`、`LEAVE_INSTANCE` 与 `SPAWN_NPC` 是由槽目标
+> 函数到共享实现的机械推导，明确标记为 DERIVED；其余虚槽均由真端函数体中的
+> `INpcImp::`/`IUserImp::` 锚点标记为 PROVEN。未闭合项继续阻断对应任务的
 > 运行时接管，不得把“基座闭合”解释为“任务迁移完成”。
 
 ### 3.2 当前 DataDrivenQuest 只是严格线性子集

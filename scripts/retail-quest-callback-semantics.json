@@ -1,0 +1,1464 @@
+{
+  "version": 4,
+  "kind": "RETAIL_QUEST_CALLBACK_SEMANTICS",
+  "evidence_files": {
+    "quest_dialog_helpers": {
+      "root": "SCRIPT_SOURCE",
+      "path": "fun/fun_731.cpp",
+      "sha256": "50464a0229212c46cce1b10563155c75baa4b4f54d0a47df461291f22237f9d0"
+    },
+    "script_interface_registry": {
+      "root": "SCRIPT_SOURCE",
+      "path": "fun/fun_732.cpp",
+      "sha256": "b930e6c8812b8da95ed5a74e7bec40553efd2b3938cc3977bf50854fc3822361"
+    },
+    "npc_server_events": {
+      "root": "NPC_SERVER_SOURCE",
+      "path": "NPCSvr64.c",
+      "sha256": "d857a311956c7e5e2c7558950a38c3b03d5c3922229c383c44816a395d518c66"
+    },
+    "transport_dialog_callbacks": {
+      "root": "SCRIPT_SOURCE",
+      "path": "fun/fun_723.cpp",
+      "sha256": "849c8b9562de68691f540901a18d50415efcbe3e499a12873112a47ea363ace5"
+    },
+    "quest_packed_progress_callbacks": {
+      "root": "SCRIPT_SOURCE",
+      "path": "fun/fun_862.cpp",
+      "sha256": "1209e74f452b1bdb49ba13a3b751ef3c867b277d814eed0aa10303540fba38ea"
+    },
+    "quest_interface_lookup_callbacks": {
+      "root": "SCRIPT_SOURCE",
+      "path": "fun/fun_863.cpp",
+      "sha256": "ae7c1d30ff6007a2c187b2387d6da693e6f9fa7de50e8f442afc7a11b6bc9713"
+    },
+    "quest_progress_callbacks": {
+      "root": "SCRIPT_SOURCE",
+      "path": "fun/fun_865.cpp",
+      "sha256": "d3bca79355f3eb57ad8afe2e8e38c4b37e2d4a5b62b5e6fa1776ce193a245ddb"
+    },
+    "npc_interface_lookup_callbacks": {
+      "root": "SCRIPT_SOURCE",
+      "path": "fun/fun_911.cpp",
+      "sha256": "0ff37da7a66222e2a98892f7077c5477d0a504d8bc31ff2b7db030236bd9f3c0"
+    },
+    "npc_server_binary": {
+      "root": "NPC_SERVER_BINARY",
+      "path": "NPCSvr64.exe",
+      "format": "binary",
+      "sha256": "3c205ec99264b371a772398b371f872755fd74742462c73e728ba0ad9b9f218d"
+    }
+  },
+  "callback_receiver_family": "NPC_HOST",
+  "receiver_families": {
+    "NPC_HOST": {
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "npc_server_events",
+          "lines": [180399, 180406],
+          "anchor": "INpcImpNoRefCount::vftable"
+        },
+        {
+          "file": "npc_server_events",
+          "lines": [282674, 282680],
+          "anchor": "(*pcVar3)(param_1 + 0x14,param_4)"
+        }
+      ],
+      "vtable": {
+        "file": "npc_server_binary",
+        "address": "0x1404640e8",
+        "source_file": "npc_server_events",
+        "scan": true,
+        "entries": {
+          "0xa0": "0x14016cbe0",
+          "0xa8": "0x14016cd50",
+          "0x100": "0x14016df00",
+          "0x188": "0x14016b4a0",
+          "0x1b0": "0x14016c030",
+          "0x338": "0x140172c70",
+          "0x348": "0x1401731d0",
+          "0x3b0": "0x140175190",
+          "0x4b8": "0x14017a8d0",
+          "0x4c0": "0x14017ac90",
+          "0x5d8": "0x14017fa30"
+        }
+      }
+    },
+    "USER_HOST": {
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "npc_server_events",
+          "lines": [269988, 270070],
+          "anchor": "IUserImp::vftable"
+        }
+      ],
+      "vtable": {
+        "file": "npc_server_binary",
+        "address": "0x140475040",
+        "source_file": "npc_server_events",
+        "scan": true,
+        "entries": {
+          "0xd0": "0x140185760",
+          "0xf0": "0x140185d90",
+          "0xf8": "0x140185f30",
+          "0x100": "0x1401860c0",
+          "0x108": "0x140186480",
+          "0x110": "0x140186250"
+        }
+      }
+    },
+    "OBJECT_HOST": {
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [251462, 251530], "anchor": "IObjectImp::vftable"}
+      ],
+      "vtable": {
+        "file": "npc_server_binary",
+        "address": "0x140476688",
+        "source_file": "npc_server_events",
+        "scan": true,
+        "entries": {
+          "0x8": "0x140169160",
+          "0x10": "0x1401692d0",
+          "0x28": "0x140169640",
+          "0x30": "0x1401697b0"
+        }
+      }
+    },
+    "INTERFACE_REGISTRY": {
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [463460, 463530], "anchor": "NpcScriptMgr::vftable"}
+      ],
+      "vtable": {
+        "file": "npc_server_binary",
+        "address": "0x1404a2778",
+        "source_file": "npc_server_events",
+        "scan": true,
+        "entries": {
+          "0x28": "0x1401908b0",
+          "0x30": "0x140190ac0",
+          "0x38": "0x140190c40",
+          "0x40": "0x140190ec0",
+          "0x48": "0x140190390"
+        }
+      }
+    },
+    "QUIT_CUTSCENE_CONTEXT": {
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [235700, 235710], "anchor": "IQuitCutSceneEventImp::vftable"}
+      ],
+      "accessors": {"0x8": "USER_HOST"},
+      "vtable": {
+        "file": "npc_server_binary",
+        "address": "0x14046f968",
+        "source_file": "npc_server_events",
+        "scan": true,
+        "entries": {
+          "0x8": "0x140150840",
+          "0x10": "0x140150850"
+        }
+      }
+    }
+  },
+  "receiver_provenance": {
+    "globals": {
+      "DAT_184720398": {
+        "receiver_family": "INTERFACE_REGISTRY",
+        "evidence": [
+          {"file": "script_interface_registry", "lines": [1067, 1075], "anchor": "DAT_184720398 = param_1"}
+        ]
+      }
+    },
+    "registry_outputs": {
+      "0x28": {
+        "output_argument": 2,
+        "receiver_family": "USER_HOST",
+        "evidence": [
+          {"file": "npc_server_events", "lines": [279475, 279563], "anchor": "NpcScriptMgr::__FindUser__"}
+        ]
+      },
+      "0x38": {
+        "output_argument": 2,
+        "receiver_family": "NPC_HOST",
+        "evidence": [
+          {"file": "npc_server_events", "lines": [279634, 279744], "anchor": "NpcScriptMgr::__FindNpc__"}
+        ]
+      }
+    },
+    "registry_inputs": {
+      "0x30": {
+        "input_argument": 1,
+        "receiver_family": "USER_HOST",
+        "evidence": [
+          {"file": "npc_server_events", "lines": [279564, 279633], "anchor": "NpcScriptMgr::__ReleaseUser__"}
+        ]
+      },
+      "0x40": {
+        "input_argument": 1,
+        "receiver_family": "NPC_HOST",
+        "evidence": [
+          {"file": "npc_server_events", "lines": [279748, 279820], "anchor": "NpcScriptMgr::__ReleaseNpc__"}
+        ]
+      }
+    },
+    "context_accessors": {
+      "EVENT:1:0x18": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [233812, 233820], "anchor": "FUN_140183140"}]},
+      "EVENT:2:0x18": {"receiver_family": "NPC_HOST", "evidence": [{"file": "npc_server_events", "lines": [233836, 233844], "anchor": "FUN_140169d10"}]},
+      "EVENT:5:0x18": {"receiver_family": "OBJECT_HOST", "evidence": [{"file": "npc_server_events", "lines": [233959, 233968], "anchor": "FUN_140168cc0"}]},
+      "EVENT:11:0x20": {"receiver_family": "OBJECT_HOST", "evidence": [{"file": "npc_server_events", "lines": [234178, 234188], "anchor": "FUN_140168cc0"}]},
+      "EVENT:17:0x18": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [234538, 234546], "anchor": "FUN_140183140"}]},
+      "EVENT:28:0x18": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [234743, 234751], "anchor": "FUN_140183140"}]},
+      "EVENT:29:0x18": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [234789, 234797], "anchor": "FUN_140183140"}]},
+      "EVENT:30:0x18": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [234835, 234843], "anchor": "FUN_140183140"}]},
+      "EVENT:38:0x30": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235084, 235094], "anchor": "FUN_140183140"}]},
+      "EVENT:49:0x30": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235168, 235178], "anchor": "FUN_140183140"}]},
+      "EVENT:50:0x30": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235336, 235346], "anchor": "FUN_140183140"}]},
+      "EVENT:51:0x30": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235420, 235430], "anchor": "FUN_140183140"}]},
+      "EVENT:53:0x40": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235590, 235602], "anchor": "FUN_140183140"}]},
+      "EVENT:54:0x30": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235252, 235262], "anchor": "FUN_140183140"}]},
+      "EVENT:55:0x20": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [234941, 234949], "anchor": "FUN_140183140"}]},
+      "EVENT:56:0x20": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235000, 235008], "anchor": "FUN_140183140"}]},
+      "EVENT:58:0x18": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [368134, 368142], "anchor": "FUN_140183140"}]},
+      "EVENT:59:0x18": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [426510, 426518], "anchor": "FUN_140183140"}]},
+      "EVENT:63:0x18": {"receiver_family": "NPC_HOST", "evidence": [{"file": "npc_server_events", "lines": [233884, 233892], "anchor": "FUN_140169d10"}]},
+      "EVENT:76:0x20": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [332698, 332706], "anchor": "FUN_140183140"}]},
+      "EVENT:79:0x20": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235745, 235753], "anchor": "FUN_140183140"}]},
+      "EVENT:80:0x20": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235794, 235802], "anchor": "FUN_140183140"}]},
+      "EVENT:90:0x20": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235843, 235851], "anchor": "FUN_140183140"}]},
+      "EVENT:92:0x18": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235940, 235948], "anchor": "FUN_140183140"}]},
+      "EVENT:97:0x20": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [235977, 235985], "anchor": "FUN_140183140"}]},
+      "EVENT:99:0x20": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [236026, 236034], "anchor": "FUN_140183140"}]},
+      "EVENT:100:0x20": {"receiver_family": "USER_HOST", "evidence": [{"file": "npc_server_events", "lines": [236075, 236083], "anchor": "FUN_140183140"}]},
+      "PHASE_MASK:0x30": {"receiver_family": "USER_HOST", "evidence": [{"file": "quest_dialog_helpers", "lines": [1823, 1865], "anchor": "param_3 + 0x30"}]}
+    },
+    "context_receivers": {
+      "EVENT:57": {
+        "parameter": 2,
+        "receiver_family": "QUIT_CUTSCENE_CONTEXT",
+        "evidence": [{"file": "npc_server_events", "lines": [235700, 235710], "anchor": "IQuitCutSceneEventImp::vftable"}]
+      }
+    }
+  },
+  "events": {
+    "0": {
+      "name": "NPC_WAKE_UP",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [240695, 240703], "anchor": "IWakeUpEventImp::vftable"}]
+    },
+    "1": {
+      "name": "SEE_USER",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [233812, 233820], "anchor": "ISeeUserEventImp::vftable"}]
+    },
+    "2": {
+      "name": "SEE_NPC",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [233836, 233844], "anchor": "ISeeNpcEventImp::vftable"}]
+    },
+    "3": {
+      "name": "DAMAGED",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [233909, 233917], "anchor": "IDamagedEventImp::vftable"}]
+    },
+    "5": {
+      "name": "ATTACKED",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [233959, 233967], "anchor": "IAttackedEventImp::vftable"}]
+    },
+    "11": {
+      "name": "SPELLED",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [234178, 234186], "anchor": "ISpelledEventImp::vftable"}]
+    },
+    "17": {
+      "name": "KILLED_BY_USER",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [234538, 234546], "anchor": "IKilledByUserEventImp::vftable"}]
+    },
+    "19": {
+      "name": "KILLED_BY_NPC",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [234572, 234580], "anchor": "IKilledByNpcEventImp::vftable"}]
+    },
+    "20": {
+      "name": "DIE",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [242336, 242344], "anchor": "IDieEventImp::vftable"}]
+    },
+    "28": {
+      "name": "CHECK_QUEST_ACQUIRE_OK",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [234743, 234751], "anchor": "ICheckQuestAcquireOKEventImp::vftable"}]
+    },
+    "29": {
+      "name": "CHECK_QUEST_ACQUIRE_FAIL",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [234789, 234797], "anchor": "ICheckQuestAcquireFailEventImp::vftable"}]
+    },
+    "30": {
+      "name": "GIVE_QUEST_REWARD_OK",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [234835, 234843], "anchor": "IGiveQuestRewardOKEventImp::vftable"}]
+    },
+    "32": {
+      "name": "ARRIVED_AT_WAYPOINT",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [204609, 204617], "anchor": "IArrivedAtWayPointEventImp::vftable"}]
+    },
+    "35": {
+      "name": "ENTER_RETURN_SPAWN_POINT",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [232190, 232198], "anchor": "IEnterReturnSPEventImp::vftable"}]
+    },
+    "38": {
+      "name": "TALKED_QUEST_STATE_NONE",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235084, 235092], "anchor": "ITalkedQuestStateNoneEventImp::vftable"}]
+    },
+    "49": {
+      "name": "TALKED_QUEST_STATE_WORKING",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235168, 235176], "anchor": "ITalkedQuestStateWorkingEventImp::vftable"}]
+    },
+    "50": {
+      "name": "TALKED_QUEST_STATE_SUCCESS",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235336, 235344], "anchor": "ITalkedQuestStateSuccessEventImp::vftable"}]
+    },
+    "51": {
+      "name": "USER_ACCEPTED_QUEST",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235420, 235428], "anchor": "IUserAcceptedQuestEventImp::vftable"}]
+    },
+    "52": {
+      "name": "USER_REFUSED_QUEST",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235504, 235512], "anchor": "IUserRefusedQuestEventImp::vftable"}]
+    },
+    "53": {
+      "name": "USER_SELECTED_QUEST_REWARD",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235590, 235598], "anchor": "IUserSelectedQuestRewardEventImp::vftable"}]
+    },
+    "54": {
+      "name": "TALKED_CHECK_USER_HAS_QUEST_ITEM",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235252, 235260], "anchor": "ITalkedCheckUserHasQuestItemEventImp::vftable"}]
+    },
+    "55": {
+      "name": "CHECK_USER_HAS_QUEST_ITEM_OK",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [234941, 234949], "anchor": "ICheckUserHasQuestItemOKEventImp::vftable"}]
+    },
+    "56": {
+      "name": "CHECK_USER_HAS_QUEST_ITEM_FAIL",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235000, 235008], "anchor": "ICheckUserHasQuestItemFailEventImp::vftable"}]
+    },
+    "57": {
+      "name": "QUIT_CUTSCENE",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235700, 235708], "anchor": "IQuitCutSceneEventImp::vftable"}]
+    },
+    "58": {
+      "name": "USER_ENTER_SENSORY_AREA",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [368134, 368142], "anchor": "IUserEnterSensoryAreaEventImp::vftable"}]
+    },
+    "59": {
+      "name": "USER_LEAVE_SENSORY_AREA",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [426510, 426518], "anchor": "IUserLeaveSensoryAreaEventImp::vftable"}]
+    },
+    "63": {
+      "name": "SEE_NPC_MOVE",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [233884, 233892], "anchor": "ISeeNpcMoveEventImp::vftable"}]
+    },
+    "64": {
+      "name": "DESPAWN",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [196275, 196283], "anchor": "IDespawnEventImp::vftable"}]
+    },
+    "65": {
+      "name": "STOP_TO_FLEE",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [282058, 282066], "anchor": "IStopToFleeEventImp::vftable"}]
+    },
+    "66": {
+      "name": "STOP_TO_FOLLOW",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [283032, 283040], "anchor": "IStopToFollowEventImp::vftable"}]
+    },
+    "76": {
+      "name": "PARTY_MEMBER_TALKED_BY_USER",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [332698, 332706], "anchor": "IPartyMbrTalkedByUserImp::vftable"}]
+    },
+    "79": {
+      "name": "USER_GOLD_DECREASE_RESULT",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235745, 235753], "anchor": "IUserGoldDecreaseResultEventImp::vftable"}]
+    },
+    "80": {
+      "name": "USER_CHECK_EQUIPMENT_RESULT",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235794, 235802], "anchor": "IUserCheckEquipmentResultEventImp::vftable"}]
+    },
+    "86": {
+      "name": "ENTER_IDLE_STATE",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [283394, 283402], "anchor": "IEnterIdleStateEventImp::vftable"}]
+    },
+    "90": {
+      "name": "USER_CHECK_DP_RESULT",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235843, 235851], "anchor": "IUserCheckDPResultEventImp::vftable"}]
+    },
+    "92": {
+      "name": "USER_CHECK_ITEM_SET_RESULT",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235940, 235948], "anchor": "IUserCheckItemSetResultEventImp::vftable"}]
+    },
+    "97": {
+      "name": "USER_CHECK_RECIPE_LEARNED_RESULT",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [235977, 235985], "anchor": "IUserCheckRecipeLearnedResultEventImp::vftable"}]
+    },
+    "99": {
+      "name": "USER_CHECK_AP_RESULT",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [236026, 236034], "anchor": "IUserCheckAPResultEventImp::vftable"}]
+    },
+    "100": {
+      "name": "USER_AP_DECREASED_RESULT",
+      "category": "EVENT",
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_server_events", "lines": [236075, 236083], "anchor": "IUserAPDecreasedResultEventImp::vftable"}]
+    }
+  },
+  "function_abis": {
+    "FUN_180ca9fb0": {
+      "script_host_parameter": 1,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [937, 950], "anchor": "FUN_180ca9fb0 ->"}]
+    },
+    "FUN_180ca9ff0": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [953, 966], "anchor": "FUN_180ca9ff0 ->"}]
+    },
+    "FUN_180caa0b0": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [986, 1025], "anchor": "FUN_180caa0b0 ->"}]
+    },
+    "FUN_180caab60": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [1323, 1336], "anchor": "FUN_180caab60 ->"}]
+    },
+    "FUN_180caabb0": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [1339, 1352], "anchor": "FUN_180caabb0 ->"}]
+    },
+    "FUN_180cab9c0": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [1846, 1865], "anchor": "FUN_180cab9c0 ->"}]
+    },
+    "FUN_180caab10": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [1307, 1320], "anchor": "FUN_180caab10 ->"}]
+    },
+    "FUN_180caadb0": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [1409, 1453], "anchor": "FUN_180caadb0 ->"}]
+    },
+    "FUN_180cab720": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [1741, 1754], "anchor": "FUN_180cab720 ->"}]
+    },
+    "FUN_180cab790": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [1757, 1772], "anchor": "FUN_180cab790 ->"}]
+    },
+    "FUN_180cab820": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [1776, 1820], "anchor": "FUN_180cab820 ->"}]
+    },
+    "FUN_180cab920": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [1823, 1843], "anchor": "FUN_180cab920 ->"}]
+    },
+    "FUN_180cac970": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [2368, 2388], "anchor": "FUN_180cac970 ->"}]
+    },
+    "FUN_180caf9c0": {
+      "script_host_parameter": 2,
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_dialog_helpers", "lines": [4389, 4407], "anchor": "FUN_180caf9c0 ->"}]
+    },
+    "FUN_180ec1d90": {
+      "receiver_bindings": {"plVar2": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_packed_progress_callbacks", "lines": [2208, 2253], "anchor": "FUN_180ec1d90 ->"}]
+    },
+    "FUN_180ec1e30": {
+      "receiver_bindings": {"plVar2": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_packed_progress_callbacks", "lines": [2255, 2300], "anchor": "FUN_180ec1e30 ->"}]
+    },
+    "FUN_180ec8470": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"local_414": "NPC_HOST", "local_824": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_interface_lookup_callbacks", "lines": [3612, 3662], "anchor": "FUN_180ec8470 ->"}]
+    },
+    "FUN_180ec8ac0": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"local_414": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_interface_lookup_callbacks", "lines": [3880, 3903], "anchor": "FUN_180ec8ac0 ->"}]
+    },
+    "FUN_180ec8b60": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"local_414": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_interface_lookup_callbacks", "lines": [3905, 3943], "anchor": "FUN_180ec8b60 ->"}]
+    },
+    "FUN_180ecd750": {
+      "script_host_parameter": 2,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"plVar1": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_progress_callbacks", "lines": [393, 414], "anchor": "FUN_180ecd750 ->"}]
+    },
+    "FUN_180ecd830": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"plVar1": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_progress_callbacks", "lines": [416, 432], "anchor": "FUN_180ecd830 ->"}]
+    },
+    "FUN_180ecd8d0": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"plVar1": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_progress_callbacks", "lines": [434, 450], "anchor": "FUN_180ecd8d0 ->"}]
+    },
+    "FUN_180ecd970": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"plVar1": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_progress_callbacks", "lines": [452, 468], "anchor": "FUN_180ecd970 ->"}]
+    },
+    "FUN_180ecda10": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"plVar1": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_progress_callbacks", "lines": [470, 486], "anchor": "FUN_180ecda10 ->"}]
+    },
+    "FUN_180ecdab0": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"plVar1": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_progress_callbacks", "lines": [488, 504], "anchor": "FUN_180ecdab0 ->"}]
+    },
+    "FUN_180ecdb50": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"plVar1": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_progress_callbacks", "lines": [506, 522], "anchor": "FUN_180ecdb50 ->"}]
+    },
+    "FUN_180ecdc80": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"plVar1": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_progress_callbacks", "lines": [540, 556], "anchor": "FUN_180ecdc80 ->"}]
+    },
+    "FUN_180ecdd20": {
+      "script_host_parameter": 2,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"plVar2": "USER_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "quest_progress_callbacks", "lines": [558, 585], "anchor": "FUN_180ecdd20 ->"}]
+    },
+    "FUN_18106af10": {
+      "script_host_parameter": 1,
+      "receiver_family": "NPC_HOST",
+      "receiver_bindings": {"local_414": "NPC_HOST"},
+      "confidence": "PROVEN",
+      "evidence": [{"file": "npc_interface_lookup_callbacks", "lines": [44554, 44601], "anchor": "FUN_18106af10 ->"}]
+    }
+  },
+  "functions": {
+    "FUN_180caac10": {
+      "name": "COMPLETE_QUEST_REWARD_AND_CONSUME_REQUIREMENTS",
+      "category": "ACTION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [1355, 1390], "anchor": "FUN_180caac10 ->"}
+      ]
+    },
+    "FUN_180caaf00": {
+      "name": "CHECK_QUEST_ACQUIRE_CONDITION_FOR_CONTEXT",
+      "category": "CONDITION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [1456, 1471], "anchor": "FUN_180caaf00 ->"}
+      ]
+    },
+    "FUN_180cab520": {
+      "name": "DISPATCH_QUEST_DIALOG_WITH_OPTIONAL_ITEM",
+      "category": "ACTION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [1667, 1740], "anchor": "FUN_180cab520 ->"}
+      ]
+    },
+    "FUN_180caca90": {
+      "name": "ACQUIRE_QUEST_AND_GIVE_ITEM",
+      "category": "ACTION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [2409, 2426], "anchor": "FUN_180caca90 ->"}
+      ]
+    },
+    "FUN_180caa850": {
+      "name": "ADVANCE_PACKED_6BIT_PROGRESS_IF_SLOT_EQUALS",
+      "category": "ACTION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [1216, 1304], "anchor": "FUN_180caa850 ->"}
+      ]
+    },
+    "FUN_180caf150": {
+      "name": "DISPATCH_QUEST_DIALOG_CORE",
+      "category": "ACTION",
+      "parameters": [
+        "quest_id",
+        "script_host",
+        "dialog_id",
+        "quest_context",
+        "progress_guard_enabled",
+        "expected_progress"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4041,
+            4105
+          ],
+          "anchor": "attempting to Jump Progress"
+        }
+      ]
+    },
+    "FUN_180caf350": {
+      "name": "DISPATCH_QUEST_DIALOG_DEFAULT",
+      "category": "ACTION",
+      "parameters": [
+        "quest_id",
+        "script_host",
+        "callback_context"
+      ],
+      "constants": {
+        "progress_guard_enabled": false,
+        "expected_progress": 0
+      },
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4111,
+            4119
+          ],
+          "anchor": "FUN_180caf150(param_1,param_2,uVar2,uVar1,0,0)"
+        }
+      ]
+    },
+    "FUN_180caf3c0": {
+      "name": "DISPATCH_QUEST_DIALOG_PROGRESS_GUARDED",
+      "category": "ACTION",
+      "parameters": [
+        "quest_id",
+        "script_host",
+        "callback_context",
+        "expected_progress"
+      ],
+      "constants": {
+        "progress_guard_enabled": true
+      },
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4125,
+            4133
+          ],
+          "anchor": "FUN_180caf150(param_1,param_2,uVar2,uVar1,1,param_4)"
+        }
+      ]
+    },
+    "FUN_180caf440": {
+      "name": "EXTRACT_PACKED_6BIT_FIELD",
+      "category": "STATE",
+      "parameters": [
+        "packed_value",
+        "one_based_slot"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4139,
+            4142
+          ],
+          "anchor": "& 0x3f"
+        }
+      ]
+    },
+    "FUN_180caf460": {
+      "name": "DISPATCH_QUEST_DIALOG_BY_MODE_CORE",
+      "category": "ACTION",
+      "parameters": [
+        "quest_id",
+        "script_host",
+        "quest_status",
+        "quest_context",
+        "dialog_mode",
+        "mode_value"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4148,
+            4219
+          ],
+          "anchor": "uVar2 = 0x2712"
+        }
+      ]
+    },
+    "FUN_180caf5a0": {
+      "name": "SEND_QUEST_DIALOG_10001",
+      "category": "ACTION",
+      "parameters": [
+        "quest_id",
+        "script_host",
+        "callback_context"
+      ],
+      "constants": {
+        "dialog_id": 10001
+      },
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4226,
+            4234
+          ],
+          "anchor": "0x2711"
+        }
+      ]
+    },
+    "FUN_180caf5f0": {
+      "name": "SEND_QUEST_DIALOG_10000",
+      "category": "ACTION",
+      "parameters": [
+        "quest_id",
+        "script_host",
+        "callback_context"
+      ],
+      "constants": {
+        "dialog_id": 10000
+      },
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4240,
+            4248
+          ],
+          "anchor": "10000"
+        }
+      ]
+    },
+    "FUN_180caf640": {
+      "name": "DISPATCH_QUEST_DIALOG_MODE_0",
+      "category": "ACTION",
+      "parameters": [
+        "quest_id",
+        "script_host",
+        "callback_context"
+      ],
+      "constants": {
+        "dialog_mode": 0
+      },
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4254,
+            4266
+          ],
+          "anchor": "local_res18[0] = 0"
+        }
+      ]
+    },
+    "FUN_180caf6c0": {
+      "name": "DISPATCH_QUEST_DIALOG_MODE_4",
+      "category": "ACTION",
+      "parameters": [
+        "quest_id",
+        "script_host",
+        "callback_context"
+      ],
+      "constants": {
+        "dialog_mode": 4
+      },
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4272,
+            4284
+          ],
+          "anchor": "local_res18[0] = 4"
+        }
+      ]
+    },
+    "FUN_180caf740": {
+      "name": "DISPATCH_QUEST_DIALOG_MODE_3",
+      "category": "ACTION",
+      "parameters": [
+        "quest_id",
+        "script_host",
+        "callback_context"
+      ],
+      "constants": {
+        "dialog_mode": 3
+      },
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4290,
+            4302
+          ],
+          "anchor": "local_res18[0] = 3"
+        }
+      ]
+    },
+    "FUN_180caf7c0": {
+      "name": "DISPATCH_QUEST_DIALOG_WITH_INITIAL_PROGRESS_AND_ITEM",
+      "category": "ACTION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [4306, 4388], "anchor": "FUN_180caf7c0 ->"}
+      ]
+    },
+    "FUN_180cafa40": {
+      "name": "DISPATCH_QUEST_DIALOG_WITH_PROGRESS_AND_ITEM_EXCHANGE",
+      "category": "ACTION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [4410, 4558], "anchor": "FUN_180cafa40 ->"}
+      ]
+    },
+    "FUN_180cb13b0": {
+      "name": "ADVANCE_PACKED_6BIT_QUEST_PROGRESS",
+      "category": "ACTION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [5304, 5350], "anchor": "FUN_180cb13b0 ->"}
+      ]
+    },
+    "FUN_180cb14e0": {
+      "name": "ADVANCE_PACKED_10BIT_QUEST_PROGRESS",
+      "category": "ACTION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [5354, 5400], "anchor": "FUN_180cb14e0 ->"}
+      ]
+    },
+    "FUN_180cb1610": {
+      "name": "SHARE_PACKED_QUEST_PROGRESS",
+      "category": "ACTION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [5404, 5444], "anchor": "FUN_180cb1610 ->"}
+      ]
+    },
+    "FUN_180cb2450": {
+      "name": "ADVANCE_PACKED_6BIT_QUEST_PROGRESS_IN_RANGE",
+      "category": "ACTION",
+      "confidence": "DERIVED",
+      "evidence": [
+        {"file": "quest_dialog_helpers", "lines": [5901, 5960], "anchor": "FUN_180cb2450 ->"}
+      ]
+    }
+  },
+  "virtual_operations": {
+    "CALL:INTERFACE_REGISTRY:0x28": {
+      "name": "FIND_USER",
+      "category": "STATE",
+      "receiver": "INTERFACE_REGISTRY",
+      "parameters": ["interface_registry", "user_id", "user_interface_output"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [279475, 279563], "anchor": "NpcScriptMgr::__FindUser__"}
+      ]
+    },
+    "CALL:INTERFACE_REGISTRY:0x30": {
+      "name": "RELEASE_USER",
+      "category": "ACTION",
+      "receiver": "INTERFACE_REGISTRY",
+      "parameters": ["interface_registry", "user_interface"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [279564, 279633], "anchor": "NpcScriptMgr::__ReleaseUser__"}
+      ]
+    },
+    "CALL:INTERFACE_REGISTRY:0x38": {
+      "name": "FIND_NPC",
+      "category": "STATE",
+      "receiver": "INTERFACE_REGISTRY",
+      "parameters": ["interface_registry", "npc_id", "npc_interface_output"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [279634, 279747], "anchor": "NpcScriptMgr::__FindNpc__"}
+      ]
+    },
+    "CALL:INTERFACE_REGISTRY:0x40": {
+      "name": "RELEASE_NPC",
+      "category": "ACTION",
+      "receiver": "INTERFACE_REGISTRY",
+      "parameters": ["interface_registry", "npc_interface"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [279748, 279820], "anchor": "NpcScriptMgr::__ReleaseNpc__"}
+      ]
+    },
+    "CALL:INTERFACE_REGISTRY:0x48": {
+      "name": "GET_ITEM_COLLECTING_PROGRESS",
+      "category": "STATE",
+      "receiver": "INTERFACE_REGISTRY",
+      "parameters": ["interface_registry", "item_id"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [279193, 279330], "anchor": "NpcScriptMgr::GetItemCollectingProgress"}
+      ]
+    },
+    "CALL:OBJECT_HOST:0x8": {
+      "name": "IS_USER",
+      "category": "STATE",
+      "receiver": "OBJECT_HOST",
+      "parameters": ["object_host"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [251663, 251728], "anchor": "IObjectImp::IsUser"}
+      ]
+    },
+    "CALL:OBJECT_HOST:0x30": {
+      "name": "GET_OBJECT_ID",
+      "category": "STATE",
+      "receiver": "OBJECT_HOST",
+      "parameters": ["object_host"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [251955, 252020], "anchor": "IObjectImp::GetId"}
+      ]
+    },
+    "CALL:QUIT_CUTSCENE_CONTEXT:0x8": {
+      "name": "GET_USER_INTERFACE",
+      "category": "STATE",
+      "receiver": "QUIT_CUTSCENE_CONTEXT",
+      "parameters": ["quit_cutscene_context"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [235700, 235725], "anchor": "/* 140150840 */"}
+      ]
+    },
+    "CALL:QUIT_CUTSCENE_CONTEXT:0x10": {
+      "name": "GET_CUTSCENE_ID",
+      "category": "STATE",
+      "receiver": "QUIT_CUTSCENE_CONTEXT",
+      "parameters": ["quit_cutscene_context"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [235700, 235735], "anchor": "/* 140150850 */"}
+      ]
+    },
+    "CALL:NPC_HOST:0x30": {"name": "GET_NPC_ID", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [252558, 252600], "anchor": "INpcImp::GetId"}]},
+    "CALL:NPC_HOST:0x1a0": {"name": "OPEN_QUEST_ACQUIRE_DIALOG", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [253593, 253632], "anchor": "INpcImp::OpenQuestAcquireDialog"}]},
+    "CALL:NPC_HOST:0x1a8": {"name": "CHECK_QUEST_ACQUIRE_CONDITION", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [253657, 253699], "anchor": "INpcImp::CheckQuestAcquireCondition"}]},
+    "CALL:NPC_HOST:0x1b8": {"name": "GIVE_QUEST_REWARD", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [253890, 253933], "anchor": "INpcImp::GiveQuestReward"}]},
+    "CALL:NPC_HOST:0x1c0": {"name": "GIVE_QUEST_REWARD", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [253806, 253849], "anchor": "INpcImp::GiveQuestReward"}]},
+    "CALL:NPC_HOST:0x1c8": {"name": "CHECK_USER_HAS_QUEST_ITEM", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [253509, 253552], "anchor": "INpcImp::CheckUserHasQuestItem"}]},
+    "CALL:NPC_HOST:0x1e0": {"name": "PLAY_QUEST_CUTSCENE", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [255442, 255482], "anchor": "INpcImp::PlayQuestCutScene"}]},
+    "CALL:NPC_HOST:0x410": {"name": "GIVE_ITEM", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [261476, 261528], "anchor": "INpcImp::GiveItem"}]},
+    "CALL:NPC_HOST:0x438": {"name": "GIVE_RECIPE", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [263034, 263087], "anchor": "INpcImp::GiveRecipe"}]},
+    "CALL:NPC_HOST:0x4d8": {"name": "ADD_HATE_POINT", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [258092, 258144], "anchor": "INpcImp::AddHatePoint"}]},
+    "CALL:NPC_HOST:0x518": {"name": "SET_DROP_OPTION", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [265264, 265303], "anchor": "INpcImp::SetDropOption"}]},
+    "CALL:NPC_HOST:0xa0": {
+      "name": "DISABLE_TALK",
+      "category": "ACTION",
+      "receiver": "NPC_HOST",
+      "parameters": ["npc_host"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [254239, 254303], "anchor": "INpcImp::DisableTalk"}
+      ]
+    },
+    "CALL:NPC_HOST:0xa8": {
+      "name": "ENABLE_TALK",
+      "category": "ACTION",
+      "receiver": "NPC_HOST",
+      "parameters": ["npc_host"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_interface_lookup_callbacks",
+          "lines": [3612, 3662],
+          "anchor": "+ 0xa8"
+        },
+        {
+          "file": "npc_server_events",
+          "lines": [254303, 254345],
+          "anchor": "INpcImp::EnableTalk"
+        }
+      ]
+    },
+    "CALL:NPC_HOST:0x100": {
+      "name": "GET_NPC_DATA",
+      "category": "STATE",
+      "receiver": "NPC_HOST",
+      "parameters": ["npc_host"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "npc_interface_lookup_callbacks",
+          "lines": [44554, 44601],
+          "anchor": "+ 0x100"
+        },
+        {
+          "file": "npc_server_events",
+          "lines": [255099, 255140],
+          "anchor": "INpcImp::Data"
+        }
+      ]
+    },
+    "CALL:NPC_HOST:0x188": {
+      "name": "OPEN_DIALOG",
+      "category": "ACTION",
+      "receiver": "NPC_HOST",
+      "parameters": [
+        "npc_host",
+        "user_interface",
+        "dialog_id",
+        "quest_id"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [
+            4217,
+            4248
+          ],
+          "anchor": "+ 0x188"
+        },
+        {
+          "file": "npc_server_events",
+          "lines": [253247, 253286],
+          "anchor": "INpcImp::OpenDialog"
+        }
+      ]
+    },
+    "CALL:NPC_HOST:0x1b0": {
+      "name": "OPEN_QUEST_REWARD_DIALOG",
+      "category": "ACTION",
+      "receiver": "NPC_HOST",
+      "parameters": [
+        "npc_host",
+        "user_interface",
+        "quest_id",
+        "mode"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [1409, 1453],
+          "anchor": "+ 0x1b0"
+        },
+        {
+          "file": "npc_server_events",
+          "lines": [253737, 253778],
+          "anchor": "INpcImp::OpenQuestRewardDialog"
+        }
+      ]
+    },
+    "CALL:NPC_HOST:0x348": {
+      "name": "SAY_TO_ALL",
+      "category": "ACTION",
+      "receiver": "NPC_HOST",
+      "parameters": ["npc_host", "message_id", "message_type", "action_context"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [258750, 258850], "anchor": "INpcImp::SayToAll"}
+      ]
+    },
+    "CALL:NPC_HOST:0x3b0": {
+      "name": "GOTO_NEXT_WAYPOINT",
+      "category": "ACTION",
+      "receiver": "NPC_HOST",
+      "parameters": ["npc_host", "waypoint", "action_context"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [260138, 260230], "anchor": "INpcImp::GotoNextWayPoint"}
+      ]
+    },
+    "CALL:NPC_HOST:0x4b8": {
+      "name": "DESPAWN",
+      "category": "ACTION",
+      "receiver": "NPC_HOST",
+      "parameters": ["npc_host", "action_context"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [263853, 263950], "anchor": "INpcImp::Despawn"}
+      ]
+    },
+    "CALL:NPC_HOST:0x4c0": {
+      "name": "DIE",
+      "category": "ACTION",
+      "receiver": "NPC_HOST",
+      "parameters": ["npc_host", "action_context"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [264017, 264120], "anchor": "INpcImp::Die"}
+      ]
+    },
+    "CALL:NPC_HOST:0x5d8": {
+      "name": "CLOSE_DIALOG",
+      "category": "ACTION",
+      "receiver": "NPC_HOST",
+      "parameters": [
+        "npc_host",
+        "user_interface",
+        "result"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "transport_dialog_callbacks",
+          "lines": [
+            2445,
+            2477
+          ],
+          "anchor": "+ 0x5d8"
+        },
+        {
+          "file": "npc_server_events",
+          "lines": [267558, 267607],
+          "anchor": "INpcImp::CloseDialog"
+        }
+      ]
+    },
+    "CALL:USER_HOST:0x30": {"name": "GET_USER_ID", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [270365, 270407], "anchor": "IUserImp::GetId"}]},
+    "CALL:USER_HOST:0x68": {"name": "GET_CLASS", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [270769, 270811], "anchor": "IUserImp::GetClass"}]},
+    "CALL:USER_HOST:0xd0": {
+      "name": "GET_QUEST_STATE",
+      "category": "STATE",
+      "receiver": "USER_HOST",
+      "parameters": [
+        "user_interface",
+        "quest_state_output",
+        "quest_id"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_progress_callbacks",
+          "lines": [393, 430],
+          "anchor": "+ 0xd0"
+        },
+        {
+          "file": "npc_server_events",
+          "lines": [271740, 272018],
+          "anchor": "IUserImp::GetQuestState"
+        }
+      ]
+    },
+    "CALL:USER_HOST:0xd8": {"name": "SET_QUEST_ACQUIRED", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [271809, 271854], "anchor": "IUserImp::SetQuestAcquired"}]},
+    "CALL:USER_HOST:0xe8": {"name": "GET_QUEST_PROGRESS", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [271953, 271995], "anchor": "IUserImp::GetQuestProgress"}]},
+    "CALL:USER_HOST:0xf0": {
+      "name": "SET_QUEST_PROGRESS",
+      "category": "ACTION",
+      "receiver": "USER_HOST",
+      "parameters": [
+        "user_interface",
+        "quest_id",
+        "progress",
+        "reserved"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_progress_callbacks",
+          "lines": [393, 430],
+          "anchor": "+ 0xf0"
+        },
+        {
+          "file": "npc_server_events",
+          "lines": [272019, 272084],
+          "anchor": "IUserImp::SetQuestProgress"
+        }
+      ]
+    },
+    "CALL:USER_HOST:0xf8": {
+      "name": "SET_QUEST_PROGRESS_MEMORY_ONLY",
+      "category": "ACTION",
+      "receiver": "USER_HOST",
+      "parameters": [
+        "user_interface",
+        "quest_id",
+        "progress",
+        "reserved"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_packed_progress_callbacks",
+          "lines": [2208, 2300],
+          "anchor": "+ 0xf8"
+        },
+        {
+          "file": "npc_server_events",
+          "lines": [272085, 272150],
+          "anchor": "IUserImp::SetQuestProgressMemoryOnly"
+        }
+      ]
+    },
+    "CALL:USER_HOST:0x100": {
+      "name": "SET_QUEST_SUCCESS",
+      "category": "ACTION",
+      "receiver": "USER_HOST",
+      "parameters": [
+        "user_interface",
+        "quest_id",
+        "progress",
+        "reserved"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "quest_dialog_helpers",
+          "lines": [1409, 1453],
+          "anchor": "+ 0x100"
+        },
+        {
+          "file": "npc_server_events",
+          "lines": [272151, 272216],
+          "anchor": "IUserImp::SetQuestSuccess"
+        }
+      ]
+    },
+    "CALL:USER_HOST:0x108": {
+      "name": "SHARE_QUEST_PROGRESS_RECORD",
+      "category": "ACTION",
+      "receiver": "USER_HOST",
+      "parameters": [
+        "user_interface",
+        "progress_record"
+      ],
+      "confidence": "PROVEN",
+      "evidence": [
+        {
+          "file": "npc_server_events",
+          "lines": [272307, 272380],
+          "anchor": "IUserImp::ShareProgress"
+        }
+      ]
+    },
+    "CALL:USER_HOST:0x110": {
+      "name": "SHARE_QUEST_PROGRESS",
+      "category": "ACTION",
+      "receiver": "USER_HOST",
+      "parameters": ["user_interface", "quest_id", "start", "end", "slot", "count"],
+      "confidence": "PROVEN",
+      "evidence": [
+        {"file": "npc_server_events", "lines": [272217, 272306], "anchor": "IUserImp::ShareProgress"}
+      ]
+    },
+    "CALL:USER_HOST:0x118": {"name": "SHARE_PROGRESS_MULTIPLE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [272603, 272650], "anchor": "IUserImp::ShareProgressMultiple"}]},
+    "CALL:USER_HOST:0x138": {"name": "IS_FINISHED_QUEST", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [272953, 272995], "anchor": "IUserImp::IsFinishedQuest"}]},
+    "CALL:USER_HOST:0x148": {"name": "ADD_HIDDEN_QUEST", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [272667, 272712], "anchor": "IUserImp::AddHiddenQuest"}]},
+    "CALL:USER_HOST:0x160": {"name": "DELETE_WORKING_QUEST", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [272871, 272913], "anchor": "IUserImp::DeleteWorkingQuest"}]},
+    "CALL:USER_HOST:0x1d0": {"name": "REMOVE_ITEM", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [273939, 273978], "anchor": "IUserImp::RemoveItem"}]},
+    "CALL:USER_HOST:0x1d8": {"name": "REMOVE_ITEM_MAX", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [274074, 274113], "anchor": "IUserImp::RemoveItemMax"}]},
+    "CALL:USER_HOST:0x1e0": {"name": "REMOVE_QUEST_REWARD_CHECK_ITEMS", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [274229, 274272], "anchor": "IUserImp::RemoveQuestRewardCheckItems"}]},
+    "CALL:USER_HOST:0x1f0": {"name": "REMOVE_ALL_COLLECT_ITEMS", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [274424, 274474], "anchor": "IUserImp::RemoveAllCollectItems"}]},
+    "CALL:USER_HOST:0x1f8": {"name": "REMOVE_RECIPE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [274522, 274562], "anchor": "IUserImp::RemoveRecipe"}]},
+    "CALL:USER_HOST:0x260": {"name": "AUTO_QUEST_REWARD", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [275411, 275451], "anchor": "IUserImp::AutoQuestReward"}]},
+    "CALL:USER_HOST:0x268": {"name": "AUTO_QUEST_REWARD", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [275347, 275386], "anchor": "IUserImp::AutoQuestReward"}]},
+    "CALL:USER_HOST:0x2a8": {"name": "HEAR", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [275863, 275913], "anchor": "IUserImp::Hear"}]},
+    "TRANSPORT:USER_HOST:0x2d0": {"name": "TELEPORT", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [276325, 276377], "anchor": "IUserImp::Teleport"}]},
+    "CALL:USER_HOST:0x300": {"name": "HAS_ITEM", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [276741, 276783], "anchor": "IUserImp::HasItem"}]},
+    "CALL:USER_HOST:0x308": {"name": "HAS_QUEST_REWARD_CHECK_ITEMS", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [274143, 274190], "anchor": "IUserImp::HasQuestRewardCheckItems"}]},
+    "CALL:USER_HOST:0x368": {"name": "SET_QUEST_BRANCH", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [277598, 277637], "anchor": "IUserImp::SetQuestBranch"}]},
+    "CALL:NPC_HOST:0x28": {"name": "GET_NPC_NAME_ID", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [252492, 252534], "anchor": "INpcImp::GetNameId"}]},
+    "CALL:NPC_HOST:0xe0": {"name": "DEBUG_MESSAGE", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [254968, 255007], "anchor": "INpcImp::DebugMsg"}]},
+    "CALL:NPC_HOST:0x190": {"name": "CLOSE_ALL_DIALOGS", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [253311, 253350], "anchor": "INpcImp::CloseDialogAll"}]},
+    "CALL:NPC_HOST:0x1d8": {"name": "PLAY_CUTSCENE", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [255297, 255337], "anchor": "INpcImp::PlayCutScene"}]},
+    "CALL:NPC_HOST:0x268": {"name": "SPAWN_NPC", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "DERIVED", "evidence": [{"file": "npc_server_events", "lines": [256597, 256620], "anchor": "FUN_14011ff00"}, {"file": "npc_server_events", "lines": [204033, 204120], "anchor": "Failed to spawn NPC"}]},
+    "CALL:NPC_HOST:0x2f0": {"name": "START_FOLLOWING", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [265050, 265102], "anchor": "INpcImp::StartToFollow"}]},
+    "CALL:NPC_HOST:0x338": {"name": "SAY", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [258521, 258574], "anchor": "INpcImp::Say"}]},
+    "CALL:NPC_HOST:0x460": {"name": "REQUEST_DECREASE_USER_MONEY", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [261813, 261858], "anchor": "INpcImp::RequestDecreaseUserMoney"}]},
+    "CALL:NPC_HOST:0x500": {"name": "PLAY_ANIMATION", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [257353, 257405], "anchor": "INpcImp::PlayAnimation"}]},
+    "CALL:NPC_HOST:0x520": {"name": "SET_DROP_OPTION_AND_OPEN_LOOT_WINDOW", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [265328, 265368], "anchor": "INpcImp::SetDropOption_OpenLootWnd"}]},
+    "CALL:USER_HOST:0x120": {"name": "SHARE_PROGRESS_MULTIPLE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [272407, 272466], "anchor": "IUserImp::ShareProgressMultiple"}]},
+    "CALL:USER_HOST:0x158": {"name": "GET_HIDDEN_QUEST_PROGRESS", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [272805, 272847], "anchor": "IUserImp::GetHiddenQuestProgress"}]},
+    "CALL:USER_HOST:0x190": {"name": "PLAY_CUTSCENE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [273402, 273441], "anchor": "IUserImp::PlayCutScene"}]},
+    "CALL:USER_HOST:0x220": {"name": "ENTER_INSTANCE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [274805, 274845], "anchor": "IUserImp::EnterInstance"}]},
+    "CALL:USER_HOST:0x258": {"name": "DELETE_QUEST_TIMER", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [275100, 275139], "anchor": "IUserImp::DeleteQuestTimer"}]},
+    "CALL:USER_HOST:0x270": {"name": "ADD_SKILL_EFFECT", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [275477, 275517], "anchor": "IUserImp::AddSkillEffect"}]},
+    "CALL:USER_HOST:0x2b8": {"name": "SAY", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [276038, 276088], "anchor": "IUserImp::Say"}]},
+    "CALL:NPC_HOST:0x20": {"name": "IS_IN_RANGE", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [252416, 252491], "anchor": "INpcImp::IsInRange"}]},
+    "CALL:NPC_HOST:0x58": {"name": "IS_IN_IDLE_STATE", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [252901, 252966], "anchor": "INpcImp::IsInIdleState"}]},
+    "CALL:NPC_HOST:0x80": {"name": "GET_GAME_TIME", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [254564, 254626], "anchor": "INpcImp::GetGameTime"}]},
+    "CALL:NPC_HOST:0xb0": {"name": "DISABLE_ATTACK", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [254367, 254430], "anchor": "INpcImp::DisableAttack"}]},
+    "CALL:NPC_HOST:0xf0": {"name": "GET_CURRENT_TARGET_ID", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [255161, 255223], "anchor": "INpcImp::GetCurTargetId"}]},
+    "CALL:NPC_HOST:0x1e8": {"name": "PLAY_PARTY_CUTSCENE", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [255509, 255575], "anchor": "INpcImp::PlayPartyCutScene"}]},
+    "CALL:NPC_HOST:0x220": {"name": "ADD_QUEST_TIMER", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "DERIVED", "evidence": [{"file": "npc_server_events", "lines": [256003, 256018], "anchor": "FUN_1401e6870"}, {"file": "npc_server_events", "lines": [337572, 337802], "anchor": "AddQuestTimer"}]},
+    "CALL:NPC_HOST:0x228": {"name": "DELETE_QUEST_TIMER", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "DERIVED", "evidence": [{"file": "npc_server_events", "lines": [256019, 256032], "anchor": "FUN_1401e6f80"}, {"file": "npc_server_events", "lines": [337926, 337992], "anchor": "DeleteQuestTimer"}]},
+    "CALL:NPC_HOST:0x230": {"name": "ADD_NPC_QUEST_TIMER", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [256033, 256112], "anchor": "INpcImp::AddNpcQuestTimer"}]},
+    "CALL:NPC_HOST:0x238": {"name": "DELETE_NPC_QUEST_TIMER", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [256113, 256192], "anchor": "INpcImp::DeleteNpcQuestTimer"}]},
+    "CALL:NPC_HOST:0x258": {"name": "ADD_SKILL_EFFECT", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [256459, 256524], "anchor": "INpcImp::AddSkillEffect"}]},
+    "CALL:NPC_HOST:0x270": {"name": "DELAYED_DESPAWN", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [263952, 264016], "anchor": "INpcImp::DelayedDespawn"}]},
+    "CALL:NPC_HOST:0x2c8": {"name": "ATTACK_MOST_HATING", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [257190, 257288], "anchor": "INpcImp::AttackMostHating"}]},
+    "TRANSPORT:NPC_HOST:0x2d0": {"name": "ATTACK", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [257289, 257352], "anchor": "INpcImp::Attack"}]},
+    "TRANSPORT:NPC_HOST:0x2e0": {"name": "USE_SKILL", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [264609, 264721], "anchor": "INpcImp::UseSkill"}]},
+    "CALL:NPC_HOST:0x300": {"name": "START_FLEEING", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [264838, 264950], "anchor": "INpcImp::StartToFlee"}]},
+    "CALL:NPC_HOST:0x3a0": {"name": "SYSTEM_MESSAGE", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [259907, 260023], "anchor": "INpcImp::SystemMessage"}]},
+    "CALL:NPC_HOST:0x3a8": {"name": "GOTO_WAYPOINT", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [260250, 260362], "anchor": "INpcImp::GotoWayPoint"}]},
+    "CALL:NPC_HOST:0x3c8": {"name": "STOP_MOVING", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [260596, 260697], "anchor": "INpcImp::StopToMove"}]},
+    "CALL:NPC_HOST:0x440": {"name": "GIVE_TITLE", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [263142, 263247], "anchor": "INpcImp::GiveTitle"}]},
+    "CALL:NPC_HOST:0x468": {"name": "CHECK_USER_EQUIPMENT", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [262000, 262102], "anchor": "INpcImp::CheckUserEquipment"}]},
+    "CALL:NPC_HOST:0x470": {"name": "CHECK_USER_EQUIPMENT", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [261899, 261999], "anchor": "INpcImp::CheckUserEquipment"}]},
+    "CALL:NPC_HOST:0x478": {"name": "CHECK_USER_DP", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [262103, 262191], "anchor": "INpcImp::CheckUserDP"}]},
+    "CALL:NPC_HOST:0x488": {"name": "CHECK_USER_ITEM_SET", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [262293, 262395], "anchor": "INpcImp::CheckUserItemSet"}]},
+    "CALL:NPC_HOST:0x490": {"name": "CHECK_USER_RECIPE_LEARNED", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [262396, 262500], "anchor": "INpcImp::CheckUserRecipeLearned"}]},
+    "CALL:NPC_HOST:0x498": {"name": "CHECK_USER_AP", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [262501, 262589], "anchor": "INpcImp::CheckUserAP"}]},
+    "CALL:NPC_HOST:0x4b0": {"name": "DESPAWN_SPAWNED", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [263751, 263852], "anchor": "INpcImp::DespawnSpawned"}]},
+    "CALL:NPC_HOST:0x4f0": {"name": "BROADCAST_MESSAGE", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [264358, 264484], "anchor": "INpcImp::BroadcastMessage"}]},
+    "CALL:NPC_HOST:0x508": {"name": "PLAY_ANIMATION_TO_USER", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [257460, 257572], "anchor": "INpcImp::PlayAnimationToUser"}]},
+    "CALL:NPC_HOST:0x528": {"name": "SET_DROP_OPTION_NO_LOOT", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [265392, 265455], "anchor": "INpcImp::SetDropOption_NoLoot"}]},
+    "CALL:NPC_HOST:0x530": {"name": "DESPAWN_ALL", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [265456, 265521], "anchor": "INpcImp::DespawnAll"}]},
+    "CALL:NPC_HOST:0x578": {"name": "SET_CONDITION_SPAWN_VARIABLE", "category": "ACTION", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [266378, 266444], "anchor": "INpcImp::SetConditionSpawnVariable"}]},
+    "CALL:NPC_HOST:0x640": {"name": "FIND_RANDOM_USER_ID", "category": "STATE", "receiver": "NPC_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [268965, 269092], "anchor": "INpcImp::FindRandomUserId"}]},
+    "CALL:USER_HOST:0x58": {"name": "GET_GENDER", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [270637, 270702], "anchor": "IUserImp::GetGender"}]},
+    "CALL:USER_HOST:0x60": {"name": "GET_RACE", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [270703, 270768], "anchor": "IUserImp::GetRace"}]},
+    "CALL:USER_HOST:0x70": {"name": "GET_LEVEL", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [270835, 270900], "anchor": "IUserImp::GetLevel"}]},
+    "CALL:USER_HOST:0x78": {"name": "GET_PARTY_ID", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [270901, 270966], "anchor": "IUserImp::GetPartyId"}]},
+    "CALL:USER_HOST:0xe0": {"name": "SET_QUEST_WAITING", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [271881, 271952], "anchor": "IUserImp::SetQuestWaiting"}]},
+    "CALL:USER_HOST:0x150": {"name": "SET_HIDDEN_QUEST_PROGRESS", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [272739, 272804], "anchor": "IUserImp::SetHiddenQuestProgress"}]},
+    "CALL:USER_HOST:0x170": {"name": "ADD_MISSION", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [273085, 273148], "anchor": "IUserImp::AddMission"}]},
+    "CALL:USER_HOST:0x180": {"name": "SPAWN_USER", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [273159, 273401], "anchor": "IUserImp::Spawn"}]},
+    "CALL:USER_HOST:0x188": {"name": "PLAY_CUTSCENE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [273467, 273543], "anchor": "IUserImp::PlayCutScene"}]},
+    "CALL:USER_HOST:0x1b8": {"name": "PLAY_MOVIE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [273808, 273872], "anchor": "IUserImp::PlayMovie"}]},
+    "CALL:USER_HOST:0x1e8": {"name": "REMOVE_ALL_QUEST_REWARD_CHECK_ITEMS", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [274306, 274423], "anchor": "IUserImp::RemoveAllQuestRewardCheckItems"}]},
+    "CALL:USER_HOST:0x208": {"name": "CHANGE_CLASS", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [274651, 274714], "anchor": "IUserImp::ChangeClass"}]},
+    "CALL:USER_HOST:0x210": {"name": "LEAVE_INSTANCE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "DERIVED", "evidence": [{"file": "npc_server_events", "lines": [274779, 274791], "anchor": "+ 0x230"}, {"file": "npc_server_events", "lines": [274954, 275027], "anchor": "IUserImp::LeaveInstance"}]},
+    "CALL:USER_HOST:0x228": {"name": "LOCK_INSTANCE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [274880, 274953], "anchor": "IUserImp::LockInstance"}]},
+    "CALL:USER_HOST:0x240": {"name": "ADD_USER_QUEST_TIMER", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [275170, 275259], "anchor": "IUserImp::AddUserQuestTimer"}]},
+    "CALL:USER_HOST:0x248": {"name": "DELETE_USER_QUEST_TIMER", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [275260, 275346], "anchor": "IUserImp::DeleteUserQuestTimer"}]},
+    "CALL:USER_HOST:0x250": {"name": "ADD_QUEST_TIMER", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [275028, 275099], "anchor": "IUserImp::AddQuestTimer"}]},
+    "CALL:USER_HOST:0x278": {"name": "DISPEL_SKILL_EFFECT_BY_EFFECT_TYPE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [275543, 275606], "anchor": "IUserImp::DispelSkillEffectByEffectType"}]},
+    "CALL:USER_HOST:0x288": {"name": "DISPEL_SKILL_EFFECT_BY_DISPEL_TYPE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [275671, 275734], "anchor": "IUserImp::DispelSkillEffectByDispelType"}]},
+    "TRANSPORT:USER_HOST:0x2e0": {"name": "TELEPORT_ALIAS", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [276419, 276482], "anchor": "IUserImp::TeleportAlias"}]},
+    "CALL:USER_HOST:0x2e8": {"name": "FLY", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [276547, 276610], "anchor": "IUserImp::Fly"}]},
+    "CALL:USER_HOST:0x2f0": {"name": "IS_FREE_FLYING", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [276611, 276676], "anchor": "IUserImp::IsFreeFlying"}]},
+    "CALL:USER_HOST:0x2f8": {"name": "ADD_ITEM", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [276677, 276740], "anchor": "IUserImp::AddItem"}]},
+    "CALL:USER_HOST:0x330": {"name": "SET_PLAY_MODE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [277065, 277128], "anchor": "IUserImp::SetPlaymode"}]},
+    "CALL:USER_HOST:0x338": {"name": "GET_CURRENT_WORLD_NUM", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [277129, 277195], "anchor": "IUserImp::GetCurWorldNum"}]},
+    "CALL:USER_HOST:0x340": {"name": "GET_CURRENT_BASE_WORLD_NUM", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [277196, 277262], "anchor": "IUserImp::GetCurBaseWorldNum"}]},
+    "CALL:USER_HOST:0x348": {"name": "GET_WORLD_EXT_CONDITION_VARIABLE", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [277263, 277329], "anchor": "IUserImp::GetWorldExtConditionVariable"}]},
+    "CALL:USER_HOST:0x350": {"name": "SET_CONDITION_SPAWN_VARIABLE", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [277330, 277469], "anchor": "IUserImp::SetConditionSpawnVariable"}]},
+    "CALL:USER_HOST:0x370": {"name": "GET_QUEST_BRANCH", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [277662, 277730], "anchor": "IUserImp::GetQuestBranch"}]},
+    "CALL:USER_HOST:0x378": {"name": "IS_FINISHED_QUEST_WITH_BRANCH", "category": "STATE", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [277731, 277796], "anchor": "IUserImp::IsFinishedQuestWithBranch"}]},
+    "CALL:USER_HOST:0x390": {"name": "DECREASE_DP", "category": "ACTION", "receiver": "USER_HOST", "confidence": "PROVEN", "evidence": [{"file": "npc_server_events", "lines": [277943, 278024], "anchor": "IUserImp::DecreaseDP"}]}
+  }
+}
