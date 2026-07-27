@@ -25,10 +25,7 @@ def load_world_ids(file: Path) -> dict[str, int]:
     return world_ids
 
 
-REGISTRATION = re.compile(
-    r"FUN_180cb2ab0\([^;]*?&(?P<vtable>PTR_vftable_[0-9a-f]+)\s*,\s*0x1b\s*,\s*"
-    r"(?P<callback>FUN_[0-9a-f]+)\s*,",
-)
+REGISTRATION = re.compile(r"FUN_180cb2ab0\((?P<args>[^;]+)\);")
 FUNCTION_MARKER = re.compile(r"(?m)^// @(?P<address>[0-9a-f]+)\s+(?P<name>FUN_[0-9a-f]+)\s+->")
 TRANSPORT_CALL = re.compile(
     r"(?P<raw>\(\*\*\(code \*\*\)\([^;]*?\+\s*(?P<offset>0x2d0|0x2d8|0x2e0)\)\)"
@@ -87,21 +84,33 @@ def script_names(path: Path) -> dict[str, str]:
 
 
 def registrations(path: Path, names: dict[str, str], source_root: Path) -> list[dict[str, object]]:
-    text = path.read_text(encoding="utf-8")
     result = []
-    for match in REGISTRATION.finditer(text):
-        vtable = match.group("vtable")
-        if vtable not in names:
-            raise ValueError(f"missing script name for registered {vtable}")
-        result.append({
-            "script_name": names[vtable],
-            "vtable": vtable,
-            "callback": match.group("callback"),
-            "registration_source": {
-                "path": source_label(path, source_root),
-                "line": text.count("\n", 0, match.start()) + 1,
-            },
-        })
+    files = sorted(path.glob("fun_*.cpp")) if path.is_dir() else [path]
+    for file in files:
+        text = file.read_text(encoding="utf-8")
+        for match in REGISTRATION.finditer(text):
+            args = split_args(match.group("args"))
+            event_code = integer(args[2]) if len(args) == 5 else None
+            if event_code is None:
+                raise ValueError(f"unsupported registration arguments in {file}: {match.group(0)}")
+            if event_code != 0x1b:
+                continue
+            vtable_match = re.fullmatch(r"&?(PTR_vftable_[0-9a-f]+)", args[1])
+            callback_match = re.fullmatch(r"&?((?:FUN|LAB)_[0-9a-f]+)", args[3])
+            if callback_match is None:
+                raise ValueError(f"unsupported registered callback {args[3]} in {file}")
+            vtable = vtable_match.group(1) if vtable_match else args[1]
+            result.append({
+                "script_name": names.get(vtable) if vtable_match else None,
+                "vtable": vtable,
+                "callback": callback_match.group(1),
+                "event_code": event_code,
+                "registration_binding": "STATIC" if vtable_match else "DYNAMIC",
+                "registration_source": {
+                    "path": source_label(file, source_root),
+                    "line": text.count("\n", 0, match.start()) + 1,
+                },
+            })
     if not result:
         raise ValueError(f"no registered NPC dialog callbacks in {path}")
     return result
@@ -332,7 +341,7 @@ def portal_service_projection(status: str, shape_id: str | None) -> dict[str, ob
 
 
 def transport_domain_type(script_name: str, callback: str, shape_id: str, api_offset: str) -> str:
-    return RETAIL_TRANSPORT_DOMAIN_TYPES.get((script_name, callback, shape_id, api_offset), "UNCLASSIFIED")
+    return RETAIL_TRANSPORT_DOMAIN_TYPES.get((script_name, callback, shape_id, api_offset), "TELEPORT")
 
 
 def containing_blocks(body: str, position: int) -> tuple[int, ...]:
@@ -405,7 +414,7 @@ def event_for_call(body: str, call_position: int) -> dict[str, object] | None:
     return {"dialog": value, "evidence": evidence}
 
 
-def parsed_calls(callback: dict[str, object]) -> list[dict[str, object]]:
+def parsed_calls(callback: dict[str, object], event_code: int | None) -> list[dict[str, object]]:
     body = callback["body"]
     current_world = set(re.findall(
         r"(?m)^\s*(\w+)\s*=\s*\(\*\*\(code \*\*\)\([^;]*?\+\s*0x338\)\)\([^;]+\);", body,
@@ -414,7 +423,8 @@ def parsed_calls(callback: dict[str, object]) -> list[dict[str, object]]:
     for match in TRANSPORT_CALL.finditer(body):
         offset = match.group("offset")
         args = split_args(match.group("args"))
-        reasons = []
+        endpoint_reasons = []
+        semantic_reasons = []
         destination = None
         transport_type = {
             "0x2d0": "COORDINATES",
@@ -423,20 +433,20 @@ def parsed_calls(callback: dict[str, object]) -> list[dict[str, object]]:
         }[offset]
         expected = {"0x2d0": 7, "0x2d8": 4, "0x2e0": 3}[offset]
         if len(args) != expected:
-            reasons.append("unsupported_argument_shape")
+            endpoint_reasons.append("unsupported_argument_shape")
         elif offset == "0x2d0":
             world = "CURRENT" if args[1] in current_world else integer(args[1])
             coordinates = [float32(value) for value in args[2:5]]
             direction = integer(args[5])
             mode = integer(args[6])
             if world is None:
-                reasons.append("dynamic_world")
+                endpoint_reasons.append("dynamic_world")
             if any(value is None for value in coordinates):
-                reasons.append("dynamic_coordinates")
+                endpoint_reasons.append("dynamic_coordinates")
             if direction is None:
-                reasons.append("dynamic_direction")
+                endpoint_reasons.append("dynamic_direction")
             if mode is None:
-                reasons.append("dynamic_mode")
+                endpoint_reasons.append("dynamic_mode")
             destination = {
                 "kind": "COORDINATES",
                 "world": world,
@@ -452,20 +462,26 @@ def parsed_calls(callback: dict[str, object]) -> list[dict[str, object]]:
             alias = WIDE_STRING.fullmatch(alias_arg)
             mode = integer(args[2] if offset == "0x2e0" else args[3])
             if world is None:
-                reasons.append("dynamic_world")
+                endpoint_reasons.append("dynamic_world")
             if alias is None:
-                reasons.append("dynamic_alias")
+                endpoint_reasons.append("dynamic_alias")
             if mode is None:
-                reasons.append("dynamic_mode")
+                endpoint_reasons.append("dynamic_mode")
             destination = {
                 "kind": "ALIAS",
                 "world": world,
                 "alias": alias.group(1) if alias else None,
                 "mode": mode,
             }
-        event = event_for_call(body, match.start())
-        if event is None:
-            reasons.append("missing_dialog_event")
+        if event_code == 0x1b:
+            event = event_for_call(body, match.start())
+            if event is None:
+                semantic_reasons.append("missing_dialog_event")
+            else:
+                event = {"type": "DIALOG", "code": event_code, **event}
+        else:
+            event = {"type": "SCRIPT_EVENT", "code": event_code, "semantic_status": "UNMODELED"}
+            semantic_reasons.append("unmodeled_event_type" if event_code is not None else "unregistered_callback")
         calls.append({
             "api_offset": offset,
             "transport_type": transport_type,
@@ -476,7 +492,9 @@ def parsed_calls(callback: dict[str, object]) -> list[dict[str, object]]:
             "raw_call": " ".join(match.group("raw").split()),
             "event": event,
             "destination": destination,
-            "reasons": reasons,
+            "endpoint_reasons": endpoint_reasons,
+            "semantic_reasons": semantic_reasons,
+            "reasons": sorted(set(endpoint_reasons + semantic_reasons)),
         })
     return calls
 
@@ -512,7 +530,8 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
     names = script_names(script_names_file)
     rows = registrations(registrations_file, names, script_root)
     callbacks = callback_blocks(callbacks_directory, {row["callback"] for row in rows}, script_root)
-    templates = npc_templates(npc_source, {row["script_name"].casefold() for row in rows}, xml_root)
+    templates = npc_templates(
+        npc_source, {row["script_name"].casefold() for row in rows if row["script_name"]}, xml_root)
     wanted_names = {template["name"].casefold() for values in templates.values() for template in values}
     spawns, aliases = world_evidence(worlds_directory, load_world_ids(world_ids_file), wanted_names)
     status_counts = Counter()
@@ -525,7 +544,7 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
 
     for row in rows:
         callback = callbacks.get(row["callback"])
-        row_templates = templates.get(row["script_name"].casefold(), [])
+        row_templates = templates.get(row["script_name"].casefold(), []) if row["script_name"] else []
         starts = []
         for template in row_templates:
             for spawn in spawns.get(template["name"].casefold(), []):
@@ -540,12 +559,18 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
             row["callback_features"] = features
             shape_counts[features["shape_id"]] += 1
             shape_signatures[features["shape_id"]] = signature
-        calls = [] if callback is None else parsed_calls(callback)
+        calls = [] if callback is None else parsed_calls(callback, row["event_code"])
         for call in calls:
-            call["domain_type"] = transport_domain_type(
-                row["script_name"], row["callback"], row["callback_features"]["shape_id"], call["api_offset"])
+            domain_key = (row["script_name"] or "", row["callback"],
+                          row["callback_features"]["shape_id"], call["api_offset"])
+            call["domain_type"] = transport_domain_type(*domain_key)
+            call["domain_type_source"] = "AUDITED_RULE" if domain_key in RETAIL_TRANSPORT_DOMAIN_TYPES else "TRANSPORT_API"
         row["calls"] = calls
         reasons = []
+        if row["registration_binding"] == "DYNAMIC":
+            reasons.append("dynamic_registration_binding")
+        if row["script_name"] is None:
+            reasons.append("missing_script_name")
         if callback is None:
             reasons.append("missing_callback_body")
         if calls and not row_templates:
@@ -557,7 +582,7 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
             routes = []
             for start in starts:
                 destination, route_reasons = resolved_destination(call["destination"], start, aliases)
-                combined = sorted(set(call["reasons"] + start["missing"] + route_reasons))
+                combined = sorted(set(call["endpoint_reasons"] + start["missing"] + route_reasons))
                 routes.append({
                     "status": "ENDPOINT_PROVEN" if not combined else "ENDPOINT_REJECTED",
                     "start": start,
@@ -590,9 +615,9 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
         status_counts[status] += 1
         reason_counts.update(row["reasons"])
 
-    rows.sort(key=lambda row: (row["script_name"].casefold(), row["callback"], row["vtable"]))
+    rows.sort(key=lambda row: ((row["script_name"] or "").casefold(), row["callback"], row["vtable"]))
     return {
-        "version": 5,
+        "version": 6,
         "provenance": {
             "kind": "RETAIL_SOURCE_MATRIX",
             "authoritative_retail_evidence": True,
@@ -601,13 +626,14 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
                 "transport API shape", "destination endpoint", "raw callback predicates",
                 "callback read/call operation inventory", "normalized callback structure",
                 "PortalService requirements for audited callback structures",
-                "audited transport domain types",
+                "transport API domain type and audited specialized subtypes",
             ],
             "excluded_semantics": [
                 "unaudited predicate semantic interpretation", "non-transport call semantic interpretation",
-                "unaudited transport domain types", "runtime consumer selection",
+                "specialized transport subtypes beyond audited rules", "runtime consumer selection",
             ],
-            "registrations": source_label(registrations_file, script_root),
+            "registrations": source_label(registrations_file, script_root)
+                + ("/fun_*.cpp" if registrations_file.is_dir() else ""),
             "script_names": source_label(script_names_file, script_root),
             "callbacks": source_label(callbacks_directory, script_root) + "/fun_*.cpp",
             "npc_definitions": source_label(npc_source, xml_root, "XML"),
@@ -647,6 +673,8 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
         },
         "summary": {
             "registrations": len(rows),
+            "registrations_without_script_name": sum(row["script_name"] is None for row in rows),
+            "registrations_by_binding": dict(sorted(Counter(row["registration_binding"] for row in rows).items())),
             "unique_callbacks": len({row["callback"] for row in rows}),
             "transport_calls": call_count,
             "endpoint_proven_routes": route_count,

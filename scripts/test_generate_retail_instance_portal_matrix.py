@@ -104,18 +104,19 @@ class InstancePortalMatrixTest(unittest.TestCase):
                 "TeleporterData/TeleportService2": 16,
             },
             "retail_transport_evidence": 45,
-            "script_transport_candidates": 67,
+            "script_transport_candidates": 137,
             "script_transport_candidates_by_start_status": {
-                "MATCH": 48,
-                "MISMATCH": 17,
-                "MISSING": 2,
+                "MATCH": 86,
+                "MISMATCH": 37,
+                "MISSING": 14,
             },
             "script_transport_candidates_by_status": {
                 "ALREADY_DATA_DRIVEN_RETAIL_PROVEN": 45,
-                "REJECT_MISSING_RUNTIME_START": 2,
-                "REJECT_ROUTE_NOT_PROVEN": 10,
+                "CONVERSION_READY": 2,
+                "REJECT_MISSING_RUNTIME_START": 14,
+                "REJECT_ROUTE_NOT_PROVEN": 38,
                 "REJECT_RUNTIME_CONSUMER": 5,
-                "REJECT_UNMODELED_CALLBACK_SHAPE": 5,
+                "REJECT_UNMODELED_CALLBACK_SHAPE": 33,
             },
         }, self.report["summary"])
 
@@ -219,9 +220,15 @@ class InstancePortalMatrixTest(unittest.TestCase):
 
     def test_script_transport_candidates_use_retail_portal_service_projection(self) -> None:
         candidates = self.report["script_transport_candidates"]
-        self.assertEqual(67, len(candidates))
+        self.assertEqual(137, len(candidates))
+        instance_world_ids = set(GENERATOR.production_worlds(ROOT))
+        self.assertTrue(all(candidate["start_world_id"] in instance_world_ids
+                            or candidate["destination"]["world_id"] in instance_world_ids
+                            for candidate in candidates))
         ready = [candidate for candidate in candidates if candidate["status"] == "CONVERSION_READY"]
-        self.assertEqual([], ready)
+        self.assertEqual({(731809, 301540000), (731810, 301540000)},
+                         {(candidate["npc_id"], candidate["start_world_id"]) for candidate in ready})
+        self.assertTrue(all(candidate["callback_shape"] == "c773c543096b3491" for candidate in ready))
         converted = [candidate for candidate in candidates if candidate["npc_id"] in {801532, 801533}]
         self.assertEqual({"ALREADY_DATA_DRIVEN_RETAIL_PROVEN"},
                          {candidate["status"] for candidate in converted})

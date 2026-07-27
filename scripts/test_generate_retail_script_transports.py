@@ -11,13 +11,36 @@ from generate_retail_script_transports import (
     transport_domain_type,
 )
 
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE_MATRIX = ROOT / "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json"
+
 
 class RetailScriptTransportsTest(unittest.TestCase):
+
+    def test_checked_in_matrix_covers_every_dialog_registration_and_transport_type(self):
+        report = json.loads(SOURCE_MATRIX.read_text(encoding="utf-8"))
+        registrations = report["registrations"]
+        calls = [call for registration in registrations for call in registration["calls"]]
+        routes = [route for call in calls for route in call["routes"]]
+
+        self.assertEqual(6, report["version"])
+        self.assertEqual(818, len(registrations))
+        self.assertEqual({0x1b}, {registration["event_code"] for registration in registrations})
+        self.assertEqual({"DYNAMIC": 1, "STATIC": 817}, report["summary"]["registrations_by_binding"])
+        self.assertEqual(520, len(calls))
+        self.assertEqual({"LIFT": 1, "TELEPORT": 519},
+                         {domain: sum(call["domain_type"] == domain for call in calls)
+                          for domain in {call["domain_type"] for call in calls}})
+        self.assertTrue(all(call["domain_type_source"] in {"AUDITED_RULE", "TRANSPORT_API"}
+                            for call in calls))
+        self.assertTrue(all("endpoint_reasons" in call and "semantic_reasons" in call for call in calls))
+        self.assertEqual(509, sum(route["status"] == "ENDPOINT_PROVEN" for route in routes))
+        self.assertEqual(509, report["summary"]["endpoint_proven_routes"])
 
     def test_domain_type_requires_the_complete_retail_evidence_tuple(self):
         evidence = ("IDNovice_Elevator_Lever_Up", "FUN_180c78400", "0eff6fbaa0598942", "0x2d0")
         self.assertEqual("LIFT", transport_domain_type(*evidence))
-        self.assertEqual("UNCLASSIFIED", transport_domain_type(*evidence[:-1], "0x2e0"))
+        self.assertEqual("TELEPORT", transport_domain_type(*evidence[:-1], "0x2e0"))
 
     def test_audited_callback_shapes_project_only_supported_portal_requirements(self):
         self.assertEqual(
@@ -65,7 +88,9 @@ class RetailScriptTransportsTest(unittest.TestCase):
             registrations.write_text(
                 'FUN_180cb2ab0(&x,&PTR_vftable_aaa,0x1b,FUN_100,local);\n'
                 'FUN_180cb2ab0(&x,&PTR_vftable_bbb,0x1b,FUN_200,local);\n'
-                'FUN_180cb2ab0(&x,&PTR_vftable_ccc,0x1b,FUN_300,local);\n', encoding="utf-8")
+                'FUN_180cb2ab0(&x,&PTR_vftable_ccc,0x1b,FUN_300,local);\n'
+                'FUN_180cb2ab0(&x,&PTR_vftable_ddd,0x1b,FUN_400,local);\n'
+                'FUN_180cb2ab0(&x,&PTR_vftable_eee,0x1a,FUN_500,local);\n', encoding="utf-8")
             (fun / "fun_100.cpp").write_text(
                 '// @100 FUN_100 -> FUN_100\nvoid FUN_100(void)\n{\n'
                 '  p = (int *)(*(code *)**(x **)(param_2 + 0x28))(param_2 + 0x28);\n'
@@ -84,6 +109,8 @@ class RetailScriptTransportsTest(unittest.TestCase):
                 '    (**(code **)(v + 0x2e0))(player,L"UPPER",0x2701);\n  }\n}\n', encoding="utf-8")
             (fun / "fun_300.cpp").write_text(
                 '// @300 FUN_300 -> FUN_300\nvoid FUN_300(void)\n{\n  return;\n}\n', encoding="utf-8")
+            (fun / "fun_400.cpp").write_text(
+                '// @400 FUN_400 -> FUN_400\nvoid FUN_400(void)\n{\n  return;\n}\n', encoding="utf-8")
             npc_source = xml / "China/npcs.xml"
             npc_source.write_text(
                 '<npcs><npc><id>1</id><name>Lift</name><ai_name>LiftScript</ai_name></npc>'
@@ -102,17 +129,22 @@ class RetailScriptTransportsTest(unittest.TestCase):
                 '<pos><x>7</x><y>8</y><z>9</z></pos><dir>2</dir></npc></npcs></territory></world>',
                 encoding="utf-8")
 
-            report = build(scripts, registrations, names, fun, xml, npc_source, worlds, world_ids)
+            report = build(scripts, fun, names, fun, xml, npc_source, worlds, world_ids)
             rows = {row["script_name"]: row for row in report["registrations"]}
 
-            self.assertEqual({"NOT_TRANSPORT": 1, "ROUTE_PROVEN": 2}, report["summary"]["by_status"])
+            self.assertEqual({"NOT_TRANSPORT": 1, "ROUTE_PROVEN": 2, "ROUTE_REJECTED": 1},
+                             report["summary"]["by_status"])
+            self.assertEqual(4, report["summary"]["registrations"])
+            self.assertEqual(1, report["summary"]["registrations_without_script_name"])
             self.assertEqual(2, report["summary"]["endpoint_proven_routes"])
             self.assertEqual(
-                {"NOT_APPLICABLE": 1, "REJECT_UNMODELED_CALLBACK_SHAPE": 2},
+                {"NOT_APPLICABLE": 1, "REJECT_ROUTE_NOT_PROVEN": 1,
+                 "REJECT_UNMODELED_CALLBACK_SHAPE": 2},
                 report["summary"]["portal_service_projection_by_status"],
             )
             self.assertEqual("PlaceableObject", rows["LiftScript"]["starts"][0]["object_type"])
-            self.assertEqual("UNCLASSIFIED", rows["LiftScript"]["calls"][0]["domain_type"])
+            self.assertEqual("TELEPORT", rows["LiftScript"]["calls"][0]["domain_type"])
+            self.assertEqual("TRANSPORT_API", rows["LiftScript"]["calls"][0]["domain_type_source"])
             self.assertEqual(220.0, rows["LiftScript"]["calls"][0]["routes"][0]["destination"]["x"])
             self.assertEqual(180, rows["LiftScript"]["calls"][0]["routes"][0]["destination"]["dir"])
             self.assertEqual(10000, rows["LiftScript"]["calls"][0]["event"]["dialog"])
@@ -127,6 +159,7 @@ class RetailScriptTransportsTest(unittest.TestCase):
             self.assertEqual(3, report["summary"]["callback_shapes"])
             self.assertEqual(2, report["summary"]["route_proven_callback_shapes"])
             self.assertTrue(json.loads(render(report))["provenance"]["authoritative_retail_evidence"])
+            self.assertEqual("fun/fun_*.cpp", report["provenance"]["registrations"])
             self.assertIn("raw callback predicates", report["provenance"]["proof_scope"])
             self.assertIn("unaudited predicate semantic interpretation",
                           report["provenance"]["excluded_semantics"])

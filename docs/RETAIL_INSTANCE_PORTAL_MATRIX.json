@@ -86,21 +86,2778 @@
       "TeleporterData/TeleportService2": 16
     },
     "retail_transport_evidence": 45,
-    "script_transport_candidates": 67,
+    "script_transport_candidates": 137,
     "script_transport_candidates_by_status": {
       "ALREADY_DATA_DRIVEN_RETAIL_PROVEN": 45,
-      "REJECT_MISSING_RUNTIME_START": 2,
-      "REJECT_ROUTE_NOT_PROVEN": 10,
+      "CONVERSION_READY": 2,
+      "REJECT_MISSING_RUNTIME_START": 14,
+      "REJECT_ROUTE_NOT_PROVEN": 38,
       "REJECT_RUNTIME_CONSUMER": 5,
-      "REJECT_UNMODELED_CALLBACK_SHAPE": 5
+      "REJECT_UNMODELED_CALLBACK_SHAPE": 33
     },
     "script_transport_candidates_by_start_status": {
-      "MATCH": 48,
-      "MISMATCH": 17,
-      "MISSING": 2
+      "MATCH": 86,
+      "MISMATCH": 37,
+      "MISSING": 14
     }
   },
   "script_transport_candidates": [
+    {
+      "npc_id": 205426,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_5th_Resurrect_NPC",
+      "callback": "FUN_180c6b050",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "310",
+          "npc_id": 205426,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1256.287231",
+          "y": "834.289856",
+          "z": "360.352631"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_04_START",
+        "points": [
+          {
+            "x": "1260.150024",
+            "y": "812.340027",
+            "z": "365.000000",
+            "dir": "270"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "empyreanarbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 477
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 471
+        }
+      }
+    },
+    {
+      "npc_id": 205427,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_6th_Resurrect_NPC",
+      "callback": "FUN_180c6b300",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "50",
+          "npc_id": 205427,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1594.475586",
+          "y": "145.268982",
+          "z": "129.894104"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_05_START",
+        "points": [
+          {
+            "x": "1616.024780",
+            "y": "154.438370",
+            "z": "128.084564",
+            "dir": "30"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "empyreanarbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 532
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 567
+        }
+      }
+    },
+    {
+      "npc_id": 205428,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_7th_Resurrect_NPC",
+      "callback": "FUN_180c6b670",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "260",
+          "npc_id": 205428,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1820.390015",
+          "y": "800.818054",
+          "z": "471.007446"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_06_START",
+        "points": [
+          {
+            "x": "1793.923340",
+            "y": "796.919983",
+            "z": "472.380005",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "empyreanarbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 587
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 696
+        }
+      }
+    },
+    {
+      "npc_id": 205429,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_8th_Resurrect_NPC",
+      "callback": "FUN_180c6b9b0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "160",
+          "npc_id": 205429,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1780.103027",
+          "y": "1723.457642",
+          "z": "305.478027"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_07_START",
+        "points": [
+          {
+            "x": "1776.792725",
+            "y": "1755.589722",
+            "z": "305.653381",
+            "dir": "90"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "empyreanarbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 642
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 813
+        }
+      }
+    },
+    {
+      "npc_id": 205430,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_9th_Resurrect_NPC",
+      "callback": "FUN_180c6bcf0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "270",
+          "npc_id": 205430,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1359.375000",
+          "y": "1758.057129",
+          "z": "320.841583"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_08_START",
+        "points": [
+          {
+            "x": "1320.451294",
+            "y": "1738.483765",
+            "z": "319.293182",
+            "dir": "200"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "empyreanarbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 697
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 930
+        }
+      }
+    },
+    {
+      "npc_id": 205431,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_10th_Resurrect_NPC",
+      "callback": "FUN_180c6a3f0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "135",
+          "npc_id": 205431,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1750.805420",
+          "y": "1252.470215",
+          "z": "395.415131"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_09_START",
+        "points": [
+          {
+            "x": "1762.430176",
+            "y": "1284.987549",
+            "z": "397.206055",
+            "dir": "45"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "empyreanarbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 290
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 31
+        }
+      }
+    },
+    {
+      "npc_id": 205506,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_4th_subMC",
+      "callback": "FUN_180c6ade0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "0",
+          "npc_id": 205506,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "345.325134",
+          "y": "353.243958",
+          "z": "99.717316"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_04_START",
+        "points": [
+          {
+            "x": "1260.150024",
+            "y": "812.340027",
+            "z": "365.000000",
+            "dir": "270"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 433
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 373
+        }
+      }
+    },
+    {
+      "npc_id": 205507,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_5th_subMC",
+      "callback": "FUN_180c6b140",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "90",
+          "npc_id": 205507,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1256.139648",
+          "y": "795.117188",
+          "z": "360.089996"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_05_START",
+        "points": [
+          {
+            "x": "1616.024780",
+            "y": "154.438370",
+            "z": "128.084564",
+            "dir": "30"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 488
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 497
+        }
+      }
+    },
+    {
+      "npc_id": 205508,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_6th_subMC",
+      "callback": "FUN_180c6b3f0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "210",
+          "npc_id": 205508,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1626.771362",
+          "y": "155.782455",
+          "z": "127.458992"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_06_START",
+        "points": [
+          {
+            "x": "1793.923340",
+            "y": "796.919983",
+            "z": "472.380005",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 543
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 593
+        }
+      }
+    },
+    {
+      "npc_id": 205509,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_7th_subMC",
+      "callback": "FUN_180c6b760",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "0",
+          "npc_id": 205509,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1781.739014",
+          "y": "800.804199",
+          "z": "470.733887"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_07_START",
+        "points": [
+          {
+            "x": "1776.792725",
+            "y": "1755.589722",
+            "z": "305.653381",
+            "dir": "90"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 598
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 722
+        }
+      }
+    },
+    {
+      "npc_id": 205510,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_8th_subMC",
+      "callback": "FUN_180c6baa0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "270",
+          "npc_id": 205510,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1780.473511",
+          "y": "1764.700806",
+          "z": "305.717896"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_08_START",
+        "points": [
+          {
+            "x": "1320.451294",
+            "y": "1738.483765",
+            "z": "319.293182",
+            "dir": "200"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 653
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 839
+        }
+      }
+    },
+    {
+      "npc_id": 205511,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_9th_subMC",
+      "callback": "FUN_180c6bde0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "20",
+          "npc_id": 205511,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1308.176514",
+          "y": "1736.284302",
+          "z": "318.991241"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_09_START",
+        "points": [
+          {
+            "x": "1762.430176",
+            "y": "1284.987549",
+            "z": "397.206055",
+            "dir": "45"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 708
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 956
+        }
+      }
+    },
+    {
+      "npc_id": 205512,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_4th_subMC_wait",
+      "callback": "FUN_180c6ae60",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 205512,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "384.101318",
+          "y": "349.055389",
+          "z": "99.717316"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_04_WAIT",
+        "points": [
+          {
+            "x": "1260.136963",
+            "y": "832.055481",
+            "z": "365.000000",
+            "dir": "130"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 444
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 393
+        }
+      }
+    },
+    {
+      "npc_id": 205513,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_5th_subMC_wait",
+      "callback": "FUN_180c6b1c0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "270",
+          "npc_id": 205513,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1261.106079",
+          "y": "835.696167",
+          "z": "360.089996"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_05_WAIT",
+        "points": [
+          {
+            "x": "1596.601929",
+            "y": "148.470963",
+            "z": "130.300537",
+            "dir": "230"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 499
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 517
+        }
+      }
+    },
+    {
+      "npc_id": 205514,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_6th_subMC_wait",
+      "callback": "FUN_180c6b470",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "20",
+          "npc_id": 205514,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1590.203491",
+          "y": "147.732574",
+          "z": "131.780762"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_06_WAIT",
+        "points": [
+          {
+            "x": "1819.542603",
+            "y": "796.741333",
+            "z": "471.400787",
+            "dir": "80"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 554
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 613
+        }
+      }
+    },
+    {
+      "npc_id": 205515,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_7th_subMC_wait",
+      "callback": "FUN_180c6b7e0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 205515,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1822.519287",
+          "y": "797.051331",
+          "z": "470.733887"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_07_WAIT",
+        "points": [
+          {
+            "x": "1776.377808",
+            "y": "1724.551758",
+            "z": "305.653381",
+            "dir": "340"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 609
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 742
+        }
+      }
+    },
+    {
+      "npc_id": 205516,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_8th_subMC_wait",
+      "callback": "FUN_180c6bb20",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "90",
+          "npc_id": 205516,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1776.039551",
+          "y": "1721.400879",
+          "z": "305.717896"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_08_WAIT",
+        "points": [
+          {
+            "x": "1359.504639",
+            "y": "1751.795166",
+            "z": "321.056976",
+            "dir": "90"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 664
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 859
+        }
+      }
+    },
+    {
+      "npc_id": 205517,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "c0693a58b0486877",
+      "script_name": "IDArena_9th_subMC_wait",
+      "callback": "FUN_180c6be60",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "200",
+          "npc_id": 205517,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "1363.098755",
+          "y": "1753.322510",
+          "z": "321.792999"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_09_WAIT",
+        "points": [
+          {
+            "x": "1748.263062",
+            "y": "1254.748169",
+            "z": "395.455170",
+            "dir": "315"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "",
+      "runtime_start_status": "MISSING",
+      "runtime_routes": [],
+      "status": "REJECT_MISSING_RUNTIME_START",
+      "reason": "retail NPC start is absent from the runtime spawn index",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 719
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 976
+        }
+      }
+    },
+    {
+      "npc_id": 205663,
+      "start_world_id": 300320000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_solo_4B_Resurrect_NPC",
+      "callback": "FUN_180c6e540",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 205663,
+          "object_type": "Npc",
+          "source": "Worlds/idarena_solo/world.xml",
+          "world_id": 300320000,
+          "x": "1295.721680",
+          "y": "242.150085",
+          "z": "407.192261"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300320000,
+        "alias": "STAGE_04_START",
+        "points": [
+          {
+            "x": "1270.887695",
+            "y": "237.933075",
+            "z": "407.598755",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idarena_solo/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "arbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1093
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 2341
+        }
+      }
+    },
+    {
+      "npc_id": 205664,
+      "start_world_id": 300320000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_Solo_H1_Resurrect_NPC",
+      "callback": "FUN_180c6d410",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "50",
+          "npc_id": 205664,
+          "object_type": "Npc",
+          "source": "Worlds/idarena_solo/world.xml",
+          "world_id": 300320000,
+          "x": "1748.199341",
+          "y": "1742.035156",
+          "z": "390.951355"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300320000,
+        "alias": "STAGE_07_START",
+        "points": [
+          {
+            "x": "1759.594604",
+            "y": "1768.644897",
+            "z": "390.718384",
+            "dir": "50"
+          }
+        ],
+        "source": "Worlds/idarena_solo/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "general",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 862
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 1743
+        }
+      }
+    },
+    {
+      "npc_id": 205665,
+      "start_world_id": 300320000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_Solo_H2_Resurrect_NPC",
+      "callback": "FUN_180c6d500",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 205665,
+          "object_type": "Npc",
+          "source": "Worlds/idarena_solo/world.xml",
+          "world_id": 300320000,
+          "x": "1821.577637",
+          "y": "801.984619",
+          "z": "471.173370"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300320000,
+        "alias": "STAGE_08_START",
+        "points": [
+          {
+            "x": "1802.495361",
+            "y": "796.456116",
+            "z": "472.110352",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idarena_solo/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "general",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 873
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 1776
+        }
+      }
+    },
+    {
+      "npc_id": 205682,
+      "start_world_id": 300320000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_solo_1st_Resurrect_NPC",
+      "callback": "FUN_180c6e000",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 205682,
+          "object_type": "Npc",
+          "source": "Worlds/idarena_solo/world.xml",
+          "world_id": 300320000,
+          "x": "383.343414",
+          "y": "1667.297729",
+          "z": "98.335236"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300320000,
+        "alias": "STAGE_00_START",
+        "points": [
+          {
+            "x": "357.102081",
+            "y": "1662.702026",
+            "z": "98.235237",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idarena_solo/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "arbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 994
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 2150
+        }
+      }
+    },
+    {
+      "npc_id": 205683,
+      "start_world_id": 300320000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_solo_2nd_Resurrect_NPC",
+      "callback": "FUN_180c6e180",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 205683,
+          "object_type": "Npc",
+          "source": "Worlds/idarena_solo/world.xml",
+          "world_id": 300320000,
+          "x": "1821.564331",
+          "y": "311.924835",
+          "z": "471.173370"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300320000,
+        "alias": "STAGE_01_START",
+        "points": [
+          {
+            "x": "1796.551270",
+            "y": "306.996704",
+            "z": "472.110352",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idarena_solo/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "arbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1027
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 2204
+        }
+      }
+    },
+    {
+      "npc_id": 205684,
+      "start_world_id": 300320000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_solo_3rd_Resurrect_NPC",
+      "callback": "FUN_180c6e3c0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "210",
+          "npc_id": 205684,
+          "object_type": "Npc",
+          "source": "Worlds/idarena_solo/world.xml",
+          "world_id": 300320000,
+          "x": "1358.402100",
+          "y": "1758.744019",
+          "z": "320.920074"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300320000,
+        "alias": "STAGE_02_START",
+        "points": [
+          {
+            "x": "1324.432983",
+            "y": "1738.227905",
+            "z": "321.073364",
+            "dir": "210"
+          }
+        ],
+        "source": "Worlds/idarena_solo/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "arbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1060
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 2287
+        }
+      }
+    },
+    {
+      "npc_id": 205685,
+      "start_world_id": 300320000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_solo_4th_Resurrect_NPC",
+      "callback": "FUN_180c6e770",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 205685,
+          "object_type": "Npc",
+          "source": "Worlds/idarena_solo/world.xml",
+          "world_id": 300320000,
+          "x": "1308.966431",
+          "y": "796.202759",
+          "z": "439.613251"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300320000,
+        "alias": "STAGE_03_START",
+        "points": [
+          {
+            "x": "1283.124634",
+            "y": "791.668274",
+            "z": "439.099365",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idarena_solo/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "arbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1126
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 2417
+        }
+      }
+    },
+    {
+      "npc_id": 205686,
+      "start_world_id": 300320000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_solo_5th_Resurrect_NPC",
+      "callback": "FUN_180c6e9d0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 205686,
+          "object_type": "Npc",
+          "source": "Worlds/idarena_solo/world.xml",
+          "world_id": 300320000,
+          "x": "383.309326",
+          "y": "354.078461",
+          "z": "99.247208"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300320000,
+        "alias": "STAGE_05_START",
+        "points": [
+          {
+            "x": "357.987976",
+            "y": "349.191162",
+            "z": "99.956322",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idarena_solo/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "arbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1159
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 2505
+        }
+      }
+    },
+    {
+      "npc_id": 205687,
+      "start_world_id": 300320000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_solo_6th_Resurrect_NPC",
+      "callback": "FUN_180c6eb50",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "50",
+          "npc_id": 205687,
+          "object_type": "Npc",
+          "source": "Worlds/idarena_solo/world.xml",
+          "world_id": 300320000,
+          "x": "1747.390137",
+          "y": "1250.201050",
+          "z": "390.730804"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300320000,
+        "alias": "STAGE_06_START",
+        "points": [
+          {
+            "x": "1759.500366",
+            "y": "1273.541382",
+            "z": "390.718384",
+            "dir": "30"
+          }
+        ],
+        "source": "Worlds/idarena_solo/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "arbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1192
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 2559
+        }
+      }
+    },
+    {
+      "npc_id": 700924,
+      "start_world_id": 300230000,
+      "dialog": 10001,
+      "callback_shape": "debbe7ddd837b48b",
+      "script_name": "IDCromede_bookcase_door_in",
+      "callback": "FUN_180c70850",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 700924,
+          "object_type": "PlaceableObject",
+          "source": "Worlds/idcromede/world.xml",
+          "world_id": 300230000,
+          "x": "587.671082",
+          "y": "774.231995",
+          "z": "217.757614"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300230000,
+        "alias": "idcromede_alias_04",
+        "points": [
+          {
+            "x": "591.864075",
+            "y": "774.249146",
+            "z": "216.395966",
+            "dir": "0"
+          }
+        ],
+        "source": "Worlds/idcromede/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "secret_safe_door",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1423
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 3570
+        }
+      }
+    },
+    {
+      "npc_id": 701596,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon01",
+      "callback": "FUN_180c756e0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 701596,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "617.500793",
+          "y": "248.196411",
+          "z": "236.425781"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point1",
+        "points": [
+          {
+            "x": "617.547974",
+            "y": "248.191772",
+            "z": "239.505188",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 785
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1180
+        }
+      }
+    },
+    {
+      "npc_id": 701597,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon02",
+      "callback": "FUN_180c75840",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "200",
+          "npc_id": 701597,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "612.805542",
+          "y": "275.205688",
+          "z": "236.299789"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point2",
+        "points": [
+          {
+            "x": "612.818909",
+            "y": "275.216705",
+            "z": "239.252502",
+            "dir": "200"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 796
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1221
+        }
+      }
+    },
+    {
+      "npc_id": 701598,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon03",
+      "callback": "FUN_180c759a0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "160",
+          "npc_id": 701598,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "616.159241",
+          "y": "313.939178",
+          "z": "236.283615"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point3",
+        "points": [
+          {
+            "x": "616.167542",
+            "y": "313.920807",
+            "z": "239.192032",
+            "dir": "160"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 807
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1262
+        }
+      }
+    },
+    {
+      "npc_id": 701599,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon04",
+      "callback": "FUN_180c75b00",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "160",
+          "npc_id": 701599,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "625.603088",
+          "y": "339.607819",
+          "z": "236.426453"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point4",
+        "points": [
+          {
+            "x": "625.597717",
+            "y": "339.611389",
+            "z": "238.970856",
+            "dir": "160"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 818
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1303
+        }
+      }
+    },
+    {
+      "npc_id": 701600,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon05",
+      "callback": "FUN_180c75c60",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "160",
+          "npc_id": 701600,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "650.913818",
+          "y": "372.932312",
+          "z": "242.104248"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point5",
+        "points": [
+          {
+            "x": "650.831970",
+            "y": "372.888062",
+            "z": "239.978455",
+            "dir": "160"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 829
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1344
+        }
+      }
+    },
+    {
+      "npc_id": 701601,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon06",
+      "callback": "FUN_180c75dc0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "120",
+          "npc_id": 701601,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "677.853027",
+          "y": "396.202576",
+          "z": "240.529022"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point6",
+        "points": [
+          {
+            "x": "677.878723",
+            "y": "396.197815",
+            "z": "242.494873",
+            "dir": "120"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 840
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1385
+        }
+      }
+    },
+    {
+      "npc_id": 701602,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon07",
+      "callback": "FUN_180c75f20",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "90",
+          "npc_id": 701602,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "710.144897",
+          "y": "410.660858",
+          "z": "243.373749"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point7",
+        "points": [
+          {
+            "x": "710.124573",
+            "y": "410.652466",
+            "z": "245.763718",
+            "dir": "90"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 851
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1426
+        }
+      }
+    },
+    {
+      "npc_id": 701603,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon08",
+      "callback": "FUN_180c76080",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "120",
+          "npc_id": 701603,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "736.802734",
+          "y": "414.120758",
+          "z": "241.813431"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point8",
+        "points": [
+          {
+            "x": "736.763245",
+            "y": "414.106354",
+            "z": "244.829239",
+            "dir": "120"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 862
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1467
+        }
+      }
+    },
+    {
+      "npc_id": 701604,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon09",
+      "callback": "FUN_180c761e0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "60",
+          "npc_id": 701604,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "772.961060",
+          "y": "410.873718",
+          "z": "241.878922"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point9",
+        "points": [
+          {
+            "x": "772.910278",
+            "y": "410.826233",
+            "z": "245.141037",
+            "dir": "60"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 873
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1508
+        }
+      }
+    },
+    {
+      "npc_id": 701605,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon10",
+      "callback": "FUN_180c76340",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "90",
+          "npc_id": 701605,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "798.383118",
+          "y": "401.605347",
+          "z": "242.296341"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point10",
+        "points": [
+          {
+            "x": "798.381470",
+            "y": "401.466827",
+            "z": "244.809219",
+            "dir": "90"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 884
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1549
+        }
+      }
+    },
+    {
+      "npc_id": 701606,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon11",
+      "callback": "FUN_180c764a0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "120",
+          "npc_id": 701606,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "709.602112",
+          "y": "313.530884",
+          "z": "254.426315"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point11",
+        "points": [
+          {
+            "x": "709.609985",
+            "y": "313.551086",
+            "z": "257.551788",
+            "dir": "120"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 895
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1590
+        }
+      }
+    },
+    {
+      "npc_id": 701607,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon12",
+      "callback": "FUN_180c76600",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "150",
+          "npc_id": 701607,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "726.756592",
+          "y": "327.932434",
+          "z": "254.812073"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point12",
+        "points": [
+          {
+            "x": "726.758484",
+            "y": "327.930450",
+            "z": "258.024414",
+            "dir": "150"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 906
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1631
+        }
+      }
+    },
+    {
+      "npc_id": 701610,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon01",
+      "callback": "FUN_180c756e0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "180",
+          "npc_id": 701610,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "617.500793",
+          "y": "248.205994",
+          "z": "237.198120"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point1",
+        "points": [
+          {
+            "x": "617.547974",
+            "y": "248.191772",
+            "z": "239.505188",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 785
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1180
+        }
+      }
+    },
+    {
+      "npc_id": 701611,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon02",
+      "callback": "FUN_180c75840",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "200",
+          "npc_id": 701611,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "612.802002",
+          "y": "275.203644",
+          "z": "237.088577"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point2",
+        "points": [
+          {
+            "x": "612.818909",
+            "y": "275.216705",
+            "z": "239.252502",
+            "dir": "200"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 796
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1221
+        }
+      }
+    },
+    {
+      "npc_id": 701612,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon03",
+      "callback": "FUN_180c759a0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "160",
+          "npc_id": 701612,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "616.159241",
+          "y": "313.936218",
+          "z": "237.181137"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point3",
+        "points": [
+          {
+            "x": "616.167542",
+            "y": "313.920807",
+            "z": "239.192032",
+            "dir": "160"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 807
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1262
+        }
+      }
+    },
+    {
+      "npc_id": 701613,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon04",
+      "callback": "FUN_180c75b00",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "160",
+          "npc_id": 701613,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "625.624451",
+          "y": "339.609375",
+          "z": "237.101593"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point4",
+        "points": [
+          {
+            "x": "625.597717",
+            "y": "339.611389",
+            "z": "238.970856",
+            "dir": "160"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 818
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1303
+        }
+      }
+    },
+    {
+      "npc_id": 701614,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon05",
+      "callback": "FUN_180c75c60",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "160",
+          "npc_id": 701614,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "650.913818",
+          "y": "372.932312",
+          "z": "243.548935"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point5",
+        "points": [
+          {
+            "x": "650.831970",
+            "y": "372.888062",
+            "z": "239.978455",
+            "dir": "160"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 829
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1344
+        }
+      }
+    },
+    {
+      "npc_id": 701615,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon06",
+      "callback": "FUN_180c75dc0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "120",
+          "npc_id": 701615,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "677.844727",
+          "y": "396.207184",
+          "z": "241.438934"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point6",
+        "points": [
+          {
+            "x": "677.878723",
+            "y": "396.197815",
+            "z": "242.494873",
+            "dir": "120"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 840
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1385
+        }
+      }
+    },
+    {
+      "npc_id": 701616,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon07",
+      "callback": "FUN_180c75f20",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "90",
+          "npc_id": 701616,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "710.156128",
+          "y": "410.672729",
+          "z": "244.449524"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point7",
+        "points": [
+          {
+            "x": "710.124573",
+            "y": "410.652466",
+            "z": "245.763718",
+            "dir": "90"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 851
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1426
+        }
+      }
+    },
+    {
+      "npc_id": 701617,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon08",
+      "callback": "FUN_180c76080",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "120",
+          "npc_id": 701617,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "736.796692",
+          "y": "414.121674",
+          "z": "243.349167"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point8",
+        "points": [
+          {
+            "x": "736.763245",
+            "y": "414.106354",
+            "z": "244.829239",
+            "dir": "120"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 862
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1467
+        }
+      }
+    },
+    {
+      "npc_id": 701618,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon09",
+      "callback": "FUN_180c761e0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "60",
+          "npc_id": 701618,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "772.985901",
+          "y": "410.830719",
+          "z": "243.978561"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point9",
+        "points": [
+          {
+            "x": "772.910278",
+            "y": "410.826233",
+            "z": "245.141037",
+            "dir": "60"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 873
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1508
+        }
+      }
+    },
+    {
+      "npc_id": 701619,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon10",
+      "callback": "FUN_180c76340",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "90",
+          "npc_id": 701619,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "798.340698",
+          "y": "401.607788",
+          "z": "244.092178"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point10",
+        "points": [
+          {
+            "x": "798.381470",
+            "y": "401.466827",
+            "z": "244.809219",
+            "dir": "90"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 884
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1549
+        }
+      }
+    },
+    {
+      "npc_id": 701620,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon11",
+      "callback": "FUN_180c764a0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "120",
+          "npc_id": 701620,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "709.601379",
+          "y": "313.534058",
+          "z": "255.387802"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point11",
+        "points": [
+          {
+            "x": "709.609985",
+            "y": "313.551086",
+            "z": "257.551788",
+            "dir": "120"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 895
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1590
+        }
+      }
+    },
+    {
+      "npc_id": 701621,
+      "start_world_id": 300540000,
+      "dialog": null,
+      "callback_shape": "ae73249985164b55",
+      "script_name": "IDLDF5B_TD_DEFWeapon12",
+      "callback": "FUN_180c76600",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "150",
+          "npc_id": 701621,
+          "object_type": "Npc",
+          "source": "Worlds/idldf5b_td/world.xml",
+          "world_id": 300540000,
+          "x": "726.760559",
+          "y": "327.942322",
+          "z": "255.969421"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300540000,
+        "alias": "LocationsAlias Point12",
+        "points": [
+          {
+            "x": "726.758484",
+            "y": "327.930450",
+            "z": "258.024414",
+            "dir": "150"
+          }
+        ],
+        "source": "Worlds/idldf5b_td/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "defense_cannon",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_004.cpp",
+          "line": 906
+        },
+        "callback": {
+          "path": "fun/fun_723.cpp",
+          "line": 1631
+        }
+      }
+    },
     {
       "npc_id": 702339,
       "start_world_id": 301270000,
@@ -109,7 +2866,7 @@
       "script_name": "IDLDF4Re_01_Boss_In",
       "callback": "FUN_180c75380",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "1",
@@ -157,7 +2914,7 @@
       "script_name": "IDLDF4Re_01_Boss_In",
       "callback": "FUN_180c75380",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "1",
@@ -205,7 +2962,7 @@
       "script_name": "IDStation_Lobby_Teleport",
       "callback": "FUN_180c789e0",
       "transport_type": "WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "230",
@@ -258,7 +3015,7 @@
       "script_name": "IDStation_Lobby_Teleport",
       "callback": "FUN_180c789e0",
       "transport_type": "WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "230",
@@ -311,7 +3068,7 @@
       "script_name": "IDStation_Lobby_Teleport",
       "callback": "FUN_180c789e0",
       "transport_type": "WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "230",
@@ -364,7 +3121,7 @@
       "script_name": "IDStation_Lobby_Teleport",
       "callback": "FUN_180c789e0",
       "transport_type": "WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "230",
@@ -406,6 +3163,59 @@
         "callback": {
           "path": "fun/fun_723.cpp",
           "line": 3056
+        }
+      }
+    },
+    {
+      "npc_id": 730308,
+      "start_world_id": 300230000,
+      "dialog": null,
+      "callback_shape": "051152e2170d7175",
+      "script_name": "IDCromede_FOBJ_Q18603",
+      "callback": "FUN_180c70160",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "0",
+          "npc_id": 730308,
+          "object_type": "PlaceableObject",
+          "source": "Worlds/idcromede/world.xml",
+          "world_id": 300230000,
+          "x": "350.283966",
+          "y": "169.959595",
+          "z": "147.850479"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300230000,
+        "alias": "idcromede_alias_02",
+        "points": [
+          {
+            "x": "687.631104",
+            "y": "675.972412",
+            "z": "201.040802",
+            "dir": "270"
+          }
+        ],
+        "source": "Worlds/idcromede/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "quest_use_item",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1379
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 3449
         }
       }
     },
@@ -541,7 +3351,7 @@
       "script_name": "IDStation_teleport_upper",
       "callback": "FUN_180c78cb0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -608,7 +3418,7 @@
       "script_name": "IDStation_teleport_upper",
       "callback": "FUN_180c78cb0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -675,7 +3485,7 @@
       "script_name": "IDTiamat_FOBJ_Teleport_S6",
       "callback": "FUN_180c796e0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -742,7 +3552,7 @@
       "script_name": "IDLDF5b_TD_Out_L",
       "callback": "FUN_180c77bc0",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "300",
@@ -834,7 +3644,7 @@
       "script_name": "IDLDF5b_TD_Out_D",
       "callback": "FUN_180c77ab0",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "300",
@@ -926,7 +3736,7 @@
       "script_name": "IDEternity_03_Teleport_1",
       "callback": "FUN_180c72df0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -993,7 +3803,7 @@
       "script_name": "IDEternity_03_Teleport_2",
       "callback": "FUN_180c72ec0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -1060,7 +3870,7 @@
       "script_name": "IDEternity_03_Teleport_3",
       "callback": "FUN_180c72f90",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -1127,7 +3937,7 @@
       "script_name": "IDEternity_03_Teleport_4",
       "callback": "FUN_180c73060",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -1194,7 +4004,7 @@
       "script_name": "IDEternity_03_Teleport_5",
       "callback": "FUN_180c73130",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -1254,6 +4064,252 @@
       }
     },
     {
+      "npc_id": 731805,
+      "start_world_id": 302340000,
+      "dialog": 104,
+      "callback_shape": "fa139d6ebdb0d079",
+      "script_name": "IDAb1_Ere_Teleport_L01",
+      "callback": "FUN_180c699c0",
+      "transport_type": "COORDINATES",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "45",
+          "npc_id": 731805,
+          "object_type": "Npc",
+          "source": "Worlds/IDAb1_Ere/world.xml",
+          "world_id": 302340000,
+          "x": "107.279831",
+          "y": "630.954224",
+          "z": "447.752563"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 400010000,
+        "x": 1769.0,
+        "y": 139.0,
+        "z": 2939.0,
+        "dir": 33,
+        "source": "ScriptDLL64 callback"
+      },
+      "requirements": {},
+      "runtime_ai": "portal",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 158
+        },
+        "callback": {
+          "path": "fun/fun_721.cpp",
+          "line": 4401
+        }
+      }
+    },
+    {
+      "npc_id": 731806,
+      "start_world_id": 302340000,
+      "dialog": 104,
+      "callback_shape": "052b3137dad50d20",
+      "script_name": "IDAb1_Ere_Teleport_D01",
+      "callback": "FUN_180c698d0",
+      "transport_type": "COORDINATES",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "45",
+          "npc_id": 731806,
+          "object_type": "Npc",
+          "source": "Worlds/IDAb1_Ere/world.xml",
+          "world_id": 302340000,
+          "x": "107.279831",
+          "y": "630.954224",
+          "z": "448.834198"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 400010000,
+        "x": 989.0,
+        "y": 2883.0,
+        "z": 3036.0,
+        "dir": 77,
+        "source": "ScriptDLL64 callback"
+      },
+      "requirements": {},
+      "runtime_ai": "portal",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 147
+        },
+        "callback": {
+          "path": "fun/fun_721.cpp",
+          "line": 4372
+        }
+      }
+    },
+    {
+      "npc_id": 731809,
+      "start_world_id": 301540000,
+      "dialog": 104,
+      "callback_shape": "c773c543096b3491",
+      "script_name": "IDEternity_01_teleporter_01",
+      "callback": "FUN_180c71c70",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "0",
+          "npc_id": 731809,
+          "object_type": "Npc",
+          "source": "Worlds/IDEternity_01/world.xml",
+          "world_id": 301540000,
+          "x": "737.267090",
+          "y": "512.086975",
+          "z": "469.915955"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 301540000,
+        "alias": "teleport_01",
+        "points": [
+          {
+            "x": "481.901276",
+            "y": "671.779297",
+            "z": "470.100006",
+            "dir": "180"
+          },
+          {
+            "x": "482.328522",
+            "y": "671.677185",
+            "z": "470.100006",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/IDEternity_01/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "portal_dialog",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [
+        {
+          "loc_id": 3015431,
+          "destination": {
+            "complete": true,
+            "world_id": 301540000,
+            "x": "469.86370",
+            "y": "656.11130",
+            "z": "468.97745",
+            "heading": "40"
+          },
+          "requirements": {
+            "min_level": 66
+          },
+          "conversion": "ALREADY_DATA_DRIVEN"
+        }
+      ],
+      "status": "CONVERSION_READY",
+      "reason": "retail callback is expressible by the existing PortalService consumer",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1643
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 4339
+        }
+      }
+    },
+    {
+      "npc_id": 731810,
+      "start_world_id": 301540000,
+      "dialog": 104,
+      "callback_shape": "c773c543096b3491",
+      "script_name": "IDEternity_01_teleporter_02",
+      "callback": "FUN_180c71d40",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "0",
+          "npc_id": 731810,
+          "object_type": "Npc",
+          "source": "Worlds/IDEternity_01/world.xml",
+          "world_id": 301540000,
+          "x": "737.267090",
+          "y": "512.086975",
+          "z": "469.915955"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 301540000,
+        "alias": "teleport_02",
+        "points": [
+          {
+            "x": "575.002747",
+            "y": "511.974487",
+            "z": "470.100006",
+            "dir": "120"
+          },
+          {
+            "x": "575.061279",
+            "y": "511.885437",
+            "z": "470.100006",
+            "dir": "120"
+          }
+        ],
+        "source": "Worlds/IDEternity_01/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "portal_dialog",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [
+        {
+          "loc_id": 3015432,
+          "destination": {
+            "complete": true,
+            "world_id": 301540000,
+            "x": "571.98865",
+            "y": "511.95203",
+            "z": "468.97675",
+            "heading": "60"
+          },
+          "requirements": {
+            "min_level": 66
+          },
+          "conversion": "ALREADY_DATA_DRIVEN"
+        }
+      ],
+      "status": "CONVERSION_READY",
+      "reason": "retail callback is expressible by the existing PortalService consumer",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1654
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 4371
+        }
+      }
+    },
+    {
       "npc_id": 731811,
       "start_world_id": 301540000,
       "dialog": 104,
@@ -1261,7 +4317,7 @@
       "script_name": "IDEternity_01_teleporter_03",
       "callback": "FUN_180c71e10",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -1346,7 +4402,7 @@
       "script_name": "IDEternity_01_teleporter_04",
       "callback": "FUN_180c71ee0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -1424,6 +4480,59 @@
       }
     },
     {
+      "npc_id": 799573,
+      "start_world_id": 300300000,
+      "dialog": 10000,
+      "callback_shape": "1f81f2a216ad13ba",
+      "script_name": "IDArena_1st_Resurrect_NPC",
+      "callback": "FUN_180c6a5f0",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "250",
+          "npc_id": 799573,
+          "object_type": "Npc",
+          "source": "Worlds/idarena/world.xml",
+          "world_id": 300300000,
+          "x": "384.510010",
+          "y": "352.610779",
+          "z": "97.325447"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300300000,
+        "alias": "STAGE_00_START",
+        "points": [
+          {
+            "x": "354.786804",
+            "y": "349.345673",
+            "z": "103.529999",
+            "dir": "180"
+          }
+        ],
+        "source": "Worlds/idarena/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "empyreanarbiter",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 323
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 107
+        }
+      }
+    },
+    {
       "npc_id": 801532,
       "start_world_id": 300510000,
       "dialog": 10000,
@@ -1431,7 +4540,7 @@
       "script_name": "IDTiamat_1_FOBJ_Reactor_Door_In",
       "callback": "FUN_180c792b0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -1498,7 +4607,7 @@
       "script_name": "IDTiamat_1_FOBJ_Reactor_Door_Out",
       "callback": "FUN_180c79330",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -1565,7 +4674,7 @@
       "script_name": "IDSeal_Boss_Teleport02",
       "callback": "FUN_180c785c0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "270",
@@ -1630,7 +4739,7 @@
       "script_name": "IDSeal_Boss_Teleport02",
       "callback": "FUN_180c785c0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "180",
@@ -1727,7 +4836,7 @@
       "script_name": "IDSeal_Boss_Teleport02",
       "callback": "FUN_180c785c0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "180",
@@ -1824,7 +4933,7 @@
       "script_name": "IDEternity_02_Save_Point_Teleport_A",
       "callback": "FUN_180c72ab0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -1891,7 +5000,7 @@
       "script_name": "IDEternity_02_Save_Point_Teleport_B",
       "callback": "FUN_180c72b80",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -1958,7 +5067,7 @@
       "script_name": "IDLDF5_Under_02_War_Teleport01",
       "callback": "FUN_180c775b0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "280",
@@ -2025,7 +5134,7 @@
       "script_name": "IDLDF5_Under_02_War_Teleport02",
       "callback": "FUN_180c77680",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "140",
@@ -2092,7 +5201,7 @@
       "script_name": "IDLDF5_Fortress_War_Teleport01",
       "callback": "FUN_180c76a40",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "135",
@@ -2159,7 +5268,7 @@
       "script_name": "IDLDF5_Fortress_War_Teleport02",
       "callback": "FUN_180c76b10",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -2226,7 +5335,7 @@
       "script_name": "IDEvent01_B_MC_End",
       "callback": "FUN_180c733e0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "225",
@@ -2279,7 +5388,7 @@
       "script_name": "IDEvent01_C_MC_End",
       "callback": "FUN_180c735a0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "348",
@@ -2332,7 +5441,7 @@
       "script_name": "IDEvent01_C_MC_End",
       "callback": "FUN_180c735a0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "348",
@@ -2385,7 +5494,7 @@
       "script_name": "IDEvent01_B_MC_End",
       "callback": "FUN_180c733e0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "225",
@@ -2431,6 +5540,165 @@
       }
     },
     {
+      "npc_id": 831350,
+      "start_world_id": 300560000,
+      "dialog": null,
+      "callback_shape": "ac6f055bc8b2457e",
+      "script_name": "IDDF2Flying_Event01_Treasure_Room",
+      "callback": "FUN_180c70c30",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "210",
+          "npc_id": 831350,
+          "object_type": "Npc",
+          "source": "Worlds/iddf2flying_event01/world.xml",
+          "world_id": 300560000,
+          "x": "450.614868",
+          "y": "105.304108",
+          "z": "214.654678"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300560000,
+        "alias": "IDDF2Flying_event01_Loc_H",
+        "points": [
+          {
+            "x": "100.288834",
+            "y": "361.268646",
+            "z": "289.555725",
+            "dir": "190"
+          }
+        ],
+        "source": "Worlds/iddf2flying_event01/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "imperial_shrine",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1478
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 3833
+        }
+      }
+    },
+    {
+      "npc_id": 831350,
+      "start_world_id": 300560000,
+      "dialog": null,
+      "callback_shape": "ac6f055bc8b2457e",
+      "script_name": "IDDF2Flying_Event01_Treasure_Room",
+      "callback": "FUN_180c70c30",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "210",
+          "npc_id": 831350,
+          "object_type": "Npc",
+          "source": "Worlds/iddf2flying_event01/world.xml",
+          "world_id": 300560000,
+          "x": "450.614868",
+          "y": "105.304108",
+          "z": "214.654678"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300560000,
+        "alias": "IDDF2Flying_event01_Loc_N",
+        "points": [
+          {
+            "x": "409.747833",
+            "y": "247.377808",
+            "z": "524.951477",
+            "dir": "50"
+          }
+        ],
+        "source": "Worlds/iddf2flying_event01/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "imperial_shrine",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1478
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 3788
+        }
+      }
+    },
+    {
+      "npc_id": 831350,
+      "start_world_id": 300560000,
+      "dialog": 10001,
+      "callback_shape": "ac6f055bc8b2457e",
+      "script_name": "IDDF2Flying_Event01_Treasure_Room",
+      "callback": "FUN_180c70c30",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "210",
+          "npc_id": 831350,
+          "object_type": "Npc",
+          "source": "Worlds/iddf2flying_event01/world.xml",
+          "world_id": 300560000,
+          "x": "450.614868",
+          "y": "105.304108",
+          "z": "214.654678"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 300560000,
+        "alias": "IDDF2Flying_event01_Loc_K",
+        "points": [
+          {
+            "x": "81.461021",
+            "y": "436.600952",
+            "z": "457.269135",
+            "dir": "190"
+          }
+        ],
+        "source": "Worlds/iddf2flying_event01/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "imperial_shrine",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_ROUTE_NOT_PROVEN",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1478
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 3752
+        }
+      }
+    },
+    {
       "npc_id": 831668,
       "start_world_id": 600080000,
       "dialog": 104,
@@ -2438,7 +5706,7 @@
       "script_name": "IDIU_outdoornpc_1",
       "callback": "FUN_180c750f0",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "45",
@@ -2502,7 +5770,7 @@
       "script_name": "IDIU_outdoornpc_2",
       "callback": "FUN_180c750f0",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "45",
@@ -2566,7 +5834,7 @@
       "script_name": "IDIU_outdoornpc_3",
       "callback": "FUN_180c751e0",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -2630,7 +5898,7 @@
       "script_name": "IDIU_outdoornpc_4",
       "callback": "FUN_180c751e0",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -2694,7 +5962,7 @@
       "script_name": "IDSweep_IN_Stage2_NPC01",
       "callback": "FUN_180c78d30",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "80",
@@ -2783,7 +6051,7 @@
       "script_name": "IDSweep_IN_Stage2_NPC01",
       "callback": "FUN_180c78d30",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "80",
@@ -2872,7 +6140,7 @@
       "script_name": "IDSweep_IN_Stage2_NPC02",
       "callback": "FUN_180c78d30",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -2961,7 +6229,7 @@
       "script_name": "IDSweep_IN_Stage2_NPC02",
       "callback": "FUN_180c78d30",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -3050,7 +6318,7 @@
       "script_name": "IDF6_LF1_Teleporter_Animar",
       "callback": "FUN_180c74870",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3121,7 +6389,7 @@
       "script_name": "IDF6_LF1_Teleporter_Kantil",
       "callback": "FUN_180c74c30",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3192,7 +6460,7 @@
       "script_name": "IDF6_LF1_Teleporter_Animar_1",
       "callback": "FUN_180c74930",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3263,7 +6531,7 @@
       "script_name": "IDF6_LF1_Teleporter_Animar_2",
       "callback": "FUN_180c749f0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3334,7 +6602,7 @@
       "script_name": "IDF6_LF1_Teleporter_Animar_3",
       "callback": "FUN_180c74ab0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3405,7 +6673,7 @@
       "script_name": "IDF6_LF1_Teleporter_Animar_4",
       "callback": "FUN_180c74b70",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3476,7 +6744,7 @@
       "script_name": "IDF6_LF1_Teleporter_Kantil_1",
       "callback": "FUN_180c74cf0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3547,7 +6815,7 @@
       "script_name": "IDF6_LF1_Teleporter_Kantil_2",
       "callback": "FUN_180c74db0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3618,7 +6886,7 @@
       "script_name": "IDF6_LF1_Teleporter_Kantil_3",
       "callback": "FUN_180c74e70",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3689,7 +6957,7 @@
       "script_name": "IDF6_LF1_Teleporter_Kantil_4",
       "callback": "FUN_180c74f30",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3760,7 +7028,7 @@
       "script_name": "IDEternity_02_Save_Point_Teleport_C",
       "callback": "FUN_180c72c50",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -3827,7 +7095,7 @@
       "script_name": "IDEternity_02_Save_Point_Teleport_D",
       "callback": "FUN_180c72d20",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -3887,6 +7155,294 @@
       }
     },
     {
+      "npc_id": 834053,
+      "start_world_id": 301540000,
+      "dialog": 10001,
+      "callback_shape": "33ee7fc6fc736e7f",
+      "script_name": "IDEternity_01_Q_Out_Portal",
+      "callback": "FUN_180c71a50",
+      "transport_type": "COORDINATES",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "0",
+          "npc_id": 834053,
+          "object_type": "PlaceableObject",
+          "source": "Worlds/IDEternity_01/world.xml",
+          "world_id": 301540000,
+          "x": "222.835190",
+          "y": "511.891052",
+          "z": "470.000000"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 210100000,
+        "x": 1407.0,
+        "y": 1315.0,
+        "z": 338.0,
+        "dir": 20,
+        "source": "ScriptDLL64 callback"
+      },
+      "requirements": {},
+      "runtime_ai": "general",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1621
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 4267
+        }
+      }
+    },
+    {
+      "npc_id": 834053,
+      "start_world_id": 301540000,
+      "dialog": 10002,
+      "callback_shape": "33ee7fc6fc736e7f",
+      "script_name": "IDEternity_01_Q_Out_Portal",
+      "callback": "FUN_180c71a50",
+      "transport_type": "COORDINATES",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "0",
+          "npc_id": 834053,
+          "object_type": "PlaceableObject",
+          "source": "Worlds/IDEternity_01/world.xml",
+          "world_id": 301540000,
+          "x": "222.835190",
+          "y": "511.891052",
+          "z": "470.000000"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 220110000,
+        "x": 1803.0,
+        "y": 1987.0,
+        "z": 199.0,
+        "dir": 135,
+        "source": "ScriptDLL64 callback"
+      },
+      "requirements": {},
+      "runtime_ai": "general",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1621
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 4277
+        }
+      }
+    },
+    {
+      "npc_id": 834054,
+      "start_world_id": 301540000,
+      "dialog": 10001,
+      "callback_shape": "33ee7fc6fc736e7f",
+      "script_name": "IDEternity_01_Q_Out_Portal",
+      "callback": "FUN_180c71a50",
+      "transport_type": "COORDINATES",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "0",
+          "npc_id": 834054,
+          "object_type": "PlaceableObject",
+          "source": "Worlds/IDEternity_01/world.xml",
+          "world_id": 301540000,
+          "x": "222.835190",
+          "y": "511.891052",
+          "z": "471.375000"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 210100000,
+        "x": 1407.0,
+        "y": 1315.0,
+        "z": 338.0,
+        "dir": 20,
+        "source": "ScriptDLL64 callback"
+      },
+      "requirements": {},
+      "runtime_ai": "general",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1621
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 4267
+        }
+      }
+    },
+    {
+      "npc_id": 834054,
+      "start_world_id": 301540000,
+      "dialog": 10002,
+      "callback_shape": "33ee7fc6fc736e7f",
+      "script_name": "IDEternity_01_Q_Out_Portal",
+      "callback": "FUN_180c71a50",
+      "transport_type": "COORDINATES",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "0",
+          "npc_id": 834054,
+          "object_type": "PlaceableObject",
+          "source": "Worlds/IDEternity_01/world.xml",
+          "world_id": 301540000,
+          "x": "222.835190",
+          "y": "511.891052",
+          "z": "471.375000"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 220110000,
+        "x": 1803.0,
+        "y": 1987.0,
+        "z": 199.0,
+        "dir": 135,
+        "source": "ScriptDLL64 callback"
+      },
+      "requirements": {},
+      "runtime_ai": "general",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1621
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 4277
+        }
+      }
+    },
+    {
+      "npc_id": 834176,
+      "start_world_id": 301550000,
+      "dialog": 104,
+      "callback_shape": "fa139d6ebdb0d079",
+      "script_name": "IDEternity_01_Out_Portal_L",
+      "callback": "FUN_180c81b70",
+      "transport_type": "COORDINATES",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "270",
+          "npc_id": 834176,
+          "object_type": "PlaceableObject",
+          "source": "Worlds/IDEternity_02/world.xml",
+          "world_id": 301550000,
+          "x": "1488.948608",
+          "y": "774.609253",
+          "z": "1036.755859"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 210100000,
+        "x": 1453.0,
+        "y": 1298.0,
+        "z": 336.0,
+        "dir": 70,
+        "source": "ScriptDLL64 callback"
+      },
+      "requirements": {},
+      "runtime_ai": "general",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1610
+        },
+        "callback": {
+          "path": "fun/fun_724.cpp",
+          "line": 3359
+        }
+      }
+    },
+    {
+      "npc_id": 834177,
+      "start_world_id": 301550000,
+      "dialog": 104,
+      "callback_shape": "052b3137dad50d20",
+      "script_name": "IDEternity_01_Out_Portal_D",
+      "callback": "FUN_180c71960",
+      "transport_type": "COORDINATES",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "270",
+          "npc_id": 834177,
+          "object_type": "PlaceableObject",
+          "source": "Worlds/IDEternity_02/world.xml",
+          "world_id": 301550000,
+          "x": "1488.948608",
+          "y": "774.609253",
+          "z": "1036.755859"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 220110000,
+        "x": 1763.0,
+        "y": 2007.0,
+        "z": 197.0,
+        "dir": 110,
+        "source": "ScriptDLL64 callback"
+      },
+      "requirements": {},
+      "runtime_ai": "general",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1599
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 4234
+        }
+      }
+    },
+    {
       "npc_id": 834188,
       "start_world_id": 302100000,
       "dialog": 104,
@@ -3894,7 +7450,7 @@
       "script_name": "IDTransform_Save_Point_01",
       "callback": "FUN_180c79940",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -3967,7 +7523,7 @@
       "script_name": "IDTransform_Save_Point_01",
       "callback": "FUN_180c79940",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -4040,7 +7596,7 @@
       "script_name": "IDTransform_Save_Point_02",
       "callback": "FUN_180c79a10",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -4113,7 +7669,7 @@
       "script_name": "IDTransform_Save_Point_02",
       "callback": "FUN_180c79a10",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -4186,7 +7742,7 @@
       "script_name": "IDTransform_Save_Point_03",
       "callback": "FUN_180c79ae0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -4259,7 +7815,7 @@
       "script_name": "IDTransform_Save_Point_03",
       "callback": "FUN_180c79ae0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "315",
@@ -4325,6 +7881,109 @@
       }
     },
     {
+      "npc_id": 834270,
+      "start_world_id": 302300000,
+      "dialog": 10000,
+      "callback_shape": "ffee58d2fe09b860",
+      "script_name": "IDDC1_Dreadgion_Invade_Key_D",
+      "callback": "FUN_180c70b80",
+      "transport_type": "CURRENT_WORLD_ALIAS",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "135",
+          "npc_id": 834270,
+          "object_type": "Npc",
+          "source": "Worlds/iddc1_dreadgion/world.xml",
+          "world_id": 302300000,
+          "x": "1360.199829",
+          "y": "1439.050171",
+          "z": "212.560669"
+        },
+        {
+          "dir": "135",
+          "npc_id": 834270,
+          "object_type": "Npc",
+          "source": "Worlds/iddc1_dreadgion/world.xml",
+          "world_id": 302300000,
+          "x": "1360.251709",
+          "y": "1439.023438",
+          "z": "212.560669"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 302300000,
+        "alias": "Location_Invade_Start_D",
+        "points": [
+          {
+            "x": "833.079285",
+            "y": "2349.898926",
+            "z": "95.163216",
+            "dir": "0"
+          },
+          {
+            "x": "836.172913",
+            "y": "2350.466309",
+            "z": "95.163216",
+            "dir": "0"
+          },
+          {
+            "x": "833.405273",
+            "y": "2345.052246",
+            "z": "95.163216",
+            "dir": "0"
+          },
+          {
+            "x": "830.873901",
+            "y": "2347.083984",
+            "z": "95.163216",
+            "dir": "0"
+          },
+          {
+            "x": "835.702271",
+            "y": "2344.916748",
+            "z": "95.163216",
+            "dir": "0"
+          }
+        ],
+        "source": "Worlds/iddc1_dreadgion/world.xml"
+      },
+      "requirements": {},
+      "runtime_ai": "portal_dialog",
+      "runtime_start_status": "MATCH",
+      "runtime_routes": [
+        {
+          "loc_id": 3023001,
+          "destination": {
+            "complete": true,
+            "world_id": 302300000,
+            "x": "834.0617",
+            "y": "2346.8477",
+            "z": "93.52324",
+            "heading": "89"
+          },
+          "requirements": {
+            "min_level": 66
+          },
+          "conversion": "ALREADY_DATA_DRIVEN"
+        }
+      ],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 1467
+        },
+        "callback": {
+          "path": "fun/fun_722.cpp",
+          "line": 3704
+        }
+      }
+    },
+    {
       "npc_id": 834320,
       "start_world_id": 302200000,
       "dialog": 10000,
@@ -4332,7 +7991,7 @@
       "script_name": "IDLC1_Dreadgion_Invade_Key_L",
       "callback": "FUN_180c752d0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -4435,7 +8094,7 @@
       "script_name": "IDEvent_Solo_Teleport_Gretel",
       "callback": "FUN_180c741b0",
       "transport_type": "CURRENT_WORLD_ALIAS",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -4502,7 +8161,7 @@
       "script_name": "IDEternity_02_Q_Out_Portal",
       "callback": "FUN_180c72980",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -4550,7 +8209,7 @@
       "script_name": "IDEternity_02_Q_Out_Portal",
       "callback": "FUN_180c72980",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -4598,7 +8257,7 @@
       "script_name": "IDEternity_02_Q_Out_Portal",
       "callback": "FUN_180c72980",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -4646,7 +8305,7 @@
       "script_name": "IDEternity_02_Q_Out_Portal",
       "callback": "FUN_180c72980",
       "transport_type": "COORDINATES",
-      "domain_type": "UNCLASSIFIED",
+      "domain_type": "TELEPORT",
       "starts": [
         {
           "dir": "0",
@@ -4683,6 +8342,136 @@
         "callback": {
           "path": "fun/fun_722.cpp",
           "line": 4852
+        }
+      }
+    },
+    {
+      "npc_id": 835684,
+      "start_world_id": 310160000,
+      "dialog": 104,
+      "callback_shape": "d85daa66a231db7b",
+      "script_name": "IDAb1_Heroes_L_Out",
+      "callback": "FUN_180c69ce0",
+      "transport_type": "COORDINATES",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "45",
+          "npc_id": 835684,
+          "object_type": "Npc",
+          "source": "Worlds/IDAb1_Heroes_L/world.xml",
+          "world_id": 310160000,
+          "x": "68.781662",
+          "y": "203.197449",
+          "z": "425.306305"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 400010000,
+        "x": 1779.699951171875,
+        "y": 2.1710277198804127e-36,
+        "z": 2938.39990234375,
+        "dir": 30,
+        "source": "ScriptDLL64 callback"
+      },
+      "requirements": {},
+      "runtime_ai": "portal_dialog",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [
+        {
+          "loc_id": 4000120,
+          "destination": {
+            "complete": true,
+            "world_id": 400010000,
+            "x": "1780.2931",
+            "y": "281.17953",
+            "z": "2938.36800",
+            "heading": "91"
+          },
+          "requirements": {
+            "race": "ELYOS",
+            "min_level": 66
+          },
+          "conversion": "ALREADY_DATA_DRIVEN"
+        }
+      ],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 202
+        },
+        "callback": {
+          "path": "fun/fun_721.cpp",
+          "line": 4519
+        }
+      }
+    },
+    {
+      "npc_id": 835685,
+      "start_world_id": 320160000,
+      "dialog": 104,
+      "callback_shape": "d85daa66a231db7b",
+      "script_name": "IDAb1_Heroes_D_Out",
+      "callback": "FUN_180c69bd0",
+      "transport_type": "COORDINATES",
+      "domain_type": "TELEPORT",
+      "starts": [
+        {
+          "dir": "45",
+          "npc_id": 835685,
+          "object_type": "Npc",
+          "source": "Worlds/IDAb1_Heroes_D/world.xml",
+          "world_id": 320160000,
+          "x": "68.779999",
+          "y": "203.000000",
+          "z": "422.500000"
+        }
+      ],
+      "destination": {
+        "complete": true,
+        "world_id": 400010000,
+        "x": 987.7999877929688,
+        "y": 2744.60009765625,
+        "z": 3034.10009765625,
+        "dir": 60,
+        "source": "ScriptDLL64 callback"
+      },
+      "requirements": {},
+      "runtime_ai": "portal_dialog",
+      "runtime_start_status": "MISMATCH",
+      "runtime_routes": [
+        {
+          "loc_id": 4000121,
+          "destination": {
+            "complete": true,
+            "world_id": 400010000,
+            "x": "986.64740",
+            "y": "2743.7097",
+            "z": "3034.09470",
+            "heading": "30"
+          },
+          "requirements": {
+            "race": "ASMODIANS",
+            "min_level": 66
+          },
+          "conversion": "ALREADY_DATA_DRIVEN"
+        }
+      ],
+      "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+      "reason": "retail callback is not fully expressible by PortalService",
+      "source": {
+        "matrix": "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
+        "registration": {
+          "path": "fun/fun_003.cpp",
+          "line": 191
+        },
+        "callback": {
+          "path": "fun/fun_721.cpp",
+          "line": 4481
         }
       }
     }
@@ -14161,7 +17950,10 @@
             "api_offset": "0x2d0",
             "transport_type": "COORDINATES",
             "domain_type": "LIFT",
+            "domain_type_source": "AUDITED_RULE",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 10000,
               "evidence": "if (*piVar4 == 10000)"
             },
@@ -15941,8 +19733,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 10000,
               "evidence": "if (*piVar2 != 10000)"
             },
@@ -16695,8 +20490,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 10000,
               "evidence": "if (*piVar2 != 10000)"
             },
@@ -21302,8 +25100,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 10000,
               "evidence": "if (*piVar2 != 10000)"
             },
@@ -21431,8 +25232,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 10000,
               "evidence": "if (*piVar2 != 10000)"
             },
@@ -21560,8 +25364,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 10000,
               "evidence": "if (*piVar2 != 10000)"
             },
@@ -34054,8 +37861,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -34317,8 +38127,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -35614,8 +39427,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -35832,8 +39648,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -38122,8 +41941,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -38328,8 +42150,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -38959,8 +42784,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -39146,8 +42974,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -39857,8 +43688,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -40044,8 +43878,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -40513,8 +44350,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -40700,8 +44540,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -40887,8 +44730,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -41074,8 +44920,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -41261,8 +45110,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -42210,8 +46062,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -42473,8 +46328,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -45568,8 +49426,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -45739,8 +49600,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -46056,8 +49920,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -46227,8 +50094,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -46398,8 +50268,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -46569,8 +50442,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -46740,8 +50616,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -46911,8 +50790,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -47082,8 +50964,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -47253,8 +51138,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -47622,8 +51510,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -47809,8 +51700,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -48234,8 +52128,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -48421,8 +52318,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -49662,8 +53562,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -49857,8 +53760,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -50052,8 +53958,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -50653,8 +54562,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -50848,8 +54760,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -51043,8 +54958,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },
@@ -52265,7 +56183,10 @@
             "api_offset": "0x2d0",
             "transport_type": "COORDINATES",
             "domain_type": "LIFT",
+            "domain_type_source": "AUDITED_RULE",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 10000,
               "evidence": "if (*piVar4 == 10000)"
             },
@@ -52732,8 +56653,11 @@
             },
             "api_offset": "0x2e0",
             "transport_type": "CURRENT_WORLD_ALIAS",
-            "domain_type": "UNCLASSIFIED",
+            "domain_type": "TELEPORT",
+            "domain_type_source": "TRANSPORT_API",
             "event": {
+              "type": "DIALOG",
+              "code": 27,
               "dialog": 104,
               "evidence": "if (*piVar3 != 0x68)"
             },

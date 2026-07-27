@@ -594,10 +594,10 @@ def route_allows_world(route: dict[str, object], world_id: int) -> bool:
     return source_world_id == 0 or source_world_id == world_id
 
 
-def source_transport_routes(root: Path) -> dict[tuple[int, int, int], list[dict[str, object]]]:
+def source_transport_routes(root: Path, instance_world_ids: set[int]) -> dict[tuple[int, int, int], list[dict[str, object]]]:
     document = json.loads((root / TRANSPORT_SOURCE).read_text(encoding="utf-8"))
     provenance = document.get("provenance", {})
-    if (document.get("version") != 5 or provenance.get("kind") != "RETAIL_SOURCE_MATRIX"
+    if (document.get("version") != 6 or provenance.get("kind") != "RETAIL_SOURCE_MATRIX"
             or not provenance.get("authoritative_retail_evidence")):
         raise ValueError("invalid retail ScriptDLL transport source matrix")
     grouped: dict[tuple[int, int, int], dict[str, dict[str, object]]] = defaultdict(dict)
@@ -612,7 +612,8 @@ def source_transport_routes(root: Path) -> dict[tuple[int, int, int], list[dict[
                 "EXPRESSIBLE", "NOT_APPLICABLE", "REJECT_ROUTE_NOT_PROVEN", "REJECT_UNMODELED_CALLBACK_SHAPE"}:
             raise ValueError(f"ScriptDLL transport without PortalService projection: {registration['script_name']}")
         for call in registration["calls"]:
-            if call.get("domain_type") not in {"LIFT", "UNCLASSIFIED"}:
+            if call.get("domain_type") not in {"LIFT", "TELEPORT"} \
+                    or call.get("domain_type_source") not in {"AUDITED_RULE", "TRANSPORT_API"}:
                 raise ValueError(f"ScriptDLL transport without audited domain type: {registration['script_name']}")
             event = call.get("event")
             dialog = -1 if event is None else int(event["dialog"])
@@ -620,6 +621,9 @@ def source_transport_routes(root: Path) -> dict[tuple[int, int, int], list[dict[
                 if route["status"] != "ENDPOINT_PROVEN":
                     continue
                 start = route["start"]
+                destination_world_id = int(route["destination"]["world_id"])
+                if int(start["world_id"]) not in instance_world_ids and destination_world_id not in instance_world_ids:
+                    continue
                 start_evidence = {
                     "world_id": start["world_id"],
                     "npc_id": start["npc_id"],
@@ -642,6 +646,7 @@ def source_transport_routes(root: Path) -> dict[tuple[int, int, int], list[dict[
                     "api_offset": call["api_offset"],
                     "transport_type": call["transport_type"],
                     "domain_type": call["domain_type"],
+                    "domain_type_source": call["domain_type_source"],
                     "event": event,
                     "portal_service_projection": projection,
                     "starts": [start_evidence],
@@ -819,8 +824,8 @@ def script_transport_candidates(
 
 def transport_type(route: dict[str, object], evidence: dict[str, object] | None) -> str:
     if evidence is not None:
-        if evidence["domain_type"] != "UNCLASSIFIED":
-            return str(evidence["domain_type"])
+        if evidence["domain_type"] == "LIFT":
+            return "LIFT"
         return "SCRIPT_DIALOG_" + str(evidence["transport_type"])
     mechanism = str(route["mechanism"])
     if mechanism in {"portal_use", "portal_dialog", "teleporter", "retail_pattern_alias"}:
@@ -951,7 +956,7 @@ def build(root: Path) -> dict[str, object]:
     start_audit = retail_start_audit(root)
     pattern_audit = retail_pattern_audit(root)
     dynamic_legacy_audit, dynamic_handler_audit = dynamic_route_audit(root)
-    transport_sources = source_transport_routes(root)
+    transport_sources = source_transport_routes(root, world_ids)
     aliases = location_aliases(root)
     audited_missing_starts = set()
     audited_legacy_npcs = set()
