@@ -207,12 +207,19 @@ public class TargetEventHandler {
 			AI2Logger.info(npcAI, "onTargetChange");
 		}
 		if (npcAI.isInState(AIState.FIGHT)) {
+			clearTargetLostState(npcAI);
 			if (!npcAI.getOwner().isTargeting(creature.getObjectId())) {
 				npcAI.getOwner().getMoveController().clearPathFailureContext();
 				npcAI.getOwner().getMoveController().clearPathPullAttempts();
 			}
 			npcAI.getOwner().setTarget(creature);
 			AttackManager.scheduleNextAttack(npcAI);
+		}
+	}
+
+	public static void clearTargetLostState(NpcAI2 npcAI) {
+		if (npcAI.isInSubState(AISubState.TARGET_LOST)) {
+			npcAI.setSubStateIfNot(AISubState.NONE);
 		}
 	}
 

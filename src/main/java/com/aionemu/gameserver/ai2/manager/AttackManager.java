@@ -8,9 +8,13 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.handler.TargetEventHandler;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.skill.NpcSkillEntry;
+import com.aionemu.gameserver.model.skill.NpcSkillList;
+import com.aionemu.gameserver.skillengine.effect.DamageEffect;
+import com.aionemu.gameserver.skillengine.model.SkillSubType;
+import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 /**
  * NPC 攻击管理器：负责攻击调度、意图选择与追击/放弃目标判定。
@@ -127,27 +131,50 @@ public class AttackManager {
 				return;
 			}
 		}
-		// 无法看到目标，2秒后仍未恢复视野才放弃目标
+		// 保留丢失目标，继续追踪；连续寻路失败由真端 react_to_pathfind_fail 处理。
 		if (!npc.canSee((Creature) npc.getTarget())) {
-			if (npcAI.setSubStateIfNot(AISubState.TARGET_LOST)) {
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
-					if (npcAI.isInSubState(AISubState.TARGET_LOST) && npc.isSpawned() && !npcAI.isAlreadyDead()) {
-						npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
-					}
-				}, 2000);
-			}
-			return;
+			npcAI.setSubStateIfNot(AISubState.TARGET_LOST);
 		}
 		// 检查是否应该放弃目标
 		if (stopRetailChase(npcAI)) {
 			return;
 		}
 		// 尝试移动到目标
-		if (npcAI.isMoveSupported()){
+		if (npcAI.isMoveSupported()) {
 			npc.getMoveController().moveToTargetObject();
 			return;
 		}
-		npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
+		if (!shouldKeepTargetWhenImmobile(npc.getObjectTemplate().getStatsTemplate().getMaxDamage(),
+				hasOffensiveSkill(npc.getSkillList()))) {
+			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
+		}
+	}
+
+	static boolean shouldKeepTargetWhenImmobile(int maxDamage, boolean hasOffensiveSkill) {
+		return maxDamage == 0 && !hasOffensiveSkill;
+	}
+
+	private static boolean hasOffensiveSkill(NpcSkillList skills) {
+		for (int i = 0; i < skills.size(); i++) {
+			NpcSkillEntry skill = skills.getSkillByIndex(i);
+			if (skill != null && !skill.isUltraSkill() && skill.hasUsesLeft() && isOffensiveSkill(skill.getSkillTemplate())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	static boolean isOffensiveSkill(SkillTemplate skill) {
+		if (skill == null) {
+			return false;
+		}
+		SkillSubType type = skill.getSubType();
+		if (type == SkillSubType.ATTACK || type == SkillSubType.DEBUFF || type == SkillSubType.SUMMON
+				|| type == SkillSubType.SUMMONHOMING || type == SkillSubType.SUMMONTRAP) {
+			return true;
+		}
+		return skill.getEffects() != null
+				&& skill.getEffects().getEffects().stream().anyMatch(DamageEffect.class::isInstance);
 	}
 
 	/**
@@ -188,7 +215,8 @@ public class AttackManager {
 		if (!"sp".equalsIgnoreCase(maxChaseTime)) {
 			try {
 				boolean stop = shouldStopTimedChase(npc.getGameStats().getFightStartingTime(),
-						npc.getGameStats().getLastAttackTime(), Integer.parseInt(maxChaseTime), now);
+						npc.getGameStats().getLastAttackTime(), npc.getGameStats().getLastAttackedTime(),
+						Integer.parseInt(maxChaseTime), now);
 				if (stop) {
 					npc.getMoveController().requestReturnToCurrentWaypoint();
 				}
@@ -213,8 +241,8 @@ public class AttackManager {
 		return shouldStopSpawnPointChase(Rnd.get(1, 100));
 	}
 
-	static boolean shouldStopTimedChase(long fightStartedAt, long lastAttackAt, int maxSeconds, long now) {
-		long chaseRefreshedAt = Math.max(fightStartedAt, lastAttackAt);
+	static boolean shouldStopTimedChase(long fightStartedAt, long lastAttackAt, long lastAttackedAt, int maxSeconds, long now) {
+		long chaseRefreshedAt = Math.max(Math.max(fightStartedAt, lastAttackAt), lastAttackedAt);
 		return maxSeconds > 0 && chaseRefreshedAt > 0 && now - chaseRefreshedAt >= maxSeconds * 1000L;
 	}
 

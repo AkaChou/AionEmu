@@ -325,7 +325,7 @@
     </useconditions>
     <effects>
       <hide duration1="0" duration2="30000" randomtime="0" effectid="165" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1" state="HIDE1" type="0" buffcount="0">
-        <change stat="SPEED" func="PERCENT" delta="0" value="-100" />
+        <change stat="SPEED" func="PERCENT" delta="0" value="0" />
       </hide>
       <snare duration1="0" duration2="30000" randomtime="0" effectid="116072" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="WATER">
         <change stat="SPEED" func="PERCENT" value="-90" delta="0" />

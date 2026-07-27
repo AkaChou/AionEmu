@@ -74,7 +74,7 @@ final class NpcSkillDefinitionLoader {
 			}
 			reader.close();
 			if (sourceOrphanCount > 0) {
-				log.warn(I18n.get("log.npc_skills.orphans_skipped", sourceOrphanCount, file.getPath()));
+				log.info(I18n.get("log.npc_skills.orphan_slots_preserved", sourceOrphanCount, file.getPath()));
 			}
 			return new NpcSkillData(assignments);
 		} catch (Exception e) {

@@ -55,6 +55,7 @@ public class AttackEventHandler {
 	}
 
 	static boolean tryEnterFight(NpcAI2 npcAI) {
+		TargetEventHandler.clearTargetLostState(npcAI);
 		return !npcAI.isInState(AIState.RETURNING) && npcAI.setStateIfNot(AIState.FIGHT);
 	}
 

@@ -243,6 +243,10 @@ public abstract class AbstractAI implements AI2 {
 				}
 			}
 		}
+		if (this.currentState == AIState.FIGHT && newState != AIState.FIGHT
+				&& this.currentSubState == AISubState.TARGET_LOST) {
+			this.currentSubState = AISubState.NONE;
+		}
 		this.currentState = newState;
 		return true;
 	}

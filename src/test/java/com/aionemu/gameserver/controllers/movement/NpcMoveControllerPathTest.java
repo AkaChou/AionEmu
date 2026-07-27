@@ -151,10 +151,10 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void failedPointMoveEndsOnlyAfterTheReactionDelayAndPendingRequest() {
-		assertFalse(NpcMoveController.shouldFinishFailedPointMove(1_000, false, false, 6_000));
-		assertTrue(NpcMoveController.shouldFinishFailedPointMove(1_000, false, false, 6_001));
-		assertFalse(NpcMoveController.shouldFinishFailedPointMove(1_000, true, false, 7_000));
-		assertFalse(NpcMoveController.shouldFinishFailedPointMove(1_000, false, true, 7_000));
+		assertFalse(NpcMoveController.shouldFinishFailedPointMove(1_000, false, false, 11_000));
+		assertTrue(NpcMoveController.shouldFinishFailedPointMove(1_000, false, false, 11_001));
+		assertFalse(NpcMoveController.shouldFinishFailedPointMove(1_000, true, false, 12_000));
+		assertFalse(NpcMoveController.shouldFinishFailedPointMove(1_000, false, true, 12_000));
 	}
 
 	@Test
@@ -373,13 +373,13 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
-	void reactsOnceOnlyAfterFiveSecondsOfContinuousFailure() {
-		assertFalse(NpcMoveController.shouldReactToPathFailure(1_000, false, 6_000));
-		assertTrue(NpcMoveController.shouldReactToPathFailure(1_000, false, 6_001));
-		assertFalse(NpcMoveController.shouldReactToPathFailure(1_000, true, 7_000));
+	void reactsOnceOnlyAfterTenSecondsOfContinuousFailure() {
+		assertFalse(NpcMoveController.shouldReactToPathFailure(1_000, false, 11_000));
+		assertTrue(NpcMoveController.shouldReactToPathFailure(1_000, false, 11_001));
+		assertFalse(NpcMoveController.shouldReactToPathFailure(1_000, true, 12_000));
 		long definitive = NpcMoveController.pathFailureStartedAt(0, 6_000, true);
-		assertFalse(NpcMoveController.shouldReactToPathFailure(definitive, false, 11_000));
-		assertTrue(NpcMoveController.shouldReactToPathFailure(definitive, false, 11_001));
+		assertFalse(NpcMoveController.shouldReactToPathFailure(definitive, false, 16_000));
+		assertTrue(NpcMoveController.shouldReactToPathFailure(definitive, false, 16_001));
 	}
 
 	@Test

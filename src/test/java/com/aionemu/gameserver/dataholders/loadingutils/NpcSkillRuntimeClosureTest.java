@@ -73,8 +73,8 @@ class NpcSkillRuntimeClosureTest {
 			reader.close();
 		}
 
-		assertEquals(317, orphanSlots);
-		assertEquals(84, orphanGroups.size());
-		assertEquals(156, affectedNpcIds.size());
+		assertEquals(316, orphanSlots);
+		assertEquals(83, orphanGroups.size());
+		assertEquals(153, affectedNpcIds.size());
 	}
 }

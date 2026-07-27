@@ -61,7 +61,7 @@ public class NpcMoveController
     /** 同起点/终点的可达性结果复用窗口。 / Reuse reach checks for the same endpoints this long. */
     private static final long REACH_CHECK_CACHE_MS = 100;
     private static final long PATH_RETRY_DELAY_MS = 500;
-    private static final long PATH_FAILURE_REACTION_DELAY_MS = 5_000;
+    private static final long PATH_FAILURE_REACTION_DELAY_MS = 10_000;
     private static final long PATH_AVOIDANCE_INTERVAL_MS = 1_000;
     private static final int PATH_AVOIDANCE_MAX_ATTEMPTS = 4;
     private static final float PATH_AVOIDANCE_STEP = 1.5f;

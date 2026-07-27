@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.ai2.AIState;
+import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import org.junit.jupiter.api.Test;
 
@@ -24,5 +25,15 @@ class AttackEventHandlerTest {
 
 		assertFalse(AttackEventHandler.tryEnterFight(ai));
 		assertTrue(ai.isInState(AIState.RETURNING));
+	}
+
+	@Test
+	void attackActivityCancelsPendingLostTargetGiveup() {
+		NpcAI2 ai = new NpcAI2();
+		ai.setStateIfNot(AIState.FIGHT);
+		ai.setSubStateIfNot(AISubState.TARGET_LOST);
+
+		assertFalse(AttackEventHandler.tryEnterFight(ai));
+		assertTrue(ai.isInSubState(AISubState.NONE));
 	}
 }
