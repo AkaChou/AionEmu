@@ -651,7 +651,7 @@
 
 	<!-- TELEPORTER SILENTERA CANYON -->
 	<!-- Silentera Canyon To Inggison -->
-	<portal_use npc_id="730270">
+	<portal_use npc_id="731860">
 		<portal_path loc_id="2101307"/>
 	</portal_use>
 	<!-- Silentera Canyon To Agrief Ruins -->
@@ -667,7 +667,7 @@
 		<portal_path loc_id="2101310"/>
 	</portal_use>
 	<!-- Silentera Canyon To Gelkmaros -->
-	<portal_use npc_id="730271">
+	<portal_use npc_id="731861">
 		<portal_path loc_id="2201407"/>
 	</portal_use>
 	<!-- Silentera Canyon To Mitrakand -->
@@ -2359,13 +2359,13 @@
 		</portal_path>
 	</portal_dialog>
 	<!-- Pandaemonium To Gelkmaros -->
-	<portal_dialog npc_id="730219">
+	<portal_dialog npc_id="731833">
 		<portal_path dialog="10000" loc_id="2201400" race="ASMODIANS">
 			<portal_req min_level="50" kinah_req="9300" err_level="27"/>
 		</portal_path>
 	</portal_dialog>
 	<!-- Gelkmaros To Pandaemonium & Pernon -->
-	<portal_dialog npc_id="730221">
+	<portal_dialog npc_id="731835">
 		<portal_path dialog="10000" loc_id="1200105" race="ASMODIANS">
 			<portal_req min_level="50" kinah_req="9300" err_level="27"/>
 		</portal_path>
@@ -2374,7 +2374,7 @@
 		</portal_path>
 	</portal_dialog>
 	<!-- Inggison To Sanctum & Oriel -->
-	<portal_dialog npc_id="730220">
+	<portal_dialog npc_id="731834">
 		<portal_path dialog="10000" loc_id="1100103" race="ELYOS">
 			<portal_req min_level="50" kinah_req="9300" err_level="27"/>
 		</portal_path>
@@ -3306,13 +3306,13 @@
 	
 	<!-- SILENTERA CANYON 4.7 -->
 	<!-- Silentera Westgate Elyos -->
-	<portal_dialog npc_id="730256">
+	<portal_dialog npc_id="731824">
 		<portal_path dialog="104" loc_id="6001100" race="ELYOS">
 			<portal_req min_level="55" err_level="27"/>
 		</portal_path>
 	</portal_dialog>
 	<!-- Silentera Westgate Asmodians -->
-	<portal_dialog npc_id="730260">
+	<portal_dialog npc_id="731828">
 		<portal_path dialog="104" loc_id="6001101" race="ASMODIANS">
 			<portal_req min_level="55" err_level="27"/>
 		</portal_path>
