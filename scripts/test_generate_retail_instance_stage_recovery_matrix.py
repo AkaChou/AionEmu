@@ -42,7 +42,7 @@ class InstanceStageRecoveryMatrixTest(unittest.TestCase):
             "REJECT_EVIDENCE_GAP": 12,
             "RETAIN_HANDLER": 57,
         }, summary["conversion_statuses"])
-        self.assertEqual(421, summary["script_stage_bindings"])
+        self.assertEqual(339, summary["script_stage_bindings"])
         self.assertEqual(6, summary["script_npc_runtime_entries"])
         self.assertEqual(6, summary["script_npc_runtime_matches"])
         self.assertEqual(0, summary["script_npc_runtime_mismatches"])
@@ -88,6 +88,13 @@ class InstanceStageRecoveryMatrixTest(unittest.TestCase):
         for match in matches:
             self.assertTrue(any(producer["owner"] == "SCRIPT_NPC"
                                 for producer in variables[match["variable"]]["producers"]))
+
+    def test_exit_callbacks_do_not_enter_stage_or_recovery_ownership(self) -> None:
+        bindings = [binding for world in self.report["worlds"] for binding in world["script_npc_bindings"]]
+        self.assertFalse(any(binding["script_name"] == "ReturnToEntrance" for binding in bindings))
+        self.assertTrue(all("evidence_status" not in binding for binding in bindings))
+        self.assertTrue(all(binding["reference_status"] in {"RESOLVED", "REJECT_EVIDENCE_GAP"}
+                            and binding["semantic_status"] for binding in bindings))
 
     def test_check_rejects_stale_report(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

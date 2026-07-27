@@ -33,6 +33,7 @@ WIDE_STRING = re.compile(r'L"([^"]*)"$')
 OPERATION_FAMILIES = {
     "0x188": "DIALOG_RESULT",
     "0x1d0": "ITEM_CONSUME",
+    "0x210": "LEAVE_INSTANCE",
     "0x2a8": "MESSAGE",
     "0x2d0": "TRANSPORT",
     "0x2d8": "TRANSPORT",
@@ -42,17 +43,88 @@ OPERATION_FAMILIES = {
     "0x578": "NAMED_VARIABLE_WRITE",
     "0x590": "INSTANCE_ACTION",
 }
+OPERATION_DIMENSIONS = {"0x210": "exit"}
+LEAVE_INSTANCE_EVIDENCE = [
+    {
+        "source": "MainServer_ScriptDLL64/fun/fun_730.cpp:681",
+        "meaning": "FUN_180ca2d20 invokes the IUserImp virtual slot at +0x210",
+    },
+    {
+        "source": "MainServer/Server64.exe:.rdata 0x1411768d8+0x210",
+        "meaning": "the IUserImp +0x210 slot resolves to FUN_1404dc6a0",
+    },
+    {
+        "source": "MainServer_Server64/fun/fun_050.cpp:8247",
+        "meaning": "FUN_1404dc6a0 calls the +0x230 LeaveInstance implementation with flag 0",
+    },
+    {
+        "source": "MainServer_Server64/classes/Account/IUserImp.cpp:1411",
+        "meaning": "IUserImp::LeaveInstance delegates the flag to User::LeaveInstance",
+    },
+    {
+        "source": "MainServer_Server64/classes/Account/User.cpp:110991",
+        "meaning": "User::LeaveInstance(0) requests the dynamic-world exit before moving the user",
+    },
+    {
+        "source": "MainServer_Server64/classes/World/DynamicWorld.cpp:3462",
+        "meaning": "DynamicWorld uses its exit alias when present and otherwise copies the player's saved location",
+    },
+]
+LEAVE_INSTANCE_SOURCE_CHECKS = {
+    Path("fun/fun_050.cpp"): (
+        "void FUN_1404dc6a0",
+        "(*param_1 + 0x230))(param_1,0);",
+    ),
+    Path("classes/Account/IUserImp.cpp"): (
+        "void IUserImp_LeaveInstance",
+        "User_LeaveInstance(*(int64_t *)(param_1 + 8),param_2);",
+    ),
+    Path("classes/Account/User.cpp"): (
+        "void User_LeaveInstance",
+        "if (param_2 != '\\0')",
+        "WorldDb_GetDynamicWorld()",
+        "*plVar9 + 0x1c8",
+        "*in_RCX + 0x150",
+    ),
+    Path("classes/World/DynamicWorld.cpp"): (
+        "bool DynamicWorld_ExitPointLocAlias",
+        "*param_1 + 0x1b8",
+        "if (_Src == (wchar_t *)0x0)",
+        "*(uint64_t *)(param_2 + 0x43d8)",
+        "wcsncpy_s",
+    ),
+}
 
 
-def production_worlds(path: Path) -> dict[int, dict[str, str]]:
-    result = {}
-    for node in ET.parse(path).getroot().findall("world"):
+def validate_leave_instance_semantics(script_root: Path) -> None:
+    server_root = script_root.parent / "MainServer_Server64"
+    for relative, tokens in LEAVE_INSTANCE_SOURCE_CHECKS.items():
+        path = server_root / relative
+        source = path.read_text(encoding="utf-8")
+        missing = [token for token in tokens if token not in source]
+        if missing:
+            raise ValueError(f"stale leave-instance semantic evidence in {relative}: {missing}")
+
+
+def production_worlds(path: Path, world_ids_path: Path) -> dict[int, dict[str, str]]:
+    retail_names = {}
+    for node in ET.parse(world_ids_path).getroot():
         world_id = int(node.get("id", "0"))
-        if world_id == 300260000:
+        name = (node.text or "").strip()
+        if world_id <= 0 or not name or world_id in retail_names:
+            raise ValueError(f"invalid retail world mapping for {world_id}")
+        retail_names[world_id] = name
+    result = {}
+    for node in ET.parse(path).getroot().findall("map"):
+        if node.get("instance") != "true":
             continue
+        world_id = int(node.get("id", "0"))
+        retail_name = retail_names.get(world_id)
+        if world_id <= 0 or not retail_name or world_id in result:
+            raise ValueError(f"invalid production instance world {world_id}")
         result[world_id] = {
-            "local_name": node.get("local_name", ""),
-            "retail_name": node.get("retail_name", ""),
+            "local_name": node.get("name", ""),
+            "retail_name": retail_name,
         }
     if len(result) != 139:
         raise ValueError(f"expected 139 production instance worlds, found {len(result)}")
@@ -120,6 +192,116 @@ def retail_instance_evidence(worlds_directory: Path, world_ids: dict[str, int],
     return dict(spawns), dict(conditions)
 
 
+def instance_exit_models(retail_root: Path, worlds_directory: Path, world_ids: dict[str, int],
+                         production_ids: set[int]) -> dict[int, dict[str, object]]:
+    source = retail_root / "China/instance_cooltime.xml"
+    models = {
+        world_id: {
+            "model": "UNMODELED",
+            "status": "REJECT_MISSING_INSTANCE_RULE",
+            "source": source_label(source, retail_root, "XML"),
+            "endpoints": [],
+        }
+        for world_id in production_ids
+    }
+    wanted_aliases: dict[str, set[str]] = defaultdict(set)
+    rules = {}
+    for node in ET.parse(source).getroot().findall("instance_cooltime"):
+        name = (node.findtext("name") or "").strip()
+        world_id = world_ids.get(name.casefold())
+        if world_id not in production_ids:
+            continue
+        if world_id in rules:
+            raise ValueError(f"duplicate instance exit rule for world {world_id}")
+        rules[world_id] = node
+        endpoints = []
+        partial = False
+        for slot in (1, 2):
+            exit_world = (node.findtext(f"exit_world_{slot}") or "").strip()
+            alias = (node.findtext(f"exit_alias_{slot}") or "").strip()
+            if bool(exit_world) != bool(alias):
+                partial = True
+                continue
+            if not exit_world:
+                continue
+            destination_world_id = world_ids.get(exit_world.casefold())
+            endpoints.append({
+                "slot": slot,
+                "world_name": exit_world,
+                "world_id": destination_world_id,
+                "alias": alias,
+                "points": [],
+                "source": "",
+            })
+            wanted_aliases[exit_world.casefold()].add(alias.casefold())
+        if partial:
+            models[world_id] = {
+                "model": "UNMODELED",
+                "status": "REJECT_INCOMPLETE_INSTANCE_RULE",
+                "source": source_label(source, retail_root, "XML"),
+                "rule_id": int((node.findtext("id") or "0").strip()),
+                "endpoints": endpoints,
+            }
+        elif endpoints:
+            models[world_id] = {
+                "model": "INSTANCE_RULE_ALIAS",
+                "status": "RESOLVED",
+                "source": source_label(source, retail_root, "XML"),
+                "rule_id": int((node.findtext("id") or "0").strip()),
+                "endpoints": endpoints,
+            }
+        else:
+            models[world_id] = {
+                "model": "PLAYER_PREVIOUS_LOCATION",
+                "status": "RESOLVED",
+                "source": source_label(source, retail_root, "XML"),
+                "rule_id": int((node.findtext("id") or "0").strip()),
+                "endpoints": [],
+            }
+
+    folders = {path.name.casefold(): path for path in worlds_directory.iterdir() if path.is_dir()}
+    aliases = {}
+    for world_name, wanted in wanted_aliases.items():
+        folder = folders.get(world_name)
+        if folder is None:
+            continue
+        for filename in ("world.xml",):
+            path = folder / filename
+            if not path.is_file():
+                continue
+            for node in ET.parse(path).getroot().findall("location_alias_list/location_alias"):
+                name = (node.findtext("name") or "").strip()
+                key = name.casefold()
+                if key not in wanted:
+                    continue
+                points = []
+                for point in node.findall("points/data"):
+                    values = {field: (point.findtext(field) or "").strip() for field in ("x", "y", "z", "dir")}
+                    if not all(values.values()):
+                        raise ValueError(f"incomplete instance exit alias point {folder.name}/{name}")
+                    points.append(values)
+                if not points:
+                    raise ValueError(f"empty instance exit alias {folder.name}/{name}")
+                alias_key = (world_name, key)
+                value = {"points": points, "source": f"Worlds/{folder.name}/{filename}"}
+                if alias_key in aliases and aliases[alias_key] != value:
+                    raise ValueError(f"conflicting instance exit alias {folder.name}/{name}")
+                aliases[alias_key] = value
+
+    for model in models.values():
+        if model["model"] != "INSTANCE_RULE_ALIAS" or model["status"] != "RESOLVED":
+            continue
+        for endpoint in model["endpoints"]:
+            evidence = aliases.get((str(endpoint["world_name"]).casefold(), str(endpoint["alias"]).casefold()))
+            if endpoint["world_id"] is None:
+                model["status"] = "REJECT_MISSING_EXIT_WORLD"
+            elif evidence is None:
+                model["status"] = "REJECT_MISSING_EXIT_ALIAS"
+            else:
+                endpoint.update(evidence)
+    return models
+
+
 def literal_arguments(arguments: list[str]) -> list[dict[str, object]]:
     result = []
     for index, value in enumerate(arguments):
@@ -165,6 +347,8 @@ def parsed_operation(operation: dict[str, object], callback: dict[str, object]) 
     row = dict(operation)
     family = OPERATION_FAMILIES.get(str(operation["target"]), "UNMODELED")
     row["family"] = family
+    row["dimension"] = OPERATION_DIMENSIONS.get(str(operation["target"]))
+    row["semantic_status"] = "RESOLVED" if family != "UNMODELED" else "REJECT_UNMODELED_OPERATION"
     call = VIRTUAL_CALL.fullmatch(str(operation["raw"]))
     arguments = split_args(call.group("args")) if call is not None else []
     row["literal_arguments"] = literal_arguments(arguments)
@@ -188,6 +372,9 @@ def parsed_operation(operation: dict[str, object], callback: dict[str, object]) 
         action = WIDE_STRING.fullmatch(arguments[2])
         if action is not None:
             parsed["action"] = action.group(1)
+    elif family == "LEAVE_INSTANCE":
+        parsed["flag"] = False
+        row["semantic_evidence"] = LEAVE_INSTANCE_EVIDENCE
     elif family in {"MESSAGE", "DIALOG_RESULT"} and len(arguments) >= 2:
         message = integer(arguments[1])
         if message is not None:
@@ -310,22 +497,24 @@ def item_gate_variable_candidate(row: dict[str, object], catalog: dict[str, obje
 
 
 def build(script_root: Path, retail_root: Path, aionemu_root: Path) -> dict[str, object]:
+    validate_leave_instance_semantics(script_root)
     fun = script_root / "fun"
     names_path = script_root / "classes/NPC/IAIScriptNpcImp.cpp"
     npc_path = retail_root / "China/npcs.xml"
     world_ids_path = retail_root / "China/ID/WorldId.xml"
     worlds_directory = retail_root.parent / "Worlds"
-    coverage_path = aionemu_root / "src/main/resources/aion/definitions/compact/instance/coverage.xml"
+    world_maps_path = aionemu_root / "src/main/resources/aion/data/static_data/world_maps.xml"
 
-    worlds = production_worlds(coverage_path)
+    worlds = production_worlds(world_maps_path, world_ids_path)
     names = script_names(names_path)
     rows = registrations(fun, names, script_root, EVENT_CODE)
     callbacks = callback_blocks(fun, {str(row["callback"]) for row in rows}, script_root)
     templates = npc_templates(
         npc_path, {str(row["script_name"]).casefold() for row in rows if row["script_name"]}, retail_root)
     wanted_names = {str(template["name"]).casefold() for values in templates.values() for template in values}
-    spawns, conditions = retail_instance_evidence(
-        worlds_directory, load_world_ids(world_ids_path), set(worlds), wanted_names)
+    world_ids = load_world_ids(world_ids_path)
+    spawns, conditions = retail_instance_evidence(worlds_directory, world_ids, set(worlds), wanted_names)
+    exit_models = instance_exit_models(retail_root, worlds_directory, world_ids, set(worlds))
     condition_variables = {
         world_id: {variable for row in entries for variable in expression_variables(row["expression"])}
         for world_id, entries in conditions.items()
@@ -401,16 +590,25 @@ def build(script_root: Path, retail_root: Path, aionemu_root: Path) -> dict[str,
                             "consumed_by_retail_condition": variable.casefold() in condition_variables.get(world_id, set()),
                             "source": operation["source"],
                         })
-            world_links[world_id].append({
+            operations = [] if catalog is None else catalog["operations"]
+            leave_operations = [operation for operation in operations if operation["family"] == "LEAVE_INSTANCE"]
+            link = {
                 "script_name": row["script_name"],
                 "callback": row["callback"],
                 "shape_id": None if catalog is None else catalog["shape_id"],
                 "npc_ids": sorted({int(binding["npc_id"]) for binding in world_bindings}),
                 "spawn_count": len(world_bindings),
                 "spawn_sources": sorted({str(binding["source"]) for binding in world_bindings}),
+                "start_bindings": world_bindings,
                 "condition_variable_writes": writes,
                 "instance_status": instance_status,
-            })
+            }
+            if leave_operations:
+                link["leave_instance"] = {
+                    "operations": leave_operations,
+                    "endpoint": exit_models[world_id],
+                }
+            world_links[world_id].append(link)
 
     rows.sort(key=lambda row: (
         (str(row["script_name"]) if row["script_name"] else "").casefold(),
@@ -455,7 +653,7 @@ def build(script_root: Path, retail_root: Path, aionemu_root: Path) -> dict[str,
     candidate_statuses = Counter(candidate["status"] for candidate in conversion_candidates)
 
     return {
-        "version": 1,
+        "version": 2,
         "provenance": {
             "kind": "RETAIL_SOURCE_MATRIX",
             "authoritative_retail_evidence": True,
@@ -463,6 +661,7 @@ def build(script_root: Path, retail_root: Path, aionemu_root: Path) -> dict[str,
                 "0x1a callback registration", "NPC script binding", "production instance spawn reachability",
                 "raw callback predicates", "callback operation inventory", "literal operation arguments",
                 "named variable writes", "item count and consume calls", "message call identifiers",
+                "leave-instance operation semantics", "instance-rule exit aliases", "previous-location fallback",
             ],
             "excluded_semantics": [
                 "unmapped virtual call semantics", "branch ordering and transaction semantics",
@@ -474,8 +673,10 @@ def build(script_root: Path, retail_root: Path, aionemu_root: Path) -> dict[str,
             "npc_definitions": source_label(npc_path, retail_root, "XML"),
             "world_definitions": "Worlds/*/world.xml|world_N.xml",
             "world_ids": source_label(world_ids_path, retail_root, "XML"),
-            "production_world_enumeration": str(coverage_path.relative_to(aionemu_root)),
+            "production_world_enumeration": str(world_maps_path.relative_to(aionemu_root)),
+            "main_server_semantics": "MainServer_Server64",
             "operation_families": dict(sorted(OPERATION_FAMILIES.items())),
+            "leave_instance_semantic_evidence": LEAVE_INSTANCE_EVIDENCE,
         },
         "summary": {
             "production_worlds": len(worlds),
@@ -495,6 +696,14 @@ def build(script_root: Path, retail_root: Path, aionemu_root: Path) -> dict[str,
             "instance_batches": len(batches),
             "instance_operation_targets": dict(sorted(operation_targets.items())),
             "instance_operation_families": dict(sorted(operation_families.items())),
+            "leave_instance_worlds": sum(
+                "leave_instance" in link for links in world_links.values() for link in links),
+            "leave_instance_endpoint_models": dict(sorted(Counter(
+                str(link["leave_instance"]["endpoint"]["model"])
+                for links in world_links.values() for link in links if "leave_instance" in link).items())),
+            "leave_instance_endpoint_statuses": dict(sorted(Counter(
+                str(link["leave_instance"]["endpoint"]["status"])
+                for links in world_links.values() for link in links if "leave_instance" in link).items())),
             "conversion_candidates": len(conversion_candidates),
             "conversion_candidate_statuses": dict(sorted(candidate_statuses.items())),
         },

@@ -4,7 +4,7 @@ import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from generate_retail_instance_stage_callbacks import build, render
+from generate_retail_instance_stage_callbacks import build, render, validate_leave_instance_semantics
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,6 +12,25 @@ STAGE_PROJECTION = ROOT / "scripts/retail-instance-stage-reference-graph.json"
 
 
 class RetailInstanceStageCallbacksTest(unittest.TestCase):
+
+    @staticmethod
+    def write_leave_instance_semantics(script_root: Path) -> None:
+        server = script_root.parent / "MainServer_Server64"
+        sources = {
+            "fun/fun_050.cpp": "void FUN_1404dc6a0 { (*param_1 + 0x230))(param_1,0); }",
+            "classes/Account/IUserImp.cpp": (
+                "void IUserImp_LeaveInstance { User_LeaveInstance(*(int64_t *)(param_1 + 8),param_2); }"),
+            "classes/Account/User.cpp": (
+                "void User_LeaveInstance { if (param_2 != '\\0') {} WorldDb_GetDynamicWorld(); "
+                "*plVar9 + 0x1c8; *in_RCX + 0x150; }"),
+            "classes/World/DynamicWorld.cpp": (
+                "bool DynamicWorld_ExitPointLocAlias { *param_1 + 0x1b8; "
+                "if (_Src == (wchar_t *)0x0) { *(uint64_t *)(param_2 + 0x43d8); } wcsncpy_s; }"),
+        }
+        for relative, source in sources.items():
+            path = server / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(source, encoding="utf-8")
 
     def test_checked_in_projection_covers_every_0x1a_registration_and_instance_closure(self):
         report = json.loads(STAGE_PROJECTION.read_text(encoding="utf-8"))
@@ -46,10 +65,33 @@ class RetailInstanceStageCallbacksTest(unittest.TestCase):
                 expected[npc_id] = candidate["expected_runtime"]
         self.assertEqual(expected, actual)
 
+    def test_leave_instance_semantics_and_endpoints_are_separate_from_stage(self):
+        report = json.loads(STAGE_PROJECTION.read_text(encoding="utf-8"))
+        callbacks = [reference for reference in report["references"]
+                     if reference["kind"] == "script_callback"
+                     and any(operation["family"] == "LEAVE_INSTANCE"
+                             for target in reference["targets"]
+                             for operation in target["operation_models"])]
+        endpoints = [reference for reference in report["references"]
+                     if reference["kind"] == "instance_exit_endpoint"]
+        self.assertEqual(82, len(callbacks))
+        self.assertTrue(all(reference["reference_status"] == "RESOLVED"
+                            and reference["semantic_status"] == "RESOLVED" for reference in callbacks))
+        self.assertEqual({"exit"}, {operation["dimension"] for reference in callbacks
+                                    for operation in reference["targets"][0]["operation_models"]
+                                    if operation["family"] == "LEAVE_INSTANCE"})
+        self.assertEqual({"INSTANCE_RULE_ALIAS": 8, "PLAYER_PREVIOUS_LOCATION": 71, "UNMODELED": 3},
+                         {model: sum(reference["raw"] == model for reference in endpoints)
+                          for model in {reference["raw"] for reference in endpoints}})
+        self.assertEqual({"REJECTED": 3, "RESOLVED": 79},
+                         {status: sum(reference["status"] == status for reference in endpoints)
+                          for status in {reference["status"] for reference in endpoints}})
+
     def test_build_keeps_source_model_separate_from_instance_reachability(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             scripts = root / "ScriptDLL"
+            self.write_leave_instance_semantics(scripts)
             fun = scripts / "fun"
             retail = root / "Map/XML"
             worlds = root / "Map/Worlds"
@@ -59,9 +101,9 @@ class RetailInstanceStageCallbacksTest(unittest.TestCase):
             (retail / "China/ID").mkdir(parents=True)
             (worlds / "InstanceA").mkdir(parents=True)
             (worlds / "OpenWorld").mkdir(parents=True)
-            coverage = aionemu / "src/main/resources/aion/definitions/compact/instance"
-            coverage.mkdir(parents=True)
-            (coverage.parent / "script-npcs.xml").write_text("<script_npcs/>\n", encoding="utf-8")
+            definitions = aionemu / "src/main/resources/aion/definitions/compact"
+            definitions.mkdir(parents=True)
+            (definitions / "script-npcs.xml").write_text("<script_npcs/>\n", encoding="utf-8")
             npc_templates = aionemu / "src/main/resources/aion/data/static_data/npcs"
             npc_templates.mkdir(parents=True)
             (npc_templates / "npc_template.xml").write_text("<npc_templates/>\n", encoding="utf-8")
@@ -90,8 +132,12 @@ class RetailInstanceStageCallbacksTest(unittest.TestCase):
                 '<npc><id>20</id><name>OutsideNpc</name><ai_name>OutsideButton</ai_name></npc>'
                 '<npc><id>30</id><name>MissingNpc</name><ai_name>MissingBody</ai_name></npc></npcs>',
                 encoding="utf-8")
+            world_ids = '<data id="300000001">InstanceA</data>' + ''.join(
+                f'<data id="{300000001 + index}">Instance{index}</data>' for index in range(1, 139))
             (retail / "China/ID/WorldId.xml").write_text(
-                '<root><data id="300000001">InstanceA</data><data id="100000001">OpenWorld</data></root>',
+                f'<root>{world_ids}<data id="100000001">OpenWorld</data></root>', encoding="utf-8")
+            (retail / "China/instance_cooltime.xml").write_text(
+                '<root><instance_cooltime><id>1</id><name>InstanceA</name></instance_cooltime></root>',
                 encoding="utf-8")
             (worlds / "InstanceA/world_N.xml").write_text(
                 '<world><territory><condition_info><condition><extcondition>stage_flag == 1</extcondition></condition>'
@@ -101,11 +147,11 @@ class RetailInstanceStageCallbacksTest(unittest.TestCase):
             (worlds / "OpenWorld/world.xml").write_text(
                 '<world><territory><npcs><npc><name>OutsideNpc</name><pos><x>1</x><y>2</y><z>3</z>'
                 '</pos></npc></npcs></territory></world>', encoding="utf-8")
-            coverage_rows = ''.join(
-                f'<world id="{300000001 + index}" local_name="W{index}" retail_name="W{index}"/>'
+            world_map_rows = ''.join(
+                f'<map id="{300000001 + index}" name="W{index}" instance="true"/>'
                 for index in range(139))
-            (coverage / "coverage.xml").write_text(
-                f'<retail_instance_coverage>{coverage_rows}</retail_instance_coverage>', encoding="utf-8")
+            world_maps = npc_templates.parent / "world_maps.xml"
+            world_maps.write_text(f'<maps>{world_map_rows}</maps>', encoding="utf-8")
 
             report = build(scripts, retail, aionemu)
             rows = {row["script_name"]: row for row in report["registrations"]}
@@ -118,6 +164,15 @@ class RetailInstanceStageCallbacksTest(unittest.TestCase):
                          if link["script_name"] == "StageButton")["condition_variable_writes"][0]
             self.assertTrue(write["consumed_by_retail_condition"])
             self.assertTrue(json.loads(render(report))["provenance"]["authoritative_retail_evidence"])
+
+    def test_leave_instance_semantic_source_guard_rejects_stale_wrapper(self):
+        with tempfile.TemporaryDirectory() as directory:
+            scripts = Path(directory) / "MainServer_ScriptDLL64"
+            self.write_leave_instance_semantics(scripts)
+            wrapper = scripts.parent / "MainServer_Server64/fun/fun_050.cpp"
+            wrapper.write_text("void FUN_1404dc6a0 {}", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "stale leave-instance semantic evidence"):
+                validate_leave_instance_semantics(scripts)
 
 
 if __name__ == "__main__":

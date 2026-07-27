@@ -19,6 +19,8 @@ PATTERN_AUDIT = Path("docs/RETAIL_INSTANCE_PORTAL_PATTERN_AUDIT.json")
 DYNAMIC_AUDIT = Path("docs/RETAIL_INSTANCE_PORTAL_DYNAMIC_AUDIT.json")
 TRANSPORT_SOURCE = Path("docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json")
 TRANSPORT_REFERENCE = Path("docs/RETAIL_SCRIPT_TRANSPORT_REFERENCE_PROJECTION.json")
+INSTANCE_CALLBACK_SOURCE = Path("docs/RETAIL_INSTANCE_STAGE_CALLBACK_SOURCE_MATRIX.json")
+INSTANCE_CALLBACK_REFERENCE = Path("scripts/retail-instance-stage-reference-graph.json")
 NUMBER = re.compile(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[fFdD])?")
 SPAWN_CALL = re.compile(
     rf"\bspawn\(\s*(\d{{6}})\s*,\s*({NUMBER.pattern})\s*,\s*({NUMBER.pattern})\s*,\s*({NUMBER.pattern})"
@@ -696,6 +698,137 @@ def source_transport_routes(root: Path, instance_world_ids: set[int]) -> dict[tu
     return result
 
 
+def same_alias_points(runtime: list[dict[str, str]], retail: list[dict[str, str]]) -> bool:
+    if len(runtime) != len(retail):
+        return False
+    return all(any(all(abs(float(runtime_point[field]) - float(retail_point[field])) < 0.0001
+                           for field in ("x", "y", "z", "dir"))
+                       for runtime_point in runtime) for retail_point in retail)
+
+
+def source_leave_instance_routes(root: Path, instance_world_ids: set[int],
+                                 runtime_aliases: dict[tuple[int, str], list[dict[str, str]]]) -> dict[int, list[dict[str, object]]]:
+    document = json.loads((root / INSTANCE_CALLBACK_REFERENCE).read_text(encoding="utf-8"))
+    if (document.get("version") != 4 or document.get("projection") != "script_stage"
+            or document.get("summary", {}).get("unresolved") or document.get("summary", {}).get("ambiguous")):
+        raise ValueError("invalid retail instance callback reference projection")
+    source_path = root / INSTANCE_CALLBACK_SOURCE
+    sources = [source for source in document.get("authority", {}).get("sources", [])
+               if source.get("role") == "script_stage_callback_source"]
+    if (len(sources) != 1 or sources[0].get("path") != source_path.name
+            or sources[0].get("size") != source_path.stat().st_size
+            or sources[0].get("sha256") != hashlib.sha256(source_path.read_bytes()).hexdigest()):
+        raise ValueError("stale retail instance callback reference projection")
+
+    bindings: dict[str, dict[str, object]] = defaultdict(dict)
+    for reference in document.get("references", []):
+        if reference.get("family") != "script_stage_callback":
+            continue
+        identity = str(reference["consumer"]["id"])
+        if reference.get("kind") == "script_callback":
+            operations = [] if not reference.get("targets") else reference["targets"][0].get("operation_models", [])
+            leave = [operation for operation in operations
+                     if operation.get("family") == "LEAVE_INSTANCE" and operation.get("dimension") == "exit"]
+            if leave:
+                bindings[identity]["callback"] = reference
+                bindings[identity]["operation"] = leave[0]
+        elif reference.get("kind") == "instance_exit_endpoint":
+            bindings[identity]["endpoint"] = reference
+
+    routes: dict[int, list[dict[str, object]]] = defaultdict(list)
+    for identity, binding in sorted(bindings.items()):
+        callback = binding.get("callback")
+        endpoint_reference = binding.get("endpoint")
+        operation = binding.get("operation")
+        if callback is None or endpoint_reference is None or operation is None:
+            raise ValueError(f"incomplete leave-instance reference binding {identity}")
+        if (callback.get("reference_status") != "RESOLVED" or callback.get("semantic_status") != "RESOLVED"
+                or operation.get("semantic_status") != "RESOLVED" or operation.get("parsed", {}).get("flag") is not False):
+            raise ValueError(f"unproven leave-instance semantics {identity}")
+        world_id = int(callback["world_id"])
+        if world_id not in instance_world_ids:
+            continue
+        starts_by_npc: dict[int, list[dict[str, str]]] = defaultdict(list)
+        for start in callback.get("start_bindings", []):
+            starts_by_npc[int(start["npc_id"])].append({
+                "x": str(start.get("x", "")),
+                "y": str(start.get("y", "")),
+                "z": str(start.get("z", "")),
+                "heading": str(start.get("dir", "")),
+                "source": str(start.get("source", "")),
+                "spawn_type": "Instances" if start.get("spawn_type") == "STATIC" else "condition-spawns",
+            })
+        if set(starts_by_npc) != {int(npc_id) for npc_id in callback.get("npc_ids", [])}:
+            raise ValueError(f"leave-instance start binding mismatch {identity}")
+
+        endpoint = None if not endpoint_reference.get("targets") else endpoint_reference["targets"][0]
+        endpoint_model = str(endpoint_reference.get("raw", "UNMODELED"))
+        destinations = []
+        if endpoint_reference["status"] == "RESOLVED" and endpoint_model == "INSTANCE_RULE_ALIAS":
+            for target in endpoint["endpoints"]:
+                retail_points = target["points"]
+                runtime_points = runtime_aliases.get((int(target["world_id"]), str(target["alias"]).casefold()))
+                conversion = (
+                    "CONVERSION_READY" if runtime_points is not None and same_alias_points(runtime_points, retail_points)
+                    else "REJECT_RUNTIME_ALIAS_MISMATCH" if runtime_points is not None
+                    else "REJECT_MISSING_RUNTIME_ALIAS"
+                )
+                destinations.append(({
+                    "complete": True,
+                    "world_id": int(target["world_id"]),
+                    "alias": target["alias"],
+                    "points": [{
+                        "x": point["x"], "y": point["y"], "z": point["z"], "heading": point["dir"],
+                    } for point in retail_points],
+                    "runtime_model": {"kind": "LOCATION_ALIAS"},
+                }, conversion, int(target["slot"])))
+        elif endpoint_reference["status"] == "RESOLVED" and endpoint_model == "PLAYER_PREVIOUS_LOCATION":
+            destinations.append(({
+                "complete": True,
+                "world_id": None,
+                "runtime_model": {"kind": "PLAYER_PREVIOUS_LOCATION"},
+            }, "REJECT_MISSING_PREVIOUS_LOCATION_RUNTIME", None))
+        else:
+            destinations.append(({
+                "complete": False,
+                "world_id": None,
+                "runtime_model": {"kind": endpoint_model},
+            }, str(endpoint_reference.get("reason", "REJECT_MISSING_INSTANCE_EXIT_MODEL")), None))
+
+        for npc_id, start_points in starts_by_npc.items():
+            for destination, conversion, slot in destinations:
+                routes[world_id].append({
+                    "npc_id": npc_id,
+                    "start_world_id": world_id,
+                    "start_points": start_points,
+                    "association": "START",
+                    "mechanism": "retail_leave_instance",
+                    "owner": str(INSTANCE_CALLBACK_REFERENCE),
+                    "destination": destination,
+                    "semantics": {
+                        "leave_instance": {
+                            "flag": False,
+                            "dimension": "exit",
+                            "endpoint_model": endpoint_model,
+                            "faction_slot": slot,
+                        },
+                    },
+                    "conversion": conversion,
+                    "reference_status": callback["reference_status"],
+                    "semantic_status": callback["semantic_status"],
+                    "endpoint_model": endpoint_model,
+                    "retail_leave_instance_evidence": {
+                        "reference_projection": str(INSTANCE_CALLBACK_REFERENCE),
+                        "source_matrix": str(INSTANCE_CALLBACK_SOURCE),
+                        "script_name": callback.get("script_name"),
+                        "callback": callback.get("callback"),
+                        "operation": operation,
+                        "endpoint": endpoint_reference,
+                    },
+                })
+    return dict(routes)
+
+
 def same_destination(runtime: dict[str, object], retail: dict[str, object]) -> bool:
     if runtime.get("world_id") != retail.get("world_id"):
         return False
@@ -873,6 +1006,8 @@ def transport_type(route: dict[str, object], evidence: dict[str, object] | None)
             return "LIFT"
         return "SCRIPT_DIALOG_" + str(evidence["transport_type"])
     mechanism = str(route["mechanism"])
+    if mechanism == "retail_leave_instance":
+        return "LEAVE_INSTANCE"
     if mechanism in {"portal_use", "portal_dialog", "teleporter", "retail_pattern_alias"}:
         return mechanism.upper()
     runtime_model = route["destination"].get("runtime_model", {})
@@ -885,6 +1020,8 @@ def transport_type(route: dict[str, object], evidence: dict[str, object] | None)
 def transport_type_source(route: dict[str, object], evidence: dict[str, object] | None) -> str:
     if evidence is not None:
         return str(TRANSPORT_REFERENCE)
+    if route["mechanism"] == "retail_leave_instance":
+        return str(INSTANCE_CALLBACK_REFERENCE)
     return {
         "portal_use": "src/main/resources/aion/data/static_data/portals/portal_template2.xml",
         "portal_dialog": "src/main/resources/aion/data/static_data/portals/portal_template2.xml",
@@ -899,6 +1036,7 @@ def runtime_consumer(route: dict[str, object]) -> str:
         "portal_dialog": "PortalService",
         "teleporter": "TeleporterData/TeleportService2",
         "retail_pattern_alias": "RetailPatternAI2",
+        "retail_leave_instance": "RETAINED_EXIT_CONSUMER",
         "legacy_ai": "LEGACY_AI",
         "handler": "INSTANCE_HANDLER",
     }[str(route["mechanism"])]
@@ -954,6 +1092,8 @@ def route_signature(route: dict[str, object], worlds: set[int]) -> dict[str, obj
             "showfx": semantics["showfx"],
             "action": semantics["action"],
         }
+    elif mechanism == "retail_leave_instance":
+        signature["semantics"] = dict(semantics["leave_instance"])
     else:
         signature["semantics"] = dict(semantics.get("teleport", {}))
         if "trigger" in semantics:
@@ -994,15 +1134,17 @@ def build(root: Path) -> dict[str, object]:
     for definitions in (portals, teleporters):
         for npc_id, routes in definitions.items():
             route_definitions[npc_id].extend(routes)
+    aliases = location_aliases(root)
+    leave_instance_routes = source_leave_instance_routes(root, world_ids, aliases)
     points = spawn_points(root, world_ids, set(route_definitions))
     dynamic_points = handler_spawn_points(root, set(route_definitions))
-    templates = npc_templates(root, {npc_id for _world_id, npc_id in points})
+    templates = npc_templates(root, {npc_id for _world_id, npc_id in points}
+                              | {int(route["npc_id"]) for routes in leave_instance_routes.values() for route in routes})
     ai_owners, handlers = java_owners(root)
     start_audit = retail_start_audit(root)
     pattern_audit = retail_pattern_audit(root)
     dynamic_legacy_audit, dynamic_handler_audit = dynamic_route_audit(root)
     transport_sources = source_transport_routes(root, world_ids)
-    aliases = location_aliases(root)
     audited_missing_starts = set()
     audited_legacy_npcs = set()
     audited_dynamic_legacy = set()
@@ -1144,6 +1286,15 @@ def build(root: Path) -> dict[str, object]:
                     "conversion": "REJECT_DYNAMIC_TRIGGER",
                 })
 
+        leave_starts = set()
+        for route in leave_instance_routes.get(world_id, []):
+            npc_id = int(route["npc_id"])
+            if npc_id not in leave_starts and not any(start["npc_id"] == npc_id for start in starts):
+                template = templates.get(npc_id, {"name": "", "retail_name": "", "ai": ""})
+                starts.append({"npc_id": npc_id, **template, "points": route["start_points"]})
+                leave_starts.add(npc_id)
+            routes.append(route)
+
         routes.extend(external_routes.get(world_id, []))
         routes.extend(dynamic_routes.get(world_id, []))
 
@@ -1156,7 +1307,10 @@ def build(root: Path) -> dict[str, object]:
                 retail_transport_evidence_count += 1
             route["transport_type"] = transport_type(route, evidence)
             route["type_source"] = transport_type_source(route, evidence)
-            route["type_status"] = "RETAIL_PROVEN" if evidence is not None else "RUNTIME_MODELED"
+            route["type_status"] = (
+                "RETAIL_PROVEN" if evidence is not None or route["mechanism"] == "retail_leave_instance"
+                else "RUNTIME_MODELED"
+            )
             route["endpoint_status"] = endpoint_status(route, world_ids)
             route["runtime_consumer"] = runtime_consumer(route)
             route_counts[route["mechanism"]] += 1
@@ -1212,9 +1366,11 @@ def build(root: Path) -> dict[str, object]:
             "retail_source_matrices": {
                 "direct_portals": "docs/RETAIL_DIRECT_PORTAL_SOURCE_MATRIX.json",
                 "script_transports": str(TRANSPORT_SOURCE),
+                "instance_callbacks": str(INSTANCE_CALLBACK_SOURCE),
             },
             "retail_reference_projections": {
                 "script_transports": str(TRANSPORT_REFERENCE),
+                "instance_callbacks": str(INSTANCE_CALLBACK_REFERENCE),
             },
         },
         "summary": summary,

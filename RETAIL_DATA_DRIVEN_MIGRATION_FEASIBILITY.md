@@ -188,7 +188,9 @@ AionEmu 已生成 XML 是派生产物，不能反向定义真端字段含义。J
    - 计时权威**穷尽搜索后确认不存在**（2026-07-26 复核，四层权威全查）：`npcs.xml` 宝箱条目只有 `talk_delay_time`（交互延迟）无生存期字段；世界 `world.xml` 的 `limitareas`/`recallareas` 仅布尔标志无时长；`instance_creation`/`instant_dungeon_define`/`instance_restrict`/`instance_cooltime` 命中这 5 个世界但**无任何时间字段**；`world_timeattack`(计分型)、`aitimeconditions`(周期型) 属别的机制。
 
    **静态矩阵状态更新（2026-07-27）**：`generate_retail_instance_stage_recovery_matrix.py` 不从 `dimension_owners` 推导语义，只用 coverage 枚举 139 个生产世界并保留当前审计 owner；实际证据来自 condition-spawns 的真端源定位、统一引用图投影、可达 Pattern/旧 AI 操作、Handler 继承链、`InstanceRuntimeState` 和 `InstanceDeadlineScheduler`。矩阵覆盖 92 个 condition world、1,183 个条件变量、2,132 个可达 Pattern 阶段绑定、4,564 个 Pattern 计时绑定、37 个旧 AI 阶段绑定和 421 个 ScriptDLL `0x1a` 交互绑定；203 个变量生产者与 2 个传递 Pattern spawn 目标继续显式拒绝。当前 60 个 stage=HANDLER、56 个 recovery=HANDLER 中没有新增可直接删除 Handler 的批次：57 个世界保留 Handler，12 个世界存在硬证据缺口，其余 70 个已由外部 owner 持有。五个深渊宝箱房已机械归并为同一批，但仍缺 ScriptDLL 计时语义，不因源码同构而转换。
-   - **ScriptDLL `0x1a` 交互族已接入统一引用图**：源矩阵覆盖 824 个注册、698 个 callback body、111 个生产副本世界和 5,794 条出生绑定；统一图生成 1,290 条最小引用，其中 callback/NPC/world 各 421 条、变量生产者到条件消费者 27 条，`resolved=1,277`、`rejected=13`、`unresolved=0`、`ambiguous=0`。8 个缺失 `LAB_*` callback body 与 5 个未被条件表达式消费的变量写入保持显式拒绝。
+   - **ScriptDLL `0x1a` 交互族已接入统一引用图**：源矩阵覆盖 824 个注册、698 个 callback body、111 个生产副本世界和 5,794 条出生绑定；stage 变量切片生成 1,290 条最小引用，其中 callback/NPC/world 各 421 条、变量生产者到条件消费者 27 条，`resolved=1,277`、`rejected=13`、`unresolved=0`、`ambiguous=0`。8 个缺失 `LAB_*` callback body 与 5 个未被条件表达式消费的变量写入保持显式拒绝。
+   - **`LEAVE_INSTANCE` 出口族静态闭合**：`FUN_180ca2d20 → IUserImp +0x210 包装槽 → +0x230(flag=0) → IUserImp::LeaveInstance → User::LeaveInstance(false)` 已证明 `0x210` 属 exit 维度，不再污染 stage/recovery。统一图现覆盖 82 个世界、89 个唯一 NPC、115 个 world/NPC 绑定，共 1,372 条引用，`resolved=1,356`、`rejected=16`、`unresolved=0`、`ambiguous=0`。端点由真端 `instance_cooltime.xml` 与 `Worlds/*/world.xml` 派生：8 个世界使用阵营 alias，71 个世界回到玩家进入前位置，3 个世界缺 instance rule。生产范围改由启用的 `world_maps.xml` 139 个副本枚举，`coverage.xml` 不再参与 source matrix 的范围或语义判断。
+   - 出口路线投影到现有 portal matrix 后形成 126 条 `LEAVE_INSTANCE`：22 条固定 alias 路线可转换；101 条 previous-location 路线因 AionEmu 尚未持久化精确进入前坐标而继续拒绝；3 条缺 rule 继续拒绝。该状态只证明静态类型与端点闭包，不代表运行时已接管。
    - **Cradle 六按钮成为首个完整消费者**：6 个 `item_gate_variable` 运行时定义逐项匹配真端 callback、NPC、world 和条件变量引用，`stage:SCRIPT_NPC` 由生成门禁证明；旧 Altar AI 与 Handler 的物品桥接可删除，Handler 仅保留离图效果清理。任何后续 `SCRIPT_NPC` owner 如果缺少或不匹配该投影，矩阵统一返回 `REJECT_MISSING_SCRIPT_NPC_STAGE_EVIDENCE`。
    - **前一轮"待 AI 类反编译流解锁"的判断已被证伪**：`ABRwd_DespawnBox` 在 `IAIScriptNpcImp.cpp` 仅是名字写入缓冲并注册到**通用 vftable**，无专用实现可恢复——该工具链投入对本族无效，不应据此排期。
    - 处置：现有 900 秒为私服取值，不可反向定义真端语义。该族**永久阻塞于计时权威缺失**（原因码 `blocked_no_timer_authority`），handler 保留兜底；除非出现新证据源（如客户端资源或另一版本数据），否则不数据化。
@@ -274,6 +276,16 @@ ScriptQuest 直接复用现有 XML QuestHandler，没有复制一套对话、击
 > compiled_*() 校验函数（推荐参照 compiled_simple_talks 的“证据全在数据表”形态）
 > ②在注册表登记一行。“证据规则绑定任务 ID”的根因（人工逆向锚点无法自动推导）
 > 仍在，后续按 §5 的通用槽位编译推进；本步先把结构成本降为 O(能力族)。
+
+> 状态更新 2026-07-27：ScriptDLL 任务回调基座已闭合。`generate_retail_quest_script_index.py`
+> 建立 10,035 个任务、60,828 个 callback 注册和 45,725 个唯一目标的确定性索引；
+> `generate_retail_quest_callback_ir.py` v5 已解析全部目标（45,710 个源码目标和 15 个
+> vtable 间接 thunk），未解析目标为 0。NPCServer 的 `NPC_HOST`、`USER_HOST`、
+> `OBJECT_HOST`、`INTERFACE_REGISTRY`、`QUIT_CUTSCENE_CONTEXT` 五个接收者族均已绑定
+> 正确 vtable，并连续索引 217/133/10/10/4 个槽；39 个已使用事件槽全部命名，receiver
+> provenance 中不再存在 OTHER、UNKNOWN 或 UNRESOLVED。当前仍未知的 25,129 个 callback
+> 函数业务名和 170 个 operation catalog 条目属于下一阶段业务语义编译，继续阻断对应任务的
+> 运行时接管，不得把“基座闭合”解释为“任务迁移完成”。
 
 ### 3.2 当前 DataDrivenQuest 只是严格线性子集
 

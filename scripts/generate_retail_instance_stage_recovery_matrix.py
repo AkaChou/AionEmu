@@ -437,15 +437,21 @@ def script_stage_models(root: Path) -> tuple[dict[int, list[dict[str, object]]],
             "condition_variable_writes": [],
             "operation_families": [],
             "operation_targets": [],
+            "operation_models": [],
+            "dimensions": [],
+            "semantic_status": "REJECT_UNMODELED_OPERATION",
             "runtime_matches": [],
         })
         kind = reference["kind"]
         if kind == "script_callback":
             binding["callback_status"] = reference["status"]
+            binding["semantic_status"] = reference.get("semantic_status", "REJECT_UNMODELED_OPERATION")
             if reference["targets"]:
                 target = reference["targets"][0]
                 binding["operation_families"] = target.get("operation_families", [])
                 binding["operation_targets"] = target.get("operation_targets", [])
+                binding["operation_models"] = target.get("operation_models", [])
+                binding["dimensions"] = target.get("dimensions", [])
         elif kind == "npc":
             binding["npc_status"] = reference["status"]
         elif kind == "world":
@@ -461,11 +467,13 @@ def script_stage_models(root: Path) -> tuple[dict[int, list[dict[str, object]]],
 
     for binding in bindings.values():
         binding["condition_variable_writes"].sort(key=lambda row: (str(row["variable"]), str(row["source"])))
-        binding["evidence_status"] = (
+        binding["reference_status"] = (
             "RESOLVED" if all(binding[field] == "RESOLVED"
                               for field in ("callback_status", "npc_status", "world_status"))
             else "REJECT_EVIDENCE_GAP"
         )
+        if binding["dimensions"] == ["exit"] and not binding["condition_variable_writes"]:
+            continue
         by_world[int(binding.pop("world_id"))].append(binding)
     for rows in by_world.values():
         rows.sort(key=lambda row: (str(row["script_name"]), str(row["callback"])))
@@ -492,7 +500,8 @@ def script_stage_models(root: Path) -> tuple[dict[int, list[dict[str, object]]],
                                         "failure_message_id", "success_message_id")))
             matches = [
                 binding for binding in by_world.get(world_id, [])
-                if expected_matches and binding["evidence_status"] == "RESOLVED"
+                if expected_matches and binding["reference_status"] == "RESOLVED"
+                and binding["semantic_status"] == "RESOLVED"
                 and runtime["npc_id"] in binding["npc_ids"]
                 and any(write["status"] == "RESOLVED" and write["variable"].casefold() == runtime["variable"].casefold()
                         and write["value"] == runtime["value"] for write in binding["condition_variable_writes"])

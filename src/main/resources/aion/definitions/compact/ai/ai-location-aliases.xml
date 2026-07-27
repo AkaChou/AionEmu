@@ -18,8 +18,33 @@
   <alias world_id="120080000" world_name="arena_d_lobby" name="Arena_D_Lobby_Area_4.7_Out">
     <point x="391.541229" y="250.661102" z="95.052589" dir="0"/>
   </alias>
+  <alias world_id="210020000" world_name="lf2" name="IDDF2_Dflame_Out_01">
+    <point x="1340.24292" y="352.110168" z="351.698273" dir="0"/>
+  </alias>
+  <alias world_id="210040000" world_name="lf3" name="IDLF3_CASTLE_LEHPAR_Out_01">
+    <point x="540.299927" y="711.994263" z="154.265732" dir="0"/>
+  </alias>
+  <alias world_id="210040000" world_name="lf3" name="IDLF3_CASTLE_LEHPAR_Out_02">
+    <point x="540.258484" y="714.317383" z="154.265732" dir="0"/>
+  </alias>
+  <alias world_id="210040000" world_name="lf3" name="IDLF3lp_Out_01">
+    <point x="242.193268" y="533.203186" z="159.875519" dir="30"/>
+  </alias>
+  <alias world_id="210040000" world_name="lf3" name="IDLF3lp_Out_02">
+    <point x="241.412384" y="537.219727" z="161.632629" dir="30"/>
+  </alias>
+  <alias world_id="210040000" world_name="lf3" name="LF3_IDLF1_OUTAREA_01">
+    <point x="2025.05029" y="1466.18958" z="129.448212" dir="180"/>
+    <point x="2026.66089" y="1468.77844" z="129.448212" dir="180"/>
+  </alias>
   <alias world_id="210040000" world_name="lf3" name="RVR_LF3_OP">
     <point x="2554.25879" y="346.274872" z="412.5" dir="0"/>
+  </alias>
+  <alias world_id="210050000" world_name="lf4" name="IDTemple_Low_Out_01">
+    <point x="334.407623" y="1353.65417" z="266.883942" dir="0"/>
+  </alias>
+  <alias world_id="210050000" world_name="lf4" name="IDTemple_Up_Out_01">
+    <point x="206.256332" y="1388.78845" z="268.035309" dir="45"/>
   </alias>
   <alias world_id="210070000" world_name="lf5" name="LF5_Vil1_1_In">
     <point x="1324.15198" y="644.236572" z="585.099976" dir="45"/>
@@ -157,6 +182,10 @@
   <alias world_id="210100000" world_name="lf6" name="LF6_Raid_Kick_D">
     <point x="2707.15845" y="1418.0188" z="233.857239" dir="160"/>
   </alias>
+  <alias world_id="210100000" world_name="lf6" name="LF6_Start_Alias">
+    <point x="1446.75659" y="1297.13294" z="338.71402" dir="0"/>
+    <point x="1452.60303" y="1300.28333" z="338.71402" dir="0"/>
+  </alias>
   <alias world_id="210120000" world_name="arena_event_l" name="IDArena_pvp01_morph_Alias1">
     <point x="705.378479" y="1777.52954" z="177.935425" dir="180"/>
   </alias>
@@ -179,8 +208,26 @@
   <alias world_id="220020000" world_name="df2" name="DF2_Teleport_1">
     <point x="1979.21252" y="852.863464" z="254.296082" dir="0"/>
   </alias>
+  <alias world_id="220020000" world_name="df2" name="IDDF2_Dflame_Out_02">
+    <point x="1592.17773" y="978.279419" z="142.059509" dir="270"/>
+  </alias>
+  <alias world_id="220040000" world_name="df3" name="DF3_IDLF1_OUTAREA_01">
+    <point x="2423.3501" y="2064.54932" z="581" dir="50"/>
+  </alias>
+  <alias world_id="220040000" world_name="df3" name="IDDF3_lp_Out_01">
+    <point x="2208.94458" y="2918.48975" z="702.472656" dir="135"/>
+  </alias>
+  <alias world_id="220040000" world_name="df3" name="IDDF3_lp_Out_02">
+    <point x="2208.94897" y="2918.66553" z="704.72699" dir="135"/>
+  </alias>
   <alias world_id="220040000" world_name="df3" name="RVR_DF3_OP">
     <point x="409.357147" y="393.041534" z="223.602051" dir="0"/>
+  </alias>
+  <alias world_id="220070000" world_name="df4" name="IDTemple_Low_Out_02">
+    <point x="2255.52295" y="1732.32153" z="310.368652" dir="200"/>
+  </alias>
+  <alias world_id="220070000" world_name="df4" name="IDTemple_Up_Out_02">
+    <point x="2272.97314" y="1602.54688" z="311.598541" dir="150"/>
   </alias>
   <alias world_id="220080000" world_name="df5" name="DF5_Vil1_1_In">
     <point x="1768.03479" y="2591.31836" z="305.100006" dir="80"/>
@@ -315,6 +362,9 @@
   </alias>
   <alias world_id="220110000" world_name="df6" name="DF6_Raid_Kick_L">
     <point x="2457.54541" y="1815.96143" z="224.840118" dir="160"/>
+  </alias>
+  <alias world_id="220110000" world_name="df6" name="DF6_Start_Alias">
+    <point x="1762.51135" y="2006.09522" z="199.683716" dir="340"/>
   </alias>
   <alias world_id="220130000" world_name="arena_event_d" name="IDArena_pvp01_morph_Alias1">
     <point x="705.378479" y="1777.52954" z="177.935425" dir="180"/>
