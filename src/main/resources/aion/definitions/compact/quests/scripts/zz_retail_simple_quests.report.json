@@ -14585,7 +14585,7 @@
       "semantic_gap_quest_ids": []
     }
   ],
-  "output_sha256": "4ba6bcc67ee0eead05e8b0b56b52f76c36286e508f0e5b8ef7751ed4cf82b3b9",
+  "output_sha256": "0da704b207c77f77e8aab212a683d7692f7b71f4adef0102b32d0be4fc32bbaf",
   "skipped": {
     "compiled_script": {},
     "compiled_script_isolation_details": {
@@ -15269,34 +15269,12 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "11001": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11001KindMeira.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "11006": {
         "disposition": "retained_complex_semantics",
         "events": [
           "onDialogEvent"
         ],
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11006TestingTheWaters.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "11009": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11009MeiriaFriendlySuggestion.java",
         "mechanisms": [
           "item_mutation"
         ],
@@ -15361,39 +15339,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "11068": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11068AMysteriousWind.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "11070": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11070CraftyMessenger.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "11072": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11072DelusCulinaryVictim.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "11076": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -15403,50 +15348,6 @@
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11076ProofOfTalent.java",
         "mechanisms": [
           "teleport"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "11103": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11103FiniteWalk.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "11105": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11105WifesNagging.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "11106": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11106RewritingHistory.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "11107": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11107ComfortisaBox.java",
-        "mechanisms": [
-          "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -15470,17 +15371,6 @@
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11116MunchingMookiePickles.java",
         "mechanisms": [
           "item_condition",
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "11117": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11117MedicationforSetzkiki.java",
-        "mechanisms": [
           "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
@@ -15783,17 +15673,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "11455": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11455When_The_Time_Is_Ripe.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "1146": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -15805,17 +15684,6 @@
           "item_condition",
           "item_mutation",
           "timer"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "11460": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11460TheShulackofTaloc.java",
-        "mechanisms": [
-          "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -15870,17 +15738,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "1158": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/verteron/_1158Village_Seal_Found.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "1162": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -15905,18 +15762,6 @@
         "mechanisms": [
           "item_mutation",
           "movie"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "1183": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/verteron/_1183SpiritOfNature.java",
-        "mechanisms": [
-          "item_condition",
-          "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -16852,17 +16697,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "1414": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/eltnen/_1414OperationWindmill.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "14150": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -16920,18 +16754,6 @@
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/eltnen/_1430ATeleportationExperiment.java",
         "mechanisms": [
           "teleport"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "1463": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/eltnen/_1463MessageToASpy.java",
-        "mechanisms": [
-          "item_condition",
-          "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -17019,18 +16841,6 @@
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_1535TheColdColdGround.java",
         "mechanisms": [
           "dynamic_reward",
-          "item_condition",
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "1540": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_1540BaittheHooks.java",
-        "mechanisms": [
           "item_condition",
           "item_mutation"
         ],
@@ -17853,17 +17663,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "1724": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/reshanta/_1724ReaperExpertise.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "17505": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -18199,17 +17998,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "18832": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18832Imagining_A_Quiet_Life.java",
-        "mechanisms": [
-          "movie"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "1884": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -18409,17 +18197,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "19064": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/miragent_holy_templar/_19064Templar_Of_Construction.java",
-        "mechanisms": [
-          "item_condition"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "1917": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -18428,17 +18205,6 @@
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_1917ALingeringMystery.java",
         "mechanisms": [
           "dynamic_reward"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "1918": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_1918An_Ax_For_Namus.java",
-        "mechanisms": [
-          "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -18513,16 +18279,6 @@
           "spawn",
           "teleport"
         ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "1937": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent",
-          "onLvlUpEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_1937ALepharistMonstrosity.java",
-        "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
       "1940": {
@@ -19361,17 +19117,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "21033": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_21033ExorcisingInfisto.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "2106": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -19433,17 +19178,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "21138": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_21138OddStrigik.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "2122": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -19465,17 +19199,6 @@
         "mechanisms": [
           "dynamic_reward",
           "item_condition",
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "21244": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_21244SearchForTheBiolab.java",
-        "mechanisms": [
           "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
@@ -19670,28 +19393,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "21455": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_21455Ingredients_For_The_Antidote.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "21460": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/gelkmaros/_21460AShulacksStory.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "21467": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -19806,17 +19507,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "2247": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/altgard/_2247TheGergersDisguise.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "2252": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -19838,17 +19528,6 @@
         "mechanisms": [
           "item_mutation",
           "movie"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "2271": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/altgard/_2271AurtrisLetter.java",
-        "mechanisms": [
-          "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -20778,17 +20457,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "24150": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_24150Interior_Landscaping.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "24153": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -20983,17 +20651,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "2505": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_2505LetCookingExpertsCook.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "25050": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -21114,17 +20771,6 @@
         "mechanisms": [
           "item_mutation",
           "timer"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "2538": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_2538CurseoftheWereRibbit.java",
-        "mechanisms": [
-          "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -21649,28 +21295,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "2646": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_2646TheInscrutableStranger.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "2663": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_2663AcquiringanAntidote.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "2664": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -22149,17 +21773,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "28832": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28832Taking_The_Tour.java",
-        "mechanisms": [
-          "movie"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "2884": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -22357,17 +21970,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "29064": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/fenris_fang/_29064Fang_Of_Construction.java",
-        "mechanisms": [
-          "item_condition"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "2911": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -22496,17 +22098,6 @@
         ],
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_2948Huron_Letter.java",
         "mechanisms": [],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "2954": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_2954DeliveringOdellaJuice.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
         "reason": "non_linear_or_side_effecting"
       },
       "29600": {
@@ -22709,17 +22300,6 @@
         ],
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/silentera_canyon/_30051BanishingtheShadowborn.java",
         "mechanisms": [],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "30055": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/silentera_canyon/_30055ForMyWife.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
         "reason": "non_linear_or_side_effecting"
       },
       "30056": {
@@ -22957,17 +22537,6 @@
         "mechanisms": [
           "movie",
           "timer"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "3023": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3023TheSpiceMustFlow.java",
-        "mechanisms": [
-          "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -23433,18 +23002,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "3041": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3041SororunerkWhereabouts.java",
-        "mechanisms": [
-          "item_condition",
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "3050": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -23611,29 +23168,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "3086": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3086SearchingForTheCrater.java",
-        "mechanisms": [
-          "item_condition"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "3087": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3087DivingForTreasure.java",
-        "mechanisms": [
-          "item_condition",
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "3088": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -23654,17 +23188,6 @@
           "onEnterZoneEvent"
         ],
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3090In_Search_Of_Pippi_The_Porgus.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "3093": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3093Secret_Dumpling_Recipe.java",
         "mechanisms": [
           "item_mutation"
         ],
@@ -23918,17 +23441,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "3920": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_3920TheSecretofSurkana.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "3933": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -24026,50 +23538,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "3965": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_3965TotheGalleriaofGrandeur.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "3967": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_3967AndusDyeBox.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "3968": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_3968PalentinesRequest.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "3970": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_3970Kinah_Digging_Daughter.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "4004": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -24087,17 +23555,6 @@
           "onDialogEvent"
         ],
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/brusthonin/_4012TroublesomePromise.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "4020": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/brusthonin/_4020ParicasSpecialOrder.java",
         "mechanisms": [
           "item_mutation"
         ],
@@ -24436,39 +23893,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "4905": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_4905InterviewingTheVeterans.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "4906": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_4906TalesOfHeroes.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "4920": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_4920MakingtheActivatedSurkana.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "4937": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -24596,30 +24020,6 @@
         ],
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/tiamaranta_eye/_51125.java",
         "mechanisms": [],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "80020": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent",
-          "onLvlUpEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80020EventSoloriusJoy.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "80021": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent",
-          "onLvlUpEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/event_quests/_80021EventFestiveUs.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
         "reason": "non_linear_or_side_effecting"
       },
       "80276": {
@@ -27673,14 +27073,14 @@
       "compiled_script_timed_report": 2,
       "compiled_script_world_collect": 4,
       "data_driven_collect": 205,
-      "data_driven_complex": 382,
+      "data_driven_complex": 436,
       "data_driven_hunt": 693,
       "data_driven_item_play": 18,
       "data_driven_pvp": 61,
       "data_driven_report": 141,
       "data_driven_talk": 39,
       "hunt": 937,
-      "talk": 2012,
+      "talk": 2066,
       "use_item": 93,
       "work_order": 574
     },
@@ -27706,7 +27106,7 @@
       "compiled_script_timed_report": 2,
       "compiled_script_world_collect": 4,
       "data_driven_collect": 205,
-      "data_driven_complex": 380,
+      "data_driven_complex": 434,
       "data_driven_hunt": 693,
       "data_driven_item_play": 18,
       "data_driven_pvp": 61,
@@ -27714,7 +27114,7 @@
       "data_driven_talk": 39,
       "hunt": 937,
       "talk": 1883,
-      "total": 5267,
+      "total": 5321,
       "use_item": 93,
       "work_order": 574
     },
@@ -27749,14 +27149,14 @@
     },
     "invalid": 2,
     "java_handlers": {
-      "base_handlers": 786,
+      "base_handlers": 732,
       "constraint_dispositions": {
         "evidence_audit": 9
       },
       "dispositions": {
         "not_executable_without_base": 4,
         "retained_authoritative_gap": 9,
-        "retained_complex_semantics": 777
+        "retained_complex_semantics": 723
       },
       "event_signatures": {
         "AtDistance+Dialog": 3,
@@ -27766,7 +27166,7 @@
         "Attack+Dialog+Die+EnterWorld+Kill+LvlUp+MovieEnd": 2,
         "Attack+Dialog+LvlUp+ZoneMissionEnd": 1,
         "Attack+Dialog+MovieEnd": 1,
-        "Dialog": 258,
+        "Dialog": 207,
         "Dialog+Die+EnterWorld+EquipItem+Kill+LvlUp+MovieEnd": 2,
         "Dialog+Die+EnterWorld+Kill+LogOut+LvlUp+MovieEnd+ZoneMissionEnd": 1,
         "Dialog+Die+EnterWorld+Kill+LogOut+LvlUp+ZoneMissionEnd": 2,
@@ -27826,7 +27226,7 @@
         "Dialog+KillInWorld": 2,
         "Dialog+LogOut+LvlUp+NpcLostTarget+NpcReachTarget+ZoneMissionEnd": 2,
         "Dialog+LogOut+NpcLostTarget+NpcReachTarget": 13,
-        "Dialog+LvlUp": 21,
+        "Dialog+LvlUp": 18,
         "Dialog+LvlUp+MovieEnd+ZoneMissionEnd": 1,
         "Dialog+LvlUp+ZoneMissionEnd": 32,
         "Dialog+MovieEnd": 2,
@@ -27838,15 +27238,15 @@
         "EnterZone+MovieEnd": 2,
         "register_only": 6
       },
-      "handlers": 790,
+      "handlers": 736,
       "mechanisms": {
         "action": 31,
         "dynamic_reward": 34,
         "inherited": 6,
         "instance": 26,
-        "item_condition": 248,
-        "item_mutation": 374,
-        "movie": 127,
+        "item_condition": 240,
+        "item_mutation": 326,
+        "movie": 125,
         "skill": 7,
         "spawn": 70,
         "teleport": 70,
@@ -27854,7 +27254,7 @@
       },
       "reasons": {
         "missing_compiled_trigger_chain": 9,
-        "non_linear_or_side_effecting": 777,
+        "non_linear_or_side_effecting": 723,
         "outside_base": 4
       }
     },
@@ -27878,13 +27278,13 @@
       "retained": 456,
       "shadowed_by_generated": 198
     },
-    "missing_base": 2563,
+    "missing_base": 2509,
     "ownership": {
-      "generated_xml": 5267,
-      "java_handlers": 786,
+      "generated_xml": 5321,
+      "java_handlers": 732,
       "legacy_xml": 456,
       "overlap": 0,
-      "selected_xml": 5723
+      "selected_xml": 5777
     },
     "retail": {
       "collect": 262,
