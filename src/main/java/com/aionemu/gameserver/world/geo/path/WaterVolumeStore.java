@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.world.geo.path;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +33,7 @@ final class WaterVolumeStore {
 			return load(input);
 		} catch (IOException | RuntimeException e) {
 			volumesByWorld = Map.of();
-			log.error("Unable to load local water volumes from {}", file, e);
+			log.error(I18n.get("log.path.water_volumes_load_failed", file), e);
 			return 0;
 		}
 	}

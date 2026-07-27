@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,11 +49,11 @@ class ConsoleStaticDataProgressReporterTest {
 		reporter.finish(3, 1234);
 
 		String output = bytes.toString(StandardCharsets.UTF_8);
-		assertTrue(output.startsWith("────────────────────────────────────────────────────────\nLoading static data..\n"));
+		assertTrue(output.startsWith("────────────────────────────────────────────────────────\n" + I18n.get("console.static_data.loading") + "\n"));
 		assertTrue(output.contains("\r█████████░░░░░░░░░░░ | \"ItemData\" | 41/87"));
 		assertTrue(output.contains("\r████████████████████ | \"ItemData\" | 87/87\n"));
 		assertTrue(output.contains("\r████████████████████ | \"NpcDropData\" | 5342/5342\n"));
-		assertTrue(output.contains("Loaded static data in 1234 ms\n"));
+		assertTrue(output.contains(I18n.get("console.static_data.loaded", 1234) + "\n"));
 		assertFalse(output.contains("\"ItemData\" | 0/87"));
 		assertFalse(output.contains("\"NpcDropData\" | 0/5342"));
 		assertFalse(output.contains("%"));
@@ -72,7 +73,7 @@ class ConsoleStaticDataProgressReporterTest {
 		reporter.sectionStarted(1, 1, "MotionData", 333);
 
 		String output = bytes.toString(StandardCharsets.UTF_8);
-		assertTrue(output.endsWith("Loading static data..\n"));
+		assertTrue(output.endsWith(I18n.get("console.static_data.loading") + "\n"));
 		assertFalse(output.contains("MotionData"));
 		assertFalse(output.contains("\r"));
 	}

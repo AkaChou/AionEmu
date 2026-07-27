@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RetailAiData.NpcParty;
 import com.aionemu.gameserver.dataholders.RetailAiData.NpcPartyMember;
@@ -25,8 +26,7 @@ public final class RetailNpcPartyEngine {
 			DataManager.RETAIL_AI_DATA.getNpcParties(instance.getMapId()));
 		templates.forEach(template -> SpawnEngine.spawnObject(template, instance.getInstanceId()));
 		if (!templates.isEmpty()) {
-			log.info("Spawned {} retail NPC party members in world {} instance {}", templates.size(), instance.getMapId(),
-				instance.getInstanceId());
+			log.info(I18n.get("log.retail_npc_party.spawned", templates.size(), instance.getMapId(), instance.getInstanceId()));
 		}
 	}
 

@@ -12,6 +12,7 @@ import java.util.Map;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.collision.IgnoreProperties;
@@ -93,8 +94,8 @@ class DespawnableGeoHookTest {
 			detachAppender(logger, appender);
 		}
 
-		assertFalse(hasLog(appender, "No geometry found for door 78"));
-		assertTrue(hasLog(appender, "No geometry found for door 999 in world 300250000"));
+		assertEquals(1, appender.list.stream().map(ILoggingEvent::getFormattedMessage)
+				.filter(log -> log.contains(I18n.get("log.d3d31340f124", 999, "300250000"))).count());
 	}
 
 	@Test
@@ -114,7 +115,7 @@ class DespawnableGeoHookTest {
 		}
 
 		assertFalse(closedState.isActive(1));
-		assertTrue(hasLog(appender, "Door state 2 not available for door 77 in world 300250000"));
+		assertTrue(hasLog(appender, I18n.get("log.0b8fabd75906", 77, "300250000")));
 	}
 
 	@Test
@@ -136,7 +137,7 @@ class DespawnableGeoHookTest {
 			detachAppender(logger, appender);
 		}
 
-		assertFalse(hasLog(appender, "No geometry found for door"));
+		assertFalse(hasLog(appender, I18n.get("log.d3d31340f124", 999, "300250000")));
 	}
 
 	@Test

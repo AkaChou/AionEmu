@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -49,7 +50,7 @@ public final class RetailDirectPortalEngine {
 		if (start == null || destination == null) {
 			delete(start);
 			delete(destination);
-			log.warn("Failed to open retail direct portal {}", id);
+			log.warn(I18n.get("log.retail_portal.open_failed", id));
 			return false;
 		}
 		ActivePortal active = new ActivePortal(definition, start, destination, destinationPoint);

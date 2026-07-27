@@ -13,7 +13,7 @@ class DropServiceTest {
 	@Test
 	void bidIsPaidBeforeItemIsAddedAndNotPaidAgainDuringDistribution() throws Exception {
 		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropService.java"));
-		String collection = source.substring(source.indexOf("// handles distribution of item"),
+		String collection = source.substring(source.indexOf("// 将物品分配给正确玩家"),
 				source.indexOf("private static long distributeEqually"));
 		String settlement = source.substring(source.indexOf("private void winningBidActions"),
 				source.indexOf("private void winningNormalActions"));

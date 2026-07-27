@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.controllers.movement.MoveController;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
@@ -41,7 +42,7 @@ class PlayerMoveTaskManagerTest {
 		private final TestMoveController moveController = new TestMoveController();
 
 		private TestCreature(int objectId) {
-			super(objectId, null, null, new TestVisibleObjectTemplate(), null);
+			super(objectId, new CreatureController<>() {}, null, new TestVisibleObjectTemplate(), null);
 		}
 
 		@Override

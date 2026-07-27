@@ -23,6 +23,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Client packet syncing windstream path state (enter, boost, exit, etc.).
  */
 public class CM_WINDSTREAM extends AionClientPacket {
+	private static final float ENTER_MAX_DISTANCE = 45;
+	private static final int ENTER_POSITION_DELAY = 100;
+
 	int teleportId;
 	int distance;
 	int state;
@@ -48,18 +51,38 @@ public class CM_WINDSTREAM extends AionClientPacket {
 		Player player = getConnection().getActivePlayer();
 		switch (state) {
 		case 0:
+			player.pendingWindstreamPath = null;
+			WindstreamRoute route = DataManager.WINDSTREAM_DATA.getRoute(player.getPosition().getMapId(), teleportId);
+			if (route == null) {
+				PacketSendUtility.sendPacket(player, new SM_WINDSTREAM(state, 0));
+				return;
+			}
+			if (!route.contains(distance, player.getX(), player.getY(), player.getZ(), ENTER_MAX_DISTANCE)
+				&& !route.contains(Math.max(0, distance - ENTER_POSITION_DELAY), player.getX(), player.getY(), player.getZ(),
+					ENTER_MAX_DISTANCE)) {
+				PacketSendUtility.sendPacket(player, new SM_WINDSTREAM(state, 0));
+				return;
+			}
 			player.unsetPlayerMode(PlayerMode.RIDE);
+			player.pendingWindstreamPath = new WindstreamPath(teleportId, distance);
 			PacketSendUtility.sendPacket(player, new SM_WINDSTREAM(state, 1));
 			break;
 		case 1:
+			WindstreamPath pendingPath = player.pendingWindstreamPath;
+			player.pendingWindstreamPath = null;
 			if (player.isUsingFlyTeleport() || player.isInPlayerMode(PlayerMode.WINDSTREAM) || !player.isFlying()) {
+				PacketSendUtility.sendPacket(player, new SM_WINDSTREAM(state, 0));
 				return;
 			}
-			WindstreamRoute route = DataManager.WINDSTREAM_DATA.getRoute(player.getPosition().getMapId(), teleportId);
-			if (route == null) {
+			if (pendingPath == null || pendingPath.teleportId != teleportId || pendingPath.distance != distance) {
+				PacketSendUtility.sendPacket(player, new SM_WINDSTREAM(state, 0));
 				return;
 			}
-			player.setPlayerMode(PlayerMode.WINDSTREAM, new WindstreamPath(route, teleportId, distance));
+			if (DataManager.WINDSTREAM_DATA.getRoute(player.getPosition().getMapId(), teleportId) == null) {
+				PacketSendUtility.sendPacket(player, new SM_WINDSTREAM(state, 0));
+				return;
+			}
+			player.setPlayerMode(PlayerMode.WINDSTREAM, pendingPath);
 			if (player.isGM()) {
 				PacketSendUtility.sendMessage(player,
 						"You enter teleportId: " + teleportId + ", distance: " + distance);

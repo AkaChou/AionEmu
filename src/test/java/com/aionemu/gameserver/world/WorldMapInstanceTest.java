@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.controllers.VisibleObjectController;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -170,7 +171,7 @@ class WorldMapInstanceTest {
 	private static final class TestVisibleObject extends VisibleObject {
 
 		private TestVisibleObject(int objectId) {
-			super(objectId, null, null, new TestVisibleObjectTemplate(objectId), new WorldPosition(1));
+			super(objectId, new VisibleObjectController<>() {}, null, new TestVisibleObjectTemplate(objectId), new WorldPosition(1));
 		}
 
 		@Override

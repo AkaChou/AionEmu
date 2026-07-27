@@ -38,12 +38,12 @@ public final class WindstreamRoute {
 		if (elapsedMillis < 0 || elapsedMillis > durationMillis) {
 			return null;
 		}
-		double index = (double) elapsedMillis * (points.size() - 1) / durationMillis;
+		double index = elapsedMillis / 1000.0;
 		int fromIndex = (int) index;
-		Point3D from = points.get(fromIndex);
-		if (fromIndex == points.size() - 1) {
-			return from;
+		if (fromIndex >= points.size() - 1) {
+			return points.getLast();
 		}
+		Point3D from = points.get(fromIndex);
 		Point3D to = points.get(fromIndex + 1);
 		float ratio = (float) (index - fromIndex);
 		return new Point3D(from.getX() + (to.getX() - from.getX()) * ratio,

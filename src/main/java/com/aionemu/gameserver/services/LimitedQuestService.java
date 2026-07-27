@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dao.LimitedQuestDAO;
@@ -56,7 +57,7 @@ public final class LimitedQuestService {
 			}
 		}
 		if (limit == null) {
-			log.warn("Ignoring charge_limitedquest for quest {} without limit definitions", questId);
+			log.warn(I18n.get("log.limited_quest.charge_ignored", questId));
 			return false;
 		}
 		int amount = chargeMaxCount ? limit.maxCount() : limit.recoverCount();
@@ -110,7 +111,7 @@ public final class LimitedQuestService {
 		private static LimitedQuestService create() {
 			File file = Config.definitionFile(DEFINITIONS_FILE);
 			Map<Integer, Limit> limits = loadLimits(file);
-			log.info("Loaded {} limited quest definitions from {}", limits.size(), file.getPath());
+			log.info(I18n.get("log.limited_quest.loaded", limits.size(), file.getPath()));
 			return new LimitedQuestService(DAOManager.getDAO(LimitedQuestDAO.class), limits);
 		}
 	}

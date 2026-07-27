@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RetailAiData.GroupControlArea;
@@ -111,8 +112,8 @@ public final class RetailGroupControlEngine {
 				refresh(state.instance, controller);
 			}
 		} catch (Throwable t) {
-			log.error("Failed to refresh retail GROUPCTRL in world {} instance {}",
-				state.instance.getMapId(), state.instance.getInstanceId(), t);
+			log.error(I18n.get("log.retail_group.refresh_failed", state.instance.getMapId(),
+				state.instance.getInstanceId()), t);
 		}
 	}
 
@@ -339,7 +340,7 @@ public final class RetailGroupControlEngine {
 				List<LocationAliasPoint> points = DataManager.RETAIL_AI_DATA.findLocationAlias(
 					definition.exitWorldId(), definition.exitAlias());
 				if (points == null || points.isEmpty()) {
-					log.error("Missing GROUPCTRL exit alias {}/{}", definition.exitWorldId(), definition.exitAlias());
+					log.error(I18n.get("log.retail_group.exit_alias_missing", definition.exitWorldId(), definition.exitAlias()));
 					return;
 				}
 				LocationAliasPoint point = points.get(Rnd.get(points.size()));

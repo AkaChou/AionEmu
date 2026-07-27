@@ -54,7 +54,9 @@ class EffectTest {
 
 	@Test
 	void healOverTimeRegistersAsSuccessfulOnce() {
-		Effect effect = new Effect(null, null, skillTemplate(), 1, 0);
+		SkillTemplate skillTemplate = skillTemplate();
+		setField(skillTemplate, SkillTemplate.class, "applyMpHealBoost", false);
+		Effect effect = new Effect(null, null, skillTemplate, 1, 0);
 		effect.setIsForcedEffect(true);
 		TestHealOverTimeEffect heal = new TestHealOverTimeEffect();
 		setField(heal, EffectTemplate.class, "position", 1);
