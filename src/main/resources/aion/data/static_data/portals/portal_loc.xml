@@ -552,6 +552,7 @@
 	<portal_loc world_id="301390000" loc_id="3013901" x="174.43976" y="527.9976" z="1749.7006" h="67"/> <!-- Boss Room -->
 	<!-- The Shugo Emperor's Vault 4.7.5 -->
 	<portal_loc world_id="301400000" loc_id="3014000" x="543.20166" y="294.48053" z="400.56976" h="23"/>
+	<portal_loc world_id="301400000" loc_id="3014001" x="425.174438" y="697.181641" z="401.404114" h="43"/> <!-- Loc_Stage2_Enter -->
 	<!-- Stonespear Reach 4.8 -->
 	<portal_loc world_id="301500000" loc_id="3015000" x="231.18587" y="264.42505" z="95.7781" h="60"/>
 	<!-- Sealed Argent Manor 4.9.1 -->
@@ -619,6 +620,7 @@
 	<portal_loc world_id="301560000" loc_id="3015607" x="481.299286" y="1025.810059" z="713.110657" h="60"/> <!-- Boss Final -->
 	<!-- Emperor Trillirunerk's Safe 4.9.1 -->
 	<portal_loc world_id="301590000" loc_id="3015900" x="543.20166" y="294.48053" z="400.56976" h="23"/>
+	<portal_loc world_id="301590000" loc_id="3015901" x="425.768829" y="696.985474" z="401.404114" h="43"/> <!-- Loc_Stage2_Enter -->
 	<!-- Adma's Fall 5.0 -->
 	<portal_loc world_id="301600000" loc_id="3016000" x="493.72937" y="468.32947" z="173.48601" h="49"/>
 	<portal_loc world_id="301600000" loc_id="3016001" x="507.09048" y="522.85175" z="198.61156" h="101"/> <!-- IDF6_Adma Boss_Room_In -->

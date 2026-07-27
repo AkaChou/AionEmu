@@ -307,9 +307,17 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertTrue(vault.contains("IDSweep_Reward"));
 		assertTrue(vault.contains("npc id=\"832932\""));
 		assertTrue(safe.contains("IDSweep_Reward_S"));
-		assertTrue(safe.contains("npc id=\"832932\""));
-		assertEquals(221, count(vault, "<condition "));
-		assertEquals(410, count(safe, "<condition "));
+			assertTrue(safe.contains("npc id=\"832932\""));
+			assertEquals(221, count(vault, "<condition "));
+			assertEquals(410, count(safe, "<condition "));
+			String npcTemplates = Files.readString(Path.of(
+					"src/main/resources/aion/data/static_data/npcs/npc_template.xml"));
+			for (int npcId : new int[] { 832924, 832925 }) {
+				assertTrue(npcTemplates.matches("(?s).*npc_id=\"" + npcId + "\"[^>]*ai=\"portal_dialog\".*"),
+						Integer.toString(npcId));
+			}
+			assertFalse(Files.exists(Path.of(
+					"src/main/java/com/aionemu/gameserver/ai/instance/shugoEmperorVault/OpenedVaultDoorAI2.java")));
 
 		String staticSpawns = Files.readString(Path.of(
 				"src/main/resources/aion/data/static_data/spawns/Instances/301590000_Emperor_Trillirunerk_Safe.xml"));

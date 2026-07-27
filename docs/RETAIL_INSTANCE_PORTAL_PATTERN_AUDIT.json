@@ -363,16 +363,6 @@
       "reason": "mapped retail pattern is absent from generated pattern definitions"
     },
     {
-      "npc_id": 832924,
-      "world_ids": [
-        301400000,
-        301590000
-      ],
-      "mapped_pattern": "IDSweep_IN_Stage2_NPC01",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
       "npc_id": 832932,
       "world_ids": [
         301400000,

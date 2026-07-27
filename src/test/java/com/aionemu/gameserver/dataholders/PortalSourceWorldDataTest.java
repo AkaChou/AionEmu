@@ -39,6 +39,11 @@ class PortalSourceWorldDataTest {
 		assertAlias(data.getPortalDialog(834188, 104, Race.ELYOS, 302110000), 3021101,
 				"IDTransform_Save_Point_01");
 		assertNull(data.getPortalDialog(834188, 104, Race.ELYOS, 301520000));
+		assertAlias(data.getPortalDialog(832924, 104, Race.ELYOS, 301400000), 3014001,
+				"Loc_Stage2_Enter");
+		assertAlias(data.getPortalDialog(832925, 104, Race.ELYOS, 301590000), 3015901,
+				"Loc_Stage2_Enter");
+		assertNull(data.getPortalDialog(832925, 104, Race.ELYOS, 301400001));
 
 		PortalPath existing = data.getPortalDialog(700088, 10000, Race.ELYOS, 310030000);
 		assertNotNull(existing);
