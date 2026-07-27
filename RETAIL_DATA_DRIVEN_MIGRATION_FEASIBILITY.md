@@ -1450,24 +1450,27 @@ coverage.xml 只能在这些维度均有证据后改变 owner。
 |------|--------|------|------|----------|
 | SimpleTalk | Quest_SimpleTalk.xml | 59 | 54 | 5 个 ScriptDLL-only 证据不足 |
 | SimpleHunt | Quest_SimpleHunt.xml | 4 | 1 | 3 个形状未映射（talk+give_item+hunt 混合） |
-| SimpleUseItem | Quest_SimpleUseItem.xml | 11 | 0 | 11 个有 talk_npc3/give_item，item_order 模板只支持 2 talk |
-| SimpleItemPlay | Quest_SimpleItemPlay.xml | 8 | 0 | 8 个形状未映射（acquired+give+use+reward） |
-| SimpleCollect | Quest_SimpleCollectItem.xml | 2 | 0 | 2 个形状未映射（talk+object+reward） |
+| SimpleUseItem | Quest_SimpleUseItem.xml | 11 | 10 | 1 个 ScriptDLL 证据不足（扩展后） |
+| SimpleItemPlay | Quest_SimpleItemPlay.xml | 8 | 8 | 0（修复 give_item 字段后全成功） |
+| SimpleCollect | Quest_SimpleCollectItem.xml | 2 | 2 | 0（扩展 talk_npc 支持后全成功） |
 
-**净退役 55 个 Java handler（54 SimpleTalk + 1 SimpleHunt），门禁全绿。**
+**净退役 75 个 Java handler（54 SimpleTalk + 1 SimpleHunt + 10 SimpleUseItem + 8 SimpleItemPlay + 2 SimpleCollect），门禁全绿。**
 
-### 19.4 下一批杠杆：形状映射扩展
+### 19.4 形状映射扩展（本会话完成）
 
-剩余 24 个简单表覆盖的 Java handler（11 SimpleUseItem + 8 SimpleItemPlay + 3 SimpleHunt + 2 SimpleCollect）真端形状已知，只是生成器映射规则不完整。按形状归类：
+通过扩展生成器形状映射，4 个简单表的 Java handler 批量退役：
 
-- **11 SimpleUseItem**：use_item + 最多 3 talk_npc + give/remove_item + reward。`ItemOrdersData` 模板只支持 2 talk，需扩展为 data_driven_quest 步骤链（已支持任意多 TALK + give/remove_item 步骤）。
-- **8 SimpleItemPlay**：acquired_npc + give_item + use_item + reward。`data_driven_item_play` 函数需扩展解析 give_item 字段。
-- **3 SimpleHunt**：talk + give_item + monster hunt + reward 混合步骤，需 data_driven 步骤链。
-- **2 SimpleCollect**：talk + object(FOBJ) + reward，需 data_driven ACTION 步骤（已支持 ACTION 类型）。
+- **simple_use_items**：扩展支持 talk_npc3 + give/remove_item*N* 物品流转形状，输出 data_driven 步骤链（start_type=ITEM_PLAY + TALK 步骤链，保留严格顺序语义）。退役 10 个。
+- **simple_item_plays**：修复 give_item 字段读取（SimpleItemPlay 表用 `give_item` 无后缀，非 `give_item1`），放宽 remove_item 要求，跳过哨兵 NPC。退役 8 个。
+- **simple_collects**：扩展 allowed 支持 talk_npc1/2/3，输出 talks 列表（item_collecting 模板已支持中间 talk NPC）。退役 2 个。
 
-这些是 O(形状族) 的生成器扩展，每扩展一个形状映射，对应一批 Java handler 自动退役。
+关键经验：**形状映射扩展是 O(形状族) 杠杆**。每个简单表函数的字段集（allowed）+ 输出格式扩展，对应一批 Java handler 自动退役。扩展前必验证：字段在 allowed 里、输出格式与渲染模板匹配、哨兵 NPC 跳过。
 
-### 19.5 最大长尾池：269 个 data_driven 覆盖的 Java handler
+### 19.5 下一批杠杆：剩余 SimpleHunt + data_driven 覆盖池
+
+剩余 3 个 SimpleHunt 覆盖的 Java handler（14152/14112/24153）形状是 talk + give_item + monster hunt 混合步骤链，需扩展 retail_hunts 输出 data_driven 步骤链。其中 24153 是并行 5 目标 hunt（每目标独立 var 槽），需 data_driven 支持并行 HUNT 步骤（当前 data_driven HUNT 是顺序的，不支持并行多 var 槽）。这是模型能力差距，需先扩展 data_driven 模型。
+
+### 19.6 最大长尾池：269 个 data_driven 覆盖的 Java handler
 
 790 个 Java handler 中，269 个在真端 `data_driven_quest.xml` 有定义。形状分布（acquire, progress）：
 - **120 EnterArea+PVP**（深渊/地图 PVP 击杀任务，最大类）
@@ -1475,10 +1478,12 @@ coverage.xml 只能在这些维度均有证据后改变 owner。
 
 `data_driven_pvps` 函数当前只支持 `acquire=Talk + progress=PVP`（119 个已生成）。`acquire=EnterArea + progress=PVP` 的 120 个需要扩展为 `kill_in_world` 带 `invasionWorldId`（进入世界自动开始），但真端块无 world 字段--需从 ScriptDLL 或 quest.xml 区域推导。这是下一阶段的最大批量池。
 
-### 19.6 批量判定要点
+### 19.7 批量判定要点
 
 - **SimpleTalk 表形状被生成器完整支持**（54/59 成功率 92%）--安全批量池。
-- **SimpleUseItem/ItemPlay/Hunt/Collect 表形状多数未映射**（1/25 成功率 4%）--需先扩展生成器形状映射，不可直接删。
+- **SimpleUseItem/ItemPlay/Collect 表形状经扩展后全部支持**（20/21 成功率 95%）--形状映射扩展杠杆验证成功。
+- **SimpleHunt 混合形状（talk+give_item+hunt）需模型扩展**（1/4）--data_driven 需支持并行 HUNT。
 - **删前必验证形状支持**：用 `Java ∩ 真端表` 交集 + 生成器 allowed 字段集核对，避免批量删后大面积隔离。
+- **哨兵 NPC（_faction_ 等）必须跳过**：simple_item_plays 等函数需跳过 acquired_npc 以 `_` 开头的记录，让 faction 闭包处理。
 - **5% 失败可接受**：恢复失败的 Java，不影响整体进度。
 
