@@ -7,7 +7,7 @@
     "runtime_proof": "RetailPatternAI2Test#retailInstancePatternsUseCompleteConditionVariables"
   },
   "summary": {
-    "REJECT_NO_RETAIL_PATTERN": 39,
+    "REJECT_NO_RETAIL_PATTERN": 38,
     "REJECT_INCOMPLETE_RETAIL_PATTERN": 1,
     "SUPPORTED_RETAIL_PATTERN": 8
   },
@@ -238,16 +238,6 @@
         301270000
       ],
       "mapped_pattern": "IDLDF4Re_01_room_out",
-      "status": "REJECT_NO_RETAIL_PATTERN",
-      "reason": "mapped retail pattern is absent from generated pattern definitions"
-    },
-    {
-      "npc_id": 702660,
-      "world_ids": [
-        300240000,
-        300241000
-      ],
-      "mapped_pattern": "IDStation_Lobby_Teleport",
       "status": "REJECT_NO_RETAIL_PATTERN",
       "reason": "mapped retail pattern is absent from generated pattern definitions"
     },

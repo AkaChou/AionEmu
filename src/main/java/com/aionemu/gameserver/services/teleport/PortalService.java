@@ -256,6 +256,8 @@ public class PortalService {
 					int errDialog = item.getErrItem();
 					if (errDialog != 0) {
 						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(npcObjectId, errDialog));
+					} else if (item.getErrMessageId() != 0) {
+						PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(item.getErrMessageId()));
 					} else {
 						PacketSendUtility.sendPacket(player,
 								SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_ENTER_WITHOUT_ITEM_TRY_LATER);

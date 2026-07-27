@@ -42,6 +42,23 @@
         "domain_type": "LIFT"
       }
     ],
+    "transport_shape_domain_type_rules": [
+      {
+        "callback_shape": "1f81f2a216ad13ba",
+        "domain_type": "ARENA_REENTRY",
+        "evidence": [
+          "fun/fun_722.cpp:24-31"
+        ]
+      },
+      {
+        "callback_shape": "ffee58d2fe09b860",
+        "domain_type": "ITEM_GATED_TELEPORT",
+        "evidence": [
+          "fun/fun_722.cpp:3700-3709",
+          "fun/fun_723.cpp:1032-1041"
+        ]
+      }
+    ],
     "portal_service_semantics": {
       "player_field_offsets": {
         "0x60": {
@@ -67,6 +84,11 @@
         "0x188": "reject branch",
         "0x5d8": "finish dialog branch",
         "FUN_180c51a60": "unmatched dialog fallback"
+      },
+      "item_calls": {
+        "0x300": "inventory item count",
+        "0x1d0": "consume inventory item",
+        "0x2a8": "send missing-item system message"
       }
     }
   },
@@ -80,7 +102,7 @@
     "unique_callbacks": 757,
     "transport_calls": 520,
     "endpoint_proven_routes": 509,
-    "portal_service_expressible_routes": 136,
+    "portal_service_expressible_routes": 140,
     "callback_shapes": 262,
     "route_proven_callback_shapes": 32,
     "by_status": {
@@ -104,10 +126,10 @@
       "unsupported_argument_shape": 59
     },
     "portal_service_projection_by_status": {
-      "EXPRESSIBLE": 101,
+      "EXPRESSIBLE": 103,
       "NOT_APPLICABLE": 393,
       "REJECT_ROUTE_NOT_PROVEN": 280,
-      "REJECT_UNMODELED_CALLBACK_SHAPE": 44
+      "REJECT_UNMODELED_CALLBACK_SHAPE": 42
     }
   },
   "callback_shapes": [
@@ -70209,8 +70231,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -70682,8 +70704,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -71090,8 +71112,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": []
         }
       ],
@@ -71436,8 +71458,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": []
         }
       ],
@@ -71809,8 +71831,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": []
         }
       ],
@@ -72502,8 +72524,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -73209,8 +73231,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -73954,8 +73976,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -74661,8 +74683,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -75368,8 +75390,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -84044,8 +84066,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -84447,8 +84469,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -84869,8 +84891,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -85272,8 +85294,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -85675,8 +85697,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -86116,8 +86138,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -86499,8 +86521,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -87706,8 +87728,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -87911,8 +87933,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ARENA_REENTRY",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -92539,8 +92561,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ITEM_GATED_TELEPORT",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -92664,8 +92686,16 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 185000283,
+              "item_count": 1,
+              "err_message_id": 1403685
+            }
+          ]
+        }
       }
     },
     {
@@ -108654,8 +108684,8 @@
           "endpoint_reasons": [],
           "semantic_reasons": [],
           "reasons": [],
-          "domain_type": "TELEPORT",
-          "domain_type_source": "TRANSPORT_API",
+          "domain_type": "ITEM_GATED_TELEPORT",
+          "domain_type_source": "AUDITED_RULE",
           "routes": [
             {
               "status": "ENDPOINT_PROVEN",
@@ -108779,8 +108809,16 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "items": [
+            {
+              "item_id": 185000282,
+              "item_count": 1,
+              "err_message_id": 1403685
+            }
+          ]
+        }
       }
     },
     {

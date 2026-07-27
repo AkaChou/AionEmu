@@ -635,7 +635,8 @@ def source_transport_routes(root: Path, instance_world_ids: set[int]) -> dict[tu
         if not projection or projection.get("status") not in {
                 "EXPRESSIBLE", "NOT_APPLICABLE", "REJECT_ROUTE_NOT_PROVEN", "REJECT_UNMODELED_CALLBACK_SHAPE"}:
             raise ValueError(f"ScriptDLL transport without PortalService projection: {reference.get('script_name')}")
-        if (reference.get("domain_type") not in {"LIFT", "TELEPORT"}
+        if (reference.get("domain_type") not in {
+                "ARENA_REENTRY", "ITEM_GATED_TELEPORT", "LIFT", "TELEPORT"}
                 or reference.get("domain_type_source") not in {"AUDITED_RULE", "TRANSPORT_API"}):
             raise ValueError(f"ScriptDLL transport without audited domain type: {reference.get('script_name')}")
         target = reference["targets"][0]
@@ -735,6 +736,18 @@ def portal_service_requirements(route: dict[str, object]) -> dict[str, object]:
             result["min_level"] = int(requirement["min_level"])
         if "max_level" in requirement:
             result["max_level"] = int(requirement["max_level"])
+        items = []
+        for item in requirements[0].get("items", []):
+            attributes = item.get("attributes", item)
+            entry = {
+                "item_id": int(attributes["item_id"]),
+                "item_count": int(attributes.get("item_count", "1")),
+            }
+            if "err_message_id" in attributes:
+                entry["err_message_id"] = int(attributes["err_message_id"])
+            items.append(entry)
+        if items:
+            result["items"] = items
     return result
 
 

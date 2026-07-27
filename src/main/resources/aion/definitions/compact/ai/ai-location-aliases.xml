@@ -961,6 +961,20 @@
   <alias world_id="302110000" world_name="idtransform_event" name="IDTransform_Save_Point_03">
     <point x="408.898682" y="513.081055" z="349.319672" dir="180"/>
   </alias>
+  <alias world_id="302200000" world_name="idlc1" name="Location_Invade_Start_L">
+    <point x="946.540039" y="758.715576" z="2209.367676" dir="0"/>
+    <point x="946.926636" y="756.478516" z="2209.367676" dir="0"/>
+    <point x="944.438110" y="758.306641" z="2209.367676" dir="0"/>
+    <point x="946.542969" y="754.756348" z="2209.367676" dir="0"/>
+    <point x="944.707886" y="755.455688" z="2209.367676" dir="0"/>
+  </alias>
+  <alias world_id="302300000" world_name="iddc1" name="Location_Invade_Start_D">
+    <point x="833.079285" y="2349.898926" z="95.163216" dir="0"/>
+    <point x="836.172913" y="2350.466309" z="95.163216" dir="0"/>
+    <point x="833.405273" y="2345.052246" z="95.163216" dir="0"/>
+    <point x="830.873901" y="2347.083984" z="95.163216" dir="0"/>
+    <point x="835.702271" y="2344.916748" z="95.163216" dir="0"/>
+  </alias>
   <alias world_id="302330000" world_name="idevent_solo" name="idevent_boss_end">
     <point x="223.848312" y="357.048798" z="143.100006" dir="270"/>
   </alias>

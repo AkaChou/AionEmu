@@ -21,6 +21,8 @@ public class ItemReq {
 	protected int itemCount;
 	@XmlAttribute(name = "err_item")
 	protected int errItem;
+	@XmlAttribute(name = "err_message_id")
+	protected int errMessageId;
 
 	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
@@ -45,5 +47,9 @@ public class ItemReq {
 	/** 返回 err item / Returns the err item */
 	public int getErrItem() {
 		return errItem;
+	}
+
+	public int getErrMessageId() {
+		return errMessageId;
 	}
 }

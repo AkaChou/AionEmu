@@ -67,6 +67,17 @@ RETAIL_TRANSPORT_DOMAIN_TYPES = {
     ("IDNovice_Elevator_Lever_Up", "FUN_180c78400", "0eff6fbaa0598942", "0x2d0"): "LIFT",
 }
 
+RETAIL_TRANSPORT_SHAPE_DOMAIN_TYPES = {
+    "1f81f2a216ad13ba": {
+        "domain_type": "ARENA_REENTRY",
+        "evidence": ["fun/fun_722.cpp:24-31"],
+    },
+    "ffee58d2fe09b860": {
+        "domain_type": "ITEM_GATED_TELEPORT",
+        "evidence": ["fun/fun_722.cpp:3700-3709", "fun/fun_723.cpp:1032-1041"],
+    },
+}
+
 
 def source_label(path: Path, root: Path, prefix: str = "") -> str:
     relative = path.resolve().relative_to(root.resolve()).as_posix()
@@ -341,11 +352,39 @@ def callback_features(callback: dict[str, object]) -> tuple[dict[str, object], d
     return {"shape_id": shape_id, "predicates": predicates, "operations": operations}, signature
 
 
-def portal_service_projection(status: str, shape_id: str | None) -> dict[str, object]:
+def item_gate_requirements(shape_id: str | None,
+                           operations: list[dict[str, object]] | None) -> dict[str, object] | None:
+    if shape_id != "ffee58d2fe09b860" or operations is None:
+        return None
+    if any(operation["target"] == "0x1d0" for operation in operations):
+        return None
+    values = {}
+    for target, kind in (("0x300", "READ"), ("0x2a8", "CALL")):
+        matches = [operation for operation in operations
+                   if operation["target"] == target and operation["kind"] == kind]
+        if len(matches) != 1:
+            return None
+        call = VIRTUAL_CALL.fullmatch(str(matches[0]["raw"]))
+        if call is None:
+            return None
+        args = split_args(call.group("args"))
+        value = integer(args[1]) if len(args) > 1 else None
+        if value is None:
+            return None
+        values[target] = value
+    return {"items": [{"item_id": values["0x300"], "item_count": 1,
+                       "err_message_id": values["0x2a8"]}]}
+
+
+def portal_service_projection(status: str, shape_id: str | None,
+                              operations: list[dict[str, object]] | None = None) -> dict[str, object]:
     if status == "NOT_TRANSPORT":
         return {"status": "NOT_APPLICABLE", "requirements": {}}
     if status != "ROUTE_PROVEN":
         return {"status": "REJECT_ROUTE_NOT_PROVEN", "requirements": {}}
+    item_requirements = item_gate_requirements(shape_id, operations)
+    if item_requirements is not None:
+        return {"status": "EXPRESSIBLE", "requirements": item_requirements}
     requirements = PORTAL_SERVICE_REQUIREMENTS.get(shape_id)
     requirements_by_dialog = PORTAL_SERVICE_REQUIREMENTS_BY_DIALOG.get(shape_id)
     if requirements_by_dialog is not None:
@@ -360,7 +399,13 @@ def portal_service_projection(status: str, shape_id: str | None) -> dict[str, ob
 
 
 def transport_domain_type(script_name: str, callback: str, shape_id: str, api_offset: str) -> str:
-    return RETAIL_TRANSPORT_DOMAIN_TYPES.get((script_name, callback, shape_id, api_offset), "TELEPORT")
+    exact = RETAIL_TRANSPORT_DOMAIN_TYPES.get((script_name, callback, shape_id, api_offset))
+    if exact is not None:
+        return exact
+    shape = RETAIL_TRANSPORT_SHAPE_DOMAIN_TYPES.get(shape_id)
+    if shape is not None:
+        return str(shape["domain_type"])
+    return "TELEPORT"
 
 
 def containing_blocks(body: str, position: int) -> tuple[int, ...]:
@@ -583,7 +628,8 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
             domain_key = (row["script_name"] or "", row["callback"],
                           row["callback_features"]["shape_id"], call["api_offset"])
             call["domain_type"] = transport_domain_type(*domain_key)
-            call["domain_type_source"] = "AUDITED_RULE" if domain_key in RETAIL_TRANSPORT_DOMAIN_TYPES else "TRANSPORT_API"
+            call["domain_type_source"] = ("AUDITED_RULE" if call["domain_type"] != "TELEPORT"
+                                          else "TRANSPORT_API")
         row["calls"] = calls
         reasons = []
         if row["registration_binding"] == "DYNAMIC":
@@ -623,7 +669,8 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
         row["status"] = status
         row["reasons"] = sorted(set(reasons))
         projection = portal_service_projection(
-            status, None if row["callback_features"] is None else row["callback_features"]["shape_id"])
+            status, None if row["callback_features"] is None else row["callback_features"]["shape_id"],
+            None if row["callback_features"] is None else row["callback_features"]["operations"])
         row["portal_service_projection"] = projection
         portal_projection_counts[projection["status"]] += 1
         if projection["status"] == "EXPRESSIBLE":
@@ -671,6 +718,9 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
                 "domain_type": domain_type,
             } for (script_name, callback, shape_id, api_offset), domain_type
                 in sorted(RETAIL_TRANSPORT_DOMAIN_TYPES.items())],
+            "transport_shape_domain_type_rules": [{"callback_shape": shape_id, **rule}
+                                                   for shape_id, rule in sorted(
+                                                       RETAIL_TRANSPORT_SHAPE_DOMAIN_TYPES.items())],
             "portal_service_semantics": {
                 "player_field_offsets": {
                     "0x60": {
@@ -687,6 +737,11 @@ def build(script_root: Path, registrations_file: Path, script_names_file: Path, 
                     "0x188": "reject branch",
                     "0x5d8": "finish dialog branch",
                     "FUN_180c51a60": "unmatched dialog fallback",
+                },
+                "item_calls": {
+                    "0x300": "inventory item count",
+                    "0x1d0": "consume inventory item",
+                    "0x2a8": "send missing-item system message",
                 },
             },
         },

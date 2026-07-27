@@ -51,6 +51,14 @@ class PortalSourceWorldDataTest {
 		assertAlias(data.getPortalDialog(832925, 104, Race.ELYOS, 301590000), 3015901,
 				"Loc_Stage2_Enter");
 		assertNull(data.getPortalDialog(832925, 104, Race.ELYOS, 301400001));
+		PortalPath invadeLight = data.getPortalDialog(834320, 10000, Race.ELYOS, 302200000);
+		assertAlias(invadeLight, 3022001, "Location_Invade_Start_L");
+		assertEquals(185000282, invadeLight.getPortalReq().getItemReq().get(0).getItemId());
+		assertEquals(1403685, invadeLight.getPortalReq().getItemReq().get(0).getErrMessageId());
+		PortalPath invadeDark = data.getPortalDialog(834270, 10000, Race.ASMODIANS, 302300000);
+		assertAlias(invadeDark, 3023001, "Location_Invade_Start_D");
+		assertEquals(185000283, invadeDark.getPortalReq().getItemReq().get(0).getItemId());
+		assertEquals(1403685, invadeDark.getPortalReq().getItemReq().get(0).getErrMessageId());
 
 		PortalPath existing = data.getPortalDialog(700088, 10000, Race.ELYOS, 310030000);
 		assertNotNull(existing);

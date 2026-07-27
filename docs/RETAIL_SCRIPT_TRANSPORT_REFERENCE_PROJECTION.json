@@ -15,8 +15,8 @@
       {
         "path": "RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
         "role": "script_transport_source",
-        "sha256": "f262d9a6af617cdca8896756925403b772373c5b0cd03077bcd70a7be2d01afe",
-        "size": 4867716
+        "sha256": "f125d5a8e8956c9b15141b7a830991c38322f3f743819f1a12fbc7e3ffb3fa3e",
+        "size": 4868729
       },
       {
         "path": "XML/China/ID/WorldId.xml",
@@ -42412,8 +42412,8 @@
         "id": "IDArena_10th_Resurrect_NPC:FUN_180c6a3f0:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -42585,8 +42585,8 @@
         "id": "IDArena_1st_Resurrect_NPC:FUN_180c6a5f0:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -42758,8 +42758,8 @@
         "id": "IDArena_2nd_Resurrect_NPC:FUN_180c6a860:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -42898,8 +42898,8 @@
         "id": "IDArena_3rd_Resurrect_NPC:FUN_180c6aaa0:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -43038,8 +43038,8 @@
         "id": "IDArena_4th_Resurrect_NPC:FUN_180c6acf0:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -43408,8 +43408,8 @@
         "id": "IDArena_5th_Resurrect_NPC:FUN_180c6b050:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -43811,8 +43811,8 @@
         "id": "IDArena_6th_Resurrect_NPC:FUN_180c6b300:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -44214,8 +44214,8 @@
         "id": "IDArena_7th_Resurrect_NPC:FUN_180c6b670:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -44617,8 +44617,8 @@
         "id": "IDArena_8th_Resurrect_NPC:FUN_180c6b9b0:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -45020,8 +45020,8 @@
         "id": "IDArena_9th_Resurrect_NPC:FUN_180c6bcf0:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -85743,8 +85743,8 @@
         "id": "IDArena_Solo_H1_Resurrect_NPC:FUN_180c6d410:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -85916,8 +85916,8 @@
         "id": "IDArena_Solo_H2_Resurrect_NPC:FUN_180c6d500:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -86089,8 +86089,8 @@
         "id": "IDArena_solo_1st_Resurrect_NPC:FUN_180c6e000:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -86262,8 +86262,8 @@
         "id": "IDArena_solo_2nd_Resurrect_NPC:FUN_180c6e180:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -86435,8 +86435,8 @@
         "id": "IDArena_solo_3rd_Resurrect_NPC:FUN_180c6e3c0:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -86608,8 +86608,8 @@
         "id": "IDArena_solo_4B_Resurrect_NPC:FUN_180c6e540:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -86781,8 +86781,8 @@
         "id": "IDArena_solo_4th_Resurrect_NPC:FUN_180c6e770:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -86954,8 +86954,8 @@
         "id": "IDArena_solo_5th_Resurrect_NPC:FUN_180c6e9d0:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -87127,8 +87127,8 @@
         "id": "IDArena_solo_6th_Resurrect_NPC:FUN_180c6eb50:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ARENA_REENTRY",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -87970,8 +87970,8 @@
         "id": "IDDC1_Dreadgion_Invade_Key_D:FUN_180c70b80:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ITEM_GATED_TELEPORT",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -87982,8 +87982,16 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "items": [
+            {
+              "err_message_id": 1403685,
+              "item_count": 1,
+              "item_id": 185000283
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar1 + 0x2e0))(plVar1,L\"Location_Invade_Start_D\",1);",
       "registration_reasons": [],
@@ -88138,8 +88146,8 @@
         "id": "IDDC1_Dreadgion_Invade_Key_D:FUN_180c70b80:1:2",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ITEM_GATED_TELEPORT",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -88150,8 +88158,16 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "items": [
+            {
+              "err_message_id": 1403685,
+              "item_count": 1,
+              "item_id": 185000283
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar1 + 0x2e0))(plVar1,L\"Location_Invade_Start_D\",1);",
       "registration_reasons": [],
@@ -102216,8 +102232,8 @@
         "id": "IDLC1_Dreadgion_Invade_Key_L:FUN_180c752d0:1:1",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ITEM_GATED_TELEPORT",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -102228,8 +102244,16 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "items": [
+            {
+              "err_message_id": 1403685,
+              "item_count": 1,
+              "item_id": 185000282
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar1 + 0x2e0))(plVar1,L\"Location_Invade_Start_L\",1);",
       "registration_reasons": [],
@@ -102384,8 +102408,8 @@
         "id": "IDLC1_Dreadgion_Invade_Key_L:FUN_180c752d0:1:2",
         "type": "script_transport"
       },
-      "domain_type": "TELEPORT",
-      "domain_type_source": "TRANSPORT_API",
+      "domain_type": "ITEM_GATED_TELEPORT",
+      "domain_type_source": "AUDITED_RULE",
       "event": {
         "code": 27,
         "dialog": 10000,
@@ -102396,8 +102420,16 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "items": [
+            {
+              "err_message_id": 1403685,
+              "item_count": 1,
+              "item_id": 185000282
+            }
+          ]
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar1 + 0x2e0))(plVar1,L\"Location_Invade_Start_L\",1);",
       "registration_reasons": [],

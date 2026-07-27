@@ -1513,17 +1513,6 @@
 	</portal_use>
 	<!-- KUMUKI CAVE 5.3 END -->
 	
-	<!-- BASTION OF SOULS 5.5 -->
-	<!-- Bastion Of Souls Exit [Elyos] -->
-	<portal_use npc_id="731805">
-		<portal_path loc_id="4000119" race="ELYOS"/>
-	</portal_use>
-	<!-- Bastion Of Souls Exit [Asmodians] -->
-	<portal_use npc_id="731806">
-		<portal_path loc_id="4000119" race="ASMODIANS"/>
-	</portal_use>
-	<!-- BASTION OF SOULS 5.5 END -->
-	
 	<!-- DIVINE TOWER 5.8 -->
 	<!-- IDAb1_Heroes_Boss_In_L -->
 	<portal_use npc_id="835693">
@@ -2217,6 +2206,13 @@
 	<!-- DARK POETA END -->
 	
 	<!-- ATURAM SKY FORTRESS 4.8 -->
+	<!-- Activated Balaur Teleporter -->
+	<portal_dialog npc_id="702660">
+		<portal_path dialog="10000" loc_id="3002402" source_world_id="300240000" destination_alias="IDStation_A_alias"/>
+		<portal_path dialog="10001" loc_id="3002403" source_world_id="300240000" destination_alias="IDStation_B_alias"/>
+		<portal_path dialog="10000" loc_id="3002412" source_world_id="300241000" destination_alias="IDStation_A_alias"/>
+		<portal_path dialog="10001" loc_id="3002413" source_world_id="300241000" destination_alias="IDStation_B_alias"/>
+	</portal_dialog>
 	<!-- Aturam Sky Fortress [Elyos] -->
 	<portal_dialog npc_id="832993">
 		<portal_path dialog="10000" loc_id="3002400" instance="true" err_group="1013" race="ELYOS">
@@ -4815,8 +4811,10 @@
 	<!-- DREDGION DEFENSE: SANCTUM -->
 	<!-- Idorunerk -->
 	<portal_dialog npc_id="834320">
-		<portal_path dialog="10000" loc_id="3022001">
-		    <portal_req min_level="66" err_level="27"/>
+		<portal_path dialog="10000" loc_id="3022001" source_world_id="302200000" destination_alias="Location_Invade_Start_L">
+			<portal_req>
+				<item_req item_id="185000282" item_count="1" err_message_id="1403685"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- DREDGION DEFENSE: SANCTUM END -->
@@ -4824,8 +4822,10 @@
 	<!-- DREDGION DEFENSE: PANDAEMONIUM -->
 	<!-- Hemerinerk -->
 	<portal_dialog npc_id="834270">
-		<portal_path dialog="10000" loc_id="3023001">
-		    <portal_req min_level="66" err_level="27"/>
+		<portal_path dialog="10000" loc_id="3023001" source_world_id="302300000" destination_alias="Location_Invade_Start_D">
+			<portal_req>
+				<item_req item_id="185000283" item_count="1" err_message_id="1403685"/>
+			</portal_req>
 		</portal_path>
 	</portal_dialog>
 	<!-- DREDGION DEFENSE: PANDAEMONIUM END -->
@@ -5040,6 +5040,14 @@
 	<!-- SPECIAL TELEPORT 5.5 END -->
 	
 	<!-- BASTION OF SOULS 5.5 -->
+	<!-- Bastion Of Souls Exit [Elyos] -->
+	<portal_dialog npc_id="731805">
+		<portal_path dialog="104" loc_id="4000124" source_world_id="302340000" race="ELYOS"/>
+	</portal_dialog>
+	<!-- Bastion Of Souls Exit [Asmodians] -->
+	<portal_dialog npc_id="731806">
+		<portal_path dialog="104" loc_id="4000125" source_world_id="302340000" race="ASMODIANS"/>
+	</portal_dialog>
 	<!-- Bastion Of Souls -->
 	<portal_dialog npc_id="731792">
 		<portal_path dialog="10000" loc_id="3023400" player_count="12" instance="true">

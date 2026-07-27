@@ -64,5 +64,6 @@
 		<xs:attribute name="item_id" type="xs:int"/>
 		<xs:attribute name="item_count" type="xs:int"/>
 		<xs:attribute name="err_item" type="xs:int"/>
+		<xs:attribute name="err_message_id" type="xs:int"/>
 	</xs:complexType>
 </xs:schema>

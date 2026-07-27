@@ -32,7 +32,7 @@ class RetailScriptTransportsTest(unittest.TestCase):
         self.assertEqual({0x1b}, {registration["event_code"] for registration in registrations})
         self.assertEqual({"DYNAMIC": 1, "STATIC": 817}, report["summary"]["registrations_by_binding"])
         self.assertEqual(520, len(calls))
-        self.assertEqual({"LIFT": 1, "TELEPORT": 519},
+        self.assertEqual({"ARENA_REENTRY": 19, "ITEM_GATED_TELEPORT": 2, "LIFT": 1, "TELEPORT": 498},
                          {domain: sum(call["domain_type"] == domain for call in calls)
                           for domain in {call["domain_type"] for call in calls}})
         self.assertTrue(all(call["domain_type_source"] in {"AUDITED_RULE", "TRANSPORT_API"}
@@ -45,6 +45,14 @@ class RetailScriptTransportsTest(unittest.TestCase):
         evidence = ("IDNovice_Elevator_Lever_Up", "FUN_180c78400", "0eff6fbaa0598942", "0x2d0")
         self.assertEqual("LIFT", transport_domain_type(*evidence))
         self.assertEqual("TELEPORT", transport_domain_type(*evidence[:-1], "0x2e0"))
+        self.assertEqual("ARENA_REENTRY",
+                         transport_domain_type("IDArena_1st_Resurrect_NPC", "FUN_180c6a5f0",
+                                               "1f81f2a216ad13ba", "0x2e0"))
+        self.assertEqual("ITEM_GATED_TELEPORT",
+                         transport_domain_type("IDDC1_Dreadgion_Invade_Key_D", "FUN_180c70b80",
+                                               "ffee58d2fe09b860", "0x2e0"))
+        self.assertEqual("ITEM_GATED_TELEPORT",
+                         transport_domain_type("Unrelated", "FUN_180c70b80", "ffee58d2fe09b860", "0x2e0"))
 
     def test_audited_callback_shapes_project_only_supported_portal_requirements(self):
         self.assertEqual(
@@ -73,6 +81,18 @@ class RetailScriptTransportsTest(unittest.TestCase):
                 "10002": {"race": "ASMODIANS"},
             }},
             portal_service_projection("ROUTE_PROVEN", "33ee7fc6fc736e7f"),
+        )
+        self.assertEqual(
+            {"status": "EXPRESSIBLE", "requirements": {
+                "items": [{"item_id": 185000283, "item_count": 1, "err_message_id": 1403685}],
+            }},
+            portal_service_projection("ROUTE_PROVEN", "ffee58d2fe09b860",
+                                      [
+                                          {"kind": "READ", "target": "0x300", "raw":
+                                              "(**(code **)(*plVar1 + 0x300))(plVar1,0xb06e15b);"},
+                                          {"kind": "CALL", "target": "0x2a8", "raw":
+                                              "(**(code **)(*plVar1 + 0x2a8))(plVar1,0x156b25,0x1e);"},
+                                      ]),
         )
 
     def test_dialog_variable_reassignment_stays_inside_its_branch(self):
@@ -186,6 +206,9 @@ class RetailScriptTransportsTest(unittest.TestCase):
             self.assertIn("raw callback predicates", report["provenance"]["proof_scope"])
             self.assertIn("unaudited predicate semantic interpretation",
                           report["provenance"]["excluded_semantics"])
+            self.assertEqual({"ARENA_REENTRY", "ITEM_GATED_TELEPORT"},
+                             {rule["domain_type"]
+                              for rule in report["provenance"]["transport_shape_domain_type_rules"]})
 
 
 if __name__ == "__main__":
