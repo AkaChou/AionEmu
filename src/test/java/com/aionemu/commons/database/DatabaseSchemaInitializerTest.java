@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class DatabaseSchemaInitializerTest {
@@ -56,6 +57,21 @@ class DatabaseSchemaInitializerTest {
         assertTrue(schema.contains("`quest_id` int(10) unsigned NOT NULL"));
         assertTrue(schema.contains("`remaining` int(10) unsigned NOT NULL"));
         assertTrue(schema.contains("PRIMARY KEY (`quest_id`)"));
+    }
+
+    @Test
+    void repairsRolledBackLunaColumnsBeforeDroppingObsoleteInstanceTables() {
+        List<String> statements = DatabaseSchemaInitializer.rollbackRepairStatements(Set.of("player_id", "free_chest"));
+
+        assertEquals(6, statements.size());
+        assertTrue(statements.get(0).contains("ADD COLUMN `free_under`"));
+        assertTrue(statements.get(1).contains("ADD COLUMN `free_munition`"));
+        assertTrue(statements.get(2).endsWith("`instance_reward_ledger`"));
+        assertTrue(statements.get(3).endsWith("`dynamic_instance_members`"));
+        assertTrue(statements.get(4).endsWith("`dynamic_instances`"));
+        assertTrue(statements.get(5).endsWith("`player_instance_limits`"));
+        assertEquals(statements.subList(2, 6), DatabaseSchemaInitializer.rollbackRepairStatements(
+            Set.of("player_id", "free_under", "free_munition", "free_chest")));
     }
 
     @Test

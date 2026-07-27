@@ -16,8 +16,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 数据库 schema 初始化器，在空库时导入内置基线 SQL
@@ -60,6 +62,8 @@ final class DatabaseSchemaInitializer {
 
         try (Connection connection = DriverManager.getConnection(target.serverUrl(), user, password)) {
             if (hasTables(connection, target.database())) {
+                // TODO(compat-20260728): Remove this repair and its test after three production releases.
+                repairRolledBackInstanceSchema(connection, target.database());
                 migrateGodstoneProcCount(connection, target.database());
                 migrateLimitedQuestCounters(connection, target.database());
                 migrateAccountVip(connection, target.database());
@@ -72,6 +76,68 @@ final class DatabaseSchemaInitializer {
         } catch (SQLException | IOException e) {
             throw new IllegalStateException("Failed to initialize database schema for " + target.database(), e);
         }
+    }
+
+    private static void repairRolledBackInstanceSchema(Connection connection, String database) throws SQLException {
+        if (!"al_server_gs".equals(database)) {
+            return;
+        }
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TABLE IF NOT EXISTS `al_server_gs`.`portal_cooldowns` ("
+                + "`player_id` int(11) NOT NULL, "
+                + "`world_id` int(11) NOT NULL, "
+                + "`reuse_time` bigint(13) NOT NULL, "
+                + "`entry_count` int(2) NOT NULL, "
+                + "PRIMARY KEY (`player_id`,`world_id`), "
+                + "CONSTRAINT `portal_cooldowns_ibfk_1` FOREIGN KEY (`player_id`) "
+                + "REFERENCES `al_server_gs`.`players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8");
+            statement.execute("CREATE TABLE IF NOT EXISTS `al_server_gs`.`player_luna_shop` ("
+                + "`player_id` int(10) NOT NULL, "
+                + "`free_under` tinyint(1) NOT NULL, "
+                + "`free_munition` tinyint(1) NOT NULL, "
+                + "`free_chest` tinyint(1) NOT NULL"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=latin1");
+            for (String sql : rollbackRepairStatements(tableColumns(connection, database, "player_luna_shop"))) {
+                statement.execute(sql);
+            }
+        }
+    }
+
+    static List<String> rollbackRepairStatements(Set<String> lunaColumns) {
+        List<String> statements = new ArrayList<>();
+        if (!lunaColumns.contains("free_under")) {
+            statements.add("ALTER TABLE `al_server_gs`.`player_luna_shop` "
+                + "ADD COLUMN `free_under` tinyint(1) NOT NULL DEFAULT 1 AFTER `player_id`");
+        }
+        if (!lunaColumns.contains("free_munition")) {
+            statements.add("ALTER TABLE `al_server_gs`.`player_luna_shop` "
+                + "ADD COLUMN `free_munition` tinyint(1) NOT NULL DEFAULT 1 AFTER `free_under`");
+        }
+        if (!lunaColumns.contains("free_chest")) {
+            statements.add("ALTER TABLE `al_server_gs`.`player_luna_shop` "
+                + "ADD COLUMN `free_chest` tinyint(1) NOT NULL DEFAULT 1 AFTER `free_munition`");
+        }
+        statements.add("DROP TABLE IF EXISTS `al_server_gs`.`instance_reward_ledger`");
+        statements.add("DROP TABLE IF EXISTS `al_server_gs`.`dynamic_instance_members`");
+        statements.add("DROP TABLE IF EXISTS `al_server_gs`.`dynamic_instances`");
+        statements.add("DROP TABLE IF EXISTS `al_server_gs`.`player_instance_limits`");
+        return statements;
+    }
+
+    private static Set<String> tableColumns(Connection connection, String database, String table) throws SQLException {
+        String query = "SELECT column_name FROM information_schema.columns WHERE table_schema = ? AND table_name = ?";
+        Set<String> columns = new HashSet<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, database);
+            statement.setString(2, table);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    columns.add(resultSet.getString(1));
+                }
+            }
+        }
+        return columns;
     }
 
     private static void migrateGodstoneProcCount(Connection connection, String database) throws SQLException {
