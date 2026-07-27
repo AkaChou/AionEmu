@@ -14585,7 +14585,7 @@
       "semantic_gap_quest_ids": []
     }
   ],
-  "output_sha256": "8d2b2dc2031ae09f66fe4719ac58a0be6eea0646da2f88622a5a2c874e6f4c19",
+  "output_sha256": "64954c45fbf734febef5d56535a7524f0de3ba31ef2903ae9480bb7fb5b593fc",
   "skipped": {
     "compiled_script": {},
     "compiled_script_isolation_details": {
@@ -15398,17 +15398,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "11143": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11143Baby_Shulack_Journey.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "11147": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -15492,17 +15481,6 @@
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/poeta/_1123Wheres_Tutty.java",
         "mechanisms": [
           "movie"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "11233": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11233SuleionTreasure.java",
-        "mechanisms": [
-          "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -16991,18 +16969,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "1559": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_1559WhatsintheBox.java",
-        "mechanisms": [
-          "item_condition",
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "15596": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -17462,17 +17428,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "1644": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/heiron/_1644AVeryOldLetter.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "1647": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -17625,17 +17580,6 @@
         "mechanisms": [
           "spawn",
           "teleport"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "1718": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/reshanta/_1718Trading_Down.java",
-        "mechanisms": [
-          "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
       },
@@ -21395,17 +21339,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "2718": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/reshanta/_2718Trading_Down.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "2722": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -23026,28 +22959,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "3058": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3058StoneofMabolo.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "3060": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3060The_Red_Journal.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "30700": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -23570,17 +23481,6 @@
         ],
         "reason": "non_linear_or_side_effecting"
       },
-      "4042": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/brusthonin/_4042Message_In_A_Bottle.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "4051": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -23591,17 +23491,6 @@
         ],
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/brusthonin/_4051Bukmir_Worry.java",
         "mechanisms": [],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "4060": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/brusthonin/_4060The_Zombie_Descendant.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
         "reason": "non_linear_or_side_effecting"
       },
       "4074": {
@@ -27060,7 +26949,7 @@
       "compiled_script_timed_report": 2,
       "compiled_script_world_collect": 4,
       "data_driven_collect": 205,
-      "data_driven_complex": 436,
+      "data_driven_complex": 446,
       "data_driven_hunt": 693,
       "data_driven_item_play": 18,
       "data_driven_pvp": 61,
@@ -27088,9 +26977,10 @@
       "compiled_script_kaldor_arrival": 2,
       "compiled_script_scorched_tree": 2,
       "compiled_script_sensory_complete": 2,
-      "compiled_script_simple_talk": 25,
+      "compiled_script_simple_talk": 24,
       "compiled_script_surama_hunt": 2,
       "compiled_script_timed_report": 2,
+      "compiled_script_use_item": 11,
       "compiled_script_world_collect": 4,
       "data_driven_collect": 205,
       "data_driven_complex": 434,
@@ -27101,7 +26991,7 @@
       "data_driven_talk": 39,
       "hunt": 938,
       "talk": 1883,
-      "total": 5322,
+      "total": 5332,
       "use_item": 93,
       "work_order": 574
     },
@@ -27136,14 +27026,14 @@
     },
     "invalid": 2,
     "java_handlers": {
-      "base_handlers": 731,
+      "base_handlers": 721,
       "constraint_dispositions": {
         "evidence_audit": 9
       },
       "dispositions": {
         "not_executable_without_base": 4,
         "retained_authoritative_gap": 9,
-        "retained_complex_semantics": 722
+        "retained_complex_semantics": 712
       },
       "event_signatures": {
         "AtDistance+Dialog": 3,
@@ -27153,7 +27043,7 @@
         "Attack+Dialog+Die+EnterWorld+Kill+LvlUp+MovieEnd": 2,
         "Attack+Dialog+LvlUp+ZoneMissionEnd": 1,
         "Attack+Dialog+MovieEnd": 1,
-        "Dialog": 207,
+        "Dialog": 197,
         "Dialog+Die+EnterWorld+EquipItem+Kill+LvlUp+MovieEnd": 2,
         "Dialog+Die+EnterWorld+Kill+LogOut+LvlUp+MovieEnd+ZoneMissionEnd": 1,
         "Dialog+Die+EnterWorld+Kill+LogOut+LvlUp+ZoneMissionEnd": 2,
@@ -27225,14 +27115,14 @@
         "EnterZone+MovieEnd": 2,
         "register_only": 6
       },
-      "handlers": 735,
+      "handlers": 725,
       "mechanisms": {
         "action": 31,
         "dynamic_reward": 34,
         "inherited": 6,
         "instance": 26,
-        "item_condition": 240,
-        "item_mutation": 326,
+        "item_condition": 239,
+        "item_mutation": 316,
         "movie": 125,
         "skill": 7,
         "spawn": 69,
@@ -27241,7 +27131,7 @@
       },
       "reasons": {
         "missing_compiled_trigger_chain": 9,
-        "non_linear_or_side_effecting": 722,
+        "non_linear_or_side_effecting": 712,
         "outside_base": 4
       }
     },
@@ -27265,13 +27155,13 @@
       "retained": 456,
       "shadowed_by_generated": 198
     },
-    "missing_base": 2508,
+    "missing_base": 2498,
     "ownership": {
-      "generated_xml": 5322,
-      "java_handlers": 731,
+      "generated_xml": 5332,
+      "java_handlers": 721,
       "legacy_xml": 456,
       "overlap": 0,
-      "selected_xml": 5778
+      "selected_xml": 5788
     },
     "retail": {
       "collect": 262,

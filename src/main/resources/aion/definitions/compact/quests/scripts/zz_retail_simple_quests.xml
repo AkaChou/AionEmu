@@ -8592,15 +8592,30 @@
     <step type="TALK" ids="730051" give_item_id="182201795" give_item_count="1" remove_item_id="182201794" remove_item_count="1" />
     <step type="TALK" ids="204500" />
   </data_driven_quest>
+  <data_driven_quest id="1559" retail="true" start_type="ITEM_PLAY" end_npc_ids="798072" start_item_id="182201823">
+    <step type="TALK" ids="798072" />
+    <step type="TALK" ids="204571" />
+    <step type="TALK" ids="798013" give_item_id="182201824" give_item_count="1" remove_item_id="182201823" remove_item_count="1" />
+  </data_driven_quest>
   <data_driven_quest id="1574" retail="true" start_type="TALK" end_npc_ids="730025" start_ids="730025" start_give_item_id="182201736" start_give_item_count="6">
     <step type="TALK" ids="204560" remove_item_id="182201736" remove_item_count="2" />
     <step type="TALK" ids="204561" remove_item_id="182201736" remove_item_count="2" />
     <step type="TALK" ids="204562" remove_item_id="182201736" remove_item_count="2" />
   </data_driven_quest>
+  <data_driven_quest id="1644" retail="true" start_type="ITEM_PLAY" end_npc_ids="204546" start_item_id="182201765">
+    <step type="TALK" ids="204545" />
+    <step type="TALK" ids="204537" remove_item_id="182201765" remove_item_count="1" />
+    <step type="TALK" ids="204545" />
+  </data_driven_quest>
   <data_driven_quest id="1691" retail="true" start_type="TALK" end_npc_ids="798386" start_ids="798386">
     <step type="TALK" ids="790005" />
     <step type="TALK" ids="798386" />
     <step type="TALK" ids="700563" give_item_id="182201826" give_item_count="1" />
+  </data_driven_quest>
+  <data_driven_quest id="1718" retail="true" start_type="ITEM_PLAY" end_npc_ids="279029" start_item_id="182202156">
+    <step type="TALK" ids="203190" give_item_id="182202157" give_item_count="1" remove_item_id="182202156" remove_item_count="1" />
+    <step type="TALK" ids="204028" give_item_id="182202158" give_item_count="1" remove_item_id="182202157" remove_item_count="1" />
+    <step type="TALK" ids="204611" give_item_id="182202159" give_item_count="1" remove_item_id="182202158" remove_item_count="1" />
   </data_driven_quest>
   <data_driven_quest id="1721" retail="true" start_type="TALK" end_npc_ids="278518" start_ids="278501" start_give_item_id="182202151" start_give_item_count="1">
     <step type="TALK" ids="278503" />
@@ -8744,6 +8759,11 @@
     <step type="TALK" ids="279027" />
     <step type="TALK" ids="279029" give_item_id="182204511" give_item_count="1" remove_item_id="182204510" remove_item_count="1" />
   </data_driven_quest>
+  <data_driven_quest id="2718" retail="true" start_type="ITEM_PLAY" end_npc_ids="279029" start_item_id="182205668">
+    <step type="TALK" ids="204396" give_item_id="182205669" give_item_count="1" remove_item_id="182205668" remove_item_count="1" />
+    <step type="TALK" ids="204386" give_item_id="182205670" give_item_count="1" remove_item_id="182205669" remove_item_count="1" />
+    <step type="TALK" ids="204811" give_item_id="182205671" give_item_count="1" remove_item_id="182205670" remove_item_count="1" />
+  </data_driven_quest>
   <data_driven_quest id="2767" retail="true" start_type="TALK" end_npc_ids="279004" start_ids="279004" start_give_item_id="182205686" start_give_item_count="1">
     <step type="TALK" ids="279026" />
     <step type="TALK" ids="279061" remove_item_id="182205686" remove_item_count="1" />
@@ -8830,6 +8850,15 @@
   <data_driven_quest id="3056" retail="true" start_type="TALK" end_npc_ids="798213" start_ids="730147">
     <step type="TALK" ids="798213" />
     <step type="HUNT" ids="214578" amount="1" />
+  </data_driven_quest>
+  <data_driven_quest id="3058" retail="true" start_type="ITEM_PLAY" end_npc_ids="798213" start_item_id="182208041">
+    <step type="TALK" ids="798189" />
+    <step type="TALK" ids="203701" remove_item_id="182208041" remove_item_count="1" />
+  </data_driven_quest>
+  <data_driven_quest id="3060" retail="true" start_type="ITEM_PLAY" end_npc_ids="798193" start_item_id="182208043">
+    <step type="TALK" ids="798190" />
+    <step type="TALK" ids="798191" />
+    <step type="TALK" ids="798192" />
   </data_driven_quest>
   <data_driven_quest id="3076" retail="true" start_type="TALK" end_npc_ids="798155" start_ids="798155">
     <step type="TALK" ids="278503" />
@@ -8958,10 +8987,19 @@
   <data_driven_quest id="4020" retail="true" start_type="TALK" end_npc_ids="205120" start_ids="205120" start_give_item_id="182209080" start_give_item_count="1">
     <step type="TALK" ids="205141" give_item_id="182209081" give_item_count="1" remove_item_id="182209080" remove_item_count="1" />
   </data_driven_quest>
+  <data_driven_quest id="4042" retail="true" start_type="ITEM_PLAY" end_npc_ids="205192" start_item_id="182209024">
+    <step type="TALK" ids="205192" />
+    <step type="TALK" ids="204225" give_item_id="182209025" give_item_count="1" remove_item_id="182209024" remove_item_count="1" />
+  </data_driven_quest>
   <data_driven_quest id="4052" retail="true" start_type="TALK" end_npc_ids="730152" start_ids="730152">
     <step type="TALK" ids="205179" />
     <step type="TALK" ids="205166" give_item_id="182209030" give_item_count="1" />
     <step type="TALK" ids="205197" remove_item_id="182209030" remove_item_count="1" />
+  </data_driven_quest>
+  <data_driven_quest id="4060" retail="true" start_type="ITEM_PLAY" end_npc_ids="205204" start_item_id="182209037">
+    <step type="TALK" ids="205156" />
+    <step type="TALK" ids="204143" />
+    <step type="TALK" ids="204731" />
   </data_driven_quest>
   <data_driven_quest id="4208" retail="true" start_type="TALK" end_npc_ids="805843" start_ids="730195" start_give_item_id="182209103" start_give_item_count="1">
     <step type="TALK" ids="204170" />
@@ -9101,6 +9139,15 @@
   </data_driven_quest>
   <data_driven_quest id="11139" retail="true" start_type="TALK" end_npc_ids="798979" start_ids="799075" start_give_item_id="182206863" start_give_item_count="1">
     <step type="TALK" ids="798971" />
+  </data_driven_quest>
+  <data_driven_quest id="11143" retail="true" start_type="ITEM_PLAY" end_npc_ids="798948" start_item_id="182206866">
+    <step type="TALK" ids="798985" />
+    <step type="TALK" ids="798984" />
+    <step type="TALK" ids="798976" />
+  </data_driven_quest>
+  <data_driven_quest id="11233" retail="true" start_type="ITEM_PLAY" end_npc_ids="798948" start_item_id="182206875">
+    <step type="TALK" ids="799075" give_item_id="182206876" give_item_count="1" remove_item_id="182206875" remove_item_count="1" />
+    <step type="TALK" ids="798976" give_item_id="182206877" give_item_count="1" remove_item_id="182206876" remove_item_count="1" />
   </data_driven_quest>
   <data_driven_quest id="11294" retail="true" start_type="TALK" end_npc_ids="798926" start_ids="799092" start_give_item_id="182213038" start_give_item_count="1">
     <step type="TALK" ids="799010" remove_item_id="182213038" remove_item_count="1" />

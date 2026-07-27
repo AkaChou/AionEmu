@@ -1267,11 +1267,16 @@ def simple_collects(path: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[s
 	return result, stats, skipped
 
 
-def simple_use_items(path: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[str, object]], dict[str, int], dict[str, object]]:
+def simple_use_items(path: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[str, object]], dict[int, dict[str, object]], dict[str, int], dict[str, object]]:
+	# 简单形状（use_item + 至多 2 talk，无物品流转）走 item_order 模板；
+	# 复杂形状（3 talk 或 give/remove_item 物品流转）走 data_driven 步骤链，保留严格顺序语义。
 	result: dict[int, dict[str, object]] = {}
-	stats = {"retail": 0, "missing_base": 0, "unsupported": 0, "invalid": 0}
+	data_result: dict[int, dict[str, object]] = {}
+	stats = {"retail": 0, "missing_base": 0, "unsupported": 0, "invalid": 0, "data_driven": 0}
 	skipped: dict[str, object] = {"unsupported": {}, "invalid": []}
-	allowed = IGNORED_FIELDS | {"use_item_name", "reward_npc_name", "talk_npc1", "talk_npc2", "item_check"}
+	simple_allowed = IGNORED_FIELDS | {"use_item_name", "reward_npc_name", "talk_npc1", "talk_npc2", "item_check"}
+	data_allowed = IGNORED_FIELDS | {"use_item_name", "reward_npc_name", "talk_npc1", "talk_npc2", "talk_npc3",
+		"give_item1", "give_item2", "give_item3", "remove_item1", "remove_item2", "remove_item3", "item_check"}
 	for node in ET.parse(path).getroot():
 		quest_id = int(node.attrib["id"])
 		stats["retail"] += 1
@@ -1279,21 +1284,51 @@ def simple_use_items(path: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[
 			stats["missing_base"] += 1
 			continue
 		fields = {child.tag: (child.text or "").strip() for child in node}
-		unsupported = sorted(set(fields) - allowed)
-		if unsupported:
-			stats["unsupported"] += 1
-			skipped["unsupported"][str(quest_id)] = unsupported
-			continue
 		if not fields.get("use_item_name") or not fields.get("reward_npc_name") or fields.get("item_check", "1") != "1":
 			stats["invalid"] += 1
 			skipped["invalid"].append(quest_id)
+			continue
+		# 复杂形状：3 talk 或带 give/remove_item 物品流转 -> data_driven 步骤链
+		has_item_flow = any(fields.get(k) for k in ("give_item1", "give_item2", "give_item3", "remove_item1", "remove_item2", "remove_item3"))
+		if fields.get("talk_npc3") or has_item_flow:
+			unsupported = sorted(set(fields) - data_allowed)
+			if unsupported:
+				stats["unsupported"] += 1
+				skipped["unsupported"][str(quest_id)] = unsupported
+				continue
+			# use_item_name 形如 "ITEM_DOC_QUEST_3060A"（纯名无数量），start_item 仅需名字解析 ID
+			start_item_name = fields["use_item_name"].removeprefix("ITEM_")
+			steps: list[dict[str, object]] = []
+			for idx in (1, 2, 3):
+				talk = fields.get(f"talk_npc{idx}")
+				if not talk:
+					continue
+				step: dict[str, object] = {"type": "TALK", "names": [talk]}
+				give = parse_item_reference(fields.get(f"give_item{idx}", ""))
+				remove = parse_item_reference(fields.get(f"remove_item{idx}", ""))
+				if give:
+					step["give_item"] = give
+				if remove:
+					step["remove_item"] = remove
+				steps.append(step)
+			data_result[quest_id] = {
+				"kind": "data_driven_simple", "source": "compiled_script_use_item", "start_type": "ITEM_PLAY",
+				"start": start_item_name, "end": fields["reward_npc_name"], "steps": steps,
+			}
+			stats["data_driven"] += 1
+			continue
+		# 简单形状 -> item_order
+		unsupported = sorted(set(fields) - simple_allowed)
+		if unsupported:
+			stats["unsupported"] += 1
+			skipped["unsupported"][str(quest_id)] = unsupported
 			continue
 		result[quest_id] = {
 			"item": fields["use_item_name"].removeprefix("ITEM_"),
 			"end": fields["reward_npc_name"],
 			"talks": [fields[key] for key in ("talk_npc1", "talk_npc2") if fields.get(key)],
 		}
-	return result, stats, skipped
+	return result, data_result, stats, skipped
 
 
 def simple_item_plays(path: Path, enabled_ids: set[int]) -> dict[int, dict[str, object]]:
@@ -3289,7 +3324,7 @@ def render(simple: dict[int, dict[str, object]], hunts: dict[int, dict[str, obje
 		"xsi:noNamespaceSchemaLocation": "../../../schemas/quest_script_data.xsd",
 	})
 	unresolved: dict[str, list[str]] = {}
-	generated = {"talk": 0, "collect": 0, "hunt": 0, "use_item": 0, "work_order": 0, "data_driven_report": 0, "data_driven_talk": 0, "data_driven_hunt": 0, "data_driven_collect": 0, "data_driven_pvp": 0, "data_driven_item_play": 0, "data_driven_complex": 0, **{label: 0 for label, *_ in COMPILED_FAMILIES}}
+	generated = {"talk": 0, "collect": 0, "hunt": 0, "use_item": 0, "work_order": 0, "data_driven_report": 0, "data_driven_talk": 0, "data_driven_hunt": 0, "data_driven_collect": 0, "data_driven_pvp": 0, "data_driven_item_play": 0, "data_driven_complex": 0, "compiled_script_use_item": 0, **{label: 0 for label, *_ in COMPILED_FAMILIES}}
 	for kind in ("item_collecting", "report_to", "report_to_many"):
 		for quest_id, quest in sorted(simple.items()):
 			if quest["kind"] != kind:
@@ -3563,7 +3598,7 @@ def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAI
 	simple_hunts, hunt_stats, hunt_skipped = retail_hunts(hunt_file, xml_owned_ids)
 	talks, talk_stats, talk_skipped = simple_talks(talk_file, xml_owned_ids)
 	collects, collect_stats, collect_skipped = simple_collects(collect_file, xml_owned_ids)
-	use_items, use_item_stats, use_item_skipped = simple_use_items(use_item_file, xml_owned_ids)
+	use_items, use_item_data_quests, use_item_stats, use_item_skipped = simple_use_items(use_item_file, xml_owned_ids)
 	simple_item_play_quests = simple_item_plays(item_play_file, xml_owned_ids)
 	data_talks, data_talk_candidates, data_talk_missing_base = data_driven_talks(data_driven_file, xml_owned_ids)
 	data_hunts, data_hunt_candidates, data_hunt_missing_base = data_driven_hunts(data_driven_file, xml_owned_ids)
@@ -3627,15 +3662,16 @@ def generate(retail: Path, quest_data: Path, retail_script: Path = DEFAULT_RETAI
 					stats_map["invalid"] -= 1
 	work_orders, work_order_stats, work_order_skipped = retail_work_orders(
 		work_order_file, retail_quest_file, quest_data, npc_file, item_file, recipe_file, xml_owned_ids)
-	handled_ids = set(simple_hunts) | set(talks) | set(collects) | set(use_items) | set(simple_item_play_quests) | set(data_talks) | set(data_hunts) | set(data_collects) | set(pvps) | set(data_item_plays) | compiled_ids | set(work_orders)
+	handled_ids = set(simple_hunts) | set(talks) | set(collects) | set(use_items) | set(use_item_data_quests) | set(simple_item_play_quests) | set(data_talks) | set(data_hunts) | set(data_collects) | set(pvps) | set(data_item_plays) | compiled_ids | set(work_orders)
 	data_quests = data_driven_complex(data_driven_file, xml_owned_ids, handled_ids)
 	for family in bucket_families["data"].values():
 		data_quests.update(family)
 	simple_data_quests = {quest_id: quest for quest_id, quest in talks.items() if quest["kind"] == "data_driven_simple"}
 	simple_data_quests.update({quest_id: quest for quest_id, quest in data_talks.items() if quest["kind"] == "data_driven_simple"})
 	simple_data_quests.update(simple_item_play_quests)
+	simple_data_quests.update(use_item_data_quests)
 	data_quests.update(simple_data_quests)
-	families = (set(simple_hunts), set(talks), set(collects), set(use_items), set(simple_item_play_quests), set(data_talks), set(data_hunts), set(data_collects), set(pvps), set(data_item_plays),
+	families = (set(simple_hunts), set(talks), set(collects), set(use_items), set(use_item_data_quests), set(simple_item_play_quests), set(data_talks), set(data_hunts), set(data_collects), set(pvps), set(data_item_plays),
 		*(set(family) for bucket in ("simple", "hunt") for family in bucket_families[bucket].values()),
 		set(data_quests) - set(simple_data_quests), set(work_orders))
 	duplicates = set().union(*(left & right for index, left in enumerate(families) for right in families[index + 1:]))
