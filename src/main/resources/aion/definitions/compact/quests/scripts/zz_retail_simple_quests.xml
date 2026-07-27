@@ -9165,6 +9165,12 @@
   <data_driven_quest id="11460" retail="true" start_type="TALK" end_npc_ids="798985" start_ids="798954">
     <step type="TALK" ids="799502" give_item_id="182209509" give_item_count="1" />
   </data_driven_quest>
+  <data_driven_quest id="13704" retail="true" start_type="TALK" end_npc_ids="802331" start_ids="802331" start_give_item_id="182215527" start_give_item_count="1">
+    <step type="ITEM_PLAY" item_id="182215527" />
+  </data_driven_quest>
+  <data_driven_quest id="13708" retail="true" start_type="TALK" end_npc_ids="802332" start_ids="802332" start_give_item_id="182215529" start_give_item_count="1">
+    <step type="ITEM_PLAY" item_id="182215529" />
+  </data_driven_quest>
   <data_driven_quest id="13800" retail="true" start_type="TALK" end_npc_ids="802431" start_ids="804699">
     <step type="TALK" ids="804782" />
   </data_driven_quest>
@@ -9647,6 +9653,9 @@
     <step type="TALK" ids="830263" />
     <step type="TALK" ids="830201" />
   </data_driven_quest>
+  <data_driven_quest id="18828" retail="true" start_type="TALK" end_npc_ids="810017 810018 810019 810020 810021" start_ids="810017 810018 810019 810020 810021" start_give_item_id="182213191" start_give_item_count="1">
+    <step type="ITEM_PLAY" item_id="182213191" />
+  </data_driven_quest>
   <data_driven_quest id="18832" retail="true" start_type="TALK" end_npc_ids="830001" start_ids="830365">
     <step type="TALK" dialog_id="2375" ids="830001" advance_dialog_id="1009" movie="801" />
   </data_driven_quest>
@@ -9696,6 +9705,9 @@
   </data_driven_quest>
   <data_driven_quest id="19034" retail="true" start_type="TALK" end_npc_ids="203786" start_ids="203786" start_give_item_id="152222056" start_give_item_count="1">
     <step type="COLLECT_ITEM" ids="203786" />
+  </data_driven_quest>
+  <data_driven_quest id="19048" retail="true" start_type="TALK" end_npc_ids="798303" start_ids="798303" start_give_item_id="182212216" start_give_item_count="1">
+    <step type="ITEM_PLAY" item_id="182212216" />
   </data_driven_quest>
   <data_driven_quest id="19056" retail="true" start_type="TALK" end_npc_ids="203700" start_ids="798450" start_give_item_id="182212226" start_give_item_count="1">
     <step type="TALK" dialog_id="2375" ids="203700" advance_dialog_id="1009" movie="115" remove_item_id="182212226" remove_item_count="1" />
@@ -9753,6 +9765,12 @@
   </data_driven_quest>
   <data_driven_quest id="21460" retail="true" start_type="TALK" end_npc_ids="799276" start_ids="799258">
     <step type="TALK" ids="799502" give_item_id="182209520" give_item_count="1" />
+  </data_driven_quest>
+  <data_driven_quest id="23704" retail="true" start_type="TALK" end_npc_ids="802343" start_ids="802343" start_give_item_id="182215533" start_give_item_count="1">
+    <step type="ITEM_PLAY" item_id="182215533" />
+  </data_driven_quest>
+  <data_driven_quest id="23708" retail="true" start_type="TALK" end_npc_ids="802344" start_ids="802344" start_give_item_id="182215535" start_give_item_count="1">
+    <step type="ITEM_PLAY" item_id="182215535" />
   </data_driven_quest>
   <data_driven_quest id="23800" retail="true" start_type="TALK" end_npc_ids="802433" start_ids="804719">
     <step type="TALK" ids="804753" />
@@ -10238,6 +10256,9 @@
     <step type="TALK" ids="830408" />
     <step type="TALK" ids="830417" />
   </data_driven_quest>
+  <data_driven_quest id="28828" retail="true" start_type="TALK" end_npc_ids="810022 810023 810024 810025 810026" start_ids="810022 810023 810024 810025 810026" start_give_item_id="182213205" start_give_item_count="1">
+    <step type="ITEM_PLAY" item_id="182213205" />
+  </data_driven_quest>
   <data_driven_quest id="28832" retail="true" start_type="TALK" end_npc_ids="830085" start_ids="830532">
     <step type="TALK" dialog_id="2375" ids="830085" advance_dialog_id="1009" movie="802" />
   </data_driven_quest>
@@ -10287,6 +10308,9 @@
   </data_driven_quest>
   <data_driven_quest id="29034" retail="true" start_type="TALK" end_npc_ids="204102" start_ids="204102" start_give_item_id="152232015" start_give_item_count="1">
     <step type="COLLECT_ITEM" ids="204102" />
+  </data_driven_quest>
+  <data_driven_quest id="29048" retail="true" start_type="TALK" end_npc_ids="798304" start_ids="798304" start_give_item_id="182212217" start_give_item_count="1">
+    <step type="ITEM_PLAY" item_id="182212217" />
   </data_driven_quest>
   <data_driven_quest id="29056" retail="true" start_type="TALK" end_npc_ids="204052" start_ids="798452" start_give_item_id="182212230" start_give_item_count="1">
     <step type="TALK" dialog_id="2375" ids="204052" advance_dialog_id="1009" movie="146" remove_item_id="182212230" remove_item_count="1" />

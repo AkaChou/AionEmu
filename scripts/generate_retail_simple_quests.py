@@ -1333,24 +1333,31 @@ def simple_use_items(path: Path, enabled_ids: set[int]) -> tuple[dict[int, dict[
 
 def simple_item_plays(path: Path, enabled_ids: set[int]) -> dict[int, dict[str, object]]:
 	result: dict[int, dict[str, object]] = {}
-	allowed = BASE_FIELDS | IGNORED_FIELDS | {"talk_npc1", "talk_npc2", "give_item1", "remove_item1", "use_item_name"}
+	allowed = BASE_FIELDS | IGNORED_FIELDS | {"give_item", "talk_npc1", "talk_npc2", "give_item1", "remove_item1", "use_item_name"}
 	for node in ET.parse(path).getroot():
 		quest_id = int(node.attrib["id"])
 		if quest_id not in enabled_ids:
 			continue
 		fields = {child.tag: (child.text or "").strip() for child in node}
-		give_item = parse_item_reference(fields.get("give_item1", ""))
+		# 哨兵起始 NPC（_faction_/_challengetask_/_area_）由对应系统发放，不走 simple_item_plays
+		acquired = fields.get("acquired_npc_name", "")
+		if acquired.startswith("_"):
+			continue
+		give_item = parse_item_reference(fields.get("give_item", "") or fields.get("give_item1", ""))
 		remove_item = parse_item_reference(fields.get("remove_item1", ""))
 		use_item = parse_item_reference(fields.get("use_item_name", ""))
 		if (set(fields) - allowed or not fields.get("acquired_npc_name") or not fields.get("reward_npc_name")
-				or give_item is None or remove_item is None or use_item is None or use_item != give_item):
+				or give_item is None or use_item is None or use_item[0] != give_item[0]):
 			continue
 		steps = [{"type": "TALK", "names": [fields[key]], "give_item": None} for key in ("talk_npc1", "talk_npc2") if fields.get(key)]
 		steps.append({"type": "ITEM_PLAY", "item": use_item[0]})
-		result[quest_id] = {
+		quest: dict[str, object] = {
 			"kind": "data_driven_simple", "start_type": "TALK", "start": fields["acquired_npc_name"],
-			"end": fields["reward_npc_name"], "start_give_item": give_item, "start_remove_item": remove_item, "steps": steps,
+			"end": fields["reward_npc_name"], "start_give_item": give_item, "steps": steps,
 		}
+		if remove_item:
+			quest["start_remove_item"] = remove_item
+		result[quest_id] = quest
 	return result
 
 

@@ -14585,7 +14585,7 @@
       "semantic_gap_quest_ids": []
     }
   ],
-  "output_sha256": "64954c45fbf734febef5d56535a7524f0de3ba31ef2903ae9480bb7fb5b593fc",
+  "output_sha256": "cabd169d5884490e954e0f0c00195b7088ddca0343ecef9500e7cd98748a7f52",
   "skipped": {
     "compiled_script": {},
     "compiled_script_isolation_details": {
@@ -15870,28 +15870,6 @@
         "mechanisms": [
           "dynamic_reward",
           "item_condition",
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "13704": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_13704Fona_Quick_Fix.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "13708": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_13708Proximity_Protect.java",
-        "mechanisms": [
           "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
@@ -17907,17 +17885,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "18828": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18828UserFriendly.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "1883": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -18100,17 +18067,6 @@
           "onFailCraftEvent"
         ],
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/crafting/_19038MasterCooksPotential.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "19048": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/sanctum/_19048Andreas_Teachings.java",
         "mechanisms": [
           "item_mutation"
         ],
@@ -19609,28 +19565,6 @@
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/morheim/_2367APrizedPossession.java",
         "mechanisms": [
           "dynamic_reward",
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "23704": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_23704Loud_Noises.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "23708": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/levinshor/_23708Sound_The_Alarm.java",
-        "mechanisms": [
           "item_mutation"
         ],
         "reason": "non_linear_or_side_effecting"
@@ -21671,17 +21605,6 @@
         "mechanisms": [],
         "reason": "non_linear_or_side_effecting"
       },
-      "28828": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28828TheManyFacetsOfFriendship.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
       "2883": {
         "disposition": "retained_complex_semantics",
         "events": [
@@ -21862,17 +21785,6 @@
           "onFailCraftEvent"
         ],
         "file": "src/main/java/com/aionemu/gameserver/quest/handlers/crafting/_29038MasterCooksPotential.java",
-        "mechanisms": [
-          "item_mutation"
-        ],
-        "reason": "non_linear_or_side_effecting"
-      },
-      "29048": {
-        "disposition": "retained_complex_semantics",
-        "events": [
-          "onDialogEvent"
-        ],
-        "file": "src/main/java/com/aionemu/gameserver/quest/handlers/pandaemonium/_29048SeriphimTeachings.java",
         "mechanisms": [
           "item_mutation"
         ],
@@ -26949,7 +26861,7 @@
       "compiled_script_timed_report": 2,
       "compiled_script_world_collect": 4,
       "data_driven_collect": 205,
-      "data_driven_complex": 446,
+      "data_driven_complex": 454,
       "data_driven_hunt": 693,
       "data_driven_item_play": 18,
       "data_driven_pvp": 61,
@@ -26983,7 +26895,7 @@
       "compiled_script_use_item": 11,
       "compiled_script_world_collect": 4,
       "data_driven_collect": 205,
-      "data_driven_complex": 434,
+      "data_driven_complex": 442,
       "data_driven_hunt": 693,
       "data_driven_item_play": 18,
       "data_driven_pvp": 61,
@@ -26991,7 +26903,7 @@
       "data_driven_talk": 39,
       "hunt": 938,
       "talk": 1883,
-      "total": 5332,
+      "total": 5340,
       "use_item": 93,
       "work_order": 574
     },
@@ -27026,14 +26938,14 @@
     },
     "invalid": 2,
     "java_handlers": {
-      "base_handlers": 721,
+      "base_handlers": 713,
       "constraint_dispositions": {
         "evidence_audit": 9
       },
       "dispositions": {
         "not_executable_without_base": 4,
         "retained_authoritative_gap": 9,
-        "retained_complex_semantics": 712
+        "retained_complex_semantics": 704
       },
       "event_signatures": {
         "AtDistance+Dialog": 3,
@@ -27043,7 +26955,7 @@
         "Attack+Dialog+Die+EnterWorld+Kill+LvlUp+MovieEnd": 2,
         "Attack+Dialog+LvlUp+ZoneMissionEnd": 1,
         "Attack+Dialog+MovieEnd": 1,
-        "Dialog": 197,
+        "Dialog": 189,
         "Dialog+Die+EnterWorld+EquipItem+Kill+LvlUp+MovieEnd": 2,
         "Dialog+Die+EnterWorld+Kill+LogOut+LvlUp+MovieEnd+ZoneMissionEnd": 1,
         "Dialog+Die+EnterWorld+Kill+LogOut+LvlUp+ZoneMissionEnd": 2,
@@ -27115,14 +27027,14 @@
         "EnterZone+MovieEnd": 2,
         "register_only": 6
       },
-      "handlers": 725,
+      "handlers": 717,
       "mechanisms": {
         "action": 31,
         "dynamic_reward": 34,
         "inherited": 6,
         "instance": 26,
         "item_condition": 239,
-        "item_mutation": 316,
+        "item_mutation": 308,
         "movie": 125,
         "skill": 7,
         "spawn": 69,
@@ -27131,7 +27043,7 @@
       },
       "reasons": {
         "missing_compiled_trigger_chain": 9,
-        "non_linear_or_side_effecting": 712,
+        "non_linear_or_side_effecting": 704,
         "outside_base": 4
       }
     },
@@ -27157,11 +27069,11 @@
     },
     "missing_base": 2498,
     "ownership": {
-      "generated_xml": 5332,
-      "java_handlers": 721,
+      "generated_xml": 5340,
+      "java_handlers": 713,
       "legacy_xml": 456,
       "overlap": 0,
-      "selected_xml": 5788
+      "selected_xml": 5796
     },
     "retail": {
       "collect": 262,
