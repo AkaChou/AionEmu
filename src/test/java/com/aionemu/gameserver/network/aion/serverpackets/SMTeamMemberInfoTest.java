@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
+import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -43,6 +44,28 @@ class SMTeamMemberInfoTest {
 		assertLocation(write(packet));
 	}
 
+	@Test
+	void writesFullEffectSlotMaskAndFreshEffectAgesForGroupUpdates() throws ReflectiveOperationException {
+		Player player = playerAt(210020000, 37);
+		player.setEffectController(new PlayerEffectController(player));
+		SM_GROUP_MEMBER_INFO packet = OBJENESIS.newInstance(SM_GROUP_MEMBER_INFO.class);
+		setField(SM_GROUP_MEMBER_INFO.class, packet, "player", player);
+		setField(SM_GROUP_MEMBER_INFO.class, packet, "event", GroupEvent.UPDATE);
+
+		ByteBuffer buffer = write(packet);
+		buffer.position(64);
+		while (buffer.getChar() != 0) {
+		}
+		buffer.getInt();
+		buffer.getInt();
+
+		assertEquals(0x7F, Byte.toUnsignedInt(buffer.get()));
+		assertEquals(0, buffer.getShort());
+		for (int i = 0; i < 8; i++) {
+			assertEquals(0, buffer.getInt());
+		}
+	}
+
 	private static ByteBuffer write(SM_ALLIANCE_MEMBER_INFO packet) {
 		ByteBuffer buffer = ByteBuffer.allocate(64);
 		packet.setBuf(buffer);
@@ -52,7 +75,7 @@ class SMTeamMemberInfoTest {
 	}
 
 	private static ByteBuffer write(SM_GROUP_MEMBER_INFO packet) {
-		ByteBuffer buffer = ByteBuffer.allocate(64);
+		ByteBuffer buffer = ByteBuffer.allocate(128);
 		packet.setBuf(buffer);
 		packet.writeImpl(null);
 		buffer.flip();

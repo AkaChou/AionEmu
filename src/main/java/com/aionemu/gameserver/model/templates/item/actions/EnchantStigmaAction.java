@@ -116,7 +116,7 @@ public class EnchantStigmaAction extends AbstractItemAction {
 					
 					boolean hasStigmaProtection = false;
 					if (player.getEffectController() != null) {
-						hasStigmaProtection = player.getEffectController().hasEffectById(900003);
+						hasStigmaProtection = player.getEffectController().hasEffectById(147141);
 					}
 
 					if (hasStigmaProtection) {

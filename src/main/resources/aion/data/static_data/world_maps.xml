@@ -18,7 +18,7 @@
 	<map id="210020000" name="Eltnen" max_user="200" beginner_twin_count="5" death_level="0" water_level="6" world_type="ELYSEA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="210030000" name="Verteron" max_user="200" twin_count="3" beginner_twin_count="4" death_level="0" water_level="100" world_type="ELYSEA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="210040000" name="Heiron" max_user="200" beginner_twin_count="3" death_level="0" water_level="100" world_type="ELYSEA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
-<!-- 	<map id="210050000" name="Inggison" death_level="0" water_level="0" world_type="BALAUREA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/> -->
+	<map id="210050000" name="Inggison" death_level="0" water_level="0" world_type="BALAUREA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="210060000" name="Theobomos" max_user="200" twin_count="1" beginner_twin_count="2" death_level="0" water_level="1" world_type="ELYSEA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="210070000" name="Cygnea" max_user="200" death_level="0" water_level="0" world_type="BALAUREA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="210080000" name="Griffoen" max_user="100" twin_count="10" death_level="0" water_level="16" world_size="512" flags="RECALL DUEL_SAME_RACE"/>
@@ -33,7 +33,7 @@
 	<map id="220030000" name="Altgard" max_user="200" twin_count="3" beginner_twin_count="4" death_level="0" water_level="0" world_type="ASMODAE" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="220040000" name="Beluslan" max_user="200" beginner_twin_count="3" death_level="0" water_level="16" world_type="ASMODAE" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="220050000" name="Brusthonin" max_user="200" twin_count="1" beginner_twin_count="2" death_level="0" water_level="5" world_type="ASMODAE" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
-<!-- 	<map id="220070000" name="Gelkmaros" death_level="0" water_level="0" world_type="BALAUREA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/> -->
+	<map id="220070000" name="Gelkmaros" death_level="0" water_level="0" world_type="BALAUREA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="220080000" name="Enshar" max_user="200" death_level="0" water_level="0" world_type="BALAUREA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="220090000" name="Habrok" max_user="100" twin_count="10" death_level="0" water_level="16" world_size="512" flags="RECALL DUEL_SAME_RACE"/>
 	<map id="220100000" name="Idian Depths" twin_count="2" death_level="0" water_level="16" world_size="1536" flags="BIND RECALL GLIDE RIDE FLY_RIDE DUEL_SAME_RACE"/>
@@ -218,7 +218,7 @@
 	<map id="510010000" name="Elyos Prison" death_level="0" water_level="16" prison="true" world_size="512" flags="RECALL"/>
 	<map id="520010000" name="Asmodians Prison" death_level="0" water_level="16" prison="true" world_size="512" flags="RECALL"/>
 	<!-- Map Both Race -->
-<!-- 	<map id="600010000" name="Silentera Canyon" death_level="0" water_level="16" world_type="BALAUREA" world_size="1536" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/> -->
+	<map id="600010000" name="Silentera Canyon" death_level="0" water_level="16" world_type="BALAUREA" world_size="1536" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="600040000" name="Tiamaranta's Eye" death_level="0" water_level="16" world_type="BALAUREA" world_size="1536" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<!-- Katalam (Need Client Patch) -->
 	<map id="600050000" name="Katalam" death_level="0" water_level="29" world_type="BALAUREA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>

@@ -471,8 +471,8 @@ public class GoTo extends AdminCommand
 		else if (destination.equalsIgnoreCase("divine2") || destination.equalsIgnoreCase("Divine Tower A")) //5.8
 			goTo(player, 320160000, 240, 222, 378);
 		//** 区域 / Zones *//
-		else if (destination.equalsIgnoreCase("silentera")) //5.8
-			goTo(player, 600110000, 583, 767, 300);
+			else if (destination.equalsIgnoreCase("silentera")) //5.8
+				goTo(player, 600010000, 583, 767, 300);
 		//** 4.3 / 4.3* *//
 		else if (destination.equalsIgnoreCase("iu"))
 			goTo(player, 600080000, 1510, 1511, 565);
@@ -486,10 +486,10 @@ public class GoTo extends AdminCommand
 		else if (destination.equalsIgnoreCase("levinshorasmo"))
 			goTo(player, 600100000, 1842, 1772, 305);
 		//** 5.8 / 5.8* *//
-		else if (destination.equalsIgnoreCase("inggison")) //5.8
-			goTo(player, 210130000, 1335, 276, 590);
-		else if (destination.equalsIgnoreCase("gelkmaros")) //5.8
-			goTo(player, 220140000, 1763, 2911, 554);
+			else if (destination.equalsIgnoreCase("inggison")) //5.8
+				goTo(player, 210050000, 1335, 276, 590);
+			else if (destination.equalsIgnoreCase("gelkmaros")) //5.8
+				goTo(player, 220070000, 1763, 2911, 554);
 		else if (destination.equalsIgnoreCase("eyeely")) //5.8
 			goTo(player, 600040000, 754, 30, 1196);
 		else if (destination.equalsIgnoreCase("eyeasmo")) //5.8

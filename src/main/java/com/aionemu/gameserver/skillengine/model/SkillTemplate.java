@@ -99,6 +99,8 @@ public class SkillTemplate {
 	protected int cooldown;
 	@XmlAttribute(name = "cooldown_delta")
 	protected int cooldownDelta;
+	@XmlAttribute(name = "delay_type")
+	protected int delayType;
 	@XmlAttribute(name = "nonchained_cooldown")
 	protected int nonchainedCooldown;
 	@XmlAttribute(name = "penalty_skill_id")
@@ -506,6 +508,10 @@ public class SkillTemplate {
 
 	public int getCooldownDelta() {
 		return cooldownDelta;
+	}
+
+	public int scaleCooldownByAttackDelay(int cooldown, int attackDelay) {
+		return delayType == 1 ? (int) (cooldown * (attackDelay / 1000f)) : cooldown;
 	}
 
 	public int getNonchainedCooldown() {

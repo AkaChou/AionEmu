@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.controllers.attack.AttackUtil;
-import com.aionemu.gameserver.skillengine.action.DamageType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
@@ -16,6 +15,15 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SignetBurstEffect")
 public class SignetBurstEffect extends DamageEffect {
+	private static final int[][] BURST_DAMAGE_PERCENT = {
+			{ 10, 20, 50, 100, 120, 150 },
+			{ 12, 30, 50, 70, 90, 110 },
+			{ 12, 50, 90, 110, 130, 150 },
+			{ 12, 50, 90, 110, 130, 150 },
+			{ 0, 50, 75, 100 },
+			{ 0, 100, 100 }
+	};
+
 	@XmlAttribute
 	protected int signetlvl;
 
@@ -40,75 +48,46 @@ public class SignetBurstEffect extends DamageEffect {
 								.anyMatch(template -> template instanceof SignetEffect signetTemplate
 										&& signetTemplate.getSignetType() == signetType))
 						.findFirst().orElse(null);
-		if (!super.calculate(effect, DamageType.MAGICAL)) {
+		if (!super.calculate(effect, null, null)) {
 			if (signetEffect != null) {
 				signetEffect.endEffect();
 			}
 			return;
 		}
 		int valueWithDelta = value + delta * effect.getSkillLevel();
-		int critAddDmg = this.critAddDmg2 + this.critAddDmg1 * effect.getSkillLevel();
-		if (signetEffect == null) {
-			valueWithDelta *= 0.05f;
-			effect.setLaunchSubEffect(false);
-			AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, getActionModifiers(effect), getElement(), true, true, false,
-					getMode(), this.critProbMod2, critAddDmg, shared, false);
-		} else {
-			int level = signetEffect.getEffectTemplates().stream()
+		int critAddDmg = getCriticalAdditionalDamage(effect.getSkillLevel());
+		int level = 0;
+		if (signetEffect != null) {
+			level = signetEffect.getEffectTemplates().stream()
 					.filter(SignetEffect.class::isInstance).map(SignetEffect.class::cast)
 					.filter(signetEffectTemplate -> signetType == 0 || signetEffectTemplate.getSignetType() == signetType)
 					.mapToInt(SignetEffect::getSignetLevel).findFirst().orElse(signetEffect.getSkillLevel());
 			if (level == 0) {
 				level = signetEffect.getSkillLevel();
 			}
-			level = Math.min(level, signetlvl);
-			if (minSignetLevel > 0 && level < minSignetLevel) {
-				effect.setSubEffectAborted(true);
-			}
-			effect.setSignetBurstedCount(level);
-			switch (level) {
-			case 1:
-				valueWithDelta *= 0.2f;
-				break;
-			case 2:
-				valueWithDelta *= 0.5f;
-				break;
-			case 3:
-				valueWithDelta *= 1.0f;
-				break;
-			case 4:
-				valueWithDelta *= 1.2f;
-				break;
-			case 5:
-				valueWithDelta *= 1.5f;
-				break;
-			}
-			int accmod = 0;
-			int mAccurancy = effect.getEffector().getGameStats().getMAccuracy().getCurrent();
-			switch (level) {
-			case 1:
-				accmod = (int) (-10.8f * mAccurancy);
-				break;
-			case 2:
-				accmod = (int) (-10.5f * mAccurancy);
-				break;
-			case 3:
-				accmod = 0;
-				break;
-			case 4:
-				accmod = (int) (13.5f * mAccurancy);
-				break;
-			case 5:
-				accmod = (int) (18.5f * mAccurancy);
-				break;
-			}
-			effect.setAccModBoost(accmod);
-			effect.setLaunchSubEffect(true);
-			AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, getActionModifiers(effect), getElement(), true, true, false,
-					getMode(), this.critProbMod2, critAddDmg, shared, false);
-			if (signetEffect != null) {
-				signetEffect.endEffect();
-			}
 		}
+		int burstLevel = Math.min(level, signetlvl);
+		if (minSignetLevel == 0 || level >= minSignetLevel) {
+			valueWithDelta = scaleBurstDamage(valueWithDelta, getBurstDamagePercent(signetType, burstLevel));
+		} else {
+			effect.setSubEffectAborted(true);
+		}
+		effect.setSignetBurstedCount(burstLevel);
+		effect.setLaunchSubEffect(signetEffect != null);
+		AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, getActionModifiers(effect), getElement(), true, true, false,
+				getMode(), getCriticalProbability(effect.getSkillLevel()), critAddDmg, shared, false);
+		if (signetEffect != null) {
+			signetEffect.endEffect();
+		}
+	}
+
+	static int getBurstDamagePercent(int signetType, int level) {
+		int typeIndex = signetType >= 1 && signetType <= BURST_DAMAGE_PERCENT.length ? signetType - 1 : 0;
+		int[] percentages = BURST_DAMAGE_PERCENT[typeIndex];
+		return percentages[Math.min(Math.max(0, level), percentages.length - 1)];
+	}
+
+	static int scaleBurstDamage(int damage, int percent) {
+		return damage / 100 * percent;
 	}
 }

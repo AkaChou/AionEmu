@@ -12,7 +12,7 @@
 	<revive_world_start_point world_id="210060000" name="Meniherk Excavation Camp" race="ELYOS" min_level="1" max_level="45" x="1424.4342" y="1568.1641" z="30.875" h="91"/>
 	<revive_world_start_point world_id="210070000" name="Aequis Headquarters" race="ELYOS" min_level="1" max_level="75" x="2946.5962" y="853.3796" z="572.10443" h="78"/>
 	<revive_world_start_point world_id="210100000" name="Ariel's Sanctuary" race="ELYOS" min_level="1" max_level="75" x="1400.1238" y="1304.6417" z="336.79132" h="9"/>
-	<revive_world_start_point world_id="210130000" name="Inggison Illusion Fortress" race="ELYOS" min_level="1" max_level="75" x="1386.6333" y="303.7946" z="588.78503" h="66"/>
+	<revive_world_start_point world_id="210050000" name="Inggison Illusion Fortress" race="ELYOS" min_level="1" max_level="75" x="1386.6333" y="303.7946" z="588.78503" h="66"/>
 	<!-- Revive Start Point Asmodians -->
 	<revive_world_start_point world_id="220010000" name="Aldelle Village" race="ASMODIANS" min_level="1" max_level="75" x="589.22565" y="2465.403" z="278.6643" h="92"/>
 	<revive_world_start_point world_id="220020000" name="Morheim Ice Fortress" race="ASMODIANS" min_level="1" max_level="75" x="270.09525" y="2239.638" z="443.7381" h="6"/>
@@ -21,7 +21,7 @@
 	<revive_world_start_point world_id="220050000" name="Settlers Campsite" race="ASMODIANS" min_level="1" max_level="45" x="2927.077" y="2431.52" z="16.662308" h="10"/>
 	<revive_world_start_point world_id="220080000" name="Dragonrest Temple" race="ASMODIANS" min_level="1" max_level="75" x="428.0889" y="2235.469" z="219.94165" h="32"/>
 	<revive_world_start_point world_id="220110000" name="Azphel's Sanctuary" race="ASMODIANS" min_level="1" max_level="75" x="1811.2202" y="1965.7113" z="199.19724" h="45"/>
-	<revive_world_start_point world_id="220140000" name="Gelkmaros Fortress" race="ASMODIANS" min_level="1" max_level="75" x="1764.1581" y="2909.8933" z="554.7983" h="9"/>
+	<revive_world_start_point world_id="220070000" name="Gelkmaros Fortress" race="ASMODIANS" min_level="1" max_level="75" x="1764.1581" y="2909.8933" z="554.7983" h="9"/>
 	<!-- Revive Start Point Both Race -->
 	<revive_world_start_point world_id="400010000" name="Primum Landing" race="ASMODIANS" min_level="1" max_level="75" x="433.718" y="2699.53" z="1655.3513" h="108"/>
 	<revive_world_start_point world_id="400010000" name="Teminon Landing" race="ELYOS" min_level="1" max_level="75" x="2375.47" y="529.8081" z="1545.4985" h="102"/>
@@ -34,4 +34,3 @@
 	<revive_world_start_point world_id="600100000" name="Pinacle Cataract Outpost" race="ASMODIANS" min_level="1" max_level="75" x="1841.5645" y="1782.8247" z="305.25" h="88"/>
 	<revive_world_start_point world_id="600100000" name="Lumewillow Glade Scout Base" race="ELYOS" min_level="1" max_level="75" x="107.92273" y="109.31979" z="347.17233" h="11"/>
 </revive_world_start_points>
-

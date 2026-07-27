@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
@@ -25,7 +26,7 @@ public class NoFlyEffect extends EffectTemplate {
 	public void calculate(Effect effect) {
 		// 目前仅影响玩家（尚无飞行 NPC）。 / Affects only players (for now as we dont have flying Npc's)
 		if (effect.getEffected() instanceof Player) {
-			super.calculate(effect, null, null);
+			super.calculate(effect, StatEnum.NOFLY_RESISTANCE, null);
 		}
 	}
 

@@ -58,6 +58,7 @@
 		<xs:attribute name="toggle_timer" type="xs:int"/>
 		<xs:attribute name="cooldown" type="xs:int" use="optional" default="0"/>
 		<xs:attribute name="cooldown_delta" type="xs:int" use="optional" default="0"/>
+		<xs:attribute name="delay_type" type="SkillDelayType" use="optional" default="0"/>
 		<xs:attribute name="nonchained_cooldown" type="xs:nonNegativeInteger" use="optional" default="0"/>
 		<xs:attribute name="penalty_skill_message" type="xs:boolean" use="optional" default="false"/>
 		<xs:attribute name="pvp_damage" type="xs:int"/>
@@ -116,6 +117,11 @@
 	<xs:simpleType name="StanceType">
 		<xs:restriction base="xs:unsignedByte">
 			<xs:maxInclusive value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SkillDelayType">
+		<xs:restriction base="xs:unsignedByte">
+			<xs:maxInclusive value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="SkillObstacle">
@@ -384,6 +390,7 @@
 		<xs:attribute name="critprobmod1" type="xs:int"/>
 		<xs:attribute name="critprobmod2" type="xs:int"/>
 		<xs:attribute name="preeffect_prob" type="xs:int"/>
+		<xs:attribute name="preeffect_prob_delta" type="xs:int"/>
 		<xs:attribute name="preeffect" type="xs:string"/>
 		<xs:attribute name="element" type="SkillElement"/>
 		<xs:attribute name="hittypeprob1" type="xs:int" use="optional" default="0"/>

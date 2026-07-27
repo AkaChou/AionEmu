@@ -4,6 +4,7 @@ package com.aionemu.gameserver.skillengine.effect;
 import com.aionemu.boot.i18n.I18n;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -21,6 +22,8 @@ import com.aionemu.gameserver.model.SkillElement;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Kisk;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.change.Change;
 import com.aionemu.gameserver.skillengine.condition.Conditions;
@@ -47,6 +50,27 @@ import lombok.extern.slf4j.Slf4j;
 @XmlType(name = "Effect")
 @Slf4j
 public abstract class EffectTemplate {
+	static final Set<StatEnum> ABNORMAL_RESISTANCE_STATS = Set.of(
+			StatEnum.BLEED_RESISTANCE, StatEnum.BIND_RESISTANCE, StatEnum.BLIND_RESISTANCE,
+			StatEnum.CHARM_RESISTANCE, StatEnum.CONFUSE_RESISTANCE, StatEnum.CURSE_RESISTANCE,
+			StatEnum.DEFORM_RESISTANCE, StatEnum.DISEASE_RESISTANCE, StatEnum.FEAR_RESISTANCE,
+			StatEnum.OPENAREIAL_RESISTANCE, StatEnum.PARALYZE_RESISTANCE, StatEnum.PERIFICATION_RESISTANCE,
+			StatEnum.NOFLY_RESISTANCE, StatEnum.POISON_RESISTANCE, StatEnum.PULLED_RESISTANCE,
+			StatEnum.ROOT_RESISTANCE, StatEnum.SIMPLE_ROOT_RESISTANCE,
+			StatEnum.SILENCE_RESISTANCE, StatEnum.SLEEP_RESISTANCE, StatEnum.SLOW_RESISTANCE,
+			StatEnum.SNARE_RESISTANCE, StatEnum.SPIN_RESISTANCE, StatEnum.STAGGER_RESISTANCE,
+			StatEnum.STUMBLE_RESISTANCE, StatEnum.STUN_RESISTANCE);
+	static final Set<StatEnum> STUNLIKE_RESISTANCE_STATS = Set.of(
+			StatEnum.CHARM_RESISTANCE, StatEnum.OPENAREIAL_RESISTANCE, StatEnum.SPIN_RESISTANCE,
+			StatEnum.STAGGER_RESISTANCE, StatEnum.STUMBLE_RESISTANCE, StatEnum.STUN_RESISTANCE);
+	static final Set<StatEnum> AR_ALL_RESISTANCE_STATS = Set.of(
+			StatEnum.BLEED_RESISTANCE, StatEnum.BIND_RESISTANCE, StatEnum.BLIND_RESISTANCE,
+			StatEnum.CONFUSE_RESISTANCE, StatEnum.CURSE_RESISTANCE, StatEnum.DEFORM_RESISTANCE,
+			StatEnum.DISEASE_RESISTANCE, StatEnum.FEAR_RESISTANCE, StatEnum.PARALYZE_RESISTANCE,
+			StatEnum.NOFLY_RESISTANCE, StatEnum.PERIFICATION_RESISTANCE, StatEnum.POISON_RESISTANCE,
+			StatEnum.PULLED_RESISTANCE, StatEnum.ROOT_RESISTANCE, StatEnum.SILENCE_RESISTANCE,
+			StatEnum.SIMPLE_ROOT_RESISTANCE, StatEnum.SLEEP_RESISTANCE,
+			StatEnum.SLOW_RESISTANCE, StatEnum.SNARE_RESISTANCE);
 
 	protected ActionModifiers modifiers;
 	protected List<Change> change;
@@ -94,6 +118,8 @@ public abstract class EffectTemplate {
 	protected String preEffect;
 	@XmlAttribute(name = "preeffect_prob")
 	protected int preEffectProb = 100;
+	@XmlAttribute(name = "preeffect_prob_delta")
+	protected int preEffectProbDelta;
 	@XmlAttribute(name = "critprobmod2")
 	protected int critProbMod2 = 100;
 	@XmlAttribute(name = "critprobmod1")
@@ -262,6 +288,10 @@ public abstract class EffectTemplate {
 		return preEffectProb;
 	}
 
+	int getPreEffectProbability(int skillLevel) {
+		return preEffectProb + preEffectProbDelta * skillLevel;
+	}
+
 	/**
 	 * 获取暴击概率修正。
 	 * Returns the critical probability modifier.
@@ -274,6 +304,10 @@ public abstract class EffectTemplate {
 
 	public int getCritProbMod1() {
 		return critProbMod1;
+	}
+
+	int getCriticalProbability(int skillLevel) {
+		return critProbMod2 + critProbMod1 * skillLevel;
 	}
 
 	/**
@@ -294,6 +328,10 @@ public abstract class EffectTemplate {
 	 */
 	public int getCritAddDmg2() {
 		return critAddDmg2;
+	}
+
+	int getCriticalAdditionalDamage(int skillLevel) {
+		return critAddDmg2 + critAddDmg1 * skillLevel;
 	}
 
 	/**
@@ -387,10 +425,6 @@ public abstract class EffectTemplate {
 		if (statEnum != null && isAlteredState(statEnum) && isImuneToAbnormal(effect, statEnum)) {
 			return false;
 		}
-		if (statEnum != null && isAlteredState(statEnum) && isExclusiveStatusImmune(effect)) {
-			return false;
-		}
-
 		if (effect.getIsForcedEffect()) {
 			this.addSuccessEffect(effect, spellStatus);
 			return true;
@@ -408,7 +442,7 @@ public abstract class EffectTemplate {
 				}
 			}
 
-			if (Rnd.get(0, 100) > this.getPreEffectProb()) {
+			if (Rnd.get(100) >= getPreEffectProbability(effect.getSkillLevel())) {
 				return false;
 			}
 		}
@@ -450,7 +484,7 @@ public abstract class EffectTemplate {
 					}
 					break;
 				default:
-					if (Rnd.get(0, 1000) < StatFunctions.calculateMagicalResistRate(effect.getEffector(),
+					if (Rnd.nextInt(1000) < StatFunctions.calculateMagicalResistRate(effect.getEffector(),
 							effect.getEffected(), accMod, getElement())) {
 						return false;
 					}
@@ -458,7 +492,7 @@ public abstract class EffectTemplate {
 				}
 				break;
 			case MAGICAL:
-				if (Rnd.get(0, 1000) < StatFunctions.calculateMagicalResistRate(effect.getEffector(),
+				if (Rnd.nextInt(1000) < StatFunctions.calculateMagicalResistRate(effect.getEffector(),
 						effect.getEffected(), accMod, getElement())) {
 					return false;
 				}
@@ -654,39 +688,35 @@ public abstract class EffectTemplate {
 		if (statEnum == null) {
 			return true;
 		}
-		int effectPower = 1000;
-
-		if (isAlteredState(statEnum)) {
-			effectPower -= effect.getEffected().getGameStats().getStat(StatEnum.ABNORMAL_RESISTANCE_ALL, 0)
-					.getCurrent();
+		if (noResist) {
+			return true;
 		}
 
-		// 效果抗性 / effect resistance
-		effectPower -= effect.getEffected().getGameStats().getStat(statEnum, 0).getCurrent();
-
-		// 穿透 / penetration
+		int resistance = effected.getGameStats().getStat(statEnum, 0).getCurrent();
 		StatEnum penetrationStat = this.getPenetrationStat(statEnum);
-		if (penetrationStat != null) {
-			effectPower += effector.getGameStats().getStat(penetrationStat, 0).getCurrent();
-		}
-
-		// PVP 抗性修正 / resist mod pvp
-		if (effector.isPvpTarget(effect.getEffected())) {
-			int differ = (effected.getLevel() - effector.getLevel());
-			if (differ > 2 && differ < 8) {
-				effectPower -= Math.round((effectPower * (differ - 2) / 15f));
-			} else if (differ >= 8) {
-				effectPower *= 0.1f;
+			int penetration = penetrationStat == null ? 0
+					: effector.getGameStats().getStat(penetrationStat, 0).getCurrent();
+			if (isAlteredState(statEnum)) {
+				if (AR_ALL_RESISTANCE_STATS.contains(statEnum)) {
+					resistance += effected.getGameStats().getStat(StatEnum.ABNORMAL_RESISTANCE_ALL, 0).getCurrent();
+				}
+				if (STUNLIKE_RESISTANCE_STATS.contains(statEnum)) {
+					resistance += effected.getGameStats().getStat(StatEnum.STUNLIKE_RESISTANCE, 0).getCurrent();
+				}
+				int resistChance = calculateAbnormalResistChance(resistance, penetration,
+						getExclusiveStatusResistance(effect), effected.isInState(CreatureState.RESTING));
+				return Rnd.get(1, 1000) > resistChance;
 			}
-		}
-
-		// PvE 抗性修正 / resist mod PvE
-		if (effect.getEffected() instanceof Npc) {
-			Npc effectrd = (Npc) effect.getEffected();
-			int hpGaugeMod = effectrd.getObjectTemplate().getRank().ordinal() - 1;
-			effectPower -= hpGaugeMod * 100;
-		}
+		int effectPower = 1000 - resistance + penetration;
 		return Rnd.get(1000) <= effectPower;
+	}
+
+	static int calculateAbnormalResistChance(int resistance, int penetration, int exclusiveResistance, boolean resting) {
+		int chance = resistance - penetration;
+		if (resting) {
+			chance = (int) (chance * 0.3f);
+		}
+		return Math.max(0, Math.min(1000, chance + exclusiveResistance));
 	}
 
 	private boolean isImuneToAbnormal(Effect effect, StatEnum statEnum) {
@@ -710,51 +740,22 @@ public abstract class EffectTemplate {
 					return true;
 				}
 			}
-			int resist = effected.getGameStats().getStat(StatEnum.ABNORMAL_RESISTANCE_ALL, 0).getCurrent();
-			return Rnd.get(1000) < resist;
 		}
 		return false;
 	}
 
-	private boolean isExclusiveStatusImmune(Effect effect) {
+	private int getExclusiveStatusResistance(Effect effect) {
 		SkillTemplate skill = effect.getSkillTemplate();
-		if (!(effect.getEffected() instanceof com.aionemu.gameserver.model.gameobjects.player.Player player)
+		if (!(effect.getEffected() instanceof Player player)
 				|| skill.getExclusiveAttribute() == null || DataManager.SKILL_DATA == null) {
-			return false;
+			return 0;
 		}
-		int immune = DataManager.SKILL_DATA.getExclusiveStatusImmune(
-			player.getEquipment().getEquippedItemIds(), skill.getExclusiveAttribute());
-		return Rnd.get(1000) < immune;
+		return DataManager.SKILL_DATA.getExclusiveStatusImmune(
+				player.getEquipment().getEquippedItemIds(), skill.getExclusiveAttribute());
 	}
 
 	private boolean isAlteredState(StatEnum stat) {
-		switch (stat) {
-		case BLEED_RESISTANCE:
-		case BIND_RESISTANCE:
-		case BLIND_RESISTANCE:
-		case CHARM_RESISTANCE:
-		case CONFUSE_RESISTANCE:
-		case CURSE_RESISTANCE:
-		case DEFORM_RESISTANCE:
-		case DISEASE_RESISTANCE:
-		case FEAR_RESISTANCE:
-		case OPENAREIAL_RESISTANCE:
-		case PARALYZE_RESISTANCE:
-		case PERIFICATION_RESISTANCE:
-		case POISON_RESISTANCE:
-		case PULLED_RESISTANCE:
-		case ROOT_RESISTANCE:
-		case SILENCE_RESISTANCE:
-		case SLEEP_RESISTANCE:
-		case SLOW_RESISTANCE:
-		case SNARE_RESISTANCE:
-		case SPIN_RESISTANCE:
-		case STAGGER_RESISTANCE:
-		case STUMBLE_RESISTANCE:
-		case STUN_RESISTANCE:
-			return true;
-		}
-		return false;
+		return ABNORMAL_RESISTANCE_STATS.contains(stat);
 	}
 
 	private StatEnum getPenetrationStat(StatEnum statEnum) {
@@ -763,6 +764,8 @@ public abstract class EffectTemplate {
 			return StatEnum.BLEED_RESISTANCE_PENETRATION;
 		case BLIND_RESISTANCE:
 			return StatEnum.BLIND_RESISTANCE_PENETRATION;
+		case BIND_RESISTANCE:
+			return StatEnum.BIND_RESISTANCE_PENETRATION;
 		case CHARM_RESISTANCE:
 			return StatEnum.CHARM_RESISTANCE_PENETRATION;
 		case CONFUSE_RESISTANCE:
@@ -771,8 +774,12 @@ public abstract class EffectTemplate {
 			return StatEnum.CURSE_RESISTANCE_PENETRATION;
 		case DISEASE_RESISTANCE:
 			return StatEnum.DISEASE_RESISTANCE_PENETRATION;
+		case DEFORM_RESISTANCE:
+			return StatEnum.DEFORM_RESISTANCE_PENETRATION;
 		case FEAR_RESISTANCE:
 			return StatEnum.FEAR_RESISTANCE_PENETRATION;
+		case NOFLY_RESISTANCE:
+			return StatEnum.NOFLY_RESISTANCE_PENETRATION;
 		case OPENAREIAL_RESISTANCE:
 			return StatEnum.OPENAREIAL_RESISTANCE_PENETRATION;
 		case PARALYZE_RESISTANCE:
@@ -781,10 +788,14 @@ public abstract class EffectTemplate {
 			return StatEnum.PERIFICATION_RESISTANCE_PENETRATION;
 		case POISON_RESISTANCE:
 			return StatEnum.POISON_RESISTANCE_PENETRATION;
+		case PULLED_RESISTANCE:
+			return StatEnum.PULLED_RESISTANCE_PENETRATION;
 		case ROOT_RESISTANCE:
 			return StatEnum.ROOT_RESISTANCE_PENETRATION;
 		case SILENCE_RESISTANCE:
 			return StatEnum.SILENCE_RESISTANCE_PENETRATION;
+		case SIMPLE_ROOT_RESISTANCE:
+			return StatEnum.SIMPLE_ROOT_RESISTANCE_PENETRATION;
 		case SLEEP_RESISTANCE:
 			return StatEnum.SLEEP_RESISTANCE_PENETRATION;
 		case SLOW_RESISTANCE:

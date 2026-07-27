@@ -58,7 +58,11 @@
 				<xs:attribute name="mresist" type="xs:int"/>
 				<xs:attribute name="mcrit" type="xs:int"/>
 				<xs:attribute name="pdef" type="xs:int"/>
-				<xs:attribute name="mdef" type="xs:int"/>	
+				<xs:attribute name="mdef" type="xs:int"/>
+				<xs:attribute name="min_damage" type="xs:int"/>
+				<xs:attribute name="max_damage" type="xs:int"/>
+				<xs:attribute name="stat_ratio" type="xs:int"/>
+				<xs:attribute name="limit_attribute_reduce_value" type="xs:int"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

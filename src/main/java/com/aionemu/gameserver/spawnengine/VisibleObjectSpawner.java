@@ -973,11 +973,12 @@ public class VisibleObjectSpawner {
         return pet;
     }
 
-    public static Minion spawnMinion(Player player, int minionId) {
-        MinionCommonData minionCommonData = player.getMinionList().getMinion(minionId);
+    public static Minion spawnMinion(Player player, int minionObjectId) {
+        MinionCommonData minionCommonData = player.getMinionList().getMinion(minionObjectId);
         if (minionCommonData == null) {
             return null;
         }
+        int minionId = minionCommonData.getMinionId();
         MinionTemplate minionTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
         if (minionTemplate == null) {
             return null;

@@ -127,6 +127,8 @@
 			<xs:enumeration value="STUMBLE_RESISTANCE"/>
 			<xs:enumeration value="STUN_RESISTANCE"/>
 			<xs:enumeration value="PULLED_RESISTANCE"/>
+			<xs:enumeration value="NOFLY_RESISTANCE"/>
+			<xs:enumeration value="SIMPLE_ROOT_RESISTANCE"/>
 			<xs:enumeration value="SILENCE_RESISTANCE_PENETRATION"/>
 			<xs:enumeration value="PARALYZE_RESISTANCE_PENETRATION"/>
 			<xs:enumeration value="STAGGER_RESISTANCE_PENETRATION"/>
@@ -201,6 +203,11 @@
 			<xs:enumeration value="OPENAREIAL_RESISTANCE_PENETRATION"/>
 			<xs:enumeration value="SNARE_RESISTANCE_PENETRATION"/>
 			<xs:enumeration value="SLOW_RESISTANCE_PENETRATION"/>
+			<xs:enumeration value="BIND_RESISTANCE_PENETRATION"/>
+			<xs:enumeration value="DEFORM_RESISTANCE_PENETRATION"/>
+			<xs:enumeration value="PULLED_RESISTANCE_PENETRATION"/>
+			<xs:enumeration value="NOFLY_RESISTANCE_PENETRATION"/>
+			<xs:enumeration value="SIMPLE_ROOT_RESISTANCE_PENETRATION"/>
 			<xs:enumeration value="BOOST_DURATION_BUFF"/>
 			<xs:enumeration value="BOOST_RESIST_DEBUFF"/>
 			<xs:enumeration value="PVP_PHYSICAL_DEFEND"/>

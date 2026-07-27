@@ -754,7 +754,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="347" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="347" applymboost="false" hp_percent_delta="0" hp_percent="50" />
     </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
@@ -778,7 +778,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="455" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="455" applymboost="false" hp_percent_delta="0" hp_percent="50" />
     </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
@@ -802,7 +802,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="564" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="564" applymboost="false" hp_percent_delta="0" hp_percent="50" />
     </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
@@ -826,7 +826,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="672" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="672" applymboost="false" hp_percent_delta="0" hp_percent="50" />
     </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
@@ -850,7 +850,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="781" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="781" applymboost="false" hp_percent_delta="0" hp_percent="50" />
     </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
@@ -874,7 +874,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="890" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="890" applymboost="false" hp_percent_delta="0" hp_percent="50" />
     </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
@@ -898,7 +898,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="998" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="998" applymboost="false" hp_percent_delta="0" hp_percent="50" />
     </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
@@ -922,7 +922,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="1107" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="1107" applymboost="false" hp_percent_delta="0" hp_percent="50" />
     </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
@@ -946,7 +946,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="1215" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="1215" applymboost="false" hp_percent_delta="0" hp_percent="50" />
     </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
@@ -2133,7 +2133,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="1236" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="1236" applymboost="false" hp_percent_delta="0" hp_percent="50" />
       <statdown duration1="0" duration2="10000" randomtime="0" effectid="120012" e="2" basiclvl="20" noresist="false" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH">
         <change stat="PHYSICAL_DEFENSE" func="ADD" value="-175" delta="0" />
       </statdown>
@@ -2176,7 +2176,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="1360" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="1360" applymboost="false" hp_percent_delta="0" hp_percent="50" />
       <statdown duration1="0" duration2="10000" randomtime="0" effectid="120012" e="2" basiclvl="20" noresist="false" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH">
         <change stat="PHYSICAL_DEFENSE" func="ADD" value="-175" delta="0" />
       </statdown>
@@ -2219,7 +2219,7 @@
     <group_ref id="SG_C12BA97321F035B9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="1484" applymboost="false" hp_percent_delta="0" hp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" delta="0" value="1484" applymboost="false" hp_percent_delta="0" hp_percent="50" />
       <statdown duration1="0" duration2="10000" randomtime="0" effectid="120012" e="2" basiclvl="20" noresist="false" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH">
         <change stat="PHYSICAL_DEFENSE" func="ADD" value="-175" delta="0" />
       </statdown>
@@ -17464,7 +17464,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="22658" name="범위 흡혈" nameId="4561079" name_desc="Vritra_LowNmd_SatkHPDrain_SA_nmd" stack="SKILL_Vritra_LowNmd_SatkHPDrain_SA_nmd" skill_group_name="Vritra_LowNmd_SatkHPDrain_SA_nmd" delayId="1000" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="25" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_C28B76A60E2FE13B" />
+    <properties first_target="TARGET" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="7" effective_angle="240" effective_altitude="7" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>

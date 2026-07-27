@@ -82,6 +82,7 @@ public class Effect implements StatOwner {
 	private SpellStatus spellStatus = SpellStatus.NONE;
 	private DashStatus dashStatus = DashStatus.NONE;
 	private AttackStatus attackStatus = AttackStatus.NORMALHIT;
+	private AttackStatus[] periodicAttackStatuses;
 	private int shieldDefense;
 	private int reflectedDamage = 0;
 	private int reflectedSkillId = 0;
@@ -93,7 +94,11 @@ public class Effect implements StatOwner {
 	private AttackCalcObserver[] attackShieldObserver;
 	private boolean launchSubEffect = true;
 	private Effect subEffect;
-	private boolean isStopped;
+	private volatile boolean isStopped;
+	private int startedTemplateCount;
+	private ActionObserver equipmentObserver;
+	private ActionObserver attackedObserver;
+	private ActionObserver dotAttackedObserver;
 	private boolean isDelayedDamage;
 	private boolean isDamageEffect;
 	private boolean isPetOrder;
@@ -560,6 +565,17 @@ public class Effect implements StatOwner {
 	 */
 	public void setAttackStatus(AttackStatus attackStatus) {
 		this.attackStatus = attackStatus;
+	}
+
+	public AttackStatus getPeriodicAttackStatus(int position) {
+		return periodicAttackStatuses == null ? null : periodicAttackStatuses[position - 1];
+	}
+
+	public void setPeriodicAttackStatus(int position, AttackStatus attackStatus) {
+		if (periodicAttackStatuses == null) {
+			periodicAttackStatuses = new AttackStatus[4];
+		}
+		periodicAttackStatuses[position - 1] = attackStatus;
 	}
 
 	/**
@@ -1163,40 +1179,50 @@ public class Effect implements StatOwner {
 		if (isStopped || successEffects.isEmpty()) {
 			return;
 		}
-		shedulePeriodicActions();
-		for (EffectTemplate template : successEffects) {
-			template.startEffect(this);
+		try {
+			shedulePeriodicActions();
+			for (int i = 0; i < successEffects.size(); i++) {
+				startedTemplateCount = i + 1;
+				successEffects.get(i).startEffect(this);
+			}
 			checkUseEquipmentConditions();
 			checkCancelOnDmg();
-		}
-		if (isToggle() && effector instanceof Player) {
-			activateToggleSkill();
-		}
-		if (!restored && !forcedDuration) {
-			duration = getEffectsDuration();
-		}
-		if (isToggle()) {
-			duration = skillTemplate.getToggleTimer();
-		}
-		if (isEnchantBoost() && effector instanceof Player) {
-			((Player) effector).setEnchantBoost(true);
-		}
-		if (isAuthorizeBoost() && effector instanceof Player) {
-			((Player) effector).setAuthorizeBoost(true);
-		}
-		if (duration == 0) {
-			return;
-		}
-		if (isOpenAerialSkill()) {
-			duration = skillTemplate.getDuration();
-		}
-		endTime = System.currentTimeMillis() + duration;
-		task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				endEffect();
+			if (isToggle() && effector instanceof Player) {
+				activateToggleSkill();
 			}
-		}, duration);
+			if (!restored && !forcedDuration) {
+				duration = getEffectsDuration();
+			}
+			if (isToggle()) {
+				duration = skillTemplate.getToggleTimer();
+			}
+			if (isEnchantBoost() && effector instanceof Player) {
+				((Player) effector).setEnchantBoost(true);
+			}
+			if (isAuthorizeBoost() && effector instanceof Player) {
+				((Player) effector).setAuthorizeBoost(true);
+			}
+			if (duration == 0) {
+				return;
+			}
+			if (isOpenAerialSkill()) {
+				duration = skillTemplate.getDuration();
+			}
+			endTime = System.currentTimeMillis() + duration;
+			task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				@Override
+				public void run() {
+					endEffect();
+				}
+			}, duration);
+		} catch (RuntimeException | Error failure) {
+			try {
+				endEffect();
+			} catch (RuntimeException | Error cleanupFailure) {
+				failure.addSuppressed(cleanupFailure);
+			}
+			throw failure;
+		}
 	}
 
 	/**
@@ -1221,35 +1247,73 @@ public class Effect implements StatOwner {
 		if (isStopped) {
 			return;
 		}
+		isStopped = true;
 		int previousAbnormals = effected.getEffectController().getAbnormals();
-		for (EffectTemplate template : successEffects) {
-			template.endEffect(this);
-		}
-		int leftAbnormals = previousAbnormals & ~effected.getEffectController().getAbnormals();
-		if (leftAbnormals != 0 && effected instanceof Npc npc) {
-			npc.getAi2().onLeaveAbnormalState(effector, leftAbnormals);
-		}
-		// 若效果为姿态，则从玩家移除姿态 / If effect is a stance, remove stance from player
-		if (effector instanceof Player) {
-			Player player = (Player) effector;
-			if (player.getController().getStanceSkillId() == getSkillId()) {
-				PacketSendUtility.sendPacket(player, new SM_PLAYER_STANCE(player, 0));
-				player.getController().startStance(0);
+		Throwable failure = null;
+		for (int i = 0; i < startedTemplateCount; i++) {
+			try {
+				successEffects.get(i).endEffect(this);
+			} catch (RuntimeException | Error templateFailure) {
+				failure = collectFailure(failure, templateFailure);
 			}
 		}
-		if (isToggle() && effector instanceof Player) {
-			deactivateToggleSkill();
+		try {
+			// 若效果为姿态，则从玩家移除姿态 / If effect is a stance, remove stance from player
+			if (effector instanceof Player) {
+				Player player = (Player) effector;
+				if (player.getController().getStanceSkillId() == getSkillId()) {
+					PacketSendUtility.sendPacket(player, new SM_PLAYER_STANCE(player, 0));
+					player.getController().startStance(0);
+				}
+			}
+			if (isToggle() && effector instanceof Player) {
+				deactivateToggleSkill();
+			}
+			if (isEnchantBoost() && effector instanceof Player) {
+				((Player) effector).setEnchantBoost(false);
+			}
+			if (isAuthorizeBoost() && effector instanceof Player) {
+				((Player) effector).setAuthorizeBoost(false);
+			}
+		} catch (RuntimeException | Error stateFailure) {
+			failure = collectFailure(failure, stateFailure);
 		}
-		if (isEnchantBoost() && effector instanceof Player) {
-			((Player) effector).setEnchantBoost(false);
+		try {
+			stopTasks();
+		} catch (RuntimeException | Error taskFailure) {
+			failure = collectFailure(failure, taskFailure);
 		}
-		if (isAuthorizeBoost() && effector instanceof Player) {
-			((Player) effector).setAuthorizeBoost(false);
+		try {
+			effected.getEffectController().clearEffect(this);
+		} catch (RuntimeException | Error clearFailure) {
+			failure = collectFailure(failure, clearFailure);
 		}
-		stopTasks();
-		effected.getEffectController().clearEffect(this);
-		this.isStopped = true;
-		this.addedToController = false;
+		addedToController = false;
+		failure = clearLifecycleObservers(failure);
+		int leftAbnormals = previousAbnormals & ~effected.getEffectController().getAbnormals();
+		if (leftAbnormals != 0 && effected instanceof Npc npc) {
+			try {
+				npc.getAi2().onLeaveAbnormalState(effector, leftAbnormals);
+			} catch (RuntimeException | Error aiFailure) {
+				failure = collectFailure(failure, aiFailure);
+			}
+		}
+		if (failure instanceof RuntimeException runtimeFailure) {
+			throw runtimeFailure;
+		}
+		if (failure instanceof Error errorFailure) {
+			throw errorFailure;
+		}
+	}
+
+	private static Throwable collectFailure(Throwable failure, Throwable nextFailure) {
+		if (failure == null) {
+			return nextFailure;
+		}
+		if (failure != nextFailure) {
+			failure.addSuppressed(nextFailure);
+		}
+		return failure;
 	}
 
 	public boolean isStopped() {
@@ -1986,19 +2050,16 @@ public class Effect implements StatOwner {
 		// 观察卸装事件，发生时移除效果 / Observe for unequip event and remove effect if event occurs
 		if ((getSkillTemplate().getUseEquipmentconditions() != null)
 				&& (getSkillTemplate().getUseEquipmentconditions().getConditions().size() > 0)) {
-			ActionObserver observer = new ActionObserver(ObserverType.UNEQUIP) {
+			equipmentObserver = new ActionObserver(ObserverType.UNEQUIP) {
 
 				@Override
 				public void unequip(Item item, Player owner) {
 					if (!useEquipmentConditionsCheck()) {
 						endEffect();
-						if (this != null) {
-							effected.getObserveController().removeObserver(this);
-						}
 					}
 				}
 			};
-			effected.getObserveController().addObserver(observer);
+			effected.getObserveController().addObserver(equipmentObserver);
 		}
 	}
 
@@ -2007,22 +2068,41 @@ public class Effect implements StatOwner {
 	 */
 	private void checkCancelOnDmg() {
 		if (isCancelOnDmg()) {
-			effected.getObserveController().attach(new ActionObserver(ObserverType.ATTACKED) {
+			attackedObserver = new ActionObserver(ObserverType.ATTACKED) {
 
 				@Override
 				public void attacked(Creature creature) {
 					effected.getEffectController().removeEffect(getSkillId());
 				}
-			});
+			};
+			effected.getObserveController().attach(attackedObserver);
 
-			effected.getObserveController().attach(new ActionObserver(ObserverType.DOT_ATTACKED) {
+			dotAttackedObserver = new ActionObserver(ObserverType.DOT_ATTACKED) {
 
 				@Override
 				public void dotattacked(Creature creature, Effect dotEffect) {
 					effected.getEffectController().removeEffect(getSkillId());
 				}
-			});
+			};
+			effected.getObserveController().attach(dotAttackedObserver);
 		}
+	}
+
+	private Throwable clearLifecycleObservers(Throwable failure) {
+		ActionObserver equipment = equipmentObserver;
+		ActionObserver attacked = attackedObserver;
+		ActionObserver dotAttacked = dotAttackedObserver;
+		equipmentObserver = null;
+		attackedObserver = null;
+		dotAttackedObserver = null;
+		for (ActionObserver observer : new ActionObserver[] { equipment, attacked, dotAttacked }) {
+			try {
+				effected.getObserveController().removeObserver(observer);
+			} catch (RuntimeException | Error observerFailure) {
+				failure = collectFailure(failure, observerFailure);
+			}
+		}
+		return failure;
 	}
 
 	/**

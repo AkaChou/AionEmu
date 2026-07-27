@@ -8958,7 +8958,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1754" name="속박의 주문" nameId="4572855" name_desc="CH_EternalSeal_G1" stack="SKILL_CH_EternalSeal" skill_group_name="CH_EternalSeal" delayId="1532" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="18000" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="18" revision_distance="0" target_status="" target_distance="25" effective_angle="7" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="18" revision_distance="0" target_status="" effective_range="25" effective_altitude="7" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_EE8568E66E564EB3" />
     <effects>

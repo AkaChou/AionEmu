@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.model.gameobjects;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.aionemu.gameserver.controllers.MinionController;
 import com.aionemu.gameserver.controllers.movement.MinionMoveController;
 import com.aionemu.gameserver.controllers.movement.MoveController;
@@ -19,6 +22,7 @@ public class Minion extends VisibleObject {
 	private final Player master;
 	private MoveController moveController;
 	private final MinionTemplate minionTemplate;
+	private final Set<Integer> grantedSkills = new HashSet<>();
 
 	public Minion(MinionTemplate minionTemplate, MinionController controller, MinionCommonData commonData,
 			Player master) {
@@ -58,5 +62,13 @@ public class Minion extends VisibleObject {
 	/** 获取守护灵模板。 / Returns the minion template. */
 	public final MinionTemplate getMinionTemplate() {
 		return minionTemplate;
+	}
+
+	public void addGrantedSkill(int skillId) {
+		grantedSkills.add(skillId);
+	}
+
+	public Set<Integer> getGrantedSkills() {
+		return grantedSkills;
 	}
 }

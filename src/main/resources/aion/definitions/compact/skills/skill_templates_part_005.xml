@@ -3493,7 +3493,7 @@
       <chain category="E_CHAINB_3TH_1" precategory="E_CHAINB_2TH_1" time="2000" precount="2" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="27" value="468" applymboost="false" hp_percent_delta="0" hp_percent="20" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="27" value="468" applymboost="false" hp_percent_delta="0" hp_percent="20">
         <modifiers>
           <targetrace delta="36" value="-36" race="TYPE_A" />
         </modifiers>
@@ -3534,7 +3534,7 @@
       <chain category="E_CHAINB_3TH_1" precategory="E_CHAINB_2TH_1" time="2000" precount="2" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="31" value="518" applymboost="false" hp_percent_delta="0" hp_percent="20" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="31" value="518" applymboost="false" hp_percent_delta="0" hp_percent="20">
         <modifiers>
           <targetrace delta="42" value="-42" race="TYPE_A" />
         </modifiers>
@@ -3575,7 +3575,7 @@
       <chain category="E_CHAINB_3TH_1" precategory="E_CHAINB_2TH_1" time="2000" precount="2" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="34" value="569" applymboost="false" hp_percent_delta="0" hp_percent="20" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="34" value="569" applymboost="false" hp_percent_delta="0" hp_percent="20">
         <modifiers>
           <targetrace delta="46" value="-46" race="TYPE_A" />
         </modifiers>
@@ -3616,7 +3616,7 @@
       <chain category="E_CHAINB_3TH_1" precategory="E_CHAINB_2TH_1" time="2000" precount="2" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="37" value="619" applymboost="false" hp_percent_delta="0" hp_percent="20" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="37" value="619" applymboost="false" hp_percent_delta="0" hp_percent="20">
         <modifiers>
           <targetrace delta="50" value="-50" race="TYPE_A" />
         </modifiers>
@@ -3657,7 +3657,7 @@
       <chain category="E_CHAINB_3TH_1" precategory="E_CHAINB_2TH_1" time="2000" precount="2" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="40" value="670" applymboost="false" hp_percent_delta="0" hp_percent="20" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="40" value="670" applymboost="false" hp_percent_delta="0" hp_percent="20">
         <modifiers>
           <targetrace delta="54" value="-54" race="TYPE_A" />
         </modifiers>
@@ -3698,7 +3698,7 @@
       <chain category="E_CHAINB_3TH_1" precategory="E_CHAINB_2TH_1" time="2000" precount="2" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="43" value="721" applymboost="false" hp_percent_delta="0" hp_percent="20" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="43" value="721" applymboost="false" hp_percent_delta="0" hp_percent="20">
         <modifiers>
           <targetrace delta="58" value="-58" race="TYPE_A" />
         </modifiers>
@@ -3739,7 +3739,7 @@
       <chain category="E_CHAINB_3TH_1" precategory="E_CHAINB_2TH_1" time="2000" precount="2" />
     </startconditions>
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="49" value="826" applymboost="false" hp_percent_delta="0" hp_percent="20" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="49" value="826" applymboost="false" hp_percent_delta="0" hp_percent="20">
         <modifiers>
           <targetrace delta="66" value="-66" race="TYPE_A" />
         </modifiers>
@@ -9060,7 +9060,7 @@
     </startconditions>
     <group_ref id="SG_CEC0C284073060E4" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="21" value="350" applymboost="false" hp_percent_delta="0" hp_percent="50" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="21" value="350" applymboost="false" hp_percent_delta="0" hp_percent="50" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="145" delta="0" />
@@ -9096,7 +9096,7 @@
     </startconditions>
     <group_ref id="SG_CEC0C284073060E4" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="22" value="384" applymboost="false" hp_percent_delta="0" hp_percent="50" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="22" value="384" applymboost="false" hp_percent_delta="0" hp_percent="50" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="156" delta="0" />
@@ -9132,7 +9132,7 @@
     </startconditions>
     <group_ref id="SG_CEC0C284073060E4" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="25" value="431" applymboost="false" hp_percent_delta="0" hp_percent="50" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="25" value="431" applymboost="false" hp_percent_delta="0" hp_percent="50" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="165" delta="0" />
@@ -9168,7 +9168,7 @@
     </startconditions>
     <group_ref id="SG_CEC0C284073060E4" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="28" value="468" applymboost="false" hp_percent_delta="0" hp_percent="50" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="100" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="28" value="468" applymboost="false" hp_percent_delta="0" hp_percent="50" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="176" delta="0" />
@@ -12608,7 +12608,7 @@
     </startconditions>
     <group_ref id="SG_3A2E6FD8F14F4730" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="213" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="213" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="117" delta="-4" />
@@ -12643,7 +12643,7 @@
     </startconditions>
     <group_ref id="SG_3A2E6FD8F14F4730" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="254" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="254" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="122" delta="-4" />
@@ -12678,7 +12678,7 @@
     </startconditions>
     <group_ref id="SG_3A2E6FD8F14F4730" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="294" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="294" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="125" delta="-4" />
@@ -12713,7 +12713,7 @@
     </startconditions>
     <group_ref id="SG_3A2E6FD8F14F4730" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="334" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="334" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="130" delta="-4" />
@@ -12748,7 +12748,7 @@
     </startconditions>
     <group_ref id="SG_3A2E6FD8F14F4730" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="374" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="374" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="135" delta="-4" />
@@ -12783,7 +12783,7 @@
     </startconditions>
     <group_ref id="SG_3A2E6FD8F14F4730" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="414" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="414" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="142" delta="-4" />
@@ -12818,7 +12818,7 @@
     </startconditions>
     <group_ref id="SG_3A2E6FD8F14F4730" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="455" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="455" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="149" delta="-4" />
@@ -12853,7 +12853,7 @@
     </startconditions>
     <group_ref id="SG_3A2E6FD8F14F4730" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="515" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="515" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="155" delta="-4" />
@@ -13260,7 +13260,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2380" name="마력탄 난사" nameId="4573443" name_desc="GU_BlindlyShot_G1" stack="SKILL_GU_BlindlyShot" skill_group_name="GU_BlindlyShot" delayId="1854" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_380D38951EF0FE96" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="20" effective_angle="65" effective_altitude="15" />
     <startconditions>
       <mp value="122" delta="0" />
       <weapon weapon="GUN_1H" />
@@ -13269,7 +13269,7 @@
     </startconditions>
     <group_ref id="SG_CEC0C284073060E4" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="300" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="0" value="964" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="300" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="0" value="964" applymboost="false" hp_percent_delta="0" hp_percent="100" />
     </effects>
     <actions>
       <mpuse value="122" delta="0" />
@@ -13293,7 +13293,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2381" name="마력탄 난사" nameId="4573443" name_desc="GU_BlindlyShot_G2" stack="SKILL_GU_BlindlyShot" skill_group_name="GU_BlindlyShot" delayId="1854" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_380D38951EF0FE96" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="20" effective_angle="65" effective_altitude="15" />
     <startconditions>
       <mp value="131" delta="0" />
       <weapon weapon="GUN_1H" />
@@ -13302,7 +13302,7 @@
     </startconditions>
     <group_ref id="SG_CEC0C284073060E4" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="300" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="0" value="1036" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="300" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="0" value="1036" applymboost="false" hp_percent_delta="0" hp_percent="100" />
     </effects>
     <actions>
       <mpuse value="131" delta="0" />
@@ -13326,7 +13326,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2382" name="마력탄 난사" nameId="4573443" name_desc="GU_BlindlyShot_G3" stack="SKILL_GU_BlindlyShot" skill_group_name="GU_BlindlyShot" delayId="1854" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_380D38951EF0FE96" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="20" effective_angle="65" effective_altitude="15" />
     <startconditions>
       <mp value="140" delta="0" />
       <weapon weapon="GUN_1H" />
@@ -13335,7 +13335,7 @@
     </startconditions>
     <group_ref id="SG_CEC0C284073060E4" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="300" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="0" value="1109" applymboost="false" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="300" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="0" value="1109" applymboost="false" hp_percent_delta="0" hp_percent="100" />
     </effects>
     <actions>
       <mpuse value="140" delta="0" />
@@ -15399,7 +15399,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2426" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G1" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="41" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -15458,7 +15458,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2427" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G2" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="56" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -15514,7 +15514,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2428" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G3" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="72" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -15570,7 +15570,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2429" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G4" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="91" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -15629,7 +15629,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2430" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G5" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="114" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -15685,7 +15685,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2431" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G6" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="6" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="132" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -15744,7 +15744,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2432" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G7" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="7" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="164" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -15803,7 +15803,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2433" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G8" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="8" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="182" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -15862,7 +15862,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2434" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G9" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="9" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="199" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -15921,7 +15921,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2435" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G10" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="10" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="211" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -15980,7 +15980,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2436" name="냉각파" nameId="4573499" name_desc="RI_ForwardAttack_G11" stack="SKILL_RI_ForwardAttack" skill_group_name="RI_ForwardAttack" delayId="1711" lvl="11" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="120" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_99FB1710D22E9193" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="2" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="231" delta="0" />
       <chain category="E_CHAINB_1TH_1" time="3500" />
@@ -18767,7 +18767,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2507" name="분노파" nameId="4573575" name_desc="RI_ProvokeWave_G1" stack="SKILL_RI_ProvokeWave" skill_group_name="RI_ProvokeWave" delayId="1723" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="105" delta="0" />
       <riderobot />
@@ -18810,7 +18810,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2508" name="분노파" nameId="4573575" name_desc="RI_ProvokeWave_G2" stack="SKILL_RI_ProvokeWave" skill_group_name="RI_ProvokeWave" delayId="1723" lvl="2" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="109" delta="0" />
       <riderobot />
@@ -18853,7 +18853,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2509" name="분노파" nameId="4573575" name_desc="RI_ProvokeWave_G3" stack="SKILL_RI_ProvokeWave" skill_group_name="RI_ProvokeWave" delayId="1723" lvl="3" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="114" delta="0" />
       <riderobot />
@@ -18893,7 +18893,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2510" name="분노파" nameId="4573575" name_desc="RI_ProvokeWave_G4" stack="SKILL_RI_ProvokeWave" skill_group_name="RI_ProvokeWave" delayId="1723" lvl="4" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="119" delta="0" />
       <riderobot />
@@ -18933,7 +18933,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2511" name="분노파" nameId="4573575" name_desc="RI_ProvokeWave_G5" stack="SKILL_RI_ProvokeWave" skill_group_name="RI_ProvokeWave" delayId="1723" lvl="5" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_4B423FA5101EAD3D" />
     <group_ref id="SG_9AAE56CA11A3A34F" />
     <effects>
@@ -18973,7 +18973,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2512" name="분쇄파" nameId="4573579" name_desc="RI_ForwardStrike_G1" stack="SKILL_RI_ForwardStrike" skill_group_name="RI_ForwardStrike" delayId="1724" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="47" delta="-1" />
       <chain category="E_CHAINB_2TH_1" precategory="E_CHAINB_1TH_1" time="3500" />
@@ -19021,7 +19021,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2513" name="분쇄파" nameId="4573579" name_desc="RI_ForwardStrike_G2" stack="SKILL_RI_ForwardStrike" skill_group_name="RI_ForwardStrike" delayId="1724" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="55" delta="-1" />
       <chain category="E_CHAINB_2TH_1" precategory="E_CHAINB_1TH_1" time="3500" />
@@ -19069,7 +19069,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2514" name="분쇄파" nameId="4573579" name_desc="RI_ForwardStrike_G3" stack="SKILL_RI_ForwardStrike" skill_group_name="RI_ForwardStrike" delayId="1724" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="65" delta="-1" />
       <chain category="E_CHAINB_2TH_1" precategory="E_CHAINB_1TH_1" time="3500" />
@@ -19117,7 +19117,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2515" name="분쇄파" nameId="4573579" name_desc="RI_ForwardStrike_G4" stack="SKILL_RI_ForwardStrike" skill_group_name="RI_ForwardStrike" delayId="1724" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="83" delta="-2" />
       <chain category="E_CHAINB_2TH_1" precategory="E_CHAINB_1TH_1" time="3500" />
@@ -19165,7 +19165,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2516" name="분쇄파" nameId="4573579" name_desc="RI_ForwardStrike_G5" stack="SKILL_RI_ForwardStrike" skill_group_name="RI_ForwardStrike" delayId="1724" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="94" delta="-2" />
       <chain category="E_CHAINB_2TH_1" precategory="E_CHAINB_1TH_1" time="3500" />
@@ -19213,7 +19213,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2517" name="분쇄파" nameId="4573579" name_desc="RI_ForwardStrike_G6" stack="SKILL_RI_ForwardStrike" skill_group_name="RI_ForwardStrike" delayId="1724" lvl="6" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="123" delta="-3" />
       <chain category="E_CHAINB_2TH_1" precategory="E_CHAINB_1TH_1" time="3500" />
@@ -19261,7 +19261,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2518" name="분쇄파" nameId="4573579" name_desc="RI_ForwardStrike_G7" stack="SKILL_RI_ForwardStrike" skill_group_name="RI_ForwardStrike" delayId="1724" lvl="7" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="153" delta="-4" />
       <chain category="E_CHAINB_2TH_1" precategory="E_CHAINB_1TH_1" time="3500" />
@@ -19309,7 +19309,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2519" name="분쇄파" nameId="4573579" name_desc="RI_ForwardStrike_G8" stack="SKILL_RI_ForwardStrike" skill_group_name="RI_ForwardStrike" delayId="1724" lvl="8" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9AF3C36A084BB1BB" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="8" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <startconditions>
       <mp value="173" delta="-5" />
       <chain category="E_CHAINB_2TH_1" precategory="E_CHAINB_1TH_1" time="3500" />
@@ -19667,7 +19667,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2530" name="신룡포" nameId="4573593" name_desc="RI_ExplodeDP_G1" stack="SKILL_RI_ExplodeDP" skill_group_name="RI_ExplodeDP" delayId="1726" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="6000" duration="0" no_jump_cancel="true" cancel_rate="20" ground="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D310CF036AC3A623" />
+    <properties first_target="ME" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="18" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_B36A714E9F2E82F1" />
     <group_ref id="SG_AD9B6D5BCE08DE6E" />
     <effects>
@@ -19696,7 +19696,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2531" name="신룡포" nameId="4573593" name_desc="RI_ExplodeDP_G2" stack="SKILL_RI_ExplodeDP" skill_group_name="RI_ExplodeDP" delayId="1726" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="6000" duration="0" no_jump_cancel="true" cancel_rate="20" ground="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D310CF036AC3A623" />
+    <properties first_target="ME" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="18" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_B36A714E9F2E82F1" />
     <group_ref id="SG_AD9B6D5BCE08DE6E" />
     <effects>
@@ -19725,7 +19725,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2532" name="신룡포" nameId="4573593" name_desc="RI_ExplodeDP_G3" stack="SKILL_RI_ExplodeDP" skill_group_name="RI_ExplodeDP" delayId="1726" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="6000" duration="0" no_jump_cancel="true" cancel_rate="20" ground="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D310CF036AC3A623" />
+    <properties first_target="ME" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="18" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_B36A714E9F2E82F1" />
     <group_ref id="SG_AD9B6D5BCE08DE6E" />
     <effects>
@@ -19754,7 +19754,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2533" name="신룡포" nameId="4573593" name_desc="RI_ExplodeDP_G4" stack="SKILL_RI_ExplodeDP" skill_group_name="RI_ExplodeDP" delayId="1726" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="6000" duration="0" no_jump_cancel="true" cancel_rate="20" ground="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D310CF036AC3A623" />
+    <properties first_target="ME" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="18" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_B36A714E9F2E82F1" />
     <group_ref id="SG_AD9B6D5BCE08DE6E" />
     <effects>
@@ -19783,7 +19783,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2534" name="신룡포" nameId="4573593" name_desc="RI_ExplodeDP_G5" stack="SKILL_RI_ExplodeDP" skill_group_name="RI_ExplodeDP" delayId="1726" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="6000" duration="0" no_jump_cancel="true" cancel_rate="20" ground="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D310CF036AC3A623" />
+    <properties first_target="ME" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="18" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_B36A714E9F2E82F1" />
     <group_ref id="SG_AD9B6D5BCE08DE6E" />
     <effects>
@@ -19812,7 +19812,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2535" name="신룡포" nameId="4573593" name_desc="RI_ExplodeDP_G6" stack="SKILL_RI_ExplodeDP" skill_group_name="RI_ExplodeDP" delayId="1726" lvl="6" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="6000" duration="0" no_jump_cancel="true" cancel_rate="20" ground="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D310CF036AC3A623" />
+    <properties first_target="ME" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="18" revision_distance="0" target_status="" target_distance="15" effective_angle="120" effective_altitude="10" />
     <group_ref id="SG_B36A714E9F2E82F1" />
     <group_ref id="SG_AD9B6D5BCE08DE6E" />
     <effects>

@@ -106,21 +106,22 @@ class TargetRangePropertyTest {
 	}
 
 	@Test
-	void cylindricalAreaIncludesMultipleTargetsAcrossConfiguredWidth() {
+	void lightningBoltAreaUsesRetailLengthWidthAndAltitude() {
 		boolean originalGeoEnabled = GeoDataConfig.GEO_ENABLE;
 		try {
 			GeoDataConfig.GEO_ENABLE = false;
 			TestCreature effector = new TestCreature(1);
-			TestCreature leftTarget = new TestCreature(2, -1f, 4f, 0f, 0f);
-			TestCreature rightTarget = new TestCreature(3, -1f, -4f, 0f, 0f);
+			TestCreature leftTarget = new TestCreature(2, -20f, 2f, 0f, 0f);
+			TestCreature rightTarget = new TestCreature(3, -20f, -2f, 0f, 0f);
 			effector.getKnownList().getKnownObjects().put(leftTarget.getObjectId(), leftTarget);
 			effector.getKnownList().getKnownObjects().put(rightTarget.getObjectId(), rightTarget);
 			Skill skill = new Skill(new SkillTemplate(), effector, 1, effector, null);
 			Properties properties = new Properties();
 			properties.targetType = TargetRangeAttribute.AREA;
-			properties.targetDistance = 2;
+			properties.targetDistance = 26;
+			properties.effectiveAltitude = 5;
 			properties.direction = 1;
-			setField(properties, "effectiveWidth", 8);
+			setField(properties, "effectiveWidth", 3);
 
 			TargetRangeProperty.set(skill, properties);
 

@@ -42,7 +42,7 @@ public class SM_SKILL_COOLDOWN extends AionServerPacket {
 		this.isSkillRemove = isSkillRemove;
 		for (Map.Entry<Integer, Long> entry : cooldowns.entrySet()) {
 			for (int skillId : DataManager.SKILL_DATA.getSkillsForDelayId(entry.getKey())) {
-				this.cooldowns.add(new Cooldown(skillId, entry.getValue()));
+				this.cooldowns.add(new Cooldown(skillId, entry.getValue(), 1000));
 			}
 		}
 		sortByAnimationDuration();
@@ -58,11 +58,12 @@ public class SM_SKILL_COOLDOWN extends AionServerPacket {
 	 */
 	public SM_SKILL_COOLDOWN(Player player, Map<Integer, Long> cooldowns, boolean isSkillRemove) {
 		this.isSkillRemove = isSkillRemove;
+		int attackDelay = player.getGameStats() == null ? 1000 : player.getGameStats().getAttackSpeed().getCurrent();
 		for (PlayerSkillEntry skill : player.getSkillList().getAllSkills()) {
 			SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(skill.getSkillId());
 			Long reuseTime = cooldowns.get(skillTemplate.getDelayId());
 			if (reuseTime != null) {
-				this.cooldowns.add(new Cooldown(skill.getSkillId(), reuseTime));
+				this.cooldowns.add(new Cooldown(skill.getSkillId(), reuseTime, attackDelay));
 			}
 		}
 		sortByAnimationDuration();
@@ -86,10 +87,12 @@ public class SM_SKILL_COOLDOWN extends AionServerPacket {
 	private static class Cooldown {
 		private final int skillId;
 		private final long reuseTime;
+		private final int attackDelay;
 
-		private Cooldown(int skillId, long reuseTime) {
+		private Cooldown(int skillId, long reuseTime, int attackDelay) {
 			this.skillId = skillId;
 			this.reuseTime = reuseTime;
+			this.attackDelay = attackDelay;
 		}
 
 		private int getRemainingMillis() {
@@ -97,7 +100,8 @@ public class SM_SKILL_COOLDOWN extends AionServerPacket {
 		}
 
 		private int getAnimationDurationMillis() {
-			return SkillConfig.scaleCooldown(DataManager.SKILL_DATA.getSkillTemplate(skillId).getCooldown()) * 100;
+			SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
+			return SkillConfig.scaleCooldown(template.scaleCooldownByAttackDelay(template.getCooldown(), attackDelay)) * 100;
 		}
 	}
 }

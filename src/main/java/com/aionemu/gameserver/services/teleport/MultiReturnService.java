@@ -52,8 +52,10 @@ public class MultiReturnService {
 			return 2100300;
 		case 210040000: // Heiron.
 			return 2100400;
-		case 210130000: // Inggison.
-			return 2101300;
+			case 210050000: // Inggison.
+				return 2100500;
+			case 210130000: // Inggison [Master Server].
+				return 2101300;
 		case 210060000: // Theobomos.
 			return 2100600;
 		case 210070000: // Cygnea.
@@ -75,8 +77,10 @@ public class MultiReturnService {
 			return 2200400;
 		case 220050000: // Brusthonin.
 			return 2200500;
-		case 220140000: // Gelkmaros.
-			return 2201400;
+			case 220070000: // Gelkmaros.
+				return 2200700;
+			case 220140000: // Gelkmaros [Master Server].
+				return 2201400;
 		case 220080000: // Enshar.
 			return 2200800;
 		case 220110000: // Norsvold.

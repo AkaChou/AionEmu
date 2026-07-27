@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 /**
  * 玩家变量 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerVarsDAO.
@@ -25,7 +24,7 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
     /** 查询变量 SQL / Select variables SQL*/
     private static final String SELECT_QUERY = "SELECT param,value FROM player_vars WHERE player_id=?";
     /** 插入变量 SQL / Insert variable SQL*/
-    private static final String INSERT_QUERY = "INSERT INTO player_vars (`player_id`, `param`, `value`, `time`) VALUES (?,?,?,NOW())";
+    private static final String INSERT_QUERY = "INSERT INTO player_vars (`player_id`, `param`, `value`, `time`) VALUES (?,?,?,NOW()) ON DUPLICATE KEY UPDATE `value`=VALUES(`value`), `time`=NOW()";
     /** 删除变量 SQL / Delete variable SQL*/
     private static final String DELETE_QUERY = "DELETE FROM player_vars WHERE player_id=? AND param=?";
 

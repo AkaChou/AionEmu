@@ -70,7 +70,7 @@ public class ReloadSpawn extends AdminCommand
 		else if (destination.equalsIgnoreCase("Heiron"))
 			worldId = WorldMapType.HEIRON.getId();
 		else if (destination.equalsIgnoreCase("Inggison"))
-			worldId = WorldMapType.INGGISON_MASTER.getId();
+			worldId = WorldMapType.INGGISON.getId();
 		else if (destination.equalsIgnoreCase("Cygnea"))
 			worldId = WorldMapType.CYGNEA.getId();
 		else if (destination.equalsIgnoreCase("Idian_L"))
@@ -99,7 +99,7 @@ public class ReloadSpawn extends AdminCommand
 		else if (destination.equalsIgnoreCase("Beluslan"))
 			worldId = WorldMapType.BELUSLAN.getId();
 		else if (destination.equalsIgnoreCase("Gelkmaros"))
-			worldId = WorldMapType.GELKMAROS_MASTER.getId();
+			worldId = WorldMapType.GELKMAROS.getId();
 		else if (destination.equalsIgnoreCase("Enshar"))
 			worldId = WorldMapType.ENSHAR.getId();
 		else if (destination.equalsIgnoreCase("Idian_D"))
@@ -110,7 +110,7 @@ public class ReloadSpawn extends AdminCommand
 			worldId = WorldMapType.TOWER_OF_ETERNITY_A.getId();
 		// 其他区域 / Other Zone
 		else if (destination.equalsIgnoreCase("Silentera"))
-			worldId = WorldMapType.SILENTERA_CANYON_MASTER.getId();
+			worldId = WorldMapType.SILENTERA_CANYON.getId();
 		else if (destination.equalsIgnoreCase("Kaldor"))
 			worldId = WorldMapType.KALDOR.getId();
 		else if (destination.equalsIgnoreCase("Levinshor"))
@@ -158,7 +158,7 @@ public class ReloadSpawn extends AdminCommand
 			reloadMap(WorldMapType.ELTNEN.getId(), player, "Eltnen");
 			reloadMap(WorldMapType.THEOBOMOS.getId(), player, "Theobomos");
 			reloadMap(WorldMapType.HEIRON.getId(), player, "Heiron");
-			reloadMap(WorldMapType.INGGISON_MASTER.getId(), player, "Inggison");
+			reloadMap(WorldMapType.INGGISON.getId(), player, "Inggison");
 			reloadMap(WorldMapType.CYGNEA.getId(), player, "Cygnea");
 			reloadMap(WorldMapType.IDIAN_DEPTHS_L.getId(), player, "Idian_L");
 			reloadMap(WorldMapType.ILUMA.getId(), player, "Iluma");
@@ -173,7 +173,7 @@ public class ReloadSpawn extends AdminCommand
 			reloadMap(WorldMapType.MORHEIM.getId(), player, "Morheim");
 			reloadMap(WorldMapType.BRUSTHONIN.getId(), player, "Brusthonin");
 			reloadMap(WorldMapType.BELUSLAN.getId(), player, "Beluslan");
-			reloadMap(WorldMapType.GELKMAROS_MASTER.getId(), player, "Gelkmaros");
+			reloadMap(WorldMapType.GELKMAROS.getId(), player, "Gelkmaros");
 			reloadMap(WorldMapType.ENSHAR.getId(), player, "Enshar");
 			reloadMap(WorldMapType.IDIAN_DEPTHS_D.getId(), player, "Idian_D");
 			reloadMap(WorldMapType.NORSVOLD.getId(), player, "Norsvold");
@@ -186,7 +186,7 @@ public class ReloadSpawn extends AdminCommand
 			reloadMap(WorldMapType.ATANATOS.getId(), player, "Atanatos");
 			reloadMap(WorldMapType.DISILLON.getId(), player, "Disillon");
 			// 其他区域 / Other Zone
-			reloadMap(WorldMapType.SILENTERA_CANYON_MASTER.getId(), player, "Silentera");
+			reloadMap(WorldMapType.SILENTERA_CANYON.getId(), player, "Silentera");
 			reloadMap(WorldMapType.KALDOR.getId(), player, "Kaldor");
 			reloadMap(WorldMapType.LEVINSHOR.getId(), player, "Levinshor");
 			// 房屋 / Housing

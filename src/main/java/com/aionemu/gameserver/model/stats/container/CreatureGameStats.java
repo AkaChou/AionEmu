@@ -22,6 +22,7 @@ import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunctionProxy;
+import com.aionemu.gameserver.model.stats.calc.functions.StatSetFunction;
 import com.aionemu.gameserver.utils.stats.CalculationType;
 
 import java.util.LinkedHashMap;
@@ -189,6 +190,27 @@ public abstract class CreatureGameStats<T extends Creature> {
 			}
 
 			return stat;
+		} finally {
+			lock.readLock().unlock();
+		}
+	}
+
+	public Integer getSetStatValue(StatEnum statEnum) {
+		lock.readLock().lock();
+		try {
+			TreeSet<IStatFunction> functions = getStatsByStatEnum(statEnum);
+			if (functions == null) {
+				return null;
+			}
+			Stat2 stat = new AdditionStat(statEnum, 0, owner);
+			Integer value = null;
+			for (IStatFunction function : functions) {
+				IStatFunction source = function instanceof StatFunctionProxy proxy ? proxy.getProxiedFunction() : function;
+				if (source instanceof StatSetFunction && !function.isBonus() && function.validate(stat, function)) {
+					value = function.getValue();
+				}
+			}
+			return value;
 		} finally {
 			lock.readLock().unlock();
 		}

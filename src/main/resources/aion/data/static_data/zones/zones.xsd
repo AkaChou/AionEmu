@@ -80,6 +80,6 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="ZoneName">
-		<xs:restriction base="xs:ID"/>
+		<xs:restriction base="xs:string"/>
 	</xs:simpleType>
 </xs:schema>

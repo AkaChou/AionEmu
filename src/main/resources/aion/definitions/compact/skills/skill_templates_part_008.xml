@@ -314,7 +314,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3544" name="은신의 휘장" nameId="4574611" name_desc="EL_Escape_G1" stack="SKILL_EL_Escape" skill_group_name="EL_Escape" delayId="1607" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="EXTRA" req_dispel_level="0" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="500" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <properties first_target="ME" first_target_range="1" target_type="PARTY_WITHPET" target_relation="MYPARTY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="0" target_status="" target_distance="20" effective_angle="7" />
+    <properties first_target="ME" first_target_range="1" target_type="PARTY_WITHPET" target_relation="MYPARTY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="0" target_status="" effective_range="20" effective_altitude="7" />
     <startconditions>
       <mp value="420" delta="0" />
       <combatcheck />
@@ -2325,7 +2325,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3589" name="공포의 절규" nameId="4574727" name_desc="EL_TerrorSpirit_G1" stack="SKILL_EL_TerrorSpirit" skill_group_name="EL_TerrorSpirit" delayId="1084" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="600" duration="1500" pvp_duration="60" cancel_rate="30" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGETORME" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="5" target_status="" target_distance="15" effective_angle="10" />
+    <properties first_target="TARGETORME" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="5" target_status="" effective_range="15" effective_altitude="10" />
     <startconditions>
       <mp value="520" delta="0" />
     </startconditions>
@@ -4237,7 +4237,7 @@
     </startconditions>
     <group_ref id="SG_1F286F0F6AD401A0" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="61" value="1009" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="61" value="1009" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="169" delta="0" />
@@ -4270,7 +4270,7 @@
     </startconditions>
     <group_ref id="SG_1F286F0F6AD401A0" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="66" value="1095" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="66" value="1095" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="185" delta="0" />
@@ -4303,7 +4303,7 @@
     </startconditions>
     <group_ref id="SG_1F286F0F6AD401A0" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="72" value="1180" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="72" value="1180" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="201" delta="0" />
@@ -4336,7 +4336,7 @@
     </startconditions>
     <group_ref id="SG_1F286F0F6AD401A0" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="79" value="1318" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" critprobmod1="0" critadddmg2="0" />
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="79" value="1318" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="50" />
     </effects>
     <actions>
       <mpuse value="224" delta="0" />
@@ -4724,7 +4724,7 @@
     <group_ref id="SG_A864D8FCB8BA94DE" />
     <group_ref id="SG_1B1E9362DB803489" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="10" value="401" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="10" value="401" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="100">
         <modifiers>
           <targetrace delta="14" value="-14" race="TYPE_C" />
         </modifiers>
@@ -4761,7 +4761,7 @@
     <group_ref id="SG_A820ADEF7D69DEBD" />
     <group_ref id="SG_1B1E9362DB803489" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="12" value="454" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="12" value="454" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="100">
         <modifiers>
           <targetrace delta="16" value="-16" race="TYPE_C" />
         </modifiers>
@@ -4800,7 +4800,7 @@
     </startconditions>
     <group_ref id="SG_1B1E9362DB803489" />
     <effects>
-      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="13" value="507" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="100" critprobmod1="0" critadddmg2="0">
+      <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" delta="13" value="507" applymboost="false" hp_percent_delta="0" hp_percent="100" mp_percent_delta="0" mp_percent="100">
         <modifiers>
           <targetrace delta="18" value="-18" race="TYPE_C" />
         </modifiers>
@@ -19754,7 +19754,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4004" name="소환 부활" nameId="4572481" name_desc="PR_CallResurrection_G1" stack="SKILL_PR_CallResurrection" skill_group_name="PR_CallResurrection" delayId="1225" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="6000" apply_casting_time_bonus="true" cancel_rate="100" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <properties first_target="TARGET" first_target_range="30" target_type="PARTY" target_relation="MYPARTY" target_species="PC" awr="false" target_maxcount="6" revision_distance="12" target_status="" target_distance="30" effective_angle="15" />
+    <properties first_target="TARGET" first_target_range="30" target_type="PARTY" target_relation="MYPARTY" target_species="PC" awr="false" target_maxcount="6" revision_distance="12" target_status="" effective_range="30" effective_altitude="15" />
     <group_ref id="SG_7E69981CE10A07C1" />
     <useconditions>
       <playermove allow="false" />

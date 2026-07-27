@@ -34,11 +34,8 @@ public class NoReduceSpellATKInstantEffect extends DamageEffect {
 		}
 
 		int valueWithDelta = calculateBaseDamage(effect.getSkillLevel(), effect.getEffected().getLifeStats().getMaxHp());
-		int critAddDmg = this.critAddDmg2 + this.critAddDmg1 * effect.getSkillLevel();
-		int critProb = this.critProbMod2 + this.critProbMod1 * effect.getSkillLevel();
-
-		AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, null, getElement(), false, true, true, getMode(),
-				critProb, critAddDmg, shared, false);
+		AttackUtil.calculateNoReduceSpellResult(effect, valueWithDelta, getCriticalProbability(effect.getSkillLevel()),
+				getCriticalAdditionalDamage(effect.getSkillLevel()));
 	}
 
 	int calculateBaseDamage(int skillLevel, int maxHp) {

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.dao;
 
 import java.util.List;
 
-import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
@@ -13,7 +12,7 @@ import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
  *
  * @author Falke_34
  */
-public abstract class PlayerMinionsDAO implements DAO {
+public abstract class PlayerMinionsDAO implements IDFactoryAwareDAO {
 
 	/**
 	 * 返回本 DAO 的唯一类名标识。
@@ -32,7 +31,7 @@ public abstract class PlayerMinionsDAO implements DAO {
 	 *
 	 * @param minionCommonData 迷你宠物公共数据 / minion common data
 	 */
-	public abstract void insertPlayerMinion(MinionCommonData minionCommonData);
+	public abstract boolean insertPlayerMinion(MinionCommonData minionCommonData);
 
 	/**
 	 * 移除玩家的指定迷你宠物。
@@ -41,7 +40,7 @@ public abstract class PlayerMinionsDAO implements DAO {
 	 * 玩家 / player
 	 * @param minionObjId 迷你宠物对象 ID / minion object id
 	 */
-	public abstract void removePlayerMinion(Player player, int minionObjId);
+	public abstract boolean removePlayerMinion(Player player, int minionObjId);
 
 	/**
 	 * 更新迷你宠物名称。
@@ -49,7 +48,7 @@ public abstract class PlayerMinionsDAO implements DAO {
 	 *
 	 * @param minionCommonData 迷你宠物公共数据 / minion common data
 	 */
-	public abstract void updateMinionName(MinionCommonData minionCommonData);
+	public abstract boolean updateMinionName(MinionCommonData minionCommonData);
 
 	/**
 	 * 获取玩家全部迷你宠物。
@@ -67,17 +66,12 @@ public abstract class PlayerMinionsDAO implements DAO {
 	 * 玩家 / player
 	 * @param minionCommonData 迷你宠物公共数据 / minion common data
 	 */
-	public abstract void updatePlayerMinionGrowthPoint(Player player, MinionCommonData minionCommonData);
+	public abstract boolean updatePlayerMinionGrowthPoint(Player player, MinionCommonData minionCommonData);
 
-	/**
-	 * 判断玩家是否拥有指定迷你宠物。
-	 * Checks whether the player owns the given minion.
-	 *
-	 * player id
-	 * minion id
-	 * 若 owned 则为 true / true if owned
-	 */
-	public abstract boolean PlayerMinions(int playerid, int miniona);
+	public abstract boolean updateGrowthAndRemoveMaterials(Player player, MinionCommonData minionCommonData,
+			List<Integer> materialObjectIds);
+
+	public abstract boolean replacePlayerMinions(MinionCommonData replacement, List<Integer> materialObjectIds);
 
 	/**
 	 * 进化迷你宠物。
@@ -86,7 +80,7 @@ public abstract class PlayerMinionsDAO implements DAO {
 	 * 玩家 / player
 	 * @param minionCommonData 迷你宠物公共数据 / minion common data
 	 */
-	public abstract void evolutionMinion(Player player, MinionCommonData minionCommonData);
+	public abstract boolean evolutionMinion(Player player, MinionCommonData minionCommonData);
 
 	/**
 	 * 锁定/解锁迷你宠物。
@@ -96,7 +90,7 @@ public abstract class PlayerMinionsDAO implements DAO {
 	 * @param minionObjId 迷你宠物对象 ID / minion object id
 	 * lock flag
 	 */
-	public abstract void lockMinions(Player player, int minionObjId, int isLocked);
+	public abstract boolean lockMinions(Player player, int minionObjId, int isLocked);
 
 	/**
 	 * 保存迷你宠物增益包。
@@ -106,7 +100,7 @@ public abstract class PlayerMinionsDAO implements DAO {
 	 * @param minionCommonData 迷你宠物公共数据 / minion common data
 	 * doping bag
 	 */
-	public abstract void saveDopingBag(Player player, MinionCommonData minionCommonData, MinionDopingBag bag);
+	public abstract boolean saveDopingBag(Player player, MinionCommonData minionCommonData, MinionDopingBag bag);
 
 	/**
 	 * 保存迷你宠物生日。

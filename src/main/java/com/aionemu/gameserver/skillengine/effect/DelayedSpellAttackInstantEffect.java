@@ -62,9 +62,9 @@ public class DelayedSpellAttackInstantEffect extends DamageEffect {
 		int skillLvl = effect.getSkillLevel();
 		int valueWithDelta = value + delta * skillLvl;
 		ActionModifier modifier = getActionModifiers(effect);
-		int critAddDmg = this.critAddDmg2 + this.critAddDmg1 * effect.getSkillLevel();
+		int critAddDmg = getCriticalAdditionalDamage(effect.getSkillLevel());
 		AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, modifier, getElement(), true, true, false,
-				getMode(), this.critProbMod2, critAddDmg, shared, false);
+				getMode(), getCriticalProbability(effect.getSkillLevel()), critAddDmg, shared, false);
 		effect.getEffected().getController().onAttack(effect.getEffector(), effect.getSkillId(), TYPE.DELAYDAMAGE,
 				effect.getReserved1(), true, LOG.PROCATKINSTANT);
 		if (effect.tryActivateGodstone()) {

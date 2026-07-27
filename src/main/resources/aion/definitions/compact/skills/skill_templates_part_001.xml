@@ -7211,7 +7211,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="266" name="화염폭발" nameId="580515" name_desc="Q_IceMeltDown" stack="SKILL_Q_IceMeltDown" skill_group_name="Q_IceMeltDown" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="50" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="10" effective_angle="5" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="10" effective_altitude="5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="1560" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -7486,7 +7486,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="276" name="자비의 방패" nameId="586815" name_desc="NPC_ShieldofCompassion" stack="SKILL_NPC_ShieldofCompassion" skill_group_name="NPC_ShieldofCompassion" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ALL" target_species="PC" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="25" effective_angle="20" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ALL" target_species="PC" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="25" effective_altitude="20" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <shield duration1="0" duration2="60000" randomtime="0" effectid="154" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" hitdelta="0" hitvalue="3000" delta="0" value="3000" hittype="EVERYHIT" hittypeprob1="0" hittypeprob2="1000" />
@@ -7512,7 +7512,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="277" name="개발자의 분노" nameId="565787" name_desc="Skill1" stack="SKILL_Skill1" skill_group_name="Skill1" delayId="1323" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="10" duration="0" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="110" revision_distance="0" target_status="" target_distance="20" effective_angle="7" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="110" revision_distance="0" target_status="" effective_range="20" effective_altitude="7" />
     <group_ref id="SG_287AFCE69331EEF2" />
     <group_ref id="SG_E454B3AD9690C227" />
     <retail>
@@ -8981,7 +8981,10 @@
   <skill_template skill_id="324" name="수호슝의 맹타" nameId="4571207" name_desc="IDSweep_KN1_Base" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_47E9D43AE8F7B782" />
     <group_ref id="SG_B9F518957876556E" />
-    <group_ref id="SG_F64009CCDF87C798" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="2" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="600" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="30000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <group_ref id="SG_48353FC414EC4F68" />
     <retail>
@@ -9014,7 +9017,10 @@
   <skill_template skill_id="325" name="수호슝의 도발" nameId="4571209" name_desc="IDSweep_KN2_Hate" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="20" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
     <group_ref id="SG_47E9D43AE8F7B782" />
     <group_ref id="SG_B9F518957876556E" />
-    <group_ref id="SG_8133CC106622534F" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="2" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="3000" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="40000" delta="0" timed_value="40000" timed_delta="0" timed_duration="1500" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <motion name="SweepKN2" speed="70" instant_skill="false" />
     <retail>
@@ -9049,7 +9055,12 @@
   <skill_template skill_id="326" name="수호슝의 나포" nameId="4571211" name_desc="IDSweep_KN3_Snatch" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="150" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
     <group_ref id="SG_9C30C538C88250CD" />
     <group_ref id="SG_B9F518957876556E" />
-    <group_ref id="SG_17CFDFD1EF9C44E4" />
+    <effects>
+      <skillatk value="284" delta="0" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="2" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0">
+        <subeffect skill_id="8441" chance="100" />
+      </skillatk>
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="30000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <group_ref id="SG_58EC78B3DC53296D" />
     <retail>
@@ -9134,11 +9145,11 @@
     </retail>
   </skill_template>
   <skill_template skill_id="328" name="검슝의 격노" nameId="4571225" name_desc="IDSweep_KN5_Wave" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="0" target_status="" target_distance="10" effective_angle="8" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="12" revision_distance="0" target_status="" effective_range="10" effective_altitude="8" />
     <group_ref id="SG_0E255BC1FBCD4373" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="2" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="20000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="2" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="20000" delta="0" />
     </effects>
     <group_ref id="SG_55A23D1576CC6767" />
     <motion name="SweepKN5" speed="100" instant_skill="false" />
@@ -9162,7 +9173,10 @@
   <skill_template skill_id="329" name="검슝의 일격" nameId="4571217" name_desc="IDSweep_FI1_Base" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_47E9D43AE8F7B782" />
     <group_ref id="SG_B9F518957876556E" />
-    <group_ref id="SG_9C04B3A4C5F95C2F" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="1200" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="1000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <group_ref id="SG_AF1024D93080565E" />
     <retail>
@@ -9196,7 +9210,7 @@
     <group_ref id="SG_0E03162F7C28554A" />
     <group_ref id="SG_B9F518957876556E" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="18000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="18000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="20000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
@@ -9232,7 +9246,10 @@
     <group_ref id="SG_47E9D43AE8F7B782" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_9D1A7A4C1F74F91D" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="12000" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="20000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <motion name="SweepFi3" speed="100" instant_skill="false" />
     <retail>
@@ -9266,7 +9283,11 @@
     <group_ref id="SG_47E9D43AE8F7B782" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_694B8C09934B0983" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="5000" delta="0" />
+      <openaerial duration1="0" duration2="4000" randomtime="0" effectid="20003" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="500" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="EARTH" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="20000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <group_ref id="SG_258BB342CD301784" />
     <retail>
@@ -9316,7 +9337,11 @@
   <skill_template skill_id="333" name="검슝의 격노" nameId="4571225" name_desc="IDSweep_FI5_Rage" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_D3E27EEE398256FA" />
     <group_ref id="SG_0E255BC1FBCD4373" />
-    <group_ref id="SG_B36772F7218852CA" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="20000" delta="0" />
+      <stumble duration1="0" duration2="1000" randomtime="0" effectid="20003" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="500" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="EARTH" delta="0" value="10" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="30000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_55A23D1576CC6767" />
     <motion name="SweepFi5" speed="100" instant_skill="false" />
     <retail>
@@ -9367,7 +9392,10 @@
   <skill_template skill_id="334" name="마도슝의 폭발" nameId="4571227" name_desc="IDSweep_WI1_Base" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" apply_casting_time_bonus="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_D819FC3488071C43" />
     <group_ref id="SG_B9F518957876556E" />
-    <group_ref id="SG_E6E24CD1265193A0" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="900" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="1000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <group_ref id="SG_636F753F3C6C3EF9" />
     <retail>
@@ -9400,7 +9428,10 @@
   <skill_template skill_id="335" name="마도슝의 낙뢰" nameId="4571229" name_desc="IDSweep_WI2_Storm" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="60" duration="0" apply_casting_time_bonus="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_FFEFC79B301FDB30" />
     <group_ref id="SG_B9F518957876556E" />
-    <group_ref id="SG_18CA426DA736B63A" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="6000" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="20000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <motion name="SweepWi2" speed="100" instant_skill="false" />
     <retail>
@@ -9433,7 +9464,10 @@
   <skill_template skill_id="336" name="마도슝의 불꽃" nameId="4571231" name_desc="IDSweep_WI3_Laser" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" cancel_rate="10" ground="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_46201384B712534B" />
     <group_ref id="SG_9CDE6CE20408F24E" />
-    <group_ref id="SG_194292AC2E25064E" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="4000" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="20000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <group_ref id="SG_72257BB817DE0594" />
     <retail>
@@ -9466,7 +9500,11 @@
   <skill_template skill_id="337" name="마도슝의 빙결" nameId="4571233" name_desc="IDSweep_WI4_Frost" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="150" duration="0" apply_casting_time_bonus="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
     <group_ref id="SG_1B611F40B9DE9D53" />
     <group_ref id="SG_B9F518957876556E" />
-    <group_ref id="SG_175504E878136A18" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="2000" delta="0" />
+      <paralyze duration1="0" duration2="4000" randomtime="0" effectid="20003" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="500" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="EARTH" value="10" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="20000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <motion name="SweepWi4" speed="100" instant_skill="false" />
     <retail>
@@ -9518,7 +9556,10 @@
     <group_ref id="SG_7AE60D105949D9F2" />
     <group_ref id="SG_0E255BC1FBCD4373" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_0F7A61D2812C08D4" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="20000" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="30000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_55A23D1576CC6767" />
     <motion name="SweepWi5" speed="100" instant_skill="false" />
     <retail>
@@ -11579,7 +11620,11 @@
     <group_ref id="SG_4F113C226021BC8D" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_70B81A1A8D9ADE26" />
+    <effects>
+      <dash value="1" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="20000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="5000" delta="0" />
+    </effects>
     <group_ref id="SG_A5011E5C0B0A4E73" />
     <motion name="FrontDash_SweepFi6" speed="100" instant_skill="false" />
     <retail>
@@ -11625,7 +11670,7 @@
     <properties first_target="TARGET" first_target_range="20" target_type="ONLYONE" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="3" target_status="" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104011" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="900" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104011" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="900" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="30000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_E75B49909EE32F1E" />
@@ -11658,10 +11703,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="402" name="인던 테스트 스킬 2" nameId="4578437" name_desc="IDLuna_Test_Two" stack="SKILL_IDLuna_Test_Two" skill_group_name="IDLuna_Test_Two" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="50" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="5" revision_distance="3" target_status="" target_distance="7" effective_angle="4" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="5" revision_distance="3" target_status="" effective_range="7" effective_altitude="4" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104021" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="1500" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104021" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="1500" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="30000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_E682E4DF3ACC62EC" />
@@ -11697,7 +11742,7 @@
     <group_ref id="SG_35DEBE1D71AF5225" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104031" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="7000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104031" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="7000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="5000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_70E43842E9DA6F34" />
@@ -11732,10 +11777,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="404" name="인던 테스트 스킬 4" nameId="4578441" name_desc="IDLuna_Test_Four" stack="SKILL_IDLuna_Test_Four" skill_group_name="IDLuna_Test_Four" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="POINT" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="20" revision_distance="3" target_status="" target_distance="7" effective_angle="5" />
+    <properties first_target="POINT" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="20" revision_distance="3" target_status="" effective_range="7" effective_altitude="5" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104041" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="20000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104041" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="20000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="30000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_B6C2B13D1C0E2613" />
@@ -11774,7 +11819,7 @@
     <group_ref id="SG_35DEBE1D71AF5225" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104051" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="7000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104051" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="7000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="5000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_AF1024D93080565E" />
@@ -11807,10 +11852,10 @@
     </retail>
   </skill_template>
   <skill_template skill_id="406" name="인던 테스트 스킬 1" nameId="4578435" name_desc="IDLuna_Test_1" stack="SKILL_IDLuna_Test_1" skill_group_name="IDLuna_Test_1" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="5" revision_distance="0" target_status="" target_distance="5" effective_angle="5" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="5" revision_distance="0" target_status="" effective_range="5" effective_altitude="5" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104111" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="2500" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104111" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="2500" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="500" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_48353FC414EC4F68" />
@@ -11846,7 +11891,7 @@
     <group_ref id="SG_2357DCF3F45ACA62" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104121" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="6000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104121" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="6000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="2000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_92AFF3DABA4CB04D" />
@@ -11879,11 +11924,11 @@
     </retail>
   </skill_template>
   <skill_template skill_id="408" name="인던 테스트 스킬 3" nameId="4578439" name_desc="IDLuna_Test_3" stack="SKILL_IDLuna_Test_3" skill_group_name="IDLuna_Test_3" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="60" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="10" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="5" revision_distance="10" target_status="" target_distance="7" effective_angle="7" />
+    <properties first_target="TARGET" first_target_range="10" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="5" revision_distance="10" target_status="" effective_range="7" effective_altitude="7" />
     <group_ref id="SG_B8124842795135AB" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104131" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104131" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="5000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <motion name="HurtATK" speed="100" instant_skill="false" />
@@ -11916,7 +11961,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="409" name="인던 테스트 스킬 4" nameId="4578441" name_desc="IDLuna_Test_4" stack="SKILL_IDLuna_Test_4" skill_group_name="IDLuna_Test_4" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="5" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="15" target_status="" target_distance="10" effective_angle="10" />
+    <properties first_target="TARGET" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="15" target_status="" effective_range="10" effective_altitude="10" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <skillatk value="0" delta="0" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="104141" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE">
@@ -11969,11 +12014,11 @@
     </retail>
   </skill_template>
   <skill_template skill_id="410" name="인던 테스트 스킬 5" nameId="4578443" name_desc="IDLuna_Test_5" stack="SKILL_IDLuna_Test_5" skill_group_name="IDLuna_Test_5" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="20" revision_distance="0" target_status="" target_distance="7" effective_angle="7" />
+    <properties first_target="ME" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="20" revision_distance="0" target_status="" effective_range="7" effective_altitude="7" />
     <group_ref id="SG_B8124842795135AB" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104151" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="30000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104151" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="30000" delta="0" />
       <root duration1="0" duration2="10000" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="false" accmod1="0" accmod2="500" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="4917" element="EARTH" resistchance="100" />
     </effects>
     <group_ref id="SG_258BB342CD301784" />
@@ -12013,7 +12058,10 @@
   <skill_template skill_id="411" name="영혼의 맹타" nameId="4578415" name_desc="IDLuna_Def_Base" stack="SKILL_IDLuna_Def_Base" skill_group_name="IDLuna_Def_Base" delayId="411" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_EE832C7945AF8D2B" />
     <group_ref id="SG_B8124842795135AB" />
-    <group_ref id="SG_BCAE465DAB7FAC1E" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104111" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="3500" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="3500000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+    </effects>
     <group_ref id="SG_48353FC414EC4F68" />
     <retail>
       <f i="5" v="0" />
@@ -12046,7 +12094,7 @@
     <group_ref id="SG_2357DCF3F45ACA62" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104121" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="7200" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104121" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="7200" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="6000000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_92AFF3DABA4CB04D" />
@@ -12081,7 +12129,7 @@
     <group_ref id="SG_35DEBE1D71AF5225" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104131" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="7000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104131" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="7000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="3500000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <motion name="HurtATK" speed="50" instant_skill="false" />
@@ -12116,7 +12164,7 @@
     <group_ref id="SG_35DEBE1D71AF5225" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104141" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="16000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104141" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="16000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="6000000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_93F86AFC6E2320B4" />
@@ -12151,7 +12199,7 @@
     <group_ref id="SG_35DEBE1D71AF5225" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104151" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="150000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104151" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="150000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="10000000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
       <stun duration1="0" duration2="3000" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="false" accmod1="0" accmod2="500" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" />
     </effects>
@@ -12203,7 +12251,7 @@
     <properties first_target="TARGET" first_target_range="15" target_type="ONLYONE" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="3" target_status="" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104161" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="2500" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104161" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="2500" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="500" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_F22E6FE56D603A02" />
@@ -12236,7 +12284,11 @@
   <skill_template skill_id="417" name="공포의 속박" nameId="4578427" name_desc="IDLuna_Siege_Restrict" stack="SKILL_IDLuna_Siege_Restrict" skill_group_name="IDLuna_Siege_Restrict" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_EE4C200D4F78694C" />
     <group_ref id="SG_B8124842795135AB" />
-    <group_ref id="SG_4FA29CB32A1CA800" />
+    <effects>
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104171" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="8000" delta="0" />
+      <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="2000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
+      <root duration1="0" duration2="3000" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="false" accmod1="0" accmod2="500" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" resistchance="100" />
+    </effects>
     <group_ref id="SG_A29CD938D162D622" />
     <retail>
       <f i="5" v="0" />
@@ -12285,7 +12337,7 @@
     <group_ref id="SG_B3DE792BB2CD20CB" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104181" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="4000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104181" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="4000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="1000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_83F7DDCCD69625A6" />
@@ -12320,7 +12372,7 @@
     <group_ref id="SG_B8124842795135AB" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104191" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="90000" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104191" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="90000" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="4000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
       <stun duration1="0" duration2="3000" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="false" accmod1="0" accmod2="500" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" />
     </effects>
@@ -12497,7 +12549,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="424" name="개발자의 격분" nameId="4580769" name_desc="Skill3" stack="SKILL_Skill3" skill_group_name="Skill3" delayId="1323" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="10" duration="0" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="110" revision_distance="0" target_status="" target_distance="20" effective_angle="7" />
+    <properties first_target="TARGET" first_target_range="0" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="110" revision_distance="0" target_status="" effective_range="20" effective_altitude="7" />
     <group_ref id="SG_287AFCE69331EEF2" />
     <group_ref id="SG_E454B3AD9690C227" />
     <retail>
@@ -12518,7 +12570,7 @@
   <skill_template skill_id="425" name="공포의 파열" nameId="4578419" name_desc="IDRUN_Test_common_01" stack="SKILL_IDRUN_Test_01" skill_group_name="IDRUN_Test_01" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
     <group_ref id="SG_35DEBE1D71AF5225" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104131" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="1" delta="0" critprobmod1="0" critadddmg2="50" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104131" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" critadddmg2="50" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="1" delta="0" />
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" value="3500000" delta="0" timed_value="0" timed_delta="0" split_totem_hate="false" />
     </effects>
     <group_ref id="SG_48353FC414EC4F68" />
@@ -12785,7 +12837,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="433" name="저주: 고목" nameId="4576227" name_desc="IDRUN_Test_WI_01" stack="SKILL_IDRUN_Test_09" skill_group_name="IDRUN_Test_09" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="0" apply_casting_time_bonus="true" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="2" revision_distance="0" target_status="" target_distance="15" effective_angle="6" />
+    <properties first_target="ME" first_target_range="1" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="2" revision_distance="0" target_status="" effective_range="15" effective_altitude="6" />
     <effects>
       <spellatkinstant value="32" delta="4" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
       <root duration1="0" duration2="1000" randomtime="0" effectid="20003" e="2" basiclvl="60" noresist="false" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1216" element="WATER" resistchance="30" />
@@ -12833,7 +12885,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="434" name="빙결 구속" nameId="4577301" name_desc="IDRUN_Test_WI_02" stack="SKILL_IDRUN_Test_10" skill_group_name="IDRUN_Test_10" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="12" effective_angle="7" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" effective_range="12" effective_altitude="7" />
     <effects>
       <spellatkinstant value="0" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="3000" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
       <stumble duration1="0" duration2="3000" randomtime="0" effectid="20003" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="500" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0" element="EARTH" delta="0" value="10" />
@@ -12969,7 +13021,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="437" name="이동속도 저하" nameId="596157" name_desc="IDRUN_Test_KN_03" stack="SKILL_IDRUN_Test_13" skill_group_name="IDRUN_Test_13" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="50" target_type="ONLYONE" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" target_distance="12" effective_angle="7" />
+    <properties first_target="TARGET" first_target_range="50" target_type="ONLYONE" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status="" effective_range="12" effective_altitude="7" />
     <effects>
       <snare duration1="0" duration2="3000" randomtime="0" effectid="104371" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER">
         <change stat="SPEED" func="PERCENT" value="-70" delta="0" />
@@ -13005,7 +13057,7 @@
       <snare duration1="0" duration2="5000" randomtime="0" effectid="104381" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER">
         <change stat="SPEED" func="PERCENT" value="-50" delta="0" />
       </snare>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="1" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="1" delta="0" />
     </effects>
     <group_ref id="SG_3A5FCA9B68C8D187" />
     <retail>
@@ -13042,7 +13094,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="439" name="자폭" nameId="4579661" name_desc="IDRUN_Test_AS_03" stack="SKILL_IDRUN_Test_15" skill_group_name="IDRUN_Test_15" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="2000" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="20" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="12" effective_angle="7" />
+    <properties first_target="ME" first_target_range="20" target_type="AREA" target_relation="ALL" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" effective_range="12" effective_altitude="7" />
     <effects>
       <skillatk value="1" delta="1" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="104391" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" />
       <stun duration1="0" duration2="5000" randomtime="0" effectid="20000" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="200" preeffect_prob="100" critprobmod2="500" hoptype="SKILLLV" hopa="0" hopb="3210" element="WATER" />
@@ -13083,7 +13135,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="440" name="STR_SKILLN_KN_StuNingSnacher" nameId="0" name_desc="IDRUN_Test_KN_04" stack="SKILL_IDRUN_Test_16" skill_group_name="IDRUN_Test_16" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="12" effective_angle="7" />
+    <properties first_target="ME" first_target_range="30" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" effective_range="12" effective_altitude="7" />
     <effects>
       <spellatkinstant value="180" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="104401" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE">
         <subeffect skill_id="8441" chance="100" />
@@ -13137,7 +13189,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="449" name="그림자 안개" nameId="4582509" name_desc="IDRUN_Test_common_06" stack="SKILL_IDRUN_Test_18" skill_group_name="IDRUN_Test_18" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="1" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="ME" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="15" effective_angle="5" />
+    <properties first_target="ME" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" effective_range="15" effective_altitude="5" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <spellatkinstant value="1" delta="1" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -13188,7 +13240,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="450" name="질주의 주문" nameId="4582511" name_desc="IDRUN_Test_common_07" stack="SKILL_IDRUN_Test_19" skill_group_name="IDRUN_Test_19" delayId="2045" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="200" duration="0" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <properties first_target="ME" first_target_range="1" target_type="PARTY" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="15" effective_angle="25" />
+    <properties first_target="ME" first_target_range="1" target_type="PARTY" target_relation="FRIEND" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" effective_range="15" effective_altitude="25" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <statup duration1="0" duration2="5000" randomtime="0" effectid="182321" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -13318,7 +13370,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="454" name="공포의 절규" nameId="4574727" name_desc="IDRUN_TerrorSpirit_G1" stack="SKILL_IDRUN_TerrorSpirit_G1" skill_group_name="IDRUN_TerrorSpirit_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="250" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGETORME" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="15" effective_angle="10" />
+    <properties first_target="TARGETORME" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" effective_range="15" effective_altitude="10" />
     <effects>
       <fear duration1="0" duration2="2000" randomtime="0" effectid="104541" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="SKILLLV" hopa="0" hopb="11737" element="EARTH" resistchance="100" />
       <deform model="201051" type="NONE" transform_level="185" duration1="0" duration2="3000" randomtime="0" effectid="175" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="500" hoptype="SKILLLV" hopa="0" hopb="911" element="FIRE" />
@@ -13388,7 +13440,7 @@
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <delayedskill duration1="0" duration2="2000" randomtime="0" effectid="104551" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" skill_id="9227" delta="1" value="0" />
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="1" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="2" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="1" delta="0" />
     </effects>
     <group_ref id="SG_F22E6FE56D603A02" />
     <retail>
@@ -13649,7 +13701,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="461" name="빙결의 작살" nameId="4582513" name_desc="IDRUN_Test_common_12" stack="SKILL_IDRUN_Test_24" skill_group_name="IDRUN_Test_24" delayId="2046" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="1" activation="ACTIVE" cooldown="200" duration="0" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGET" first_target_range="20" target_type="ONLYONE" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="5" effective_angle="5" />
+    <properties first_target="TARGET" first_target_range="20" target_type="ONLYONE" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" effective_range="5" effective_altitude="5" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <spellatkinstant value="1" delta="1" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -13694,7 +13746,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="462" name="마법 차단" nameId="4574699" name_desc="IDRUN_Silence" stack="SKILL_IDRUN_Test_25" skill_group_name="IDRUN_Test_25" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="200" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGETORME" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="15" effective_angle="15" />
+    <properties first_target="TARGETORME" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" effective_range="15" effective_altitude="15" />
     <effects>
       <silence duration1="0" duration2="5000" randomtime="0" effectid="20101" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="SKILLLV" hopa="0" hopb="1400" element="WIND" />
     </effects>
@@ -13721,7 +13773,7 @@
     <group_ref id="SG_9991DB5D7256ADA8" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
-      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104131" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="1" delta="0" critprobmod1="0" critadddmg2="0" />
+      <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104131" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="1" delta="0" />
       <stumble duration1="0" duration2="2000" randomtime="0" effectid="20000" e="2" basiclvl="200" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="500" hoptype="SKILLLV" hopa="0" hopb="0" element="WATER" delta="0" value="0" />
       <absolutesnare duration1="0" duration2="2000" randomtime="0" effectid="0" e="3" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="2" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" value="5000" delta="0" />
     </effects>
@@ -13949,7 +14001,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="467" name="기절파" nameId="568889" name_desc="IDRUN_Test_stun" stack="SKILL_IDRUN_Test_30" skill_group_name="IDRUN_Test_30" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <properties first_target="TARGETORME" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="3" effective_angle="20" effective_width="5" />
+    <properties first_target="TARGETORME" first_target_range="20" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="3" revision_distance="0" target_status="" target_distance="20" effective_width="3" effective_altitude="5" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <skillatk value="1" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="104671" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" />

@@ -4151,7 +4151,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3125" name="STR_SKILLN_KN_WindBlade" nameId="0" name_desc="KN_WindBlade_G1" stack="SKILL_KN_WindBlade" skill_group_name="KN_WindBlade" skill_group="KN_WindBlade" delayId="102" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="1000" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DBA653D5F93A2F6A" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="16" effective_width="3" effective_altitude="5" />
     <group_ref id="SG_4DC686B4366C4600" />
     <group_ref id="SG_DE48D292181611EB" />
     <effects>
@@ -4186,7 +4186,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3126" name="STR_SKILLN_KN_WindBlade" nameId="0" name_desc="KN_WindBlade_G2" stack="SKILL_KN_WindBlade" skill_group_name="KN_WindBlade" skill_group="KN_WindBlade" delayId="102" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="1000" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DBA653D5F93A2F6A" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="16" effective_width="3" effective_altitude="5" />
     <group_ref id="SG_4DC686B4366C4600" />
     <group_ref id="SG_DE48D292181611EB" />
     <group_ref id="SG_6DF49CF115F0F4A8" />
@@ -15899,7 +15899,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3415" name="멸살" nameId="4574401" name_desc="AS_GenocidalSword_G1" stack="SKILL_AS_GenocidalSword" skill_group_name="AS_GenocidalSword" skill_group="AS_GenocidalSword" delayId="116" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="900" duration="800" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DBA653D5F93A2F6A" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="16" effective_width="3" effective_altitude="5" />
     <startconditions>
       <mp value="243" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -15978,7 +15978,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3416" name="멸살" nameId="4574401" name_desc="AS_GenocidalSword_G2" stack="SKILL_AS_GenocidalSword" skill_group_name="AS_GenocidalSword" skill_group="AS_GenocidalSword" delayId="116" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="900" duration="800" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DBA653D5F93A2F6A" />
+    <properties first_target="TARGET" first_target_range="15" target_type="AREA" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="6" revision_distance="0" target_status="" target_distance="16" effective_width="3" effective_altitude="5" />
     <startconditions>
       <mp value="272" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />

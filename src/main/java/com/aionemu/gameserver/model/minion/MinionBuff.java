@@ -17,16 +17,15 @@ import com.aionemu.gameserver.model.templates.minion.MinionTemplate;
  */
 
 public class MinionBuff implements StatOwner {
-	private MinionTemplate mt;
-	private List<IStatFunction> functions = new ArrayList<IStatFunction>();
 
 	/** 应用。 / Apply. */
 	public void apply(Player player, int minionId) {
 		if (minionId == 0) {
 			return;
 		}
-		mt = DataManager.MINION_DATA.getMinionTemplate(minionId);
-		for (StatFunction statFunction : mt.getModifiers()) {
+		MinionTemplate minionTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
+		List<IStatFunction> functions = new ArrayList<IStatFunction>();
+		for (StatFunction statFunction : minionTemplate.getModifiers()) {
 			// if
 			// (player.getPlayerClass().getClassType(player).equals(statFunction.getClassType()))
 			// {
@@ -38,7 +37,6 @@ public class MinionBuff implements StatOwner {
 
 	/** 结束 / end. */
 	public void end(Player player) {
-		functions.clear();
 		player.getGameStats().endEffect(this);
 	}
 }

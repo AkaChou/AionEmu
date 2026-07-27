@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -57,6 +59,26 @@ class PetrificationEffectTest {
 		Effect effect = new Effect(player, player, activeSkill(), 1, 0);
 
 		assertFalse(new PetrificationEffect().calculateEffectResistRate(effect, StatEnum.PERIFICATION_RESISTANCE));
+	}
+
+	@Test
+	void expandsAggregateResistancePercentByRetailMask() {
+		Player player = new ObjenesisStd().newInstance(TestPlayer.class);
+		player.setGameStats(new TestPlayerGameStats(player));
+		TestPetrificationEffect template = new TestPetrificationEffect();
+		Effect effect = new Effect(player, player, activeSkill(), 1, 0);
+
+		setField(template, EffectTemplate.class, "change",
+				List.of(change(StatEnum.ABNORMAL_RESISTANCE_ALL, Func.PERCENT, 10, 0)));
+		assertEquals(EffectTemplate.AR_ALL_RESISTANCE_STATS, modifierStats(template, effect));
+
+		setField(template, EffectTemplate.class, "change",
+				List.of(change(StatEnum.STUNLIKE_RESISTANCE, Func.PERCENT, 10, 0)));
+		assertEquals(EffectTemplate.STUNLIKE_RESISTANCE_STATS, modifierStats(template, effect));
+	}
+
+	private static Set<StatEnum> modifierStats(TestPetrificationEffect template, Effect effect) {
+		return template.modifiers(effect).stream().map(IStatFunction::getName).collect(Collectors.toSet());
 	}
 
 	private static Change change(StatEnum stat, Func func, int value, int delta) {
