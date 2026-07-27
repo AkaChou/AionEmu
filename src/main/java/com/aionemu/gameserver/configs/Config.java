@@ -53,6 +53,7 @@ import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.configs.main.ShutdownConfig;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
+import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.configs.main.TransportConfig;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
@@ -246,6 +247,8 @@ public class Config {
 			ConfigurableProcessor.process(SecurityConfig.class, mainProps);
 			ConfigurableProcessor.process(ShutdownConfig.class, mainProps);
 			ConfigurableProcessor.process(SiegeConfig.class, mainProps);
+			ConfigurableProcessor.process(SkillConfig.class, mainProps);
+			SkillConfig.refresh();
 			ConfigurableProcessor.process(ThreadConfig.class, mainProps);
 			ConfigurableProcessor.process(WorldConfig.class, mainProps);
 			ConfigurableProcessor.process(AdvCustomConfig.class, mainProps);
@@ -338,6 +341,8 @@ public class Config {
 			ConfigurableProcessor.process(SecurityConfig.class, mainProps);
 			ConfigurableProcessor.process(ShutdownConfig.class, mainProps);
 			ConfigurableProcessor.process(SiegeConfig.class, mainProps);
+			ConfigurableProcessor.process(SkillConfig.class, mainProps);
+			SkillConfig.refresh();
 			ConfigurableProcessor.process(ThreadConfig.class, mainProps);
 			ConfigurableProcessor.process(WorldConfig.class, mainProps);
 			ConfigurableProcessor.process(AdvCustomConfig.class, mainProps);

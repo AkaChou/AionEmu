@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.skill.PlayerSkillEntry;
@@ -96,7 +97,7 @@ public class SM_SKILL_COOLDOWN extends AionServerPacket {
 		}
 
 		private int getAnimationDurationMillis() {
-			return DataManager.SKILL_DATA.getSkillTemplate(skillId).getCooldown() * 100;
+			return SkillConfig.scaleCooldown(DataManager.SKILL_DATA.getSkillTemplate(skillId).getCooldown()) * 100;
 		}
 	}
 }

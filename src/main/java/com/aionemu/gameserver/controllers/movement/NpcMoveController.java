@@ -1611,10 +1611,18 @@ public class NpcMoveController
 
     public Point3D getHomeReturnDestination() {
         if (homeReturnWaypoint != null) {
-            return new Point3D(homeReturnWaypoint.getX(), homeReturnWaypoint.getY(), homeReturnWaypoint.getZ());
+            return new Point3D(homeReturnWaypoint.getX(), homeReturnWaypoint.getY(), resolveRouteStepZ(homeReturnWaypoint));
         }
         SpawnTemplate spawn = owner.getSpawn();
         return new Point3D(spawn.getX(), spawn.getY(), spawn.getZ());
+    }
+
+    private float resolveRouteStepZ(RouteStep routeStep) {
+        float z = routeStep.getZ();
+        if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !owner.isInFlyingState()) {
+            return GameWorldServices.geoService().getZ(owner.getWorldId(), routeStep.getX(), routeStep.getY(), z - 1, 100f, 1);
+        }
+        return z;
     }
 
     public boolean isHomeReturnDestinationReached() {
@@ -1759,16 +1767,10 @@ public class NpcMoveController
                 return;
             }
             localPoint2D = WalkerGroup.getLinePoint(new Point2D(paramRouteStep2.getX(), paramRouteStep2.getY()), new Point2D(paramRouteStep1.getX(), paramRouteStep1.getY()), ((Npc)this.owner).getWalkerGroupShift());
-            this.pointZ = paramRouteStep2.getZ();
-            if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !(this.owner.isInFlyingState())) {
-                this.pointZ = GameWorldServices.geoService().getZ(((Creature)this.owner).getWorldId(), paramRouteStep2.getX(), paramRouteStep2.getY(), paramRouteStep2.getZ()-1, 100f, 1);
-            }
+            this.pointZ = resolveRouteStepZ(paramRouteStep2);
             ((Npc)this.owner).getWalkerGroup().setStep((Npc)this.owner, paramRouteStep1.getRouteStep());
         } else {
-            this.pointZ = paramRouteStep1.getZ();
-            if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !(this.owner.isInFlyingState())) {
-                this.pointZ = GameWorldServices.geoService().getZ(((Creature)this.owner).getWorldId(), paramRouteStep1.getX(), paramRouteStep1.getY(), paramRouteStep1.getZ()-1, 100f, 1);
-            }
+            this.pointZ = resolveRouteStepZ(paramRouteStep1);
         }
         this.currentPoint = paramRouteStep1.getRouteStep() - 1;
         this.pointX = localPoint2D == null ? paramRouteStep1.getX() : localPoint2D.getX();

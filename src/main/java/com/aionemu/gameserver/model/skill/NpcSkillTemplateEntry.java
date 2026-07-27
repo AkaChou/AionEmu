@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.skill;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplate;
 
 /**
@@ -70,7 +71,7 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 	/** 是否拥有冷却。 / Whether cooldown. */
 	@Override
 	public boolean hasCooldown() {
-		return template.getCooldown() > (System.currentTimeMillis() - lastTimeUsed);
+		return SkillConfig.scaleCooldown(template.getCooldown()) > (System.currentTimeMillis() - lastTimeUsed);
 	}
 
 	/** 刷新时使用 / Use In Spawned. */

@@ -28,6 +28,7 @@ import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
+import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.controllers.observer.StartMovingListener;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -97,6 +98,7 @@ public class Skill {
 	private int skillskinId = 0;
 	private int skillskinHitTIme = 0;
 	private ChargeSkillTemplate chargeTemplate = null;
+	private float chargeTimeMultiplier = 1;
 	private Future<?> castingTask = null;
 	private volatile boolean castCancelled;
 	private long castStart = 0;
@@ -292,6 +294,9 @@ public class Skill {
 		}
 
 		calculateSkillDuration();
+		if (chargeTemplate != null) {
+			chargeTimeMultiplier = calculateChargeTimeMultiplier();
+		}
 
 		if (SecurityConfig.MOTION_TIME) {
 			// must be after calculateskillduration
@@ -337,7 +342,7 @@ public class Skill {
 		if (chargeTemplate != null) {
 			this.duration = 0;
 			for (ChargeTemplate charge : chargeTemplate.getCharges()) {
-				this.duration += charge.getTime();
+				this.duration += scaleChargeTime(charge.getTime());
 			}
 		}
 		if (preselectedTargets != null) {
@@ -355,7 +360,7 @@ public class Skill {
 				? Math.max(1, Math.ceilDiv(skillTemplate.getNonchainedCooldown(), 100))
 				: effector.getSkillCooldown(skillTemplate);
 		if (cooldown != 0) {
-			cooldown = StigmaEnchantCoolDown(this, cooldown);
+			cooldown = SkillConfig.scaleCooldown(StigmaEnchantCoolDown(this, cooldown));
 			effector.setSkillCoolDown(skillTemplate.getDelayId(), cooldown * 100 + this.duration + System.currentTimeMillis());
 			effector.setSkillCoolDownBase(skillTemplate.getDelayId(), System.currentTimeMillis());
 		}
@@ -1062,6 +1067,26 @@ public class Skill {
 		}
 	}
 
+	private float calculateChargeTimeMultiplier() {
+		float speedRatio;
+		switch (chargeTemplate.getBonusChargeType()) {
+		case PHYSICAL:
+			Stat2 attackSpeed = effector.getGameStats().getAttackSpeed();
+			speedRatio = attackSpeed.getBase() == 0 ? 1 : attackSpeed.getCurrent() / (float) attackSpeed.getBase();
+			break;
+		case MAGICAL:
+			speedRatio = skillTemplate.getDuration() == 0 ? 1 : duration / (float) skillTemplate.getDuration();
+			break;
+		default:
+			return 1;
+		}
+		return 1 - (1 - speedRatio) * 0.5f;
+	}
+
+	private int scaleChargeTime(int time) {
+		return (int) (time * chargeTimeMultiplier);
+	}
+
 	private boolean checkAnimationTime() {
 		if (!(effector instanceof Player) || skillMethod != SkillMethod.CAST) {
 			return true;
@@ -1147,11 +1172,8 @@ public class Skill {
 		}
 
 		// 按弹药时间调整客户端时间 / adjust client time with ammotime
-		long ammoTime = 0;
 		double distance = MathUtil.getDistance(effector, firstTarget);
-		if (getSkillTemplate().getAmmoSpeed() != 0) {
-			ammoTime = Math.round(distance / getSkillTemplate().getAmmoSpeed() * 1000);// checked with client
-		}
+		int ammoTime = calculateAmmoTime(distance, getSkillTemplate().getAmmoSpeed());
 		clientTime -= ammoTime;
 
 		// 按动作播放速度调整服务器时间 / adjust servertime with motion play speed
@@ -1176,7 +1198,7 @@ public class Skill {
 
 		int finalTime = Math.round(serverTime);
 		if (motion.getInstantSkill() && hitTime == 0) {
-			this.serverTime = (int) ammoTime;
+			this.serverTime = ammoTime;
 		} else {
 			if (clientTime < finalTime) {
 				// 检查无动画作弊 / check for no animation Hacks
@@ -1201,6 +1223,10 @@ public class Skill {
 		}
 		player.setNextSkillUse(System.currentTimeMillis() + duration + finalTime);
 		return true;
+	}
+
+	static int calculateAmmoTime(double distance, int ammoSpeed) {
+		return ammoSpeed > 0 ? (int) Math.round(distance / ammoSpeed * 1000) : 0;
 	}
 
 	/**
@@ -1292,13 +1318,13 @@ public class Skill {
 			int time = (int) (System.currentTimeMillis() - castStart);
 			time += 100; // 100ms leeway
 
-			if (time < chargeTemplate.getMinCharge()) {
+			if (time < scaleChargeTime(chargeTemplate.getMinCharge())) {
 				return;
 			}
 
 			int skillId = skillTemplate.getSkillId();
 			for (ChargeTemplate charge : chargeTemplate.getCharges()) {
-				time -= charge.getTime();
+				time -= scaleChargeTime(charge.getTime());
 				skillId = charge.getSkillId();
 
 				if (time < 0) {
@@ -1307,7 +1333,7 @@ public class Skill {
 			}
 			skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 
-			effector.setSkillCoolDown(skillTemplate.getDelayId(), skillTemplate.getCooldown() * 100 + System.currentTimeMillis());
+			effector.setSkillCoolDown(skillTemplate.getDelayId(), SkillConfig.scaleCooldown(skillTemplate.getCooldown()) * 100L + System.currentTimeMillis());
 		}
 
 		// 若目标超出范围 / if target out of range
@@ -1481,15 +1507,9 @@ public class Skill {
 			GameEngineServices.questEngine().onUseSkill(env, skillTemplate.getSkillId());
 		}
 
-		// 【修复】只在客户端未发送有效 hitTime 时才由服务端计算
-		// 原条件存在运算符优先级问题，导致非 HEAL 技能的 hitTime 被错误覆盖
-		// 修复后：确保 hitTime <= 0 时才由服务端计算，保留客户端发送的有效值
 		if ((skillMethod == SkillMethod.CAST || skillMethod == SkillMethod.ITEM) && getSkillTemplate().getSubType() != SkillSubType.HEAL && hitTime <= 0) {
-			if (skillskinHitTIme > 0) {
-				hitTime += (int) (skillskinHitTIme * effector.getDistanceToTarget() * 1.8F);
-			} else {
-				this.hitTime = ((int) ((int) (getSkillTemplate().getAmmoSpeed() * effector.getDistanceToTarget()) * 1.8F));
-			}
+			int ammoSpeed = skillskinHitTIme > 0 ? skillskinHitTIme : getSkillTemplate().getAmmoSpeed();
+			hitTime = calculateAmmoTime(effector.getDistanceToTarget(), ammoSpeed);
 		}
 
 		if (hitTime == 0) {
@@ -1564,24 +1584,25 @@ public class Skill {
 	 */
 	private void sendCastspellEnd(int spellStatus, int dashStatus, List<Effect> effects) {
 		getSkillSkinData();
+		int resultHitTime = serverTime > 0 ? serverTime : hitTime;
 		if (skillMethod == SkillMethod.CAST) {
 			switch (targetType) {
 			case 0: // PlayerObjectId as Target
-				broadcastCastResult(new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus,
+				broadcastCastResult(new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus,
 					dashStatus, skillskinId));
 				break;
 
 			case 4:
 			case 87:
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus, dashStatus, targetType, skillskinId));
+				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus, dashStatus, targetType, skillskinId));
 				break;
 
 			case 3: // Target not in sight?
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus, dashStatus, skillskinId));
+				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus, dashStatus, skillskinId));
 				break;
 
 			case 1: // XYZ as Target
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus, dashStatus, targetType, skillskinId));
+				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, resultHitTime, chainSuccess, spellStatus, dashStatus, targetType, skillskinId));
 				break;
 			}
 		} else if (skillMethod == SkillMethod.ITEM) {
@@ -2138,7 +2159,10 @@ public class Skill {
 		if (chargeTemplate == null) {
 			return;
 		}
-		cancelCast();
+		if (castingTask != null) {
+			castingTask.cancel(true);
+			castingTask = null;
+		}
 		endCast();
 	}
 }

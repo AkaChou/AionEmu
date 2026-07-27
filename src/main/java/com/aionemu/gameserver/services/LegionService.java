@@ -1651,7 +1651,7 @@ public class LegionService {
 			if (targetPlayer != null) {
 				appointBrigadeGeneral(activePlayer, targetPlayer);
 			} else {
-				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_NO_USER_TO_INVITE);
+				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_NO_SUCH_USER);
 			}
 			break;
 		/**

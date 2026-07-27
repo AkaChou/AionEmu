@@ -257,12 +257,6 @@ public class CustomConfig {
 	@Property(key = "gameserver.commands.admin.dot.enable", defaultValue = "false")
 	public static boolean ENABLE_ADMIN_DOT_COMMANDS;
 	/**
-	 * 魔法增幅上限。
-	 * Magic boost cap value.
-	 */
-	@Property(key = "gameserver.magicboost.cap", defaultValue = "6500")
-	public static int MAGICBOOST_CAP;
-	/**
 	 * 呼唤特快邮差的冷却时间（秒）。
 	 * Express courier summon cooldown in seconds.
 	 */

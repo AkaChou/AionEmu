@@ -2,6 +2,7 @@ package com.aionemu.commons.utils.concurrent;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.configs.CommonsConfig;
 import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -169,6 +170,9 @@ public class RunnableStatsManager {
      * Runtime
      */
     public void handleStats(Class<? extends Runnable> clazz, long runTime) {
+        if (!CommonsConfig.RUNNABLESTATS_ENABLE) {
+            return;
+        }
         getClassStat(clazz, false).getRunnableStat().handleStats(runTime);
     }
 
@@ -181,6 +185,9 @@ public class RunnableStatsManager {
      * Runtime
      */
     public void handleStats(Class<?> clazz, String methodName, long runTime) {
+        if (!CommonsConfig.RUNNABLESTATS_ENABLE) {
+            return;
+        }
         getClassStat(clazz, false).getMethodStat(methodName, false).handleStats(runTime);
     }
 
@@ -317,6 +324,9 @@ public class RunnableStatsManager {
      * @param sortBy 排序字段，可为 null / Sort field, may be null
      */
     public void dumpClassStats(final SortBy sortBy) {
+        if (!CommonsConfig.RUNNABLESTATS_ENABLE) {
+            return;
+        }
         final List<MethodStat> methodStats = new ArrayList<MethodStat>();
 
         synchronized (RunnableStatsManager.class) {

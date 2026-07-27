@@ -21,7 +21,7 @@ public class CommonsConfig {
      * </p>
      */
     @Property(
-        key = "commons.runnablestats.enable",
+        key = "gameserver.log.runnablestats",
         defaultValue = "false"
     )
     public static boolean RUNNABLESTATS_ENABLE;

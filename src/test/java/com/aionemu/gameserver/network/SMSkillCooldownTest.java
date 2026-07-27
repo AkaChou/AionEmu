@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -39,6 +40,23 @@ class SMSkillCooldownTest {
 			assertTrue(remaining > 120_000 && remaining <= 123_456, "skill cooldown remaining time must be written in milliseconds");
 			assertEquals(300_000, buffer.getInt());
 		} finally {
+			DataManager.SKILL_DATA = previousSkillData;
+		}
+	}
+
+	@Test
+	void scalesLoginCooldownAnimation() throws Exception {
+		SkillData previousSkillData = DataManager.SKILL_DATA;
+		double previousMultiplier = SkillConfig.COOLDOWN_MULTIPLIER;
+		DataManager.SKILL_DATA = skillData(skillTemplate(1001, 10, 3000));
+		SkillConfig.COOLDOWN_MULTIPLIER = 0.01;
+		try {
+			ByteBuffer buffer = write(new SM_SKILL_COOLDOWN(playerWithSkills(1001), Map.of(10, System.currentTimeMillis() + 3_000), false));
+			buffer.position(9);
+
+			assertEquals(3_000, buffer.getInt());
+		} finally {
+			SkillConfig.COOLDOWN_MULTIPLIER = previousMultiplier;
 			DataManager.SKILL_DATA = previousSkillData;
 		}
 	}

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.skillengine.periodicaction;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 
+import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
@@ -28,6 +29,9 @@ public class DpUsePeriodicAction extends PeriodicAction {
 	 */
 	@Override
 	public void act(final Effect effect) {
+		if (!SkillConfig.CONSUME_DP) {
+			return;
+		}
 		final Player effector = (Player) effect.getEffector();
 		int currentDp = effector.getCommonData().getDp();
 		if (currentDp <= 0 || currentDp < value) {

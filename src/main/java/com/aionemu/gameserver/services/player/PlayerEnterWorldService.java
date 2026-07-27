@@ -355,10 +355,10 @@ public final class PlayerEnterWorldService {
 						pcd.addReposteEnergy(addResposeEnergy > maxRespose ? maxRespose : addResposeEnergy);
 					}
 				}
-				if (System.currentTimeMillis() / 1000 - lastOnline > 300) {
+				if (secondsOffline > 300) {
 					player.getCommonData().setDp(0);
 				}
-				if (System.currentTimeMillis() / 1000 - lastOnline > 3600) {
+				if (secondsOffline > 3600) {
 					player.getCommonData().setAuraOfGrowth(0);
 				}
 			}
@@ -453,7 +453,7 @@ public final class PlayerEnterWorldService {
 	 * 若在伊卢玛/诺斯沃尔德敌对领地登出，将被传送。 / http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_071316.pdf If a user logs out in hostile territory in Iluma/Norsvold, they will be transported back to the last registered Obelisk
 	 */
 			TeleportService2.onLogOutOppositeMap(player);
-			// TeleportService2.sendSetBindPoint(player);
+			TeleportService2.sendSetBindPoint(player);
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().preSpawn(player);
 			GameLocationBootstrapServices.vortexService().validateLoginZone(player);
 			client.sendPacket(new SM_PLAYER_SPAWN(player));

@@ -48,45 +48,39 @@ public class CM_WINDSTREAM extends AionClientPacket {
 		Player player = getConnection().getActivePlayer();
 		switch (state) {
 		case 0:
-		case 7:
-		case 8:
-			if (state == 0) {
-				player.unsetPlayerMode(PlayerMode.RIDE);
-			} else if (state == 7) {
-				PacketSendUtility.broadcastPacket(player,
-						new SM_EMOTION(player, EmotionType.WINDSTREAM_START_BOOST, 0, 0), true);
-			} else if (state == 8) {
-				PacketSendUtility.broadcastPacket(player,
-						new SM_EMOTION(player, EmotionType.WINDSTREAM_END_BOOST, 0, 0), true);
-			}
+			player.unsetPlayerMode(PlayerMode.RIDE);
 			PacketSendUtility.sendPacket(player, new SM_WINDSTREAM(state, 1));
 			break;
 		case 1:
-			if (player.isInPlayerMode(PlayerMode.WINDSTREAM)) {
+			if (player.isUsingFlyTeleport() || player.isInPlayerMode(PlayerMode.WINDSTREAM) || !player.isFlying()) {
 				return;
 			}
 			WindstreamRoute route = DataManager.WINDSTREAM_DATA.getRoute(player.getPosition().getMapId(), teleportId);
-			if (route == null || !route.contains(distance, player.getX(), player.getY(), player.getZ(), 45)) {
+			if (route == null) {
 				return;
 			}
-			if (player.isInState(CreatureState.GLIDING) || player.isInState(CreatureState.FLYING)) {
-				player.setPlayerMode(PlayerMode.WINDSTREAM, new WindstreamPath(route, teleportId, distance));
-				if (player.isGM()) {
-					PacketSendUtility.sendMessage(player,
-							"You enter teleportId: " + teleportId + ", distance: " + distance);
-				}
-				player.unsetState(CreatureState.ACTIVE);
-				player.unsetState(CreatureState.GLIDING);
-				player.setState(CreatureState.FLYING);
-				PacketSendUtility.broadcastPacket(player,
-						new SM_EMOTION(player, EmotionType.WINDSTREAM, teleportId, distance), true);
-				player.getLifeStats().triggerFpRestore();
-				GameEngineServices.questEngine().onEnterWindStream(new QuestEnv(null, player, 0, 0), teleportId);
+			player.setPlayerMode(PlayerMode.WINDSTREAM, new WindstreamPath(route, teleportId, distance));
+			if (player.isGM()) {
+				PacketSendUtility.sendMessage(player,
+						"You enter teleportId: " + teleportId + ", distance: " + distance);
 			}
+			player.unsetState(CreatureState.ACTIVE);
+			player.unsetState(CreatureState.GLIDING);
+			player.setState(CreatureState.FLYING);
+			player.setFlyState(1);
+			PacketSendUtility.broadcastPacket(player,
+					new SM_EMOTION(player, EmotionType.WINDSTREAM, teleportId, distance), true);
+			player.getLifeStats().triggerFpRestore();
+			GameEngineServices.questEngine().onEnterWindStream(new QuestEnv(null, player, 0, 0), teleportId);
+			break;
+		case 7:
+		case 8:
+			PacketSendUtility.broadcastPacket(player,
+				new SM_EMOTION(player, state == 7 ? EmotionType.WINDSTREAM_START_BOOST : EmotionType.WINDSTREAM_END_BOOST, 0, 0), true);
+			PacketSendUtility.sendPacket(player, new SM_WINDSTREAM(state, 1));
 			break;
 		case 2:
 		case 3:
-		case 4:
 			if (!player.isInPlayerMode(PlayerMode.WINDSTREAM)) {
 				return;
 			}
@@ -96,7 +90,7 @@ public class CM_WINDSTREAM extends AionClientPacket {
 				player.setState(CreatureState.GLIDING);
 				player.getLifeStats().triggerFpReduce();
 			}
-			if (state == 4 || player.isTransformed()) {
+			if (player.isTransformed()) {
 				player.setState(CreatureState.GLIDING);
 				player.getLifeStats().triggerFpReduce();
 
@@ -108,9 +102,13 @@ public class CM_WINDSTREAM extends AionClientPacket {
 			PacketSendUtility.broadcastPacket(player,
 					new SM_EMOTION(player, state == 2 ? EmotionType.WINDSTREAM_END : EmotionType.WINDSTREAM_EXIT, 0, 0),
 					true);
+			player.setFlyState(player.isInState(CreatureState.GLIDING) ? 2 : 0);
 			player.getGameStats().updateStatsAndSpeedVisually();
 			PacketSendUtility.sendPacket(player, new SM_WINDSTREAM(state, 1));
 			player.unsetPlayerMode(PlayerMode.WINDSTREAM);
+			break;
+		case 4:
+			PacketSendUtility.sendPacket(player, new SM_WINDSTREAM(state, 1));
 			break;
 		}
 	}
