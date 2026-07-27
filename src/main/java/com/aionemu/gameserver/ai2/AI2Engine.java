@@ -154,6 +154,10 @@ public class AI2Engine implements GameEngine {
 
 	String selectRegisteredNpcAi(String fallback, Npc npc) {
 		String selected = selectNpcAi(fallback, npc == null ? 0 : npc.getNpcId(), npc);
+		if (npc != null && AiNames.GENERAL_NPC.getName().equals(selected)
+				&& DataManager.PORTAL2_DATA != null && DataManager.PORTAL2_DATA.hasPortalDialog(npc.getNpcId())) {
+			selected = "portal_dialog";
+		}
 		if (aiMap.containsKey(selected)) {
 			return selected;
 		}

@@ -146,12 +146,12 @@ public class PortalService {
 
 	private static boolean checkEnterLevel(Player player, int mapId, PortalReq portalReq, int npcObjectId) {
 		int enterMinLvl = portalReq.getMinLevel();
-		int enterMaxLvl = 0;
+		int enterMaxLvl = portalReq.getMaxLevel();
 		Row rule = InstanceLimitService.rule(mapId);
 		if (rule != null) {
 			String suffix = player.getRace() == Race.ELYOS ? "light" : "dark";
 			enterMinLvl = rule.intValue("enter_min_level_" + suffix, enterMinLvl);
-			enterMaxLvl = rule.intValue("enter_max_level_" + suffix, 0);
+			enterMaxLvl = rule.intValue("enter_max_level_" + suffix, enterMaxLvl);
 		}
 		if (rule != null && player.isMentor()) {
 			if (!rule.booleanValue("can_enter_mentor")) {
@@ -160,7 +160,7 @@ public class PortalService {
 				return false;
 			}
 		}
-		if (player.getLevel() < enterMinLvl || enterMaxLvl > 0 && player.getLevel() > enterMaxLvl) {
+		if (!isLevelAllowed(player.getLevel(), enterMinLvl, enterMaxLvl)) {
 			int errDialog = portalReq.getErrLevel();
 			if (errDialog != 0) {
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(npcObjectId, errDialog));
@@ -170,6 +170,10 @@ public class PortalService {
 			return false;
 		}
 		return true;
+	}
+
+	static boolean isLevelAllowed(int playerLevel, int minLevel, int maxLevel) {
+		return playerLevel >= minLevel && (maxLevel <= 0 || playerLevel <= maxLevel);
 	}
 
 	private static boolean checkPlayerSize(Player player, PortalPath portalPath, int npcObjectId) {

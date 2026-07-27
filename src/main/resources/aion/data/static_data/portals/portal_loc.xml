@@ -114,6 +114,8 @@
 	<portal_loc world_id="210100000" loc_id="2101018" x="1409.2625" y="1331.155" z="1335.9395" h="29"/> <!-- LF6_Event_B_H_Teleport_Da -->
 	<portal_loc world_id="210100000" loc_id="2101019" x="1411.8926" y="1414.7153" z="1336.0331" h="89"/> <!-- LF6_Event_B_T_Teleport_Da -->
 	<portal_loc world_id="210100000" loc_id="2101020" x="1500.5347" y="1396.1859" z="337.36615" h="92"/> <!-- LF6_OP_Event_B_Out -->
+	<portal_loc world_id="210100000" loc_id="2101021" x="1407" y="1315" z="338" h="6"/> <!-- Archives Quest Retail Exit -->
+	<portal_loc world_id="210100000" loc_id="2101022" x="1453" y="1298" z="336" h="23"/> <!-- Archives Retail Exit -->
 	<!-- Tower Of Eternity 5.0/5.1 -->
 	<portal_loc world_id="210110000" loc_id="2101100" x="448.4795" y="499.93314" z="299.85013" h="0"/>
 	<portal_loc world_id="210110000" loc_id="2101101" x="503.78494" y="500.18906" z="348.8464" h="61"/> <!-- Sage_Room_Q_Entrance [Q10526] -->
@@ -244,6 +246,8 @@
 	<portal_loc world_id="220110000" loc_id="2201118" x="1348.6952" y="1624.232" z="1010.55457" h="117"/> <!-- DF6_Event_B_H_Teleport_Li -->
 	<portal_loc world_id="220110000" loc_id="2201119" x="1433.2096" y="1608.035" z="1010.55457" h="55"/> <!-- DF6_Event_B_T_Teleport_Li -->
 	<portal_loc world_id="220110000" loc_id="2201120" x="1657.7545" y="1968.5072" z="199.67375" h="30"/> <!-- DF6_OP_Event_B_Out -->
+	<portal_loc world_id="220110000" loc_id="2201121" x="1803" y="1987" z="199" h="45"/> <!-- Archives Quest Retail Exit -->
+	<portal_loc world_id="220110000" loc_id="2201122" x="1763" y="2007" z="197" h="36"/> <!-- Archives Retail Exit -->
 	<!-- Tower Of Eternity 5.0/5.1 -->
 	<portal_loc world_id="220120000" loc_id="2201200" x="448.4795" y="499.93314" z="299.85013" h="0"/>
 	<portal_loc world_id="220120000" loc_id="2201201" x="503.78494" y="500.18906" z="348.8464" h="61"/> <!-- Sage_Room_Q_Entrance [Q20526] -->
@@ -284,6 +288,8 @@
 	<portal_loc world_id="400010000" loc_id="4000119" x="1315.2606" y="1353.0134" z="3039.1736" h="99"/> <!-- Bastion Of Souls Exit -->
 	<portal_loc world_id="400010000" loc_id="4000120" x="1780.2931" y="281.17953" z="2938.36800" h="91"/> <!-- Divine Tower L Exit -->
 	<portal_loc world_id="400010000" loc_id="4000121" x="986.64740" y="2743.7097" z="3034.09470" h="30"/> <!-- Divine Tower D Exit -->
+	<portal_loc world_id="400010000" loc_id="4000122" x="1779.699951" y="278.100006" z="2938.399902" h="10"/> <!-- Divine Tower L Retail Exit -->
+	<portal_loc world_id="400010000" loc_id="4000123" x="987.799988" y="2744.600098" z="3034.100098" h="20"/> <!-- Divine Tower D Retail Exit -->
 	<!-- Belus [Arcadian Fortress] -->
 	<portal_loc world_id="400020000" loc_id="4000208" x="824.5404" y="823.3414" z="1517.9669" h="14"/> <!-- Ivy Temple -->
 	<portal_loc world_id="400020000" loc_id="4000209" x="825.65466" y="1221.8978" z="1518.1077" h="45"/> <!-- Highland Temple -->

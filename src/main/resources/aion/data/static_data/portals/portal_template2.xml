@@ -3860,6 +3860,10 @@
 		<portal_dialog npc_id="805745">
 			<portal_path dialog="104" loc_id="3015200" destination_alias="IDSeal_Q_Boss_Point"/>
 		</portal_dialog>
+		<!-- Agony's Well -->
+		<portal_dialog npc_id="805377">
+			<portal_path dialog="104" loc_id="3015200" source_world_id="301520000" destination_alias="IDSeal_Q_Boss_Point"/>
+		</portal_dialog>
 		<!-- DRAKENSPIRE DEPTHS QUEST 4.9 END -->
 		
 		<!-- ARCHIVES OF ETERNITY 5.0 -->
@@ -3912,10 +3916,34 @@
 		<portal_path dialog="104" loc_id="3015433" destination_alias="Alias_3rd_Boss_Room_In_1"/>
 	</portal_dialog>
 	<!-- Prologue To Knowledge ==> Archives All Knowledge -->
-	<portal_dialog npc_id="731812">
-		<portal_path dialog="104" loc_id="3015434" destination_alias="Alias_4th_Boss_Room_In_2"/>
-	</portal_dialog>
-	<!-- ARCHIVES OF ETERNITY 5.0 END -->
+		<portal_dialog npc_id="731812">
+			<portal_path dialog="104" loc_id="3015434" destination_alias="Alias_4th_Boss_Room_In_2"/>
+		</portal_dialog>
+		<!-- Archives Quest Retail Exits -->
+		<portal_dialog npc_id="834053">
+			<portal_path dialog="10001" loc_id="2101021" source_world_id="301540000" race="ELYOS"/>
+			<portal_path dialog="10002" loc_id="2201121" source_world_id="301540000" race="ASMODIANS"/>
+		</portal_dialog>
+		<portal_dialog npc_id="834054">
+			<portal_path dialog="10001" loc_id="2101021" source_world_id="301540000" race="ELYOS"/>
+			<portal_path dialog="10002" loc_id="2201121" source_world_id="301540000" race="ASMODIANS"/>
+		</portal_dialog>
+		<portal_dialog npc_id="835349">
+			<portal_path dialog="10001" loc_id="2101021" source_world_id="301550000" race="ELYOS"/>
+			<portal_path dialog="10002" loc_id="2201121" source_world_id="301550000" race="ASMODIANS"/>
+		</portal_dialog>
+		<portal_dialog npc_id="835350">
+			<portal_path dialog="10001" loc_id="2101021" source_world_id="301550000" race="ELYOS"/>
+			<portal_path dialog="10002" loc_id="2201121" source_world_id="301550000" race="ASMODIANS"/>
+		</portal_dialog>
+		<!-- Archives Retail Exits -->
+		<portal_dialog npc_id="834176">
+			<portal_path dialog="104" loc_id="2101022" source_world_id="301550000" race="ELYOS"/>
+		</portal_dialog>
+		<portal_dialog npc_id="834177">
+			<portal_path dialog="104" loc_id="2201122" source_world_id="301550000" race="ASMODIANS"/>
+		</portal_dialog>
+		<!-- ARCHIVES OF ETERNITY 5.0 END -->
 	
 	<!-- CRADLE OF ETERNITY 5.1 -->
 	<!-- Cradle Of Eternity [Elyos] -->
@@ -5221,14 +5249,14 @@
 	</portal_dialog>
 	<!-- IDAb1_Heroes_L_Out -->
 	<portal_dialog npc_id="835684">
-		<portal_path dialog="104" loc_id="4000120" race="ELYOS">
-		    <portal_req min_level="66"/>
+		<portal_path dialog="104" loc_id="4000122">
+		    <portal_req min_level="1" max_level="100"/>
 		</portal_path>
 	</portal_dialog>
 	<!-- IDAb1_Heroes_D_Out -->
 	<portal_dialog npc_id="835685">
-		<portal_path dialog="104" loc_id="4000121" race="ASMODIANS">
-		    <portal_req min_level="66"/>
+		<portal_path dialog="104" loc_id="4000123">
+		    <portal_req min_level="1" max_level="100"/>
 		</portal_path>
 	</portal_dialog>
 	<!-- IDAb1_Heroes_L_Out_2 -->

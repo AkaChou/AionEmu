@@ -80,7 +80,7 @@
     "unique_callbacks": 757,
     "transport_calls": 520,
     "endpoint_proven_routes": 509,
-    "portal_service_expressible_routes": 111,
+    "portal_service_expressible_routes": 136,
     "callback_shapes": 262,
     "route_proven_callback_shapes": 32,
     "by_status": {
@@ -104,10 +104,10 @@
       "unsupported_argument_shape": 59
     },
     "portal_service_projection_by_status": {
-      "EXPRESSIBLE": 86,
+      "EXPRESSIBLE": 101,
       "NOT_APPLICABLE": 393,
       "REJECT_ROUTE_NOT_PROVEN": 280,
-      "REJECT_UNMODELED_CALLBACK_SHAPE": 59
+      "REJECT_UNMODELED_CALLBACK_SHAPE": 44
     }
   },
   "callback_shapes": [
@@ -31429,8 +31429,8 @@
           "destination": {
             "kind": "COORDINATES",
             "world": 220110000,
-            "x": 2.4232079923302566e-36,
-            "y": 2.438406766944404e-36,
+            "x": 1810.4000244140625,
+            "y": 1975.9000244140625,
             "z": 203.0,
             "dir": 0,
             "mode": 1
@@ -31462,8 +31462,8 @@
               "destination": {
                 "complete": true,
                 "world_id": 220110000,
-                "x": 2.4232079923302566e-36,
-                "y": 2.438406766944404e-36,
+                "x": 1810.4000244140625,
+                "y": 1975.9000244140625,
                 "z": 203.0,
                 "dir": 0,
                 "source": "ScriptDLL64 callback"
@@ -31491,8 +31491,8 @@
               "destination": {
                 "complete": true,
                 "world_id": 220110000,
-                "x": 2.4232079923302566e-36,
-                "y": 2.438406766944404e-36,
+                "x": 1810.4000244140625,
+                "y": 1975.9000244140625,
                 "z": 203.0,
                 "dir": 0,
                 "source": "ScriptDLL64 callback"
@@ -33708,7 +33708,7 @@
           "destination": {
             "kind": "COORDINATES",
             "world": 210100000,
-            "x": 2.3846830016919792e-36,
+            "x": 1390.9000244140625,
             "y": 1277.300048828125,
             "z": 343.0,
             "dir": 270,
@@ -33741,7 +33741,7 @@
               "destination": {
                 "complete": true,
                 "world_id": 210100000,
-                "x": 2.3846830016919792e-36,
+                "x": 1390.9000244140625,
                 "y": 1277.300048828125,
                 "z": 343.0,
                 "dir": 270,
@@ -33770,7 +33770,7 @@
               "destination": {
                 "complete": true,
                 "world_id": 210100000,
-                "x": 2.3846830016919792e-36,
+                "x": 1390.9000244140625,
                 "y": 1277.300048828125,
                 "z": 343.0,
                 "dir": 270,
@@ -34759,8 +34759,8 @@
             "kind": "COORDINATES",
             "world": 120020000,
             "x": 1557.199951171875,
-            "y": 2.388218668294062e-36,
-            "z": 2.166435945072513e-36,
+            "y": 1429.4000244140625,
+            "z": 265.6000061035156,
             "dir": 33,
             "mode": 1
           },
@@ -34792,8 +34792,8 @@
                 "complete": true,
                 "world_id": 120020000,
                 "x": 1557.199951171875,
-                "y": 2.388218668294062e-36,
-                "z": 2.166435945072513e-36,
+                "y": 1429.4000244140625,
+                "z": 265.6000061035156,
                 "dir": 33,
                 "source": "ScriptDLL64 callback"
               },
@@ -35222,8 +35222,8 @@
           "destination": {
             "kind": "COORDINATES",
             "world": 120010000,
-            "x": 2.4043357978697894e-36,
-            "y": 2.3845452484477423e-36,
+            "x": 1604.9000244140625,
+            "y": 1389.4000244140625,
             "z": 193.10000610351562,
             "dir": 180,
             "mode": 1
@@ -35255,8 +35255,8 @@
               "destination": {
                 "complete": true,
                 "world_id": 120010000,
-                "x": 2.4043357978697894e-36,
-                "y": 2.3845452484477423e-36,
+                "x": 1604.9000244140625,
+                "y": 1389.4000244140625,
                 "z": 193.10000610351562,
                 "dir": 180,
                 "source": "ScriptDLL64 callback"
@@ -35459,8 +35459,10 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "race": "ASMODIANS"
+        }
       }
     },
     {
@@ -37610,7 +37612,7 @@
             "world": 220070000,
             "x": 724.8599853515625,
             "y": 2279.14990234375,
-            "z": 2.2121700221591928e-36,
+            "z": 390.1000061035156,
             "dir": 240,
             "mode": 1
           },
@@ -37720,7 +37722,7 @@
             "world": 220070000,
             "x": 728.8699951171875,
             "y": 2286.429931640625,
-            "z": 2.2121700221591928e-36,
+            "z": 390.1000061035156,
             "dir": 60,
             "mode": 1
           },
@@ -47565,8 +47567,10 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "race": "ASMODIANS"
+        }
       }
     },
     {
@@ -47749,8 +47753,10 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "race": "ASMODIANS"
+        }
       }
     },
     {
@@ -68194,8 +68200,10 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "race": "ASMODIANS"
+        }
       }
     },
     {
@@ -68468,8 +68476,10 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "race": "ELYOS"
+        }
       }
     },
     {
@@ -68915,8 +68925,11 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "min_level": 1,
+          "max_level": 100
+        }
       }
     },
     {
@@ -69110,7 +69123,7 @@
             "kind": "COORDINATES",
             "world": 400010000,
             "x": 1779.699951171875,
-            "y": 2.1710277198804127e-36,
+            "y": 278.1000061035156,
             "z": 2938.39990234375,
             "dir": 30,
             "mode": 1
@@ -69143,7 +69156,7 @@
                 "complete": true,
                 "world_id": 400010000,
                 "x": 1779.699951171875,
-                "y": 2.1710277198804127e-36,
+                "y": 278.1000061035156,
                 "z": 2938.39990234375,
                 "dir": 30,
                 "source": "ScriptDLL64 callback"
@@ -69156,8 +69169,11 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "min_level": 1,
+          "max_level": 100
+        }
       }
     },
     {
@@ -91062,7 +91078,7 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
+        "status": "EXPRESSIBLE",
         "requirements": {}
       }
     },
@@ -94886,8 +94902,10 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "race": "ASMODIANS"
+        }
       }
     },
     {
@@ -95082,8 +95100,10 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "race": "ELYOS"
+        }
       }
     },
     {
@@ -95452,8 +95472,16 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {},
+        "requirements_by_dialog": {
+          "10001": {
+            "race": "ELYOS"
+          },
+          "10002": {
+            "race": "ASMODIANS"
+          }
+        }
       }
     },
     {
@@ -98983,8 +99011,16 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {},
+        "requirements_by_dialog": {
+          "10001": {
+            "race": "ELYOS"
+          },
+          "10002": {
+            "race": "ASMODIANS"
+          }
+        }
       }
     },
     {
@@ -129771,8 +129807,8 @@
             "kind": "COORDINATES",
             "world": 110020000,
             "x": 2155.60009765625,
-            "y": 2.4008460490157857e-36,
-            "z": 2.367601599406593e-36,
+            "y": 1566.9000244140625,
+            "z": 1204.9000244140625,
             "dir": 207,
             "mode": 1
           },
@@ -129804,8 +129840,8 @@
                 "complete": true,
                 "world_id": 110020000,
                 "x": 2155.60009765625,
-                "y": 2.4008460490157857e-36,
-                "z": 2.367601599406593e-36,
+                "y": 1566.9000244140625,
+                "z": 1204.9000244140625,
                 "dir": 207,
                 "source": "ScriptDLL64 callback"
               },
@@ -130495,8 +130531,10 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "race": "ELYOS"
+        }
       }
     },
     {
@@ -138879,7 +138917,7 @@
           "destination": {
             "kind": "COORDINATES",
             "world": 210050000,
-            "x": 2.4664634078516876e-36,
+            "x": 2514.820068359375,
             "y": 821.6799926757812,
             "z": 416.32000732421875,
             "dir": 80,
@@ -148687,8 +148725,10 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "race": "ELYOS"
+        }
       }
     },
     {
@@ -148871,8 +148911,10 @@
       "status": "ROUTE_PROVEN",
       "reasons": [],
       "portal_service_projection": {
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE",
-        "requirements": {}
+        "status": "EXPRESSIBLE",
+        "requirements": {
+          "race": "ELYOS"
+        }
       }
     },
     {

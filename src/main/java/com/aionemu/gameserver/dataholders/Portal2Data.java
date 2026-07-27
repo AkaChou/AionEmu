@@ -113,6 +113,10 @@ public class Portal2Data {
 		return portalUses.get(npcId) != null || portalDialogs.get(npcId) != null;
 	}
 
+	public boolean hasPortalDialog(int npcId) {
+		return portalDialogs.get(npcId) != null;
+	}
+
 	/**
 	 * 按 NPC ID 获取使用型传送门配置。
 	 * Returns the use-type portal configuration for the given NPC id.

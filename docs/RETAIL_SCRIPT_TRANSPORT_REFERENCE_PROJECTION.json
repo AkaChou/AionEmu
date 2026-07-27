@@ -15,8 +15,8 @@
       {
         "path": "RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json",
         "role": "script_transport_source",
-        "sha256": "1c6f53aecf0b0f49856ff3dc143b45f4294b1c3c6b025ff5307261e9d7e8040e",
-        "size": 4867275
+        "sha256": "f262d9a6af617cdca8896756925403b772373c5b0cd03077bcd70a7be2d01afe",
+        "size": 4867716
       },
       {
         "path": "XML/China/ID/WorldId.xml",
@@ -2022,8 +2022,8 @@
             "dir": 0,
             "source": "ScriptDLL64 callback",
             "world_id": 220110000,
-            "x": 2.4232079923302566e-36,
-            "y": 2.438406766944404e-36,
+            "x": 1810.4000244140625,
+            "y": 1975.9000244140625,
             "z": 203.0
           },
           "id": "ARENA_D_LOBBY_to_DC1orDC2_TELEPORT:FUN_180c5d3c0:2:1",
@@ -2151,8 +2151,8 @@
             "dir": 0,
             "source": "ScriptDLL64 callback",
             "world_id": 220110000,
-            "x": 2.4232079923302566e-36,
-            "y": 2.438406766944404e-36,
+            "x": 1810.4000244140625,
+            "y": 1975.9000244140625,
             "z": 203.0
           },
           "id": "ARENA_D_LOBBY_to_DC1orDC2_TELEPORT:FUN_180c5d3c0:2:2",
@@ -2538,7 +2538,7 @@
             "dir": 270,
             "source": "ScriptDLL64 callback",
             "world_id": 210100000,
-            "x": 2.3846830016919792e-36,
+            "x": 1390.9000244140625,
             "y": 1277.300048828125,
             "z": 343.0
           },
@@ -2667,7 +2667,7 @@
             "dir": 270,
             "source": "ScriptDLL64 callback",
             "world_id": 210100000,
-            "x": 2.3846830016919792e-36,
+            "x": 1390.9000244140625,
             "y": 1277.300048828125,
             "z": 343.0
           },
@@ -10388,8 +10388,8 @@
             "source": "ScriptDLL64 callback",
             "world_id": 120020000,
             "x": 1557.199951171875,
-            "y": 2.388218668294062e-36,
-            "z": 2.166435945072513e-36
+            "y": 1429.4000244140625,
+            "z": 265.6000061035156
           },
           "id": "DC1_DC2_Teleport:FUN_180c61b30:1:1",
           "source": "fun/fun_720.cpp:4929",
@@ -10683,8 +10683,8 @@
             "dir": 180,
             "source": "ScriptDLL64 callback",
             "world_id": 120010000,
-            "x": 2.4043357978697894e-36,
-            "y": 2.3845452484477423e-36,
+            "x": 1604.9000244140625,
+            "y": 1389.4000244140625,
             "z": 193.10000610351562
           },
           "id": "DC2_DC1_Teleport:FUN_180c61da0:1:1",
@@ -10810,8 +10810,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ASMODIANS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xd1e2780,0x43ce0000,0x45099000,0x435e0000,0x26,1);",
       "registration_reasons": [],
@@ -18077,8 +18079,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ASMODIANS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xd1ec3c0,0x43f88000,0x43f68000,0x439b0000,0x1a,1);",
       "registration_reasons": [],
@@ -18226,8 +18230,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ASMODIANS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xd1e9cb0,0x44dc6000,0x44fae000,0x43450000,0x6e,1);",
       "registration_reasons": [],
@@ -41075,8 +41081,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ASMODIANS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0x17d7ab10,0x44774000,0x45343000,0x453dc000,0x4d,1);",
       "registration_reasons": [],
@@ -41224,8 +41232,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ASMODIANS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0x17d7ab10,0x44774000,0x45343000,0x453dc000,0x4d,1);",
       "registration_reasons": [],
@@ -41373,8 +41383,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ASMODIANS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0x17d7ab10,0x44774000,0x45343000,0x453dc000,0x4d,1);",
       "registration_reasons": [],
@@ -41522,8 +41534,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ELYOS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0x17d7ab10,0x44dd2000,0x430b0000,0x4537b000,0x21,1);",
       "registration_reasons": [],
@@ -41671,8 +41685,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ELYOS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0x17d7ab10,0x44dd2000,0x430b0000,0x4537b000,0x21,1);",
       "registration_reasons": [],
@@ -41820,8 +41836,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ELYOS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0x17d7ab10,0x44dd2000,0x430b0000,0x4537b000,0x21,1);",
       "registration_reasons": [],
@@ -42026,8 +42044,11 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "max_level": 100,
+          "min_level": 1
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0x17d7ab10,0x4476f333,0x452b899a,0x453da19a,0x3c,1);",
       "registration_reasons": [],
@@ -42232,8 +42253,11 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "max_level": 100,
+          "min_level": 1
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0x17d7ab10,0x44de7666,0x438b0ccd,0x4537a666,0x1e,1);",
       "registration_reasons": [],
@@ -42255,7 +42279,7 @@
             "source": "ScriptDLL64 callback",
             "world_id": 400010000,
             "x": 1779.699951171875,
-            "y": 2.1710277198804127e-36,
+            "y": 278.1000061035156,
             "z": 2938.39990234375
           },
           "id": "IDAb1_Heroes_L_Out:FUN_180c69ce0:1:1",
@@ -87815,7 +87839,7 @@
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
         "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar1 + 0x2e0))(plVar1,L\"idcromede_alias_04\",1);",
       "registration_reasons": [],
@@ -90966,8 +90990,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ASMODIANS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xd1e9cb0,0x44dc6000,0x44fae000,0x43450000,0x6e,1);",
       "registration_reasons": [],
@@ -91115,8 +91141,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ELYOS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xc85df20,0x44b5a000,0x44a24000,0x43a80000,0x46,1);",
       "registration_reasons": [],
@@ -91311,7 +91339,15 @@
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
         "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements_by_dialog": {
+          "10001": {
+            "race": "ELYOS"
+          },
+          "10002": {
+            "race": "ASMODIANS"
+          }
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xc85df20,0x44afe000,0x44a46000,0x43a90000,0x14,1);",
       "registration_reasons": [],
@@ -91506,7 +91542,15 @@
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
         "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements_by_dialog": {
+          "10001": {
+            "race": "ELYOS"
+          },
+          "10002": {
+            "race": "ASMODIANS"
+          }
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xc85df20,0x44afe000,0x44a46000,0x43a90000,0x14,1);",
       "registration_reasons": [],
@@ -91701,7 +91745,15 @@
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
         "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements_by_dialog": {
+          "10001": {
+            "race": "ELYOS"
+          },
+          "10002": {
+            "race": "ASMODIANS"
+          }
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xd1e9cb0,0x44e16000,0x44f86000,0x43470000,0x87,1);",
       "registration_reasons": [],
@@ -91896,7 +91948,15 @@
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
         "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements_by_dialog": {
+          "10001": {
+            "race": "ELYOS"
+          },
+          "10002": {
+            "race": "ASMODIANS"
+          }
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xd1e9cb0,0x44e16000,0x44f86000,0x43470000,0x87,1);",
       "registration_reasons": [],
@@ -94472,7 +94532,15 @@
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
         "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements_by_dialog": {
+          "10001": {
+            "race": "ELYOS"
+          },
+          "10002": {
+            "race": "ASMODIANS"
+          }
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xc85df20,0x44afe000,0x44a46000,0x43a90000,0x14,1);",
       "registration_reasons": [],
@@ -94667,7 +94735,15 @@
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
         "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements_by_dialog": {
+          "10001": {
+            "race": "ELYOS"
+          },
+          "10002": {
+            "race": "ASMODIANS"
+          }
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xc85df20,0x44afe000,0x44a46000,0x43a90000,0x14,1);",
       "registration_reasons": [],
@@ -94862,7 +94938,15 @@
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
         "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements_by_dialog": {
+          "10001": {
+            "race": "ELYOS"
+          },
+          "10002": {
+            "race": "ASMODIANS"
+          }
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xd1e9cb0,0x44e16000,0x44f86000,0x43470000,0x87,1);",
       "registration_reasons": [],
@@ -95057,7 +95141,15 @@
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
         "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements_by_dialog": {
+          "10001": {
+            "race": "ELYOS"
+          },
+          "10002": {
+            "race": "ASMODIANS"
+          }
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xd1e9cb0,0x44e16000,0x44f86000,0x43470000,0x87,1);",
       "registration_reasons": [],
@@ -126104,8 +126196,8 @@
             "source": "ScriptDLL64 callback",
             "world_id": 110020000,
             "x": 2155.60009765625,
-            "y": 2.4008460490157857e-36,
-            "z": 2.367601599406593e-36
+            "y": 1566.9000244140625,
+            "z": 1204.9000244140625
           },
           "id": "LC1_LC2_Teleport:FUN_180c7aa80:1:1",
           "source": "fun/fun_723.cpp:4268",
@@ -126526,8 +126618,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ELYOS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xc8569f0,0x4539b000,0x445e0000,0x440f8000,0x11,1);",
       "registration_reasons": [],
@@ -138073,8 +138167,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ELYOS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xc860630,0x43f88000,0x43f68000,0x439b0000,0x1a,1);",
       "registration_reasons": [],
@@ -138222,8 +138318,10 @@
       "field": "route",
       "kind": "script_transport_endpoint",
       "portal_service_projection": {
-        "requirements": {},
-        "status": "REJECT_UNMODELED_CALLBACK_SHAPE"
+        "requirements": {
+          "race": "ELYOS"
+        },
+        "status": "EXPRESSIBLE"
       },
       "raw": "(**(code **)(*plVar2 + 0x2d0))(plVar2,0xc85df20,0x44b5a000,0x44a24000,0x43a80000,0x46,1);",
       "registration_reasons": [],

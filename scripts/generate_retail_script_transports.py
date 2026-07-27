@@ -41,6 +41,7 @@ INTEGER = re.compile(r"-?(?:0x[0-9a-f]+|\d+)$", re.IGNORECASE)
 WIDE_STRING = re.compile(r'L"([^"]+)"$')
 
 PORTAL_SERVICE_REQUIREMENTS = {
+    "052b3137dad50d20": {"race": "ASMODIANS"},
     "0a02711fcd9bbf1e": {},
     "0eff6fbaa0598942": {},
     "9b29ef7f2a1f2510": {"race": "ASMODIANS"},
@@ -48,8 +49,18 @@ PORTAL_SERVICE_REQUIREMENTS = {
     "bbb59816bae2e848": {"race": "ELYOS", "min_level": 65, "max_level": 100},
     "c0693a58b0486877": {},
     "c773c543096b3491": {},
+    "d85daa66a231db7b": {"min_level": 1, "max_level": 100},
+    "debbe7ddd837b48b": {},
     "e4ab7c479ad41c01": {"min_level": 40, "max_level": 100},
+    "fa139d6ebdb0d079": {"race": "ELYOS"},
     "f949be6f7be4bac9": {"race": "ELYOS"},
+}
+
+PORTAL_SERVICE_REQUIREMENTS_BY_DIALOG = {
+    "33ee7fc6fc736e7f": {
+        10001: {"race": "ELYOS"},
+        10002: {"race": "ASMODIANS"},
+    },
 }
 
 RETAIL_TRANSPORT_DOMAIN_TYPES = {
@@ -233,9 +244,10 @@ def integer(value: str) -> int | None:
 
 
 def float32(value: str) -> float | None:
-    value = value.strip().rstrip("fFdD")
+    value = value.strip()
     if re.fullmatch(r"0x[0-9a-f]{1,8}", value, re.IGNORECASE):
         return struct.unpack(">f", int(value, 16).to_bytes(4, "big"))[0]
+    value = value.rstrip("fFdD")
     try:
         return float(value)
     except ValueError:
@@ -335,6 +347,13 @@ def portal_service_projection(status: str, shape_id: str | None) -> dict[str, ob
     if status != "ROUTE_PROVEN":
         return {"status": "REJECT_ROUTE_NOT_PROVEN", "requirements": {}}
     requirements = PORTAL_SERVICE_REQUIREMENTS.get(shape_id)
+    requirements_by_dialog = PORTAL_SERVICE_REQUIREMENTS_BY_DIALOG.get(shape_id)
+    if requirements_by_dialog is not None:
+        return {
+            "status": "EXPRESSIBLE",
+            "requirements": {},
+            "requirements_by_dialog": {str(dialog): value for dialog, value in sorted(requirements_by_dialog.items())},
+        }
     if requirements is None:
         return {"status": "REJECT_UNMODELED_CALLBACK_SHAPE", "requirements": {}}
     return {"status": "EXPRESSIBLE", "requirements": requirements}

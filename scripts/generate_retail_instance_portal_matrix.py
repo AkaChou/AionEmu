@@ -596,6 +596,18 @@ def route_allows_world(route: dict[str, object], world_id: int) -> bool:
     return source_world_id == 0 or source_world_id == world_id
 
 
+def portal_service_projection_for_event(projection: dict[str, object],
+                                        event: dict[str, object] | None) -> dict[str, object]:
+    requirements_by_dialog = projection.get("requirements_by_dialog")
+    if projection.get("status") != "EXPRESSIBLE" or requirements_by_dialog is None:
+        return projection
+    dialog = None if event is None else str(event.get("dialog"))
+    requirements = requirements_by_dialog.get(dialog) if dialog is not None else None
+    if requirements is None:
+        return {"status": "REJECT_UNMODELED_DIALOG_REQUIREMENTS", "requirements": {}}
+    return {"status": "EXPRESSIBLE", "requirements": requirements}
+
+
 def source_transport_routes(root: Path, instance_world_ids: set[int]) -> dict[tuple[int, int, int], list[dict[str, object]]]:
     document = json.loads((root / TRANSPORT_REFERENCE).read_text(encoding="utf-8"))
     authority = document.get("authority", {})
@@ -633,6 +645,7 @@ def source_transport_routes(root: Path, instance_world_ids: set[int]) -> dict[tu
         if int(start["world_id"]) not in instance_world_ids and destination_world_id not in instance_world_ids:
             continue
         event = reference.get("event")
+        projection = portal_service_projection_for_event(projection, event)
         dialog = -1 if event is None else int(event["dialog"])
         start_evidence = {
             "world_id": start["world_id"],
@@ -782,7 +795,8 @@ def script_transport_candidates(
             exact = [route for route in runtime_routes
                      if same_destination(route["destination"], evidence["destination"])
                      and same_requirements(route, evidence)]
-            ai = templates.get(npc_id, {}).get("ai", "")
+            declared_ai = templates.get(npc_id, {}).get("ai", "")
+            ai = "portal_dialog" if projection["status"] == "EXPRESSIBLE" and declared_ai == "general" else declared_ai
             if projection["status"] != "EXPRESSIBLE":
                 status = projection["status"]
                 reason = "retail callback is not fully expressible by PortalService"
@@ -811,6 +825,7 @@ def script_transport_candidates(
                 "destination": evidence["destination"],
                 "requirements": projection["requirements"],
                 "runtime_ai": ai,
+                "runtime_ai_declared": declared_ai,
                 "runtime_start_status": start_status,
                 "runtime_routes": [{
                     "loc_id": route.get("loc_id"),

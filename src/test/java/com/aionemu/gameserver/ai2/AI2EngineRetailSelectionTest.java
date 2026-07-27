@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.ai2;
 
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.Portal2Data;
 import com.aionemu.gameserver.dataholders.RetailAiData;
 import com.aionemu.gameserver.dataholders.RetailAiData.Operation;
 import com.aionemu.gameserver.dataholders.RetailAiData.Pattern;
@@ -9,6 +10,7 @@ import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai.DummyAI2;
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai.RetailPatternAI2;
+import com.aionemu.gameserver.ai.portals.PortalDialogAI2;
 import com.aionemu.gameserver.instance.handlers.scripts.danuarReliquary.DanuarReliquaryInstance;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
@@ -139,6 +141,30 @@ class AI2EngineRetailSelectionTest {
 			assertEquals("general", engine.selectRegisteredNpcAi("hyperion", null));
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
+		}
+	}
+
+	@Test
+	void selectsPortalDialogForDataDrivenGeneralNpcOnly() {
+		var previousAi = DataManager.RETAIL_AI_DATA;
+		var previousPortals = DataManager.PORTAL2_DATA;
+		try {
+			DataManager.RETAIL_AI_DATA = null;
+			DataManager.PORTAL2_DATA = new Portal2Data() {
+				@Override
+				public boolean hasPortalDialog(int npcId) {
+					return npcId == 200000;
+				}
+			};
+			AI2Engine engine = new AI2Engine();
+			engine.registerAI(GeneralNpcAI2.class);
+			engine.registerAI(PortalDialogAI2.class);
+
+			assertEquals("portal_dialog", engine.selectRegisteredNpcAi("general", testNpc(200000, 301550000, null)));
+			assertEquals("general", engine.selectRegisteredNpcAi("general", testNpc(200001, 301550000, null)));
+		} finally {
+			DataManager.RETAIL_AI_DATA = previousAi;
+			DataManager.PORTAL2_DATA = previousPortals;
 		}
 	}
 

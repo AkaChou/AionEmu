@@ -6,6 +6,7 @@ from pathlib import Path
 from generate_retail_script_transports import (
     build,
     event_for_call,
+    float32,
     portal_service_projection,
     render,
     transport_domain_type,
@@ -16,6 +17,9 @@ SOURCE_MATRIX = ROOT / "docs/RETAIL_INSTANCE_TRANSPORT_SOURCE_MATRIX.json"
 
 
 class RetailScriptTransportsTest(unittest.TestCase):
+
+    def test_hex_float_keeps_trailing_hex_digit(self):
+        self.assertAlmostEqual(278.1000061035156, float32("0x438b0ccd"))
 
     def test_checked_in_matrix_covers_every_dialog_registration_and_transport_type(self):
         report = json.loads(SOURCE_MATRIX.read_text(encoding="utf-8"))
@@ -50,6 +54,25 @@ class RetailScriptTransportsTest(unittest.TestCase):
         self.assertEqual(
             "REJECT_UNMODELED_CALLBACK_SHAPE",
             portal_service_projection("ROUTE_PROVEN", "ffee58d2fe09b860")["status"],
+        )
+        self.assertEqual(
+            {"status": "EXPRESSIBLE", "requirements": {"race": "ELYOS"}},
+            portal_service_projection("ROUTE_PROVEN", "fa139d6ebdb0d079"),
+        )
+        self.assertEqual(
+            {"status": "EXPRESSIBLE", "requirements": {"race": "ASMODIANS"}},
+            portal_service_projection("ROUTE_PROVEN", "052b3137dad50d20"),
+        )
+        self.assertEqual(
+            {"status": "EXPRESSIBLE", "requirements": {"min_level": 1, "max_level": 100}},
+            portal_service_projection("ROUTE_PROVEN", "d85daa66a231db7b"),
+        )
+        self.assertEqual(
+            {"status": "EXPRESSIBLE", "requirements": {}, "requirements_by_dialog": {
+                "10001": {"race": "ELYOS"},
+                "10002": {"race": "ASMODIANS"},
+            }},
+            portal_service_projection("ROUTE_PROVEN", "33ee7fc6fc736e7f"),
         )
 
     def test_dialog_variable_reassignment_stays_inside_its_branch(self):
