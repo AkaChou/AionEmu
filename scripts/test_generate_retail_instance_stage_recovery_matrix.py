@@ -25,7 +25,7 @@ class InstanceStageRecoveryMatrixTest(unittest.TestCase):
 
     def test_full_matrix_is_conservative_and_explicit(self) -> None:
         summary = self.report["summary"]
-        self.assertEqual(1, self.report["version"])
+        self.assertEqual(2, self.report["version"])
         self.assertEqual("RUNTIME_AUDIT_PROJECTION", self.report["provenance"]["kind"])
         self.assertFalse(self.report["provenance"]["authoritative_retail_evidence"])
         self.assertEqual(139, summary["production_worlds"])
@@ -34,13 +34,18 @@ class InstanceStageRecoveryMatrixTest(unittest.TestCase):
         self.assertEqual(1183, summary["condition_variables"])
         self.assertEqual(203, summary["condition_variables_missing_producers"])
         self.assertEqual(2, summary["pattern_spawn_gaps"])
-        self.assertEqual(61, summary["declared_stage_owners"]["HANDLER"])
+        self.assertEqual(60, summary["declared_stage_owners"]["HANDLER"])
+        self.assertEqual(1, summary["declared_stage_owners"]["SCRIPT_NPC"])
         self.assertEqual(56, summary["declared_recovery_owners"]["HANDLER"])
         self.assertEqual({
-            "ALREADY_EXTERNAL_OWNER": 69,
+            "ALREADY_EXTERNAL_OWNER": 70,
             "REJECT_EVIDENCE_GAP": 12,
-            "RETAIN_HANDLER": 58,
+            "RETAIN_HANDLER": 57,
         }, summary["conversion_statuses"])
+        self.assertEqual(421, summary["script_stage_bindings"])
+        self.assertEqual(6, summary["script_npc_runtime_entries"])
+        self.assertEqual(6, summary["script_npc_runtime_matches"])
+        self.assertEqual(0, summary["script_npc_runtime_mismatches"])
         self.assertNotIn("CONVERSION_READY", summary["conversion_statuses"])
         for world in self.report["worlds"]:
             if "HANDLER" in {world["declared_stage_owner"], world["declared_recovery_owner"]}:
@@ -70,6 +75,19 @@ class InstanceStageRecoveryMatrixTest(unittest.TestCase):
         self.assertEqual("RETAIL_PATTERN_MODELED", tiamat["stage_classification"])
         self.assertEqual("DECLARED_STATELESS_CONTRADICTION", tiamat["recovery_classification"])
         self.assertIn("declared_stateless_has_runtime_state", tiamat["evidence_gaps"])
+
+    def test_cradle_script_npc_stage_owner_has_retail_source_closure(self) -> None:
+        cradle = self.worlds[301550000]
+        self.assertEqual("SCRIPT_NPC_MODELED", cradle["stage_classification"])
+        self.assertEqual(6, len(cradle["script_npc_runtime_entries"]))
+        self.assertTrue(all(entry["source_status"] == "RESOLVED"
+                            for entry in cradle["script_npc_runtime_entries"]))
+        matches = [match for binding in cradle["script_npc_bindings"] for match in binding["runtime_matches"]]
+        self.assertEqual(6, len(matches))
+        variables = {variable["name"]: variable for variable in cradle["condition_model"]["variables"]}
+        for match in matches:
+            self.assertTrue(any(producer["owner"] == "SCRIPT_NPC"
+                                for producer in variables[match["variable"]]["producers"]))
 
     def test_check_rejects_stale_report(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

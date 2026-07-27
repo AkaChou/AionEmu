@@ -105,17 +105,18 @@ def script_names(path: Path) -> dict[str, str]:
     return result
 
 
-def registrations(path: Path, names: dict[str, str], source_root: Path) -> list[dict[str, object]]:
+def registrations(path: Path, names: dict[str, str], source_root: Path,
+                  event_code: int = 0x1b) -> list[dict[str, object]]:
     result = []
     files = sorted(path.glob("fun_*.cpp")) if path.is_dir() else [path]
     for file in files:
         text = file.read_text(encoding="utf-8")
         for match in REGISTRATION.finditer(text):
             args = split_args(match.group("args"))
-            event_code = integer(args[2]) if len(args) == 5 else None
-            if event_code is None:
+            registered_event = integer(args[2]) if len(args) == 5 else None
+            if registered_event is None:
                 raise ValueError(f"unsupported registration arguments in {file}: {match.group(0)}")
-            if event_code != 0x1b:
+            if registered_event != event_code:
                 continue
             vtable_match = re.fullmatch(r"&?(PTR_vftable_[0-9a-f]+)", args[1])
             callback_match = re.fullmatch(r"&?((?:FUN|LAB)_[0-9a-f]+)", args[3])
@@ -126,7 +127,7 @@ def registrations(path: Path, names: dict[str, str], source_root: Path) -> list[
                 "script_name": names.get(vtable) if vtable_match else None,
                 "vtable": vtable,
                 "callback": callback_match.group(1),
-                "event_code": event_code,
+                "event_code": registered_event,
                 "registration_binding": "STATIC" if vtable_match else "DYNAMIC",
                 "registration_source": {
                     "path": source_label(file, source_root),
@@ -134,7 +135,7 @@ def registrations(path: Path, names: dict[str, str], source_root: Path) -> list[
                 },
             })
     if not result:
-        raise ValueError(f"no registered NPC dialog callbacks in {path}")
+        raise ValueError(f"no registered NPC callbacks for event 0x{event_code:x} in {path}")
     return result
 
 

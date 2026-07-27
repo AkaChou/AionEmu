@@ -2,4 +2,10 @@
 <script_npcs>
   <use_skill npc_id="700940" skill_id="19229" skill_level="1" despawn_on_success="true"/>
   <use_skill npc_id="700941" skill_id="19230" skill_level="1" despawn_on_success="true"/>
+  <item_gate_variable npc_id="834006" world_id="301550000" item_id="185000266" variable="ideternity_02_a_button_01" value="2" failure_message_id="1403447" success_message_id="1403589"/>
+  <item_gate_variable npc_id="834019" world_id="301550000" item_id="185000266" variable="ideternity_02_a_button_02" value="2" failure_message_id="1403447" success_message_id="1403589"/>
+  <item_gate_variable npc_id="834020" world_id="301550000" item_id="185000266" variable="ideternity_02_a_button_03" value="2" failure_message_id="1403447" success_message_id="1403589"/>
+  <item_gate_variable npc_id="834021" world_id="301550000" item_id="185000266" variable="ideternity_02_a_button_04" value="2" failure_message_id="1403447" success_message_id="1403589"/>
+  <item_gate_variable npc_id="834022" world_id="301550000" item_id="185000266" variable="ideternity_02_a_button_05" value="2" failure_message_id="1403447" success_message_id="1403589"/>
+  <item_gate_variable npc_id="834007" world_id="301550000" item_id="185000267" variable="ideternity_02_d_button" value="2" failure_message_id="1403448" success_message_id="1403590"/>
 </script_npcs>

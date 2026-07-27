@@ -370,10 +370,13 @@ def attributes(row: dict[str, str], extra: dict[str, object] | None = None) -> d
     return values
 
 
-def write_xml(root: ET.Element, path: Path) -> None:
+def write_xml(root: ET.Element, path: Path, trailing_newline: bool = False) -> None:
     ET.indent(root, space="  ")
     path.parent.mkdir(parents=True, exist_ok=True)
     ET.ElementTree(root).write(path, encoding="UTF-8", xml_declaration=True)
+    if trailing_newline:
+        with path.open("ab") as stream:
+            stream.write(b"\n")
 
 
 def schema(root: ET.Element) -> None:
@@ -932,7 +935,7 @@ def generate(source: Path, client: Path, aionemu: Path, output: Path,
         ET.SubElement(coverage, "world", generated)
     if sum(behaviors.values()) != len(coverage_worlds) or set(behaviors) - set(BEHAVIORS):
         raise ValueError(f"invalid instance behavior closure: {dict(behaviors)}")
-    write_xml(coverage, output / "coverage.xml")
+    write_xml(coverage, output / "coverage.xml", trailing_newline=True)
 
     manifest = ET.Element("retail_instance_manifest", {
         "version": "1",

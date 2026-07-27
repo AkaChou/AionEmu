@@ -97,12 +97,23 @@ class CradleOfEternityMigrationTest {
 	}
 
 	@Test
-	void handlerOnlyBridgesTheMissingSunAltarPattern() throws Exception {
+	void scriptNpcsOwnAllSixRetailAltarCallbacks() throws Exception {
+		Document scripts = parse("src/main/resources/aion/definitions/compact/script-npcs.xml");
+		assertEquals(6, count(scripts, "//item_gate_variable[@world_id='301550000']"));
+		for (String npcId : new String[] { "834006", "834019", "834020", "834021", "834022", "834007" }) {
+			assertTrue(exists(scripts, "//item_gate_variable[@npc_id='" + npcId + "']"), npcId);
+		}
+		Document templates = parse("src/main/resources/aion/data/static_data/npcs/npc_template.xml");
+		for (String npcId : new String[] { "834006", "834019", "834020", "834021", "834022", "834007" }) {
+			assertTrue(exists(templates, "//npc_template[@npc_id='" + npcId + "' and @ai='useitem']"), npcId);
+		}
+		assertFalse(Files.exists(Path.of(
+				"src/main/java/com/aionemu/gameserver/ai/instance/cradleOfEternity/Altar_Of_EarthAI2.java")));
 		String handler = Files.readString(Path.of(
-			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CradleOfEternityInstance.java"));
-		assertTrue(handler.contains("npc.getNpcId() != 834007"));
-		assertTrue(handler.contains("decreaseByItemId(185000267, 1)"));
-		assertTrue(handler.contains("RetailConditionSpawnEngine.setVariable(instance, \"ideternity_02_d_button\", 2, 0)"));
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CradleOfEternityInstance.java"));
+		assertFalse(handler.contains("handleUseItemFinish("));
+		assertTrue(handler.contains("removeEffect(21340)"));
+		assertTrue(handler.contains("removeEffect(21344)"));
 		for (String legacy : new String[] { "Rnd", "onDropRegistered(", "onInstanceCreate(", "onEnterInstance(",
 			"onDie(", "onEnterZone(", "runtimeState()", "setDoorState(", "SpawnIDEternity02Race(",
 			"spawn(", "806056", "281446", "834005" }) {

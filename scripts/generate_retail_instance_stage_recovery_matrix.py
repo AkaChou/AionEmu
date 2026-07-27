@@ -23,6 +23,8 @@ INSTANCE_SPAWNS = Path("src/main/resources/aion/data/static_data/spawns/Instance
 HANDLERS = Path("src/main/java/com/aionemu/gameserver/instance/handlers/scripts")
 LEGACY_AI = Path("src/main/java/com/aionemu/gameserver/ai")
 NPC_TEMPLATES = Path("src/main/resources/aion/data/static_data/npcs/npc_template.xml")
+SCRIPT_NPCS = Path("src/main/resources/aion/definitions/compact/script-npcs.xml")
+SCRIPT_STAGE_REFERENCES = Path("scripts/retail-instance-stage-reference-graph.json")
 REPORT = Path("docs/RETAIL_INSTANCE_STAGE_RECOVERY_MATRIX.json")
 DISABLED_WORLD = 300260000
 INSTANCE_ID = re.compile(r"\b\d{9}\b")
@@ -402,6 +404,110 @@ def legacy_npc_mappings(root: Path, ais: dict[str, dict[str, object]]) -> dict[i
     return result
 
 
+def script_stage_models(root: Path) -> tuple[dict[int, list[dict[str, object]]], dict[int, list[dict[str, object]]]]:
+    document = json.loads((root / SCRIPT_STAGE_REFERENCES).read_text(encoding="utf-8"))
+    if (document.get("version") != 4 or document.get("projection") != "script_stage"
+            or document.get("summary", {}).get("unresolved") or document.get("summary", {}).get("ambiguous")):
+        raise ValueError("invalid retail instance stage reference projection")
+    candidates = document.get("authority", {}).get("script_stage_callback_inventory", {}).get(
+        "conversion_candidates", [])
+    expected_by_npc = {
+        int(npc_id): {**candidate["expected_runtime"], "candidate_status": candidate["status"]}
+        for candidate in candidates if candidate.get("expected_runtime")
+        for npc_id in candidate.get("npc_ids", [])
+    }
+
+    bindings: dict[str, dict[str, object]] = {}
+    by_world: dict[int, list[dict[str, object]]] = defaultdict(list)
+    for reference in document.get("references", []):
+        if reference.get("family") != "script_stage_callback":
+            continue
+        identity = str(reference["consumer"]["id"])
+        binding = bindings.setdefault(identity, {
+            "world_id": int(reference["world_id"]),
+            "script_name": reference.get("script_name"),
+            "callback": reference.get("callback"),
+            "shape_id": reference.get("callback_shape"),
+            "npc_ids": reference.get("npc_ids", []),
+            "spawn_sources": reference.get("spawn_sources", []),
+            "source": reference.get("source", ""),
+            "callback_status": "REJECTED",
+            "npc_status": "REJECTED",
+            "world_status": "REJECTED",
+            "condition_variable_writes": [],
+            "operation_families": [],
+            "operation_targets": [],
+            "runtime_matches": [],
+        })
+        kind = reference["kind"]
+        if kind == "script_callback":
+            binding["callback_status"] = reference["status"]
+            if reference["targets"]:
+                target = reference["targets"][0]
+                binding["operation_families"] = target.get("operation_families", [])
+                binding["operation_targets"] = target.get("operation_targets", [])
+        elif kind == "npc":
+            binding["npc_status"] = reference["status"]
+        elif kind == "world":
+            binding["world_status"] = reference["status"]
+        elif kind == "condition_variable":
+            binding["condition_variable_writes"].append({
+                "variable": reference["raw"],
+                "value": reference.get("value"),
+                "status": reference["status"],
+                "source": reference.get("source", ""),
+                "condition_sources": [] if not reference["targets"] else reference["targets"][0].get("sources", []),
+            })
+
+    for binding in bindings.values():
+        binding["condition_variable_writes"].sort(key=lambda row: (str(row["variable"]), str(row["source"])))
+        binding["evidence_status"] = (
+            "RESOLVED" if all(binding[field] == "RESOLVED"
+                              for field in ("callback_status", "npc_status", "world_status"))
+            else "REJECT_EVIDENCE_GAP"
+        )
+        by_world[int(binding.pop("world_id"))].append(binding)
+    for rows in by_world.values():
+        rows.sort(key=lambda row: (str(row["script_name"]), str(row["callback"])))
+
+    runtime_by_world: dict[int, list[dict[str, object]]] = defaultdict(list)
+    for node in ET.parse(root / SCRIPT_NPCS).getroot().findall("item_gate_variable"):
+        runtime_by_world[int(node.get("world_id", "0"))].append({
+            "world_id": int(node.get("world_id", "0")),
+            "npc_id": int(node.get("npc_id", "0")),
+            "item_id": int(node.get("item_id", "0")),
+            "item_count": int(node.get("item_count", "1")),
+            "variable": node.get("variable", ""),
+            "value": int(node.get("value", "0")),
+            "failure_message_id": int(node.get("failure_message_id", "0")),
+            "success_message_id": int(node.get("success_message_id", "0")),
+            "source_status": "REJECT_MISSING_SCRIPT_NPC_STAGE_EVIDENCE",
+        })
+    for world_id, runtime_entries in runtime_by_world.items():
+        for runtime in runtime_entries:
+            expected = expected_by_npc.get(int(runtime["npc_id"]))
+            expected_matches = bool(expected and expected["candidate_status"] == "ALREADY_DATA_DRIVEN"
+                                    and all(runtime[key] == expected[key] for key in (
+                                        "world_id", "item_id", "item_count", "variable", "value",
+                                        "failure_message_id", "success_message_id")))
+            matches = [
+                binding for binding in by_world.get(world_id, [])
+                if expected_matches and binding["evidence_status"] == "RESOLVED"
+                and runtime["npc_id"] in binding["npc_ids"]
+                and any(write["status"] == "RESOLVED" and write["variable"].casefold() == runtime["variable"].casefold()
+                        and write["value"] == runtime["value"] for write in binding["condition_variable_writes"])
+            ]
+            if len(matches) == 1:
+                runtime["source_status"] = "RESOLVED"
+                matches[0]["runtime_matches"].append({
+                    "npc_id": runtime["npc_id"],
+                    "variable": runtime["variable"],
+                    "value": runtime["value"],
+                })
+        runtime_entries.sort(key=lambda row: int(row["npc_id"]))
+    return dict(by_world), dict(runtime_by_world)
+
+
 def stage_classification(world: dict[str, object]) -> str:
     owner = str(world["declared_stage_owner"])
     handler = world["handler_model"]
@@ -419,6 +525,12 @@ def stage_classification(world: dict[str, object]) -> str:
         return "HANDLER_STATE_MACHINE" if has_handler_stage else "HANDLER_EVENT_FLOW"
     if owner == "RETAIL_PATTERN":
         return "RETAIL_PATTERN_MODELED" if has_pattern_stage else "REJECT_MISSING_PATTERN_STAGE_SIGNAL"
+    if owner == "SCRIPT_NPC":
+        runtime_entries = world["script_npc_runtime_entries"]
+        if (not runtime_entries or any(entry["source_status"] != "RESOLVED" for entry in runtime_entries)
+                or not any(binding["runtime_matches"] for binding in world["script_npc_bindings"])):
+            return "REJECT_MISSING_SCRIPT_NPC_STAGE_EVIDENCE"
+        return "SCRIPT_NPC_MODELED"
     if owner == "NOT_APPLICABLE":
         return "NOT_APPLICABLE" if not has_handler_stage and not has_pattern_stage else "DECLARED_NOT_APPLICABLE_CONTRADICTION"
     return "EXTERNAL_OWNER_WITH_STATIC_EVIDENCE" if has_pattern_stage or world["condition_model"] else "EXTERNAL_OWNER"
@@ -461,6 +573,8 @@ def evidence_gaps(world: dict[str, object]) -> list[str]:
         gaps.append("scriptdll_stage_semantics_not_compiled")
     if world["stage_classification"] == "REJECT_MISSING_PATTERN_STAGE_SIGNAL":
         gaps.append("missing_retail_pattern_stage_signal")
+    if world["stage_classification"] == "REJECT_MISSING_SCRIPT_NPC_STAGE_EVIDENCE":
+        gaps.append("missing_script_npc_stage_evidence")
     if world["recovery_classification"] == "REJECT_VOLATILE_HANDLER_STATE":
         gaps.append("volatile_handler_schedule")
     if world["recovery_classification"] == "REJECT_UNMODELED_HANDLER_RECOVERY":
@@ -507,6 +621,7 @@ def attach_batches(matrix: list[dict[str, object]]) -> list[dict[str, object]]:
             "has_pattern_stage": any(operation["operation"] in PATTERN_STAGE_OPERATIONS
                                      for binding in world["pattern_bindings"]
                                      for operation in binding["operations"]),
+            "has_script_npc_stage": any(binding["runtime_matches"] for binding in world["script_npc_bindings"]),
         }
         key = json.dumps(signature, sort_keys=True, separators=(",", ":"))
         signatures[key] = signature
@@ -536,6 +651,7 @@ def build(root: Path) -> dict[str, object]:
     spawn_gaps = expand_pattern_spawns(reachable, patterns, names, mappings)
     legacy_ais = legacy_stage_ais(root)
     legacy_mappings = legacy_npc_mappings(root, legacy_ais)
+    script_bindings_by_world, script_runtime_by_world = script_stage_models(root)
     retail_npcs = door_matrix.retail_mapped_npcs(root)
 
     pattern_by_world: dict[int, list[dict[str, object]]] = defaultdict(list)
@@ -609,6 +725,8 @@ def build(root: Path) -> dict[str, object]:
         pattern_bindings = sorted(pattern_by_world.get(world_id, []),
                                   key=lambda row: (int(row["npc_id"]), str(row["pattern"])))
         legacy_bindings = sorted(legacy_by_world.get(world_id, []), key=lambda row: int(row["npc_id"]))
+        script_npc_bindings = script_bindings_by_world.get(world_id, [])
+        script_npc_runtime_entries = script_runtime_by_world.get(world_id, [])
         producers: dict[str, list[dict[str, object]]] = defaultdict(list)
         for variable, rows in cross_world_producers.get(world_id, {}).items():
             producers[variable].extend(rows)
@@ -635,6 +753,16 @@ def build(root: Path) -> dict[str, object]:
                     producers[str(write["variable"]).casefold()].append({
                         "owner": "LEGACY_AI", "npc_id": binding["npc_id"], "ai": binding["ai"], **write,
                     })
+        for binding in script_npc_bindings:
+            for match in binding["runtime_matches"]:
+                producers[str(match["variable"]).casefold()].append({
+                    "owner": "SCRIPT_NPC",
+                    "npc_id": match["npc_id"],
+                    "script_name": binding["script_name"],
+                    "callback": binding["callback"],
+                    "source": binding["source"],
+                    "value": match["value"],
+                })
         if condition:
             for variable in condition["variables"]:
                 variable["producers"] = sorted(producers.get(str(variable["name"]).casefold(), []),
@@ -650,6 +778,8 @@ def build(root: Path) -> dict[str, object]:
             "condition_model": condition,
             "pattern_bindings": pattern_bindings,
             "legacy_bindings": legacy_bindings,
+            "script_npc_bindings": script_npc_bindings,
+            "script_npc_runtime_entries": script_npc_runtime_entries,
             "pattern_spawn_gaps": [row for row in spawn_gaps if int(row["world_id"]) == world_id],
         }
         world["stage_classification"] = stage_classification(world)
@@ -678,6 +808,12 @@ def build(root: Path) -> dict[str, object]:
                                           for operation in binding["operations"])
                                       for world in matrix for binding in world["pattern_bindings"]),
         "legacy_stage_bindings": sum(len(world["legacy_bindings"]) for world in matrix),
+        "script_stage_bindings": sum(len(world["script_npc_bindings"]) for world in matrix),
+        "script_npc_runtime_entries": sum(len(world["script_npc_runtime_entries"]) for world in matrix),
+        "script_npc_runtime_matches": sum(len(binding["runtime_matches"]) for world in matrix
+                                          for binding in world["script_npc_bindings"]),
+        "script_npc_runtime_mismatches": sum(entry["source_status"] != "RESOLVED" for world in matrix
+                                             for entry in world["script_npc_runtime_entries"]),
         "pattern_spawn_gaps": len(spawn_gaps),
         "declared_stage_owners": dict(sorted(Counter(str(world["declared_stage_owner"]) for world in matrix).items())),
         "declared_recovery_owners": dict(sorted(Counter(str(world["declared_recovery_owner"]) for world in matrix).items())),
@@ -696,13 +832,14 @@ def build(root: Path) -> dict[str, object]:
             binding.pop("pattern_key")
             binding.pop("operations")
     return {
-        "version": 1,
+        "version": 2,
         "provenance": {
             "kind": "RUNTIME_AUDIT_PROJECTION",
             "authoritative_retail_evidence": False,
             "production_world_enumeration": str(COVERAGE),
             "condition_projection": str(CONDITION_SPAWNS),
             "pattern_projection": "src/main/resources/aion/definitions/compact/ai/npcaipatterns*.xml",
+            "script_stage_projection": str(SCRIPT_STAGE_REFERENCES),
             "uncompiled_scriptdll_authority": "58Server/server58-source/MainServer_ScriptDLL64",
             "runtime_state": "src/main/java/com/aionemu/gameserver/model/instance/InstanceRuntimeState.java",
             "deadline_scheduler": "src/main/java/com/aionemu/gameserver/services/instance/InstanceDeadlineScheduler.java",

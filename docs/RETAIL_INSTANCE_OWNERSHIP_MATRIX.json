@@ -11,15 +11,15 @@
     "batches": 68,
     "registered_handler_worlds": 99,
     "behavior_handler_worlds": 86,
-    "worlds_with_handler_dimensions": 79,
-    "handler_dimensions_total": 278,
+    "worlds_with_handler_dimensions": 78,
+    "handler_dimensions_total": 277,
     "handler_owned_by_dimension": {
       "entry": 0,
       "spawn": 15,
       "ai": 0,
       "path": 1,
       "door": 38,
-      "stage": 61,
+      "stage": 60,
       "score": 35,
       "reward": 14,
       "exit": 58,
@@ -74,11 +74,12 @@
       },
       "stage": {
         "EVENT_AI": 1,
-        "HANDLER": 61,
+        "HANDLER": 60,
         "NON_PRODUCTION": 2,
         "NOT_APPLICABLE": 4,
         "RETAIL_PATTERN": 45,
         "SCRIPT_AI": 1,
+        "SCRIPT_NPC": 1,
         "SCRIPT_QUEST": 17,
         "TOURNAMENT_SERVICE": 8
       },
@@ -1206,28 +1207,6 @@
         "ai": "RETAIL_PATTERN",
         "path": "RUNTIME_PATHING",
         "door": "RETAIL_PATTERN",
-        "stage": "HANDLER",
-        "score": "NOT_APPLICABLE",
-        "reward": "RETAIL_DROPS",
-        "exit": "INSTANCE_EXIT_DATA",
-        "recovery": "STATELESS"
-      },
-      "world_ids": [
-        301550000
-      ],
-      "handlers": [
-        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CradleOfEternityInstance.java"
-      ]
-    },
-    {
-      "id": "B048",
-      "count": 1,
-      "dimensions": {
-        "entry": "RETAIL_PORTAL",
-        "spawn": "RETAIL_DATA",
-        "ai": "RETAIL_PATTERN",
-        "path": "RUNTIME_PATHING",
-        "door": "RETAIL_PATTERN",
         "stage": "RETAIL_PATTERN",
         "score": "NOT_APPLICABLE",
         "reward": "RETAIL_DROPS",
@@ -1239,6 +1218,28 @@
       ],
       "handlers": [
         "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UdasTempleInstance.java"
+      ]
+    },
+    {
+      "id": "B048",
+      "count": 1,
+      "dimensions": {
+        "entry": "RETAIL_PORTAL",
+        "spawn": "RETAIL_DATA",
+        "ai": "RETAIL_PATTERN",
+        "path": "RUNTIME_PATHING",
+        "door": "RETAIL_PATTERN",
+        "stage": "SCRIPT_NPC",
+        "score": "NOT_APPLICABLE",
+        "reward": "RETAIL_DROPS",
+        "exit": "INSTANCE_EXIT_DATA",
+        "recovery": "STATELESS"
+      },
+      "world_ids": [
+        301550000
+      ],
+      "handlers": [
+        "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CradleOfEternityInstance.java"
       ]
     },
     {
@@ -2019,7 +2020,7 @@
       },
       "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UdasTempleInstance.java",
       "handler_dimensions": [],
-      "batch_id": "B048"
+      "batch_id": "B047"
     },
     {
       "world_id": 300160000,
@@ -3486,24 +3487,22 @@
       "local_name": "Cradle Of Eternity",
       "retail_name": "ideternity_02",
       "behavior": "HANDLER",
-      "behavior_source": "retail static/condition spawns/AI; handler Sun Altar item-to-variable bridge and leave effect cleanup",
+      "behavior_source": "retail static/condition spawns/AI and ScriptNpc item-to-variable callbacks own six altars; handler only owns leave effect cleanup",
       "dimensions": {
         "entry": "RETAIL_PORTAL",
         "spawn": "RETAIL_DATA",
         "ai": "RETAIL_PATTERN",
         "path": "RUNTIME_PATHING",
         "door": "RETAIL_PATTERN",
-        "stage": "HANDLER",
+        "stage": "SCRIPT_NPC",
         "score": "NOT_APPLICABLE",
         "reward": "RETAIL_DROPS",
         "exit": "INSTANCE_EXIT_DATA",
         "recovery": "STATELESS"
       },
       "handler": "src/main/java/com/aionemu/gameserver/instance/handlers/scripts/CradleOfEternityInstance.java",
-      "handler_dimensions": [
-        "stage"
-      ],
-      "batch_id": "B047"
+      "handler_dimensions": [],
+      "batch_id": "B048"
     },
     {
       "world_id": 301560000,
