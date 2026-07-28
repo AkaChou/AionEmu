@@ -38,6 +38,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDe
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RankedPlayerKillEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.SkillUsedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.SkillUseSource;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DredgionSettledEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.CraftFailedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcAggroListedEvent;
@@ -68,7 +70,7 @@ class QuestGraphRouterTest {
 		CompiledQuestGraphData data = QuestGraphCompiler.load(xml, SCHEMA,
 			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(182200001), Set.of(), Set.of("TEST_ZONE"), Set.of(913),
 				Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
-				Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1"))));
+				Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832)));
 		router = new QuestGraphRouter(data);
 	}
 
@@ -180,6 +182,7 @@ class QuestGraphRouterTest {
 			405001, 405, 120, true, true, true);
 		FlyingRingPassedEvent flyingRingPassed = new FlyingRingPassedEvent("flying-ring-passed", 7, 3025, 210020000, 1,
 			"ELTNEN_AIR_BOOSTER_1", 6, 2.5f, true, true);
+		SkillUsedEvent skillUsed = skillEvent("skill-used", 7, 3026);
 		assertEquals(attack, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(attack)));
 		assertEquals(death, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(death)));
 		assertEquals(worldKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldKill)));
@@ -204,6 +207,14 @@ class QuestGraphRouterTest {
 		assertEquals(aggroListed, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(aggroListed)));
 		assertEquals(windstreamEntered, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(windstreamEntered)));
 		assertEquals(flyingRingPassed, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(flyingRingPassed)));
+		assertEquals(skillUsed, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(skillUsed)));
+		byte[] encodedSkill = QuestGraphEventCodec.encode(skillUsed);
+		byte[] unknownSkillSource = Arrays.copyOf(encodedSkill, encodedSkill.length);
+		unknownSkillSource[unknownSkillSource.length - 2] = 99;
+		assertThrows(IllegalArgumentException.class, () -> QuestGraphEventCodec.decode(unknownSkillSource));
+		byte[] rejectedSkillAuthority = Arrays.copyOf(encodedSkill, encodedSkill.length);
+		rejectedSkillAuthority[rejectedSkillAuthority.length - 1] = 0;
+		assertThrows(IllegalArgumentException.class, () -> QuestGraphEventCodec.decode(rejectedSkillAuthority));
 
 		byte[] encoded = QuestGraphEventCodec.encode(kill);
 		byte[] unknown = Arrays.copyOf(encoded, encoded.length);
@@ -411,10 +422,43 @@ class QuestGraphRouterTest {
 				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
 	}
 
+	/**
+	 * 验证 skill-use 固定广播、owner 级旧窗口、RAW 双入口保留、边界及登出 cleanup。
+	 * Verifies skill-use broadcast, owner-scoped legacy windows, RAW dual-entry preservation, boundary, and logout cleanup.
+	 */
+	@Test
+	void skillUseRoutesApplyExplicitOwnerScopedDuplicatePolicies() {
+		PlayerQuestGraphStateList states = activeStates(QuestStatus.START);
+		assertEquals(List.of("skill-legacy-q2", "skill-raw-q1"),
+			visited(skillEvent("skill:first", 7, 12000), states));
+		assertEquals(List.of("skill-raw-q1"),
+			visited(skillEvent("skill:duplicate", 7, 12499), states));
+		assertEquals(List.of("skill-legacy-q2", "skill-raw-q1"),
+			visited(skillEvent("skill:boundary", 7, 12500), states));
+
+		PlayerQuestGraphStateList inactiveStates = activeStates(QuestStatus.NONE);
+		assertEquals(List.of("skill-legacy-q2", "skill-raw-q1"),
+			visited(skillEvent("skill:inactive", 8, 13000), inactiveStates));
+		assertEquals(List.of("skill-legacy-q2", "skill-raw-q1"),
+			visited(skillEvent("skill:active", 8, 13001), states));
+
+		visited(new PlayerLogoutEvent("logout:skill", 7, 12501, 210010000, 1), states);
+		assertEquals(List.of("skill-legacy-q2", "skill-raw-q1"),
+			visited(skillEvent("skill:after-logout", 7, 12502), states));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new SkillUsedEvent("wrong-skill", 7, 14000, 14000, 9833, 1, 0, 300040000, 12,
+				SkillUseSource.SKILL_ACTIONS_APPLIED, true), states, match -> Status.APPLIED));
+	}
+
 	/** 返回广播访问的转换标识。 / Returns transition identifiers visited by a broadcast event. */
 	private List<String> visited(QuestGraphEvent event) {
+		return visited(event, new PlayerQuestGraphStateList());
+	}
+
+	/** 返回使用显式 owner 状态广播访问的转换标识。 / Returns transition identifiers visited using explicit owner states. */
+	private List<String> visited(QuestGraphEvent event, PlayerQuestGraphStateList states) {
 		List<String> visited = new ArrayList<>();
-		DispatchResult result = router.dispatch(event, new PlayerQuestGraphStateList(), match -> {
+		DispatchResult result = router.dispatch(event, states, match -> {
 			visited.add(match.route().transition().id());
 			return Status.APPLIED;
 		});
@@ -446,7 +490,8 @@ class QuestGraphRouterTest {
 				worldZoneTransition("aggro-listed-q1", 20, "<npc-aggro-listed npc_id=\"100\"/>"),
 				worldZoneTransition("windstream-entered-q1", 20, "<windstream-entered world_id=\"210130000\" route_id=\"405001\"/>"),
 				worldZoneTransition("flying-ring-passed-q1", 20,
-					"<flying-ring-passed world_id=\"210020000\" ring_name=\"ELTNEN_AIR_BOOSTER_1\"/>"));
+					"<flying-ring-passed world_id=\"210020000\" ring_name=\"ELTNEN_AIR_BOOSTER_1\"/>"),
+				skillTransition("skill-raw-q1", 20, "RAW_SOURCE"));
 		String questTwoTransitions = String.join("", dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5),
 			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"),
 			itemTransition("item-use-q2", 10, "item-use"), itemTransition("item-obtained-q2", 10, "item-obtained"),
@@ -468,7 +513,8 @@ class QuestGraphRouterTest {
 				worldZoneTransition("aggro-listed-q2", 10, "<npc-aggro-listed npc_id=\"100\"/>"),
 				worldZoneTransition("windstream-entered-q2", 10, "<windstream-entered world_id=\"210130000\" route_id=\"405001\"/>"),
 				worldZoneTransition("flying-ring-passed-q2", 10,
-					"<flying-ring-passed world_id=\"210020000\" ring_name=\"ELTNEN_AIR_BOOSTER_1\"/>"));
+					"<flying-ring-passed world_id=\"210020000\" ring_name=\"ELTNEN_AIR_BOOSTER_1\"/>"),
+				skillTransition("skill-legacy-q2", 10, "LEGACY_500_MILLIS"));
 		return """
 			<quest_graphs>
 				<quest_graph quest_id="1" version="1" scope="PLAYER" initial_node="start">
@@ -516,5 +562,27 @@ class QuestGraphRouterTest {
 	/** 创建聚焦 world/zone 路由转换。 / Creates a focused world/zone route transition. */
 	private static String worldZoneTransition(String id, int priority, String event) {
 		return combatTransition(id, priority, event);
+	}
+
+	/** 创建显式重复策略的 skill-use 路由。 / Creates a skill-use route with an explicit duplicate policy. */
+	private static String skillTransition(String id, int priority, String duplicatePolicy) {
+		return combatTransition(id, priority,
+			"<skill-used skill_id=\"9832\" duplicate_policy=\"%s\"/>".formatted(duplicatePolicy));
+	}
+
+	/** 创建完整服务端 authority 的 skill-use 事件。 / Creates a skill-use event with complete server authority. */
+	private static SkillUsedEvent skillEvent(String eventId, int playerId, long occurredAt) {
+		return new SkillUsedEvent(eventId, playerId, occurredAt, occurredAt, 9832, 1, 0, 300040000, 12,
+			SkillUseSource.CONTROLLER_ACCEPTED, true);
+	}
+
+	/** 创建两个 owner 的活动状态。 / Creates active states for both owners. */
+	private static PlayerQuestGraphStateList activeStates(QuestStatus questStatus) {
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		for (int questId : List.of(1, 2)) {
+			states.addLoaded(new PlayerQuestGraphState(questId, 1, 0, "start", questStatus, QuestHistory.EMPTY, null,
+				Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null));
+		}
+		return states;
 	}
 }

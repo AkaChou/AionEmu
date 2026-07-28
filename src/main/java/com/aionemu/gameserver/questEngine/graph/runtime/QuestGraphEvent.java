@@ -15,7 +15,8 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	QuestGraphEvent.QuestTimerEndedEvent, QuestGraphEvent.MovieEndedEvent, QuestGraphEvent.NpcProximityEvent,
 	QuestGraphEvent.EscortReachedTargetEvent, QuestGraphEvent.EscortLostTargetEvent,
 	QuestGraphEvent.RankedPlayerKillEvent, QuestGraphEvent.DredgionSettledEvent, QuestGraphEvent.CraftFailedEvent,
-	QuestGraphEvent.NpcAggroListedEvent, QuestGraphEvent.WindstreamEnteredEvent, QuestGraphEvent.FlyingRingPassedEvent {
+	QuestGraphEvent.NpcAggroListedEvent, QuestGraphEvent.WindstreamEnteredEvent, QuestGraphEvent.FlyingRingPassedEvent,
+	QuestGraphEvent.SkillUsedEvent {
 
 	/**
 	 * 定义由事件类型固定的候选传播策略。
@@ -52,8 +53,16 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 					WORLD_ENTERED, ZONE_ENTERED, ZONE_LEFT, ZONE_MISSION_ENDED, LEVEL_UP, PLAYER_LOGOUT,
 					QUEST_TIMER_ENDED, NPC_PROXIMITY, ESCORT_REACHED_TARGET, ESCORT_LOST_TARGET -> RoutingPolicy.BROADCAST;
 				case RANKED_PLAYER_KILL, DREDGION_SETTLED, NPC_AGGRO_LISTED -> RoutingPolicy.BROADCAST;
-				case WINDSTREAM_ENTERED, FLYING_RING_PASSED -> RoutingPolicy.BROADCAST;
+				case WINDSTREAM_ENTERED, FLYING_RING_PASSED, SKILL_USED -> RoutingPolicy.BROADCAST;
 		};
+	}
+
+	/** 区分当前两个服务端 skill-use 分发入口。 / Distinguishes the two current server skill-use dispatch entry points. */
+	enum SkillUseSource {
+		/** PlayerController 完成限制检查并接受使用请求。 / PlayerController accepted the use request after restriction checks. */
+		CONTROLLER_ACCEPTED,
+		/** Skill 执行完必要 action 后发出执行信号。 / Skill emitted an execution signal after required actions. */
+		SKILL_ACTIONS_APPLIED
 	}
 
 	/**
@@ -682,6 +691,33 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		@Override
 		public int targetId() {
 			return worldId;
+		}
+	}
+
+	/** 表示只由技能服务签发并带稳定 use ID 的技能使用信号。 / Represents a skill-use signal issued only by the skill service with a stable use id. */
+	record SkillUsedEvent(String eventId, int playerId, long occurredAt, long serverUseId, int skillId, int skillLevel,
+			int targetObjectId, int worldId, int instanceId, SkillUseSource source, boolean serverExecutionAccepted)
+			implements QuestGraphEvent {
+		/** 校验技能、对象、世界及服务端执行 authority。 / Validates skill, object, world, and server-execution authority. */
+		public SkillUsedEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateWorldInstance(worldId, instanceId);
+			if (serverUseId <= 0 || skillId <= 0 || skillLevel <= 0 || targetObjectId < 0 || source == null
+					|| !serverExecutionAccepted) {
+				throw new IllegalArgumentException("Skill-use authority snapshot is invalid");
+			}
+		}
+
+		/** 返回 SKILL_USED 类型。 / Returns the SKILL_USED type. */
+		@Override
+		public EventType type() {
+			return EventType.SKILL_USED;
+		}
+
+		/** 返回技能模板标识作为广播路由键。 / Returns the skill-template identifier as the broadcast route key. */
+		@Override
+		public int targetId() {
+			return skillId;
 		}
 	}
 

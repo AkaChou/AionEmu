@@ -72,7 +72,16 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		CRAFT_FAILED,
 		NPC_AGGRO_LISTED,
 		WINDSTREAM_ENTERED,
-		FLYING_RING_PASSED
+		FLYING_RING_PASSED,
+		SKILL_USED
+	}
+
+	/** 定义 skill-use owner 对两个服务端入口的重复处理策略。 / Defines how a skill-use owner handles duplicate server entry points. */
+	public enum SkillDuplicatePolicy {
+		/** 保留每个服务端入口，匹配手写 Handler 当前行为。 / Preserves every server entry point for current handwritten Handler parity. */
+		RAW_SOURCE,
+		/** 按旧 XML SkillUse 模板在 500ms 内拒绝同 owner 重复信号。 / Rejects same-owner duplicates within 500ms like the legacy XML SkillUse template. */
+		LEGACY_500_MILLIS
 	}
 
 	/**

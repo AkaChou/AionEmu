@@ -223,7 +223,8 @@ public final class QuestGraphData {
 				@XmlElement(name = "craft-failed", type = CraftFailedEventData.class, required = true),
 				@XmlElement(name = "npc-aggro-listed", type = NpcAggroListedEventData.class, required = true),
 				@XmlElement(name = "windstream-entered", type = WindstreamEnteredEventData.class, required = true),
-				@XmlElement(name = "flying-ring-passed", type = FlyingRingPassedEventData.class, required = true)
+				@XmlElement(name = "flying-ring-passed", type = FlyingRingPassedEventData.class, required = true),
+				@XmlElement(name = "skill-used", type = SkillUsedEventData.class, required = true)
 		})
 		private Object event;
 		/**
@@ -480,6 +481,18 @@ public final class QuestGraphData {
 		/** 静态数据中的规范飞行环名称。 / Canonical flying-ring name from static data. */
 		@XmlAttribute(name = "ring_name", required = true)
 		private String ringName;
+	}
+
+	/** 表示服务端确认的技能使用信号及 owner 重复策略。 / Represents a server-confirmed skill-use signal and its owner duplicate policy. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SkillUsedEventData {
+		/** 技能模板标识。 / Skill-template identifier. */
+		@XmlAttribute(name = "skill_id", required = true)
+		private Integer skillId;
+		/** 两个服务端入口的强类型重复策略。 / Typed duplicate policy for the two server entry points. */
+		@XmlAttribute(name = "duplicate_policy", required = true)
+		private String duplicatePolicy;
 	}
 
 	/**

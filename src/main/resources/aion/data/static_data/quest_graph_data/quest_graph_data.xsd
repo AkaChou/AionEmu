@@ -244,6 +244,18 @@
 		<xs:attribute name="ring_name" type="questGraphMovementName" use="required"/>
 	</xs:complexType>
 
+	<xs:simpleType name="questGraphSkillDuplicatePolicy">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="RAW_SOURCE"/>
+			<xs:enumeration value="LEGACY_500_MILLIS"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="questGraphSkillUsedEvent">
+		<xs:attribute name="skill_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="duplicate_policy" type="questGraphSkillDuplicatePolicy" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphQuestStatusCondition">
 		<xs:attribute name="quest_id" type="xs:positiveInteger"/>
 		<xs:attribute name="op" type="questGraphSetComparison" use="required"/>
@@ -511,6 +523,7 @@
 					<xs:element name="npc-aggro-listed" type="questGraphNpcAggroListedEvent"/>
 					<xs:element name="windstream-entered" type="questGraphWindstreamEnteredEvent"/>
 					<xs:element name="flying-ring-passed" type="questGraphFlyingRingPassedEvent"/>
+					<xs:element name="skill-used" type="questGraphSkillUsedEvent"/>
 			</xs:choice>
 			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
 			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>

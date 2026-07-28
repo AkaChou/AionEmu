@@ -26,6 +26,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.CraftFai
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcAggroListedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WindstreamEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.FlyingRingPassedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.SkillUsedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.SkillUseSource;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -68,6 +70,7 @@ public final class QuestGraphEventCodec {
 	private static final byte NPC_AGGRO_LISTED = 24;
 	private static final byte WINDSTREAM_ENTERED = 25;
 	private static final byte FLYING_RING_PASSED = 26;
+	private static final byte SKILL_USED = 27;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -257,6 +260,18 @@ public final class QuestGraphEventCodec {
 							output.writeBoolean(flyingRingPassed.planeIntersected());
 							output.writeBoolean(flyingRingPassed.intersectionPointAvailable());
 						}
+						case SkillUsedEvent skillUsed -> {
+							output.writeByte(SKILL_USED);
+							writeCommon(output, skillUsed);
+							output.writeLong(skillUsed.serverUseId());
+							output.writeInt(skillUsed.skillId());
+							output.writeInt(skillUsed.skillLevel());
+							output.writeInt(skillUsed.targetObjectId());
+							output.writeInt(skillUsed.worldId());
+							output.writeInt(skillUsed.instanceId());
+							output.writeByte(skillUsed.source().ordinal());
+							output.writeBoolean(skillUsed.serverExecutionAccepted());
+						}
 				}
 			}
 			byte[] payload = bytes.toByteArray();
@@ -322,6 +337,9 @@ public final class QuestGraphEventCodec {
 							input.readInt(), input.readInt(), input.readInt(), input.readBoolean(), input.readBoolean(), input.readBoolean());
 						case FLYING_RING_PASSED -> new FlyingRingPassedEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
 							input.readUTF(), input.readFloat(), input.readFloat(), input.readBoolean(), input.readBoolean());
+						case SKILL_USED -> new SkillUsedEvent(eventId, playerId, occurredAt, input.readLong(), input.readInt(), input.readInt(),
+							input.readInt(), input.readInt(), input.readInt(), readEnum(input, SkillUseSource.values(), "skill-use source"),
+							input.readBoolean());
 				default -> throw new IllegalArgumentException("Unknown quest graph event tag " + type);
 			};
 			if (input.read() != -1) {
@@ -354,6 +372,15 @@ public final class QuestGraphEventCodec {
 		output.writeUTF(event.eventId());
 		output.writeInt(event.playerId());
 		output.writeLong(event.occurredAt());
+	}
+
+	/** 按受控 ordinal 解码封闭枚举并拒绝未知值。 / Decodes a closed enum by controlled ordinal and rejects unknown values. */
+	private static <E extends Enum<E>> E readEnum(DataInputStream input, E[] values, String name) throws IOException {
+		int ordinal = input.readUnsignedByte();
+		if (ordinal >= values.length) {
+			throw new IllegalArgumentException("Unknown " + name + " ordinal " + ordinal);
+		}
+		return values[ordinal];
 	}
 
 	/** 写入服务端世界、实例和位置快照。 / Writes a server world, instance, and position snapshot. */

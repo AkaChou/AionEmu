@@ -19,6 +19,7 @@ import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventT
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.NPC_AGGRO_LISTED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.WINDSTREAM_ENTERED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.FLYING_RING_PASSED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.SKILL_USED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_DEATH;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_LOGOUT;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.QUEST_TIMER_ENDED;
@@ -138,6 +139,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CraftFailedEventD
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NpcAggroListedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.WindstreamEnteredEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FlyingRingPassedEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SkillUsedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
@@ -194,7 +196,7 @@ public final class QuestGraphCompiler {
 	 */
 	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
 			Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
-			Set<FlyingRingReference> flyingRings) {
+			Set<FlyingRingReference> flyingRings, Set<Integer> skillIds) {
 		/**
 		 * 复制引用集合，保证一次编译期间引用闭包稳定。
 		 * Copies reference sets so the reference closure stays stable during compilation.
@@ -208,6 +210,7 @@ public final class QuestGraphCompiler {
 			movieIds = Set.copyOf(movieIds);
 			windstreamRoutes = Set.copyOf(windstreamRoutes);
 			flyingRings = Set.copyOf(flyingRings);
+			skillIds = Set.copyOf(skillIds);
 		}
 
 		/**
@@ -216,7 +219,14 @@ public final class QuestGraphCompiler {
 		 */
 		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
 				Set<String> zoneNames, Set<Integer> movieIds) {
-			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of());
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), Set.of());
+		}
+
+		/** 创建带 movement 但不声明 skill 引用的兼容集合；skill XML 仍会失败关闭。 / Creates references with movement but no skills; skill XML still fails closed. */
+		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
+				Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
+				Set<FlyingRingReference> flyingRings) {
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, Set.of());
 		}
 	}
 
@@ -636,6 +646,19 @@ public final class QuestGraphCompiler {
 					+ worldId + '/' + ringName);
 			}
 			return new Event(FLYING_RING_PASSED, worldId, ringName);
+		}
+		if (source instanceof SkillUsedEventData skillUsed) {
+			Integer skillId = skillUsed.getSkillId();
+			if (skillId == null || skillId <= 0 || !references.skillIds().contains(skillId)) {
+				throw new IllegalArgumentException("Quest " + questId + " skill-used references missing skill " + skillId);
+			}
+			CompiledQuestGraph.SkillDuplicatePolicy duplicatePolicy;
+			try {
+				duplicatePolicy = CompiledQuestGraph.SkillDuplicatePolicy.valueOf(skillUsed.getDuplicatePolicy());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " skill-used has invalid duplicate policy", e);
+			}
+			return new Event(SKILL_USED, skillId, duplicatePolicy.name());
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
 	}

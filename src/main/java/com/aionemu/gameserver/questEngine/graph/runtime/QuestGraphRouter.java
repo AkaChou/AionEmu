@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SkillDuplicatePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Propagation;
@@ -32,6 +34,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.CraftFai
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcAggroListedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WindstreamEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.FlyingRingPassedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.SkillUsedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -43,6 +46,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneMiss
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphSkillSignalBridge.DeduplicationGate;
 
 /**
  * 使用编译期事件索引按固定策略路由不可变任务图事件。
@@ -51,13 +55,20 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 public final class QuestGraphRouter {
 
 	private final CompiledQuestGraphData graphData;
+	private final DeduplicationGate skillDeduplication;
 
 	/**
 	 * 创建只读任务图路由器。
 	 * Creates a read-only quest graph router.
 	 */
 	public QuestGraphRouter(CompiledQuestGraphData graphData) {
+		this(graphData, new DeduplicationGate());
+	}
+
+	/** 创建使用显式 skill-use 去重状态的只读路由器。 / Creates a read-only router with explicit skill-use deduplication state. */
+	public QuestGraphRouter(CompiledQuestGraphData graphData, DeduplicationGate skillDeduplication) {
 		this.graphData = Objects.requireNonNull(graphData, "graphData");
+		this.skillDeduplication = Objects.requireNonNull(skillDeduplication, "skillDeduplication");
 	}
 
 	/**
@@ -69,10 +80,14 @@ public final class QuestGraphRouter {
 		Objects.requireNonNull(playerStates, "playerStates");
 		Objects.requireNonNull(evaluator, "evaluator");
 		List<EventRoute> routes = routes(event);
-		return switch (event.routingPolicy()) {
+		DispatchResult result = switch (event.routingPolicy()) {
 			case EXCLUSIVE -> dispatchExclusive(event, playerStates, routes, evaluator);
 			case BROADCAST -> dispatchBroadcast(event, playerStates, routes, evaluator);
 		};
+		if (event instanceof PlayerLogoutEvent) {
+			skillDeduplication.clearPlayer(event.playerId());
+		}
+		return result;
 	}
 
 	/**
@@ -164,6 +179,17 @@ public final class QuestGraphRouter {
 		if (!route.nodeId().equals(nodeId) || !matches(event, route)) {
 			return Status.NO_MATCH;
 		}
+		if (event instanceof SkillUsedEvent skillUsed) {
+			try {
+				SkillDuplicatePolicy policy = SkillDuplicatePolicy.valueOf(route.transition().event().qualifier());
+				QuestStatus questStatus = state == null ? QuestStatus.NONE : state.getQuestStatus();
+				if (!skillDeduplication.allow(route.questId(), questStatus, policy, skillUsed)) {
+					return Status.NO_MATCH;
+				}
+			} catch (RuntimeException e) {
+				return Status.FAILED;
+			}
+		}
 		try {
 			return Objects.requireNonNull(evaluator.apply(new Match(event, graph, route, state)), "evaluator result");
 		} catch (RuntimeException e) {
@@ -212,6 +238,7 @@ public final class QuestGraphRouter {
 					Integer.toString(windstreamEntered.teleportId()), route);
 				case FlyingRingPassedEvent flyingRingPassed -> matchesQualifiedTarget(flyingRingPassed,
 					flyingRingPassed.ringName(), route);
+				case SkillUsedEvent skillUsed -> matchesTarget(skillUsed, route);
 			};
 	}
 

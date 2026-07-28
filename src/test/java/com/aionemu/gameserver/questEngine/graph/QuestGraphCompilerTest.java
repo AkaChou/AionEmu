@@ -33,7 +33,7 @@ class QuestGraphCompilerTest {
 	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
 			Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"), Set.of(913),
 			Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
-			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")));
+			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832));
 
 	@TempDir
 	Path tempDir;
@@ -427,6 +427,33 @@ class QuestGraphCompilerTest {
 			flyingRing.replace("ELTNEN_AIR_BOOSTER_1", "eltnen_air_booster_1"), terminal()))));
 	}
 
+	/** 验证 skill-use 事件强制 skill 引用与显式重复策略。 / Verifies skill-use events enforce skill references and explicit duplicate policy. */
+	@Test
+	void compilerBuildsReferenceClosedSkillUseEvents() throws Exception {
+		String rawSkill = transition("skill-raw", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>",
+				"<skill-used skill_id=\"9832\" duplicate_policy=\"RAW_SOURCE\"/>");
+		CompiledQuestGraph.Event compiledRaw = load(document(graph(1, "offer", rawSkill, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().event();
+		assertEquals(CompiledQuestGraph.EventType.SKILL_USED, compiledRaw.type());
+		assertEquals(9832, compiledRaw.targetId());
+		assertEquals("RAW_SOURCE", compiledRaw.qualifier());
+
+		String legacySkill = rawSkill.replace("RAW_SOURCE", "LEGACY_500_MILLIS");
+		CompiledQuestGraph.Event compiledLegacy = load(document(graph(1, "offer", legacySkill, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().event();
+		assertEquals("LEGACY_500_MILLIS", compiledLegacy.qualifier());
+
+		QuestGraphCompiler.References withoutSkill = new QuestGraphCompiler.References(Set.of(1), Set.of(203709), Set.of(182200001),
+			Set.of(42), Set.of("TEST_ZONE"), Set.of(913), Set.of(), Set.of(), Set.of());
+		assertFailureContains(document(graph(1, "offer", rawSkill, terminal())), withoutSkill,
+			"skill-used references missing skill 9832");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			rawSkill.replace("RAW_SOURCE", "SILENT_FALLBACK"), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			rawSkill.replace(" duplicate_policy=\"RAW_SOURCE\"", ""), terminal()))));
+	}
+
 	/**
 	 * 验证 daily、weekly 与 anchored cooldown 被编译为封闭的强类型策略。
 	 * Verifies that daily, weekly, and anchored cooldown compile into closed typed policies.
@@ -631,6 +658,12 @@ class QuestGraphCompilerTest {
 		assertCauseContains(error, message);
 	}
 
+	/** 使用显式引用集合断言编译失败原因。 / Asserts a compiler failure using an explicit reference set. */
+	private void assertFailureContains(String xml, QuestGraphCompiler.References references, String message) {
+		IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> load(xml, references));
+		assertCauseContains(error, message);
+	}
+
 	private static void assertCauseContains(Throwable error, String message) {
 		for (Throwable cause = error; cause != null; cause = cause.getCause()) {
 			if (cause.getMessage() != null && cause.getMessage().contains(message)) {
@@ -648,9 +681,10 @@ class QuestGraphCompilerTest {
 		Set<Integer> questIds = new HashSet<>();
 		Set<Integer> npcIds = new HashSet<>();
 		Set<Integer> itemIds = new HashSet<>();
-			Set<Integer> titleIds = new HashSet<>();
-			Set<String> zoneNames = new HashSet<>();
-			Set<Integer> movieIds = new HashSet<>();
+		Set<Integer> titleIds = new HashSet<>();
+		Set<String> zoneNames = new HashSet<>();
+		Set<Integer> movieIds = new HashSet<>();
+		Set<Integer> skillIds = new HashSet<>();
 		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
 		inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 		inputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
@@ -664,15 +698,16 @@ class QuestGraphCompilerTest {
 					addIntegerAttribute(reader, "quest_id", questIds);
 					addIntegerAttribute(reader, "npc_id", npcIds);
 					addIntegerAttribute(reader, "item_id", itemIds);
+					addIntegerAttribute(reader, "skill_id", skillIds);
 					addIntegerAttribute(reader, "title_id", titleIds);
-						addStringAttribute(reader, "zone_name", zoneNames);
-						addIntegerAttribute(reader, "movie_id", movieIds);
+					addStringAttribute(reader, "zone_name", zoneNames);
+					addIntegerAttribute(reader, "movie_id", movieIds);
 				}
 			} finally {
 				reader.close();
 			}
 		}
-			return new QuestGraphCompiler.References(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds);
+		return new QuestGraphCompiler.References(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), skillIds);
 	}
 
 	/** 添加存在的正整数 XML 属性。 / Adds a present positive-integer XML attribute. */
