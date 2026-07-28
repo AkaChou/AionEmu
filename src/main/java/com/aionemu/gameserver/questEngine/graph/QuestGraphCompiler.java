@@ -46,18 +46,43 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.VariableData;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
+/**
+ * 将经过 XSD 校验的 XML 任务图编译为强类型、不可变且引用闭合的运行时数据。
+ * Compiles XSD-validated XML quest graphs into typed, immutable, reference-closed runtime data.
+ */
 public final class QuestGraphCompiler {
 
+	/**
+	 * 禁止实例化纯静态编译器。
+	 * Prevents instantiation of this static compiler.
+	 */
 	private QuestGraphCompiler() {
 	}
 
+	/**
+	 * 保存编译时允许引用的任务与 NPC 标识集合。
+	 * Holds the quest and NPC identifiers allowed during compilation.
+	 */
 	public record References(Set<Integer> questIds, Set<Integer> npcIds) {
+		/**
+		 * 复制引用集合，保证一次编译期间引用闭包稳定。
+		 * Copies reference sets so the reference closure stays stable during compilation.
+		 */
 		public References {
 			questIds = Set.copyOf(questIds);
 			npcIds = Set.copyOf(npcIds);
 		}
 	}
 
+	/**
+	 * 安全读取并校验 XML 文件，然后编译全部任务图。
+	 * Safely reads and validates an XML file, then compiles all quest graphs.
+	 *
+	 * @param xmlFile 任务图 XML 文件 / quest graph XML file
+	 * @param schemaFile 任务图 XSD 文件 / quest graph XSD file
+	 * @param references 可引用的任务与 NPC / allowed quest and NPC references
+	 * @return 已编译任务图数据 / compiled quest graph data
+	 */
 	public static CompiledQuestGraphData load(Path xmlFile, Path schemaFile, References references) {
 		try {
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -81,6 +106,14 @@ public final class QuestGraphCompiler {
 		}
 	}
 
+	/**
+	 * 校验 JAXB 数据的图结构、能力和引用，并生成确定性索引。
+	 * Validates JAXB graph structure, capabilities, and references, then builds a deterministic index.
+	 *
+	 * @param source JAXB 任务图数据 / JAXB quest graph data
+	 * @param references 可引用的任务与 NPC / allowed quest and NPC references
+	 * @return 已编译任务图数据 / compiled quest graph data
+	 */
 	public static CompiledQuestGraphData compile(QuestGraphData source, References references) {
 		if (source == null) {
 			throw new IllegalArgumentException("Quest graph data is missing");
@@ -99,6 +132,10 @@ public final class QuestGraphCompiler {
 		return new CompiledQuestGraphData(immutableGraphs, buildEventIndex(immutableGraphs));
 	}
 
+	/**
+	 * 按事件目标建立稳定排序的分发索引。
+	 * Builds a stably ordered dispatch index by event target.
+	 */
 	private static Map<EventKey, List<EventRoute>> buildEventIndex(Map<Integer, CompiledQuestGraph> graphs) {
 		Comparator<EventKey> keyOrder = Comparator.comparing(EventKey::type).thenComparingInt(EventKey::targetId);
 		Map<EventKey, List<EventRoute>> index = new TreeMap<>(keyOrder);
@@ -111,6 +148,10 @@ public final class QuestGraphCompiler {
 		return index;
 	}
 
+	/**
+	 * 编译并完整校验单个任务所有者的图定义。
+	 * Compiles and fully validates one quest owner's graph definition.
+	 */
 	private static CompiledQuestGraph compileGraph(GraphData source, References references) {
 		Integer questIdValue = source.getQuestId();
 		Integer version = source.getVersion();
@@ -180,6 +221,10 @@ public final class QuestGraphCompiler {
 		return new CompiledQuestGraph(questId, version, scope, source.getInitialNode(), variables, nodes);
 	}
 
+	/**
+	 * 编译任务变量并拒绝重复名称或未知类型。
+	 * Compiles quest variables and rejects duplicate names or unknown types.
+	 */
 	private static Map<String, Variable> compileVariables(int questId, List<VariableData> sourceVariables) {
 		Map<String, Variable> variables = new TreeMap<>();
 		for (VariableData source : sourceVariables) {
@@ -202,6 +247,10 @@ public final class QuestGraphCompiler {
 		return Collections.unmodifiableMap(new LinkedHashMap<>(variables));
 	}
 
+	/**
+	 * 校验整数边界和初值并生成强类型变量。
+	 * Validates integer bounds and initial value and creates a typed variable.
+	 */
 	private static IntVariable compileIntVariable(int questId, VariableData source, StateScope scope) {
 		if (source.getMin() == null || source.getMax() == null || source.getMin() > source.getMax()) {
 			throw new IllegalArgumentException("Quest " + questId + " INT variable " + source.getName() + " has an invalid range");
@@ -217,6 +266,10 @@ public final class QuestGraphCompiler {
 		}
 	}
 
+	/**
+	 * 校验布尔初值并生成强类型变量。
+	 * Validates a boolean initial value and creates a typed variable.
+	 */
 	private static BooleanVariable compileBooleanVariable(int questId, VariableData source, StateScope scope) {
 		if (source.getMin() != null || source.getMax() != null || !("true".equals(source.getInitial()) || "false".equals(source.getInitial()))) {
 			throw new IllegalArgumentException("Quest " + questId + " BOOLEAN variable " + source.getName() + " is invalid");
@@ -224,6 +277,10 @@ public final class QuestGraphCompiler {
 		return new BooleanVariable(source.getName(), scope, Boolean.parseBoolean(source.getInitial()));
 	}
 
+	/**
+	 * 将受支持的 JAXB 事件编译为强类型事件并校验目标引用。
+	 * Compiles a supported JAXB event into a typed event and validates its target reference.
+	 */
 	private static Event compileEvent(int questId, Object source, References references) {
 		if (source instanceof DialogEventData dialog) {
 			if (dialog.getNpcId() == null || dialog.getNpcId() <= 0 || dialog.getDialog() == null) {
@@ -237,6 +294,10 @@ public final class QuestGraphCompiler {
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
 	}
 
+	/**
+	 * 将受支持的 JAXB 条件编译为强类型条件。
+	 * Compiles a supported JAXB condition into a typed condition.
+	 */
 	private static Condition compileCondition(int questId, Object source) {
 		if (source instanceof QuestStatusConditionData condition) {
 			try {
@@ -248,6 +309,10 @@ public final class QuestGraphCompiler {
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported condition capability");
 	}
 
+	/**
+	 * 将受支持的 JAXB 动作编译为强类型动作。
+	 * Compiles a supported JAXB action into a typed action.
+	 */
 	private static Action compileAction(int questId, Object source) {
 		if (source instanceof StartQuestActionData) {
 			return new Action(START_QUEST);
@@ -255,6 +320,10 @@ public final class QuestGraphCompiler {
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported action capability");
 	}
 
+	/**
+	 * 证明所有节点从入口可达且至少存在一个可达终态。
+	 * Proves every node is reachable from the entry and at least one reachable terminal state exists.
+	 */
 	private static void validateReachability(int questId, String initialNode, Map<String, Node> nodes) {
 		Set<String> reachable = new HashSet<>();
 		ArrayDeque<String> pending = new ArrayDeque<>();

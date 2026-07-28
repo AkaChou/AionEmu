@@ -151,11 +151,22 @@ public class XmlDataLoader {
 		return loadStaticData(this::loadSkillData);
 	}
 
+	/**
+	 * 合并、校验并编译配置目录中的任务图数据。
+	 * Merges, validates, and compiles quest graph data from the configured data directory.
+	 *
+	 * @param references 可引用的任务与 NPC / allowed quest and NPC references
+	 * @return 已编译任务图数据 / compiled quest graph data
+	 */
 	public CompiledQuestGraphData loadQuestGraphData(References references) {
 		return loadQuestGraphData(Config.dataFile(QUEST_GRAPH_MAIN_XML_FILE), Config.cacheFile(QUEST_GRAPH_CACHE_XML_FILE),
 			Config.dataFile(QUEST_GRAPH_SCHEMA_FILE), references);
 	}
 
+	/**
+	 * 使用显式源文件、缓存和 XSD 加载任务图，供启动流程和聚焦测试复用。
+	 * Loads quest graphs from explicit source, cache, and XSD files for startup and focused tests.
+	 */
 	static CompiledQuestGraphData loadQuestGraphData(File sourceFile, File cacheFile, File schemaFile, References references) {
 		try {
 			File cacheDirectory = cacheFile.getParentFile();
