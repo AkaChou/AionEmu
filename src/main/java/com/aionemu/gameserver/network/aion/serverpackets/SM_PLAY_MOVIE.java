@@ -2,6 +2,8 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.model.gameobjects.player.MoviePlaybackAuthority;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
  * 向客户端播放过场/影片（CutScene 或 CutSceneMovie）。
@@ -61,6 +63,10 @@ public class SM_PLAY_MOVIE extends AionServerPacket {
 
 	@Override
 	protected void writeImpl(AionConnection con) {
+		Player player = con.getActivePlayer();
+		if (player != null && MoviePlaybackAuthority.isValidMovieId(movieId)) {
+			player.getMoviePlaybackAuthority().begin(movieId, System.currentTimeMillis());
+		}
 		writeC(type);
 		writeD(objectId);
 		writeD(id);

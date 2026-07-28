@@ -208,9 +208,13 @@ public final class QuestGraphData {
 			@XmlElement(name = "item-equipped", type = ItemEquippedEventData.class, required = true),
 			@XmlElement(name = "house-item-use", type = HouseItemUseEventData.class, required = true),
 			@XmlElement(name = "world-entered", type = WorldEnteredEventData.class, required = true),
-			@XmlElement(name = "zone-entered", type = ZoneEnteredEventData.class, required = true),
-			@XmlElement(name = "zone-left", type = ZoneLeftEventData.class, required = true),
-			@XmlElement(name = "zone-mission-ended", type = ZoneMissionEndedEventData.class, required = true)
+				@XmlElement(name = "zone-entered", type = ZoneEnteredEventData.class, required = true),
+				@XmlElement(name = "zone-left", type = ZoneLeftEventData.class, required = true),
+				@XmlElement(name = "zone-mission-ended", type = ZoneMissionEndedEventData.class, required = true),
+				@XmlElement(name = "level-up", type = LevelUpEventData.class, required = true),
+				@XmlElement(name = "player-logout", type = PlayerLogoutEventData.class, required = true),
+				@XmlElement(name = "quest-timer-ended", type = QuestTimerEndedEventData.class, required = true),
+				@XmlElement(name = "movie-ended", type = MovieEndedEventData.class, required = true)
 		})
 		private Object event;
 		/**
@@ -364,6 +368,34 @@ public final class QuestGraphData {
 	/** 表示向当前 graph owner 定向投递的区域任务结束事件。 / Represents a zone-mission-end event targeted at the current graph owner. */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class ZoneMissionEndedEventData {
+	}
+
+	/** 表示服务端确认的玩家升级事件；路由不接受客户端参数。 / Represents a server-confirmed player level-up without client routing parameters. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class LevelUpEventData {
+	}
+
+	/** 表示玩家会话登出事件；路由不接受客户端参数。 / Represents a player-session logout without client routing parameters. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class PlayerLogoutEventData {
+	}
+
+	/** 表示当前 graph owner 的命名任务计时器到期。 / Represents expiry of a named quest timer owned by the current graph. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class QuestTimerEndedEventData {
+		/** 与强类型 deadline 状态对应的计时器名称。 / Timer name corresponding to typed deadline state. */
+		@XmlAttribute(required = true)
+		private String timer;
+	}
+
+	/** 表示客户端对服务端已发影片的权威结束确认。 / Represents an authoritative completion of a server-issued movie. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class MovieEndedEventData {
+		/** 影片协议标识。 / Movie protocol identifier. */
+		@XmlAttribute(name = "movie_id", required = true)
+		private Integer movieId;
 	}
 
 	/**

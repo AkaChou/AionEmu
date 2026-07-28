@@ -59,7 +59,11 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		WORLD_ENTERED,
 		ZONE_ENTERED,
 		ZONE_LEFT,
-		ZONE_MISSION_ENDED
+		ZONE_MISSION_ENDED,
+		LEVEL_UP,
+		PLAYER_LOGOUT,
+		QUEST_TIMER_ENDED,
+		MOVIE_ENDED
 	}
 
 	/**

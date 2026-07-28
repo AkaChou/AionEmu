@@ -21,7 +21,11 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemObta
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.LevelUpEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RoutingPolicy;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneEnteredEvent;
@@ -171,9 +175,13 @@ public final class QuestGraphRouter {
 			case HouseItemUseEvent houseItemUse -> matchesTarget(houseItemUse, route);
 			case WorldEnteredEvent worldEntered -> matchesTarget(worldEntered, route);
 			case ZoneEnteredEvent zoneEntered -> matchesQualifiedTarget(zoneEntered, zoneEntered.zoneName(), route);
-			case ZoneLeftEvent zoneLeft -> matchesQualifiedTarget(zoneLeft, zoneLeft.zoneName(), route);
-			case ZoneMissionEndedEvent zoneMissionEnded -> matchesTarget(zoneMissionEnded, route);
-		};
+				case ZoneLeftEvent zoneLeft -> matchesQualifiedTarget(zoneLeft, zoneLeft.zoneName(), route);
+				case ZoneMissionEndedEvent zoneMissionEnded -> matchesTarget(zoneMissionEnded, route);
+				case LevelUpEvent levelUp -> matchesTarget(levelUp, route);
+				case PlayerLogoutEvent playerLogout -> matchesTarget(playerLogout, route);
+				case QuestTimerEndedEvent timerEnded -> matchesQualifiedTarget(timerEnded, timerEnded.timer(), route);
+				case MovieEndedEvent movieEnded -> matchesTarget(movieEnded, route);
+			};
 	}
 
 	/** 校验无额外 XML qualifier 的目标事件。 / Matches a target event without an additional XML qualifier. */

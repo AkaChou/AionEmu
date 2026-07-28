@@ -195,7 +195,7 @@ class XmlDataLoaderTest {
 		Path cache = tempDir.resolve("cache/quest_graph_data.xml");
 
 		var data = XmlDataLoader.loadQuestGraphData(source.toFile(), cache.toFile(), schema.toFile(),
-			new QuestGraphCompiler.References(Set.of(), Set.of(), Set.of(), Set.of(), Set.of()));
+			new QuestGraphCompiler.References(Set.of(), Set.of(), Set.of(), Set.of(), Set.of(), Set.of()));
 
 		assertTrue(data.graphs().isEmpty());
 		assertTrue(Files.exists(cache));
@@ -213,7 +213,7 @@ class XmlDataLoaderTest {
 		assertThrows(IllegalStateException.class, () -> XmlDataLoader.loadQuestGraphData(source.toFile(),
 			tempDir.resolve("cache/invalid.xml").toFile(),
 			Path.of("src/main/resources/aion/data/static_data/quest_graph_data/quest_graph_data.xsd").toFile(),
-			new QuestGraphCompiler.References(Set.of(), Set.of(), Set.of(), Set.of(), Set.of())));
+				new QuestGraphCompiler.References(Set.of(), Set.of(), Set.of(), Set.of(), Set.of(), Set.of())));
 	}
 
 	@Test

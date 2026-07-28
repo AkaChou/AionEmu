@@ -8,7 +8,11 @@ import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventT
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ITEM_USE;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL_IN_WORLD;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.LEVEL_UP;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.MOVIE_ENDED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_DEATH;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_LOGOUT;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.QUEST_TIMER_ENDED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.WORLD_ENTERED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ZONE_ENTERED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ZONE_LEFT;
@@ -114,6 +118,8 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GiveQuestItemActi
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillInWorldEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.LevelUpEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.MovieEndedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
@@ -121,12 +127,14 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerGenderCondi
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerEquippedConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerInventoryConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerDeathEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerLogoutEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerLevelConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerRaceConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerTitleConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestCompletionCountConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestCollectItemsConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestRepeatAvailableConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestTimerEndedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestRewardConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestStatusConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestVariableConditionData;
@@ -163,11 +171,11 @@ public final class QuestGraphCompiler {
 	}
 
 	/**
-	 * 保存编译时允许引用的任务、NPC、物品、称号和区域标识集合。
-	 * Holds the quest, NPC, item, title, and zone identifiers allowed during compilation.
+	 * 保存编译时允许引用的任务、NPC、物品、称号、区域和影片标识集合。
+	 * Holds the quest, NPC, item, title, zone, and movie identifiers allowed during compilation.
 	 */
 	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
-			Set<String> zoneNames) {
+			Set<String> zoneNames, Set<Integer> movieIds) {
 		/**
 		 * 复制引用集合，保证一次编译期间引用闭包稳定。
 		 * Copies reference sets so the reference closure stays stable during compilation.
@@ -178,6 +186,7 @@ public final class QuestGraphCompiler {
 			itemIds = Set.copyOf(itemIds);
 			titleIds = Set.copyOf(titleIds);
 			zoneNames = Set.copyOf(zoneNames);
+			movieIds = Set.copyOf(movieIds);
 		}
 	}
 
@@ -187,7 +196,7 @@ public final class QuestGraphCompiler {
 	 *
 	 * @param xmlFile 任务图 XML 文件 / quest graph XML file
 	 * @param schemaFile 任务图 XSD 文件 / quest graph XSD file
-	 * @param references 可引用的任务、NPC、物品、称号与区域 / allowed quest, NPC, item, title, and zone references
+	 * @param references 可引用的任务、NPC、物品、称号、区域与影片 / allowed quest, NPC, item, title, zone, and movie references
 	 * @return 已编译任务图数据 / compiled quest graph data
 	 */
 	public static CompiledQuestGraphData load(Path xmlFile, Path schemaFile, References references) {
@@ -489,6 +498,25 @@ public final class QuestGraphCompiler {
 		}
 		if (source instanceof ZoneMissionEndedEventData) {
 			return new Event(ZONE_MISSION_ENDED, questId, null);
+		}
+		if (source instanceof LevelUpEventData) {
+			return new Event(LEVEL_UP, 0, null);
+		}
+		if (source instanceof PlayerLogoutEventData) {
+			return new Event(PLAYER_LOGOUT, 0, null);
+		}
+		if (source instanceof QuestTimerEndedEventData timerEnded) {
+			if (timerEnded.getTimer() == null || timerEnded.getTimer().isBlank()) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid quest-timer-ended event");
+			}
+			return new Event(QUEST_TIMER_ENDED, questId, timerEnded.getTimer());
+		}
+		if (source instanceof MovieEndedEventData movieEnded) {
+			Integer movieId = movieEnded.getMovieId();
+			if (movieId == null || movieId <= 0 || movieId > 0xFFFF || !references.movieIds().contains(movieId)) {
+				throw new IllegalArgumentException("Quest " + questId + " movie-ended references missing movie " + movieId);
+			}
+			return new Event(MOVIE_ENDED, movieId, null);
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
 	}

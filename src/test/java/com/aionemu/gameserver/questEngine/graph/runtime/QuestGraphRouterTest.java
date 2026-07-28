@@ -29,7 +29,11 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemObta
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.LevelUpEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneLeftEvent;
@@ -53,7 +57,7 @@ class QuestGraphRouterTest {
 		Path xml = tempDir.resolve("graphs.xml");
 		Files.writeString(xml, document(), StandardCharsets.UTF_8);
 		CompiledQuestGraphData data = QuestGraphCompiler.load(xml, SCHEMA,
-			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(182200001), Set.of(), Set.of("TEST_ZONE")));
+			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(182200001), Set.of(), Set.of("TEST_ZONE"), Set.of(913)));
 		router = new QuestGraphRouter(data);
 	}
 
@@ -150,6 +154,10 @@ class QuestGraphRouterTest {
 		ZoneEnteredEvent zoneEntered = new ZoneEnteredEvent("zone-entered", 7, 3010, "TEST_ZONE", 210010000, 1, 10, 20, 30);
 		ZoneLeftEvent zoneLeft = new ZoneLeftEvent("zone-left", 7, 3011, "TEST_ZONE", 210010000, 1);
 		ZoneMissionEndedEvent zoneMissionEnded = new ZoneMissionEndedEvent("zone-mission-ended", 7, 3012, 1);
+		LevelUpEvent levelUp = new LevelUpEvent("level-up", 7, 3013, 66);
+		PlayerLogoutEvent playerLogout = new PlayerLogoutEvent("player-logout", 7, 3014, 210010000, 1);
+		QuestTimerEndedEvent timerEnded = new QuestTimerEndedEvent("timer-ended", 7, 3015, 1, "QUEST_TIMER", 3015);
+		MovieEndedEvent movieEnded = new MovieEndedEvent("movie-ended", 7, 3016, 913, 4, 3000);
 		assertEquals(attack, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(attack)));
 		assertEquals(death, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(death)));
 		assertEquals(worldKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldKill)));
@@ -161,6 +169,10 @@ class QuestGraphRouterTest {
 		assertEquals(zoneEntered, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(zoneEntered)));
 		assertEquals(zoneLeft, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(zoneLeft)));
 		assertEquals(zoneMissionEnded, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(zoneMissionEnded)));
+		assertEquals(levelUp, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(levelUp)));
+		assertEquals(playerLogout, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(playerLogout)));
+		assertEquals(timerEnded, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(timerEnded)));
+		assertEquals(movieEnded, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(movieEnded)));
 
 		byte[] encoded = QuestGraphEventCodec.encode(kill);
 		byte[] unknown = Arrays.copyOf(encoded, encoded.length);
@@ -240,6 +252,38 @@ class QuestGraphRouterTest {
 		assertThrows(IllegalArgumentException.class, () -> new ZoneMissionEndedEvent("invalid", 7, 6008, 0));
 	}
 
+	/**
+	 * 验证升级与登出广播、计时器 owner/名称匹配，以及影片独占路由与权威快照。
+	 * Verifies level/logout broadcast, timer owner/name matching, and exclusive movie routing with authority snapshots.
+	 */
+	@Test
+	void lifecycleTimerAndMovieEventsUseFixedTypedRoutes() {
+		assertEquals(List.of("level-up-q2", "level-up-q1"), visited(new LevelUpEvent("level", 7, 7000, 66)));
+		assertEquals(List.of("player-logout-q2", "player-logout-q1"),
+			visited(new PlayerLogoutEvent("logout", 7, 7001, 210010000, 1)));
+		assertEquals(List.of("timer-ended-q1"),
+			visited(new QuestTimerEndedEvent("timer", 7, 7002, 1, "QUEST_TIMER", 7000)));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new QuestTimerEndedEvent("wrong-timer", 7, 7003, 1, "OTHER_TIMER", 7000),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+
+		List<Integer> movieOwners = new ArrayList<>();
+		DispatchResult movie = router.dispatch(new MovieEndedEvent("movie", 7, 7004, 913, 1, 6990),
+			new PlayerQuestGraphStateList(), match -> {
+				movieOwners.add(match.route().questId());
+				return Status.APPLIED;
+			});
+		assertEquals(List.of(2), movieOwners);
+		assertEquals(new DispatchResult(Status.APPLIED, Propagation.STOP), movie);
+		assertThrows(IllegalArgumentException.class, () -> new LevelUpEvent("invalid", 7, 7005, 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new PlayerLogoutEvent("invalid", 7, 7006, 210010000, 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new QuestTimerEndedEvent("invalid", 7, 6999, 1, "QUEST_TIMER", 7000));
+		assertThrows(IllegalArgumentException.class,
+			() -> new MovieEndedEvent("invalid", 7, 7007, 913, 0, 6990));
+	}
+
 	/** 返回广播访问的转换标识。 / Returns transition identifiers visited by a broadcast event. */
 	private List<String> visited(QuestGraphEvent event) {
 		List<String> visited = new ArrayList<>();
@@ -259,17 +303,25 @@ class QuestGraphRouterTest {
 			itemTransition("item-use-q1", 20, "item-use"), itemTransition("item-obtained-q1", 20, "item-obtained"),
 			itemTransition("item-equipped-q1", 20, "item-equipped"), itemTransition("house-item-use-q1", 20, "house-item-use"),
 			worldZoneTransition("world-entered-q1", 20, "<world-entered/>"),
-			worldZoneTransition("zone-entered-q1", 20, "<zone-entered zone_name=\"TEST_ZONE\"/>"),
-			worldZoneTransition("zone-left-q1", 20, "<zone-left zone_name=\"TEST_ZONE\"/>"),
-			worldZoneTransition("zone-mission-ended-q1", 20, "<zone-mission-ended/>"));
+				worldZoneTransition("zone-entered-q1", 20, "<zone-entered zone_name=\"TEST_ZONE\"/>"),
+				worldZoneTransition("zone-left-q1", 20, "<zone-left zone_name=\"TEST_ZONE\"/>"),
+				worldZoneTransition("zone-mission-ended-q1", 20, "<zone-mission-ended/>"),
+				worldZoneTransition("level-up-q1", 20, "<level-up/>"),
+				worldZoneTransition("player-logout-q1", 20, "<player-logout/>"),
+				worldZoneTransition("timer-ended-q1", 20, "<quest-timer-ended timer=\"QUEST_TIMER\"/>"),
+				worldZoneTransition("movie-ended-q1", 20, "<movie-ended movie_id=\"913\"/>"));
 		String questTwoTransitions = String.join("", dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5),
 			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"),
 			itemTransition("item-use-q2", 10, "item-use"), itemTransition("item-obtained-q2", 10, "item-obtained"),
 			itemTransition("house-item-use-q2", 10, "house-item-use"),
 			worldZoneTransition("world-entered-q2", 10, "<world-entered/>"),
-			worldZoneTransition("zone-entered-q2", 10, "<zone-entered zone_name=\"TEST_ZONE\"/>"),
-			worldZoneTransition("zone-left-q2", 10, "<zone-left zone_name=\"TEST_ZONE\"/>"),
-			worldZoneTransition("zone-mission-ended-q2", 10, "<zone-mission-ended/>"));
+				worldZoneTransition("zone-entered-q2", 10, "<zone-entered zone_name=\"TEST_ZONE\"/>"),
+				worldZoneTransition("zone-left-q2", 10, "<zone-left zone_name=\"TEST_ZONE\"/>"),
+				worldZoneTransition("zone-mission-ended-q2", 10, "<zone-mission-ended/>"),
+				worldZoneTransition("level-up-q2", 10, "<level-up/>"),
+				worldZoneTransition("player-logout-q2", 10, "<player-logout/>"),
+				worldZoneTransition("timer-ended-q2", 10, "<quest-timer-ended timer=\"QUEST_TIMER\"/>"),
+				worldZoneTransition("movie-ended-q2", 10, "<movie-ended movie_id=\"913\"/>"));
 		return """
 			<quest_graphs>
 				<quest_graph quest_id="1" version="1" scope="PLAYER" initial_node="start">

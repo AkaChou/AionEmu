@@ -169,6 +169,12 @@ public class Player extends Creature {
 	@Setter
 	@NonNull
 	private PlayerQuestGraphStateList questGraphStateList = new PlayerQuestGraphStateList();
+	/**
+	 * 当前客户端会话的服务端影片播放凭据；结束包只能消费一次匹配凭据。
+	 * Server movie-playback authority for the current client session; an end packet may consume one matching authority.
+	 */
+	@Getter
+	private final MoviePlaybackAuthority moviePlaybackAuthority = new MoviePlaybackAuthority();
 	private RecipeList recipeList;
 	private List<House> houses;
 	private ResponseRequester requester;

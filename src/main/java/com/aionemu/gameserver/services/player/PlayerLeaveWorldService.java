@@ -168,6 +168,7 @@ public class PlayerLeaveWorldService {
 			GameCoreGameplayServices.legionService().onLogout(player);
 		}
 		GameEngineServices.questEngine().onLogOut(new QuestEnv(null, player, 0, 0));
+		player.getMoviePlaybackAuthority().clear();
 		player.getController().delete();
 		// 重置楼层“试炼尖塔 5.6” / Reset Floor "Crucible Spire 5.6"
 		player.getCommonData().setFloor(0);

@@ -186,6 +186,24 @@
 
 	<xs:complexType name="questGraphZoneMissionEndedEvent"/>
 
+	<xs:complexType name="questGraphLevelUpEvent"/>
+
+	<xs:complexType name="questGraphPlayerLogoutEvent"/>
+
+	<xs:complexType name="questGraphQuestTimerEndedEvent">
+		<xs:attribute name="timer" type="questGraphIdentifier" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="questGraphMovieId">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="65535"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="questGraphMovieEndedEvent">
+		<xs:attribute name="movie_id" type="questGraphMovieId" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphQuestStatusCondition">
 		<xs:attribute name="quest_id" type="xs:positiveInteger"/>
 		<xs:attribute name="op" type="questGraphSetComparison" use="required"/>
@@ -437,9 +455,13 @@
 				<xs:element name="item-equipped" type="questGraphItemEquippedEvent"/>
 				<xs:element name="house-item-use" type="questGraphHouseItemUseEvent"/>
 				<xs:element name="world-entered" type="questGraphWorldEnteredEvent"/>
-				<xs:element name="zone-entered" type="questGraphZoneEnteredEvent"/>
-				<xs:element name="zone-left" type="questGraphZoneLeftEvent"/>
-				<xs:element name="zone-mission-ended" type="questGraphZoneMissionEndedEvent"/>
+					<xs:element name="zone-entered" type="questGraphZoneEnteredEvent"/>
+					<xs:element name="zone-left" type="questGraphZoneLeftEvent"/>
+					<xs:element name="zone-mission-ended" type="questGraphZoneMissionEndedEvent"/>
+					<xs:element name="level-up" type="questGraphLevelUpEvent"/>
+					<xs:element name="player-logout" type="questGraphPlayerLogoutEvent"/>
+					<xs:element name="quest-timer-ended" type="questGraphQuestTimerEndedEvent"/>
+					<xs:element name="movie-ended" type="questGraphMovieEndedEvent"/>
 			</xs:choice>
 			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
 			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>

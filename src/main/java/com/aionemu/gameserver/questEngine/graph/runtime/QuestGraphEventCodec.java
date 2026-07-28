@@ -15,7 +15,11 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemObta
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.LevelUpEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneLeftEvent;
@@ -42,6 +46,10 @@ public final class QuestGraphEventCodec {
 	private static final byte ZONE_ENTERED = 11;
 	private static final byte ZONE_LEFT = 12;
 	private static final byte ZONE_MISSION_ENDED = 13;
+	private static final byte LEVEL_UP = 14;
+	private static final byte PLAYER_LOGOUT = 15;
+	private static final byte QUEST_TIMER_ENDED = 16;
+	private static final byte MOVIE_ENDED = 17;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -128,11 +136,36 @@ public final class QuestGraphEventCodec {
 						output.writeInt(zoneLeft.worldId());
 						output.writeInt(zoneLeft.instanceId());
 					}
-					case ZoneMissionEndedEvent zoneMissionEnded -> {
-						output.writeByte(ZONE_MISSION_ENDED);
-						writeCommon(output, zoneMissionEnded);
-						output.writeInt(zoneMissionEnded.questId());
-					}
+						case ZoneMissionEndedEvent zoneMissionEnded -> {
+							output.writeByte(ZONE_MISSION_ENDED);
+							writeCommon(output, zoneMissionEnded);
+							output.writeInt(zoneMissionEnded.questId());
+						}
+						case LevelUpEvent levelUp -> {
+							output.writeByte(LEVEL_UP);
+							writeCommon(output, levelUp);
+							output.writeInt(levelUp.level());
+						}
+						case PlayerLogoutEvent playerLogout -> {
+							output.writeByte(PLAYER_LOGOUT);
+							writeCommon(output, playerLogout);
+							output.writeInt(playerLogout.worldId());
+							output.writeInt(playerLogout.instanceId());
+						}
+						case QuestTimerEndedEvent timerEnded -> {
+							output.writeByte(QUEST_TIMER_ENDED);
+							writeCommon(output, timerEnded);
+							output.writeInt(timerEnded.questId());
+							output.writeUTF(timerEnded.timer());
+							output.writeLong(timerEnded.deadlineAt());
+						}
+						case MovieEndedEvent movieEnded -> {
+							output.writeByte(MOVIE_ENDED);
+							writeCommon(output, movieEnded);
+							output.writeInt(movieEnded.movieId());
+							output.writeLong(movieEnded.playbackId());
+							output.writeLong(movieEnded.startedAt());
+						}
 				}
 			}
 			byte[] payload = bytes.toByteArray();
@@ -175,8 +208,13 @@ public final class QuestGraphEventCodec {
 						input.readFloat(), input.readFloat());
 					case ZONE_ENTERED -> new ZoneEnteredEvent(eventId, playerId, occurredAt, input.readUTF(), input.readInt(), input.readInt(),
 						input.readFloat(), input.readFloat(), input.readFloat());
-					case ZONE_LEFT -> new ZoneLeftEvent(eventId, playerId, occurredAt, input.readUTF(), input.readInt(), input.readInt());
-					case ZONE_MISSION_ENDED -> new ZoneMissionEndedEvent(eventId, playerId, occurredAt, input.readInt());
+						case ZONE_LEFT -> new ZoneLeftEvent(eventId, playerId, occurredAt, input.readUTF(), input.readInt(), input.readInt());
+						case ZONE_MISSION_ENDED -> new ZoneMissionEndedEvent(eventId, playerId, occurredAt, input.readInt());
+						case LEVEL_UP -> new LevelUpEvent(eventId, playerId, occurredAt, input.readInt());
+						case PLAYER_LOGOUT -> new PlayerLogoutEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt());
+						case QUEST_TIMER_ENDED -> new QuestTimerEndedEvent(eventId, playerId, occurredAt, input.readInt(), input.readUTF(),
+							input.readLong());
+						case MOVIE_ENDED -> new MovieEndedEvent(eventId, playerId, occurredAt, input.readInt(), input.readLong(), input.readLong());
 				default -> throw new IllegalArgumentException("Unknown quest graph event tag " + type);
 			};
 			if (input.read() != -1) {

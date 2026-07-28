@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -9,10 +10,13 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 客户端过场动画播放结束通知包，驱动任务与副本回调。
  * Client packet notifying that a cutscene/movie finished; triggers quest and instance handlers.
  */
+@Slf4j
 public class CM_PLAY_MOVIE_END extends AionClientPacket {
 	@SuppressWarnings("unused")
 	private int type;
@@ -45,6 +49,10 @@ public class CM_PLAY_MOVIE_END extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
+		if (player.getMoviePlaybackAuthority().complete(movieId, System.currentTimeMillis()).isEmpty()) {
+			log.warn(I18n.get("log.quest.movie_end_rejected", player.getObjectId(), movieId));
+			return;
+		}
 		notifyRetailAi(player, targetObjectId, movieId);
 		GameEngineServices.questEngine().onMovieEnd(new QuestEnv(null, player, 0, 0), movieId);
 		player.getPosition().getWorldMapInstance().getInstanceHandler().onPlayMovieEnd(player, movieId);

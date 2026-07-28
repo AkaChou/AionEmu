@@ -11,7 +11,8 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	QuestGraphEvent.PlayerDeathEvent, QuestGraphEvent.KillInWorldEvent, QuestGraphEvent.ItemUseEvent,
 	QuestGraphEvent.ItemObtainedEvent, QuestGraphEvent.ItemEquippedEvent, QuestGraphEvent.HouseItemUseEvent,
 	QuestGraphEvent.WorldEnteredEvent, QuestGraphEvent.ZoneEnteredEvent, QuestGraphEvent.ZoneLeftEvent,
-	QuestGraphEvent.ZoneMissionEndedEvent {
+	QuestGraphEvent.ZoneMissionEndedEvent, QuestGraphEvent.LevelUpEvent, QuestGraphEvent.PlayerLogoutEvent,
+	QuestGraphEvent.QuestTimerEndedEvent, QuestGraphEvent.MovieEndedEvent {
 
 	/**
 	 * 定义由事件类型固定的候选传播策略。
@@ -43,9 +44,10 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	 */
 	default RoutingPolicy routingPolicy() {
 		return switch (type()) {
-			case DIALOG, ITEM_USE -> RoutingPolicy.EXCLUSIVE;
-			case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD, ITEM_OBTAINED, ITEM_EQUIPPED, HOUSE_ITEM_USE,
-				WORLD_ENTERED, ZONE_ENTERED, ZONE_LEFT, ZONE_MISSION_ENDED -> RoutingPolicy.BROADCAST;
+				case DIALOG, ITEM_USE, MOVIE_ENDED -> RoutingPolicy.EXCLUSIVE;
+				case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD, ITEM_OBTAINED, ITEM_EQUIPPED, HOUSE_ITEM_USE,
+					WORLD_ENTERED, ZONE_ENTERED, ZONE_LEFT, ZONE_MISSION_ENDED, LEVEL_UP, PLAYER_LOGOUT,
+					QUEST_TIMER_ENDED -> RoutingPolicy.BROADCAST;
 		};
 	}
 
@@ -361,6 +363,99 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		}
 	}
 
+	/** 表示由服务端等级写入触发的升级快照。 / Represents a level-up snapshot triggered by a server-side level write. */
+	record LevelUpEvent(String eventId, int playerId, long occurredAt, int level) implements QuestGraphEvent {
+		/** 校验服务端新等级快照。 / Validates the server-side new-level snapshot. */
+		public LevelUpEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			if (level <= 0 || level > 255) {
+				throw new IllegalArgumentException("Level-up event level is invalid");
+			}
+		}
+
+		/** 返回 LEVEL_UP 类型。 / Returns the LEVEL_UP type. */
+		@Override
+		public EventType type() {
+			return EventType.LEVEL_UP;
+		}
+
+		/** 升级事件使用固定全局路由键 0。 / Level-up uses the fixed global route key zero. */
+		@Override
+		public int targetId() {
+			return 0;
+		}
+	}
+
+	/** 表示玩家离开当前服务端会话时的位置快照。 / Represents the location snapshot when a player leaves the current server session. */
+	record PlayerLogoutEvent(String eventId, int playerId, long occurredAt, int worldId, int instanceId) implements QuestGraphEvent {
+		/** 校验登出时的服务端世界与实例快照。 / Validates the server world and instance snapshot at logout. */
+		public PlayerLogoutEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateWorldInstance(worldId, instanceId);
+		}
+
+		/** 返回 PLAYER_LOGOUT 类型。 / Returns the PLAYER_LOGOUT type. */
+		@Override
+		public EventType type() {
+			return EventType.PLAYER_LOGOUT;
+		}
+
+		/** 登出事件使用固定全局路由键 0。 / Player logout uses the fixed global route key zero. */
+		@Override
+		public int targetId() {
+			return 0;
+		}
+	}
+
+	/** 表示当前任务 owner 的命名绝对 deadline 已由服务端确认到期。 / Represents server-confirmed expiry of a named absolute deadline for one quest owner. */
+	record QuestTimerEndedEvent(String eventId, int playerId, long occurredAt, int questId, String timer, long deadlineAt)
+			implements QuestGraphEvent {
+		/** 校验 owner、计时器名称和绝对 deadline。 / Validates the owner, timer name, and absolute deadline. */
+		public QuestTimerEndedEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			if (questId <= 0 || deadlineAt <= 0 || occurredAt < deadlineAt) {
+				throw new IllegalArgumentException("Quest-timer-ended owner or deadline is invalid");
+			}
+			timer = requireIdentifier(timer, "timer name");
+		}
+
+		/** 返回 QUEST_TIMER_ENDED 类型。 / Returns the QUEST_TIMER_ENDED type. */
+		@Override
+		public EventType type() {
+			return EventType.QUEST_TIMER_ENDED;
+		}
+
+		/** 返回显式目标任务 owner。 / Returns the explicit target quest owner. */
+		@Override
+		public int targetId() {
+			return questId;
+		}
+	}
+
+	/** 表示已消费服务端播放凭据的影片结束事件。 / Represents a movie completion backed by consumed server playback authority. */
+	record MovieEndedEvent(String eventId, int playerId, long occurredAt, int movieId, long playbackId, long startedAt)
+			implements QuestGraphEvent {
+		/** 校验影片协议标识和服务端播放凭据。 / Validates the movie protocol id and server playback authority. */
+		public MovieEndedEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			if (movieId <= 0 || movieId > 0xFFFF || playbackId <= 0 || startedAt <= 0 || occurredAt < startedAt) {
+				throw new IllegalArgumentException("Movie-ended authority snapshot is invalid");
+			}
+		}
+
+		/** 返回 MOVIE_ENDED 类型。 / Returns the MOVIE_ENDED type. */
+		@Override
+		public EventType type() {
+			return EventType.MOVIE_ENDED;
+		}
+
+		/** 返回影片路由标识。 / Returns the movie route identifier. */
+		@Override
+		public int targetId() {
+			return movieId;
+		}
+	}
+
 	/**
 	 * 校验所有事件共享的字段。
 	 * Validates fields shared by all events.
@@ -414,5 +509,21 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 			throw new IllegalArgumentException(label + " is missing");
 		}
 		return value;
+	}
+
+	/** 校验与 XSD questGraphIdentifier 一致的有限标识符。 / Validates a bounded identifier matching the XSD questGraphIdentifier. */
+	private static String requireIdentifier(String value, String label) {
+		requireText(value, label);
+		if (value.length() > 128 || !isAsciiLetter(value.charAt(0))
+				|| !value.chars().allMatch(character -> isAsciiLetter(character) || character >= '0' && character <= '9' || character == '_' || character == '.'
+					|| character == '-')) {
+			throw new IllegalArgumentException(label + " is not a canonical identifier");
+		}
+		return value;
+	}
+
+	/** 判断字符是否为 XSD 标识符允许的 ASCII 字母。 / Returns whether a character is an ASCII letter allowed by the XSD identifier. */
+	private static boolean isAsciiLetter(int character) {
+		return character >= 'A' && character <= 'Z' || character >= 'a' && character <= 'z';
 	}
 }
