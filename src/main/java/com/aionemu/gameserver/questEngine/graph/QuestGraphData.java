@@ -202,7 +202,11 @@ public final class QuestGraphData {
 			@XmlElement(name = "kill", type = KillEventData.class, required = true),
 			@XmlElement(name = "attack", type = AttackEventData.class, required = true),
 			@XmlElement(name = "player-death", type = PlayerDeathEventData.class, required = true),
-			@XmlElement(name = "kill-in-world", type = KillInWorldEventData.class, required = true)
+			@XmlElement(name = "kill-in-world", type = KillInWorldEventData.class, required = true),
+			@XmlElement(name = "item-use", type = ItemUseEventData.class, required = true),
+			@XmlElement(name = "item-obtained", type = ItemObtainedEventData.class, required = true),
+			@XmlElement(name = "item-equipped", type = ItemEquippedEventData.class, required = true),
+			@XmlElement(name = "house-item-use", type = HouseItemUseEventData.class, required = true)
 		})
 		private Object event;
 		/**
@@ -292,6 +296,42 @@ public final class QuestGraphData {
 		/** 世界标识；0 表示旧注册的显式 wildcard。 / World identifier; zero is the legacy explicit wildcard. */
 		@XmlAttribute(name = "world_id", required = true)
 		private Integer worldId;
+	}
+
+	/** 表示使用普通物品事件的 XML 路由参数。 / Represents XML routing parameters for a regular item-use event. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class ItemUseEventData {
+		/** 使用物品模板标识。 / Used item template identifier. */
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
+	}
+
+	/** 表示获得物品事件的 XML 路由参数。 / Represents XML routing parameters for an item-obtained event. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class ItemObtainedEventData {
+		/** 获得物品模板标识。 / Obtained item template identifier. */
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
+	}
+
+	/** 表示装备物品事件的 XML 路由参数。 / Represents XML routing parameters for an item-equipped event. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class ItemEquippedEventData {
+		/** 装备物品模板标识。 / Equipped item template identifier. */
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
+	}
+
+	/** 表示使用房屋物品事件的 XML 路由参数。 / Represents XML routing parameters for a house-item-use event. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class HouseItemUseEventData {
+		/** 使用房屋物品模板标识。 / Used house-item template identifier. */
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
 	}
 
 	/**

@@ -8,7 +8,8 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
  * Defines an immutable quest graph event that holds no game-object references.
  */
 public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, QuestGraphEvent.KillEvent, QuestGraphEvent.AttackEvent,
-	QuestGraphEvent.PlayerDeathEvent, QuestGraphEvent.KillInWorldEvent {
+	QuestGraphEvent.PlayerDeathEvent, QuestGraphEvent.KillInWorldEvent, QuestGraphEvent.ItemUseEvent,
+	QuestGraphEvent.ItemObtainedEvent, QuestGraphEvent.ItemEquippedEvent, QuestGraphEvent.HouseItemUseEvent {
 
 	/**
 	 * 定义由事件类型固定的候选传播策略。
@@ -40,8 +41,8 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	 */
 	default RoutingPolicy routingPolicy() {
 		return switch (type()) {
-			case DIALOG -> RoutingPolicy.EXCLUSIVE;
-			case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD -> RoutingPolicy.BROADCAST;
+			case DIALOG, ITEM_USE -> RoutingPolicy.EXCLUSIVE;
+			case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD, ITEM_OBTAINED, ITEM_EQUIPPED, HOUSE_ITEM_USE -> RoutingPolicy.BROADCAST;
 		};
 	}
 
@@ -179,6 +180,93 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		}
 	}
 
+	/** 表示服务器确认的普通物品使用快照。 / Represents a server-confirmed regular item-use snapshot. */
+	record ItemUseEvent(String eventId, int playerId, long occurredAt, int itemId, int itemObjectId) implements QuestGraphEvent {
+		/** 校验物品模板和实例标识。 / Validates item template and object identifiers. */
+		public ItemUseEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateItemId(itemId);
+			if (itemObjectId <= 0) {
+				throw new IllegalArgumentException("Used item object id must be positive");
+			}
+		}
+
+		/** 返回 ITEM_USE 类型。 / Returns the ITEM_USE type. */
+		@Override
+		public EventType type() {
+			return EventType.ITEM_USE;
+		}
+
+		/** 返回物品模板路由键。 / Returns the item-template route key. */
+		@Override
+		public int targetId() {
+			return itemId;
+		}
+	}
+
+	/** 表示服务器确认的获得物品事件。 / Represents a server-confirmed item-obtained event. */
+	record ItemObtainedEvent(String eventId, int playerId, long occurredAt, int itemId) implements QuestGraphEvent {
+		/** 校验物品模板标识。 / Validates the item template identifier. */
+		public ItemObtainedEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateItemId(itemId);
+		}
+
+		/** 返回 ITEM_OBTAINED 类型。 / Returns the ITEM_OBTAINED type. */
+		@Override
+		public EventType type() {
+			return EventType.ITEM_OBTAINED;
+		}
+
+		/** 返回物品模板路由键。 / Returns the item-template route key. */
+		@Override
+		public int targetId() {
+			return itemId;
+		}
+	}
+
+	/** 表示服务器确认的装备物品事件。 / Represents a server-confirmed item-equipped event. */
+	record ItemEquippedEvent(String eventId, int playerId, long occurredAt, int itemId) implements QuestGraphEvent {
+		/** 校验物品模板标识。 / Validates the item template identifier. */
+		public ItemEquippedEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateItemId(itemId);
+		}
+
+		/** 返回 ITEM_EQUIPPED 类型。 / Returns the ITEM_EQUIPPED type. */
+		@Override
+		public EventType type() {
+			return EventType.ITEM_EQUIPPED;
+		}
+
+		/** 返回物品模板路由键。 / Returns the item-template route key. */
+		@Override
+		public int targetId() {
+			return itemId;
+		}
+	}
+
+	/** 表示服务器确认的房屋物品使用事件。 / Represents a server-confirmed house-item-use event. */
+	record HouseItemUseEvent(String eventId, int playerId, long occurredAt, int itemId) implements QuestGraphEvent {
+		/** 校验房屋物品模板标识。 / Validates the house-item template identifier. */
+		public HouseItemUseEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateItemId(itemId);
+		}
+
+		/** 返回 HOUSE_ITEM_USE 类型。 / Returns the HOUSE_ITEM_USE type. */
+		@Override
+		public EventType type() {
+			return EventType.HOUSE_ITEM_USE;
+		}
+
+		/** 返回物品模板路由键。 / Returns the item-template route key. */
+		@Override
+		public int targetId() {
+			return itemId;
+		}
+	}
+
 	/**
 	 * 校验所有事件共享的字段。
 	 * Validates fields shared by all events.
@@ -187,6 +275,13 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		requireText(eventId, "event id");
 		if (playerId <= 0 || occurredAt <= 0) {
 			throw new IllegalArgumentException("Event player id and occurrence time must be positive");
+		}
+	}
+
+	/** 校验事件中的物品模板标识。 / Validates an event item-template identifier. */
+	private static void validateItemId(int itemId) {
+		if (itemId <= 0) {
+			throw new IllegalArgumentException("Event item id must be positive");
 		}
 	}
 

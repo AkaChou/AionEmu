@@ -51,7 +51,11 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		KILL,
 		ATTACK,
 		PLAYER_DEATH,
-		KILL_IN_WORLD
+		KILL_IN_WORLD,
+		ITEM_USE,
+		ITEM_OBTAINED,
+		ITEM_EQUIPPED,
+		HOUSE_ITEM_USE
 	}
 
 	/**
@@ -274,7 +278,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * 表示已类型化的任务事件及其目标参数。
 	 * Represents a typed quest event and its target parameters.
 	 */
-	public record Event(EventType type, int npcId, String dialog) {
+	public record Event(EventType type, int targetId, String dialog) {
 	}
 
 	/**

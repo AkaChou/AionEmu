@@ -2,6 +2,10 @@ package com.aionemu.gameserver.questEngine.graph;
 
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DIALOG;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ATTACK;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.HOUSE_ITEM_USE;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ITEM_EQUIPPED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ITEM_OBTAINED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ITEM_USE;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL_IN_WORLD;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_DEATH;
@@ -38,6 +42,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariab
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CloseDialogAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EndQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DailyRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
@@ -87,6 +92,10 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AttackEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.HouseItemUseEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ItemEquippedEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ItemObtainedEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ItemUseEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddCompletionCountActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddQuestVariableActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CloseDialogActionData;
@@ -227,7 +236,7 @@ public final class QuestGraphCompiler {
 		Comparator<EventKey> keyOrder = Comparator.comparing(EventKey::type).thenComparingInt(EventKey::targetId);
 		Map<EventKey, List<EventRoute>> index = new TreeMap<>(keyOrder);
 		graphs.values().forEach(graph -> graph.nodes().values().forEach(node -> node.transitions().forEach(transition ->
-			index.computeIfAbsent(new EventKey(transition.event().type(), transition.event().npcId()), key -> new ArrayList<>())
+			index.computeIfAbsent(new EventKey(transition.event().type(), transition.event().targetId()), key -> new ArrayList<>())
 				.add(new EventRoute(graph.questId(), node.id(), transition)))));
 		Comparator<EventRoute> routeOrder = Comparator.comparingInt((EventRoute route) -> route.transition().priority())
 			.thenComparingInt(EventRoute::questId).thenComparing(route -> route.transition().id());
@@ -446,7 +455,30 @@ public final class QuestGraphCompiler {
 			}
 			return new Event(KILL_IN_WORLD, killInWorld.getWorldId(), null);
 		}
+		if (source instanceof ItemUseEventData itemUse) {
+			return compileItemEvent(questId, "item-use", ITEM_USE, itemUse.getItemId(), references);
+		}
+		if (source instanceof ItemObtainedEventData itemObtained) {
+			return compileItemEvent(questId, "item-obtained", ITEM_OBTAINED, itemObtained.getItemId(), references);
+		}
+		if (source instanceof ItemEquippedEventData itemEquipped) {
+			return compileItemEvent(questId, "item-equipped", ITEM_EQUIPPED, itemEquipped.getItemId(), references);
+		}
+		if (source instanceof HouseItemUseEventData houseItemUse) {
+			return compileItemEvent(questId, "house-item-use", HOUSE_ITEM_USE, houseItemUse.getItemId(), references);
+		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
+	}
+
+	/**
+	 * 编译以物品模板为路由键的事件并强制引用闭包。
+	 * Compiles an item-template-routed event and enforces reference closure.
+	 */
+	private static Event compileItemEvent(int questId, String eventName, EventType type, Integer itemId, References references) {
+		if (itemId == null || itemId <= 0 || !references.itemIds().contains(itemId)) {
+			throw new IllegalArgumentException("Quest " + questId + ' ' + eventName + " references missing item " + itemId);
+		}
+		return new Event(type, itemId, null);
 	}
 
 	/**

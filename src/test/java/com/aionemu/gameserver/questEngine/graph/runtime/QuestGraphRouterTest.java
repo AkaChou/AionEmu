@@ -23,6 +23,10 @@ import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Propagati
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.AttackEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.HouseItemUseEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemEquippedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemObtainedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
@@ -45,7 +49,7 @@ class QuestGraphRouterTest {
 		Path xml = tempDir.resolve("graphs.xml");
 		Files.writeString(xml, document(), StandardCharsets.UTF_8);
 		CompiledQuestGraphData data = QuestGraphCompiler.load(xml, SCHEMA,
-			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(), Set.of()));
+			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(182200001), Set.of()));
 		router = new QuestGraphRouter(data);
 	}
 
@@ -134,9 +138,17 @@ class QuestGraphRouterTest {
 		AttackEvent attack = new AttackEvent("attack", 7, 3002, 100, 40, 100);
 		PlayerDeathEvent death = new PlayerDeathEvent("death", 7, 3003);
 		KillInWorldEvent worldKill = new KillInWorldEvent("world-kill", 7, 3004, 400010000, 8, 65);
+		ItemUseEvent itemUse = new ItemUseEvent("item-use", 7, 3005, 182200001, 5001);
+		ItemObtainedEvent itemObtained = new ItemObtainedEvent("item-obtained", 7, 3006, 182200001);
+		ItemEquippedEvent itemEquipped = new ItemEquippedEvent("item-equipped", 7, 3007, 182200001);
+		HouseItemUseEvent houseItemUse = new HouseItemUseEvent("house-item-use", 7, 3008, 182200001);
 		assertEquals(attack, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(attack)));
 		assertEquals(death, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(death)));
 		assertEquals(worldKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldKill)));
+		assertEquals(itemUse, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(itemUse)));
+		assertEquals(itemObtained, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(itemObtained)));
+		assertEquals(itemEquipped, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(itemEquipped)));
+		assertEquals(houseItemUse, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(houseItemUse)));
 
 		byte[] encoded = QuestGraphEventCodec.encode(kill);
 		byte[] unknown = Arrays.copyOf(encoded, encoded.length);
@@ -162,6 +174,34 @@ class QuestGraphRouterTest {
 		assertThrows(IllegalArgumentException.class, () -> new KillInWorldEvent("world", 7, 4004, 1, 7, 65));
 	}
 
+	/**
+	 * 验证物品使用采用旧 HandlerResult 独占语义，其余 item/housing 事件固定广播。
+	 * Verifies legacy HandlerResult exclusivity for item use and fixed broadcast for other item/housing events.
+	 */
+	@Test
+	void itemAndHousingEventsUseFixedTypedRoutes() {
+		List<Integer> visited = new ArrayList<>();
+		DispatchResult itemUse = router.dispatch(new ItemUseEvent("item-use", 7, 5000, 182200001, 5001),
+			new PlayerQuestGraphStateList(), match -> {
+				visited.add(match.route().questId());
+				return match.route().questId() == 2 ? Status.NO_MATCH : Status.APPLIED;
+			});
+		assertEquals(List.of(2, 1), visited);
+		assertEquals(new DispatchResult(Status.APPLIED, Propagation.STOP), itemUse);
+
+		assertEquals(List.of("item-obtained-q2", "item-obtained-q1"),
+			visited(new ItemObtainedEvent("item-obtained", 7, 5001, 182200001)));
+		assertEquals(List.of("item-equipped-q1"),
+			visited(new ItemEquippedEvent("item-equipped", 7, 5002, 182200001)));
+		assertEquals(List.of("house-item-use-q2", "house-item-use-q1"),
+			visited(new HouseItemUseEvent("house-item-use", 7, 5003, 182200001)));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new ItemUseEvent("missing-item", 7, 5004, 182200002, 5002),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+		assertThrows(IllegalArgumentException.class, () -> new ItemUseEvent("invalid", 7, 5005, 182200001, 0));
+		assertThrows(IllegalArgumentException.class, () -> new ItemObtainedEvent("invalid", 7, 5006, 0));
+	}
+
 	/** 返回广播访问的转换标识。 / Returns transition identifiers visited by a broadcast event. */
 	private List<String> visited(QuestGraphEvent event) {
 		List<String> visited = new ArrayList<>();
@@ -184,11 +224,18 @@ class QuestGraphRouterTest {
 						%s
 						%s
 						%s
+						%s
+						%s
+						%s
+						%s
 					</node>
 					<node id="done" terminal="true"/>
 				</quest_graph>
 				<quest_graph quest_id="2" version="1" scope="PLAYER" initial_node="start">
 					<node id="start">
+						%s
+						%s
+						%s
 						%s
 						%s
 						%s
@@ -200,8 +247,15 @@ class QuestGraphRouterTest {
 			combatTransition("attack-q1", 10, "<attack npc_id=\"100\"/>"),
 			combatTransition("death-q1", 10, "<player-death/>"),
 			combatTransition("world-exact-q1", 20, "<kill-in-world world_id=\"400010000\"/>"),
+			itemTransition("item-use-q1", 20, "item-use"),
+			itemTransition("item-obtained-q1", 20, "item-obtained"),
+			itemTransition("item-equipped-q1", 20, "item-equipped"),
+			itemTransition("house-item-use-q1", 20, "house-item-use"),
 			dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5),
-			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"));
+			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"),
+			itemTransition("item-use-q2", 10, "item-use"),
+			itemTransition("item-obtained-q2", 10, "item-obtained"),
+			itemTransition("house-item-use-q2", 10, "house-item-use"));
 	}
 
 	private static String dialogTransition(String id, int priority) {
@@ -223,5 +277,10 @@ class QuestGraphRouterTest {
 	/** 创建聚焦 combat 路由转换。 / Creates a focused combat route transition. */
 	private static String combatTransition(String id, int priority, String event) {
 		return "<transition id=\"%s\" priority=\"%d\" to=\"done\">%s</transition>".formatted(id, priority, event);
+	}
+
+	/** 创建聚焦 item/housing 路由转换。 / Creates a focused item/housing route transition. */
+	private static String itemTransition(String id, int priority, String event) {
+		return combatTransition(id, priority, "<" + event + " item_id=\"182200001\"/>");
 	}
 }

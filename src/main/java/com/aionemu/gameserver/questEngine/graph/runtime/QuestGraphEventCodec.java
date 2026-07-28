@@ -9,6 +9,10 @@ import java.io.IOException;
 
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.AttackEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.HouseItemUseEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemEquippedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemObtainedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
@@ -26,6 +30,10 @@ public final class QuestGraphEventCodec {
 	private static final byte ATTACK = 3;
 	private static final byte PLAYER_DEATH = 4;
 	private static final byte KILL_IN_WORLD = 5;
+	private static final byte ITEM_USE = 6;
+	private static final byte ITEM_OBTAINED = 7;
+	private static final byte ITEM_EQUIPPED = 8;
+	private static final byte HOUSE_ITEM_USE = 9;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -73,6 +81,27 @@ public final class QuestGraphEventCodec {
 						output.writeInt(killInWorld.victimPlayerId());
 						output.writeInt(killInWorld.victimLevel());
 					}
+					case ItemUseEvent itemUse -> {
+						output.writeByte(ITEM_USE);
+						writeCommon(output, itemUse);
+						output.writeInt(itemUse.itemId());
+						output.writeInt(itemUse.itemObjectId());
+					}
+					case ItemObtainedEvent itemObtained -> {
+						output.writeByte(ITEM_OBTAINED);
+						writeCommon(output, itemObtained);
+						output.writeInt(itemObtained.itemId());
+					}
+					case ItemEquippedEvent itemEquipped -> {
+						output.writeByte(ITEM_EQUIPPED);
+						writeCommon(output, itemEquipped);
+						output.writeInt(itemEquipped.itemId());
+					}
+					case HouseItemUseEvent houseItemUse -> {
+						output.writeByte(HOUSE_ITEM_USE);
+						writeCommon(output, houseItemUse);
+						output.writeInt(houseItemUse.itemId());
+					}
 				}
 			}
 			byte[] payload = bytes.toByteArray();
@@ -107,6 +136,10 @@ public final class QuestGraphEventCodec {
 					case ATTACK -> new AttackEvent(eventId, playerId, occurredAt, input.readInt(), input.readLong(), input.readLong());
 					case PLAYER_DEATH -> new PlayerDeathEvent(eventId, playerId, occurredAt);
 					case KILL_IN_WORLD -> new KillInWorldEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(), input.readInt());
+					case ITEM_USE -> new ItemUseEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt());
+					case ITEM_OBTAINED -> new ItemObtainedEvent(eventId, playerId, occurredAt, input.readInt());
+					case ITEM_EQUIPPED -> new ItemEquippedEvent(eventId, playerId, occurredAt, input.readInt());
+					case HOUSE_ITEM_USE -> new HouseItemUseEvent(eventId, playerId, occurredAt, input.readInt());
 				default -> throw new IllegalArgumentException("Unknown quest graph event tag " + type);
 			};
 			if (input.read() != -1) {

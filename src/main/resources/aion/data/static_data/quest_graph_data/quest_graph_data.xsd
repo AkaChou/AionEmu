@@ -150,6 +150,22 @@
 		<xs:attribute name="world_id" type="xs:nonNegativeInteger" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphItemUseEvent">
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphItemObtainedEvent">
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphItemEquippedEvent">
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphHouseItemUseEvent">
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphQuestStatusCondition">
 		<xs:attribute name="quest_id" type="xs:positiveInteger"/>
 		<xs:attribute name="op" type="questGraphSetComparison" use="required"/>
@@ -396,6 +412,10 @@
 				<xs:element name="attack" type="questGraphAttackEvent"/>
 				<xs:element name="player-death" type="questGraphPlayerDeathEvent"/>
 				<xs:element name="kill-in-world" type="questGraphKillInWorldEvent"/>
+				<xs:element name="item-use" type="questGraphItemUseEvent"/>
+				<xs:element name="item-obtained" type="questGraphItemObtainedEvent"/>
+				<xs:element name="item-equipped" type="questGraphItemEquippedEvent"/>
+				<xs:element name="house-item-use" type="questGraphHouseItemUseEvent"/>
 			</xs:choice>
 			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
 			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>

@@ -203,6 +203,34 @@ class QuestGraphCompilerTest {
 	}
 
 	/**
+	 * 验证 item/housing 事件编译为以物品模板为键的强类型 IR，并强制引用闭包。
+	 * Verifies item/housing events compile into item-template-keyed typed IR with reference closure.
+	 */
+	@Test
+	void compilerBuildsTypedItemAndHousingEvents() throws Exception {
+		List<String> elements = List.of("item-use", "item-obtained", "item-equipped", "house-item-use");
+		List<CompiledQuestGraph.EventType> types = List.of(CompiledQuestGraph.EventType.ITEM_USE,
+			CompiledQuestGraph.EventType.ITEM_OBTAINED, CompiledQuestGraph.EventType.ITEM_EQUIPPED,
+			CompiledQuestGraph.EventType.HOUSE_ITEM_USE);
+		for (int i = 0; i < elements.size(); i++) {
+			String event = "<" + elements.get(i) + " item_id=\"182200001\"/>";
+			String source = transition("item-event", 10, "done")
+				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", event);
+			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
+				.nodes().get("offer").transitions().getFirst().event();
+			assertEquals(types.get(i), compiled.type());
+			assertEquals(182200001, compiled.targetId());
+		}
+
+		String missingReference = transition("item-event", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<item-use item_id=\"182200002\"/>");
+		assertFailureContains(document(graph(1, "offer", missingReference, terminal())),
+			"item-use references missing item 182200002");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			missingReference.replace(" item_id=\"182200002\"", ""), terminal()))));
+	}
+
+	/**
 	 * 验证 daily、weekly 与 anchored cooldown 被编译为封闭的强类型策略。
 	 * Verifies that daily, weekly, and anchored cooldown compile into closed typed policies.
 	 */

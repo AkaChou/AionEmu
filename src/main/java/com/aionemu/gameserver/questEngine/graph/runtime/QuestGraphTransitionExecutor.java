@@ -860,7 +860,7 @@ public final class QuestGraphTransitionExecutor {
 	 * Verifies that a recovered event exactly matches the compiled transition event.
 	 */
 	private static boolean matches(QuestGraphEvent event, Event expected) {
-		if (event.type() != expected.type() || event.targetId() != expected.npcId()) {
+		if (event.type() != expected.type() || event.targetId() != expected.targetId()) {
 			return false;
 		}
 		return !(event instanceof QuestGraphEvent.DialogEvent dialog) || Objects.equals(dialog.dialog(), expected.dialog());

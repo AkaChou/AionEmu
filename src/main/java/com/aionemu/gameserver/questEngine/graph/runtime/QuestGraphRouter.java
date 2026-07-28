@@ -15,6 +15,10 @@ import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Propagati
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.AttackEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.HouseItemUseEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemEquippedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemObtainedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
@@ -147,17 +151,26 @@ public final class QuestGraphRouter {
 	private static boolean matches(QuestGraphEvent event, EventRoute route) {
 		return switch (event) {
 			case DialogEvent dialog -> route.transition().event().type() == dialog.type()
-				&& route.transition().event().npcId() == dialog.npcId()
+				&& route.transition().event().targetId() == dialog.npcId()
 				&& route.transition().event().dialog().equals(dialog.dialog());
 			case KillEvent kill -> route.transition().event().type() == kill.type()
-				&& route.transition().event().npcId() == kill.npcId();
+				&& route.transition().event().targetId() == kill.npcId();
 			case AttackEvent attack -> route.transition().event().type() == attack.type()
-				&& route.transition().event().npcId() == attack.npcId();
+				&& route.transition().event().targetId() == attack.npcId();
 			case PlayerDeathEvent death -> route.transition().event().type() == death.type()
-				&& route.transition().event().npcId() == 0;
+				&& route.transition().event().targetId() == 0;
 			case KillInWorldEvent killInWorld -> route.transition().event().type() == killInWorld.type()
-				&& (route.transition().event().npcId() == killInWorld.worldId() || route.transition().event().npcId() == 0);
+				&& (route.transition().event().targetId() == killInWorld.worldId() || route.transition().event().targetId() == 0);
+			case ItemUseEvent itemUse -> matchesTarget(itemUse, route);
+			case ItemObtainedEvent itemObtained -> matchesTarget(itemObtained, route);
+			case ItemEquippedEvent itemEquipped -> matchesTarget(itemEquipped, route);
+			case HouseItemUseEvent houseItemUse -> matchesTarget(houseItemUse, route);
 		};
+	}
+
+	/** 校验无额外 XML qualifier 的目标事件。 / Matches a target event without an additional XML qualifier. */
+	private static boolean matchesTarget(QuestGraphEvent event, EventRoute route) {
+		return route.transition().event().type() == event.type() && route.transition().event().targetId() == event.targetId();
 	}
 
 	/**
