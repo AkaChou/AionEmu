@@ -103,6 +103,7 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_TOLL_INFO;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.conquerors.Conqueror;
@@ -125,6 +126,10 @@ import com.aionemu.gameserver.utils.rates.RegularRates;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 import java.util.LinkedHashMap;
 
@@ -156,6 +161,14 @@ public class Player extends Creature {
 	private PrivateStore store;
 	private TitleList titleList;
 	private QuestStateList questStateList;
+	/**
+	 * 玩家独立任务图状态；旧任务 Handler 仍使用 questStateList，直到 owner 原子切换。
+	 * Independent player quest graph state; legacy quest handlers keep using questStateList until atomic owner cutover.
+	 */
+	@Getter
+	@Setter
+	@NonNull
+	private PlayerQuestGraphStateList questGraphStateList = new PlayerQuestGraphStateList();
 	private RecipeList recipeList;
 	private List<House> houses;
 	private ResponseRequester requester;

@@ -5,6 +5,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerQuestGraphStateDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
@@ -40,6 +41,7 @@ class GeneralUpdateTask implements Runnable {
 				DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
 				DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player);
 				DAOManager.getDAO(PlayerQuestListDAO.class).store(player);
+				DAOManager.getDAO(PlayerQuestGraphStateDAO.class).store(player);
 				DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
 				DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
 				for (House house : player.getHouses())

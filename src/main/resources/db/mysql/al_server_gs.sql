@@ -2037,6 +2037,38 @@ LOCK TABLES `player_quests` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `player_quest_graph_states`
+--
+
+DROP TABLE IF EXISTS `player_quest_graph_states`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `player_quest_graph_states` (
+  `player_id` int(11) NOT NULL,
+  `quest_id` int(10) unsigned NOT NULL,
+  `definition_version` int(10) unsigned NOT NULL,
+  `revision` bigint(20) unsigned NOT NULL,
+  `node_id` varchar(128) NOT NULL,
+  `lifecycle` varchar(16) NOT NULL,
+  `instance_run_id` bigint(20) unsigned DEFAULT NULL,
+  `next_deadline_at` bigint(20) unsigned DEFAULT NULL,
+  `state_payload` mediumblob NOT NULL,
+  PRIMARY KEY (`player_id`,`quest_id`),
+  KEY `idx_player_quest_graph_deadline` (`next_deadline_at`),
+  CONSTRAINT `player_quest_graph_states_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `player_quest_graph_states`
+--
+
+LOCK TABLES `player_quest_graph_states` WRITE;
+/*!40000 ALTER TABLE `player_quest_graph_states` DISABLE KEYS */;
+/*!40000 ALTER TABLE `player_quest_graph_states` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `limited_quest_counters`
 --
 

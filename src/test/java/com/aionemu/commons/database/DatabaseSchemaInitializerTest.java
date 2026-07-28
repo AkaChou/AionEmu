@@ -59,6 +59,19 @@ class DatabaseSchemaInitializerTest {
         assertTrue(schema.contains("PRIMARY KEY (`quest_id`)"));
     }
 
+	@Test
+	void gameServerSchemaAndExistingDatabaseMigrationIncludeQuestGraphState() throws IOException {
+		String schema = resourceText("db/mysql/al_server_gs.sql");
+
+		assertTrue(schema.contains("CREATE TABLE `player_quest_graph_states`"));
+		assertTrue(schema.contains("`definition_version` int(10) unsigned NOT NULL"));
+		assertTrue(schema.contains("`next_deadline_at` bigint(20) unsigned DEFAULT NULL"));
+		assertTrue(schema.contains("`state_payload` mediumblob NOT NULL"));
+		assertTrue(schema.contains("KEY `idx_player_quest_graph_deadline` (`next_deadline_at`)"));
+		assertTrue(DatabaseSchemaInitializer.PLAYER_QUEST_GRAPH_STATE_TABLE_SQL.contains("CREATE TABLE IF NOT EXISTS"));
+		assertTrue(DatabaseSchemaInitializer.PLAYER_QUEST_GRAPH_STATE_TABLE_SQL.contains("FOREIGN KEY (`player_id`)"));
+	}
+
     @Test
     void repairsRolledBackLunaColumnsBeforeDroppingObsoleteInstanceTables() {
         List<String> statements = DatabaseSchemaInitializer.rollbackRepairStatements(Set.of("player_id", "free_chest"));

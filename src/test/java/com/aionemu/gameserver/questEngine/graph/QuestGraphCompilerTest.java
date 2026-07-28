@@ -69,6 +69,8 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			variables().replaceFirst(" scope=\"PLAYER\"", ""),
 			transition("accept", 10, "done"), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "x".repeat(129),
+			transition("accept", 10, "done"), terminal()))));
 		assertThrows(IllegalArgumentException.class,
 			() -> load("<!DOCTYPE quest_graphs [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><quest_graphs>&xxe;</quest_graphs>"));
 	}

@@ -32,6 +32,22 @@ final class DatabaseSchemaInitializer {
         "al_server_gs", "db/mysql/al_server_gs.sql",
         "al_server_ls", "db/mysql/al_server_ls.sql"
     );
+	/** 创建玩家任务图状态表。 / Creates the player quest graph state table. */
+	static final String PLAYER_QUEST_GRAPH_STATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `al_server_gs`.`player_quest_graph_states` ("
+		+ "`player_id` INT NOT NULL, "
+		+ "`quest_id` INT UNSIGNED NOT NULL, "
+		+ "`definition_version` INT UNSIGNED NOT NULL, "
+		+ "`revision` BIGINT UNSIGNED NOT NULL, "
+		+ "`node_id` VARCHAR(128) NOT NULL, "
+		+ "`lifecycle` VARCHAR(16) NOT NULL, "
+		+ "`instance_run_id` BIGINT UNSIGNED NULL, "
+		+ "`next_deadline_at` BIGINT UNSIGNED NULL, "
+		+ "`state_payload` MEDIUMBLOB NOT NULL, "
+		+ "PRIMARY KEY (`player_id`,`quest_id`), "
+		+ "KEY `idx_player_quest_graph_deadline` (`next_deadline_at`), "
+		+ "CONSTRAINT `player_quest_graph_states_ibfk_1` FOREIGN KEY (`player_id`) "
+		+ "REFERENCES `al_server_gs`.`players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE"
+		+ ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
     private DatabaseSchemaInitializer() {
     }
@@ -66,6 +82,7 @@ final class DatabaseSchemaInitializer {
                 repairRolledBackInstanceSchema(connection, target.database());
                 migrateGodstoneProcCount(connection, target.database());
                 migrateLimitedQuestCounters(connection, target.database());
+				migratePlayerQuestGraphStates(connection, target.database());
                 migrateAccountVip(connection, target.database());
                 log.debug("Database {} already contains tables; skipping schema initialization.", target.database());
                 return;
@@ -173,6 +190,19 @@ final class DatabaseSchemaInitializer {
                 + "PRIMARY KEY (`quest_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
         }
     }
+
+	/**
+	 * 为已有游戏数据库幂等创建玩家任务图状态表。
+	 * Idempotently creates the player quest graph state table in an existing game database.
+	 */
+	private static void migratePlayerQuestGraphStates(Connection connection, String database) throws SQLException {
+		if (!"al_server_gs".equals(database)) {
+			return;
+		}
+		try (Statement statement = connection.createStatement()) {
+			statement.execute(PLAYER_QUEST_GRAPH_STATE_TABLE_SQL);
+		}
+	}
 
     private static void migrateAccountVip(Connection connection, String database) throws SQLException {
         if (!"al_server_ls".equals(database)) {

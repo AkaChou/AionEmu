@@ -3,6 +3,7 @@
 	<xs:simpleType name="questGraphIdentifier">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
 			<xs:pattern value="[A-Za-z][A-Za-z0-9_.-]*"/>
 		</xs:restriction>
 	</xs:simpleType>
