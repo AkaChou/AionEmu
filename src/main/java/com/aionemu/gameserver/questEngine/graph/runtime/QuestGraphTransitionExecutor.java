@@ -863,6 +863,11 @@ public final class QuestGraphTransitionExecutor {
 		if (event.type() != expected.type() || event.targetId() != expected.targetId()) {
 			return false;
 		}
-		return !(event instanceof QuestGraphEvent.DialogEvent dialog) || Objects.equals(dialog.dialog(), expected.dialog());
+		return switch (event) {
+			case QuestGraphEvent.DialogEvent dialog -> Objects.equals(dialog.dialog(), expected.qualifier());
+			case QuestGraphEvent.ZoneEnteredEvent zoneEntered -> Objects.equals(zoneEntered.zoneName(), expected.qualifier());
+			case QuestGraphEvent.ZoneLeftEvent zoneLeft -> Objects.equals(zoneLeft.zoneName(), expected.qualifier());
+			default -> true;
+		};
 	}
 }

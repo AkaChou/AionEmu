@@ -23,6 +23,10 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEven
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RoutingPolicy;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneEnteredEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneLeftEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneMissionEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
@@ -152,7 +156,7 @@ public final class QuestGraphRouter {
 		return switch (event) {
 			case DialogEvent dialog -> route.transition().event().type() == dialog.type()
 				&& route.transition().event().targetId() == dialog.npcId()
-				&& route.transition().event().dialog().equals(dialog.dialog());
+				&& route.transition().event().qualifier().equals(dialog.dialog());
 			case KillEvent kill -> route.transition().event().type() == kill.type()
 				&& route.transition().event().targetId() == kill.npcId();
 			case AttackEvent attack -> route.transition().event().type() == attack.type()
@@ -165,12 +169,21 @@ public final class QuestGraphRouter {
 			case ItemObtainedEvent itemObtained -> matchesTarget(itemObtained, route);
 			case ItemEquippedEvent itemEquipped -> matchesTarget(itemEquipped, route);
 			case HouseItemUseEvent houseItemUse -> matchesTarget(houseItemUse, route);
+			case WorldEnteredEvent worldEntered -> matchesTarget(worldEntered, route);
+			case ZoneEnteredEvent zoneEntered -> matchesQualifiedTarget(zoneEntered, zoneEntered.zoneName(), route);
+			case ZoneLeftEvent zoneLeft -> matchesQualifiedTarget(zoneLeft, zoneLeft.zoneName(), route);
+			case ZoneMissionEndedEvent zoneMissionEnded -> matchesTarget(zoneMissionEnded, route);
 		};
 	}
 
 	/** 校验无额外 XML qualifier 的目标事件。 / Matches a target event without an additional XML qualifier. */
 	private static boolean matchesTarget(QuestGraphEvent event, EventRoute route) {
 		return route.transition().event().type() == event.type() && route.transition().event().targetId() == event.targetId();
+	}
+
+	/** 校验预索引目标及完整 qualifier，防止字符串哈希碰撞误匹配。 / Matches a pre-indexed target and full qualifier to reject hash collisions. */
+	private static boolean matchesQualifiedTarget(QuestGraphEvent event, String qualifier, EventRoute route) {
+		return matchesTarget(event, route) && Objects.equals(route.transition().event().qualifier(), qualifier);
 	}
 
 	/**

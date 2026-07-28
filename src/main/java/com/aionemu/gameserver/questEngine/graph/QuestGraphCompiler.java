@@ -9,6 +9,10 @@ import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventT
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL_IN_WORLD;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_DEATH;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.WORLD_ENTERED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ZONE_ENTERED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ZONE_LEFT;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ZONE_MISSION_ENDED;
 
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -21,6 +25,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -96,6 +101,10 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.HouseItemUseEvent
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ItemEquippedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ItemObtainedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ItemUseEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.WorldEnteredEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ZoneEnteredEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ZoneLeftEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ZoneMissionEndedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddCompletionCountActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddQuestVariableActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CloseDialogActionData;
@@ -154,10 +163,11 @@ public final class QuestGraphCompiler {
 	}
 
 	/**
-	 * 保存编译时允许引用的任务、NPC、物品和称号标识集合。
-	 * Holds the quest, NPC, item, and title identifiers allowed during compilation.
+	 * 保存编译时允许引用的任务、NPC、物品、称号和区域标识集合。
+	 * Holds the quest, NPC, item, title, and zone identifiers allowed during compilation.
 	 */
-	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds) {
+	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
+			Set<String> zoneNames) {
 		/**
 		 * 复制引用集合，保证一次编译期间引用闭包稳定。
 		 * Copies reference sets so the reference closure stays stable during compilation.
@@ -167,6 +177,7 @@ public final class QuestGraphCompiler {
 			npcIds = Set.copyOf(npcIds);
 			itemIds = Set.copyOf(itemIds);
 			titleIds = Set.copyOf(titleIds);
+			zoneNames = Set.copyOf(zoneNames);
 		}
 	}
 
@@ -176,7 +187,7 @@ public final class QuestGraphCompiler {
 	 *
 	 * @param xmlFile 任务图 XML 文件 / quest graph XML file
 	 * @param schemaFile 任务图 XSD 文件 / quest graph XSD file
-	 * @param references 可引用的任务、NPC、物品与称号 / allowed quest, NPC, item, and title references
+	 * @param references 可引用的任务、NPC、物品、称号与区域 / allowed quest, NPC, item, title, and zone references
 	 * @return 已编译任务图数据 / compiled quest graph data
 	 */
 	public static CompiledQuestGraphData load(Path xmlFile, Path schemaFile, References references) {
@@ -207,7 +218,7 @@ public final class QuestGraphCompiler {
 	 * Validates JAXB graph structure, capabilities, and references, then builds a deterministic index.
 	 *
 	 * @param source JAXB 任务图数据 / JAXB quest graph data
-	 * @param references 可引用的任务、NPC、物品与称号 / allowed quest, NPC, item, and title references
+	 * @param references 可引用的任务、NPC、物品、称号与区域 / allowed quest, NPC, item, title, and zone references
 	 * @return 已编译任务图数据 / compiled quest graph data
 	 */
 	public static CompiledQuestGraphData compile(QuestGraphData source, References references) {
@@ -467,6 +478,18 @@ public final class QuestGraphCompiler {
 		if (source instanceof HouseItemUseEventData houseItemUse) {
 			return compileItemEvent(questId, "house-item-use", HOUSE_ITEM_USE, houseItemUse.getItemId(), references);
 		}
+		if (source instanceof WorldEnteredEventData) {
+			return new Event(WORLD_ENTERED, 0, null);
+		}
+		if (source instanceof ZoneEnteredEventData zoneEntered) {
+			return compileZoneEvent(questId, "zone-entered", ZONE_ENTERED, zoneEntered.getZoneName(), references);
+		}
+		if (source instanceof ZoneLeftEventData zoneLeft) {
+			return compileZoneEvent(questId, "zone-left", ZONE_LEFT, zoneLeft.getZoneName(), references);
+		}
+		if (source instanceof ZoneMissionEndedEventData) {
+			return new Event(ZONE_MISSION_ENDED, questId, null);
+		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
 	}
 
@@ -479,6 +502,17 @@ public final class QuestGraphCompiler {
 			throw new IllegalArgumentException("Quest " + questId + ' ' + eventName + " references missing item " + itemId);
 		}
 		return new Event(type, itemId, null);
+	}
+
+	/**
+	 * 编译以规范化区域名称为路由键的事件并强制引用闭包。
+	 * Compiles a canonical-zone-name-routed event and enforces reference closure.
+	 */
+	private static Event compileZoneEvent(int questId, String eventName, EventType type, String zoneName, References references) {
+		if (zoneName == null || !zoneName.equals(zoneName.toUpperCase(Locale.ROOT)) || !references.zoneNames().contains(zoneName)) {
+			throw new IllegalArgumentException("Quest " + questId + ' ' + eventName + " references missing zone " + zoneName);
+		}
+		return new Event(type, zoneName.hashCode(), zoneName);
 	}
 
 	/**

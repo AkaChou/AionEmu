@@ -206,7 +206,11 @@ public final class QuestGraphData {
 			@XmlElement(name = "item-use", type = ItemUseEventData.class, required = true),
 			@XmlElement(name = "item-obtained", type = ItemObtainedEventData.class, required = true),
 			@XmlElement(name = "item-equipped", type = ItemEquippedEventData.class, required = true),
-			@XmlElement(name = "house-item-use", type = HouseItemUseEventData.class, required = true)
+			@XmlElement(name = "house-item-use", type = HouseItemUseEventData.class, required = true),
+			@XmlElement(name = "world-entered", type = WorldEnteredEventData.class, required = true),
+			@XmlElement(name = "zone-entered", type = ZoneEnteredEventData.class, required = true),
+			@XmlElement(name = "zone-left", type = ZoneLeftEventData.class, required = true),
+			@XmlElement(name = "zone-mission-ended", type = ZoneMissionEndedEventData.class, required = true)
 		})
 		private Object event;
 		/**
@@ -332,6 +336,34 @@ public final class QuestGraphData {
 		/** 使用房屋物品模板标识。 / Used house-item template identifier. */
 		@XmlAttribute(name = "item_id", required = true)
 		private Integer itemId;
+	}
+
+	/** 表示玩家完成地图加载并进入世界；路由不接受客户端参数。 / Represents world entry after map load without client routing parameters. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class WorldEnteredEventData {
+	}
+
+	/** 表示进入命名区域事件的 XML 路由参数。 / Represents XML routing parameters for entering a named zone. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class ZoneEnteredEventData {
+		/** 规范化区域名称。 / Canonical zone name. */
+		@XmlAttribute(name = "zone_name", required = true)
+		private String zoneName;
+	}
+
+	/** 表示离开命名区域事件的 XML 路由参数。 / Represents XML routing parameters for leaving a named zone. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class ZoneLeftEventData {
+		/** 规范化区域名称。 / Canonical zone name. */
+		@XmlAttribute(name = "zone_name", required = true)
+		private String zoneName;
+	}
+
+	/** 表示向当前 graph owner 定向投递的区域任务结束事件。 / Represents a zone-mission-end event targeted at the current graph owner. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class ZoneMissionEndedEventData {
 	}
 
 	/**

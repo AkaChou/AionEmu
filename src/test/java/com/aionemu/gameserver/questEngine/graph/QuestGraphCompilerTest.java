@@ -31,7 +31,7 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 class QuestGraphCompilerTest {
 	private static final Path SCHEMA = Path.of("src/main/resources/aion/data/static_data/quest_graph_data/quest_graph_data.xsd");
 	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
-		Set.of(182200001), Set.of(42));
+		Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"));
 
 	@TempDir
 	Path tempDir;
@@ -231,6 +231,35 @@ class QuestGraphCompilerTest {
 	}
 
 	/**
+	 * 验证 world/zone 事件编译为固定目标或规范化区域引用，并拒绝缺失引用。
+	 * Verifies world/zone events compile to fixed targets or canonical zone references and reject missing references.
+	 */
+	@Test
+	void compilerBuildsTypedWorldAndZoneEvents() throws Exception {
+		List<String> events = List.of("<world-entered/>", "<zone-entered zone_name=\"TEST_ZONE\"/>",
+			"<zone-left zone_name=\"TEST_ZONE\"/>", "<zone-mission-ended/>");
+		List<CompiledQuestGraph.EventType> types = List.of(CompiledQuestGraph.EventType.WORLD_ENTERED,
+			CompiledQuestGraph.EventType.ZONE_ENTERED, CompiledQuestGraph.EventType.ZONE_LEFT,
+			CompiledQuestGraph.EventType.ZONE_MISSION_ENDED);
+		List<Integer> targets = List.of(0, "TEST_ZONE".hashCode(), "TEST_ZONE".hashCode(), 1);
+		for (int i = 0; i < events.size(); i++) {
+			String source = transition("world-zone-event", 10, "done")
+				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", events.get(i));
+			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
+				.nodes().get("offer").transitions().getFirst().event();
+			assertEquals(types.get(i), compiled.type());
+			assertEquals(targets.get(i), compiled.targetId());
+		}
+
+		String missingZone = transition("zone-event", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<zone-entered zone_name=\"MISSING_ZONE\"/>");
+		assertFailureContains(document(graph(1, "offer", missingZone, terminal())),
+			"zone-entered references missing zone MISSING_ZONE");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			missingZone.replace("MISSING_ZONE", "lowercase_zone"), terminal()))));
+	}
+
+	/**
 	 * 验证 daily、weekly 与 anchored cooldown 被编译为封闭的强类型策略。
 	 * Verifies that daily, weekly, and anchored cooldown compile into closed typed policies.
 	 */
@@ -335,25 +364,25 @@ class QuestGraphCompilerTest {
 
 		IllegalArgumentException missingQuest = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
-				new QuestGraphCompiler.References(Set.of(), Set.of(203709), Set.of(182200001), Set.of(42))));
+				new QuestGraphCompiler.References(Set.of(), Set.of(203709), Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"))));
 		assertCauseContains(missingQuest, "references missing quest 1");
 		IllegalArgumentException missingNpc = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
-				new QuestGraphCompiler.References(Set.of(1), Set.of(), Set.of(182200001), Set.of(42))));
+				new QuestGraphCompiler.References(Set.of(1), Set.of(), Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"))));
 		assertCauseContains(missingNpc, "references missing NPC 203709");
 		String killTransition = transition("kill", 10, "done")
 			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<kill npc_id=\"203709\"/>");
 		IllegalArgumentException missingKillNpc = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", killTransition, terminal())),
-				new QuestGraphCompiler.References(Set.of(1), Set.of(), Set.of(182200001), Set.of(42))));
+				new QuestGraphCompiler.References(Set.of(1), Set.of(), Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"))));
 		assertCauseContains(missingKillNpc, "kill references missing NPC 203709");
 		IllegalArgumentException missingTitle = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
-				new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709), Set.of(182200001), Set.of())));
+				new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709), Set.of(182200001), Set.of(), Set.of("TEST_ZONE"))));
 		assertCauseContains(missingTitle, "references missing title 42");
 		IllegalArgumentException missingItem = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
-				new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709), Set.of(), Set.of(42))));
+				new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709), Set.of(), Set.of(42), Set.of("TEST_ZONE"))));
 		assertCauseContains(missingItem, "references missing item 182200001");
 		String missingGiveItem = transition("accept", 10, "done")
 			.replace("<give-quest-item item_id=\"182200001\"", "<give-quest-item item_id=\"182200002\"");
@@ -367,7 +396,7 @@ class QuestGraphCompilerTest {
 		assertCauseContains(missingRemove, "remove action references missing item 182200002");
 		IllegalArgumentException missingPrerequisiteQuest = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
-				new QuestGraphCompiler.References(Set.of(1), Set.of(203709), Set.of(182200001), Set.of(42))));
+				new QuestGraphCompiler.References(Set.of(1), Set.of(203709), Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"))));
 		assertCauseContains(missingPrerequisiteQuest, "references missing quest 2");
 	}
 
@@ -452,6 +481,7 @@ class QuestGraphCompilerTest {
 		Set<Integer> npcIds = new HashSet<>();
 		Set<Integer> itemIds = new HashSet<>();
 		Set<Integer> titleIds = new HashSet<>();
+		Set<String> zoneNames = new HashSet<>();
 		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
 		inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 		inputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
@@ -466,12 +496,13 @@ class QuestGraphCompilerTest {
 					addIntegerAttribute(reader, "npc_id", npcIds);
 					addIntegerAttribute(reader, "item_id", itemIds);
 					addIntegerAttribute(reader, "title_id", titleIds);
+					addStringAttribute(reader, "zone_name", zoneNames);
 				}
 			} finally {
 				reader.close();
 			}
 		}
-		return new QuestGraphCompiler.References(questIds, npcIds, itemIds, titleIds);
+		return new QuestGraphCompiler.References(questIds, npcIds, itemIds, titleIds, zoneNames);
 	}
 
 	/** 添加存在的正整数 XML 属性。 / Adds a present positive-integer XML attribute. */
@@ -479,6 +510,14 @@ class QuestGraphCompilerTest {
 		String value = reader.getAttributeValue(null, name);
 		if (value != null) {
 			target.add(Integer.parseInt(value));
+		}
+	}
+
+	/** 添加存在的字符串 XML 属性。 / Adds a present string XML attribute. */
+	private static void addStringAttribute(XMLStreamReader reader, String name, Set<String> target) {
+		String value = reader.getAttributeValue(null, name);
+		if (value != null) {
+			target.add(value);
 		}
 	}
 

@@ -9,7 +9,9 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
  */
 public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, QuestGraphEvent.KillEvent, QuestGraphEvent.AttackEvent,
 	QuestGraphEvent.PlayerDeathEvent, QuestGraphEvent.KillInWorldEvent, QuestGraphEvent.ItemUseEvent,
-	QuestGraphEvent.ItemObtainedEvent, QuestGraphEvent.ItemEquippedEvent, QuestGraphEvent.HouseItemUseEvent {
+	QuestGraphEvent.ItemObtainedEvent, QuestGraphEvent.ItemEquippedEvent, QuestGraphEvent.HouseItemUseEvent,
+	QuestGraphEvent.WorldEnteredEvent, QuestGraphEvent.ZoneEnteredEvent, QuestGraphEvent.ZoneLeftEvent,
+	QuestGraphEvent.ZoneMissionEndedEvent {
 
 	/**
 	 * 定义由事件类型固定的候选传播策略。
@@ -42,7 +44,8 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	default RoutingPolicy routingPolicy() {
 		return switch (type()) {
 			case DIALOG, ITEM_USE -> RoutingPolicy.EXCLUSIVE;
-			case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD, ITEM_OBTAINED, ITEM_EQUIPPED, HOUSE_ITEM_USE -> RoutingPolicy.BROADCAST;
+			case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD, ITEM_OBTAINED, ITEM_EQUIPPED, HOUSE_ITEM_USE,
+				WORLD_ENTERED, ZONE_ENTERED, ZONE_LEFT, ZONE_MISSION_ENDED -> RoutingPolicy.BROADCAST;
 		};
 	}
 
@@ -267,6 +270,97 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		}
 	}
 
+	/** 表示服务器确认的玩家进入世界位置快照。 / Represents a server-confirmed player world-entry location snapshot. */
+	record WorldEnteredEvent(String eventId, int playerId, long occurredAt, int worldId, int instanceId, float x, float y, float z)
+		implements QuestGraphEvent {
+		/** 校验世界、实例和坐标快照。 / Validates world, instance, and coordinate snapshots. */
+		public WorldEnteredEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateLocation(worldId, instanceId, x, y, z);
+		}
+
+		/** 返回 WORLD_ENTERED 类型。 / Returns the WORLD_ENTERED type. */
+		@Override
+		public EventType type() {
+			return EventType.WORLD_ENTERED;
+		}
+
+		/** 进入世界为全局广播，使用固定路由键 0。 / World entry is globally broadcast using route key zero. */
+		@Override
+		public int targetId() {
+			return 0;
+		}
+	}
+
+	/** 表示服务器确认的玩家进入命名区域快照。 / Represents a server-confirmed player entry into a named zone. */
+	record ZoneEnteredEvent(String eventId, int playerId, long occurredAt, String zoneName, int worldId, int instanceId,
+			float x, float y, float z) implements QuestGraphEvent {
+		/** 校验区域、世界、实例和坐标快照。 / Validates zone, world, instance, and coordinate snapshots. */
+		public ZoneEnteredEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			zoneName = validateZoneName(zoneName);
+			validateLocation(worldId, instanceId, x, y, z);
+		}
+
+		/** 返回 ZONE_ENTERED 类型。 / Returns the ZONE_ENTERED type. */
+		@Override
+		public EventType type() {
+			return EventType.ZONE_ENTERED;
+		}
+
+		/** 返回区域名称的预索引键；router 仍执行完整名称匹配。 / Returns the zone pre-index key; the router still matches the full name. */
+		@Override
+		public int targetId() {
+			return zoneName.hashCode();
+		}
+	}
+
+	/** 表示服务器确认的玩家离开命名区域快照。 / Represents a server-confirmed player departure from a named zone. */
+	record ZoneLeftEvent(String eventId, int playerId, long occurredAt, String zoneName, int worldId, int instanceId)
+		implements QuestGraphEvent {
+		/** 校验区域、世界和实例快照。 / Validates zone, world, and instance snapshots. */
+		public ZoneLeftEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			zoneName = validateZoneName(zoneName);
+			validateWorldInstance(worldId, instanceId);
+		}
+
+		/** 返回 ZONE_LEFT 类型。 / Returns the ZONE_LEFT type. */
+		@Override
+		public EventType type() {
+			return EventType.ZONE_LEFT;
+		}
+
+		/** 返回区域名称的预索引键；router 仍执行完整名称匹配。 / Returns the zone pre-index key; the router still matches the full name. */
+		@Override
+		public int targetId() {
+			return zoneName.hashCode();
+		}
+	}
+
+	/** 表示服务器内部向指定任务 owner 投递的区域任务结束事件。 / Represents a server-internal zone-mission-end event for a quest owner. */
+	record ZoneMissionEndedEvent(String eventId, int playerId, long occurredAt, int questId) implements QuestGraphEvent {
+		/** 校验目标任务 owner。 / Validates the target quest owner. */
+		public ZoneMissionEndedEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			if (questId <= 0) {
+				throw new IllegalArgumentException("Zone mission target quest id must be positive");
+			}
+		}
+
+		/** 返回 ZONE_MISSION_ENDED 类型。 / Returns the ZONE_MISSION_ENDED type. */
+		@Override
+		public EventType type() {
+			return EventType.ZONE_MISSION_ENDED;
+		}
+
+		/** 返回显式目标任务 owner 路由键。 / Returns the explicit target quest-owner route key. */
+		@Override
+		public int targetId() {
+			return questId;
+		}
+	}
+
 	/**
 	 * 校验所有事件共享的字段。
 	 * Validates fields shared by all events.
@@ -282,6 +376,32 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	private static void validateItemId(int itemId) {
 		if (itemId <= 0) {
 			throw new IllegalArgumentException("Event item id must be positive");
+		}
+	}
+
+	/** 校验规范化区域名称并返回原值。 / Validates and returns a canonical zone name. */
+	private static String validateZoneName(String zoneName) {
+		if (zoneName == null || zoneName.isEmpty() || zoneName.length() > 192
+				|| !(zoneName.charAt(0) == '_' || zoneName.charAt(0) >= 'A' && zoneName.charAt(0) <= 'Z')
+				|| !zoneName.chars().allMatch(character -> character == '_' || character == '.' || character == '-'
+					|| character >= 'A' && character <= 'Z' || character >= '0' && character <= '9')) {
+			throw new IllegalArgumentException("Event zone name must be canonical uppercase text");
+		}
+		return zoneName;
+	}
+
+	/** 校验世界、实例和有限坐标。 / Validates world, instance, and finite coordinates. */
+	private static void validateLocation(int worldId, int instanceId, float x, float y, float z) {
+		validateWorldInstance(worldId, instanceId);
+		if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
+			throw new IllegalArgumentException("Event coordinates must be finite");
+		}
+	}
+
+	/** 校验服务端世界与实例标识。 / Validates server world and instance identifiers. */
+	private static void validateWorldInstance(int worldId, int instanceId) {
+		if (worldId <= 0 || instanceId <= 0) {
+			throw new IllegalArgumentException("Event world and instance ids must be positive");
 		}
 	}
 

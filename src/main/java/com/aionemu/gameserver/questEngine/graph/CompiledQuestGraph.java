@@ -55,7 +55,11 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		ITEM_USE,
 		ITEM_OBTAINED,
 		ITEM_EQUIPPED,
-		HOUSE_ITEM_USE
+		HOUSE_ITEM_USE,
+		WORLD_ENTERED,
+		ZONE_ENTERED,
+		ZONE_LEFT,
+		ZONE_MISSION_ENDED
 	}
 
 	/**
@@ -278,7 +282,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * 表示已类型化的任务事件及其目标参数。
 	 * Represents a typed quest event and its target parameters.
 	 */
-	public record Event(EventType type, int targetId, String dialog) {
+	public record Event(EventType type, int targetId, String qualifier) {
 	}
 
 	/**

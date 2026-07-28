@@ -30,6 +30,10 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseE
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneEnteredEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneLeftEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneMissionEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
@@ -49,7 +53,7 @@ class QuestGraphRouterTest {
 		Path xml = tempDir.resolve("graphs.xml");
 		Files.writeString(xml, document(), StandardCharsets.UTF_8);
 		CompiledQuestGraphData data = QuestGraphCompiler.load(xml, SCHEMA,
-			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(182200001), Set.of()));
+			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(182200001), Set.of(), Set.of("TEST_ZONE")));
 		router = new QuestGraphRouter(data);
 	}
 
@@ -142,6 +146,10 @@ class QuestGraphRouterTest {
 		ItemObtainedEvent itemObtained = new ItemObtainedEvent("item-obtained", 7, 3006, 182200001);
 		ItemEquippedEvent itemEquipped = new ItemEquippedEvent("item-equipped", 7, 3007, 182200001);
 		HouseItemUseEvent houseItemUse = new HouseItemUseEvent("house-item-use", 7, 3008, 182200001);
+		WorldEnteredEvent worldEntered = new WorldEnteredEvent("world-entered", 7, 3009, 210010000, 1, 10, 20, 30);
+		ZoneEnteredEvent zoneEntered = new ZoneEnteredEvent("zone-entered", 7, 3010, "TEST_ZONE", 210010000, 1, 10, 20, 30);
+		ZoneLeftEvent zoneLeft = new ZoneLeftEvent("zone-left", 7, 3011, "TEST_ZONE", 210010000, 1);
+		ZoneMissionEndedEvent zoneMissionEnded = new ZoneMissionEndedEvent("zone-mission-ended", 7, 3012, 1);
 		assertEquals(attack, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(attack)));
 		assertEquals(death, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(death)));
 		assertEquals(worldKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldKill)));
@@ -149,6 +157,10 @@ class QuestGraphRouterTest {
 		assertEquals(itemObtained, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(itemObtained)));
 		assertEquals(itemEquipped, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(itemEquipped)));
 		assertEquals(houseItemUse, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(houseItemUse)));
+		assertEquals(worldEntered, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldEntered)));
+		assertEquals(zoneEntered, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(zoneEntered)));
+		assertEquals(zoneLeft, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(zoneLeft)));
+		assertEquals(zoneMissionEnded, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(zoneMissionEnded)));
 
 		byte[] encoded = QuestGraphEventCodec.encode(kill);
 		byte[] unknown = Arrays.copyOf(encoded, encoded.length);
@@ -202,6 +214,32 @@ class QuestGraphRouterTest {
 		assertThrows(IllegalArgumentException.class, () -> new ItemObtainedEvent("invalid", 7, 5006, 0));
 	}
 
+	/**
+	 * 验证 world/zone 事件固定广播，zone-mission 仅路由显式目标 owner。
+	 * Verifies fixed broadcast for world/zone events and explicit owner targeting for zone-mission events.
+	 */
+	@Test
+	void worldAndZoneEventsUseServerSnapshotsAndFixedRoutes() {
+		assertEquals(List.of("world-entered-q2", "world-entered-q1"),
+			visited(new WorldEnteredEvent("world-entered", 7, 6000, 210010000, 1, 10, 20, 30)));
+		assertEquals(List.of("zone-entered-q2", "zone-entered-q1"),
+			visited(new ZoneEnteredEvent("zone-entered", 7, 6001, "TEST_ZONE", 210010000, 1, 10, 20, 30)));
+		assertEquals(List.of("zone-left-q2", "zone-left-q1"),
+			visited(new ZoneLeftEvent("zone-left", 7, 6002, "TEST_ZONE", 210010000, 1)));
+		assertEquals(List.of("zone-mission-ended-q1"),
+			visited(new ZoneMissionEndedEvent("zone-mission-ended", 7, 6003, 1)));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new ZoneMissionEndedEvent("missing-owner", 7, 6004, 3),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+		assertThrows(IllegalArgumentException.class,
+			() -> new WorldEnteredEvent("invalid", 7, 6005, 0, 1, 0, 0, 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new WorldEnteredEvent("invalid", 7, 6006, 210010000, 1, Float.NaN, 0, 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new ZoneEnteredEvent("invalid", 7, 6007, "lowercase", 210010000, 1, 0, 0, 0));
+		assertThrows(IllegalArgumentException.class, () -> new ZoneMissionEndedEvent("invalid", 7, 6008, 0));
+	}
+
 	/** 返回广播访问的转换标识。 / Returns transition identifiers visited by a broadcast event. */
 	private List<String> visited(QuestGraphEvent event) {
 		List<String> visited = new ArrayList<>();
@@ -214,19 +252,28 @@ class QuestGraphRouterTest {
 	}
 
 	private static String document() {
+		String questOneTransitions = String.join("", dialogTransition("dialog-q1", 20), killTransition("kill-first", 15),
+			killTransition("kill-second", 25), combatTransition("attack-q1", 10, "<attack npc_id=\"100\"/>"),
+			combatTransition("death-q1", 10, "<player-death/>"),
+			combatTransition("world-exact-q1", 20, "<kill-in-world world_id=\"400010000\"/>"),
+			itemTransition("item-use-q1", 20, "item-use"), itemTransition("item-obtained-q1", 20, "item-obtained"),
+			itemTransition("item-equipped-q1", 20, "item-equipped"), itemTransition("house-item-use-q1", 20, "house-item-use"),
+			worldZoneTransition("world-entered-q1", 20, "<world-entered/>"),
+			worldZoneTransition("zone-entered-q1", 20, "<zone-entered zone_name=\"TEST_ZONE\"/>"),
+			worldZoneTransition("zone-left-q1", 20, "<zone-left zone_name=\"TEST_ZONE\"/>"),
+			worldZoneTransition("zone-mission-ended-q1", 20, "<zone-mission-ended/>"));
+		String questTwoTransitions = String.join("", dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5),
+			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"),
+			itemTransition("item-use-q2", 10, "item-use"), itemTransition("item-obtained-q2", 10, "item-obtained"),
+			itemTransition("house-item-use-q2", 10, "house-item-use"),
+			worldZoneTransition("world-entered-q2", 10, "<world-entered/>"),
+			worldZoneTransition("zone-entered-q2", 10, "<zone-entered zone_name=\"TEST_ZONE\"/>"),
+			worldZoneTransition("zone-left-q2", 10, "<zone-left zone_name=\"TEST_ZONE\"/>"),
+			worldZoneTransition("zone-mission-ended-q2", 10, "<zone-mission-ended/>"));
 		return """
 			<quest_graphs>
 				<quest_graph quest_id="1" version="1" scope="PLAYER" initial_node="start">
 					<node id="start">
-						%s
-						%s
-						%s
-						%s
-						%s
-						%s
-						%s
-						%s
-						%s
 						%s
 					</node>
 					<node id="done" terminal="true"/>
@@ -234,28 +281,11 @@ class QuestGraphRouterTest {
 				<quest_graph quest_id="2" version="1" scope="PLAYER" initial_node="start">
 					<node id="start">
 						%s
-						%s
-						%s
-						%s
-						%s
-						%s
 					</node>
 					<node id="done" terminal="true"/>
 				</quest_graph>
 			</quest_graphs>
-			""".formatted(dialogTransition("dialog-q1", 20), killTransition("kill-first", 15), killTransition("kill-second", 25),
-			combatTransition("attack-q1", 10, "<attack npc_id=\"100\"/>"),
-			combatTransition("death-q1", 10, "<player-death/>"),
-			combatTransition("world-exact-q1", 20, "<kill-in-world world_id=\"400010000\"/>"),
-			itemTransition("item-use-q1", 20, "item-use"),
-			itemTransition("item-obtained-q1", 20, "item-obtained"),
-			itemTransition("item-equipped-q1", 20, "item-equipped"),
-			itemTransition("house-item-use-q1", 20, "house-item-use"),
-			dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5),
-			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"),
-			itemTransition("item-use-q2", 10, "item-use"),
-			itemTransition("item-obtained-q2", 10, "item-obtained"),
-			itemTransition("house-item-use-q2", 10, "house-item-use"));
+			""".formatted(questOneTransitions, questTwoTransitions);
 	}
 
 	private static String dialogTransition(String id, int priority) {
@@ -282,5 +312,10 @@ class QuestGraphRouterTest {
 	/** 创建聚焦 item/housing 路由转换。 / Creates a focused item/housing route transition. */
 	private static String itemTransition(String id, int priority, String event) {
 		return combatTransition(id, priority, "<" + event + " item_id=\"182200001\"/>");
+	}
+
+	/** 创建聚焦 world/zone 路由转换。 / Creates a focused world/zone route transition. */
+	private static String worldZoneTransition(String id, int priority, String event) {
+		return combatTransition(id, priority, event);
 	}
 }

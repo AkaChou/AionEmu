@@ -16,6 +16,10 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseE
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneEnteredEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneLeftEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneMissionEndedEvent;
 
 /**
  * 使用有界、版本化二进制格式持久化类型化任务图事件。
@@ -34,6 +38,10 @@ public final class QuestGraphEventCodec {
 	private static final byte ITEM_OBTAINED = 7;
 	private static final byte ITEM_EQUIPPED = 8;
 	private static final byte HOUSE_ITEM_USE = 9;
+	private static final byte WORLD_ENTERED = 10;
+	private static final byte ZONE_ENTERED = 11;
+	private static final byte ZONE_LEFT = 12;
+	private static final byte ZONE_MISSION_ENDED = 13;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -102,6 +110,29 @@ public final class QuestGraphEventCodec {
 						writeCommon(output, houseItemUse);
 						output.writeInt(houseItemUse.itemId());
 					}
+					case WorldEnteredEvent worldEntered -> {
+						output.writeByte(WORLD_ENTERED);
+						writeCommon(output, worldEntered);
+						writeLocation(output, worldEntered.worldId(), worldEntered.instanceId(), worldEntered.x(), worldEntered.y(), worldEntered.z());
+					}
+					case ZoneEnteredEvent zoneEntered -> {
+						output.writeByte(ZONE_ENTERED);
+						writeCommon(output, zoneEntered);
+						output.writeUTF(zoneEntered.zoneName());
+						writeLocation(output, zoneEntered.worldId(), zoneEntered.instanceId(), zoneEntered.x(), zoneEntered.y(), zoneEntered.z());
+					}
+					case ZoneLeftEvent zoneLeft -> {
+						output.writeByte(ZONE_LEFT);
+						writeCommon(output, zoneLeft);
+						output.writeUTF(zoneLeft.zoneName());
+						output.writeInt(zoneLeft.worldId());
+						output.writeInt(zoneLeft.instanceId());
+					}
+					case ZoneMissionEndedEvent zoneMissionEnded -> {
+						output.writeByte(ZONE_MISSION_ENDED);
+						writeCommon(output, zoneMissionEnded);
+						output.writeInt(zoneMissionEnded.questId());
+					}
 				}
 			}
 			byte[] payload = bytes.toByteArray();
@@ -140,6 +171,12 @@ public final class QuestGraphEventCodec {
 					case ITEM_OBTAINED -> new ItemObtainedEvent(eventId, playerId, occurredAt, input.readInt());
 					case ITEM_EQUIPPED -> new ItemEquippedEvent(eventId, playerId, occurredAt, input.readInt());
 					case HOUSE_ITEM_USE -> new HouseItemUseEvent(eventId, playerId, occurredAt, input.readInt());
+					case WORLD_ENTERED -> new WorldEnteredEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(), input.readFloat(),
+						input.readFloat(), input.readFloat());
+					case ZONE_ENTERED -> new ZoneEnteredEvent(eventId, playerId, occurredAt, input.readUTF(), input.readInt(), input.readInt(),
+						input.readFloat(), input.readFloat(), input.readFloat());
+					case ZONE_LEFT -> new ZoneLeftEvent(eventId, playerId, occurredAt, input.readUTF(), input.readInt(), input.readInt());
+					case ZONE_MISSION_ENDED -> new ZoneMissionEndedEvent(eventId, playerId, occurredAt, input.readInt());
 				default -> throw new IllegalArgumentException("Unknown quest graph event tag " + type);
 			};
 			if (input.read() != -1) {
@@ -164,5 +201,14 @@ public final class QuestGraphEventCodec {
 		output.writeUTF(event.eventId());
 		output.writeInt(event.playerId());
 		output.writeLong(event.occurredAt());
+	}
+
+	/** 写入服务端世界、实例和位置快照。 / Writes a server world, instance, and position snapshot. */
+	private static void writeLocation(DataOutputStream output, int worldId, int instanceId, float x, float y, float z) throws IOException {
+		output.writeInt(worldId);
+		output.writeInt(instanceId);
+		output.writeFloat(x);
+		output.writeFloat(y);
+		output.writeFloat(z);
 	}
 }
