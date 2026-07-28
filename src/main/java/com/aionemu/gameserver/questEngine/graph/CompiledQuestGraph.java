@@ -70,7 +70,9 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		RANKED_PLAYER_KILL,
 		DREDGION_SETTLED,
 		CRAFT_FAILED,
-		NPC_AGGRO_LISTED
+		NPC_AGGRO_LISTED,
+		WINDSTREAM_ENTERED,
+		FLYING_RING_PASSED
 	}
 
 	/**

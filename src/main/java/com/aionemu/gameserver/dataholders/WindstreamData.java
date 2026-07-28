@@ -2,13 +2,12 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import jakarta.xml.bind.annotation.XmlTransient;
-
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.windstreams.WindstreamTemplate;
@@ -33,6 +32,8 @@ public class WindstreamData {
 	private IntObjectHashMap<WindstreamTemplate> windstreams;
 	@XmlTransient
 	private IntObjectHashMap<IntObjectHashMap<WindstreamRoute>> routesByMap;
+	@XmlTransient
+	private List<WindstreamRoute> routes = List.of();
 
 	public WindstreamData() {
 	}
@@ -40,6 +41,7 @@ public class WindstreamData {
 	public WindstreamData(List<WindstreamTemplate> templates, List<WindstreamRoute> routes) {
 		wts = templates;
 		indexTemplates();
+		this.routes = List.copyOf(routes);
 		routesByMap = new IntObjectHashMap<>();
 		for (WindstreamRoute route : routes) {
 			IntObjectHashMap<WindstreamRoute> mapRoutes = routesByMap.get(route.getMapId());
@@ -83,6 +85,11 @@ public class WindstreamData {
 	public WindstreamRoute getRoute(int mapId, int routeId) {
 		IntObjectHashMap<WindstreamRoute> routes = routesByMap.get(mapId);
 		return routes == null ? null : routes.get(routeId >= 1000 ? routeId / 1000 : routeId);
+	}
+
+	/** 返回用于正式引用闭包的不可变风道 route 列表。 / Returns immutable windstream routes used by formal reference closure. */
+	public List<WindstreamRoute> getRoutes() {
+		return routes;
 	}
 
 	/**

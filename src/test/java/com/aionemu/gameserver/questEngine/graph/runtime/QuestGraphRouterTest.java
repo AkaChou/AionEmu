@@ -41,6 +41,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RankedPl
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DredgionSettledEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.CraftFailedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcAggroListedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WindstreamEnteredEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.FlyingRingPassedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneLeftEvent;
@@ -64,7 +66,9 @@ class QuestGraphRouterTest {
 		Path xml = tempDir.resolve("graphs.xml");
 		Files.writeString(xml, document(), StandardCharsets.UTF_8);
 		CompiledQuestGraphData data = QuestGraphCompiler.load(xml, SCHEMA,
-			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(182200001), Set.of(), Set.of("TEST_ZONE"), Set.of(913)));
+			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(182200001), Set.of(), Set.of("TEST_ZONE"), Set.of(913),
+				Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
+				Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1"))));
 		router = new QuestGraphRouter(data);
 	}
 
@@ -172,6 +176,10 @@ class QuestGraphRouterTest {
 		DredgionSettledEvent dredgionSettled = new DredgionSettledEvent("dredgion-settled", 7, 3021, 400010000, 1);
 		CraftFailedEvent craftFailed = new CraftFailedEvent("craft-failed", 7, 3022, 182200001, 0);
 		NpcAggroListedEvent aggroListed = new NpcAggroListedEvent("aggro-listed", 7, 3023, 8, 100, 5001, 210010000, 1, 12.5f, true);
+		WindstreamEnteredEvent windstreamEntered = new WindstreamEnteredEvent("windstream-entered", 7, 3024, 210130000, 1,
+			405001, 405, 120, true, true, true);
+		FlyingRingPassedEvent flyingRingPassed = new FlyingRingPassedEvent("flying-ring-passed", 7, 3025, 210020000, 1,
+			"ELTNEN_AIR_BOOSTER_1", 6, 2.5f, true, true);
 		assertEquals(attack, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(attack)));
 		assertEquals(death, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(death)));
 		assertEquals(worldKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldKill)));
@@ -194,6 +202,8 @@ class QuestGraphRouterTest {
 		assertEquals(dredgionSettled, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(dredgionSettled)));
 		assertEquals(craftFailed, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(craftFailed)));
 		assertEquals(aggroListed, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(aggroListed)));
+		assertEquals(windstreamEntered, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(windstreamEntered)));
+		assertEquals(flyingRingPassed, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(flyingRingPassed)));
 
 		byte[] encoded = QuestGraphEventCodec.encode(kill);
 		byte[] unknown = Arrays.copyOf(encoded, encoded.length);
@@ -380,6 +390,27 @@ class QuestGraphRouterTest {
 			() -> new NpcAggroListedEvent("unknown-recipient", 7, 10006, 8, 100, 5001, 210010000, 1, 12.5f, false));
 	}
 
+	/**
+	 * 验证 movement 事件按 world 与完整 qualifier 广播，错误 world/route/ring 不匹配。
+	 * Verifies movement events broadcast by world and full qualifier while wrong world, route, or ring does not match.
+	 */
+	@Test
+	void movementSignalsUseCompositeWorldQualifiedRoutes() {
+		assertEquals(List.of("windstream-entered-q2", "windstream-entered-q1"),
+			visited(new WindstreamEnteredEvent("windstream", 7, 11000, 210130000, 1, 405001, 405, 120, true, true, true)));
+		assertEquals(List.of("flying-ring-passed-q2", "flying-ring-passed-q1"),
+			visited(new FlyingRingPassedEvent("ring", 7, 11001, 210020000, 1, "ELTNEN_AIR_BOOSTER_1", 6, 2, true, true)));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new WindstreamEnteredEvent("wrong-world", 7, 11002, 210140000, 1, 405001, 405, 120, true, true, true),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new WindstreamEnteredEvent("wrong-route", 7, 11003, 210130000, 1, 406001, 406, 120, true, true, true),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new FlyingRingPassedEvent("wrong-ring", 7, 11004, 210020000, 1, "ELTNEN_AIR_BOOSTER_2", 6, 2, true, true),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+	}
+
 	/** 返回广播访问的转换标识。 / Returns transition identifiers visited by a broadcast event. */
 	private List<String> visited(QuestGraphEvent event) {
 		List<String> visited = new ArrayList<>();
@@ -412,7 +443,10 @@ class QuestGraphRouterTest {
 				worldZoneTransition("ranked-kill-q1", 20, "<ranked-player-kill minimum_rank=\"10\"/>"),
 				worldZoneTransition("dredgion-settled-q1", 20, "<dredgion-settled/>"),
 				worldZoneTransition("craft-failed-q1", 20, "<craft-failed item_id=\"182200001\"/>"),
-				worldZoneTransition("aggro-listed-q1", 20, "<npc-aggro-listed npc_id=\"100\"/>"));
+				worldZoneTransition("aggro-listed-q1", 20, "<npc-aggro-listed npc_id=\"100\"/>"),
+				worldZoneTransition("windstream-entered-q1", 20, "<windstream-entered world_id=\"210130000\" route_id=\"405001\"/>"),
+				worldZoneTransition("flying-ring-passed-q1", 20,
+					"<flying-ring-passed world_id=\"210020000\" ring_name=\"ELTNEN_AIR_BOOSTER_1\"/>"));
 		String questTwoTransitions = String.join("", dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5),
 			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"),
 			itemTransition("item-use-q2", 10, "item-use"), itemTransition("item-obtained-q2", 10, "item-obtained"),
@@ -431,7 +465,10 @@ class QuestGraphRouterTest {
 				worldZoneTransition("ranked-kill-q2", 10, "<ranked-player-kill minimum_rank=\"5\"/>"),
 				worldZoneTransition("dredgion-settled-q2", 10, "<dredgion-settled/>"),
 				worldZoneTransition("craft-failed-q2", 10, "<craft-failed item_id=\"182200001\"/>"),
-				worldZoneTransition("aggro-listed-q2", 10, "<npc-aggro-listed npc_id=\"100\"/>"));
+				worldZoneTransition("aggro-listed-q2", 10, "<npc-aggro-listed npc_id=\"100\"/>"),
+				worldZoneTransition("windstream-entered-q2", 10, "<windstream-entered world_id=\"210130000\" route_id=\"405001\"/>"),
+				worldZoneTransition("flying-ring-passed-q2", 10,
+					"<flying-ring-passed world_id=\"210020000\" ring_name=\"ELTNEN_AIR_BOOSTER_1\"/>"));
 		return """
 			<quest_graphs>
 				<quest_graph quest_id="1" version="1" scope="PLAYER" initial_node="start">

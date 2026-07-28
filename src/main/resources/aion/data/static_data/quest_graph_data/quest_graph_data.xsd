@@ -16,6 +16,14 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="questGraphMovementName">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="192"/>
+			<xs:pattern value="[A-Z_][A-Z0-9_.-]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="questGraphStateScope">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="PLAYER"/>
@@ -224,6 +232,16 @@
 
 	<xs:complexType name="questGraphNpcAggroListedEvent">
 		<xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphWindstreamEnteredEvent">
+		<xs:attribute name="world_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="route_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphFlyingRingPassedEvent">
+		<xs:attribute name="world_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="ring_name" type="questGraphMovementName" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="questGraphQuestStatusCondition">
@@ -491,6 +509,8 @@
 					<xs:element name="dredgion-settled" type="questGraphDredgionSettledEvent"/>
 					<xs:element name="craft-failed" type="questGraphCraftFailedEvent"/>
 					<xs:element name="npc-aggro-listed" type="questGraphNpcAggroListedEvent"/>
+					<xs:element name="windstream-entered" type="questGraphWindstreamEnteredEvent"/>
+					<xs:element name="flying-ring-passed" type="questGraphFlyingRingPassedEvent"/>
 			</xs:choice>
 			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
 			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>

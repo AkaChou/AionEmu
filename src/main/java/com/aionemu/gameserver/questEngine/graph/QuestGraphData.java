@@ -221,7 +221,9 @@ public final class QuestGraphData {
 				@XmlElement(name = "ranked-player-kill", type = RankedPlayerKillEventData.class, required = true),
 				@XmlElement(name = "dredgion-settled", type = DredgionSettledEventData.class, required = true),
 				@XmlElement(name = "craft-failed", type = CraftFailedEventData.class, required = true),
-				@XmlElement(name = "npc-aggro-listed", type = NpcAggroListedEventData.class, required = true)
+				@XmlElement(name = "npc-aggro-listed", type = NpcAggroListedEventData.class, required = true),
+				@XmlElement(name = "windstream-entered", type = WindstreamEnteredEventData.class, required = true),
+				@XmlElement(name = "flying-ring-passed", type = FlyingRingPassedEventData.class, required = true)
 		})
 		private Object event;
 		/**
@@ -454,6 +456,30 @@ public final class QuestGraphData {
 		/** 产生仇恨列表信号的 NPC 模板标识。 / NPC template identifier producing the aggro-list signal. */
 		@XmlAttribute(name = "npc_id", required = true)
 		private Integer npcId;
+	}
+
+	/** 表示进入指定世界风道的服务端确认事件。 / Represents server-confirmed entry into a windstream in a specific world. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class WindstreamEnteredEventData {
+		/** 风道所在世界。 / World containing the windstream route. */
+		@XmlAttribute(name = "world_id", required = true)
+		private Integer worldId;
+		/** 客户端协议使用的原始 teleport ID。 / Raw teleport id used by the client protocol. */
+		@XmlAttribute(name = "route_id", required = true)
+		private Integer routeId;
+	}
+
+	/** 表示穿过指定世界飞行环的服务端确认事件。 / Represents server-confirmed passage through a flying ring in a specific world. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class FlyingRingPassedEventData {
+		/** 飞行环所在世界。 / World containing the flying ring. */
+		@XmlAttribute(name = "world_id", required = true)
+		private Integer worldId;
+		/** 静态数据中的规范飞行环名称。 / Canonical flying-ring name from static data. */
+		@XmlAttribute(name = "ring_name", required = true)
+		private String ringName;
 	}
 
 	/**

@@ -17,6 +17,8 @@ import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventT
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DREDGION_SETTLED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.CRAFT_FAILED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.NPC_AGGRO_LISTED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.WINDSTREAM_ENTERED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.FLYING_RING_PASSED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_DEATH;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_LOGOUT;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.QUEST_TIMER_ENDED;
@@ -134,6 +136,8 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RankedPlayerKillE
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DredgionSettledEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CraftFailedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NpcAggroListedEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.WindstreamEnteredEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FlyingRingPassedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
@@ -185,11 +189,12 @@ public final class QuestGraphCompiler {
 	}
 
 	/**
-	 * 保存编译时允许引用的任务、NPC、物品、称号、区域和影片标识集合。
-	 * Holds the quest, NPC, item, title, zone, and movie identifiers allowed during compilation.
+	 * 保存编译时允许引用的任务、对象与复合 movement 静态数据键。
+	 * Holds quest, object, and composite movement static-data keys allowed during compilation.
 	 */
 	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
-			Set<String> zoneNames, Set<Integer> movieIds) {
+			Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
+			Set<FlyingRingReference> flyingRings) {
 		/**
 		 * 复制引用集合，保证一次编译期间引用闭包稳定。
 		 * Copies reference sets so the reference closure stays stable during compilation.
@@ -201,6 +206,50 @@ public final class QuestGraphCompiler {
 			titleIds = Set.copyOf(titleIds);
 			zoneNames = Set.copyOf(zoneNames);
 			movieIds = Set.copyOf(movieIds);
+			windstreamRoutes = Set.copyOf(windstreamRoutes);
+			flyingRings = Set.copyOf(flyingRings);
+		}
+
+		/**
+		 * 创建不声明 movement 引用的兼容引用集合；任何 movement XML 仍会 fail closed。
+		 * Creates references without movement keys; movement XML still fails closed.
+		 */
+		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
+				Set<String> zoneNames, Set<Integer> movieIds) {
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of());
+		}
+	}
+
+	/** 表示世界与规范化风道 route ID 的静态引用键。 / Represents a static-data key for a world and canonical windstream route id. */
+	public record WindstreamRouteReference(int worldId, int routeId) {
+		/** 校验世界和规范 route ID。 / Validates the world and canonical route id. */
+		public WindstreamRouteReference {
+			if (worldId <= 0 || routeId <= 0 || routeId >= 1000) {
+				throw new IllegalArgumentException("Windstream route reference is invalid");
+			}
+		}
+
+		/**
+		 * 按正式 WindstreamData 规则把协议 teleport ID 归一化为 route ID。
+		 * Normalizes a protocol teleport id to a route id using the formal WindstreamData rule.
+		 */
+		public static WindstreamRouteReference fromTeleportId(int worldId, int teleportId) {
+			return new WindstreamRouteReference(worldId, normalizeRouteId(teleportId));
+		}
+
+		/** 返回正式风道 route 归一化结果。 / Returns the formal normalized windstream route id. */
+		public static int normalizeRouteId(int teleportId) {
+			return teleportId >= 1000 ? teleportId / 1000 : teleportId;
+		}
+	}
+
+	/** 表示世界与规范飞行环名称的静态引用键。 / Represents a static-data key for a world and canonical flying-ring name. */
+	public record FlyingRingReference(int worldId, String ringName) {
+		/** 校验世界和规范飞行环名称。 / Validates the world and canonical flying-ring name. */
+		public FlyingRingReference {
+			if (worldId <= 0 || !isCanonicalMovementName(ringName)) {
+				throw new IllegalArgumentException("Flying-ring reference is invalid");
+			}
 		}
 	}
 
@@ -568,7 +617,35 @@ public final class QuestGraphCompiler {
 			}
 			return new Event(NPC_AGGRO_LISTED, npcId, null);
 		}
+		if (source instanceof WindstreamEnteredEventData windstreamEntered) {
+			Integer worldId = windstreamEntered.getWorldId();
+			Integer routeId = windstreamEntered.getRouteId();
+			if (worldId == null || routeId == null || worldId <= 0 || routeId <= 0
+					|| !references.windstreamRoutes().contains(WindstreamRouteReference.fromTeleportId(worldId, routeId))) {
+				throw new IllegalArgumentException("Quest " + questId + " windstream-entered references missing route "
+					+ worldId + '/' + routeId);
+			}
+			return new Event(WINDSTREAM_ENTERED, worldId, Integer.toString(routeId));
+		}
+		if (source instanceof FlyingRingPassedEventData flyingRingPassed) {
+			Integer worldId = flyingRingPassed.getWorldId();
+			String ringName = flyingRingPassed.getRingName();
+			if (worldId == null || worldId <= 0 || !isCanonicalMovementName(ringName)
+					|| !references.flyingRings().contains(new FlyingRingReference(worldId, ringName))) {
+				throw new IllegalArgumentException("Quest " + questId + " flying-ring-passed references missing ring "
+					+ worldId + '/' + ringName);
+			}
+			return new Event(FLYING_RING_PASSED, worldId, ringName);
+		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
+	}
+
+	/** 校验 movement 静态名称与 XSD 的规范形式一致。 / Validates a movement static name against the canonical XSD form. */
+	private static boolean isCanonicalMovementName(String value) {
+		return value != null && !value.isEmpty() && value.length() <= 192
+			&& (value.charAt(0) == '_' || value.charAt(0) >= 'A' && value.charAt(0) <= 'Z')
+			&& value.chars().allMatch(character -> character == '_' || character == '.' || character == '-'
+				|| character >= 'A' && character <= 'Z' || character >= '0' && character <= '9');
 	}
 
 	/**

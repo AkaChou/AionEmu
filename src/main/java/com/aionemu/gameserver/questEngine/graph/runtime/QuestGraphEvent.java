@@ -15,7 +15,7 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	QuestGraphEvent.QuestTimerEndedEvent, QuestGraphEvent.MovieEndedEvent, QuestGraphEvent.NpcProximityEvent,
 	QuestGraphEvent.EscortReachedTargetEvent, QuestGraphEvent.EscortLostTargetEvent,
 	QuestGraphEvent.RankedPlayerKillEvent, QuestGraphEvent.DredgionSettledEvent, QuestGraphEvent.CraftFailedEvent,
-	QuestGraphEvent.NpcAggroListedEvent {
+	QuestGraphEvent.NpcAggroListedEvent, QuestGraphEvent.WindstreamEnteredEvent, QuestGraphEvent.FlyingRingPassedEvent {
 
 	/**
 	 * 定义由事件类型固定的候选传播策略。
@@ -52,6 +52,7 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 					WORLD_ENTERED, ZONE_ENTERED, ZONE_LEFT, ZONE_MISSION_ENDED, LEVEL_UP, PLAYER_LOGOUT,
 					QUEST_TIMER_ENDED, NPC_PROXIMITY, ESCORT_REACHED_TARGET, ESCORT_LOST_TARGET -> RoutingPolicy.BROADCAST;
 				case RANKED_PLAYER_KILL, DREDGION_SETTLED, NPC_AGGRO_LISTED -> RoutingPolicy.BROADCAST;
+				case WINDSTREAM_ENTERED, FLYING_RING_PASSED -> RoutingPolicy.BROADCAST;
 		};
 	}
 
@@ -628,6 +629,62 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		}
 	}
 
+	/** 表示服务端完整验证后进入风道的 movement 事件。 / Represents windstream entry after complete server validation. */
+	record WindstreamEnteredEvent(String eventId, int playerId, long occurredAt, int worldId, int instanceId, int teleportId,
+			int routeId, int distance, boolean routePositionValidated, boolean pendingPathMatched, boolean flightStateEligible)
+			implements QuestGraphEvent {
+		/** 校验 route 归一化、实例和全部服务端 authority 证明。 / Validates route normalization, instance, and all server-authority proofs. */
+		public WindstreamEnteredEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateWorldInstance(worldId, instanceId);
+			int normalizedRouteId = teleportId >= 1000 ? teleportId / 1000 : teleportId;
+			if (teleportId <= 0 || routeId <= 0 || routeId >= 1000 || routeId != normalizedRouteId || distance < 0
+					|| !routePositionValidated || !pendingPathMatched || !flightStateEligible) {
+				throw new IllegalArgumentException("Windstream-entry authority snapshot is invalid");
+			}
+		}
+
+		/** 返回 WINDSTREAM_ENTERED 类型。 / Returns the WINDSTREAM_ENTERED type. */
+		@Override
+		public EventType type() {
+			return EventType.WINDSTREAM_ENTERED;
+		}
+
+		/** 返回风道所在世界作为复合路由键的整数部分。 / Returns the windstream world as the integer part of the composite route key. */
+		@Override
+		public int targetId() {
+			return worldId;
+		}
+	}
+
+	/** 表示服务端平面相交与半径检查通过后的飞行环事件。 / Represents a flying-ring event after server plane and radius checks pass. */
+	record FlyingRingPassedEvent(String eventId, int playerId, long occurredAt, int worldId, int instanceId, String ringName,
+			float radius, float centerDistance, boolean planeIntersected, boolean intersectionPointAvailable)
+			implements QuestGraphEvent {
+		/** 校验 ring 静态名称、实例、平面相交和严格半径。 / Validates the static ring name, instance, plane intersection, and strict radius. */
+		public FlyingRingPassedEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateWorldInstance(worldId, instanceId);
+			ringName = validateMovementName(ringName);
+			if (!Float.isFinite(radius) || radius <= 0 || !Float.isFinite(centerDistance) || centerDistance < 0
+					|| centerDistance >= radius || !planeIntersected) {
+				throw new IllegalArgumentException("Flying-ring authority snapshot is invalid");
+			}
+		}
+
+		/** 返回 FLYING_RING_PASSED 类型。 / Returns the FLYING_RING_PASSED type. */
+		@Override
+		public EventType type() {
+			return EventType.FLYING_RING_PASSED;
+		}
+
+		/** 返回飞行环所在世界作为复合路由键的整数部分。 / Returns the flying-ring world as the integer part of the composite route key. */
+		@Override
+		public int targetId() {
+			return worldId;
+		}
+	}
+
 	/**
 	 * 校验所有事件共享的字段。
 	 * Validates fields shared by all events.
@@ -655,6 +712,17 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 			throw new IllegalArgumentException("Event zone name must be canonical uppercase text");
 		}
 		return zoneName;
+	}
+
+	/** 校验 movement 静态名称并返回原值。 / Validates and returns a canonical movement static name. */
+	private static String validateMovementName(String value) {
+		if (value == null || value.isEmpty() || value.length() > 192
+				|| !(value.charAt(0) == '_' || value.charAt(0) >= 'A' && value.charAt(0) <= 'Z')
+				|| !value.chars().allMatch(character -> character == '_' || character == '.' || character == '-'
+					|| character >= 'A' && character <= 'Z' || character >= '0' && character <= '9')) {
+			throw new IllegalArgumentException("Event movement name must be canonical uppercase text");
+		}
+		return value;
 	}
 
 	/** 校验世界、实例和有限坐标。 / Validates world, instance, and finite coordinates. */

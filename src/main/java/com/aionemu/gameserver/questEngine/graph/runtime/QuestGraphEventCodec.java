@@ -24,6 +24,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RankedPl
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DredgionSettledEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.CraftFailedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcAggroListedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WindstreamEnteredEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.FlyingRingPassedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -64,6 +66,8 @@ public final class QuestGraphEventCodec {
 	private static final byte DREDGION_SETTLED = 22;
 	private static final byte CRAFT_FAILED = 23;
 	private static final byte NPC_AGGRO_LISTED = 24;
+	private static final byte WINDSTREAM_ENTERED = 25;
+	private static final byte FLYING_RING_PASSED = 26;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -230,6 +234,29 @@ public final class QuestGraphEventCodec {
 							output.writeFloat(aggroListed.recipientDistance());
 							output.writeBoolean(aggroListed.recipientKnownToNpc());
 						}
+						case WindstreamEnteredEvent windstreamEntered -> {
+							output.writeByte(WINDSTREAM_ENTERED);
+							writeCommon(output, windstreamEntered);
+							output.writeInt(windstreamEntered.worldId());
+							output.writeInt(windstreamEntered.instanceId());
+							output.writeInt(windstreamEntered.teleportId());
+							output.writeInt(windstreamEntered.routeId());
+							output.writeInt(windstreamEntered.distance());
+							output.writeBoolean(windstreamEntered.routePositionValidated());
+							output.writeBoolean(windstreamEntered.pendingPathMatched());
+							output.writeBoolean(windstreamEntered.flightStateEligible());
+						}
+						case FlyingRingPassedEvent flyingRingPassed -> {
+							output.writeByte(FLYING_RING_PASSED);
+							writeCommon(output, flyingRingPassed);
+							output.writeInt(flyingRingPassed.worldId());
+							output.writeInt(flyingRingPassed.instanceId());
+							output.writeUTF(flyingRingPassed.ringName());
+							output.writeFloat(flyingRingPassed.radius());
+							output.writeFloat(flyingRingPassed.centerDistance());
+							output.writeBoolean(flyingRingPassed.planeIntersected());
+							output.writeBoolean(flyingRingPassed.intersectionPointAvailable());
+						}
 				}
 			}
 			byte[] payload = bytes.toByteArray();
@@ -291,6 +318,10 @@ public final class QuestGraphEventCodec {
 						case CRAFT_FAILED -> new CraftFailedEvent(eventId, playerId, occurredAt, input.readInt(), input.readLong());
 						case NPC_AGGRO_LISTED -> new NpcAggroListedEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
 							input.readInt(), input.readInt(), input.readInt(), input.readFloat(), input.readBoolean());
+						case WINDSTREAM_ENTERED -> new WindstreamEnteredEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
+							input.readInt(), input.readInt(), input.readInt(), input.readBoolean(), input.readBoolean(), input.readBoolean());
+						case FLYING_RING_PASSED -> new FlyingRingPassedEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
+							input.readUTF(), input.readFloat(), input.readFloat(), input.readBoolean(), input.readBoolean());
 				default -> throw new IllegalArgumentException("Unknown quest graph event tag " + type);
 			};
 			if (input.read() != -1) {

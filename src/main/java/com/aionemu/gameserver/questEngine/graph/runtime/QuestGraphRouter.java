@@ -30,6 +30,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RankedPl
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DredgionSettledEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.CraftFailedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcAggroListedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WindstreamEnteredEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.FlyingRingPassedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -206,6 +208,10 @@ public final class QuestGraphRouter {
 				case DredgionSettledEvent settled -> matchesTarget(settled, route);
 				case CraftFailedEvent craftFailed -> matchesTarget(craftFailed, route);
 				case NpcAggroListedEvent aggroListed -> matchesTarget(aggroListed, route);
+				case WindstreamEnteredEvent windstreamEntered -> matchesQualifiedTarget(windstreamEntered,
+					Integer.toString(windstreamEntered.teleportId()), route);
+				case FlyingRingPassedEvent flyingRingPassed -> matchesQualifiedTarget(flyingRingPassed,
+					flyingRingPassed.ringName(), route);
 			};
 	}
 

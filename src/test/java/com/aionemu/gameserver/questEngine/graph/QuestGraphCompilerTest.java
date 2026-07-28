@@ -31,7 +31,9 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 class QuestGraphCompilerTest {
 	private static final Path SCHEMA = Path.of("src/main/resources/aion/data/static_data/quest_graph_data/quest_graph_data.xsd");
 	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
-			Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"), Set.of(913));
+			Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"), Set.of(913),
+			Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
+			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")));
 
 	@TempDir
 	Path tempDir;
@@ -387,6 +389,42 @@ class QuestGraphCompilerTest {
 			missingItem.replace(" item_id=\"182200002\"", ""), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			missingNpc.replace(" npc_id=\"203710\"", ""), terminal()))));
+	}
+
+	/**
+	 * 验证 movement 事件使用 world 复合引用闭包并保留完整协议 qualifier。
+	 * Verifies movement events use world-composite reference closure and preserve full protocol qualifiers.
+	 */
+	@Test
+	void compilerBuildsReferenceClosedMovementEvents() throws Exception {
+		String windstream = transition("windstream", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>",
+				"<windstream-entered world_id=\"210130000\" route_id=\"405001\"/>");
+		CompiledQuestGraph.Event compiledWindstream = load(document(graph(1, "offer", windstream, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().event();
+		assertEquals(CompiledQuestGraph.EventType.WINDSTREAM_ENTERED, compiledWindstream.type());
+		assertEquals(210130000, compiledWindstream.targetId());
+		assertEquals("405001", compiledWindstream.qualifier());
+
+		String flyingRing = transition("flying-ring", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>",
+				"<flying-ring-passed world_id=\"210020000\" ring_name=\"ELTNEN_AIR_BOOSTER_1\"/>");
+		CompiledQuestGraph.Event compiledRing = load(document(graph(1, "offer", flyingRing, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().event();
+		assertEquals(CompiledQuestGraph.EventType.FLYING_RING_PASSED, compiledRing.type());
+		assertEquals(210020000, compiledRing.targetId());
+		assertEquals("ELTNEN_AIR_BOOSTER_1", compiledRing.qualifier());
+
+		assertFailureContains(document(graph(1, "offer",
+			windstream.replace("405001", "406001"), terminal())),
+			"windstream-entered references missing route 210130000/406001");
+		assertFailureContains(document(graph(1, "offer",
+			flyingRing.replace("ELTNEN_AIR_BOOSTER_1", "ELTNEN_AIR_BOOSTER_2"), terminal())),
+			"flying-ring-passed references missing ring 210020000/ELTNEN_AIR_BOOSTER_2");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			windstream.replace(" world_id=\"210130000\"", ""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			flyingRing.replace("ELTNEN_AIR_BOOSTER_1", "eltnen_air_booster_1"), terminal()))));
 	}
 
 	/**
