@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.graph.runtime;
 
-import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionType.START_QUEST;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DIALOG;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus.NONE;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope.PLAYER;
@@ -29,16 +28,26 @@ import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAvailableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphRouter.Match;
@@ -79,14 +88,14 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(DispatchResult.Status.APPLIED, executor.execute(fixture.match(), context));
 
 		PlayerQuestGraphState state = fixture.states().get(1);
-		assertEquals(2, state.getRevision());
+		assertEquals(3, state.getRevision());
 		assertEquals("done", state.getNodeId());
 		assertEquals(Lifecycle.ACTIVE, state.getLifecycle());
 		assertEquals(CompiledQuestGraph.QuestStatus.START, state.getQuestStatus());
 		assertNull(state.getJournal());
 		assertEquals(new IntValue(2), state.getVariables().get("count"));
 		assertEquals(new BooleanValue(false), state.getVariables().get("enabled"));
-		assertEquals("8:dialog-1:1:accept:7:0", action.get().idempotencyKey());
+		assertEquals("8:dialog-1:1:accept:7:1", action.get().idempotencyKey());
 		assertEquals(state, database.get());
 	}
 
@@ -192,6 +201,68 @@ class QuestGraphTransitionExecutorTest {
 	}
 
 	/**
+	 * 验证重复资格可显式匹配“可用”和“不可用”，缺失必需 deadline 时仍失败。
+	 * Verifies explicit available/unavailable repeat matching while a required missing deadline still fails.
+	 */
+	@Test
+	void canonicalRepeatAvailabilitySupportsExplicitNegation() {
+		QuestHistory waiting = new QuestHistory(1, 0, 900L, 2000L);
+		Fixture unavailable = fixture(List.of(new QuestRepeatAvailableCondition(255, true, false)));
+		PlayerQuestGraphState waitingState = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.COMPLETE,
+			waiting, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		unavailable.states().addLoaded(waitingState);
+		TransitionContext context = new TransitionContext(7, unavailable.states(), invocation -> NOT_MATCHED, invocation -> READY,
+			invocation -> APPLIED, (expected, state) -> PersistenceResult.APPLIED);
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(new Match(EVENT, unavailable.graph(), unavailable.match().route(), waitingState), context));
+
+		Fixture available = fixture(List.of(new QuestRepeatAvailableCondition(255, true, true)));
+		PlayerQuestGraphState future = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.COMPLETE,
+			waiting, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		available.states().addLoaded(future);
+		assertEquals(DispatchResult.Status.NO_MATCH, executor.execute(
+			new Match(EVENT, available.graph(), available.match().route(), future),
+			new TransitionContext(7, available.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+				(expected, state) -> PersistenceResult.APPLIED)));
+
+		Fixture missingDeadline = fixture(List.of(new QuestRepeatAvailableCondition(255, true, false)));
+		PlayerQuestGraphState missing = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.COMPLETE,
+			new QuestHistory(1, 0, 900L, null), null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		missingDeadline.states().addLoaded(missing);
+		assertEquals(DispatchResult.Status.FAILED, executor.execute(
+			new Match(EVENT, missingDeadline.graph(), missingDeadline.match().route(), missing),
+			new TransitionContext(7, missingDeadline.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+				(expected, state) -> PersistenceResult.APPLIED)));
+	}
+
+	/**
+	 * 验证 canonical 变量命中，并在 ACTIVE 状态缺失声明变量时显式失败。
+	 * Verifies a canonical variable match and explicit failure when ACTIVE state lacks the declared variable.
+	 */
+	@Test
+	void canonicalQuestVariableRejectsCorruptActiveState() {
+		List<Condition> conditions = List.of(new QuestVariableCondition("count", ConditionOperation.EQUAL, 2));
+		Fixture matched = fixture(conditions);
+		PlayerQuestGraphState valid = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of("count", new IntValue(2), "enabled", new BooleanValue(false)),
+			Map.of(), null, Map.of(), null);
+		matched.states().addLoaded(valid);
+		assertEquals(DispatchResult.Status.APPLIED, executor.execute(
+			new Match(EVENT, matched.graph(), matched.match().route(), valid),
+			new TransitionContext(7, matched.states(), invocation -> NOT_MATCHED, invocation -> READY, invocation -> APPLIED,
+				(expected, state) -> PersistenceResult.APPLIED)));
+
+		Fixture corrupt = fixture(conditions);
+		PlayerQuestGraphState missing = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		corrupt.states().addLoaded(missing);
+		assertEquals(DispatchResult.Status.FAILED, executor.execute(
+			new Match(EVENT, corrupt.graph(), corrupt.match().route(), missing),
+			new TransitionContext(7, corrupt.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+				(expected, state) -> PersistenceResult.APPLIED)));
+	}
+
+	/**
 	 * 验证已知非法 canonical action 状态在 PREPARED 和 callback 前失败。
 	 * Verifies that a known-invalid canonical action state fails before PREPARED and callbacks.
 	 */
@@ -255,12 +326,65 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(DispatchResult.Status.FAILED, executor.execute(fixture.match(), context));
 
 		PlayerQuestGraphState state = fixture.states().get(1);
-		assertEquals(0, state.getRevision());
+		assertEquals(1, state.getRevision());
 		assertEquals("offer", state.getNodeId());
 		assertEquals(Lifecycle.PREPARED, state.getLifecycle());
-		assertEquals(CompiledQuestGraph.QuestStatus.NONE, state.getQuestStatus());
+		assertEquals(CompiledQuestGraph.QuestStatus.START, state.getQuestStatus());
 		assertEquals(-1, state.getJournal().getBaseRevision());
-		assertEquals(0, state.getJournal().getNextActionIndex());
+		assertEquals(1, state.getJournal().getNextActionIndex());
+	}
+
+	/**
+	 * 验证状态动作内部归约、必需副作用 journal 和提交后协议严格分阶段执行。
+	 * Verifies staged state reduction, required-effect journaling, and post-commit protocol ordering.
+	 */
+	@Test
+	void standardDialogLifecycleStagesStateRequiredEffectsAndProtocol() {
+		Map<String, CompiledQuestGraph.Variable> variables = Map.of("var0", new IntVariable("var0", PLAYER, 0, 0, 5));
+		List<Action> actions = List.of(
+			new SetQuestVariableAction("var0", 1),
+			new AddQuestVariableAction("var0", 1),
+			new SetQuestStatusAction(CompiledQuestGraph.QuestStatus.REWARD),
+			new RemoveCollectedItemsAction(),
+			new FinishQuestAction(0),
+			new SyncQuestStatusAction(),
+			new SendDialogAction(5));
+		Transition transition = new Transition("finish", 10, "done", new Event(DIALOG, 100, "SELECT_REWARD"),
+			List.of(new QuestStatusCondition(CompiledQuestGraph.QuestStatus.START)), actions);
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", variables,
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of("var0", new IntValue(0)), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		List<CompiledQuestGraph.ActionType> preflighted = new java.util.ArrayList<>();
+		List<CompiledQuestGraph.ActionType> executed = new java.util.ArrayList<>();
+		TransitionContext context = new TransitionContext(7, states, invocation -> MATCHED, invocation -> {
+			preflighted.add(invocation.action().type());
+			return READY;
+		}, invocation -> {
+			executed.add(invocation.action().type());
+			if (invocation.action().type().phase() == CompiledQuestGraph.ActionPhase.POST_COMMIT_PROTOCOL) {
+				assertEquals(Lifecycle.ACTIVE, states.get(1).getLifecycle());
+				assertEquals("done", states.get(1).getNodeId());
+				return FAILED;
+			}
+			return APPLIED;
+		}, cas(database));
+		DialogEvent event = new DialogEvent("finish-1", 7, 1_700_000_000_000L, 100, "SELECT_REWARD");
+
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(new Match(event, graph, new EventRoute(1, "active", transition), initial), context));
+
+		PlayerQuestGraphState completed = states.get(1);
+		assertEquals(7, completed.getRevision());
+		assertEquals(CompiledQuestGraph.QuestStatus.COMPLETE, completed.getQuestStatus());
+		assertEquals(new IntValue(0), completed.getVariables().get("var0"));
+		assertEquals(new QuestHistory(1, 0, 1_700_000_000_000L, null), completed.getHistory());
+		assertEquals(List.of(CompiledQuestGraph.ActionType.REMOVE_COLLECTED_ITEMS, CompiledQuestGraph.ActionType.FINISH_QUEST), preflighted);
+		assertEquals(List.of(CompiledQuestGraph.ActionType.REMOVE_COLLECTED_ITEMS, CompiledQuestGraph.ActionType.FINISH_QUEST,
+			CompiledQuestGraph.ActionType.SYNC_QUEST_STATUS, CompiledQuestGraph.ActionType.SEND_DIALOG), executed);
 	}
 
 	/**
@@ -337,17 +461,17 @@ class QuestGraphTransitionExecutorTest {
 		TransitionContext context = new TransitionContext(7, fixture.states(), invocation -> MATCHED, invocation -> READY, invocation -> {
 			calls.incrementAndGet();
 			return effects.add(invocation.idempotencyKey()) ? APPLIED : ALREADY_APPLIED;
-		}, (expected, state) -> writes.incrementAndGet() == 2 ? CONFLICT : cas.apply(expected, state));
+		}, (expected, state) -> writes.incrementAndGet() == 3 ? CONFLICT : cas.apply(expected, state));
 
 		assertEquals(DispatchResult.Status.FAILED, executor.execute(fixture.match(), context));
 		assertEquals(Lifecycle.PREPARED, fixture.states().get(1).getLifecycle());
-		assertEquals(CompiledQuestGraph.QuestStatus.NONE, fixture.states().get(1).getQuestStatus());
+		assertEquals(CompiledQuestGraph.QuestStatus.START, fixture.states().get(1).getQuestStatus());
 		assertEquals(DispatchResult.Status.APPLIED, executor.recover(fixture.graph(), context));
 
 		PlayerQuestGraphState committed = fixture.states().get(1);
 		assertEquals(2, calls.get());
 		assertEquals(1, effects.size());
-		assertEquals(2, committed.getRevision());
+		assertEquals(3, committed.getRevision());
 		assertEquals("done", committed.getNodeId());
 		assertEquals(Lifecycle.ACTIVE, committed.getLifecycle());
 		assertEquals(CompiledQuestGraph.QuestStatus.START, committed.getQuestStatus());
@@ -391,9 +515,9 @@ class QuestGraphTransitionExecutorTest {
 	 * Creates a minimal graph fixture using the specified condition list.
 	 */
 	private static Fixture fixture(List<Condition> conditions) {
-		Action action = new Action(START_QUEST);
+		List<Action> actions = List.of(new StartQuestAction(), new RemoveCollectedItemsAction());
 		Transition transition = new Transition("accept", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"),
-			conditions, List.of(action));
+			conditions, actions);
 		Map<String, CompiledQuestGraph.Variable> variables = new LinkedHashMap<>();
 		variables.put("count", new IntVariable("count", PLAYER, 2, 0, 5));
 		variables.put("enabled", new BooleanVariable("enabled", PLAYER, false));

@@ -8,14 +8,22 @@ import java.util.function.Function;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionPhase;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAvailableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
@@ -157,8 +165,7 @@ public final class QuestGraphTransitionExecutor {
 				if (conditionStatus != Status.APPLIED) {
 					return conditionStatus;
 				}
-				QuestStatus questStatus = current == null ? QuestStatus.NONE : current.getQuestStatus();
-				Status preflightStatus = preflight(match.graph(), match.route().transition(), match.event(), questStatus, 0, context);
+				Status preflightStatus = preflight(match.graph(), match.route().transition(), match.event(), current, 0, context);
 				if (preflightStatus != Status.APPLIED) {
 					return preflightStatus;
 				}
@@ -208,7 +215,7 @@ public final class QuestGraphTransitionExecutor {
 				if (event.playerId() != context.playerId() || !journal.getEventId().equals(event.eventId()) || !matches(event, transition.event())) {
 					return Status.FAILED;
 				}
-				Status preflightStatus = preflight(graph, transition, event, state.getQuestStatus(), journal.getNextActionIndex(), context);
+				Status preflightStatus = preflight(graph, transition, event, state, journal.getNextActionIndex(), context);
 				return preflightStatus == Status.APPLIED ? resumePrepared(graph, transition, event, state, context) : preflightStatus;
 			} catch (RuntimeException e) {
 				return Status.FAILED;
@@ -223,7 +230,7 @@ public final class QuestGraphTransitionExecutor {
 	private static Status evaluateConditions(Match match, TransitionContext context) {
 		QuestStatus questStatus = match.state() == null ? QuestStatus.NONE : match.state().getQuestStatus();
 		for (Condition condition : match.route().transition().conditions()) {
-			ConditionResult canonicalResult = evaluateCanonicalCondition(condition, match.graph().questId(), context.states());
+			ConditionResult canonicalResult = evaluateCanonicalCondition(condition, match.graph().questId(), context.states(), match.event());
 			if (canonicalResult != null) {
 				if (canonicalResult == ConditionResult.NOT_MATCHED) {
 					return Status.NO_MATCH;
@@ -254,7 +261,8 @@ public final class QuestGraphTransitionExecutor {
 	 * 直接评估 canonical 任务状态条件；非 ACTIVE 引用显式失败，非 canonical 条件返回 null。
 	 * Directly evaluates canonical quest-state conditions, fails non-active references, and returns null for other capabilities.
 	 */
-	private static ConditionResult evaluateCanonicalCondition(Condition condition, int ownerQuestId, PlayerQuestGraphStateList states) {
+	private static ConditionResult evaluateCanonicalCondition(Condition condition, int ownerQuestId, PlayerQuestGraphStateList states,
+		QuestGraphEvent event) {
 		if (condition instanceof QuestStatusCondition statusCondition) {
 			int questId = statusCondition.questId() == null ? ownerQuestId : statusCondition.questId();
 			PlayerQuestGraphState state = states.get(questId);
@@ -281,26 +289,75 @@ public final class QuestGraphTransitionExecutor {
 			int completionCount = state == null ? 0 : state.getHistory().completionCount();
 			return completionCondition.matches(completionCount) ? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
 		}
+		if (condition instanceof QuestVariableCondition variableCondition) {
+			PlayerQuestGraphState state = states.get(ownerQuestId);
+			if (state == null) {
+				return ConditionResult.NOT_MATCHED;
+			}
+			if (state.getLifecycle() != Lifecycle.ACTIVE
+					|| !(state.getVariables().get(variableCondition.variable()) instanceof IntValue value)) {
+				return ConditionResult.FAILED;
+			}
+			return compare(value.value(), variableCondition.operation(), variableCondition.value())
+				? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
+		}
+		if (condition instanceof QuestRepeatAvailableCondition repeatCondition) {
+			PlayerQuestGraphState state = states.get(ownerQuestId);
+			if (state == null) {
+				return repeatResult(true, repeatCondition);
+			}
+			if (state.getLifecycle() != Lifecycle.ACTIVE) {
+				return ConditionResult.FAILED;
+			}
+			if (state.getQuestStatus() == QuestStatus.NONE) {
+				return repeatResult(true, repeatCondition);
+			}
+			if (state.getQuestStatus() != QuestStatus.COMPLETE
+					|| repeatCondition.maxCompletions() != 255
+						&& state.getHistory().completionCount() >= repeatCondition.maxCompletions()) {
+				return repeatResult(false, repeatCondition);
+			}
+			Long deadline = state.getHistory().nextRepeatAt();
+			if (repeatCondition.requiresDeadline() && deadline == null) {
+				return ConditionResult.FAILED;
+			}
+			return repeatResult(deadline == null || deadline <= event.occurredAt(), repeatCondition);
+		}
 		return null;
+	}
+
+	/**
+	 * 将实际重复资格与条件期望值比较。
+	 * Compares actual repeat eligibility with the condition's expected value.
+	 */
+	private static ConditionResult repeatResult(boolean available, QuestRepeatAvailableCondition condition) {
+		return available == condition.expectedAvailable() ? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
 	}
 
 	/**
 	 * 从指定动作位置预检全部剩余动作，不产生状态或业务副作用。
 	 * Preflights every remaining action from the given index without state or business side effects.
 	 */
-	private static Status preflight(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event, QuestStatus questStatus, int startIndex,
+	private static Status preflight(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event, PlayerQuestGraphState current,
+		int startIndex,
 		TransitionContext context) {
+		ActionState preview = new ActionState(current == null ? QuestStatus.NONE : current.getQuestStatus(),
+			current == null ? initialVariables(graph) : current.getVariables());
 		for (int index = startIndex; index < transition.actions().size(); index++) {
 			Action action = transition.actions().get(index);
-			QuestStatus nextStatus;
+			QuestStatus invocationStatus = preview.questStatus();
 			try {
-				nextStatus = reduceQuestStatus(questStatus, action);
+				preview = reduceActionState(graph, preview, action);
 			} catch (RuntimeException e) {
 				return Status.FAILED;
 			}
+			if (action.type().phase() != ActionPhase.REQUIRED) {
+				continue;
+			}
 			PreflightResult result;
 			try {
-				result = Objects.requireNonNull(context.actionPreflight().apply(invocation(graph, transition, event, questStatus, index)),
+				result = Objects.requireNonNull(context.actionPreflight().apply(invocation(graph, transition, event,
+					invocationStatus, index)),
 					"preflight result");
 			} catch (RuntimeException e) {
 				return Status.FAILED;
@@ -311,7 +368,6 @@ public final class QuestGraphTransitionExecutor {
 			if (result == PreflightResult.FAILED) {
 				return Status.FAILED;
 			}
-			questStatus = nextStatus;
 		}
 		return Status.APPLIED;
 	}
@@ -343,22 +399,35 @@ public final class QuestGraphTransitionExecutor {
 	private static Status resumePrepared(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event,
 		PlayerQuestGraphState prepared, TransitionContext context) {
 		PlayerQuestGraphState current = prepared;
+		int protocolStart = transition.actions().size();
 		for (int index = prepared.getJournal().getNextActionIndex(); index < transition.actions().size(); index++) {
-			ActionResult result;
+			Action action = transition.actions().get(index);
+			if (action.type().phase() == ActionPhase.POST_COMMIT_PROTOCOL) {
+				protocolStart = index;
+				break;
+			}
+			if (action.type().phase() == ActionPhase.REQUIRED) {
+				ActionResult result;
+				try {
+					result = Objects.requireNonNull(context.actionExecutor()
+						.apply(invocation(graph, transition, event, current.getQuestStatus(), index)), "action result");
+				} catch (RuntimeException e) {
+					return Status.FAILED;
+				}
+				if (result == ActionResult.REJECTED) {
+					return Status.REJECTED;
+				}
+				if (result == ActionResult.FAILED) {
+					return Status.FAILED;
+				}
+			}
+			PlayerQuestGraphState reduced;
 			try {
-				result = Objects.requireNonNull(context.actionExecutor()
-					.apply(invocation(graph, transition, event, current.getQuestStatus(), index)), "action result");
+				reduced = reduceActionState(graph, current, action, event.occurredAt());
 			} catch (RuntimeException e) {
 				return Status.FAILED;
 			}
-			if (result == ActionResult.REJECTED) {
-				return Status.REJECTED;
-			}
-			if (result == ActionResult.FAILED) {
-				return Status.FAILED;
-			}
-			QuestStatus questStatus = reduceQuestStatus(current.getQuestStatus(), transition.actions().get(index));
-			PlayerQuestGraphState progressed = copy(current, current.getRevision() + 1, current.getNodeId(), questStatus, Lifecycle.PREPARED,
+			PlayerQuestGraphState progressed = copy(reduced, current.getRevision() + 1, current.getNodeId(), reduced.getQuestStatus(), Lifecycle.PREPARED,
 				new PreparedTransition(current.getJournal().getBaseRevision(), event.eventId(), transition.id(), index + 1,
 					current.getJournal().getEventPayload()));
 			if (persist(context, current.getRevision(), progressed) != PersistenceResult.APPLIED) {
@@ -373,6 +442,13 @@ public final class QuestGraphTransitionExecutor {
 			return Status.FAILED;
 		}
 		context.states().put(committed);
+		for (int index = protocolStart; index < transition.actions().size(); index++) {
+			try {
+				context.actionExecutor().apply(invocation(graph, transition, event, committed.getQuestStatus(), index));
+			} catch (RuntimeException ignored) {
+				// Protocol is a post-commit projection; the owning adapter is responsible for logging/retry.
+			}
+		}
 		return Status.APPLIED;
 	}
 
@@ -391,14 +467,81 @@ public final class QuestGraphTransitionExecutor {
 	 * 将已成功动作归约到 canonical 任务状态；未知或非法状态组合显式失败。
 	 * Reduces a successful action into canonical quest status and explicitly fails unknown or illegal combinations.
 	 */
-	private static QuestStatus reduceQuestStatus(QuestStatus current, Action action) {
-		return switch (action.type()) {
-			case START_QUEST -> switch (current) {
-				case NONE, COMPLETE, LOCKED -> QuestStatus.START;
-				case START -> QuestStatus.START;
-				case REWARD -> throw new IllegalStateException("Cannot start a quest awaiting reward");
-			};
+	private static ActionState reduceActionState(CompiledQuestGraph graph, ActionState current, Action action) {
+		Map<String, VariableValue> variables = new LinkedHashMap<>(current.variables());
+		QuestStatus status = current.questStatus();
+		switch (action) {
+			case StartQuestAction ignored -> {
+				if (status == QuestStatus.REWARD) {
+					throw new IllegalStateException("Cannot start a quest awaiting reward");
+				}
+				if (status != QuestStatus.START) {
+					variables = new LinkedHashMap<>(initialVariables(graph));
+				}
+				status = QuestStatus.START;
+			}
+			case SetQuestStatusAction set -> {
+				if (set.status() == QuestStatus.REWARD && status != QuestStatus.START) {
+					throw new IllegalStateException("Only a started quest can become rewardable");
+				}
+				status = set.status();
+			}
+			case SetQuestVariableAction set -> variables.put(set.variable(), checkedIntValue(graph, set.variable(), set.value()));
+			case AddQuestVariableAction add -> {
+				if (!(variables.get(add.variable()) instanceof IntValue value)) {
+					throw new IllegalStateException("Missing INT variable " + add.variable());
+				}
+				variables.put(add.variable(), checkedIntValue(graph, add.variable(), Math.addExact(value.value(), add.delta())));
+			}
+			case FinishQuestAction ignored -> {
+				if (status != QuestStatus.REWARD) {
+					throw new IllegalStateException("Only a rewardable quest can finish");
+				}
+				status = QuestStatus.COMPLETE;
+				variables = new LinkedHashMap<>(initialVariables(graph));
+			}
+			default -> {
+			}
+		}
+		return new ActionState(status, variables);
+	}
+
+	/** 使用当前状态执行一个内部 state reduction。 / Applies one internal state reduction to the current state. */
+	private static PlayerQuestGraphState reduceActionState(CompiledQuestGraph graph, PlayerQuestGraphState current, Action action,
+		long occurredAt) {
+		ActionState reduced = reduceActionState(graph, new ActionState(current.getQuestStatus(), current.getVariables()), action);
+		QuestHistory history = current.getHistory();
+		if (action instanceof FinishQuestAction finish) {
+			history = new QuestHistory(Math.addExact(history.completionCount(), 1), finish.rewardIndex(), occurredAt, null);
+		}
+		return new PlayerQuestGraphState(current.getQuestId(), current.getDefinitionVersion(), current.getRevision(), current.getNodeId(),
+			reduced.questStatus(), history, current.getInstanceRunId(), current.getLifecycle(), reduced.variables(), current.getDeadlines(),
+			current.getJournal(), current.getCleanupLeases(), current.getQuarantineReason());
+	}
+
+	/** 校验整数变量写入仍位于声明边界。 / Validates that an integer-variable write remains within declared bounds. */
+	private static IntValue checkedIntValue(CompiledQuestGraph graph, String name, int value) {
+		if (!(graph.variables().get(name) instanceof IntVariable variable) || value < variable.min() || value > variable.max()) {
+			throw new IllegalStateException("INT variable write is outside declared bounds: " + name);
+		}
+		return new IntValue(value);
+	}
+
+	/** 比较 canonical 整数变量。 / Compares a canonical integer variable. */
+	private static boolean compare(int actual, com.aionemu.gameserver.questEngine.model.ConditionOperation operation, int expected) {
+		return switch (operation) {
+			case EQUAL -> actual == expected;
+			case GREATER -> actual > expected;
+			case GREATER_EQUAL -> actual >= expected;
+			case LESSER -> actual < expected;
+			case LESSER_EQUAL -> actual <= expected;
+			case NOT_EQUAL -> actual != expected;
+			case IN, NOT_IN -> throw new IllegalStateException("Set operation is invalid for a quest variable");
 		};
+	}
+
+	/** 保存 preflight 使用的纯状态预览。 / Holds the pure state preview used during preflight. */
+	private record ActionState(QuestStatus questStatus, Map<String, VariableValue> variables) {
 	}
 
 	/**

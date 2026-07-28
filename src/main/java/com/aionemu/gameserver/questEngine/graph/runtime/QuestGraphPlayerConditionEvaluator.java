@@ -10,11 +10,16 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCollectItemsCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAvailableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionInvocation;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionResult;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.services.QuestService;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +46,9 @@ public final class QuestGraphPlayerConditionEvaluator {
 		try {
 			boolean matched = switch (invocation.condition()) {
 				case QuestStatusCondition condition -> throw new IllegalArgumentException("Quest status must be evaluated by the transition executor");
+				case QuestVariableCondition condition -> throw new IllegalArgumentException("Quest variable must be evaluated by the transition executor");
+				case QuestRepeatAvailableCondition condition -> throw new IllegalArgumentException(
+					"Quest repeat eligibility must be evaluated by the transition executor");
 				case QuestRewardCondition condition -> throw new IllegalArgumentException("Quest reward must be evaluated by the transition executor");
 				case QuestCompletionCountCondition condition -> throw new IllegalArgumentException(
 					"Quest completion count must be evaluated by the transition executor");
@@ -54,6 +62,8 @@ public final class QuestGraphPlayerConditionEvaluator {
 				case PlayerInventoryCondition condition -> compare(player.getInventory().getItemCountByItemId(condition.itemId()),
 					condition.operation(), condition.count());
 				case PlayerEquippedCondition condition -> player.getEquipment().getEquippedItemIds().contains(condition.itemId());
+				case QuestCollectItemsCondition condition -> QuestService.collectItemCheck(
+					new QuestEnv(null, player, invocation.questId(), 0), false);
 			};
 			return matched ? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
 		} catch (RuntimeException e) {

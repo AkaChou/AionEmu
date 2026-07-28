@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.graph;
 
-import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionType.START_QUEST;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DIALOG;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL;
 
@@ -28,7 +27,10 @@ import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionPhase;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CloseDialogAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
@@ -40,17 +42,33 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerInvento
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerMessageChannel;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCollectItemsCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAvailableCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendPlayerMessageAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ShowQuestListAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Variable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddQuestVariableActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CloseDialogActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FinishQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
@@ -63,9 +81,19 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerLevelCondit
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerRaceConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerTitleConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestCompletionCountConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestCollectItemsConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestRepeatAvailableConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestRewardConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestStatusConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestVariableConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveCollectedItemsActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendDialogActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendPlayerMessageActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetQuestStatusActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetQuestVariableActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ShowQuestListActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SyncQuestStatusActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.TransitionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.VariableData;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
@@ -232,13 +260,19 @@ public final class QuestGraphCompiler {
 					throw new IllegalArgumentException("Quest " + questId + " transition " + sourceTransition.getId()
 						+ " targets missing node " + sourceTransition.getTargetNode());
 				}
+				List<Condition> conditions = sourceTransition.getConditions().stream()
+					.map(value -> compileCondition(questId, value, references, variables)).toList();
+				List<Action> actions = sourceTransition.getActions().stream()
+					.map(value -> compileAction(questId, value, variables)).toList();
+				validateActionOrder(questId, sourceTransition.getId(), actions);
 				transitions.add(new Transition(sourceTransition.getId(), sourceTransition.getPriority(), sourceTransition.getTargetNode(), event,
-					sourceTransition.getConditions().stream().map(value -> compileCondition(questId, value, references)).toList(),
-					sourceTransition.getActions().stream().map(value -> compileAction(questId, value)).toList()));
+					conditions, actions));
 			}
 			transitions.sort(Comparator.comparingInt(Transition::priority).thenComparing(Transition::id));
-			if (sourceNode.isTerminal() && !transitions.isEmpty()) {
-				throw new IllegalArgumentException("Quest " + questId + " terminal node " + sourceNode.getId() + " has transitions");
+			if (sourceNode.isTerminal() && transitions.stream().anyMatch(transition ->
+					!isRepeatEntry(transition) && !isTerminalProtocolSelfLoop(sourceNode.getId(), transition))) {
+				throw new IllegalArgumentException("Quest " + questId + " terminal node " + sourceNode.getId()
+					+ " has a transition without repeat eligibility or a guarded protocol self-loop");
 			}
 			if (!sourceNode.isTerminal() && transitions.isEmpty()) {
 				throw new IllegalArgumentException("Quest " + questId + " non-terminal node " + sourceNode.getId() + " has no transitions");
@@ -248,6 +282,30 @@ public final class QuestGraphCompiler {
 
 		validateReachability(questId, source.getInitialNode(), nodes);
 		return new CompiledQuestGraph(questId, version, scope, source.getInitialNode(), variables, nodes);
+	}
+
+	/**
+	 * 判断完成节点转换是否由显式的可重复条件保护。
+	 * Returns whether a completed-node transition is guarded by explicit repeat availability.
+	 */
+	private static boolean isRepeatEntry(Transition transition) {
+		return transition.conditions().stream().anyMatch(condition ->
+			condition instanceof QuestRepeatAvailableCondition repeat && repeat.expectedAvailable());
+	}
+
+	/**
+	 * 允许完成节点在“不可重复”时执行不改变状态的提交后协议自环。
+	 * Allows a completed node to run a state-preserving post-commit protocol self-loop while repeat is unavailable.
+	 */
+	private static boolean isTerminalProtocolSelfLoop(String nodeId, Transition transition) {
+		boolean completeState = transition.conditions().stream().anyMatch(condition ->
+			condition instanceof QuestStatusCondition status && status.questId() == null
+				&& status.operation() == com.aionemu.gameserver.questEngine.model.ConditionOperation.IN
+				&& status.statuses().equals(Set.of(QuestStatus.COMPLETE)));
+		boolean repeatUnavailable = transition.conditions().stream().anyMatch(condition ->
+			condition instanceof QuestRepeatAvailableCondition repeat && !repeat.expectedAvailable());
+		return transition.targetNode().equals(nodeId) && completeState && repeatUnavailable && !transition.actions().isEmpty()
+			&& transition.actions().stream().allMatch(action -> action.type().phase() == ActionPhase.POST_COMMIT_PROTOCOL);
 	}
 
 	/**
@@ -336,7 +394,7 @@ public final class QuestGraphCompiler {
 	 * 将受支持的 JAXB 条件编译为强类型条件。
 	 * Compiles a supported JAXB condition into a typed condition.
 	 */
-	private static Condition compileCondition(int questId, Object source, References references) {
+	private static Condition compileCondition(int questId, Object source, References references, Map<String, Variable> variables) {
 		if (source instanceof QuestStatusConditionData condition) {
 			if (condition.getQuestId() != null && !references.questIds().contains(condition.getQuestId())) {
 				throw new IllegalArgumentException("Quest " + questId + " status condition references missing quest " + condition.getQuestId());
@@ -361,6 +419,28 @@ public final class QuestGraphCompiler {
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid quest reward condition", e);
 			}
+		}
+		if (source instanceof QuestVariableConditionData condition) {
+			if (!(variables.get(condition.getVariable()) instanceof IntVariable) || condition.getValue() == null) {
+				throw new IllegalArgumentException("Quest " + questId + " variable condition references a missing INT variable "
+					+ condition.getVariable());
+			}
+			try {
+				return new QuestVariableCondition(condition.getVariable(), condition.getOperation(), condition.getValue());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid quest variable condition", e);
+			}
+		}
+		if (source instanceof QuestRepeatAvailableConditionData condition) {
+			try {
+				return new QuestRepeatAvailableCondition(condition.getMaxCompletions(), condition.getRequiresDeadline(),
+					condition.getExpectedAvailable());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid repeat-available condition", e);
+			}
+		}
+		if (source instanceof QuestCollectItemsConditionData) {
+			return new QuestCollectItemsCondition();
 		}
 		if (source instanceof QuestCompletionCountConditionData condition) {
 			if (condition.getQuestId() == null || !references.questIds().contains(condition.getQuestId())) {
@@ -451,11 +531,92 @@ public final class QuestGraphCompiler {
 	 * 将受支持的 JAXB 动作编译为强类型动作。
 	 * Compiles a supported JAXB action into a typed action.
 	 */
-	private static Action compileAction(int questId, Object source) {
+	private static Action compileAction(int questId, Object source, Map<String, Variable> variables) {
 		if (source instanceof StartQuestActionData) {
-			return new Action(START_QUEST);
+			return new StartQuestAction();
+		}
+		if (source instanceof SetQuestStatusActionData action) {
+			try {
+				return new SetQuestStatusAction(QuestStatus.valueOf(action.getStatus()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid set-status action", e);
+			}
+		}
+		if (source instanceof SetQuestVariableActionData action) {
+			IntVariable variable = requireIntVariable(questId, action.getVariable(), variables);
+			if (action.getValue() == null || action.getValue() < variable.min() || action.getValue() > variable.max()) {
+				throw new IllegalArgumentException("Quest " + questId + " set-variable action is outside " + action.getVariable() + " bounds");
+			}
+			return new SetQuestVariableAction(action.getVariable(), action.getValue());
+		}
+		if (source instanceof AddQuestVariableActionData action) {
+			requireIntVariable(questId, action.getVariable(), variables);
+			try {
+				return new AddQuestVariableAction(action.getVariable(), action.getDelta());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid add-variable action", e);
+			}
+		}
+		if (source instanceof RemoveCollectedItemsActionData) {
+			return new RemoveCollectedItemsAction();
+		}
+		if (source instanceof FinishQuestActionData action) {
+			try {
+				return new FinishQuestAction(action.getRewardIndex());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid finish action", e);
+			}
+		}
+		if (source instanceof SendDialogActionData action) {
+			try {
+				return new SendDialogAction(action.getDialogId());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid dialog action", e);
+			}
+		}
+		if (source instanceof CloseDialogActionData) {
+			return new CloseDialogAction();
+		}
+		if (source instanceof ShowQuestListActionData) {
+			return new ShowQuestListAction();
+		}
+		if (source instanceof SyncQuestStatusActionData) {
+			return new SyncQuestStatusAction();
+		}
+		if (source instanceof SendPlayerMessageActionData action) {
+			try {
+				return new SendPlayerMessageAction(action.getText(), PlayerMessageChannel.valueOf(action.getChannel()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid player-message action", e);
+			}
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported action capability");
+	}
+
+	/**
+	 * 返回已声明的整数变量，否则阻断编译。
+	 * Returns a declared integer variable or blocks compilation.
+	 */
+	private static IntVariable requireIntVariable(int questId, String name, Map<String, Variable> variables) {
+		if (!(variables.get(name) instanceof IntVariable variable)) {
+			throw new IllegalArgumentException("Quest " + questId + " references a missing INT variable " + name);
+		}
+		return variable;
+	}
+
+	/**
+	 * 强制状态/必需副作用位于提交后协议之前，避免发包早于状态提交。
+	 * Forces state/required effects before post-commit protocol so packets cannot precede state commit.
+	 */
+	private static void validateActionOrder(int questId, String transitionId, List<Action> actions) {
+		ActionPhase previous = ActionPhase.STATE;
+		for (Action action : actions) {
+			ActionPhase phase = action.type().phase();
+			if (phase.ordinal() < previous.ordinal()) {
+				throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " has invalid action phase order");
+			}
+			previous = phase;
+		}
 	}
 
 	/**

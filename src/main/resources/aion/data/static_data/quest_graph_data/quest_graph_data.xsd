@@ -146,6 +146,22 @@
 		<xs:attribute name="values" type="questGraphQuestStatusList" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphQuestVariableCondition">
+		<xs:attribute name="variable" type="questGraphIdentifier" use="required"/>
+		<xs:attribute name="op" type="questGraphNumericComparison" use="required"/>
+		<xs:attribute name="value" type="xs:int" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphQuestRepeatAvailableCondition">
+		<xs:attribute name="max_completions" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:positiveInteger"><xs:maxInclusive value="255"/></xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="requires_deadline" type="xs:boolean" use="required"/>
+		<xs:attribute name="expected" type="xs:boolean" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphQuestRewardCondition">
 		<xs:attribute name="quest_id" type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="reward_index" type="xs:nonNegativeInteger" use="required"/>
@@ -194,9 +210,45 @@
 
 	<xs:complexType name="questGraphEmptyAction"/>
 
+	<xs:complexType name="questGraphSetStatusAction">
+		<xs:attribute name="status" type="questGraphQuestStatus" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphSetVariableAction">
+		<xs:attribute name="variable" type="questGraphIdentifier" use="required"/>
+		<xs:attribute name="value" type="xs:int" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphAddVariableAction">
+		<xs:attribute name="variable" type="questGraphIdentifier" use="required"/>
+		<xs:attribute name="delta" type="xs:int" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphFinishAction">
+		<xs:attribute name="reward_index" type="xs:nonNegativeInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphSendDialogAction">
+		<xs:attribute name="dialog_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="questGraphPlayerMessageChannel">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BRIGHT_YELLOW_CENTER"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="questGraphSendPlayerMessageAction">
+		<xs:attribute name="text" type="xs:string" use="required"/>
+		<xs:attribute name="channel" type="questGraphPlayerMessageChannel" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphConditions">
 		<xs:choice minOccurs="1" maxOccurs="unbounded">
 			<xs:element name="quest-status" type="questGraphQuestStatusCondition"/>
+			<xs:element name="quest-variable" type="questGraphQuestVariableCondition"/>
+			<xs:element name="quest-repeat-available" type="questGraphQuestRepeatAvailableCondition"/>
+			<xs:element name="quest-collect-items" type="questGraphEmptyAction"/>
 			<xs:element name="quest-reward" type="questGraphQuestRewardCondition"/>
 			<xs:element name="quest-completion-count" type="questGraphQuestCompletionCountCondition"/>
 			<xs:element name="player-level" type="questGraphPlayerLevelCondition"/>
@@ -213,6 +265,16 @@
 	<xs:complexType name="questGraphActions">
 		<xs:choice minOccurs="1" maxOccurs="unbounded">
 			<xs:element name="start-quest" type="questGraphEmptyAction"/>
+			<xs:element name="set-quest-status" type="questGraphSetStatusAction"/>
+			<xs:element name="set-quest-variable" type="questGraphSetVariableAction"/>
+			<xs:element name="add-quest-variable" type="questGraphAddVariableAction"/>
+			<xs:element name="remove-collected-items" type="questGraphEmptyAction"/>
+			<xs:element name="finish-quest" type="questGraphFinishAction"/>
+			<xs:element name="send-dialog" type="questGraphSendDialogAction"/>
+			<xs:element name="close-dialog" type="questGraphEmptyAction"/>
+			<xs:element name="show-quest-list" type="questGraphEmptyAction"/>
+			<xs:element name="sync-quest-status" type="questGraphEmptyAction"/>
+			<xs:element name="send-player-message" type="questGraphSendPlayerMessageAction"/>
 		</xs:choice>
 	</xs:complexType>
 

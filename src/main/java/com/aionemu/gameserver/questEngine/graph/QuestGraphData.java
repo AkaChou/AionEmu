@@ -276,6 +276,9 @@ public final class QuestGraphData {
 	public static final class ConditionsData {
 		@XmlElements({
 			@XmlElement(name = "quest-status", type = QuestStatusConditionData.class),
+			@XmlElement(name = "quest-variable", type = QuestVariableConditionData.class),
+			@XmlElement(name = "quest-repeat-available", type = QuestRepeatAvailableConditionData.class),
+			@XmlElement(name = "quest-collect-items", type = QuestCollectItemsConditionData.class),
 			@XmlElement(name = "quest-reward", type = QuestRewardConditionData.class),
 			@XmlElement(name = "quest-completion-count", type = QuestCompletionCountConditionData.class),
 			@XmlElement(name = "player-level", type = PlayerLevelConditionData.class),
@@ -288,6 +291,44 @@ public final class QuestGraphData {
 			@XmlElement(name = "player-equipped", type = PlayerEquippedConditionData.class)
 		})
 		private List<Object> values = new ArrayList<>();
+	}
+
+	/**
+	 * 表示当前任务整数变量的数值比较。
+	 * Represents a numeric comparison against an integer variable of the current quest.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class QuestVariableConditionData {
+		/** 变量名。 / Variable name. */
+		@XmlAttribute(required = true)
+		private String variable;
+		/** 数值比较操作。 / Numeric comparison operation. */
+		@XmlAttribute(name = "op", required = true)
+		private ConditionOperation operation;
+		/** 比较值。 / Comparison value. */
+		@XmlAttribute(required = true)
+		private Integer value;
+	}
+
+	/** 定义当前任务开始新重复周期所需的上限和 deadline。 / Defines the cap and deadline required to start a repeat cycle. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class QuestRepeatAvailableConditionData {
+		/** 最大完成次数；255 表示无限。 / Maximum completions; 255 means unlimited. */
+		@XmlAttribute(name = "max_completions", required = true)
+		private Integer maxCompletions;
+		/** 是否要求 history 中存在并到达 next-repeat deadline。 / Whether history must contain a reached next-repeat deadline. */
+		@XmlAttribute(name = "requires_deadline", required = true)
+		private Boolean requiresDeadline;
+		/** 期望当前是否可重复。 / Whether repeat availability is expected. */
+		@XmlAttribute(name = "expected", required = true)
+		private Boolean expectedAvailable;
+	}
+
+	/** 标记玩家必须持有 quest_data 声明的全部交付物品。 / Marks that all quest_data delivery items must be present. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class QuestCollectItemsConditionData {
 	}
 
 	/**
@@ -455,7 +496,19 @@ public final class QuestGraphData {
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class ActionsData {
-		@XmlElements(@XmlElement(name = "start-quest", type = StartQuestActionData.class))
+		@XmlElements({
+			@XmlElement(name = "start-quest", type = StartQuestActionData.class),
+			@XmlElement(name = "set-quest-status", type = SetQuestStatusActionData.class),
+			@XmlElement(name = "set-quest-variable", type = SetQuestVariableActionData.class),
+			@XmlElement(name = "add-quest-variable", type = AddQuestVariableActionData.class),
+			@XmlElement(name = "remove-collected-items", type = RemoveCollectedItemsActionData.class),
+			@XmlElement(name = "finish-quest", type = FinishQuestActionData.class),
+			@XmlElement(name = "send-dialog", type = SendDialogActionData.class),
+			@XmlElement(name = "close-dialog", type = CloseDialogActionData.class),
+			@XmlElement(name = "show-quest-list", type = ShowQuestListActionData.class),
+			@XmlElement(name = "sync-quest-status", type = SyncQuestStatusActionData.class),
+			@XmlElement(name = "send-player-message", type = SendPlayerMessageActionData.class)
+		})
 		private List<Object> values = new ArrayList<>();
 	}
 
@@ -465,5 +518,88 @@ public final class QuestGraphData {
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class StartQuestActionData {
+	}
+
+	/** 设置 canonical 任务状态。 / Sets canonical quest status. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SetQuestStatusActionData {
+		/** 目标状态。 / Target status. */
+		@XmlAttribute(required = true)
+		private String status;
+	}
+
+	/** 设置整数任务变量。 / Sets an integer quest variable. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SetQuestVariableActionData {
+		/** 变量名。 / Variable name. */
+		@XmlAttribute(required = true)
+		private String variable;
+		/** 写入值。 / Assigned value. */
+		@XmlAttribute(required = true)
+		private Integer value;
+	}
+
+	/** 增加整数任务变量。 / Increments an integer quest variable. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class AddQuestVariableActionData {
+		/** 变量名。 / Variable name. */
+		@XmlAttribute(required = true)
+		private String variable;
+		/** 非零增量。 / Non-zero delta. */
+		@XmlAttribute(required = true)
+		private Integer delta;
+	}
+
+	/** 扣除 quest_data 交付物品。 / Removes quest_data delivery items. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class RemoveCollectedItemsActionData {
+	}
+
+	/** 发放奖励并完成任务周期。 / Grants rewards and completes the quest cycle. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class FinishQuestActionData {
+		/** 奖励组索引。 / Reward-group index. */
+		@XmlAttribute(name = "reward_index", required = true)
+		private Integer rewardIndex;
+	}
+
+	/** 发送任务对话页面。 / Sends a quest dialog page. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SendDialogActionData {
+		/** 对话页面 ID。 / Dialog-page id. */
+		@XmlAttribute(name = "dialog_id", required = true)
+		private Integer dialogId;
+	}
+
+	/** 关闭当前对话窗口。 / Closes the current dialog window. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class CloseDialogActionData {
+	}
+
+	/** 刷新 NPC 任务选择列表。 / Refreshes the NPC quest list. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class ShowQuestListActionData {
+	}
+
+	/** 同步任务状态和变量。 / Synchronizes quest status and variables. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class SyncQuestStatusActionData {
+	}
+
+	/** 向玩家发送类型化频道消息。 / Sends a typed-channel player message. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SendPlayerMessageActionData {
+		/** 消息正文。 / Message text. */
+		@XmlAttribute(required = true)
+		private String text;
+		/** 客户端频道。 / Client channel. */
+		@XmlAttribute(required = true)
+		private String channel;
 	}
 }

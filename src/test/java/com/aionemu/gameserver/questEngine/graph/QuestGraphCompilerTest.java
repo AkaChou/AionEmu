@@ -8,10 +8,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamReader;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.aionemu.gameserver.model.Gender;
@@ -53,6 +59,9 @@ class QuestGraphCompilerTest {
 			new CompiledQuestGraph.QuestStatusCondition(CompiledQuestGraph.QuestStatus.NONE),
 			new CompiledQuestGraph.QuestStatusCondition(2, ConditionOperation.IN,
 				Set.of(CompiledQuestGraph.QuestStatus.COMPLETE)),
+			new CompiledQuestGraph.QuestVariableCondition("counter", ConditionOperation.EQUAL, 0),
+			new CompiledQuestGraph.QuestRepeatAvailableCondition(255, true, true),
+			new CompiledQuestGraph.QuestCollectItemsCondition(),
 			new CompiledQuestGraph.QuestRewardCondition(2, 1),
 			new CompiledQuestGraph.QuestCompletionCountCondition(2, ConditionOperation.EQUAL, 3),
 			new CompiledQuestGraph.PlayerLevelCondition(10, 55),
@@ -64,8 +73,19 @@ class QuestGraphCompilerTest {
 			new CompiledQuestGraph.PlayerInventoryCondition(182200001, ConditionOperation.GREATER_EQUAL, 1),
 			new CompiledQuestGraph.PlayerEquippedCondition(182200001)),
 			graph.nodes().get("b").transitions().getFirst().conditions());
-		assertEquals(CompiledQuestGraph.ActionType.START_QUEST,
-			graph.nodes().get("b").transitions().getFirst().actions().getFirst().type());
+		assertEquals(List.of(
+			CompiledQuestGraph.ActionType.START_QUEST,
+			CompiledQuestGraph.ActionType.SET_QUEST_VARIABLE,
+			CompiledQuestGraph.ActionType.ADD_QUEST_VARIABLE,
+			CompiledQuestGraph.ActionType.SET_QUEST_STATUS,
+			CompiledQuestGraph.ActionType.REMOVE_COLLECTED_ITEMS,
+			CompiledQuestGraph.ActionType.FINISH_QUEST,
+			CompiledQuestGraph.ActionType.SYNC_QUEST_STATUS,
+			CompiledQuestGraph.ActionType.SEND_DIALOG,
+			CompiledQuestGraph.ActionType.CLOSE_DIALOG,
+			CompiledQuestGraph.ActionType.SHOW_QUEST_LIST,
+			CompiledQuestGraph.ActionType.SEND_PLAYER_MESSAGE),
+			graph.nodes().get("b").transitions().getFirst().actions().stream().map(CompiledQuestGraph.Action::type).toList());
 		var routes = data.eventIndex().get(new CompiledQuestGraphData.EventKey(CompiledQuestGraph.EventType.DIALOG, 203709));
 		assertEquals(List.of("accept", "first", "late"), routes.stream().map(route -> route.transition().id()).toList());
 		assertEquals(data, load(xml));
@@ -73,6 +93,22 @@ class QuestGraphCompilerTest {
 		assertThrows(UnsupportedOperationException.class, () -> graph.nodes().clear());
 		assertThrows(UnsupportedOperationException.class, () -> graph.nodes().get("b").transitions().clear());
 		assertThrows(UnsupportedOperationException.class, routes::clear);
+	}
+
+	/**
+	 * 使用真实编译器离线编译由系统属性指定的完整候选批次。
+	 * Offline-compiles a complete candidate batch selected through system properties with the real compiler.
+	 */
+	@Test
+	@EnabledIfSystemProperty(named = "questGraphBatchFile", matches = ".+")
+	void compilesRequestedGeneratedBatchFile() throws Exception {
+		Path file = Path.of(System.getProperty("questGraphBatchFile"));
+		CompiledQuestGraphData data = QuestGraphCompiler.load(file, SCHEMA, referencesDeclaredIn(file));
+		long transitionCount = data.graphs().values().stream().flatMap(graph -> graph.nodes().values().stream())
+			.flatMap(node -> node.transitions().stream()).count();
+
+		assertEquals(Integer.parseInt(System.getProperty("questGraphExpectedCount")), data.graphs().size());
+		assertEquals(Long.parseLong(System.getProperty("questGraphExpectedTransitionCount")), transitionCount);
 	}
 
 	@Test
@@ -84,6 +120,9 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> load("<quest_graphs><script/></quest_graphs>"));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("<start-quest/>", "<complete-quest/>"), terminal()))));
+		assertFailureContains(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("<start-quest/>", "<send-dialog dialog_id=\"1\"/><start-quest/>"), terminal())),
+			"invalid action phase order");
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("<dialog", "<attack"), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
@@ -134,6 +173,31 @@ class QuestGraphCompilerTest {
 		assertFailureContains(document(graph(1, "offer", transition("again", 10, "offer"), "")), "no reachable terminal node");
 		assertFailureContains(document(graph(1, "offer",
 			transition("first", 10, "done") + transition("second", 10, "done"), terminal())), "ambiguous DIALOG priority 10");
+		String terminalTransition = transition("repeat", 20, "offer")
+			.replace("<quest-status op=\"IN\" values=\"NONE\"/>",
+				"<quest-status op=\"IN\" values=\"COMPLETE\"/>");
+		loadUnchecked(document(graph(1, "offer", transition("accept", 10, "done"),
+			"<node id=\"done\" terminal=\"true\">" + terminalTransition + "</node>")));
+		String invalidTerminalTransition = transition("invalid", 20, "offer")
+			.replace("<quest-repeat-available max_completions=\"255\" requires_deadline=\"true\" expected=\"true\"/>", "");
+		assertFailureContains(document(graph(1, "offer", transition("accept", 10, "done"),
+			"<node id=\"done\" terminal=\"true\">" + invalidTerminalTransition + "</node>")),
+			"transition without repeat eligibility or a guarded protocol self-loop");
+		String terminalProtocolLoop = """
+			<transition id="close" priority="30" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<conditions>
+					<quest-status op="IN" values="COMPLETE"/>
+					<quest-repeat-available max_completions="255" requires_deadline="true" expected="false"/>
+				</conditions>
+				<actions><close-dialog/></actions>
+			</transition>
+			""";
+		loadUnchecked(document(graph(1, "offer", transition("accept", 10, "done"),
+			"<node id=\"done\" terminal=\"true\">" + terminalProtocolLoop + "</node>")));
+		assertFailureContains(document(graph(1, "offer", transition("accept", 10, "done"),
+			"<node id=\"done\" terminal=\"true\">" + terminalProtocolLoop.replace("<close-dialog/>", "<start-quest/>") + "</node>")),
+			"transition without repeat eligibility or a guarded protocol self-loop");
 	}
 
 	@Test
@@ -200,6 +264,12 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class,
 			() -> new CompiledQuestGraph.PlayerInventoryCondition(182200001, ConditionOperation.EQUAL, -1));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerEquippedCondition(0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new CompiledQuestGraph.QuestVariableCondition("counter", ConditionOperation.IN, 0));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.QuestRepeatAvailableCondition(0, false, true));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.AddQuestVariableAction("counter", 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new CompiledQuestGraph.SetQuestStatusAction(CompiledQuestGraph.QuestStatus.COMPLETE));
 	}
 
 	private CompiledQuestGraphData load(String xml) throws Exception {
@@ -210,6 +280,15 @@ class QuestGraphCompilerTest {
 		Path file = tempDir.resolve("graphs-" + fileIndex++ + ".xml");
 		Files.writeString(file, xml, StandardCharsets.UTF_8);
 		return QuestGraphCompiler.load(file, SCHEMA, references);
+	}
+
+	/** 编译预期成功的内联 XML，并把检查异常提升为断言失败。 / Compiles inline XML expected to succeed and promotes checked errors. */
+	private CompiledQuestGraphData loadUnchecked(String xml) {
+		try {
+			return load(xml);
+		} catch (Exception e) {
+			throw new AssertionError(e);
+		}
 	}
 
 	private void assertFailureContains(String xml, String message) {
@@ -224,6 +303,45 @@ class QuestGraphCompilerTest {
 			}
 		}
 		fail("Expected failure containing: " + message);
+	}
+
+	/**
+	 * 从待编译 XML 收集 compiler 所需的引用集合；真实静态数据存在性由生成器的引用闭包门禁独立证明。
+	 * Collects compiler reference sets from the XML; the generator independently proves existence in authoritative static data.
+	 */
+	private static QuestGraphCompiler.References referencesDeclaredIn(Path file) throws Exception {
+		Set<Integer> questIds = new HashSet<>();
+		Set<Integer> npcIds = new HashSet<>();
+		Set<Integer> itemIds = new HashSet<>();
+		Set<Integer> titleIds = new HashSet<>();
+		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
+		inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		inputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+		try (var stream = Files.newInputStream(file)) {
+			XMLStreamReader reader = inputFactory.createXMLStreamReader(stream);
+			try {
+				while (reader.hasNext()) {
+					if (reader.next() != XMLStreamConstants.START_ELEMENT) {
+						continue;
+					}
+					addIntegerAttribute(reader, "quest_id", questIds);
+					addIntegerAttribute(reader, "npc_id", npcIds);
+					addIntegerAttribute(reader, "item_id", itemIds);
+					addIntegerAttribute(reader, "title_id", titleIds);
+				}
+			} finally {
+				reader.close();
+			}
+		}
+		return new QuestGraphCompiler.References(questIds, npcIds, itemIds, titleIds);
+	}
+
+	/** 添加存在的正整数 XML 属性。 / Adds a present positive-integer XML attribute. */
+	private static void addIntegerAttribute(XMLStreamReader reader, String name, Set<Integer> target) {
+		String value = reader.getAttributeValue(null, name);
+		if (value != null) {
+			target.add(Integer.parseInt(value));
+		}
 	}
 
 	private static String document(String graph) {
@@ -260,6 +378,9 @@ class QuestGraphCompilerTest {
 			<conditions>
 				<quest-status op="IN" values="NONE"/>
 				<quest-status quest_id="2" op="IN" values="COMPLETE"/>
+				<quest-variable variable="counter" op="EQUAL" value="0"/>
+				<quest-repeat-available max_completions="255" requires_deadline="true" expected="true"/>
+				<quest-collect-items/>
 				<quest-reward quest_id="2" reward_index="1"/>
 				<quest-completion-count quest_id="2" op="EQUAL" count="3"/>
 				<player-level min="10" max="55"/>
@@ -271,7 +392,19 @@ class QuestGraphCompilerTest {
 				<player-inventory item_id="182200001" op="GREATER_EQUAL" count="1"/>
 				<player-equipped item_id="182200001"/>
 			</conditions>
-				<actions><start-quest/></actions>
+				<actions>
+					<start-quest/>
+					<set-quest-variable variable="counter" value="1"/>
+					<add-quest-variable variable="counter" delta="1"/>
+					<set-quest-status status="REWARD"/>
+					<remove-collected-items/>
+					<finish-quest reward_index="0"/>
+					<sync-quest-status/>
+					<send-dialog dialog_id="5"/>
+					<close-dialog/>
+					<show-quest-list/>
+					<send-player-message text="Missing item" channel="BRIGHT_YELLOW_CENTER"/>
+				</actions>
 			</transition>
 			""".formatted(id, priority, target);
 	}

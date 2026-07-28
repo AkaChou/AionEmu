@@ -56,7 +56,46 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Lists action capabilities currently proven and supported by the compiler.
 	 */
 	public enum ActionType {
-		START_QUEST
+		START_QUEST(ActionPhase.STATE),
+		SET_QUEST_STATUS(ActionPhase.STATE),
+		SET_QUEST_VARIABLE(ActionPhase.STATE),
+		ADD_QUEST_VARIABLE(ActionPhase.STATE),
+		REMOVE_COLLECTED_ITEMS(ActionPhase.REQUIRED),
+		FINISH_QUEST(ActionPhase.REQUIRED),
+		SEND_DIALOG(ActionPhase.POST_COMMIT_PROTOCOL),
+		CLOSE_DIALOG(ActionPhase.POST_COMMIT_PROTOCOL),
+		SHOW_QUEST_LIST(ActionPhase.POST_COMMIT_PROTOCOL),
+		SYNC_QUEST_STATUS(ActionPhase.POST_COMMIT_PROTOCOL),
+		SEND_PLAYER_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL);
+
+		private final ActionPhase phase;
+
+		ActionType(ActionPhase phase) {
+			this.phase = phase;
+		}
+
+		/** 返回动作的固定执行阶段。 / Returns the action's fixed execution phase. */
+		public ActionPhase phase() {
+			return phase;
+		}
+	}
+
+	/**
+	 * 定义状态、必需副作用和提交后协议三个固定动作阶段。
+	 * Defines the fixed state, required-side-effect, and post-commit protocol action phases.
+	 */
+	public enum ActionPhase {
+		STATE,
+		REQUIRED,
+		POST_COMMIT_PROTOCOL
+	}
+
+	/**
+	 * 定义玩家消息投影当前支持的客户端频道。
+	 * Defines client channels currently supported by player-message projection.
+	 */
+	public enum PlayerMessageChannel {
+		BRIGHT_YELLOW_CENTER
 	}
 
 	/**
@@ -143,9 +182,44 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * 表示转换执行前必须满足的已类型化条件。
 	 * Represents a typed condition that must hold before a transition executes.
 	 */
-	public sealed interface Condition permits QuestStatusCondition, PlayerLevelCondition, PlayerRaceCondition, PlayerClassCondition,
+	public sealed interface Condition permits QuestStatusCondition, QuestVariableCondition, QuestRepeatAvailableCondition,
+		QuestCollectItemsCondition, PlayerLevelCondition, PlayerRaceCondition, PlayerClassCondition,
 		PlayerGenderCondition, PlayerTitleCondition, PlayerAbyssRankCondition, PlayerInventoryCondition, QuestRewardCondition,
 		QuestCompletionCountCondition, PlayerEquippedCondition {
+	}
+
+	/**
+	 * 比较当前任务的强类型整数变量。
+	 * Compares a typed integer variable of the current quest.
+	 */
+	public record QuestVariableCondition(String variable, ConditionOperation operation, int value) implements Condition {
+		/** 校验变量名和数值比较操作。 / Validates the variable name and numeric comparison operation. */
+		public QuestVariableCondition {
+			if (variable == null || variable.isBlank() || operation == null || operation == ConditionOperation.IN
+					|| operation == ConditionOperation.NOT_IN) {
+				throw new IllegalArgumentException("Quest variable condition is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 比较当前 canonical 任务状态是否允许开始新的重复周期。
+	 * Compares whether the current canonical quest state allows a new repeat cycle.
+	 */
+	public record QuestRepeatAvailableCondition(int maxCompletions, boolean requiresDeadline, boolean expectedAvailable) implements Condition {
+		/** 校验重复次数上限；255 表示旧任务模型中的无限重复。 / Validates the repeat cap; 255 means unlimited in the legacy model. */
+		public QuestRepeatAvailableCondition {
+			if (maxCompletions <= 0 || maxCompletions > 255) {
+				throw new IllegalArgumentException("Quest repeat limit is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 要求玩家持有 quest_data 中声明的全部交付物品；条件本身不扣除物品。
+	 * Requires all delivery items declared by quest_data; the condition itself never removes items.
+	 */
+	public record QuestCollectItemsCondition() implements Condition {
 	}
 
 	/**
@@ -337,9 +411,108 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	}
 
 	/**
-	 * 表示转换命中后执行的已类型化动作。
-	 * Represents a typed action executed after a transition matches.
+	 * 定义转换动作的强类型封闭集合。
+	 * Defines the closed typed set of transition actions.
 	 */
-	public record Action(ActionType type) {
+	public sealed interface Action permits StartQuestAction, SetQuestStatusAction, SetQuestVariableAction, AddQuestVariableAction,
+		RemoveCollectedItemsAction, FinishQuestAction, SendDialogAction, CloseDialogAction, ShowQuestListAction,
+		SyncQuestStatusAction, SendPlayerMessageAction {
+
+		/** 返回动作种类及其固定执行阶段。 / Returns the action kind and its fixed execution phase. */
+		default ActionType type() {
+			return switch (this) {
+				case StartQuestAction ignored -> ActionType.START_QUEST;
+				case SetQuestStatusAction ignored -> ActionType.SET_QUEST_STATUS;
+				case SetQuestVariableAction ignored -> ActionType.SET_QUEST_VARIABLE;
+				case AddQuestVariableAction ignored -> ActionType.ADD_QUEST_VARIABLE;
+				case RemoveCollectedItemsAction ignored -> ActionType.REMOVE_COLLECTED_ITEMS;
+				case FinishQuestAction ignored -> ActionType.FINISH_QUEST;
+				case SendDialogAction ignored -> ActionType.SEND_DIALOG;
+				case CloseDialogAction ignored -> ActionType.CLOSE_DIALOG;
+				case ShowQuestListAction ignored -> ActionType.SHOW_QUEST_LIST;
+				case SyncQuestStatusAction ignored -> ActionType.SYNC_QUEST_STATUS;
+				case SendPlayerMessageAction ignored -> ActionType.SEND_PLAYER_MESSAGE;
+			};
+		}
+	}
+
+	/** 启动或重新启动当前任务周期。 / Starts or restarts the current quest cycle. */
+	public record StartQuestAction() implements Action {
+	}
+
+	/** 设置当前 canonical 任务状态。 / Sets the current canonical quest status. */
+	public record SetQuestStatusAction(QuestStatus status) implements Action {
+		/** 拒绝空状态和 COMPLETE；完整结算必须使用 finish-quest。 / Rejects null and COMPLETE; settlement must use finish-quest. */
+		public SetQuestStatusAction {
+			if (status == null || status == QuestStatus.COMPLETE) {
+				throw new IllegalArgumentException("Quest status action is invalid");
+			}
+		}
+	}
+
+	/** 将整数任务变量设置为显式值。 / Sets an integer quest variable to an explicit value. */
+	public record SetQuestVariableAction(String variable, int value) implements Action {
+		/** 校验变量名。 / Validates the variable name. */
+		public SetQuestVariableAction {
+			if (variable == null || variable.isBlank()) {
+				throw new IllegalArgumentException("Quest variable action name is missing");
+			}
+		}
+	}
+
+	/** 为整数任务变量增加显式增量。 / Adds an explicit delta to an integer quest variable. */
+	public record AddQuestVariableAction(String variable, int delta) implements Action {
+		/** 校验变量名和非零增量。 / Validates the variable name and non-zero delta. */
+		public AddQuestVariableAction {
+			if (variable == null || variable.isBlank() || delta == 0) {
+				throw new IllegalArgumentException("Quest variable increment is invalid");
+			}
+		}
+	}
+
+	/** 扣除 quest_data 中声明的交付物品。 / Removes delivery items declared by quest_data. */
+	public record RemoveCollectedItemsAction() implements Action {
+	}
+
+	/** 发放指定奖励组并完成当前任务周期。 / Grants the selected reward group and completes the current quest cycle. */
+	public record FinishQuestAction(int rewardIndex) implements Action {
+		/** 校验非负奖励组索引。 / Validates the non-negative reward-group index. */
+		public FinishQuestAction {
+			if (rewardIndex < 0) {
+				throw new IllegalArgumentException("Quest reward index is invalid");
+			}
+		}
+	}
+
+	/** 提交后发送绑定当前任务的对话页面。 / Sends a quest-bound dialog page after commit. */
+	public record SendDialogAction(int dialogId) implements Action {
+		/** 校验正数对话页面 ID。 / Validates a positive dialog-page id. */
+		public SendDialogAction {
+			if (dialogId <= 0) {
+				throw new IllegalArgumentException("Quest dialog id is invalid");
+			}
+		}
+	}
+
+	/** 提交后关闭当前客户端对话窗口。 / Closes the current client dialog window after commit. */
+	public record CloseDialogAction() implements Action {
+	}
+
+	/** 提交后刷新当前 NPC 的任务选择列表。 / Refreshes the current NPC quest list after commit. */
+	public record ShowQuestListAction() implements Action {
+	}
+
+	/** 提交后向客户端同步 canonical 任务状态和变量。 / Syncs canonical quest status and variables after commit. */
+	public record SyncQuestStatusAction() implements Action {
+	}
+
+	/** 提交后向玩家发送类型化频道消息。 / Sends a typed-channel player message after commit. */
+	public record SendPlayerMessageAction(String text, PlayerMessageChannel channel) implements Action {
+		/** 校验消息正文和频道。 / Validates message text and channel. */
+		public SendPlayerMessageAction {
+			if (text == null || text.isBlank() || channel == null) {
+				throw new IllegalArgumentException("Player message action is invalid");
+			}
+		}
 	}
 }
