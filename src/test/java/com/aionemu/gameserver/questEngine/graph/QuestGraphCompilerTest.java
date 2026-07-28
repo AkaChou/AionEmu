@@ -78,6 +78,8 @@ class QuestGraphCompilerTest {
 			CompiledQuestGraph.ActionType.SET_QUEST_VARIABLE,
 			CompiledQuestGraph.ActionType.ADD_QUEST_VARIABLE,
 			CompiledQuestGraph.ActionType.SET_QUEST_STATUS,
+			CompiledQuestGraph.ActionType.GIVE_QUEST_ITEM,
+			CompiledQuestGraph.ActionType.REMOVE_QUEST_ITEM,
 			CompiledQuestGraph.ActionType.REMOVE_COLLECTED_ITEMS,
 			CompiledQuestGraph.ActionType.FINISH_QUEST,
 			CompiledQuestGraph.ActionType.SYNC_QUEST_STATUS,
@@ -120,6 +122,10 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> load("<quest_graphs><script/></quest_graphs>"));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("<start-quest/>", "<complete-quest/>"), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("mode=\"TOP_UP_TO\"", "mode=\"ADD\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("mode=\"EXACT\"", "mode=\"BEST_EFFORT\""), terminal()))));
 		assertFailureContains(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("<start-quest/>", "<send-dialog dialog_id=\"1\"/><start-quest/>"), terminal())),
 			"invalid action phase order");
@@ -280,6 +286,16 @@ class QuestGraphCompilerTest {
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
 				new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709), Set.of(), Set.of(42))));
 		assertCauseContains(missingItem, "references missing item 182200001");
+		String missingGiveItem = transition("accept", 10, "done")
+			.replace("<give-quest-item item_id=\"182200001\"", "<give-quest-item item_id=\"182200002\"");
+		IllegalArgumentException missingGive = assertThrows(IllegalArgumentException.class,
+			() -> load(document(graph(1, "offer", missingGiveItem, terminal()))));
+		assertCauseContains(missingGive, "give action references missing item 182200002");
+		String missingRemoveItem = transition("accept", 10, "done")
+			.replace("<remove-quest-item item_id=\"182200001\"", "<remove-quest-item item_id=\"182200002\"");
+		IllegalArgumentException missingRemove = assertThrows(IllegalArgumentException.class,
+			() -> load(document(graph(1, "offer", missingRemoveItem, terminal()))));
+		assertCauseContains(missingRemove, "remove action references missing item 182200002");
 		IllegalArgumentException missingPrerequisiteQuest = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
 				new QuestGraphCompiler.References(Set.of(1), Set.of(203709), Set.of(182200001), Set.of(42))));
@@ -315,6 +331,10 @@ class QuestGraphCompilerTest {
 			() -> new CompiledQuestGraph.QuestVariableCondition("counter", ConditionOperation.IN, 0));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.QuestRepeatAvailableCondition(0, false, true));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.AddQuestVariableAction("counter", 0));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.GiveQuestItemAction(0, 1,
+			CompiledQuestGraph.QuestItemGrantMode.TOP_UP_TO));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.RemoveQuestItemAction(1, 0,
+			CompiledQuestGraph.QuestItemRemovalMode.EXACT));
 		assertThrows(IllegalArgumentException.class,
 			() -> new CompiledQuestGraph.SetQuestStatusAction(CompiledQuestGraph.QuestStatus.COMPLETE));
 	}
@@ -444,6 +464,8 @@ class QuestGraphCompilerTest {
 					<set-quest-variable variable="counter" value="1"/>
 					<add-quest-variable variable="counter" delta="1"/>
 					<set-quest-status status="REWARD"/>
+					<give-quest-item item_id="182200001" count="3" mode="TOP_UP_TO"/>
+					<remove-quest-item item_id="182200001" count="1" mode="EXACT"/>
 					<remove-collected-items/>
 					<finish-quest reward_index="0"/>
 					<sync-quest-status/>

@@ -21,6 +21,8 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationPlan;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
@@ -38,8 +40,9 @@ class PlayerQuestGraphStateTest {
 		Map<String, VariableValue> reversedVariables = new LinkedHashMap<>();
 		reversedVariables.put("ready", new BooleanValue(true));
 		reversedVariables.put("score", new IntValue(7));
+		ItemMutationPlan itemPlan = new ItemMutationPlan(1, ItemMutationKind.REMOVE_EXACT, 182200001, 2, 5, 3);
 		PreparedTransition journal = new PreparedTransition(0, "event-9", "kill-advance", 2, RepeatDeadlineResolution.deadline(1_760_000_000_000L),
-			new byte[] { 4, 5, 6 });
+			Map.of(1, itemPlan), new byte[] { 4, 5, 6 });
 		PlayerQuestGraphState first = state(firstVariables, journal);
 		PlayerQuestGraphState reversed = state(reversedVariables, journal);
 
@@ -53,6 +56,7 @@ class PlayerQuestGraphStateTest {
 		assertEquals("SPAWN", decoded.getCleanupLeases().get("escort").capability());
 		assertEquals("event-9", decoded.getJournal().getEventId());
 		assertEquals(RepeatDeadlineResolution.deadline(1_760_000_000_000L), decoded.getJournal().getRepeatDeadlineResolution());
+		assertEquals(Map.of(1, itemPlan), decoded.getJournal().getItemMutationPlans());
 		assertEquals(QuestStatus.START, decoded.getQuestStatus());
 		assertEquals(new QuestHistory(3, 2, 1_700_000_000_000L, 1_750_000_000_000L), decoded.getHistory());
 		assertArrayEquals(new byte[] { 4, 5, 6 }, decoded.getJournal().getEventPayload());
@@ -103,6 +107,8 @@ class PlayerQuestGraphStateTest {
 		assertThrows(IllegalArgumentException.class,
 			() -> new RepeatDeadlineResolution(RepeatDeadlineDisposition.DEADLINE, 0L));
 		assertThrows(IllegalArgumentException.class,
+			() -> new ItemMutationPlan(0, ItemMutationKind.REMOVE_EXACT, 182200001, 3, 2, 0));
+		assertThrows(IllegalArgumentException.class,
 			() -> new QuestHistory(1, 0, 1L, null, RepeatDeadlineDisposition.DEADLINE));
 		assertThrows(IllegalArgumentException.class,
 			() -> new QuestHistory(1, 0, 1L, 2L, RepeatDeadlineDisposition.PRIVILEGED_BYPASS));
@@ -134,6 +140,16 @@ class PlayerQuestGraphStateTest {
 				java.util.Arrays.copyOf(valid, valid.length - 1)));
 		assertThrows(IllegalArgumentException.class,
 			() -> PlayerQuestGraphStateCodec.decode(1, 1, 0, "start", null, Lifecycle.ACTIVE, duplicateVariablePayload()));
+	}
+
+	/** 验证旧 QGS4 payload 可读且 journal 物品计划默认为空。 / Verifies legacy QGS4 payloads remain readable with an empty item-plan journal. */
+	@Test
+	void codecReadsLegacyQgs4Journal() throws Exception {
+		byte[] payload = legacyQgs4PreparedPayload();
+		PlayerQuestGraphState decoded = PlayerQuestGraphStateCodec.decode(1, 1, 0, "offer", null, Lifecycle.PREPARED, payload);
+
+		assertTrue(decoded.getJournal().getItemMutationPlans().isEmpty());
+		assertEquals("legacy", decoded.getJournal().getEventId());
 	}
 
 	@Test
@@ -185,6 +201,32 @@ class PlayerQuestGraphStateTest {
 			output.writeInt(2);
 			output.writeInt(0);
 			output.writeBoolean(false);
+			output.writeInt(0);
+			output.writeBoolean(false);
+		}
+		return bytes.toByteArray();
+	}
+
+	/** 创建最小旧 QGS4 PREPARED payload。 / Creates a minimal legacy QGS4 PREPARED payload. */
+	private static byte[] legacyQgs4PreparedPayload() throws Exception {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		try (DataOutputStream output = new DataOutputStream(bytes)) {
+			output.writeInt(0x51475334);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeBoolean(false);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(true);
+			output.writeLong(-1);
+			output.writeUTF("legacy");
+			output.writeUTF("accept");
+			output.writeInt(0);
+			output.writeByte(0);
+			output.writeInt(0);
 			output.writeInt(0);
 			output.writeBoolean(false);
 		}

@@ -1,0 +1,121 @@
+package com.aionemu.gameserver.questEngine.graph.runtime;
+
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus.START;
+import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.ALREADY_APPLIED;
+import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.APPLIED;
+import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.FAILED;
+import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PreflightResult.READY;
+import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PreflightResult.REJECTED;
+import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.GIVE_TOP_UP_TO;
+import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.REMOVE_EXACT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionInvocation;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationPlan;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
+
+/**
+ * 验证冻结物品计划的严格收敛、同步持久化和恢复行为。
+ * Verifies strict convergence, synchronous persistence, and recovery of frozen item plans.
+ */
+class QuestGraphItemActionAdapterTest {
+
+	private static final DialogEvent EVENT = new DialogEvent("event", 7, 1000, 100, "QUEST_SELECT");
+
+	/** 验证 give 从 before 补齐到 after，恢复时不重复发放但仍确认库存已持久化。 / Verifies give convergence and recovery without a duplicate grant. */
+	@Test
+	void givePersistsBeforeJournalProgressAndReplaysWithoutDuplicateGrant() {
+		AtomicLong count = new AtomicLong(2);
+		AtomicInteger grants = new AtomicInteger();
+		AtomicInteger stores = new AtomicInteger();
+		QuestGraphItemActionAdapter adapter = adapter(count, grants, new AtomicInteger(), stores);
+		ItemMutationPlan plan = new ItemMutationPlan(0, GIVE_TOP_UP_TO, 182200001, 5, 2, 5);
+		ActionInvocation invocation = invocation(new GiveQuestItemAction(182200001, 5,
+			com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemGrantMode.TOP_UP_TO), plan);
+
+		assertEquals(READY, adapter.preflight(invocation));
+		assertEquals(APPLIED, adapter.execute(invocation));
+		assertEquals(5, count.get());
+		assertEquals(1, grants.get());
+		assertEquals(1, stores.get());
+		assertEquals(ALREADY_APPLIED, adapter.execute(invocation));
+		assertEquals(1, grants.get());
+		assertEquals(2, stores.get());
+	}
+
+	/** 验证 exact remove 只接受 before/after 两端，任何外部数量漂移均显式失败。 / Verifies exact remove accepts only the before/after endpoints. */
+	@Test
+	void exactRemoveRejectsDivergedInventory() {
+		AtomicLong count = new AtomicLong(5);
+		AtomicInteger removals = new AtomicInteger();
+		QuestGraphItemActionAdapter adapter = adapter(count, new AtomicInteger(), removals, new AtomicInteger());
+		ItemMutationPlan plan = new ItemMutationPlan(0, REMOVE_EXACT, 182200001, 2, 5, 3);
+		ActionInvocation invocation = invocation(new RemoveQuestItemAction(182200001, 2,
+			com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemRemovalMode.EXACT), plan);
+
+		assertEquals(APPLIED, adapter.execute(invocation));
+		assertEquals(3, count.get());
+		assertEquals(1, removals.get());
+		count.set(4);
+		assertEquals(FAILED, adapter.execute(invocation));
+		assertEquals(1, removals.get());
+	}
+
+	/** 验证整组预检按 action index 投影同一物品的连续 give/remove。 / Verifies batch preflight projects consecutive give/remove actions by index. */
+	@Test
+	void batchPreflightProjectsConsecutiveMutations() {
+		AtomicLong count = new AtomicLong(2);
+		AtomicReference<Map<Integer, Long>> grants = new AtomicReference<>();
+		QuestGraphItemActionAdapter adapter = new QuestGraphItemActionAdapter(7, new Object(), ignored -> count.get(), values -> {
+			grants.set(values);
+			return true;
+		}, (itemId, delta) -> true, (itemId, delta) -> true, () -> true, itemId -> true);
+
+		assertEquals(READY, adapter.preflight(Map.of(
+			0, new ItemMutationPlan(0, GIVE_TOP_UP_TO, 182200001, 5, 2, 5),
+			1, new ItemMutationPlan(1, REMOVE_EXACT, 182200001, 2, 5, 3))));
+		assertEquals(Map.of(182200001, 3L), grants.get());
+	}
+
+	/** 验证整组 give 容量不足在写 PREPARED 前作为业务拒绝返回。 / Verifies insufficient aggregate give capacity rejects before PREPARED. */
+	@Test
+	void batchPreflightRejectsInsufficientGrantCapacity() {
+		QuestGraphItemActionAdapter adapter = new QuestGraphItemActionAdapter(7, new Object(), ignored -> 0,
+			values -> false, (itemId, delta) -> true, (itemId, delta) -> true, () -> true, itemId -> true);
+
+		assertEquals(REJECTED, adapter.preflight(Map.of(
+			0, new ItemMutationPlan(0, GIVE_TOP_UP_TO, 182200001, 5, 0, 5))));
+	}
+
+	/** 创建由原子计数器驱动的 adapter。 / Creates an adapter backed by atomic counters. */
+	private static QuestGraphItemActionAdapter adapter(AtomicLong count, AtomicInteger grants, AtomicInteger removals, AtomicInteger stores) {
+		return new QuestGraphItemActionAdapter(7, new Object(), ignored -> count.get(), values -> true, (itemId, delta) -> {
+			grants.incrementAndGet();
+			count.addAndGet(delta);
+			return true;
+		}, (itemId, delta) -> {
+			removals.incrementAndGet();
+			count.addAndGet(-delta);
+			return true;
+		}, () -> {
+			stores.incrementAndGet();
+			return true;
+		}, itemId -> true);
+	}
+
+	/** 创建物品动作调用。 / Creates an item-action invocation. */
+	private static ActionInvocation invocation(com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action action,
+			ItemMutationPlan plan) {
+		return new ActionInvocation(action, 1, plan.actionIndex(), START, EVENT, RepeatDeadlineResolution.NOT_APPLICABLE, plan, "key");
+	}
+}

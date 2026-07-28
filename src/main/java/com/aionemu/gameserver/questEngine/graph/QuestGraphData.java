@@ -501,6 +501,8 @@ public final class QuestGraphData {
 			@XmlElement(name = "set-quest-status", type = SetQuestStatusActionData.class),
 			@XmlElement(name = "set-quest-variable", type = SetQuestVariableActionData.class),
 			@XmlElement(name = "add-quest-variable", type = AddQuestVariableActionData.class),
+			@XmlElement(name = "give-quest-item", type = GiveQuestItemActionData.class),
+			@XmlElement(name = "remove-quest-item", type = RemoveQuestItemActionData.class),
 			@XmlElement(name = "remove-collected-items", type = RemoveCollectedItemsActionData.class),
 			@XmlElement(name = "finish-quest", type = FinishQuestActionData.class),
 			@XmlElement(name = "send-dialog", type = SendDialogActionData.class),
@@ -552,6 +554,42 @@ public final class QuestGraphData {
 		/** 非零增量。 / Non-zero delta. */
 		@XmlAttribute(required = true)
 		private Integer delta;
+	}
+
+	/**
+	 * 表示把任务物品补齐到目标总数的 XML 参数。
+	 * Represents XML parameters that top a quest item up to a target total.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class GiveQuestItemActionData {
+		/** 任务物品模板 ID。 / Quest-item template id. */
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
+		/** 目标总数。 / Target total count. */
+		@XmlAttribute(required = true)
+		private Long count;
+		/** 显式补齐模式。 / Explicit top-up mode. */
+		@XmlAttribute(required = true)
+		private String mode;
+	}
+
+	/**
+	 * 表示从背包精确扣除任务物品的 XML 参数。
+	 * Represents XML parameters that remove an exact quest-item count from the inventory.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class RemoveQuestItemActionData {
+		/** 任务物品模板 ID。 / Quest-item template id. */
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
+		/** 精确扣除数量。 / Exact count to remove. */
+		@XmlAttribute(required = true)
+		private Long count;
+		/** 显式精确扣除模式。 / Explicit exact-removal mode. */
+		@XmlAttribute(required = true)
+		private String mode;
 	}
 
 	/** 扣除 quest_data 交付物品。 / Removes quest_data delivery items. */

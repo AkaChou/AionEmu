@@ -224,6 +224,30 @@
 		<xs:attribute name="delta" type="xs:int" use="required"/>
 	</xs:complexType>
 
+	<xs:simpleType name="questGraphQuestItemGrantMode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TOP_UP_TO"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphQuestItemRemovalMode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EXACT"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="questGraphGiveQuestItemAction">
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="count" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="mode" type="questGraphQuestItemGrantMode" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphRemoveQuestItemAction">
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="count" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="mode" type="questGraphQuestItemRemovalMode" use="required"/>
+	</xs:complexType>
+
 	<xs:simpleType name="questGraphRepeatDeadlineKind">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="DAILY"/>
@@ -320,6 +344,8 @@
 			<xs:element name="set-quest-status" type="questGraphSetStatusAction"/>
 			<xs:element name="set-quest-variable" type="questGraphSetVariableAction"/>
 			<xs:element name="add-quest-variable" type="questGraphAddVariableAction"/>
+			<xs:element name="give-quest-item" type="questGraphGiveQuestItemAction"/>
+			<xs:element name="remove-quest-item" type="questGraphRemoveQuestItemAction"/>
 			<xs:element name="remove-collected-items" type="questGraphEmptyAction"/>
 			<xs:element name="finish-quest" type="questGraphFinishAction"/>
 			<xs:element name="send-dialog" type="questGraphSendDialogAction"/>

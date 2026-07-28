@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.ToLongFunction;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
@@ -16,6 +17,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
@@ -24,6 +26,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatPrivilegeMode;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
@@ -34,6 +37,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphRouter.Match;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationPlan;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
@@ -110,7 +115,7 @@ public final class QuestGraphTransitionExecutor {
 	 * Holds immutable action input and its stable idempotency key for preflight or execution.
 	 */
 	public record ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event,
-		RepeatDeadlineResolution repeatDeadlineResolution, String idempotencyKey) {
+		RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, String idempotencyKey) {
 		/**
 		 * 校验动作调用输入。
 		 * Validates action invocation input.
@@ -134,7 +139,35 @@ public final class QuestGraphTransitionExecutor {
 		Function<ConditionInvocation, ConditionResult> conditionEvaluator,
 		Function<ActionInvocation, PreflightResult> actionPreflight,
 		Function<ActionInvocation, ActionResult> actionExecutor,
+		ToLongFunction<Integer> itemCountReader,
+		Function<Map<Integer, ItemMutationPlan>, PreflightResult> itemMutationPreflight,
 		BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+		/**
+		 * 创建不支持物品 journal 的兼容上下文；遇到物品动作时会显式失败。
+		 * Creates a compatibility context without item journaling; item actions fail explicitly.
+		 */
+		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
+				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
+				Function<ActionInvocation, ActionResult> actionExecutor,
+				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator, actionPreflight, actionExecutor, itemId -> -1,
+				plans -> plans.isEmpty() ? PreflightResult.READY : PreflightResult.FAILED, persistence);
+		}
+
+		/**
+		 * 组合非物品能力与正式物品 adapter。
+		 * Composes non-item capabilities with the production item adapter.
+		 */
+		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
+				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
+				Function<ActionInvocation, ActionResult> actionExecutor, QuestGraphItemActionAdapter itemActions,
+				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator,
+				invocation -> invocation.itemMutationPlan() == null ? actionPreflight.apply(invocation) : itemActions.preflight(invocation),
+				invocation -> invocation.itemMutationPlan() == null ? actionExecutor.apply(invocation) : itemActions.execute(invocation),
+				itemActions::itemCount, itemActions::preflight, persistence);
+		}
+
 		/**
 		 * 校验转换执行依赖；新状态写入时 persistence 的 expected revision 为 null。
 		 * Validates transition dependencies; persistence receives a null expected revision for a new state.
@@ -148,6 +181,8 @@ public final class QuestGraphTransitionExecutor {
 			Objects.requireNonNull(conditionEvaluator, "conditionEvaluator");
 			Objects.requireNonNull(actionPreflight, "actionPreflight");
 			Objects.requireNonNull(actionExecutor, "actionExecutor");
+			Objects.requireNonNull(itemCountReader, "itemCountReader");
+			Objects.requireNonNull(itemMutationPreflight, "itemMutationPreflight");
 			Objects.requireNonNull(persistence, "persistence");
 		}
 	}
@@ -172,11 +207,11 @@ public final class QuestGraphTransitionExecutor {
 				if (conditionStatus != Status.APPLIED) {
 					return conditionStatus;
 				}
-				Status preflightStatus = preflight(match.graph(), match.route().transition(), match.event(), current, 0, context);
-				if (preflightStatus != Status.APPLIED) {
-					return preflightStatus;
+				PreflightOutcome preflight = preflight(match.graph(), match.route().transition(), match.event(), current, 0, Map.of(), context);
+				if (preflight.status() != Status.APPLIED) {
+					return preflight.status();
 				}
-					PlayerQuestGraphState prepared = prepare(match, current, context.serverZoneId(), context.accessLevel());
+				PlayerQuestGraphState prepared = prepare(match, current, context.serverZoneId(), context.accessLevel(), preflight.itemMutationPlans());
 				Long expectedRevision = current == null ? null : current.getRevision();
 				if (persist(context, expectedRevision, prepared) != PersistenceResult.APPLIED) {
 					return Status.FAILED;
@@ -218,12 +253,16 @@ public final class QuestGraphTransitionExecutor {
 				if (transition == null || journal.getNextActionIndex() > transition.actions().size()) {
 					return Status.FAILED;
 				}
+				if (!validItemMutationPlans(transition, journal.getItemMutationPlans())) {
+					return Status.FAILED;
+				}
 				QuestGraphEvent event = QuestGraphEventCodec.decode(journal.getEventPayload());
 				if (event.playerId() != context.playerId() || !journal.getEventId().equals(event.eventId()) || !matches(event, transition.event())) {
 					return Status.FAILED;
 				}
-				Status preflightStatus = preflight(graph, transition, event, state, journal.getNextActionIndex(), context);
-				return preflightStatus == Status.APPLIED ? resumePrepared(graph, transition, event, state, context) : preflightStatus;
+				PreflightOutcome preflight = preflight(graph, transition, event, state, journal.getNextActionIndex(),
+					journal.getItemMutationPlans(), context);
+				return preflight.status() == Status.APPLIED ? resumePrepared(graph, transition, event, state, context) : preflight.status();
 			} catch (RuntimeException e) {
 				return Status.FAILED;
 			}
@@ -352,11 +391,12 @@ public final class QuestGraphTransitionExecutor {
 	 * 从指定动作位置预检全部剩余动作，不产生状态或业务副作用。
 	 * Preflights every remaining action from the given index without state or business side effects.
 	 */
-	private static Status preflight(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event, PlayerQuestGraphState current,
-		int startIndex,
-		TransitionContext context) {
+	private static PreflightOutcome preflight(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event, PlayerQuestGraphState current,
+		int startIndex, Map<Integer, ItemMutationPlan> frozenPlans, TransitionContext context) {
 		ActionState preview = new ActionState(current == null ? QuestStatus.NONE : current.getQuestStatus(),
 			current == null ? initialVariables(graph) : current.getVariables());
+		Map<Integer, ItemMutationPlan> plans = new LinkedHashMap<>(frozenPlans);
+		Map<Integer, Long> projectedCounts = new LinkedHashMap<>();
 		RepeatDeadlineResolution repeatResolution = current != null && current.getLifecycle() == Lifecycle.PREPARED
 			? current.getJournal().getRepeatDeadlineResolution() : RepeatDeadlineResolution.NOT_APPLICABLE;
 		for (int index = startIndex; index < transition.actions().size(); index++) {
@@ -365,34 +405,55 @@ public final class QuestGraphTransitionExecutor {
 			try {
 				preview = reduceActionState(graph, preview, action);
 			} catch (RuntimeException e) {
-				return Status.FAILED;
+				return new PreflightOutcome(Status.FAILED, Map.of());
 			}
 			if (action.type().phase() != ActionPhase.REQUIRED) {
 				continue;
 			}
 			PreflightResult result;
 			try {
+				ItemMutationPlan plan = plans.get(index);
+				if (isItemMutation(action) && plan == null) {
+					plan = createItemMutationPlan(action, index, projectedCounts, context.itemCountReader());
+					plans.put(index, plan);
+				}
 				result = Objects.requireNonNull(context.actionPreflight().apply(invocation(graph, transition, event,
-					invocationStatus, index, repeatResolution)),
+					invocationStatus, index, repeatResolution, plan)),
 					"preflight result");
+			} catch (ItemMutationRejectedException e) {
+				return new PreflightOutcome(Status.REJECTED, Map.of());
 			} catch (RuntimeException e) {
-				return Status.FAILED;
+				return new PreflightOutcome(Status.FAILED, Map.of());
 			}
 			if (result == PreflightResult.REJECTED) {
-				return Status.REJECTED;
+				return new PreflightOutcome(Status.REJECTED, Map.of());
 			}
 			if (result == PreflightResult.FAILED) {
-				return Status.FAILED;
+				return new PreflightOutcome(Status.FAILED, Map.of());
 			}
 		}
-		return Status.APPLIED;
+		PreflightResult itemResult;
+		try {
+			Map<Integer, ItemMutationPlan> remainingPlans = plans.entrySet().stream()
+				.filter(entry -> entry.getKey() >= startIndex)
+				.collect(java.util.stream.Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
+			itemResult = Objects.requireNonNull(context.itemMutationPreflight().apply(remainingPlans), "item mutation preflight result");
+		} catch (RuntimeException e) {
+			return new PreflightOutcome(Status.FAILED, Map.of());
+		}
+		return switch (itemResult) {
+			case READY -> new PreflightOutcome(Status.APPLIED, Map.copyOf(plans));
+			case REJECTED -> new PreflightOutcome(Status.REJECTED, Map.of());
+			case FAILED -> new PreflightOutcome(Status.FAILED, Map.of());
+		};
 	}
 
 	/**
 	 * 创建包含事件快照和初始变量的下一 revision PREPARED 状态。
 	 * Creates the next-revision PREPARED state with an event snapshot and initialized variables.
 	 */
-	private static PlayerQuestGraphState prepare(Match match, PlayerQuestGraphState current, ZoneId serverZoneId, int accessLevel) {
+	private static PlayerQuestGraphState prepare(Match match, PlayerQuestGraphState current, ZoneId serverZoneId, int accessLevel,
+		Map<Integer, ItemMutationPlan> itemMutationPlans) {
 		long baseRevision = current == null ? -1 : current.getRevision();
 		long preparedRevision = Math.addExact(baseRevision, 1);
 		Map<String, VariableValue> variables = current == null ? initialVariables(match.graph()) : current.getVariables();
@@ -402,7 +463,7 @@ public final class QuestGraphTransitionExecutor {
 		String nodeId = current == null ? match.graph().initialNode() : current.getNodeId();
 		RepeatDeadlineResolution repeatResolution = resolveRepeatDeadline(match.route().transition(), match.event(), serverZoneId, accessLevel);
 		PreparedTransition journal = new PreparedTransition(baseRevision, match.event().eventId(), match.route().transition().id(), 0,
-			repeatResolution, QuestGraphEventCodec.encode(match.event()));
+			repeatResolution, itemMutationPlans, QuestGraphEventCodec.encode(match.event()));
 		QuestStatus questStatus = current == null ? QuestStatus.NONE : current.getQuestStatus();
 		QuestHistory history = current == null ? QuestHistory.EMPTY : current.getHistory();
 		return new PlayerQuestGraphState(match.graph().questId(), match.graph().version(), preparedRevision, nodeId, questStatus, history, instanceRunId,
@@ -428,7 +489,8 @@ public final class QuestGraphTransitionExecutor {
 				ActionResult result;
 				try {
 					result = Objects.requireNonNull(context.actionExecutor()
-						.apply(invocation(graph, transition, event, current.getQuestStatus(), index, repeatResolution)), "action result");
+						.apply(invocation(graph, transition, event, current.getQuestStatus(), index, repeatResolution,
+							current.getJournal().getItemMutationPlans().get(index))), "action result");
 				} catch (RuntimeException e) {
 					return Status.FAILED;
 				}
@@ -447,7 +509,7 @@ public final class QuestGraphTransitionExecutor {
 			}
 			PlayerQuestGraphState progressed = copy(reduced, current.getRevision() + 1, current.getNodeId(), reduced.getQuestStatus(), Lifecycle.PREPARED,
 				new PreparedTransition(current.getJournal().getBaseRevision(), event.eventId(), transition.id(), index + 1,
-					repeatResolution, current.getJournal().getEventPayload()));
+					repeatResolution, current.getJournal().getItemMutationPlans(), current.getJournal().getEventPayload()));
 			if (persist(context, current.getRevision(), progressed) != PersistenceResult.APPLIED) {
 				return Status.FAILED;
 			}
@@ -462,7 +524,7 @@ public final class QuestGraphTransitionExecutor {
 		context.states().put(committed);
 		for (int index = protocolStart; index < transition.actions().size(); index++) {
 			try {
-				context.actionExecutor().apply(invocation(graph, transition, event, committed.getQuestStatus(), index, repeatResolution));
+				context.actionExecutor().apply(invocation(graph, transition, event, committed.getQuestStatus(), index, repeatResolution, null));
 			} catch (RuntimeException ignored) {
 				// Protocol is a post-commit projection; the owning adapter is responsible for logging/retry.
 			}
@@ -475,11 +537,72 @@ public final class QuestGraphTransitionExecutor {
 	 * Builds a stable idempotent invocation that includes the action index.
 	 */
 	private static ActionInvocation invocation(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event,
-		QuestStatus questStatus, int actionIndex, RepeatDeadlineResolution repeatDeadlineResolution) {
+		QuestStatus questStatus, int actionIndex, RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan) {
 		String key = event.eventId().length() + ":" + event.eventId() + ':' + graph.questId() + ':' + transition.id() + ':'
 			+ event.playerId() + ':' + actionIndex;
 		return new ActionInvocation(transition.actions().get(actionIndex), graph.questId(), actionIndex, questStatus, event,
-			repeatDeadlineResolution, key);
+			repeatDeadlineResolution, itemMutationPlan, key);
+	}
+
+	/** 保存动作预检结果及准备写入 journal 的冻结物品计划。 / Holds preflight status and frozen item plans to persist in the journal. */
+	private record PreflightOutcome(Status status, Map<Integer, ItemMutationPlan> itemMutationPlans) {
+	}
+
+	/** 判断动作是否为显式物品数量变更。 / Returns whether an action is an explicit item-count mutation. */
+	private static boolean isItemMutation(Action action) {
+		return action instanceof GiveQuestItemAction || action instanceof RemoveQuestItemAction;
+	}
+
+	/**
+	 * 从当前或同一转换的投影数量创建确定性物品计划。
+	 * Creates a deterministic item plan from current or same-transition projected counts.
+	 */
+	private static ItemMutationPlan createItemMutationPlan(Action action, int actionIndex, Map<Integer, Long> projectedCounts,
+		ToLongFunction<Integer> itemCountReader) {
+		int itemId = action instanceof GiveQuestItemAction give ? give.itemId() : ((RemoveQuestItemAction) action).itemId();
+		long before = projectedCounts.computeIfAbsent(itemId, id -> itemCountReader.applyAsLong(id));
+		if (before < 0) {
+			throw new IllegalStateException("Item count reader does not support quest-item actions");
+		}
+		ItemMutationPlan plan;
+		if (action instanceof GiveQuestItemAction give) {
+			plan = new ItemMutationPlan(actionIndex, ItemMutationKind.GIVE_TOP_UP_TO, itemId, give.count(), before,
+				Math.max(before, give.count()));
+		} else {
+			RemoveQuestItemAction remove = (RemoveQuestItemAction) action;
+			if (before < remove.count()) {
+				throw new ItemMutationRejectedException();
+			}
+			plan = new ItemMutationPlan(actionIndex, ItemMutationKind.REMOVE_EXACT, itemId, remove.count(), before,
+				Math.subtractExact(before, remove.count()));
+		}
+		projectedCounts.put(itemId, plan.afterCount());
+		return plan;
+	}
+
+	/** 校验 journal 中每个且仅有的物品计划与编译动作一致。 / Validates that the journal has exactly one matching plan per item action. */
+	private static boolean validItemMutationPlans(Transition transition, Map<Integer, ItemMutationPlan> plans) {
+		for (int index = 0; index < transition.actions().size(); index++) {
+			Action action = transition.actions().get(index);
+			ItemMutationPlan plan = plans.get(index);
+			if (!isItemMutation(action)) {
+				if (plan != null) {
+					return false;
+				}
+				continue;
+			}
+			if (plan == null || action instanceof GiveQuestItemAction give
+					&& (plan.kind() != ItemMutationKind.GIVE_TOP_UP_TO || plan.itemId() != give.itemId() || plan.requestedCount() != give.count())
+					|| action instanceof RemoveQuestItemAction remove
+						&& (plan.kind() != ItemMutationKind.REMOVE_EXACT || plan.itemId() != remove.itemId() || plan.requestedCount() != remove.count())) {
+				return false;
+			}
+		}
+		return plans.size() == transition.actions().stream().filter(QuestGraphTransitionExecutor::isItemMutation).count();
+	}
+
+	/** 标记物品动作的可预期业务拒绝，避免把库存不足误报为基础设施失败。 / Marks an expected item-action rejection. */
+	private static final class ItemMutationRejectedException extends RuntimeException {
 	}
 
 	/**

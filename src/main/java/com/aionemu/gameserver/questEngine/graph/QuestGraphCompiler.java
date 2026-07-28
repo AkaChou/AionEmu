@@ -47,6 +47,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerMessageChannel;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCollectItemsCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
@@ -54,8 +55,11 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAvailableCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemGrantMode;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemRemovalMode;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatTimeBasis;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatWeekday;
@@ -77,6 +81,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddQuestVariableActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CloseDialogActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FinishQuestActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GiveQuestItemActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
@@ -95,6 +100,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestRewardCondit
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestStatusConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestVariableConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveCollectedItemsActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveQuestItemActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendDialogActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendPlayerMessageActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendRepeatDeadlineMessageActionData;
@@ -272,7 +278,7 @@ public final class QuestGraphCompiler {
 				List<Condition> conditions = sourceTransition.getConditions().stream()
 					.map(value -> compileCondition(questId, value, references, variables)).toList();
 				List<Action> actions = sourceTransition.getActions().stream()
-					.map(value -> compileAction(questId, value, variables)).toList();
+					.map(value -> compileAction(questId, value, variables, references)).toList();
 				validateActionOrder(questId, sourceTransition.getId(), actions);
 				validateRepeatDeadlineProtocol(questId, sourceTransition.getId(), actions);
 				transitions.add(new Transition(sourceTransition.getId(), sourceTransition.getPriority(), sourceTransition.getTargetNode(), event,
@@ -541,7 +547,7 @@ public final class QuestGraphCompiler {
 	 * 将受支持的 JAXB 动作编译为强类型动作。
 	 * Compiles a supported JAXB action into a typed action.
 	 */
-	private static Action compileAction(int questId, Object source, Map<String, Variable> variables) {
+	private static Action compileAction(int questId, Object source, Map<String, Variable> variables, References references) {
 		if (source instanceof StartQuestActionData) {
 			return new StartQuestAction();
 		}
@@ -565,6 +571,26 @@ public final class QuestGraphCompiler {
 				return new AddQuestVariableAction(action.getVariable(), action.getDelta());
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid add-variable action", e);
+			}
+		}
+		if (source instanceof GiveQuestItemActionData action) {
+			if (action.getItemId() == null || !references.itemIds().contains(action.getItemId())) {
+				throw new IllegalArgumentException("Quest " + questId + " give action references missing item " + action.getItemId());
+			}
+			try {
+				return new GiveQuestItemAction(action.getItemId(), action.getCount(), QuestItemGrantMode.valueOf(action.getMode()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid give-quest-item action", e);
+			}
+		}
+		if (source instanceof RemoveQuestItemActionData action) {
+			if (action.getItemId() == null || !references.itemIds().contains(action.getItemId())) {
+				throw new IllegalArgumentException("Quest " + questId + " remove action references missing item " + action.getItemId());
+			}
+			try {
+				return new RemoveQuestItemAction(action.getItemId(), action.getCount(), QuestItemRemovalMode.valueOf(action.getMode()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid remove-quest-item action", e);
 			}
 		}
 		if (source instanceof RemoveCollectedItemsActionData) {

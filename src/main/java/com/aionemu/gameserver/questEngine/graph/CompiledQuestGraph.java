@@ -60,6 +60,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		SET_QUEST_STATUS(ActionPhase.STATE),
 		SET_QUEST_VARIABLE(ActionPhase.STATE),
 		ADD_QUEST_VARIABLE(ActionPhase.STATE),
+		GIVE_QUEST_ITEM(ActionPhase.REQUIRED),
+		REMOVE_QUEST_ITEM(ActionPhase.REQUIRED),
 		REMOVE_COLLECTED_ITEMS(ActionPhase.REQUIRED),
 		FINISH_QUEST(ActionPhase.REQUIRED),
 		SEND_DIALOG(ActionPhase.POST_COMMIT_PROTOCOL),
@@ -504,7 +506,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Defines the closed typed set of transition actions.
 	 */
 	public sealed interface Action permits StartQuestAction, SetQuestStatusAction, SetQuestVariableAction, AddQuestVariableAction,
-		RemoveCollectedItemsAction, FinishQuestAction, SendDialogAction, CloseDialogAction, ShowQuestListAction,
+		GiveQuestItemAction, RemoveQuestItemAction, RemoveCollectedItemsAction, FinishQuestAction, SendDialogAction, CloseDialogAction, ShowQuestListAction,
 		SyncQuestStatusAction, SendRepeatDeadlineMessageAction, SendPlayerMessageAction {
 
 		/** 返回动作种类及其固定执行阶段。 / Returns the action kind and its fixed execution phase. */
@@ -514,6 +516,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				case SetQuestStatusAction ignored -> ActionType.SET_QUEST_STATUS;
 				case SetQuestVariableAction ignored -> ActionType.SET_QUEST_VARIABLE;
 				case AddQuestVariableAction ignored -> ActionType.ADD_QUEST_VARIABLE;
+				case GiveQuestItemAction ignored -> ActionType.GIVE_QUEST_ITEM;
+				case RemoveQuestItemAction ignored -> ActionType.REMOVE_QUEST_ITEM;
 				case RemoveCollectedItemsAction ignored -> ActionType.REMOVE_COLLECTED_ITEMS;
 				case FinishQuestAction ignored -> ActionType.FINISH_QUEST;
 				case SendDialogAction ignored -> ActionType.SEND_DIALOG;
@@ -556,6 +560,36 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		public AddQuestVariableAction {
 			if (variable == null || variable.isBlank() || delta == 0) {
 				throw new IllegalArgumentException("Quest variable increment is invalid");
+			}
+		}
+	}
+
+	/** 定义发放任务物品时支持的封闭模式。 / Defines the closed set of supported quest-item grant modes. */
+	public enum QuestItemGrantMode {
+		TOP_UP_TO
+	}
+
+	/** 定义移除任务物品时支持的封闭模式。 / Defines the closed set of supported quest-item removal modes. */
+	public enum QuestItemRemovalMode {
+		EXACT
+	}
+
+	/** 把玩家背包中的任务物品补齐到显式目标总数。 / Tops a quest item in the player's inventory up to an explicit target total. */
+	public record GiveQuestItemAction(int itemId, long count, QuestItemGrantMode mode) implements Action {
+		/** 校验物品引用、目标总数和封闭模式。 / Validates the item reference, target total, and closed mode. */
+		public GiveQuestItemAction {
+			if (itemId <= 0 || count <= 0 || mode == null) {
+				throw new IllegalArgumentException("Give quest item action is invalid");
+			}
+		}
+	}
+
+	/** 从玩家背包精确扣除显式数量的任务物品。 / Removes an explicit exact count of a quest item from the player's inventory. */
+	public record RemoveQuestItemAction(int itemId, long count, QuestItemRemovalMode mode) implements Action {
+		/** 校验物品引用、扣除数量和封闭模式。 / Validates the item reference, removal count, and closed mode. */
+		public RemoveQuestItemAction {
+			if (itemId <= 0 || count <= 0 || mode == null) {
+				throw new IllegalArgumentException("Remove quest item action is invalid");
 			}
 		}
 	}

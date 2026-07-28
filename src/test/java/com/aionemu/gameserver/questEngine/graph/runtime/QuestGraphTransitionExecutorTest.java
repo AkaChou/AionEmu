@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
@@ -38,6 +39,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DailyRepeatDe
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
@@ -46,6 +48,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAv
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendRepeatDeadlineMessageAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
@@ -63,6 +66,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExec
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
@@ -601,6 +605,78 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(Lifecycle.ACTIVE, committed.getLifecycle());
 		assertEquals(CompiledQuestGraph.QuestStatus.START, committed.getQuestStatus());
 		assertEquals(committed, database.get());
+	}
+
+	/**
+	 * 验证物品已同步持久化但 journal CAS 失败时，恢复会使用冻结计划且不重复发放。
+	 * Verifies recovery uses the frozen plan without a duplicate grant after inventory persistence but journal CAS failure.
+	 */
+	@Test
+	void itemMutationRecoveryDoesNotDuplicateGrant() {
+		GiveQuestItemAction give = new GiveQuestItemAction(182200001, 5, CompiledQuestGraph.QuestItemGrantMode.TOP_UP_TO);
+		Transition transition = new Transition("accept", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"),
+			List.of(new QuestStatusCondition(NONE)), List.of(new StartQuestAction(), give));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		Match match = new Match(EVENT, graph, new EventRoute(1, "offer", transition), null);
+		AtomicLong itemCount = new AtomicLong(2);
+		AtomicInteger grants = new AtomicInteger();
+		AtomicInteger stores = new AtomicInteger();
+		QuestGraphItemActionAdapter items = new QuestGraphItemActionAdapter(7, new Object(), ignored -> itemCount.get(), values -> true,
+			(itemId, delta) -> {
+				grants.incrementAndGet();
+				itemCount.addAndGet(delta);
+				return true;
+			}, (itemId, delta) -> false, () -> {
+				stores.incrementAndGet();
+				return true;
+			}, itemId -> true);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>();
+		AtomicInteger writes = new AtomicInteger();
+		BiFunction<Long, PlayerQuestGraphState, PersistenceResult> databaseCas = cas(database);
+		TransitionContext first = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> APPLIED, items, (expected, state) -> writes.incrementAndGet() == 3 ? CONFLICT : databaseCas.apply(expected, state));
+
+		assertEquals(DispatchResult.Status.FAILED, executor.execute(match, first));
+		assertEquals(Lifecycle.PREPARED, states.get(1).getLifecycle());
+		assertEquals(1, states.get(1).getJournal().getNextActionIndex());
+		assertEquals(ItemMutationKind.GIVE_TOP_UP_TO, states.get(1).getJournal().getItemMutationPlans().get(1).kind());
+		assertEquals(5, itemCount.get());
+		assertEquals(1, grants.get());
+
+		TransitionContext recovery = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> APPLIED, items, databaseCas);
+		assertEquals(DispatchResult.Status.APPLIED, executor.recover(graph, recovery));
+		assertEquals(1, grants.get());
+		assertEquals(2, stores.get());
+		assertEquals(Lifecycle.ACTIVE, states.get(1).getLifecycle());
+		assertEquals("done", states.get(1).getNodeId());
+	}
+
+	/** 验证 guard 后出现的库存不足作为业务拒绝返回，且不会写 PREPARED。 / Verifies post-guard insufficiency rejects without PREPARED. */
+	@Test
+	void insufficientExactRemoveRejectsBeforePrepared() {
+		RemoveQuestItemAction remove = new RemoveQuestItemAction(182200001, 2,
+			CompiledQuestGraph.QuestItemRemovalMode.EXACT);
+		Transition transition = new Transition("remove", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"),
+			List.of(new QuestStatusCondition(NONE)), List.of(new StartQuestAction(), remove));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		Match match = new Match(EVENT, graph, new EventRoute(1, "offer", transition), null);
+		QuestGraphItemActionAdapter items = new QuestGraphItemActionAdapter(7, new Object(), ignored -> 1,
+			values -> true, (itemId, delta) -> false, (itemId, delta) -> false, () -> true, itemId -> true);
+		AtomicInteger writes = new AtomicInteger();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED,
+			invocation -> READY, invocation -> APPLIED, items, (expected, state) -> {
+				writes.incrementAndGet();
+				return PersistenceResult.APPLIED;
+			});
+
+		assertEquals(DispatchResult.Status.REJECTED, executor.execute(match, context));
+		assertEquals(0, writes.get());
+		assertNull(states.get(1));
 	}
 
 	/**

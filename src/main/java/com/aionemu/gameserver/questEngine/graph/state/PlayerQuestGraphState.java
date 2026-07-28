@@ -84,6 +84,32 @@ public final class PlayerQuestGraphState {
 		}
 	}
 
+	/** 定义冻结物品动作的封闭语义。 / Defines the closed semantics of a frozen item action. */
+	public enum ItemMutationKind {
+		GIVE_TOP_UP_TO,
+		REMOVE_EXACT
+	}
+
+	/**
+	 * 保存 PREPARED 前按动作序号冻结的物品数量转换。
+	 * Holds an item-count transition frozen by action index before PREPARED persistence.
+	 */
+	public record ItemMutationPlan(int actionIndex, ItemMutationKind kind, int itemId, long requestedCount, long beforeCount, long afterCount) {
+		/** 校验动作索引、物品引用和 before/after 关系。 / Validates the action index, item reference, and before/after relation. */
+		public ItemMutationPlan {
+			if (actionIndex < 0 || kind == null || itemId <= 0 || requestedCount <= 0 || beforeCount < 0 || afterCount < 0) {
+				throw new IllegalArgumentException("Item mutation plan is invalid");
+			}
+			boolean valid = switch (kind) {
+				case GIVE_TOP_UP_TO -> afterCount == Math.max(beforeCount, requestedCount);
+				case REMOVE_EXACT -> beforeCount >= requestedCount && afterCount == beforeCount - requestedCount;
+			};
+			if (!valid) {
+				throw new IllegalArgumentException("Item mutation before/after counts do not match its semantics");
+			}
+		}
+	}
+
 	/**
 	 * 保存跨重复周期保留的 canonical 任务历史。
 	 * Holds canonical quest history retained across repeat cycles.
@@ -145,6 +171,8 @@ public final class PlayerQuestGraphState {
 		private final int nextActionIndex;
 		/** 在副作用前解析并冻结的 repeat deadline 结果。 / Repeat-deadline resolution frozen before side effects. */
 		private final RepeatDeadlineResolution repeatDeadlineResolution;
+		/** 按动作序号排序的冻结物品动作。 / Frozen item actions ordered by action index. */
+		private final Map<Integer, ItemMutationPlan> itemMutationPlans;
 		/** 类型化事件 codec 生成的不可变负载。 / Immutable payload produced by the typed event codec. */
 		@Getter(AccessLevel.NONE)
 		private final byte[] eventPayload;
@@ -154,7 +182,7 @@ public final class PlayerQuestGraphState {
 		 * Creates a prepared transition and copies its event payload.
 		 */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, byte[] eventPayload) {
-			this(baseRevision, eventId, transitionId, nextActionIndex, RepeatDeadlineResolution.NOT_APPLICABLE, eventPayload);
+			this(baseRevision, eventId, transitionId, nextActionIndex, RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), eventPayload);
 		}
 
 		/**
@@ -163,6 +191,15 @@ public final class PlayerQuestGraphState {
 		 */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex,
 				RepeatDeadlineResolution repeatDeadlineResolution, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, repeatDeadlineResolution, Map.of(), eventPayload);
+		}
+
+		/**
+		 * 创建带 repeat deadline 与冻结物品计划的 journal。
+		 * Creates a journal with repeat-deadline and frozen item plans.
+		 */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex,
+				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans, byte[] eventPayload) {
 			if (baseRevision < -1 || nextActionIndex < 0) {
 				throw new IllegalArgumentException("Prepared transition base revision/action index is invalid");
 			}
@@ -171,6 +208,15 @@ public final class PlayerQuestGraphState {
 			this.transitionId = requireText(transitionId, "transition id");
 			this.nextActionIndex = nextActionIndex;
 			this.repeatDeadlineResolution = java.util.Objects.requireNonNull(repeatDeadlineResolution, "repeatDeadlineResolution");
+			TreeMap<Integer, ItemMutationPlan> plans = new TreeMap<>();
+			if (itemMutationPlans != null) {
+				itemMutationPlans.forEach((index, plan) -> {
+					if (index == null || plan == null || index != plan.actionIndex() || plans.putIfAbsent(index, plan) != null) {
+						throw new IllegalArgumentException("Prepared item mutation plans are invalid");
+					}
+				});
+			}
+			this.itemMutationPlans = Collections.unmodifiableMap(plans);
 			this.eventPayload = eventPayload == null ? new byte[0] : Arrays.copyOf(eventPayload, eventPayload.length);
 		}
 

@@ -13,6 +13,8 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationPlan;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
@@ -26,10 +28,12 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Vari
  */
 public final class PlayerQuestGraphStateCodec {
 
-	private static final int MAGIC = 0x51475334;
+	private static final int MAGIC_QGS4 = 0x51475334;
+	private static final int MAGIC_QGS5 = 0x51475335;
 	private static final int MAX_VARIABLES = 1024;
 	private static final int MAX_DEADLINES = 256;
 	private static final int MAX_CLEANUP_LEASES = 1024;
+	private static final int MAX_ITEM_MUTATION_PLANS = 1024;
 	private static final int MAX_EVENT_PAYLOAD = 1024 * 1024;
 	private static final int MAX_TOTAL_PAYLOAD = 2 * 1024 * 1024;
 	private static final byte INT_VALUE = 1;
@@ -42,6 +46,8 @@ public final class PlayerQuestGraphStateCodec {
 	private static final byte REPEAT_NOT_APPLICABLE = 0;
 	private static final byte REPEAT_DEADLINE = 1;
 	private static final byte REPEAT_PRIVILEGED_BYPASS = 2;
+	private static final byte ITEM_GIVE_TOP_UP_TO = 1;
+	private static final byte ITEM_REMOVE_EXACT = 2;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -58,7 +64,7 @@ public final class PlayerQuestGraphStateCodec {
 		try {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 			try (DataOutputStream output = new DataOutputStream(bytes)) {
-				output.writeInt(MAGIC);
+				output.writeInt(MAGIC_QGS5);
 				output.writeByte(switch (state.getQuestStatus()) {
 					case NONE -> STATUS_NONE;
 					case START -> STATUS_START;
@@ -93,7 +99,8 @@ public final class PlayerQuestGraphStateCodec {
 			throw new IllegalArgumentException("Quest graph state payload is missing or oversized");
 		}
 		try (DataInputStream input = new DataInputStream(new ByteArrayInputStream(payload))) {
-			if (input.readInt() != MAGIC) {
+			int magic = input.readInt();
+			if (magic != MAGIC_QGS4 && magic != MAGIC_QGS5) {
 				throw new IllegalArgumentException("Unsupported quest graph state payload version");
 			}
 			QuestStatus questStatus = switch (input.readByte()) {
@@ -107,7 +114,7 @@ public final class PlayerQuestGraphStateCodec {
 			QuestHistory history = readHistory(input);
 			Map<String, VariableValue> variables = readVariables(input);
 			Map<String, Long> deadlines = readDeadlines(input);
-			PreparedTransition journal = readJournal(input);
+			PreparedTransition journal = readJournal(input, magic == MAGIC_QGS5);
 			Map<String, CleanupLease> cleanupLeases = readCleanupLeases(input);
 			String quarantineReason = readOptionalText(input);
 			if (input.read() != -1) {
@@ -226,6 +233,7 @@ public final class PlayerQuestGraphStateCodec {
 		output.writeUTF(journal.getTransitionId());
 		output.writeInt(journal.getNextActionIndex());
 		writeRepeatResolution(output, journal.getRepeatDeadlineResolution());
+		writeItemMutationPlans(output, journal.getItemMutationPlans());
 		byte[] eventPayload = journal.getEventPayload();
 		if (eventPayload.length > MAX_EVENT_PAYLOAD) {
 			throw new IllegalArgumentException("Prepared event payload exceeds " + MAX_EVENT_PAYLOAD + " bytes");
@@ -238,7 +246,7 @@ public final class PlayerQuestGraphStateCodec {
 	 * 读取可选 PREPARED journal。
 	 * Reads the optional PREPARED journal.
 	 */
-	private static PreparedTransition readJournal(DataInputStream input) throws IOException {
+	private static PreparedTransition readJournal(DataInputStream input, boolean hasItemMutationPlans) throws IOException {
 		if (!input.readBoolean()) {
 			return null;
 		}
@@ -247,12 +255,49 @@ public final class PlayerQuestGraphStateCodec {
 		String transitionId = input.readUTF();
 		int nextActionIndex = input.readInt();
 		RepeatDeadlineResolution repeatDeadlineResolution = readRepeatResolution(input);
+		Map<Integer, ItemMutationPlan> itemMutationPlans = hasItemMutationPlans ? readItemMutationPlans(input) : Map.of();
 		int payloadSize = readCount(input, "prepared event bytes", MAX_EVENT_PAYLOAD);
 		byte[] eventPayload = input.readNBytes(payloadSize);
 		if (eventPayload.length != payloadSize) {
 			throw new EOFException("Prepared event payload is truncated");
 		}
-		return new PreparedTransition(baseRevision, eventId, transitionId, nextActionIndex, repeatDeadlineResolution, eventPayload);
+		return new PreparedTransition(baseRevision, eventId, transitionId, nextActionIndex, repeatDeadlineResolution, itemMutationPlans, eventPayload);
+	}
+
+	/** 写入按动作序号排序的冻结物品计划。 / Writes frozen item plans ordered by action index. */
+	private static void writeItemMutationPlans(DataOutputStream output, Map<Integer, ItemMutationPlan> plans) throws IOException {
+		checkCount("item mutation plans", plans.size(), MAX_ITEM_MUTATION_PLANS);
+		output.writeInt(plans.size());
+		for (ItemMutationPlan plan : plans.values()) {
+			output.writeInt(plan.actionIndex());
+			output.writeByte(switch (plan.kind()) {
+				case GIVE_TOP_UP_TO -> ITEM_GIVE_TOP_UP_TO;
+				case REMOVE_EXACT -> ITEM_REMOVE_EXACT;
+			});
+			output.writeInt(plan.itemId());
+			output.writeLong(plan.requestedCount());
+			output.writeLong(plan.beforeCount());
+			output.writeLong(plan.afterCount());
+		}
+	}
+
+	/** 读取冻结物品计划并拒绝未知语义或重复动作索引。 / Reads frozen item plans and rejects unknown semantics or duplicate action indices. */
+	private static Map<Integer, ItemMutationPlan> readItemMutationPlans(DataInputStream input) throws IOException {
+		int count = readCount(input, "item mutation plans", MAX_ITEM_MUTATION_PLANS);
+		Map<Integer, ItemMutationPlan> plans = new LinkedHashMap<>();
+		for (int i = 0; i < count; i++) {
+			int actionIndex = input.readInt();
+			ItemMutationKind kind = switch (input.readByte()) {
+				case ITEM_GIVE_TOP_UP_TO -> ItemMutationKind.GIVE_TOP_UP_TO;
+				case ITEM_REMOVE_EXACT -> ItemMutationKind.REMOVE_EXACT;
+				default -> throw new IllegalArgumentException("Unknown item mutation kind tag");
+			};
+			ItemMutationPlan plan = new ItemMutationPlan(actionIndex, kind, input.readInt(), input.readLong(), input.readLong(), input.readLong());
+			if (plans.putIfAbsent(actionIndex, plan) != null) {
+				throw new IllegalArgumentException("Duplicate item mutation action index " + actionIndex);
+			}
+		}
+		return plans;
 	}
 
 	/** 写入 repeat deadline disposition 的稳定 tag。 / Writes the stable tag for a repeat-deadline disposition. */
