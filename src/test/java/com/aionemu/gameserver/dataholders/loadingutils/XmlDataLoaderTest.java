@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -17,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -33,6 +35,7 @@ import com.aionemu.gameserver.dataholders.MotionData;
 import com.aionemu.gameserver.dataholders.PetDopingData;
 import com.aionemu.gameserver.dataholders.PetMerchandData;
 import com.aionemu.gameserver.dataholders.StaticData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphCompiler;
 import com.aionemu.boot.i18n.I18n;
 import jakarta.xml.bind.annotation.XmlElement;
 import org.junit.jupiter.api.Test;
@@ -183,6 +186,34 @@ class XmlDataLoaderTest {
 			.newSchema(Path.of("src/main/resources/aion/data/static_data/static_data.xsd").toFile())
 			.newValidator()
 			.validate(new StreamSource(Path.of("src/main/resources/aion/data/static_data/static_data.xml").toFile())));
+	}
+
+	@Test
+	void questGraphEntryUsesXmlMergerAndSynchronousCompilerValidation() {
+		Path source = Path.of("src/main/resources/aion/data/static_data/quest_graph_data/quest_graph_data.xml");
+		Path schema = Path.of("src/main/resources/aion/data/static_data/quest_graph_data/quest_graph_data.xsd");
+		Path cache = tempDir.resolve("cache/quest_graph_data.xml");
+
+		var data = XmlDataLoader.loadQuestGraphData(source.toFile(), cache.toFile(), schema.toFile(),
+			new QuestGraphCompiler.References(Set.of(), Set.of()));
+
+		assertTrue(data.graphs().isEmpty());
+		assertTrue(Files.exists(cache));
+		assertFalse(assertDoesNotThrow(() -> Files.readString(cache)).contains("<import"));
+	}
+
+	@Test
+	void questGraphLoaderRejectsUnknownImportedElements() throws Exception {
+		Path source = tempDir.resolve("data/quest_graph_data.xml");
+		Path graphs = source.getParent().resolve("graphs");
+		Files.createDirectories(graphs);
+		Files.writeString(source, "<quest_graphs><import file=\"graphs/invalid.xml\" skipRoot=\"true\"/></quest_graphs>");
+		Files.writeString(graphs.resolve("invalid.xml"), "<quest_graphs><unknown-capability/></quest_graphs>");
+
+		assertThrows(IllegalStateException.class, () -> XmlDataLoader.loadQuestGraphData(source.toFile(),
+			tempDir.resolve("cache/invalid.xml").toFile(),
+			Path.of("src/main/resources/aion/data/static_data/quest_graph_data/quest_graph_data.xsd").toFile(),
+			new QuestGraphCompiler.References(Set.of(), Set.of())));
 	}
 
 	@Test

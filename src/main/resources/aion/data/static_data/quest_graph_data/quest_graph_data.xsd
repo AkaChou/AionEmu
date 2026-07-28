@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="questGraphIdentifier">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:pattern value="[A-Za-z][A-Za-z0-9_.-]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphStateScope">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PLAYER"/>
+			<xs:enumeration value="PARTY"/>
+			<xs:enumeration value="ALLIANCE"/>
+			<xs:enumeration value="INSTANCE_RUN"/>
+			<xs:enumeration value="WORLD"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphQuestStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NONE"/>
+			<xs:enumeration value="START"/>
+			<xs:enumeration value="REWARD"/>
+			<xs:enumeration value="COMPLETE"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphVariableType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="INT"/>
+			<xs:enumeration value="BOOLEAN"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="questGraphVariable">
+		<xs:attribute name="name" type="questGraphIdentifier" use="required"/>
+		<xs:attribute name="type" type="questGraphVariableType" use="required"/>
+		<xs:attribute name="scope" type="questGraphStateScope" use="required"/>
+		<xs:attribute name="initial" type="xs:string" use="required"/>
+		<xs:attribute name="min" type="xs:int"/>
+		<xs:attribute name="max" type="xs:int"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphVariables">
+		<xs:sequence>
+			<xs:element name="variable" type="questGraphVariable" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphDialogEvent">
+		<xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="dialog" type="questGraphIdentifier" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphQuestStatusCondition">
+		<xs:attribute name="value" type="questGraphQuestStatus" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphEmptyAction"/>
+
+	<xs:complexType name="questGraphConditions">
+		<xs:choice minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="quest-status" type="questGraphQuestStatusCondition"/>
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphActions">
+		<xs:choice minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="start-quest" type="questGraphEmptyAction"/>
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphTransition">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="dialog" type="questGraphDialogEvent"/>
+			</xs:choice>
+			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
+			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="questGraphIdentifier" use="required"/>
+		<xs:attribute name="priority" type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="to" type="questGraphIdentifier" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphNode">
+		<xs:sequence>
+			<xs:element name="transition" type="questGraphTransition" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="questGraphIdentifier" use="required"/>
+		<xs:attribute name="terminal" type="xs:boolean" default="false"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphDefinition">
+		<xs:sequence>
+			<xs:element name="variables" type="questGraphVariables" minOccurs="0"/>
+			<xs:element name="node" type="questGraphNode" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="quest_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="scope" type="questGraphStateScope" use="required"/>
+		<xs:attribute name="initial_node" type="questGraphIdentifier" use="required"/>
+	</xs:complexType>
+
+	<xs:element name="quest_graphs">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="quest_graph" type="questGraphDefinition" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

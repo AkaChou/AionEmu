@@ -19,6 +19,9 @@ import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.WalkerData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphCompiler;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphCompiler.References;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -60,6 +63,9 @@ public class XmlDataLoader {
 	private final static String XML_SCHEMA_FILE = "./data/static_data/static_data.xsd";
 	private static final String CACHE_XML_FILE = "./cache/static_data.xml";
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
+	private static final String QUEST_GRAPH_CACHE_XML_FILE = "./cache/quest_graph_data.xml";
+	private static final String QUEST_GRAPH_MAIN_XML_FILE = "./data/static_data/quest_graph_data/quest_graph_data.xml";
+	private static final String QUEST_GRAPH_SCHEMA_FILE = "./data/static_data/quest_graph_data/quest_graph_data.xsd";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/compact/npc_drops";
@@ -143,6 +149,24 @@ public class XmlDataLoader {
 	 */
 	public StaticData loadStaticData() {
 		return loadStaticData(this::loadSkillData);
+	}
+
+	public CompiledQuestGraphData loadQuestGraphData(References references) {
+		return loadQuestGraphData(Config.dataFile(QUEST_GRAPH_MAIN_XML_FILE), Config.cacheFile(QUEST_GRAPH_CACHE_XML_FILE),
+			Config.dataFile(QUEST_GRAPH_SCHEMA_FILE), references);
+	}
+
+	static CompiledQuestGraphData loadQuestGraphData(File sourceFile, File cacheFile, File schemaFile, References references) {
+		try {
+			File cacheDirectory = cacheFile.getParentFile();
+			if (cacheDirectory != null && !cacheDirectory.exists() && !cacheDirectory.mkdirs()) {
+				throw new IOException("Could not create cache directory " + cacheDirectory);
+			}
+			new XmlMerger(sourceFile, cacheFile).process();
+			return QuestGraphCompiler.load(cacheFile.toPath(), schemaFile.toPath(), references);
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load quest graph data from " + sourceFile, e);
+		}
 	}
 
 	/**

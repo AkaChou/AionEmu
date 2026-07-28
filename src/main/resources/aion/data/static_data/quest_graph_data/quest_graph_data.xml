@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest_graphs>
+	<import file="graphs/quest_graphs.xml" skipRoot="true"/>
+</quest_graphs>
