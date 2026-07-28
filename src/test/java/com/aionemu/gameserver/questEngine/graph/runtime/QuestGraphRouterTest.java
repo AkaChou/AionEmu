@@ -37,6 +37,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortLo
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RankedPlayerKillEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DredgionSettledEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneLeftEvent;
@@ -164,6 +166,8 @@ class QuestGraphRouterTest {
 		NpcProximityEvent proximity = new NpcProximityEvent("proximity", 7, 3017, 100, 5001, 210010000, 1, 12.5f);
 		EscortReachedTargetEvent reached = new EscortReachedTargetEvent("escort-reached", 7, 3018, 1, 100, 5001, 210010000, 1);
 		EscortLostTargetEvent lost = new EscortLostTargetEvent("escort-lost", 7, 3019, 1, 100, 5001, 210010000, 1);
+		RankedPlayerKillEvent rankedKill = new RankedPlayerKillEvent("ranked-kill", 7, 3020, 7, 8, 12, 210010000, 1, 5, true);
+		DredgionSettledEvent dredgionSettled = new DredgionSettledEvent("dredgion-settled", 7, 3021, 400010000, 1);
 		assertEquals(attack, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(attack)));
 		assertEquals(death, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(death)));
 		assertEquals(worldKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldKill)));
@@ -182,6 +186,8 @@ class QuestGraphRouterTest {
 		assertEquals(proximity, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(proximity)));
 		assertEquals(reached, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(reached)));
 		assertEquals(lost, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(lost)));
+		assertEquals(rankedKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(rankedKill)));
+		assertEquals(dredgionSettled, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(dredgionSettled)));
 
 		byte[] encoded = QuestGraphEventCodec.encode(kill);
 		byte[] unknown = Arrays.copyOf(encoded, encoded.length);
@@ -316,6 +322,28 @@ class QuestGraphRouterTest {
 			() -> new EscortReachedTargetEvent("invalid", 7, 8006, 1, 100, 5001, 210010000, 0));
 	}
 
+	/**
+	 * 验证军衔击杀合并全部已满足最低军衔的路由并稳定广播，Dredgion 结算固定广播。
+	 * Verifies ranked kills merge every satisfied minimum-rank route with stable broadcast order and Dredgion
+	 * settlement uses fixed broadcast.
+	 */
+	@Test
+	void pvpSignalEventsUseRankRangesAndFixedBroadcast() {
+		assertEquals(List.of("ranked-kill-q2", "ranked-kill-q1"),
+			visited(new RankedPlayerKillEvent("ranked", 7, 9000, 7, 8, 12, 210010000, 1, 5, true)));
+		assertEquals(List.of("dredgion-settled-q2", "dredgion-settled-q1"),
+			visited(new DredgionSettledEvent("settled", 7, 9001, 400010000, 1)));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new RankedPlayerKillEvent("below-rank", 7, 9002, 7, 8, 4, 210010000, 1, 5, true),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+		assertThrows(IllegalArgumentException.class,
+			() -> new RankedPlayerKillEvent("invalid-rank", 7, 9003, 7, 8, 19, 210010000, 1, 5, true));
+		assertThrows(IllegalArgumentException.class,
+			() -> new RankedPlayerKillEvent("dead-recipient", 7, 9004, 7, 8, 12, 210010000, 1, 5, false));
+		assertThrows(IllegalArgumentException.class,
+			() -> new DredgionSettledEvent("invalid-instance", 7, 9005, 400010000, 0));
+	}
+
 	/** 返回广播访问的转换标识。 / Returns transition identifiers visited by a broadcast event. */
 	private List<String> visited(QuestGraphEvent event) {
 		List<String> visited = new ArrayList<>();
@@ -344,7 +372,9 @@ class QuestGraphRouterTest {
 				worldZoneTransition("movie-ended-q1", 20, "<movie-ended movie_id=\"913\"/>"),
 				worldZoneTransition("npc-proximity-q1", 20, "<npc-proximity npc_id=\"100\"/>"),
 				worldZoneTransition("escort-reached-q1", 20, "<escort-reached-target/>"),
-				worldZoneTransition("escort-lost-q1", 20, "<escort-lost-target/>"));
+				worldZoneTransition("escort-lost-q1", 20, "<escort-lost-target/>"),
+				worldZoneTransition("ranked-kill-q1", 20, "<ranked-player-kill minimum_rank=\"10\"/>"),
+				worldZoneTransition("dredgion-settled-q1", 20, "<dredgion-settled/>"));
 		String questTwoTransitions = String.join("", dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5),
 			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"),
 			itemTransition("item-use-q2", 10, "item-use"), itemTransition("item-obtained-q2", 10, "item-obtained"),
@@ -359,7 +389,9 @@ class QuestGraphRouterTest {
 				worldZoneTransition("movie-ended-q2", 10, "<movie-ended movie_id=\"913\"/>"),
 				worldZoneTransition("npc-proximity-q2", 10, "<npc-proximity npc_id=\"100\"/>"),
 				worldZoneTransition("escort-reached-q2", 10, "<escort-reached-target/>"),
-				worldZoneTransition("escort-lost-q2", 10, "<escort-lost-target/>"));
+				worldZoneTransition("escort-lost-q2", 10, "<escort-lost-target/>"),
+				worldZoneTransition("ranked-kill-q2", 10, "<ranked-player-kill minimum_rank=\"5\"/>"),
+				worldZoneTransition("dredgion-settled-q2", 10, "<dredgion-settled/>"));
 		return """
 			<quest_graphs>
 				<quest_graph quest_id="1" version="1" scope="PLAYER" initial_node="start">

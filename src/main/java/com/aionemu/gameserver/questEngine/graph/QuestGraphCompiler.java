@@ -13,6 +13,8 @@ import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventT
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.NPC_PROXIMITY;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ESCORT_REACHED_TARGET;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ESCORT_LOST_TARGET;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.RANKED_PLAYER_KILL;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DREDGION_SETTLED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_DEATH;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_LOGOUT;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.QUEST_TIMER_ENDED;
@@ -126,6 +128,8 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.MovieEndedEventDa
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NpcProximityEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EscortReachedTargetEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EscortLostTargetEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RankedPlayerKillEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DredgionSettledEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
@@ -536,6 +540,16 @@ public final class QuestGraphCompiler {
 		}
 		if (source instanceof EscortLostTargetEventData) {
 			return new Event(ESCORT_LOST_TARGET, questId, null);
+		}
+		if (source instanceof RankedPlayerKillEventData rankedKill) {
+			Integer minimumRank = rankedKill.getMinimumRank();
+			if (minimumRank == null || minimumRank <= 0 || minimumRank > 18) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid ranked-player-kill minimum rank");
+			}
+			return new Event(RANKED_PLAYER_KILL, minimumRank, null);
+		}
+		if (source instanceof DredgionSettledEventData) {
+			return new Event(DREDGION_SETTLED, 0, null);
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
 	}

@@ -212,6 +212,12 @@
 
 	<xs:complexType name="questGraphEscortLostTargetEvent"/>
 
+	<xs:complexType name="questGraphRankedPlayerKillEvent">
+		<xs:attribute name="minimum_rank" type="questGraphAbyssRankId" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphDredgionSettledEvent"/>
+
 	<xs:complexType name="questGraphQuestStatusCondition">
 		<xs:attribute name="quest_id" type="xs:positiveInteger"/>
 		<xs:attribute name="op" type="questGraphSetComparison" use="required"/>
@@ -473,6 +479,8 @@
 					<xs:element name="npc-proximity" type="questGraphNpcProximityEvent"/>
 					<xs:element name="escort-reached-target" type="questGraphEscortReachedTargetEvent"/>
 					<xs:element name="escort-lost-target" type="questGraphEscortLostTargetEvent"/>
+					<xs:element name="ranked-player-kill" type="questGraphRankedPlayerKillEvent"/>
+					<xs:element name="dredgion-settled" type="questGraphDredgionSettledEvent"/>
 			</xs:choice>
 			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
 			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>

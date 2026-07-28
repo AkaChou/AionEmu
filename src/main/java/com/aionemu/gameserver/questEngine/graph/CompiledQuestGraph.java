@@ -66,7 +66,9 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		MOVIE_ENDED,
 		NPC_PROXIMITY,
 		ESCORT_REACHED_TARGET,
-		ESCORT_LOST_TARGET
+		ESCORT_LOST_TARGET,
+		RANKED_PLAYER_KILL,
+		DREDGION_SETTLED
 	}
 
 	/**

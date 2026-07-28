@@ -217,7 +217,9 @@ public final class QuestGraphData {
 				@XmlElement(name = "movie-ended", type = MovieEndedEventData.class, required = true),
 				@XmlElement(name = "npc-proximity", type = NpcProximityEventData.class, required = true),
 				@XmlElement(name = "escort-reached-target", type = EscortReachedTargetEventData.class, required = true),
-				@XmlElement(name = "escort-lost-target", type = EscortLostTargetEventData.class, required = true)
+				@XmlElement(name = "escort-lost-target", type = EscortLostTargetEventData.class, required = true),
+				@XmlElement(name = "ranked-player-kill", type = RankedPlayerKillEventData.class, required = true),
+				@XmlElement(name = "dredgion-settled", type = DredgionSettledEventData.class, required = true)
 		})
 		private Object event;
 		/**
@@ -418,6 +420,20 @@ public final class QuestGraphData {
 	/** 表示当前 graph owner 的护送 NPC 丢失目标。 / Represents the escort NPC losing its target for the current graph owner. */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class EscortLostTargetEventData {
+	}
+
+	/** 表示击杀最低欧比斯军衔玩家的事件。 / Represents a kill of a player at or above a minimum Abyss rank. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class RankedPlayerKillEventData {
+		/** 允许 credit 的最低受害者军衔 ID。 / Minimum victim rank id eligible for credit. */
+		@XmlAttribute(name = "minimum_rank", required = true)
+		private Integer minimumRank;
+	}
+
+	/** 表示服务端完成当前 Dredgion run 的成员结算。 / Represents server completion of member settlement for the current Dredgion run. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class DredgionSettledEventData {
 	}
 
 	/**

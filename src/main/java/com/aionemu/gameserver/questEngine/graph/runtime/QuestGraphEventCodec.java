@@ -20,6 +20,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEnd
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcProximityEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortReachedTargetEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortLostTargetEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RankedPlayerKillEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DredgionSettledEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -56,6 +58,8 @@ public final class QuestGraphEventCodec {
 	private static final byte NPC_PROXIMITY = 18;
 	private static final byte ESCORT_REACHED_TARGET = 19;
 	private static final byte ESCORT_LOST_TARGET = 20;
+	private static final byte RANKED_PLAYER_KILL = 21;
+	private static final byte DREDGION_SETTLED = 22;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -190,6 +194,23 @@ public final class QuestGraphEventCodec {
 							output.writeInt(lost.questId());
 							writeNpcSnapshot(output, lost.npcId(), lost.npcObjectId(), lost.worldId(), lost.instanceId());
 						}
+						case RankedPlayerKillEvent rankedKill -> {
+							output.writeByte(RANKED_PLAYER_KILL);
+							writeCommon(output, rankedKill);
+							output.writeInt(rankedKill.killerPlayerId());
+							output.writeInt(rankedKill.victimPlayerId());
+							output.writeInt(rankedKill.victimRankId());
+							output.writeInt(rankedKill.worldId());
+							output.writeInt(rankedKill.instanceId());
+							output.writeFloat(rankedKill.creditDistance());
+							output.writeBoolean(rankedKill.recipientAlive());
+						}
+						case DredgionSettledEvent dredgionSettled -> {
+							output.writeByte(DREDGION_SETTLED);
+							writeCommon(output, dredgionSettled);
+							output.writeInt(dredgionSettled.worldId());
+							output.writeInt(dredgionSettled.instanceId());
+						}
 				}
 			}
 			byte[] payload = bytes.toByteArray();
@@ -245,6 +266,9 @@ public final class QuestGraphEventCodec {
 							input.readInt(), input.readInt(), input.readInt());
 						case ESCORT_LOST_TARGET -> new EscortLostTargetEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
 							input.readInt(), input.readInt(), input.readInt());
+						case RANKED_PLAYER_KILL -> new RankedPlayerKillEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
+							input.readInt(), input.readInt(), input.readInt(), input.readFloat(), input.readBoolean());
+						case DREDGION_SETTLED -> new DredgionSettledEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt());
 				default -> throw new IllegalArgumentException("Unknown quest graph event tag " + type);
 			};
 			if (input.read() != -1) {

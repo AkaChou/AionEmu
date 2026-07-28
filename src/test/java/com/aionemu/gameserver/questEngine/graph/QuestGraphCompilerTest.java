@@ -322,6 +322,41 @@ class QuestGraphCompilerTest {
 	}
 
 	/**
+	 * 验证军衔击杀范围和 Dredgion 结算编译为封闭的 PvP 信号 IR，并拒绝缺失或越界军衔。
+	 * Verifies ranked-kill ranges and Dredgion settlement compile into closed PvP-signal IR and reject missing or
+	 * out-of-range ranks.
+	 */
+	@Test
+	void compilerBuildsTypedPvpSignalEvents() throws Exception {
+		for (int minimumRank : List.of(1, 18)) {
+			String source = transition("ranked-kill", 10, "done")
+				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>",
+					"<ranked-player-kill minimum_rank=\"" + minimumRank + "\"/>");
+			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
+				.nodes().get("offer").transitions().getFirst().event();
+			assertEquals(CompiledQuestGraph.EventType.RANKED_PLAYER_KILL, compiled.type());
+			assertEquals(minimumRank, compiled.targetId());
+			assertEquals(null, compiled.qualifier());
+		}
+
+		String settlement = transition("dredgion-settled", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<dredgion-settled/>");
+		CompiledQuestGraph.Event compiledSettlement = load(document(graph(1, "offer", settlement, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().event();
+		assertEquals(CompiledQuestGraph.EventType.DREDGION_SETTLED, compiledSettlement.type());
+		assertEquals(0, compiledSettlement.targetId());
+
+		String ranked = transition("ranked-kill", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<ranked-player-kill minimum_rank=\"1\"/>");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			ranked.replace(" minimum_rank=\"1\"", ""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			ranked.replace("minimum_rank=\"1\"", "minimum_rank=\"0\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			ranked.replace("minimum_rank=\"1\"", "minimum_rank=\"19\""), terminal()))));
+	}
+
+	/**
 	 * 验证 daily、weekly 与 anchored cooldown 被编译为封闭的强类型策略。
 	 * Verifies that daily, weekly, and anchored cooldown compile into closed typed policies.
 	 */

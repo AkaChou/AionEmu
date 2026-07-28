@@ -13,7 +13,8 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	QuestGraphEvent.WorldEnteredEvent, QuestGraphEvent.ZoneEnteredEvent, QuestGraphEvent.ZoneLeftEvent,
 	QuestGraphEvent.ZoneMissionEndedEvent, QuestGraphEvent.LevelUpEvent, QuestGraphEvent.PlayerLogoutEvent,
 	QuestGraphEvent.QuestTimerEndedEvent, QuestGraphEvent.MovieEndedEvent, QuestGraphEvent.NpcProximityEvent,
-	QuestGraphEvent.EscortReachedTargetEvent, QuestGraphEvent.EscortLostTargetEvent {
+	QuestGraphEvent.EscortReachedTargetEvent, QuestGraphEvent.EscortLostTargetEvent,
+	QuestGraphEvent.RankedPlayerKillEvent, QuestGraphEvent.DredgionSettledEvent {
 
 	/**
 	 * 定义由事件类型固定的候选传播策略。
@@ -49,6 +50,7 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 				case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD, ITEM_OBTAINED, ITEM_EQUIPPED, HOUSE_ITEM_USE,
 					WORLD_ENTERED, ZONE_ENTERED, ZONE_LEFT, ZONE_MISSION_ENDED, LEVEL_UP, PLAYER_LOGOUT,
 					QUEST_TIMER_ENDED, NPC_PROXIMITY, ESCORT_REACHED_TARGET, ESCORT_LOST_TARGET -> RoutingPolicy.BROADCAST;
+				case RANKED_PLAYER_KILL, DREDGION_SETTLED -> RoutingPolicy.BROADCAST;
 		};
 	}
 
@@ -523,6 +525,54 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		@Override
 		public int targetId() {
 			return questId;
+		}
+	}
+
+	/** 表示服务端确认并分配给当前 credit recipient 的军衔玩家击杀。 / Represents a server-confirmed ranked-player kill assigned to the current credit recipient. */
+	record RankedPlayerKillEvent(String eventId, int playerId, long occurredAt, int killerPlayerId, int victimPlayerId,
+			int victimRankId, int worldId, int instanceId, float creditDistance, boolean recipientAlive) implements QuestGraphEvent {
+		/** 校验参与者、军衔、实例与 credit 资格快照。 / Validates participants, rank, instance, and credit-eligibility snapshot. */
+		public RankedPlayerKillEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			if (killerPlayerId <= 0 || victimPlayerId <= 0 || killerPlayerId == victimPlayerId || playerId == victimPlayerId
+					|| victimRankId <= 0 || victimRankId > 18 || !Float.isFinite(creditDistance) || creditDistance < 0 || !recipientAlive) {
+				throw new IllegalArgumentException("Ranked-player-kill credit snapshot is invalid");
+			}
+			validateWorldInstance(worldId, instanceId);
+		}
+
+		/** 返回 RANKED_PLAYER_KILL 类型。 / Returns the RANKED_PLAYER_KILL type. */
+		@Override
+		public EventType type() {
+			return EventType.RANKED_PLAYER_KILL;
+		}
+
+		/** 返回受害者实际军衔 ID，用于最低军衔范围路由。 / Returns the victim rank id used for minimum-rank range routing. */
+		@Override
+		public int targetId() {
+			return victimRankId;
+		}
+	}
+
+	/** 表示当前成员已由服务端 Dredgion run 完成结算。 / Represents server-confirmed Dredgion-run settlement for the current member. */
+	record DredgionSettledEvent(String eventId, int playerId, long occurredAt, int worldId, int instanceId)
+			implements QuestGraphEvent {
+		/** 校验结算成员与 instance run 快照。 / Validates the settled member and instance-run snapshot. */
+		public DredgionSettledEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateWorldInstance(worldId, instanceId);
+		}
+
+		/** 返回 DREDGION_SETTLED 类型。 / Returns the DREDGION_SETTLED type. */
+		@Override
+		public EventType type() {
+			return EventType.DREDGION_SETTLED;
+		}
+
+		/** Dredgion settlement 使用固定全局路由键 0。 / Dredgion settlement uses the fixed global route key zero. */
+		@Override
+		public int targetId() {
+			return 0;
 		}
 	}
 

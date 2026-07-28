@@ -26,6 +26,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEnd
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcProximityEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortReachedTargetEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortLostTargetEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RankedPlayerKillEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DredgionSettledEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -75,6 +77,16 @@ public final class QuestGraphRouter {
 	 */
 	private List<EventRoute> routes(QuestGraphEvent event) {
 		List<EventRoute> exact = graphData.eventIndex().getOrDefault(event.eventKey(), List.of());
+		if (event instanceof RankedPlayerKillEvent rankedKill) {
+			List<EventRoute> ranged = new ArrayList<>();
+			for (int minimumRank = 1; minimumRank <= rankedKill.victimRankId(); minimumRank++) {
+				ranged.addAll(graphData.eventIndex().getOrDefault(
+					new com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey(event.type(), minimumRank), List.of()));
+			}
+			ranged.sort(Comparator.comparingInt((EventRoute route) -> route.transition().priority())
+				.thenComparingInt(EventRoute::questId).thenComparing(route -> route.transition().id()));
+			return ranged;
+		}
 		if (!(event instanceof KillInWorldEvent killInWorld) || killInWorld.worldId() == 0) {
 			return exact;
 		}
@@ -187,6 +199,9 @@ public final class QuestGraphRouter {
 				case NpcProximityEvent proximity -> matchesTarget(proximity, route);
 				case EscortReachedTargetEvent reached -> matchesTarget(reached, route);
 				case EscortLostTargetEvent lost -> matchesTarget(lost, route);
+				case RankedPlayerKillEvent rankedKill -> route.transition().event().type() == rankedKill.type()
+					&& route.transition().event().targetId() <= rankedKill.victimRankId();
+				case DredgionSettledEvent settled -> matchesTarget(settled, route);
 			};
 	}
 
