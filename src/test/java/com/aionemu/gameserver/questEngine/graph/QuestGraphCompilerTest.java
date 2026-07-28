@@ -1,8 +1,10 @@
 package com.aionemu.gameserver.questEngine.graph;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -159,6 +161,45 @@ class QuestGraphCompilerTest {
 			transition("accept", 10, "done"), terminal()))));
 		assertThrows(IllegalArgumentException.class,
 			() -> load("<!DOCTYPE quest_graphs [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><quest_graphs>&xxe;</quest_graphs>"));
+	}
+
+	/**
+	 * 验证编译器在 typed bridge 完成前拒绝非 PLAYER 图和变量范围。
+	 * Verifies that the compiler rejects non-PLAYER graph and variable scopes until typed bridges exist.
+	 */
+	@Test
+	void compilerRejectsScopesWithoutTypedRuntimeBridge() {
+		String source = document(graph(1, "offer", transition("accept", 10, "done"), terminal()));
+
+		assertFailureContains(source.replace("scope=\"PLAYER\" initial_node", "scope=\"PARTY\" initial_node"),
+			"graph requires unsupported PARTY scope");
+		assertFailureContains(source.replaceFirst("type=\"INT\" scope=\"PLAYER\"", "type=\"INT\" scope=\"WORLD\""),
+			"variable counter requires unsupported WORLD scope");
+	}
+
+	/**
+	 * 验证完成次数与计时器 XML 编译为封闭动作，并固定追加提交后协议。
+	 * Verifies completion-count and timer XML compile into closed actions with fixed post-commit protocol.
+	 */
+	@Test
+	void compilerBuildsCompletionCountAndTimerActions() throws Exception {
+		String sourceTransition = transition("accept", 10, "done")
+			.replace("<give-quest-item", "<set-completion-count count=\"0\"/><add-completion-count delta=\"1\"/><give-quest-item")
+			.replace("<sync-quest-status/>", "<start-quest-timer timer=\"QUEST_TIMER\" duration_seconds=\"300\"/>");
+		List<CompiledQuestGraph.Action> actions = load(document(graph(1, "offer", sourceTransition, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().actions();
+
+		assertTrue(actions.contains(new CompiledQuestGraph.SetCompletionCountAction(0)));
+		assertTrue(actions.contains(new CompiledQuestGraph.AddCompletionCountAction(1)));
+		assertTrue(actions.contains(new CompiledQuestGraph.StartQuestTimerAction("QUEST_TIMER", 300)));
+		assertTrue(actions.contains(new CompiledQuestGraph.SyncQuestTimerAction("QUEST_TIMER", 300)));
+
+		String endTimer = transition("end", 10, "done").replace("<sync-quest-status/>",
+			"<end-quest-timer timer=\"QUEST_TIMER\"/>");
+		List<CompiledQuestGraph.Action> endActions = load(document(graph(1, "offer", endTimer, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().actions();
+		assertTrue(endActions.contains(new CompiledQuestGraph.EndQuestTimerAction("QUEST_TIMER")));
+		assertTrue(endActions.contains(new CompiledQuestGraph.SyncQuestTimerAction("QUEST_TIMER", 0)));
 	}
 
 	/**
@@ -335,8 +376,10 @@ class QuestGraphCompilerTest {
 			CompiledQuestGraph.QuestItemGrantMode.TOP_UP_TO));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.RemoveQuestItemAction(1, 0,
 			CompiledQuestGraph.QuestItemRemovalMode.EXACT));
-		assertThrows(IllegalArgumentException.class,
-			() -> new CompiledQuestGraph.SetQuestStatusAction(CompiledQuestGraph.QuestStatus.COMPLETE));
+		assertDoesNotThrow(() -> new CompiledQuestGraph.SetQuestStatusAction(CompiledQuestGraph.QuestStatus.COMPLETE));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.SetCompletionCountAction(-1));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.AddCompletionCountAction(0));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.StartQuestTimerAction("QUEST_TIMER", 0));
 	}
 
 	private CompiledQuestGraphData load(String xml) throws Exception {

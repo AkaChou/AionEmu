@@ -28,12 +28,14 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionPhase;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AnchoredCooldownRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CloseDialogAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EndQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DailyRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
@@ -66,21 +68,26 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatWeekday
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendPlayerMessageAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendRepeatDeadlineMessageAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ShowQuestListAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Variable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.WeeklyRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddCompletionCountActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddQuestVariableActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CloseDialogActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FinishQuestActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EndQuestTimerActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GiveQuestItemActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
@@ -104,10 +111,12 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveQuestItemAc
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendDialogActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendPlayerMessageActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendRepeatDeadlineMessageActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetCompletionCountActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetQuestStatusActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetQuestVariableActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ShowQuestListActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestTimerActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SyncQuestStatusActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.TransitionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.VariableData;
@@ -240,6 +249,7 @@ public final class QuestGraphCompiler {
 		} catch (RuntimeException e) {
 			throw new IllegalArgumentException("Quest " + questId + " has an invalid scope", e);
 		}
+		requireSupportedScope(questId, "graph", scope);
 
 		Map<String, NodeData> sourceNodes = new TreeMap<>();
 		for (NodeData node : source.getNodes()) {
@@ -278,7 +288,7 @@ public final class QuestGraphCompiler {
 				List<Condition> conditions = sourceTransition.getConditions().stream()
 					.map(value -> compileCondition(questId, value, references, variables)).toList();
 				List<Action> actions = sourceTransition.getActions().stream()
-					.map(value -> compileAction(questId, value, variables, references)).toList();
+					.flatMap(value -> compileActions(questId, value, variables, references).stream()).toList();
 				validateActionOrder(questId, sourceTransition.getId(), actions);
 				validateRepeatDeadlineProtocol(questId, sourceTransition.getId(), actions);
 				transitions.add(new Transition(sourceTransition.getId(), sourceTransition.getPriority(), sourceTransition.getTargetNode(), event,
@@ -337,6 +347,7 @@ public final class QuestGraphCompiler {
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " variable " + source.getName() + " has an invalid scope", e);
 			}
+			requireSupportedScope(questId, "variable " + source.getName(), scope);
 			Variable variable = switch (source.getType()) {
 				case "INT" -> compileIntVariable(questId, source, scope);
 				case "BOOLEAN" -> compileBooleanVariable(questId, source, scope);
@@ -348,6 +359,17 @@ public final class QuestGraphCompiler {
 			}
 		}
 		return Collections.unmodifiableMap(new LinkedHashMap<>(variables));
+	}
+
+	/**
+	 * 在 typed scope bridge 完成前仅允许当前 PLAYER 持久化与锁模型。
+	 * Allows only the current PLAYER persistence and locking model until a typed scope bridge exists.
+	 */
+	private static void requireSupportedScope(int questId, String member, StateScope scope) {
+		if (scope != StateScope.PLAYER) {
+			throw new IllegalArgumentException("Quest " + questId + ' ' + member + " requires unsupported " + scope
+				+ " scope without a typed runtime bridge");
+		}
 	}
 
 	/**
@@ -573,6 +595,20 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid add-variable action", e);
 			}
 		}
+		if (source instanceof SetCompletionCountActionData action) {
+			try {
+				return new SetCompletionCountAction(action.getCount());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid set-completion-count action", e);
+			}
+		}
+		if (source instanceof AddCompletionCountActionData action) {
+			try {
+				return new AddCompletionCountAction(action.getDelta());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid add-completion-count action", e);
+			}
+		}
 		if (source instanceof GiveQuestItemActionData action) {
 			if (action.getItemId() == null || !references.itemIds().contains(action.getItemId())) {
 				throw new IllegalArgumentException("Quest " + questId + " give action references missing item " + action.getItemId());
@@ -636,6 +672,28 @@ public final class QuestGraphCompiler {
 			}
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported action capability");
+	}
+
+	/**
+	 * 将一个 XML 动作编译为一个动作或带提交后协议的固定 typed expansion。
+	 * Compiles one XML action into one action or a fixed typed expansion with post-commit protocol.
+	 */
+	private static List<Action> compileActions(int questId, Object source, Map<String, Variable> variables, References references) {
+		try {
+			if (source instanceof StartQuestTimerActionData timer) {
+				return List.of(new StartQuestTimerAction(timer.getTimer(), timer.getDurationSeconds()),
+					new SyncQuestTimerAction(timer.getTimer(), timer.getDurationSeconds()));
+			}
+			if (source instanceof EndQuestTimerActionData timer) {
+				return List.of(new EndQuestTimerAction(timer.getTimer()), new SyncQuestTimerAction(timer.getTimer(), 0));
+			}
+			return List.of(compileAction(questId, source, variables, references));
+		} catch (RuntimeException e) {
+			if (e instanceof IllegalArgumentException && e.getMessage() != null && e.getMessage().startsWith("Quest ")) {
+				throw e;
+			}
+			throw new IllegalArgumentException("Quest " + questId + " has an invalid quest-timer action", e);
+		}
 	}
 
 	/**

@@ -501,10 +501,14 @@ public final class QuestGraphData {
 			@XmlElement(name = "set-quest-status", type = SetQuestStatusActionData.class),
 			@XmlElement(name = "set-quest-variable", type = SetQuestVariableActionData.class),
 			@XmlElement(name = "add-quest-variable", type = AddQuestVariableActionData.class),
+			@XmlElement(name = "set-completion-count", type = SetCompletionCountActionData.class),
+			@XmlElement(name = "add-completion-count", type = AddCompletionCountActionData.class),
 			@XmlElement(name = "give-quest-item", type = GiveQuestItemActionData.class),
 			@XmlElement(name = "remove-quest-item", type = RemoveQuestItemActionData.class),
 			@XmlElement(name = "remove-collected-items", type = RemoveCollectedItemsActionData.class),
 			@XmlElement(name = "finish-quest", type = FinishQuestActionData.class),
+			@XmlElement(name = "start-quest-timer", type = StartQuestTimerActionData.class),
+			@XmlElement(name = "end-quest-timer", type = EndQuestTimerActionData.class),
 			@XmlElement(name = "send-dialog", type = SendDialogActionData.class),
 			@XmlElement(name = "close-dialog", type = CloseDialogActionData.class),
 			@XmlElement(name = "show-quest-list", type = ShowQuestListActionData.class),
@@ -552,6 +556,24 @@ public final class QuestGraphData {
 		@XmlAttribute(required = true)
 		private String variable;
 		/** 非零增量。 / Non-zero delta. */
+		@XmlAttribute(required = true)
+		private Integer delta;
+	}
+
+	/** 设置 canonical 完成次数。 / Sets the canonical completion count. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SetCompletionCountActionData {
+		/** 目标完成次数。 / Target completion count. */
+		@XmlAttribute(required = true)
+		private Integer count;
+	}
+
+	/** 增加 canonical 完成次数。 / Adds to the canonical completion count. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class AddCompletionCountActionData {
+		/** 非零完成次数增量。 / Non-zero completion-count delta. */
 		@XmlAttribute(required = true)
 		private Integer delta;
 	}
@@ -620,6 +642,27 @@ public final class QuestGraphData {
 		/** anchored cooldown 秒数。 / Anchored cooldown seconds. */
 		@XmlAttribute(name = "cooldown_seconds")
 		private Long cooldownSeconds;
+	}
+
+	/** 启动命名任务计时器。 / Starts a named quest timer. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class StartQuestTimerActionData {
+		/** 稳定计时器名称。 / Stable timer name. */
+		@XmlAttribute(required = true)
+		private String timer;
+		/** 持续秒数。 / Duration in seconds. */
+		@XmlAttribute(name = "duration_seconds", required = true)
+		private Long durationSeconds;
+	}
+
+	/** 停止命名任务计时器。 / Stops a named quest timer. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class EndQuestTimerActionData {
+		/** 稳定计时器名称。 / Stable timer name. */
+		@XmlAttribute(required = true)
+		private String timer;
 	}
 
 	/** 发送任务对话页面。 / Sends a quest dialog page. */

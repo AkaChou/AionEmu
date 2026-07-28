@@ -60,15 +60,20 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		SET_QUEST_STATUS(ActionPhase.STATE),
 		SET_QUEST_VARIABLE(ActionPhase.STATE),
 		ADD_QUEST_VARIABLE(ActionPhase.STATE),
+		SET_COMPLETION_COUNT(ActionPhase.STATE),
+		ADD_COMPLETION_COUNT(ActionPhase.STATE),
 		GIVE_QUEST_ITEM(ActionPhase.REQUIRED),
 		REMOVE_QUEST_ITEM(ActionPhase.REQUIRED),
 		REMOVE_COLLECTED_ITEMS(ActionPhase.REQUIRED),
 		FINISH_QUEST(ActionPhase.REQUIRED),
+		START_QUEST_TIMER(ActionPhase.REQUIRED),
+		END_QUEST_TIMER(ActionPhase.REQUIRED),
 		SEND_DIALOG(ActionPhase.POST_COMMIT_PROTOCOL),
 		CLOSE_DIALOG(ActionPhase.POST_COMMIT_PROTOCOL),
 		SHOW_QUEST_LIST(ActionPhase.POST_COMMIT_PROTOCOL),
 		SYNC_QUEST_STATUS(ActionPhase.POST_COMMIT_PROTOCOL),
 		SEND_REPEAT_DEADLINE_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL),
+		SYNC_QUEST_TIMER(ActionPhase.POST_COMMIT_PROTOCOL),
 		SEND_PLAYER_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL);
 
 		private final ActionPhase phase;
@@ -506,8 +511,9 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Defines the closed typed set of transition actions.
 	 */
 	public sealed interface Action permits StartQuestAction, SetQuestStatusAction, SetQuestVariableAction, AddQuestVariableAction,
-		GiveQuestItemAction, RemoveQuestItemAction, RemoveCollectedItemsAction, FinishQuestAction, SendDialogAction, CloseDialogAction, ShowQuestListAction,
-		SyncQuestStatusAction, SendRepeatDeadlineMessageAction, SendPlayerMessageAction {
+		SetCompletionCountAction, AddCompletionCountAction, GiveQuestItemAction, RemoveQuestItemAction, RemoveCollectedItemsAction, FinishQuestAction,
+		StartQuestTimerAction, EndQuestTimerAction, SendDialogAction, CloseDialogAction, ShowQuestListAction, SyncQuestStatusAction,
+		SendRepeatDeadlineMessageAction, SyncQuestTimerAction, SendPlayerMessageAction {
 
 		/** 返回动作种类及其固定执行阶段。 / Returns the action kind and its fixed execution phase. */
 		default ActionType type() {
@@ -516,15 +522,20 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				case SetQuestStatusAction ignored -> ActionType.SET_QUEST_STATUS;
 				case SetQuestVariableAction ignored -> ActionType.SET_QUEST_VARIABLE;
 				case AddQuestVariableAction ignored -> ActionType.ADD_QUEST_VARIABLE;
+				case SetCompletionCountAction ignored -> ActionType.SET_COMPLETION_COUNT;
+				case AddCompletionCountAction ignored -> ActionType.ADD_COMPLETION_COUNT;
 				case GiveQuestItemAction ignored -> ActionType.GIVE_QUEST_ITEM;
 				case RemoveQuestItemAction ignored -> ActionType.REMOVE_QUEST_ITEM;
 				case RemoveCollectedItemsAction ignored -> ActionType.REMOVE_COLLECTED_ITEMS;
 				case FinishQuestAction ignored -> ActionType.FINISH_QUEST;
+				case StartQuestTimerAction ignored -> ActionType.START_QUEST_TIMER;
+				case EndQuestTimerAction ignored -> ActionType.END_QUEST_TIMER;
 				case SendDialogAction ignored -> ActionType.SEND_DIALOG;
 				case CloseDialogAction ignored -> ActionType.CLOSE_DIALOG;
 				case ShowQuestListAction ignored -> ActionType.SHOW_QUEST_LIST;
 				case SyncQuestStatusAction ignored -> ActionType.SYNC_QUEST_STATUS;
 				case SendRepeatDeadlineMessageAction ignored -> ActionType.SEND_REPEAT_DEADLINE_MESSAGE;
+				case SyncQuestTimerAction ignored -> ActionType.SYNC_QUEST_TIMER;
 				case SendPlayerMessageAction ignored -> ActionType.SEND_PLAYER_MESSAGE;
 			};
 		}
@@ -536,9 +547,9 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 
 	/** 设置当前 canonical 任务状态。 / Sets the current canonical quest status. */
 	public record SetQuestStatusAction(QuestStatus status) implements Action {
-		/** 拒绝空状态和 COMPLETE；完整结算必须使用 finish-quest。 / Rejects null and COMPLETE; settlement must use finish-quest. */
+		/** 拒绝空状态；COMPLETE 表示有证据的无奖励直接完成。 / Rejects null; COMPLETE represents a proven direct completion without settlement. */
 		public SetQuestStatusAction {
-			if (status == null || status == QuestStatus.COMPLETE) {
+			if (status == null) {
 				throw new IllegalArgumentException("Quest status action is invalid");
 			}
 		}
@@ -560,6 +571,26 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		public AddQuestVariableAction {
 			if (variable == null || variable.isBlank() || delta == 0) {
 				throw new IllegalArgumentException("Quest variable increment is invalid");
+			}
+		}
+	}
+
+	/** 将 canonical 完成次数设置为显式非负值。 / Sets the canonical completion count to an explicit non-negative value. */
+	public record SetCompletionCountAction(int count) implements Action {
+		/** 校验非负完成次数。 / Validates a non-negative completion count. */
+		public SetCompletionCountAction {
+			if (count < 0) {
+				throw new IllegalArgumentException("Quest completion count is invalid");
+			}
+		}
+	}
+
+	/** 为 canonical 完成次数增加显式非零增量。 / Adds an explicit non-zero delta to the canonical completion count. */
+	public record AddCompletionCountAction(int delta) implements Action {
+		/** 校验非零增量。 / Validates a non-zero delta. */
+		public AddCompletionCountAction {
+			if (delta == 0) {
+				throw new IllegalArgumentException("Quest completion-count delta is invalid");
 			}
 		}
 	}
@@ -613,6 +644,26 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		}
 	}
 
+	/** 通过 typed timer bridge 启动命名任务计时器。 / Starts a named quest timer through the typed timer bridge. */
+	public record StartQuestTimerAction(String timer, long durationSeconds) implements Action {
+		/** 校验命名计时器和正持续时间。 / Validates the named timer and positive duration. */
+		public StartQuestTimerAction {
+			if (!validTimerName(timer) || durationSeconds <= 0) {
+				throw new IllegalArgumentException("Start quest timer action is invalid");
+			}
+		}
+	}
+
+	/** 通过 typed timer bridge 停止命名任务计时器。 / Stops a named quest timer through the typed timer bridge. */
+	public record EndQuestTimerAction(String timer) implements Action {
+		/** 校验命名计时器。 / Validates the named timer. */
+		public EndQuestTimerAction {
+			if (!validTimerName(timer)) {
+				throw new IllegalArgumentException("End quest timer action is invalid");
+			}
+		}
+	}
+
 	/** 提交后发送绑定当前任务的对话页面。 / Sends a quest-bound dialog page after commit. */
 	public record SendDialogAction(int dialogId) implements Action {
 		/** 校验正数对话页面 ID。 / Validates a positive dialog-page id. */
@@ -643,6 +694,21 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				throw new IllegalArgumentException("Repeat deadline message policy is invalid");
 			}
 		}
+	}
+
+	/** 提交后同步命名任务计时器的剩余秒数。 / Syncs the remaining seconds of a named quest timer after commit. */
+	public record SyncQuestTimerAction(String timer, long remainingSeconds) implements Action {
+		/** 校验命名计时器和非负剩余秒数。 / Validates the named timer and non-negative remaining seconds. */
+		public SyncQuestTimerAction {
+			if (!validTimerName(timer) || remainingSeconds < 0) {
+				throw new IllegalArgumentException("Quest timer protocol action is invalid");
+			}
+		}
+	}
+
+	/** 校验任务计时器使用稳定 identifier 语法。 / Validates stable identifier syntax for quest timers. */
+	private static boolean validTimerName(String timer) {
+		return timer != null && timer.length() <= 128 && timer.matches("[A-Za-z][A-Za-z0-9_.-]*");
 	}
 
 	/** 提交后向玩家发送类型化频道消息。 / Sends a typed-channel player message after commit. */

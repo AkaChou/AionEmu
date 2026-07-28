@@ -31,12 +31,14 @@ import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AnchoredCooldownRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DailyRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EndQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
@@ -51,11 +53,14 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollect
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendRepeatDeadlineMessageAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestTimerAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatTimeBasis;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
@@ -68,6 +73,7 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Bool
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
@@ -576,6 +582,88 @@ class QuestGraphTransitionExecutorTest {
 	}
 
 	/**
+	 * 验证定义版本不兼容会通过 CAS 将 PREPARED 状态持久化为稳定隔离状态。
+	 * Verifies an incompatible definition version is persisted as a stable quarantined state through CAS.
+	 */
+	@Test
+	void unrecoverablePreparedStateIsPersistentlyQuarantined() {
+		Fixture fixture = fixture();
+		PlayerQuestGraphState prepared = preparedState(fixture.graph());
+		fixture.states().addLoaded(prepared);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(prepared);
+		CompiledQuestGraph replacement = new CompiledQuestGraph(1, 2, PLAYER, fixture.graph().initialNode(), fixture.graph().variables(),
+			fixture.graph().nodes());
+		TransitionContext context = context(fixture.states(), database, invocation -> APPLIED);
+
+		assertEquals(DispatchResult.Status.FAILED, executor.recover(replacement, context));
+		PlayerQuestGraphState quarantined = fixture.states().get(1);
+		assertEquals(Lifecycle.QUARANTINED, quarantined.getLifecycle());
+		assertEquals(1, quarantined.getRevision());
+		assertEquals("RECOVERY_DEFINITION_VERSION_MISMATCH", quarantined.getQuarantineReason());
+		assertEquals(quarantined, database.get());
+	}
+
+	/**
+	 * 验证隔离 CAS 冲突保持原 PREPARED 状态，不产生内存伪成功。
+	 * Verifies a quarantine CAS conflict preserves the PREPARED state without an in-memory false success.
+	 */
+	@Test
+	void quarantineCasConflictPreservesPreparedState() {
+		Fixture fixture = fixture();
+		PlayerQuestGraphState prepared = preparedState(fixture.graph());
+		fixture.states().addLoaded(prepared);
+		CompiledQuestGraph replacement = new CompiledQuestGraph(1, 2, PLAYER, fixture.graph().initialNode(), fixture.graph().variables(),
+			fixture.graph().nodes());
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(), invocation -> MATCHED, invocation -> READY,
+			invocation -> APPLIED, (expected, state) -> CONFLICT);
+
+		assertEquals(DispatchResult.Status.FAILED, executor.recover(replacement, context));
+		assertEquals(prepared, fixture.states().get(1));
+		assertEquals(Lifecycle.PREPARED, fixture.states().get(1).getLifecycle());
+	}
+
+	/**
+	 * 验证已持久化 journal 的纯状态归约不再合法时会被隔离。
+	 * Verifies a persisted journal is quarantined when its pure state reduction is no longer valid.
+	 */
+	@Test
+	void recoveryQuarantinesInvalidStateTransition() {
+		List<Action> actions = List.of(new SetQuestStatusAction(CompiledQuestGraph.QuestStatus.COMPLETE), new SetCompletionCountAction(0));
+		Transition transition = new Transition("invalid", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), actions);
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PreparedTransition journal = new PreparedTransition(-1, EVENT.eventId(), "invalid", 0, QuestGraphEventCodec.encode(EVENT));
+		PlayerQuestGraphState prepared = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.PREPARED, Map.of(), Map.of(), journal, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(prepared);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(prepared);
+
+		assertEquals(DispatchResult.Status.FAILED, executor.recover(graph, context(states, database, invocation -> APPLIED)));
+		assertEquals(Lifecycle.QUARANTINED, states.get(1).getLifecycle());
+		assertEquals("RECOVERY_STATE_TRANSITION_INVALID", states.get(1).getQuarantineReason());
+		assertEquals(states.get(1), database.get());
+	}
+
+	/**
+	 * 验证外部能力的瞬时 preflight 失败保留 PREPARED 状态供后续重试。
+	 * Verifies a transient external preflight failure preserves PREPARED state for a later retry.
+	 */
+	@Test
+	void recoveryPreservesPreparedStateOnTransientPreflightFailure() {
+		Fixture fixture = fixture();
+		PlayerQuestGraphState prepared = preparedState(fixture.graph());
+		fixture.states().addLoaded(prepared);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(prepared);
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(), invocation -> MATCHED,
+			invocation -> QuestGraphTransitionExecutor.PreflightResult.FAILED, invocation -> APPLIED, cas(database));
+
+		assertEquals(DispatchResult.Status.FAILED, executor.recover(fixture.graph(), context));
+		assertEquals(prepared, fixture.states().get(1));
+		assertEquals(prepared, database.get());
+	}
+
+	/**
 	 * 验证动作后 journal CAS 冲突可用相同幂等键重放并完成最终提交。
 	 * Verifies replay with the same idempotency key and final commit after a post-action journal CAS conflict.
 	 */
@@ -680,6 +768,107 @@ class QuestGraphTransitionExecutorTest {
 	}
 
 	/**
+	 * 验证直接完成、完成次数 set/add 与计时器启动共享同一 journal/CAS 执行合同。
+	 * Verifies direct completion, completion-count set/add, and timer start share one journal/CAS execution contract.
+	 */
+	@Test
+	void completionCountAndTimerStartArePersistedBeforeProtocol() {
+		List<Action> actions = List.of(new SetQuestStatusAction(CompiledQuestGraph.QuestStatus.COMPLETE),
+			new SetCompletionCountAction(1), new AddCompletionCountAction(1), new StartQuestTimerAction("QUEST_TIMER", 300),
+			new SyncQuestTimerAction("QUEST_TIMER", 300));
+		Transition transition = new Transition("complete", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), actions);
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		AtomicReference<QuestGraphTimerActionAdapter.StartCommand> start = new AtomicReference<>();
+		AtomicReference<QuestGraphTimerActionAdapter.SyncCommand> sync = new AtomicReference<>();
+		QuestGraphTimerActionAdapter timers = new QuestGraphTimerActionAdapter(command -> {
+			start.set(command);
+			return APPLIED;
+		}, command -> FAILED, command -> {
+			sync.set(command);
+			return APPLIED;
+		});
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> FAILED, noItemActions(), timers, cas(database));
+
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), context));
+		PlayerQuestGraphState completed = states.get(1);
+		assertEquals(CompiledQuestGraph.QuestStatus.COMPLETE, completed.getQuestStatus());
+		assertEquals(2, completed.getHistory().completionCount());
+		assertEquals(301_000L, completed.getDeadlines().get("QUEST_TIMER"));
+		assertEquals(301_000L, start.get().deadlineAt());
+		assertEquals(300, sync.get().remainingSeconds());
+		assertEquals(completed, database.get());
+	}
+
+	/**
+	 * 验证 COMPLETE 与零完成次数的非法组合在 PREPARED 写入前失败。
+	 * Verifies an invalid COMPLETE/zero-count combination fails before the PREPARED write.
+	 */
+	@Test
+	void invalidCompletionHistoryFailsBeforeAnyWrite() {
+		List<Action> actions = List.of(new SetQuestStatusAction(CompiledQuestGraph.QuestStatus.COMPLETE), new SetCompletionCountAction(0));
+		Transition transition = new Transition("invalid", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), actions);
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicInteger writes = new AtomicInteger();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> APPLIED, (expected, state) -> {
+				writes.incrementAndGet();
+				return PersistenceResult.APPLIED;
+			});
+
+		assertEquals(DispatchResult.Status.FAILED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), context));
+		assertEquals(0, writes.get());
+		assertEquals(initial, states.get(1));
+	}
+
+	/**
+	 * 验证计时器停止通过 typed bridge 后删除持久化 deadline，并在提交后同步零秒。
+	 * Verifies timer end removes the persisted deadline through the typed bridge and syncs zero after commit.
+	 */
+	@Test
+	void timerEndRemovesDeadlineAndSyncsAfterCommit() {
+		List<Action> actions = List.of(new EndQuestTimerAction("QUEST_TIMER"), new SyncQuestTimerAction("QUEST_TIMER", 0));
+		Transition transition = new Transition("stop", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), actions);
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of("QUEST_TIMER", 500_000L), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		AtomicReference<QuestGraphTimerActionAdapter.EndCommand> end = new AtomicReference<>();
+		AtomicReference<QuestGraphTimerActionAdapter.SyncCommand> sync = new AtomicReference<>();
+		QuestGraphTimerActionAdapter timers = new QuestGraphTimerActionAdapter(command -> FAILED, command -> {
+			end.set(command);
+			return APPLIED;
+		}, command -> {
+			sync.set(command);
+			return APPLIED;
+		});
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> FAILED, noItemActions(), timers, cas(database));
+
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), context));
+		assertEquals(Map.of(), states.get(1).getDeadlines());
+		assertEquals("QUEST_TIMER", end.get().timer());
+		assertEquals(0, sync.get().remainingSeconds());
+	}
+
+	/**
 	 * 创建聚焦测试使用的执行上下文。
 	 * Creates the execution context used by focused tests.
 	 */
@@ -701,6 +890,12 @@ class QuestGraphTransitionExecutorTest {
 			database.set(next);
 			return PersistenceResult.APPLIED;
 		};
+	}
+
+	/** 创建不处理任何物品动作的聚焦 adapter。 / Creates a focused adapter that handles no item actions. */
+	private static QuestGraphItemActionAdapter noItemActions() {
+		return new QuestGraphItemActionAdapter(7, new Object(), ignored -> 0, values -> true, (itemId, delta) -> false,
+			(itemId, delta) -> false, () -> true, itemId -> true);
 	}
 
 	/**
@@ -726,6 +921,13 @@ class QuestGraphTransitionExecutorTest {
 			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
 		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
 		return new Fixture(graph, states, new Match(EVENT, graph, new EventRoute(1, "offer", transition), null));
+	}
+
+	/** 创建指向 fixture 首个转换的初始 PREPARED 状态。 / Creates an initial PREPARED state targeting the fixture's first transition. */
+	private static PlayerQuestGraphState preparedState(CompiledQuestGraph graph) {
+		PreparedTransition journal = new PreparedTransition(-1, EVENT.eventId(), "accept", 0, QuestGraphEventCodec.encode(EVENT));
+		return new PlayerQuestGraphState(1, 1, 0, graph.initialNode(), NONE, QuestHistory.EMPTY, null, Lifecycle.PREPARED,
+			Map.of("count", new IntValue(2), "enabled", new BooleanValue(false)), Map.of(), journal, Map.of(), null);
 	}
 
 	/**

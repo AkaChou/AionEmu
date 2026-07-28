@@ -224,6 +224,14 @@
 		<xs:attribute name="delta" type="xs:int" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphSetCompletionCountAction">
+		<xs:attribute name="count" type="xs:nonNegativeInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphAddCompletionCountAction">
+		<xs:attribute name="delta" type="xs:int" use="required"/>
+	</xs:complexType>
+
 	<xs:simpleType name="questGraphQuestItemGrantMode">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="TOP_UP_TO"/>
@@ -296,6 +304,15 @@
 		<xs:attribute name="cooldown_seconds" type="xs:positiveInteger"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphStartTimerAction">
+		<xs:attribute name="timer" type="questGraphIdentifier" use="required"/>
+		<xs:attribute name="duration_seconds" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphEndTimerAction">
+		<xs:attribute name="timer" type="questGraphIdentifier" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphSendDialogAction">
 		<xs:attribute name="dialog_id" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
@@ -344,10 +361,14 @@
 			<xs:element name="set-quest-status" type="questGraphSetStatusAction"/>
 			<xs:element name="set-quest-variable" type="questGraphSetVariableAction"/>
 			<xs:element name="add-quest-variable" type="questGraphAddVariableAction"/>
+			<xs:element name="set-completion-count" type="questGraphSetCompletionCountAction"/>
+			<xs:element name="add-completion-count" type="questGraphAddCompletionCountAction"/>
 			<xs:element name="give-quest-item" type="questGraphGiveQuestItemAction"/>
 			<xs:element name="remove-quest-item" type="questGraphRemoveQuestItemAction"/>
 			<xs:element name="remove-collected-items" type="questGraphEmptyAction"/>
 			<xs:element name="finish-quest" type="questGraphFinishAction"/>
+			<xs:element name="start-quest-timer" type="questGraphStartTimerAction"/>
+			<xs:element name="end-quest-timer" type="questGraphEndTimerAction"/>
 			<xs:element name="send-dialog" type="questGraphSendDialogAction"/>
 			<xs:element name="close-dialog" type="questGraphEmptyAction"/>
 			<xs:element name="show-quest-list" type="questGraphEmptyAction"/>
