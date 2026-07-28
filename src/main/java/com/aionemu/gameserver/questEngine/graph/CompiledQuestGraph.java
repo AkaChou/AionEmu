@@ -38,7 +38,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Lists event capabilities currently proven and supported by the compiler.
 	 */
 	public enum EventType {
-		DIALOG
+		DIALOG,
+		KILL
 	}
 
 	/**

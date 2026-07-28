@@ -194,7 +194,10 @@ public final class QuestGraphData {
 		 * JAXB 事件负载。
 		 * JAXB event payload.
 		 */
-		@XmlElements(@XmlElement(name = "dialog", type = DialogEventData.class, required = true))
+		@XmlElements({
+			@XmlElement(name = "dialog", type = DialogEventData.class, required = true),
+			@XmlElement(name = "kill", type = KillEventData.class, required = true)
+		})
 		private Object event;
 		/**
 		 * XML 条件包装。
@@ -245,6 +248,21 @@ public final class QuestGraphData {
 		 */
 		@XmlAttribute(required = true)
 		private String dialog;
+	}
+
+	/**
+	 * 表示 NPC 击杀事件的 XML 参数。
+	 * Represents XML parameters for an NPC kill event.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class KillEventData {
+		/**
+		 * 被击杀 NPC 标识。
+		 * Killed NPC identifier.
+		 */
+		@XmlAttribute(name = "npc_id", required = true)
+		private Integer npcId;
 	}
 
 	/**

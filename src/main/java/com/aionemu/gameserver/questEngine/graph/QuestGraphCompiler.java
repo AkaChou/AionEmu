@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.graph;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionType.START_QUEST;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ConditionType.QUEST_STATUS;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DIALOG;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL;
 
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -37,6 +38,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestStatusConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestActionData;
@@ -290,6 +292,15 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " dialog references missing NPC " + dialog.getNpcId());
 			}
 			return new Event(DIALOG, dialog.getNpcId(), dialog.getDialog());
+		}
+		if (source instanceof KillEventData kill) {
+			if (kill.getNpcId() == null || kill.getNpcId() <= 0) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid kill event");
+			}
+			if (!references.npcIds().contains(kill.getNpcId())) {
+				throw new IllegalArgumentException("Quest " + questId + " kill references missing NPC " + kill.getNpcId());
+			}
+			return new Event(KILL, kill.getNpcId(), null);
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
 	}

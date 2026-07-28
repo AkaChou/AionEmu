@@ -54,6 +54,10 @@
 		<xs:attribute name="dialog" type="questGraphIdentifier" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphKillEvent">
+		<xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphQuestStatusCondition">
 		<xs:attribute name="value" type="questGraphQuestStatus" use="required"/>
 	</xs:complexType>
@@ -76,6 +80,7 @@
 		<xs:sequence>
 			<xs:choice>
 				<xs:element name="dialog" type="questGraphDialogEvent"/>
+				<xs:element name="kill" type="questGraphKillEvent"/>
 			</xs:choice>
 			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
 			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>

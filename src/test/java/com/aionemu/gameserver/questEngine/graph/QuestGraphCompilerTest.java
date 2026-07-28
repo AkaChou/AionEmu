@@ -61,7 +61,7 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("<start-quest/>", "<complete-quest/>"), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
-			transition("accept", 10, "done").replace("<dialog", "<kill"), terminal()))));
+			transition("accept", 10, "done").replace("<dialog", "<attack"), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done"), terminal()).replace(" scope=\"PLAYER\"", ""))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
@@ -114,6 +114,12 @@ class QuestGraphCompilerTest {
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
 				new QuestGraphCompiler.References(Set.of(1), Set.of())));
 		assertCauseContains(missingNpc, "references missing NPC 203709");
+		String killTransition = transition("kill", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<kill npc_id=\"203709\"/>");
+		IllegalArgumentException missingKillNpc = assertThrows(IllegalArgumentException.class,
+			() -> load(document(graph(1, "offer", killTransition, terminal())),
+				new QuestGraphCompiler.References(Set.of(1), Set.of())));
+		assertCauseContains(missingKillNpc, "kill references missing NPC 203709");
 	}
 
 	private CompiledQuestGraphData load(String xml) throws Exception {
