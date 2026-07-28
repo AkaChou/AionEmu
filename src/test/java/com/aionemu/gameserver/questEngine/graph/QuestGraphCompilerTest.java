@@ -17,10 +17,13 @@ import org.junit.jupiter.api.io.TempDir;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.questEngine.model.ConditionOperation;
+import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 class QuestGraphCompilerTest {
 	private static final Path SCHEMA = Path.of("src/main/resources/aion/data/static_data/quest_graph_data/quest_graph_data.xsd");
-	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709));
+	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
+		Set.of(182200001), Set.of(42));
 
 	@TempDir
 	Path tempDir;
@@ -51,7 +54,10 @@ class QuestGraphCompilerTest {
 			new CompiledQuestGraph.PlayerLevelCondition(10, 55),
 			new CompiledQuestGraph.PlayerRaceCondition(Set.of(Race.ELYOS, Race.ASMODIANS)),
 			new CompiledQuestGraph.PlayerClassCondition(Set.of(PlayerClass.GLADIATOR, PlayerClass.TEMPLAR)),
-			new CompiledQuestGraph.PlayerGenderCondition(Gender.MALE)),
+			new CompiledQuestGraph.PlayerGenderCondition(Gender.MALE),
+			new CompiledQuestGraph.PlayerTitleCondition(42),
+			new CompiledQuestGraph.PlayerAbyssRankCondition(AbyssRankEnum.STAR1_OFFICER),
+			new CompiledQuestGraph.PlayerInventoryCondition(182200001, ConditionOperation.GREATER_EQUAL, 1)),
 			graph.nodes().get("b").transitions().getFirst().conditions());
 		assertEquals(CompiledQuestGraph.ActionType.START_QUEST,
 			graph.nodes().get("b").transitions().getFirst().actions().getFirst().type());
@@ -80,6 +86,12 @@ class QuestGraphCompilerTest {
 			transition("accept", 10, "done").replace("values=\"GLADIATOR TEMPLAR\"", "values=\"ALL\""), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("value=\"MALE\"", "value=\"DUMMY\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("minimum=\"10\"", "minimum=\"19\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("op=\"GREATER_EQUAL\"", "op=\"IN\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("count=\"1\"", "count=\"-1\""), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done"), terminal()).replace(" scope=\"PLAYER\"", ""))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
@@ -126,18 +138,26 @@ class QuestGraphCompilerTest {
 
 		IllegalArgumentException missingQuest = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
-				new QuestGraphCompiler.References(Set.of(), Set.of(203709))));
+				new QuestGraphCompiler.References(Set.of(), Set.of(203709), Set.of(182200001), Set.of(42))));
 		assertCauseContains(missingQuest, "references missing quest 1");
 		IllegalArgumentException missingNpc = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
-				new QuestGraphCompiler.References(Set.of(1), Set.of())));
+				new QuestGraphCompiler.References(Set.of(1), Set.of(), Set.of(182200001), Set.of(42))));
 		assertCauseContains(missingNpc, "references missing NPC 203709");
 		String killTransition = transition("kill", 10, "done")
 			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<kill npc_id=\"203709\"/>");
 		IllegalArgumentException missingKillNpc = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", killTransition, terminal())),
-				new QuestGraphCompiler.References(Set.of(1), Set.of())));
+				new QuestGraphCompiler.References(Set.of(1), Set.of(), Set.of(182200001), Set.of(42))));
 		assertCauseContains(missingKillNpc, "kill references missing NPC 203709");
+		IllegalArgumentException missingTitle = assertThrows(IllegalArgumentException.class,
+			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
+				new QuestGraphCompiler.References(Set.of(1), Set.of(203709), Set.of(182200001), Set.of())));
+		assertCauseContains(missingTitle, "references missing title 42");
+		IllegalArgumentException missingItem = assertThrows(IllegalArgumentException.class,
+			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
+				new QuestGraphCompiler.References(Set.of(1), Set.of(203709), Set.of(), Set.of(42))));
+		assertCauseContains(missingItem, "references missing item 182200001");
 	}
 
 	/**
@@ -152,6 +172,12 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerRaceCondition(Set.of(Race.NPC)));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerClassCondition(Set.of(PlayerClass.ALL)));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerGenderCondition(Gender.DUMMY));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerTitleCondition(0));
+		assertThrows(NullPointerException.class, () -> new CompiledQuestGraph.PlayerAbyssRankCondition(null));
+		assertThrows(IllegalArgumentException.class,
+			() -> new CompiledQuestGraph.PlayerInventoryCondition(182200001, ConditionOperation.IN, 1));
+		assertThrows(IllegalArgumentException.class,
+			() -> new CompiledQuestGraph.PlayerInventoryCondition(182200001, ConditionOperation.EQUAL, -1));
 	}
 
 	private CompiledQuestGraphData load(String xml) throws Exception {
@@ -215,6 +241,9 @@ class QuestGraphCompilerTest {
 				<player-race values="ELYOS ASMODIANS"/>
 				<player-class values="GLADIATOR TEMPLAR"/>
 				<player-gender value="MALE"/>
+				<player-title title_id="42"/>
+				<player-abyss-rank minimum="10"/>
+				<player-inventory item_id="182200001" op="GREATER_EQUAL" count="1"/>
 			</conditions>
 				<actions><start-quest/></actions>
 			</transition>

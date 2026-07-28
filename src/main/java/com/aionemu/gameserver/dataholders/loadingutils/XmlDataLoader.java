@@ -155,7 +155,7 @@ public class XmlDataLoader {
 	 * 合并、校验并编译配置目录中的任务图数据。
 	 * Merges, validates, and compiles quest graph data from the configured data directory.
 	 *
-	 * @param references 可引用的任务与 NPC / allowed quest and NPC references
+	 * @param references 可引用的任务、NPC、物品与称号 / allowed quest, NPC, item, and title references
 	 * @return 已编译任务图数据 / compiled quest graph data
 	 */
 	public CompiledQuestGraphData loadQuestGraphData(References references) {

@@ -3,6 +3,8 @@ package com.aionemu.gameserver.questEngine.graph;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.aionemu.gameserver.questEngine.model.ConditionOperation;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -277,7 +279,10 @@ public final class QuestGraphData {
 			@XmlElement(name = "player-level", type = PlayerLevelConditionData.class),
 			@XmlElement(name = "player-race", type = PlayerRaceConditionData.class),
 			@XmlElement(name = "player-class", type = PlayerClassConditionData.class),
-			@XmlElement(name = "player-gender", type = PlayerGenderConditionData.class)
+			@XmlElement(name = "player-gender", type = PlayerGenderConditionData.class),
+			@XmlElement(name = "player-title", type = PlayerTitleConditionData.class),
+			@XmlElement(name = "player-abyss-rank", type = PlayerAbyssRankConditionData.class),
+			@XmlElement(name = "player-inventory", type = PlayerInventoryConditionData.class)
 		})
 		private List<Object> values = new ArrayList<>();
 	}
@@ -348,6 +353,48 @@ public final class QuestGraphData {
 		/** 期望性别名称。 / Expected gender name. */
 		@XmlAttribute(required = true)
 		private String value;
+	}
+
+	/**
+	 * 表示要求玩家持有指定称号。
+	 * Represents a requirement that the player owns a specific title.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayerTitleConditionData {
+		/** 称号模板 ID。 / Title template id. */
+		@XmlAttribute(name = "title_id", required = true)
+		private Integer titleId;
+	}
+
+	/**
+	 * 表示要求玩家达到指定最低深渊军衔。
+	 * Represents a minimum Abyss-rank requirement for the player.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayerAbyssRankConditionData {
+		/** 最低深渊军衔 ID。 / Minimum Abyss-rank id. */
+		@XmlAttribute(required = true)
+		private Integer minimum;
+	}
+
+	/**
+	 * 表示玩家背包物品数量的数值比较。
+	 * Represents a numeric comparison against an item count in the player's inventory.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayerInventoryConditionData {
+		/** 物品模板 ID。 / Item template id. */
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
+		/** 数值比较操作符。 / Numeric comparison operator. */
+		@XmlAttribute(name = "op", required = true)
+		private ConditionOperation operation;
+		/** 比较阈值。 / Comparison threshold. */
+		@XmlAttribute(required = true)
+		private Long count;
 	}
 
 	/**

@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -17,16 +18,25 @@ import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
+import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
+import com.aionemu.gameserver.model.gameobjects.player.title.TitleList;
+import com.aionemu.gameserver.model.items.storage.PlayerStorage;
+import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerInventoryCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionInvocation;
+import com.aionemu.gameserver.questEngine.model.ConditionOperation;
+import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 /**
  * 验证玩家接取资格条件的类型化只读评估。
@@ -37,15 +47,17 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	private static final DialogEvent EVENT = new DialogEvent("dialog", 7, 1000, 100, "QUEST_SELECT");
 
 	/**
-	 * 验证状态、等级、阵营、职业和性别条件的正向匹配。
-	 * Verifies positive matches for status, level, race, class, and gender conditions.
+	 * 验证全部已支持玩家条件的正向匹配。
+	 * Verifies positive matches for all supported player conditions.
 	 */
 	@Test
 	void matchesAllSupportedConditions() throws ReflectiveOperationException {
 		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
 		List<Condition> conditions = List.of(new QuestStatusCondition(START), new PlayerLevelCondition(10, 55),
 			new PlayerRaceCondition(Set.of(Race.ELYOS)), new PlayerClassCondition(Set.of(PlayerClass.TEMPLAR)),
-			new PlayerGenderCondition(Gender.MALE));
+			new PlayerGenderCondition(Gender.MALE), new PlayerTitleCondition(42),
+			new PlayerAbyssRankCondition(AbyssRankEnum.STAR1_OFFICER),
+			new PlayerInventoryCondition(182200001, ConditionOperation.GREATER_EQUAL, 3));
 
 		for (Condition condition : conditions) {
 			assertEquals(MATCHED, evaluator.evaluate(invocation(condition, EVENT)));
@@ -61,11 +73,54 @@ class QuestGraphPlayerConditionEvaluatorTest {
 		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
 		List<Condition> conditions = List.of(new QuestStatusCondition(com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus.REWARD),
 			new PlayerLevelCondition(51, null), new PlayerRaceCondition(Set.of(Race.ASMODIANS)),
-			new PlayerClassCondition(Set.of(PlayerClass.GLADIATOR)), new PlayerGenderCondition(Gender.FEMALE));
+			new PlayerClassCondition(Set.of(PlayerClass.GLADIATOR)), new PlayerGenderCondition(Gender.FEMALE),
+			new PlayerTitleCondition(43), new PlayerAbyssRankCondition(AbyssRankEnum.STAR2_OFFICER),
+			new PlayerInventoryCondition(182200001, ConditionOperation.GREATER, 3));
 
 		for (Condition condition : conditions) {
 			assertEquals(NOT_MATCHED, evaluator.evaluate(invocation(condition, EVENT)));
 		}
+	}
+
+	/**
+	 * 验证背包数量使用旧 XML condition 的全部六种数值比较语义。
+	 * Verifies all six numeric comparison semantics used by the legacy XML inventory condition.
+	 */
+	@Test
+	void evaluatesEveryInventoryComparison() throws ReflectiveOperationException {
+		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
+		List<PlayerInventoryCondition> conditions = List.of(
+			new PlayerInventoryCondition(182200001, ConditionOperation.EQUAL, 3),
+			new PlayerInventoryCondition(182200001, ConditionOperation.GREATER, 2),
+			new PlayerInventoryCondition(182200001, ConditionOperation.GREATER_EQUAL, 3),
+			new PlayerInventoryCondition(182200001, ConditionOperation.LESSER, 4),
+			new PlayerInventoryCondition(182200001, ConditionOperation.LESSER_EQUAL, 3),
+			new PlayerInventoryCondition(182200001, ConditionOperation.NOT_EQUAL, 2));
+
+		for (PlayerInventoryCondition condition : conditions) {
+			assertEquals(MATCHED, evaluator.evaluate(invocation(condition, EVENT)));
+		}
+	}
+
+	/**
+	 * 验证玩家服务状态缺失时不会被解释为业务不匹配或默认成功。
+	 * Verifies that missing player services are not interpreted as a business mismatch or default success.
+	 */
+	@Test
+	void failsWhenRequiredPlayerStateCannotBeRead() throws ReflectiveOperationException {
+		Player player = player();
+		setField(Player.class, player, "titleList", null);
+		assertEquals(FAILED, new QuestGraphPlayerConditionEvaluator(player).evaluate(invocation(new PlayerTitleCondition(42), EVENT)));
+
+		player = player();
+		setField(Player.class, player, "abyssRank", null);
+		assertEquals(FAILED, new QuestGraphPlayerConditionEvaluator(player)
+			.evaluate(invocation(new PlayerAbyssRankCondition(AbyssRankEnum.STAR1_OFFICER), EVENT)));
+
+		player = player();
+		setField(Player.class, player, "inventory", null);
+		assertEquals(FAILED, new QuestGraphPlayerConditionEvaluator(player)
+			.evaluate(invocation(new PlayerInventoryCondition(182200001, ConditionOperation.EQUAL, 3), EVENT)));
 	}
 
 	/**
@@ -87,13 +142,31 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	private static Player player() throws ReflectiveOperationException {
 		Player player = new ObjenesisStd().newInstance(Player.class);
 		PlayerCommonData commonData = new PlayerCommonData(7);
+		TitleList titleList = new TitleList();
+		putTitleId(titleList, 42);
+		AbyssRank abyssRank = new ObjenesisStd().newInstance(AbyssRank.class);
+		setField(AbyssRank.class, abyssRank, "rank", AbyssRankEnum.STAR1_OFFICER);
 		setField(PlayerCommonData.class, commonData, "level", 50);
 		commonData.setRace(Race.ELYOS);
 		commonData.setPlayerClass(PlayerClass.TEMPLAR);
 		commonData.setGender(Gender.MALE);
 		setField(AionObject.class, player, "objectId", 7);
 		setField(Player.class, player, "playerCommonData", commonData);
+		setField(Player.class, player, "titleList", titleList);
+		setField(Player.class, player, "abyssRank", abyssRank);
+		setField(Player.class, player, "inventory", new TestStorage(Map.of(182200001, 3L)));
 		return player;
+	}
+
+	/**
+	 * 向最小称号 fixture 写入一个 ID，避免依赖全局静态数据。
+	 * Adds one id to the minimal title fixture without depending on global static data.
+	 */
+	@SuppressWarnings("unchecked")
+	private static void putTitleId(TitleList titleList, int titleId) throws ReflectiveOperationException {
+		Field field = TitleList.class.getDeclaredField("titles");
+		field.setAccessible(true);
+		((Map<Integer, Object>) field.get(titleList)).put(titleId, null);
 	}
 
 	/**
@@ -112,5 +185,25 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	 */
 	private static ConditionInvocation invocation(Condition condition, DialogEvent event) {
 		return new ConditionInvocation(condition, 1, START, event);
+	}
+
+	/**
+	 * 提供只读物品数量的最小 CUBE fixture。
+	 * Provides a minimal CUBE fixture for read-only item counts.
+	 */
+	private static final class TestStorage extends PlayerStorage {
+		private final Map<Integer, Long> itemCounts;
+
+		/** 创建稳定的物品数量映射。 / Creates a stable item-count mapping. */
+		private TestStorage(Map<Integer, Long> itemCounts) {
+			super(StorageType.CUBE);
+			this.itemCounts = Map.copyOf(itemCounts);
+		}
+
+		/** 返回指定物品的 fixture 数量。 / Returns the fixture count for an item. */
+		@Override
+		public long getItemCountByItemId(int itemId) {
+			return itemCounts.getOrDefault(itemId, 0L);
+		}
 	}
 }

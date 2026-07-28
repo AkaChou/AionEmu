@@ -41,7 +41,7 @@ class QuestGraphRouterTest {
 		Path xml = tempDir.resolve("graphs.xml");
 		Files.writeString(xml, document(), StandardCharsets.UTF_8);
 		CompiledQuestGraphData data = QuestGraphCompiler.load(xml, SCHEMA,
-			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100)));
+			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(), Set.of()));
 		router = new QuestGraphRouter(data);
 	}
 

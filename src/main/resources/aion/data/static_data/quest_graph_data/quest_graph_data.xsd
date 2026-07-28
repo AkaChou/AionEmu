@@ -77,6 +77,23 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="questGraphAbyssRankId">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="18"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphNumericComparison">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EQUAL"/>
+			<xs:enumeration value="GREATER"/>
+			<xs:enumeration value="GREATER_EQUAL"/>
+			<xs:enumeration value="LESSER"/>
+			<xs:enumeration value="LESSER_EQUAL"/>
+			<xs:enumeration value="NOT_EQUAL"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="questGraphVariableType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="INT"/>
@@ -129,6 +146,20 @@
 		<xs:attribute name="value" type="questGraphPlayerGender" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphPlayerTitleCondition">
+		<xs:attribute name="title_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphPlayerAbyssRankCondition">
+		<xs:attribute name="minimum" type="questGraphAbyssRankId" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphPlayerInventoryCondition">
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="op" type="questGraphNumericComparison" use="required"/>
+		<xs:attribute name="count" type="xs:nonNegativeInteger" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphEmptyAction"/>
 
 	<xs:complexType name="questGraphConditions">
@@ -138,6 +169,9 @@
 			<xs:element name="player-race" type="questGraphPlayerRaceCondition"/>
 			<xs:element name="player-class" type="questGraphPlayerClassCondition"/>
 			<xs:element name="player-gender" type="questGraphPlayerGenderCondition"/>
+			<xs:element name="player-title" type="questGraphPlayerTitleCondition"/>
+			<xs:element name="player-abyss-rank" type="questGraphPlayerAbyssRankCondition"/>
+			<xs:element name="player-inventory" type="questGraphPlayerInventoryCondition"/>
 		</xs:choice>
 	</xs:complexType>
 

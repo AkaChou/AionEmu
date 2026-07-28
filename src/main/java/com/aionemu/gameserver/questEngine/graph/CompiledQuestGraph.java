@@ -11,6 +11,8 @@ import java.util.Set;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.questEngine.model.ConditionOperation;
+import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 /**
  * 表示经过校验、可供运行时直接消费的不可变任务图。
@@ -141,7 +143,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Represents a typed condition that must hold before a transition executes.
 	 */
 	public sealed interface Condition permits QuestStatusCondition, PlayerLevelCondition, PlayerRaceCondition, PlayerClassCondition,
-		PlayerGenderCondition {
+		PlayerGenderCondition, PlayerTitleCondition, PlayerAbyssRankCondition, PlayerInventoryCondition {
 	}
 
 	/**
@@ -213,6 +215,44 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		public PlayerGenderCondition {
 			if (expected == null || expected == Gender.DUMMY) {
 				throw new IllegalArgumentException("Player gender condition is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 要求玩家持有指定称号。
+	 * Requires the player to own a specific title.
+	 */
+	public record PlayerTitleCondition(int titleId) implements Condition {
+		/** 校验称号模板 ID。 / Validates the title template id. */
+		public PlayerTitleCondition {
+			if (titleId <= 0) {
+				throw new IllegalArgumentException("Player title condition id is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 要求玩家达到指定最低深渊军衔。
+	 * Requires the player to reach a specified minimum Abyss rank.
+	 */
+	public record PlayerAbyssRankCondition(AbyssRankEnum minimum) implements Condition {
+		/** 校验最低军衔。 / Validates the minimum rank. */
+		public PlayerAbyssRankCondition {
+			Objects.requireNonNull(minimum, "minimum");
+		}
+	}
+
+	/**
+	 * 比较玩家背包中指定物品的总数量。
+	 * Compares the total count of a specified item in the player's inventory.
+	 */
+	public record PlayerInventoryCondition(int itemId, ConditionOperation operation, long count) implements Condition {
+		/** 校验物品引用、比较操作符和非负阈值。 / Validates the item reference, comparison operator, and non-negative threshold. */
+		public PlayerInventoryCondition {
+			if (itemId <= 0 || count < 0 || operation == null || operation == ConditionOperation.IN
+					|| operation == ConditionOperation.NOT_IN) {
+				throw new IllegalArgumentException("Player inventory condition is invalid");
 			}
 		}
 	}

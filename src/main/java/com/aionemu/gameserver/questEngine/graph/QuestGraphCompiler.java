@@ -32,10 +32,13 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariab
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerInventoryCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
@@ -48,14 +51,18 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerGenderConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerInventoryConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerLevelConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerRaceConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerTitleConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestStatusConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.TransitionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.VariableData;
+import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
@@ -74,10 +81,10 @@ public final class QuestGraphCompiler {
 	}
 
 	/**
-	 * 保存编译时允许引用的任务与 NPC 标识集合。
-	 * Holds the quest and NPC identifiers allowed during compilation.
+	 * 保存编译时允许引用的任务、NPC、物品和称号标识集合。
+	 * Holds the quest, NPC, item, and title identifiers allowed during compilation.
 	 */
-	public record References(Set<Integer> questIds, Set<Integer> npcIds) {
+	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds) {
 		/**
 		 * 复制引用集合，保证一次编译期间引用闭包稳定。
 		 * Copies reference sets so the reference closure stays stable during compilation.
@@ -85,6 +92,8 @@ public final class QuestGraphCompiler {
 		public References {
 			questIds = Set.copyOf(questIds);
 			npcIds = Set.copyOf(npcIds);
+			itemIds = Set.copyOf(itemIds);
+			titleIds = Set.copyOf(titleIds);
 		}
 	}
 
@@ -94,7 +103,7 @@ public final class QuestGraphCompiler {
 	 *
 	 * @param xmlFile 任务图 XML 文件 / quest graph XML file
 	 * @param schemaFile 任务图 XSD 文件 / quest graph XSD file
-	 * @param references 可引用的任务与 NPC / allowed quest and NPC references
+	 * @param references 可引用的任务、NPC、物品与称号 / allowed quest, NPC, item, and title references
 	 * @return 已编译任务图数据 / compiled quest graph data
 	 */
 	public static CompiledQuestGraphData load(Path xmlFile, Path schemaFile, References references) {
@@ -125,7 +134,7 @@ public final class QuestGraphCompiler {
 	 * Validates JAXB graph structure, capabilities, and references, then builds a deterministic index.
 	 *
 	 * @param source JAXB 任务图数据 / JAXB quest graph data
-	 * @param references 可引用的任务与 NPC / allowed quest and NPC references
+	 * @param references 可引用的任务、NPC、物品与称号 / allowed quest, NPC, item, and title references
 	 * @return 已编译任务图数据 / compiled quest graph data
 	 */
 	public static CompiledQuestGraphData compile(QuestGraphData source, References references) {
@@ -218,7 +227,7 @@ public final class QuestGraphCompiler {
 						+ " targets missing node " + sourceTransition.getTargetNode());
 				}
 				transitions.add(new Transition(sourceTransition.getId(), sourceTransition.getPriority(), sourceTransition.getTargetNode(), event,
-					sourceTransition.getConditions().stream().map(value -> compileCondition(questId, value)).toList(),
+					sourceTransition.getConditions().stream().map(value -> compileCondition(questId, value, references)).toList(),
 					sourceTransition.getActions().stream().map(value -> compileAction(questId, value)).toList()));
 			}
 			transitions.sort(Comparator.comparingInt(Transition::priority).thenComparing(Transition::id));
@@ -321,7 +330,7 @@ public final class QuestGraphCompiler {
 	 * 将受支持的 JAXB 条件编译为强类型条件。
 	 * Compiles a supported JAXB condition into a typed condition.
 	 */
-	private static Condition compileCondition(int questId, Object source) {
+	private static Condition compileCondition(int questId, Object source, References references) {
 		if (source instanceof QuestStatusConditionData condition) {
 			try {
 				return new QuestStatusCondition(QuestStatus.valueOf(condition.getValue()));
@@ -370,6 +379,29 @@ public final class QuestGraphCompiler {
 				return new PlayerGenderCondition(expected);
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid player gender", e);
+			}
+		}
+		if (source instanceof PlayerTitleConditionData condition) {
+			if (condition.getTitleId() == null || condition.getTitleId() <= 0 || !references.titleIds().contains(condition.getTitleId())) {
+				throw new IllegalArgumentException("Quest " + questId + " references missing title " + condition.getTitleId());
+			}
+			return new PlayerTitleCondition(condition.getTitleId());
+		}
+		if (source instanceof PlayerAbyssRankConditionData condition) {
+			try {
+				return new PlayerAbyssRankCondition(AbyssRankEnum.getRankById(condition.getMinimum()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid minimum Abyss rank", e);
+			}
+		}
+		if (source instanceof PlayerInventoryConditionData condition) {
+			if (condition.getItemId() == null || condition.getItemId() <= 0 || !references.itemIds().contains(condition.getItemId())) {
+				throw new IllegalArgumentException("Quest " + questId + " references missing item " + condition.getItemId());
+			}
+			try {
+				return new PlayerInventoryCondition(condition.getItemId(), condition.getOperation(), condition.getCount());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid player inventory comparison", e);
 			}
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported condition capability");
