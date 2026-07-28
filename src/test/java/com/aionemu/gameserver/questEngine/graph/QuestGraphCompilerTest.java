@@ -357,6 +357,39 @@ class QuestGraphCompilerTest {
 	}
 
 	/**
+	 * 验证制作失败和 NPC 仇恨感知事件编译为引用闭合的强类型 IR。
+	 * Verifies craft-failure and NPC aggro-perception events compile into reference-closed typed IR.
+	 */
+	@Test
+	void compilerBuildsTypedCraftAndAggroEvents() throws Exception {
+		List<String> events = List.of("<craft-failed item_id=\"182200001\"/>", "<npc-aggro-listed npc_id=\"203709\"/>");
+		List<CompiledQuestGraph.EventType> types = List.of(CompiledQuestGraph.EventType.CRAFT_FAILED,
+			CompiledQuestGraph.EventType.NPC_AGGRO_LISTED);
+		List<Integer> targets = List.of(182200001, 203709);
+		for (int i = 0; i < events.size(); i++) {
+			String source = transition("server-signal", 10, "done")
+				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", events.get(i));
+			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
+				.nodes().get("offer").transitions().getFirst().event();
+			assertEquals(types.get(i), compiled.type());
+			assertEquals(targets.get(i), compiled.targetId());
+		}
+
+		String missingItem = transition("craft-failed", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<craft-failed item_id=\"182200002\"/>");
+		assertFailureContains(document(graph(1, "offer", missingItem, terminal())),
+			"craft-failed references missing item 182200002");
+		String missingNpc = transition("aggro-listed", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<npc-aggro-listed npc_id=\"203710\"/>");
+		assertFailureContains(document(graph(1, "offer", missingNpc, terminal())),
+			"npc-aggro-listed references missing NPC 203710");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			missingItem.replace(" item_id=\"182200002\"", ""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			missingNpc.replace(" npc_id=\"203710\"", ""), terminal()))));
+	}
+
+	/**
 	 * 验证 daily、weekly 与 anchored cooldown 被编译为封闭的强类型策略。
 	 * Verifies that daily, weekly, and anchored cooldown compile into closed typed policies.
 	 */

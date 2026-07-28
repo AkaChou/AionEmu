@@ -218,6 +218,14 @@
 
 	<xs:complexType name="questGraphDredgionSettledEvent"/>
 
+	<xs:complexType name="questGraphCraftFailedEvent">
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphNpcAggroListedEvent">
+		<xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphQuestStatusCondition">
 		<xs:attribute name="quest_id" type="xs:positiveInteger"/>
 		<xs:attribute name="op" type="questGraphSetComparison" use="required"/>
@@ -481,6 +489,8 @@
 					<xs:element name="escort-lost-target" type="questGraphEscortLostTargetEvent"/>
 					<xs:element name="ranked-player-kill" type="questGraphRankedPlayerKillEvent"/>
 					<xs:element name="dredgion-settled" type="questGraphDredgionSettledEvent"/>
+					<xs:element name="craft-failed" type="questGraphCraftFailedEvent"/>
+					<xs:element name="npc-aggro-listed" type="questGraphNpcAggroListedEvent"/>
 			</xs:choice>
 			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
 			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>

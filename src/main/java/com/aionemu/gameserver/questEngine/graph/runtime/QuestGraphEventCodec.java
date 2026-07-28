@@ -22,6 +22,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortRe
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortLostTargetEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RankedPlayerKillEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DredgionSettledEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.CraftFailedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcAggroListedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -60,6 +62,8 @@ public final class QuestGraphEventCodec {
 	private static final byte ESCORT_LOST_TARGET = 20;
 	private static final byte RANKED_PLAYER_KILL = 21;
 	private static final byte DREDGION_SETTLED = 22;
+	private static final byte CRAFT_FAILED = 23;
+	private static final byte NPC_AGGRO_LISTED = 24;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -211,6 +215,21 @@ public final class QuestGraphEventCodec {
 							output.writeInt(dredgionSettled.worldId());
 							output.writeInt(dredgionSettled.instanceId());
 						}
+						case CraftFailedEvent craftFailed -> {
+							output.writeByte(CRAFT_FAILED);
+							writeCommon(output, craftFailed);
+							output.writeInt(craftFailed.itemId());
+							output.writeLong(craftFailed.inventoryCountAfterAttempt());
+						}
+						case NpcAggroListedEvent aggroListed -> {
+							output.writeByte(NPC_AGGRO_LISTED);
+							writeCommon(output, aggroListed);
+							output.writeInt(aggroListed.aggroPlayerId());
+							writeNpcSnapshot(output, aggroListed.npcId(), aggroListed.npcObjectId(), aggroListed.worldId(),
+								aggroListed.instanceId());
+							output.writeFloat(aggroListed.recipientDistance());
+							output.writeBoolean(aggroListed.recipientKnownToNpc());
+						}
 				}
 			}
 			byte[] payload = bytes.toByteArray();
@@ -269,6 +288,9 @@ public final class QuestGraphEventCodec {
 						case RANKED_PLAYER_KILL -> new RankedPlayerKillEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
 							input.readInt(), input.readInt(), input.readInt(), input.readFloat(), input.readBoolean());
 						case DREDGION_SETTLED -> new DredgionSettledEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt());
+						case CRAFT_FAILED -> new CraftFailedEvent(eventId, playerId, occurredAt, input.readInt(), input.readLong());
+						case NPC_AGGRO_LISTED -> new NpcAggroListedEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
+							input.readInt(), input.readInt(), input.readInt(), input.readFloat(), input.readBoolean());
 				default -> throw new IllegalArgumentException("Unknown quest graph event tag " + type);
 			};
 			if (input.read() != -1) {

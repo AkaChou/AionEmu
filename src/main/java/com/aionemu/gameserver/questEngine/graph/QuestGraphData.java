@@ -219,7 +219,9 @@ public final class QuestGraphData {
 				@XmlElement(name = "escort-reached-target", type = EscortReachedTargetEventData.class, required = true),
 				@XmlElement(name = "escort-lost-target", type = EscortLostTargetEventData.class, required = true),
 				@XmlElement(name = "ranked-player-kill", type = RankedPlayerKillEventData.class, required = true),
-				@XmlElement(name = "dredgion-settled", type = DredgionSettledEventData.class, required = true)
+				@XmlElement(name = "dredgion-settled", type = DredgionSettledEventData.class, required = true),
+				@XmlElement(name = "craft-failed", type = CraftFailedEventData.class, required = true),
+				@XmlElement(name = "npc-aggro-listed", type = NpcAggroListedEventData.class, required = true)
 		})
 		private Object event;
 		/**
@@ -434,6 +436,24 @@ public final class QuestGraphData {
 	/** 表示服务端完成当前 Dredgion run 的成员结算。 / Represents server completion of member settlement for the current Dredgion run. */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class DredgionSettledEventData {
+	}
+
+	/** 表示服务端确认且玩家库存仍为零的制作失败事件。 / Represents a server-confirmed craft failure whose product remains absent from inventory. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class CraftFailedEventData {
+		/** 制作失败时未获得的物品模板标识。 / Item-template identifier not obtained by the failed craft. */
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
+	}
+
+	/** 表示玩家被服务端加入指定 NPC 仇恨列表后产生的感知广播。 / Represents server perception after a player is added to an NPC aggro list. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class NpcAggroListedEventData {
+		/** 产生仇恨列表信号的 NPC 模板标识。 / NPC template identifier producing the aggro-list signal. */
+		@XmlAttribute(name = "npc_id", required = true)
+		private Integer npcId;
 	}
 
 	/**

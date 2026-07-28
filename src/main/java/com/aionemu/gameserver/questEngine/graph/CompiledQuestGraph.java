@@ -68,7 +68,9 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		ESCORT_REACHED_TARGET,
 		ESCORT_LOST_TARGET,
 		RANKED_PLAYER_KILL,
-		DREDGION_SETTLED
+		DREDGION_SETTLED,
+		CRAFT_FAILED,
+		NPC_AGGRO_LISTED
 	}
 
 	/**

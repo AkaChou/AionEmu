@@ -14,7 +14,8 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	QuestGraphEvent.ZoneMissionEndedEvent, QuestGraphEvent.LevelUpEvent, QuestGraphEvent.PlayerLogoutEvent,
 	QuestGraphEvent.QuestTimerEndedEvent, QuestGraphEvent.MovieEndedEvent, QuestGraphEvent.NpcProximityEvent,
 	QuestGraphEvent.EscortReachedTargetEvent, QuestGraphEvent.EscortLostTargetEvent,
-	QuestGraphEvent.RankedPlayerKillEvent, QuestGraphEvent.DredgionSettledEvent {
+	QuestGraphEvent.RankedPlayerKillEvent, QuestGraphEvent.DredgionSettledEvent, QuestGraphEvent.CraftFailedEvent,
+	QuestGraphEvent.NpcAggroListedEvent {
 
 	/**
 	 * 定义由事件类型固定的候选传播策略。
@@ -46,11 +47,11 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	 */
 	default RoutingPolicy routingPolicy() {
 		return switch (type()) {
-				case DIALOG, ITEM_USE, MOVIE_ENDED -> RoutingPolicy.EXCLUSIVE;
+				case DIALOG, ITEM_USE, MOVIE_ENDED, CRAFT_FAILED -> RoutingPolicy.EXCLUSIVE;
 				case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD, ITEM_OBTAINED, ITEM_EQUIPPED, HOUSE_ITEM_USE,
 					WORLD_ENTERED, ZONE_ENTERED, ZONE_LEFT, ZONE_MISSION_ENDED, LEVEL_UP, PLAYER_LOGOUT,
 					QUEST_TIMER_ENDED, NPC_PROXIMITY, ESCORT_REACHED_TARGET, ESCORT_LOST_TARGET -> RoutingPolicy.BROADCAST;
-				case RANKED_PLAYER_KILL, DREDGION_SETTLED -> RoutingPolicy.BROADCAST;
+				case RANKED_PLAYER_KILL, DREDGION_SETTLED, NPC_AGGRO_LISTED -> RoutingPolicy.BROADCAST;
 		};
 	}
 
@@ -573,6 +574,57 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		@Override
 		public int targetId() {
 			return 0;
+		}
+	}
+
+	/** 表示服务端确认的制作失败，且失败产品在玩家 CUBE 中仍为零。 / Represents a server-confirmed craft failure whose failed product remains absent from the player's CUBE. */
+	record CraftFailedEvent(String eventId, int playerId, long occurredAt, int itemId, long inventoryCountAfterAttempt)
+			implements QuestGraphEvent {
+		/** 校验失败产品及制作后库存快照。 / Validates the failed product and post-attempt inventory snapshot. */
+		public CraftFailedEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateItemId(itemId);
+			if (inventoryCountAfterAttempt != 0) {
+				throw new IllegalArgumentException("Craft-failed inventory count must be zero");
+			}
+		}
+
+		/** 返回 CRAFT_FAILED 类型。 / Returns the CRAFT_FAILED type. */
+		@Override
+		public EventType type() {
+			return EventType.CRAFT_FAILED;
+		}
+
+		/** 返回失败产品物品模板标识。 / Returns the failed product item-template identifier. */
+		@Override
+		public int targetId() {
+			return itemId;
+		}
+	}
+
+	/** 表示服务端 NPC 仇恨列表变化向半径内玩家产生的感知信号。 / Represents server NPC aggro-list perception delivered to a player within the fixed radius. */
+	record NpcAggroListedEvent(String eventId, int playerId, long occurredAt, int aggroPlayerId, int npcId, int npcObjectId,
+			int worldId, int instanceId, float recipientDistance, boolean recipientKnownToNpc) implements QuestGraphEvent {
+		/** 校验仇恨来源玩家、NPC 快照和接收者距离。 / Validates aggro-source player, NPC snapshot, and recipient distance. */
+		public NpcAggroListedEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateNpcSnapshot(npcId, npcObjectId, worldId, instanceId);
+			if (aggroPlayerId <= 0 || !Float.isFinite(recipientDistance) || recipientDistance < 0 || recipientDistance >= 50
+					|| !recipientKnownToNpc) {
+				throw new IllegalArgumentException("NPC aggro-list recipient snapshot is invalid");
+			}
+		}
+
+		/** 返回 NPC_AGGRO_LISTED 类型。 / Returns the NPC_AGGRO_LISTED type. */
+		@Override
+		public EventType type() {
+			return EventType.NPC_AGGRO_LISTED;
+		}
+
+		/** 返回产生仇恨信号的 NPC 模板标识。 / Returns the NPC template identifier producing the aggro signal. */
+		@Override
+		public int targetId() {
+			return npcId;
 		}
 	}
 

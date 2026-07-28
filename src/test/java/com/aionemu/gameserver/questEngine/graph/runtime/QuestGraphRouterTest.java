@@ -39,6 +39,8 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLo
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RankedPlayerKillEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DredgionSettledEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.CraftFailedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcAggroListedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneLeftEvent;
@@ -168,6 +170,8 @@ class QuestGraphRouterTest {
 		EscortLostTargetEvent lost = new EscortLostTargetEvent("escort-lost", 7, 3019, 1, 100, 5001, 210010000, 1);
 		RankedPlayerKillEvent rankedKill = new RankedPlayerKillEvent("ranked-kill", 7, 3020, 7, 8, 12, 210010000, 1, 5, true);
 		DredgionSettledEvent dredgionSettled = new DredgionSettledEvent("dredgion-settled", 7, 3021, 400010000, 1);
+		CraftFailedEvent craftFailed = new CraftFailedEvent("craft-failed", 7, 3022, 182200001, 0);
+		NpcAggroListedEvent aggroListed = new NpcAggroListedEvent("aggro-listed", 7, 3023, 8, 100, 5001, 210010000, 1, 12.5f, true);
 		assertEquals(attack, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(attack)));
 		assertEquals(death, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(death)));
 		assertEquals(worldKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldKill)));
@@ -188,6 +192,8 @@ class QuestGraphRouterTest {
 		assertEquals(lost, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(lost)));
 		assertEquals(rankedKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(rankedKill)));
 		assertEquals(dredgionSettled, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(dredgionSettled)));
+		assertEquals(craftFailed, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(craftFailed)));
+		assertEquals(aggroListed, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(aggroListed)));
 
 		byte[] encoded = QuestGraphEventCodec.encode(kill);
 		byte[] unknown = Arrays.copyOf(encoded, encoded.length);
@@ -344,6 +350,36 @@ class QuestGraphRouterTest {
 			() -> new DredgionSettledEvent("invalid-instance", 7, 9005, 400010000, 0));
 	}
 
+	/**
+	 * 验证制作失败采用固定独占路由，NPC 仇恨感知按 NPC 固定广播。
+	 * Verifies fixed exclusive routing for craft failures and fixed NPC-keyed broadcast for aggro perception.
+	 */
+	@Test
+	void craftAndAggroSignalsUseFixedTypedRoutes() {
+		List<String> craftVisited = new ArrayList<>();
+		DispatchResult craftResult = router.dispatch(new CraftFailedEvent("craft", 7, 10000, 182200001, 0),
+			new PlayerQuestGraphStateList(), match -> {
+				craftVisited.add(match.route().transition().id());
+				return Status.APPLIED;
+			});
+		assertEquals(List.of("craft-failed-q2"), craftVisited);
+		assertEquals(new DispatchResult(Status.APPLIED, Propagation.STOP), craftResult);
+		assertEquals(List.of("aggro-listed-q2", "aggro-listed-q1"),
+			visited(new NpcAggroListedEvent("aggro", 7, 10001, 8, 100, 5001, 210010000, 1, 12.5f, true)));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new CraftFailedEvent("missing-item", 7, 10002, 182200002, 0),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new NpcAggroListedEvent("missing-npc", 7, 10003, 8, 101, 5002, 210010000, 1, 12.5f, true),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+		assertThrows(IllegalArgumentException.class,
+			() -> new CraftFailedEvent("product-present", 7, 10004, 182200001, 1));
+		assertThrows(IllegalArgumentException.class,
+			() -> new NpcAggroListedEvent("boundary", 7, 10005, 8, 100, 5001, 210010000, 1, 50, true));
+		assertThrows(IllegalArgumentException.class,
+			() -> new NpcAggroListedEvent("unknown-recipient", 7, 10006, 8, 100, 5001, 210010000, 1, 12.5f, false));
+	}
+
 	/** 返回广播访问的转换标识。 / Returns transition identifiers visited by a broadcast event. */
 	private List<String> visited(QuestGraphEvent event) {
 		List<String> visited = new ArrayList<>();
@@ -374,7 +410,9 @@ class QuestGraphRouterTest {
 				worldZoneTransition("escort-reached-q1", 20, "<escort-reached-target/>"),
 				worldZoneTransition("escort-lost-q1", 20, "<escort-lost-target/>"),
 				worldZoneTransition("ranked-kill-q1", 20, "<ranked-player-kill minimum_rank=\"10\"/>"),
-				worldZoneTransition("dredgion-settled-q1", 20, "<dredgion-settled/>"));
+				worldZoneTransition("dredgion-settled-q1", 20, "<dredgion-settled/>"),
+				worldZoneTransition("craft-failed-q1", 20, "<craft-failed item_id=\"182200001\"/>"),
+				worldZoneTransition("aggro-listed-q1", 20, "<npc-aggro-listed npc_id=\"100\"/>"));
 		String questTwoTransitions = String.join("", dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5),
 			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"),
 			itemTransition("item-use-q2", 10, "item-use"), itemTransition("item-obtained-q2", 10, "item-obtained"),
@@ -391,7 +429,9 @@ class QuestGraphRouterTest {
 				worldZoneTransition("escort-reached-q2", 10, "<escort-reached-target/>"),
 				worldZoneTransition("escort-lost-q2", 10, "<escort-lost-target/>"),
 				worldZoneTransition("ranked-kill-q2", 10, "<ranked-player-kill minimum_rank=\"5\"/>"),
-				worldZoneTransition("dredgion-settled-q2", 10, "<dredgion-settled/>"));
+				worldZoneTransition("dredgion-settled-q2", 10, "<dredgion-settled/>"),
+				worldZoneTransition("craft-failed-q2", 10, "<craft-failed item_id=\"182200001\"/>"),
+				worldZoneTransition("aggro-listed-q2", 10, "<npc-aggro-listed npc_id=\"100\"/>"));
 		return """
 			<quest_graphs>
 				<quest_graph quest_id="1" version="1" scope="PLAYER" initial_node="start">

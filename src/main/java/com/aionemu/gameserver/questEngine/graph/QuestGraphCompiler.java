@@ -15,6 +15,8 @@ import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventT
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ESCORT_LOST_TARGET;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.RANKED_PLAYER_KILL;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DREDGION_SETTLED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.CRAFT_FAILED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.NPC_AGGRO_LISTED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_DEATH;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_LOGOUT;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.QUEST_TIMER_ENDED;
@@ -130,6 +132,8 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EscortReachedTarg
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EscortLostTargetEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RankedPlayerKillEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DredgionSettledEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CraftFailedEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NpcAggroListedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
@@ -550,6 +554,19 @@ public final class QuestGraphCompiler {
 		}
 		if (source instanceof DredgionSettledEventData) {
 			return new Event(DREDGION_SETTLED, 0, null);
+		}
+		if (source instanceof CraftFailedEventData craftFailed) {
+			return compileItemEvent(questId, "craft-failed", CRAFT_FAILED, craftFailed.getItemId(), references);
+		}
+		if (source instanceof NpcAggroListedEventData aggroListed) {
+			Integer npcId = aggroListed.getNpcId();
+			if (npcId == null || npcId <= 0) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid npc-aggro-listed event");
+			}
+			if (!references.npcIds().contains(npcId)) {
+				throw new IllegalArgumentException("Quest " + questId + " npc-aggro-listed references missing NPC " + npcId);
+			}
+			return new Event(NPC_AGGRO_LISTED, npcId, null);
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
 	}
