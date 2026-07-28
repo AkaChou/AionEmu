@@ -34,7 +34,7 @@ class PlayerQuestGraphStateTest {
 		Map<String, VariableValue> reversedVariables = new LinkedHashMap<>();
 		reversedVariables.put("ready", new BooleanValue(true));
 		reversedVariables.put("score", new IntValue(7));
-		PreparedTransition journal = new PreparedTransition(3, "event-9", "kill-advance", 2, new byte[] { 4, 5, 6 });
+		PreparedTransition journal = new PreparedTransition(0, "event-9", "kill-advance", 2, new byte[] { 4, 5, 6 });
 		PlayerQuestGraphState first = state(firstVariables, journal);
 		PlayerQuestGraphState reversed = state(reversedVariables, journal);
 
@@ -55,7 +55,7 @@ class PlayerQuestGraphStateTest {
 		Map<String, VariableValue> variables = new HashMap<>();
 		variables.put("score", new IntValue(1));
 		byte[] eventPayload = { 1, 2 };
-		PreparedTransition journal = new PreparedTransition(3, "event", "transition", 0, eventPayload);
+		PreparedTransition journal = new PreparedTransition(2, "event", "transition", 0, eventPayload);
 		PlayerQuestGraphState state = state(variables, journal);
 
 		variables.clear();
@@ -74,6 +74,8 @@ class PlayerQuestGraphStateTest {
 			Lifecycle.PREPARED, Map.of(), Map.of(), null, Map.of(), null));
 		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", null,
 			Lifecycle.QUARANTINED, Map.of(), Map.of(), null, Map.of(), null));
+		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", null,
+			Lifecycle.PREPARED, Map.of(), Map.of(), new PreparedTransition(-1, "event", "transition", 1, new byte[0]), Map.of(), null));
 
 		byte[] valid = PlayerQuestGraphStateCodec.encode(new PlayerQuestGraphState(1, 1, 0, "start", null,
 			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null));

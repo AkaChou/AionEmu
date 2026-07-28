@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Types;
 import java.util.Collection;
 import java.util.Objects;
@@ -36,6 +37,11 @@ public final class PlayerQuestGraphStateDAO extends com.aionemu.gameserver.dao.P
 		+ "`state_payload` = IF(VALUES(`revision`) > `revision`, VALUES(`state_payload`), `state_payload`), "
 		+ "`revision` = GREATEST(`revision`, VALUES(`revision`))";
 	static final String DELETE_QUERY = "DELETE FROM `player_quest_graph_states` WHERE `player_id` = ? AND `quest_id` = ?";
+	static final String INSERT_QUERY = "INSERT INTO `player_quest_graph_states` (`player_id`, `quest_id`, `definition_version`, "
+		+ "`revision`, `node_id`, `lifecycle`, `instance_run_id`, `next_deadline_at`, `state_payload`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	static final String UPDATE_CAS_QUERY = "UPDATE `player_quest_graph_states` SET `definition_version` = ?, `revision` = ?, "
+		+ "`node_id` = ?, `lifecycle` = ?, `instance_run_id` = ?, `next_deadline_at` = ?, `state_payload` = ? "
+		+ "WHERE `player_id` = ? AND `quest_id` = ? AND `revision` = ?";
 
 	/**
 	 * 加载并严格校验玩家全部任务图状态。
@@ -102,6 +108,40 @@ public final class PlayerQuestGraphStateDAO extends com.aionemu.gameserver.dao.P
 	}
 
 	/**
+	 * 使用主键插入或 revision 条件更新实现单状态 CAS。
+	 * Implements single-state CAS with primary-key insertion or revision-guarded update.
+	 */
+	@Override
+	public boolean compareAndSet(int playerId, Long expectedRevision, PlayerQuestGraphState state) {
+		if (playerId <= 0 || expectedRevision != null && expectedRevision < 0) {
+			throw new IllegalArgumentException("Player id/expected revision is invalid");
+		}
+		long nextRevision = expectedRevision == null ? 0 : Math.addExact(expectedRevision, 1);
+		if (state.getRevision() != nextRevision) {
+			throw new IllegalArgumentException("Quest graph CAS must advance exactly one revision");
+		}
+		try (Connection connection = DatabaseFactory.getConnection()) {
+			if (expectedRevision == null) {
+				try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)) {
+					setStateParameters(statement, playerId, state);
+					return statement.executeUpdate() == 1;
+				} catch (SQLIntegrityConstraintViolationException e) {
+					if (e.getErrorCode() == 1062) {
+						return false;
+					}
+					throw e;
+				}
+			}
+			try (PreparedStatement statement = connection.prepareStatement(UPDATE_CAS_QUERY)) {
+				setCasParameters(statement, playerId, expectedRevision, state);
+				return statement.executeUpdate() == 1;
+			}
+		} catch (SQLException e) {
+			throw new IllegalStateException("Failed to compare-and-set quest graph state for player " + playerId, e);
+		}
+	}
+
+	/**
 	 * 批量 upsert 当前任务图状态。
 	 * Batch-upserts the current quest graph states.
 	 */
@@ -150,6 +190,24 @@ public final class PlayerQuestGraphStateDAO extends com.aionemu.gameserver.dao.P
 		setNullableLong(statement, 7, state.getInstanceRunId());
 		setNullableLong(statement, 8, state.nextDeadlineAt());
 		statement.setBytes(9, PlayerQuestGraphStateCodec.encode(state));
+	}
+
+	/**
+	 * 绑定 revision 条件更新参数。
+	 * Binds revision-guarded update parameters.
+	 */
+	private static void setCasParameters(PreparedStatement statement, int playerId, long expectedRevision, PlayerQuestGraphState state)
+			throws SQLException {
+		statement.setInt(1, state.getDefinitionVersion());
+		statement.setLong(2, state.getRevision());
+		statement.setString(3, state.getNodeId());
+		statement.setString(4, state.getLifecycle().name());
+		setNullableLong(statement, 5, state.getInstanceRunId());
+		setNullableLong(statement, 6, state.nextDeadlineAt());
+		statement.setBytes(7, PlayerQuestGraphStateCodec.encode(state));
+		statement.setInt(8, playerId);
+		statement.setInt(9, state.getQuestId());
+		statement.setLong(10, expectedRevision);
 	}
 
 	/**

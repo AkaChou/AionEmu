@@ -16,6 +16,8 @@ class PlayerQuestGraphStateDAOSqlTest {
 		assertTrue(PlayerQuestGraphStateDAO.UPSERT_QUERY.contains("`next_deadline_at` = IF("));
 		assertTrue(PlayerQuestGraphStateDAO.UPSERT_QUERY.contains("`state_payload` = IF("));
 		assertTrue(PlayerQuestGraphStateDAO.UPSERT_QUERY.contains("`revision` = GREATEST(`revision`, VALUES(`revision`))"));
+		assertTrue(PlayerQuestGraphStateDAO.INSERT_QUERY.startsWith("INSERT INTO `player_quest_graph_states`"));
+		assertTrue(PlayerQuestGraphStateDAO.UPDATE_CAS_QUERY.endsWith("AND `revision` = ?"));
 		assertTrue(Arrays.asList(new GameDAOClassProvider().daoClasses()).contains(PlayerQuestGraphStateDAO.class));
 	}
 }

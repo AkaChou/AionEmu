@@ -77,7 +77,7 @@ class QuestGraphRouterTest {
 			new PlayerQuestGraphState(2, 2, 0, "start", null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null),
 			new PlayerQuestGraphState(2, 1, 0, "missing", null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null),
 			new PlayerQuestGraphState(2, 1, 0, "start", null, Lifecycle.PREPARED, Map.of(), Map.of(),
-				new PreparedTransition(0, "event", "dialog-q2", 0, new byte[0]), Map.of(), null),
+				new PreparedTransition(-1, "event", "dialog-q2", 0, new byte[0]), Map.of(), null),
 			new PlayerQuestGraphState(2, 1, 0, "start", null, Lifecycle.QUARANTINED, Map.of(), Map.of(), null, Map.of(), "blocked"));
 		for (PlayerQuestGraphState blockedState : blockedStates) {
 			PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();

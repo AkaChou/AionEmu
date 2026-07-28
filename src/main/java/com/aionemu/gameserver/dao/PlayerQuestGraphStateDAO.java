@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 
 /**
@@ -30,5 +31,10 @@ public abstract class PlayerQuestGraphStateDAO implements DAO {
 	 * Stores player quest graph states and the deletion ledger in one transaction.
 	 */
 	public abstract void store(Player player);
-}
 
+	/**
+	 * 仅在数据库 revision 与期望值一致时写入下一状态；不存在时 expectedRevision 为 null。
+	 * Writes the next state only when the database revision matches; expectedRevision is null for insertion.
+	 */
+	public abstract boolean compareAndSet(int playerId, Long expectedRevision, PlayerQuestGraphState state);
+}

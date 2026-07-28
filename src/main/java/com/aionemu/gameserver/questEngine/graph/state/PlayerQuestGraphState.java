@@ -69,8 +69,8 @@ public final class PlayerQuestGraphState {
 		 * Creates a prepared transition and copies its event payload.
 		 */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, byte[] eventPayload) {
-			if (baseRevision < 0 || nextActionIndex < 0) {
-				throw new IllegalArgumentException("Prepared transition revision/action index must be non-negative");
+			if (baseRevision < -1 || nextActionIndex < 0) {
+				throw new IllegalArgumentException("Prepared transition base revision/action index is invalid");
 			}
 			this.baseRevision = baseRevision;
 			this.eventId = requireText(eventId, "event id");
@@ -181,8 +181,16 @@ public final class PlayerQuestGraphState {
 		if (lifecycle != Lifecycle.QUARANTINED && quarantineReason != null) {
 			throw new IllegalArgumentException("Only QUARANTINED state may contain a reason");
 		}
-		if (journal != null && journal.getBaseRevision() != revision) {
-			throw new IllegalArgumentException("Prepared transition base revision must match state revision");
+		if (journal != null) {
+			long expectedRevision;
+			try {
+				expectedRevision = Math.addExact(Math.addExact(journal.getBaseRevision(), journal.getNextActionIndex()), 1);
+			} catch (ArithmeticException e) {
+				throw new IllegalArgumentException("Prepared transition revision overflows", e);
+			}
+			if (expectedRevision != revision) {
+				throw new IllegalArgumentException("Prepared transition revision does not match journal progress");
+			}
 		}
 	}
 
