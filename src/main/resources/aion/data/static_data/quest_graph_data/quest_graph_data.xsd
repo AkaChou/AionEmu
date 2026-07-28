@@ -27,6 +27,56 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="questGraphPlayerRace">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ELYOS"/>
+			<xs:enumeration value="ASMODIANS"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphPlayerClass">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="WARRIOR"/>
+			<xs:enumeration value="GLADIATOR"/>
+			<xs:enumeration value="TEMPLAR"/>
+			<xs:enumeration value="SCOUT"/>
+			<xs:enumeration value="ASSASSIN"/>
+			<xs:enumeration value="RANGER"/>
+			<xs:enumeration value="MAGE"/>
+			<xs:enumeration value="SORCERER"/>
+			<xs:enumeration value="SPIRIT_MASTER"/>
+			<xs:enumeration value="PRIEST"/>
+			<xs:enumeration value="CLERIC"/>
+			<xs:enumeration value="CHANTER"/>
+			<xs:enumeration value="TECHNIST"/>
+			<xs:enumeration value="AETHERTECH"/>
+			<xs:enumeration value="GUNSLINGER"/>
+			<xs:enumeration value="MUSE"/>
+			<xs:enumeration value="SONGWEAVER"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphPlayerRaceList">
+		<xs:restriction>
+			<xs:simpleType><xs:list itemType="questGraphPlayerRace"/></xs:simpleType>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphPlayerClassList">
+		<xs:restriction>
+			<xs:simpleType><xs:list itemType="questGraphPlayerClass"/></xs:simpleType>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphPlayerGender">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MALE"/>
+			<xs:enumeration value="FEMALE"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="questGraphVariableType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="INT"/>
@@ -62,11 +112,32 @@
 		<xs:attribute name="value" type="questGraphQuestStatus" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphPlayerLevelCondition">
+		<xs:attribute name="min" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="max" type="xs:positiveInteger"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphPlayerRaceCondition">
+		<xs:attribute name="values" type="questGraphPlayerRaceList" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphPlayerClassCondition">
+		<xs:attribute name="values" type="questGraphPlayerClassList" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphPlayerGenderCondition">
+		<xs:attribute name="value" type="questGraphPlayerGender" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphEmptyAction"/>
 
 	<xs:complexType name="questGraphConditions">
 		<xs:choice minOccurs="1" maxOccurs="unbounded">
 			<xs:element name="quest-status" type="questGraphQuestStatusCondition"/>
+			<xs:element name="player-level" type="questGraphPlayerLevelCondition"/>
+			<xs:element name="player-race" type="questGraphPlayerRaceCondition"/>
+			<xs:element name="player-class" type="questGraphPlayerClassCondition"/>
+			<xs:element name="player-gender" type="questGraphPlayerGenderCondition"/>
 		</xs:choice>
 	</xs:complexType>
 

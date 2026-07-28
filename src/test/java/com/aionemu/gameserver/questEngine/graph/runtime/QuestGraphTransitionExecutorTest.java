@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.graph.runtime;
 
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionType.START_QUEST;
-import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ConditionType.QUEST_STATUS;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DIALOG;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus.NONE;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope.PLAYER;
@@ -35,6 +34,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
@@ -312,7 +312,7 @@ class QuestGraphTransitionExecutorTest {
 	 * Creates a minimal graph fixture with one condition, one action, and one terminal node.
 	 */
 	private static Fixture fixture() {
-		Condition condition = new Condition(QUEST_STATUS, NONE);
+		Condition condition = new QuestStatusCondition(NONE);
 		Action action = new Action(START_QUEST);
 		Transition transition = new Transition("accept", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"),
 			List.of(condition), List.of(action));

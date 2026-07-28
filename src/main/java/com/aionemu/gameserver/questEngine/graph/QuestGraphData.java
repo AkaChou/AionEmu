@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElements;
+import jakarta.xml.bind.annotation.XmlList;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import lombok.Getter;
@@ -271,7 +272,13 @@ public final class QuestGraphData {
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class ConditionsData {
-		@XmlElements(@XmlElement(name = "quest-status", type = QuestStatusConditionData.class))
+		@XmlElements({
+			@XmlElement(name = "quest-status", type = QuestStatusConditionData.class),
+			@XmlElement(name = "player-level", type = PlayerLevelConditionData.class),
+			@XmlElement(name = "player-race", type = PlayerRaceConditionData.class),
+			@XmlElement(name = "player-class", type = PlayerClassConditionData.class),
+			@XmlElement(name = "player-gender", type = PlayerGenderConditionData.class)
+		})
 		private List<Object> values = new ArrayList<>();
 	}
 
@@ -286,6 +293,59 @@ public final class QuestGraphData {
 		 * 期望的任务状态名称。
 		 * Expected quest status name.
 		 */
+		@XmlAttribute(required = true)
+		private String value;
+	}
+
+	/**
+	 * 表示玩家等级闭区间条件；max 缺失时没有上限。
+	 * Represents an inclusive player-level range with no upper bound when max is absent.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayerLevelConditionData {
+		/** 最低玩家等级。 / Minimum player level. */
+		@XmlAttribute(required = true)
+		private Integer min;
+		/** 可选最高玩家等级。 / Optional maximum player level. */
+		@XmlAttribute
+		private Integer max;
+	}
+
+	/**
+	 * 表示允许的玩家阵营集合。
+	 * Represents the allowed player-race set.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayerRaceConditionData {
+		/** 空格分隔的允许阵营。 / Space-separated allowed races. */
+		@XmlList
+		@XmlAttribute(name = "values", required = true)
+		private List<String> allowed = new ArrayList<>();
+	}
+
+	/**
+	 * 表示允许的玩家职业集合。
+	 * Represents the allowed player-class set.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayerClassConditionData {
+		/** 空格分隔的允许职业。 / Space-separated allowed classes. */
+		@XmlList
+		@XmlAttribute(name = "values", required = true)
+		private List<String> allowed = new ArrayList<>();
+	}
+
+	/**
+	 * 表示要求的玩家性别。
+	 * Represents the required player gender.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayerGenderConditionData {
+		/** 期望性别名称。 / Expected gender name. */
 		@XmlAttribute(required = true)
 		private String value;
 	}

@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.graph;
 
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionType.START_QUEST;
-import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ConditionType.QUEST_STATUS;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DIALOG;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL;
 
@@ -12,6 +11,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,13 +24,21 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.validation.SchemaFactory;
 
+import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Variable;
@@ -40,6 +48,10 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerGenderConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerLevelConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerRaceConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestStatusConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.TransitionData;
@@ -312,9 +324,52 @@ public final class QuestGraphCompiler {
 	private static Condition compileCondition(int questId, Object source) {
 		if (source instanceof QuestStatusConditionData condition) {
 			try {
-				return new Condition(QUEST_STATUS, QuestStatus.valueOf(condition.getValue()));
+				return new QuestStatusCondition(QuestStatus.valueOf(condition.getValue()));
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid quest status", e);
+			}
+		}
+		if (source instanceof PlayerLevelConditionData condition) {
+			if (condition.getMin() == null || condition.getMin() <= 0
+					|| condition.getMax() != null && condition.getMax() < condition.getMin()) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid player level range");
+			}
+			return new PlayerLevelCondition(condition.getMin(), condition.getMax());
+		}
+		if (source instanceof PlayerRaceConditionData condition) {
+			try {
+				EnumSet<Race> allowed = EnumSet.noneOf(Race.class);
+				condition.getAllowed().forEach(value -> allowed.add(Race.valueOf(value)));
+				if (allowed.isEmpty() || allowed.size() != condition.getAllowed().size()
+						|| allowed.stream().anyMatch(race -> race != Race.ELYOS && race != Race.ASMODIANS)) {
+					throw new IllegalArgumentException("unsupported player race");
+				}
+				return new PlayerRaceCondition(allowed);
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid player race set", e);
+			}
+		}
+		if (source instanceof PlayerClassConditionData condition) {
+			try {
+				EnumSet<PlayerClass> allowed = EnumSet.noneOf(PlayerClass.class);
+				condition.getAllowed().forEach(value -> allowed.add(PlayerClass.valueOf(value)));
+				if (allowed.isEmpty() || allowed.size() != condition.getAllowed().size() || allowed.contains(PlayerClass.ALL)) {
+					throw new IllegalArgumentException("unsupported player class");
+				}
+				return new PlayerClassCondition(allowed);
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid player class set", e);
+			}
+		}
+		if (source instanceof PlayerGenderConditionData condition) {
+			try {
+				Gender expected = Gender.valueOf(condition.getValue());
+				if (expected == Gender.DUMMY) {
+					throw new IllegalArgumentException("unsupported player gender");
+				}
+				return new PlayerGenderCondition(expected);
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid player gender", e);
 			}
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported condition capability");

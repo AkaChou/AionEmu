@@ -1,9 +1,16 @@
 package com.aionemu.gameserver.questEngine.graph;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
+import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
 
 /**
  * 表示经过校验、可供运行时直接消费的不可变任务图。
@@ -40,14 +47,6 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	public enum EventType {
 		DIALOG,
 		KILL
-	}
-
-	/**
-	 * 列出当前编译器已证明并支持的条件能力。
-	 * Lists condition capabilities currently proven and supported by the compiler.
-	 */
-	public enum ConditionType {
-		QUEST_STATUS
 	}
 
 	/**
@@ -141,7 +140,81 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * 表示转换执行前必须满足的已类型化条件。
 	 * Represents a typed condition that must hold before a transition executes.
 	 */
-	public record Condition(ConditionType type, QuestStatus questStatus) {
+	public sealed interface Condition permits QuestStatusCondition, PlayerLevelCondition, PlayerRaceCondition, PlayerClassCondition,
+		PlayerGenderCondition {
+	}
+
+	/**
+	 * 要求 canonical 任务状态等于期望值。
+	 * Requires the canonical quest status to equal the expected value.
+	 */
+	public record QuestStatusCondition(QuestStatus expected) implements Condition {
+		/** 校验期望状态。 / Validates the expected status. */
+		public QuestStatusCondition {
+			Objects.requireNonNull(expected, "expected");
+		}
+	}
+
+	/**
+	 * 要求玩家等级位于闭区间；max 为 null 时没有上限。
+	 * Requires player level within an inclusive range; a null max means no upper bound.
+	 */
+	public record PlayerLevelCondition(int min, Integer max) implements Condition {
+		/** 校验等级闭区间。 / Validates the inclusive level range. */
+		public PlayerLevelCondition {
+			if (min <= 0 || max != null && max < min) {
+				throw new IllegalArgumentException("Player level condition range is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 要求玩家阵营属于显式允许集合。
+	 * Requires the player's race to belong to the explicit allowed set.
+	 */
+	public record PlayerRaceCondition(Set<Race> allowed) implements Condition {
+		/**
+		 * 复制允许集合，保持条件不可变。
+		 * Copies the allowed set to keep the condition immutable.
+		 */
+		public PlayerRaceCondition {
+			Objects.requireNonNull(allowed, "allowed");
+			if (allowed.isEmpty() || allowed.stream().anyMatch(race -> race != Race.ELYOS && race != Race.ASMODIANS)) {
+				throw new IllegalArgumentException("Player race condition is empty or contains a non-player race");
+			}
+			allowed = Collections.unmodifiableSet(EnumSet.copyOf(allowed));
+		}
+	}
+
+	/**
+	 * 要求玩家职业属于显式允许集合。
+	 * Requires the player's class to belong to the explicit allowed set.
+	 */
+	public record PlayerClassCondition(Set<PlayerClass> allowed) implements Condition {
+		/**
+		 * 复制允许集合，保持条件不可变。
+		 * Copies the allowed set to keep the condition immutable.
+		 */
+		public PlayerClassCondition {
+			Objects.requireNonNull(allowed, "allowed");
+			if (allowed.isEmpty() || allowed.contains(PlayerClass.ALL)) {
+				throw new IllegalArgumentException("Player class condition is empty or contains ALL");
+			}
+			allowed = Collections.unmodifiableSet(EnumSet.copyOf(allowed));
+		}
+	}
+
+	/**
+	 * 要求玩家性别等于期望值。
+	 * Requires the player's gender to equal the expected value.
+	 */
+	public record PlayerGenderCondition(Gender expected) implements Condition {
+		/** 校验玩家性别且拒绝创建占位值。 / Validates player gender and rejects the creation-only placeholder. */
+		public PlayerGenderCondition {
+			if (expected == null || expected == Gender.DUMMY) {
+				throw new IllegalArgumentException("Player gender condition is invalid");
+			}
+		}
 	}
 
 	/**

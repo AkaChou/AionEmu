@@ -13,6 +13,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
@@ -219,7 +220,7 @@ public final class QuestGraphTransitionExecutor {
 	private static Status evaluateConditions(Match match, TransitionContext context) {
 		QuestStatus questStatus = match.state() == null ? QuestStatus.NONE : match.state().getQuestStatus();
 		for (Condition condition : match.route().transition().conditions()) {
-			if (condition.questStatus() != questStatus) {
+			if (condition instanceof QuestStatusCondition statusCondition && statusCondition.expected() != questStatus) {
 				return Status.NO_MATCH;
 			}
 			ConditionResult result;

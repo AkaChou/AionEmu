@@ -14,6 +14,10 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
+
 class QuestGraphCompilerTest {
 	private static final Path SCHEMA = Path.of("src/main/resources/aion/data/static_data/quest_graph_data/quest_graph_data.xsd");
 	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709));
@@ -42,8 +46,13 @@ class QuestGraphCompilerTest {
 			graph.variables().get("counter"));
 		assertEquals(List.of("first", "late"), graph.nodes().get("b").transitions().stream().map(CompiledQuestGraph.Transition::id).toList());
 		assertEquals(CompiledQuestGraph.EventType.DIALOG, graph.nodes().get("b").transitions().getFirst().event().type());
-		assertEquals(CompiledQuestGraph.ConditionType.QUEST_STATUS,
-			graph.nodes().get("b").transitions().getFirst().conditions().getFirst().type());
+		assertEquals(List.of(
+			new CompiledQuestGraph.QuestStatusCondition(CompiledQuestGraph.QuestStatus.NONE),
+			new CompiledQuestGraph.PlayerLevelCondition(10, 55),
+			new CompiledQuestGraph.PlayerRaceCondition(Set.of(Race.ELYOS, Race.ASMODIANS)),
+			new CompiledQuestGraph.PlayerClassCondition(Set.of(PlayerClass.GLADIATOR, PlayerClass.TEMPLAR)),
+			new CompiledQuestGraph.PlayerGenderCondition(Gender.MALE)),
+			graph.nodes().get("b").transitions().getFirst().conditions());
 		assertEquals(CompiledQuestGraph.ActionType.START_QUEST,
 			graph.nodes().get("b").transitions().getFirst().actions().getFirst().type());
 		var routes = data.eventIndex().get(new CompiledQuestGraphData.EventKey(CompiledQuestGraph.EventType.DIALOG, 203709));
@@ -62,6 +71,15 @@ class QuestGraphCompilerTest {
 			transition("accept", 10, "done").replace("<start-quest/>", "<complete-quest/>"), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("<dialog", "<attack"), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("<player-level min=\"10\" max=\"55\"/>", "<player-level min=\"10\" max=\"5\"/>"),
+			terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("values=\"ELYOS ASMODIANS\"", "values=\"NPC\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("values=\"GLADIATOR TEMPLAR\"", "values=\"ALL\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("value=\"MALE\"", "value=\"DUMMY\""), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done"), terminal()).replace(" scope=\"PLAYER\"", ""))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
@@ -122,6 +140,20 @@ class QuestGraphCompilerTest {
 		assertCauseContains(missingKillNpc, "kill references missing NPC 203709");
 	}
 
+	/**
+	 * 验证绕过 XSD 时 typed condition 自身仍拒绝非法值。
+	 * Verifies that typed conditions reject invalid values even when XSD is bypassed.
+	 */
+	@Test
+	void typedConditionsRejectInvalidDirectConstruction() {
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerLevelCondition(0, null));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerLevelCondition(10, 9));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerRaceCondition(Set.of()));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerRaceCondition(Set.of(Race.NPC)));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerClassCondition(Set.of(PlayerClass.ALL)));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerGenderCondition(Gender.DUMMY));
+	}
+
 	private CompiledQuestGraphData load(String xml) throws Exception {
 		return load(xml, REFERENCES);
 	}
@@ -177,7 +209,13 @@ class QuestGraphCompilerTest {
 		return """
 			<transition id="%s" priority="%d" to="%s">
 				<dialog npc_id="203709" dialog="QUEST_SELECT"/>
-				<conditions><quest-status value="NONE"/></conditions>
+			<conditions>
+				<quest-status value="NONE"/>
+				<player-level min="10" max="55"/>
+				<player-race values="ELYOS ASMODIANS"/>
+				<player-class values="GLADIATOR TEMPLAR"/>
+				<player-gender value="MALE"/>
+			</conditions>
 				<actions><start-quest/></actions>
 			</transition>
 			""".formatted(id, priority, target);
