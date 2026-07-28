@@ -294,6 +294,34 @@ class QuestGraphCompilerTest {
 	}
 
 	/**
+	 * 验证邻近 NPC 引用和护送 owner 信号编译为封闭事件 IR。
+	 * Verifies NPC proximity references and escort-owner signals compile into closed event IR.
+	 */
+	@Test
+	void compilerBuildsTypedProximityAndEscortEvents() throws Exception {
+		List<String> events = List.of("<npc-proximity npc_id=\"203709\"/>", "<escort-reached-target/>",
+			"<escort-lost-target/>");
+		List<CompiledQuestGraph.EventType> types = List.of(CompiledQuestGraph.EventType.NPC_PROXIMITY,
+			CompiledQuestGraph.EventType.ESCORT_REACHED_TARGET, CompiledQuestGraph.EventType.ESCORT_LOST_TARGET);
+		List<Integer> targets = List.of(203709, 1, 1);
+		for (int i = 0; i < events.size(); i++) {
+			String source = transition("npc-signal-event", 10, "done")
+				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", events.get(i));
+			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
+				.nodes().get("offer").transitions().getFirst().event();
+			assertEquals(types.get(i), compiled.type());
+			assertEquals(targets.get(i), compiled.targetId());
+		}
+
+		String missingNpc = transition("proximity-event", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<npc-proximity npc_id=\"203710\"/>");
+		assertFailureContains(document(graph(1, "offer", missingNpc, terminal())),
+			"npc-proximity references missing NPC 203710");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			missingNpc.replace(" npc_id=\"203710\"", ""), terminal()))));
+	}
+
+	/**
 	 * 验证 daily、weekly 与 anchored cooldown 被编译为封闭的强类型策略。
 	 * Verifies that daily, weekly, and anchored cooldown compile into closed typed policies.
 	 */

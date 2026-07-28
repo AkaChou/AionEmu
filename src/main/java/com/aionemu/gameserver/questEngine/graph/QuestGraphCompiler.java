@@ -10,6 +10,9 @@ import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventT
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL_IN_WORLD;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.LEVEL_UP;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.MOVIE_ENDED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.NPC_PROXIMITY;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ESCORT_REACHED_TARGET;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ESCORT_LOST_TARGET;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_DEATH;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_LOGOUT;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.QUEST_TIMER_ENDED;
@@ -120,6 +123,9 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillInWorldEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.LevelUpEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.MovieEndedEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NpcProximityEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EscortReachedTargetEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EscortLostTargetEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
@@ -517,6 +523,19 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " movie-ended references missing movie " + movieId);
 			}
 			return new Event(MOVIE_ENDED, movieId, null);
+		}
+		if (source instanceof NpcProximityEventData proximity) {
+			Integer npcId = proximity.getNpcId();
+			if (npcId == null || npcId <= 0 || !references.npcIds().contains(npcId)) {
+				throw new IllegalArgumentException("Quest " + questId + " npc-proximity references missing NPC " + npcId);
+			}
+			return new Event(NPC_PROXIMITY, npcId, null);
+		}
+		if (source instanceof EscortReachedTargetEventData) {
+			return new Event(ESCORT_REACHED_TARGET, questId, null);
+		}
+		if (source instanceof EscortLostTargetEventData) {
+			return new Event(ESCORT_LOST_TARGET, questId, null);
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
 	}

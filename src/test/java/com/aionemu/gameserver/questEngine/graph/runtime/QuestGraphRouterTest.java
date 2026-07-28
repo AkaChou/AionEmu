@@ -31,6 +31,9 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEven
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.LevelUpEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcProximityEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortReachedTargetEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortLostTargetEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -158,6 +161,9 @@ class QuestGraphRouterTest {
 		PlayerLogoutEvent playerLogout = new PlayerLogoutEvent("player-logout", 7, 3014, 210010000, 1);
 		QuestTimerEndedEvent timerEnded = new QuestTimerEndedEvent("timer-ended", 7, 3015, 1, "QUEST_TIMER", 3015);
 		MovieEndedEvent movieEnded = new MovieEndedEvent("movie-ended", 7, 3016, 913, 4, 3000);
+		NpcProximityEvent proximity = new NpcProximityEvent("proximity", 7, 3017, 100, 5001, 210010000, 1, 12.5f);
+		EscortReachedTargetEvent reached = new EscortReachedTargetEvent("escort-reached", 7, 3018, 1, 100, 5001, 210010000, 1);
+		EscortLostTargetEvent lost = new EscortLostTargetEvent("escort-lost", 7, 3019, 1, 100, 5001, 210010000, 1);
 		assertEquals(attack, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(attack)));
 		assertEquals(death, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(death)));
 		assertEquals(worldKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldKill)));
@@ -173,6 +179,9 @@ class QuestGraphRouterTest {
 		assertEquals(playerLogout, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(playerLogout)));
 		assertEquals(timerEnded, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(timerEnded)));
 		assertEquals(movieEnded, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(movieEnded)));
+		assertEquals(proximity, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(proximity)));
+		assertEquals(reached, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(reached)));
+		assertEquals(lost, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(lost)));
 
 		byte[] encoded = QuestGraphEventCodec.encode(kill);
 		byte[] unknown = Arrays.copyOf(encoded, encoded.length);
@@ -284,6 +293,29 @@ class QuestGraphRouterTest {
 			() -> new MovieEndedEvent("invalid", 7, 7007, 913, 0, 6990));
 	}
 
+	/**
+	 * 验证邻近事件按 NPC 广播，护送结果只投递原任务 owner，并拒绝越界或无效快照。
+	 * Verifies NPC-broadcast proximity, owner-targeted escort results, and rejection of invalid snapshots.
+	 */
+	@Test
+	void npcSignalEventsUseServerSnapshotsAndFixedRoutes() {
+		assertEquals(List.of("npc-proximity-q2", "npc-proximity-q1"),
+			visited(new NpcProximityEvent("proximity", 7, 8000, 100, 5001, 210010000, 1, 12.5f)));
+		assertEquals(List.of("escort-reached-q1"),
+			visited(new EscortReachedTargetEvent("reached", 7, 8001, 1, 100, 5001, 210010000, 1)));
+		assertEquals(List.of("escort-lost-q1"),
+			visited(new EscortLostTargetEvent("lost", 7, 8002, 1, 100, 5001, 210010000, 1)));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new EscortReachedTargetEvent("missing-owner", 7, 8003, 3, 100, 5001, 210010000, 1),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+		assertThrows(IllegalArgumentException.class,
+			() -> new NpcProximityEvent("invalid", 7, 8004, 100, 5001, 210010000, 1, 20.1f));
+		assertThrows(IllegalArgumentException.class,
+			() -> new EscortLostTargetEvent("invalid", 7, 8005, 0, 100, 5001, 210010000, 1));
+		assertThrows(IllegalArgumentException.class,
+			() -> new EscortReachedTargetEvent("invalid", 7, 8006, 1, 100, 5001, 210010000, 0));
+	}
+
 	/** 返回广播访问的转换标识。 / Returns transition identifiers visited by a broadcast event. */
 	private List<String> visited(QuestGraphEvent event) {
 		List<String> visited = new ArrayList<>();
@@ -309,7 +341,10 @@ class QuestGraphRouterTest {
 				worldZoneTransition("level-up-q1", 20, "<level-up/>"),
 				worldZoneTransition("player-logout-q1", 20, "<player-logout/>"),
 				worldZoneTransition("timer-ended-q1", 20, "<quest-timer-ended timer=\"QUEST_TIMER\"/>"),
-				worldZoneTransition("movie-ended-q1", 20, "<movie-ended movie_id=\"913\"/>"));
+				worldZoneTransition("movie-ended-q1", 20, "<movie-ended movie_id=\"913\"/>"),
+				worldZoneTransition("npc-proximity-q1", 20, "<npc-proximity npc_id=\"100\"/>"),
+				worldZoneTransition("escort-reached-q1", 20, "<escort-reached-target/>"),
+				worldZoneTransition("escort-lost-q1", 20, "<escort-lost-target/>"));
 		String questTwoTransitions = String.join("", dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5),
 			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"),
 			itemTransition("item-use-q2", 10, "item-use"), itemTransition("item-obtained-q2", 10, "item-obtained"),
@@ -321,7 +356,10 @@ class QuestGraphRouterTest {
 				worldZoneTransition("level-up-q2", 10, "<level-up/>"),
 				worldZoneTransition("player-logout-q2", 10, "<player-logout/>"),
 				worldZoneTransition("timer-ended-q2", 10, "<quest-timer-ended timer=\"QUEST_TIMER\"/>"),
-				worldZoneTransition("movie-ended-q2", 10, "<movie-ended movie_id=\"913\"/>"));
+				worldZoneTransition("movie-ended-q2", 10, "<movie-ended movie_id=\"913\"/>"),
+				worldZoneTransition("npc-proximity-q2", 10, "<npc-proximity npc_id=\"100\"/>"),
+				worldZoneTransition("escort-reached-q2", 10, "<escort-reached-target/>"),
+				worldZoneTransition("escort-lost-q2", 10, "<escort-lost-target/>"));
 		return """
 			<quest_graphs>
 				<quest_graph quest_id="1" version="1" scope="PLAYER" initial_node="start">

@@ -17,6 +17,9 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEven
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.LevelUpEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcProximityEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortReachedTargetEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortLostTargetEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -50,6 +53,9 @@ public final class QuestGraphEventCodec {
 	private static final byte PLAYER_LOGOUT = 15;
 	private static final byte QUEST_TIMER_ENDED = 16;
 	private static final byte MOVIE_ENDED = 17;
+	private static final byte NPC_PROXIMITY = 18;
+	private static final byte ESCORT_REACHED_TARGET = 19;
+	private static final byte ESCORT_LOST_TARGET = 20;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -166,6 +172,24 @@ public final class QuestGraphEventCodec {
 							output.writeLong(movieEnded.playbackId());
 							output.writeLong(movieEnded.startedAt());
 						}
+						case NpcProximityEvent proximity -> {
+							output.writeByte(NPC_PROXIMITY);
+							writeCommon(output, proximity);
+							writeNpcSnapshot(output, proximity.npcId(), proximity.npcObjectId(), proximity.worldId(), proximity.instanceId());
+							output.writeFloat(proximity.distance());
+						}
+						case EscortReachedTargetEvent reached -> {
+							output.writeByte(ESCORT_REACHED_TARGET);
+							writeCommon(output, reached);
+							output.writeInt(reached.questId());
+							writeNpcSnapshot(output, reached.npcId(), reached.npcObjectId(), reached.worldId(), reached.instanceId());
+						}
+						case EscortLostTargetEvent lost -> {
+							output.writeByte(ESCORT_LOST_TARGET);
+							writeCommon(output, lost);
+							output.writeInt(lost.questId());
+							writeNpcSnapshot(output, lost.npcId(), lost.npcObjectId(), lost.worldId(), lost.instanceId());
+						}
 				}
 			}
 			byte[] payload = bytes.toByteArray();
@@ -215,6 +239,12 @@ public final class QuestGraphEventCodec {
 						case QUEST_TIMER_ENDED -> new QuestTimerEndedEvent(eventId, playerId, occurredAt, input.readInt(), input.readUTF(),
 							input.readLong());
 						case MOVIE_ENDED -> new MovieEndedEvent(eventId, playerId, occurredAt, input.readInt(), input.readLong(), input.readLong());
+						case NPC_PROXIMITY -> new NpcProximityEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(), input.readInt(),
+							input.readInt(), input.readFloat());
+						case ESCORT_REACHED_TARGET -> new EscortReachedTargetEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
+							input.readInt(), input.readInt(), input.readInt());
+						case ESCORT_LOST_TARGET -> new EscortLostTargetEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
+							input.readInt(), input.readInt(), input.readInt());
 				default -> throw new IllegalArgumentException("Unknown quest graph event tag " + type);
 			};
 			if (input.read() != -1) {
@@ -229,6 +259,14 @@ public final class QuestGraphEventCodec {
 			}
 			throw new IllegalArgumentException("Failed to decode quest graph event", e);
 		}
+	}
+
+	/** 写入 NPC 模板、对象与实例快照。 / Writes an NPC template, object, and instance snapshot. */
+	private static void writeNpcSnapshot(DataOutputStream output, int npcId, int npcObjectId, int worldId, int instanceId) throws IOException {
+		output.writeInt(npcId);
+		output.writeInt(npcObjectId);
+		output.writeInt(worldId);
+		output.writeInt(instanceId);
 	}
 
 	/**

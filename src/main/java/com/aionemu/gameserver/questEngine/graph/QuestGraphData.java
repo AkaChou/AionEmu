@@ -214,7 +214,10 @@ public final class QuestGraphData {
 				@XmlElement(name = "level-up", type = LevelUpEventData.class, required = true),
 				@XmlElement(name = "player-logout", type = PlayerLogoutEventData.class, required = true),
 				@XmlElement(name = "quest-timer-ended", type = QuestTimerEndedEventData.class, required = true),
-				@XmlElement(name = "movie-ended", type = MovieEndedEventData.class, required = true)
+				@XmlElement(name = "movie-ended", type = MovieEndedEventData.class, required = true),
+				@XmlElement(name = "npc-proximity", type = NpcProximityEventData.class, required = true),
+				@XmlElement(name = "escort-reached-target", type = EscortReachedTargetEventData.class, required = true),
+				@XmlElement(name = "escort-lost-target", type = EscortLostTargetEventData.class, required = true)
 		})
 		private Object event;
 		/**
@@ -396,6 +399,25 @@ public final class QuestGraphData {
 		/** 影片协议标识。 / Movie protocol identifier. */
 		@XmlAttribute(name = "movie_id", required = true)
 		private Integer movieId;
+	}
+
+	/** 表示玩家进入指定 NPC 服务端感知半径的事件。 / Represents server-observed player entry into an NPC proximity radius. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class NpcProximityEventData {
+		/** 邻近目标 NPC 模板标识。 / Proximity target NPC template identifier. */
+		@XmlAttribute(name = "npc_id", required = true)
+		private Integer npcId;
+	}
+
+	/** 表示当前 graph owner 的护送 NPC 到达目标。 / Represents the escort NPC reaching its target for the current graph owner. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class EscortReachedTargetEventData {
+	}
+
+	/** 表示当前 graph owner 的护送 NPC 丢失目标。 / Represents the escort NPC losing its target for the current graph owner. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class EscortLostTargetEventData {
 	}
 
 	/**

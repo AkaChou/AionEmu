@@ -12,7 +12,8 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	QuestGraphEvent.ItemObtainedEvent, QuestGraphEvent.ItemEquippedEvent, QuestGraphEvent.HouseItemUseEvent,
 	QuestGraphEvent.WorldEnteredEvent, QuestGraphEvent.ZoneEnteredEvent, QuestGraphEvent.ZoneLeftEvent,
 	QuestGraphEvent.ZoneMissionEndedEvent, QuestGraphEvent.LevelUpEvent, QuestGraphEvent.PlayerLogoutEvent,
-	QuestGraphEvent.QuestTimerEndedEvent, QuestGraphEvent.MovieEndedEvent {
+	QuestGraphEvent.QuestTimerEndedEvent, QuestGraphEvent.MovieEndedEvent, QuestGraphEvent.NpcProximityEvent,
+	QuestGraphEvent.EscortReachedTargetEvent, QuestGraphEvent.EscortLostTargetEvent {
 
 	/**
 	 * 定义由事件类型固定的候选传播策略。
@@ -47,7 +48,7 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 				case DIALOG, ITEM_USE, MOVIE_ENDED -> RoutingPolicy.EXCLUSIVE;
 				case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD, ITEM_OBTAINED, ITEM_EQUIPPED, HOUSE_ITEM_USE,
 					WORLD_ENTERED, ZONE_ENTERED, ZONE_LEFT, ZONE_MISSION_ENDED, LEVEL_UP, PLAYER_LOGOUT,
-					QUEST_TIMER_ENDED -> RoutingPolicy.BROADCAST;
+					QUEST_TIMER_ENDED, NPC_PROXIMITY, ESCORT_REACHED_TARGET, ESCORT_LOST_TARGET -> RoutingPolicy.BROADCAST;
 		};
 	}
 
@@ -456,6 +457,75 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		}
 	}
 
+	/** 表示服务端确认玩家进入 NPC 固定感知半径的快照。 / Represents a server-confirmed player entry into an NPC's fixed proximity radius. */
+	record NpcProximityEvent(String eventId, int playerId, long occurredAt, int npcId, int npcObjectId, int worldId,
+			int instanceId, float distance) implements QuestGraphEvent {
+		/** 校验 NPC 身份、所在实例和服务端距离。 / Validates NPC identity, instance, and server-measured distance. */
+		public NpcProximityEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateNpcSnapshot(npcId, npcObjectId, worldId, instanceId);
+			if (!Float.isFinite(distance) || distance < 0 || distance >= 20) {
+				throw new IllegalArgumentException("NPC proximity distance must be within the fixed server radius");
+			}
+		}
+
+		/** 返回 NPC_PROXIMITY 类型。 / Returns the NPC_PROXIMITY type. */
+		@Override
+		public EventType type() {
+			return EventType.NPC_PROXIMITY;
+		}
+
+		/** 返回邻近 NPC 模板路由键。 / Returns the proximity NPC template route key. */
+		@Override
+		public int targetId() {
+			return npcId;
+		}
+	}
+
+	/** 表示护送 NPC 已由服务端检查器确认到达当前任务目标。 / Represents server-confirmed escort arrival for the current quest owner. */
+	record EscortReachedTargetEvent(String eventId, int playerId, long occurredAt, int questId, int npcId, int npcObjectId,
+			int worldId, int instanceId) implements QuestGraphEvent {
+		/** 校验任务 owner 与护送 NPC 快照。 / Validates the quest owner and escort NPC snapshot. */
+		public EscortReachedTargetEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateQuestNpcSnapshot(questId, npcId, npcObjectId, worldId, instanceId);
+		}
+
+		/** 返回 ESCORT_REACHED_TARGET 类型。 / Returns the ESCORT_REACHED_TARGET type. */
+		@Override
+		public EventType type() {
+			return EventType.ESCORT_REACHED_TARGET;
+		}
+
+		/** 返回显式目标任务 owner。 / Returns the explicit target quest owner. */
+		@Override
+		public int targetId() {
+			return questId;
+		}
+	}
+
+	/** 表示护送 NPC 已由服务端检查器判定丢失当前任务目标。 / Represents server-confirmed escort target loss for the current quest owner. */
+	record EscortLostTargetEvent(String eventId, int playerId, long occurredAt, int questId, int npcId, int npcObjectId,
+			int worldId, int instanceId) implements QuestGraphEvent {
+		/** 校验任务 owner 与护送 NPC 快照。 / Validates the quest owner and escort NPC snapshot. */
+		public EscortLostTargetEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateQuestNpcSnapshot(questId, npcId, npcObjectId, worldId, instanceId);
+		}
+
+		/** 返回 ESCORT_LOST_TARGET 类型。 / Returns the ESCORT_LOST_TARGET type. */
+		@Override
+		public EventType type() {
+			return EventType.ESCORT_LOST_TARGET;
+		}
+
+		/** 返回显式目标任务 owner。 / Returns the explicit target quest owner. */
+		@Override
+		public int targetId() {
+			return questId;
+		}
+	}
+
 	/**
 	 * 校验所有事件共享的字段。
 	 * Validates fields shared by all events.
@@ -498,6 +568,22 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		if (worldId <= 0 || instanceId <= 0) {
 			throw new IllegalArgumentException("Event world and instance ids must be positive");
 		}
+	}
+
+	/** 校验 NPC 模板、对象及所在实例标识。 / Validates NPC template, object, and containing-instance identifiers. */
+	private static void validateNpcSnapshot(int npcId, int npcObjectId, int worldId, int instanceId) {
+		if (npcId <= 0 || npcObjectId <= 0) {
+			throw new IllegalArgumentException("NPC event template and object ids must be positive");
+		}
+		validateWorldInstance(worldId, instanceId);
+	}
+
+	/** 校验任务 owner 与 NPC 快照。 / Validates a quest owner together with an NPC snapshot. */
+	private static void validateQuestNpcSnapshot(int questId, int npcId, int npcObjectId, int worldId, int instanceId) {
+		if (questId <= 0) {
+			throw new IllegalArgumentException("Escort event target quest id must be positive");
+		}
+		validateNpcSnapshot(npcId, npcObjectId, worldId, instanceId);
 	}
 
 	/**

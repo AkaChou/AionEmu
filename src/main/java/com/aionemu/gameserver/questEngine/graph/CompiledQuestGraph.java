@@ -63,7 +63,10 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		LEVEL_UP,
 		PLAYER_LOGOUT,
 		QUEST_TIMER_ENDED,
-		MOVIE_ENDED
+		MOVIE_ENDED,
+		NPC_PROXIMITY,
+		ESCORT_REACHED_TARGET,
+		ESCORT_LOST_TARGET
 	}
 
 	/**

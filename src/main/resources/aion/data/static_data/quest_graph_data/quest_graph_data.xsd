@@ -204,6 +204,14 @@
 		<xs:attribute name="movie_id" type="questGraphMovieId" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphNpcProximityEvent">
+		<xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphEscortReachedTargetEvent"/>
+
+	<xs:complexType name="questGraphEscortLostTargetEvent"/>
+
 	<xs:complexType name="questGraphQuestStatusCondition">
 		<xs:attribute name="quest_id" type="xs:positiveInteger"/>
 		<xs:attribute name="op" type="questGraphSetComparison" use="required"/>
@@ -462,6 +470,9 @@
 					<xs:element name="player-logout" type="questGraphPlayerLogoutEvent"/>
 					<xs:element name="quest-timer-ended" type="questGraphQuestTimerEndedEvent"/>
 					<xs:element name="movie-ended" type="questGraphMovieEndedEvent"/>
+					<xs:element name="npc-proximity" type="questGraphNpcProximityEvent"/>
+					<xs:element name="escort-reached-target" type="questGraphEscortReachedTargetEvent"/>
+					<xs:element name="escort-lost-target" type="questGraphEscortLostTargetEvent"/>
 			</xs:choice>
 			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
 			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>

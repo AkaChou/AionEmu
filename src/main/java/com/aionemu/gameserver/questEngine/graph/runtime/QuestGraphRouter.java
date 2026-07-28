@@ -23,6 +23,9 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEven
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.LevelUpEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcProximityEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortReachedTargetEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.EscortLostTargetEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -181,6 +184,9 @@ public final class QuestGraphRouter {
 				case PlayerLogoutEvent playerLogout -> matchesTarget(playerLogout, route);
 				case QuestTimerEndedEvent timerEnded -> matchesQualifiedTarget(timerEnded, timerEnded.timer(), route);
 				case MovieEndedEvent movieEnded -> matchesTarget(movieEnded, route);
+				case NpcProximityEvent proximity -> matchesTarget(proximity, route);
+				case EscortReachedTargetEvent reached -> matchesTarget(reached, route);
+				case EscortLostTargetEvent lost -> matchesTarget(lost, route);
 			};
 	}
 
