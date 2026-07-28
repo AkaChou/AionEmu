@@ -48,7 +48,10 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 */
 	public enum EventType {
 		DIALOG,
-		KILL
+		KILL,
+		ATTACK,
+		PLAYER_DEATH,
+		KILL_IN_WORLD
 	}
 
 	/**

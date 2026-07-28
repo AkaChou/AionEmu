@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.graph.runtime;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +14,10 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRout
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Propagation;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.AttackEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RoutingPolicy;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
@@ -42,11 +47,28 @@ public final class QuestGraphRouter {
 		Objects.requireNonNull(event, "event");
 		Objects.requireNonNull(playerStates, "playerStates");
 		Objects.requireNonNull(evaluator, "evaluator");
-		List<EventRoute> routes = graphData.eventIndex().getOrDefault(event.eventKey(), List.of());
+		List<EventRoute> routes = routes(event);
 		return switch (event.routingPolicy()) {
 			case EXCLUSIVE -> dispatchExclusive(event, playerStates, routes, evaluator);
 			case BROADCAST -> dispatchBroadcast(event, playerStates, routes, evaluator);
 		};
+	}
+
+	/**
+	 * 返回精确路由，并为世界击杀合并显式 wildcard=0 路由且保持稳定优先级。
+	 * Returns exact routes and merges explicit wildcard-zero world-kill routes in stable priority order.
+	 */
+	private List<EventRoute> routes(QuestGraphEvent event) {
+		List<EventRoute> exact = graphData.eventIndex().getOrDefault(event.eventKey(), List.of());
+		if (!(event instanceof KillInWorldEvent killInWorld) || killInWorld.worldId() == 0) {
+			return exact;
+		}
+		List<EventRoute> merged = new ArrayList<>(exact);
+		merged.addAll(graphData.eventIndex().getOrDefault(
+			new com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey(event.type(), 0), List.of()));
+		merged.sort(Comparator.comparingInt((EventRoute route) -> route.transition().priority())
+			.thenComparingInt(EventRoute::questId).thenComparing(route -> route.transition().id()));
+		return merged;
 	}
 
 	/**
@@ -129,6 +151,12 @@ public final class QuestGraphRouter {
 				&& route.transition().event().dialog().equals(dialog.dialog());
 			case KillEvent kill -> route.transition().event().type() == kill.type()
 				&& route.transition().event().npcId() == kill.npcId();
+			case AttackEvent attack -> route.transition().event().type() == attack.type()
+				&& route.transition().event().npcId() == attack.npcId();
+			case PlayerDeathEvent death -> route.transition().event().type() == death.type()
+				&& route.transition().event().npcId() == 0;
+			case KillInWorldEvent killInWorld -> route.transition().event().type() == killInWorld.type()
+				&& (route.transition().event().npcId() == killInWorld.worldId() || route.transition().event().npcId() == 0);
 		};
 	}
 

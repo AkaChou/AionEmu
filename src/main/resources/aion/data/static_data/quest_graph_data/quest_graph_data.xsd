@@ -140,6 +140,16 @@
 		<xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphAttackEvent">
+		<xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphPlayerDeathEvent"/>
+
+	<xs:complexType name="questGraphKillInWorldEvent">
+		<xs:attribute name="world_id" type="xs:nonNegativeInteger" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphQuestStatusCondition">
 		<xs:attribute name="quest_id" type="xs:positiveInteger"/>
 		<xs:attribute name="op" type="questGraphSetComparison" use="required"/>
@@ -383,6 +393,9 @@
 			<xs:choice>
 				<xs:element name="dialog" type="questGraphDialogEvent"/>
 				<xs:element name="kill" type="questGraphKillEvent"/>
+				<xs:element name="attack" type="questGraphAttackEvent"/>
+				<xs:element name="player-death" type="questGraphPlayerDeathEvent"/>
+				<xs:element name="kill-in-world" type="questGraphKillInWorldEvent"/>
 			</xs:choice>
 			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
 			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>

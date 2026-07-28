@@ -199,7 +199,10 @@ public final class QuestGraphData {
 		 */
 		@XmlElements({
 			@XmlElement(name = "dialog", type = DialogEventData.class, required = true),
-			@XmlElement(name = "kill", type = KillEventData.class, required = true)
+			@XmlElement(name = "kill", type = KillEventData.class, required = true),
+			@XmlElement(name = "attack", type = AttackEventData.class, required = true),
+			@XmlElement(name = "player-death", type = PlayerDeathEventData.class, required = true),
+			@XmlElement(name = "kill-in-world", type = KillInWorldEventData.class, required = true)
 		})
 		private Object event;
 		/**
@@ -266,6 +269,29 @@ public final class QuestGraphData {
 		 */
 		@XmlAttribute(name = "npc_id", required = true)
 		private Integer npcId;
+	}
+
+	/** 表示 NPC 受攻击事件的 XML 路由参数。 / Represents XML routing parameters for an NPC attack event. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class AttackEventData {
+		/** 受攻击 NPC 标识。 / Attacked NPC identifier. */
+		@XmlAttribute(name = "npc_id", required = true)
+		private Integer npcId;
+	}
+
+	/** 表示当前玩家死亡事件；无客户端参数。 / Represents current-player death without client parameters. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class PlayerDeathEventData {
+	}
+
+	/** 表示指定世界中的玩家击杀事件。 / Represents a player kill in a specified world. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class KillInWorldEventData {
+		/** 世界标识；0 表示旧注册的显式 wildcard。 / World identifier; zero is the legacy explicit wildcard. */
+		@XmlAttribute(name = "world_id", required = true)
+		private Integer worldId;
 	}
 
 	/**

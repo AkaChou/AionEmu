@@ -1,7 +1,10 @@
 package com.aionemu.gameserver.questEngine.graph;
 
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DIALOG;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ATTACK;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL_IN_WORLD;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_DEATH;
 
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -83,6 +86,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.WeeklyRepeatD
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AttackEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddCompletionCountActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddQuestVariableActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CloseDialogActionData;
@@ -91,12 +95,14 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EndQuestTimerActi
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GiveQuestItemActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillInWorldEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerGenderConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerEquippedConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerInventoryConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerDeathEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerLevelConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerRaceConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerTitleConditionData;
@@ -424,6 +430,21 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " kill references missing NPC " + kill.getNpcId());
 			}
 			return new Event(KILL, kill.getNpcId(), null);
+		}
+		if (source instanceof AttackEventData attack) {
+			if (attack.getNpcId() == null || attack.getNpcId() <= 0 || !references.npcIds().contains(attack.getNpcId())) {
+				throw new IllegalArgumentException("Quest " + questId + " attack references missing NPC " + attack.getNpcId());
+			}
+			return new Event(ATTACK, attack.getNpcId(), null);
+		}
+		if (source instanceof PlayerDeathEventData) {
+			return new Event(PLAYER_DEATH, 0, null);
+		}
+		if (source instanceof KillInWorldEventData killInWorld) {
+			if (killInWorld.getWorldId() == null || killInWorld.getWorldId() < 0) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid kill-in-world event");
+			}
+			return new Event(KILL_IN_WORLD, killInWorld.getWorldId(), null);
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
 	}

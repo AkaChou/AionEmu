@@ -8,7 +8,10 @@ import java.io.EOFException;
 import java.io.IOException;
 
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.AttackEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 
 /**
  * 使用有界、版本化二进制格式持久化类型化任务图事件。
@@ -20,6 +23,9 @@ public final class QuestGraphEventCodec {
 	private static final int MAX_PAYLOAD = 128 * 1024;
 	private static final byte DIALOG = 1;
 	private static final byte KILL = 2;
+	private static final byte ATTACK = 3;
+	private static final byte PLAYER_DEATH = 4;
+	private static final byte KILL_IN_WORLD = 5;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -48,6 +54,24 @@ public final class QuestGraphEventCodec {
 						output.writeByte(KILL);
 						writeCommon(output, kill);
 						output.writeInt(kill.npcId());
+					}
+					case AttackEvent attack -> {
+						output.writeByte(ATTACK);
+						writeCommon(output, attack);
+						output.writeInt(attack.npcId());
+						output.writeLong(attack.currentHp());
+						output.writeLong(attack.maximumHp());
+					}
+					case PlayerDeathEvent death -> {
+						output.writeByte(PLAYER_DEATH);
+						writeCommon(output, death);
+					}
+					case KillInWorldEvent killInWorld -> {
+						output.writeByte(KILL_IN_WORLD);
+						writeCommon(output, killInWorld);
+						output.writeInt(killInWorld.worldId());
+						output.writeInt(killInWorld.victimPlayerId());
+						output.writeInt(killInWorld.victimLevel());
 					}
 				}
 			}
@@ -79,7 +103,10 @@ public final class QuestGraphEventCodec {
 			long occurredAt = input.readLong();
 			QuestGraphEvent event = switch (type) {
 				case DIALOG -> new DialogEvent(eventId, playerId, occurredAt, input.readInt(), input.readUTF());
-				case KILL -> new KillEvent(eventId, playerId, occurredAt, input.readInt());
+					case KILL -> new KillEvent(eventId, playerId, occurredAt, input.readInt());
+					case ATTACK -> new AttackEvent(eventId, playerId, occurredAt, input.readInt(), input.readLong(), input.readLong());
+					case PLAYER_DEATH -> new PlayerDeathEvent(eventId, playerId, occurredAt);
+					case KILL_IN_WORLD -> new KillInWorldEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(), input.readInt());
 				default -> throw new IllegalArgumentException("Unknown quest graph event tag " + type);
 			};
 			if (input.read() != -1) {
@@ -106,4 +133,3 @@ public final class QuestGraphEventCodec {
 		output.writeLong(event.occurredAt());
 	}
 }
-

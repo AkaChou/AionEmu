@@ -22,7 +22,10 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphCompiler;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Propagation;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.AttackEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
@@ -128,6 +131,12 @@ class QuestGraphRouterTest {
 		KillEvent kill = new KillEvent("kill", 8, 3001, 100);
 		assertEquals(dialog, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(dialog)));
 		assertEquals(kill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(kill)));
+		AttackEvent attack = new AttackEvent("attack", 7, 3002, 100, 40, 100);
+		PlayerDeathEvent death = new PlayerDeathEvent("death", 7, 3003);
+		KillInWorldEvent worldKill = new KillInWorldEvent("world-kill", 7, 3004, 400010000, 8, 65);
+		assertEquals(attack, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(attack)));
+		assertEquals(death, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(death)));
+		assertEquals(worldKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldKill)));
 
 		byte[] encoded = QuestGraphEventCodec.encode(kill);
 		byte[] unknown = Arrays.copyOf(encoded, encoded.length);
@@ -139,11 +148,39 @@ class QuestGraphRouterTest {
 			() -> QuestGraphEventCodec.decode(Arrays.copyOf(encoded, encoded.length + 1)));
 	}
 
+	/**
+	 * 验证 combat 事件广播、服务器快照和 world wildcard 路由。
+	 * Verifies combat-event broadcast, server snapshots, and world-wildcard routing.
+	 */
+	@Test
+	void combatEventsUseTypedBroadcastRoutes() {
+		assertEquals(List.of("attack-q1"), visited(new AttackEvent("attack", 7, 4000, 100, 40, 100)));
+		assertEquals(List.of("death-q1"), visited(new PlayerDeathEvent("death", 7, 4001)));
+		assertEquals(List.of("world-wildcard-q2", "world-exact-q1"),
+			visited(new KillInWorldEvent("world", 7, 4002, 400010000, 8, 65)));
+		assertThrows(IllegalArgumentException.class, () -> new AttackEvent("attack", 7, 4003, 100, 101, 100));
+		assertThrows(IllegalArgumentException.class, () -> new KillInWorldEvent("world", 7, 4004, 1, 7, 65));
+	}
+
+	/** 返回广播访问的转换标识。 / Returns transition identifiers visited by a broadcast event. */
+	private List<String> visited(QuestGraphEvent event) {
+		List<String> visited = new ArrayList<>();
+		DispatchResult result = router.dispatch(event, new PlayerQuestGraphStateList(), match -> {
+			visited.add(match.route().transition().id());
+			return Status.APPLIED;
+		});
+		assertEquals(new DispatchResult(Status.APPLIED, Propagation.CONTINUE), result);
+		return visited;
+	}
+
 	private static String document() {
 		return """
 			<quest_graphs>
 				<quest_graph quest_id="1" version="1" scope="PLAYER" initial_node="start">
 					<node id="start">
+						%s
+						%s
+						%s
 						%s
 						%s
 						%s
@@ -154,12 +191,17 @@ class QuestGraphRouterTest {
 					<node id="start">
 						%s
 						%s
+						%s
 					</node>
 					<node id="done" terminal="true"/>
 				</quest_graph>
 			</quest_graphs>
 			""".formatted(dialogTransition("dialog-q1", 20), killTransition("kill-first", 15), killTransition("kill-second", 25),
-			dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5));
+			combatTransition("attack-q1", 10, "<attack npc_id=\"100\"/>"),
+			combatTransition("death-q1", 10, "<player-death/>"),
+			combatTransition("world-exact-q1", 20, "<kill-in-world world_id=\"400010000\"/>"),
+			dialogTransition("dialog-q2", 10), killTransition("kill-q2", 5),
+			combatTransition("world-wildcard-q2", 10, "<kill-in-world world_id=\"0\"/>"));
 	}
 
 	private static String dialogTransition(String id, int priority) {
@@ -176,5 +218,10 @@ class QuestGraphRouterTest {
 				<kill npc_id="100"/>
 			</transition>
 			""".formatted(id, priority);
+	}
+
+	/** 创建聚焦 combat 路由转换。 / Creates a focused combat route transition. */
+	private static String combatTransition(String id, int priority, String event) {
+		return "<transition id=\"%s\" priority=\"%d\" to=\"done\">%s</transition>".formatted(id, priority, event);
 	}
 }

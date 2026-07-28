@@ -7,7 +7,8 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
  * 定义不持有游戏对象引用的不可变任务图事件。
  * Defines an immutable quest graph event that holds no game-object references.
  */
-public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, QuestGraphEvent.KillEvent {
+public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, QuestGraphEvent.KillEvent, QuestGraphEvent.AttackEvent,
+	QuestGraphEvent.PlayerDeathEvent, QuestGraphEvent.KillInWorldEvent {
 
 	/**
 	 * 定义由事件类型固定的候选传播策略。
@@ -40,7 +41,7 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	default RoutingPolicy routingPolicy() {
 		return switch (type()) {
 			case DIALOG -> RoutingPolicy.EXCLUSIVE;
-			case KILL -> RoutingPolicy.BROADCAST;
+			case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD -> RoutingPolicy.BROADCAST;
 		};
 	}
 
@@ -111,6 +112,73 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		}
 	}
 
+	/** 表示服务器观察到的 NPC 受攻击快照。 / Represents a server-observed NPC attack snapshot. */
+	record AttackEvent(String eventId, int playerId, long occurredAt, int npcId, long currentHp, long maximumHp) implements QuestGraphEvent {
+		/** 校验攻击者、NPC 和服务端生命值快照。 / Validates attacker, NPC, and server-side health snapshot. */
+		public AttackEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			if (npcId <= 0 || currentHp < 0 || maximumHp <= 0 || currentHp > maximumHp) {
+				throw new IllegalArgumentException("Attack event NPC/health snapshot is invalid");
+			}
+		}
+
+		/** 返回 ATTACK 类型。 / Returns the ATTACK type. */
+		@Override
+		public EventType type() {
+			return EventType.ATTACK;
+		}
+
+		/** 返回受攻击 NPC 标识。 / Returns the attacked NPC identifier. */
+		@Override
+		public int targetId() {
+			return npcId;
+		}
+	}
+
+	/** 表示服务器观察到的当前玩家死亡。 / Represents a server-observed death of the current player. */
+	record PlayerDeathEvent(String eventId, int playerId, long occurredAt) implements QuestGraphEvent {
+		/** 校验玩家死亡事件公共字段。 / Validates common player-death fields. */
+		public PlayerDeathEvent {
+			validateCommon(eventId, playerId, occurredAt);
+		}
+
+		/** 返回 PLAYER_DEATH 类型。 / Returns the PLAYER_DEATH type. */
+		@Override
+		public EventType type() {
+			return EventType.PLAYER_DEATH;
+		}
+
+		/** 玩家死亡使用固定全局路由键 0。 / Player death uses the fixed global route key zero. */
+		@Override
+		public int targetId() {
+			return 0;
+		}
+	}
+
+	/** 表示服务器确认的指定世界玩家击杀快照。 / Represents a server-confirmed player-kill snapshot in a world. */
+	record KillInWorldEvent(String eventId, int playerId, long occurredAt, int worldId, int victimPlayerId, int victimLevel)
+		implements QuestGraphEvent {
+		/** 校验世界、受害者身份和等级。 / Validates world, victim identity, and level. */
+		public KillInWorldEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			if (worldId < 0 || victimPlayerId <= 0 || victimPlayerId == playerId || victimLevel <= 0) {
+				throw new IllegalArgumentException("Kill-in-world event snapshot is invalid");
+			}
+		}
+
+		/** 返回 KILL_IN_WORLD 类型。 / Returns the KILL_IN_WORLD type. */
+		@Override
+		public EventType type() {
+			return EventType.KILL_IN_WORLD;
+		}
+
+		/** 返回世界路由键。 / Returns the world route key. */
+		@Override
+		public int targetId() {
+			return worldId;
+		}
+	}
+
 	/**
 	 * 校验所有事件共享的字段。
 	 * Validates fields shared by all events.
@@ -133,4 +201,3 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		return value;
 	}
 }
-
