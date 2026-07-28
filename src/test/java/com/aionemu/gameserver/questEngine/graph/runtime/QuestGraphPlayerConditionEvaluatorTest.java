@@ -19,6 +19,7 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
+import com.aionemu.gameserver.model.gameobjects.player.Equipment;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.title.TitleList;
@@ -27,12 +28,12 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerEquippedCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerInventoryCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
-import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionInvocation;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
@@ -53,11 +54,11 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	@Test
 	void matchesAllSupportedConditions() throws ReflectiveOperationException {
 		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
-		List<Condition> conditions = List.of(new QuestStatusCondition(START), new PlayerLevelCondition(10, 55),
+		List<Condition> conditions = List.of(new PlayerLevelCondition(10, 55),
 			new PlayerRaceCondition(Set.of(Race.ELYOS)), new PlayerClassCondition(Set.of(PlayerClass.TEMPLAR)),
 			new PlayerGenderCondition(Gender.MALE), new PlayerTitleCondition(42),
 			new PlayerAbyssRankCondition(AbyssRankEnum.STAR1_OFFICER),
-			new PlayerInventoryCondition(182200001, ConditionOperation.GREATER_EQUAL, 3));
+			new PlayerInventoryCondition(182200001, ConditionOperation.GREATER_EQUAL, 3), new PlayerEquippedCondition(182200001));
 
 		for (Condition condition : conditions) {
 			assertEquals(MATCHED, evaluator.evaluate(invocation(condition, EVENT)));
@@ -71,11 +72,10 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	@Test
 	void rejectsEveryMismatchedValue() throws ReflectiveOperationException {
 		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
-		List<Condition> conditions = List.of(new QuestStatusCondition(com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus.REWARD),
-			new PlayerLevelCondition(51, null), new PlayerRaceCondition(Set.of(Race.ASMODIANS)),
+		List<Condition> conditions = List.of(new PlayerLevelCondition(51, null), new PlayerRaceCondition(Set.of(Race.ASMODIANS)),
 			new PlayerClassCondition(Set.of(PlayerClass.GLADIATOR)), new PlayerGenderCondition(Gender.FEMALE),
 			new PlayerTitleCondition(43), new PlayerAbyssRankCondition(AbyssRankEnum.STAR2_OFFICER),
-			new PlayerInventoryCondition(182200001, ConditionOperation.GREATER, 3));
+			new PlayerInventoryCondition(182200001, ConditionOperation.GREATER, 3), new PlayerEquippedCondition(182200002));
 
 		for (Condition condition : conditions) {
 			assertEquals(NOT_MATCHED, evaluator.evaluate(invocation(condition, EVENT)));
@@ -121,6 +121,11 @@ class QuestGraphPlayerConditionEvaluatorTest {
 		setField(Player.class, player, "inventory", null);
 		assertEquals(FAILED, new QuestGraphPlayerConditionEvaluator(player)
 			.evaluate(invocation(new PlayerInventoryCondition(182200001, ConditionOperation.EQUAL, 3), EVENT)));
+
+		player = player();
+		player.setEquipment(null);
+		assertEquals(FAILED, new QuestGraphPlayerConditionEvaluator(player)
+			.evaluate(invocation(new PlayerEquippedCondition(182200001), EVENT)));
 	}
 
 	/**
@@ -155,6 +160,7 @@ class QuestGraphPlayerConditionEvaluatorTest {
 		setField(Player.class, player, "titleList", titleList);
 		setField(Player.class, player, "abyssRank", abyssRank);
 		setField(Player.class, player, "inventory", new TestStorage(Map.of(182200001, 3L)));
+		player.setEquipment(new TestEquipment(player, List.of(182200001)));
 		return player;
 	}
 
@@ -204,6 +210,23 @@ class QuestGraphPlayerConditionEvaluatorTest {
 		@Override
 		public long getItemCountByItemId(int itemId) {
 			return itemCounts.getOrDefault(itemId, 0L);
+		}
+	}
+
+	/** 提供稳定已装备物品 ID 的最小 fixture。 / Provides a minimal fixture with stable equipped item ids. */
+	private static final class TestEquipment extends Equipment {
+		private final List<Integer> itemIds;
+
+		/** 创建已装备物品快照。 / Creates an equipped-item snapshot. */
+		private TestEquipment(Player player, List<Integer> itemIds) {
+			super(player);
+			this.itemIds = List.copyOf(itemIds);
+		}
+
+		/** 返回 fixture 已装备物品 ID。 / Returns fixture equipped item ids. */
+		@Override
+		public List<Integer> getEquippedItemIds() {
+			return itemIds;
 		}
 	}
 }

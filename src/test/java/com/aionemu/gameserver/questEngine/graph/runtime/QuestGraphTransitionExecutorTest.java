@@ -34,6 +34,9 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
@@ -48,6 +51,7 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntV
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
+import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 
 /**
  * 验证任务图转换的预检、CAS、journal 推进和恢复重放。
@@ -143,6 +147,48 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(DispatchResult.Status.NO_MATCH, executor.execute(match, context));
 		assertEquals(0, callbacks.get());
 		assertEquals(active, fixture.states().get(1));
+	}
+
+	/**
+	 * 验证跨任务状态、奖励和完成次数只读 canonical 状态，且不可被外部 callback 覆盖。
+	 * Verifies that cross-quest status, reward, and completion count read canonical state and cannot be overridden by callbacks.
+	 */
+	@Test
+	void canonicalPrerequisitesReadOnlyGraphState() {
+		List<Condition> conditions = List.of(new QuestStatusCondition(NONE),
+			new QuestStatusCondition(2, ConditionOperation.IN, Set.of(CompiledQuestGraph.QuestStatus.COMPLETE)),
+			new QuestRewardCondition(2, 1), new QuestCompletionCountCondition(2, ConditionOperation.EQUAL, 3));
+		Fixture matched = fixture(conditions);
+		matched.states().addLoaded(new PlayerQuestGraphState(2, 1, 0, "done", CompiledQuestGraph.QuestStatus.COMPLETE,
+			new QuestHistory(3, 1, 1_700_000_000_000L, null), null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null));
+		AtomicInteger callbacks = new AtomicInteger();
+		TransitionContext matchedContext = new TransitionContext(7, matched.states(), invocation -> {
+			callbacks.incrementAndGet();
+			return NOT_MATCHED;
+		}, invocation -> READY, invocation -> APPLIED, (expected, state) -> PersistenceResult.APPLIED);
+
+		assertEquals(DispatchResult.Status.APPLIED, executor.execute(matched.match(), matchedContext));
+		assertEquals(0, callbacks.get());
+
+		Fixture missingReward = fixture(List.of(new QuestStatusCondition(NONE), new QuestRewardCondition(2, 0)));
+		assertEquals(DispatchResult.Status.NO_MATCH, executor.execute(missingReward.match(),
+			new TransitionContext(7, missingReward.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+				(expected, state) -> PersistenceResult.APPLIED)));
+
+		Fixture missingQuest = fixture(List.of(new QuestStatusCondition(NONE),
+			new QuestStatusCondition(2, ConditionOperation.IN, Set.of(NONE, CompiledQuestGraph.QuestStatus.LOCKED)),
+			new QuestCompletionCountCondition(2, ConditionOperation.EQUAL, 0)));
+		assertEquals(DispatchResult.Status.APPLIED, executor.execute(missingQuest.match(),
+			new TransitionContext(7, missingQuest.states(), invocation -> NOT_MATCHED, invocation -> READY, invocation -> APPLIED,
+				(expected, state) -> PersistenceResult.APPLIED)));
+
+		Fixture quarantinedQuest = fixture(List.of(new QuestStatusCondition(NONE),
+			new QuestStatusCondition(2, ConditionOperation.IN, Set.of(CompiledQuestGraph.QuestStatus.START))));
+		quarantinedQuest.states().addLoaded(new PlayerQuestGraphState(2, 1, 0, "start", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.QUARANTINED, Map.of(), Map.of(), null, Map.of(), "recovery failed"));
+		assertEquals(DispatchResult.Status.FAILED, executor.execute(quarantinedQuest.match(),
+			new TransitionContext(7, quarantinedQuest.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+				(expected, state) -> PersistenceResult.APPLIED)));
 	}
 
 	/**
@@ -337,10 +383,17 @@ class QuestGraphTransitionExecutorTest {
 	 * Creates a minimal graph fixture with one condition, one action, and one terminal node.
 	 */
 	private static Fixture fixture() {
-		Condition condition = new QuestStatusCondition(NONE);
+		return fixture(List.of(new QuestStatusCondition(NONE), new PlayerLevelCondition(1, null)));
+	}
+
+	/**
+	 * 创建使用指定条件列表的最小图 fixture。
+	 * Creates a minimal graph fixture using the specified condition list.
+	 */
+	private static Fixture fixture(List<Condition> conditions) {
 		Action action = new Action(START_QUEST);
 		Transition transition = new Transition("accept", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"),
-			List.of(condition), List.of(action));
+			conditions, List.of(action));
 		Map<String, CompiledQuestGraph.Variable> variables = new LinkedHashMap<>();
 		variables.put("count", new IntVariable("count", PLAYER, 2, 0, 5));
 		variables.put("enabled", new BooleanVariable("enabled", PLAYER, false));

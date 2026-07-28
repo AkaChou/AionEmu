@@ -51,13 +51,18 @@ class QuestGraphCompilerTest {
 		assertEquals(CompiledQuestGraph.EventType.DIALOG, graph.nodes().get("b").transitions().getFirst().event().type());
 		assertEquals(List.of(
 			new CompiledQuestGraph.QuestStatusCondition(CompiledQuestGraph.QuestStatus.NONE),
+			new CompiledQuestGraph.QuestStatusCondition(2, ConditionOperation.IN,
+				Set.of(CompiledQuestGraph.QuestStatus.COMPLETE)),
+			new CompiledQuestGraph.QuestRewardCondition(2, 1),
+			new CompiledQuestGraph.QuestCompletionCountCondition(2, ConditionOperation.EQUAL, 3),
 			new CompiledQuestGraph.PlayerLevelCondition(10, 55),
 			new CompiledQuestGraph.PlayerRaceCondition(Set.of(Race.ELYOS, Race.ASMODIANS)),
 			new CompiledQuestGraph.PlayerClassCondition(Set.of(PlayerClass.GLADIATOR, PlayerClass.TEMPLAR)),
 			new CompiledQuestGraph.PlayerGenderCondition(Gender.MALE),
 			new CompiledQuestGraph.PlayerTitleCondition(42),
 			new CompiledQuestGraph.PlayerAbyssRankCondition(AbyssRankEnum.STAR1_OFFICER),
-			new CompiledQuestGraph.PlayerInventoryCondition(182200001, ConditionOperation.GREATER_EQUAL, 1)),
+			new CompiledQuestGraph.PlayerInventoryCondition(182200001, ConditionOperation.GREATER_EQUAL, 1),
+			new CompiledQuestGraph.PlayerEquippedCondition(182200001)),
 			graph.nodes().get("b").transitions().getFirst().conditions());
 		assertEquals(CompiledQuestGraph.ActionType.START_QUEST,
 			graph.nodes().get("b").transitions().getFirst().actions().getFirst().type());
@@ -73,7 +78,7 @@ class QuestGraphCompilerTest {
 	@Test
 	void schemaRejectsUnknownElementsCapabilitiesAndMissingRequiredAttributes() throws Exception {
 		CompiledQuestGraph locked = load(document(graph(1, "offer",
-			transition("accept", 10, "done").replace("value=\"NONE\"", "value=\"LOCKED\""), terminal()))).graphs().get(1);
+			transition("accept", 10, "done").replace("values=\"NONE\"", "values=\"LOCKED\""), terminal()))).graphs().get(1);
 		assertEquals(new CompiledQuestGraph.QuestStatusCondition(CompiledQuestGraph.QuestStatus.LOCKED),
 			locked.nodes().get("offer").transitions().getFirst().conditions().getFirst());
 		assertThrows(IllegalArgumentException.class, () -> load("<quest_graphs><script/></quest_graphs>"));
@@ -94,6 +99,8 @@ class QuestGraphCompilerTest {
 			transition("accept", 10, "done").replace("minimum=\"10\"", "minimum=\"19\""), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("op=\"GREATER_EQUAL\"", "op=\"IN\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("op=\"IN\" values=\"NONE\"", "op=\"EQUAL\" values=\"NONE\""), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("count=\"1\"", "count=\"-1\""), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
@@ -156,12 +163,16 @@ class QuestGraphCompilerTest {
 		assertCauseContains(missingKillNpc, "kill references missing NPC 203709");
 		IllegalArgumentException missingTitle = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
-				new QuestGraphCompiler.References(Set.of(1), Set.of(203709), Set.of(182200001), Set.of())));
+				new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709), Set.of(182200001), Set.of())));
 		assertCauseContains(missingTitle, "references missing title 42");
 		IllegalArgumentException missingItem = assertThrows(IllegalArgumentException.class,
 			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
-				new QuestGraphCompiler.References(Set.of(1), Set.of(203709), Set.of(), Set.of(42))));
+				new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709), Set.of(), Set.of(42))));
 		assertCauseContains(missingItem, "references missing item 182200001");
+		IllegalArgumentException missingPrerequisiteQuest = assertThrows(IllegalArgumentException.class,
+			() -> load(document(graph(1, "offer", transition("accept", 10, "done"), terminal())),
+				new QuestGraphCompiler.References(Set.of(1), Set.of(203709), Set.of(182200001), Set.of(42))));
+		assertCauseContains(missingPrerequisiteQuest, "references missing quest 2");
 	}
 
 	/**
@@ -170,6 +181,12 @@ class QuestGraphCompilerTest {
 	 */
 	@Test
 	void typedConditionsRejectInvalidDirectConstruction() {
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.QuestStatusCondition(null, ConditionOperation.EQUAL,
+			Set.of(CompiledQuestGraph.QuestStatus.NONE)));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.QuestStatusCondition(null, ConditionOperation.IN, Set.of()));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.QuestRewardCondition(0, 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new CompiledQuestGraph.QuestCompletionCountCondition(1, ConditionOperation.IN, 1));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerLevelCondition(0, null));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerLevelCondition(10, 9));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerRaceCondition(Set.of()));
@@ -182,6 +199,7 @@ class QuestGraphCompilerTest {
 			() -> new CompiledQuestGraph.PlayerInventoryCondition(182200001, ConditionOperation.IN, 1));
 		assertThrows(IllegalArgumentException.class,
 			() -> new CompiledQuestGraph.PlayerInventoryCondition(182200001, ConditionOperation.EQUAL, -1));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerEquippedCondition(0));
 	}
 
 	private CompiledQuestGraphData load(String xml) throws Exception {
@@ -240,7 +258,10 @@ class QuestGraphCompilerTest {
 			<transition id="%s" priority="%d" to="%s">
 				<dialog npc_id="203709" dialog="QUEST_SELECT"/>
 			<conditions>
-				<quest-status value="NONE"/>
+				<quest-status op="IN" values="NONE"/>
+				<quest-status quest_id="2" op="IN" values="COMPLETE"/>
+				<quest-reward quest_id="2" reward_index="1"/>
+				<quest-completion-count quest_id="2" op="EQUAL" count="3"/>
 				<player-level min="10" max="55"/>
 				<player-race values="ELYOS ASMODIANS"/>
 				<player-class values="GLADIATOR TEMPLAR"/>
@@ -248,6 +269,7 @@ class QuestGraphCompilerTest {
 				<player-title title_id="42"/>
 				<player-abyss-rank minimum="10"/>
 				<player-inventory item_id="182200001" op="GREATER_EQUAL" count="1"/>
+				<player-equipped item_id="182200001"/>
 			</conditions>
 				<actions><start-quest/></actions>
 			</transition>

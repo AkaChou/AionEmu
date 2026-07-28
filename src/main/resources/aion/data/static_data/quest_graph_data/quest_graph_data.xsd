@@ -28,6 +28,20 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="questGraphQuestStatusList">
+		<xs:restriction>
+			<xs:simpleType><xs:list itemType="questGraphQuestStatus"/></xs:simpleType>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphSetComparison">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="IN"/>
+			<xs:enumeration value="NOT_IN"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="questGraphPlayerRace">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="ELYOS"/>
@@ -127,7 +141,20 @@
 	</xs:complexType>
 
 	<xs:complexType name="questGraphQuestStatusCondition">
-		<xs:attribute name="value" type="questGraphQuestStatus" use="required"/>
+		<xs:attribute name="quest_id" type="xs:positiveInteger"/>
+		<xs:attribute name="op" type="questGraphSetComparison" use="required"/>
+		<xs:attribute name="values" type="questGraphQuestStatusList" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphQuestRewardCondition">
+		<xs:attribute name="quest_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="reward_index" type="xs:nonNegativeInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphQuestCompletionCountCondition">
+		<xs:attribute name="quest_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="op" type="questGraphNumericComparison" use="required"/>
+		<xs:attribute name="count" type="xs:nonNegativeInteger" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="questGraphPlayerLevelCondition">
@@ -161,11 +188,17 @@
 		<xs:attribute name="count" type="xs:nonNegativeInteger" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphPlayerEquippedCondition">
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphEmptyAction"/>
 
 	<xs:complexType name="questGraphConditions">
 		<xs:choice minOccurs="1" maxOccurs="unbounded">
 			<xs:element name="quest-status" type="questGraphQuestStatusCondition"/>
+			<xs:element name="quest-reward" type="questGraphQuestRewardCondition"/>
+			<xs:element name="quest-completion-count" type="questGraphQuestCompletionCountCondition"/>
 			<xs:element name="player-level" type="questGraphPlayerLevelCondition"/>
 			<xs:element name="player-race" type="questGraphPlayerRaceCondition"/>
 			<xs:element name="player-class" type="questGraphPlayerClassCondition"/>
@@ -173,6 +206,7 @@
 			<xs:element name="player-title" type="questGraphPlayerTitleCondition"/>
 			<xs:element name="player-abyss-rank" type="questGraphPlayerAbyssRankCondition"/>
 			<xs:element name="player-inventory" type="questGraphPlayerInventoryCondition"/>
+			<xs:element name="player-equipped" type="questGraphPlayerEquippedCondition"/>
 		</xs:choice>
 	</xs:complexType>
 

@@ -144,17 +144,82 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Represents a typed condition that must hold before a transition executes.
 	 */
 	public sealed interface Condition permits QuestStatusCondition, PlayerLevelCondition, PlayerRaceCondition, PlayerClassCondition,
-		PlayerGenderCondition, PlayerTitleCondition, PlayerAbyssRankCondition, PlayerInventoryCondition {
+		PlayerGenderCondition, PlayerTitleCondition, PlayerAbyssRankCondition, PlayerInventoryCondition, QuestRewardCondition,
+		QuestCompletionCountCondition, PlayerEquippedCondition {
 	}
 
 	/**
-	 * 要求 canonical 任务状态等于期望值。
-	 * Requires the canonical quest status to equal the expected value.
+	 * 要求当前或指定任务的 canonical 状态位于或不位于显式集合。
+	 * Requires the current or specified quest's canonical status to be in or outside an explicit set.
 	 */
-	public record QuestStatusCondition(QuestStatus expected) implements Condition {
-		/** 校验期望状态。 / Validates the expected status. */
+	public record QuestStatusCondition(Integer questId, ConditionOperation operation, Set<QuestStatus> statuses) implements Condition {
+		/** 校验任务引用、集合操作和状态集。 / Validates the quest reference, set operation, and status set. */
 		public QuestStatusCondition {
-			Objects.requireNonNull(expected, "expected");
+			if (questId != null && questId <= 0 || operation != ConditionOperation.IN && operation != ConditionOperation.NOT_IN
+					|| statuses == null || statuses.isEmpty()) {
+				throw new IllegalArgumentException("Quest status condition is invalid");
+			}
+			statuses = Collections.unmodifiableSet(EnumSet.copyOf(statuses));
+		}
+
+		/**
+		 * 创建当前 owner 的单状态包含条件。
+		 * Creates a single-status inclusion condition for the current owner.
+		 */
+		public QuestStatusCondition(QuestStatus status) {
+			this(null, ConditionOperation.IN, Set.of(status));
+		}
+
+		/**
+		 * 比较实际 canonical 状态与显式状态集。
+		 * Compares an actual canonical status with the explicit status set.
+		 */
+		public boolean matches(QuestStatus actual) {
+			boolean contains = statuses.contains(actual);
+			return operation == ConditionOperation.IN ? contains : !contains;
+		}
+	}
+
+	/**
+	 * 要求指定任务至少完成一次且末次奖励索引匹配。
+	 * Requires the specified quest to have completed at least once with a matching last reward index.
+	 */
+	public record QuestRewardCondition(int questId, int rewardIndex) implements Condition {
+		/** 校验任务引用和奖励索引。 / Validates the quest reference and reward index. */
+		public QuestRewardCondition {
+			if (questId <= 0 || rewardIndex < 0) {
+				throw new IllegalArgumentException("Quest reward condition is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 对指定任务的 canonical 完成次数执行数值比较。
+	 * Applies a numeric comparison to the specified quest's canonical completion count.
+	 */
+	public record QuestCompletionCountCondition(int questId, ConditionOperation operation, int count) implements Condition {
+		/** 校验任务引用、数值操作和完成次数。 / Validates the quest reference, numeric operation, and completion count. */
+		public QuestCompletionCountCondition {
+			if (questId <= 0 || count < 0 || operation == null || operation == ConditionOperation.IN
+					|| operation == ConditionOperation.NOT_IN) {
+				throw new IllegalArgumentException("Quest completion-count condition is invalid");
+			}
+		}
+
+		/**
+		 * 将实际完成次数与配置阈值比较。
+		 * Compares an actual completion count with the configured operand.
+		 */
+		public boolean matches(int actual) {
+			return switch (operation) {
+				case EQUAL -> actual == count;
+				case GREATER -> actual > count;
+				case GREATER_EQUAL -> actual >= count;
+				case LESSER -> actual < count;
+				case LESSER_EQUAL -> actual <= count;
+				case NOT_EQUAL -> actual != count;
+				case IN, NOT_IN -> throw new IllegalStateException("Set operation is invalid for a completion count");
+			};
 		}
 	}
 
@@ -254,6 +319,19 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 			if (itemId <= 0 || count < 0 || operation == null || operation == ConditionOperation.IN
 					|| operation == ConditionOperation.NOT_IN) {
 				throw new IllegalArgumentException("Player inventory condition is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 要求玩家当前装备指定物品。
+	 * Requires the player to have the specified item currently equipped.
+	 */
+	public record PlayerEquippedCondition(int itemId) implements Condition {
+		/** 校验装备物品引用。 / Validates the equipped-item reference. */
+		public PlayerEquippedCondition {
+			if (itemId <= 0) {
+				throw new IllegalArgumentException("Player equipped condition id is invalid");
 			}
 		}
 	}

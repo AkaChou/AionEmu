@@ -276,30 +276,70 @@ public final class QuestGraphData {
 	public static final class ConditionsData {
 		@XmlElements({
 			@XmlElement(name = "quest-status", type = QuestStatusConditionData.class),
+			@XmlElement(name = "quest-reward", type = QuestRewardConditionData.class),
+			@XmlElement(name = "quest-completion-count", type = QuestCompletionCountConditionData.class),
 			@XmlElement(name = "player-level", type = PlayerLevelConditionData.class),
 			@XmlElement(name = "player-race", type = PlayerRaceConditionData.class),
 			@XmlElement(name = "player-class", type = PlayerClassConditionData.class),
 			@XmlElement(name = "player-gender", type = PlayerGenderConditionData.class),
 			@XmlElement(name = "player-title", type = PlayerTitleConditionData.class),
 			@XmlElement(name = "player-abyss-rank", type = PlayerAbyssRankConditionData.class),
-			@XmlElement(name = "player-inventory", type = PlayerInventoryConditionData.class)
+			@XmlElement(name = "player-inventory", type = PlayerInventoryConditionData.class),
+			@XmlElement(name = "player-equipped", type = PlayerEquippedConditionData.class)
 		})
 		private List<Object> values = new ArrayList<>();
 	}
 
 	/**
-	 * 表示任务状态条件的 XML 参数。
-	 * Represents XML parameters for a quest-status condition.
+	 * 表示当前或指定任务状态集合条件的 XML 参数。
+	 * Represents XML parameters for a current- or referenced-quest status-set condition.
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@Getter
 	public static final class QuestStatusConditionData {
-		/**
-		 * 期望的任务状态名称。
-		 * Expected quest status name.
-		 */
+		/** 可选目标任务 ID；缺失时使用当前 owner。 / Optional target quest id; current owner when absent. */
+		@XmlAttribute(name = "quest_id")
+		private Integer questId;
+		/** 状态集合比较操作。 / Status-set comparison operation. */
+		@XmlAttribute(name = "op", required = true)
+		private ConditionOperation operation;
+		/** 空格分隔的显式状态集。 / Space-separated explicit status set. */
+		@XmlList
+		@XmlAttribute(name = "values", required = true)
+		private List<String> statuses = new ArrayList<>();
+	}
+
+	/**
+	 * 表示指定任务末次奖励索引条件的 XML 参数。
+	 * Represents XML parameters for a referenced quest's last reward-index condition.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class QuestRewardConditionData {
+		/** 目标任务 ID。 / Target quest id. */
+		@XmlAttribute(name = "quest_id", required = true)
+		private Integer questId;
+		/** 期望的末次奖励索引。 / Expected last reward index. */
+		@XmlAttribute(name = "reward_index", required = true)
+		private Integer rewardIndex;
+	}
+
+	/**
+	 * 表示指定任务完成次数比较的 XML 参数。
+	 * Represents XML parameters for a referenced quest's completion-count comparison.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class QuestCompletionCountConditionData {
+		/** 目标任务 ID。 / Target quest id. */
+		@XmlAttribute(name = "quest_id", required = true)
+		private Integer questId;
+		/** 数值比较操作。 / Numeric comparison operation. */
+		@XmlAttribute(name = "op", required = true)
+		private ConditionOperation operation;
+		/** 比较的完成次数。 / Completion-count operand. */
 		@XmlAttribute(required = true)
-		private String value;
+		private Integer count;
 	}
 
 	/**
@@ -395,6 +435,18 @@ public final class QuestGraphData {
 		/** 比较阈值。 / Comparison threshold. */
 		@XmlAttribute(required = true)
 		private Long count;
+	}
+
+	/**
+	 * 表示玩家当前已装备物品条件的 XML 参数。
+	 * Represents XML parameters for an item currently equipped by the player.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayerEquippedConditionData {
+		/** 必须已装备的物品模板 ID。 / Item template id that must be equipped. */
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
 	}
 
 	/**

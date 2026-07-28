@@ -3,11 +3,14 @@ package com.aionemu.gameserver.questEngine.graph.runtime;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerEquippedCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerInventoryCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionInvocation;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionResult;
@@ -17,8 +20,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 只读评估 canonical 任务状态和玩家静态接取资格条件。
- * Read-only evaluator for canonical quest status and static player start-eligibility conditions.
+ * 只读评估玩家静态接取资格条件；canonical 任务状态由转换执行器评估。
+ * Read-only evaluator for static player eligibility; canonical quest state is evaluated by the transition executor.
  */
 @RequiredArgsConstructor
 public final class QuestGraphPlayerConditionEvaluator {
@@ -37,7 +40,10 @@ public final class QuestGraphPlayerConditionEvaluator {
 		}
 		try {
 			boolean matched = switch (invocation.condition()) {
-				case QuestStatusCondition condition -> condition.expected() == invocation.questStatus();
+				case QuestStatusCondition condition -> throw new IllegalArgumentException("Quest status must be evaluated by the transition executor");
+				case QuestRewardCondition condition -> throw new IllegalArgumentException("Quest reward must be evaluated by the transition executor");
+				case QuestCompletionCountCondition condition -> throw new IllegalArgumentException(
+					"Quest completion count must be evaluated by the transition executor");
 				case PlayerLevelCondition condition -> player.getLevel() >= condition.min()
 					&& (condition.max() == null || player.getLevel() <= condition.max());
 				case PlayerRaceCondition condition -> condition.allowed().contains(player.getRace());
@@ -47,6 +53,7 @@ public final class QuestGraphPlayerConditionEvaluator {
 				case PlayerAbyssRankCondition condition -> player.getAbyssRank().getRank().getId() >= condition.minimum().getId();
 				case PlayerInventoryCondition condition -> compare(player.getInventory().getItemCountByItemId(condition.itemId()),
 					condition.operation(), condition.count());
+				case PlayerEquippedCondition condition -> player.getEquipment().getEquippedItemIds().contains(condition.itemId());
 			};
 			return matched ? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
 		} catch (RuntimeException e) {

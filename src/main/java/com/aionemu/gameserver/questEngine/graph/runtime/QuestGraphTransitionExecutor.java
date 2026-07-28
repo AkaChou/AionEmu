@@ -12,6 +12,8 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariab
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
@@ -221,8 +223,15 @@ public final class QuestGraphTransitionExecutor {
 	private static Status evaluateConditions(Match match, TransitionContext context) {
 		QuestStatus questStatus = match.state() == null ? QuestStatus.NONE : match.state().getQuestStatus();
 		for (Condition condition : match.route().transition().conditions()) {
-			if (condition instanceof QuestStatusCondition statusCondition && statusCondition.expected() != questStatus) {
-				return Status.NO_MATCH;
+			ConditionResult canonicalResult = evaluateCanonicalCondition(condition, match.graph().questId(), context.states());
+			if (canonicalResult != null) {
+				if (canonicalResult == ConditionResult.NOT_MATCHED) {
+					return Status.NO_MATCH;
+				}
+				if (canonicalResult == ConditionResult.FAILED) {
+					return Status.FAILED;
+				}
+				continue;
 			}
 			ConditionResult result;
 			try {
@@ -239,6 +248,40 @@ public final class QuestGraphTransitionExecutor {
 			}
 		}
 		return Status.APPLIED;
+	}
+
+	/**
+	 * 直接评估 canonical 任务状态条件；非 ACTIVE 引用显式失败，非 canonical 条件返回 null。
+	 * Directly evaluates canonical quest-state conditions, fails non-active references, and returns null for other capabilities.
+	 */
+	private static ConditionResult evaluateCanonicalCondition(Condition condition, int ownerQuestId, PlayerQuestGraphStateList states) {
+		if (condition instanceof QuestStatusCondition statusCondition) {
+			int questId = statusCondition.questId() == null ? ownerQuestId : statusCondition.questId();
+			PlayerQuestGraphState state = states.get(questId);
+			if (state != null && state.getLifecycle() != Lifecycle.ACTIVE) {
+				return ConditionResult.FAILED;
+			}
+			QuestStatus status = state == null ? QuestStatus.NONE : state.getQuestStatus();
+			return statusCondition.matches(status) ? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
+		}
+		if (condition instanceof QuestRewardCondition rewardCondition) {
+			PlayerQuestGraphState state = states.get(rewardCondition.questId());
+			if (state != null && state.getLifecycle() != Lifecycle.ACTIVE) {
+				return ConditionResult.FAILED;
+			}
+			return state != null && state.getHistory().completionCount() > 0
+				&& state.getHistory().lastRewardIndex() == rewardCondition.rewardIndex()
+					? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
+		}
+		if (condition instanceof QuestCompletionCountCondition completionCondition) {
+			PlayerQuestGraphState state = states.get(completionCondition.questId());
+			if (state != null && state.getLifecycle() != Lifecycle.ACTIVE) {
+				return ConditionResult.FAILED;
+			}
+			int completionCount = state == null ? 0 : state.getHistory().completionCount();
+			return completionCondition.matches(completionCount) ? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
+		}
+		return null;
 	}
 
 	/**

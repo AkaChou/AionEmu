@@ -35,11 +35,14 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerEquippedCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerInventoryCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
@@ -54,10 +57,13 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerGenderConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerEquippedConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerInventoryConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerLevelConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerRaceConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerTitleConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestCompletionCountConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestRewardConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestStatusConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.TransitionData;
@@ -332,10 +338,38 @@ public final class QuestGraphCompiler {
 	 */
 	private static Condition compileCondition(int questId, Object source, References references) {
 		if (source instanceof QuestStatusConditionData condition) {
+			if (condition.getQuestId() != null && !references.questIds().contains(condition.getQuestId())) {
+				throw new IllegalArgumentException("Quest " + questId + " status condition references missing quest " + condition.getQuestId());
+			}
 			try {
-				return new QuestStatusCondition(QuestStatus.valueOf(condition.getValue()));
+				EnumSet<QuestStatus> statuses = EnumSet.noneOf(QuestStatus.class);
+				condition.getStatuses().forEach(value -> statuses.add(QuestStatus.valueOf(value)));
+				if (statuses.size() != condition.getStatuses().size()) {
+					throw new IllegalArgumentException("duplicate quest status");
+				}
+				return new QuestStatusCondition(condition.getQuestId(), condition.getOperation(), statuses);
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid quest status", e);
+			}
+		}
+		if (source instanceof QuestRewardConditionData condition) {
+			if (condition.getQuestId() == null || !references.questIds().contains(condition.getQuestId())) {
+				throw new IllegalArgumentException("Quest " + questId + " reward condition references missing quest " + condition.getQuestId());
+			}
+			try {
+				return new QuestRewardCondition(condition.getQuestId(), condition.getRewardIndex());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid quest reward condition", e);
+			}
+		}
+		if (source instanceof QuestCompletionCountConditionData condition) {
+			if (condition.getQuestId() == null || !references.questIds().contains(condition.getQuestId())) {
+				throw new IllegalArgumentException("Quest " + questId + " completion condition references missing quest " + condition.getQuestId());
+			}
+			try {
+				return new QuestCompletionCountCondition(condition.getQuestId(), condition.getOperation(), condition.getCount());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid quest completion-count condition", e);
 			}
 		}
 		if (source instanceof PlayerLevelConditionData condition) {
@@ -403,6 +437,12 @@ public final class QuestGraphCompiler {
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid player inventory comparison", e);
 			}
+		}
+		if (source instanceof PlayerEquippedConditionData condition) {
+			if (condition.getItemId() == null || !references.itemIds().contains(condition.getItemId())) {
+				throw new IllegalArgumentException("Quest " + questId + " equipped condition references missing item " + condition.getItemId());
+			}
+			return new PlayerEquippedCondition(condition.getItemId());
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported condition capability");
 	}
