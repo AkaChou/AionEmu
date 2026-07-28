@@ -49,12 +49,58 @@ public final class PlayerQuestGraphState {
 	}
 
 	/**
+	 * 区分无 repeat policy、已计算 deadline 与旧 Handler 的高权限绕过。
+	 * Distinguishes no repeat policy, a calculated deadline, and the legacy Handler's privileged bypass.
+	 */
+	public enum RepeatDeadlineDisposition {
+		NOT_APPLICABLE,
+		DEADLINE,
+		PRIVILEGED_BYPASS
+	}
+
+	/**
+	 * 保存副作用前冻结的 repeat deadline 解析结果。
+	 * Holds the repeat-deadline resolution frozen before side effects.
+	 */
+	public record RepeatDeadlineResolution(RepeatDeadlineDisposition disposition, Long deadlineAt) {
+		/** 无 repeat policy 的规范结果。 / Canonical result for no repeat policy. */
+		public static final RepeatDeadlineResolution NOT_APPLICABLE =
+			new RepeatDeadlineResolution(RepeatDeadlineDisposition.NOT_APPLICABLE, null);
+		/** 高权限账号跳过 daily/weekly deadline 的规范结果。 / Canonical result for privileged daily/weekly bypass. */
+		public static final RepeatDeadlineResolution PRIVILEGED_BYPASS =
+			new RepeatDeadlineResolution(RepeatDeadlineDisposition.PRIVILEGED_BYPASS, null);
+
+		/** 校验 disposition 与绝对时间的一致性。 / Validates consistency between the disposition and absolute timestamp. */
+		public RepeatDeadlineResolution {
+			if (disposition == null || disposition == RepeatDeadlineDisposition.DEADLINE != (deadlineAt != null)
+					|| deadlineAt != null && deadlineAt <= 0) {
+				throw new IllegalArgumentException("Repeat deadline resolution is invalid");
+			}
+		}
+
+		/** 创建带正数 Unix 毫秒值的 deadline 结果。 / Creates a deadline result with a positive Unix-millisecond value. */
+		public static RepeatDeadlineResolution deadline(long deadlineAt) {
+			return new RepeatDeadlineResolution(RepeatDeadlineDisposition.DEADLINE, deadlineAt);
+		}
+	}
+
+	/**
 	 * 保存跨重复周期保留的 canonical 任务历史。
 	 * Holds canonical quest history retained across repeat cycles.
 	 */
-	public record QuestHistory(int completionCount, int lastRewardIndex, Long completedAt, Long nextRepeatAt) {
+	public record QuestHistory(int completionCount, int lastRewardIndex, Long completedAt, Long nextRepeatAt,
+		RepeatDeadlineDisposition repeatDeadlineDisposition) {
 		/** 没有完成历史的规范值。 / Canonical value for no completion history. */
-		public static final QuestHistory EMPTY = new QuestHistory(0, 0, null, null);
+		public static final QuestHistory EMPTY = new QuestHistory(0, 0, null, null, RepeatDeadlineDisposition.NOT_APPLICABLE);
+
+		/**
+		 * 从旧四字段调用推导无 deadline 或已计算 deadline 的 disposition。
+		 * Infers the no-deadline or calculated-deadline disposition for legacy four-field callers.
+		 */
+		public QuestHistory(int completionCount, int lastRewardIndex, Long completedAt, Long nextRepeatAt) {
+			this(completionCount, lastRewardIndex, completedAt, nextRepeatAt,
+				nextRepeatAt == null ? RepeatDeadlineDisposition.NOT_APPLICABLE : RepeatDeadlineDisposition.DEADLINE);
+		}
 
 		/**
 		 * 校验完成次数、奖励索引和时间戳的一致性。
@@ -67,8 +113,15 @@ public final class PlayerQuestGraphState {
 			if ((completedAt != null && completedAt <= 0) || (nextRepeatAt != null && nextRepeatAt <= 0)) {
 				throw new IllegalArgumentException("Quest history timestamps must be positive");
 			}
+			if (repeatDeadlineDisposition == null
+					|| repeatDeadlineDisposition == RepeatDeadlineDisposition.DEADLINE != (nextRepeatAt != null)) {
+				throw new IllegalArgumentException("Quest history repeat deadline disposition is invalid");
+			}
 			if (completionCount == 0 && (lastRewardIndex != 0 || completedAt != null || nextRepeatAt != null)) {
 				throw new IllegalArgumentException("Empty quest history cannot contain completion metadata");
+			}
+			if (completionCount == 0 && repeatDeadlineDisposition != RepeatDeadlineDisposition.NOT_APPLICABLE) {
+				throw new IllegalArgumentException("Empty quest history cannot contain repeat deadline metadata");
 			}
 			if (completionCount > 0 && completedAt == null) {
 				throw new IllegalArgumentException("Completed quest history requires a completion timestamp");
@@ -90,6 +143,8 @@ public final class PlayerQuestGraphState {
 		private final String transitionId;
 		/** 下一个待执行动作索引。 / Index of the next action to execute. */
 		private final int nextActionIndex;
+		/** 在副作用前解析并冻结的 repeat deadline 结果。 / Repeat-deadline resolution frozen before side effects. */
+		private final RepeatDeadlineResolution repeatDeadlineResolution;
 		/** 类型化事件 codec 生成的不可变负载。 / Immutable payload produced by the typed event codec. */
 		@Getter(AccessLevel.NONE)
 		private final byte[] eventPayload;
@@ -99,6 +154,15 @@ public final class PlayerQuestGraphState {
 		 * Creates a prepared transition and copies its event payload.
 		 */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, RepeatDeadlineResolution.NOT_APPLICABLE, eventPayload);
+		}
+
+		/**
+		 * 创建带已解析 repeat deadline 结果的 journal，并复制事件负载。
+		 * Creates a journal with a resolved repeat-deadline outcome and copies its event payload.
+		 */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex,
+				RepeatDeadlineResolution repeatDeadlineResolution, byte[] eventPayload) {
 			if (baseRevision < -1 || nextActionIndex < 0) {
 				throw new IllegalArgumentException("Prepared transition base revision/action index is invalid");
 			}
@@ -106,6 +170,7 @@ public final class PlayerQuestGraphState {
 			this.eventId = requireText(eventId, "event id");
 			this.transitionId = requireText(transitionId, "transition id");
 			this.nextActionIndex = nextActionIndex;
+			this.repeatDeadlineResolution = java.util.Objects.requireNonNull(repeatDeadlineResolution, "repeatDeadlineResolution");
 			this.eventPayload = eventPayload == null ? new byte[0] : Arrays.copyOf(eventPayload, eventPayload.length);
 		}
 

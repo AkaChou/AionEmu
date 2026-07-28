@@ -507,6 +507,7 @@ public final class QuestGraphData {
 			@XmlElement(name = "close-dialog", type = CloseDialogActionData.class),
 			@XmlElement(name = "show-quest-list", type = ShowQuestListActionData.class),
 			@XmlElement(name = "sync-quest-status", type = SyncQuestStatusActionData.class),
+			@XmlElement(name = "send-repeat-deadline-message", type = SendRepeatDeadlineMessageActionData.class),
 			@XmlElement(name = "send-player-message", type = SendPlayerMessageActionData.class)
 		})
 		private List<Object> values = new ArrayList<>();
@@ -565,6 +566,22 @@ public final class QuestGraphData {
 		/** 奖励组索引。 / Reward-group index. */
 		@XmlAttribute(name = "reward_index", required = true)
 		private Integer rewardIndex;
+		/** 可选 repeat deadline 策略。 / Optional repeat-deadline policy. */
+		@XmlAttribute(name = "repeat_kind")
+		private String repeatKind;
+		/** 显式时间基准。 / Explicit time basis. */
+		@XmlAttribute(name = "time_basis")
+		private String timeBasis;
+		/** daily/weekly 重置小时或 cooldown 锚点小时。 / Daily/weekly reset hour or cooldown anchor hour. */
+		@XmlAttribute(name = "reset_hour")
+		private Integer resetHour;
+		/** weekly 策略的星期集合。 / Weekday set for a weekly policy. */
+		@XmlList
+		@XmlAttribute(name = "weekdays")
+		private List<String> weekdays = new ArrayList<>();
+		/** anchored cooldown 秒数。 / Anchored cooldown seconds. */
+		@XmlAttribute(name = "cooldown_seconds")
+		private Long cooldownSeconds;
 	}
 
 	/** 发送任务对话页面。 / Sends a quest dialog page. */
@@ -589,6 +606,28 @@ public final class QuestGraphData {
 	/** 同步任务状态和变量。 / Synchronizes quest status and variables. */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class SyncQuestStatusActionData {
+	}
+
+	/** 发送 repeat deadline 系统提示。 / Sends the repeat-deadline system message. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SendRepeatDeadlineMessageActionData {
+		/** repeat deadline 策略。 / Repeat-deadline policy. */
+		@XmlAttribute(name = "repeat_kind", required = true)
+		private String repeatKind;
+		/** 显式时间基准。 / Explicit time basis. */
+		@XmlAttribute(name = "time_basis", required = true)
+		private String timeBasis;
+		/** daily/weekly 重置小时或 cooldown 锚点小时。 / Daily/weekly reset hour or cooldown anchor hour. */
+		@XmlAttribute(name = "reset_hour", required = true)
+		private Integer resetHour;
+		/** weekly 策略的星期集合。 / Weekday set for a weekly policy. */
+		@XmlList
+		@XmlAttribute(name = "weekdays")
+		private List<String> weekdays = new ArrayList<>();
+		/** anchored cooldown 秒数。 / Anchored cooldown seconds. */
+		@XmlAttribute(name = "cooldown_seconds")
+		private Long cooldownSeconds;
 	}
 
 	/** 向玩家发送类型化频道消息。 / Sends a typed-channel player message. */

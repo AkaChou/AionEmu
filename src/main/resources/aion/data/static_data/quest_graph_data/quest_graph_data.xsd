@@ -224,8 +224,52 @@
 		<xs:attribute name="delta" type="xs:int" use="required"/>
 	</xs:complexType>
 
+	<xs:simpleType name="questGraphRepeatDeadlineKind">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="DAILY"/>
+			<xs:enumeration value="WEEKLY"/>
+			<xs:enumeration value="ANCHORED_COOLDOWN"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphRepeatTimeBasis">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SERVER_LOCAL"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphRepeatWeekday">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MON"/>
+			<xs:enumeration value="TUE"/>
+			<xs:enumeration value="WED"/>
+			<xs:enumeration value="THU"/>
+			<xs:enumeration value="FRI"/>
+			<xs:enumeration value="SAT"/>
+			<xs:enumeration value="SUN"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphRepeatWeekdayList">
+		<xs:restriction>
+			<xs:simpleType><xs:list itemType="questGraphRepeatWeekday"/></xs:simpleType>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphHour">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="23"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:complexType name="questGraphFinishAction">
 		<xs:attribute name="reward_index" type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="repeat_kind" type="questGraphRepeatDeadlineKind"/>
+		<xs:attribute name="time_basis" type="questGraphRepeatTimeBasis"/>
+		<xs:attribute name="reset_hour" type="questGraphHour"/>
+		<xs:attribute name="weekdays" type="questGraphRepeatWeekdayList"/>
+		<xs:attribute name="cooldown_seconds" type="xs:positiveInteger"/>
 	</xs:complexType>
 
 	<xs:complexType name="questGraphSendDialogAction">
@@ -241,6 +285,14 @@
 	<xs:complexType name="questGraphSendPlayerMessageAction">
 		<xs:attribute name="text" type="xs:string" use="required"/>
 		<xs:attribute name="channel" type="questGraphPlayerMessageChannel" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphSendRepeatDeadlineMessageAction">
+		<xs:attribute name="repeat_kind" type="questGraphRepeatDeadlineKind" use="required"/>
+		<xs:attribute name="time_basis" type="questGraphRepeatTimeBasis" use="required"/>
+		<xs:attribute name="reset_hour" type="questGraphHour" use="required"/>
+		<xs:attribute name="weekdays" type="questGraphRepeatWeekdayList"/>
+		<xs:attribute name="cooldown_seconds" type="xs:positiveInteger"/>
 	</xs:complexType>
 
 	<xs:complexType name="questGraphConditions">
@@ -274,6 +326,7 @@
 			<xs:element name="close-dialog" type="questGraphEmptyAction"/>
 			<xs:element name="show-quest-list" type="questGraphEmptyAction"/>
 			<xs:element name="sync-quest-status" type="questGraphEmptyAction"/>
+			<xs:element name="send-repeat-deadline-message" type="questGraphSendRepeatDeadlineMessageAction"/>
 			<xs:element name="send-player-message" type="questGraphSendPlayerMessageAction"/>
 		</xs:choice>
 	</xs:complexType>

@@ -16,6 +16,8 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntV
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.VariableValue;
 
 /**
@@ -24,7 +26,7 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Vari
  */
 public final class PlayerQuestGraphStateCodec {
 
-	private static final int MAGIC = 0x51475333;
+	private static final int MAGIC = 0x51475334;
 	private static final int MAX_VARIABLES = 1024;
 	private static final int MAX_DEADLINES = 256;
 	private static final int MAX_CLEANUP_LEASES = 1024;
@@ -37,6 +39,9 @@ public final class PlayerQuestGraphStateCodec {
 	private static final byte STATUS_REWARD = 2;
 	private static final byte STATUS_COMPLETE = 3;
 	private static final byte STATUS_LOCKED = 4;
+	private static final byte REPEAT_NOT_APPLICABLE = 0;
+	private static final byte REPEAT_DEADLINE = 1;
+	private static final byte REPEAT_PRIVILEGED_BYPASS = 2;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -129,6 +134,7 @@ public final class PlayerQuestGraphStateCodec {
 		output.writeInt(history.lastRewardIndex());
 		writeOptionalLong(output, history.completedAt());
 		writeOptionalLong(output, history.nextRepeatAt());
+		writeRepeatDisposition(output, history.repeatDeadlineDisposition());
 	}
 
 	/**
@@ -136,7 +142,7 @@ public final class PlayerQuestGraphStateCodec {
 	 * Reads and validates canonical quest history.
 	 */
 	private static QuestHistory readHistory(DataInputStream input) throws IOException {
-		return new QuestHistory(input.readInt(), input.readInt(), readOptionalLong(input), readOptionalLong(input));
+		return new QuestHistory(input.readInt(), input.readInt(), readOptionalLong(input), readOptionalLong(input), readRepeatDisposition(input));
 	}
 
 	/**
@@ -219,6 +225,7 @@ public final class PlayerQuestGraphStateCodec {
 		output.writeUTF(journal.getEventId());
 		output.writeUTF(journal.getTransitionId());
 		output.writeInt(journal.getNextActionIndex());
+		writeRepeatResolution(output, journal.getRepeatDeadlineResolution());
 		byte[] eventPayload = journal.getEventPayload();
 		if (eventPayload.length > MAX_EVENT_PAYLOAD) {
 			throw new IllegalArgumentException("Prepared event payload exceeds " + MAX_EVENT_PAYLOAD + " bytes");
@@ -239,12 +246,49 @@ public final class PlayerQuestGraphStateCodec {
 		String eventId = input.readUTF();
 		String transitionId = input.readUTF();
 		int nextActionIndex = input.readInt();
+		RepeatDeadlineResolution repeatDeadlineResolution = readRepeatResolution(input);
 		int payloadSize = readCount(input, "prepared event bytes", MAX_EVENT_PAYLOAD);
 		byte[] eventPayload = input.readNBytes(payloadSize);
 		if (eventPayload.length != payloadSize) {
 			throw new EOFException("Prepared event payload is truncated");
 		}
-		return new PreparedTransition(baseRevision, eventId, transitionId, nextActionIndex, eventPayload);
+		return new PreparedTransition(baseRevision, eventId, transitionId, nextActionIndex, repeatDeadlineResolution, eventPayload);
+	}
+
+	/** 写入 repeat deadline disposition 的稳定 tag。 / Writes the stable tag for a repeat-deadline disposition. */
+	private static void writeRepeatDisposition(DataOutputStream output, RepeatDeadlineDisposition disposition) throws IOException {
+		output.writeByte(switch (disposition) {
+			case NOT_APPLICABLE -> REPEAT_NOT_APPLICABLE;
+			case DEADLINE -> REPEAT_DEADLINE;
+			case PRIVILEGED_BYPASS -> REPEAT_PRIVILEGED_BYPASS;
+		});
+	}
+
+	/** 读取 repeat deadline disposition 并拒绝未知 tag。 / Reads a repeat-deadline disposition and rejects unknown tags. */
+	private static RepeatDeadlineDisposition readRepeatDisposition(DataInputStream input) throws IOException {
+		return switch (input.readByte()) {
+			case REPEAT_NOT_APPLICABLE -> RepeatDeadlineDisposition.NOT_APPLICABLE;
+			case REPEAT_DEADLINE -> RepeatDeadlineDisposition.DEADLINE;
+			case REPEAT_PRIVILEGED_BYPASS -> RepeatDeadlineDisposition.PRIVILEGED_BYPASS;
+			default -> throw new IllegalArgumentException("Unknown repeat deadline disposition tag");
+		};
+	}
+
+	/** 写入冻结的 repeat deadline 解析结果。 / Writes the frozen repeat-deadline resolution. */
+	private static void writeRepeatResolution(DataOutputStream output, RepeatDeadlineResolution resolution) throws IOException {
+		writeRepeatDisposition(output, resolution.disposition());
+		if (resolution.disposition() == RepeatDeadlineDisposition.DEADLINE) {
+			output.writeLong(resolution.deadlineAt());
+		}
+	}
+
+	/** 读取并校验冻结的 repeat deadline 解析结果。 / Reads and validates the frozen repeat-deadline resolution. */
+	private static RepeatDeadlineResolution readRepeatResolution(DataInputStream input) throws IOException {
+		return switch (readRepeatDisposition(input)) {
+			case NOT_APPLICABLE -> RepeatDeadlineResolution.NOT_APPLICABLE;
+			case DEADLINE -> RepeatDeadlineResolution.deadline(input.readLong());
+			case PRIVILEGED_BYPASS -> RepeatDeadlineResolution.PRIVILEGED_BYPASS;
+		};
 	}
 
 	/**

@@ -155,6 +155,53 @@ class QuestGraphCompilerTest {
 			() -> load("<!DOCTYPE quest_graphs [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><quest_graphs>&xxe;</quest_graphs>"));
 	}
 
+	/**
+	 * 验证 daily、weekly 与 anchored cooldown 被编译为封闭的强类型策略。
+	 * Verifies that daily, weekly, and anchored cooldown compile into closed typed policies.
+	 */
+	@Test
+	void compilerBuildsTypedRepeatDeadlinePolicies() throws Exception {
+		assertEquals(new CompiledQuestGraph.DailyRepeatDeadlinePolicy(CompiledQuestGraph.RepeatTimeBasis.SERVER_LOCAL, 9),
+			repeatFinish(load(document(graph(1, "offer", repeatTransition(
+				"repeat_kind=\"DAILY\" time_basis=\"SERVER_LOCAL\" reset_hour=\"9\"",
+				"repeat_kind=\"DAILY\" time_basis=\"SERVER_LOCAL\" reset_hour=\"9\""), terminal())))).repeatDeadlinePolicy());
+		assertEquals(new CompiledQuestGraph.WeeklyRepeatDeadlinePolicy(CompiledQuestGraph.RepeatTimeBasis.SERVER_LOCAL,
+			Set.of(CompiledQuestGraph.RepeatWeekday.MON, CompiledQuestGraph.RepeatWeekday.WED), 9),
+			repeatFinish(load(document(graph(1, "offer", repeatTransition(
+				"repeat_kind=\"WEEKLY\" time_basis=\"SERVER_LOCAL\" reset_hour=\"9\" weekdays=\"MON WED\"",
+				"repeat_kind=\"WEEKLY\" time_basis=\"SERVER_LOCAL\" reset_hour=\"9\" weekdays=\"MON WED\""), terminal()))))
+				.repeatDeadlinePolicy());
+		assertEquals(new CompiledQuestGraph.AnchoredCooldownRepeatDeadlinePolicy(CompiledQuestGraph.RepeatTimeBasis.SERVER_LOCAL, 2_592_000, 9),
+			repeatFinish(load(document(graph(1, "offer", repeatTransition(
+				"repeat_kind=\"ANCHORED_COOLDOWN\" time_basis=\"SERVER_LOCAL\" reset_hour=\"9\" cooldown_seconds=\"2592000\"",
+				"repeat_kind=\"ANCHORED_COOLDOWN\" time_basis=\"SERVER_LOCAL\" reset_hour=\"9\" cooldown_seconds=\"2592000\""),
+				terminal())))).repeatDeadlinePolicy());
+	}
+
+	/**
+	 * 验证缺字段、冲突字段、重复 weekday 与不配对提示都会阻断编译。
+	 * Verifies missing fields, conflicting fields, duplicate weekdays, and unpaired messages block compilation.
+	 */
+	@Test
+	void compilerRejectsInvalidRepeatDeadlineProtocols() {
+		String daily = "repeat_kind=\"DAILY\" time_basis=\"SERVER_LOCAL\" reset_hour=\"9\"";
+		String cooldown = "repeat_kind=\"ANCHORED_COOLDOWN\" time_basis=\"SERVER_LOCAL\" reset_hour=\"9\" cooldown_seconds=\"3600\"";
+		assertFailureContains(document(graph(1, "offer", repeatTransition(
+			"repeat_kind=\"DAILY\" time_basis=\"SERVER_LOCAL\"", daily), terminal())), "repeat policy is incomplete");
+		assertFailureContains(document(graph(1, "offer", repeatTransition(daily + " cooldown_seconds=\"3600\"", daily), terminal())),
+			"conflicting fields");
+		String duplicateWeekday = "repeat_kind=\"WEEKLY\" time_basis=\"SERVER_LOCAL\" reset_hour=\"9\" weekdays=\"MON MON\"";
+		assertFailureContains(document(graph(1, "offer", repeatTransition(duplicateWeekday, duplicateWeekday), terminal())),
+			"duplicate weekdays");
+		assertFailureContains(document(graph(1, "offer", repeatTransition(daily, daily)
+			.replace("<finish-quest reward_index=\"0\" " + daily + "/>", ""), terminal())), "repeat protocol without finish");
+		assertFailureContains(document(graph(1, "offer", repeatTransition(daily, cooldown), terminal())),
+			"mismatched repeat deadline protocol");
+		String messageOnly = transition("message-only", 10, "done").replace("<finish-quest reward_index=\"0\"/>",
+			"<finish-quest reward_index=\"0\"/><send-repeat-deadline-message " + daily + "/>");
+		assertFailureContains(document(graph(1, "offer", messageOnly, terminal())), "repeat protocol without deadline");
+	}
+
 	@Test
 	void compilerRejectsDuplicateOwnersNodesTransitionsAndBadEdges() {
 		assertFailureContains(document(graph(1, "offer", transition("accept", 10, "done"), terminal())
@@ -407,6 +454,22 @@ class QuestGraphCompilerTest {
 				</actions>
 			</transition>
 			""".formatted(id, priority, target);
+	}
+
+	/** 创建带 finish/message 对的 repeat 转换。 / Creates a repeat transition with a paired finish/message protocol. */
+	private static String repeatTransition(String finishAttributes, String messageAttributes) {
+		return transition("repeat-finish", 10, "done")
+			.replace("<finish-quest reward_index=\"0\"/>", "<finish-quest reward_index=\"0\" " + finishAttributes + "/>")
+			.replace("<sync-quest-status/>",
+				"<sync-quest-status/><send-repeat-deadline-message " + messageAttributes + "/>");
+	}
+
+	/** 返回已编译转换中的唯一 finish action。 / Returns the only compiled finish action in the transition. */
+	private static CompiledQuestGraph.FinishQuestAction repeatFinish(CompiledQuestGraphData data) {
+		return data.graphs().get(1).nodes().get("offer").transitions().getFirst().actions().stream()
+			.filter(CompiledQuestGraph.FinishQuestAction.class::isInstance)
+			.map(CompiledQuestGraph.FinishQuestAction.class::cast)
+			.findFirst().orElseThrow();
 	}
 
 	private static String terminal() {

@@ -15,6 +15,8 @@ import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransit
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,8 +31,10 @@ import org.junit.jupiter.api.Test;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AnchoredCooldownRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DailyRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
@@ -43,11 +47,13 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendRepeatDeadlineMessageAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatTimeBasis;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphRouter.Match;
@@ -59,6 +65,8 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Bool
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 
@@ -69,6 +77,7 @@ import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 class QuestGraphTransitionExecutorTest {
 
 	private static final DialogEvent EVENT = new DialogEvent("dialog-1", 7, 1000, 100, "QUEST_SELECT");
+	private static final ZoneId SERVER_ZONE = ZoneId.of("Asia/Shanghai");
 	private final QuestGraphTransitionExecutor executor = new QuestGraphTransitionExecutor();
 
 	/**
@@ -108,7 +117,7 @@ class QuestGraphTransitionExecutorTest {
 		Fixture mismatch = fixture();
 		AtomicInteger mismatchActions = new AtomicInteger();
 		AtomicInteger mismatchWrites = new AtomicInteger();
-		TransitionContext mismatchContext = new TransitionContext(7, mismatch.states(), invocation -> NOT_MATCHED, invocation -> READY,
+		TransitionContext mismatchContext = new TransitionContext(7, 0, SERVER_ZONE, mismatch.states(), invocation -> NOT_MATCHED, invocation -> READY,
 			invocation -> {
 				mismatchActions.incrementAndGet();
 				return APPLIED;
@@ -123,7 +132,7 @@ class QuestGraphTransitionExecutorTest {
 		Fixture rejected = fixture();
 		AtomicInteger rejectedActions = new AtomicInteger();
 		AtomicInteger rejectedWrites = new AtomicInteger();
-		TransitionContext rejectedContext = new TransitionContext(7, rejected.states(), invocation -> MATCHED, invocation -> REJECTED,
+		TransitionContext rejectedContext = new TransitionContext(7, 0, SERVER_ZONE, rejected.states(), invocation -> MATCHED, invocation -> REJECTED,
 			invocation -> {
 				rejectedActions.incrementAndGet();
 				return APPLIED;
@@ -147,7 +156,7 @@ class QuestGraphTransitionExecutorTest {
 			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
 		fixture.states().addLoaded(active);
 		AtomicInteger callbacks = new AtomicInteger();
-		TransitionContext context = new TransitionContext(7, fixture.states(), invocation -> {
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(), invocation -> {
 			callbacks.incrementAndGet();
 			return MATCHED;
 		}, invocation -> READY, invocation -> APPLIED, (expected, state) -> PersistenceResult.APPLIED);
@@ -171,7 +180,7 @@ class QuestGraphTransitionExecutorTest {
 		matched.states().addLoaded(new PlayerQuestGraphState(2, 1, 0, "done", CompiledQuestGraph.QuestStatus.COMPLETE,
 			new QuestHistory(3, 1, 1_700_000_000_000L, null), null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null));
 		AtomicInteger callbacks = new AtomicInteger();
-		TransitionContext matchedContext = new TransitionContext(7, matched.states(), invocation -> {
+		TransitionContext matchedContext = new TransitionContext(7, 0, SERVER_ZONE, matched.states(), invocation -> {
 			callbacks.incrementAndGet();
 			return NOT_MATCHED;
 		}, invocation -> READY, invocation -> APPLIED, (expected, state) -> PersistenceResult.APPLIED);
@@ -181,14 +190,14 @@ class QuestGraphTransitionExecutorTest {
 
 		Fixture missingReward = fixture(List.of(new QuestStatusCondition(NONE), new QuestRewardCondition(2, 0)));
 		assertEquals(DispatchResult.Status.NO_MATCH, executor.execute(missingReward.match(),
-			new TransitionContext(7, missingReward.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+			new TransitionContext(7, 0, SERVER_ZONE, missingReward.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
 				(expected, state) -> PersistenceResult.APPLIED)));
 
 		Fixture missingQuest = fixture(List.of(new QuestStatusCondition(NONE),
 			new QuestStatusCondition(2, ConditionOperation.IN, Set.of(NONE, CompiledQuestGraph.QuestStatus.LOCKED)),
 			new QuestCompletionCountCondition(2, ConditionOperation.EQUAL, 0)));
 		assertEquals(DispatchResult.Status.APPLIED, executor.execute(missingQuest.match(),
-			new TransitionContext(7, missingQuest.states(), invocation -> NOT_MATCHED, invocation -> READY, invocation -> APPLIED,
+			new TransitionContext(7, 0, SERVER_ZONE, missingQuest.states(), invocation -> NOT_MATCHED, invocation -> READY, invocation -> APPLIED,
 				(expected, state) -> PersistenceResult.APPLIED)));
 
 		Fixture quarantinedQuest = fixture(List.of(new QuestStatusCondition(NONE),
@@ -196,7 +205,7 @@ class QuestGraphTransitionExecutorTest {
 		quarantinedQuest.states().addLoaded(new PlayerQuestGraphState(2, 1, 0, "start", CompiledQuestGraph.QuestStatus.START,
 			QuestHistory.EMPTY, null, Lifecycle.QUARANTINED, Map.of(), Map.of(), null, Map.of(), "recovery failed"));
 		assertEquals(DispatchResult.Status.FAILED, executor.execute(quarantinedQuest.match(),
-			new TransitionContext(7, quarantinedQuest.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+			new TransitionContext(7, 0, SERVER_ZONE, quarantinedQuest.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
 				(expected, state) -> PersistenceResult.APPLIED)));
 	}
 
@@ -211,7 +220,7 @@ class QuestGraphTransitionExecutorTest {
 		PlayerQuestGraphState waitingState = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.COMPLETE,
 			waiting, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
 		unavailable.states().addLoaded(waitingState);
-		TransitionContext context = new TransitionContext(7, unavailable.states(), invocation -> NOT_MATCHED, invocation -> READY,
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, unavailable.states(), invocation -> NOT_MATCHED, invocation -> READY,
 			invocation -> APPLIED, (expected, state) -> PersistenceResult.APPLIED);
 		assertEquals(DispatchResult.Status.APPLIED,
 			executor.execute(new Match(EVENT, unavailable.graph(), unavailable.match().route(), waitingState), context));
@@ -222,7 +231,7 @@ class QuestGraphTransitionExecutorTest {
 		available.states().addLoaded(future);
 		assertEquals(DispatchResult.Status.NO_MATCH, executor.execute(
 			new Match(EVENT, available.graph(), available.match().route(), future),
-			new TransitionContext(7, available.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+			new TransitionContext(7, 0, SERVER_ZONE, available.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
 				(expected, state) -> PersistenceResult.APPLIED)));
 
 		Fixture missingDeadline = fixture(List.of(new QuestRepeatAvailableCondition(255, true, false)));
@@ -231,7 +240,17 @@ class QuestGraphTransitionExecutorTest {
 		missingDeadline.states().addLoaded(missing);
 		assertEquals(DispatchResult.Status.FAILED, executor.execute(
 			new Match(EVENT, missingDeadline.graph(), missingDeadline.match().route(), missing),
-			new TransitionContext(7, missingDeadline.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+			new TransitionContext(7, 0, SERVER_ZONE, missingDeadline.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+				(expected, state) -> PersistenceResult.APPLIED)));
+
+		Fixture bypassedDeadline = fixture(List.of(new QuestRepeatAvailableCondition(255, true, true)));
+		PlayerQuestGraphState bypassed = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.COMPLETE,
+			new QuestHistory(1, 0, 900L, null, RepeatDeadlineDisposition.PRIVILEGED_BYPASS), null, Lifecycle.ACTIVE, Map.of(), Map.of(), null,
+			Map.of(), null);
+		bypassedDeadline.states().addLoaded(bypassed);
+		assertEquals(DispatchResult.Status.APPLIED, executor.execute(
+			new Match(EVENT, bypassedDeadline.graph(), bypassedDeadline.match().route(), bypassed),
+			new TransitionContext(7, 0, SERVER_ZONE, bypassedDeadline.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
 				(expected, state) -> PersistenceResult.APPLIED)));
 	}
 
@@ -249,7 +268,7 @@ class QuestGraphTransitionExecutorTest {
 		matched.states().addLoaded(valid);
 		assertEquals(DispatchResult.Status.APPLIED, executor.execute(
 			new Match(EVENT, matched.graph(), matched.match().route(), valid),
-			new TransitionContext(7, matched.states(), invocation -> NOT_MATCHED, invocation -> READY, invocation -> APPLIED,
+			new TransitionContext(7, 0, SERVER_ZONE, matched.states(), invocation -> NOT_MATCHED, invocation -> READY, invocation -> APPLIED,
 				(expected, state) -> PersistenceResult.APPLIED)));
 
 		Fixture corrupt = fixture(conditions);
@@ -258,7 +277,7 @@ class QuestGraphTransitionExecutorTest {
 		corrupt.states().addLoaded(missing);
 		assertEquals(DispatchResult.Status.FAILED, executor.execute(
 			new Match(EVENT, corrupt.graph(), corrupt.match().route(), missing),
-			new TransitionContext(7, corrupt.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
+			new TransitionContext(7, 0, SERVER_ZONE, corrupt.states(), invocation -> MATCHED, invocation -> READY, invocation -> APPLIED,
 				(expected, state) -> PersistenceResult.APPLIED)));
 	}
 
@@ -278,7 +297,7 @@ class QuestGraphTransitionExecutorTest {
 			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
 		fixture.states().addLoaded(state);
 		AtomicInteger callbacks = new AtomicInteger();
-		TransitionContext context = new TransitionContext(7, fixture.states(), invocation -> MATCHED, invocation -> {
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(), invocation -> MATCHED, invocation -> {
 			callbacks.incrementAndGet();
 			return READY;
 		}, invocation -> APPLIED, (expected, next) -> PersistenceResult.APPLIED);
@@ -360,7 +379,7 @@ class QuestGraphTransitionExecutorTest {
 		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
 		List<CompiledQuestGraph.ActionType> preflighted = new java.util.ArrayList<>();
 		List<CompiledQuestGraph.ActionType> executed = new java.util.ArrayList<>();
-		TransitionContext context = new TransitionContext(7, states, invocation -> MATCHED, invocation -> {
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> {
 			preflighted.add(invocation.action().type());
 			return READY;
 		}, invocation -> {
@@ -388,6 +407,112 @@ class QuestGraphTransitionExecutorTest {
 	}
 
 	/**
+	 * 验证 deadline 在副作用前冻结，CAS 冲突恢复时即使上下文时区和权限变化也不重算。
+	 * Verifies deadline freezing before side effects and no recalculation after zone/access changes during CAS recovery.
+	 */
+	@Test
+	void repeatDeadlineIsFrozenAcrossRecovery() {
+		DailyRepeatDeadlinePolicy policy = new DailyRepeatDeadlinePolicy(RepeatTimeBasis.SERVER_LOCAL, 9);
+		List<Action> actions = List.of(new SetQuestStatusAction(CompiledQuestGraph.QuestStatus.REWARD), new FinishQuestAction(2, policy),
+			new SyncQuestStatusAction(), new SendRepeatDeadlineMessageAction(policy));
+		Transition transition = new Transition("finish", 10, "done", new Event(DIALOG, 100, "SELECT_REWARD"),
+			List.of(new QuestStatusCondition(CompiledQuestGraph.QuestStatus.START)), actions);
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		AtomicInteger writes = new AtomicInteger();
+		Set<String> effects = new HashSet<>();
+		List<RepeatDeadlineResolution> observed = new java.util.ArrayList<>();
+		BiFunction<Long, PlayerQuestGraphState, PersistenceResult> databaseCas = cas(database);
+		java.util.function.Function<ActionInvocation, QuestGraphTransitionExecutor.ActionResult> action = invocation -> {
+			if (invocation.action() instanceof FinishQuestAction || invocation.action() instanceof SendRepeatDeadlineMessageAction) {
+				observed.add(invocation.repeatDeadlineResolution());
+			}
+			return effects.add(invocation.idempotencyKey()) ? APPLIED : ALREADY_APPLIED;
+		};
+		TransitionContext firstContext = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY, action,
+			(expected, state) -> writes.incrementAndGet() == 3 ? CONFLICT : databaseCas.apply(expected, state));
+		long occurredAt = ZonedDateTime.parse("2026-07-28T10:00+08:00[Asia/Shanghai]").toInstant().toEpochMilli();
+		DialogEvent event = new DialogEvent("repeat-finish", 7, occurredAt, 100, "SELECT_REWARD");
+
+		assertEquals(DispatchResult.Status.FAILED,
+			executor.execute(new Match(event, graph, new EventRoute(1, "active", transition), initial), firstContext));
+		RepeatDeadlineResolution frozen = states.get(1).getJournal().getRepeatDeadlineResolution();
+		assertEquals(RepeatDeadlineResolution.deadline(
+			ZonedDateTime.parse("2026-07-29T09:00+08:00[Asia/Shanghai]").toInstant().toEpochMilli()), frozen);
+
+		TransitionContext recoveryContext = new TransitionContext(7, 1, ZoneId.of("UTC"), states, invocation -> MATCHED, invocation -> READY,
+			action, databaseCas);
+		assertEquals(DispatchResult.Status.APPLIED, executor.recover(graph, recoveryContext));
+		assertEquals(List.of(frozen, frozen, frozen), observed);
+		assertEquals(new QuestHistory(1, 2, occurredAt, frozen.deadlineAt(), RepeatDeadlineDisposition.DEADLINE),
+			states.get(1).getHistory());
+	}
+
+	/** 验证 privileged daily 完成会持久化显式绕过而非损坏的空 deadline。 / Verifies privileged daily completion persists an explicit bypass rather than a corrupt null deadline. */
+	@Test
+	void privilegedDailyFinishPersistsBypass() {
+		DailyRepeatDeadlinePolicy policy = new DailyRepeatDeadlinePolicy(RepeatTimeBasis.SERVER_LOCAL, 9);
+		List<Action> actions = List.of(new SetQuestStatusAction(CompiledQuestGraph.QuestStatus.REWARD), new FinishQuestAction(0, policy),
+			new SendRepeatDeadlineMessageAction(policy));
+		Transition transition = new Transition("finish", 10, "done", new Event(DIALOG, 100, "SELECT_REWARD"), List.of(), actions);
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		AtomicReference<RepeatDeadlineResolution> messageResolution = new AtomicReference<>();
+		TransitionContext context = new TransitionContext(7, 1, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY, invocation -> {
+			if (invocation.action() instanceof SendRepeatDeadlineMessageAction) {
+				messageResolution.set(invocation.repeatDeadlineResolution());
+			}
+			return APPLIED;
+		}, cas(database));
+		long occurredAt = ZonedDateTime.parse("2026-07-28T10:00+08:00[Asia/Shanghai]").toInstant().toEpochMilli();
+
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(new Match(new DialogEvent("gm-finish", 7, occurredAt, 100, "SELECT_REWARD"), graph,
+				new EventRoute(1, "active", transition), initial), context));
+		assertEquals(new QuestHistory(1, 0, occurredAt, null, RepeatDeadlineDisposition.PRIVILEGED_BYPASS), states.get(1).getHistory());
+		assertEquals(RepeatDeadlineResolution.PRIVILEGED_BYPASS, messageResolution.get());
+	}
+
+	/** 验证 deadline 溢出会在任何持久化或动作副作用前失败。 / Verifies deadline overflow fails before persistence or action side effects. */
+	@Test
+	void repeatDeadlineOverflowFailsBeforeActions() {
+		AnchoredCooldownRepeatDeadlinePolicy policy = new AnchoredCooldownRepeatDeadlinePolicy(RepeatTimeBasis.SERVER_LOCAL, Long.MAX_VALUE, 9);
+		Transition transition = new Transition("finish", 10, "done", new Event(DIALOG, 100, "SELECT_REWARD"), List.of(),
+			List.of(new SetQuestStatusAction(CompiledQuestGraph.QuestStatus.REWARD), new FinishQuestAction(0, policy)));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicInteger actions = new AtomicInteger();
+		AtomicInteger writes = new AtomicInteger();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY, invocation -> {
+			actions.incrementAndGet();
+			return APPLIED;
+		}, (expected, state) -> {
+			writes.incrementAndGet();
+			return PersistenceResult.APPLIED;
+		});
+
+		assertEquals(DispatchResult.Status.FAILED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), context));
+		assertEquals(0, actions.get());
+		assertEquals(0, writes.get());
+		assertEquals(initial, states.get(1));
+	}
+
+	/**
 	 * 验证准备状态 CAS 冲突会在任何动作执行前阻断转换。
 	 * Verifies that a PREPARED-state CAS conflict blocks the transition before any action executes.
 	 */
@@ -395,7 +520,7 @@ class QuestGraphTransitionExecutorTest {
 	void prepareCasConflictBlocksActions() {
 		Fixture fixture = fixture();
 		AtomicInteger actions = new AtomicInteger();
-		TransitionContext context = new TransitionContext(7, fixture.states(), invocation -> MATCHED, invocation -> READY, invocation -> {
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(), invocation -> MATCHED, invocation -> READY, invocation -> {
 			actions.incrementAndGet();
 			return APPLIED;
 		}, (expected, state) -> CONFLICT);
@@ -416,7 +541,7 @@ class QuestGraphTransitionExecutorTest {
 			Map.of("world", new IntVariable("world", WORLD, 0, 0, 1)), base.graph().nodes());
 		Match match = new Match(EVENT, graph, new EventRoute(1, "offer", graph.nodes().get("offer").transitions().getFirst()), null);
 		AtomicInteger callbacks = new AtomicInteger();
-		TransitionContext context = new TransitionContext(7, base.states(), invocation -> {
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, base.states(), invocation -> {
 			callbacks.incrementAndGet();
 			return MATCHED;
 		}, invocation -> READY, invocation -> APPLIED, (expected, state) -> PersistenceResult.APPLIED);
@@ -436,7 +561,7 @@ class QuestGraphTransitionExecutorTest {
 		DialogEvent foreignEvent = new DialogEvent("dialog-foreign", 8, 1000, 100, "QUEST_SELECT");
 		Match foreignMatch = new Match(foreignEvent, fixture.graph(), fixture.match().route(), null);
 		AtomicInteger callbacks = new AtomicInteger();
-		TransitionContext context = new TransitionContext(7, fixture.states(), invocation -> {
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(), invocation -> {
 			callbacks.incrementAndGet();
 			return MATCHED;
 		}, invocation -> READY, invocation -> APPLIED, (expected, state) -> PersistenceResult.APPLIED);
@@ -458,7 +583,7 @@ class QuestGraphTransitionExecutorTest {
 		AtomicInteger calls = new AtomicInteger();
 		Set<String> effects = new HashSet<>();
 		BiFunction<Long, PlayerQuestGraphState, PersistenceResult> cas = cas(database);
-		TransitionContext context = new TransitionContext(7, fixture.states(), invocation -> MATCHED, invocation -> READY, invocation -> {
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(), invocation -> MATCHED, invocation -> READY, invocation -> {
 			calls.incrementAndGet();
 			return effects.add(invocation.idempotencyKey()) ? APPLIED : ALREADY_APPLIED;
 		}, (expected, state) -> writes.incrementAndGet() == 3 ? CONFLICT : cas.apply(expected, state));
@@ -484,7 +609,7 @@ class QuestGraphTransitionExecutorTest {
 	 */
 	private static TransitionContext context(PlayerQuestGraphStateList states, AtomicReference<PlayerQuestGraphState> database,
 		java.util.function.Function<ActionInvocation, QuestGraphTransitionExecutor.ActionResult> action) {
-		return new TransitionContext(7, states, invocation -> MATCHED, invocation -> READY, action, cas(database));
+		return new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY, action, cas(database));
 	}
 
 	/**

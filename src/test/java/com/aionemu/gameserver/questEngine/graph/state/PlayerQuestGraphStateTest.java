@@ -24,6 +24,8 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntV
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.VariableValue;
 
 class PlayerQuestGraphStateTest {
@@ -36,7 +38,8 @@ class PlayerQuestGraphStateTest {
 		Map<String, VariableValue> reversedVariables = new LinkedHashMap<>();
 		reversedVariables.put("ready", new BooleanValue(true));
 		reversedVariables.put("score", new IntValue(7));
-		PreparedTransition journal = new PreparedTransition(0, "event-9", "kill-advance", 2, new byte[] { 4, 5, 6 });
+		PreparedTransition journal = new PreparedTransition(0, "event-9", "kill-advance", 2, RepeatDeadlineResolution.deadline(1_760_000_000_000L),
+			new byte[] { 4, 5, 6 });
 		PlayerQuestGraphState first = state(firstVariables, journal);
 		PlayerQuestGraphState reversed = state(reversedVariables, journal);
 
@@ -49,9 +52,26 @@ class PlayerQuestGraphStateTest {
 		assertEquals(1_750_000_000_000L, decoded.nextDeadlineAt());
 		assertEquals("SPAWN", decoded.getCleanupLeases().get("escort").capability());
 		assertEquals("event-9", decoded.getJournal().getEventId());
+		assertEquals(RepeatDeadlineResolution.deadline(1_760_000_000_000L), decoded.getJournal().getRepeatDeadlineResolution());
 		assertEquals(QuestStatus.START, decoded.getQuestStatus());
 		assertEquals(new QuestHistory(3, 2, 1_700_000_000_000L, 1_750_000_000_000L), decoded.getHistory());
 		assertArrayEquals(new byte[] { 4, 5, 6 }, decoded.getJournal().getEventPayload());
+	}
+
+	/** 验证高权限绕过在 history 与 PREPARED journal 中都可确定性往返。 / Verifies deterministic privileged-bypass round trips in history and journal. */
+	@Test
+	void codecRoundTripsPrivilegedRepeatBypass() {
+		QuestHistory history = new QuestHistory(1, 0, 1_700_000_000_000L, null, RepeatDeadlineDisposition.PRIVILEGED_BYPASS);
+		PreparedTransition journal = new PreparedTransition(3, "event", "finish", 0,
+			RepeatDeadlineResolution.PRIVILEGED_BYPASS, new byte[] { 1 });
+		PlayerQuestGraphState state = new PlayerQuestGraphState(1, 1, 4, "reward", QuestStatus.COMPLETE, history, null,
+			Lifecycle.PREPARED, Map.of(), Map.of(), journal, Map.of(), null);
+
+		PlayerQuestGraphState decoded = PlayerQuestGraphStateCodec.decode(1, 1, 4, "reward", null, Lifecycle.PREPARED,
+			PlayerQuestGraphStateCodec.encode(state));
+
+		assertEquals(RepeatDeadlineDisposition.PRIVILEGED_BYPASS, decoded.getHistory().repeatDeadlineDisposition());
+		assertEquals(RepeatDeadlineResolution.PRIVILEGED_BYPASS, decoded.getJournal().getRepeatDeadlineResolution());
 	}
 
 	@Test
@@ -80,6 +100,12 @@ class PlayerQuestGraphStateTest {
 			Lifecycle.QUARANTINED, Map.of(), Map.of(), null, Map.of(), null));
 		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", QuestStatus.NONE, QuestHistory.EMPTY, null,
 			Lifecycle.PREPARED, Map.of(), Map.of(), new PreparedTransition(-1, "event", "transition", 1, new byte[0]), Map.of(), null));
+		assertThrows(IllegalArgumentException.class,
+			() -> new RepeatDeadlineResolution(RepeatDeadlineDisposition.DEADLINE, 0L));
+		assertThrows(IllegalArgumentException.class,
+			() -> new QuestHistory(1, 0, 1L, null, RepeatDeadlineDisposition.DEADLINE));
+		assertThrows(IllegalArgumentException.class,
+			() -> new QuestHistory(1, 0, 1L, 2L, RepeatDeadlineDisposition.PRIVILEGED_BYPASS));
 		assertThrows(IllegalArgumentException.class, () -> new QuestHistory(0, 1, null, null));
 		assertThrows(IllegalArgumentException.class, () -> new QuestHistory(1, 0, null, null));
 		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", QuestStatus.COMPLETE,
@@ -94,7 +120,7 @@ class PlayerQuestGraphStateTest {
 			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null));
 		byte[] trailing = java.util.Arrays.copyOf(valid, valid.length + 1);
 		byte[] oldVersion = java.util.Arrays.copyOf(valid, valid.length);
-		oldVersion[3] = 0x32;
+		oldVersion[3] = 0x33;
 		byte[] unknownStatus = java.util.Arrays.copyOf(valid, valid.length);
 		unknownStatus[4] = 99;
 		assertThrows(IllegalArgumentException.class,
@@ -143,12 +169,13 @@ class PlayerQuestGraphStateTest {
 	private static byte[] duplicateVariablePayload() throws Exception {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		try (DataOutputStream output = new DataOutputStream(bytes)) {
-			output.writeInt(0x51475333);
+			output.writeInt(0x51475334);
 			output.writeByte(1);
 			output.writeInt(0);
 			output.writeInt(0);
 			output.writeBoolean(false);
 			output.writeBoolean(false);
+			output.writeByte(0);
 			output.writeInt(2);
 			output.writeUTF("score");
 			output.writeByte(1);

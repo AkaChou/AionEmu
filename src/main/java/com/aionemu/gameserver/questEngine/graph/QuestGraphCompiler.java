@@ -29,10 +29,12 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionPhase;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AnchoredCooldownRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CloseDialogAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DailyRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
@@ -45,6 +47,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerMessageChannel;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCollectItemsCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
@@ -53,8 +56,12 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAvailableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatDeadlinePolicy;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatTimeBasis;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatWeekday;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendPlayerMessageAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendRepeatDeadlineMessageAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ShowQuestListAction;
@@ -63,6 +70,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Variable;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.WeeklyRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogEventData;
@@ -89,6 +97,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestVariableCond
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveCollectedItemsActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendDialogActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendPlayerMessageActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendRepeatDeadlineMessageActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetQuestStatusActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetQuestVariableActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ShowQuestListActionData;
@@ -265,6 +274,7 @@ public final class QuestGraphCompiler {
 				List<Action> actions = sourceTransition.getActions().stream()
 					.map(value -> compileAction(questId, value, variables)).toList();
 				validateActionOrder(questId, sourceTransition.getId(), actions);
+				validateRepeatDeadlineProtocol(questId, sourceTransition.getId(), actions);
 				transitions.add(new Transition(sourceTransition.getId(), sourceTransition.getPriority(), sourceTransition.getTargetNode(), event,
 					conditions, actions));
 			}
@@ -562,7 +572,8 @@ public final class QuestGraphCompiler {
 		}
 		if (source instanceof FinishQuestActionData action) {
 			try {
-				return new FinishQuestAction(action.getRewardIndex());
+				return new FinishQuestAction(action.getRewardIndex(), compileRepeatDeadlinePolicy(questId, "finish", action.getRepeatKind(),
+					action.getTimeBasis(), action.getResetHour(), action.getWeekdays(), action.getCooldownSeconds(), false));
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid finish action", e);
 			}
@@ -583,6 +594,14 @@ public final class QuestGraphCompiler {
 		if (source instanceof SyncQuestStatusActionData) {
 			return new SyncQuestStatusAction();
 		}
+		if (source instanceof SendRepeatDeadlineMessageActionData action) {
+			try {
+				return new SendRepeatDeadlineMessageAction(compileRepeatDeadlinePolicy(questId, "repeat message", action.getRepeatKind(),
+					action.getTimeBasis(), action.getResetHour(), action.getWeekdays(), action.getCooldownSeconds(), true));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid repeat-deadline message action", e);
+			}
+		}
 		if (source instanceof SendPlayerMessageActionData action) {
 			try {
 				return new SendPlayerMessageAction(action.getText(), PlayerMessageChannel.valueOf(action.getChannel()));
@@ -591,6 +610,52 @@ public final class QuestGraphCompiler {
 			}
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported action capability");
+	}
+
+	/**
+	 * 将 XML repeat deadline 字段编译为封闭策略，并拒绝缺失、冲突或多余字段。
+	 * Compiles XML repeat-deadline fields into a closed policy and rejects missing, conflicting, or extra fields.
+	 */
+	private static RepeatDeadlinePolicy compileRepeatDeadlinePolicy(int questId, String label, String kind, String timeBasis,
+		Integer resetHour, List<String> weekdayValues, Long cooldownSeconds, boolean required) {
+		List<String> weekdays = weekdayValues == null ? List.of() : weekdayValues;
+		boolean hasAnyField = kind != null || timeBasis != null || resetHour != null || !weekdays.isEmpty() || cooldownSeconds != null;
+		if (!hasAnyField) {
+			if (required) {
+				throw new IllegalArgumentException("Quest " + questId + ' ' + label + " repeat policy is missing");
+			}
+			return NoRepeatDeadlinePolicy.INSTANCE;
+		}
+		if (kind == null || timeBasis == null || resetHour == null) {
+			throw new IllegalArgumentException("Quest " + questId + ' ' + label + " repeat policy is incomplete");
+		}
+		RepeatTimeBasis basis = RepeatTimeBasis.valueOf(timeBasis);
+		return switch (kind) {
+			case "DAILY" -> {
+				if (!weekdays.isEmpty() || cooldownSeconds != null) {
+					throw new IllegalArgumentException("Daily repeat policy has conflicting fields");
+				}
+				yield new DailyRepeatDeadlinePolicy(basis, resetHour);
+			}
+			case "WEEKLY" -> {
+				if (weekdays.isEmpty() || cooldownSeconds != null) {
+					throw new IllegalArgumentException("Weekly repeat policy has conflicting fields");
+				}
+				EnumSet<RepeatWeekday> parsed = EnumSet.noneOf(RepeatWeekday.class);
+				weekdays.forEach(value -> parsed.add(RepeatWeekday.valueOf(value)));
+				if (parsed.size() != weekdays.size()) {
+					throw new IllegalArgumentException("Weekly repeat policy contains duplicate weekdays");
+				}
+				yield new WeeklyRepeatDeadlinePolicy(basis, parsed, resetHour);
+			}
+			case "ANCHORED_COOLDOWN" -> {
+				if (!weekdays.isEmpty() || cooldownSeconds == null) {
+					throw new IllegalArgumentException("Anchored cooldown repeat policy has conflicting fields");
+				}
+				yield new AnchoredCooldownRepeatDeadlinePolicy(basis, cooldownSeconds, resetHour);
+			}
+			default -> throw new IllegalArgumentException("Unknown repeat deadline kind " + kind);
+		};
 	}
 
 	/**
@@ -616,6 +681,34 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " has invalid action phase order");
 			}
 			previous = phase;
+		}
+	}
+
+	/**
+	 * 要求 repeat 完成动作与提交后提示一一对应且使用完全相同的策略。
+	 * Requires a one-to-one, identical-policy match between repeat completion and its post-commit message.
+	 */
+	private static void validateRepeatDeadlineProtocol(int questId, String transitionId, List<Action> actions) {
+		List<FinishQuestAction> finishes = actions.stream().filter(FinishQuestAction.class::isInstance)
+			.map(FinishQuestAction.class::cast).toList();
+		List<SendRepeatDeadlineMessageAction> messages = actions.stream().filter(SendRepeatDeadlineMessageAction.class::isInstance)
+			.map(SendRepeatDeadlineMessageAction.class::cast).toList();
+		if (finishes.size() > 1 || messages.size() > 1) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " has duplicate finish/repeat protocol actions");
+		}
+		if (finishes.isEmpty()) {
+			if (!messages.isEmpty()) {
+				throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " has repeat protocol without finish");
+			}
+			return;
+		}
+		RepeatDeadlinePolicy policy = finishes.getFirst().repeatDeadlinePolicy();
+		if (policy == NoRepeatDeadlinePolicy.INSTANCE) {
+			if (!messages.isEmpty()) {
+				throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " has repeat protocol without deadline");
+			}
+		} else if (messages.size() != 1 || !policy.equals(messages.getFirst().repeatDeadlinePolicy())) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " has mismatched repeat deadline protocol");
 		}
 	}
 

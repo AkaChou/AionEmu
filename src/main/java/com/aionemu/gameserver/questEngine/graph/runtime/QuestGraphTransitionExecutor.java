@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.graph.runtime;
 
+import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -15,12 +16,14 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAvailableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatPrivilegeMode;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
@@ -34,6 +37,8 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntV
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.VariableValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 
@@ -105,7 +110,7 @@ public final class QuestGraphTransitionExecutor {
 	 * Holds immutable action input and its stable idempotency key for preflight or execution.
 	 */
 	public record ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event,
-		String idempotencyKey) {
+		RepeatDeadlineResolution repeatDeadlineResolution, String idempotencyKey) {
 		/**
 		 * 校验动作调用输入。
 		 * Validates action invocation input.
@@ -114,6 +119,7 @@ public final class QuestGraphTransitionExecutor {
 			Objects.requireNonNull(action, "action");
 			Objects.requireNonNull(questStatus, "questStatus");
 			Objects.requireNonNull(event, "event");
+			Objects.requireNonNull(repeatDeadlineResolution, "repeatDeadlineResolution");
 			if (actionIndex < 0 || idempotencyKey == null || idempotencyKey.isBlank()) {
 				throw new IllegalArgumentException("Action index/idempotency key is invalid");
 			}
@@ -124,7 +130,7 @@ public final class QuestGraphTransitionExecutor {
 	 * 组合玩家状态、类型化能力和 CAS 持久化回调，不引入单实现接口。
 	 * Composes player state, typed capabilities, and CAS persistence callbacks without single-use interfaces.
 	 */
-	public record TransitionContext(int playerId, PlayerQuestGraphStateList states,
+	public record TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
 		Function<ConditionInvocation, ConditionResult> conditionEvaluator,
 		Function<ActionInvocation, PreflightResult> actionPreflight,
 		Function<ActionInvocation, ActionResult> actionExecutor,
@@ -134,9 +140,10 @@ public final class QuestGraphTransitionExecutor {
 		 * Validates transition dependencies; persistence receives a null expected revision for a new state.
 		 */
 		public TransitionContext {
-			if (playerId <= 0) {
-				throw new IllegalArgumentException("Player id must be positive");
+			if (playerId <= 0 || accessLevel < 0) {
+				throw new IllegalArgumentException("Player id/access level is invalid");
 			}
+			Objects.requireNonNull(serverZoneId, "serverZoneId");
 			Objects.requireNonNull(states, "states");
 			Objects.requireNonNull(conditionEvaluator, "conditionEvaluator");
 			Objects.requireNonNull(actionPreflight, "actionPreflight");
@@ -169,7 +176,7 @@ public final class QuestGraphTransitionExecutor {
 				if (preflightStatus != Status.APPLIED) {
 					return preflightStatus;
 				}
-				PlayerQuestGraphState prepared = prepare(match, current);
+					PlayerQuestGraphState prepared = prepare(match, current, context.serverZoneId(), context.accessLevel());
 				Long expectedRevision = current == null ? null : current.getRevision();
 				if (persist(context, expectedRevision, prepared) != PersistenceResult.APPLIED) {
 					return Status.FAILED;
@@ -317,11 +324,18 @@ public final class QuestGraphTransitionExecutor {
 						&& state.getHistory().completionCount() >= repeatCondition.maxCompletions()) {
 				return repeatResult(false, repeatCondition);
 			}
-			Long deadline = state.getHistory().nextRepeatAt();
-			if (repeatCondition.requiresDeadline() && deadline == null) {
-				return ConditionResult.FAILED;
-			}
-			return repeatResult(deadline == null || deadline <= event.occurredAt(), repeatCondition);
+				QuestHistory history = state.getHistory();
+				if (repeatCondition.requiresDeadline()) {
+					return switch (history.repeatDeadlineDisposition()) {
+						case DEADLINE -> repeatResult(history.nextRepeatAt() <= event.occurredAt(), repeatCondition);
+						case PRIVILEGED_BYPASS -> repeatResult(true, repeatCondition);
+						case NOT_APPLICABLE -> ConditionResult.FAILED;
+					};
+				}
+				if (history.repeatDeadlineDisposition() != RepeatDeadlineDisposition.NOT_APPLICABLE) {
+					return ConditionResult.FAILED;
+				}
+				return repeatResult(true, repeatCondition);
 		}
 		return null;
 	}
@@ -343,6 +357,8 @@ public final class QuestGraphTransitionExecutor {
 		TransitionContext context) {
 		ActionState preview = new ActionState(current == null ? QuestStatus.NONE : current.getQuestStatus(),
 			current == null ? initialVariables(graph) : current.getVariables());
+		RepeatDeadlineResolution repeatResolution = current != null && current.getLifecycle() == Lifecycle.PREPARED
+			? current.getJournal().getRepeatDeadlineResolution() : RepeatDeadlineResolution.NOT_APPLICABLE;
 		for (int index = startIndex; index < transition.actions().size(); index++) {
 			Action action = transition.actions().get(index);
 			QuestStatus invocationStatus = preview.questStatus();
@@ -357,7 +373,7 @@ public final class QuestGraphTransitionExecutor {
 			PreflightResult result;
 			try {
 				result = Objects.requireNonNull(context.actionPreflight().apply(invocation(graph, transition, event,
-					invocationStatus, index)),
+					invocationStatus, index, repeatResolution)),
 					"preflight result");
 			} catch (RuntimeException e) {
 				return Status.FAILED;
@@ -376,7 +392,7 @@ public final class QuestGraphTransitionExecutor {
 	 * 创建包含事件快照和初始变量的下一 revision PREPARED 状态。
 	 * Creates the next-revision PREPARED state with an event snapshot and initialized variables.
 	 */
-	private static PlayerQuestGraphState prepare(Match match, PlayerQuestGraphState current) {
+	private static PlayerQuestGraphState prepare(Match match, PlayerQuestGraphState current, ZoneId serverZoneId, int accessLevel) {
 		long baseRevision = current == null ? -1 : current.getRevision();
 		long preparedRevision = Math.addExact(baseRevision, 1);
 		Map<String, VariableValue> variables = current == null ? initialVariables(match.graph()) : current.getVariables();
@@ -384,8 +400,9 @@ public final class QuestGraphTransitionExecutor {
 		Map<String, PlayerQuestGraphState.CleanupLease> leases = current == null ? Map.of() : current.getCleanupLeases();
 		Long instanceRunId = current == null ? null : current.getInstanceRunId();
 		String nodeId = current == null ? match.graph().initialNode() : current.getNodeId();
+		RepeatDeadlineResolution repeatResolution = resolveRepeatDeadline(match.route().transition(), match.event(), serverZoneId, accessLevel);
 		PreparedTransition journal = new PreparedTransition(baseRevision, match.event().eventId(), match.route().transition().id(), 0,
-			QuestGraphEventCodec.encode(match.event()));
+			repeatResolution, QuestGraphEventCodec.encode(match.event()));
 		QuestStatus questStatus = current == null ? QuestStatus.NONE : current.getQuestStatus();
 		QuestHistory history = current == null ? QuestHistory.EMPTY : current.getHistory();
 		return new PlayerQuestGraphState(match.graph().questId(), match.graph().version(), preparedRevision, nodeId, questStatus, history, instanceRunId,
@@ -399,6 +416,7 @@ public final class QuestGraphTransitionExecutor {
 	private static Status resumePrepared(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event,
 		PlayerQuestGraphState prepared, TransitionContext context) {
 		PlayerQuestGraphState current = prepared;
+		RepeatDeadlineResolution repeatResolution = prepared.getJournal().getRepeatDeadlineResolution();
 		int protocolStart = transition.actions().size();
 		for (int index = prepared.getJournal().getNextActionIndex(); index < transition.actions().size(); index++) {
 			Action action = transition.actions().get(index);
@@ -410,7 +428,7 @@ public final class QuestGraphTransitionExecutor {
 				ActionResult result;
 				try {
 					result = Objects.requireNonNull(context.actionExecutor()
-						.apply(invocation(graph, transition, event, current.getQuestStatus(), index)), "action result");
+						.apply(invocation(graph, transition, event, current.getQuestStatus(), index, repeatResolution)), "action result");
 				} catch (RuntimeException e) {
 					return Status.FAILED;
 				}
@@ -423,13 +441,13 @@ public final class QuestGraphTransitionExecutor {
 			}
 			PlayerQuestGraphState reduced;
 			try {
-				reduced = reduceActionState(graph, current, action, event.occurredAt());
+				reduced = reduceActionState(graph, current, action, event.occurredAt(), repeatResolution);
 			} catch (RuntimeException e) {
 				return Status.FAILED;
 			}
 			PlayerQuestGraphState progressed = copy(reduced, current.getRevision() + 1, current.getNodeId(), reduced.getQuestStatus(), Lifecycle.PREPARED,
 				new PreparedTransition(current.getJournal().getBaseRevision(), event.eventId(), transition.id(), index + 1,
-					current.getJournal().getEventPayload()));
+					repeatResolution, current.getJournal().getEventPayload()));
 			if (persist(context, current.getRevision(), progressed) != PersistenceResult.APPLIED) {
 				return Status.FAILED;
 			}
@@ -444,7 +462,7 @@ public final class QuestGraphTransitionExecutor {
 		context.states().put(committed);
 		for (int index = protocolStart; index < transition.actions().size(); index++) {
 			try {
-				context.actionExecutor().apply(invocation(graph, transition, event, committed.getQuestStatus(), index));
+				context.actionExecutor().apply(invocation(graph, transition, event, committed.getQuestStatus(), index, repeatResolution));
 			} catch (RuntimeException ignored) {
 				// Protocol is a post-commit projection; the owning adapter is responsible for logging/retry.
 			}
@@ -457,10 +475,11 @@ public final class QuestGraphTransitionExecutor {
 	 * Builds a stable idempotent invocation that includes the action index.
 	 */
 	private static ActionInvocation invocation(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event,
-		QuestStatus questStatus, int actionIndex) {
+		QuestStatus questStatus, int actionIndex, RepeatDeadlineResolution repeatDeadlineResolution) {
 		String key = event.eventId().length() + ":" + event.eventId() + ':' + graph.questId() + ':' + transition.id() + ':'
 			+ event.playerId() + ':' + actionIndex;
-		return new ActionInvocation(transition.actions().get(actionIndex), graph.questId(), actionIndex, questStatus, event, key);
+		return new ActionInvocation(transition.actions().get(actionIndex), graph.questId(), actionIndex, questStatus, event,
+			repeatDeadlineResolution, key);
 	}
 
 	/**
@@ -508,15 +527,51 @@ public final class QuestGraphTransitionExecutor {
 
 	/** 使用当前状态执行一个内部 state reduction。 / Applies one internal state reduction to the current state. */
 	private static PlayerQuestGraphState reduceActionState(CompiledQuestGraph graph, PlayerQuestGraphState current, Action action,
-		long occurredAt) {
+		long occurredAt, RepeatDeadlineResolution repeatDeadlineResolution) {
 		ActionState reduced = reduceActionState(graph, new ActionState(current.getQuestStatus(), current.getVariables()), action);
 		QuestHistory history = current.getHistory();
 		if (action instanceof FinishQuestAction finish) {
-			history = new QuestHistory(Math.addExact(history.completionCount(), 1), finish.rewardIndex(), occurredAt, null);
+			if (!matchesRepeatResolution(finish, repeatDeadlineResolution)) {
+				throw new IllegalStateException("Resolved repeat deadline does not match finish policy");
+			}
+			history = new QuestHistory(Math.addExact(history.completionCount(), 1), finish.rewardIndex(), occurredAt,
+				repeatDeadlineResolution.deadlineAt(), repeatDeadlineResolution.disposition());
 		}
 		return new PlayerQuestGraphState(current.getQuestId(), current.getDefinitionVersion(), current.getRevision(), current.getNodeId(),
 			reduced.questStatus(), history, current.getInstanceRunId(), current.getLifecycle(), reduced.variables(), current.getDeadlines(),
 			current.getJournal(), current.getCleanupLeases(), current.getQuarantineReason());
+	}
+
+	/** 校验冻结结果与 finish policy 的 deadline/权限合同一致。 / Validates the frozen outcome against the finish policy's deadline/privilege contract. */
+	private static boolean matchesRepeatResolution(FinishQuestAction finish, RepeatDeadlineResolution resolution) {
+		if (finish.repeatDeadlinePolicy() == NoRepeatDeadlinePolicy.INSTANCE) {
+			return resolution.disposition() == RepeatDeadlineDisposition.NOT_APPLICABLE;
+		}
+		return switch (resolution.disposition()) {
+			case NOT_APPLICABLE -> false;
+			case DEADLINE -> true;
+			case PRIVILEGED_BYPASS -> finish.repeatDeadlinePolicy().privilegeMode() == RepeatPrivilegeMode.BYPASS_FOR_PRIVILEGED;
+		};
+	}
+
+	/**
+	 * 在写入 PREPARED 前解析唯一 finish action 的 repeat deadline。
+	 * Resolves the unique finish action's repeat deadline before PREPARED is persisted.
+	 */
+	private static RepeatDeadlineResolution resolveRepeatDeadline(Transition transition, QuestGraphEvent event, ZoneId serverZoneId,
+		int accessLevel) {
+		FinishQuestAction finish = null;
+		for (Action action : transition.actions()) {
+			if (!(action instanceof FinishQuestAction candidate)) {
+				continue;
+			}
+			if (finish != null) {
+				throw new IllegalStateException("Transition contains multiple finish actions");
+			}
+			finish = candidate;
+		}
+		return finish == null ? RepeatDeadlineResolution.NOT_APPLICABLE
+			: QuestRepeatDeadlineCalculator.calculate(finish.repeatDeadlinePolicy(), event.occurredAt(), serverZoneId, accessLevel);
 	}
 
 	/** 校验整数变量写入仍位于声明边界。 / Validates that an integer-variable write remains within declared bounds. */

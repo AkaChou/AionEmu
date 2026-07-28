@@ -66,6 +66,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		CLOSE_DIALOG(ActionPhase.POST_COMMIT_PROTOCOL),
 		SHOW_QUEST_LIST(ActionPhase.POST_COMMIT_PROTOCOL),
 		SYNC_QUEST_STATUS(ActionPhase.POST_COMMIT_PROTOCOL),
+		SEND_REPEAT_DEADLINE_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL),
 		SEND_PLAYER_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL);
 
 		private final ActionPhase phase;
@@ -96,6 +97,94 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 */
 	public enum PlayerMessageChannel {
 		BRIGHT_YELLOW_CENTER
+	}
+
+	/** 定义 repeat deadline 使用的时间基准。 / Defines the time basis used by repeat deadlines. */
+	public enum RepeatTimeBasis {
+		SERVER_LOCAL
+	}
+
+	/** 定义高权限玩家完成计时任务时的 deadline 行为。 / Defines deadline behavior when a privileged player completes a timed quest. */
+	public enum RepeatPrivilegeMode {
+		NOT_APPLICABLE,
+		BYPASS_FOR_PRIVILEGED,
+		ENFORCE_FOR_PRIVILEGED
+	}
+
+	/** 定义当前任务数据使用的星期标识。 / Defines weekday identifiers used by current quest data. */
+	public enum RepeatWeekday {
+		MON(1),
+		TUE(2),
+		WED(3),
+		THU(4),
+		FRI(5),
+		SAT(6),
+		SUN(7);
+
+		private final int dayOfWeek;
+
+		RepeatWeekday(int dayOfWeek) {
+			this.dayOfWeek = dayOfWeek;
+		}
+
+		/** 返回 ISO-8601 星期值，周一为 1。 / Returns the ISO-8601 weekday value where Monday is 1. */
+		public int dayOfWeek() {
+			return dayOfWeek;
+		}
+	}
+
+	/** 定义完成任务后计算下次可重复时间的封闭策略集合。 / Defines the closed set of post-completion repeat-deadline policies. */
+	public sealed interface RepeatDeadlinePolicy permits NoRepeatDeadlinePolicy, DailyRepeatDeadlinePolicy,
+		WeeklyRepeatDeadlinePolicy, AnchoredCooldownRepeatDeadlinePolicy {
+
+		/** 返回该策略对高权限玩家的显式处理方式。 / Returns the policy's explicit handling of privileged players. */
+		default RepeatPrivilegeMode privilegeMode() {
+			return switch (this) {
+				case NoRepeatDeadlinePolicy ignored -> RepeatPrivilegeMode.NOT_APPLICABLE;
+				case DailyRepeatDeadlinePolicy ignored -> RepeatPrivilegeMode.BYPASS_FOR_PRIVILEGED;
+				case WeeklyRepeatDeadlinePolicy ignored -> RepeatPrivilegeMode.BYPASS_FOR_PRIVILEGED;
+				case AnchoredCooldownRepeatDeadlinePolicy ignored -> RepeatPrivilegeMode.ENFORCE_FOR_PRIVILEGED;
+			};
+		}
+	}
+
+	/** 表示完成后不生成 repeat deadline。 / Represents completion without a repeat deadline. */
+	public enum NoRepeatDeadlinePolicy implements RepeatDeadlinePolicy {
+		INSTANCE
+	}
+
+	/** 在服务器本地每日固定小时重置。 / Resets at a fixed server-local hour every day. */
+	public record DailyRepeatDeadlinePolicy(RepeatTimeBasis timeBasis, int resetHour) implements RepeatDeadlinePolicy {
+		/** 校验显式时间基准和小时。 / Validates the explicit time basis and hour. */
+		public DailyRepeatDeadlinePolicy {
+			if (timeBasis == null || resetHour < 0 || resetHour > 23) {
+				throw new IllegalArgumentException("Daily repeat deadline policy is invalid");
+			}
+		}
+	}
+
+	/** 在服务器本地指定星期的固定小时重置。 / Resets at a fixed server-local hour on selected weekdays. */
+	public record WeeklyRepeatDeadlinePolicy(RepeatTimeBasis timeBasis, Set<RepeatWeekday> weekdays, int resetHour)
+		implements RepeatDeadlinePolicy {
+		/** 校验并复制星期集合、时间基准和小时。 / Validates and copies weekdays, time basis, and hour. */
+		public WeeklyRepeatDeadlinePolicy {
+			if (timeBasis == null || weekdays == null || weekdays.isEmpty() || weekdays.stream().anyMatch(java.util.Objects::isNull)
+					|| resetHour < 0 || resetHour > 23) {
+				throw new IllegalArgumentException("Weekly repeat deadline policy is invalid");
+			}
+			weekdays = Set.copyOf(weekdays);
+		}
+	}
+
+	/** 从服务器本地当日锚点增加冷却秒数。 / Adds cooldown seconds to the current server-local day's anchor. */
+	public record AnchoredCooldownRepeatDeadlinePolicy(RepeatTimeBasis timeBasis, long cooldownSeconds, int anchorHour)
+		implements RepeatDeadlinePolicy {
+		/** 校验显式时间基准、正冷却和锚点小时。 / Validates the time basis, positive cooldown, and anchor hour. */
+		public AnchoredCooldownRepeatDeadlinePolicy {
+			if (timeBasis == null || cooldownSeconds <= 0 || anchorHour < 0 || anchorHour > 23) {
+				throw new IllegalArgumentException("Anchored cooldown repeat deadline policy is invalid");
+			}
+		}
 	}
 
 	/**
@@ -416,7 +505,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 */
 	public sealed interface Action permits StartQuestAction, SetQuestStatusAction, SetQuestVariableAction, AddQuestVariableAction,
 		RemoveCollectedItemsAction, FinishQuestAction, SendDialogAction, CloseDialogAction, ShowQuestListAction,
-		SyncQuestStatusAction, SendPlayerMessageAction {
+		SyncQuestStatusAction, SendRepeatDeadlineMessageAction, SendPlayerMessageAction {
 
 		/** 返回动作种类及其固定执行阶段。 / Returns the action kind and its fixed execution phase. */
 		default ActionType type() {
@@ -431,6 +520,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				case CloseDialogAction ignored -> ActionType.CLOSE_DIALOG;
 				case ShowQuestListAction ignored -> ActionType.SHOW_QUEST_LIST;
 				case SyncQuestStatusAction ignored -> ActionType.SYNC_QUEST_STATUS;
+				case SendRepeatDeadlineMessageAction ignored -> ActionType.SEND_REPEAT_DEADLINE_MESSAGE;
 				case SendPlayerMessageAction ignored -> ActionType.SEND_PLAYER_MESSAGE;
 			};
 		}
@@ -475,10 +565,15 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	}
 
 	/** 发放指定奖励组并完成当前任务周期。 / Grants the selected reward group and completes the current quest cycle. */
-	public record FinishQuestAction(int rewardIndex) implements Action {
-		/** 校验非负奖励组索引。 / Validates the non-negative reward-group index. */
+	public record FinishQuestAction(int rewardIndex, RepeatDeadlinePolicy repeatDeadlinePolicy) implements Action {
+		/** 创建没有 repeat deadline 的完成动作。 / Creates a finish action without a repeat deadline. */
+		public FinishQuestAction(int rewardIndex) {
+			this(rewardIndex, NoRepeatDeadlinePolicy.INSTANCE);
+		}
+
+		/** 校验非负奖励组索引和显式 repeat policy。 / Validates the reward index and explicit repeat policy. */
 		public FinishQuestAction {
-			if (rewardIndex < 0) {
+			if (rewardIndex < 0 || repeatDeadlinePolicy == null) {
 				throw new IllegalArgumentException("Quest reward index is invalid");
 			}
 		}
@@ -504,6 +599,16 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 
 	/** 提交后向客户端同步 canonical 任务状态和变量。 / Syncs canonical quest status and variables after commit. */
 	public record SyncQuestStatusAction() implements Action {
+	}
+
+	/** 提交后发送与已持久化 repeat deadline 一致的系统提示。 / Sends a system message matching the persisted repeat deadline after commit. */
+	public record SendRepeatDeadlineMessageAction(RepeatDeadlinePolicy repeatDeadlinePolicy) implements Action {
+		/** 提示必须引用一个真实 repeat policy。 / Requires a real repeat policy for the message. */
+		public SendRepeatDeadlineMessageAction {
+			if (repeatDeadlinePolicy == null || repeatDeadlinePolicy == NoRepeatDeadlinePolicy.INSTANCE) {
+				throw new IllegalArgumentException("Repeat deadline message policy is invalid");
+			}
+		}
 	}
 
 	/** 提交后向玩家发送类型化频道消息。 / Sends a typed-channel player message after commit. */
