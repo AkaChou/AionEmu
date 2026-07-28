@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.graph.runtime;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerEquippedCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
@@ -17,6 +18,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionInvocation;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionResult;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.QuestService;
@@ -25,8 +27,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 只读评估玩家静态接取资格条件；canonical 任务状态由转换执行器评估。
- * Read-only evaluator for static player eligibility; canonical quest state is evaluated by the transition executor.
+ * 只读评估玩家属性及绑定服务端事件快照的条件；canonical 任务状态由转换执行器评估。
+ * Read-only evaluator for player attributes and server-event-bound conditions; canonical quest state is evaluated by the transition executor.
  */
 @RequiredArgsConstructor
 public final class QuestGraphPlayerConditionEvaluator {
@@ -54,6 +56,7 @@ public final class QuestGraphPlayerConditionEvaluator {
 					"Quest completion count must be evaluated by the transition executor");
 				case PlayerLevelCondition condition -> player.getLevel() >= condition.min()
 					&& (condition.max() == null || player.getLevel() <= condition.max());
+				case KillVictimLevelDeltaCondition condition -> matchesKillVictimLevelDelta(condition, invocation);
 				case PlayerRaceCondition condition -> condition.allowed().contains(player.getRace());
 				case PlayerClassCondition condition -> condition.allowed().contains(player.getPlayerClass());
 				case PlayerGenderCondition condition -> condition.expected() == player.getGender();
@@ -69,6 +72,18 @@ public final class QuestGraphPlayerConditionEvaluator {
 		} catch (RuntimeException e) {
 			return ConditionResult.FAILED;
 		}
+	}
+
+	/**
+	 * 使用 KILL_IN_WORLD 的受害者等级快照比较当前玩家等级差；错误事件类型失败关闭。
+	 * Compares the current player level against the KILL_IN_WORLD victim-level snapshot and fails closed for other events.
+	 */
+	private boolean matchesKillVictimLevelDelta(KillVictimLevelDeltaCondition condition, ConditionInvocation invocation) {
+		if (!(invocation.event() instanceof KillInWorldEvent event)) {
+			throw new IllegalArgumentException("Kill-victim level delta requires KILL_IN_WORLD");
+		}
+		int delta = player.getLevel() - event.victimLevel();
+		return (condition.min() == null || delta >= condition.min()) && (condition.max() == null || delta <= condition.max());
 	}
 
 	/**

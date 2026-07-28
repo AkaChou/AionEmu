@@ -27,6 +27,7 @@ import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerEquippedCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
@@ -35,6 +36,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionInvocation;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
@@ -100,6 +102,23 @@ class QuestGraphPlayerConditionEvaluatorTest {
 		for (PlayerInventoryCondition condition : conditions) {
 			assertEquals(MATCHED, evaluator.evaluate(invocation(condition, EVENT)));
 		}
+	}
+
+	/**
+	 * 验证当前玩家与服务端受害者等级快照的双边和单边差值比较，并对错误事件失败关闭。
+	 * Verifies bounded and one-sided current-player/victim snapshot level deltas and fail-closed wrong-event handling.
+	 */
+	@Test
+	void evaluatesKillVictimLevelDeltaFromAuthoritativeEvent() throws ReflectiveOperationException {
+		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
+		KillInWorldEvent event = new KillInWorldEvent("kill", 7, 1000, 0, 8, 45);
+
+		assertEquals(MATCHED, evaluator.evaluate(invocation(new KillVictimLevelDeltaCondition(-5, 9), event)));
+		assertEquals(MATCHED, evaluator.evaluate(invocation(new KillVictimLevelDeltaCondition(null, 5), event)));
+		assertEquals(MATCHED, evaluator.evaluate(invocation(new KillVictimLevelDeltaCondition(5, null), event)));
+		assertEquals(NOT_MATCHED, evaluator.evaluate(invocation(new KillVictimLevelDeltaCondition(null, 4), event)));
+		assertEquals(NOT_MATCHED, evaluator.evaluate(invocation(new KillVictimLevelDeltaCondition(6, null), event)));
+		assertEquals(FAILED, evaluator.evaluate(invocation(new KillVictimLevelDeltaCondition(-5, 9), EVENT)));
 	}
 
 	/**
@@ -189,7 +208,7 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	 * 创建 evaluator 输入。
 	 * Creates evaluator input.
 	 */
-	private static ConditionInvocation invocation(Condition condition, DialogEvent event) {
+	private static ConditionInvocation invocation(Condition condition, QuestGraphEvent event) {
 		return new ConditionInvocation(condition, 1, START, event);
 	}
 

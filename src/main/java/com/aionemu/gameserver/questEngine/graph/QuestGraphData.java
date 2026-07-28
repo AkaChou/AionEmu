@@ -522,6 +522,7 @@ public final class QuestGraphData {
 			@XmlElement(name = "quest-reward", type = QuestRewardConditionData.class),
 			@XmlElement(name = "quest-completion-count", type = QuestCompletionCountConditionData.class),
 			@XmlElement(name = "player-level", type = PlayerLevelConditionData.class),
+			@XmlElement(name = "kill-victim-level-delta", type = KillVictimLevelDeltaConditionData.class),
 			@XmlElement(name = "player-race", type = PlayerRaceConditionData.class),
 			@XmlElement(name = "player-class", type = PlayerClassConditionData.class),
 			@XmlElement(name = "player-gender", type = PlayerGenderConditionData.class),
@@ -634,6 +635,21 @@ public final class QuestGraphData {
 		@XmlAttribute(required = true)
 		private Integer min;
 		/** 可选最高玩家等级。 / Optional maximum player level. */
+		@XmlAttribute
+		private Integer max;
+	}
+
+	/**
+	 * 表示当前玩家等级减去 KILL_IN_WORLD 受害玩家等级后的可选闭区间。
+	 * Represents optional inclusive bounds for current-player level minus the KILL_IN_WORLD victim-player level.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class KillVictimLevelDeltaConditionData {
+		/** 可选最小等级差。 / Optional minimum level delta. */
+		@XmlAttribute
+		private Integer min;
+		/** 可选最大等级差。 / Optional maximum level delta. */
 		@XmlAttribute
 		private Integer max;
 	}

@@ -305,6 +305,11 @@
 		<xs:attribute name="max" type="xs:positiveInteger"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphKillVictimLevelDeltaCondition">
+		<xs:attribute name="min" type="xs:int"/>
+		<xs:attribute name="max" type="xs:int"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphPlayerRaceCondition">
 		<xs:attribute name="values" type="questGraphPlayerRaceList" use="required"/>
 	</xs:complexType>
@@ -476,6 +481,7 @@
 			<xs:element name="quest-reward" type="questGraphQuestRewardCondition"/>
 			<xs:element name="quest-completion-count" type="questGraphQuestCompletionCountCondition"/>
 			<xs:element name="player-level" type="questGraphPlayerLevelCondition"/>
+			<xs:element name="kill-victim-level-delta" type="questGraphKillVictimLevelDeltaCondition"/>
 			<xs:element name="player-race" type="questGraphPlayerRaceCondition"/>
 			<xs:element name="player-class" type="questGraphPlayerClassCondition"/>
 			<xs:element name="player-gender" type="questGraphPlayerGenderCondition"/>

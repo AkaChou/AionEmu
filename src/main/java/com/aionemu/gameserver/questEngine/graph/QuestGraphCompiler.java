@@ -78,6 +78,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerMessage
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InteractionAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
@@ -131,6 +132,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GiveQuestItemActi
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillInWorldEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillVictimLevelDeltaConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.LevelUpEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.MovieEndedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NpcProximityEventData;
@@ -402,6 +404,7 @@ public final class QuestGraphCompiler {
 					.map(value -> compileCondition(questId, value, references, variables)).toList();
 				List<Action> actions = sourceTransition.getActions().stream()
 					.flatMap(value -> compileActions(questId, value, variables, references).stream()).toList();
+				validateEventConditions(questId, sourceTransition.getId(), event, conditions);
 				validateActionOrder(questId, sourceTransition.getId(), actions);
 				validateRepeatDeadlineProtocol(questId, sourceTransition.getId(), actions);
 				validateInteractionEligibility(questId, sourceNode.getId(), sourceTransition.getId(), sourceTransition.getTargetNode(), event, actions);
@@ -786,6 +789,13 @@ public final class QuestGraphCompiler {
 			}
 			return new PlayerLevelCondition(condition.getMin(), condition.getMax());
 		}
+		if (source instanceof KillVictimLevelDeltaConditionData condition) {
+			try {
+				return new KillVictimLevelDeltaCondition(condition.getMin(), condition.getMax());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid kill-victim level delta range", e);
+			}
+		}
 		if (source instanceof PlayerRaceConditionData condition) {
 			try {
 				EnumSet<Race> allowed = EnumSet.noneOf(Race.class);
@@ -1077,6 +1087,18 @@ public final class QuestGraphCompiler {
 		if (event.type() == INTERACTION_ELIGIBILITY && (!nodeId.equals(targetNode) || !actions.isEmpty())) {
 			throw new IllegalArgumentException("Quest " + questId + " interaction eligibility transition " + transitionId
 				+ " must be an actionless self-loop");
+		}
+	}
+
+	/**
+	 * 拒绝把事件专属条件挂到不提供相应服务端快照的事件。
+	 * Rejects event-specific conditions on events that do not provide the required server-authoritative snapshot.
+	 */
+	private static void validateEventConditions(int questId, String transitionId, Event event, List<Condition> conditions) {
+		if (conditions.stream().anyMatch(KillVictimLevelDeltaCondition.class::isInstance)
+				&& event.type() != KILL_IN_WORLD) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+				+ " uses kill-victim level delta outside KILL_IN_WORLD");
 		}
 	}
 

@@ -319,7 +319,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Represents a typed condition that must hold before a transition executes.
 	 */
 	public sealed interface Condition permits QuestStatusCondition, QuestVariableCondition, QuestRepeatAvailableCondition,
-		QuestCollectItemsCondition, PlayerLevelCondition, PlayerRaceCondition, PlayerClassCondition,
+		QuestCollectItemsCondition, PlayerLevelCondition, KillVictimLevelDeltaCondition, PlayerRaceCondition, PlayerClassCondition,
 		PlayerGenderCondition, PlayerTitleCondition, PlayerAbyssRankCondition, PlayerInventoryCondition, QuestRewardCondition,
 		QuestCompletionCountCondition, PlayerEquippedCondition {
 	}
@@ -442,6 +442,19 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		public PlayerLevelCondition {
 			if (min <= 0 || max != null && max < min) {
 				throw new IllegalArgumentException("Player level condition range is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 比较当前玩家等级与 KILL_IN_WORLD 服务端受害者快照的差值闭区间。
+	 * Compares the current player level minus the server-authoritative KILL_IN_WORLD victim level against an inclusive range.
+	 */
+	public record KillVictimLevelDeltaCondition(Integer min, Integer max) implements Condition {
+		/** 校验至少一个边界存在且闭区间有效。 / Validates that at least one bound exists and the inclusive range is valid. */
+		public KillVictimLevelDeltaCondition {
+			if (min == null && max == null || min != null && max != null && max < min) {
+				throw new IllegalArgumentException("Kill-victim level delta condition range is invalid");
 			}
 		}
 	}

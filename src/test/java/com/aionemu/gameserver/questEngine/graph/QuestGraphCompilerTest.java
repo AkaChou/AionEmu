@@ -609,6 +609,8 @@ class QuestGraphCompilerTest {
 			() -> new CompiledQuestGraph.QuestCompletionCountCondition(1, ConditionOperation.IN, 1));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerLevelCondition(0, null));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerLevelCondition(10, 9));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.KillVictimLevelDeltaCondition(null, null));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.KillVictimLevelDeltaCondition(10, 9));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerRaceCondition(Set.of()));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerRaceCondition(Set.of(Race.NPC)));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayerClassCondition(Set.of(PlayerClass.ALL)));
@@ -633,6 +635,34 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.AddCompletionCountAction(0));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.StartQuestTimerAction("QUEST_TIMER", 0));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayMovieAction(0));
+	}
+
+	/**
+	 * 验证击杀事件等级差条件只读取 KILL_IN_WORLD 快照，并拒绝空区间、反向区间和错误事件。
+	 * Verifies that the kill-victim level-delta condition only reads KILL_IN_WORLD snapshots and rejects empty, reversed,
+	 * or wrong-event definitions.
+	 */
+	@Test
+	void compilerClosesKillVictimLevelDeltaCondition() throws Exception {
+		String transition = """
+			<transition id="pvp-level" priority="1" to="done">
+				<kill-in-world world_id="0"/>
+				<conditions><kill-victim-level-delta min="-5" max="9"/></conditions>
+			</transition>
+			""";
+		CompiledQuestGraph.Condition condition = load(document(graph(1, "active", transition, terminal()))).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().conditions().getFirst();
+		assertEquals(new CompiledQuestGraph.KillVictimLevelDeltaCondition(-5, 9), condition);
+
+		IllegalArgumentException wrongEvent = assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			transition.replace("<kill-in-world world_id=\"0\"/>", "<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>"), terminal()))));
+		assertCauseContains(wrongEvent, "uses kill-victim level delta outside KILL_IN_WORLD");
+		IllegalArgumentException missingBounds = assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			transition.replace(" min=\"-5\" max=\"9\"", ""), terminal()))));
+		assertCauseContains(missingBounds, "invalid kill-victim level delta range");
+		IllegalArgumentException reversedBounds = assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			transition.replace("min=\"-5\" max=\"9\"", "min=\"10\" max=\"9\""), terminal()))));
+		assertCauseContains(reversedBounds, "invalid kill-victim level delta range");
 	}
 
 	/**
