@@ -77,6 +77,7 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(2, state.getRevision());
 		assertEquals("done", state.getNodeId());
 		assertEquals(Lifecycle.ACTIVE, state.getLifecycle());
+		assertEquals(CompiledQuestGraph.QuestStatus.START, state.getQuestStatus());
 		assertNull(state.getJournal());
 		assertEquals(new IntValue(2), state.getVariables().get("count"));
 		assertEquals(new BooleanValue(false), state.getVariables().get("enabled"));
@@ -122,6 +123,55 @@ class QuestGraphTransitionExecutorTest {
 	}
 
 	/**
+	 * 验证 canonical graph 状态会在外部 condition callback 前阻断状态不匹配。
+	 * Verifies that canonical graph state blocks a status mismatch before the external condition callback.
+	 */
+	@Test
+	void canonicalQuestStatusCannotBeOverriddenByConditionCallback() {
+		Fixture fixture = fixture();
+		PlayerQuestGraphState active = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.START, null,
+			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		fixture.states().addLoaded(active);
+		AtomicInteger callbacks = new AtomicInteger();
+		TransitionContext context = new TransitionContext(7, fixture.states(), invocation -> {
+			callbacks.incrementAndGet();
+			return MATCHED;
+		}, invocation -> READY, invocation -> APPLIED, (expected, state) -> PersistenceResult.APPLIED);
+		Match match = new Match(EVENT, fixture.graph(), fixture.match().route(), active);
+
+		assertEquals(DispatchResult.Status.NO_MATCH, executor.execute(match, context));
+		assertEquals(0, callbacks.get());
+		assertEquals(active, fixture.states().get(1));
+	}
+
+	/**
+	 * 验证已知非法 canonical action 状态在 PREPARED 和 callback 前失败。
+	 * Verifies that a known-invalid canonical action state fails before PREPARED and callbacks.
+	 */
+	@Test
+	void illegalCanonicalActionStateFailsDuringPreflight() {
+		Fixture fixture = fixture();
+		Transition original = fixture.match().route().transition();
+		Transition transition = new Transition(original.id(), original.priority(), original.targetNode(), original.event(), List.of(),
+			original.actions());
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", fixture.graph().variables(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState state = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.REWARD, null,
+			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		fixture.states().addLoaded(state);
+		AtomicInteger callbacks = new AtomicInteger();
+		TransitionContext context = new TransitionContext(7, fixture.states(), invocation -> MATCHED, invocation -> {
+			callbacks.incrementAndGet();
+			return READY;
+		}, invocation -> APPLIED, (expected, next) -> PersistenceResult.APPLIED);
+
+		assertEquals(DispatchResult.Status.FAILED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "offer", transition), state), context));
+		assertEquals(0, callbacks.get());
+		assertEquals(state, fixture.states().get(1));
+	}
+
+	/**
 	 * 验证动作失败保留可恢复 PREPARED journal 且不推进节点。
 	 * Verifies that action failure retains a recoverable PREPARED journal without advancing the node.
 	 */
@@ -137,6 +187,7 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(0, state.getRevision());
 		assertEquals("offer", state.getNodeId());
 		assertEquals(Lifecycle.PREPARED, state.getLifecycle());
+		assertEquals(CompiledQuestGraph.QuestStatus.NONE, state.getQuestStatus());
 		assertEquals(-1, state.getJournal().getBaseRevision());
 		assertEquals(0, state.getJournal().getNextActionIndex());
 	}
@@ -219,6 +270,7 @@ class QuestGraphTransitionExecutorTest {
 
 		assertEquals(DispatchResult.Status.FAILED, executor.execute(fixture.match(), context));
 		assertEquals(Lifecycle.PREPARED, fixture.states().get(1).getLifecycle());
+		assertEquals(CompiledQuestGraph.QuestStatus.NONE, fixture.states().get(1).getQuestStatus());
 		assertEquals(DispatchResult.Status.APPLIED, executor.recover(fixture.graph(), context));
 
 		PlayerQuestGraphState committed = fixture.states().get(1);
@@ -227,6 +279,7 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(2, committed.getRevision());
 		assertEquals("done", committed.getNodeId());
 		assertEquals(Lifecycle.ACTIVE, committed.getLifecycle());
+		assertEquals(CompiledQuestGraph.QuestStatus.START, committed.getQuestStatus());
 		assertEquals(committed, database.get());
 	}
 

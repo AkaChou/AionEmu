@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphCompiler;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Propagation;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
@@ -74,11 +75,12 @@ class QuestGraphRouterTest {
 		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE), noMatch);
 
 		List<PlayerQuestGraphState> blockedStates = List.of(
-			new PlayerQuestGraphState(2, 2, 0, "start", null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null),
-			new PlayerQuestGraphState(2, 1, 0, "missing", null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null),
-			new PlayerQuestGraphState(2, 1, 0, "start", null, Lifecycle.PREPARED, Map.of(), Map.of(),
+			new PlayerQuestGraphState(2, 2, 0, "start", QuestStatus.START, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null),
+			new PlayerQuestGraphState(2, 1, 0, "missing", QuestStatus.START, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null),
+			new PlayerQuestGraphState(2, 1, 0, "start", QuestStatus.NONE, null, Lifecycle.PREPARED, Map.of(), Map.of(),
 				new PreparedTransition(-1, "event", "dialog-q2", 0, new byte[0]), Map.of(), null),
-			new PlayerQuestGraphState(2, 1, 0, "start", null, Lifecycle.QUARANTINED, Map.of(), Map.of(), null, Map.of(), "blocked"));
+			new PlayerQuestGraphState(2, 1, 0, "start", QuestStatus.START, null, Lifecycle.QUARANTINED, Map.of(), Map.of(), null,
+				Map.of(), "blocked"));
 		for (PlayerQuestGraphState blockedState : blockedStates) {
 			PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
 			states.addLoaded(blockedState);

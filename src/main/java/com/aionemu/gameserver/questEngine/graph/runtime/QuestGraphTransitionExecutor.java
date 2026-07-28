@@ -12,6 +12,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariab
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
@@ -75,13 +76,14 @@ public final class QuestGraphTransitionExecutor {
 	 * 保存一次类型化条件评估所需的不可变输入。
 	 * Holds immutable input required to evaluate one typed condition.
 	 */
-	public record ConditionInvocation(Condition condition, int questId, QuestGraphEvent event) {
+	public record ConditionInvocation(Condition condition, int questId, QuestStatus questStatus, QuestGraphEvent event) {
 		/**
 		 * 校验条件调用输入。
 		 * Validates condition invocation input.
 		 */
 		public ConditionInvocation {
 			Objects.requireNonNull(condition, "condition");
+			Objects.requireNonNull(questStatus, "questStatus");
 			Objects.requireNonNull(event, "event");
 		}
 	}
@@ -90,13 +92,15 @@ public final class QuestGraphTransitionExecutor {
 	 * 保存一次动作预检或执行所需的不可变输入和稳定幂等键。
 	 * Holds immutable action input and its stable idempotency key for preflight or execution.
 	 */
-	public record ActionInvocation(Action action, int questId, int actionIndex, QuestGraphEvent event, String idempotencyKey) {
+	public record ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event,
+		String idempotencyKey) {
 		/**
 		 * 校验动作调用输入。
 		 * Validates action invocation input.
 		 */
 		public ActionInvocation {
 			Objects.requireNonNull(action, "action");
+			Objects.requireNonNull(questStatus, "questStatus");
 			Objects.requireNonNull(event, "event");
 			if (actionIndex < 0 || idempotencyKey == null || idempotencyKey.isBlank()) {
 				throw new IllegalArgumentException("Action index/idempotency key is invalid");
@@ -149,7 +153,8 @@ public final class QuestGraphTransitionExecutor {
 				if (conditionStatus != Status.APPLIED) {
 					return conditionStatus;
 				}
-				Status preflightStatus = preflight(match.graph(), match.route().transition(), match.event(), 0, context);
+				QuestStatus questStatus = current == null ? QuestStatus.NONE : current.getQuestStatus();
+				Status preflightStatus = preflight(match.graph(), match.route().transition(), match.event(), questStatus, 0, context);
 				if (preflightStatus != Status.APPLIED) {
 					return preflightStatus;
 				}
@@ -199,7 +204,7 @@ public final class QuestGraphTransitionExecutor {
 				if (event.playerId() != context.playerId() || !journal.getEventId().equals(event.eventId()) || !matches(event, transition.event())) {
 					return Status.FAILED;
 				}
-				Status preflightStatus = preflight(graph, transition, event, journal.getNextActionIndex(), context);
+				Status preflightStatus = preflight(graph, transition, event, state.getQuestStatus(), journal.getNextActionIndex(), context);
 				return preflightStatus == Status.APPLIED ? resumePrepared(graph, transition, event, state, context) : preflightStatus;
 			} catch (RuntimeException e) {
 				return Status.FAILED;
@@ -212,11 +217,15 @@ public final class QuestGraphTransitionExecutor {
 	 * Evaluates all read-only conditions and separately maps mismatch and capability failure to routing status.
 	 */
 	private static Status evaluateConditions(Match match, TransitionContext context) {
+		QuestStatus questStatus = match.state() == null ? QuestStatus.NONE : match.state().getQuestStatus();
 		for (Condition condition : match.route().transition().conditions()) {
+			if (condition.questStatus() != questStatus) {
+				return Status.NO_MATCH;
+			}
 			ConditionResult result;
 			try {
 				result = Objects.requireNonNull(context.conditionEvaluator()
-					.apply(new ConditionInvocation(condition, match.graph().questId(), match.event())), "condition result");
+					.apply(new ConditionInvocation(condition, match.graph().questId(), questStatus, match.event())), "condition result");
 			} catch (RuntimeException e) {
 				return Status.FAILED;
 			}
@@ -234,12 +243,19 @@ public final class QuestGraphTransitionExecutor {
 	 * 从指定动作位置预检全部剩余动作，不产生状态或业务副作用。
 	 * Preflights every remaining action from the given index without state or business side effects.
 	 */
-	private static Status preflight(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event, int startIndex,
+	private static Status preflight(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event, QuestStatus questStatus, int startIndex,
 		TransitionContext context) {
 		for (int index = startIndex; index < transition.actions().size(); index++) {
+			Action action = transition.actions().get(index);
+			QuestStatus nextStatus;
+			try {
+				nextStatus = reduceQuestStatus(questStatus, action);
+			} catch (RuntimeException e) {
+				return Status.FAILED;
+			}
 			PreflightResult result;
 			try {
-				result = Objects.requireNonNull(context.actionPreflight().apply(invocation(graph, transition, event, index)),
+				result = Objects.requireNonNull(context.actionPreflight().apply(invocation(graph, transition, event, questStatus, index)),
 					"preflight result");
 			} catch (RuntimeException e) {
 				return Status.FAILED;
@@ -250,6 +266,7 @@ public final class QuestGraphTransitionExecutor {
 			if (result == PreflightResult.FAILED) {
 				return Status.FAILED;
 			}
+			questStatus = nextStatus;
 		}
 		return Status.APPLIED;
 	}
@@ -268,7 +285,8 @@ public final class QuestGraphTransitionExecutor {
 		String nodeId = current == null ? match.graph().initialNode() : current.getNodeId();
 		PreparedTransition journal = new PreparedTransition(baseRevision, match.event().eventId(), match.route().transition().id(), 0,
 			QuestGraphEventCodec.encode(match.event()));
-		return new PlayerQuestGraphState(match.graph().questId(), match.graph().version(), preparedRevision, nodeId, instanceRunId,
+		QuestStatus questStatus = current == null ? QuestStatus.NONE : current.getQuestStatus();
+		return new PlayerQuestGraphState(match.graph().questId(), match.graph().version(), preparedRevision, nodeId, questStatus, instanceRunId,
 			Lifecycle.PREPARED, variables, deadlines, journal, leases, null);
 	}
 
@@ -282,7 +300,8 @@ public final class QuestGraphTransitionExecutor {
 		for (int index = prepared.getJournal().getNextActionIndex(); index < transition.actions().size(); index++) {
 			ActionResult result;
 			try {
-				result = Objects.requireNonNull(context.actionExecutor().apply(invocation(graph, transition, event, index)), "action result");
+				result = Objects.requireNonNull(context.actionExecutor()
+					.apply(invocation(graph, transition, event, current.getQuestStatus(), index)), "action result");
 			} catch (RuntimeException e) {
 				return Status.FAILED;
 			}
@@ -292,7 +311,8 @@ public final class QuestGraphTransitionExecutor {
 			if (result == ActionResult.FAILED) {
 				return Status.FAILED;
 			}
-			PlayerQuestGraphState progressed = copy(current, current.getRevision() + 1, current.getNodeId(), Lifecycle.PREPARED,
+			QuestStatus questStatus = reduceQuestStatus(current.getQuestStatus(), transition.actions().get(index));
+			PlayerQuestGraphState progressed = copy(current, current.getRevision() + 1, current.getNodeId(), questStatus, Lifecycle.PREPARED,
 				new PreparedTransition(current.getJournal().getBaseRevision(), event.eventId(), transition.id(), index + 1,
 					current.getJournal().getEventPayload()));
 			if (persist(context, current.getRevision(), progressed) != PersistenceResult.APPLIED) {
@@ -301,7 +321,8 @@ public final class QuestGraphTransitionExecutor {
 			context.states().put(progressed);
 			current = progressed;
 		}
-		PlayerQuestGraphState committed = copy(current, current.getRevision() + 1, transition.targetNode(), Lifecycle.ACTIVE, null);
+		PlayerQuestGraphState committed = copy(current, current.getRevision() + 1, transition.targetNode(), current.getQuestStatus(),
+			Lifecycle.ACTIVE, null);
 		if (persist(context, current.getRevision(), committed) != PersistenceResult.APPLIED) {
 			return Status.FAILED;
 		}
@@ -313,10 +334,25 @@ public final class QuestGraphTransitionExecutor {
 	 * 构造包含动作序号的稳定幂等调用。
 	 * Builds a stable idempotent invocation that includes the action index.
 	 */
-	private static ActionInvocation invocation(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event, int actionIndex) {
+	private static ActionInvocation invocation(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event,
+		QuestStatus questStatus, int actionIndex) {
 		String key = event.eventId().length() + ":" + event.eventId() + ':' + graph.questId() + ':' + transition.id() + ':'
 			+ event.playerId() + ':' + actionIndex;
-		return new ActionInvocation(transition.actions().get(actionIndex), graph.questId(), actionIndex, event, key);
+		return new ActionInvocation(transition.actions().get(actionIndex), graph.questId(), actionIndex, questStatus, event, key);
+	}
+
+	/**
+	 * 将已成功动作归约到 canonical 任务状态；未知或非法状态组合显式失败。
+	 * Reduces a successful action into canonical quest status and explicitly fails unknown or illegal combinations.
+	 */
+	private static QuestStatus reduceQuestStatus(QuestStatus current, Action action) {
+		return switch (action.type()) {
+			case START_QUEST -> switch (current) {
+				case NONE, COMPLETE -> QuestStatus.START;
+				case START -> QuestStatus.START;
+				case REWARD -> throw new IllegalStateException("Cannot start a quest awaiting reward");
+			};
+		};
 	}
 
 	/**
@@ -356,10 +392,10 @@ public final class QuestGraphTransitionExecutor {
 	 * 复制状态并只替换转换推进字段。
 	 * Copies state while replacing only transition-progress fields.
 	 */
-	private static PlayerQuestGraphState copy(PlayerQuestGraphState source, long revision, String nodeId, Lifecycle lifecycle,
-		PreparedTransition journal) {
-		return new PlayerQuestGraphState(source.getQuestId(), source.getDefinitionVersion(), revision, nodeId, source.getInstanceRunId(),
-			lifecycle, source.getVariables(), source.getDeadlines(), journal, source.getCleanupLeases(), null);
+	private static PlayerQuestGraphState copy(PlayerQuestGraphState source, long revision, String nodeId, QuestStatus questStatus,
+		Lifecycle lifecycle, PreparedTransition journal) {
+		return new PlayerQuestGraphState(source.getQuestId(), source.getDefinitionVersion(), revision, nodeId, questStatus,
+			source.getInstanceRunId(), lifecycle, source.getVariables(), source.getDeadlines(), journal, source.getCleanupLeases(), null);
 	}
 
 	/**

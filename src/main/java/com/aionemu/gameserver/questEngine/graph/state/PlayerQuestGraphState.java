@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -111,6 +113,8 @@ public final class PlayerQuestGraphState {
 	private final long revision;
 	/** 当前任务图节点。 / Current quest graph node. */
 	private final String nodeId;
+	/** 当前 canonical 任务生命周期状态。 / Current canonical quest lifecycle status. */
+	private final QuestStatus questStatus;
 	/** 可选副本运行标识。 / Optional instance-run identifier. */
 	private final Long instanceRunId;
 	/** 当前恢复生命周期。 / Current recovery lifecycle. */
@@ -130,7 +134,7 @@ public final class PlayerQuestGraphState {
 	 * 创建并完整校验不可变玩家任务图状态。
 	 * Creates and fully validates an immutable player quest graph state.
 	 */
-	public PlayerQuestGraphState(int questId, int definitionVersion, long revision, String nodeId, Long instanceRunId,
+	public PlayerQuestGraphState(int questId, int definitionVersion, long revision, String nodeId, QuestStatus questStatus, Long instanceRunId,
 			Lifecycle lifecycle, Map<String, VariableValue> variables, Map<String, Long> deadlines, PreparedTransition journal,
 			Map<String, CleanupLease> cleanupLeases, String quarantineReason) {
 		if (questId <= 0 || definitionVersion <= 0 || revision < 0) {
@@ -146,6 +150,7 @@ public final class PlayerQuestGraphState {
 		if (this.nodeId.length() > 128) {
 			throw new IllegalArgumentException("Node id exceeds the persisted 128-character limit");
 		}
+		this.questStatus = java.util.Objects.requireNonNull(questStatus, "questStatus");
 		this.instanceRunId = instanceRunId;
 		this.lifecycle = java.util.Objects.requireNonNull(lifecycle, "lifecycle");
 		this.variables = immutableVariables(variables);
@@ -169,6 +174,9 @@ public final class PlayerQuestGraphState {
 	 * Validates consistency between lifecycle, journal, and quarantine reason.
 	 */
 	private void validateLifecycle() {
+		if (lifecycle == Lifecycle.ACTIVE && questStatus == QuestStatus.NONE) {
+			throw new IllegalArgumentException("ACTIVE state cannot have NONE quest status");
+		}
 		if (lifecycle == Lifecycle.ACTIVE && (journal != null || quarantineReason != null)) {
 			throw new IllegalArgumentException("ACTIVE state cannot contain journal/quarantine reason");
 		}

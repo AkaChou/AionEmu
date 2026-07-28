@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
@@ -47,6 +48,7 @@ class PlayerQuestGraphStateTest {
 		assertEquals(1_800_000_000_000L, decoded.nextDeadlineAt());
 		assertEquals("SPAWN", decoded.getCleanupLeases().get("escort").capability());
 		assertEquals("event-9", decoded.getJournal().getEventId());
+		assertEquals(QuestStatus.START, decoded.getQuestStatus());
 		assertArrayEquals(new byte[] { 4, 5, 6 }, decoded.getJournal().getEventPayload());
 	}
 
@@ -70,16 +72,26 @@ class PlayerQuestGraphStateTest {
 
 	@Test
 	void invalidLifecycleAndCorruptPayloadAreRejected() throws Exception {
-		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", null,
+		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", QuestStatus.NONE, null,
 			Lifecycle.PREPARED, Map.of(), Map.of(), null, Map.of(), null));
-		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", null,
+		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", QuestStatus.START, null,
 			Lifecycle.QUARANTINED, Map.of(), Map.of(), null, Map.of(), null));
-		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", null,
+		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", QuestStatus.NONE, null,
 			Lifecycle.PREPARED, Map.of(), Map.of(), new PreparedTransition(-1, "event", "transition", 1, new byte[0]), Map.of(), null));
+		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", QuestStatus.NONE, null,
+			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null));
 
-		byte[] valid = PlayerQuestGraphStateCodec.encode(new PlayerQuestGraphState(1, 1, 0, "start", null,
+		byte[] valid = PlayerQuestGraphStateCodec.encode(new PlayerQuestGraphState(1, 1, 0, "start", QuestStatus.START, null,
 			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null));
 		byte[] trailing = java.util.Arrays.copyOf(valid, valid.length + 1);
+		byte[] oldVersion = java.util.Arrays.copyOf(valid, valid.length);
+		oldVersion[3] = 0x31;
+		byte[] unknownStatus = java.util.Arrays.copyOf(valid, valid.length);
+		unknownStatus[4] = 99;
+		assertThrows(IllegalArgumentException.class,
+			() -> PlayerQuestGraphStateCodec.decode(1, 1, 0, "start", null, Lifecycle.ACTIVE, oldVersion));
+		assertThrows(IllegalArgumentException.class,
+			() -> PlayerQuestGraphStateCodec.decode(1, 1, 0, "start", null, Lifecycle.ACTIVE, unknownStatus));
 		assertThrows(IllegalArgumentException.class,
 			() -> PlayerQuestGraphStateCodec.decode(1, 1, 0, "start", null, Lifecycle.ACTIVE, trailing));
 		assertThrows(IllegalArgumentException.class,
@@ -97,7 +109,8 @@ class PlayerQuestGraphStateTest {
 
 		assertEquals(List.of(10, 20), states.snapshot().stream().map(PlayerQuestGraphState::getQuestId).toList());
 		assertThrows(IllegalArgumentException.class, () -> states.put(activeState(20)));
-		states.put(new PlayerQuestGraphState(20, 1, 1, "next", null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null));
+		states.put(new PlayerQuestGraphState(20, 1, 1, "next", QuestStatus.START, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null,
+			Map.of(), null));
 		assertEquals(1, states.get(20).getRevision());
 		assertTrue(states.remove(10));
 		assertFalse(states.remove(10));
@@ -107,19 +120,21 @@ class PlayerQuestGraphStateTest {
 	}
 
 	private static PlayerQuestGraphState state(Map<String, VariableValue> variables, PreparedTransition journal) {
-		return new PlayerQuestGraphState(1230, 2, 3, "hunt", 77L, Lifecycle.PREPARED, variables,
+		return new PlayerQuestGraphState(1230, 2, 3, "hunt", QuestStatus.START, 77L, Lifecycle.PREPARED, variables,
 			Map.of("soft", 1_900_000_000_000L, "timeout", 1_800_000_000_000L), journal,
 			Map.of("escort", new CleanupLease("SPAWN", "npc:9001")), null);
 	}
 
 	private static PlayerQuestGraphState activeState(int questId) {
-		return new PlayerQuestGraphState(questId, 1, 0, "start", null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		return new PlayerQuestGraphState(questId, 1, 0, "start", QuestStatus.START, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null,
+			Map.of(), null);
 	}
 
 	private static byte[] duplicateVariablePayload() throws Exception {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		try (DataOutputStream output = new DataOutputStream(bytes)) {
-			output.writeInt(0x51475331);
+			output.writeInt(0x51475332);
+			output.writeByte(1);
 			output.writeInt(2);
 			output.writeUTF("score");
 			output.writeByte(1);

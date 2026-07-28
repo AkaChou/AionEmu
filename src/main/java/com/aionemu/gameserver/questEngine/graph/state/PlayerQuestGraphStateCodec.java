@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
@@ -22,7 +23,7 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Vari
  */
 public final class PlayerQuestGraphStateCodec {
 
-	private static final int MAGIC = 0x51475331;
+	private static final int MAGIC = 0x51475332;
 	private static final int MAX_VARIABLES = 1024;
 	private static final int MAX_DEADLINES = 256;
 	private static final int MAX_CLEANUP_LEASES = 1024;
@@ -30,6 +31,10 @@ public final class PlayerQuestGraphStateCodec {
 	private static final int MAX_TOTAL_PAYLOAD = 2 * 1024 * 1024;
 	private static final byte INT_VALUE = 1;
 	private static final byte BOOLEAN_VALUE = 2;
+	private static final byte STATUS_NONE = 0;
+	private static final byte STATUS_START = 1;
+	private static final byte STATUS_REWARD = 2;
+	private static final byte STATUS_COMPLETE = 3;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -47,6 +52,12 @@ public final class PlayerQuestGraphStateCodec {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 			try (DataOutputStream output = new DataOutputStream(bytes)) {
 				output.writeInt(MAGIC);
+				output.writeByte(switch (state.getQuestStatus()) {
+					case NONE -> STATUS_NONE;
+					case START -> STATUS_START;
+					case REWARD -> STATUS_REWARD;
+					case COMPLETE -> STATUS_COMPLETE;
+				});
 				writeVariables(output, state.getVariables());
 				writeDeadlines(output, state.getDeadlines());
 				writeJournal(output, state.getJournal());
@@ -76,6 +87,13 @@ public final class PlayerQuestGraphStateCodec {
 			if (input.readInt() != MAGIC) {
 				throw new IllegalArgumentException("Unsupported quest graph state payload version");
 			}
+			QuestStatus questStatus = switch (input.readByte()) {
+				case STATUS_NONE -> QuestStatus.NONE;
+				case STATUS_START -> QuestStatus.START;
+				case STATUS_REWARD -> QuestStatus.REWARD;
+				case STATUS_COMPLETE -> QuestStatus.COMPLETE;
+				default -> throw new IllegalArgumentException("Unknown quest graph status tag");
+			};
 			Map<String, VariableValue> variables = readVariables(input);
 			Map<String, Long> deadlines = readDeadlines(input);
 			PreparedTransition journal = readJournal(input);
@@ -84,7 +102,7 @@ public final class PlayerQuestGraphStateCodec {
 			if (input.read() != -1) {
 				throw new IllegalArgumentException("Quest graph state payload has trailing data");
 			}
-			return new PlayerQuestGraphState(questId, definitionVersion, revision, nodeId, instanceRunId, lifecycle, variables,
+			return new PlayerQuestGraphState(questId, definitionVersion, revision, nodeId, questStatus, instanceRunId, lifecycle, variables,
 				deadlines, journal, cleanupLeases, quarantineReason);
 		} catch (EOFException e) {
 			throw new IllegalArgumentException("Quest graph state payload is truncated", e);
@@ -281,4 +299,3 @@ public final class PlayerQuestGraphStateCodec {
 		}
 	}
 }
-
