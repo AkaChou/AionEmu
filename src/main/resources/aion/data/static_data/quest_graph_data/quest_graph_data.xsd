@@ -212,6 +212,17 @@
 		<xs:attribute name="movie_id" type="questGraphMovieId" use="required"/>
 	</xs:complexType>
 
+	<xs:simpleType name="questGraphInteractionAction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ACTION_ITEM_USE"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="questGraphInteractionEligibilityEvent">
+		<xs:attribute name="object_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="action" type="questGraphInteractionAction" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphNpcProximityEvent">
 		<xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
@@ -433,6 +444,10 @@
 		<xs:attribute name="dialog_id" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphPlayMovieAction">
+		<xs:attribute name="movie_id" type="questGraphMovieId" use="required"/>
+	</xs:complexType>
+
 	<xs:simpleType name="questGraphPlayerMessageChannel">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="BRIGHT_YELLOW_CENTER"/>
@@ -491,6 +506,7 @@
 			<xs:element name="sync-quest-status" type="questGraphEmptyAction"/>
 			<xs:element name="send-repeat-deadline-message" type="questGraphSendRepeatDeadlineMessageAction"/>
 			<xs:element name="send-player-message" type="questGraphSendPlayerMessageAction"/>
+			<xs:element name="play-movie" type="questGraphPlayMovieAction"/>
 		</xs:choice>
 	</xs:complexType>
 
@@ -524,6 +540,7 @@
 					<xs:element name="windstream-entered" type="questGraphWindstreamEnteredEvent"/>
 					<xs:element name="flying-ring-passed" type="questGraphFlyingRingPassedEvent"/>
 					<xs:element name="skill-used" type="questGraphSkillUsedEvent"/>
+					<xs:element name="interaction-eligibility" type="questGraphInteractionEligibilityEvent"/>
 			</xs:choice>
 			<xs:element name="conditions" type="questGraphConditions" minOccurs="0"/>
 			<xs:element name="actions" type="questGraphActions" minOccurs="0"/>

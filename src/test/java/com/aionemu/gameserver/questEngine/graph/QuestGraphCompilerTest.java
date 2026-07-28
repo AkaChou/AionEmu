@@ -632,6 +632,45 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.SetCompletionCountAction(-1));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.AddCompletionCountAction(0));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.StartQuestTimerAction("QUEST_TIMER", 0));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayMovieAction(0));
+	}
+
+	/**
+	 * 验证交互资格只能编译为引用闭合的 actionless self-loop，影片动作属于引用闭合的 post-commit 协议。
+	 * Verifies that interaction eligibility compiles only as a reference-closed actionless self-loop and that movie
+	 * actions are reference-closed post-commit protocol.
+	 */
+	@Test
+	void compilerClosesInteractionEligibilityAndPlayMovieContracts() throws Exception {
+		String eligibility = """
+			<transition id="can-act" priority="1" to="offer">
+				<interaction-eligibility object_id="203709" action="ACTION_ITEM_USE"/>
+				<conditions><quest-status op="IN" values="START"/></conditions>
+			</transition>
+			""";
+		String movie = transition("movie", 10, "done")
+			.replace("<send-dialog dialog_id=\"5\"/>", "<play-movie movie_id=\"913\"/>");
+		CompiledQuestGraph graph = load(document(graph(1, "offer", eligibility + movie, terminal()))).graphs().get(1);
+		CompiledQuestGraph.Transition query = graph.nodes().get("offer").transitions().getFirst();
+		assertEquals(CompiledQuestGraph.EventType.INTERACTION_ELIGIBILITY, query.event().type());
+		assertEquals(203709, query.event().targetId());
+		assertEquals("ACTION_ITEM_USE", query.event().qualifier());
+		assertTrue(query.actions().isEmpty());
+		CompiledQuestGraph.Action movieAction = graph.nodes().get("offer").transitions().get(1).actions().stream()
+			.filter(action -> action.type() == CompiledQuestGraph.ActionType.PLAY_MOVIE).findFirst().orElseThrow();
+		assertEquals(CompiledQuestGraph.ActionPhase.POST_COMMIT_PROTOCOL, movieAction.type().phase());
+
+		assertFailureContains(document(graph(1, "offer", eligibility.replace("203709", "203710") + movie, terminal())),
+			"interaction eligibility references missing NPC 203710");
+		assertFailureContains(document(graph(1, "offer", eligibility.replace("to=\"offer\"", "to=\"done\"") + movie, terminal())),
+			"must be an actionless self-loop");
+		assertFailureContains(document(graph(1, "offer",
+			eligibility.replace("</transition>", "<actions><play-movie movie_id=\"913\"/></actions></transition>") + movie, terminal())),
+			"must be an actionless self-loop");
+		assertFailureContains(document(graph(1, "offer", eligibility + movie.replace("913", "914"), terminal())),
+			"play-movie action references missing movie 914");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			eligibility.replace("ACTION_ITEM_USE", "UNPROVEN_ACTION") + movie, terminal()))));
 	}
 
 	private CompiledQuestGraphData load(String xml) throws Exception {
@@ -697,6 +736,7 @@ class QuestGraphCompilerTest {
 					}
 					addIntegerAttribute(reader, "quest_id", questIds);
 					addIntegerAttribute(reader, "npc_id", npcIds);
+					addIntegerAttribute(reader, "object_id", npcIds);
 					addIntegerAttribute(reader, "item_id", itemIds);
 					addIntegerAttribute(reader, "skill_id", skillIds);
 					addIntegerAttribute(reader, "title_id", titleIds);

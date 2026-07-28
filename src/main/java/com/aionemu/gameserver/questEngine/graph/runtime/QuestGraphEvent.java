@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.graph.runtime;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InteractionAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
 
 /**
@@ -16,7 +17,7 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	QuestGraphEvent.EscortReachedTargetEvent, QuestGraphEvent.EscortLostTargetEvent,
 	QuestGraphEvent.RankedPlayerKillEvent, QuestGraphEvent.DredgionSettledEvent, QuestGraphEvent.CraftFailedEvent,
 	QuestGraphEvent.NpcAggroListedEvent, QuestGraphEvent.WindstreamEnteredEvent, QuestGraphEvent.FlyingRingPassedEvent,
-	QuestGraphEvent.SkillUsedEvent {
+	QuestGraphEvent.SkillUsedEvent, QuestGraphEvent.InteractionEligibilityEvent {
 
 	/**
 	 * 定义由事件类型固定的候选传播策略。
@@ -48,7 +49,7 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	 */
 	default RoutingPolicy routingPolicy() {
 		return switch (type()) {
-				case DIALOG, ITEM_USE, MOVIE_ENDED, CRAFT_FAILED -> RoutingPolicy.EXCLUSIVE;
+				case DIALOG, ITEM_USE, MOVIE_ENDED, CRAFT_FAILED, INTERACTION_ELIGIBILITY -> RoutingPolicy.EXCLUSIVE;
 				case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD, ITEM_OBTAINED, ITEM_EQUIPPED, HOUSE_ITEM_USE,
 					WORLD_ENTERED, ZONE_ENTERED, ZONE_LEFT, ZONE_MISSION_ENDED, LEVEL_UP, PLAYER_LOGOUT,
 					QUEST_TIMER_ENDED, NPC_PROXIMITY, ESCORT_REACHED_TARGET, ESCORT_LOST_TARGET -> RoutingPolicy.BROADCAST;
@@ -718,6 +719,31 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		@Override
 		public int targetId() {
 			return skillId;
+		}
+	}
+
+	/** 表示服务端确认对象可交互后的只读资格查询。 / Represents a read-only eligibility query after server confirmation that the object is interactable. */
+	record InteractionEligibilityEvent(String eventId, int playerId, long occurredAt, int objectTemplateId, int objectId,
+			int worldId, int instanceId, InteractionAction action, boolean serverInteractionAvailable) implements QuestGraphEvent {
+		/** 校验对象身份、实例、封闭动作及服务端 authority。 / Validates object identity, instance, closed action, and server authority. */
+		public InteractionEligibilityEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateWorldInstance(worldId, instanceId);
+			if (objectTemplateId <= 0 || objectId <= 0 || action == null || !serverInteractionAvailable) {
+				throw new IllegalArgumentException("Interaction-eligibility authority snapshot is invalid");
+			}
+		}
+
+		/** 返回 INTERACTION_ELIGIBILITY 类型。 / Returns the INTERACTION_ELIGIBILITY type. */
+		@Override
+		public EventType type() {
+			return EventType.INTERACTION_ELIGIBILITY;
+		}
+
+		/** 返回对象模板标识作为独占查询路由键。 / Returns the object-template identifier as the exclusive query route key. */
+		@Override
+		public int targetId() {
+			return objectTemplateId;
 		}
 	}
 

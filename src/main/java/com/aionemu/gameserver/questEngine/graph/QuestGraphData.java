@@ -224,7 +224,8 @@ public final class QuestGraphData {
 				@XmlElement(name = "npc-aggro-listed", type = NpcAggroListedEventData.class, required = true),
 				@XmlElement(name = "windstream-entered", type = WindstreamEnteredEventData.class, required = true),
 				@XmlElement(name = "flying-ring-passed", type = FlyingRingPassedEventData.class, required = true),
-				@XmlElement(name = "skill-used", type = SkillUsedEventData.class, required = true)
+				@XmlElement(name = "skill-used", type = SkillUsedEventData.class, required = true),
+				@XmlElement(name = "interaction-eligibility", type = InteractionEligibilityEventData.class, required = true)
 		})
 		private Object event;
 		/**
@@ -406,6 +407,18 @@ public final class QuestGraphData {
 		/** 影片协议标识。 / Movie protocol identifier. */
 		@XmlAttribute(name = "movie_id", required = true)
 		private Integer movieId;
+	}
+
+	/** 表示服务端对象交互的只读资格查询。 / Represents a read-only eligibility query for a server object interaction. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class InteractionEligibilityEventData {
+		/** 被查询对象的 NPC 模板标识。 / NPC template identifier of the queried object. */
+		@XmlAttribute(name = "object_id", required = true)
+		private Integer objectId;
+		/** 当前生产入口证明的封闭动作名称。 / Closed action name proven by the current production entry point. */
+		@XmlAttribute(required = true)
+		private String action;
 	}
 
 	/** 表示玩家进入指定 NPC 服务端感知半径的事件。 / Represents server-observed player entry into an NPC proximity radius. */
@@ -741,7 +754,8 @@ public final class QuestGraphData {
 			@XmlElement(name = "show-quest-list", type = ShowQuestListActionData.class),
 			@XmlElement(name = "sync-quest-status", type = SyncQuestStatusActionData.class),
 			@XmlElement(name = "send-repeat-deadline-message", type = SendRepeatDeadlineMessageActionData.class),
-			@XmlElement(name = "send-player-message", type = SendPlayerMessageActionData.class)
+			@XmlElement(name = "send-player-message", type = SendPlayerMessageActionData.class),
+			@XmlElement(name = "play-movie", type = PlayMovieActionData.class)
 		})
 		private List<Object> values = new ArrayList<>();
 	}
@@ -948,5 +962,14 @@ public final class QuestGraphData {
 		/** 客户端频道。 / Client channel. */
 		@XmlAttribute(required = true)
 		private String channel;
+	}
+
+	/** 播放引用闭合的任务影片。 / Plays a reference-closed quest movie. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayMovieActionData {
+		/** 影片协议标识。 / Movie protocol identifier. */
+		@XmlAttribute(name = "movie_id", required = true)
+		private Integer movieId;
 	}
 }

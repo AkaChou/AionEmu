@@ -20,6 +20,7 @@ import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventT
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.WINDSTREAM_ENTERED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.FLYING_RING_PASSED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.SKILL_USED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.INTERACTION_ELIGIBILITY;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_DEATH;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.PLAYER_LOGOUT;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.QUEST_TIMER_ENDED;
@@ -74,7 +75,9 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerMessageChannel;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InteractionAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
@@ -140,6 +143,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NpcAggroListedEve
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.WindstreamEnteredEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FlyingRingPassedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SkillUsedEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.InteractionEligibilityEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
@@ -162,6 +166,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveCollectedIt
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveQuestItemActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendDialogActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendPlayerMessageActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayMovieActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendRepeatDeadlineMessageActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetCompletionCountActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetQuestStatusActionData;
@@ -399,12 +404,14 @@ public final class QuestGraphCompiler {
 					.flatMap(value -> compileActions(questId, value, variables, references).stream()).toList();
 				validateActionOrder(questId, sourceTransition.getId(), actions);
 				validateRepeatDeadlineProtocol(questId, sourceTransition.getId(), actions);
+				validateInteractionEligibility(questId, sourceNode.getId(), sourceTransition.getId(), sourceTransition.getTargetNode(), event, actions);
 				transitions.add(new Transition(sourceTransition.getId(), sourceTransition.getPriority(), sourceTransition.getTargetNode(), event,
 					conditions, actions));
 			}
 			transitions.sort(Comparator.comparingInt(Transition::priority).thenComparing(Transition::id));
 			if (sourceNode.isTerminal() && transitions.stream().anyMatch(transition ->
-					!isRepeatEntry(transition) && !isTerminalProtocolSelfLoop(sourceNode.getId(), transition))) {
+					!isRepeatEntry(transition) && !isTerminalProtocolSelfLoop(sourceNode.getId(), transition)
+						&& !isInteractionEligibilitySelfLoop(sourceNode.getId(), transition))) {
 				throw new IllegalArgumentException("Quest " + questId + " terminal node " + sourceNode.getId()
 					+ " has a transition without repeat eligibility or a guarded protocol self-loop");
 			}
@@ -440,6 +447,12 @@ public final class QuestGraphCompiler {
 			condition instanceof QuestRepeatAvailableCondition repeat && !repeat.expectedAvailable());
 		return transition.targetNode().equals(nodeId) && completeState && repeatUnavailable && !transition.actions().isEmpty()
 			&& transition.actions().stream().allMatch(action -> action.type().phase() == ActionPhase.POST_COMMIT_PROTOCOL);
+	}
+
+	/** 判断转换是否为无状态交互资格查询自环。 / Returns whether a transition is a stateless interaction-eligibility query self-loop. */
+	private static boolean isInteractionEligibilitySelfLoop(String nodeId, Transition transition) {
+		return transition.event().type() == INTERACTION_ELIGIBILITY && transition.targetNode().equals(nodeId)
+			&& transition.actions().isEmpty();
 	}
 
 	/**
@@ -659,6 +672,17 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " skill-used has invalid duplicate policy", e);
 			}
 			return new Event(SKILL_USED, skillId, duplicatePolicy.name());
+		}
+		if (source instanceof InteractionEligibilityEventData eligibility) {
+			Integer objectId = eligibility.getObjectId();
+			if (objectId == null || objectId <= 0 || !references.npcIds().contains(objectId)) {
+				throw new IllegalArgumentException("Quest " + questId + " interaction eligibility references missing NPC " + objectId);
+			}
+			try {
+				return new Event(INTERACTION_ELIGIBILITY, objectId, InteractionAction.valueOf(eligibility.getAction()).name());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid interaction eligibility action", e);
+			}
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported event capability");
 	}
@@ -936,6 +960,17 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid player-message action", e);
 			}
 		}
+		if (source instanceof PlayMovieActionData action) {
+			Integer movieId = action.getMovieId();
+			if (movieId == null || !references.movieIds().contains(movieId)) {
+				throw new IllegalArgumentException("Quest " + questId + " play-movie action references missing movie " + movieId);
+			}
+			try {
+				return new PlayMovieAction(movieId);
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid play-movie action", e);
+			}
+		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported action capability");
 	}
 
@@ -1030,6 +1065,18 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " has invalid action phase order");
 			}
 			previous = phase;
+		}
+	}
+
+	/**
+	 * 强制交互资格查询为 actionless self-loop，禁止借查询入口写状态或产生副作用。
+	 * Forces interaction eligibility to be an actionless self-loop so query entry points cannot mutate state or cause effects.
+	 */
+	private static void validateInteractionEligibility(int questId, String nodeId, String transitionId, String targetNode, Event event,
+			List<Action> actions) {
+		if (event.type() == INTERACTION_ELIGIBILITY && (!nodeId.equals(targetNode) || !actions.isEmpty())) {
+			throw new IllegalArgumentException("Quest " + questId + " interaction eligibility transition " + transitionId
+				+ " must be an actionless self-loop");
 		}
 	}
 

@@ -116,6 +116,22 @@ public final class QuestGraphTransitionExecutor {
 	}
 
 	/**
+	 * 保存只读查询所需的玩家 owner、状态快照和类型化条件端点。
+	 * Holds the player owner, state snapshot, and typed condition endpoint required by a read-only query.
+	 */
+	public record ReadOnlyContext(int playerId, PlayerQuestGraphStateList states,
+			Function<ConditionInvocation, ConditionResult> conditionEvaluator) {
+		/** 校验只读查询依赖。 / Validates read-only query dependencies. */
+		public ReadOnlyContext {
+			if (playerId <= 0) {
+				throw new IllegalArgumentException("Read-only query player id is invalid");
+			}
+			Objects.requireNonNull(states, "states");
+			Objects.requireNonNull(conditionEvaluator, "conditionEvaluator");
+		}
+	}
+
+	/**
 	 * 保存一次动作预检或执行所需的不可变输入和稳定幂等键。
 	 * Holds immutable action input and its stable idempotency key for preflight or execution.
 	 */
@@ -190,6 +206,25 @@ public final class QuestGraphTransitionExecutor {
 		}
 
 		/**
+		 * 组合非物品能力与正式物品、计时器和影片 typed adapter。
+		 * Composes non-item capabilities with production item, timer, and movie typed adapters.
+		 */
+		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
+				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
+				Function<ActionInvocation, ActionResult> actionExecutor, QuestGraphItemActionAdapter itemActions,
+				QuestGraphTimerActionAdapter timerActions, QuestGraphMovieActionAdapter movieActions,
+				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator,
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation) : actionPreflight.apply(invocation),
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.execute(invocation)
+					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
+						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
+							? movieActions.execute(invocation) : actionExecutor.apply(invocation),
+				itemActions::itemCount, itemActions::preflight, persistence);
+		}
+
+		/**
 		 * 校验转换执行依赖；新状态写入时 persistence 的 expected revision 为 null。
 		 * Validates transition dependencies; persistence receives a null expected revision for a new state.
 		 */
@@ -215,7 +250,8 @@ public final class QuestGraphTransitionExecutor {
 	public Status execute(Match match, TransitionContext context) {
 		Objects.requireNonNull(match, "match");
 		Objects.requireNonNull(context, "context");
-		if (match.event().playerId() != context.playerId() || !supportsPlayerState(match.graph())) {
+		if (match.event().type() == CompiledQuestGraph.EventType.INTERACTION_ELIGIBILITY
+				|| match.event().playerId() != context.playerId() || !supportsPlayerState(match.graph())) {
 			return Status.FAILED;
 		}
 		synchronized (context.states()) {
@@ -242,6 +278,28 @@ public final class QuestGraphTransitionExecutor {
 			} catch (RuntimeException e) {
 				return Status.FAILED;
 			}
+		}
+	}
+
+	/**
+	 * 只读评估 actionless eligibility self-loop；不创建 journal、revision 或任何业务副作用。
+	 * Read-only evaluates an actionless eligibility self-loop without creating a journal, revision, or business side effect.
+	 */
+	public static Status evaluateReadOnly(Match match, ReadOnlyContext context) {
+		Objects.requireNonNull(match, "match");
+		Objects.requireNonNull(context, "context");
+		if (match.event().type() != CompiledQuestGraph.EventType.INTERACTION_ELIGIBILITY
+				|| match.event().playerId() != context.playerId() || !supportsPlayerState(match.graph())) {
+			return Status.FAILED;
+		}
+		synchronized (context.states()) {
+			PlayerQuestGraphState current = context.states().get(match.graph().questId());
+			String nodeId = current == null ? match.graph().initialNode() : current.getNodeId();
+			if (current != match.state() || !match.route().nodeId().equals(nodeId)
+					|| !match.route().transition().targetNode().equals(nodeId) || !match.route().transition().actions().isEmpty()) {
+				return Status.FAILED;
+			}
+			return evaluateConditions(match, context.states(), context.conditionEvaluator());
 		}
 	}
 
@@ -301,9 +359,15 @@ public final class QuestGraphTransitionExecutor {
 	 * Evaluates all read-only conditions and separately maps mismatch and capability failure to routing status.
 	 */
 	private static Status evaluateConditions(Match match, TransitionContext context) {
+		return evaluateConditions(match, context.states(), context.conditionEvaluator());
+	}
+
+	/** 评估共享的 canonical 和 typed 条件集合。 / Evaluates the shared canonical and typed condition set. */
+	private static Status evaluateConditions(Match match, PlayerQuestGraphStateList states,
+			Function<ConditionInvocation, ConditionResult> conditionEvaluator) {
 		QuestStatus questStatus = match.state() == null ? QuestStatus.NONE : match.state().getQuestStatus();
 		for (Condition condition : match.route().transition().conditions()) {
-			ConditionResult canonicalResult = evaluateCanonicalCondition(condition, match.graph().questId(), context.states(), match.event());
+			ConditionResult canonicalResult = evaluateCanonicalCondition(condition, match.graph().questId(), states, match.event());
 			if (canonicalResult != null) {
 				if (canonicalResult == ConditionResult.NOT_MATCHED) {
 					return Status.NO_MATCH;
@@ -315,7 +379,7 @@ public final class QuestGraphTransitionExecutor {
 			}
 			ConditionResult result;
 			try {
-				result = Objects.requireNonNull(context.conditionEvaluator()
+				result = Objects.requireNonNull(conditionEvaluator
 					.apply(new ConditionInvocation(condition, match.graph().questId(), questStatus, match.event())), "condition result");
 			} catch (RuntimeException e) {
 				return Status.FAILED;

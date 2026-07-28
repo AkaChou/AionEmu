@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InteractionAction;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.AttackEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.HouseItemUseEvent;
@@ -27,6 +28,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcAggro
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WindstreamEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.FlyingRingPassedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.SkillUsedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.InteractionEligibilityEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.SkillUseSource;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
@@ -71,6 +73,7 @@ public final class QuestGraphEventCodec {
 	private static final byte WINDSTREAM_ENTERED = 25;
 	private static final byte FLYING_RING_PASSED = 26;
 	private static final byte SKILL_USED = 27;
+	private static final byte INTERACTION_ELIGIBILITY = 28;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -272,6 +275,16 @@ public final class QuestGraphEventCodec {
 							output.writeByte(skillUsed.source().ordinal());
 							output.writeBoolean(skillUsed.serverExecutionAccepted());
 						}
+						case InteractionEligibilityEvent eligibility -> {
+							output.writeByte(INTERACTION_ELIGIBILITY);
+							writeCommon(output, eligibility);
+							output.writeInt(eligibility.objectTemplateId());
+							output.writeInt(eligibility.objectId());
+							output.writeInt(eligibility.worldId());
+							output.writeInt(eligibility.instanceId());
+							output.writeByte(eligibility.action().ordinal());
+							output.writeBoolean(eligibility.serverInteractionAvailable());
+						}
 				}
 			}
 			byte[] payload = bytes.toByteArray();
@@ -340,6 +353,8 @@ public final class QuestGraphEventCodec {
 						case SKILL_USED -> new SkillUsedEvent(eventId, playerId, occurredAt, input.readLong(), input.readInt(), input.readInt(),
 							input.readInt(), input.readInt(), input.readInt(), readEnum(input, SkillUseSource.values(), "skill-use source"),
 							input.readBoolean());
+						case INTERACTION_ELIGIBILITY -> new InteractionEligibilityEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
+							input.readInt(), input.readInt(), readEnum(input, InteractionAction.values(), "interaction action"), input.readBoolean());
 				default -> throw new IllegalArgumentException("Unknown quest graph event tag " + type);
 			};
 			if (input.read() != -1) {

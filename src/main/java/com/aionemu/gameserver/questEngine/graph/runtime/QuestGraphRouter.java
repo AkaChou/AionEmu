@@ -35,6 +35,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.NpcAggro
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WindstreamEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.FlyingRingPassedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.SkillUsedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.InteractionEligibilityEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerDeathEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.PlayerLogoutEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
@@ -239,6 +240,7 @@ public final class QuestGraphRouter {
 				case FlyingRingPassedEvent flyingRingPassed -> matchesQualifiedTarget(flyingRingPassed,
 					flyingRingPassed.ringName(), route);
 				case SkillUsedEvent skillUsed -> matchesTarget(skillUsed, route);
+				case InteractionEligibilityEvent eligibility -> matchesQualifiedTarget(eligibility, eligibility.action().name(), route);
 			};
 	}
 

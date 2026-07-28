@@ -73,7 +73,13 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		NPC_AGGRO_LISTED,
 		WINDSTREAM_ENTERED,
 		FLYING_RING_PASSED,
-		SKILL_USED
+		SKILL_USED,
+		INTERACTION_ELIGIBILITY
+	}
+
+	/** 定义当前生产入口证明的封闭交互资格动作。 / Defines the closed interaction-eligibility actions proven by current production entry points. */
+	public enum InteractionAction {
+		ACTION_ITEM_USE
 	}
 
 	/** 定义 skill-use owner 对两个服务端入口的重复处理策略。 / Defines how a skill-use owner handles duplicate server entry points. */
@@ -107,7 +113,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		SYNC_QUEST_STATUS(ActionPhase.POST_COMMIT_PROTOCOL),
 		SEND_REPEAT_DEADLINE_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL),
 		SYNC_QUEST_TIMER(ActionPhase.POST_COMMIT_PROTOCOL),
-		SEND_PLAYER_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL);
+		SEND_PLAYER_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL),
+		PLAY_MOVIE(ActionPhase.POST_COMMIT_PROTOCOL);
 
 		private final ActionPhase phase;
 
@@ -546,7 +553,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	public sealed interface Action permits StartQuestAction, SetQuestStatusAction, SetQuestVariableAction, AddQuestVariableAction,
 		SetCompletionCountAction, AddCompletionCountAction, GiveQuestItemAction, RemoveQuestItemAction, RemoveCollectedItemsAction, FinishQuestAction,
 		StartQuestTimerAction, EndQuestTimerAction, SendDialogAction, CloseDialogAction, ShowQuestListAction, SyncQuestStatusAction,
-		SendRepeatDeadlineMessageAction, SyncQuestTimerAction, SendPlayerMessageAction {
+		SendRepeatDeadlineMessageAction, SyncQuestTimerAction, SendPlayerMessageAction, PlayMovieAction {
 
 		/** 返回动作种类及其固定执行阶段。 / Returns the action kind and its fixed execution phase. */
 		default ActionType type() {
@@ -570,6 +577,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				case SendRepeatDeadlineMessageAction ignored -> ActionType.SEND_REPEAT_DEADLINE_MESSAGE;
 				case SyncQuestTimerAction ignored -> ActionType.SYNC_QUEST_TIMER;
 				case SendPlayerMessageAction ignored -> ActionType.SEND_PLAYER_MESSAGE;
+				case PlayMovieAction ignored -> ActionType.PLAY_MOVIE;
 			};
 		}
 	}
@@ -750,6 +758,16 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		public SendPlayerMessageAction {
 			if (text == null || text.isBlank() || channel == null) {
 				throw new IllegalArgumentException("Player message action is invalid");
+			}
+		}
+	}
+
+	/** 提交后通过客户端影片协议播放引用闭合的影片。 / Plays a reference-closed movie through the client protocol after commit. */
+	public record PlayMovieAction(int movieId) implements Action {
+		/** 校验影片 ID 可无损写入协议的无符号 16 位字段。 / Validates that the movie id fits the protocol unsigned 16-bit field. */
+		public PlayMovieAction {
+			if (movieId <= 0 || movieId > 0xFFFF) {
+				throw new IllegalArgumentException("Quest movie action id is invalid");
 			}
 		}
 	}

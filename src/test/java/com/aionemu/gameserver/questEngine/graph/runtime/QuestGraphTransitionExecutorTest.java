@@ -44,6 +44,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAc
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAvailableCondition;
@@ -805,6 +806,36 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(301_000L, start.get().deadlineAt());
 		assertEquals(300, sync.get().remainingSeconds());
 		assertEquals(completed, database.get());
+	}
+
+	/** 验证影片 typed adapter 只在 canonical 状态提交后接收稳定协议投影。 / Verifies the movie typed adapter receives a stable protocol projection only after canonical state commit. */
+	@Test
+	void movieProjectionRunsThroughTypedAdapterAfterCommit() {
+		Transition transition = new Transition("movie", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(),
+			List.of(new PlayMovieAction(913)));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		AtomicReference<QuestGraphMovieActionAdapter.PlayMovieCommand> movie = new AtomicReference<>();
+		QuestGraphMovieActionAdapter movies = new QuestGraphMovieActionAdapter(7, command -> {
+			assertEquals("done", states.get(1).getNodeId());
+			assertEquals(Lifecycle.ACTIVE, states.get(1).getLifecycle());
+			movie.set(command);
+			return APPLIED;
+		}, command -> FAILED);
+		QuestGraphTimerActionAdapter timers = new QuestGraphTimerActionAdapter(command -> FAILED, command -> FAILED, command -> FAILED);
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> FAILED, noItemActions(), timers, movies, cas(database));
+
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), context));
+		assertEquals(913, movie.get().movieId());
+		assertEquals("8:dialog-1:1:movie:7:0", movie.get().idempotencyKey());
+		assertEquals(states.get(1), database.get());
 	}
 
 	/**
