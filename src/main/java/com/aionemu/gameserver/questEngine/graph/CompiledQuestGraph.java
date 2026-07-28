@@ -67,7 +67,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		NONE,
 		START,
 		REWARD,
-		COMPLETE
+		COMPLETE,
+		LOCKED
 	}
 
 	/**

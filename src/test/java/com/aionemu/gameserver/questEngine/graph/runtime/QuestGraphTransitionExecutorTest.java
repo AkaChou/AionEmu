@@ -46,6 +46,7 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 
 /**
@@ -129,7 +130,7 @@ class QuestGraphTransitionExecutorTest {
 	@Test
 	void canonicalQuestStatusCannotBeOverriddenByConditionCallback() {
 		Fixture fixture = fixture();
-		PlayerQuestGraphState active = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.START, null,
+		PlayerQuestGraphState active = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.START, QuestHistory.EMPTY, null,
 			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
 		fixture.states().addLoaded(active);
 		AtomicInteger callbacks = new AtomicInteger();
@@ -156,7 +157,7 @@ class QuestGraphTransitionExecutorTest {
 			original.actions());
 		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", fixture.graph().variables(),
 			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
-		PlayerQuestGraphState state = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.REWARD, null,
+		PlayerQuestGraphState state = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.REWARD, QuestHistory.EMPTY, null,
 			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
 		fixture.states().addLoaded(state);
 		AtomicInteger callbacks = new AtomicInteger();
@@ -169,6 +170,30 @@ class QuestGraphTransitionExecutorTest {
 			executor.execute(new Match(EVENT, graph, new EventRoute(1, "offer", transition), state), context));
 		assertEquals(0, callbacks.get());
 		assertEquals(state, fixture.states().get(1));
+	}
+
+	/**
+	 * 验证重复接取从 COMPLETE 进入 START 时保留 canonical 历史。
+	 * Verifies that repeat acceptance preserves canonical history while moving from COMPLETE to START.
+	 */
+	@Test
+	void repeatedStartPreservesCanonicalHistory() {
+		Fixture fixture = fixture();
+		Transition original = fixture.match().route().transition();
+		Transition transition = new Transition(original.id(), original.priority(), original.targetNode(), original.event(), List.of(),
+			original.actions());
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", fixture.graph().variables(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		QuestHistory history = new QuestHistory(2, 1, 1_700_000_000_000L, 1_750_000_000_000L);
+		PlayerQuestGraphState state = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.COMPLETE, history, null,
+			Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		fixture.states().addLoaded(state);
+		Match match = new Match(EVENT, graph, new EventRoute(1, "offer", transition), state);
+		TransitionContext context = context(fixture.states(), new AtomicReference<>(state), invocation -> APPLIED);
+
+		assertEquals(DispatchResult.Status.APPLIED, executor.execute(match, context));
+		assertEquals(CompiledQuestGraph.QuestStatus.START, fixture.states().get(1).getQuestStatus());
+		assertEquals(history, fixture.states().get(1).getHistory());
 	}
 
 	/**

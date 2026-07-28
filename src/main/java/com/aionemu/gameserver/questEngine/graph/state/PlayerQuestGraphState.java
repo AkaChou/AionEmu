@@ -49,6 +49,34 @@ public final class PlayerQuestGraphState {
 	}
 
 	/**
+	 * 保存跨重复周期保留的 canonical 任务历史。
+	 * Holds canonical quest history retained across repeat cycles.
+	 */
+	public record QuestHistory(int completionCount, int lastRewardIndex, Long completedAt, Long nextRepeatAt) {
+		/** 没有完成历史的规范值。 / Canonical value for no completion history. */
+		public static final QuestHistory EMPTY = new QuestHistory(0, 0, null, null);
+
+		/**
+		 * 校验完成次数、奖励索引和时间戳的一致性。
+		 * Validates consistency of completion count, reward index, and timestamps.
+		 */
+		public QuestHistory {
+			if (completionCount < 0 || lastRewardIndex < 0) {
+				throw new IllegalArgumentException("Quest history counts must be non-negative");
+			}
+			if ((completedAt != null && completedAt <= 0) || (nextRepeatAt != null && nextRepeatAt <= 0)) {
+				throw new IllegalArgumentException("Quest history timestamps must be positive");
+			}
+			if (completionCount == 0 && (lastRewardIndex != 0 || completedAt != null || nextRepeatAt != null)) {
+				throw new IllegalArgumentException("Empty quest history cannot contain completion metadata");
+			}
+			if (completionCount > 0 && completedAt == null) {
+				throw new IllegalArgumentException("Completed quest history requires a completion timestamp");
+			}
+		}
+	}
+
+	/**
 	 * 保存崩溃恢复所需的已准备转换位置和事件快照。
 	 * Holds the prepared transition position and event snapshot required for crash recovery.
 	 */
@@ -115,6 +143,8 @@ public final class PlayerQuestGraphState {
 	private final String nodeId;
 	/** 当前 canonical 任务生命周期状态。 / Current canonical quest lifecycle status. */
 	private final QuestStatus questStatus;
+	/** 跨重复周期保留的 canonical 完成历史。 / Canonical completion history retained across repeat cycles. */
+	private final QuestHistory history;
 	/** 可选副本运行标识。 / Optional instance-run identifier. */
 	private final Long instanceRunId;
 	/** 当前恢复生命周期。 / Current recovery lifecycle. */
@@ -134,7 +164,8 @@ public final class PlayerQuestGraphState {
 	 * 创建并完整校验不可变玩家任务图状态。
 	 * Creates and fully validates an immutable player quest graph state.
 	 */
-	public PlayerQuestGraphState(int questId, int definitionVersion, long revision, String nodeId, QuestStatus questStatus, Long instanceRunId,
+	public PlayerQuestGraphState(int questId, int definitionVersion, long revision, String nodeId, QuestStatus questStatus, QuestHistory history,
+			Long instanceRunId,
 			Lifecycle lifecycle, Map<String, VariableValue> variables, Map<String, Long> deadlines, PreparedTransition journal,
 			Map<String, CleanupLease> cleanupLeases, String quarantineReason) {
 		if (questId <= 0 || definitionVersion <= 0 || revision < 0) {
@@ -151,6 +182,7 @@ public final class PlayerQuestGraphState {
 			throw new IllegalArgumentException("Node id exceeds the persisted 128-character limit");
 		}
 		this.questStatus = java.util.Objects.requireNonNull(questStatus, "questStatus");
+		this.history = java.util.Objects.requireNonNull(history, "history");
 		this.instanceRunId = instanceRunId;
 		this.lifecycle = java.util.Objects.requireNonNull(lifecycle, "lifecycle");
 		this.variables = immutableVariables(variables);
@@ -162,11 +194,16 @@ public final class PlayerQuestGraphState {
 	}
 
 	/**
-	 * 返回最早绝对 deadline；没有 deadline 时返回 null。
-	 * Returns the earliest absolute deadline, or null when none exists.
+	 * 返回图 deadline 与下次可重复时间中的最早值；都不存在时返回 null。
+	 * Returns the earliest graph deadline or repeat time, or null when neither exists.
 	 */
 	public Long nextDeadlineAt() {
-		return deadlines.values().stream().min(Long::compareTo).orElse(null);
+		Long graphDeadline = deadlines.values().stream().min(Long::compareTo).orElse(null);
+		Long repeatDeadline = history.nextRepeatAt();
+		if (graphDeadline == null) {
+			return repeatDeadline;
+		}
+		return repeatDeadline == null ? graphDeadline : Math.min(graphDeadline, repeatDeadline);
 	}
 
 	/**
@@ -174,8 +211,11 @@ public final class PlayerQuestGraphState {
 	 * Validates consistency between lifecycle, journal, and quarantine reason.
 	 */
 	private void validateLifecycle() {
-		if (lifecycle == Lifecycle.ACTIVE && questStatus == QuestStatus.NONE) {
-			throw new IllegalArgumentException("ACTIVE state cannot have NONE quest status");
+		if (questStatus == QuestStatus.COMPLETE && history.completionCount() == 0) {
+			throw new IllegalArgumentException("COMPLETE state requires completion history");
+		}
+		if (questStatus == QuestStatus.LOCKED && !history.equals(QuestHistory.EMPTY)) {
+			throw new IllegalArgumentException("LOCKED state cannot contain completion history");
 		}
 		if (lifecycle == Lifecycle.ACTIVE && (journal != null || quarantineReason != null)) {
 			throw new IllegalArgumentException("ACTIVE state cannot contain journal/quarantine reason");

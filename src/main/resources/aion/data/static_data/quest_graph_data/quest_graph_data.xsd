@@ -24,6 +24,7 @@
 			<xs:enumeration value="START"/>
 			<xs:enumeration value="REWARD"/>
 			<xs:enumeration value="COMPLETE"/>
+			<xs:enumeration value="LOCKED"/>
 		</xs:restriction>
 	</xs:simpleType>
 

@@ -15,6 +15,7 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Clea
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.VariableValue;
 
 /**
@@ -23,7 +24,7 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Vari
  */
 public final class PlayerQuestGraphStateCodec {
 
-	private static final int MAGIC = 0x51475332;
+	private static final int MAGIC = 0x51475333;
 	private static final int MAX_VARIABLES = 1024;
 	private static final int MAX_DEADLINES = 256;
 	private static final int MAX_CLEANUP_LEASES = 1024;
@@ -35,6 +36,7 @@ public final class PlayerQuestGraphStateCodec {
 	private static final byte STATUS_START = 1;
 	private static final byte STATUS_REWARD = 2;
 	private static final byte STATUS_COMPLETE = 3;
+	private static final byte STATUS_LOCKED = 4;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -57,7 +59,9 @@ public final class PlayerQuestGraphStateCodec {
 					case START -> STATUS_START;
 					case REWARD -> STATUS_REWARD;
 					case COMPLETE -> STATUS_COMPLETE;
+					case LOCKED -> STATUS_LOCKED;
 				});
+				writeHistory(output, state.getHistory());
 				writeVariables(output, state.getVariables());
 				writeDeadlines(output, state.getDeadlines());
 				writeJournal(output, state.getJournal());
@@ -92,8 +96,10 @@ public final class PlayerQuestGraphStateCodec {
 				case STATUS_START -> QuestStatus.START;
 				case STATUS_REWARD -> QuestStatus.REWARD;
 				case STATUS_COMPLETE -> QuestStatus.COMPLETE;
+				case STATUS_LOCKED -> QuestStatus.LOCKED;
 				default -> throw new IllegalArgumentException("Unknown quest graph status tag");
 			};
+			QuestHistory history = readHistory(input);
 			Map<String, VariableValue> variables = readVariables(input);
 			Map<String, Long> deadlines = readDeadlines(input);
 			PreparedTransition journal = readJournal(input);
@@ -102,7 +108,7 @@ public final class PlayerQuestGraphStateCodec {
 			if (input.read() != -1) {
 				throw new IllegalArgumentException("Quest graph state payload has trailing data");
 			}
-			return new PlayerQuestGraphState(questId, definitionVersion, revision, nodeId, questStatus, instanceRunId, lifecycle, variables,
+			return new PlayerQuestGraphState(questId, definitionVersion, revision, nodeId, questStatus, history, instanceRunId, lifecycle, variables,
 				deadlines, journal, cleanupLeases, quarantineReason);
 		} catch (EOFException e) {
 			throw new IllegalArgumentException("Quest graph state payload is truncated", e);
@@ -112,6 +118,25 @@ public final class PlayerQuestGraphStateCodec {
 			}
 			throw new IllegalArgumentException("Failed to decode player quest graph state", e);
 		}
+	}
+
+	/**
+	 * 写入跨重复周期保留的 canonical 任务历史。
+	 * Writes canonical quest history retained across repeat cycles.
+	 */
+	private static void writeHistory(DataOutputStream output, QuestHistory history) throws IOException {
+		output.writeInt(history.completionCount());
+		output.writeInt(history.lastRewardIndex());
+		writeOptionalLong(output, history.completedAt());
+		writeOptionalLong(output, history.nextRepeatAt());
+	}
+
+	/**
+	 * 读取并校验 canonical 任务历史。
+	 * Reads and validates canonical quest history.
+	 */
+	private static QuestHistory readHistory(DataInputStream input) throws IOException {
+		return new QuestHistory(input.readInt(), input.readInt(), readOptionalLong(input), readOptionalLong(input));
 	}
 
 	/**
@@ -259,6 +284,25 @@ public final class PlayerQuestGraphStateCodec {
 		if (value != null) {
 			output.writeUTF(value);
 		}
+	}
+
+	/**
+	 * 写入可选 long 值。
+	 * Writes an optional long value.
+	 */
+	private static void writeOptionalLong(DataOutputStream output, Long value) throws IOException {
+		output.writeBoolean(value != null);
+		if (value != null) {
+			output.writeLong(value);
+		}
+	}
+
+	/**
+	 * 读取可选 long 值。
+	 * Reads an optional long value.
+	 */
+	private static Long readOptionalLong(DataInputStream input) throws IOException {
+		return input.readBoolean() ? input.readLong() : null;
 	}
 
 	/**

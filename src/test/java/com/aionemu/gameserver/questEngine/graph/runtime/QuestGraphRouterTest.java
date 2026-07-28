@@ -26,6 +26,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEven
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 
 class QuestGraphRouterTest {
@@ -75,11 +76,13 @@ class QuestGraphRouterTest {
 		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE), noMatch);
 
 		List<PlayerQuestGraphState> blockedStates = List.of(
-			new PlayerQuestGraphState(2, 2, 0, "start", QuestStatus.START, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null),
-			new PlayerQuestGraphState(2, 1, 0, "missing", QuestStatus.START, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null),
-			new PlayerQuestGraphState(2, 1, 0, "start", QuestStatus.NONE, null, Lifecycle.PREPARED, Map.of(), Map.of(),
+			new PlayerQuestGraphState(2, 2, 0, "start", QuestStatus.START, QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null,
+				Map.of(), null),
+			new PlayerQuestGraphState(2, 1, 0, "missing", QuestStatus.START, QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null,
+				Map.of(), null),
+			new PlayerQuestGraphState(2, 1, 0, "start", QuestStatus.NONE, QuestHistory.EMPTY, null, Lifecycle.PREPARED, Map.of(), Map.of(),
 				new PreparedTransition(-1, "event", "dialog-q2", 0, new byte[0]), Map.of(), null),
-			new PlayerQuestGraphState(2, 1, 0, "start", QuestStatus.START, null, Lifecycle.QUARANTINED, Map.of(), Map.of(), null,
+			new PlayerQuestGraphState(2, 1, 0, "start", QuestStatus.START, QuestHistory.EMPTY, null, Lifecycle.QUARANTINED, Map.of(), Map.of(), null,
 				Map.of(), "blocked"));
 		for (PlayerQuestGraphState blockedState : blockedStates) {
 			PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();

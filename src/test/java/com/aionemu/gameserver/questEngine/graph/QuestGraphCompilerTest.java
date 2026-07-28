@@ -71,7 +71,11 @@ class QuestGraphCompilerTest {
 	}
 
 	@Test
-	void schemaRejectsUnknownElementsCapabilitiesAndMissingRequiredAttributes() {
+	void schemaRejectsUnknownElementsCapabilitiesAndMissingRequiredAttributes() throws Exception {
+		CompiledQuestGraph locked = load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("value=\"NONE\"", "value=\"LOCKED\""), terminal()))).graphs().get(1);
+		assertEquals(new CompiledQuestGraph.QuestStatusCondition(CompiledQuestGraph.QuestStatus.LOCKED),
+			locked.nodes().get("offer").transitions().getFirst().conditions().getFirst());
 		assertThrows(IllegalArgumentException.class, () -> load("<quest_graphs><script/></quest_graphs>"));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("<start-quest/>", "<complete-quest/>"), terminal()))));

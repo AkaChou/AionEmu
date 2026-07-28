@@ -23,6 +23,7 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Bool
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.VariableValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 
@@ -287,7 +288,8 @@ public final class QuestGraphTransitionExecutor {
 		PreparedTransition journal = new PreparedTransition(baseRevision, match.event().eventId(), match.route().transition().id(), 0,
 			QuestGraphEventCodec.encode(match.event()));
 		QuestStatus questStatus = current == null ? QuestStatus.NONE : current.getQuestStatus();
-		return new PlayerQuestGraphState(match.graph().questId(), match.graph().version(), preparedRevision, nodeId, questStatus, instanceRunId,
+		QuestHistory history = current == null ? QuestHistory.EMPTY : current.getHistory();
+		return new PlayerQuestGraphState(match.graph().questId(), match.graph().version(), preparedRevision, nodeId, questStatus, history, instanceRunId,
 			Lifecycle.PREPARED, variables, deadlines, journal, leases, null);
 	}
 
@@ -349,7 +351,7 @@ public final class QuestGraphTransitionExecutor {
 	private static QuestStatus reduceQuestStatus(QuestStatus current, Action action) {
 		return switch (action.type()) {
 			case START_QUEST -> switch (current) {
-				case NONE, COMPLETE -> QuestStatus.START;
+				case NONE, COMPLETE, LOCKED -> QuestStatus.START;
 				case START -> QuestStatus.START;
 				case REWARD -> throw new IllegalStateException("Cannot start a quest awaiting reward");
 			};
@@ -396,7 +398,8 @@ public final class QuestGraphTransitionExecutor {
 	private static PlayerQuestGraphState copy(PlayerQuestGraphState source, long revision, String nodeId, QuestStatus questStatus,
 		Lifecycle lifecycle, PreparedTransition journal) {
 		return new PlayerQuestGraphState(source.getQuestId(), source.getDefinitionVersion(), revision, nodeId, questStatus,
-			source.getInstanceRunId(), lifecycle, source.getVariables(), source.getDeadlines(), journal, source.getCleanupLeases(), null);
+			source.getHistory(), source.getInstanceRunId(), lifecycle, source.getVariables(), source.getDeadlines(), journal,
+			source.getCleanupLeases(), null);
 	}
 
 	/**
