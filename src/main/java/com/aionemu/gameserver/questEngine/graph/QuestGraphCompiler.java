@@ -86,6 +86,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAc
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCollectItemsCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RecipeLearnableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
@@ -96,7 +97,11 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemRemo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PackedCounterCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestWorkItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.LearnRecipeAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DeleteRecipeAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NotifyRecipeRejectionAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatTimeBasis;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatWeekday;
@@ -167,6 +172,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerRaceConditi
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerTitleConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestCompletionCountConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestCollectItemsConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RecipeLearnableConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestRepeatAvailableConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestTimerEndedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestRewardConditionData;
@@ -174,7 +180,11 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestStatusCondit
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestVariableConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PackedCounterConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveCollectedItemsActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveQuestWorkItemsActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveQuestItemActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.LearnRecipeActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DeleteRecipeActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NotifyRecipeRejectionActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendDialogActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendPlayerMessageActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayMovieActionData;
@@ -213,7 +223,7 @@ public final class QuestGraphCompiler {
 	 */
 	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
 			Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
-			Set<FlyingRingReference> flyingRings, Set<Integer> skillIds, Set<Integer> worldIds) {
+			Set<FlyingRingReference> flyingRings, Set<Integer> skillIds, Set<Integer> worldIds, Set<Integer> recipeIds) {
 		/**
 		 * 复制引用集合，保证一次编译期间引用闭包稳定。
 		 * Copies reference sets so the reference closure stays stable during compilation.
@@ -229,6 +239,7 @@ public final class QuestGraphCompiler {
 			flyingRings = Set.copyOf(flyingRings);
 			skillIds = Set.copyOf(skillIds);
 			worldIds = Set.copyOf(worldIds);
+			recipeIds = Set.copyOf(recipeIds);
 		}
 
 		/**
@@ -237,21 +248,28 @@ public final class QuestGraphCompiler {
 		 */
 		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
 				Set<String> zoneNames, Set<Integer> movieIds) {
-			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), Set.of(), Set.of());
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), Set.of(), Set.of(), Set.of());
 		}
 
 		/** 创建带 movement 但不声明 skill 引用的兼容集合；skill XML 仍会失败关闭。 / Creates references with movement but no skills; skill XML still fails closed. */
 		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
 				Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
 				Set<FlyingRingReference> flyingRings) {
-			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, Set.of(), Set.of());
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, Set.of(), Set.of(), Set.of());
 		}
 
 		/** 创建带 movement 与 skill、但不声明 world 引用的兼容集合。 / Creates references with movement and skills but no world references. */
 		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
 				Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
 				Set<FlyingRingReference> flyingRings, Set<Integer> skillIds) {
-			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, skillIds, Set.of());
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, skillIds, Set.of(), Set.of());
+		}
+
+		/** 创建带 world 但不声明 recipe 引用的兼容集合。 / Creates references with worlds but no recipe references. */
+		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
+				Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
+				Set<FlyingRingReference> flyingRings, Set<Integer> skillIds, Set<Integer> worldIds) {
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, skillIds, worldIds, Set.of());
 		}
 	}
 
@@ -808,6 +826,13 @@ public final class QuestGraphCompiler {
 		if (source instanceof QuestCollectItemsConditionData) {
 			return new QuestCollectItemsCondition();
 		}
+		if (source instanceof RecipeLearnableConditionData condition) {
+			if (condition.getRecipeId() == null || !references.recipeIds().contains(condition.getRecipeId())) {
+				throw new IllegalArgumentException("Quest " + questId + " recipe condition references missing recipe "
+					+ condition.getRecipeId());
+			}
+			return new RecipeLearnableCondition(condition.getRecipeId(), Boolean.TRUE.equals(condition.getExpected()));
+		}
 		if (source instanceof QuestCompletionCountConditionData condition) {
 			if (condition.getQuestId() == null || !references.questIds().contains(condition.getQuestId())) {
 				throw new IllegalArgumentException("Quest " + questId + " completion condition references missing quest " + condition.getQuestId());
@@ -991,6 +1016,18 @@ public final class QuestGraphCompiler {
 		if (source instanceof RemoveCollectedItemsActionData) {
 			return new RemoveCollectedItemsAction();
 		}
+		if (source instanceof RemoveQuestWorkItemsActionData) {
+			return new RemoveQuestWorkItemsAction();
+		}
+		if (source instanceof LearnRecipeActionData action) {
+			return new LearnRecipeAction(requireRecipeReference(questId, action.getRecipeId(), references));
+		}
+		if (source instanceof DeleteRecipeActionData action) {
+			return new DeleteRecipeAction(requireRecipeReference(questId, action.getRecipeId(), references));
+		}
+		if (source instanceof NotifyRecipeRejectionActionData action) {
+			return new NotifyRecipeRejectionAction(requireRecipeReference(questId, action.getRecipeId(), references));
+		}
 		if (source instanceof FinishQuestActionData action) {
 			try {
 				return new FinishQuestAction(action.getRewardIndex(), compileRepeatDeadlinePolicy(questId, "finish", action.getRepeatKind(),
@@ -1042,6 +1079,14 @@ public final class QuestGraphCompiler {
 			}
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported action capability");
+	}
+
+	/** 返回引用闭合的配方标识。 / Returns a reference-closed recipe identifier. */
+	private static int requireRecipeReference(int questId, Integer recipeId, References references) {
+		if (recipeId == null || !references.recipeIds().contains(recipeId)) {
+			throw new IllegalArgumentException("Quest " + questId + " action references missing recipe " + recipeId);
+		}
+		return recipeId;
 	}
 
 	/**

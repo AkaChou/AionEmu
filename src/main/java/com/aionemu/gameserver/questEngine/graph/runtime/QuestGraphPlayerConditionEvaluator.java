@@ -15,6 +15,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCollectItemsCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAvailableCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RecipeLearnableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
@@ -72,6 +73,8 @@ public final class QuestGraphPlayerConditionEvaluator {
 				case PlayerEquippedCondition condition -> player.getEquipment().getEquippedItemIds().contains(condition.itemId());
 				case QuestCollectItemsCondition condition -> QuestService.collectItemCheck(
 					new QuestEnv(null, player, invocation.questId(), 0), false);
+				case RecipeLearnableCondition condition -> throw new IllegalArgumentException(
+					"Recipe learnability must be evaluated by the recipe bridge");
 			};
 			return matched ? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
 		} catch (RuntimeException e) {

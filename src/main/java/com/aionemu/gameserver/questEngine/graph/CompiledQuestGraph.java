@@ -107,6 +107,9 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		GIVE_QUEST_ITEM(ActionPhase.REQUIRED),
 		REMOVE_QUEST_ITEM(ActionPhase.REQUIRED),
 		REMOVE_COLLECTED_ITEMS(ActionPhase.REQUIRED),
+		REMOVE_QUEST_WORK_ITEMS(ActionPhase.REQUIRED),
+		LEARN_RECIPE(ActionPhase.REQUIRED),
+		DELETE_RECIPE(ActionPhase.REQUIRED),
 		FINISH_QUEST(ActionPhase.REQUIRED),
 		START_QUEST_TIMER(ActionPhase.REQUIRED),
 		END_QUEST_TIMER(ActionPhase.REQUIRED),
@@ -117,7 +120,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		SEND_REPEAT_DEADLINE_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL),
 		SYNC_QUEST_TIMER(ActionPhase.POST_COMMIT_PROTOCOL),
 		SEND_PLAYER_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL),
-		PLAY_MOVIE(ActionPhase.POST_COMMIT_PROTOCOL);
+		PLAY_MOVIE(ActionPhase.POST_COMMIT_PROTOCOL),
+		NOTIFY_RECIPE_REJECTION(ActionPhase.POST_COMMIT_PROTOCOL);
 
 		private final ActionPhase phase;
 
@@ -323,7 +327,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 */
 	public sealed interface Condition permits QuestStatusCondition, QuestVariableCondition, QuestRepeatAvailableCondition,
 		PackedCounterCondition, InvasionWorldActiveCondition,
-		QuestCollectItemsCondition, PlayerLevelCondition, KillVictimLevelDeltaCondition, PlayerRaceCondition, PlayerClassCondition,
+		QuestCollectItemsCondition, RecipeLearnableCondition, PlayerLevelCondition, KillVictimLevelDeltaCondition, PlayerRaceCondition, PlayerClassCondition,
 		PlayerGenderCondition, PlayerTitleCondition, PlayerAbyssRankCondition, PlayerInventoryCondition, QuestRewardCondition,
 		QuestCompletionCountCondition, PlayerEquippedCondition {
 	}
@@ -384,6 +388,16 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Requires all delivery items declared by quest_data; the condition itself never removes items.
 	 */
 	public record QuestCollectItemsCondition() implements Condition {
+	}
+
+	/** 要求 recipe typed bridge 判定当前玩家可或不可学习指定配方。 / Requires the recipe typed bridge to confirm whether the player can learn a recipe. */
+	public record RecipeLearnableCondition(int recipeId, boolean expected) implements Condition {
+		/** 校验正数配方引用。 / Validates a positive recipe reference. */
+		public RecipeLearnableCondition {
+			if (recipeId <= 0) {
+				throw new IllegalArgumentException("Recipe learnable condition is invalid");
+			}
+		}
 	}
 
 	/**
@@ -593,7 +607,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 */
 	public sealed interface Action permits StartQuestAction, StartEventQuestAction, AbandonQuestAction, SetQuestStatusAction, SetQuestVariableAction,
 		AddQuestVariableAction, IncrementPackedCounterAction,
-		SetCompletionCountAction, AddCompletionCountAction, GiveQuestItemAction, RemoveQuestItemAction, RemoveCollectedItemsAction, FinishQuestAction,
+		SetCompletionCountAction, AddCompletionCountAction, GiveQuestItemAction, RemoveQuestItemAction, RemoveCollectedItemsAction,
+		RemoveQuestWorkItemsAction, LearnRecipeAction, DeleteRecipeAction, NotifyRecipeRejectionAction, FinishQuestAction,
 		StartQuestTimerAction, EndQuestTimerAction, SendDialogAction, CloseDialogAction, ShowQuestListAction, SyncQuestStatusAction,
 		SendRepeatDeadlineMessageAction, SyncQuestTimerAction, SendPlayerMessageAction, PlayMovieAction {
 
@@ -612,6 +627,10 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				case GiveQuestItemAction ignored -> ActionType.GIVE_QUEST_ITEM;
 				case RemoveQuestItemAction ignored -> ActionType.REMOVE_QUEST_ITEM;
 				case RemoveCollectedItemsAction ignored -> ActionType.REMOVE_COLLECTED_ITEMS;
+				case RemoveQuestWorkItemsAction ignored -> ActionType.REMOVE_QUEST_WORK_ITEMS;
+				case LearnRecipeAction ignored -> ActionType.LEARN_RECIPE;
+				case DeleteRecipeAction ignored -> ActionType.DELETE_RECIPE;
+				case NotifyRecipeRejectionAction ignored -> ActionType.NOTIFY_RECIPE_REJECTION;
 				case FinishQuestAction ignored -> ActionType.FINISH_QUEST;
 				case StartQuestTimerAction ignored -> ActionType.START_QUEST_TIMER;
 				case EndQuestTimerAction ignored -> ActionType.END_QUEST_TIMER;
@@ -711,7 +730,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 
 	/** 定义发放任务物品时支持的封闭模式。 / Defines the closed set of supported quest-item grant modes. */
 	public enum QuestItemGrantMode {
-		TOP_UP_TO
+		TOP_UP_TO,
+		ADD_EXACT
 	}
 
 	/** 定义移除任务物品时支持的封闭模式。 / Defines the closed set of supported quest-item removal modes. */
@@ -742,6 +762,40 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 
 	/** 扣除 quest_data 中声明的交付物品。 / Removes delivery items declared by quest_data. */
 	public record RemoveCollectedItemsAction() implements Action {
+	}
+
+	/** 扣除 quest_data 中声明的全部工单过程物品。 / Removes all work-order intermediate items declared by quest_data. */
+	public record RemoveQuestWorkItemsAction() implements Action {
+	}
+
+	/** 通过 recipe typed bridge 学习引用闭合的配方。 / Learns a reference-closed recipe through the recipe typed bridge. */
+	public record LearnRecipeAction(int recipeId) implements Action {
+		/** 校验正数配方引用。 / Validates a positive recipe reference. */
+		public LearnRecipeAction {
+			if (recipeId <= 0) {
+				throw new IllegalArgumentException("Learn recipe action is invalid");
+			}
+		}
+	}
+
+	/** 通过 recipe typed bridge 删除引用闭合的临时工单配方。 / Deletes a reference-closed temporary work-order recipe through the recipe typed bridge. */
+	public record DeleteRecipeAction(int recipeId) implements Action {
+		/** 校验正数配方引用。 / Validates a positive recipe reference. */
+		public DeleteRecipeAction {
+			if (recipeId <= 0) {
+				throw new IllegalArgumentException("Delete recipe action is invalid");
+			}
+		}
+	}
+
+	/** 将 recipe eligibility 拒绝原因投影到客户端协议。 / Projects a recipe-eligibility rejection to the client protocol. */
+	public record NotifyRecipeRejectionAction(int recipeId) implements Action {
+		/** 校验正数配方引用。 / Validates a positive recipe reference. */
+		public NotifyRecipeRejectionAction {
+			if (recipeId <= 0) {
+				throw new IllegalArgumentException("Recipe rejection action is invalid");
+			}
+		}
 	}
 
 	/** 发放指定奖励组并完成当前任务周期。 / Grants the selected reward group and completes the current quest cycle. */

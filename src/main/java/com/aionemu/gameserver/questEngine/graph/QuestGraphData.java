@@ -521,6 +521,7 @@ public final class QuestGraphData {
 			@XmlElement(name = "invasion-world-active", type = InvasionWorldActiveConditionData.class),
 			@XmlElement(name = "quest-repeat-available", type = QuestRepeatAvailableConditionData.class),
 			@XmlElement(name = "quest-collect-items", type = QuestCollectItemsConditionData.class),
+			@XmlElement(name = "recipe-learnable", type = RecipeLearnableConditionData.class),
 			@XmlElement(name = "quest-reward", type = QuestRewardConditionData.class),
 			@XmlElement(name = "quest-completion-count", type = QuestCompletionCountConditionData.class),
 			@XmlElement(name = "player-level", type = PlayerLevelConditionData.class),
@@ -603,6 +604,18 @@ public final class QuestGraphData {
 	/** 标记玩家必须持有 quest_data 声明的全部交付物品。 / Marks that all quest_data delivery items must be present. */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class QuestCollectItemsConditionData {
+	}
+
+	/** 表示 recipe typed bridge 的可学习性判断。 / Represents a learnability decision from the recipe typed bridge. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class RecipeLearnableConditionData {
+		/** 配方模板标识。 / Recipe-template identifier. */
+		@XmlAttribute(name = "recipe_id", required = true)
+		private Integer recipeId;
+		/** 期望的可学习性。 / Expected learnability. */
+		@XmlAttribute(required = true)
+		private Boolean expected;
 	}
 
 	/**
@@ -798,6 +811,9 @@ public final class QuestGraphData {
 			@XmlElement(name = "give-quest-item", type = GiveQuestItemActionData.class),
 			@XmlElement(name = "remove-quest-item", type = RemoveQuestItemActionData.class),
 			@XmlElement(name = "remove-collected-items", type = RemoveCollectedItemsActionData.class),
+			@XmlElement(name = "remove-quest-work-items", type = RemoveQuestWorkItemsActionData.class),
+			@XmlElement(name = "learn-recipe", type = LearnRecipeActionData.class),
+			@XmlElement(name = "delete-recipe", type = DeleteRecipeActionData.class),
 			@XmlElement(name = "finish-quest", type = FinishQuestActionData.class),
 			@XmlElement(name = "start-quest-timer", type = StartQuestTimerActionData.class),
 			@XmlElement(name = "end-quest-timer", type = EndQuestTimerActionData.class),
@@ -807,7 +823,8 @@ public final class QuestGraphData {
 			@XmlElement(name = "sync-quest-status", type = SyncQuestStatusActionData.class),
 			@XmlElement(name = "send-repeat-deadline-message", type = SendRepeatDeadlineMessageActionData.class),
 			@XmlElement(name = "send-player-message", type = SendPlayerMessageActionData.class),
-			@XmlElement(name = "play-movie", type = PlayMovieActionData.class)
+			@XmlElement(name = "play-movie", type = PlayMovieActionData.class),
+			@XmlElement(name = "notify-recipe-rejection", type = NotifyRecipeRejectionActionData.class)
 		})
 		private List<Object> values = new ArrayList<>();
 	}
@@ -946,6 +963,38 @@ public final class QuestGraphData {
 	/** 扣除 quest_data 交付物品。 / Removes quest_data delivery items. */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class RemoveCollectedItemsActionData {
+	}
+
+	/** 扣除 quest_data 工单过程物品。 / Removes work-order intermediate items declared by quest_data. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class RemoveQuestWorkItemsActionData {
+	}
+
+	/** 表示学习一个引用闭合配方。 / Represents learning a reference-closed recipe. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class LearnRecipeActionData {
+		/** 配方模板标识。 / Recipe-template identifier. */
+		@XmlAttribute(name = "recipe_id", required = true)
+		private Integer recipeId;
+	}
+
+	/** 表示删除一个引用闭合配方。 / Represents deleting a reference-closed recipe. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class DeleteRecipeActionData {
+		/** 配方模板标识。 / Recipe-template identifier. */
+		@XmlAttribute(name = "recipe_id", required = true)
+		private Integer recipeId;
+	}
+
+	/** 表示 recipe eligibility 拒绝协议投影。 / Represents a recipe-eligibility rejection protocol projection. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class NotifyRecipeRejectionActionData {
+		/** 配方模板标识。 / Recipe-template identifier. */
+		@XmlAttribute(name = "recipe_id", required = true)
+		private Integer recipeId;
 	}
 
 	/** 发放奖励并完成任务周期。 / Grants rewards and completes the quest cycle. */

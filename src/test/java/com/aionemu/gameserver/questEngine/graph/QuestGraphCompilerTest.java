@@ -33,7 +33,8 @@ class QuestGraphCompilerTest {
 	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
 			Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"), Set.of(913),
 			Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
-			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832), Set.of(220050000));
+			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832), Set.of(220050000),
+			Set.of(155004001));
 
 	@TempDir
 	Path tempDir;
@@ -791,6 +792,37 @@ class QuestGraphCompilerTest {
 			eligibility.replace("ACTION_ITEM_USE", "UNPROVEN_ACTION") + movie, terminal()))));
 	}
 
+	/** 验证工单配方条件、材料追加、过程物品清理和配方动作均引用闭合且阶段固定。 / Verifies work-order recipe conditions, additive materials, work-item cleanup, and recipe actions are reference closed with fixed phases. */
+	@Test
+	void compilerClosesWorkOrderRecipeAndCleanupContracts() throws Exception {
+		String transition = """
+			<transition id="work-order" priority="1" to="active">
+				<dialog npc_id="203709" dialog="ACCEPT_QUEST"/>
+				<conditions><recipe-learnable recipe_id="155004001" expected="true"/></conditions>
+				<actions>
+					<start-quest/>
+					<give-quest-item item_id="182200001" count="4" mode="ADD_EXACT"/>
+					<learn-recipe recipe_id="155004001"/>
+					<remove-quest-work-items/>
+					<delete-recipe recipe_id="155004001"/>
+					<sync-quest-status/>
+				</actions>
+			</transition>
+			""";
+		CompiledQuestGraph graph = load(document(graph(1, "offer", transition, "<node id=\"active\" terminal=\"true\"/>"))).graphs().get(1);
+		CompiledQuestGraph.Transition compiled = graph.nodes().get("offer").transitions().getFirst();
+		assertEquals(new CompiledQuestGraph.RecipeLearnableCondition(155004001, true), compiled.conditions().getFirst());
+		assertEquals(CompiledQuestGraph.QuestItemGrantMode.ADD_EXACT,
+			((CompiledQuestGraph.GiveQuestItemAction) compiled.actions().get(1)).mode());
+		assertEquals(CompiledQuestGraph.ActionType.LEARN_RECIPE, compiled.actions().get(2).type());
+		assertEquals(CompiledQuestGraph.ActionType.REMOVE_QUEST_WORK_ITEMS, compiled.actions().get(3).type());
+		assertEquals(CompiledQuestGraph.ActionType.DELETE_RECIPE, compiled.actions().get(4).type());
+
+		assertFailureContains(document(graph(1, "offer", transition.replace("155004001", "155004002"),
+			"<node id=\"active\" terminal=\"true\"/>")),
+			"references missing recipe 155004002");
+	}
+
 	/**
 	 * 验证 lifecycle XML 只编译为封闭启动、活动刷新和放弃动作，并校验跨 owner 引用。
 	 * Verifies lifecycle XML compiles only to closed start, event-refresh, and abandon actions with cross-owner references.
@@ -876,6 +908,7 @@ class QuestGraphCompilerTest {
 		Set<Integer> movieIds = new HashSet<>();
 		Set<Integer> skillIds = new HashSet<>();
 		Set<Integer> worldIds = new HashSet<>();
+		Set<Integer> recipeIds = new HashSet<>();
 		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
 		inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 		inputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
@@ -895,13 +928,14 @@ class QuestGraphCompilerTest {
 					addIntegerAttribute(reader, "title_id", titleIds);
 					addStringAttribute(reader, "zone_name", zoneNames);
 					addIntegerAttribute(reader, "movie_id", movieIds);
+					addIntegerAttribute(reader, "recipe_id", recipeIds);
 				}
 			} finally {
 				reader.close();
 			}
 		}
 		return new QuestGraphCompiler.References(
-			questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), skillIds, worldIds);
+			questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), skillIds, worldIds, recipeIds);
 	}
 
 	/** 添加存在的正整数 XML 属性。 / Adds a present positive-integer XML attribute. */

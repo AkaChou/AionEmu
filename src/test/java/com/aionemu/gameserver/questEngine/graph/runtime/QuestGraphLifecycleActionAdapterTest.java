@@ -27,6 +27,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAc
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestWorkItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEventQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
@@ -38,6 +39,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphLifecycleActio
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphLifecycleActionAdapter.LifecycleCommand;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphLifecycleActionAdapter.SettlementCommand;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphLifecycleActionAdapter.StartCommand;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphLifecycleActionAdapter.WorkItemsCleanupCommand;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphRouter.Match;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionInvocation;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PersistenceResult;
@@ -74,6 +76,7 @@ class QuestGraphLifecycleActionAdapterTest {
 		assertEquals(READY, adapter.preflight(invocation(new StartEventQuestAction(2, QuestStatus.START),
 			QuestStatus.START, "event-start")));
 		assertEquals(READY, adapter.preflight(invocation(new RemoveCollectedItemsAction(), QuestStatus.REWARD, "collect")));
+		assertEquals(READY, adapter.preflight(invocation(new RemoveQuestWorkItemsAction(), QuestStatus.START, "work-items")));
 		assertEquals(READY, adapter.preflight(invocation(new FinishQuestAction(3), QuestStatus.REWARD, "finish")));
 		assertEquals(READY, adapter.preflight(invocation(new AbandonQuestAction(), QuestStatus.START, "abandon")));
 
@@ -82,10 +85,11 @@ class QuestGraphLifecycleActionAdapterTest {
 		assertEquals(2, eventStart.targetQuestId());
 		assertEquals(QuestStatus.START, eventStart.status());
 		assertInstanceOf(CollectedItemsCleanupCommand.class, commands.get(2));
-		SettlementCommand settlement = assertInstanceOf(SettlementCommand.class, commands.get(3));
+		assertInstanceOf(WorkItemsCleanupCommand.class, commands.get(3));
+		SettlementCommand settlement = assertInstanceOf(SettlementCommand.class, commands.get(4));
 		assertEquals(3, settlement.rewardIndex());
 		assertEquals(LEASES, settlement.cleanupLeases());
-		assertInstanceOf(AbandonCommand.class, commands.get(4));
+		assertInstanceOf(AbandonCommand.class, commands.get(5));
 		assertEquals(QuestGraphTransitionExecutor.PreflightResult.FAILED,
 			adapter.preflight(invocation(new FinishQuestAction(0), QuestStatus.START, "bad-status")));
 		assertEquals(QuestGraphTransitionExecutor.PreflightResult.FAILED,

@@ -113,7 +113,8 @@ public final class QuestGraphItemActionAdapter {
 				if (current != plan.beforeCount()) {
 					return PreflightResult.FAILED;
 				}
-				if (plan.kind() == ItemMutationKind.GIVE_TOP_UP_TO && plan.afterCount() > plan.beforeCount()) {
+				if ((plan.kind() == ItemMutationKind.GIVE_TOP_UP_TO || plan.kind() == ItemMutationKind.GIVE_ADD_EXACT)
+						&& plan.afterCount() > plan.beforeCount()) {
 					grants.merge(plan.itemId(), plan.afterCount() - plan.beforeCount(), Math::addExact);
 				}
 				projected.put(plan.itemId(), plan.afterCount());
@@ -145,7 +146,7 @@ public final class QuestGraphItemActionAdapter {
 				return ActionResult.FAILED;
 			}
 			boolean changed = switch (plan.kind()) {
-				case GIVE_TOP_UP_TO -> itemGrant.test(plan.itemId(), plan.afterCount() - plan.beforeCount());
+				case GIVE_TOP_UP_TO, GIVE_ADD_EXACT -> itemGrant.test(plan.itemId(), plan.afterCount() - plan.beforeCount());
 				case REMOVE_EXACT, REMOVE_OPTIONAL_EXACT -> itemRemoval.test(plan.itemId(), plan.requestedCount());
 			};
 			if (!changed || itemCountReader.applyAsLong(plan.itemId()) != plan.afterCount()) {
@@ -166,7 +167,11 @@ public final class QuestGraphItemActionAdapter {
 			return false;
 		}
 		if (action instanceof GiveQuestItemAction give) {
-			return plan.kind() == ItemMutationKind.GIVE_TOP_UP_TO && plan.itemId() == give.itemId()
+			ItemMutationKind expected = switch (give.mode()) {
+				case TOP_UP_TO -> ItemMutationKind.GIVE_TOP_UP_TO;
+				case ADD_EXACT -> ItemMutationKind.GIVE_ADD_EXACT;
+			};
+			return plan.kind() == expected && plan.itemId() == give.itemId()
 				&& plan.requestedCount() == give.count();
 		}
 		if (action instanceof RemoveQuestItemAction remove) {

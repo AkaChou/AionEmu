@@ -49,6 +49,7 @@ public final class PlayerQuestGraphStateCodec {
 	private static final byte ITEM_GIVE_TOP_UP_TO = 1;
 	private static final byte ITEM_REMOVE_EXACT = 2;
 	private static final byte ITEM_REMOVE_OPTIONAL_EXACT = 3;
+	private static final byte ITEM_GIVE_ADD_EXACT = 4;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -273,6 +274,7 @@ public final class PlayerQuestGraphStateCodec {
 			output.writeInt(plan.actionIndex());
 			output.writeByte(switch (plan.kind()) {
 				case GIVE_TOP_UP_TO -> ITEM_GIVE_TOP_UP_TO;
+				case GIVE_ADD_EXACT -> ITEM_GIVE_ADD_EXACT;
 				case REMOVE_EXACT -> ITEM_REMOVE_EXACT;
 				case REMOVE_OPTIONAL_EXACT -> ITEM_REMOVE_OPTIONAL_EXACT;
 			});
@@ -291,6 +293,7 @@ public final class PlayerQuestGraphStateCodec {
 			int actionIndex = input.readInt();
 			ItemMutationKind kind = switch (input.readByte()) {
 				case ITEM_GIVE_TOP_UP_TO -> ItemMutationKind.GIVE_TOP_UP_TO;
+				case ITEM_GIVE_ADD_EXACT -> ItemMutationKind.GIVE_ADD_EXACT;
 				case ITEM_REMOVE_EXACT -> ItemMutationKind.REMOVE_EXACT;
 				case ITEM_REMOVE_OPTIONAL_EXACT -> ItemMutationKind.REMOVE_OPTIONAL_EXACT;
 				default -> throw new IllegalArgumentException("Unknown item mutation kind tag");

@@ -32,6 +32,11 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariable
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PackedCounterCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatPrivilegeMode;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestWorkItemsAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.LearnRecipeAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DeleteRecipeAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NotifyRecipeRejectionAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RecipeLearnableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
@@ -187,6 +192,34 @@ public final class QuestGraphTransitionExecutor {
 				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
 			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator, actionPreflight, actionExecutor, itemId -> -1,
 				plans -> plans.isEmpty() ? PreflightResult.READY : PreflightResult.FAILED, persistence);
+		}
+
+		/**
+		 * 组合正式物品、计时器、影片、lifecycle 与 recipe typed adapter。
+		 * Composes production item, timer, movie, lifecycle, and recipe typed adapters.
+		 */
+		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
+				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
+				Function<ActionInvocation, ActionResult> actionExecutor, QuestGraphItemActionAdapter itemActions,
+				QuestGraphTimerActionAdapter timerActions, QuestGraphMovieActionAdapter movieActions,
+				QuestGraphLifecycleActionAdapter lifecycleActions, QuestGraphRecipeBridge recipeBridge,
+				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			this(playerId, accessLevel, serverZoneId, states,
+				invocation -> invocation.condition() instanceof RecipeLearnableCondition
+					? recipeBridge.evaluate(invocation) : conditionEvaluator.apply(invocation),
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
+						: isLifecycleAction(invocation.action()) ? lifecycleActions.preflight(invocation)
+							: isRequiredRecipeAction(invocation.action()) ? recipeBridge.preflight(invocation)
+								: actionPreflight.apply(invocation),
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.execute(invocation)
+					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
+						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
+							? movieActions.execute(invocation)
+							: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation)
+								: isRecipeAction(invocation.action()) ? recipeBridge.execute(invocation)
+									: actionExecutor.apply(invocation),
+				itemActions::itemCount, itemActions::preflight, persistence);
 		}
 
 		/**
@@ -727,7 +760,18 @@ public final class QuestGraphTransitionExecutor {
 	/** 判断动作是否必须由封闭 lifecycle adapter 执行。 / Returns whether an action must execute through the closed lifecycle adapter. */
 	private static boolean isLifecycleAction(Action action) {
 		return action instanceof StartQuestAction || action instanceof StartEventQuestAction || action instanceof RemoveCollectedItemsAction
+			|| action instanceof RemoveQuestWorkItemsAction
 			|| action instanceof FinishQuestAction || action instanceof AbandonQuestAction;
+	}
+
+	/** 判断动作是否为 PREPARED 前必须验证的 recipe 持久化动作。 / Returns whether an action is a recipe persistence action that must preflight before PREPARED. */
+	private static boolean isRequiredRecipeAction(Action action) {
+		return action instanceof LearnRecipeAction || action instanceof DeleteRecipeAction;
+	}
+
+	/** 判断动作是否属于 recipe bridge，包括提交后拒绝协议。 / Returns whether an action belongs to the recipe bridge, including rejection protocol. */
+	private static boolean isRecipeAction(Action action) {
+		return isRequiredRecipeAction(action) || action instanceof NotifyRecipeRejectionAction;
 	}
 
 	/**
@@ -743,8 +787,15 @@ public final class QuestGraphTransitionExecutor {
 		}
 		ItemMutationPlan plan;
 		if (action instanceof GiveQuestItemAction give) {
-			plan = new ItemMutationPlan(actionIndex, ItemMutationKind.GIVE_TOP_UP_TO, itemId, give.count(), before,
-				Math.max(before, give.count()));
+			ItemMutationKind kind = switch (give.mode()) {
+				case TOP_UP_TO -> ItemMutationKind.GIVE_TOP_UP_TO;
+				case ADD_EXACT -> ItemMutationKind.GIVE_ADD_EXACT;
+			};
+			long after = switch (give.mode()) {
+				case TOP_UP_TO -> Math.max(before, give.count());
+				case ADD_EXACT -> Math.addExact(before, give.count());
+			};
+			plan = new ItemMutationPlan(actionIndex, kind, itemId, give.count(), before, after);
 		} else {
 			RemoveQuestItemAction remove = (RemoveQuestItemAction) action;
 			if (before < remove.count() && remove.mode() == CompiledQuestGraph.QuestItemRemovalMode.EXACT) {
@@ -773,7 +824,10 @@ public final class QuestGraphTransitionExecutor {
 				continue;
 			}
 			if (plan == null || action instanceof GiveQuestItemAction give
-					&& (plan.kind() != ItemMutationKind.GIVE_TOP_UP_TO || plan.itemId() != give.itemId() || plan.requestedCount() != give.count())
+					&& (plan.kind() != switch (give.mode()) {
+						case TOP_UP_TO -> ItemMutationKind.GIVE_TOP_UP_TO;
+						case ADD_EXACT -> ItemMutationKind.GIVE_ADD_EXACT;
+					} || plan.itemId() != give.itemId() || plan.requestedCount() != give.count())
 					|| action instanceof RemoveQuestItemAction remove
 						&& (plan.kind() != switch (remove.mode()) {
 							case EXACT -> ItemMutationKind.REMOVE_EXACT;

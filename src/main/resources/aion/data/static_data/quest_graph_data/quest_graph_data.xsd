@@ -396,6 +396,7 @@
 	<xs:simpleType name="questGraphQuestItemGrantMode">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="TOP_UP_TO"/>
+			<xs:enumeration value="ADD_EXACT"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -416,6 +417,15 @@
 		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="count" type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="mode" type="questGraphQuestItemRemovalMode" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphRecipeCondition">
+		<xs:attribute name="recipe_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="expected" type="xs:boolean" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphRecipeAction">
+		<xs:attribute name="recipe_id" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
 	<xs:simpleType name="questGraphRepeatDeadlineKind">
@@ -510,6 +520,7 @@
 			<xs:element name="invasion-world-active" type="questGraphInvasionWorldActiveCondition"/>
 			<xs:element name="quest-repeat-available" type="questGraphQuestRepeatAvailableCondition"/>
 			<xs:element name="quest-collect-items" type="questGraphEmptyAction"/>
+			<xs:element name="recipe-learnable" type="questGraphRecipeCondition"/>
 			<xs:element name="quest-reward" type="questGraphQuestRewardCondition"/>
 			<xs:element name="quest-completion-count" type="questGraphQuestCompletionCountCondition"/>
 			<xs:element name="player-level" type="questGraphPlayerLevelCondition"/>
@@ -538,6 +549,9 @@
 			<xs:element name="give-quest-item" type="questGraphGiveQuestItemAction"/>
 			<xs:element name="remove-quest-item" type="questGraphRemoveQuestItemAction"/>
 			<xs:element name="remove-collected-items" type="questGraphEmptyAction"/>
+			<xs:element name="remove-quest-work-items" type="questGraphEmptyAction"/>
+			<xs:element name="learn-recipe" type="questGraphRecipeAction"/>
+			<xs:element name="delete-recipe" type="questGraphRecipeAction"/>
 			<xs:element name="finish-quest" type="questGraphFinishAction"/>
 			<xs:element name="start-quest-timer" type="questGraphStartTimerAction"/>
 			<xs:element name="end-quest-timer" type="questGraphEndTimerAction"/>
@@ -548,6 +562,7 @@
 			<xs:element name="send-repeat-deadline-message" type="questGraphSendRepeatDeadlineMessageAction"/>
 			<xs:element name="send-player-message" type="questGraphSendPlayerMessageAction"/>
 			<xs:element name="play-movie" type="questGraphPlayMovieAction"/>
+			<xs:element name="notify-recipe-rejection" type="questGraphRecipeAction"/>
 		</xs:choice>
 	</xs:complexType>
 

@@ -8,6 +8,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AbandonQuestA
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestWorkItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEventQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionInvocation;
@@ -86,6 +87,9 @@ public final class QuestGraphLifecycleActionAdapter {
 		if (invocation.action() instanceof RemoveCollectedItemsAction) {
 			return new CollectedItemsCleanupCommand(invocation.questId(), invocation.cleanupLeases(), invocation.idempotencyKey());
 		}
+		if (invocation.action() instanceof RemoveQuestWorkItemsAction) {
+			return new WorkItemsCleanupCommand(invocation.questId(), invocation.cleanupLeases(), invocation.idempotencyKey());
+		}
 		if (invocation.action() instanceof FinishQuestAction finish) {
 			return new SettlementCommand(invocation.questId(), finish.rewardIndex(), invocation.questStatus(),
 				invocation.repeatDeadlineResolution(), invocation.cleanupLeases(), invocation.idempotencyKey());
@@ -97,7 +101,7 @@ public final class QuestGraphLifecycleActionAdapter {
 	}
 
 	/** 定义 lifecycle bridge 接受的封闭命令集合。 / Defines the closed command set accepted by the lifecycle bridge. */
-	public sealed interface LifecycleCommand permits StartCommand, EventStartCommand, CollectedItemsCleanupCommand, SettlementCommand,
+	public sealed interface LifecycleCommand permits StartCommand, EventStartCommand, CollectedItemsCleanupCommand, WorkItemsCleanupCommand, SettlementCommand,
 		AbandonCommand {
 		/** 返回稳定幂等键。 / Returns the stable idempotency key. */
 		String idempotencyKey();
@@ -130,6 +134,16 @@ public final class QuestGraphLifecycleActionAdapter {
 			implements LifecycleCommand {
 		/** 校验交付物品清理命令。 / Validates the collected-item cleanup command. */
 		public CollectedItemsCleanupCommand {
+			validateCommon(questId, idempotencyKey);
+			cleanupLeases = immutableLeases(cleanupLeases);
+		}
+	}
+
+	/** 表示 quest_data 工单过程物品的幂等清理。 / Represents idempotent cleanup of quest-data work-order intermediate items. */
+	public record WorkItemsCleanupCommand(int questId, Map<String, CleanupLease> cleanupLeases, String idempotencyKey)
+			implements LifecycleCommand {
+		/** 校验 owner、cleanup ledger 和幂等键。 / Validates the owner, cleanup ledger, and idempotency key. */
+		public WorkItemsCleanupCommand {
 			validateCommon(questId, idempotencyKey);
 			cleanupLeases = immutableLeases(cleanupLeases);
 		}

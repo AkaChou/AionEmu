@@ -7,6 +7,7 @@ import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransit
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PreflightResult.READY;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PreflightResult.REJECTED;
 import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.GIVE_TOP_UP_TO;
+import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.GIVE_ADD_EXACT;
 import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.REMOVE_EXACT;
 import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.REMOVE_OPTIONAL_EXACT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,6 +53,25 @@ class QuestGraphItemActionAdapterTest {
 		assertEquals(ALREADY_APPLIED, adapter.execute(invocation));
 		assertEquals(1, grants.get());
 		assertEquals(2, stores.get());
+	}
+
+	/** 验证 ADD_EXACT 从冻结 before 追加显式数量，恢复时只收敛到同一 after。 / Verifies ADD_EXACT appends an explicit count from frozen before and converges to the same after on recovery. */
+	@Test
+	void additiveGivePreservesExistingWorkOrderMaterials() {
+		AtomicLong count = new AtomicLong(2);
+		AtomicInteger grants = new AtomicInteger();
+		AtomicInteger stores = new AtomicInteger();
+		QuestGraphItemActionAdapter adapter = adapter(count, grants, new AtomicInteger(), stores);
+		ItemMutationPlan plan = new ItemMutationPlan(0, GIVE_ADD_EXACT, 182200001, 4, 2, 6);
+		ActionInvocation invocation = invocation(new GiveQuestItemAction(182200001, 4,
+			com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemGrantMode.ADD_EXACT), plan);
+
+		assertEquals(READY, adapter.preflight(invocation));
+		assertEquals(APPLIED, adapter.execute(invocation));
+		assertEquals(6, count.get());
+		assertEquals(1, grants.get());
+		assertEquals(ALREADY_APPLIED, adapter.execute(invocation));
+		assertEquals(1, grants.get());
 	}
 
 	/** 验证 exact remove 只接受 before/after 两端，任何外部数量漂移均显式失败。 / Verifies exact remove accepts only the before/after endpoints. */
