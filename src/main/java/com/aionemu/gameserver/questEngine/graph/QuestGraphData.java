@@ -754,6 +754,8 @@ public final class QuestGraphData {
 	public static final class ActionsData {
 		@XmlElements({
 			@XmlElement(name = "start-quest", type = StartQuestActionData.class),
+			@XmlElement(name = "start-event-quest", type = StartEventQuestActionData.class),
+			@XmlElement(name = "abandon-quest", type = AbandonQuestActionData.class),
 			@XmlElement(name = "set-quest-status", type = SetQuestStatusActionData.class),
 			@XmlElement(name = "set-quest-variable", type = SetQuestVariableActionData.class),
 			@XmlElement(name = "add-quest-variable", type = AddQuestVariableActionData.class),
@@ -777,11 +779,28 @@ public final class QuestGraphData {
 	}
 
 	/**
-	 * 标记启动任务动作；该动作当前不需要额外参数。
-	 * Marks a start-quest action, which currently requires no additional parameters.
+	 * 标记当前标准任务启动动作。
+	 * Marks a standard start action for the current quest.
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class StartQuestActionData {
+	}
+
+	/** 表示以显式状态启动活动任务 owner。 / Represents starting an event-quest owner with an explicit status. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class StartEventQuestActionData {
+		/** 目标任务 owner。 / Target quest owner. */
+		@XmlAttribute(name = "quest_id", required = true)
+		private Integer questId;
+		/** 目标活动任务的初始状态。 / Initial status of the target event quest. */
+		@XmlAttribute(required = true)
+		private String status;
+	}
+
+	/** 标记放弃当前任务并执行 typed cleanup。 / Marks abandonment of the current quest with typed cleanup. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class AbandonQuestActionData {
 	}
 
 	/** 设置 canonical 任务状态。 / Sets canonical quest status. */

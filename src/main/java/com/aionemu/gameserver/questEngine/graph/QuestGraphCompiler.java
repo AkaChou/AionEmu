@@ -55,6 +55,7 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionPhase;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AbandonQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AnchoredCooldownRepeatDeadlinePolicy;
@@ -104,6 +105,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatu
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ShowQuestListAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEventQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
@@ -125,6 +127,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ZoneLeftEventData
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ZoneMissionEndedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddCompletionCountActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddQuestVariableActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AbandonQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CloseDialogActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FinishQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EndQuestTimerActionData;
@@ -175,6 +178,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetQuestStatusAct
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetQuestVariableActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ShowQuestListActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartEventQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestTimerActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SyncQuestStatusActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.TransitionData;
@@ -871,6 +875,19 @@ public final class QuestGraphCompiler {
 	private static Action compileAction(int questId, Object source, Map<String, Variable> variables, References references) {
 		if (source instanceof StartQuestActionData) {
 			return new StartQuestAction();
+		}
+		if (source instanceof StartEventQuestActionData action) {
+			if (action.getQuestId() == null || !references.questIds().contains(action.getQuestId())) {
+				throw new IllegalArgumentException("Quest " + questId + " event start references missing quest " + action.getQuestId());
+			}
+			try {
+				return new StartEventQuestAction(action.getQuestId(), QuestStatus.valueOf(action.getStatus()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid event start action", e);
+			}
+		}
+		if (source instanceof AbandonQuestActionData) {
+			return new AbandonQuestAction();
 		}
 		if (source instanceof SetQuestStatusActionData action) {
 			try {

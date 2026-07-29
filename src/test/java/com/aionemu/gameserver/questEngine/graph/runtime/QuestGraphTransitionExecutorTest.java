@@ -356,12 +356,12 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(DispatchResult.Status.FAILED, executor.execute(fixture.match(), context));
 
 		PlayerQuestGraphState state = fixture.states().get(1);
-		assertEquals(1, state.getRevision());
+		assertEquals(0, state.getRevision());
 		assertEquals("offer", state.getNodeId());
 		assertEquals(Lifecycle.PREPARED, state.getLifecycle());
-		assertEquals(CompiledQuestGraph.QuestStatus.START, state.getQuestStatus());
+		assertEquals(CompiledQuestGraph.QuestStatus.NONE, state.getQuestStatus());
 		assertEquals(-1, state.getJournal().getBaseRevision());
-		assertEquals(1, state.getJournal().getNextActionIndex());
+		assertEquals(0, state.getJournal().getNextActionIndex());
 	}
 
 	/**
@@ -687,8 +687,8 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(DispatchResult.Status.APPLIED, executor.recover(fixture.graph(), context));
 
 		PlayerQuestGraphState committed = fixture.states().get(1);
-		assertEquals(2, calls.get());
-		assertEquals(1, effects.size());
+		assertEquals(3, calls.get());
+		assertEquals(2, effects.size());
 		assertEquals(3, committed.getRevision());
 		assertEquals("done", committed.getNodeId());
 		assertEquals(Lifecycle.ACTIVE, committed.getLifecycle());

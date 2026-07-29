@@ -11,6 +11,7 @@ import java.util.function.ToLongFunction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionPhase;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AbandonQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
@@ -28,11 +29,13 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatPrivilegeMode;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEventQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestTimerAction;
@@ -41,6 +44,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphRouter.Match;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationPlan;
@@ -136,7 +140,14 @@ public final class QuestGraphTransitionExecutor {
 	 * Holds immutable action input and its stable idempotency key for preflight or execution.
 	 */
 	public record ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event,
-		RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, String idempotencyKey) {
+		RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, Map<String, CleanupLease> cleanupLeases,
+		String idempotencyKey) {
+		/** 创建不携带 cleanup 资源的兼容调用。 / Creates a compatibility invocation without cleanup resources. */
+		public ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event,
+				RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, String idempotencyKey) {
+			this(action, questId, actionIndex, questStatus, event, repeatDeadlineResolution, itemMutationPlan, Map.of(), idempotencyKey);
+		}
+
 		/**
 		 * 校验动作调用输入。
 		 * Validates action invocation input.
@@ -146,6 +157,7 @@ public final class QuestGraphTransitionExecutor {
 			Objects.requireNonNull(questStatus, "questStatus");
 			Objects.requireNonNull(event, "event");
 			Objects.requireNonNull(repeatDeadlineResolution, "repeatDeadlineResolution");
+			cleanupLeases = Map.copyOf(Objects.requireNonNull(cleanupLeases, "cleanup leases"));
 			if (actionIndex < 0 || idempotencyKey == null || idempotencyKey.isBlank()) {
 				throw new IllegalArgumentException("Action index/idempotency key is invalid");
 			}
@@ -176,6 +188,20 @@ public final class QuestGraphTransitionExecutor {
 		}
 
 		/**
+		 * 组合非 lifecycle 能力与正式任务生命周期 typed adapter。
+		 * Composes non-lifecycle capabilities with the production quest-lifecycle typed adapter.
+		 */
+		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
+				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
+				Function<ActionInvocation, ActionResult> actionExecutor, QuestGraphLifecycleActionAdapter lifecycleActions,
+				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator,
+				invocation -> isLifecycleAction(invocation.action()) ? lifecycleActions.preflight(invocation) : actionPreflight.apply(invocation),
+				invocation -> isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation) : actionExecutor.apply(invocation),
+				itemId -> -1, plans -> plans.isEmpty() ? PreflightResult.READY : PreflightResult.FAILED, persistence);
+		}
+
+		/**
 		 * 组合非物品能力与正式物品 adapter。
 		 * Composes non-item capabilities with the production item adapter.
 		 */
@@ -186,6 +212,27 @@ public final class QuestGraphTransitionExecutor {
 			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator,
 				invocation -> invocation.itemMutationPlan() == null ? actionPreflight.apply(invocation) : itemActions.preflight(invocation),
 				invocation -> invocation.itemMutationPlan() == null ? actionExecutor.apply(invocation) : itemActions.execute(invocation),
+				itemActions::itemCount, itemActions::preflight, persistence);
+		}
+
+		/**
+		 * 组合正式物品、计时器、影片和 lifecycle typed adapter。
+		 * Composes production item, timer, movie, and lifecycle typed adapters.
+		 */
+		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
+				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
+				Function<ActionInvocation, ActionResult> actionExecutor, QuestGraphItemActionAdapter itemActions,
+				QuestGraphTimerActionAdapter timerActions, QuestGraphMovieActionAdapter movieActions,
+				QuestGraphLifecycleActionAdapter lifecycleActions, BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator,
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
+						: isLifecycleAction(invocation.action()) ? lifecycleActions.preflight(invocation) : actionPreflight.apply(invocation),
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.execute(invocation)
+					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
+						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
+							? movieActions.execute(invocation)
+							: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation) : actionExecutor.apply(invocation),
 				itemActions::itemCount, itemActions::preflight, persistence);
 		}
 
@@ -489,18 +536,19 @@ public final class QuestGraphTransitionExecutor {
 			: resolveRepeatDeadline(transition, event, context.serverZoneId(), context.accessLevel());
 		ActionState preview = new ActionState(current == null ? QuestStatus.NONE : current.getQuestStatus(),
 			current == null ? initialVariables(graph) : current.getVariables(), current == null ? QuestHistory.EMPTY : current.getHistory(),
-			current == null ? Map.of() : current.getDeadlines());
+			current == null ? Map.of() : current.getDeadlines(), current == null ? Map.of() : current.getCleanupLeases());
 		Map<Integer, ItemMutationPlan> plans = new LinkedHashMap<>(frozenPlans);
 		Map<Integer, Long> projectedCounts = new LinkedHashMap<>();
 		for (int index = startIndex; index < transition.actions().size(); index++) {
 			Action action = transition.actions().get(index);
 			QuestStatus invocationStatus = preview.questStatus();
+			Map<String, CleanupLease> invocationLeases = preview.cleanupLeases();
 			try {
 				preview = reduceActionState(graph, preview, action, event.occurredAt(), repeatResolution);
 			} catch (RuntimeException e) {
 				return new PreflightOutcome(Status.FAILED, Map.of(), true);
 			}
-			if (action.type().phase() != ActionPhase.REQUIRED) {
+			if (action.type().phase() != ActionPhase.REQUIRED && !isLifecycleAction(action)) {
 				continue;
 			}
 			PreflightResult result;
@@ -511,7 +559,7 @@ public final class QuestGraphTransitionExecutor {
 					plans.put(index, plan);
 				}
 				result = Objects.requireNonNull(context.actionPreflight().apply(invocation(graph, transition, event,
-					invocationStatus, index, repeatResolution, plan)),
+					invocationStatus, index, repeatResolution, plan, invocationLeases)),
 					"preflight result");
 			} catch (ItemMutationRejectedException e) {
 					return new PreflightOutcome(Status.REJECTED, Map.of(), false);
@@ -578,12 +626,12 @@ public final class QuestGraphTransitionExecutor {
 				protocolStart = index;
 				break;
 			}
-			if (action.type().phase() == ActionPhase.REQUIRED) {
+			if (action.type().phase() == ActionPhase.REQUIRED || isLifecycleAction(action)) {
 				ActionResult result;
 				try {
 					result = Objects.requireNonNull(context.actionExecutor()
 						.apply(invocation(graph, transition, event, current.getQuestStatus(), index, repeatResolution,
-							current.getJournal().getItemMutationPlans().get(index))), "action result");
+							current.getJournal().getItemMutationPlans().get(index), current.getCleanupLeases())), "action result");
 				} catch (RuntimeException e) {
 					return Status.FAILED;
 				}
@@ -617,7 +665,8 @@ public final class QuestGraphTransitionExecutor {
 		context.states().put(committed);
 		for (int index = protocolStart; index < transition.actions().size(); index++) {
 			try {
-				context.actionExecutor().apply(invocation(graph, transition, event, committed.getQuestStatus(), index, repeatResolution, null));
+				context.actionExecutor().apply(invocation(graph, transition, event, committed.getQuestStatus(), index, repeatResolution, null,
+					committed.getCleanupLeases()));
 			} catch (RuntimeException ignored) {
 				// Protocol is a post-commit projection; the owning adapter is responsible for logging/retry.
 			}
@@ -630,11 +679,12 @@ public final class QuestGraphTransitionExecutor {
 	 * Builds a stable idempotent invocation that includes the action index.
 	 */
 	private static ActionInvocation invocation(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event,
-		QuestStatus questStatus, int actionIndex, RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan) {
+		QuestStatus questStatus, int actionIndex, RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan,
+		Map<String, CleanupLease> cleanupLeases) {
 		String key = event.eventId().length() + ":" + event.eventId() + ':' + graph.questId() + ':' + transition.id() + ':'
 			+ event.playerId() + ':' + actionIndex;
 		return new ActionInvocation(transition.actions().get(actionIndex), graph.questId(), actionIndex, questStatus, event,
-			repeatDeadlineResolution, itemMutationPlan, key);
+			repeatDeadlineResolution, itemMutationPlan, cleanupLeases, key);
 	}
 
 	/** 保存动作预检结果及准备写入 journal 的冻结物品计划。 / Holds preflight status and frozen item plans to persist in the journal. */
@@ -654,6 +704,12 @@ public final class QuestGraphTransitionExecutor {
 	/** 判断动作是否属于任务计时器 bridge，包括提交后协议。 / Returns whether an action belongs to the quest-timer bridge, including protocol. */
 	private static boolean isTimerAction(Action action) {
 		return isRequiredTimerAction(action) || action instanceof SyncQuestTimerAction;
+	}
+
+	/** 判断动作是否必须由封闭 lifecycle adapter 执行。 / Returns whether an action must execute through the closed lifecycle adapter. */
+	private static boolean isLifecycleAction(Action action) {
+		return action instanceof StartQuestAction || action instanceof StartEventQuestAction || action instanceof RemoveCollectedItemsAction
+			|| action instanceof FinishQuestAction || action instanceof AbandonQuestAction;
 	}
 
 	/**
@@ -724,6 +780,7 @@ public final class QuestGraphTransitionExecutor {
 		RepeatDeadlineResolution repeatDeadlineResolution) {
 		Map<String, VariableValue> variables = new LinkedHashMap<>(current.variables());
 		Map<String, Long> deadlines = new LinkedHashMap<>(current.deadlines());
+		Map<String, CleanupLease> cleanupLeases = new LinkedHashMap<>(current.cleanupLeases());
 		QuestStatus status = current.questStatus();
 		QuestHistory history = current.history();
 		switch (action) {
@@ -735,6 +792,25 @@ public final class QuestGraphTransitionExecutor {
 					variables = new LinkedHashMap<>(initialVariables(graph));
 				}
 				status = QuestStatus.START;
+				deadlines.clear();
+				cleanupLeases.clear();
+			}
+			case StartEventQuestAction startEvent -> {
+				if (startEvent.targetQuestId() == graph.questId()) {
+					status = startEvent.status();
+					variables = new LinkedHashMap<>(initialVariables(graph));
+					deadlines.clear();
+					cleanupLeases.clear();
+				}
+			}
+			case AbandonQuestAction ignored -> {
+				if (status == QuestStatus.NONE || status == QuestStatus.COMPLETE) {
+					throw new IllegalStateException("Only an active quest can be abandoned");
+				}
+				status = QuestStatus.NONE;
+				variables = new LinkedHashMap<>(initialVariables(graph));
+				deadlines.clear();
+				cleanupLeases.clear();
 			}
 			case SetQuestStatusAction set -> {
 				if (set.status() == QuestStatus.REWARD && status != QuestStatus.START) {
@@ -766,6 +842,8 @@ public final class QuestGraphTransitionExecutor {
 				}
 				history = new QuestHistory(Math.addExact(history.completionCount(), 1), finish.rewardIndex(), occurredAt,
 					repeatDeadlineResolution.deadlineAt(), repeatDeadlineResolution.disposition());
+				deadlines.clear();
+				cleanupLeases.clear();
 			}
 			case StartQuestTimerAction timer ->
 				deadlines.put(timer.timer(), Math.addExact(occurredAt, Math.multiplyExact(timer.durationSeconds(), 1000)));
@@ -776,18 +854,19 @@ public final class QuestGraphTransitionExecutor {
 		if (status == QuestStatus.COMPLETE && history.completionCount() == 0) {
 			throw new IllegalStateException("COMPLETE state requires completion history");
 		}
-		return new ActionState(status, variables, history, deadlines);
+		return new ActionState(status, variables, history, deadlines, cleanupLeases);
 	}
 
 	/** 使用当前状态执行一个内部 state reduction。 / Applies one internal state reduction to the current state. */
 	private static PlayerQuestGraphState reduceActionState(CompiledQuestGraph graph, PlayerQuestGraphState current, Action action,
 		long occurredAt, RepeatDeadlineResolution repeatDeadlineResolution) {
 		ActionState reduced = reduceActionState(graph,
-			new ActionState(current.getQuestStatus(), current.getVariables(), current.getHistory(), current.getDeadlines()), action, occurredAt,
+			new ActionState(current.getQuestStatus(), current.getVariables(), current.getHistory(), current.getDeadlines(), current.getCleanupLeases()),
+			action, occurredAt,
 			repeatDeadlineResolution);
 		return new PlayerQuestGraphState(current.getQuestId(), current.getDefinitionVersion(), current.getRevision(), current.getNodeId(),
 			reduced.questStatus(), reduced.history(), current.getInstanceRunId(), current.getLifecycle(), reduced.variables(), reduced.deadlines(),
-			current.getJournal(), current.getCleanupLeases(), current.getQuarantineReason());
+			current.getJournal(), reduced.cleanupLeases(), current.getQuarantineReason());
 	}
 
 	/**
@@ -862,7 +941,8 @@ public final class QuestGraphTransitionExecutor {
 	}
 
 	/** 保存 preflight 使用的纯状态预览。 / Holds the pure state preview used during preflight. */
-	private record ActionState(QuestStatus questStatus, Map<String, VariableValue> variables, QuestHistory history, Map<String, Long> deadlines) {
+	private record ActionState(QuestStatus questStatus, Map<String, VariableValue> variables, QuestHistory history, Map<String, Long> deadlines,
+		Map<String, CleanupLease> cleanupLeases) {
 	}
 
 	/**

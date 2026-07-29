@@ -720,6 +720,39 @@ class QuestGraphCompilerTest {
 			eligibility.replace("ACTION_ITEM_USE", "UNPROVEN_ACTION") + movie, terminal()))));
 	}
 
+	/**
+	 * 验证 lifecycle XML 只编译为封闭启动、活动刷新和放弃动作，并校验跨 owner 引用。
+	 * Verifies lifecycle XML compiles only to closed start, event-refresh, and abandon actions with cross-owner references.
+	 */
+	@Test
+	void compilerBuildsReferenceClosedLifecycleActions() throws Exception {
+		String lifecycle = """
+			<quest_graph quest_id="1" version="1" scope="PLAYER" initial_node="active">
+				<node id="active">
+					<transition id="lifecycle" priority="1" to="done">
+						<dialog npc_id="203709" dialog="QUEST_SELECT"/>
+						<actions>
+							<start-quest/>
+							<start-event-quest quest_id="2" status="START"/>
+						</actions>
+					</transition>
+				</node>
+				<node id="done" terminal="true"/>
+			</quest_graph>
+			""";
+		List<CompiledQuestGraph.Action> actions = load(document(lifecycle)).graphs().get(1).nodes().get("active").transitions().getFirst().actions();
+
+		assertEquals(List.of(new CompiledQuestGraph.StartQuestAction(),
+			new CompiledQuestGraph.StartEventQuestAction(2, CompiledQuestGraph.QuestStatus.START)), actions);
+		String abandon = lifecycle.replace("<start-quest/>", "<abandon-quest/>")
+			.replace("<start-event-quest quest_id=\"2\" status=\"START\"/>", "");
+		assertEquals(new CompiledQuestGraph.AbandonQuestAction(),
+			load(document(abandon)).graphs().get(1).nodes().get("active").transitions().getFirst().actions().getFirst());
+		assertFailureContains(document(lifecycle.replace("quest_id=\"2\"", "quest_id=\"99\"")), "references missing quest 99");
+		assertThrows(IllegalArgumentException.class,
+			() -> load(document(lifecycle.replace("status=\"START\"", "status=\"DYNAMIC\""))));
+	}
+
 	private CompiledQuestGraphData load(String xml) throws Exception {
 		return load(xml, REFERENCES);
 	}

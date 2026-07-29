@@ -342,6 +342,11 @@
 
 	<xs:complexType name="questGraphEmptyAction"/>
 
+	<xs:complexType name="questGraphStartEventQuestAction">
+		<xs:attribute name="quest_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="status" type="questGraphQuestStatus" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphSetStatusAction">
 		<xs:attribute name="status" type="questGraphQuestStatus" use="required"/>
 	</xs:complexType>
@@ -496,6 +501,8 @@
 	<xs:complexType name="questGraphActions">
 		<xs:choice minOccurs="1" maxOccurs="unbounded">
 			<xs:element name="start-quest" type="questGraphEmptyAction"/>
+			<xs:element name="start-event-quest" type="questGraphStartEventQuestAction"/>
+			<xs:element name="abandon-quest" type="questGraphEmptyAction"/>
 			<xs:element name="set-quest-status" type="questGraphSetStatusAction"/>
 			<xs:element name="set-quest-variable" type="questGraphSetVariableAction"/>
 			<xs:element name="add-quest-variable" type="questGraphAddVariableAction"/>

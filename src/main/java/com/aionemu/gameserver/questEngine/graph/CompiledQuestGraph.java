@@ -96,6 +96,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 */
 	public enum ActionType {
 		START_QUEST(ActionPhase.STATE),
+		START_EVENT_QUEST(ActionPhase.STATE),
+		ABANDON_QUEST(ActionPhase.STATE),
 		SET_QUEST_STATUS(ActionPhase.STATE),
 		SET_QUEST_VARIABLE(ActionPhase.STATE),
 		ADD_QUEST_VARIABLE(ActionPhase.STATE),
@@ -563,7 +565,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * 定义转换动作的强类型封闭集合。
 	 * Defines the closed typed set of transition actions.
 	 */
-	public sealed interface Action permits StartQuestAction, SetQuestStatusAction, SetQuestVariableAction, AddQuestVariableAction,
+	public sealed interface Action permits StartQuestAction, StartEventQuestAction, AbandonQuestAction, SetQuestStatusAction, SetQuestVariableAction,
+		AddQuestVariableAction,
 		SetCompletionCountAction, AddCompletionCountAction, GiveQuestItemAction, RemoveQuestItemAction, RemoveCollectedItemsAction, FinishQuestAction,
 		StartQuestTimerAction, EndQuestTimerAction, SendDialogAction, CloseDialogAction, ShowQuestListAction, SyncQuestStatusAction,
 		SendRepeatDeadlineMessageAction, SyncQuestTimerAction, SendPlayerMessageAction, PlayMovieAction {
@@ -572,6 +575,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		default ActionType type() {
 			return switch (this) {
 				case StartQuestAction ignored -> ActionType.START_QUEST;
+				case StartEventQuestAction ignored -> ActionType.START_EVENT_QUEST;
+				case AbandonQuestAction ignored -> ActionType.ABANDON_QUEST;
 				case SetQuestStatusAction ignored -> ActionType.SET_QUEST_STATUS;
 				case SetQuestVariableAction ignored -> ActionType.SET_QUEST_VARIABLE;
 				case AddQuestVariableAction ignored -> ActionType.ADD_QUEST_VARIABLE;
@@ -595,8 +600,22 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		}
 	}
 
-	/** 启动或重新启动当前任务周期。 / Starts or restarts the current quest cycle. */
+	/** 启动或重新启动当前标准任务周期。 / Starts or restarts the current standard quest cycle. */
 	public record StartQuestAction() implements Action {
+	}
+
+	/** 通过 typed lifecycle bridge 以显式状态启动活动任务 owner。 / Starts an event-quest owner with an explicit status through the typed lifecycle bridge. */
+	public record StartEventQuestAction(int targetQuestId, QuestStatus status) implements Action {
+		/** 校验目标 owner 和初始状态。 / Validates the target owner and initial status. */
+		public StartEventQuestAction {
+			if (targetQuestId <= 0 || status == null) {
+				throw new IllegalArgumentException("Event quest start action is invalid");
+			}
+		}
+	}
+
+	/** 放弃当前任务并释放其全部 typed cleanup 资源。 / Abandons the current quest and releases all typed cleanup resources. */
+	public record AbandonQuestAction() implements Action {
 	}
 
 	/** 设置当前 canonical 任务状态。 / Sets the current canonical quest status. */
