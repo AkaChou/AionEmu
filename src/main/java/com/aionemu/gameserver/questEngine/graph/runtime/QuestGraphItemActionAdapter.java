@@ -134,7 +134,8 @@ public final class QuestGraphItemActionAdapter {
 		synchronized (inventoryLock) {
 			long current = itemCountReader.applyAsLong(plan.itemId());
 			if (current == plan.afterCount()) {
-				if (plan.beforeCount() == plan.afterCount() && !alreadyPresentNotifier.test(plan.itemId())) {
+				if (plan.kind() == ItemMutationKind.GIVE_TOP_UP_TO && plan.beforeCount() == plan.afterCount()
+						&& !alreadyPresentNotifier.test(plan.itemId())) {
 					return ActionResult.FAILED;
 				}
 				return plan.beforeCount() == plan.afterCount() || inventoryPersistence.getAsBoolean()
@@ -145,7 +146,7 @@ public final class QuestGraphItemActionAdapter {
 			}
 			boolean changed = switch (plan.kind()) {
 				case GIVE_TOP_UP_TO -> itemGrant.test(plan.itemId(), plan.afterCount() - plan.beforeCount());
-				case REMOVE_EXACT -> itemRemoval.test(plan.itemId(), plan.requestedCount());
+				case REMOVE_EXACT, REMOVE_OPTIONAL_EXACT -> itemRemoval.test(plan.itemId(), plan.requestedCount());
 			};
 			if (!changed || itemCountReader.applyAsLong(plan.itemId()) != plan.afterCount()) {
 				return ActionResult.FAILED;
@@ -169,7 +170,11 @@ public final class QuestGraphItemActionAdapter {
 				&& plan.requestedCount() == give.count();
 		}
 		if (action instanceof RemoveQuestItemAction remove) {
-			return plan.kind() == ItemMutationKind.REMOVE_EXACT && plan.itemId() == remove.itemId()
+			ItemMutationKind expected = switch (remove.mode()) {
+				case EXACT -> ItemMutationKind.REMOVE_EXACT;
+				case OPTIONAL_EXACT -> ItemMutationKind.REMOVE_OPTIONAL_EXACT;
+			};
+			return plan.kind() == expected && plan.itemId() == remove.itemId()
 				&& plan.requestedCount() == remove.count();
 		}
 		return false;

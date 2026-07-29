@@ -166,6 +166,23 @@ class QuestGraphCompilerTest {
 	}
 
 	/**
+	 * 验证 XSD 与正式 compiler 只接受封闭的可选精确扣除模式。
+	 * Verifies that the XSD and production compiler accept only the closed optional-exact removal mode.
+	 */
+	@Test
+	void compilerBuildsClosedOptionalExactItemRemoval() throws Exception {
+		String optional = document(graph(1, "offer",
+			transition("accept", 10, "done").replace("mode=\"EXACT\"", "mode=\"OPTIONAL_EXACT\""), terminal()));
+		CompiledQuestGraph.Action action = load(optional).graphs().get(1).nodes().get("offer").transitions().getFirst().actions().stream()
+			.filter(CompiledQuestGraph.RemoveQuestItemAction.class::isInstance)
+			.findFirst().orElseThrow();
+
+		assertEquals(new CompiledQuestGraph.RemoveQuestItemAction(182200001, 1,
+			CompiledQuestGraph.QuestItemRemovalMode.OPTIONAL_EXACT), action);
+		assertThrows(IllegalArgumentException.class, () -> load(optional.replace("OPTIONAL_EXACT", "BEST_EFFORT")));
+	}
+
+	/**
 	 * 验证编译器在 typed bridge 完成前拒绝非 PLAYER 图和变量范围。
 	 * Verifies that the compiler rejects non-PLAYER graph and variable scopes until typed bridges exist.
 	 */

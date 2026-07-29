@@ -673,11 +673,15 @@ public final class QuestGraphTransitionExecutor {
 				Math.max(before, give.count()));
 		} else {
 			RemoveQuestItemAction remove = (RemoveQuestItemAction) action;
-			if (before < remove.count()) {
+			if (before < remove.count() && remove.mode() == CompiledQuestGraph.QuestItemRemovalMode.EXACT) {
 				throw new ItemMutationRejectedException();
 			}
-			plan = new ItemMutationPlan(actionIndex, ItemMutationKind.REMOVE_EXACT, itemId, remove.count(), before,
-				Math.subtractExact(before, remove.count()));
+			ItemMutationKind kind = switch (remove.mode()) {
+				case EXACT -> ItemMutationKind.REMOVE_EXACT;
+				case OPTIONAL_EXACT -> ItemMutationKind.REMOVE_OPTIONAL_EXACT;
+			};
+			long after = before >= remove.count() ? Math.subtractExact(before, remove.count()) : before;
+			plan = new ItemMutationPlan(actionIndex, kind, itemId, remove.count(), before, after);
 		}
 		projectedCounts.put(itemId, plan.afterCount());
 		return plan;
@@ -697,7 +701,11 @@ public final class QuestGraphTransitionExecutor {
 			if (plan == null || action instanceof GiveQuestItemAction give
 					&& (plan.kind() != ItemMutationKind.GIVE_TOP_UP_TO || plan.itemId() != give.itemId() || plan.requestedCount() != give.count())
 					|| action instanceof RemoveQuestItemAction remove
-						&& (plan.kind() != ItemMutationKind.REMOVE_EXACT || plan.itemId() != remove.itemId() || plan.requestedCount() != remove.count())) {
+						&& (plan.kind() != switch (remove.mode()) {
+							case EXACT -> ItemMutationKind.REMOVE_EXACT;
+							case OPTIONAL_EXACT -> ItemMutationKind.REMOVE_OPTIONAL_EXACT;
+						}
+							|| plan.itemId() != remove.itemId() || plan.requestedCount() != remove.count())) {
 				return false;
 			}
 		}

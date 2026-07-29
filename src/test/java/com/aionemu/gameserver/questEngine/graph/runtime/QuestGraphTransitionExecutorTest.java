@@ -769,6 +769,43 @@ class QuestGraphTransitionExecutorTest {
 	}
 
 	/**
+	 * 验证库存不足的 optional exact 冻结为 no-op，并仍按 journal/CAS 合同提交任务状态。
+	 * Verifies that an insufficient optional exact removal freezes as a no-op and still commits quest state through journal/CAS.
+	 */
+	@Test
+	void insufficientOptionalExactRemoveStillCommitsState() {
+		RemoveQuestItemAction remove = new RemoveQuestItemAction(182200001, 2,
+			CompiledQuestGraph.QuestItemRemovalMode.OPTIONAL_EXACT);
+		Transition transition = new Transition("remove", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"),
+			List.of(new QuestStatusCondition(NONE)), List.of(new StartQuestAction(), remove));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		Match match = new Match(EVENT, graph, new EventRoute(1, "offer", transition), null);
+		AtomicInteger removals = new AtomicInteger();
+		AtomicInteger stores = new AtomicInteger();
+		QuestGraphItemActionAdapter items = new QuestGraphItemActionAdapter(7, new Object(), ignored -> 1,
+			values -> true, (itemId, delta) -> false, (itemId, delta) -> {
+				removals.incrementAndGet();
+				return true;
+			}, () -> {
+				stores.incrementAndGet();
+				return true;
+			}, itemId -> true);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED,
+			invocation -> READY, invocation -> APPLIED, items, cas(database));
+
+		assertEquals(DispatchResult.Status.APPLIED, executor.execute(match, context));
+		assertEquals("done", states.get(1).getNodeId());
+		assertEquals(CompiledQuestGraph.QuestStatus.START, states.get(1).getQuestStatus());
+		assertEquals(Lifecycle.ACTIVE, states.get(1).getLifecycle());
+		assertEquals(0, removals.get());
+		assertEquals(0, stores.get());
+		assertEquals(states.get(1), database.get());
+	}
+
+	/**
 	 * 验证直接完成、完成次数 set/add 与计时器启动共享同一 journal/CAS 执行合同。
 	 * Verifies direct completion, completion-count set/add, and timer start share one journal/CAS execution contract.
 	 */

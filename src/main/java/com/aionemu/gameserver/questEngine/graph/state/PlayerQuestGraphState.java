@@ -87,7 +87,8 @@ public final class PlayerQuestGraphState {
 	/** 定义冻结物品动作的封闭语义。 / Defines the closed semantics of a frozen item action. */
 	public enum ItemMutationKind {
 		GIVE_TOP_UP_TO,
-		REMOVE_EXACT
+		REMOVE_EXACT,
+		REMOVE_OPTIONAL_EXACT
 	}
 
 	/**
@@ -103,6 +104,7 @@ public final class PlayerQuestGraphState {
 			boolean valid = switch (kind) {
 				case GIVE_TOP_UP_TO -> afterCount == Math.max(beforeCount, requestedCount);
 				case REMOVE_EXACT -> beforeCount >= requestedCount && afterCount == beforeCount - requestedCount;
+				case REMOVE_OPTIONAL_EXACT -> afterCount == (beforeCount >= requestedCount ? beforeCount - requestedCount : beforeCount);
 			};
 			if (!valid) {
 				throw new IllegalArgumentException("Item mutation before/after counts do not match its semantics");

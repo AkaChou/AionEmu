@@ -854,8 +854,8 @@ public final class QuestGraphData {
 	}
 
 	/**
-	 * 表示从背包精确扣除任务物品的 XML 参数。
-	 * Represents XML parameters that remove an exact quest-item count from the inventory.
+	 * 表示从背包精确或可选精确扣除任务物品的 XML 参数。
+	 * Represents XML parameters that remove an exact or optional-exact quest-item count from the inventory.
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@Getter
@@ -866,7 +866,7 @@ public final class QuestGraphData {
 		/** 精确扣除数量。 / Exact count to remove. */
 		@XmlAttribute(required = true)
 		private Long count;
-		/** 显式精确扣除模式。 / Explicit exact-removal mode. */
+		/** 显式扣除模式。 / Explicit removal mode. */
 		@XmlAttribute(required = true)
 		private String mode;
 	}

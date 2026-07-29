@@ -78,6 +78,27 @@ class PlayerQuestGraphStateTest {
 		assertEquals(RepeatDeadlineResolution.PRIVILEGED_BYPASS, decoded.getJournal().getRepeatDeadlineResolution());
 	}
 
+	/**
+	 * 验证可选精确扣除的足量和不足计划均可确定性往返，且非法端点被拒绝。
+	 * Verifies deterministic round trips for sufficient and insufficient optional-exact plans and rejects invalid endpoints.
+	 */
+	@Test
+	void codecRoundTripsOptionalExactItemPlans() {
+		ItemMutationPlan sufficient = new ItemMutationPlan(1, ItemMutationKind.REMOVE_OPTIONAL_EXACT, 182200001, 2, 5, 3);
+		ItemMutationPlan insufficient = new ItemMutationPlan(2, ItemMutationKind.REMOVE_OPTIONAL_EXACT, 182200002, 2, 1, 1);
+		PreparedTransition journal = new PreparedTransition(0, "event", "remove", 0, RepeatDeadlineResolution.NOT_APPLICABLE,
+			Map.of(1, sufficient, 2, insufficient), new byte[] { 1 });
+		PlayerQuestGraphState state = new PlayerQuestGraphState(1, 1, 1, "active", QuestStatus.START, QuestHistory.EMPTY, null,
+			Lifecycle.PREPARED, Map.of(), Map.of(), journal, Map.of(), null);
+
+		PlayerQuestGraphState decoded = PlayerQuestGraphStateCodec.decode(1, 1, 1, "active", null, Lifecycle.PREPARED,
+			PlayerQuestGraphStateCodec.encode(state));
+
+		assertEquals(Map.of(1, sufficient, 2, insufficient), decoded.getJournal().getItemMutationPlans());
+		assertThrows(IllegalArgumentException.class,
+			() -> new ItemMutationPlan(0, ItemMutationKind.REMOVE_OPTIONAL_EXACT, 182200001, 2, 1, 0));
+	}
+
 	@Test
 	void stateAndJournalDefensivelyCopyInputs() {
 		Map<String, VariableValue> variables = new HashMap<>();

@@ -656,7 +656,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 
 	/** 定义移除任务物品时支持的封闭模式。 / Defines the closed set of supported quest-item removal modes. */
 	public enum QuestItemRemovalMode {
-		EXACT
+		EXACT,
+		OPTIONAL_EXACT
 	}
 
 	/** 把玩家背包中的任务物品补齐到显式目标总数。 / Tops a quest item in the player's inventory up to an explicit target total. */
@@ -669,7 +670,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		}
 	}
 
-	/** 从玩家背包精确扣除显式数量的任务物品。 / Removes an explicit exact count of a quest item from the player's inventory. */
+	/** 从玩家背包按封闭模式扣除显式数量的任务物品。 / Removes an explicit quest-item count using a closed removal mode. */
 	public record RemoveQuestItemAction(int itemId, long count, QuestItemRemovalMode mode) implements Action {
 		/** 校验物品引用、扣除数量和封闭模式。 / Validates the item reference, removal count, and closed mode. */
 		public RemoveQuestItemAction {

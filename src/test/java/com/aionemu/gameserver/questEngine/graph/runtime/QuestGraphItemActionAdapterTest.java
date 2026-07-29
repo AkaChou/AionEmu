@@ -8,6 +8,7 @@ import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransit
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PreflightResult.REJECTED;
 import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.GIVE_TOP_UP_TO;
 import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.REMOVE_EXACT;
+import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.REMOVE_OPTIONAL_EXACT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
@@ -69,6 +70,64 @@ class QuestGraphItemActionAdapterTest {
 		count.set(4);
 		assertEquals(FAILED, adapter.execute(invocation));
 		assertEquals(1, removals.get());
+	}
+
+	/**
+	 * 验证库存不足的 optional exact 是无副作用 no-op，且模式不匹配的冻结计划失败。
+	 * Verifies that an insufficient optional exact removal is a side-effect-free no-op and a mismatched frozen plan fails.
+	 */
+	@Test
+	void insufficientOptionalExactRemovalIsSideEffectFree() {
+		AtomicLong count = new AtomicLong(1);
+		AtomicInteger removals = new AtomicInteger();
+		AtomicInteger stores = new AtomicInteger();
+		AtomicInteger notifications = new AtomicInteger();
+		QuestGraphItemActionAdapter adapter = new QuestGraphItemActionAdapter(7, new Object(), ignored -> count.get(), values -> true,
+			(itemId, delta) -> true, (itemId, delta) -> {
+				removals.incrementAndGet();
+				return true;
+			}, () -> {
+				stores.incrementAndGet();
+				return true;
+			}, itemId -> {
+				notifications.incrementAndGet();
+				return true;
+			});
+		RemoveQuestItemAction action = new RemoveQuestItemAction(182200001, 2,
+			com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemRemovalMode.OPTIONAL_EXACT);
+		ItemMutationPlan plan = new ItemMutationPlan(0, REMOVE_OPTIONAL_EXACT, 182200001, 2, 1, 1);
+
+		assertEquals(READY, adapter.preflight(invocation(action, plan)));
+		assertEquals(ALREADY_APPLIED, adapter.execute(invocation(action, plan)));
+		assertEquals(0, removals.get());
+		assertEquals(0, stores.get());
+		assertEquals(0, notifications.get());
+		assertEquals(QuestGraphTransitionExecutor.PreflightResult.FAILED, adapter.preflight(invocation(action,
+			new ItemMutationPlan(0, REMOVE_EXACT, 182200001, 2, 3, 1))));
+	}
+
+	/**
+	 * 验证足量 optional exact 仍精确扣除并持久化，外部库存漂移显式失败。
+	 * Verifies that a sufficient optional exact removal still removes exactly and persists, while inventory drift fails.
+	 */
+	@Test
+	void sufficientOptionalExactRemovalRejectsInventoryDrift() {
+		AtomicLong count = new AtomicLong(5);
+		AtomicInteger removals = new AtomicInteger();
+		AtomicInteger stores = new AtomicInteger();
+		QuestGraphItemActionAdapter adapter = adapter(count, new AtomicInteger(), removals, stores);
+		ItemMutationPlan plan = new ItemMutationPlan(0, REMOVE_OPTIONAL_EXACT, 182200001, 2, 5, 3);
+		ActionInvocation invocation = invocation(new RemoveQuestItemAction(182200001, 2,
+			com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemRemovalMode.OPTIONAL_EXACT), plan);
+
+		assertEquals(APPLIED, adapter.execute(invocation));
+		assertEquals(3, count.get());
+		assertEquals(1, removals.get());
+		assertEquals(1, stores.get());
+		count.set(4);
+		assertEquals(FAILED, adapter.execute(invocation));
+		assertEquals(1, removals.get());
+		assertEquals(1, stores.get());
 	}
 
 	/** 验证整组预检按 action index 投影同一物品的连续 give/remove。 / Verifies batch preflight projects consecutive give/remove actions by index. */
