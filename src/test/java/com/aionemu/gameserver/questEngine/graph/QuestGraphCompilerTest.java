@@ -33,7 +33,7 @@ class QuestGraphCompilerTest {
 	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
 			Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"), Set.of(913),
 			Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
-			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832));
+			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832), Set.of(220050000));
 
 	@TempDir
 	Path tempDir;
@@ -139,6 +139,37 @@ class QuestGraphCompilerTest {
 			transition.replace("digit0 digit1", "digit0 digit0"), terminal())), "invalid packed-counter");
 		assertFailureContains(document(graph(1, "active", variables,
 			transition.replace("maximum=\"1000\"", "maximum=\"4096\""), terminal())), "outside packed capacity");
+	}
+
+	/**
+	 * 验证入侵世界条件绑定 WORLD_ENTERED 事件并要求正式 world 引用闭包。
+	 * Verifies that invasion-world conditions bind to WORLD_ENTERED and require formal world-reference closure.
+	 */
+	@Test
+	void compilesAndValidatesInvasionWorldAuthorityCondition() throws Exception {
+		String transition = """
+			<transition id="invasion" priority="10" to="done">
+				<world-entered/>
+				<conditions>
+					<quest-status op="IN" values="NONE"/>
+					<invasion-world-active world_id="220050000"/>
+				</conditions>
+				<actions><start-quest/><sync-quest-status/></actions>
+			</transition>
+			""";
+		CompiledQuestGraph.Transition compiled = load(document(graph(1, "offer", "", transition, terminal())))
+			.graphs().get(1).nodes().get("offer").transitions().getFirst();
+		assertEquals(new CompiledQuestGraph.InvasionWorldActiveCondition(220050000), compiled.conditions().get(1));
+		assertFailureContains(document(graph(1, "offer", "",
+			transition.replace("<world-entered/>", "<kill npc_id=\"203709\"/>"), terminal())),
+			"uses invasion-world-active outside WORLD_ENTERED");
+
+		QuestGraphCompiler.References withoutWorld = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
+			Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"), Set.of(913),
+			Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
+			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832));
+		assertFailureContains(document(graph(1, "offer", "", transition, terminal())), withoutWorld,
+			"references missing world 220050000");
 	}
 
 	/**
@@ -844,6 +875,7 @@ class QuestGraphCompilerTest {
 		Set<String> zoneNames = new HashSet<>();
 		Set<Integer> movieIds = new HashSet<>();
 		Set<Integer> skillIds = new HashSet<>();
+		Set<Integer> worldIds = new HashSet<>();
 		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
 		inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 		inputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
@@ -859,6 +891,7 @@ class QuestGraphCompilerTest {
 					addIntegerAttribute(reader, "object_id", npcIds);
 					addIntegerAttribute(reader, "item_id", itemIds);
 					addIntegerAttribute(reader, "skill_id", skillIds);
+					addIntegerAttribute(reader, "world_id", worldIds);
 					addIntegerAttribute(reader, "title_id", titleIds);
 					addStringAttribute(reader, "zone_name", zoneNames);
 					addIntegerAttribute(reader, "movie_id", movieIds);
@@ -867,7 +900,8 @@ class QuestGraphCompilerTest {
 				reader.close();
 			}
 		}
-		return new QuestGraphCompiler.References(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), skillIds);
+		return new QuestGraphCompiler.References(
+			questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), skillIds, worldIds);
 	}
 
 	/** 添加存在的正整数 XML 属性。 / Adds a present positive-integer XML attribute. */

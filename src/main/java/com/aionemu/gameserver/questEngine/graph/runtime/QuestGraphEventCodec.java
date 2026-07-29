@@ -44,7 +44,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneMiss
  */
 public final class QuestGraphEventCodec {
 
-	private static final int MAGIC = 0x51474531;
+	private static final int MAGIC = 0x51474532;
 	private static final int MAX_PAYLOAD = 128 * 1024;
 	private static final byte DIALOG = 1;
 	private static final byte KILL = 2;
@@ -146,6 +146,7 @@ public final class QuestGraphEventCodec {
 						output.writeByte(WORLD_ENTERED);
 						writeCommon(output, worldEntered);
 						writeLocation(output, worldEntered.worldId(), worldEntered.instanceId(), worldEntered.x(), worldEntered.y(), worldEntered.z());
+						output.writeBoolean(worldEntered.invasionAccessActive());
 					}
 					case ZoneEnteredEvent zoneEntered -> {
 						output.writeByte(ZONE_ENTERED);
@@ -324,7 +325,7 @@ public final class QuestGraphEventCodec {
 					case ITEM_EQUIPPED -> new ItemEquippedEvent(eventId, playerId, occurredAt, input.readInt());
 					case HOUSE_ITEM_USE -> new HouseItemUseEvent(eventId, playerId, occurredAt, input.readInt());
 					case WORLD_ENTERED -> new WorldEnteredEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(), input.readFloat(),
-						input.readFloat(), input.readFloat());
+						input.readFloat(), input.readFloat(), input.readBoolean());
 					case ZONE_ENTERED -> new ZoneEnteredEvent(eventId, playerId, occurredAt, input.readUTF(), input.readInt(), input.readInt(),
 						input.readFloat(), input.readFloat(), input.readFloat());
 						case ZONE_LEFT -> new ZoneLeftEvent(eventId, playerId, occurredAt, input.readUTF(), input.readInt(), input.readInt());

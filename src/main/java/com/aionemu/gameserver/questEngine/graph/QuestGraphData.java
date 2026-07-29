@@ -518,6 +518,7 @@ public final class QuestGraphData {
 			@XmlElement(name = "quest-status", type = QuestStatusConditionData.class),
 			@XmlElement(name = "quest-variable", type = QuestVariableConditionData.class),
 			@XmlElement(name = "packed-counter", type = PackedCounterConditionData.class),
+			@XmlElement(name = "invasion-world-active", type = InvasionWorldActiveConditionData.class),
 			@XmlElement(name = "quest-repeat-available", type = QuestRepeatAvailableConditionData.class),
 			@XmlElement(name = "quest-collect-items", type = QuestCollectItemsConditionData.class),
 			@XmlElement(name = "quest-reward", type = QuestRewardConditionData.class),
@@ -573,6 +574,15 @@ public final class QuestGraphData {
 		/** 比较值。 / Comparison value. */
 		@XmlAttribute(required = true)
 		private Integer value;
+	}
+
+	/** 表示进入世界时服务端确认的入侵通道活跃条件。 / Represents server-confirmed active invasion access on world entry. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class InvasionWorldActiveConditionData {
+		/** 入侵目标世界标识。 / Invasion target world identifier. */
+		@XmlAttribute(name = "world_id", required = true)
+		private Integer worldId;
 	}
 
 	/** 定义当前任务开始新重复周期所需的上限和 deadline。 / Defines the cap and deadline required to start a repeat cycle. */

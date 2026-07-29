@@ -59,6 +59,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AbandonQuestA
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IncrementPackedCounterAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InvasionWorldActiveCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AnchoredCooldownRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CloseDialogAction;
@@ -130,6 +131,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ZoneMissionEndedE
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddCompletionCountActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddQuestVariableActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.IncrementPackedCounterActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.InvasionWorldActiveConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AbandonQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CloseDialogActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FinishQuestActionData;
@@ -211,7 +213,7 @@ public final class QuestGraphCompiler {
 	 */
 	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
 			Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
-			Set<FlyingRingReference> flyingRings, Set<Integer> skillIds) {
+			Set<FlyingRingReference> flyingRings, Set<Integer> skillIds, Set<Integer> worldIds) {
 		/**
 		 * 复制引用集合，保证一次编译期间引用闭包稳定。
 		 * Copies reference sets so the reference closure stays stable during compilation.
@@ -226,6 +228,7 @@ public final class QuestGraphCompiler {
 			windstreamRoutes = Set.copyOf(windstreamRoutes);
 			flyingRings = Set.copyOf(flyingRings);
 			skillIds = Set.copyOf(skillIds);
+			worldIds = Set.copyOf(worldIds);
 		}
 
 		/**
@@ -234,14 +237,21 @@ public final class QuestGraphCompiler {
 		 */
 		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
 				Set<String> zoneNames, Set<Integer> movieIds) {
-			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), Set.of());
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), Set.of(), Set.of());
 		}
 
 		/** 创建带 movement 但不声明 skill 引用的兼容集合；skill XML 仍会失败关闭。 / Creates references with movement but no skills; skill XML still fails closed. */
 		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
 				Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
 				Set<FlyingRingReference> flyingRings) {
-			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, Set.of());
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, Set.of(), Set.of());
+		}
+
+		/** 创建带 movement 与 skill、但不声明 world 引用的兼容集合。 / Creates references with movement and skills but no world references. */
+		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
+				Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
+				Set<FlyingRingReference> flyingRings, Set<Integer> skillIds) {
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, skillIds, Set.of());
 		}
 	}
 
@@ -780,6 +790,13 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid packed-counter condition", e);
 			}
 		}
+		if (source instanceof InvasionWorldActiveConditionData condition) {
+			if (condition.getWorldId() == null || !references.worldIds().contains(condition.getWorldId())) {
+				throw new IllegalArgumentException("Quest " + questId + " invasion condition references missing world "
+					+ condition.getWorldId());
+			}
+			return new InvasionWorldActiveCondition(condition.getWorldId());
+		}
 		if (source instanceof QuestRepeatAvailableConditionData condition) {
 			try {
 				return new QuestRepeatAvailableCondition(condition.getMaxCompletions(), condition.getRequiresDeadline(),
@@ -1177,6 +1194,11 @@ public final class QuestGraphCompiler {
 				&& event.type() != KILL_IN_WORLD) {
 			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
 				+ " uses kill-victim level delta outside KILL_IN_WORLD");
+		}
+		if (conditions.stream().anyMatch(InvasionWorldActiveCondition.class::isInstance)
+				&& event.type() != WORLD_ENTERED) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+				+ " uses invasion-world-active outside WORLD_ENTERED");
 		}
 	}
 

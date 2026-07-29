@@ -163,7 +163,7 @@ class QuestGraphRouterTest {
 		ItemObtainedEvent itemObtained = new ItemObtainedEvent("item-obtained", 7, 3006, 182200001);
 		ItemEquippedEvent itemEquipped = new ItemEquippedEvent("item-equipped", 7, 3007, 182200001);
 		HouseItemUseEvent houseItemUse = new HouseItemUseEvent("house-item-use", 7, 3008, 182200001);
-		WorldEnteredEvent worldEntered = new WorldEnteredEvent("world-entered", 7, 3009, 210010000, 1, 10, 20, 30);
+		WorldEnteredEvent worldEntered = new WorldEnteredEvent("world-entered", 7, 3009, 210010000, 1, 10, 20, 30, true);
 		ZoneEnteredEvent zoneEntered = new ZoneEnteredEvent("zone-entered", 7, 3010, "TEST_ZONE", 210010000, 1, 10, 20, 30);
 		ZoneLeftEvent zoneLeft = new ZoneLeftEvent("zone-left", 7, 3011, "TEST_ZONE", 210010000, 1);
 		ZoneMissionEndedEvent zoneMissionEnded = new ZoneMissionEndedEvent("zone-mission-ended", 7, 3012, 1);

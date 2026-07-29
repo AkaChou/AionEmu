@@ -4,6 +4,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PackedCounterCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InvasionWorldActiveCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerEquippedCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
@@ -20,6 +21,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariable
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionInvocation;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionResult;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.QuestService;
@@ -51,6 +53,7 @@ public final class QuestGraphPlayerConditionEvaluator {
 				case QuestStatusCondition condition -> throw new IllegalArgumentException("Quest status must be evaluated by the transition executor");
 				case QuestVariableCondition condition -> throw new IllegalArgumentException("Quest variable must be evaluated by the transition executor");
 				case PackedCounterCondition condition -> throw new IllegalArgumentException("Packed counter must be evaluated by the transition executor");
+				case InvasionWorldActiveCondition condition -> matchesInvasionWorld(condition, invocation);
 				case QuestRepeatAvailableCondition condition -> throw new IllegalArgumentException(
 					"Quest repeat eligibility must be evaluated by the transition executor");
 				case QuestRewardCondition condition -> throw new IllegalArgumentException("Quest reward must be evaluated by the transition executor");
@@ -74,6 +77,14 @@ public final class QuestGraphPlayerConditionEvaluator {
 		} catch (RuntimeException e) {
 			return ConditionResult.FAILED;
 		}
+	}
+
+	/** 使用持久化 WORLD_ENTERED 快照校验世界与服务端入侵访问凭据。 / Validates the world and server invasion-access authority from the persisted WORLD_ENTERED snapshot. */
+	private boolean matchesInvasionWorld(InvasionWorldActiveCondition condition, ConditionInvocation invocation) {
+		if (!(invocation.event() instanceof WorldEnteredEvent event)) {
+			throw new IllegalArgumentException("Invasion world condition requires WORLD_ENTERED");
+		}
+		return event.worldId() == condition.worldId() && event.invasionAccessActive();
 	}
 
 	/**

@@ -28,6 +28,7 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InvasionWorldActiveCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerEquippedCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
@@ -37,6 +38,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCon
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionInvocation;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
@@ -119,6 +121,24 @@ class QuestGraphPlayerConditionEvaluatorTest {
 		assertEquals(NOT_MATCHED, evaluator.evaluate(invocation(new KillVictimLevelDeltaCondition(null, 4), event)));
 		assertEquals(NOT_MATCHED, evaluator.evaluate(invocation(new KillVictimLevelDeltaCondition(6, null), event)));
 		assertEquals(FAILED, evaluator.evaluate(invocation(new KillVictimLevelDeltaCondition(-5, 9), EVENT)));
+	}
+
+	/**
+	 * 验证入侵资格只读取持久化世界进入凭据，并拒绝错误世界、无凭据和错误事件。
+	 * Verifies that invasion eligibility reads only persisted world-entry authority and rejects wrong worlds, absent authority, and wrong events.
+	 */
+	@Test
+	void evaluatesInvasionWorldFromAuthoritativeEventSnapshot() throws ReflectiveOperationException {
+		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
+		InvasionWorldActiveCondition condition = new InvasionWorldActiveCondition(220050000);
+
+		assertEquals(MATCHED, evaluator.evaluate(invocation(condition,
+			new WorldEnteredEvent("enter", 7, 1000, 220050000, 1, 1, 2, 3, true))));
+		assertEquals(NOT_MATCHED, evaluator.evaluate(invocation(condition,
+			new WorldEnteredEvent("wrong", 7, 1000, 210010000, 1, 1, 2, 3, true))));
+		assertEquals(NOT_MATCHED, evaluator.evaluate(invocation(condition,
+			new WorldEnteredEvent("closed", 7, 1000, 220050000, 1, 1, 2, 3, false))));
+		assertEquals(FAILED, evaluator.evaluate(invocation(condition, EVENT)));
 	}
 
 	/**

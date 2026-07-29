@@ -293,6 +293,10 @@
 		<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphInvasionWorldActiveCondition">
+		<xs:attribute name="world_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphQuestRepeatAvailableCondition">
 		<xs:attribute name="max_completions" use="required">
 			<xs:simpleType>
@@ -503,6 +507,7 @@
 			<xs:element name="quest-status" type="questGraphQuestStatusCondition"/>
 			<xs:element name="quest-variable" type="questGraphQuestVariableCondition"/>
 			<xs:element name="packed-counter" type="questGraphPackedCounterCondition"/>
+			<xs:element name="invasion-world-active" type="questGraphInvasionWorldActiveCondition"/>
 			<xs:element name="quest-repeat-available" type="questGraphQuestRepeatAvailableCondition"/>
 			<xs:element name="quest-collect-items" type="questGraphEmptyAction"/>
 			<xs:element name="quest-reward" type="questGraphQuestRewardCondition"/>

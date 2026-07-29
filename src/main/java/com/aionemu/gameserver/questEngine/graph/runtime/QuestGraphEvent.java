@@ -288,12 +288,18 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	}
 
 	/** 表示服务器确认的玩家进入世界位置快照。 / Represents a server-confirmed player world-entry location snapshot. */
-	record WorldEnteredEvent(String eventId, int playerId, long occurredAt, int worldId, int instanceId, float x, float y, float z)
+	record WorldEnteredEvent(String eventId, int playerId, long occurredAt, int worldId, int instanceId, float x, float y, float z,
+			boolean invasionAccessActive)
 		implements QuestGraphEvent {
 		/** 校验世界、实例和坐标快照。 / Validates world, instance, and coordinate snapshots. */
 		public WorldEnteredEvent {
 			validateCommon(eventId, playerId, occurredAt);
 			validateLocation(worldId, instanceId, x, y, z);
+		}
+
+		/** 创建未附带入侵访问凭据的兼容世界进入事件。 / Creates a compatible world-entry event without invasion-access authority. */
+		public WorldEnteredEvent(String eventId, int playerId, long occurredAt, int worldId, int instanceId, float x, float y, float z) {
+			this(eventId, playerId, occurredAt, worldId, instanceId, x, y, z, false);
 		}
 
 		/** 返回 WORLD_ENTERED 类型。 / Returns the WORLD_ENTERED type. */

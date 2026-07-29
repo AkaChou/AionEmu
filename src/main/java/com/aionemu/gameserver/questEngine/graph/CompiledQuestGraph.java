@@ -322,7 +322,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Represents a typed condition that must hold before a transition executes.
 	 */
 	public sealed interface Condition permits QuestStatusCondition, QuestVariableCondition, QuestRepeatAvailableCondition,
-		PackedCounterCondition,
+		PackedCounterCondition, InvasionWorldActiveCondition,
 		QuestCollectItemsCondition, PlayerLevelCondition, KillVictimLevelDeltaCondition, PlayerRaceCondition, PlayerClassCondition,
 		PlayerGenderCondition, PlayerTitleCondition, PlayerAbyssRankCondition, PlayerInventoryCondition, QuestRewardCondition,
 		QuestCompletionCountCondition, PlayerEquippedCondition {
@@ -352,6 +352,16 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 			variables = validatedPackedVariables(variables, radix);
 			if (operation == null || operation == ConditionOperation.IN || operation == ConditionOperation.NOT_IN || value < 0) {
 				throw new IllegalArgumentException("Packed counter condition is invalid");
+			}
+		}
+	}
+
+	/** 要求 WORLD_ENTERED 快照确认目标世界的漩涡或裂隙在事件发生时活跃。 / Requires the WORLD_ENTERED snapshot to confirm active vortex or rift access for the target world. */
+	public record InvasionWorldActiveCondition(int worldId) implements Condition {
+		/** 校验正数世界标识。 / Validates a positive world identifier. */
+		public InvasionWorldActiveCondition {
+			if (worldId <= 0) {
+				throw new IllegalArgumentException("Invasion world condition is invalid");
 			}
 		}
 	}
