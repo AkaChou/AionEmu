@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,13 +29,15 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
+import jakarta.xml.bind.JAXBContext;
+
 class QuestGraphCompilerTest {
 	private static final Path SCHEMA = Path.of("src/main/resources/aion/data/static_data/quest_graph_data/quest_graph_data.xsd");
 	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
 			Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"), Set.of(913),
 			Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
 			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832), Set.of(220050000),
-			Set.of(155004001));
+			Set.of(155004001), Set.of(40002));
 
 	@TempDir
 	Path tempDir;
@@ -552,7 +555,7 @@ class QuestGraphCompilerTest {
 		assertFailureContains(document(graph(1, "offer", rawSkill, terminal())), withoutSkill,
 			"skill-used references missing skill 9832");
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
-			rawSkill.replace("RAW_SOURCE", "SILENT_FALLBACK"), terminal()))));
+			rawSkill.replace("RAW_SOURCE", "UNSUPPORTED_SOURCE"), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			rawSkill.replace(" duplicate_policy=\"RAW_SOURCE\"", ""), terminal()))));
 	}
@@ -728,6 +731,10 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class,
 			() -> new CompiledQuestGraph.QuestVariableCondition("counter", ConditionOperation.IN, 0));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.QuestRepeatAvailableCondition(0, false, true));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.CraftSkillEligibilityCondition(40002, 401,
+			CompiledQuestGraph.CraftSkillEligibilityPolicy.CAPACITY_REQUIRED));
+		assertThrows(IllegalArgumentException.class,
+			() -> new CompiledQuestGraph.CraftSkillEligibilityCondition(40002, 400, null));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.AddQuestVariableAction("counter", 0));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.GiveQuestItemAction(0, 1,
 			CompiledQuestGraph.QuestItemGrantMode.TOP_UP_TO));
@@ -738,6 +745,8 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.AddCompletionCountAction(0));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.StartQuestTimerAction("QUEST_TIMER", 0));
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.PlayMovieAction(0));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.GrantCraftSkillRewardAction(40002, 401));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.SyncCraftSkillRewardAction(0));
 	}
 
 	/**
@@ -838,6 +847,104 @@ class QuestGraphCompilerTest {
 	}
 
 	/**
+	 * 验证制作奖励的两种资格策略、required grant、提交后同步、独立引用闭包及 XSD/compiler 双重失败关闭。
+	 * Verifies both craft-reward eligibility policies, required grant, post-commit synchronization, independent reference
+	 * closure, and fail-closed XSD/compiler validation.
+	 */
+	@Test
+	void compilerClosesCraftSkillRewardContracts() throws Exception {
+		String craftGraph = """
+			<quest_graph quest_id="1" version="1" scope="PLAYER" initial_node="offer">
+				<node id="offer">
+					<transition id="select" priority="1" to="reward">
+						<dialog npc_id="203709" dialog="SELECT_REWARD"/>
+						<conditions>
+							<quest-status op="IN" values="START"/>
+							<craft-skill-eligible craft_skill_id="40002" target_level="400"
+								policy="CAPACITY_IF_EXISTING_NOT_TARGET"/>
+						</conditions>
+						<actions>
+							<set-quest-status status="REWARD"/>
+							<sync-quest-status/>
+							<send-dialog dialog_id="5"/>
+						</actions>
+					</transition>
+				</node>
+				<node id="reward">
+					<transition id="grant" priority="1" to="reward">
+						<movie-ended movie_id="913"/>
+						<conditions>
+							<quest-status op="IN" values="REWARD"/>
+							<craft-skill-eligible craft_skill_id="40002" target_level="400"
+								policy="CAPACITY_REQUIRED"/>
+						</conditions>
+						<actions>
+							<grant-craft-skill-reward craft_skill_id="40002" target_level="400"/>
+							<sync-craft-skill-reward craft_skill_id="40002"/>
+						</actions>
+					</transition>
+					<transition id="finish" priority="2" to="complete">
+						<dialog npc_id="203709" dialog="USE_OBJECT"/>
+						<actions><close-dialog/></actions>
+					</transition>
+				</node>
+				<node id="complete" terminal="true"/>
+			</quest_graph>
+			""";
+		CompiledQuestGraph graph = load(document(craftGraph)).graphs().get(1);
+		CompiledQuestGraph.Transition dialog = graph.nodes().get("offer").transitions().getFirst();
+		CompiledQuestGraph.Transition grant = graph.nodes().get("reward").transitions().getFirst();
+		assertEquals(new CompiledQuestGraph.CraftSkillEligibilityCondition(40002, 400,
+			CompiledQuestGraph.CraftSkillEligibilityPolicy.CAPACITY_IF_EXISTING_NOT_TARGET), dialog.conditions().get(1));
+		assertEquals(new CompiledQuestGraph.CraftSkillEligibilityCondition(40002, 400,
+			CompiledQuestGraph.CraftSkillEligibilityPolicy.CAPACITY_REQUIRED), grant.conditions().get(1));
+		assertEquals(List.of(new CompiledQuestGraph.GrantCraftSkillRewardAction(40002, 400),
+			new CompiledQuestGraph.SyncCraftSkillRewardAction(40002)), grant.actions());
+		assertEquals(CompiledQuestGraph.ActionPhase.REQUIRED, grant.actions().getFirst().type().phase());
+		assertEquals(CompiledQuestGraph.ActionPhase.POST_COMMIT_PROTOCOL, grant.actions().getLast().type().phase());
+		assertEquals(Set.of(CompiledQuestGraph.CraftSkillEligibilityPolicy.CAPACITY_IF_EXISTING_NOT_TARGET,
+			CompiledQuestGraph.CraftSkillEligibilityPolicy.CAPACITY_REQUIRED),
+			Set.of(CompiledQuestGraph.CraftSkillEligibilityPolicy.values()));
+		assertDoesNotThrow(() -> load(document(craftGraph.replace("target_level=\"400\"", "target_level=\"500\""))));
+
+		QuestGraphCompiler.References withoutCraftSkills = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
+			Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"), Set.of(913),
+			Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
+			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832), Set.of(220050000),
+			Set.of(155004001));
+		assertFailureContains(document(craftGraph), withoutCraftSkills, "references missing craft skill 40002");
+		assertFailureContains(document(craftGraph.replace("craft_skill_id=\"40002\"", "craft_skill_id=\"9832\"")),
+			"references missing craft skill 9832");
+		assertFailureContains(document(craftGraph.replace("<dialog npc_id=\"203709\" dialog=\"SELECT_REWARD\"/>",
+			"<skill-used skill_id=\"40002\" duplicate_policy=\"RAW_SOURCE\"/>")), "skill-used references missing skill 40002");
+		String grantAction = "<grant-craft-skill-reward craft_skill_id=\"40002\" target_level=\"400\"/>";
+		String syncAction = "<sync-craft-skill-reward craft_skill_id=\"40002\"/>";
+		String invalidOrder = craftGraph.replace(grantAction, "<craft-action-order-marker/>")
+			.replace(syncAction, grantAction).replace("<craft-action-order-marker/>", syncAction);
+		assertFailureContains(document(invalidOrder), "invalid action phase order");
+
+		assertThrows(IllegalArgumentException.class, () -> load(document(craftGraph.replace(
+			"CAPACITY_IF_EXISTING_NOT_TARGET", "UNPROVEN_POLICY"))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(craftGraph.replace("target_level=\"400\"", "target_level=\"401\""))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(craftGraph.replace(
+			"policy=\"CAPACITY_REQUIRED\"", ""))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(craftGraph.replace(
+			"<sync-craft-skill-reward craft_skill_id=\"40002\"/>", "<sync-craft-skill-reward/>"))));
+
+		assertCompilerFailureContains(document(craftGraph.replace("CAPACITY_IF_EXISTING_NOT_TARGET", "UNPROVEN_POLICY")),
+			"invalid craft skill eligibility condition");
+		assertCompilerFailureContains(document(craftGraph.replace("target_level=\"400\"", "target_level=\"401\"")),
+			"invalid craft skill eligibility condition");
+		assertCompilerFailureContains(document(craftGraph.replace(
+			"<grant-craft-skill-reward craft_skill_id=\"40002\" target_level=\"400\"/>",
+			"<grant-craft-skill-reward craft_skill_id=\"40002\" target_level=\"401\"/>")),
+			"invalid grant-craft-skill-reward action");
+		assertCompilerFailureContains(document(craftGraph.replace(
+			"<sync-craft-skill-reward craft_skill_id=\"40002\"/>", "<sync-craft-skill-reward/>")),
+			"references missing craft skill null");
+	}
+
+	/**
 	 * 验证 lifecycle XML 只编译为封闭启动、活动刷新和放弃动作，并校验跨 owner 引用。
 	 * Verifies lifecycle XML compiles only to closed start, event-refresh, and abandon actions with cross-owner references.
 	 */
@@ -900,6 +1007,26 @@ class QuestGraphCompilerTest {
 		assertCauseContains(error, message);
 	}
 
+	/** 断言在不依赖 XSD 的情况下正式 compiler 仍失败关闭。 / Asserts that the formal compiler fails closed without relying on XSD. */
+	private void assertCompilerFailureContains(String xml, String message) {
+		IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> compileWithoutSchema(xml));
+		assertCauseContains(error, message);
+	}
+
+	/** 解组未经过 XSD 校验的 JAXB 数据并直接调用正式 compiler。 / Unmarshals JAXB data without XSD and invokes the formal compiler directly. */
+	private CompiledQuestGraphData compileWithoutSchema(String xml) throws Exception {
+		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
+		inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		inputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+		XMLStreamReader reader = inputFactory.createXMLStreamReader(new StringReader(xml));
+		try {
+			QuestGraphData source = (QuestGraphData) JAXBContext.newInstance(QuestGraphData.class).createUnmarshaller().unmarshal(reader);
+			return QuestGraphCompiler.compile(source, REFERENCES);
+		} finally {
+			reader.close();
+		}
+	}
+
 	private static void assertCauseContains(Throwable error, String message) {
 		for (Throwable cause = error; cause != null; cause = cause.getCause()) {
 			if (cause.getMessage() != null && cause.getMessage().contains(message)) {
@@ -923,6 +1050,7 @@ class QuestGraphCompilerTest {
 		Set<Integer> skillIds = new HashSet<>();
 		Set<Integer> worldIds = new HashSet<>();
 		Set<Integer> recipeIds = new HashSet<>();
+		Set<Integer> craftSkillIds = new HashSet<>();
 		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
 		inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 		inputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
@@ -943,13 +1071,15 @@ class QuestGraphCompilerTest {
 					addStringAttribute(reader, "zone_name", zoneNames);
 					addIntegerAttribute(reader, "movie_id", movieIds);
 					addIntegerAttribute(reader, "recipe_id", recipeIds);
+					addIntegerAttribute(reader, "craft_skill_id", craftSkillIds);
 				}
 			} finally {
 				reader.close();
 			}
 		}
 		return new QuestGraphCompiler.References(
-			questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), skillIds, worldIds, recipeIds);
+			questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), skillIds, worldIds, recipeIds,
+			craftSkillIds);
 	}
 
 	/** 添加存在的正整数 XML 属性。 / Adds a present positive-integer XML attribute. */

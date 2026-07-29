@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.graph.runtime;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CraftSkillEligibilityCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PackedCounterCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InvasionWorldActiveCondition;
@@ -75,6 +76,8 @@ public final class QuestGraphPlayerConditionEvaluator {
 					new QuestEnv(null, player, invocation.questId(), 0), false);
 				case RecipeLearnableCondition condition -> throw new IllegalArgumentException(
 					"Recipe learnability must be evaluated by the recipe bridge");
+				case CraftSkillEligibilityCondition condition -> throw new IllegalArgumentException(
+					"Craft-skill eligibility must be evaluated by the craft reward bridge");
 			};
 			return matched ? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
 		} catch (RuntimeException e) {

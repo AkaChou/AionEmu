@@ -41,6 +41,7 @@ import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandlerLoader;
 import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
@@ -655,6 +656,22 @@ public class QuestEngine implements GameEngine {
 			// log.error(I18n.get("log.e20bb13d3b6a", ex));
 		}
 		return false;
+	}
+
+	/**
+	 * 在旧 Handler 仍是唯一生产 owner 时接收完整 typed 影片凭据，并投影到现有影片回调。
+	 * Receives complete typed movie authority while legacy handlers remain the sole production owners and projects it to the
+	 * existing movie callback.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param event 已消费服务端播放凭据的 typed 事件 / typed event backed by consumed server playback authority
+	 * @return 是否有当前生产 Handler 接管 / whether a current production handler took over
+	 */
+	public boolean onMovieEnd(QuestEnv env, MovieEndedEvent event) {
+		if (env == null || env.getPlayer() == null || event == null || env.getPlayer().getObjectId() != event.playerId()) {
+			throw new IllegalArgumentException("Movie-ended event player authority is invalid");
+		}
+		return onMovieEnd(env, event.movieId());
 	}
 
 	/**

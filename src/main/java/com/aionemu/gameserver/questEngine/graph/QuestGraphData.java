@@ -536,6 +536,7 @@ public final class QuestGraphData {
 			@XmlElement(name = "quest-repeat-available", type = QuestRepeatAvailableConditionData.class),
 			@XmlElement(name = "quest-collect-items", type = QuestCollectItemsConditionData.class),
 			@XmlElement(name = "recipe-learnable", type = RecipeLearnableConditionData.class),
+			@XmlElement(name = "craft-skill-eligible", type = CraftSkillEligibilityConditionData.class),
 			@XmlElement(name = "quest-reward", type = QuestRewardConditionData.class),
 			@XmlElement(name = "quest-completion-count", type = QuestCompletionCountConditionData.class),
 			@XmlElement(name = "player-level", type = PlayerLevelConditionData.class),
@@ -630,6 +631,23 @@ public final class QuestGraphData {
 		/** 期望的可学习性。 / Expected learnability. */
 		@XmlAttribute(required = true)
 		private Boolean expected;
+	}
+
+	/** 表示制作技能奖励在对话或影片提交阶段的 typed 资格查询。 / Represents a typed craft-reward eligibility query during dialog or movie settlement. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class CraftSkillEligibilityConditionData {
+		/** 制作技能标识。 / Craft-skill identifier. */
+		@XmlAttribute(name = "craft_skill_id", required = true)
+		private Integer craftSkillId;
+
+		/** 专家或大师目标等级。 / Expert or master target level. */
+		@XmlAttribute(name = "target_level", required = true)
+		private Integer targetLevel;
+
+		/** 对话或影片提交使用的封闭资格策略。 / Closed eligibility policy for dialog or movie settlement. */
+		@XmlAttribute(required = true)
+		private String policy;
 	}
 
 	/**
@@ -828,6 +846,7 @@ public final class QuestGraphData {
 			@XmlElement(name = "remove-quest-work-items", type = RemoveQuestWorkItemsActionData.class),
 			@XmlElement(name = "learn-recipe", type = LearnRecipeActionData.class),
 			@XmlElement(name = "delete-recipe", type = DeleteRecipeActionData.class),
+			@XmlElement(name = "grant-craft-skill-reward", type = GrantCraftSkillRewardActionData.class),
 			@XmlElement(name = "finish-quest", type = FinishQuestActionData.class),
 			@XmlElement(name = "start-quest-timer", type = StartQuestTimerActionData.class),
 			@XmlElement(name = "end-quest-timer", type = EndQuestTimerActionData.class),
@@ -838,6 +857,7 @@ public final class QuestGraphData {
 			@XmlElement(name = "send-repeat-deadline-message", type = SendRepeatDeadlineMessageActionData.class),
 			@XmlElement(name = "send-player-message", type = SendPlayerMessageActionData.class),
 			@XmlElement(name = "play-movie", type = PlayMovieActionData.class),
+			@XmlElement(name = "sync-craft-skill-reward", type = SyncCraftSkillRewardActionData.class),
 			@XmlElement(name = "notify-recipe-rejection", type = NotifyRecipeRejectionActionData.class)
 		})
 		private List<Object> values = new ArrayList<>();
@@ -1000,6 +1020,28 @@ public final class QuestGraphData {
 		/** 配方模板标识。 / Recipe-template identifier. */
 		@XmlAttribute(name = "recipe_id", required = true)
 		private Integer recipeId;
+	}
+
+	/** 表示原子收敛制作技能等级和自动学习配方的 required 动作。 / Represents the required action that converges a craft-skill level and auto-learn recipes. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class GrantCraftSkillRewardActionData {
+		/** 制作技能标识。 / Craft-skill identifier. */
+		@XmlAttribute(name = "craft_skill_id", required = true)
+		private Integer craftSkillId;
+
+		/** 专家或大师目标等级。 / Expert or master target level. */
+		@XmlAttribute(name = "target_level", required = true)
+		private Integer targetLevel;
+	}
+
+	/** 表示固定制作晋升技能列表的 post-commit 协议投影。 / Represents the fixed post-commit craft-promotion skill-list projection. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SyncCraftSkillRewardActionData {
+		/** 制作技能标识。 / Craft-skill identifier. */
+		@XmlAttribute(name = "craft_skill_id", required = true)
+		private Integer craftSkillId;
 	}
 
 	/** 表示 recipe eligibility 拒绝协议投影。 / Represents a recipe-eligibility rejection protocol projection. */

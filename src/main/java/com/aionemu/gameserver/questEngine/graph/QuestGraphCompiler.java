@@ -65,6 +65,8 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AnchoredCoold
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CloseDialogAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CraftSkillEligibilityCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CraftSkillEligibilityPolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EndQuestTimerAction;
@@ -85,6 +87,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InteractionAc
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GrantCraftSkillRewardAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCollectItemsCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RecipeLearnableCondition;
@@ -119,6 +122,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestTim
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncCraftSkillRewardAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Variable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.WeeklyRepeatDeadlinePolicy;
@@ -141,9 +145,11 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.IncrementPackedCo
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.InvasionWorldActiveConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AbandonQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CloseDialogActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CraftSkillEligibilityConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FinishQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EndQuestTimerActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GiveQuestItemActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GrantCraftSkillRewardActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillInWorldEventData;
@@ -199,6 +205,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestActionD
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartEventQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartQuestTimerActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SyncQuestStatusActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SyncCraftSkillRewardActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.TransitionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.VariableData;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
@@ -220,12 +227,13 @@ public final class QuestGraphCompiler {
 	}
 
 	/**
-	 * 保存编译时允许引用的任务、对象与复合 movement 静态数据键。
-	 * Holds quest, object, and composite movement static-data keys allowed during compilation.
+	 * 保存编译时允许引用的任务、对象、复合 movement 与独立制作技能静态数据键。
+	 * Holds quest, object, composite movement, and independent craft-skill static-data keys allowed during compilation.
 	 */
 	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
 			Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
-			Set<FlyingRingReference> flyingRings, Set<Integer> skillIds, Set<Integer> worldIds, Set<Integer> recipeIds) {
+			Set<FlyingRingReference> flyingRings, Set<Integer> skillIds, Set<Integer> worldIds, Set<Integer> recipeIds,
+			Set<Integer> craftSkillIds) {
 		/**
 		 * 复制引用集合，保证一次编译期间引用闭包稳定。
 		 * Copies reference sets so the reference closure stays stable during compilation.
@@ -242,6 +250,15 @@ public final class QuestGraphCompiler {
 			skillIds = Set.copyOf(skillIds);
 			worldIds = Set.copyOf(worldIds);
 			recipeIds = Set.copyOf(recipeIds);
+			craftSkillIds = Set.copyOf(craftSkillIds);
+		}
+
+		/** 创建未声明制作技能引用的兼容集合；craft reward XML 仍会失败关闭。 / Creates a compatibility set without craft-skill references; craft-reward XML still fails closed. */
+		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
+				Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
+				Set<FlyingRingReference> flyingRings, Set<Integer> skillIds, Set<Integer> worldIds, Set<Integer> recipeIds) {
+			this(questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, skillIds, worldIds,
+				recipeIds, Set.of());
 		}
 
 		/**
@@ -314,7 +331,7 @@ public final class QuestGraphCompiler {
 	 *
 	 * @param xmlFile 任务图 XML 文件 / quest graph XML file
 	 * @param schemaFile 任务图 XSD 文件 / quest graph XSD file
-	 * @param references 可引用的任务、NPC、物品、称号、区域与影片 / allowed quest, NPC, item, title, zone, and movie references
+	 * @param references 可引用的任务、对象、movement、配方与制作技能 / allowed quest, object, movement, recipe, and craft-skill references
 	 * @return 已编译任务图数据 / compiled quest graph data
 	 */
 	public static CompiledQuestGraphData load(Path xmlFile, Path schemaFile, References references) {
@@ -345,7 +362,7 @@ public final class QuestGraphCompiler {
 	 * Validates JAXB graph structure, capabilities, and references, then builds a deterministic index.
 	 *
 	 * @param source JAXB 任务图数据 / JAXB quest graph data
-	 * @param references 可引用的任务、NPC、物品、称号与区域 / allowed quest, NPC, item, title, and zone references
+	 * @param references 可引用的任务、对象、movement、配方与制作技能 / allowed quest, object, movement, recipe, and craft-skill references
 	 * @return 已编译任务图数据 / compiled quest graph data
 	 */
 	public static CompiledQuestGraphData compile(QuestGraphData source, References references) {
@@ -842,6 +859,18 @@ public final class QuestGraphCompiler {
 			}
 			return new RecipeLearnableCondition(condition.getRecipeId(), Boolean.TRUE.equals(condition.getExpected()));
 		}
+		if (source instanceof CraftSkillEligibilityConditionData condition) {
+			if (condition.getCraftSkillId() == null || !references.craftSkillIds().contains(condition.getCraftSkillId())) {
+				throw new IllegalArgumentException("Quest " + questId + " craft condition references missing craft skill "
+					+ condition.getCraftSkillId());
+			}
+			try {
+				return new CraftSkillEligibilityCondition(condition.getCraftSkillId(), condition.getTargetLevel(),
+					CraftSkillEligibilityPolicy.valueOf(condition.getPolicy()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid craft skill eligibility condition", e);
+			}
+		}
 		if (source instanceof QuestCompletionCountConditionData condition) {
 			if (condition.getQuestId() == null || !references.questIds().contains(condition.getQuestId())) {
 				throw new IllegalArgumentException("Quest " + questId + " completion condition references missing quest " + condition.getQuestId());
@@ -1034,6 +1063,17 @@ public final class QuestGraphCompiler {
 		if (source instanceof DeleteRecipeActionData action) {
 			return new DeleteRecipeAction(requireRecipeReference(questId, action.getRecipeId(), references));
 		}
+		if (source instanceof GrantCraftSkillRewardActionData action) {
+			int craftSkillId = requireCraftSkillReference(questId, action.getCraftSkillId(), references);
+			try {
+				return new GrantCraftSkillRewardAction(craftSkillId, action.getTargetLevel());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid grant-craft-skill-reward action", e);
+			}
+		}
+		if (source instanceof SyncCraftSkillRewardActionData action) {
+			return new SyncCraftSkillRewardAction(requireCraftSkillReference(questId, action.getCraftSkillId(), references));
+		}
 		if (source instanceof NotifyRecipeRejectionActionData action) {
 			return new NotifyRecipeRejectionAction(requireRecipeReference(questId, action.getRecipeId(), references));
 		}
@@ -1096,6 +1136,14 @@ public final class QuestGraphCompiler {
 			throw new IllegalArgumentException("Quest " + questId + " action references missing recipe " + recipeId);
 		}
 		return recipeId;
+	}
+
+	/** 返回引用闭合的制作技能标识。 / Returns a reference-closed craft-skill identifier. */
+	private static int requireCraftSkillReference(int questId, Integer craftSkillId, References references) {
+		if (craftSkillId == null || !references.craftSkillIds().contains(craftSkillId)) {
+			throw new IllegalArgumentException("Quest " + questId + " action references missing craft skill " + craftSkillId);
+		}
+		return craftSkillId;
 	}
 
 	/**

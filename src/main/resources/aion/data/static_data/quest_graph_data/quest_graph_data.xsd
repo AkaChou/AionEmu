@@ -433,6 +433,35 @@
 		<xs:attribute name="recipe_id" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
+	<xs:simpleType name="questGraphCraftSkillTargetLevel">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:enumeration value="400"/>
+			<xs:enumeration value="500"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphCraftSkillEligibilityPolicy">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CAPACITY_IF_EXISTING_NOT_TARGET"/>
+			<xs:enumeration value="CAPACITY_REQUIRED"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="questGraphCraftSkillEligibilityCondition">
+		<xs:attribute name="craft_skill_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="target_level" type="questGraphCraftSkillTargetLevel" use="required"/>
+		<xs:attribute name="policy" type="questGraphCraftSkillEligibilityPolicy" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphCraftSkillRewardAction">
+		<xs:attribute name="craft_skill_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="target_level" type="questGraphCraftSkillTargetLevel" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphCraftSkillProtocolAction">
+		<xs:attribute name="craft_skill_id" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
 	<xs:simpleType name="questGraphRepeatDeadlineKind">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="DAILY"/>
@@ -526,6 +555,7 @@
 			<xs:element name="quest-repeat-available" type="questGraphQuestRepeatAvailableCondition"/>
 			<xs:element name="quest-collect-items" type="questGraphEmptyAction"/>
 			<xs:element name="recipe-learnable" type="questGraphRecipeCondition"/>
+			<xs:element name="craft-skill-eligible" type="questGraphCraftSkillEligibilityCondition"/>
 			<xs:element name="quest-reward" type="questGraphQuestRewardCondition"/>
 			<xs:element name="quest-completion-count" type="questGraphQuestCompletionCountCondition"/>
 			<xs:element name="player-level" type="questGraphPlayerLevelCondition"/>
@@ -557,6 +587,7 @@
 			<xs:element name="remove-quest-work-items" type="questGraphEmptyAction"/>
 			<xs:element name="learn-recipe" type="questGraphRecipeAction"/>
 			<xs:element name="delete-recipe" type="questGraphRecipeAction"/>
+			<xs:element name="grant-craft-skill-reward" type="questGraphCraftSkillRewardAction"/>
 			<xs:element name="finish-quest" type="questGraphFinishAction"/>
 			<xs:element name="start-quest-timer" type="questGraphStartTimerAction"/>
 			<xs:element name="end-quest-timer" type="questGraphEndTimerAction"/>
@@ -567,6 +598,7 @@
 			<xs:element name="send-repeat-deadline-message" type="questGraphSendRepeatDeadlineMessageAction"/>
 			<xs:element name="send-player-message" type="questGraphSendPlayerMessageAction"/>
 			<xs:element name="play-movie" type="questGraphPlayMovieAction"/>
+			<xs:element name="sync-craft-skill-reward" type="questGraphCraftSkillProtocolAction"/>
 			<xs:element name="notify-recipe-rejection" type="questGraphRecipeAction"/>
 		</xs:choice>
 	</xs:complexType>

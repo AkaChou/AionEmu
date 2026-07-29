@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.graph.runtime;
 
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DIALOG;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ITEM_DIALOG;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.MOVIE_ENDED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus.NONE;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope.PLAYER;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope.WORLD;
@@ -14,8 +15,10 @@ import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransit
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PreflightResult.READY;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PreflightResult.REJECTED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.io.File;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -30,6 +33,8 @@ import java.util.function.BiFunction;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.dataholders.RecipeData;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddCompletionCountAction;
@@ -37,6 +42,8 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVaria
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AnchoredCooldownRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CraftSkillEligibilityCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CraftSkillEligibilityPolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DailyRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EndQuestTimerAction;
@@ -44,6 +51,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IncrementPackedCounterAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GrantCraftSkillRewardAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction;
@@ -61,7 +69,9 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetCompletion
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncCraftSkillRewardAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphCraftSkillReferenceCatalog;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestTimerAction;
@@ -69,6 +79,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatTimeBas
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemDialogEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphRouter.Match;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionInvocation;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PersistenceResult;
@@ -85,6 +96,8 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Repe
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 
+import jakarta.xml.bind.JAXBContext;
+
 /**
  * 验证任务图转换的预检、CAS、journal 推进和恢复重放。
  * Verifies quest-graph transition preflight, CAS, journal progress, and recovery replay.
@@ -92,6 +105,7 @@ import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 class QuestGraphTransitionExecutorTest {
 
 	private static final DialogEvent EVENT = new DialogEvent("dialog-1", 7, 1000, 100, "QUEST_SELECT");
+	private static final QuestGraphCraftSkillReferenceCatalog CRAFT_REFERENCES = craftReferences();
 	private static final ZoneId SERVER_ZONE = ZoneId.of("Asia/Shanghai");
 	private final QuestGraphTransitionExecutor executor = new QuestGraphTransitionExecutor();
 
@@ -936,6 +950,137 @@ class QuestGraphTransitionExecutorTest {
 	}
 
 	/**
+	 * 验证制作 bridge 独占资格、required 预检/执行和提交后协议路径。
+	 * Verifies the craft bridge exclusively owns eligibility, required preflight/execution, and post-commit protocol paths.
+	 */
+	@Test
+	void craftBridgeRoutesConditionRequiredGrantAndPostCommitProtocol() {
+		CraftFixture fixture = craftFixture();
+		AtomicInteger delegatedConditions = new AtomicInteger();
+		AtomicInteger delegatedPreflights = new AtomicInteger();
+		AtomicInteger delegatedActions = new AtomicInteger();
+		AtomicInteger eligibility = new AtomicInteger();
+		AtomicInteger preflights = new AtomicInteger();
+		AtomicInteger grants = new AtomicInteger();
+		AtomicInteger protocols = new AtomicInteger();
+		QuestGraphCraftSkillRewardBridge bridge = new QuestGraphCraftSkillRewardBridge(7, Race.ELYOS, CRAFT_REFERENCES, query -> {
+			eligibility.incrementAndGet();
+			return new QuestGraphCraftSkillRewardBridge.EligibilitySnapshot(true, 399, true);
+		}, command -> {
+			preflights.incrementAndGet();
+			return READY;
+		}, command -> {
+			grants.incrementAndGet();
+			return APPLIED;
+		}, command -> {
+			protocols.incrementAndGet();
+			assertEquals(Lifecycle.ACTIVE, fixture.states().get(1941).getLifecycle());
+			assertEquals("reward", fixture.states().get(1941).getNodeId());
+			return APPLIED;
+		}, command -> FAILED);
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(), invocation -> {
+			delegatedConditions.incrementAndGet();
+			return QuestGraphTransitionExecutor.ConditionResult.FAILED;
+		}, invocation -> {
+			delegatedPreflights.incrementAndGet();
+			return QuestGraphTransitionExecutor.PreflightResult.FAILED;
+		}, invocation -> {
+			delegatedActions.incrementAndGet();
+			return FAILED;
+		}, bridge, cas(fixture.database()));
+
+		assertEquals(DispatchResult.Status.APPLIED, executor.execute(fixture.match(), context));
+		assertEquals(1, eligibility.get());
+		assertEquals(1, preflights.get());
+		assertEquals(1, grants.get());
+		assertEquals(1, protocols.get());
+		assertEquals(0, delegatedConditions.get());
+		assertEquals(0, delegatedPreflights.get());
+		assertEquals(0, delegatedActions.get());
+		assertEquals(3, fixture.states().get(1941).getRevision());
+		assertEquals(fixture.states().get(1941), fixture.database().get());
+	}
+
+	/**
+	 * 验证 grant 失败保留 PREPARED journal，恢复复用稳定命令且协议只在提交后执行。
+	 * Verifies grant failure retains PREPARED, recovery reuses a stable command, and protocol runs only after commit.
+	 */
+	@Test
+	void craftBridgeRecoveryReusesStableGrantIdentityAndDefersProtocol() {
+		CraftFixture fixture = craftFixture();
+		AtomicReference<QuestGraphCraftSkillRewardBridge.GrantCommand> failedGrant = new AtomicReference<>();
+		AtomicInteger prematureProtocols = new AtomicInteger();
+		QuestGraphCraftSkillRewardBridge failing = new QuestGraphCraftSkillRewardBridge(7, Race.ELYOS, CRAFT_REFERENCES,
+			query -> new QuestGraphCraftSkillRewardBridge.EligibilitySnapshot(false, 0, true), command -> READY, command -> {
+				failedGrant.set(command);
+				return FAILED;
+			}, command -> {
+				prematureProtocols.incrementAndGet();
+				return FAILED;
+			}, command -> FAILED);
+		TransitionContext first = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(),
+			invocation -> QuestGraphTransitionExecutor.ConditionResult.FAILED,
+			invocation -> QuestGraphTransitionExecutor.PreflightResult.FAILED, invocation -> FAILED, failing, cas(fixture.database()));
+
+		assertEquals(DispatchResult.Status.FAILED, executor.execute(fixture.match(), first));
+		assertEquals(Lifecycle.PREPARED, fixture.states().get(1941).getLifecycle());
+		assertEquals(0, fixture.states().get(1941).getJournal().getNextActionIndex());
+		assertEquals(0, prematureProtocols.get());
+		assertFalse(failedGrant.get().recipeIds().isEmpty());
+		assertEquals(failedGrant.get().recipeIds().stream().sorted().toList(), failedGrant.get().recipeIds());
+
+		AtomicReference<QuestGraphCraftSkillRewardBridge.GrantCommand> recoveredGrant = new AtomicReference<>();
+		AtomicInteger protocols = new AtomicInteger();
+		QuestGraphCraftSkillRewardBridge recovering = new QuestGraphCraftSkillRewardBridge(7, Race.ELYOS, CRAFT_REFERENCES,
+			query -> new QuestGraphCraftSkillRewardBridge.EligibilitySnapshot(false, 0, true), command -> READY, command -> {
+				recoveredGrant.set(command);
+				return ALREADY_APPLIED;
+			}, command -> {
+				protocols.incrementAndGet();
+				assertEquals(Lifecycle.ACTIVE, fixture.states().get(1941).getLifecycle());
+				return APPLIED;
+			}, command -> FAILED);
+		TransitionContext recovery = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(),
+			invocation -> QuestGraphTransitionExecutor.ConditionResult.FAILED,
+			invocation -> QuestGraphTransitionExecutor.PreflightResult.FAILED, invocation -> FAILED, recovering, cas(fixture.database()));
+
+		assertEquals(DispatchResult.Status.APPLIED, executor.recover(fixture.graph(), recovery));
+		assertEquals(failedGrant.get(), recoveredGrant.get());
+		assertEquals(1, protocols.get());
+		assertEquals(Lifecycle.ACTIVE, fixture.states().get(1941).getLifecycle());
+		assertNull(fixture.states().get(1941).getJournal());
+	}
+
+	/**
+	 * 验证制作 grant 预检拒绝时不会写入 PREPARED，也不会执行 grant 或提交后协议。
+	 * Verifies a rejected craft-grant preflight writes no PREPARED state and executes neither grant nor post-commit protocol.
+	 */
+	@Test
+	void craftGrantPreflightRejectionLeavesCanonicalStateUntouched() {
+		CraftFixture fixture = craftFixture();
+		AtomicInteger grants = new AtomicInteger();
+		AtomicInteger protocols = new AtomicInteger();
+		QuestGraphCraftSkillRewardBridge bridge = new QuestGraphCraftSkillRewardBridge(7, Race.ELYOS, CRAFT_REFERENCES,
+			query -> new QuestGraphCraftSkillRewardBridge.EligibilitySnapshot(true, 399, true), command -> REJECTED, command -> {
+				grants.incrementAndGet();
+				return APPLIED;
+			}, command -> {
+				protocols.incrementAndGet();
+				return APPLIED;
+			}, command -> FAILED);
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(),
+			invocation -> QuestGraphTransitionExecutor.ConditionResult.FAILED,
+			invocation -> QuestGraphTransitionExecutor.PreflightResult.FAILED, invocation -> FAILED, bridge, cas(fixture.database()));
+
+		assertEquals(DispatchResult.Status.REJECTED, executor.execute(fixture.match(), context));
+		assertEquals(0, grants.get());
+		assertEquals(0, protocols.get());
+		assertEquals(Lifecycle.ACTIVE, fixture.states().get(1941).getLifecycle());
+		assertNull(fixture.states().get(1941).getJournal());
+		assertEquals(fixture.database().get(), fixture.states().get(1941));
+	}
+
+	/**
 	 * 验证 COMPLETE 与零完成次数的非法组合在 PREPARED 写入前失败。
 	 * Verifies an invalid COMPLETE/zero-count combination fails before the PREPARED write.
 	 */
@@ -1026,6 +1171,33 @@ class QuestGraphTransitionExecutorTest {
 			(itemId, delta) -> false, () -> true, itemId -> true);
 	}
 
+	/** 从正式 RecipeData 构造制作奖励测试共享的独立引用目录。 / Builds the independent formal-RecipeData reference catalog shared by craft-reward tests. */
+	private static QuestGraphCraftSkillReferenceCatalog craftReferences() {
+		try {
+			RecipeData recipes = (RecipeData) JAXBContext.newInstance(RecipeData.class).createUnmarshaller()
+				.unmarshal(new File("src/main/resources/aion/data/static_data/recipe/recipe_templates.xml"));
+			return QuestGraphCraftSkillReferenceCatalog.build(recipes);
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load formal craft references", e);
+		}
+	}
+
+	/** 创建制作奖励 required/protocol 自转换 fixture。 / Creates a craft-reward required/protocol self-transition fixture. */
+	private static CraftFixture craftFixture() {
+		MovieEndedEvent event = new MovieEndedEvent("craft-movie", 7, 2000, 93, 1, 1900);
+		Transition transition = new Transition("grant-craft", 10, "reward", new Event(MOVIE_ENDED, 93, null),
+			List.of(new CraftSkillEligibilityCondition(40002, 400, CraftSkillEligibilityPolicy.CAPACITY_REQUIRED)),
+			List.of(new GrantCraftSkillRewardAction(40002, 400), new SyncCraftSkillRewardAction(40002)));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1941, 1, PLAYER, "reward", Map.of(),
+			Map.of("reward", new Node("reward", false, List.of(transition))));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1941, 1, 0, "reward", CompiledQuestGraph.QuestStatus.REWARD,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		return new CraftFixture(graph, states, database, new Match(event, graph, new EventRoute(1941, "reward", transition), initial));
+	}
+
 	/**
 	 * 创建包含一个条件、一个动作和一个终态的最小图 fixture。
 	 * Creates a minimal graph fixture with one condition, one action, and one terminal node.
@@ -1063,5 +1235,10 @@ class QuestGraphTransitionExecutorTest {
 	 * Holds the graph, state list, and route match shared by one transition test.
 	 */
 	private record Fixture(CompiledQuestGraph graph, PlayerQuestGraphStateList states, Match match) {
+	}
+
+	/** 保存制作奖励恢复测试共享的图、状态、数据库和匹配。 / Holds graph, state, database, and match shared by craft-reward recovery tests. */
+	private record CraftFixture(CompiledQuestGraph graph, PlayerQuestGraphStateList states,
+			AtomicReference<PlayerQuestGraphState> database, Match match) {
 	}
 }

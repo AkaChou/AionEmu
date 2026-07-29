@@ -6,7 +6,6 @@ import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransit
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionResult.NOT_MATCHED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,11 +16,9 @@ import org.objenesis.ObjenesisStd;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Equipment;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.title.TitleList;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
@@ -56,7 +53,7 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	 * Verifies positive matches for all supported player conditions.
 	 */
 	@Test
-	void matchesAllSupportedConditions() throws ReflectiveOperationException {
+	void matchesAllSupportedConditions() {
 		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
 		List<Condition> conditions = List.of(new PlayerLevelCondition(10, 55),
 			new PlayerRaceCondition(Set.of(Race.ELYOS)), new PlayerClassCondition(Set.of(PlayerClass.TEMPLAR)),
@@ -74,7 +71,7 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	 * Verifies that every eligibility mismatch returns NOT_MATCHED without side effects.
 	 */
 	@Test
-	void rejectsEveryMismatchedValue() throws ReflectiveOperationException {
+	void rejectsEveryMismatchedValue() {
 		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
 		List<Condition> conditions = List.of(new PlayerLevelCondition(51, null), new PlayerRaceCondition(Set.of(Race.ASMODIANS)),
 			new PlayerClassCondition(Set.of(PlayerClass.GLADIATOR)), new PlayerGenderCondition(Gender.FEMALE),
@@ -91,7 +88,7 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	 * Verifies all six numeric comparison semantics used by the legacy XML inventory condition.
 	 */
 	@Test
-	void evaluatesEveryInventoryComparison() throws ReflectiveOperationException {
+	void evaluatesEveryInventoryComparison() {
 		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
 		List<PlayerInventoryCondition> conditions = List.of(
 			new PlayerInventoryCondition(182200001, ConditionOperation.EQUAL, 3),
@@ -111,7 +108,7 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	 * Verifies bounded and one-sided current-player/victim snapshot level deltas and fail-closed wrong-event handling.
 	 */
 	@Test
-	void evaluatesKillVictimLevelDeltaFromAuthoritativeEvent() throws ReflectiveOperationException {
+	void evaluatesKillVictimLevelDeltaFromAuthoritativeEvent() {
 		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
 		KillInWorldEvent event = new KillInWorldEvent("kill", 7, 1000, 0, 8, 45);
 
@@ -128,7 +125,7 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	 * Verifies that invasion eligibility reads only persisted world-entry authority and rejects wrong worlds, absent authority, and wrong events.
 	 */
 	@Test
-	void evaluatesInvasionWorldFromAuthoritativeEventSnapshot() throws ReflectiveOperationException {
+	void evaluatesInvasionWorldFromAuthoritativeEventSnapshot() {
 		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
 		InvasionWorldActiveCondition condition = new InvasionWorldActiveCondition(220050000);
 
@@ -146,18 +143,18 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	 * Verifies that missing player services are not interpreted as a business mismatch or default success.
 	 */
 	@Test
-	void failsWhenRequiredPlayerStateCannotBeRead() throws ReflectiveOperationException {
-		Player player = player();
-		setField(Player.class, player, "titleList", null);
+	void failsWhenRequiredPlayerStateCannotBeRead() {
+		TestPlayer player = player();
+		player.titleList = null;
 		assertEquals(FAILED, new QuestGraphPlayerConditionEvaluator(player).evaluate(invocation(new PlayerTitleCondition(42), EVENT)));
 
 		player = player();
-		setField(Player.class, player, "abyssRank", null);
+		player.abyssRank = null;
 		assertEquals(FAILED, new QuestGraphPlayerConditionEvaluator(player)
 			.evaluate(invocation(new PlayerAbyssRankCondition(AbyssRankEnum.STAR1_OFFICER), EVENT)));
 
 		player = player();
-		setField(Player.class, player, "inventory", null);
+		player.inventory = null;
 		assertEquals(FAILED, new QuestGraphPlayerConditionEvaluator(player)
 			.evaluate(invocation(new PlayerInventoryCondition(182200001, ConditionOperation.EQUAL, 3), EVENT)));
 
@@ -172,7 +169,7 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	 * Verifies explicit failure when the event player differs from the evaluator owner.
 	 */
 	@Test
-	void rejectsForeignEventOwner() throws ReflectiveOperationException {
+	void rejectsForeignEventOwner() {
 		QuestGraphPlayerConditionEvaluator evaluator = new QuestGraphPlayerConditionEvaluator(player());
 		DialogEvent foreign = new DialogEvent("foreign", 8, 1000, 100, "QUEST_SELECT");
 
@@ -183,45 +180,107 @@ class QuestGraphPlayerConditionEvaluatorTest {
 	 * 创建带稳定静态属性的最小玩家 fixture。
 	 * Creates a minimal player fixture with stable static attributes.
 	 */
-	private static Player player() throws ReflectiveOperationException {
-		Player player = new ObjenesisStd().newInstance(Player.class);
-		PlayerCommonData commonData = new PlayerCommonData(7);
-		TitleList titleList = new TitleList();
-		putTitleId(titleList, 42);
-		AbyssRank abyssRank = new ObjenesisStd().newInstance(AbyssRank.class);
-		setField(AbyssRank.class, abyssRank, "rank", AbyssRankEnum.STAR1_OFFICER);
-		setField(PlayerCommonData.class, commonData, "level", 50);
-		commonData.setRace(Race.ELYOS);
-		commonData.setPlayerClass(PlayerClass.TEMPLAR);
-		commonData.setGender(Gender.MALE);
-		setField(AionObject.class, player, "objectId", 7);
-		setField(Player.class, player, "playerCommonData", commonData);
-		setField(Player.class, player, "titleList", titleList);
-		setField(Player.class, player, "abyssRank", abyssRank);
-		setField(Player.class, player, "inventory", new TestStorage(Map.of(182200001, 3L)));
+	private static TestPlayer player() {
+		TestPlayer player = new ObjenesisStd().newInstance(TestPlayer.class);
+		player.titleList = new TestTitleList(Set.of(42));
+		TestAbyssRank abyssRank = new ObjenesisStd().newInstance(TestAbyssRank.class);
+		abyssRank.rank = AbyssRankEnum.STAR1_OFFICER;
+		player.abyssRank = abyssRank;
+		player.inventory = new TestStorage(Map.of(182200001, 3L));
 		player.setEquipment(new TestEquipment(player, List.of(182200001)));
 		return player;
 	}
 
-	/**
-	 * 向最小称号 fixture 写入一个 ID，避免依赖全局静态数据。
-	 * Adds one id to the minimal title fixture without depending on global static data.
-	 */
-	@SuppressWarnings("unchecked")
-	private static void putTitleId(TitleList titleList, int titleId) throws ReflectiveOperationException {
-		Field field = TitleList.class.getDeclaredField("titles");
-		field.setAccessible(true);
-		((Map<Integer, Object>) field.get(titleList)).put(titleId, null);
+	/** 提供不依赖反射的稳定玩家属性。 / Provides stable player attributes without reflection. */
+	private static final class TestPlayer extends Player {
+		private TitleList titleList;
+		private AbyssRank abyssRank;
+		private PlayerStorage inventory;
+
+		/** 仅声明 Objenesis 测试类型；测试不会调用真实玩家构造链。 / Declares the Objenesis test type; tests never invoke the real player constructor chain. */
+		private TestPlayer() {
+			super(null, null, null, null);
+		}
+
+		/** 返回稳定玩家 ID。 / Returns the stable player id. */
+		@Override
+		public Integer getObjectId() {
+			return 7;
+		}
+
+		/** 返回稳定玩家等级。 / Returns the stable player level. */
+		@Override
+		public byte getLevel() {
+			return 50;
+		}
+
+		/** 返回稳定玩家阵营。 / Returns the stable player race. */
+		@Override
+		public Race getRace() {
+			return Race.ELYOS;
+		}
+
+		/** 返回稳定玩家职业。 / Returns the stable player class. */
+		@Override
+		public PlayerClass getPlayerClass() {
+			return PlayerClass.TEMPLAR;
+		}
+
+		/** 返回稳定玩家性别。 / Returns the stable player gender. */
+		@Override
+		public Gender getGender() {
+			return Gender.MALE;
+		}
+
+		/** 返回可控称号 fixture。 / Returns the controllable title fixture. */
+		@Override
+		public TitleList getTitleList() {
+			return titleList;
+		}
+
+		/** 返回可控深渊军衔 fixture。 / Returns the controllable abyss-rank fixture. */
+		@Override
+		public AbyssRank getAbyssRank() {
+			return abyssRank;
+		}
+
+		/** 返回可控背包 fixture。 / Returns the controllable inventory fixture. */
+		@Override
+		public PlayerStorage getInventory() {
+			return inventory;
+		}
 	}
 
-	/**
-	 * 设置 Objenesis fixture 无法通过构造器初始化的字段。
-	 * Sets a field that the Objenesis fixture cannot initialize through constructors.
-	 */
-	private static void setField(Class<?> owner, Object target, String name, Object value) throws ReflectiveOperationException {
-		Field field = owner.getDeclaredField(name);
-		field.setAccessible(true);
-		field.set(target, value);
+	/** 提供独立于静态称号数据的只读称号集合。 / Provides a read-only title set independent of static title data. */
+	private static final class TestTitleList extends TitleList {
+		private final Set<Integer> titleIds;
+
+		/** 创建稳定称号 ID 集合。 / Creates a stable title-id set. */
+		private TestTitleList(Set<Integer> titleIds) {
+			this.titleIds = Set.copyOf(titleIds);
+		}
+
+		/** 判断 fixture 是否包含称号。 / Returns whether the fixture contains the title. */
+		@Override
+		public boolean contains(int titleId) {
+			return titleIds.contains(titleId);
+		}
+	}
+
+	/** 提供不依赖持久化字段的稳定深渊军衔。 / Provides a stable abyss rank without persisted fields. */
+	private static final class TestAbyssRank extends AbyssRank {
+		private AbyssRankEnum rank;
+
+		/** 仅声明 Objenesis 测试类型；测试不会调用真实军衔构造链。 / Declares the Objenesis test type; tests never invoke the real rank constructor chain. */
+		private TestAbyssRank() {
+			super(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		}
+
+		/** 返回稳定军衔。 / Returns the stable abyss rank. */
+		@Override
+		public AbyssRankEnum getRank() {
+			return rank;
+		}
 	}
 
 	/**

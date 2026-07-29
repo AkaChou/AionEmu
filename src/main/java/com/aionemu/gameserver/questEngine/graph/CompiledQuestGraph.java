@@ -111,6 +111,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		REMOVE_QUEST_WORK_ITEMS(ActionPhase.REQUIRED),
 		LEARN_RECIPE(ActionPhase.REQUIRED),
 		DELETE_RECIPE(ActionPhase.REQUIRED),
+		GRANT_CRAFT_SKILL_REWARD(ActionPhase.REQUIRED),
 		FINISH_QUEST(ActionPhase.REQUIRED),
 		START_QUEST_TIMER(ActionPhase.REQUIRED),
 		END_QUEST_TIMER(ActionPhase.REQUIRED),
@@ -122,6 +123,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		SYNC_QUEST_TIMER(ActionPhase.POST_COMMIT_PROTOCOL),
 		SEND_PLAYER_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL),
 		PLAY_MOVIE(ActionPhase.POST_COMMIT_PROTOCOL),
+		SYNC_CRAFT_SKILL_REWARD(ActionPhase.POST_COMMIT_PROTOCOL),
 		NOTIFY_RECIPE_REJECTION(ActionPhase.POST_COMMIT_PROTOCOL);
 
 		private final ActionPhase phase;
@@ -328,7 +330,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 */
 	public sealed interface Condition permits QuestStatusCondition, QuestVariableCondition, QuestRepeatAvailableCondition,
 		PackedCounterCondition, InvasionWorldActiveCondition,
-		QuestCollectItemsCondition, RecipeLearnableCondition, PlayerLevelCondition, KillVictimLevelDeltaCondition, PlayerRaceCondition, PlayerClassCondition,
+		QuestCollectItemsCondition, RecipeLearnableCondition, CraftSkillEligibilityCondition, PlayerLevelCondition,
+		KillVictimLevelDeltaCondition, PlayerRaceCondition, PlayerClassCondition,
 		PlayerGenderCondition, PlayerTitleCondition, PlayerAbyssRankCondition, PlayerInventoryCondition, QuestRewardCondition,
 		QuestCompletionCountCondition, PlayerEquippedCondition {
 	}
@@ -397,6 +400,23 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		public RecipeLearnableCondition {
 			if (recipeId <= 0) {
 				throw new IllegalArgumentException("Recipe learnable condition is invalid");
+			}
+		}
+	}
+
+	/** 定义制作技能奖励在对话与影片提交阶段使用的两种精确资格策略。 / Defines the two exact eligibility policies used by craft rewards during dialog and movie settlement. */
+	public enum CraftSkillEligibilityPolicy {
+		CAPACITY_IF_EXISTING_NOT_TARGET,
+		CAPACITY_REQUIRED
+	}
+
+	/** 通过制作服务的 typed snapshot 判断专家或大师奖励资格。 / Evaluates expert or master reward eligibility through a typed crafting-service snapshot. */
+	public record CraftSkillEligibilityCondition(int craftSkillId, int targetLevel, CraftSkillEligibilityPolicy policy)
+		implements Condition {
+		/** 校验制作技能引用、当前可达奖励等级和封闭策略。 / Validates the craft-skill reference, currently reachable reward level, and closed policy. */
+		public CraftSkillEligibilityCondition {
+			if (craftSkillId <= 0 || targetLevel != 400 && targetLevel != 500 || policy == null) {
+				throw new IllegalArgumentException("Craft skill eligibility condition is invalid");
 			}
 		}
 	}
@@ -609,7 +629,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	public sealed interface Action permits StartQuestAction, StartEventQuestAction, AbandonQuestAction, SetQuestStatusAction, SetQuestVariableAction,
 		AddQuestVariableAction, IncrementPackedCounterAction,
 		SetCompletionCountAction, AddCompletionCountAction, GiveQuestItemAction, RemoveQuestItemAction, RemoveCollectedItemsAction,
-		RemoveQuestWorkItemsAction, LearnRecipeAction, DeleteRecipeAction, NotifyRecipeRejectionAction, FinishQuestAction,
+		RemoveQuestWorkItemsAction, LearnRecipeAction, DeleteRecipeAction, GrantCraftSkillRewardAction,
+		SyncCraftSkillRewardAction, NotifyRecipeRejectionAction, FinishQuestAction,
 		StartQuestTimerAction, EndQuestTimerAction, SendDialogAction, CloseDialogAction, ShowQuestListAction, SyncQuestStatusAction,
 		SendRepeatDeadlineMessageAction, SyncQuestTimerAction, SendPlayerMessageAction, PlayMovieAction {
 
@@ -631,6 +652,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				case RemoveQuestWorkItemsAction ignored -> ActionType.REMOVE_QUEST_WORK_ITEMS;
 				case LearnRecipeAction ignored -> ActionType.LEARN_RECIPE;
 				case DeleteRecipeAction ignored -> ActionType.DELETE_RECIPE;
+				case GrantCraftSkillRewardAction ignored -> ActionType.GRANT_CRAFT_SKILL_REWARD;
+				case SyncCraftSkillRewardAction ignored -> ActionType.SYNC_CRAFT_SKILL_REWARD;
 				case NotifyRecipeRejectionAction ignored -> ActionType.NOTIFY_RECIPE_REJECTION;
 				case FinishQuestAction ignored -> ActionType.FINISH_QUEST;
 				case StartQuestTimerAction ignored -> ActionType.START_QUEST_TIMER;
@@ -785,6 +808,26 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		public DeleteRecipeAction {
 			if (recipeId <= 0) {
 				throw new IllegalArgumentException("Delete recipe action is invalid");
+			}
+		}
+	}
+
+	/** 通过持久化 typed bridge 收敛制作技能等级和该等级应自动学习的配方。 / Converges the craft-skill level and auto-learn recipes through a durable typed bridge. */
+	public record GrantCraftSkillRewardAction(int craftSkillId, int targetLevel) implements Action {
+		/** 校验制作技能引用及当前生产 Handler 使用的专家/大师等级。 / Validates the craft-skill reference and expert/master levels used by current production handlers. */
+		public GrantCraftSkillRewardAction {
+			if (craftSkillId <= 0 || targetLevel != 400 && targetLevel != 500) {
+				throw new IllegalArgumentException("Grant craft skill reward action is invalid");
+			}
+		}
+	}
+
+	/** 提交后同步固定的制作晋升技能列表协议。 / Projects the fixed craft-promotion skill-list protocol after commit. */
+	public record SyncCraftSkillRewardAction(int craftSkillId) implements Action {
+		/** 校验制作技能引用。 / Validates the craft-skill reference. */
+		public SyncCraftSkillRewardAction {
+			if (craftSkillId <= 0) {
+				throw new IllegalArgumentException("Craft skill reward protocol action is invalid");
 			}
 		}
 	}

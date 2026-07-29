@@ -17,11 +17,13 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVaria
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IncrementPackedCounterAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CraftSkillEligibilityCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EndQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GrantCraftSkillRewardAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
@@ -46,6 +48,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEventQue
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestTimerAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncCraftSkillRewardAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphRouter.Match;
@@ -219,6 +222,54 @@ public final class QuestGraphTransitionExecutor {
 							: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation)
 								: isRecipeAction(invocation.action()) ? recipeBridge.execute(invocation)
 									: actionExecutor.apply(invocation),
+				itemActions::itemCount, itemActions::preflight, persistence);
+		}
+
+		/**
+		 * 组合通用能力与正式制作技能奖励 typed bridge。
+		 * Composes generic capabilities with the formal craft-skill reward typed bridge.
+		 */
+		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
+				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
+				Function<ActionInvocation, ActionResult> actionExecutor, QuestGraphCraftSkillRewardBridge craftSkillRewards,
+				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			this(playerId, accessLevel, serverZoneId, states,
+				craftConditionEvaluator(conditionEvaluator, craftSkillRewards),
+				craftActionPreflight(actionPreflight, craftSkillRewards),
+				craftActionExecutor(actionExecutor, craftSkillRewards),
+				itemId -> -1, plans -> plans.isEmpty() ? PreflightResult.READY : PreflightResult.FAILED, persistence);
+		}
+
+		/**
+		 * 组合正式物品、计时器、影片、lifecycle、recipe 与制作技能奖励 typed adapter。
+		 * Composes production item, timer, movie, lifecycle, recipe, and craft-skill reward typed adapters.
+		 */
+		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
+				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
+				Function<ActionInvocation, ActionResult> actionExecutor, QuestGraphItemActionAdapter itemActions,
+				QuestGraphTimerActionAdapter timerActions, QuestGraphMovieActionAdapter movieActions,
+				QuestGraphLifecycleActionAdapter lifecycleActions, QuestGraphRecipeBridge recipeBridge,
+				QuestGraphCraftSkillRewardBridge craftSkillRewards,
+				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			this(playerId, accessLevel, serverZoneId, states,
+				invocation -> invocation.condition() instanceof RecipeLearnableCondition
+					? recipeBridge.evaluate(invocation)
+					: invocation.condition() instanceof CraftSkillEligibilityCondition
+						? craftSkillRewards.evaluate(invocation) : conditionEvaluator.apply(invocation),
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
+						: isLifecycleAction(invocation.action()) ? lifecycleActions.preflight(invocation)
+							: isRequiredRecipeAction(invocation.action()) ? recipeBridge.preflight(invocation)
+								: isRequiredCraftSkillRewardAction(invocation.action()) ? craftSkillRewards.preflight(invocation)
+									: actionPreflight.apply(invocation),
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.execute(invocation)
+					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
+						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
+							? movieActions.execute(invocation)
+							: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation)
+								: isRecipeAction(invocation.action()) ? recipeBridge.execute(invocation)
+									: isCraftSkillRewardAction(invocation.action()) ? craftSkillRewards.execute(invocation)
+										: actionExecutor.apply(invocation),
 				itemActions::itemCount, itemActions::preflight, persistence);
 		}
 
@@ -774,6 +825,43 @@ public final class QuestGraphTransitionExecutor {
 	/** 判断动作是否属于 recipe bridge，包括提交后拒绝协议。 / Returns whether an action belongs to the recipe bridge, including rejection protocol. */
 	private static boolean isRecipeAction(Action action) {
 		return isRequiredRecipeAction(action) || action instanceof NotifyRecipeRejectionAction;
+	}
+
+	/** 判断动作是否为 PREPARED 前必须验证的制作技能奖励。 / Returns whether an action is a craft-skill reward that must preflight before PREPARED. */
+	private static boolean isRequiredCraftSkillRewardAction(Action action) {
+		return action instanceof GrantCraftSkillRewardAction;
+	}
+
+	/** 判断动作是否属于制作技能奖励 bridge，包括提交后协议。 / Returns whether an action belongs to the craft-skill reward bridge, including protocol. */
+	private static boolean isCraftSkillRewardAction(Action action) {
+		return isRequiredCraftSkillRewardAction(action) || action instanceof SyncCraftSkillRewardAction;
+	}
+
+	/** 组合制作资格条件并立即校验 bridge 依赖。 / Composes craft eligibility and eagerly validates the bridge dependency. */
+	private static Function<ConditionInvocation, ConditionResult> craftConditionEvaluator(
+			Function<ConditionInvocation, ConditionResult> delegate, QuestGraphCraftSkillRewardBridge craftSkillRewards) {
+		Objects.requireNonNull(delegate, "condition evaluator");
+		Objects.requireNonNull(craftSkillRewards, "craft skill rewards");
+		return invocation -> invocation.condition() instanceof CraftSkillEligibilityCondition
+			? craftSkillRewards.evaluate(invocation) : delegate.apply(invocation);
+	}
+
+	/** 组合制作 grant 预检并立即校验 bridge 依赖。 / Composes craft-grant preflight and eagerly validates the bridge dependency. */
+	private static Function<ActionInvocation, PreflightResult> craftActionPreflight(
+			Function<ActionInvocation, PreflightResult> delegate, QuestGraphCraftSkillRewardBridge craftSkillRewards) {
+		Objects.requireNonNull(delegate, "action preflight");
+		Objects.requireNonNull(craftSkillRewards, "craft skill rewards");
+		return invocation -> isRequiredCraftSkillRewardAction(invocation.action())
+			? craftSkillRewards.preflight(invocation) : delegate.apply(invocation);
+	}
+
+	/** 组合制作 required/protocol 执行并立即校验 bridge 依赖。 / Composes craft required/protocol execution and eagerly validates the bridge dependency. */
+	private static Function<ActionInvocation, ActionResult> craftActionExecutor(
+			Function<ActionInvocation, ActionResult> delegate, QuestGraphCraftSkillRewardBridge craftSkillRewards) {
+		Objects.requireNonNull(delegate, "action executor");
+		Objects.requireNonNull(craftSkillRewards, "craft skill rewards");
+		return invocation -> isCraftSkillRewardAction(invocation.action())
+			? craftSkillRewards.execute(invocation) : delegate.apply(invocation);
 	}
 
 	/**

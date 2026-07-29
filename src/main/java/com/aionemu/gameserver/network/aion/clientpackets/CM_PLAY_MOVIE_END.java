@@ -4,10 +4,13 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.player.MoviePlaybackAuthority.Playback;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphMovieSignalBridge;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,12 +52,15 @@ public class CM_PLAY_MOVIE_END extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		if (player.getMoviePlaybackAuthority().complete(movieId, System.currentTimeMillis()).isEmpty()) {
+		long endedAt = System.currentTimeMillis();
+		Playback playback = player.getMoviePlaybackAuthority().complete(movieId, endedAt).orElse(null);
+		if (playback == null) {
 			log.warn(I18n.get("log.quest.movie_end_rejected", player.getObjectId(), movieId));
 			return;
 		}
+		MovieEndedEvent movieEnded = QuestGraphMovieSignalBridge.fromPlayback(player.getObjectId(), endedAt, playback);
 		notifyRetailAi(player, targetObjectId, movieId);
-		GameEngineServices.questEngine().onMovieEnd(new QuestEnv(null, player, 0, 0), movieId);
+		GameEngineServices.questEngine().onMovieEnd(new QuestEnv(null, player, 0, 0), movieEnded);
 		player.getPosition().getWorldMapInstance().getInstanceHandler().onPlayMovieEnd(player, movieId);
 	}
 
