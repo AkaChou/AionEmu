@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.graph.runtime;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PackedCounterCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerEquippedCondition;
@@ -49,6 +50,7 @@ public final class QuestGraphPlayerConditionEvaluator {
 			boolean matched = switch (invocation.condition()) {
 				case QuestStatusCondition condition -> throw new IllegalArgumentException("Quest status must be evaluated by the transition executor");
 				case QuestVariableCondition condition -> throw new IllegalArgumentException("Quest variable must be evaluated by the transition executor");
+				case PackedCounterCondition condition -> throw new IllegalArgumentException("Packed counter must be evaluated by the transition executor");
 				case QuestRepeatAvailableCondition condition -> throw new IllegalArgumentException(
 					"Quest repeat eligibility must be evaluated by the transition executor");
 				case QuestRewardCondition condition -> throw new IllegalArgumentException("Quest reward must be evaluated by the transition executor");

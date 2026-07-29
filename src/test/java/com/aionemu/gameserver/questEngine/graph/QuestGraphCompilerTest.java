@@ -102,6 +102,46 @@ class QuestGraphCompilerTest {
 	}
 
 	/**
+	 * 验证 packed counter 只接受低位到高位、非重复且边界为 0..radix-1 的 INT 位变量。
+	 * Verifies that packed counters accept only unique low-to-high INT digits bounded to 0..radix-1.
+	 */
+	@Test
+	void compilesAndValidatesTypedPackedCounters() throws Exception {
+		String variables = """
+			<variables>
+				<variable name="digit0" type="INT" scope="PLAYER" initial="0" min="0" max="63"/>
+				<variable name="digit1" type="INT" scope="PLAYER" initial="0" min="0" max="63"/>
+			</variables>
+			""";
+		String transition = """
+			<transition id="count" priority="10" to="done">
+				<kill npc_id="203709"/>
+				<conditions>
+					<quest-status op="IN" values="START"/>
+					<packed-counter variables="digit0 digit1" radix="64" op="LESSER" value="1000"/>
+				</conditions>
+				<actions>
+					<increment-packed-counter variables="digit0 digit1" radix="64" maximum="1000"/>
+					<sync-quest-status/>
+				</actions>
+			</transition>
+			""";
+
+		CompiledQuestGraph graph = load(document(graph(1, "active", variables, transition, terminal()))).graphs().get(1);
+		CompiledQuestGraph.Transition compiled = graph.nodes().get("active").transitions().getFirst();
+		assertEquals(new CompiledQuestGraph.PackedCounterCondition(
+			List.of("digit0", "digit1"), 64, ConditionOperation.LESSER, 1000), compiled.conditions().get(1));
+		assertEquals(new CompiledQuestGraph.IncrementPackedCounterAction(List.of("digit0", "digit1"), 64, 1000),
+			compiled.actions().getFirst());
+		assertFailureContains(document(graph(1, "active", variables.replace("max=\"63\"", "max=\"62\""), transition, terminal())),
+			"must use bounds 0..63");
+		assertFailureContains(document(graph(1, "active", variables,
+			transition.replace("digit0 digit1", "digit0 digit0"), terminal())), "invalid packed-counter");
+		assertFailureContains(document(graph(1, "active", variables,
+			transition.replace("maximum=\"1000\"", "maximum=\"4096\""), terminal())), "outside packed capacity");
+	}
+
+	/**
 	 * 使用真实编译器离线编译由系统属性指定的完整候选批次。
 	 * Offline-compiles a complete candidate batch selected through system properties with the real compiler.
 	 */

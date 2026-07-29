@@ -8,6 +8,13 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="questGraphIdentifierList">
+		<xs:restriction>
+			<xs:simpleType><xs:list itemType="questGraphIdentifier"/></xs:simpleType>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="questGraphZoneName">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
@@ -279,6 +286,13 @@
 		<xs:attribute name="value" type="xs:int" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphPackedCounterCondition">
+		<xs:attribute name="variables" type="questGraphIdentifierList" use="required"/>
+		<xs:attribute name="radix" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="op" type="questGraphNumericComparison" use="required"/>
+		<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphQuestRepeatAvailableCondition">
 		<xs:attribute name="max_completions" use="required">
 			<xs:simpleType>
@@ -359,6 +373,12 @@
 	<xs:complexType name="questGraphAddVariableAction">
 		<xs:attribute name="variable" type="questGraphIdentifier" use="required"/>
 		<xs:attribute name="delta" type="xs:int" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="questGraphIncrementPackedCounterAction">
+		<xs:attribute name="variables" type="questGraphIdentifierList" use="required"/>
+		<xs:attribute name="radix" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="maximum" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="questGraphSetCompletionCountAction">
@@ -482,6 +502,7 @@
 		<xs:choice minOccurs="1" maxOccurs="unbounded">
 			<xs:element name="quest-status" type="questGraphQuestStatusCondition"/>
 			<xs:element name="quest-variable" type="questGraphQuestVariableCondition"/>
+			<xs:element name="packed-counter" type="questGraphPackedCounterCondition"/>
 			<xs:element name="quest-repeat-available" type="questGraphQuestRepeatAvailableCondition"/>
 			<xs:element name="quest-collect-items" type="questGraphEmptyAction"/>
 			<xs:element name="quest-reward" type="questGraphQuestRewardCondition"/>
@@ -506,6 +527,7 @@
 			<xs:element name="set-quest-status" type="questGraphSetStatusAction"/>
 			<xs:element name="set-quest-variable" type="questGraphSetVariableAction"/>
 			<xs:element name="add-quest-variable" type="questGraphAddVariableAction"/>
+			<xs:element name="increment-packed-counter" type="questGraphIncrementPackedCounterAction"/>
 			<xs:element name="set-completion-count" type="questGraphSetCompletionCountAction"/>
 			<xs:element name="add-completion-count" type="questGraphAddCompletionCountAction"/>
 			<xs:element name="give-quest-item" type="questGraphGiveQuestItemAction"/>

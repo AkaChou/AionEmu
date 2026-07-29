@@ -58,6 +58,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionPhase;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AbandonQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IncrementPackedCounterAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AnchoredCooldownRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CloseDialogAction;
@@ -92,6 +93,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAv
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemGrantMode;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemRemovalMode;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PackedCounterCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatDeadlinePolicy;
@@ -127,6 +129,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ZoneLeftEventData
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ZoneMissionEndedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddCompletionCountActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AddQuestVariableActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.IncrementPackedCounterActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AbandonQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CloseDialogActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FinishQuestActionData;
@@ -167,6 +170,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestTimerEndedEv
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestRewardConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestStatusConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.QuestVariableConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PackedCounterConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveCollectedItemsActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveQuestItemActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendDialogActionData;
@@ -765,6 +769,17 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid quest variable condition", e);
 			}
 		}
+		if (source instanceof PackedCounterConditionData condition) {
+			try {
+				List<String> names = requirePackedCounterVariables(questId, condition.getVariables(), condition.getRadix(), variables);
+				if (condition.getValue() == null || condition.getValue() > packedCounterCapacity(names.size(), condition.getRadix())) {
+					throw new IllegalArgumentException("comparison is outside packed capacity");
+				}
+				return new PackedCounterCondition(names, condition.getRadix(), condition.getOperation(), condition.getValue());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid packed-counter condition", e);
+			}
+		}
 		if (source instanceof QuestRepeatAvailableConditionData condition) {
 			try {
 				return new QuestRepeatAvailableCondition(condition.getMaxCompletions(), condition.getRequiresDeadline(),
@@ -909,6 +924,17 @@ public final class QuestGraphCompiler {
 				return new AddQuestVariableAction(action.getVariable(), action.getDelta());
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid add-variable action", e);
+			}
+		}
+		if (source instanceof IncrementPackedCounterActionData action) {
+			try {
+				List<String> names = requirePackedCounterVariables(questId, action.getVariables(), action.getRadix(), variables);
+				if (action.getMaximum() == null || action.getMaximum() > packedCounterCapacity(names.size(), action.getRadix())) {
+					throw new IllegalArgumentException("maximum is outside packed capacity");
+				}
+				return new IncrementPackedCounterAction(names, action.getRadix(), action.getMaximum());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid packed-counter increment", e);
 			}
 		}
 		if (source instanceof SetCompletionCountActionData action) {
@@ -1078,6 +1104,41 @@ public final class QuestGraphCompiler {
 			throw new IllegalArgumentException("Quest " + questId + " references a missing INT variable " + name);
 		}
 		return variable;
+	}
+
+	/**
+	 * 校验 packed counter 的变量顺序、唯一性以及每位 0..radix-1 的强类型边界。
+	 * Validates packed-counter variable order, uniqueness, and each digit's typed 0..radix-1 bounds.
+	 */
+	private static List<String> requirePackedCounterVariables(int questId, List<String> names, Integer radix,
+			Map<String, Variable> variables) {
+		if (names == null || names.isEmpty() || radix == null || radix < 2 || radix > 256
+				|| new HashSet<>(names).size() != names.size()) {
+			throw new IllegalArgumentException("Quest " + questId + " has an invalid packed-counter shape");
+		}
+		for (String name : names) {
+			IntVariable variable = requireIntVariable(questId, name, variables);
+			if (variable.min() != 0 || variable.max() != radix - 1) {
+				throw new IllegalArgumentException("Quest " + questId + " packed-counter digit " + name
+					+ " must use bounds 0.." + (radix - 1));
+			}
+		}
+		return List.copyOf(names);
+	}
+
+	/**
+	 * 计算给定位数和基数可表示的最大非负整数，并拒绝 int 溢出。
+	 * Computes the maximum non-negative integer represented by the digit count and radix, rejecting int overflow.
+	 */
+	private static int packedCounterCapacity(int digits, int radix) {
+		long capacity = 1;
+		for (int index = 0; index < digits; index++) {
+			capacity = Math.multiplyExact(capacity, radix);
+			if (capacity - 1 > Integer.MAX_VALUE) {
+				throw new IllegalArgumentException("Packed-counter capacity exceeds INT range");
+			}
+		}
+		return (int) capacity - 1;
 	}
 
 	/**

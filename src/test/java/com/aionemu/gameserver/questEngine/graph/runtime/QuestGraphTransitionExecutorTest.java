@@ -40,6 +40,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DailyRepeatDe
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EndQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IncrementPackedCounterAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
@@ -50,6 +51,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAvailableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PackedCounterCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction;
@@ -117,6 +119,37 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(new BooleanValue(false), state.getVariables().get("enabled"));
 		assertEquals("8:dialog-1:1:accept:7:1", action.get().idempotencyKey());
 		assertEquals(state, database.get());
+	}
+
+	/**
+	 * 验证 packed counter 在同一状态归约中执行 63 到 64 的跨位进位，并以解码总值评估条件。
+	 * Verifies that a packed counter carries atomically from 63 to 64 and evaluates conditions against the decoded total.
+	 */
+	@Test
+	void packedCounterConditionAndIncrementAreAtomic() {
+		Map<String, CompiledQuestGraph.Variable> variables = new LinkedHashMap<>();
+		variables.put("digit0", new IntVariable("digit0", PLAYER, 0, 0, 63));
+		variables.put("digit1", new IntVariable("digit1", PLAYER, 0, 0, 63));
+		Transition transition = new Transition("count", 10, "active", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(
+			new QuestStatusCondition(CompiledQuestGraph.QuestStatus.START),
+			new PackedCounterCondition(List.of("digit0", "digit1"), 64, ConditionOperation.LESSER, 100)), List.of(
+				new IncrementPackedCounterAction(List.of("digit0", "digit1"), 64, 100),
+				new SyncQuestStatusAction()));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", variables,
+			Map.of("active", new Node("active", false, List.of(transition))));
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		PlayerQuestGraphState current = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of("digit0", new IntValue(63), "digit1", new IntValue(0)),
+			Map.of(), null, Map.of(), null);
+		states.addLoaded(current);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(current);
+		Match match = new Match(EVENT, graph, new EventRoute(1, "active", transition), current);
+
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(match, context(states, database, invocation -> APPLIED)));
+		assertEquals(new IntValue(0), states.get(1).getVariables().get("digit0"));
+		assertEquals(new IntValue(1), states.get(1).getVariables().get("digit1"));
+		assertEquals(states.get(1), database.get());
 	}
 
 	/**

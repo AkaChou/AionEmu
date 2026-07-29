@@ -517,6 +517,7 @@ public final class QuestGraphData {
 		@XmlElements({
 			@XmlElement(name = "quest-status", type = QuestStatusConditionData.class),
 			@XmlElement(name = "quest-variable", type = QuestVariableConditionData.class),
+			@XmlElement(name = "packed-counter", type = PackedCounterConditionData.class),
 			@XmlElement(name = "quest-repeat-available", type = QuestRepeatAvailableConditionData.class),
 			@XmlElement(name = "quest-collect-items", type = QuestCollectItemsConditionData.class),
 			@XmlElement(name = "quest-reward", type = QuestRewardConditionData.class),
@@ -544,6 +545,28 @@ public final class QuestGraphData {
 		/** 变量名。 / Variable name. */
 		@XmlAttribute(required = true)
 		private String variable;
+		/** 数值比较操作。 / Numeric comparison operation. */
+		@XmlAttribute(name = "op", required = true)
+		private ConditionOperation operation;
+		/** 比较值。 / Comparison value. */
+		@XmlAttribute(required = true)
+		private Integer value;
+	}
+
+	/**
+	 * 表示由低位到高位整数变量组成的定基数计数器比较。
+	 * Represents a fixed-radix counter comparison over low-to-high integer variables.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PackedCounterConditionData {
+		/** 低位到高位变量名。 / Low-to-high variable names. */
+		@XmlList
+		@XmlAttribute(required = true)
+		private List<String> variables = new ArrayList<>();
+		/** 每位的固定基数。 / Fixed radix of each digit. */
+		@XmlAttribute(required = true)
+		private Integer radix;
 		/** 数值比较操作。 / Numeric comparison operation. */
 		@XmlAttribute(name = "op", required = true)
 		private ConditionOperation operation;
@@ -759,6 +782,7 @@ public final class QuestGraphData {
 			@XmlElement(name = "set-quest-status", type = SetQuestStatusActionData.class),
 			@XmlElement(name = "set-quest-variable", type = SetQuestVariableActionData.class),
 			@XmlElement(name = "add-quest-variable", type = AddQuestVariableActionData.class),
+			@XmlElement(name = "increment-packed-counter", type = IncrementPackedCounterActionData.class),
 			@XmlElement(name = "set-completion-count", type = SetCompletionCountActionData.class),
 			@XmlElement(name = "add-completion-count", type = AddCompletionCountActionData.class),
 			@XmlElement(name = "give-quest-item", type = GiveQuestItemActionData.class),
@@ -834,6 +858,25 @@ public final class QuestGraphData {
 		/** 非零增量。 / Non-zero delta. */
 		@XmlAttribute(required = true)
 		private Integer delta;
+	}
+
+	/**
+	 * 表示对低位到高位强类型变量执行一次有上限的定基数递增。
+	 * Represents one bounded fixed-radix increment over low-to-high typed variables.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class IncrementPackedCounterActionData {
+		/** 低位到高位变量名。 / Low-to-high variable names. */
+		@XmlList
+		@XmlAttribute(required = true)
+		private List<String> variables = new ArrayList<>();
+		/** 每位的固定基数。 / Fixed radix of each digit. */
+		@XmlAttribute(required = true)
+		private Integer radix;
+		/** 允许递增到的最大总值。 / Maximum total value the action may reach. */
+		@XmlAttribute(required = true)
+		private Integer maximum;
 	}
 
 	/** 设置 canonical 完成次数。 / Sets the canonical completion count. */

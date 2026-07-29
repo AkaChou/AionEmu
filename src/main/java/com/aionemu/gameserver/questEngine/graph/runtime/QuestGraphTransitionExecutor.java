@@ -14,6 +14,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionPhase;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AbandonQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IncrementPackedCounterAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
@@ -28,6 +29,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRepeatAv
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatusCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariableCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PackedCounterCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatPrivilegeMode;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
@@ -485,6 +487,22 @@ public final class QuestGraphTransitionExecutor {
 			return compare(value.value(), variableCondition.operation(), variableCondition.value())
 				? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
 		}
+		if (condition instanceof PackedCounterCondition packedCondition) {
+			PlayerQuestGraphState state = states.get(ownerQuestId);
+			if (state == null) {
+				return ConditionResult.NOT_MATCHED;
+			}
+			if (state.getLifecycle() != Lifecycle.ACTIVE) {
+				return ConditionResult.FAILED;
+			}
+			try {
+				int actual = packedCounterValue(state.getVariables(), packedCondition.variables(), packedCondition.radix());
+				return compare(actual, packedCondition.operation(), packedCondition.value())
+					? ConditionResult.MATCHED : ConditionResult.NOT_MATCHED;
+			} catch (RuntimeException e) {
+				return ConditionResult.FAILED;
+			}
+		}
 		if (condition instanceof QuestRepeatAvailableCondition repeatCondition) {
 			PlayerQuestGraphState state = states.get(ownerQuestId);
 			if (state == null) {
@@ -828,6 +846,20 @@ public final class QuestGraphTransitionExecutor {
 				}
 				variables.put(add.variable(), checkedIntValue(graph, add.variable(), Math.addExact(value.value(), add.delta())));
 			}
+			case IncrementPackedCounterAction increment -> {
+				int currentValue = packedCounterValue(variables, increment.variables(), increment.radix());
+				if (currentValue >= increment.maximum()) {
+					throw new IllegalStateException("Packed counter has reached its maximum");
+				}
+				int remaining = Math.addExact(currentValue, 1);
+				for (String variable : increment.variables()) {
+					variables.put(variable, checkedIntValue(graph, variable, remaining % increment.radix()));
+					remaining /= increment.radix();
+				}
+				if (remaining != 0) {
+					throw new IllegalStateException("Packed counter increment exceeds declared digits");
+				}
+			}
 			case SetCompletionCountAction set -> history = completionHistory(history, set.count(), occurredAt);
 			case AddCompletionCountAction add ->
 				history = completionHistory(history, Math.addExact(history.completionCount(), add.delta()), occurredAt);
@@ -925,6 +957,26 @@ public final class QuestGraphTransitionExecutor {
 			throw new IllegalStateException("INT variable write is outside declared bounds: " + name);
 		}
 		return new IntValue(value);
+	}
+
+	/**
+	 * 从低位到高位强类型变量解码定基数计数器，并拒绝缺失、坏位值和整数溢出。
+	 * Decodes a fixed-radix counter from low-to-high typed variables, rejecting missing digits, invalid values, and overflow.
+	 */
+	private static int packedCounterValue(Map<String, VariableValue> values, java.util.List<String> variables, int radix) {
+		long total = 0;
+		long multiplier = 1;
+		for (String variable : variables) {
+			if (!(values.get(variable) instanceof IntValue digit) || digit.value() < 0 || digit.value() >= radix) {
+				throw new IllegalStateException("Packed counter contains an invalid digit " + variable);
+			}
+			total = Math.addExact(total, Math.multiplyExact(digit.value(), multiplier));
+			if (total > Integer.MAX_VALUE) {
+				throw new IllegalStateException("Packed counter exceeds INT range");
+			}
+			multiplier = Math.multiplyExact(multiplier, radix);
+		}
+		return (int) total;
 	}
 
 	/** 比较 canonical 整数变量。 / Compares a canonical integer variable. */

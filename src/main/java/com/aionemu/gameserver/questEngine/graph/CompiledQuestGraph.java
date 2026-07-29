@@ -101,6 +101,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		SET_QUEST_STATUS(ActionPhase.STATE),
 		SET_QUEST_VARIABLE(ActionPhase.STATE),
 		ADD_QUEST_VARIABLE(ActionPhase.STATE),
+		INCREMENT_PACKED_COUNTER(ActionPhase.STATE),
 		SET_COMPLETION_COUNT(ActionPhase.STATE),
 		ADD_COMPLETION_COUNT(ActionPhase.STATE),
 		GIVE_QUEST_ITEM(ActionPhase.REQUIRED),
@@ -321,6 +322,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Represents a typed condition that must hold before a transition executes.
 	 */
 	public sealed interface Condition permits QuestStatusCondition, QuestVariableCondition, QuestRepeatAvailableCondition,
+		PackedCounterCondition,
 		QuestCollectItemsCondition, PlayerLevelCondition, KillVictimLevelDeltaCondition, PlayerRaceCondition, PlayerClassCondition,
 		PlayerGenderCondition, PlayerTitleCondition, PlayerAbyssRankCondition, PlayerInventoryCondition, QuestRewardCondition,
 		QuestCompletionCountCondition, PlayerEquippedCondition {
@@ -336,6 +338,20 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 			if (variable == null || variable.isBlank() || operation == null || operation == ConditionOperation.IN
 					|| operation == ConditionOperation.NOT_IN) {
 				throw new IllegalArgumentException("Quest variable condition is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 比较由低位到高位整数变量组成的定基数计数器。
+	 * Compares a fixed-radix counter composed of low-to-high integer variables.
+	 */
+	public record PackedCounterCondition(List<String> variables, int radix, ConditionOperation operation, int value) implements Condition {
+		/** 校验变量序列、基数、操作和非负阈值。 / Validates the variable sequence, radix, operation, and non-negative operand. */
+		public PackedCounterCondition {
+			variables = validatedPackedVariables(variables, radix);
+			if (operation == null || operation == ConditionOperation.IN || operation == ConditionOperation.NOT_IN || value < 0) {
+				throw new IllegalArgumentException("Packed counter condition is invalid");
 			}
 		}
 	}
@@ -566,7 +582,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Defines the closed typed set of transition actions.
 	 */
 	public sealed interface Action permits StartQuestAction, StartEventQuestAction, AbandonQuestAction, SetQuestStatusAction, SetQuestVariableAction,
-		AddQuestVariableAction,
+		AddQuestVariableAction, IncrementPackedCounterAction,
 		SetCompletionCountAction, AddCompletionCountAction, GiveQuestItemAction, RemoveQuestItemAction, RemoveCollectedItemsAction, FinishQuestAction,
 		StartQuestTimerAction, EndQuestTimerAction, SendDialogAction, CloseDialogAction, ShowQuestListAction, SyncQuestStatusAction,
 		SendRepeatDeadlineMessageAction, SyncQuestTimerAction, SendPlayerMessageAction, PlayMovieAction {
@@ -580,6 +596,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				case SetQuestStatusAction ignored -> ActionType.SET_QUEST_STATUS;
 				case SetQuestVariableAction ignored -> ActionType.SET_QUEST_VARIABLE;
 				case AddQuestVariableAction ignored -> ActionType.ADD_QUEST_VARIABLE;
+				case IncrementPackedCounterAction ignored -> ActionType.INCREMENT_PACKED_COUNTER;
 				case SetCompletionCountAction ignored -> ActionType.SET_COMPLETION_COUNT;
 				case AddCompletionCountAction ignored -> ActionType.ADD_COMPLETION_COUNT;
 				case GiveQuestItemAction ignored -> ActionType.GIVE_QUEST_ITEM;
@@ -644,6 +661,20 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		public AddQuestVariableAction {
 			if (variable == null || variable.isBlank() || delta == 0) {
 				throw new IllegalArgumentException("Quest variable increment is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 对低位到高位整数变量执行一次有上限的定基数原子递增。
+	 * Atomically increments a bounded fixed-radix counter over low-to-high integer variables.
+	 */
+	public record IncrementPackedCounterAction(List<String> variables, int radix, int maximum) implements Action {
+		/** 校验变量序列、基数和正上限。 / Validates the variable sequence, radix, and positive maximum. */
+		public IncrementPackedCounterAction {
+			variables = validatedPackedVariables(variables, radix);
+			if (maximum <= 0) {
+				throw new IllegalArgumentException("Packed counter increment maximum is invalid");
 			}
 		}
 	}
@@ -783,6 +814,16 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	/** 校验任务计时器使用稳定 identifier 语法。 / Validates stable identifier syntax for quest timers. */
 	private static boolean validTimerName(String timer) {
 		return timer != null && timer.length() <= 128 && timer.matches("[A-Za-z][A-Za-z0-9_.-]*");
+	}
+
+	/** 校验 packed counter 使用非重复稳定变量名和受控基数。 / Validates unique stable variable names and a bounded radix for packed counters. */
+	private static List<String> validatedPackedVariables(List<String> variables, int radix) {
+		if (variables == null || variables.isEmpty() || radix < 2 || radix > 256
+				|| variables.stream().anyMatch(value -> value == null || value.isBlank())
+				|| Set.copyOf(variables).size() != variables.size()) {
+			throw new IllegalArgumentException("Packed counter shape is invalid");
+		}
+		return List.copyOf(variables);
 	}
 
 	/** 提交后向玩家发送类型化频道消息。 / Sends a typed-channel player message after commit. */
