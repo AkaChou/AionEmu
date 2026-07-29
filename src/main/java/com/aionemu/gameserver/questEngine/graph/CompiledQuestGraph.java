@@ -53,6 +53,7 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		PLAYER_DEATH,
 		KILL_IN_WORLD,
 		ITEM_USE,
+		ITEM_DIALOG,
 		ITEM_OBTAINED,
 		ITEM_EQUIPPED,
 		HOUSE_ITEM_USE,

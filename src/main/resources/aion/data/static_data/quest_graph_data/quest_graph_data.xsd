@@ -177,6 +177,11 @@
 		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="questGraphItemDialogEvent">
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="dialog" type="questGraphIdentifier" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphItemObtainedEvent">
 		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
@@ -575,6 +580,7 @@
 				<xs:element name="player-death" type="questGraphPlayerDeathEvent"/>
 				<xs:element name="kill-in-world" type="questGraphKillInWorldEvent"/>
 				<xs:element name="item-use" type="questGraphItemUseEvent"/>
+				<xs:element name="item-dialog" type="questGraphItemDialogEvent"/>
 				<xs:element name="item-obtained" type="questGraphItemObtainedEvent"/>
 				<xs:element name="item-equipped" type="questGraphItemEquippedEvent"/>
 				<xs:element name="house-item-use" type="questGraphHouseItemUseEvent"/>

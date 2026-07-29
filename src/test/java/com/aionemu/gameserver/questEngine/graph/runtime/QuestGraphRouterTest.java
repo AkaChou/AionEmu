@@ -25,6 +25,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEv
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.AttackEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.HouseItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemEquippedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemDialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemObtainedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
@@ -160,6 +161,8 @@ class QuestGraphRouterTest {
 		PlayerDeathEvent death = new PlayerDeathEvent("death", 7, 3003);
 		KillInWorldEvent worldKill = new KillInWorldEvent("world-kill", 7, 3004, 400010000, 8, 65);
 		ItemUseEvent itemUse = new ItemUseEvent("item-use", 7, 3005, 182200001, 5001);
+		ItemDialogEvent itemDialog = new ItemDialogEvent("item-dialog", 7, 3005, 1, 182200001, 5001,
+			"ACCEPT_QUEST", 91);
 		ItemObtainedEvent itemObtained = new ItemObtainedEvent("item-obtained", 7, 3006, 182200001);
 		ItemEquippedEvent itemEquipped = new ItemEquippedEvent("item-equipped", 7, 3007, 182200001);
 		HouseItemUseEvent houseItemUse = new HouseItemUseEvent("house-item-use", 7, 3008, 182200001);
@@ -187,6 +190,7 @@ class QuestGraphRouterTest {
 		assertEquals(death, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(death)));
 		assertEquals(worldKill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(worldKill)));
 		assertEquals(itemUse, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(itemUse)));
+		assertEquals(itemDialog, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(itemDialog)));
 		assertEquals(itemObtained, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(itemObtained)));
 		assertEquals(itemEquipped, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(itemEquipped)));
 		assertEquals(houseItemUse, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(houseItemUse)));
@@ -266,6 +270,29 @@ class QuestGraphRouterTest {
 				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
 		assertThrows(IllegalArgumentException.class, () -> new ItemUseEvent("invalid", 7, 5005, 182200001, 0));
 		assertThrows(IllegalArgumentException.class, () -> new ItemObtainedEvent("invalid", 7, 5006, 0));
+	}
+
+	/**
+	 * 验证物品对话按任务 owner、物品和动作精确独占路由。
+	 * Verifies item dialogs use exact exclusive routing by quest owner, item, and dialog action.
+	 */
+	@Test
+	void itemDialogUsesExactOwnerAndQualifierRouting() {
+		List<Integer> visited = new ArrayList<>();
+		DispatchResult accepted = router.dispatch(
+			new ItemDialogEvent("item-dialog", 7, 5010, 1, 182200001, 5001, "ACCEPT_QUEST", 91),
+			new PlayerQuestGraphStateList(), match -> {
+				visited.add(match.route().questId());
+				return Status.APPLIED;
+			});
+		assertEquals(List.of(1), visited);
+		assertEquals(new DispatchResult(Status.APPLIED, Propagation.STOP), accepted);
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE), router.dispatch(
+			new ItemDialogEvent("wrong-owner", 7, 5011, 2, 182200001, 5001, "ACCEPT_QUEST", 92),
+			new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE), router.dispatch(
+			new ItemDialogEvent("wrong-dialog", 7, 5012, 1, 182200001, 5001, "REFUSE_QUEST", 93),
+			new PlayerQuestGraphStateList(), match -> Status.APPLIED));
 	}
 
 	/**
@@ -471,7 +498,8 @@ class QuestGraphRouterTest {
 			killTransition("kill-second", 25), combatTransition("attack-q1", 10, "<attack npc_id=\"100\"/>"),
 			combatTransition("death-q1", 10, "<player-death/>"),
 			combatTransition("world-exact-q1", 20, "<kill-in-world world_id=\"400010000\"/>"),
-			itemTransition("item-use-q1", 20, "item-use"), itemTransition("item-obtained-q1", 20, "item-obtained"),
+			itemTransition("item-use-q1", 20, "item-use"), itemDialogTransition("item-dialog-q1", 20),
+			itemTransition("item-obtained-q1", 20, "item-obtained"),
 			itemTransition("item-equipped-q1", 20, "item-equipped"), itemTransition("house-item-use-q1", 20, "house-item-use"),
 			worldZoneTransition("world-entered-q1", 20, "<world-entered/>"),
 				worldZoneTransition("zone-entered-q1", 20, "<zone-entered zone_name=\"TEST_ZONE\"/>"),
@@ -557,6 +585,12 @@ class QuestGraphRouterTest {
 	/** 创建聚焦 item/housing 路由转换。 / Creates a focused item/housing route transition. */
 	private static String itemTransition(String id, int priority, String event) {
 		return combatTransition(id, priority, "<" + event + " item_id=\"182200001\"/>");
+	}
+
+	/** 创建 owner 绑定的物品对话路由。 / Creates an owner-bound item-dialog route. */
+	private static String itemDialogTransition(String id, int priority) {
+		return combatTransition(id, priority,
+			"<item-dialog item_id=\"182200001\" dialog=\"ACCEPT_QUEST\"/>");
 	}
 
 	/** 创建聚焦 world/zone 路由转换。 / Creates a focused world/zone route transition. */

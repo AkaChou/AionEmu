@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.graph.runtime;
 
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DIALOG;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ITEM_DIALOG;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus.NONE;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope.PLAYER;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope.WORLD;
@@ -67,6 +68,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestTime
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatTimeBasis;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemDialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphRouter.Match;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionInvocation;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PersistenceResult;
@@ -677,6 +679,31 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(Lifecycle.QUARANTINED, states.get(1).getLifecycle());
 		assertEquals("RECOVERY_STATE_TRANSITION_INVALID", states.get(1).getQuarantineReason());
 		assertEquals(states.get(1), database.get());
+	}
+
+	/**
+	 * 验证恢复时物品对话事件不能跨任务 owner 重放。
+	 * Verifies that item-dialog events cannot be replayed across quest owners during recovery.
+	 */
+	@Test
+	void recoveryQuarantinesCrossOwnerItemDialogEvent() {
+		Transition transition = new Transition("accept-item", 10, "active",
+			new Event(ITEM_DIALOG, 182200001, "ACCEPT_QUEST"), List.of(), List.of(new StartQuestAction()));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "active", new Node("active", true, List.of())));
+		ItemDialogEvent event = new ItemDialogEvent("item-dialog", 7, 1000, 2, 182200001, 5001,
+			"ACCEPT_QUEST", 91);
+		PreparedTransition journal = new PreparedTransition(-1, event.eventId(), transition.id(), 0,
+			QuestGraphEventCodec.encode(event));
+		PlayerQuestGraphState prepared = new PlayerQuestGraphState(1, 1, 0, "offer", NONE, QuestHistory.EMPTY, null,
+			Lifecycle.PREPARED, Map.of(), Map.of(), journal, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(prepared);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(prepared);
+
+		assertEquals(DispatchResult.Status.FAILED, executor.recover(graph, context(states, database, invocation -> APPLIED)));
+		assertEquals(Lifecycle.QUARANTINED, states.get(1).getLifecycle());
+		assertEquals("RECOVERY_EVENT_INCOMPATIBLE", states.get(1).getQuarantineReason());
 	}
 
 	/**

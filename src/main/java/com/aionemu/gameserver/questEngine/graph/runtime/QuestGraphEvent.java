@@ -10,7 +10,8 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventKey;
  */
 public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, QuestGraphEvent.KillEvent, QuestGraphEvent.AttackEvent,
 	QuestGraphEvent.PlayerDeathEvent, QuestGraphEvent.KillInWorldEvent, QuestGraphEvent.ItemUseEvent,
-	QuestGraphEvent.ItemObtainedEvent, QuestGraphEvent.ItemEquippedEvent, QuestGraphEvent.HouseItemUseEvent,
+	QuestGraphEvent.ItemDialogEvent, QuestGraphEvent.ItemObtainedEvent, QuestGraphEvent.ItemEquippedEvent,
+	QuestGraphEvent.HouseItemUseEvent,
 	QuestGraphEvent.WorldEnteredEvent, QuestGraphEvent.ZoneEnteredEvent, QuestGraphEvent.ZoneLeftEvent,
 	QuestGraphEvent.ZoneMissionEndedEvent, QuestGraphEvent.LevelUpEvent, QuestGraphEvent.PlayerLogoutEvent,
 	QuestGraphEvent.QuestTimerEndedEvent, QuestGraphEvent.MovieEndedEvent, QuestGraphEvent.NpcProximityEvent,
@@ -49,7 +50,7 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	 */
 	default RoutingPolicy routingPolicy() {
 		return switch (type()) {
-				case DIALOG, ITEM_USE, MOVIE_ENDED, CRAFT_FAILED, INTERACTION_ELIGIBILITY -> RoutingPolicy.EXCLUSIVE;
+				case DIALOG, ITEM_USE, ITEM_DIALOG, MOVIE_ENDED, CRAFT_FAILED, INTERACTION_ELIGIBILITY -> RoutingPolicy.EXCLUSIVE;
 				case KILL, ATTACK, PLAYER_DEATH, KILL_IN_WORLD, ITEM_OBTAINED, ITEM_EQUIPPED, HOUSE_ITEM_USE,
 					WORLD_ENTERED, ZONE_ENTERED, ZONE_LEFT, ZONE_MISSION_ENDED, LEVEL_UP, PLAYER_LOGOUT,
 					QUEST_TIMER_ENDED, NPC_PROXIMITY, ESCORT_REACHED_TARGET, ESCORT_LOST_TARGET -> RoutingPolicy.BROADCAST;
@@ -215,6 +216,35 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 		@Override
 		public EventType type() {
 			return EventType.ITEM_USE;
+		}
+
+		/** 返回物品模板路由键。 / Returns the item-template route key. */
+		@Override
+		public int targetId() {
+			return itemId;
+		}
+	}
+
+	/**
+	 * 表示由一次性服务端授权绑定到任务、物品模板和物品实例的对话选择。
+	 * Represents a dialog choice bound by one-time server authorization to a quest, item template, and item instance.
+	 */
+	record ItemDialogEvent(String eventId, int playerId, long occurredAt, int questId, int itemId, int itemObjectId,
+			String dialog, long authorizationId) implements QuestGraphEvent {
+		/** 校验 owner、物品、动作和一次性授权标识。 / Validates owner, item, action, and one-time authorization identity. */
+		public ItemDialogEvent {
+			validateCommon(eventId, playerId, occurredAt);
+			validateItemId(itemId);
+			if (questId <= 0 || itemObjectId <= 0 || authorizationId <= 0) {
+				throw new IllegalArgumentException("Item dialog authority is invalid");
+			}
+			dialog = requireText(dialog, "item dialog action");
+		}
+
+		/** 返回 ITEM_DIALOG 类型。 / Returns the ITEM_DIALOG type. */
+		@Override
+		public EventType type() {
+			return EventType.ITEM_DIALOG;
 		}
 
 		/** 返回物品模板路由键。 / Returns the item-template route key. */

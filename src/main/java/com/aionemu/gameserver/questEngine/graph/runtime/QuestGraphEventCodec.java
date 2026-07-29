@@ -12,6 +12,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEv
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.AttackEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.HouseItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemEquippedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemDialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemObtainedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
@@ -74,6 +75,7 @@ public final class QuestGraphEventCodec {
 	private static final byte FLYING_RING_PASSED = 26;
 	private static final byte SKILL_USED = 27;
 	private static final byte INTERACTION_ELIGIBILITY = 28;
+	private static final byte ITEM_DIALOG = 29;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -126,6 +128,15 @@ public final class QuestGraphEventCodec {
 						writeCommon(output, itemUse);
 						output.writeInt(itemUse.itemId());
 						output.writeInt(itemUse.itemObjectId());
+					}
+					case ItemDialogEvent itemDialog -> {
+						output.writeByte(ITEM_DIALOG);
+						writeCommon(output, itemDialog);
+						output.writeInt(itemDialog.questId());
+						output.writeInt(itemDialog.itemId());
+						output.writeInt(itemDialog.itemObjectId());
+						output.writeUTF(itemDialog.dialog());
+						output.writeLong(itemDialog.authorizationId());
 					}
 					case ItemObtainedEvent itemObtained -> {
 						output.writeByte(ITEM_OBTAINED);
@@ -321,6 +332,8 @@ public final class QuestGraphEventCodec {
 					case PLAYER_DEATH -> new PlayerDeathEvent(eventId, playerId, occurredAt);
 					case KILL_IN_WORLD -> new KillInWorldEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(), input.readInt());
 					case ITEM_USE -> new ItemUseEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt());
+					case ITEM_DIALOG -> new ItemDialogEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(),
+						input.readInt(), input.readUTF(), input.readLong());
 					case ITEM_OBTAINED -> new ItemObtainedEvent(eventId, playerId, occurredAt, input.readInt());
 					case ITEM_EQUIPPED -> new ItemEquippedEvent(eventId, playerId, occurredAt, input.readInt());
 					case HOUSE_ITEM_USE -> new HouseItemUseEvent(eventId, playerId, occurredAt, input.readInt());

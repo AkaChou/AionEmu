@@ -19,6 +19,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEv
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.AttackEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.HouseItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemEquippedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemDialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemObtainedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillEvent;
@@ -216,6 +217,8 @@ public final class QuestGraphRouter {
 			case KillInWorldEvent killInWorld -> route.transition().event().type() == killInWorld.type()
 				&& (route.transition().event().targetId() == killInWorld.worldId() || route.transition().event().targetId() == 0);
 			case ItemUseEvent itemUse -> matchesTarget(itemUse, route);
+			case ItemDialogEvent itemDialog -> route.questId() == itemDialog.questId()
+				&& matchesQualifiedTarget(itemDialog, itemDialog.dialog(), route);
 			case ItemObtainedEvent itemObtained -> matchesTarget(itemObtained, route);
 			case ItemEquippedEvent itemEquipped -> matchesTarget(itemEquipped, route);
 			case HouseItemUseEvent houseItemUse -> matchesTarget(houseItemUse, route);

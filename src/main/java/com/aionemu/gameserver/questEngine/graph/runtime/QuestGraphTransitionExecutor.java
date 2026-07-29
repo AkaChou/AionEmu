@@ -421,7 +421,9 @@ public final class QuestGraphTransitionExecutor {
 					return quarantinePrepared(context, state, "RECOVERY_ITEM_PLAN_INCOMPATIBLE");
 				}
 				QuestGraphEvent event = QuestGraphEventCodec.decode(journal.getEventPayload());
-				if (event.playerId() != context.playerId() || !journal.getEventId().equals(event.eventId()) || !matches(event, transition.event())) {
+				if (event.playerId() != context.playerId()
+						|| (event instanceof QuestGraphEvent.ItemDialogEvent itemDialog && itemDialog.questId() != graph.questId())
+						|| !journal.getEventId().equals(event.eventId()) || !matches(event, transition.event())) {
 					return quarantinePrepared(context, state, "RECOVERY_EVENT_INCOMPATIBLE");
 				}
 				PreflightOutcome preflight = preflight(graph, transition, event, state, journal.getNextActionIndex(),
@@ -1123,6 +1125,7 @@ public final class QuestGraphTransitionExecutor {
 		}
 		return switch (event) {
 			case QuestGraphEvent.DialogEvent dialog -> Objects.equals(dialog.dialog(), expected.qualifier());
+			case QuestGraphEvent.ItemDialogEvent itemDialog -> Objects.equals(itemDialog.dialog(), expected.qualifier());
 			case QuestGraphEvent.ZoneEnteredEvent zoneEntered -> Objects.equals(zoneEntered.zoneName(), expected.qualifier());
 			case QuestGraphEvent.ZoneLeftEvent zoneLeft -> Objects.equals(zoneLeft.zoneName(), expected.qualifier());
 			default -> true;

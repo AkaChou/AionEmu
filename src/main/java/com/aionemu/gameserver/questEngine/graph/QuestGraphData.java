@@ -204,6 +204,7 @@ public final class QuestGraphData {
 			@XmlElement(name = "player-death", type = PlayerDeathEventData.class, required = true),
 			@XmlElement(name = "kill-in-world", type = KillInWorldEventData.class, required = true),
 			@XmlElement(name = "item-use", type = ItemUseEventData.class, required = true),
+			@XmlElement(name = "item-dialog", type = ItemDialogEventData.class, required = true),
 			@XmlElement(name = "item-obtained", type = ItemObtainedEventData.class, required = true),
 			@XmlElement(name = "item-equipped", type = ItemEquippedEventData.class, required = true),
 			@XmlElement(name = "house-item-use", type = HouseItemUseEventData.class, required = true),
@@ -324,6 +325,19 @@ public final class QuestGraphData {
 		/** 使用物品模板标识。 / Used item template identifier. */
 		@XmlAttribute(name = "item_id", required = true)
 		private Integer itemId;
+	}
+
+	/** 表示由服务端物品对话授权产生的客户端选择。 / Represents a client choice authorized by a server-side item dialog session. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class ItemDialogEventData {
+		/** 发起对话的物品模板标识。 / Item template that opened the dialog. */
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
+
+		/** 允许的客户端对话动作。 / Allowed client dialog action. */
+		@XmlAttribute(required = true)
+		private String dialog;
 	}
 
 	/** 表示获得物品事件的 XML 路由参数。 / Represents XML routing parameters for an item-obtained event. */

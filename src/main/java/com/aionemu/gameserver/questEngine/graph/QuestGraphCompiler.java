@@ -4,6 +4,7 @@ import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventT
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ATTACK;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.HOUSE_ITEM_USE;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ITEM_EQUIPPED;
+import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ITEM_DIALOG;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ITEM_OBTAINED;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.ITEM_USE;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.KILL;
@@ -127,6 +128,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.AttackEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.HouseItemUseEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ItemEquippedEventData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ItemDialogEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ItemObtainedEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ItemUseEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.WorldEnteredEventData;
@@ -602,6 +604,13 @@ public final class QuestGraphCompiler {
 		}
 		if (source instanceof ItemUseEventData itemUse) {
 			return compileItemEvent(questId, "item-use", ITEM_USE, itemUse.getItemId(), references);
+		}
+		if (source instanceof ItemDialogEventData itemDialog) {
+			Event item = compileItemEvent(questId, "item-dialog", ITEM_DIALOG, itemDialog.getItemId(), references);
+			if (itemDialog.getDialog() == null || itemDialog.getDialog().isBlank()) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid item-dialog action");
+			}
+			return new Event(item.type(), item.targetId(), itemDialog.getDialog());
 		}
 		if (source instanceof ItemObtainedEventData itemObtained) {
 			return compileItemEvent(questId, "item-obtained", ITEM_OBTAINED, itemObtained.getItemId(), references);

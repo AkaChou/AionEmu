@@ -319,6 +319,20 @@ class QuestGraphCompilerTest {
 			"item-use references missing item 182200002");
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			missingReference.replace(" item_id=\"182200002\"", ""), terminal()))));
+
+		String itemDialog = transition("item-dialog", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>",
+				"<item-dialog item_id=\"182200001\" dialog=\"ACCEPT_QUEST\"/>");
+		CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", itemDialog, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().event();
+		assertEquals(CompiledQuestGraph.EventType.ITEM_DIALOG, compiled.type());
+		assertEquals(182200001, compiled.targetId());
+		assertEquals("ACCEPT_QUEST", compiled.qualifier());
+		assertFailureContains(document(graph(1, "offer",
+			itemDialog.replace("182200001", "182200002"), terminal())),
+			"item-dialog references missing item 182200002");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			itemDialog.replace(" dialog=\"ACCEPT_QUEST\"", ""), terminal()))));
 	}
 
 	/**
