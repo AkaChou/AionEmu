@@ -26,6 +26,7 @@
 		<xs:attribute name="price" type="xs:int"/>
 		<xs:attribute name="pricePvp" type="xs:int"/>
 		<xs:attribute name="requiredQuest" type="xs:int"/>
+		<xs:attribute name="requiredQuestStep" type="xs:int"/>
 		<xs:attribute name="type" type="TeleportType" use="required"/>
 	</xs:complexType>
 	<xs:simpleType name="TeleportType">

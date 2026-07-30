@@ -21,6 +21,7 @@ public class _20520Lost_Destiny extends QuestHandler {
 
 	public static final int questId = 20520;
 	private static final int SANCTUARY_DUNGEON_ID = 301580000;
+	private static final int NORSVOLD_ID = 220110000;
 	private final static int[] npcs = {204075, 204191, 806077, 806080};
 	public _20520Lost_Destiny() {
 		super(questId);
@@ -41,8 +42,12 @@ public class _20520Lost_Destiny extends QuestHandler {
 	@Override
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
+		QuestState qs = player.getQuestStateList().getQuestState(questId);
+		if (player.getWorldId() == NORSVOLD_ID && isSanctuaryDungeonReentryPending(qs)) {
+			enterSanctuaryDungeon(player);
+			return true;
+		}
         if (player.getWorldId() == 120010000) { //Pandaemonium.
-            QuestState qs = player.getQuestStateList().getQuestState(questId);
             if (qs == null) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {
@@ -64,7 +69,12 @@ public class _20520Lost_Destiny extends QuestHandler {
         int targetId = 0;
         if (env.getVisibleObject() instanceof Npc) {
             targetId = ((Npc) env.getVisibleObject()).getNpcId();
-        } if (qs.getStatus() == QuestStatus.START) {
+		}
+		if (targetId == 204191 && env.getDialog() == QuestDialog.START_DIALOG && isSanctuaryDungeonReentryPending(qs)) {
+			enterSanctuaryDungeon(player);
+			return closeDialogWindow(env);
+		}
+		if (qs.getStatus() == QuestStatus.START) {
 			if (targetId == 204075) { //Balder.
 				switch (env.getDialog()) {
 					case START_DIALOG: {
@@ -102,9 +112,6 @@ public class _20520Lost_Destiny extends QuestHandler {
 					case START_DIALOG: {
 						if (var == 3) {
 							return sendQuestDialog(env, 2034);
-						} else if (var == 5) {
-							enterSanctuaryDungeon(player);
-							return closeDialogWindow(env);
 						}
 					} case SELECT_ACTION_1694: {
 						if (var == 3) {
@@ -154,13 +161,13 @@ public class _20520Lost_Destiny extends QuestHandler {
     public boolean onEnterZoneEvent(QuestEnv env, ZoneName zoneName) {
         final Player player = env.getPlayer();
         final QuestState qs = player.getQuestStateList().getQuestState(questId);
-        if (qs != null && qs.getStatus() == QuestStatus.START) {
+		if (qs != null) {
             int var = qs.getQuestVarById(0);
 			if (zoneName == ZoneName.get("DF6_SENSORY_AREA_Q20520_220110000")) {
-				if (var == 4) {
+				if (qs.getStatus() == QuestStatus.START && var == 4) {
 					playQuestMovie(env, 867);
 					return true;
-				} else if (var == 5) {
+				} else if (isSanctuaryDungeonReentryPending(qs)) {
 					enterSanctuaryDungeon(player);
 					return true;
 				}
@@ -178,6 +185,11 @@ public class _20520Lost_Destiny extends QuestHandler {
 			return true;
 		}
 		return false;
+	}
+
+	private boolean isSanctuaryDungeonReentryPending(QuestState questState) {
+		return questState != null && (questState.getStatus() == QuestStatus.REWARD
+				|| questState.getStatus() == QuestStatus.START && questState.getQuestVarById(0) == 5);
 	}
 
 	private void enterSanctuaryDungeon(Player player) {
