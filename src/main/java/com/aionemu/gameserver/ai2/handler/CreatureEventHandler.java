@@ -10,9 +10,11 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.manager.AttackManager;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.templates.BoundRadius;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -85,18 +87,16 @@ public class CreatureEventHandler {
 			return;
 		}
 
-		boolean isInAggroRange = false;
-		if (ai.poll(AIQuestion.CAN_SHOUT)) {
+		boolean isInAggroRange = isInAggroRange(owner, creature);
+		if (isInAggroRange && ai.poll(AIQuestion.CAN_SHOUT)) {
 			int shoutRange = owner.getObjectTemplate().getMinimumShoutRange();
 			double distance = MathUtil.getDistance(owner, creature);
 			if (distance <= shoutRange) {
 				ShoutEventHandler.onSee(ai, creature);
-				isInAggroRange = shoutRange <= owner.getAggroRange();
 			}
 		}
 
-		if (!ai.isInState(AIState.FIGHT) && (isInAggroRange
-				|| MathUtil.isIn3dRange(owner, creature, owner.getAggroRange() * 1.6f))) { // 1.6 is for aggro range correction
+		if (!ai.isInState(AIState.FIGHT) && isInAggroRange) {
 			if (owner.isAggressiveTo(creature) && GameWorldServices.geoService().canSee(owner, creature)) {
 				if (!ai.isInState(AIState.RETURNING)) {
 					ai.getOwner().getMoveController().storeStep();
@@ -106,5 +106,55 @@ public class CreatureEventHandler {
 				}
 			}
 		}
+	}
+
+	static boolean isInAggroRange(Npc owner, Creature creature) {
+		var definition = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getNpc(owner.getNpcId());
+		float sensoryRange = definition == null
+				? owner.getObjectTemplate() == null ? owner.getAggroRange() : owner.getObjectTemplate().getAggroRange()
+				: definition.sensoryRange();
+		float sensoryRangeShort = definition == null ? 0 : definition.sensoryRangeShort();
+		float sensoryAngle = definition == null ? 360 : definition.sensoryAngle();
+		BoundRadius bound = owner.getObjectTemplate() == null ? BoundRadius.DEFAULT
+				: owner.getObjectTemplate().getBoundRadius();
+		float boundOffset = sensoryBoundOffset(bound, definition == null ? 100 : definition.modelScalePercent());
+		sensoryRange = effectiveSensoryRange(sensoryRange, boundOffset);
+		sensoryRangeShort = effectiveSensoryRange(sensoryRangeShort, boundOffset);
+		var ownerAi = owner.getAi2();
+		if (ownerAi != null && ownerAi.getState() == AIState.RETURNING) {
+			int percent = definition == null ? 50 : Math.max(0, definition.returnSensoryPercent());
+			sensoryRange *= percent / 100f;
+		}
+		return isInAggroRange(owner, creature, sensoryRange, sensoryRangeShort, sensoryAngle);
+	}
+
+	static boolean isInAggroRange(Npc owner, Creature creature, float sensoryRange, float sensoryRangeShort,
+			float sensoryAngle) {
+		if (owner.getWorldId() != creature.getWorldId() || owner.getInstanceId() != creature.getInstanceId()) {
+			return false;
+		}
+		float dx = creature.getX() - owner.getX();
+		float dy = creature.getY() - owner.getY();
+		float dz = creature.getZ() - owner.getZ();
+		float distanceSquared = dx * dx + dy * dy + dz * dz;
+		if (sensoryRange <= 0 || distanceSquared > sensoryRange * sensoryRange) {
+			return false;
+		}
+		if (sensoryAngle >= 360
+				|| sensoryRangeShort > 0 && distanceSquared <= sensoryRangeShort * sensoryRangeShort) {
+			return true;
+		}
+		float difference = Math.abs(MathUtil.calculateAngleFrom(owner, creature)
+				- MathUtil.convertHeadingToDegree(owner.getHeading()));
+		difference = Math.min(difference, 360 - difference);
+		return difference <= Math.max(0, sensoryAngle) / 2;
+	}
+
+	static float effectiveSensoryRange(float sensoryRange, float boundOffset) {
+		return sensoryRange <= 0 ? 0 : Math.min(100, sensoryRange + Math.max(0, boundOffset));
+	}
+
+	static float sensoryBoundOffset(BoundRadius bound, int modelScalePercent) {
+		return Math.max(bound.getFront(), bound.getSide()) * Math.max(0, modelScalePercent) / 200f;
 	}
 }

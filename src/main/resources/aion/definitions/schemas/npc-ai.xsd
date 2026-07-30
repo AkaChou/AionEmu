@@ -8,6 +8,7 @@
 						<xs:attribute name="id" type="xs:int" use="required"/>
 						<xs:attribute name="name" type="xs:string" use="required"/>
 						<xs:attribute name="ai" type="xs:string" use="required"/>
+						<xs:attribute name="model_scale" type="xs:nonNegativeInteger" default="100"/>
 						<xs:attribute name="sensory_range" type="xs:float" use="required"/>
 							<xs:attribute name="sensory_range_short" type="xs:float" use="required"/>
 							<xs:attribute name="sensory_angle" type="xs:float" use="required"/>

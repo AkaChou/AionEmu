@@ -430,9 +430,16 @@ public final class RetailAiData {
 		ABANDON_TARGET
 	}
 
-	public record Npc(int id, String name, String aiName, float sensoryRange, float sensoryRangeShort,
+	public record Npc(int id, String name, String aiName, int modelScalePercent, float sensoryRange, float sensoryRangeShort,
 			float sensoryAngle, int talkDelay, String maxChaseTime, PathfindFailReaction pathfindFailReaction,
 			String returnMoveType, int returnSpeedPercent, int returnSensoryPercent) {
+
+		public Npc(int id, String name, String aiName, float sensoryRange, float sensoryRangeShort, float sensoryAngle,
+				int talkDelay, String maxChaseTime, PathfindFailReaction pathfindFailReaction, String returnMoveType,
+				int returnSpeedPercent, int returnSensoryPercent) {
+			this(id, name, aiName, 100, sensoryRange, sensoryRangeShort, sensoryAngle, talkDelay, maxChaseTime,
+					pathfindFailReaction, returnMoveType, returnSpeedPercent, returnSensoryPercent);
+		}
 	}
 
 	public record NpcScore(int id, int npcId, String name, String nameId, int scoreApplyType,

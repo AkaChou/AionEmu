@@ -53,7 +53,7 @@ class RetailAiDefinitionLoaderTest {
 		Path mappings = tempDir.resolve("npc-ai.xml");
 		Files.writeString(mappings, """
 			<npc_ai_mappings>
-			<npc id="219358" name="IDTiamat_Tahabata_Named_60_Ah" ai="IDTiamat_Tahabata" sensory_range="20"
+			<npc id="219358" name="IDTiamat_Tahabata_Named_60_Ah" ai="IDTiamat_Tahabata" model_scale="75" sensory_range="20"
 				sensory_range_short="6" sensory_angle="300" talk_delay="10" max_chase_time="SP"
 				react_to_pathfind_fail="pull_target" move_type_return="run" move_speed_return="200"
 				decrease_sensory_range_return="40"/>
@@ -76,6 +76,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals("60", pattern.event("on_battle_timer").get(1).conditions().get(0).value("percent"));
 		assertEquals("SKILLI_INDEX_4", pattern.event("on_battle_timer").get(1).actions().get(0).value("skill"));
 		var retailNpc = data.getNpc(219358);
+		assertEquals(75, retailNpc.modelScalePercent());
 		assertEquals(10, retailNpc.talkDelay());
 		assertEquals("SP", retailNpc.maxChaseTime());
 		assertEquals(RetailAiData.PathfindFailReaction.PULL_TARGET, retailNpc.pathfindFailReaction());
@@ -83,6 +84,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(200, retailNpc.returnSpeedPercent());
 		assertEquals(40, retailNpc.returnSensoryPercent());
 		var defaultNpc = data.getNpc(200001);
+		assertEquals(100, defaultNpc.modelScalePercent());
 		assertNull(defaultNpc.maxChaseTime());
 		assertEquals(RetailAiData.PathfindFailReaction.RETURN_TO_SP, defaultNpc.pathfindFailReaction());
 		assertEquals("walk", defaultNpc.returnMoveType());
@@ -187,6 +189,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(1500178, data.findStringId("STR_CHAT_NPC_Robstin_Patterns_01"));
 		assertEquals(1403373, data.findStringId("STR_MSG_F6_Event_G1_Po_Time_Start_01"));
 		assertEquals("LC1_LF4_Teleport", data.getNpc(730218).aiName());
+		assertEquals(10, data.getNpc(200000).modelScalePercent());
 		assertEquals(15, data.getNpc(219358).sensoryRange());
 		assertEquals(0, data.getNpc(219358).sensoryRangeShort());
 		assertEquals(99999, data.getNpc(248031).talkDelay());

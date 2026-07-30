@@ -23,7 +23,7 @@ class AI2EngineRetailSelectionTest {
 			Pattern pattern = new Pattern("complete", Map.of("on_wake_up", List.of(
 				new Rule(1, "DIRECT", List.of(), List.of(new Operation("do_nothing", Map.of()))))));
 			DataManager.RETAIL_AI_DATA = new RetailAiData(Map.of("complete", pattern),
-				Map.of(200000, new RetailAiData.Npc(200000, "test", "complete", 0, 0, 360, 0,
+				Map.of(200000, new RetailAiData.Npc(200000, "test", "complete", 100, 0, 0, 360, 0,
 					null, RetailAiData.PathfindFailReaction.RETURN_TO_SP, "walk", 150, 50)),
 				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
 				Map.of(), Map.of(), Map.of());
