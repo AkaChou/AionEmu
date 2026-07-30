@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
@@ -15,19 +14,13 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-/**
- * 大天使任务脚本：Covert Communiques（任务 ID 10520）。
- * Archdaeva quest script: Covert Communiques (quest ID 10520). Source KOR: https://www.youtube.com/watch?v=8Qt-ZODwhoA
- *
- * @author Encom
- */
 public class _10520Covert_Communiques extends QuestHandler {
 
 	public static final int questId = 10520;
+	private static final int SANCTUARY_DUNGEON_ID = 301580000;
 	private final static int[] npcs = {203726, 203752, 806073, 806076};
 	public _10520Covert_Communiques() {
 		super(questId);
@@ -111,6 +104,9 @@ public class _10520Covert_Communiques extends QuestHandler {
 					case START_DIALOG: {
 						if (var == 3) {
 							return sendQuestDialog(env, 2034);
+						} else if (var == 5) {
+							enterSanctuaryDungeon(player);
+							return closeDialogWindow(env);
 						}
 					} case SELECT_ACTION_2035: {
 						if (var == 3) {
@@ -163,10 +159,12 @@ public class _10520Covert_Communiques extends QuestHandler {
         final QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {
             int var = qs.getQuestVarById(0);
-			int instanceId = player.getInstanceId();
 			if (zoneName == ZoneName.get("LF6_SENSORY_AREA_Q10520_210100000")) {
 				if (var == 4) {
 					playQuestMovie(env, 995);
+					return true;
+				} else if (var == 5) {
+					enterSanctuaryDungeon(player);
 					return true;
 				}
 			}
@@ -179,12 +177,19 @@ public class _10520Covert_Communiques extends QuestHandler {
 		Player player = env.getPlayer();
 		if (movieId == 995) {
 			changeQuestStep(env, 4, 5, false);
-			WorldMapInstance SanctuaryDungeon = InstanceService.getNextAvailableInstance(301580000);
-			InstanceService.registerPlayerWithInstance(SanctuaryDungeon, player);
-			TeleportService2.teleportTo(player, 301580000, SanctuaryDungeon.getInstanceId(), 431, 491, 99);
+			enterSanctuaryDungeon(player);
 			return true;
 		}
 		return false;
+	}
+
+	private void enterSanctuaryDungeon(Player player) {
+		WorldMapInstance sanctuaryDungeon = InstanceService.getRegisteredInstance(SANCTUARY_DUNGEON_ID, player.getObjectId());
+		if (sanctuaryDungeon == null) {
+			sanctuaryDungeon = InstanceService.getNextAvailableInstance(SANCTUARY_DUNGEON_ID);
+			InstanceService.registerPlayerWithInstance(sanctuaryDungeon, player);
+		}
+		TeleportService2.teleportTo(player, SANCTUARY_DUNGEON_ID, sanctuaryDungeon.getInstanceId(), 431, 491, 99);
 	}
 	
 	@Override
