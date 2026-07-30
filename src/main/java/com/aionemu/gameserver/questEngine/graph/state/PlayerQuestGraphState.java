@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortSource;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEscortAction;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -89,7 +91,8 @@ public final class PlayerQuestGraphState {
 		GIVE_TOP_UP_TO,
 		GIVE_ADD_EXACT,
 		REMOVE_EXACT,
-		REMOVE_OPTIONAL_EXACT
+		REMOVE_OPTIONAL_EXACT,
+		REMOVE_ALL
 	}
 
 	/**
@@ -107,6 +110,7 @@ public final class PlayerQuestGraphState {
 				case GIVE_ADD_EXACT -> afterCount == Math.addExact(beforeCount, requestedCount);
 				case REMOVE_EXACT -> beforeCount >= requestedCount && afterCount == beforeCount - requestedCount;
 				case REMOVE_OPTIONAL_EXACT -> afterCount == (beforeCount >= requestedCount ? beforeCount - requestedCount : beforeCount);
+				case REMOVE_ALL -> afterCount == 0;
 			};
 			if (!valid) {
 				throw new IllegalArgumentException("Item mutation before/after counts do not match its semantics");
@@ -173,6 +177,8 @@ public final class PlayerQuestGraphState {
 		private final String transitionId;
 		/** 下一个待执行动作索引。 / Index of the next action to execute. */
 		private final int nextActionIndex;
+		/** 目标节点是否已在协议投递前提交。 / Whether the target node was committed before protocol delivery. */
+		private final boolean targetCommitted;
 		/** 在副作用前解析并冻结的 repeat deadline 结果。 / Repeat-deadline resolution frozen before side effects. */
 		private final RepeatDeadlineResolution repeatDeadlineResolution;
 		/** 按动作序号排序的冻结物品动作。 / Frozen item actions ordered by action index. */
@@ -186,7 +192,7 @@ public final class PlayerQuestGraphState {
 		 * Creates a prepared transition and copies its event payload.
 		 */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, byte[] eventPayload) {
-			this(baseRevision, eventId, transitionId, nextActionIndex, RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), eventPayload);
+			this(baseRevision, eventId, transitionId, nextActionIndex, false, RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), eventPayload);
 		}
 
 		/**
@@ -195,7 +201,7 @@ public final class PlayerQuestGraphState {
 		 */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex,
 				RepeatDeadlineResolution repeatDeadlineResolution, byte[] eventPayload) {
-			this(baseRevision, eventId, transitionId, nextActionIndex, repeatDeadlineResolution, Map.of(), eventPayload);
+			this(baseRevision, eventId, transitionId, nextActionIndex, false, repeatDeadlineResolution, Map.of(), eventPayload);
 		}
 
 		/**
@@ -204,6 +210,12 @@ public final class PlayerQuestGraphState {
 		 */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex,
 				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, false, repeatDeadlineResolution, itemMutationPlans, eventPayload);
+		}
+
+		/** 创建可恢复到已提交目标节点的 journal。 / Creates a journal that can resume after the target node was committed. */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, boolean targetCommitted,
+				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans, byte[] eventPayload) {
 			if (baseRevision < -1 || nextActionIndex < 0) {
 				throw new IllegalArgumentException("Prepared transition base revision/action index is invalid");
 			}
@@ -211,6 +223,7 @@ public final class PlayerQuestGraphState {
 			this.eventId = requireText(eventId, "event id");
 			this.transitionId = requireText(transitionId, "transition id");
 			this.nextActionIndex = nextActionIndex;
+			this.targetCommitted = targetCommitted;
 			this.repeatDeadlineResolution = java.util.Objects.requireNonNull(repeatDeadlineResolution, "repeatDeadlineResolution");
 			TreeMap<Integer, ItemMutationPlan> plans = new TreeMap<>();
 			if (itemMutationPlans != null) {
@@ -233,11 +246,110 @@ public final class PlayerQuestGraphState {
 		}
 	}
 
+	/** 冻结的 NPC 生成位置种类，独立于 runtime adapter 实现。 / Frozen NPC spawn placement kind, independent of runtime adapters. */
+	public enum SpawnPlacementKind {
+		STATIC_SPAWN,
+		DIALOG_TARGET,
+		PLAYER,
+		FIXED
+	}
+
+	/** cleanup ledger 支持的封闭资源身份。 / Closed resource identities supported by the cleanup ledger. */
+	public sealed interface ResourceIdentity permits InstanceSpawnResourceIdentity, EscortResourceIdentity {
+		int playerId();
+
+		int questId();
+
+		int objectId();
+
+		int npcId();
+
+		int worldId();
+
+		int instanceId();
+
+		String idempotencyKey();
+
+		default boolean materialized() {
+			return objectId() > 0;
+		}
+	}
+
 	/**
-	 * 表示 cleanup ledger 中由类型化能力持有的稳定资源。
-	 * Represents a stable resource held by a typed capability in the cleanup ledger.
+	 * 保存副本 NPC 的冻结生成计划或已物化身份；objectId=0 表示 PREPARED 计划。
+	 * Holds a frozen instance-NPC plan or materialized identity; objectId=0 denotes a PREPARED plan.
 	 */
-	public record CleanupLease(String capability, String resourceKey) {
+	public record InstanceSpawnResourceIdentity(int playerId, int questId, int objectId, int npcId,
+			SpawnPlacementKind placement, int sourceNpcId, int sourceObjectId, int worldId, int instanceId,
+			float x, float y, float z, byte heading, String idempotencyKey) implements ResourceIdentity {
+		public InstanceSpawnResourceIdentity {
+			if (playerId <= 0 || questId <= 0 || objectId < 0 || npcId <= 0 || placement == null
+					|| sourceNpcId < 0 || sourceObjectId < 0 || worldId <= 0 || instanceId < 0
+					|| !Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)
+					|| placement == SpawnPlacementKind.STATIC_SPAWN && (sourceNpcId <= 0 || sourceObjectId != 0)
+					|| placement == SpawnPlacementKind.DIALOG_TARGET && (sourceNpcId <= 0 || sourceObjectId <= 0)
+					|| placement == SpawnPlacementKind.PLAYER && (sourceNpcId != 0 || sourceObjectId != playerId)
+					|| placement == SpawnPlacementKind.FIXED && (sourceNpcId != 0 || sourceObjectId != 0)) {
+				throw new IllegalArgumentException("Instance spawn resource identity is invalid");
+			}
+			idempotencyKey = requireText(idempotencyKey, "resource idempotency key");
+		}
+
+		public InstanceSpawnResourceIdentity materialize(int spawnedObjectId) {
+			if (spawnedObjectId <= 0) {
+				throw new IllegalArgumentException("Spawned object id is invalid");
+			}
+			return new InstanceSpawnResourceIdentity(playerId, questId, spawnedObjectId, npcId, placement, sourceNpcId,
+				sourceObjectId, worldId, instanceId, x, y, z, heading, idempotencyKey);
+		}
+	}
+
+	/**
+	 * 保存 escort 的冻结恢复计划或已物化 follower 身份；完整 action 保留 AI、walker 与目的地参数。
+	 * Holds a frozen escort recovery plan or materialized follower identity; the full action retains AI, walker, and destination parameters.
+	 */
+	public record EscortResourceIdentity(int playerId, int questId, int objectId, int npcId, int worldId, int instanceId, float x, float y, float z,
+			int eventNpcId, int eventNpcObjectId, boolean spawnedFollower, String previousWalkerId,
+			StartEscortAction action, String idempotencyKey) implements ResourceIdentity {
+		public EscortResourceIdentity {
+			if (playerId <= 0 || questId <= 0 || objectId < 0 || npcId <= 0 || worldId <= 0 || instanceId < 0
+					|| !Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)
+					|| eventNpcId < 0 || eventNpcObjectId < 0 || (eventNpcId == 0) != (eventNpcObjectId == 0)
+					|| action == null || spawnedFollower != (action.source() != EscortSource.EVENT_NPC)
+					|| npcId != (spawnedFollower ? action.npcId() : eventNpcId) || objectId == 0 && previousWalkerId != null) {
+				throw new IllegalArgumentException("Escort resource identity is invalid");
+			}
+			previousWalkerId = previousWalkerId == null ? null : requireText(previousWalkerId, "previous walker id");
+			idempotencyKey = requireText(idempotencyKey, "resource idempotency key");
+		}
+
+		public EscortResourceIdentity materialize(int followerObjectId, String walkerBeforeStart) {
+			if (followerObjectId <= 0) {
+				throw new IllegalArgumentException("Follower object id is invalid");
+			}
+			return new EscortResourceIdentity(playerId, questId, followerObjectId, npcId, worldId, instanceId, x, y, z,
+				eventNpcId, eventNpcObjectId, spawnedFollower, walkerBeforeStart, action, idempotencyKey);
+		}
+	}
+
+	/**
+	 * 表示 cleanup ledger 中由类型化能力持有的稳定资源。旧 payload 的 identity 为 null 且只能 fail closed。
+	 * Represents a stable resource held by a typed capability. Legacy payloads have a null identity and must fail closed.
+	 */
+	public record CleanupLease(String capability, String resourceKey, ResourceIdentity identity) {
+		/** 保留旧调用方；该形式没有可恢复身份。 / Retains legacy callers; this form has no recoverable identity. */
+		public CleanupLease(String capability, String resourceKey) {
+			this(capability, resourceKey, null);
+		}
+
+		public static CleanupLease instanceSpawn(InstanceSpawnResourceIdentity identity) {
+			return new CleanupLease("INSTANCE_SCOPED_SPAWN", identity.idempotencyKey(), identity);
+		}
+
+		public static CleanupLease escort(EscortResourceIdentity identity) {
+			return new CleanupLease("QUEST_ESCORT", identity.idempotencyKey(), identity);
+		}
+
 		/**
 		 * 校验 cleanup 能力与资源键。
 		 * Validates the cleanup capability and resource key.
@@ -245,6 +357,15 @@ public final class PlayerQuestGraphState {
 		public CleanupLease {
 			capability = requireText(capability, "cleanup capability");
 			resourceKey = requireText(resourceKey, "cleanup resource key");
+			if (identity != null && (!resourceKey.equals(identity.idempotencyKey())
+					|| identity instanceof InstanceSpawnResourceIdentity && !"INSTANCE_SCOPED_SPAWN".equals(capability)
+					|| identity instanceof EscortResourceIdentity && !"QUEST_ESCORT".equals(capability))) {
+				throw new IllegalArgumentException("Cleanup lease capability or resource key does not match its typed identity");
+			}
+		}
+
+		public boolean resolved() {
+			return identity != null;
 		}
 	}
 
@@ -303,7 +424,7 @@ public final class PlayerQuestGraphState {
 		this.variables = immutableVariables(variables);
 		this.deadlines = immutableDeadlines(deadlines);
 		this.journal = journal;
-		this.cleanupLeases = immutableCleanupLeases(cleanupLeases);
+		this.cleanupLeases = immutableCleanupLeases(cleanupLeases, questId);
 		this.quarantineReason = quarantineReason;
 		validateLifecycle();
 	}
@@ -338,6 +459,9 @@ public final class PlayerQuestGraphState {
 		if (lifecycle == Lifecycle.PREPARED && (journal == null || quarantineReason != null)) {
 			throw new IllegalArgumentException("PREPARED state requires only a journal");
 		}
+		if (journal != null && lifecycle != Lifecycle.PREPARED) {
+			throw new IllegalArgumentException("Only PREPARED state may contain a journal");
+		}
 		if (lifecycle == Lifecycle.QUARANTINED && (quarantineReason == null || quarantineReason.isBlank())) {
 			throw new IllegalArgumentException("QUARANTINED state requires a reason");
 		}
@@ -347,13 +471,18 @@ public final class PlayerQuestGraphState {
 		if (journal != null) {
 			long expectedRevision;
 			try {
-				expectedRevision = Math.addExact(Math.addExact(journal.getBaseRevision(), journal.getNextActionIndex()), 1);
+				expectedRevision = Math.addExact(Math.addExact(journal.getBaseRevision(), journal.getNextActionIndex()),
+					journal.isTargetCommitted() ? 2 : 1);
 			} catch (ArithmeticException e) {
 				throw new IllegalArgumentException("Prepared transition revision overflows", e);
 			}
 			if (expectedRevision != revision) {
 				throw new IllegalArgumentException("Prepared transition revision does not match journal progress");
 			}
+		}
+		if (lifecycle != Lifecycle.PREPARED && cleanupLeases.values().stream()
+				.anyMatch(lease -> lease.identity() != null && !lease.identity().materialized())) {
+			throw new IllegalArgumentException("Only PREPARED state may contain frozen resource plans");
 		}
 	}
 
@@ -391,11 +520,18 @@ public final class PlayerQuestGraphState {
 	 * 校验并按 lease 标识复制 cleanup ledger。
 	 * Validates and copies the cleanup ledger in lease-id order.
 	 */
-	private static Map<String, CleanupLease> immutableCleanupLeases(Map<String, CleanupLease> source) {
+	private static Map<String, CleanupLease> immutableCleanupLeases(Map<String, CleanupLease> source, int questId) {
 		TreeMap<String, CleanupLease> result = new TreeMap<>();
 		if (source != null) {
-			source.forEach((name, lease) -> result.put(requireText(name, "cleanup lease id"),
-				java.util.Objects.requireNonNull(lease, "cleanup lease")));
+			source.forEach((name, lease) -> {
+				String leaseId = requireText(name, "cleanup lease id");
+				CleanupLease validated = java.util.Objects.requireNonNull(lease, "cleanup lease");
+				if (validated.identity() != null && (!leaseId.equals(validated.resourceKey())
+						|| validated.identity().questId() != questId)) {
+					throw new IllegalArgumentException("Typed cleanup lease key or quest owner does not match its state");
+				}
+				result.put(leaseId, validated);
+			});
 		}
 		return Collections.unmodifiableMap(result);
 	}

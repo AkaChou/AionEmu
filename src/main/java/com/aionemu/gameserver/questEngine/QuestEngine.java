@@ -41,7 +41,10 @@ import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandlerLoader;
 import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEscortActionAdapter.CleanupReason;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEscortCleanupCoordinator;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
@@ -337,6 +340,7 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onDie(QuestEnv env) {
+		cleanupGraphEscorts(env.getPlayer(), CleanupReason.PLAYER_DEATH);
 		try {
 			for (int index = 0; index < questOnDie.size(); index++) {
 				QuestHandler questHandler = getQuestHandlerByQuestId(questOnDie.get(index));
@@ -357,6 +361,7 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onLogOut(QuestEnv env) {
+		cleanupGraphEscorts(env.getPlayer(), CleanupReason.LOGOUT);
 		try {
 			for (int index = 0; index < questOnLogOut.size(); index++) {
 				QuestHandler questHandler = getQuestHandlerByQuestId(questOnLogOut.get(index));
@@ -367,6 +372,20 @@ public class QuestEngine implements GameEngine {
 			}
 		} catch (Exception ex) {
 			// log.error(I18n.get("log.223296a535b7", ex));
+		}
+	}
+
+	private static void cleanupGraphEscorts(Player player, CleanupReason reason) {
+		if (player == null) {
+			return;
+		}
+		try {
+			ActionResult result = new QuestGraphEscortCleanupCoordinator(player).cleanupAll(reason);
+			if (result != ActionResult.APPLIED && result != ActionResult.ALREADY_APPLIED) {
+				log.error(I18n.get("log.quest_graph_escort_cleanup_failed", player.getObjectId(), reason, result));
+			}
+		} catch (RuntimeException e) {
+			log.error(I18n.get("log.quest_graph_escort_cleanup_exception", player.getObjectId(), reason, e));
 		}
 	}
 

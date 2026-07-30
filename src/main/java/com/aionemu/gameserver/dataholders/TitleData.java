@@ -52,6 +52,11 @@ public class TitleData {
 		return titles.get(titleId);
 	}
 
+	/** 返回全部称号模板映射，供强类型引用闭包构建。 / Returns all title templates for typed reference-closure construction. */
+	public IntObjectHashMap<TitleTemplate> getTitleData() {
+		return titles;
+	}
+
 	/**
 	 * 返回已加载的称号数量。
 	 * Returns the number of loaded titles.

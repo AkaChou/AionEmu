@@ -16,8 +16,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,6 +49,21 @@ final class DatabaseSchemaInitializer {
 		+ "PRIMARY KEY (`player_id`,`quest_id`), "
 		+ "KEY `idx_player_quest_graph_deadline` (`next_deadline_at`), "
 		+ "CONSTRAINT `player_quest_graph_states_ibfk_1` FOREIGN KEY (`player_id`) "
+		+ "REFERENCES `al_server_gs`.`players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE"
+		+ ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
+	/** Creates the durable operation-key to quest graph resource identity registry. */
+	static final String QUEST_GRAPH_RESOURCE_OPERATION_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `al_server_gs`.`quest_graph_resource_operations` ("
+		+ "`player_id` INT NOT NULL, "
+		+ "`operation_hash` BINARY(32) NOT NULL, "
+		+ "`operation_key` VARCHAR(1024) NOT NULL, "
+		+ "`quest_id` INT UNSIGNED NOT NULL, "
+		+ "`capability` VARCHAR(64) NOT NULL, "
+		+ "`reserved_object_id` INT UNSIGNED NULL, "
+		+ "`resource_payload` MEDIUMBLOB NOT NULL, "
+		+ "PRIMARY KEY (`player_id`,`operation_hash`), "
+		+ "UNIQUE KEY `uq_quest_graph_resource_object` (`reserved_object_id`), "
+		+ "KEY `idx_quest_graph_resource_quest` (`player_id`,`quest_id`), "
+		+ "CONSTRAINT `quest_graph_resource_operations_ibfk_1` FOREIGN KEY (`player_id`) "
 		+ "REFERENCES `al_server_gs`.`players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE"
 		+ ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
@@ -83,6 +101,7 @@ final class DatabaseSchemaInitializer {
                 migrateGodstoneProcCount(connection, target.database());
                 migrateLimitedQuestCounters(connection, target.database());
 				migratePlayerQuestGraphStates(connection, target.database());
+				migrateQuestGraphResourceOperations(connection, target.database());
                 migrateAccountVip(connection, target.database());
                 log.debug("Database {} already contains tables; skipping schema initialization.", target.database());
                 return;
@@ -202,6 +221,104 @@ final class DatabaseSchemaInitializer {
 		try (Statement statement = connection.createStatement()) {
 			statement.execute(PLAYER_QUEST_GRAPH_STATE_TABLE_SQL);
 		}
+	}
+
+	/** Idempotently creates the durable quest graph resource-operation registry. */
+	private static void migrateQuestGraphResourceOperations(Connection connection, String database) throws SQLException {
+		if (!"al_server_gs".equals(database)) {
+			return;
+		}
+		try (Statement statement = connection.createStatement()) {
+			statement.execute(QUEST_GRAPH_RESOURCE_OPERATION_TABLE_SQL);
+		}
+		validateQuestGraphResourceOperationSchema(connection, database);
+	}
+
+	private static void validateQuestGraphResourceOperationSchema(Connection connection, String database) throws SQLException {
+		Map<String, SchemaColumn> columns = new HashMap<>();
+		String columnsQuery = "SELECT column_name, data_type, column_type, is_nullable, character_maximum_length "
+			+ "FROM information_schema.columns WHERE table_schema = ? AND table_name = 'quest_graph_resource_operations'";
+		try (PreparedStatement statement = connection.prepareStatement(columnsQuery)) {
+			statement.setString(1, database);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					long maximumLength = resultSet.getLong("character_maximum_length");
+					Long nullableMaximumLength = resultSet.wasNull() ? null : maximumLength;
+					columns.put(resultSet.getString("column_name"), new SchemaColumn(resultSet.getString("data_type"),
+						resultSet.getString("column_type"), "YES".equalsIgnoreCase(resultSet.getString("is_nullable")),
+						nullableMaximumLength));
+				}
+			}
+		}
+
+		List<SchemaIndexColumn> indexes = new ArrayList<>();
+		String indexesQuery = "SELECT index_name, non_unique, seq_in_index, column_name FROM information_schema.statistics "
+			+ "WHERE table_schema = ? AND table_name = 'quest_graph_resource_operations'";
+		try (PreparedStatement statement = connection.prepareStatement(indexesQuery)) {
+			statement.setString(1, database);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					indexes.add(new SchemaIndexColumn(resultSet.getString("index_name"), resultSet.getInt("non_unique") == 0,
+						resultSet.getInt("seq_in_index"), resultSet.getString("column_name")));
+				}
+			}
+		}
+
+		List<String> violations = questGraphResourceOperationSchemaViolations(columns, indexes);
+		if (!violations.isEmpty()) {
+			throw new SQLException("Existing quest_graph_resource_operations schema violates the runtime contract: "
+				+ String.join(", ", violations));
+		}
+	}
+
+	static List<String> questGraphResourceOperationSchemaViolations(Map<String, SchemaColumn> columns,
+			List<SchemaIndexColumn> indexes) {
+		List<String> violations = new ArrayList<>();
+		requireColumn(violations, columns, "player_id", "int", false, null, false);
+		requireColumn(violations, columns, "operation_hash", "binary", false, 32L, false);
+		requireColumn(violations, columns, "operation_key", "varchar", false, 1024L, false);
+		requireColumn(violations, columns, "quest_id", "int", false, null, true);
+		requireColumn(violations, columns, "capability", "varchar", false, 64L, false);
+		requireColumn(violations, columns, "reserved_object_id", "int", true, null, true);
+		requireColumn(violations, columns, "resource_payload", "mediumblob", false, null, false);
+		if (!hasExactIndex(indexes, true, List.of("player_id", "operation_hash"))) {
+			violations.add("missing primary/unique player_id+operation_hash index");
+		}
+		if (!hasExactIndex(indexes, true, List.of("reserved_object_id"))) {
+			violations.add("missing unique reserved_object_id index");
+		}
+		if (!hasExactIndex(indexes, false, List.of("player_id", "quest_id"))) {
+			violations.add("missing player_id+quest_id lookup index");
+		}
+		return List.copyOf(violations);
+	}
+
+	private static void requireColumn(List<String> violations, Map<String, SchemaColumn> columns, String name,
+			String dataType, boolean nullable, Long maximumLength, boolean unsigned) {
+		SchemaColumn actual = columns.get(name);
+		if (actual == null || !dataType.equalsIgnoreCase(actual.dataType()) || actual.nullable() != nullable
+				|| maximumLength != null && !maximumLength.equals(actual.maximumLength())
+				|| unsigned != actual.columnType().toLowerCase(Locale.ROOT).contains("unsigned")) {
+			violations.add("invalid " + name + " column");
+		}
+	}
+
+	private static boolean hasExactIndex(List<SchemaIndexColumn> indexes, boolean unique, List<String> columns) {
+		Map<String, List<SchemaIndexColumn>> byName = new HashMap<>();
+		for (SchemaIndexColumn index : indexes) {
+			byName.computeIfAbsent(index.name(), ignored -> new ArrayList<>()).add(index);
+		}
+		return byName.values().stream().anyMatch(index -> {
+			index.sort(Comparator.comparingInt(SchemaIndexColumn::sequence));
+			return index.size() == columns.size() && index.stream().allMatch(column -> column.unique() == unique)
+				&& index.stream().map(SchemaIndexColumn::column).toList().equals(columns);
+		});
+	}
+
+	record SchemaColumn(String dataType, String columnType, boolean nullable, Long maximumLength) {
+	}
+
+	record SchemaIndexColumn(String name, boolean unique, int sequence, String column) {
 	}
 
     private static void migrateAccountVip(Connection connection, String database) throws SQLException {

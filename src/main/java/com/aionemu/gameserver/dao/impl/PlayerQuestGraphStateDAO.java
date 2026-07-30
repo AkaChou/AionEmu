@@ -7,12 +7,16 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Types;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateCodec;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
@@ -42,6 +46,8 @@ public final class PlayerQuestGraphStateDAO extends com.aionemu.gameserver.dao.P
 	static final String UPDATE_CAS_QUERY = "UPDATE `player_quest_graph_states` SET `definition_version` = ?, `revision` = ?, "
 		+ "`node_id` = ?, `lifecycle` = ?, `instance_run_id` = ?, `next_deadline_at` = ?, `state_payload` = ? "
 		+ "WHERE `player_id` = ? AND `quest_id` = ? AND `revision` = ?";
+	static final String USED_RESOURCE_IDS_QUERY = "SELECT `player_id`, `quest_id`, `definition_version`, `revision`, `node_id`, `lifecycle`, "
+		+ "`instance_run_id`, `state_payload` FROM `player_quest_graph_states` ORDER BY `player_id`, `quest_id`";
 
 	/**
 	 * 加载并严格校验玩家全部任务图状态。
@@ -139,6 +145,70 @@ public final class PlayerQuestGraphStateDAO extends com.aionemu.gameserver.dao.P
 		} catch (SQLException e) {
 			throw new IllegalStateException("Failed to compare-and-set quest graph state for player " + playerId, e);
 		}
+	}
+
+	/**
+	 * Loads every object id still referenced by durable graph state, including the cleanup-before-CAS crash window.
+	 * Corrupt payloads abort IDFactory startup rather than making an id reusable.
+	 */
+	@Override
+	public int[] getUsedIDs() {
+		return getUsedResourceLeases().keySet().stream().mapToInt(Integer::intValue).sorted().toArray();
+	}
+
+	@Override
+	public Map<Integer, CleanupLease> getUsedResourceLeases() {
+		Map<Integer, CleanupLease> leases = new TreeMap<>();
+		try (Connection connection = DatabaseFactory.getConnection();
+				PreparedStatement statement = connection.prepareStatement(USED_RESOURCE_IDS_QUERY);
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				int playerId = resultSet.getInt("player_id");
+				PlayerQuestGraphState state = PlayerQuestGraphStateCodec.decode(resultSet.getInt("quest_id"), resultSet.getInt("definition_version"),
+					resultSet.getLong("revision"), resultSet.getString("node_id"), nullableLong(resultSet, "instance_run_id"),
+					Lifecycle.valueOf(resultSet.getString("lifecycle")), resultSet.getBytes("state_payload"));
+				if (state.getCleanupLeases().values().stream().anyMatch(lease ->
+						lease.identity() != null && lease.identity().playerId() != playerId)) {
+					throw new IllegalArgumentException("Quest graph resource identity belongs to another player");
+				}
+				addMaterializedResourceLeases(state, leases);
+			}
+			return Map.copyOf(leases);
+		} catch (SQLException | RuntimeException e) {
+			throw new IllegalStateException("Failed to load object ids referenced by quest graph states", e);
+		}
+	}
+
+	static int[] materializedResourceObjectIds(Collection<PlayerQuestGraphState> states) {
+		TreeSet<Integer> ids = new TreeSet<>();
+		for (PlayerQuestGraphState state : states) {
+			addMaterializedResourceObjectIds(state, ids);
+		}
+		return toArray(ids);
+	}
+
+	private static void addMaterializedResourceLeases(PlayerQuestGraphState state, Map<Integer, CleanupLease> leases) {
+		state.getCleanupLeases().values().forEach(lease -> {
+			if (lease.identity() != null && lease.identity().materialized()
+					&& leases.putIfAbsent(lease.identity().objectId(), lease) != null) {
+				throw new IllegalArgumentException("Duplicate materialized quest graph resource object id "
+					+ lease.identity().objectId());
+			}
+		});
+	}
+
+	private static void addMaterializedResourceObjectIds(PlayerQuestGraphState state, Set<Integer> ids) {
+		state.getCleanupLeases().values().forEach(lease -> {
+			if (lease.identity() != null && lease.identity().materialized()
+					&& !ids.add(lease.identity().objectId())) {
+				throw new IllegalArgumentException("Duplicate materialized quest graph resource object id "
+					+ lease.identity().objectId());
+			}
+		});
+	}
+
+	private static int[] toArray(Set<Integer> ids) {
+		return ids.stream().mapToInt(Integer::intValue).toArray();
 	}
 
 	/**

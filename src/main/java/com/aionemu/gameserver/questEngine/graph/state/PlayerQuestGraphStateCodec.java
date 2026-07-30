@@ -9,10 +9,17 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortCoordinatesDestination;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortNpcDestination;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortSource;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortZoneDestination;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEscortAction;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.EscortResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.InstanceSpawnResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationPlan;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
@@ -20,6 +27,7 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Prep
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.SpawnPlacementKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.VariableValue;
 
 /**
@@ -30,6 +38,9 @@ public final class PlayerQuestGraphStateCodec {
 
 	private static final int MAGIC_QGS4 = 0x51475334;
 	private static final int MAGIC_QGS5 = 0x51475335;
+	private static final int MAGIC_QGS6 = 0x51475336;
+	private static final int MAGIC_QGS7 = 0x51475337;
+	private static final int MAGIC_QGR1 = 0x51475231;
 	private static final int MAX_VARIABLES = 1024;
 	private static final int MAX_DEADLINES = 256;
 	private static final int MAX_CLEANUP_LEASES = 1024;
@@ -50,6 +61,16 @@ public final class PlayerQuestGraphStateCodec {
 	private static final byte ITEM_REMOVE_EXACT = 2;
 	private static final byte ITEM_REMOVE_OPTIONAL_EXACT = 3;
 	private static final byte ITEM_GIVE_ADD_EXACT = 4;
+	private static final byte ITEM_REMOVE_ALL = 5;
+	private static final byte RESOURCE_UNRESOLVED = 0;
+	private static final byte RESOURCE_INSTANCE_SPAWN = 1;
+	private static final byte RESOURCE_ESCORT = 2;
+	private static final byte ESCORT_SOURCE_EVENT_NPC = 1;
+	private static final byte ESCORT_SOURCE_PLAYER_POSITION_SPAWN = 2;
+	private static final byte ESCORT_SOURCE_REPLACE_EVENT_NPC = 3;
+	private static final byte ESCORT_DESTINATION_ZONE = 1;
+	private static final byte ESCORT_DESTINATION_NPC = 2;
+	private static final byte ESCORT_DESTINATION_COORDINATES = 3;
 
 	/**
 	 * 禁止实例化纯静态 codec。
@@ -66,7 +87,7 @@ public final class PlayerQuestGraphStateCodec {
 		try {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 			try (DataOutputStream output = new DataOutputStream(bytes)) {
-				output.writeInt(MAGIC_QGS5);
+				output.writeInt(MAGIC_QGS7);
 				output.writeByte(switch (state.getQuestStatus()) {
 					case NONE -> STATUS_NONE;
 					case START -> STATUS_START;
@@ -102,7 +123,7 @@ public final class PlayerQuestGraphStateCodec {
 		}
 		try (DataInputStream input = new DataInputStream(new ByteArrayInputStream(payload))) {
 			int magic = input.readInt();
-			if (magic != MAGIC_QGS4 && magic != MAGIC_QGS5) {
+			if (magic != MAGIC_QGS4 && magic != MAGIC_QGS5 && magic != MAGIC_QGS6 && magic != MAGIC_QGS7) {
 				throw new IllegalArgumentException("Unsupported quest graph state payload version");
 			}
 			QuestStatus questStatus = switch (input.readByte()) {
@@ -116,8 +137,8 @@ public final class PlayerQuestGraphStateCodec {
 			QuestHistory history = readHistory(input);
 			Map<String, VariableValue> variables = readVariables(input);
 			Map<String, Long> deadlines = readDeadlines(input);
-			PreparedTransition journal = readJournal(input, magic == MAGIC_QGS5);
-			Map<String, CleanupLease> cleanupLeases = readCleanupLeases(input);
+			PreparedTransition journal = readJournal(input, magic != MAGIC_QGS4, magic == MAGIC_QGS7);
+			Map<String, CleanupLease> cleanupLeases = readCleanupLeases(input, magic == MAGIC_QGS6 || magic == MAGIC_QGS7);
 			String quarantineReason = readOptionalText(input);
 			if (input.read() != -1) {
 				throw new IllegalArgumentException("Quest graph state payload has trailing data");
@@ -131,6 +152,55 @@ public final class PlayerQuestGraphStateCodec {
 				throw invalid;
 			}
 			throw new IllegalArgumentException("Failed to decode player quest graph state", e);
+		}
+	}
+
+	/** Encodes one typed cleanup lease for the durable resource-operation registry. */
+	public static byte[] encodeCleanupLease(CleanupLease lease) {
+		if (lease == null || lease.identity() == null || !lease.identity().materialized()) {
+			throw new IllegalArgumentException("Resource operation lease must have a materialized typed identity");
+		}
+		try {
+			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+			try (DataOutputStream output = new DataOutputStream(bytes)) {
+				output.writeInt(MAGIC_QGR1);
+				writeCleanupLeases(output, Map.of(lease.resourceKey(), lease));
+			}
+			byte[] payload = bytes.toByteArray();
+			if (payload.length > MAX_TOTAL_PAYLOAD) {
+				throw new IllegalArgumentException("Resource operation payload exceeds " + MAX_TOTAL_PAYLOAD + " bytes");
+			}
+			return payload;
+		} catch (IOException e) {
+			throw new IllegalArgumentException("Failed to encode resource operation lease", e);
+		}
+	}
+
+	/** Decodes one typed cleanup lease from the durable resource-operation registry. */
+	public static CleanupLease decodeCleanupLease(byte[] payload) {
+		if (payload == null || payload.length == 0 || payload.length > MAX_TOTAL_PAYLOAD) {
+			throw new IllegalArgumentException("Resource operation payload is missing or oversized");
+		}
+		try (DataInputStream input = new DataInputStream(new ByteArrayInputStream(payload))) {
+			if (input.readInt() != MAGIC_QGR1) {
+				throw new IllegalArgumentException("Unsupported resource operation payload version");
+			}
+			Map<String, CleanupLease> leases = readCleanupLeases(input, true);
+			if (leases.size() != 1 || input.read() != -1) {
+				throw new IllegalArgumentException("Resource operation payload is not canonical");
+			}
+			CleanupLease lease = leases.values().iterator().next();
+			if (lease.identity() == null || !lease.identity().materialized()) {
+				throw new IllegalArgumentException("Resource operation identity is unresolved");
+			}
+			return lease;
+		} catch (EOFException e) {
+			throw new IllegalArgumentException("Resource operation payload is truncated", e);
+		} catch (IOException | RuntimeException e) {
+			if (e instanceof IllegalArgumentException invalid) {
+				throw invalid;
+			}
+			throw new IllegalArgumentException("Failed to decode resource operation lease", e);
 		}
 	}
 
@@ -234,6 +304,7 @@ public final class PlayerQuestGraphStateCodec {
 		output.writeUTF(journal.getEventId());
 		output.writeUTF(journal.getTransitionId());
 		output.writeInt(journal.getNextActionIndex());
+		output.writeBoolean(journal.isTargetCommitted());
 		writeRepeatResolution(output, journal.getRepeatDeadlineResolution());
 		writeItemMutationPlans(output, journal.getItemMutationPlans());
 		byte[] eventPayload = journal.getEventPayload();
@@ -248,7 +319,7 @@ public final class PlayerQuestGraphStateCodec {
 	 * 读取可选 PREPARED journal。
 	 * Reads the optional PREPARED journal.
 	 */
-	private static PreparedTransition readJournal(DataInputStream input, boolean hasItemMutationPlans) throws IOException {
+	private static PreparedTransition readJournal(DataInputStream input, boolean hasItemMutationPlans, boolean hasTargetCommitMarker) throws IOException {
 		if (!input.readBoolean()) {
 			return null;
 		}
@@ -256,6 +327,7 @@ public final class PlayerQuestGraphStateCodec {
 		String eventId = input.readUTF();
 		String transitionId = input.readUTF();
 		int nextActionIndex = input.readInt();
+		boolean targetCommitted = hasTargetCommitMarker && input.readBoolean();
 		RepeatDeadlineResolution repeatDeadlineResolution = readRepeatResolution(input);
 		Map<Integer, ItemMutationPlan> itemMutationPlans = hasItemMutationPlans ? readItemMutationPlans(input) : Map.of();
 		int payloadSize = readCount(input, "prepared event bytes", MAX_EVENT_PAYLOAD);
@@ -263,7 +335,8 @@ public final class PlayerQuestGraphStateCodec {
 		if (eventPayload.length != payloadSize) {
 			throw new EOFException("Prepared event payload is truncated");
 		}
-		return new PreparedTransition(baseRevision, eventId, transitionId, nextActionIndex, repeatDeadlineResolution, itemMutationPlans, eventPayload);
+		return new PreparedTransition(baseRevision, eventId, transitionId, nextActionIndex, targetCommitted, repeatDeadlineResolution,
+			itemMutationPlans, eventPayload);
 	}
 
 	/** 写入按动作序号排序的冻结物品计划。 / Writes frozen item plans ordered by action index. */
@@ -277,6 +350,7 @@ public final class PlayerQuestGraphStateCodec {
 				case GIVE_ADD_EXACT -> ITEM_GIVE_ADD_EXACT;
 				case REMOVE_EXACT -> ITEM_REMOVE_EXACT;
 				case REMOVE_OPTIONAL_EXACT -> ITEM_REMOVE_OPTIONAL_EXACT;
+				case REMOVE_ALL -> ITEM_REMOVE_ALL;
 			});
 			output.writeInt(plan.itemId());
 			output.writeLong(plan.requestedCount());
@@ -296,6 +370,7 @@ public final class PlayerQuestGraphStateCodec {
 				case ITEM_GIVE_ADD_EXACT -> ItemMutationKind.GIVE_ADD_EXACT;
 				case ITEM_REMOVE_EXACT -> ItemMutationKind.REMOVE_EXACT;
 				case ITEM_REMOVE_OPTIONAL_EXACT -> ItemMutationKind.REMOVE_OPTIONAL_EXACT;
+				case ITEM_REMOVE_ALL -> ItemMutationKind.REMOVE_ALL;
 				default -> throw new IllegalArgumentException("Unknown item mutation kind tag");
 			};
 			ItemMutationPlan plan = new ItemMutationPlan(actionIndex, kind, input.readInt(), input.readLong(), input.readLong(), input.readLong());
@@ -351,8 +426,20 @@ public final class PlayerQuestGraphStateCodec {
 		output.writeInt(cleanupLeases.size());
 		for (Map.Entry<String, CleanupLease> entry : cleanupLeases.entrySet()) {
 			output.writeUTF(entry.getKey());
-			output.writeUTF(entry.getValue().capability());
-			output.writeUTF(entry.getValue().resourceKey());
+			CleanupLease lease = entry.getValue();
+			output.writeUTF(lease.capability());
+			output.writeUTF(lease.resourceKey());
+			switch (lease.identity()) {
+				case null -> output.writeByte(RESOURCE_UNRESOLVED);
+				case InstanceSpawnResourceIdentity spawn -> {
+					output.writeByte(RESOURCE_INSTANCE_SPAWN);
+					writeInstanceSpawnIdentity(output, spawn);
+				}
+				case EscortResourceIdentity escort -> {
+					output.writeByte(RESOURCE_ESCORT);
+					writeEscortIdentity(output, escort);
+				}
+			}
 		}
 	}
 
@@ -360,14 +447,148 @@ public final class PlayerQuestGraphStateCodec {
 	 * 读取 cleanup ledger 并拒绝重复 lease。
 	 * Reads the cleanup ledger and rejects duplicate leases.
 	 */
-	private static Map<String, CleanupLease> readCleanupLeases(DataInputStream input) throws IOException {
+	private static Map<String, CleanupLease> readCleanupLeases(DataInputStream input, boolean hasTypedIdentity) throws IOException {
 		int count = readCount(input, "cleanup leases", MAX_CLEANUP_LEASES);
 		Map<String, CleanupLease> cleanupLeases = new LinkedHashMap<>();
 		for (int i = 0; i < count; i++) {
 			String leaseId = input.readUTF();
-			putUnique(cleanupLeases, leaseId, new CleanupLease(input.readUTF(), input.readUTF()), "cleanup lease");
+			String capability = input.readUTF();
+			String resourceKey = input.readUTF();
+			CleanupLease lease = !hasTypedIdentity ? new CleanupLease(capability, resourceKey)
+				: switch (input.readByte()) {
+					case RESOURCE_UNRESOLVED -> new CleanupLease(capability, resourceKey);
+					case RESOURCE_INSTANCE_SPAWN -> new CleanupLease(capability, resourceKey, readInstanceSpawnIdentity(input));
+					case RESOURCE_ESCORT -> new CleanupLease(capability, resourceKey, readEscortIdentity(input));
+					default -> throw new IllegalArgumentException("Unknown cleanup resource identity tag");
+				};
+			putUnique(cleanupLeases, leaseId, lease, "cleanup lease");
 		}
 		return cleanupLeases;
+	}
+
+	private static void writeInstanceSpawnIdentity(DataOutputStream output, InstanceSpawnResourceIdentity identity) throws IOException {
+		writeResourceOwner(output, identity.playerId(), identity.questId(), identity.objectId(), identity.npcId(),
+			identity.worldId(), identity.instanceId(), identity.idempotencyKey());
+		output.writeByte(switch (identity.placement()) {
+			case STATIC_SPAWN -> 1;
+			case DIALOG_TARGET -> 2;
+			case PLAYER -> 3;
+			case FIXED -> 4;
+		});
+		output.writeInt(identity.sourceNpcId());
+		output.writeInt(identity.sourceObjectId());
+		output.writeFloat(identity.x());
+		output.writeFloat(identity.y());
+		output.writeFloat(identity.z());
+		output.writeByte(identity.heading());
+	}
+
+	private static InstanceSpawnResourceIdentity readInstanceSpawnIdentity(DataInputStream input) throws IOException {
+		ResourceOwner owner = readResourceOwner(input);
+		SpawnPlacementKind placement = switch (input.readByte()) {
+			case 1 -> SpawnPlacementKind.STATIC_SPAWN;
+			case 2 -> SpawnPlacementKind.DIALOG_TARGET;
+			case 3 -> SpawnPlacementKind.PLAYER;
+			case 4 -> SpawnPlacementKind.FIXED;
+			default -> throw new IllegalArgumentException("Unknown spawn placement tag");
+		};
+		return new InstanceSpawnResourceIdentity(owner.playerId(), owner.questId(), owner.objectId(), owner.npcId(), placement,
+			input.readInt(), input.readInt(), owner.worldId(), owner.instanceId(), input.readFloat(), input.readFloat(),
+			input.readFloat(), input.readByte(), owner.idempotencyKey());
+	}
+
+	private static void writeEscortIdentity(DataOutputStream output, EscortResourceIdentity identity) throws IOException {
+		writeResourceOwner(output, identity.playerId(), identity.questId(), identity.objectId(), identity.npcId(),
+			identity.worldId(), identity.instanceId(), identity.idempotencyKey());
+		output.writeFloat(identity.x());
+		output.writeFloat(identity.y());
+		output.writeFloat(identity.z());
+		output.writeInt(identity.eventNpcId());
+		output.writeInt(identity.eventNpcObjectId());
+		output.writeBoolean(identity.spawnedFollower());
+		writeOptionalText(output, identity.previousWalkerId());
+		writeEscortAction(output, identity.action());
+	}
+
+	private static EscortResourceIdentity readEscortIdentity(DataInputStream input) throws IOException {
+		ResourceOwner owner = readResourceOwner(input);
+		return new EscortResourceIdentity(owner.playerId(), owner.questId(), owner.objectId(), owner.npcId(), owner.worldId(),
+			owner.instanceId(), input.readFloat(), input.readFloat(), input.readFloat(), input.readInt(), input.readInt(), input.readBoolean(), readOptionalText(input),
+			readEscortAction(input), owner.idempotencyKey());
+	}
+
+	private static void writeResourceOwner(DataOutputStream output, int playerId, int questId, int objectId, int npcId,
+			int worldId, int instanceId, String idempotencyKey) throws IOException {
+		output.writeInt(playerId);
+		output.writeInt(questId);
+		output.writeInt(objectId);
+		output.writeInt(npcId);
+		output.writeInt(worldId);
+		output.writeInt(instanceId);
+		output.writeUTF(idempotencyKey);
+	}
+
+	private static ResourceOwner readResourceOwner(DataInputStream input) throws IOException {
+		return new ResourceOwner(input.readInt(), input.readInt(), input.readInt(), input.readInt(), input.readInt(),
+			input.readInt(), input.readUTF());
+	}
+
+	private static void writeEscortAction(DataOutputStream output, StartEscortAction action) throws IOException {
+		output.writeByte(switch (action.source()) {
+			case EVENT_NPC -> ESCORT_SOURCE_EVENT_NPC;
+			case PLAYER_POSITION_SPAWN -> ESCORT_SOURCE_PLAYER_POSITION_SPAWN;
+			case REPLACE_EVENT_NPC_AT_PLAYER_POSITION -> ESCORT_SOURCE_REPLACE_EVENT_NPC;
+		});
+		output.writeInt(action.npcId());
+		output.writeByte(action.heading());
+		writeOptionalText(output, action.walkerId());
+		output.writeBoolean(action.startWalking());
+		output.writeBoolean(action.followMe());
+		output.writeBoolean(action.startEmote2());
+		output.writeBoolean(action.sendNpcInfo());
+		switch (action.destination()) {
+			case EscortZoneDestination zone -> {
+				output.writeByte(ESCORT_DESTINATION_ZONE);
+				output.writeUTF(zone.zoneName());
+			}
+			case EscortNpcDestination npc -> {
+				output.writeByte(ESCORT_DESTINATION_NPC);
+				output.writeInt(npc.npcId());
+			}
+			case EscortCoordinatesDestination coordinates -> {
+				output.writeByte(ESCORT_DESTINATION_COORDINATES);
+				output.writeFloat(coordinates.x());
+				output.writeFloat(coordinates.y());
+				output.writeFloat(coordinates.z());
+			}
+		}
+	}
+
+	private static StartEscortAction readEscortAction(DataInputStream input) throws IOException {
+		EscortSource source = switch (input.readByte()) {
+			case ESCORT_SOURCE_EVENT_NPC -> EscortSource.EVENT_NPC;
+			case ESCORT_SOURCE_PLAYER_POSITION_SPAWN -> EscortSource.PLAYER_POSITION_SPAWN;
+			case ESCORT_SOURCE_REPLACE_EVENT_NPC -> EscortSource.REPLACE_EVENT_NPC_AT_PLAYER_POSITION;
+			default -> throw new IllegalArgumentException("Unknown escort source tag");
+		};
+		int npcId = input.readInt();
+		byte heading = input.readByte();
+		String walkerId = readOptionalText(input);
+		boolean startWalking = input.readBoolean();
+		boolean followMe = input.readBoolean();
+		boolean startEmote2 = input.readBoolean();
+		boolean sendNpcInfo = input.readBoolean();
+		var destination = switch (input.readByte()) {
+			case ESCORT_DESTINATION_ZONE -> new EscortZoneDestination(input.readUTF());
+			case ESCORT_DESTINATION_NPC -> new EscortNpcDestination(input.readInt());
+			case ESCORT_DESTINATION_COORDINATES -> new EscortCoordinatesDestination(input.readFloat(), input.readFloat(), input.readFloat());
+			default -> throw new IllegalArgumentException("Unknown escort destination tag");
+		};
+		return new StartEscortAction(source, npcId, heading, walkerId, startWalking, followMe, startEmote2, sendNpcInfo, destination);
+	}
+
+	private record ResourceOwner(int playerId, int questId, int objectId, int npcId, int worldId, int instanceId,
+			String idempotencyKey) {
 	}
 
 	/**

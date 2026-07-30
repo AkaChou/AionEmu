@@ -80,6 +80,20 @@ public class SpawnEngine {
 	}
 
 	/**
+	 * Spawns a regular one-time NPC with an object id reserved before the world side effect.
+	 * The caller must ensure the id is globally reserved and must retry with the same id.
+	 */
+	public static VisibleObject spawnNpcWithReservedObjectId(SpawnTemplate spawn, int instanceIndex, int reservedObjectId) {
+		if (spawn == null || spawn.getClass() != SpawnTemplate.class || reservedObjectId <= 0) {
+			throw new IllegalArgumentException("Reserved-id NPC spawn requires a regular spawn template and positive object id");
+		}
+		VisibleObject visibleObject = VisibleObjectSpawner.spawnNpc(spawn, instanceIndex, reservedObjectId);
+		spawn.setVisibleObject(visibleObject);
+		spawn.addVisibleObject(visibleObject);
+		return visibleObject;
+	}
+
+	/**
 	 * 按模板类型分派到具体刷怪实现。
 	 * Dispatches to a concrete spawner by template type.
 	 *

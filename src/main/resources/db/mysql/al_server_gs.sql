@@ -2069,6 +2069,37 @@ LOCK TABLES `player_quest_graph_states` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `quest_graph_resource_operations`
+--
+
+DROP TABLE IF EXISTS `quest_graph_resource_operations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `quest_graph_resource_operations` (
+  `player_id` int(11) NOT NULL,
+  `operation_hash` binary(32) NOT NULL,
+  `operation_key` varchar(1024) NOT NULL,
+  `quest_id` int(10) unsigned NOT NULL,
+  `capability` varchar(64) NOT NULL,
+  `reserved_object_id` int(10) unsigned DEFAULT NULL,
+  `resource_payload` mediumblob NOT NULL,
+  PRIMARY KEY (`player_id`,`operation_hash`),
+  UNIQUE KEY `uq_quest_graph_resource_object` (`reserved_object_id`),
+  KEY `idx_quest_graph_resource_quest` (`player_id`,`quest_id`),
+  CONSTRAINT `quest_graph_resource_operations_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `quest_graph_resource_operations`
+--
+
+LOCK TABLES `quest_graph_resource_operations` WRITE;
+/*!40000 ALTER TABLE `quest_graph_resource_operations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `quest_graph_resource_operations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `limited_quest_counters`
 --
 

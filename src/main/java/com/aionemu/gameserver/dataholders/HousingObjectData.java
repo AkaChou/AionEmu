@@ -65,6 +65,11 @@ public class HousingObjectData {
 		return objectTemplatesById.size();
 	}
 
+	/** 返回已加载房屋物件模板 ID 快照。 / Returns a snapshot of loaded housing-object template ids. */
+	public int[] getTemplateIds() {
+		return objectTemplatesById.keys();
+	}
+
 	/**
 	 * 按模板 ID 获取可放置房屋物件。
 	 * Returns the placeable housing object for the given template id.

@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.Supplier;
 
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -96,13 +97,78 @@ public class InstanceService {
 		log.info(I18n.get("log.a698e49af03a", worldId, nextInstanceId, ownerId));
 		WorldMapInstance worldMapInstance = WorldMapInstanceFactory.createWorldMapInstance(map, nextInstanceId,
 				ownerId);
-		map.addInstance(nextInstanceId, worldMapInstance);
-		SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), (byte) 0, ownerId);
-		GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance);
-		if (map.isInstanceType()) {
-			startInstanceChecker(worldMapInstance);
+		return initializeInstance(map, worldMapInstance,
+				() -> SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), (byte) 0, ownerId),
+				() -> GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance));
+	}
+
+	static WorldMapInstance initializeInstance(WorldMap map, WorldMapInstance instance, Runnable spawn,
+			Runnable onInstanceCreate) {
+		map.addInstance(instance.getInstanceId(), instance);
+		boolean instanceCreateStarted = false;
+		try {
+			spawn.run();
+			instanceCreateStarted = true;
+			onInstanceCreate.run();
+			if (map.isInstanceType()) {
+				startInstanceChecker(instance);
+			}
+			return instance;
+		} catch (RuntimeException | Error e) {
+			rollbackFailedInstance(map, instance, instanceCreateStarted, e);
+			throw e;
 		}
-		return worldMapInstance;
+	}
+
+	private static void rollbackFailedInstance(WorldMap map, WorldMapInstance instance, boolean instanceCreateStarted,
+			Throwable failure) {
+		pendingResets.remove(instance);
+		if (instance.getEmptyInstanceTask() != null) {
+			runRollbackStep(failure, () -> instance.getEmptyInstanceTask().cancel(false));
+			instance.setEmptyInstanceTask(null);
+		}
+		runRollbackStep(failure, () -> map.removeWorldMapInstance(instance.getInstanceId()));
+		runRollbackStep(failure, () -> RetailConditionSpawnEngine.clear(instance));
+		runRollbackStep(failure, () -> RetailAreaEngine.clear(instance));
+		runRollbackStep(failure, () -> RetailWindstreamEngine.clear(instance));
+		runRollbackStep(failure, () -> RetailDynamicAreaEngine.clear(instance));
+		try {
+			Iterator<VisibleObject> objects = instance.objectIterator();
+			while (objects.hasNext()) {
+				VisibleObject object = objects.next();
+				runRollbackStep(failure, () -> object.getController().onDelete());
+			}
+		} catch (RuntimeException | Error cleanupFailure) {
+			addSuppressed(failure, cleanupFailure);
+		}
+		if (instanceCreateStarted) {
+			runRollbackStep(failure, () -> {
+				if (instance.getInstanceHandler() != null) {
+					instance.getInstanceHandler().onInstanceDestroy();
+				}
+			});
+			runRollbackStep(failure, () -> {
+				if (instance instanceof WorldMap2DInstance instance2D && instance2D.isPersonal()) {
+					GameHousingServices.housingService().onInstanceDestroy(instance2D.getOwnerId());
+				}
+			});
+		}
+		runRollbackStep(failure,
+				() -> GameWorldServices.pathService().instanceDestroyed(instance.getMapId(), instance.getInstanceId()));
+	}
+
+	private static void runRollbackStep(Throwable failure, Runnable rollbackStep) {
+		try {
+			rollbackStep.run();
+		} catch (RuntimeException | Error cleanupFailure) {
+			addSuppressed(failure, cleanupFailure);
+		}
+	}
+
+	private static void addSuppressed(Throwable failure, Throwable cleanupFailure) {
+		if (cleanupFailure != failure) {
+			failure.addSuppressed(cleanupFailure);
+		}
 	}
 
 	/**
@@ -222,7 +288,12 @@ public class InstanceService {
 	 * @return 已注册副本，未找到则为 null / registered instance, or null
 	 */
 	public static WorldMapInstance getRegisteredInstance(int worldId, int objectId) {
-		Iterator<WorldMapInstance> iterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).iterator();
+		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
+		return getRegisteredInstance(map, objectId);
+	}
+
+	private static WorldMapInstance getRegisteredInstance(WorldMap map, int objectId) {
+		Iterator<WorldMapInstance> iterator = map.iterator();
 		while (iterator.hasNext()) {
 			WorldMapInstance instance = iterator.next();
 			if (instance.isRegistered(objectId)) {
@@ -230,6 +301,37 @@ public class InstanceService {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 返回玩家已注册的副本；尚未注册时原子地创建并登记一个新副本。
+	 * Returns the player's registered instance, or atomically creates and registers a new one.
+	 *
+	 * @param worldId 副本世界 ID / instance world id
+	 * @param player 玩家 / player
+	 * @return 已有或新建并登记的副本 / existing or newly created and registered instance
+	 */
+	public synchronized static WorldMapInstance getRegisteredOrCreateAndRegister(int worldId, Player player) {
+		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
+		return getRegisteredOrCreateAndRegister(map, player, () -> getNextAvailableInstance(worldId));
+	}
+
+	static WorldMapInstance getRegisteredOrCreateAndRegister(WorldMap map, Player player,
+			Supplier<WorldMapInstance> instanceCreator) {
+		synchronized (InstanceService.class) {
+			WorldMapInstance registered = getRegisteredInstance(map, player.getObjectId());
+			if (registered != null) {
+				return registered;
+			}
+			WorldMapInstance created = instanceCreator.get();
+			try {
+				registerPlayerWithInstance(created, player);
+				return created;
+			} catch (RuntimeException | Error e) {
+				rollbackFailedInstance(map, created, true, e);
+				throw e;
+			}
+		}
 	}
 
 	/**

@@ -926,6 +926,13 @@ public final class QuestService {
 		return SpawnEngine.spawnObject(SpawnEngine.addNewSingleTimeSpawn(worldId, templateId, x, y, z, heading), instanceId);
 	}
 
+	/** Spawns a quest NPC using an object id durably reserved before entering the world. */
+	public static VisibleObject spawnQuestNpcWithReservedObjectId(int worldId, int instanceId, int templateId,
+			float x, float y, float z, byte heading, int reservedObjectId) {
+		return SpawnEngine.spawnNpcWithReservedObjectId(
+			SpawnEngine.addNewSingleTimeSpawn(worldId, templateId, x, y, z, heading), instanceId, reservedObjectId);
+	}
+
 	/**
 	 * 生成一次性任务相关生物（别名接口）。
 	 * Spawns a one-time quest-related creature (alias API).
@@ -941,6 +948,13 @@ public final class QuestService {
 	 */
 	public static VisibleObject addNewSpawn(int worldId, int instanceId, int templateId, float x, float y, float z, byte heading) {
 		return SpawnEngine.spawnObject(SpawnEngine.addNewSingleTimeSpawn(worldId, templateId, x, y, z, heading), instanceId);
+	}
+
+	/** Adds a one-time quest spawn using an object id durably reserved before entering the world. */
+	public static VisibleObject addNewSpawnWithReservedObjectId(int worldId, int instanceId, int templateId,
+			float x, float y, float z, byte heading, int reservedObjectId) {
+		return SpawnEngine.spawnNpcWithReservedObjectId(
+			SpawnEngine.addNewSingleTimeSpawn(worldId, templateId, x, y, z, heading), instanceId, reservedObjectId);
 	}
 
 	/**

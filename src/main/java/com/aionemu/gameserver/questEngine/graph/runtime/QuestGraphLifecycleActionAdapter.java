@@ -1,7 +1,10 @@
 package com.aionemu.gameserver.questEngine.graph.runtime;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AbandonQuestAction;
@@ -11,10 +14,13 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollect
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestWorkItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEventQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEscortActionAdapter.CleanupReason;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionInvocation;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PreflightResult;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.EscortResourceIdentity;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.InstanceSpawnResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
 
 /**
@@ -26,6 +32,7 @@ public final class QuestGraphLifecycleActionAdapter {
 	private final int playerId;
 	private final Function<LifecycleCommand, PreflightResult> preflight;
 	private final Function<LifecycleCommand, ActionResult> executor;
+	private final BiFunction<CleanupLease, CleanupReason, ActionResult> resourceCleaner;
 
 	/**
 	 * 创建只接受封闭 lifecycle 命令的 typed bridge。
@@ -33,12 +40,27 @@ public final class QuestGraphLifecycleActionAdapter {
 	 */
 	public QuestGraphLifecycleActionAdapter(int playerId, Function<LifecycleCommand, PreflightResult> preflight,
 			Function<LifecycleCommand, ActionResult> executor) {
+		this(playerId, preflight, executor, null);
+	}
+
+	/** 创建带逐 lease 物理清理端点的 lifecycle bridge。 / Creates a lifecycle bridge with a per-lease physical cleanup endpoint. */
+	public QuestGraphLifecycleActionAdapter(int playerId, Function<LifecycleCommand, PreflightResult> preflight,
+			Function<LifecycleCommand, ActionResult> executor,
+			BiFunction<CleanupLease, CleanupReason, ActionResult> resourceCleaner) {
 		if (playerId <= 0) {
 			throw new IllegalArgumentException("Lifecycle adapter player id is invalid");
 		}
 		this.playerId = playerId;
 		this.preflight = Objects.requireNonNull(preflight, "lifecycle preflight");
 		this.executor = Objects.requireNonNull(executor, "lifecycle executor");
+		this.resourceCleaner = resourceCleaner;
+	}
+
+	/** 创建直接分派到 instance-spawn 与 escort adapter 的 lifecycle bridge。 / Creates a lifecycle bridge dispatching directly to instance-spawn and escort adapters. */
+	public QuestGraphLifecycleActionAdapter(int playerId, Function<LifecycleCommand, PreflightResult> preflight,
+			Function<LifecycleCommand, ActionResult> executor, QuestGraphInstanceSpawnAdapter instanceSpawns,
+			QuestGraphEscortActionAdapter escortActions) {
+		this(playerId, preflight, executor, typedCleaner(instanceSpawns, escortActions));
 	}
 
 	/**
@@ -50,7 +72,11 @@ public final class QuestGraphLifecycleActionAdapter {
 			if (!validOwner(invocation)) {
 				return PreflightResult.FAILED;
 			}
-			return Objects.requireNonNull(preflight.apply(command(invocation)), "lifecycle preflight result");
+			LifecycleCommand command = command(invocation);
+			if (cleanupReason(command) != null && !validCleanupLeases(invocation)) {
+				return PreflightResult.FAILED;
+			}
+			return Objects.requireNonNull(preflight.apply(command), "lifecycle preflight result");
 		} catch (RuntimeException e) {
 			return PreflightResult.FAILED;
 		}
@@ -65,10 +91,80 @@ public final class QuestGraphLifecycleActionAdapter {
 			if (!validOwner(invocation)) {
 				return ActionResult.FAILED;
 			}
-			return Objects.requireNonNull(executor.apply(command(invocation)), "lifecycle action result");
+			LifecycleCommand command = command(invocation);
+			CleanupReason reason = cleanupReason(command);
+			if (reason != null) {
+				ActionResult cleanup = cleanup(invocation, reason);
+				if (cleanup != ActionResult.APPLIED && cleanup != ActionResult.ALREADY_APPLIED) {
+					return ActionResult.FAILED;
+				}
+			}
+			ActionResult result = Objects.requireNonNull(executor.apply(command), "lifecycle action result");
+			if (result != ActionResult.APPLIED && result != ActionResult.ALREADY_APPLIED) {
+				return result;
+			}
+			return reason != null && !invocation.cleanupLeases().isEmpty() ? ActionResult.CLEANUP_CONFIRMED : result;
 		} catch (RuntimeException e) {
 			return ActionResult.FAILED;
 		}
+	}
+
+	/** 在结算或放弃提交前逐个清理持久化资源；任何失败都会保留整个 journal ledger。 / Physically cleans persisted resources before settlement or abandonment; any failure retains the complete journal ledger. */
+	private ActionResult cleanup(ActionInvocation invocation, CleanupReason reason) {
+		if (!validCleanupLeases(invocation)) {
+			return ActionResult.FAILED;
+		}
+		if (invocation.cleanupLeases().isEmpty()) {
+			return ActionResult.ALREADY_APPLIED;
+		}
+		ActionResult aggregate = ActionResult.ALREADY_APPLIED;
+		for (Map.Entry<String, CleanupLease> entry : sortedLeases(invocation.cleanupLeases())) {
+			ActionResult result = Objects.requireNonNull(resourceCleaner.apply(entry.getValue(), reason), "resource cleanup result");
+			if (result != ActionResult.APPLIED && result != ActionResult.ALREADY_APPLIED) {
+				return result;
+			}
+			if (result == ActionResult.APPLIED) {
+				aggregate = ActionResult.APPLIED;
+			}
+		}
+		return aggregate;
+	}
+
+	/** 校验终态清理只能消费当前玩家、当前 quest 的已物化 typed lease。 / Validates terminal cleanup consumes only materialized typed leases owned by the current player and quest. */
+	private boolean validCleanupLeases(ActionInvocation invocation) {
+		if (!invocation.cleanupLeases().isEmpty() && resourceCleaner == null) {
+			return false;
+		}
+		for (Map.Entry<String, CleanupLease> entry : invocation.cleanupLeases().entrySet()) {
+			CleanupLease lease = entry.getValue();
+			if (lease == null || !entry.getKey().equals(lease.resourceKey()) || !lease.resolved()
+					|| !lease.identity().materialized() || lease.identity().playerId() != playerId
+					|| lease.identity().questId() != invocation.questId()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static List<Map.Entry<String, CleanupLease>> sortedLeases(Map<String, CleanupLease> leases) {
+		List<Map.Entry<String, CleanupLease>> sorted = new ArrayList<>(leases.entrySet());
+		sorted.sort(Map.Entry.comparingByKey());
+		return sorted;
+	}
+
+	private static CleanupReason cleanupReason(LifecycleCommand command) {
+		return command instanceof SettlementCommand ? CleanupReason.FINISH
+			: command instanceof AbandonCommand ? CleanupReason.ABANDON : null;
+	}
+
+	private static BiFunction<CleanupLease, CleanupReason, ActionResult> typedCleaner(QuestGraphInstanceSpawnAdapter instanceSpawns,
+			QuestGraphEscortActionAdapter escortActions) {
+		Objects.requireNonNull(instanceSpawns, "instance spawn actions");
+		Objects.requireNonNull(escortActions, "escort actions");
+		return (lease, reason) -> switch (lease.identity()) {
+			case InstanceSpawnResourceIdentity ignored -> instanceSpawns.clear(lease);
+			case EscortResourceIdentity ignored -> escortActions.clear(lease, reason);
+		};
 	}
 
 	/** 校验事件玩家与 adapter owner 一致。 / Validates that the event player matches the adapter owner. */

@@ -17,10 +17,15 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortCoordinatesDestination;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortSource;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEscortAction;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.EscortResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.InstanceSpawnResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationPlan;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
@@ -28,6 +33,7 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Prep
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.SpawnPlacementKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.VariableValue;
 
 class PlayerQuestGraphStateTest {
@@ -57,9 +63,58 @@ class PlayerQuestGraphStateTest {
 		assertEquals("event-9", decoded.getJournal().getEventId());
 		assertEquals(RepeatDeadlineResolution.deadline(1_760_000_000_000L), decoded.getJournal().getRepeatDeadlineResolution());
 		assertEquals(Map.of(1, itemPlan), decoded.getJournal().getItemMutationPlans());
+		assertFalse(decoded.getJournal().isTargetCommitted());
 		assertEquals(QuestStatus.START, decoded.getQuestStatus());
 		assertEquals(new QuestHistory(3, 2, 1_700_000_000_000L, 1_750_000_000_000L), decoded.getHistory());
 		assertArrayEquals(new byte[] { 4, 5, 6 }, decoded.getJournal().getEventPayload());
+	}
+
+	@Test
+	void codecRoundTripsTypedResourcePlansAndMaterializedLeases() {
+		InstanceSpawnResourceIdentity spawn = new InstanceSpawnResourceIdentity(7, 1230, 990001, 216608,
+			SpawnPlacementKind.DIALOG_TARGET, 700759, 880759, 210040000, 3, 10.5f, 20.5f, 30.5f, (byte) 64, "spawn-key");
+		StartEscortAction action = new StartEscortAction(EscortSource.PLAYER_POSITION_SPAWN, 204416, (byte) 8, "4212",
+			true, true, true, false, new EscortCoordinatesDestination(1.5f, 2.5f, 3.5f));
+		EscortResourceIdentity escort = new EscortResourceIdentity(7, 1230, 990002, 204416, 210040000, 3,
+			11.5f, 12.5f, 13.5f, 0, 0, true, "old-walker", action, "escort-key");
+		PlayerQuestGraphState state = new PlayerQuestGraphState(1230, 2, 0, "hunt", QuestStatus.START, QuestHistory.EMPTY, null,
+			Lifecycle.ACTIVE, Map.of(), Map.of(), null,
+			Map.of("escort-key", CleanupLease.escort(escort), "spawn-key", CleanupLease.instanceSpawn(spawn)), null);
+
+		PlayerQuestGraphState decoded = PlayerQuestGraphStateCodec.decode(1230, 2, 0, "hunt", null, Lifecycle.ACTIVE,
+			PlayerQuestGraphStateCodec.encode(state));
+
+		assertEquals(spawn, decoded.getCleanupLeases().get("spawn-key").identity());
+		assertEquals(escort, decoded.getCleanupLeases().get("escort-key").identity());
+		assertTrue(decoded.getCleanupLeases().values().stream().allMatch(CleanupLease::resolved));
+		assertThrows(IllegalArgumentException.class,
+			() -> PlayerQuestGraphStateCodec.decode(1231, 2, 0, "hunt", null, Lifecycle.ACTIVE,
+				PlayerQuestGraphStateCodec.encode(state)));
+	}
+
+	@Test
+	void typedCleanupLeasesRequireCanonicalLedgerKeysAndQuestOwners() {
+		InstanceSpawnResourceIdentity spawn = new InstanceSpawnResourceIdentity(7, 1230, 0, 216608,
+			SpawnPlacementKind.STATIC_SPAWN, 700759, 0, 210040000, 3, 10.5f, 20.5f, 30.5f, (byte) 64, "spawn-key");
+		CleanupLease lease = CleanupLease.instanceSpawn(spawn);
+
+		assertThrows(IllegalArgumentException.class,
+			() -> new PlayerQuestGraphState(1230, 2, 0, "hunt", QuestStatus.START, QuestHistory.EMPTY, null,
+				Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of("wrong-key", lease), null));
+		assertThrows(IllegalArgumentException.class,
+			() -> new PlayerQuestGraphState(1231, 2, 0, "hunt", QuestStatus.START, QuestHistory.EMPTY, null,
+				Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of("spawn-key", lease), null));
+	}
+
+	@Test
+	void codecReadsLegacyQgs5CleanupLeaseAsUnresolved() throws Exception {
+		PlayerQuestGraphState decoded = PlayerQuestGraphStateCodec.decode(1, 1, 0, "active", null, Lifecycle.ACTIVE,
+			legacyQgs5ActivePayloadWithLease());
+
+		CleanupLease lease = decoded.getCleanupLeases().get("legacy");
+		assertEquals("INSTANCE_SCOPED_SPAWN", lease.capability());
+		assertEquals("spawner:700759:npc:216608", lease.resourceKey());
+		assertFalse(lease.resolved());
 	}
 
 	/** 验证高权限绕过在 history 与 PREPARED journal 中都可确定性往返。 / Verifies deterministic privileged-bypass round trips in history and journal. */
@@ -78,24 +133,40 @@ class PlayerQuestGraphStateTest {
 		assertEquals(RepeatDeadlineResolution.PRIVILEGED_BYPASS, decoded.getJournal().getRepeatDeadlineResolution());
 	}
 
+	@Test
+	void codecRoundTripsCommittedProtocolOutbox() {
+		PreparedTransition journal = new PreparedTransition(0, "event", "finish", 2, true,
+			RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), new byte[] { 1, 2 });
+		PlayerQuestGraphState state = new PlayerQuestGraphState(1, 1, 4, "done", QuestStatus.START, QuestHistory.EMPTY, null,
+			Lifecycle.PREPARED, Map.of(), Map.of(), journal, Map.of(), null);
+
+		PlayerQuestGraphState decoded = PlayerQuestGraphStateCodec.decode(1, 1, 4, "done", null, Lifecycle.PREPARED,
+			PlayerQuestGraphStateCodec.encode(state));
+
+		assertTrue(decoded.getJournal().isTargetCommitted());
+		assertEquals(2, decoded.getJournal().getNextActionIndex());
+		assertEquals("done", decoded.getNodeId());
+	}
+
 	/**
-	 * 验证追加发放与可选精确扣除计划均可确定性往返，且非法端点被拒绝。
-	 * Verifies deterministic round trips for additive grants and optional-exact plans and rejects invalid endpoints.
+	 * 验证追加发放、可选精确扣除和全部扣除计划均可确定性往返，且非法端点被拒绝。
+	 * Verifies deterministic round trips for additive, optional-exact, and remove-all plans and rejects invalid endpoints.
 	 */
 	@Test
 	void codecRoundTripsOptionalExactItemPlans() {
 		ItemMutationPlan sufficient = new ItemMutationPlan(1, ItemMutationKind.REMOVE_OPTIONAL_EXACT, 182200001, 2, 5, 3);
 		ItemMutationPlan insufficient = new ItemMutationPlan(2, ItemMutationKind.REMOVE_OPTIONAL_EXACT, 182200002, 2, 1, 1);
 		ItemMutationPlan additive = new ItemMutationPlan(3, ItemMutationKind.GIVE_ADD_EXACT, 182200003, 4, 2, 6);
+		ItemMutationPlan all = new ItemMutationPlan(4, ItemMutationKind.REMOVE_ALL, 182200004, 1, 7, 0);
 		PreparedTransition journal = new PreparedTransition(0, "event", "remove", 0, RepeatDeadlineResolution.NOT_APPLICABLE,
-			Map.of(1, sufficient, 2, insufficient, 3, additive), new byte[] { 1 });
+			Map.of(1, sufficient, 2, insufficient, 3, additive, 4, all), new byte[] { 1 });
 		PlayerQuestGraphState state = new PlayerQuestGraphState(1, 1, 1, "active", QuestStatus.START, QuestHistory.EMPTY, null,
 			Lifecycle.PREPARED, Map.of(), Map.of(), journal, Map.of(), null);
 
 		PlayerQuestGraphState decoded = PlayerQuestGraphStateCodec.decode(1, 1, 1, "active", null, Lifecycle.PREPARED,
 			PlayerQuestGraphStateCodec.encode(state));
 
-		assertEquals(Map.of(1, sufficient, 2, insufficient, 3, additive), decoded.getJournal().getItemMutationPlans());
+		assertEquals(Map.of(1, sufficient, 2, insufficient, 3, additive, 4, all), decoded.getJournal().getItemMutationPlans());
 		assertThrows(IllegalArgumentException.class,
 			() -> new ItemMutationPlan(0, ItemMutationKind.REMOVE_OPTIONAL_EXACT, 182200001, 2, 1, 0));
 	}
@@ -124,6 +195,8 @@ class PlayerQuestGraphStateTest {
 			Lifecycle.PREPARED, Map.of(), Map.of(), null, Map.of(), null));
 		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", QuestStatus.START, QuestHistory.EMPTY, null,
 			Lifecycle.QUARANTINED, Map.of(), Map.of(), null, Map.of(), null));
+		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 1, "start", QuestStatus.START, QuestHistory.EMPTY, null,
+			Lifecycle.QUARANTINED, Map.of(), Map.of(), new PreparedTransition(-1, "event", "transition", 0, new byte[0]), Map.of(), "reason"));
 		assertThrows(IllegalArgumentException.class, () -> new PlayerQuestGraphState(1, 1, 0, "start", QuestStatus.NONE, QuestHistory.EMPTY, null,
 			Lifecycle.PREPARED, Map.of(), Map.of(), new PreparedTransition(-1, "event", "transition", 1, new byte[0]), Map.of(), null));
 		assertThrows(IllegalArgumentException.class,
@@ -224,6 +297,28 @@ class PlayerQuestGraphStateTest {
 			output.writeInt(0);
 			output.writeBoolean(false);
 			output.writeInt(0);
+			output.writeBoolean(false);
+		}
+		return bytes.toByteArray();
+	}
+
+	private static byte[] legacyQgs5ActivePayloadWithLease() throws Exception {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		try (DataOutputStream output = new DataOutputStream(bytes)) {
+			output.writeInt(0x51475335);
+			output.writeByte(1);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeBoolean(false);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeInt(1);
+			output.writeUTF("legacy");
+			output.writeUTF("INSTANCE_SCOPED_SPAWN");
+			output.writeUTF("spawner:700759:npc:216608");
 			output.writeBoolean(false);
 		}
 		return bytes.toByteArray();

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.aionemu.gameserver.dataholders.SpawnsData2;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -33,11 +34,12 @@ import jakarta.xml.bind.JAXBContext;
 
 class QuestGraphCompilerTest {
 	private static final Path SCHEMA = Path.of("src/main/resources/aion/data/static_data/quest_graph_data/quest_graph_data.xsd");
-	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
-			Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"), Set.of(913),
+	private static final QuestGraphCompiler.References REFERENCES = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709, 700759),
+			Set.of(182200001), Set.of(3420021), Set.of(42), Set.of("TEST_ZONE"), Set.of(913),
 			Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
-			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832), Set.of(220050000),
-			Set.of(155004001), Set.of(40002));
+			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832),
+			Set.of(220050000, 301580000), Set.of(301580000), Set.of(155004001), Set.of(40002), Set.of("4212"),
+			Set.of(700759), Set.of(31));
 
 	@TempDir
 	Path tempDir;
@@ -45,12 +47,14 @@ class QuestGraphCompilerTest {
 
 	@Test
 	void compilesSchemaValidatedGraphsIntoDeterministicImmutableIr() throws Exception {
+		String graph2Transitions = (transition("late", 20, "done") + transition("first", 10, "done"))
+			.replace("<quest-status quest_id=\"2\"", "<quest-status quest_id=\"1\"");
 		String xml = """
 			<quest_graphs>
 				%s
 				%s
 			</quest_graphs>
-			""".formatted(graph(2, "b", transition("late", 20, "done") + transition("first", 10, "done"), "<node id=\"done\" terminal=\"true\"/>"),
+			""".formatted(graph(2, "b", graph2Transitions, "<node id=\"done\" terminal=\"true\"/>"),
 			graph(1, "offer", transition("accept", 10, "accepted"), "<node id=\"accepted\" terminal=\"true\"/>"));
 		CompiledQuestGraphData data = load(xml);
 		var graphs = data.graphs();
@@ -65,7 +69,7 @@ class QuestGraphCompilerTest {
 		assertEquals(CompiledQuestGraph.EventType.DIALOG, graph.nodes().get("b").transitions().getFirst().event().type());
 		assertEquals(List.of(
 			new CompiledQuestGraph.QuestStatusCondition(CompiledQuestGraph.QuestStatus.NONE),
-			new CompiledQuestGraph.QuestStatusCondition(2, ConditionOperation.IN,
+			new CompiledQuestGraph.QuestStatusCondition(1, ConditionOperation.IN,
 				Set.of(CompiledQuestGraph.QuestStatus.COMPLETE)),
 			new CompiledQuestGraph.QuestVariableCondition("counter", ConditionOperation.EQUAL, 0),
 			new CompiledQuestGraph.QuestRepeatAvailableCondition(255, true, true),
@@ -79,7 +83,9 @@ class QuestGraphCompilerTest {
 			new CompiledQuestGraph.PlayerTitleCondition(42),
 			new CompiledQuestGraph.PlayerAbyssRankCondition(AbyssRankEnum.STAR1_OFFICER),
 			new CompiledQuestGraph.PlayerInventoryCondition(182200001, ConditionOperation.GREATER_EQUAL, 1),
-			new CompiledQuestGraph.PlayerEquippedCondition(182200001)),
+			new CompiledQuestGraph.PlayerEquippedCondition(182200001),
+			new CompiledQuestGraph.PlayerRewardInventoryCapacityCondition(
+				CompiledQuestGraph.RewardInventoryScope.SPECIAL_CUBE, true)),
 			graph.nodes().get("b").transitions().getFirst().conditions());
 		assertEquals(List.of(
 			CompiledQuestGraph.ActionType.START_QUEST,
@@ -94,7 +100,8 @@ class QuestGraphCompilerTest {
 			CompiledQuestGraph.ActionType.SEND_DIALOG,
 			CompiledQuestGraph.ActionType.CLOSE_DIALOG,
 			CompiledQuestGraph.ActionType.SHOW_QUEST_LIST,
-			CompiledQuestGraph.ActionType.SEND_PLAYER_MESSAGE),
+			CompiledQuestGraph.ActionType.SEND_PLAYER_MESSAGE,
+			CompiledQuestGraph.ActionType.SEND_EMOTION),
 			graph.nodes().get("b").transitions().getFirst().actions().stream().map(CompiledQuestGraph.Action::type).toList());
 		var routes = data.eventIndex().get(new CompiledQuestGraphData.EventKey(CompiledQuestGraph.EventType.DIALOG, 203709));
 		assertEquals(List.of("accept", "first", "late"), routes.stream().map(route -> route.transition().id()).toList());
@@ -103,6 +110,27 @@ class QuestGraphCompilerTest {
 		assertThrows(UnsupportedOperationException.class, () -> graph.nodes().clear());
 		assertThrows(UnsupportedOperationException.class, () -> graph.nodes().get("b").transitions().clear());
 		assertThrows(UnsupportedOperationException.class, routes::clear);
+	}
+
+	@Test
+	void compilesOnlyExplicitNoTargetDialogsWithoutNpcReference() throws Exception {
+		String systemTransition = eventTransition("system-accept", 10, "done")
+			.replace("npc_id=\"203709\"", "npc_id=\"0\" target_kind=\"NO_TARGET\"");
+		CompiledQuestGraph graph = load(document(graph(1, "offer", systemTransition, terminal()))).graphs().get(1);
+
+		CompiledQuestGraph.Event event = graph.nodes().get("offer").transitions().getFirst().event();
+		assertEquals(0, event.targetId());
+		assertEquals(CompiledQuestGraph.DialogTargetKind.NO_TARGET, event.dialogTargetKind());
+		assertFailureContains(document(graph(1, "offer", systemTransition.replace(" target_kind=\"NO_TARGET\"", ""), terminal())),
+			"invalid dialog event");
+		assertFailureContains(document(graph(1, "offer", systemTransition.replace("NO_TARGET", "NPC"), terminal())),
+			"invalid dialog event");
+		assertFailureContains(document(graph(1, "offer",
+			systemTransition.replace("npc_id=\"0\"", "npc_id=\"203709\""), terminal())), "invalid dialog event");
+		assertCompilerFailureContains(document(graph(1, "offer",
+			systemTransition.replace("NO_TARGET", " "), terminal())), "invalid dialog target kind");
+		assertThrows(IllegalArgumentException.class,
+			() -> new CompiledQuestGraph.Event(CompiledQuestGraph.EventType.DIALOG, 0, "ACCEPT_QUEST"));
 	}
 
 	/**
@@ -177,6 +205,51 @@ class QuestGraphCompilerTest {
 	}
 
 	/**
+	 * 验证 world-entered 缺省为通配路由，显式 world_id 编译为精确目标并要求引用闭包。
+	 * Verifies world-entered defaults to a wildcard, while explicit world_id compiles as an exact referenced target.
+	 */
+	@Test
+	void compilesAndValidatesOptionalWorldEnteredTarget() throws Exception {
+		String wildcard = eventTransition("world-wildcard", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<world-entered/>");
+		String exact = wildcard.replace("world-wildcard", "world-exact")
+			.replace("<world-entered/>", "<world-entered world_id=\"220050000\"/>");
+
+		CompiledQuestGraph.Event wildcardEvent = load(document(graph(1, "offer", wildcard, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().event();
+		CompiledQuestGraph.Event exactEvent = load(document(graph(1, "offer", exact, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().event();
+		assertEquals(CompiledQuestGraph.EventType.WORLD_ENTERED, wildcardEvent.type());
+		assertEquals(0, wildcardEvent.targetId());
+		assertEquals(CompiledQuestGraph.EventType.WORLD_ENTERED, exactEvent.type());
+		assertEquals(220050000, exactEvent.targetId());
+
+		QuestGraphCompiler.References withoutWorld = new QuestGraphCompiler.References(Set.of(1, 2), Set.of(203709),
+			Set.of(182200001), Set.of(42), Set.of("TEST_ZONE"), Set.of(913),
+			Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
+			Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832));
+		assertFailureContains(document(graph(1, "offer", exact, terminal())), withoutWorld,
+			"world-entered references missing world 220050000");
+	}
+
+	/** 验证 kill-in-world 的 0 通配值以及正 world 引用均由 compiler 闭合。 / Verifies compiler closure for the kill-in-world zero wildcard and positive world references. */
+	@Test
+	void compilesAndValidatesKillInWorldTarget() throws Exception {
+		String exact = eventTransition("kill-world", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<kill-in-world world_id=\"220050000\"/>");
+		CompiledQuestGraph.Event event = load(document(graph(1, "offer", exact, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().event();
+		assertEquals(CompiledQuestGraph.EventType.KILL_IN_WORLD, event.type());
+		assertEquals(220050000, event.targetId());
+
+		String wildcard = exact.replace("220050000", "0");
+		assertEquals(0, load(document(graph(1, "offer", wildcard, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().event().targetId());
+		assertFailureContains(document(graph(1, "offer", exact.replace("220050000", "220050001"), terminal())),
+			"kill-in-world references missing world 220050001");
+	}
+
+	/**
 	 * 使用真实编译器离线编译由系统属性指定的完整候选批次。
 	 * Offline-compiles a complete candidate batch selected through system properties with the real compiler.
 	 */
@@ -208,6 +281,8 @@ class QuestGraphCompilerTest {
 		assertFailureContains(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("<start-quest/>", "<send-dialog dialog_id=\"1\"/><start-quest/>"), terminal())),
 			"invalid action phase order");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition("accept", 10, "done").replace("text=\"Missing item\"", "text=\"   \""), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			transition("accept", 10, "done").replace("<dialog", "<attack"), terminal()))));
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
@@ -271,6 +346,26 @@ class QuestGraphCompilerTest {
 			"variable counter requires unsupported WORLD scope");
 	}
 
+	/** 绕过 XSD 直接编译 JAXB 数据时，所有 required Boolean 仍必须显式存在。 / Required Boolean fields remain mandatory when JAXB data is compiled without XSD validation. */
+	@Test
+	void compilerRejectsMissingRequiredBooleansWithoutSchema() {
+		String source = document(graph(1, "offer", transition("accept", 10, "done"), terminal()));
+		assertCompilerFailureContains(source.replace(" requires_deadline=\"true\"", ""),
+			"missing required Boolean quest-repeat-available requires_deadline");
+		assertCompilerFailureContains(source.replace(
+			"<quest-repeat-available max_completions=\"255\" requires_deadline=\"true\" expected=\"true\"/>",
+			"<quest-repeat-available max_completions=\"255\" requires_deadline=\"true\"/>"),
+			"missing required Boolean quest-repeat-available expected");
+		assertCompilerFailureContains(source.replace("<quest-collect-items/>",
+			"<recipe-learnable recipe_id=\"155004001\"/>"), "missing required Boolean recipe-learnable expected");
+		assertCompilerFailureContains(source.replace(
+			"<player-reward-inventory-capacity scope=\"SPECIAL_CUBE\" expected=\"true\"/>",
+			"<player-reward-inventory-capacity scope=\"SPECIAL_CUBE\"/>"),
+			"missing required Boolean player-reward-inventory-capacity expected");
+		assertCompilerFailureContains(source.replace(" broadcast=\"true\"", ""),
+			"missing required Boolean send-emotion broadcast");
+	}
+
 	/**
 	 * 验证完成次数与计时器 XML 编译为封闭动作，并固定追加提交后协议。
 	 * Verifies completion-count and timer XML compile into closed actions with fixed post-commit protocol.
@@ -303,17 +398,18 @@ class QuestGraphCompilerTest {
 	@Test
 	void compilerBuildsTypedItemAndHousingEvents() throws Exception {
 		List<String> elements = List.of("item-use", "item-obtained", "item-equipped", "house-item-use");
+		List<Integer> targetIds = List.of(182200001, 182200001, 182200001, 3420021);
 		List<CompiledQuestGraph.EventType> types = List.of(CompiledQuestGraph.EventType.ITEM_USE,
 			CompiledQuestGraph.EventType.ITEM_OBTAINED, CompiledQuestGraph.EventType.ITEM_EQUIPPED,
 			CompiledQuestGraph.EventType.HOUSE_ITEM_USE);
 		for (int i = 0; i < elements.size(); i++) {
-			String event = "<" + elements.get(i) + " item_id=\"182200001\"/>";
-			String source = transition("item-event", 10, "done")
+			String event = "<" + elements.get(i) + " item_id=\"" + targetIds.get(i) + "\"/>";
+			String source = eventTransition("item-event", 10, "done")
 				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", event);
 			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
 				.nodes().get("offer").transitions().getFirst().event();
 			assertEquals(types.get(i), compiled.type());
-			assertEquals(182200001, compiled.targetId());
+			assertEquals(targetIds.get(i).intValue(), compiled.targetId());
 		}
 
 		String missingReference = transition("item-event", 10, "done")
@@ -322,8 +418,16 @@ class QuestGraphCompilerTest {
 			"item-use references missing item 182200002");
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			missingReference.replace(" item_id=\"182200002\"", ""), terminal()))));
+		String missingHousingObject = transition("house-item-event", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<house-item-use item_id=\"3420022\"/>");
+		assertFailureContains(document(graph(1, "offer", missingHousingObject, terminal())),
+			"house-item-use references missing housing object 3420022");
+		String housingObjectAsItem = transition("item-event", 10, "done")
+			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<item-use item_id=\"3420021\"/>");
+		assertFailureContains(document(graph(1, "offer", housingObjectAsItem, terminal())),
+			"item-use references missing item 3420021");
 
-		String itemDialog = transition("item-dialog", 10, "done")
+		String itemDialog = eventTransition("item-dialog", 10, "done")
 			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>",
 				"<item-dialog item_id=\"182200001\" dialog=\"ACCEPT_QUEST\"/>");
 		CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", itemDialog, terminal()))).graphs().get(1)
@@ -351,7 +455,7 @@ class QuestGraphCompilerTest {
 			CompiledQuestGraph.EventType.ZONE_MISSION_ENDED);
 		List<Integer> targets = List.of(0, "TEST_ZONE".hashCode(), "TEST_ZONE".hashCode(), 1);
 		for (int i = 0; i < events.size(); i++) {
-			String source = transition("world-zone-event", 10, "done")
+			String source = eventTransition("world-zone-event", 10, "done")
 				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", events.get(i));
 			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
 				.nodes().get("offer").transitions().getFirst().event();
@@ -381,7 +485,7 @@ class QuestGraphCompilerTest {
 		List<Integer> targets = List.of(0, 0, 1, 913);
 		List<String> qualifiers = java.util.Arrays.asList(null, null, "QUEST_TIMER", null);
 		for (int i = 0; i < events.size(); i++) {
-			String source = transition("lifecycle-event", 10, "done")
+			String source = eventTransition("lifecycle-event", 10, "done")
 				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", events.get(i));
 			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
 				.nodes().get("offer").transitions().getFirst().event();
@@ -413,7 +517,7 @@ class QuestGraphCompilerTest {
 			CompiledQuestGraph.EventType.ESCORT_REACHED_TARGET, CompiledQuestGraph.EventType.ESCORT_LOST_TARGET);
 		List<Integer> targets = List.of(203709, 1, 1);
 		for (int i = 0; i < events.size(); i++) {
-			String source = transition("npc-signal-event", 10, "done")
+			String source = eventTransition("npc-signal-event", 10, "done")
 				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", events.get(i));
 			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
 				.nodes().get("offer").transitions().getFirst().event();
@@ -437,7 +541,7 @@ class QuestGraphCompilerTest {
 	@Test
 	void compilerBuildsTypedPvpSignalEvents() throws Exception {
 		for (int minimumRank : List.of(1, 18)) {
-			String source = transition("ranked-kill", 10, "done")
+			String source = eventTransition("ranked-kill", 10, "done")
 				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>",
 					"<ranked-player-kill minimum_rank=\"" + minimumRank + "\"/>");
 			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
@@ -447,7 +551,7 @@ class QuestGraphCompilerTest {
 			assertEquals(null, compiled.qualifier());
 		}
 
-		String settlement = transition("dredgion-settled", 10, "done")
+		String settlement = eventTransition("dredgion-settled", 10, "done")
 			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", "<dredgion-settled/>");
 		CompiledQuestGraph.Event compiledSettlement = load(document(graph(1, "offer", settlement, terminal()))).graphs().get(1)
 			.nodes().get("offer").transitions().getFirst().event();
@@ -475,7 +579,7 @@ class QuestGraphCompilerTest {
 			CompiledQuestGraph.EventType.NPC_AGGRO_LISTED);
 		List<Integer> targets = List.of(182200001, 203709);
 		for (int i = 0; i < events.size(); i++) {
-			String source = transition("server-signal", 10, "done")
+			String source = eventTransition("server-signal", 10, "done")
 				.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>", events.get(i));
 			CompiledQuestGraph.Event compiled = load(document(graph(1, "offer", source, terminal()))).graphs().get(1)
 				.nodes().get("offer").transitions().getFirst().event();
@@ -503,7 +607,7 @@ class QuestGraphCompilerTest {
 	 */
 	@Test
 	void compilerBuildsReferenceClosedMovementEvents() throws Exception {
-		String windstream = transition("windstream", 10, "done")
+		String windstream = eventTransition("windstream", 10, "done")
 			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>",
 				"<windstream-entered world_id=\"210130000\" route_id=\"405001\"/>");
 		CompiledQuestGraph.Event compiledWindstream = load(document(graph(1, "offer", windstream, terminal()))).graphs().get(1)
@@ -512,7 +616,7 @@ class QuestGraphCompilerTest {
 		assertEquals(210130000, compiledWindstream.targetId());
 		assertEquals("405001", compiledWindstream.qualifier());
 
-		String flyingRing = transition("flying-ring", 10, "done")
+		String flyingRing = eventTransition("flying-ring", 10, "done")
 			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>",
 				"<flying-ring-passed world_id=\"210020000\" ring_name=\"ELTNEN_AIR_BOOSTER_1\"/>");
 		CompiledQuestGraph.Event compiledRing = load(document(graph(1, "offer", flyingRing, terminal()))).graphs().get(1)
@@ -536,7 +640,7 @@ class QuestGraphCompilerTest {
 	/** 验证 skill-use 事件强制 skill 引用与显式重复策略。 / Verifies skill-use events enforce skill references and explicit duplicate policy. */
 	@Test
 	void compilerBuildsReferenceClosedSkillUseEvents() throws Exception {
-		String rawSkill = transition("skill-raw", 10, "done")
+		String rawSkill = eventTransition("skill-raw", 10, "done")
 			.replace("<dialog npc_id=\"203709\" dialog=\"QUEST_SELECT\"/>",
 				"<skill-used skill_id=\"9832\" duplicate_policy=\"RAW_SOURCE\"/>");
 		CompiledQuestGraph.Event compiledRaw = load(document(graph(1, "offer", rawSkill, terminal()))).graphs().get(1)
@@ -649,6 +753,40 @@ class QuestGraphCompilerTest {
 			"<node id=\"done\" terminal=\"true\">" + terminalProtocolLoop + "</node>")));
 		assertFailureContains(document(graph(1, "offer", transition("accept", 10, "done"),
 			"<node id=\"done\" terminal=\"true\">" + terminalProtocolLoop.replace("<close-dialog/>", "<start-quest/>") + "</node>")),
+			"transition without repeat eligibility or a guarded protocol self-loop");
+		String collectedReward = """
+			<transition id="collected-reward" priority="40" to="reward">
+				<dialog npc_id="203709" dialog="CHECK_COLLECTED_ITEMS"/>
+				<conditions>
+					<quest-status op="IN" values="COMPLETE"/>
+					<quest-collect-items/>
+				</conditions>
+				<actions>
+					<set-quest-status status="REWARD"/>
+					<remove-collected-items/>
+					<sync-quest-status/>
+					<send-dialog dialog_id="5"/>
+				</actions>
+			</transition>
+			""";
+		assertFailureContains(document(graph(1, "offer", transition("accept", 10, "done"),
+			"<node id=\"done\" terminal=\"true\">" + collectedReward + "</node><node id=\"reward\" terminal=\"true\"/>")),
+			"cannot execute set-quest-status REWARD from COMPLETE");
+		String collectedProtocolLoop = """
+			<transition id="collected-protocol" priority="40" to="done">
+				<dialog npc_id="203709" dialog="CHECK_COLLECTED_ITEMS"/>
+				<conditions>
+					<quest-status op="IN" values="COMPLETE"/>
+					<quest-collect-items/>
+				</conditions>
+				<actions><send-dialog dialog_id="5"/></actions>
+			</transition>
+			""";
+		loadUnchecked(document(graph(1, "offer", transition("accept", 10, "done"),
+			"<node id=\"done\" terminal=\"true\">" + collectedProtocolLoop + "</node>")));
+		assertFailureContains(document(graph(1, "offer", transition("accept", 10, "done"),
+			"<node id=\"done\" terminal=\"true\">" + collectedProtocolLoop.replace("<send-dialog dialog_id=\"5\"/>",
+				"<remove-collected-items/><send-dialog dialog_id=\"5\"/>") + "</node>")),
 			"transition without repeat eligibility or a guarded protocol self-loop");
 	}
 
@@ -814,6 +952,511 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
 			eligibility.replace("ACTION_ITEM_USE", "UNPROVEN_ACTION") + movie, terminal()))));
 	}
+
+	/**
+	 * 验证奖励特殊背包容量条件编译，并拒绝无效 scope。
+	 * Verifies reward special-cube capacity condition compilation and rejects invalid scopes.
+	 */
+	@Test
+	void compilerClosesRewardInventoryCapacityCondition() throws Exception {
+		String transition = """
+			<transition id="capacity" priority="1" to="done">
+				<dialog npc_id="203709" dialog="STEP_TO_1"/>
+				<conditions>
+					<player-reward-inventory-capacity scope="SPECIAL_CUBE" expected="true"/>
+				</conditions>
+			</transition>
+			""";
+		CompiledQuestGraph.Condition condition = load(document(graph(1, "active", transition, terminal()))).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().conditions().getFirst();
+		assertEquals(new CompiledQuestGraph.PlayerRewardInventoryCapacityCondition(
+			CompiledQuestGraph.RewardInventoryScope.SPECIAL_CUBE, true), condition);
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			transition.replace("SPECIAL_CUBE", "CUBE"), terminal()))));
+	}
+
+	/** 验证当前住宅管家条件编译为无参数强类型条件。 / Verifies active-house butler compilation as a parameterless typed condition. */
+	@Test
+	void compilerClosesActiveHouseButlerCondition() throws Exception {
+		String transition = """
+			<transition id="butler" priority="1" to="done">
+				<dialog npc_id="203709" dialog="STEP_TO_1"/>
+				<conditions><player-active-house-butler/></conditions>
+			</transition>
+			""";
+		CompiledQuestGraph.Condition condition = load(document(graph(1, "active", transition, terminal()))).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().conditions().getFirst();
+		assertEquals(new CompiledQuestGraph.PlayerActiveHouseButlerCondition(), condition);
+	}
+
+	/** 拒绝把需要事件实例身份的能力挂到不提供相应快照的事件。 / Rejects capabilities whose event cannot supply the required identity snapshot. */
+	@Test
+	void compilerRejectsCapabilitiesWithoutRequiredEventSnapshot() throws Exception {
+		String butlerOnKill = """
+			<transition id="butler" priority="1" to="done">
+				<kill npc_id="203709"/>
+				<conditions><player-active-house-butler/></conditions>
+			</transition>
+			""";
+		assertFailureContains(document(graph(1, "active", butlerOnKill, terminal())),
+			"player-active-house-butler without a bound DIALOG NPC snapshot");
+
+		String protocolOnKill = """
+			<transition id="protocol" priority="1" to="done">
+				<kill npc_id="203709"/>
+				<actions><send-dialog dialog_id="5"/></actions>
+			</transition>
+			""";
+		assertFailureContains(document(graph(1, "active", protocolOnKill, terminal())),
+			"send-dialog without a bound DIALOG NPC snapshot");
+		assertFailureContains(document(graph(1, "active",
+			protocolOnKill.replace("<send-dialog dialog_id=\"5\"/>",
+				"<send-emotion target=\"PLAYER\" emotion=\"STAND\" broadcast=\"true\"/>"), terminal())),
+			"send-emotion without a bound DIALOG NPC snapshot");
+		assertFailureContains(document(graph(1, "active",
+			protocolOnKill.replace("<send-dialog dialog_id=\"5\"/>",
+				"<schedule-item-use-dialog duration_ms=\"3000\" dialog_id=\"4\"/>"), terminal())),
+			"schedule-item-use-dialog outside ITEM_USE");
+
+		String escortOnKill = protocolOnKill.replace("<send-dialog dialog_id=\"5\"/>", """
+			<start-escort source="EVENT_NPC" destination_kind="COORDINATES"
+				destination_x="1" destination_y="2" destination_z="3"/>""");
+		assertFailureContains(document(graph(1, "active", escortOnKill, terminal())),
+			"event-NPC escort without a bound DIALOG NPC snapshot");
+
+		String noTargetDialog = protocolOnKill.replace("<kill npc_id=\"203709\"/>",
+			"<dialog npc_id=\"0\" target_kind=\"NO_TARGET\" dialog=\"STEP_TO_1\"/>");
+		assertEquals(new CompiledQuestGraph.SendDialogAction(5), load(document(graph(1, "active", noTargetDialog, terminal())))
+			.graphs().get(1).nodes().get("active").transitions().getFirst().actions().getFirst());
+		assertFailureContains(document(graph(1, "active",
+			noTargetDialog.replace("<send-dialog dialog_id=\"5\"/>",
+				"<send-emotion target=\"PLAYER\" emotion=\"STAND\" broadcast=\"true\"/>"), terminal())),
+			"send-emotion without a bound DIALOG NPC snapshot");
+		assertFailureContains(document(graph(1, "active",
+			noTargetDialog.replace("<actions><send-dialog dialog_id=\"5\"/></actions>",
+				"<conditions><player-active-house-butler/></conditions>"), terminal())),
+			"player-active-house-butler without a bound DIALOG NPC snapshot");
+		assertFailureContains(document(graph(1, "active",
+			noTargetDialog.replace("<send-dialog dialog_id=\"5\"/>", """
+				<start-escort source="EVENT_NPC" destination_kind="COORDINATES"
+					destination_x="1" destination_y="2" destination_z="3"/>"""), terminal())),
+			"event-NPC escort without a bound DIALOG NPC snapshot");
+
+		String itemUseDialog = protocolOnKill.replace("<kill npc_id=\"203709\"/>",
+			"<item-use item_id=\"182200001\"/>");
+		assertEquals(new CompiledQuestGraph.SendDialogAction(5), load(document(graph(1, "active", itemUseDialog, terminal())))
+			.graphs().get(1).nodes().get("active").transitions().getFirst().actions().getFirst());
+		String itemDialog = protocolOnKill.replace("<kill npc_id=\"203709\"/>",
+			"<item-dialog item_id=\"182200001\" dialog=\"ACCEPT_QUEST\"/>");
+		assertEquals(new CompiledQuestGraph.SendDialogAction(5), load(document(graph(1, "active", itemDialog, terminal())))
+			.graphs().get(1).nodes().get("active").transitions().getFirst().actions().getFirst());
+	}
+
+	/**
+	 * 验证物品使用动画延迟对话动作编译为 post-commit 协议，并拒绝非正参数。
+	 * Verifies item-use animation delayed-dialog compiles as post-commit protocol and rejects non-positive parameters.
+	 */
+	@Test
+	void compilerClosesScheduleItemUseDialogProtocol() throws Exception {
+		String transition = """
+			<transition id="item-use" priority="1" to="done">
+				<item-use item_id="182200001"/>
+				<conditions><quest-status op="IN" values="NONE"/></conditions>
+				<actions>
+					<schedule-item-use-dialog duration_ms="3000" dialog_id="4"/>
+				</actions>
+			</transition>
+			""";
+		CompiledQuestGraph.Action action = load(document(graph(1, "offer", transition, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.ScheduleItemUseDialogAction(3000, 4), action);
+		assertEquals(CompiledQuestGraph.ActionPhase.POST_COMMIT_PROTOCOL, action.type().phase());
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition.replace("3000", "0"), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.ScheduleItemUseDialogAction(3000, 0));
+	}
+
+
+	/**
+	 * 验证 send-dialog 支持 BOUND/UNBOUND 绑定，缺省 BOUND，非法绑定失败关闭。
+	 * Verifies send-dialog supports BOUND/UNBOUND binding, defaults to BOUND, and fails closed on illegal binding.
+	 */
+	@Test
+	void compilerClosesUnboundDialogBinding() throws Exception {
+		String bound = """
+			<transition id="bound" priority="1" to="done">
+				<dialog npc_id="203709" dialog="START_DIALOG"/>
+				<actions><send-dialog dialog_id="1352"/></actions>
+			</transition>
+			""";
+		String unbound = """
+			<transition id="unbound" priority="1" to="done">
+				<dialog npc_id="203709" dialog="STEP_TO_1"/>
+				<actions><send-dialog dialog_id="1352" binding="UNBOUND"/></actions>
+			</transition>
+			""";
+		var boundAction = load(document(graph(1, "active", bound, terminal()))).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.SendDialogAction(1352, CompiledQuestGraph.DialogBindingMode.BOUND), boundAction);
+		var unboundAction = load(document(graph(1, "active", unbound, terminal()))).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.SendDialogAction(1352, CompiledQuestGraph.DialogBindingMode.UNBOUND), unboundAction);
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			unbound.replace("UNBOUND", "LOOSE"), terminal()))));
+	}
+
+	/**
+	 * 验证 teleport-player 编译为 REQUIRED，并闭合 world 引用。
+	 * Verifies teleport-player compiles as REQUIRED and closes world references.
+	 */
+	@Test
+	void compilerClosesTeleportPlayerAction() throws Exception {
+		String transition = """
+			<transition id="tp" priority="1" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<conditions><quest-status op="IN" values="START"/></conditions>
+				<actions>
+					<teleport-player world_id="210010000" x="10" y="20" z="30" heading="90"/>
+				</actions>
+			</transition>
+			""";
+		// 测试引用目录需包含 world 210010000；若默认 references 无 world，使用扩展 load。
+		// Test reference catalog must include world 210010000; use extended load if defaults omit worlds.
+		CompiledQuestGraph.Action action = load(document(graph(1, "active",
+			transition.replace("210010000", "220050000"), terminal()))).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.TeleportPlayerAction(220050000, 0, 10f, 20f, 30f, (byte) 90), action);
+		assertEquals(CompiledQuestGraph.ActionPhase.REQUIRED, action.type().phase());
+		String registered = transition.replace("210010000", "301580000")
+			.replace("world_id=\"301580000\"", "world_id=\"301580000\" instance_policy=\"PLAYER_REGISTERED_OR_CREATE\"");
+		CompiledQuestGraph.Action registeredAction = load(document(graph(1, "active", registered, terminal()))).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.TeleportPlayerAction(301580000, 0,
+			CompiledQuestGraph.TeleportInstancePolicy.PLAYER_REGISTERED_OR_CREATE, 10f, 20f, 30f, (byte) 90), registeredAction);
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			registered.replace("instance_policy=\"PLAYER_REGISTERED_OR_CREATE\"",
+				"instance_id=\"2\" instance_policy=\"PLAYER_REGISTERED_OR_CREATE\""), terminal()))));
+		assertFailureContains(document(graph(1, "active",
+			registered.replace("301580000", "220050000"), terminal())), "references non-instance world 220050000");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active", transition, terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			transition.replace("210010000", "220050000").replace("x=\"10\"", "x=\"INF\""), terminal()))));
+	}
+
+	/**
+	 * 验证 instance-scoped 召唤动作编译为 REQUIRED，并闭合 spawner/NPC 引用。
+	 * Verifies instance-scoped spawn compiles as REQUIRED and closes spawner/NPC references.
+	 */
+	@Test
+	void compilerClosesSpawnInstanceNpcAction() throws Exception {
+		String transition = """
+			<transition id="spawn" priority="1" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<conditions><quest-status op="IN" values="START"/></conditions>
+				<actions>
+					<spawn-instance-npc spawner_object_id="700759" npc_id="203709"/>
+				</actions>
+			</transition>
+			""";
+		CompiledQuestGraph.Action action = load(resourceGraph(transition)).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.SpawnInstanceNpcAction(700759, 203709), action);
+		assertEquals(CompiledQuestGraph.ActionPhase.REQUIRED, action.type().phase());
+		String missingSpawner = transition.replace(
+			"spawner_object_id=\"700759\"", "spawner_object_id=\"999999\"");
+		assertFailureContains(document(graph(1, "active", missingSpawner, terminal())),
+			"spawn-instance-npc references missing static spawner 999999");
+		assertFailureContains(document(graph(1, "active",
+			transition.replace("spawner_object_id=\"700759\"", "spawner_object_id=\"203709\""), terminal())),
+			"spawn-instance-npc references missing static spawner 203709");
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.SpawnInstanceNpcAction(0, 203709));
+	}
+
+	/** 正式引用目录只收录确有坐标的静态刷新点，不把任意 NPC 模板或空刷新组算作证明。 / The formal catalog includes only static spawns with coordinates, not arbitrary NPC templates or empty groups. */
+	@Test
+	void referenceCatalogCollectsOnlyRealStaticSpawnPoints() throws Exception {
+		SpawnsData2 spawns = (SpawnsData2) JAXBContext.newInstance(SpawnsData2.class).createUnmarshaller().unmarshal(new StringReader("""
+			<spawns>
+				<spawn_map map_id="220050000">
+					<spawn npc_id="700759"><spot x="1" y="2" z="3" h="4"/></spawn>
+					<spawn npc_id="203709"/>
+				</spawn_map>
+				<spawn_map map_id="220050001">
+					<spawn npc_id="700760"><spot x="1" y="2" z="3" h="4"/></spawn>
+				</spawn_map>
+			</spawns>
+			"""));
+
+		assertEquals(Set.of(700759), QuestGraphReferenceCatalog.collectStaticSpawnNpcIds(spawns, Set.of(220050000)));
+	}
+
+	/** 验证 escort 来源、目的地、walker 与复合端点参数均编译为单一 REQUIRED action。 / Verifies escort source, destination, walker, and composite endpoint parameters compile into one REQUIRED action. */
+	@Test
+	void compilerClosesStartEscortCompositeAction() throws Exception {
+		String transition = """
+			<transition id="escort" priority="1" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<conditions><quest-status op="IN" values="START"/></conditions>
+				<actions>
+					<start-escort source="PLAYER_POSITION_SPAWN" npc_id="203709" heading="8" walker_id="4212"
+						start_walking="true" follow_me="true" start_emote2="true"
+						destination_kind="ZONE" destination_zone="TEST_ZONE"/>
+				</actions>
+			</transition>
+			""";
+		CompiledQuestGraph.Action action = load(resourceGraph(transition)).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.StartEscortAction(CompiledQuestGraph.EscortSource.PLAYER_POSITION_SPAWN,
+			203709, (byte) 8, "4212", true, true, true, false,
+			new CompiledQuestGraph.EscortZoneDestination("TEST_ZONE")), action);
+		assertEquals(CompiledQuestGraph.ActionPhase.REQUIRED, action.type().phase());
+
+		String eventNpc = transition.replace("source=\"PLAYER_POSITION_SPAWN\" npc_id=\"203709\" heading=\"8\"",
+			"source=\"EVENT_NPC\"")
+			.replace(" walker_id=\"4212\"", "")
+			.replace(" follow_me=\"true\"", "")
+			.replace(" start_emote2=\"true\"", "")
+			.replace("destination_kind=\"ZONE\" destination_zone=\"TEST_ZONE\"",
+				"destination_kind=\"COORDINATES\" destination_x=\"505.69427\" destination_y=\"437.69382\" destination_z=\"885.1844\"");
+		CompiledQuestGraph.Action eventAction = load(resourceGraph(eventNpc)).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.StartEscortAction(CompiledQuestGraph.EscortSource.EVENT_NPC, 0, (byte) 0,
+			null, true, false, false, false,
+			new CompiledQuestGraph.EscortCoordinatesDestination(505.69427f, 437.69382f, 885.1844f)), eventAction);
+
+		String replace = transition.replace("source=\"PLAYER_POSITION_SPAWN\"", "source=\"REPLACE_EVENT_NPC_AT_PLAYER_POSITION\"")
+			.replace(" walker_id=\"4212\"", "")
+			.replace("start_walking=\"true\"", "start_walking=\"false\"")
+			.replace(" start_emote2=\"true\"", "")
+			.replace(" follow_me=\"true\"", " follow_me=\"true\" send_npc_info=\"true\"")
+			.replace("destination_kind=\"ZONE\" destination_zone=\"TEST_ZONE\"",
+				"destination_kind=\"NPC\" destination_npc_id=\"700759\"");
+		CompiledQuestGraph.Action replaceAction = load(resourceGraph(replace)).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.StartEscortAction(
+			CompiledQuestGraph.EscortSource.REPLACE_EVENT_NPC_AT_PLAYER_POSITION, 203709, (byte) 8, null, false, true,
+			false, true, new CompiledQuestGraph.EscortNpcDestination(700759)), replaceAction);
+	}
+
+	@Test
+	void compilerClosesGroupSystemMessageAndFlightProtocol() throws Exception {
+		String transition = """
+			<transition id="protocol" priority="1" to="done">
+				<dialog npc_id="203709" dialog="STEP_TO_3"/>
+				<conditions>
+					<quest-status op="IN" values="START"/>
+					<player-group-membership expected="false"/>
+				</conditions>
+				<actions>
+					<send-system-message kind="WAREHOUSE_FULL_INVENTORY"/>
+					<start-flight-teleport path_id="31"/>
+				</actions>
+			</transition>
+			""";
+		CompiledQuestGraph.Transition compiled = load(document(graph(1, "active", transition, terminal()))).graphs().get(1)
+			.nodes().get("active").transitions().getFirst();
+		assertEquals(new CompiledQuestGraph.PlayerGroupMembershipCondition(false), compiled.conditions().get(1));
+		assertEquals(new CompiledQuestGraph.SendSystemMessageAction(
+			CompiledQuestGraph.SystemMessageKind.WAREHOUSE_FULL_INVENTORY), compiled.actions().getFirst());
+		assertEquals(new CompiledQuestGraph.StartFlightTeleportAction(31), compiled.actions().get(1));
+		assertEquals(31001, ((CompiledQuestGraph.StartFlightTeleportAction) compiled.actions().get(1)).protocolId());
+		assertEquals(CompiledQuestGraph.ActionPhase.POST_COMMIT_PROTOCOL, compiled.actions().get(1).type().phase());
+
+		QuestGraphCompiler.References withoutFlightPaths = new QuestGraphCompiler.References(REFERENCES.questIds(),
+			REFERENCES.npcIds(), REFERENCES.itemIds(), REFERENCES.housingObjectIds(), REFERENCES.titleIds(), REFERENCES.zoneNames(),
+			REFERENCES.movieIds(), REFERENCES.windstreamRoutes(), REFERENCES.flyingRings(), REFERENCES.skillIds(), REFERENCES.worldIds(),
+			REFERENCES.instanceWorldIds(), REFERENCES.recipeIds(), REFERENCES.craftSkillIds(), REFERENCES.walkerIds(),
+			REFERENCES.staticSpawnNpcIds(), Set.of());
+		assertFailureContains(document(graph(1, "active", transition, terminal())), withoutFlightPaths,
+			"references missing path 31");
+		assertFailureContains(document(graph(1, "active", transition.replace("path_id=\"31\"", "path_id=\"424\""), terminal())),
+			"references missing path 424");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			transition.replace("path_id=\"31\"", "path_id=\"2147484\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.StartFlightTeleportAction(2_147_484));
+	}
+
+	/** 验证 escort 条件属性与静态引用缺口均失败关闭。 / Verifies escort conditional attributes and static-reference gaps fail closed. */
+	@Test
+	void startEscortRejectsAmbiguousShapesAndMissingReferences() throws Exception {
+		String action = """
+			<start-escort source="EVENT_NPC" start_walking="true" walker_id="4212"
+				destination_kind="COORDINATES" destination_x="1" destination_y="2" destination_z="3"/>
+			""";
+		String transition = """
+			<transition id="escort" priority="1" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<conditions><quest-status op="IN" values="START"/></conditions>
+				<actions>%s</actions>
+			</transition>
+			""";
+		assertFailureContains(document(graph(1, "active", transition.formatted(
+			action.replace("source=\"EVENT_NPC\"", "source=\"EVENT_NPC\" npc_id=\"203709\"")), terminal())),
+			"EVENT_NPC must not declare npc_id");
+		assertFailureContains(document(graph(1, "active", transition.formatted(
+			action.replace("walker_id=\"4212\"", "walker_id=\"MISSING\"")), terminal())),
+			"references missing walker MISSING");
+		assertFailureContains(document(graph(1, "active", transition.formatted(
+			action.replace("destination_z=\"3\"", "")), terminal())), "coordinates are incomplete");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active", transition.formatted(
+			action.replace("destination_kind=\"COORDINATES\"", "destination_kind=\"COORDINATES\" destination_x=\"NaN\"")
+				.replace(" destination_x=\"1\"", "")), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active", transition.formatted(
+			action.replace("destination_kind=\"COORDINATES\" ", "")), terminal()))));
+		assertFailureContains(document(graph(1, "active", transition.formatted(
+			action.replace("destination_kind=\"COORDINATES\" destination_x=\"1\" destination_y=\"2\" destination_z=\"3\"",
+				"destination_kind=\"ZONE\" destination_zone=\"MISSING_ZONE\"")), terminal())),
+			"references missing zone MISSING_ZONE");
+		assertFailureContains(document(graph(1, "active", transition.formatted(
+			action.replace("destination_kind=\"COORDINATES\" destination_x=\"1\" destination_y=\"2\" destination_z=\"3\"",
+				"destination_kind=\"NPC\" destination_npc_id=\"203709\"")), terminal())),
+			"references missing destination NPC static spawn 203709");
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.StartEscortAction(
+			CompiledQuestGraph.EscortSource.EVENT_NPC, 1, (byte) 0, null, false, false, false, false,
+			new CompiledQuestGraph.EscortNpcDestination(203709)));
+	}
+
+	/** XSD 与 compiler 对 escort zone 使用相同的 canonical 名称域。 / XSD and compiler share the canonical escort-zone name domain. */
+	@Test
+	void startEscortUsesCanonicalZoneSchema() throws Exception {
+		String transition = """
+			<transition id="escort-zone" priority="1" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<actions><start-escort source="EVENT_NPC" destination_kind="ZONE" destination_zone="_TEST_ZONE"/></actions>
+			</transition>
+			""";
+		QuestGraphCompiler.References references = new QuestGraphCompiler.References(Set.of(1), Set.of(203709), Set.of(),
+			Set.of(), Set.of("_TEST_ZONE"), Set.of());
+		load(resourceGraph(transition), references);
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			transition.replace("_TEST_ZONE", "test_zone"), resourceCleanupNode() + terminal())), references));
+	}
+
+	/** 终止 owner 的转换不得同时创建新的 cleanup lease。 / Owner termination must not create a new cleanup lease in the same transition. */
+	@Test
+	void compilerRejectsTerminalLifecycleWithResourceCreation() {
+		String transition = """
+			<transition id="%s" priority="1" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<actions>
+					%s
+					<start-escort source="EVENT_NPC" destination_kind="COORDINATES"
+						destination_x="1" destination_y="2" destination_z="3"/>
+				</actions>
+			</transition>
+			""";
+		String abandon = transition.formatted("abandon-resource", "<abandon-quest/>");
+		assertFailureContains(document(graph(1, "active", abandon, terminal())),
+			"combines terminal lifecycle with durable resource creation");
+		String finish = transition.formatted("finish-resource", "<finish-quest reward_index=\"0\"/>");
+		assertFailureContains(document(graph(1, "reward", finish, terminal())),
+			"combines terminal lifecycle with durable resource creation");
+		String directComplete = transition.formatted("complete-resource", "<set-quest-status status=\"COMPLETE\"/>");
+		assertFailureContains(document(graph(1, "active", directComplete, terminal())),
+			"combines terminal lifecycle with durable resource creation");
+		String duplicateTerminal = """
+			<transition id="duplicate-terminal" priority="1" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<actions>
+					<abandon-quest/>
+					<finish-quest reward_index="0"/>
+				</actions>
+			</transition>
+			""";
+		assertFailureContains(document(graph(1, "active", duplicateTerminal, terminal())),
+			"multiple terminal lifecycle actions");
+	}
+
+	/** 已知当前状态与 lifecycle 动作矛盾时由 compiler 阻断，而不是留到生产 executor 固定失败。 / Known lifecycle contradictions fail at compile time. */
+	@Test
+	void compilerRejectsKnownInvalidLifecycleStateFlow() {
+		String invalidFinish = """
+			<transition id="invalid-finish" priority="1" to="done">
+				<dialog npc_id="203709" dialog="SELECT_REWARD"/>
+				<conditions><quest-status op="IN" values="START"/></conditions>
+				<actions><finish-quest reward_index="0"/></actions>
+			</transition>
+			""";
+		assertFailureContains(document(graph(1, "active", invalidFinish, terminal())),
+			"cannot execute finish-quest from START");
+		String promotedFinish = invalidFinish.replace("<finish-quest reward_index=\"0\"/>",
+			"<set-quest-status status=\"REWARD\"/><finish-quest reward_index=\"0\"/>");
+		loadUnchecked(document(graph(1, "active", promotedFinish, terminal())));
+		assertFailureContains(document(graph(1, "active",
+			invalidFinish.replace("<quest-status ", "<quest-status quest_id=\"1\" "), terminal())),
+			"cannot execute finish-quest from START");
+		assertFailureContains(document(graph(1, "active",
+			invalidFinish.replace("op=\"IN\" values=\"START\"", "op=\"NOT_IN\" values=\"NONE REWARD COMPLETE LOCKED\""), terminal())),
+			"cannot execute finish-quest from START");
+		String contradictory = invalidFinish.replace("<quest-status op=\"IN\" values=\"START\"/>",
+			"<quest-status op=\"IN\" values=\"START\"/><quest-status op=\"NOT_IN\" values=\"START\"/>");
+		assertFailureContains(document(graph(1, "active", contradictory, terminal())),
+			"contradictory current quest-status conditions");
+
+		String invalidHistory = invalidFinish.replace("<finish-quest reward_index=\"0\"/>",
+			"<set-quest-status status=\"COMPLETE\"/><set-quest-status status=\"LOCKED\"/>");
+		assertFailureContains(document(graph(1, "active", invalidHistory, terminal())),
+			"cannot prove empty completion history required by LOCKED");
+		String externalInvalidHistory = invalidFinish.replace("<finish-quest reward_index=\"0\"/>",
+			"<set-quest-status status=\"COMPLETE\"/><start-event-quest quest_id=\"1\" status=\"LOCKED\"/>");
+		assertFailureContains(document(graph(1, "active", externalInvalidHistory, terminal())),
+			"cannot prove empty completion history required by LOCKED");
+		String completeWithoutHistory = invalidFinish.replace("values=\"START\"", "values=\"LOCKED\"")
+			.replace("<finish-quest reward_index=\"0\"/>", "<start-event-quest quest_id=\"1\" status=\"COMPLETE\"/>");
+		assertFailureContains(document(graph(1, "active", completeWithoutHistory, terminal())),
+			"cannot prove completion history required by COMPLETE");
+	}
+
+	/** 跨转换创建的 durable resource 必须在任何 reset 或终点前通过 lifecycle endpoint 清理。 / Durable resources created on an earlier edge require lifecycle cleanup before reset or termination. */
+	@Test
+	void compilerRejectsDurableResourceLeaksAcrossTransitions() {
+		String startEscort = """
+			<transition id="start-escort" priority="1" to="escorting">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<conditions><quest-status op="IN" values="START"/></conditions>
+				<actions><start-escort source="EVENT_NPC" destination_kind="COORDINATES"
+					destination_x="1" destination_y="2" destination_z="3"/></actions>
+			</transition>
+			""";
+		String directComplete = """
+			<node id="escorting">
+				<transition id="direct-complete" priority="1" to="done">
+					<dialog npc_id="203709" dialog="USE_OBJECT"/>
+					<conditions><quest-status op="IN" values="START"/></conditions>
+					<actions><set-quest-status status="COMPLETE"/></actions>
+				</transition>
+			</node>
+			""";
+		assertFailureContains(document(graph(1, "active", startEscort, directComplete + terminal())),
+			"enters COMPLETE without durable cleanup");
+		String reset = directComplete.replace("<set-quest-status status=\"COMPLETE\"/>", "<start-quest/>");
+		assertFailureContains(document(graph(1, "active", startEscort, reset + terminal())),
+			"resets an owner with an active durable resource");
+		String finish = directComplete.replace("<set-quest-status status=\"COMPLETE\"/>",
+			"<set-quest-status status=\"REWARD\"/><finish-quest reward_index=\"0\"/>");
+		loadUnchecked(document(graph(1, "active", startEscort, finish + terminal())));
+	}
+
+	/** 未经过 XSD 的 JAXB 数据也不得把空白枚举静默降级为默认值。 / JAXB data bypassing XSD must not silently default blank enums. */
+	@Test
+	void compilerRejectsBlankOptionalEnumsWithoutSchema() {
+		String dialog = """
+			<transition id="blank-dialog-binding" priority="1" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<actions><send-dialog dialog_id="10000" binding=" "/></actions>
+			</transition>
+			""";
+		assertCompilerFailureContains(document(graph(1, "active", dialog, terminal())), "invalid dialog action");
+
+		String teleport = """
+			<transition id="blank-instance-policy" priority="1" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<actions><teleport-player world_id="220050000" instance_policy=" " x="1" y="2" z="3"/></actions>
+			</transition>
+			""";
+		assertCompilerFailureContains(document(graph(1, "active", teleport, terminal())), "invalid teleport-player action");
+	}
+
 
 	/** 验证工单配方条件、材料追加、过程物品清理和配方动作均引用闭合且阶段固定。 / Verifies work-order recipe conditions, additive materials, work-item cleanup, and recipe actions are reference closed with fixed phases. */
 	@Test
@@ -1049,8 +1692,12 @@ class QuestGraphCompilerTest {
 		Set<Integer> movieIds = new HashSet<>();
 		Set<Integer> skillIds = new HashSet<>();
 		Set<Integer> worldIds = new HashSet<>();
+		Set<Integer> instanceWorldIds = new HashSet<>();
 		Set<Integer> recipeIds = new HashSet<>();
 		Set<Integer> craftSkillIds = new HashSet<>();
+		Set<String> walkerIds = new HashSet<>();
+		Set<Integer> staticSpawnNpcIds = new HashSet<>();
+		Set<Integer> flightPathIds = new HashSet<>();
 		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
 		inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 		inputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
@@ -1063,23 +1710,37 @@ class QuestGraphCompilerTest {
 					}
 					addIntegerAttribute(reader, "quest_id", questIds);
 					addIntegerAttribute(reader, "npc_id", npcIds);
+					addIntegerAttribute(reader, "destination_npc_id", npcIds);
+					addIntegerAttribute(reader, "spawner_object_id", staticSpawnNpcIds);
+					if (reader.getLocalName().equals("start-escort")) {
+						addIntegerAttribute(reader, "destination_npc_id", staticSpawnNpcIds);
+					}
 					addIntegerAttribute(reader, "object_id", npcIds);
 					addIntegerAttribute(reader, "item_id", itemIds);
 					addIntegerAttribute(reader, "skill_id", skillIds);
 					addIntegerAttribute(reader, "world_id", worldIds);
+					if (reader.getLocalName().equals("teleport-player")
+							&& "PLAYER_REGISTERED_OR_CREATE".equals(reader.getAttributeValue(null, "instance_policy"))) {
+						instanceWorldIds.add(Integer.parseInt(reader.getAttributeValue(null, "world_id")));
+					}
 					addIntegerAttribute(reader, "title_id", titleIds);
 					addStringAttribute(reader, "zone_name", zoneNames);
 					addIntegerAttribute(reader, "movie_id", movieIds);
 					addIntegerAttribute(reader, "recipe_id", recipeIds);
 					addIntegerAttribute(reader, "craft_skill_id", craftSkillIds);
+					addStringAttribute(reader, "walker_id", walkerIds);
+					if (reader.getLocalName().equals("start-flight-teleport")) {
+						addIntegerAttribute(reader, "path_id", flightPathIds);
+					}
 				}
 			} finally {
 				reader.close();
 			}
 		}
 		return new QuestGraphCompiler.References(
-			questIds, npcIds, itemIds, titleIds, zoneNames, movieIds, Set.of(), Set.of(), skillIds, worldIds, recipeIds,
-			craftSkillIds);
+			questIds, npcIds, itemIds, Set.of(), titleIds, zoneNames, movieIds, Set.of(), Set.of(), skillIds, worldIds,
+			instanceWorldIds, recipeIds,
+			craftSkillIds, walkerIds, staticSpawnNpcIds, flightPathIds);
 	}
 
 	/** 添加存在的正整数 XML 属性。 / Adds a present positive-integer XML attribute. */
@@ -1116,6 +1777,24 @@ class QuestGraphCompilerTest {
 			""".formatted(questId, initialNode, variables, initialNode, transitions, extraNodes);
 	}
 
+	/** 构造资源动作后经 typed abandon endpoint 清理再进入终点的完整图。 / Builds a complete resource-action graph with typed abandon cleanup before its terminal node. */
+	private static String resourceGraph(String transition) {
+		return document(graph(1, "active", transition.replace("to=\"done\"", "to=\"resource-active\""),
+			resourceCleanupNode() + terminal()));
+	}
+
+	private static String resourceCleanupNode() {
+		return """
+			<node id="resource-active">
+				<transition id="cleanup-resource" priority="1" to="done">
+					<dialog npc_id="203709" dialog="USE_OBJECT"/>
+					<conditions><quest-status op="IN" values="START"/></conditions>
+					<actions><abandon-quest/></actions>
+				</transition>
+			</node>
+			""";
+	}
+
 	private static String variables() {
 		return """
 			<variables>
@@ -1145,6 +1824,7 @@ class QuestGraphCompilerTest {
 				<player-abyss-rank minimum="10"/>
 				<player-inventory item_id="182200001" op="GREATER_EQUAL" count="1"/>
 				<player-equipped item_id="182200001"/>
+				<player-reward-inventory-capacity scope="SPECIAL_CUBE" expected="true"/>
 			</conditions>
 				<actions>
 					<start-quest/>
@@ -1160,9 +1840,17 @@ class QuestGraphCompilerTest {
 					<close-dialog/>
 					<show-quest-list/>
 					<send-player-message text="Missing item" channel="BRIGHT_YELLOW_CENTER"/>
+					<send-emotion target="PLAYER" emotion="STAND" broadcast="true"/>
 				</actions>
 			</transition>
 			""".formatted(id, priority, target);
+	}
+
+	/** 构造不依赖 DIALOG objectId 的通用事件编译 fixture。 / Builds a generic event fixture without DIALOG-object protocol dependencies. */
+	private static String eventTransition(String id, int priority, String target) {
+		return transition(id, priority, target)
+			.replace("<send-dialog dialog_id=\"5\"/>", "")
+			.replace("<send-emotion target=\"PLAYER\" emotion=\"STAND\" broadcast=\"true\"/>", "");
 	}
 
 	/** 创建带 finish/message 对的 repeat 转换。 / Creates a repeat transition with a paired finish/message protocol. */

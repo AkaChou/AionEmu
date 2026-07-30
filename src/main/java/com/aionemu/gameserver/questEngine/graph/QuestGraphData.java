@@ -273,6 +273,12 @@ public final class QuestGraphData {
 		@XmlAttribute(name = "npc_id", required = true)
 		private Integer npcId;
 		/**
+		 * 对话目标种类；普通 NPC 对话可省略，显式无目标事件必须声明 NO_TARGET。
+		 * Dialog target kind; regular NPC dialogs may omit it, while targetless events must declare NO_TARGET.
+		 */
+		@XmlAttribute(name = "target_kind")
+		private String targetKind;
+		/**
 		 * 客户端对话标识。
 		 * Client dialog identifier.
 		 */
@@ -367,9 +373,13 @@ public final class QuestGraphData {
 		private Integer itemId;
 	}
 
-	/** 表示玩家完成地图加载并进入世界；路由不接受客户端参数。 / Represents world entry after map load without client routing parameters. */
+	/** 表示玩家完成地图加载并进入世界；可按服务端快照 world 路由。 / Represents world entry after map load, optionally routed by snapshot world. */
 	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
 	public static final class WorldEnteredEventData {
+		/** 可选目标世界；缺省 0 表示任意世界。 / Optional target world; absent/0 matches any world. */
+		@XmlAttribute(name = "world_id")
+		private Integer worldId;
 	}
 
 	/** 表示进入命名区域事件的 XML 路由参数。 / Represents XML routing parameters for entering a named zone. */
@@ -547,7 +557,10 @@ public final class QuestGraphData {
 			@XmlElement(name = "player-title", type = PlayerTitleConditionData.class),
 			@XmlElement(name = "player-abyss-rank", type = PlayerAbyssRankConditionData.class),
 			@XmlElement(name = "player-inventory", type = PlayerInventoryConditionData.class),
-			@XmlElement(name = "player-equipped", type = PlayerEquippedConditionData.class)
+			@XmlElement(name = "player-equipped", type = PlayerEquippedConditionData.class),
+			@XmlElement(name = "player-reward-inventory-capacity", type = PlayerRewardInventoryCapacityConditionData.class),
+			@XmlElement(name = "player-active-house-butler", type = PlayerActiveHouseButlerConditionData.class),
+			@XmlElement(name = "player-group-membership", type = PlayerGroupMembershipConditionData.class)
 		})
 		private List<Object> values = new ArrayList<>();
 	}
@@ -825,6 +838,34 @@ public final class QuestGraphData {
 	}
 
 	/**
+	 * 表示奖励结算前特殊背包容量资格的 XML 参数。
+	 * Represents XML parameters for special-cube capacity eligibility before reward settlement.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayerRewardInventoryCapacityConditionData {
+		/** 封闭库存范围。 / Closed inventory scope. */
+		@XmlAttribute(required = true)
+		private String scope;
+		/** 期望是否仍有空位。 / Whether free capacity is expected. */
+		@XmlAttribute(required = true)
+		private Boolean expected;
+	}
+
+	/** 表示当前 DIALOG 目标必须是玩家当前住宅管家。 / Requires the current DIALOG target to be the active-house butler. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static final class PlayerActiveHouseButlerConditionData {
+	}
+
+	/** 比较玩家是否属于小队。 / Compares whether the player belongs to a party. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PlayerGroupMembershipConditionData {
+		@XmlAttribute(required = true)
+		private Boolean expected;
+	}
+
+	/**
 	 * 包装 XML 中的动作列表。
 	 * Wraps the action list in XML.
 	 */
@@ -856,7 +897,14 @@ public final class QuestGraphData {
 			@XmlElement(name = "sync-quest-status", type = SyncQuestStatusActionData.class),
 			@XmlElement(name = "send-repeat-deadline-message", type = SendRepeatDeadlineMessageActionData.class),
 			@XmlElement(name = "send-player-message", type = SendPlayerMessageActionData.class),
+			@XmlElement(name = "send-system-message", type = SendSystemMessageActionData.class),
+			@XmlElement(name = "send-emotion", type = SendEmotionActionData.class),
+			@XmlElement(name = "start-flight-teleport", type = StartFlightTeleportActionData.class),
 			@XmlElement(name = "play-movie", type = PlayMovieActionData.class),
+			@XmlElement(name = "schedule-item-use-dialog", type = ScheduleItemUseDialogActionData.class),
+			@XmlElement(name = "spawn-instance-npc", type = SpawnInstanceNpcActionData.class),
+			@XmlElement(name = "start-escort", type = StartEscortActionData.class),
+			@XmlElement(name = "teleport-player", type = TeleportPlayerActionData.class),
 			@XmlElement(name = "sync-craft-skill-reward", type = SyncCraftSkillRewardActionData.class),
 			@XmlElement(name = "notify-recipe-rejection", type = NotifyRecipeRejectionActionData.class)
 		})
@@ -1106,6 +1154,9 @@ public final class QuestGraphData {
 		/** 对话页面 ID。 / Dialog-page id. */
 		@XmlAttribute(name = "dialog_id", required = true)
 		private Integer dialogId;
+		/** 任务绑定模式；缺省 BOUND。 / Quest binding mode; defaults to BOUND. */
+		@XmlAttribute
+		private String binding;
 	}
 
 	/** 关闭当前对话窗口。 / Closes the current dialog window. */
@@ -1157,6 +1208,37 @@ public final class QuestGraphData {
 		private String channel;
 	}
 
+	/** 发送一种封闭系统消息。 / Sends one closed system-message kind. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SendSystemMessageActionData {
+		@XmlAttribute(required = true)
+		private String kind;
+	}
+
+	/** 启动引用闭合的飞行路径。 / Starts a reference-closed flight path. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class StartFlightTeleportActionData {
+		@XmlAttribute(name = "path_id", required = true)
+		private Integer pathId;
+	}
+
+	/** 由玩家或当前对话 NPC 播放类型化表情。 / Plays a typed emote by the player or current dialog NPC. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SendEmotionActionData {
+		/** 服务端权威表情发起者。 / Server-authoritative emote actor. */
+		@XmlAttribute(required = true)
+		private String target;
+		/** 表情枚举名称。 / Emotion enum name. */
+		@XmlAttribute(required = true)
+		private String emotion;
+		/** 是否广播给附近玩家。 / Whether nearby players receive the emote. */
+		@XmlAttribute(required = true)
+		private Boolean broadcast;
+	}
+
 	/** 播放引用闭合的任务影片。 / Plays a reference-closed quest movie. */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@Getter
@@ -1164,5 +1246,113 @@ public final class QuestGraphData {
 		/** 影片协议标识。 / Movie protocol identifier. */
 		@XmlAttribute(name = "movie_id", required = true)
 		private Integer movieId;
+	}
+
+	/**
+	 * 物品使用动画延迟后打开对话页。
+	 * Schedules a dialog page after the item-use animation delay.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class ScheduleItemUseDialogActionData {
+		/** 动画持续时间（毫秒）。 / Animation duration in milliseconds. */
+		@XmlAttribute(name = "duration_ms", required = true)
+		private Integer durationMs;
+		/** 延迟结束后打开的对话页。 / Dialog page opened after the delay. */
+		@XmlAttribute(name = "dialog_id", required = true)
+		private Integer dialogId;
+	}
+
+	/**
+	 * 在 spawner 静态坐标召唤 instance-scoped NPC。
+	 * Spawns an instance-scoped NPC at the spawner static coordinates.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class SpawnInstanceNpcActionData {
+		/** 提供坐标的 spawner 物体模板 ID。 / Spawner object template id providing coordinates. */
+		@XmlAttribute(name = "spawner_object_id", required = true)
+		private Integer spawnerObjectId;
+		/** 被召唤的 NPC 模板 ID。 / Spawned NPC template id. */
+		@XmlAttribute(name = "npc_id", required = true)
+		private Integer npcId;
+	}
+
+	/** 表示原子 escort 启动动作的 XML 参数。 / Represents XML parameters for an atomic escort-start action. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class StartEscortActionData {
+		/** follower 来源。 / Follower source. */
+		@XmlAttribute(required = true)
+		private String source;
+		/** 生成来源使用的 NPC 模板；EVENT_NPC 不声明。 / NPC template used by spawning sources; omitted for EVENT_NPC. */
+		@XmlAttribute(name = "npc_id")
+		private Integer npcId;
+		/** 生成 follower 的朝向。 / Heading of a spawned follower. */
+		@XmlAttribute
+		private Byte heading;
+		/** 可选巡逻路线。 / Optional walker route. */
+		@XmlAttribute(name = "walker_id")
+		private String walkerId;
+		/** 是否调用 walking endpoint。 / Whether the walking endpoint is invoked. */
+		@XmlAttribute(name = "start_walking")
+		private Boolean startWalking;
+		/** 是否向玩家启动 FOLLOW_ME；到达检查任务始终安装。 / Whether FOLLOW_ME is emitted; the arrival-check task is always installed. */
+		@XmlAttribute(name = "follow_me")
+		private Boolean followMe;
+		/** 是否广播 START_EMOTE2。 / Whether START_EMOTE2 is broadcast. */
+		@XmlAttribute(name = "start_emote2")
+		private Boolean startEmote2;
+		/** 是否先向 owner 发送 follower 的 NPC 信息。 / Whether follower NPC info is sent to the owner. */
+		@XmlAttribute(name = "send_npc_info")
+		private Boolean sendNpcInfo;
+		/** 跟随到达判定目标种类。 / Arrival-check destination kind. */
+		@XmlAttribute(name = "destination_kind", required = true)
+		private String destinationKind;
+		/** ZONE 目的地名称。 / ZONE destination name. */
+		@XmlAttribute(name = "destination_zone")
+		private String destinationZone;
+		/** NPC 目的地模板。 / NPC destination template. */
+		@XmlAttribute(name = "destination_npc_id")
+		private Integer destinationNpcId;
+		/** COORDINATES 目的地 X。 / COORDINATES destination X. */
+		@XmlAttribute(name = "destination_x")
+		private Float destinationX;
+		/** COORDINATES 目的地 Y。 / COORDINATES destination Y. */
+		@XmlAttribute(name = "destination_y")
+		private Float destinationY;
+		/** COORDINATES 目的地 Z。 / COORDINATES destination Z. */
+		@XmlAttribute(name = "destination_z")
+		private Float destinationZ;
+	}
+
+	/**
+	 * 传送玩家到世界坐标。
+	 * Teleports the player to world coordinates.
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class TeleportPlayerActionData {
+		/** 目标世界 ID。 / Target world id. */
+		@XmlAttribute(name = "world_id", required = true)
+		private Integer worldId;
+		/** 目标 instance（缺省 0=当前/默认）。 / Target instance (default 0 = current/default). */
+		@XmlAttribute(name = "instance_id")
+		private Integer instanceId;
+		/** instance 解析策略（缺省普通显式/默认）。 / Instance resolution policy (defaults to normal explicit/default routing). */
+		@XmlAttribute(name = "instance_policy")
+		private String instancePolicy;
+		/** 坐标 X。 / Coordinate X. */
+		@XmlAttribute(name = "x", required = true)
+		private Float x;
+		/** 坐标 Y。 / Coordinate Y. */
+		@XmlAttribute(name = "y", required = true)
+		private Float y;
+		/** 坐标 Z。 / Coordinate Z. */
+		@XmlAttribute(name = "z", required = true)
+		private Float z;
+		/** 朝向。 / Heading. */
+		@XmlAttribute(name = "heading")
+		private Byte heading;
 	}
 }

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.graph.runtime;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerActiveHouseButlerCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CraftSkillEligibilityCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PackedCounterCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
@@ -9,7 +10,10 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InvasionWorld
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerEquippedCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGroupMembershipCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerInventoryCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRewardInventoryCapacityCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RewardInventoryScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
@@ -23,6 +27,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestVariable
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionInvocation;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionResult;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.KillInWorldEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
@@ -72,6 +77,9 @@ public final class QuestGraphPlayerConditionEvaluator {
 				case PlayerInventoryCondition condition -> compare(player.getInventory().getItemCountByItemId(condition.itemId()),
 					condition.operation(), condition.count());
 				case PlayerEquippedCondition condition -> player.getEquipment().getEquippedItemIds().contains(condition.itemId());
+				case PlayerRewardInventoryCapacityCondition condition -> matchesRewardInventoryCapacity(condition);
+				case PlayerActiveHouseButlerCondition condition -> matchesActiveHouseButler(condition, invocation);
+				case PlayerGroupMembershipCondition condition -> player.isInGroup2() == condition.expected();
 				case QuestCollectItemsCondition condition -> QuestService.collectItemCheck(
 					new QuestEnv(null, player, invocation.questId(), 0), false);
 				case RecipeLearnableCondition condition -> throw new IllegalArgumentException(
@@ -83,6 +91,23 @@ public final class QuestGraphPlayerConditionEvaluator {
 		} catch (RuntimeException e) {
 			return ConditionResult.FAILED;
 		}
+	}
+
+	/** 对照服务端 DIALOG NPC 快照检查当前住宅管家，缺少住宅或管家时不匹配。 / Matches the active-house butler against the server DIALOG snapshot. */
+	private boolean matchesActiveHouseButler(PlayerActiveHouseButlerCondition condition, ConditionInvocation invocation) {
+		if (!(invocation.event() instanceof DialogEvent event)) {
+			throw new IllegalArgumentException("Active-house butler condition requires DIALOG");
+		}
+		if (event.npcObjectId() <= 0) {
+			throw new IllegalArgumentException("Active-house butler condition requires a bound NPC object");
+		}
+		if (player.getActiveHouse() == null || player.getActiveHouse().getButler() == null) {
+			return false;
+		}
+		var butler = player.getActiveHouse().getButler();
+		return butler.getNpcId() == event.npcId() && butler.getObjectId() == event.npcObjectId()
+			&& player.getKnownList().getObject(event.npcObjectId()) == butler
+			&& player.getWorldId() == butler.getWorldId() && player.getInstanceId() == butler.getInstanceId();
 	}
 
 	/** 使用持久化 WORLD_ENTERED 快照校验世界与服务端入侵访问凭据。 / Validates the world and server invasion-access authority from the persisted WORLD_ENTERED snapshot. */
@@ -103,6 +128,18 @@ public final class QuestGraphPlayerConditionEvaluator {
 		}
 		int delta = player.getLevel() - event.victimLevel();
 		return (condition.min() == null || delta >= condition.min()) && (condition.max() == null || delta <= condition.max());
+	}
+
+	/**
+	 * 读取服务端特殊背包容量；只有 SPECIAL_CUBE 且 expected=hasFreeSlot 才匹配。
+	 * Reads server special-cube capacity; only SPECIAL_CUBE with expected=hasFreeSlot matches.
+	 */
+	private boolean matchesRewardInventoryCapacity(PlayerRewardInventoryCapacityCondition condition) {
+		if (condition.scope() != RewardInventoryScope.SPECIAL_CUBE) {
+			throw new IllegalArgumentException("Unsupported reward inventory scope");
+		}
+		boolean hasCapacity = !player.getInventory().isFullSpecialCube();
+		return hasCapacity == condition.expected();
 	}
 
 	/**

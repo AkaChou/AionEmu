@@ -51,6 +51,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.validation.SchemaFactory;
 
+import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -70,18 +71,34 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CraftSkillEli
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EndQuestTimerAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EmotionTarget;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DailyRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerAbyssRankCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerActiveHouseButlerCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGroupMembershipCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerClassCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerGenderCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerEquippedCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerInventoryCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRewardInventoryCapacityCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RewardInventoryScope;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerMessageChannel;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ScheduleItemUseDialogAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SpawnInstanceNpcAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEscortAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortCoordinatesDestination;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortDestination;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortDestinationKind;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortNpcDestination;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortSource;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortZoneDestination;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportInstancePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InteractionAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
@@ -110,7 +127,13 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatDeadlin
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatTimeBasis;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RepeatWeekday;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DialogBindingMode;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DialogTargetKind;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendEmotionAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendPlayerMessageAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendSystemMessageAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartFlightTeleportAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SystemMessageKind;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendRepeatDeadlineMessageAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
@@ -169,10 +192,13 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SkillUsedEventDat
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.InteractionEligibilityEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NodeData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerAbyssRankConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerActiveHouseButlerConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerGroupMembershipConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerClassConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerGenderConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerEquippedConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerInventoryConditionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerRewardInventoryCapacityConditionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerDeathEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerLogoutEventData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayerLevelConditionData;
@@ -194,8 +220,15 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.LearnRecipeAction
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DeleteRecipeActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NotifyRecipeRejectionActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendDialogActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendEmotionActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendPlayerMessageActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendSystemMessageActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartFlightTeleportActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayMovieActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ScheduleItemUseDialogActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SpawnInstanceNpcActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartEscortActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.TeleportPlayerActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendRepeatDeadlineMessageActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetCompletionCountActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SetQuestStatusActionData;
@@ -227,13 +260,14 @@ public final class QuestGraphCompiler {
 	}
 
 	/**
-	 * 保存编译时允许引用的任务、对象、复合 movement 与独立制作技能静态数据键。
-	 * Holds quest, object, composite movement, and independent craft-skill static-data keys allowed during compilation.
+	 * 保存编译时允许引用的任务、对象、房屋物件、复合 movement 与独立制作技能静态数据键。
+	 * Holds quest, object, housing-object, composite movement, and independent craft-skill static-data keys allowed during compilation.
 	 */
-	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
-			Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
-			Set<FlyingRingReference> flyingRings, Set<Integer> skillIds, Set<Integer> worldIds, Set<Integer> recipeIds,
-			Set<Integer> craftSkillIds) {
+	public record References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds,
+			Set<Integer> housingObjectIds, Set<Integer> titleIds, Set<String> zoneNames, Set<Integer> movieIds,
+			Set<WindstreamRouteReference> windstreamRoutes, Set<FlyingRingReference> flyingRings, Set<Integer> skillIds,
+			Set<Integer> worldIds, Set<Integer> instanceWorldIds, Set<Integer> recipeIds, Set<Integer> craftSkillIds,
+			Set<String> walkerIds, Set<Integer> staticSpawnNpcIds, Set<Integer> flightPathIds) {
 		/**
 		 * 复制引用集合，保证一次编译期间引用闭包稳定。
 		 * Copies reference sets so the reference closure stays stable during compilation.
@@ -242,6 +276,7 @@ public final class QuestGraphCompiler {
 			questIds = Set.copyOf(questIds);
 			npcIds = Set.copyOf(npcIds);
 			itemIds = Set.copyOf(itemIds);
+			housingObjectIds = Set.copyOf(housingObjectIds);
 			titleIds = Set.copyOf(titleIds);
 			zoneNames = Set.copyOf(zoneNames);
 			movieIds = Set.copyOf(movieIds);
@@ -249,8 +284,59 @@ public final class QuestGraphCompiler {
 			flyingRings = Set.copyOf(flyingRings);
 			skillIds = Set.copyOf(skillIds);
 			worldIds = Set.copyOf(worldIds);
+			instanceWorldIds = Set.copyOf(instanceWorldIds);
 			recipeIds = Set.copyOf(recipeIds);
 			craftSkillIds = Set.copyOf(craftSkillIds);
+			walkerIds = Set.copyOf(walkerIds);
+			staticSpawnNpcIds = Set.copyOf(staticSpawnNpcIds);
+			flightPathIds = Set.copyOf(flightPathIds);
+		}
+
+		/** 创建尚未提供飞行路径目录的旧完整引用集合。 / Creates the former complete reference shape without a flight-path catalog. */
+		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds,
+				Set<Integer> housingObjectIds, Set<Integer> titleIds, Set<String> zoneNames, Set<Integer> movieIds,
+				Set<WindstreamRouteReference> windstreamRoutes, Set<FlyingRingReference> flyingRings, Set<Integer> skillIds,
+				Set<Integer> worldIds, Set<Integer> instanceWorldIds, Set<Integer> recipeIds, Set<Integer> craftSkillIds,
+				Set<String> walkerIds, Set<Integer> staticSpawnNpcIds) {
+			this(questIds, npcIds, itemIds, housingObjectIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings,
+				skillIds, worldIds, instanceWorldIds, recipeIds, craftSkillIds, walkerIds, staticSpawnNpcIds, Set.of());
+		}
+
+		/** 创建尚未提供静态刷新点目录的旧完整引用集合。 / Creates the former complete reference shape without a static-spawn catalog. */
+		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds,
+				Set<Integer> housingObjectIds, Set<Integer> titleIds, Set<String> zoneNames, Set<Integer> movieIds,
+				Set<WindstreamRouteReference> windstreamRoutes, Set<FlyingRingReference> flyingRings, Set<Integer> skillIds,
+				Set<Integer> worldIds, Set<Integer> instanceWorldIds, Set<Integer> recipeIds, Set<Integer> craftSkillIds,
+				Set<String> walkerIds) {
+			this(questIds, npcIds, itemIds, housingObjectIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings,
+				skillIds, worldIds, instanceWorldIds, recipeIds, craftSkillIds, walkerIds, Set.of());
+		}
+
+		/** 创建未声明 walker 路线的旧 canonical 引用集合。 / Creates the former canonical reference shape without walker routes. */
+		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds,
+				Set<Integer> housingObjectIds, Set<Integer> titleIds, Set<String> zoneNames, Set<Integer> movieIds,
+				Set<WindstreamRouteReference> windstreamRoutes, Set<FlyingRingReference> flyingRings, Set<Integer> skillIds,
+				Set<Integer> worldIds, Set<Integer> instanceWorldIds, Set<Integer> recipeIds, Set<Integer> craftSkillIds) {
+			this(questIds, npcIds, itemIds, housingObjectIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings,
+				skillIds, worldIds, instanceWorldIds, recipeIds, craftSkillIds, Set.of());
+		}
+
+		/** 创建未声明 instance world 的旧完整引用集合。 / Creates the former complete reference shape without instance-world declarations. */
+		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds,
+				Set<Integer> housingObjectIds, Set<Integer> titleIds, Set<String> zoneNames, Set<Integer> movieIds,
+				Set<WindstreamRouteReference> windstreamRoutes, Set<FlyingRingReference> flyingRings, Set<Integer> skillIds,
+				Set<Integer> worldIds, Set<Integer> recipeIds, Set<Integer> craftSkillIds) {
+			this(questIds, npcIds, itemIds, housingObjectIds, titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings,
+				skillIds, worldIds, Set.of(), recipeIds, craftSkillIds);
+		}
+
+		/** 创建未声明房屋物件引用的兼容集合；housing event XML 仍会失败关闭。 / Creates a compatibility set without housing-object references; housing event XML still fails closed. */
+		public References(Set<Integer> questIds, Set<Integer> npcIds, Set<Integer> itemIds, Set<Integer> titleIds,
+				Set<String> zoneNames, Set<Integer> movieIds, Set<WindstreamRouteReference> windstreamRoutes,
+				Set<FlyingRingReference> flyingRings, Set<Integer> skillIds, Set<Integer> worldIds, Set<Integer> recipeIds,
+				Set<Integer> craftSkillIds) {
+			this(questIds, npcIds, itemIds, Set.of(), titleIds, zoneNames, movieIds, windstreamRoutes, flyingRings, skillIds,
+				worldIds, recipeIds, craftSkillIds);
 		}
 
 		/** 创建未声明制作技能引用的兼容集合；craft reward XML 仍会失败关闭。 / Creates a compatibility set without craft-skill references; craft-reward XML still fails closed. */
@@ -459,8 +545,10 @@ public final class QuestGraphCompiler {
 					.map(value -> compileCondition(questId, value, references, variables)).toList();
 				List<Action> actions = sourceTransition.getActions().stream()
 					.flatMap(value -> compileActions(questId, value, variables, references).stream()).toList();
-				validateEventConditions(questId, sourceTransition.getId(), event, conditions);
+				validateEventBoundCapabilities(questId, sourceTransition.getId(), event, conditions, actions);
 				validateActionOrder(questId, sourceTransition.getId(), actions);
+				validateLifecycleResourceComposition(questId, sourceTransition.getId(), actions);
+				validateLifecycleStateFlow(questId, sourceTransition.getId(), conditions, actions);
 				validateRepeatDeadlineProtocol(questId, sourceTransition.getId(), actions);
 				validateInteractionEligibility(questId, sourceNode.getId(), sourceTransition.getId(), sourceTransition.getTargetNode(), event, actions);
 				transitions.add(new Transition(sourceTransition.getId(), sourceTransition.getPriority(), sourceTransition.getTargetNode(), event,
@@ -469,6 +557,7 @@ public final class QuestGraphCompiler {
 			transitions.sort(Comparator.comparingInt(Transition::priority).thenComparing(Transition::id));
 			if (sourceNode.isTerminal() && transitions.stream().anyMatch(transition ->
 					!isRepeatEntry(transition) && !isTerminalProtocolSelfLoop(sourceNode.getId(), transition)
+						&& !isTerminalCollectedItemsRoute(sourceNode.getId(), transition)
 						&& !isInteractionEligibilitySelfLoop(sourceNode.getId(), transition))) {
 				throw new IllegalArgumentException("Quest " + questId + " terminal node " + sourceNode.getId()
 					+ " has a transition without repeat eligibility or a guarded protocol self-loop");
@@ -480,6 +569,7 @@ public final class QuestGraphCompiler {
 		}
 
 		validateReachability(questId, source.getInitialNode(), nodes);
+		validateLifecycleResourceFlow(questId, source.getInitialNode(), nodes);
 		return new CompiledQuestGraph(questId, version, scope, source.getInitialNode(), variables, nodes);
 	}
 
@@ -504,6 +594,23 @@ public final class QuestGraphCompiler {
 		boolean repeatUnavailable = transition.conditions().stream().anyMatch(condition ->
 			condition instanceof QuestRepeatAvailableCondition repeat && !repeat.expectedAvailable());
 		return transition.targetNode().equals(nodeId) && completeState && repeatUnavailable && !transition.actions().isEmpty()
+			&& transition.actions().stream().allMatch(action -> action.type().phase() == ActionPhase.POST_COMMIT_PROTOCOL);
+	}
+
+	/**
+	 * 允许旧事件任务在 COMPLETE 下以显式收集物品条件重开只读协议。
+	 * Allows legacy event quests guarded by an explicit collected-items check to reopen read-only protocol while COMPLETE.
+	 */
+	private static boolean isTerminalCollectedItemsRoute(String nodeId, Transition transition) {
+		boolean completeState = transition.conditions().stream().anyMatch(condition ->
+			condition instanceof QuestStatusCondition status && status.questId() == null
+				&& status.operation() == com.aionemu.gameserver.questEngine.model.ConditionOperation.IN
+				&& status.statuses().equals(Set.of(QuestStatus.COMPLETE)));
+		boolean collectedItems = transition.conditions().stream().anyMatch(QuestCollectItemsCondition.class::isInstance);
+		if (!completeState || !collectedItems || transition.event().type() != DIALOG || transition.actions().isEmpty()) {
+			return false;
+		}
+		return transition.targetNode().equals(nodeId)
 			&& transition.actions().stream().allMatch(action -> action.type().phase() == ActionPhase.POST_COMMIT_PROTOCOL);
 	}
 
@@ -587,13 +694,21 @@ public final class QuestGraphCompiler {
 	 */
 	private static Event compileEvent(int questId, Object source, References references) {
 		if (source instanceof DialogEventData dialog) {
-			if (dialog.getNpcId() == null || dialog.getNpcId() <= 0 || dialog.getDialog() == null) {
+			DialogTargetKind targetKind;
+			try {
+				targetKind = dialog.getTargetKind() == null ? DialogTargetKind.NPC : DialogTargetKind.valueOf(dialog.getTargetKind());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid dialog target kind", e);
+			}
+			if (dialog.getNpcId() == null || dialog.getNpcId() < 0 || dialog.getDialog() == null
+					|| dialog.getNpcId() == 0 && targetKind != DialogTargetKind.NO_TARGET
+					|| dialog.getNpcId() > 0 && targetKind != DialogTargetKind.NPC) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid dialog event");
 			}
-			if (!references.npcIds().contains(dialog.getNpcId())) {
+			if (dialog.getNpcId() > 0 && !references.npcIds().contains(dialog.getNpcId())) {
 				throw new IllegalArgumentException("Quest " + questId + " dialog references missing NPC " + dialog.getNpcId());
 			}
-			return new Event(DIALOG, dialog.getNpcId(), dialog.getDialog());
+			return new Event(DIALOG, dialog.getNpcId(), dialog.getDialog(), targetKind);
 		}
 		if (source instanceof KillEventData kill) {
 			if (kill.getNpcId() == null || kill.getNpcId() <= 0) {
@@ -617,6 +732,10 @@ public final class QuestGraphCompiler {
 			if (killInWorld.getWorldId() == null || killInWorld.getWorldId() < 0) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid kill-in-world event");
 			}
+			if (killInWorld.getWorldId() > 0 && !references.worldIds().contains(killInWorld.getWorldId())) {
+				throw new IllegalArgumentException(
+					"Quest " + questId + " kill-in-world references missing world " + killInWorld.getWorldId());
+			}
 			return new Event(KILL_IN_WORLD, killInWorld.getWorldId(), null);
 		}
 		if (source instanceof ItemUseEventData itemUse) {
@@ -636,10 +755,14 @@ public final class QuestGraphCompiler {
 			return compileItemEvent(questId, "item-equipped", ITEM_EQUIPPED, itemEquipped.getItemId(), references);
 		}
 		if (source instanceof HouseItemUseEventData houseItemUse) {
-			return compileItemEvent(questId, "house-item-use", HOUSE_ITEM_USE, houseItemUse.getItemId(), references);
+			return compileHousingObjectEvent(questId, houseItemUse.getItemId(), references);
 		}
-		if (source instanceof WorldEnteredEventData) {
-			return new Event(WORLD_ENTERED, 0, null);
+		if (source instanceof WorldEnteredEventData worldEntered) {
+			int worldId = worldEntered.getWorldId() == null ? 0 : worldEntered.getWorldId();
+			if (worldId < 0 || worldId > 0 && !references.worldIds().contains(worldId)) {
+				throw new IllegalArgumentException("Quest " + questId + " world-entered references missing world " + worldId);
+			}
+			return new Event(WORLD_ENTERED, worldId, null);
 		}
 		if (source instanceof ZoneEnteredEventData zoneEntered) {
 			return compileZoneEvent(questId, "zone-entered", ZONE_ENTERED, zoneEntered.getZoneName(), references);
@@ -771,6 +894,15 @@ public final class QuestGraphCompiler {
 		return new Event(type, itemId, null);
 	}
 
+	/** 编译房屋物件路由事件，不将房屋物件 ID 误当作物品模板 ID。 / Compiles a housing-object-routed event without treating its id as an item-template id. */
+	private static Event compileHousingObjectEvent(int questId, Integer housingObjectId, References references) {
+		if (housingObjectId == null || housingObjectId <= 0 || !references.housingObjectIds().contains(housingObjectId)) {
+			throw new IllegalArgumentException(
+				"Quest " + questId + " house-item-use references missing housing object " + housingObjectId);
+		}
+		return new Event(HOUSE_ITEM_USE, housingObjectId, null);
+	}
+
 	/**
 	 * 编译以规范化区域名称为路由键的事件并强制引用闭包。
 	 * Compiles a canonical-zone-name-routed event and enforces reference closure.
@@ -843,8 +975,9 @@ public final class QuestGraphCompiler {
 		}
 		if (source instanceof QuestRepeatAvailableConditionData condition) {
 			try {
-				return new QuestRepeatAvailableCondition(condition.getMaxCompletions(), condition.getRequiresDeadline(),
-					condition.getExpectedAvailable());
+				return new QuestRepeatAvailableCondition(condition.getMaxCompletions(),
+					requireBoolean(questId, "quest-repeat-available requires_deadline", condition.getRequiresDeadline()),
+					requireBoolean(questId, "quest-repeat-available expected", condition.getExpectedAvailable()));
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid repeat-available condition", e);
 			}
@@ -857,7 +990,8 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " recipe condition references missing recipe "
 					+ condition.getRecipeId());
 			}
-			return new RecipeLearnableCondition(condition.getRecipeId(), Boolean.TRUE.equals(condition.getExpected()));
+			return new RecipeLearnableCondition(condition.getRecipeId(),
+				requireBoolean(questId, "recipe-learnable expected", condition.getExpected()));
 		}
 		if (source instanceof CraftSkillEligibilityConditionData condition) {
 			if (condition.getCraftSkillId() == null || !references.craftSkillIds().contains(condition.getCraftSkillId())) {
@@ -959,6 +1093,21 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " equipped condition references missing item " + condition.getItemId());
 			}
 			return new PlayerEquippedCondition(condition.getItemId());
+		}
+		if (source instanceof PlayerRewardInventoryCapacityConditionData condition) {
+			try {
+				return new PlayerRewardInventoryCapacityCondition(RewardInventoryScope.valueOf(condition.getScope()),
+					requireBoolean(questId, "player-reward-inventory-capacity expected", condition.getExpected()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid reward-inventory-capacity condition", e);
+			}
+		}
+		if (source instanceof PlayerActiveHouseButlerConditionData) {
+			return new PlayerActiveHouseButlerCondition();
+		}
+		if (source instanceof PlayerGroupMembershipConditionData condition) {
+			return new PlayerGroupMembershipCondition(
+				requireBoolean(questId, "player-group-membership expected", condition.getExpected()));
 		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported condition capability");
 	}
@@ -1087,7 +1236,10 @@ public final class QuestGraphCompiler {
 		}
 		if (source instanceof SendDialogActionData action) {
 			try {
-				return new SendDialogAction(action.getDialogId());
+				DialogBindingMode binding = action.getBinding() == null
+					? DialogBindingMode.BOUND
+					: DialogBindingMode.valueOf(action.getBinding());
+				return new SendDialogAction(action.getDialogId(), binding);
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid dialog action", e);
 			}
@@ -1116,6 +1268,28 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid player-message action", e);
 			}
 		}
+		if (source instanceof SendSystemMessageActionData action) {
+			try {
+				return new SendSystemMessageAction(SystemMessageKind.valueOf(action.getKind()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid system-message action", e);
+			}
+		}
+		if (source instanceof StartFlightTeleportActionData action) {
+			Integer pathId = action.getPathId();
+			if (pathId == null || !references.flightPathIds().contains(pathId)) {
+				throw new IllegalArgumentException("Quest " + questId + " flight action references missing path " + pathId);
+			}
+			return new StartFlightTeleportAction(pathId);
+		}
+		if (source instanceof SendEmotionActionData action) {
+			try {
+				return new SendEmotionAction(EmotionTarget.valueOf(action.getTarget()), EmotionId.valueOf(action.getEmotion()),
+					requireBoolean(questId, "send-emotion broadcast", action.getBroadcast()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid emotion action", e);
+			}
+		}
 		if (source instanceof PlayMovieActionData action) {
 			Integer movieId = action.getMovieId();
 			if (movieId == null || !references.movieIds().contains(movieId)) {
@@ -1127,7 +1301,116 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid play-movie action", e);
 			}
 		}
+		if (source instanceof ScheduleItemUseDialogActionData action) {
+			try {
+				return new ScheduleItemUseDialogAction(action.getDurationMs(), action.getDialogId());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid schedule-item-use-dialog action", e);
+			}
+		}
+		if (source instanceof SpawnInstanceNpcActionData action) {
+			Integer spawnerObjectId = action.getSpawnerObjectId();
+			Integer npcId = action.getNpcId();
+			if (spawnerObjectId == null || !references.staticSpawnNpcIds().contains(spawnerObjectId)) {
+				throw new IllegalArgumentException(
+					"Quest " + questId + " spawn-instance-npc references missing static spawner " + spawnerObjectId);
+			}
+			if (npcId == null || !references.npcIds().contains(npcId)) {
+				throw new IllegalArgumentException("Quest " + questId + " spawn-instance-npc references missing npc " + npcId);
+			}
+			try {
+				return new SpawnInstanceNpcAction(spawnerObjectId, npcId);
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid spawn-instance-npc action", e);
+			}
+		}
+		if (source instanceof StartEscortActionData action) {
+			try {
+				EscortSource escortSource = EscortSource.valueOf(action.getSource());
+				int npcId = action.getNpcId() == null ? 0 : action.getNpcId();
+				if (escortSource == EscortSource.EVENT_NPC && npcId != 0) {
+					throw new IllegalArgumentException("EVENT_NPC must not declare npc_id");
+				}
+				if (escortSource != EscortSource.EVENT_NPC && !references.npcIds().contains(npcId)) {
+					throw new IllegalArgumentException("start-escort references missing follower NPC " + npcId);
+				}
+				String walkerId = action.getWalkerId();
+				if (walkerId != null && !references.walkerIds().contains(walkerId)) {
+					throw new IllegalArgumentException("start-escort references missing walker " + walkerId);
+				}
+				EscortDestination destination = compileEscortDestination(questId, action, references);
+				return new StartEscortAction(escortSource, npcId, action.getHeading() == null ? 0 : action.getHeading(), walkerId,
+					Boolean.TRUE.equals(action.getStartWalking()), Boolean.TRUE.equals(action.getFollowMe()), Boolean.TRUE.equals(action.getStartEmote2()),
+					Boolean.TRUE.equals(action.getSendNpcInfo()), destination);
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid start-escort action", e);
+			}
+		}
+		if (source instanceof TeleportPlayerActionData action) {
+			Integer worldId = action.getWorldId();
+			if (worldId == null || worldId <= 0 || !references.worldIds().contains(worldId)) {
+				throw new IllegalArgumentException("Quest " + questId + " teleport-player references missing world " + worldId);
+			}
+			int instanceId = action.getInstanceId() == null ? 0 : action.getInstanceId();
+			byte heading = action.getHeading() == null ? 0 : action.getHeading();
+			try {
+				TeleportInstancePolicy instancePolicy = action.getInstancePolicy() == null
+					? TeleportInstancePolicy.EXPLICIT_OR_DEFAULT
+					: TeleportInstancePolicy.valueOf(action.getInstancePolicy());
+				if (instancePolicy == TeleportInstancePolicy.PLAYER_REGISTERED_OR_CREATE
+						&& !references.instanceWorldIds().contains(worldId)) {
+					throw new IllegalArgumentException(
+						"Quest " + questId + " registered-instance teleport references non-instance world " + worldId);
+				}
+				return new TeleportPlayerAction(worldId, instanceId, instancePolicy, action.getX(), action.getY(), action.getZ(), heading);
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid teleport-player action", e);
+			}
+		}
 		throw new IllegalArgumentException("Quest " + questId + " has an unsupported action capability");
+	}
+
+	/** 编译并严格闭合 escort 目的地条件属性。 / Compiles and strictly closes conditional escort-destination attributes. */
+	private static EscortDestination compileEscortDestination(int questId, StartEscortActionData action, References references) {
+		String kindValue = action.getDestinationKind();
+		boolean hasZone = action.getDestinationZone() != null;
+		boolean hasNpc = action.getDestinationNpcId() != null;
+		boolean hasCoordinates = action.getDestinationX() != null || action.getDestinationY() != null || action.getDestinationZ() != null;
+		EscortDestinationKind kind = EscortDestinationKind.valueOf(kindValue);
+		return switch (kind) {
+			case ZONE -> {
+				String zone = action.getDestinationZone();
+				if (!hasZone || hasNpc || hasCoordinates || !zone.equals(zone.toUpperCase(Locale.ROOT))
+						|| !references.zoneNames().contains(zone)) {
+					throw new IllegalArgumentException("Quest " + questId + " start-escort references missing zone " + zone);
+				}
+				yield new EscortZoneDestination(zone);
+			}
+			case NPC -> {
+				Integer npcId = action.getDestinationNpcId();
+				if (hasZone || !hasNpc || hasCoordinates || !references.npcIds().contains(npcId)
+						|| !references.staticSpawnNpcIds().contains(npcId)) {
+					throw new IllegalArgumentException(
+						"Quest " + questId + " start-escort references missing destination NPC static spawn " + npcId);
+				}
+				yield new EscortNpcDestination(npcId);
+			}
+			case COORDINATES -> {
+				if (hasZone || hasNpc || action.getDestinationX() == null || action.getDestinationY() == null
+						|| action.getDestinationZ() == null) {
+					throw new IllegalArgumentException("Quest " + questId + " start-escort coordinates are incomplete");
+				}
+				yield new EscortCoordinatesDestination(action.getDestinationX(), action.getDestinationY(), action.getDestinationZ());
+			}
+		};
+	}
+
+	/** 返回必需布尔字段，并在绕过 XSD 直接编译 JAXB 数据时保持失败关闭。 / Returns a required Boolean while remaining fail-closed when JAXB data bypasses XSD validation. */
+	private static boolean requireBoolean(int questId, String field, Boolean value) {
+		if (value == null) {
+			throw new IllegalArgumentException("Quest " + questId + " is missing required Boolean " + field);
+		}
+		return value;
 	}
 
 	/** 返回引用闭合的配方标识。 / Returns a reference-closed recipe identifier. */
@@ -1276,6 +1559,172 @@ public final class QuestGraphCompiler {
 	}
 
 	/**
+	 * 禁止在同一转换中既终止 owner 又创建新的持久资源，避免终态遗留无法结算的 lease。
+	 * Prevents one transition from both terminating the owner and creating a durable resource that would outlive settlement.
+	 */
+	private static void validateLifecycleResourceComposition(int questId, String transitionId, List<Action> actions) {
+		long terminalLifecycles = actions.stream().filter(action ->
+			action instanceof FinishQuestAction || action instanceof AbandonQuestAction).count();
+		QuestStatus finalExplicitStatus = null;
+		for (Action action : actions) {
+			if (action instanceof StartQuestAction) {
+				finalExplicitStatus = QuestStatus.START;
+			} else if (action instanceof StartEventQuestAction startEvent && startEvent.targetQuestId() == questId) {
+				finalExplicitStatus = startEvent.status();
+			} else if (action instanceof AbandonQuestAction) {
+				finalExplicitStatus = QuestStatus.NONE;
+			} else if (action instanceof SetQuestStatusAction set) {
+				finalExplicitStatus = set.status();
+			}
+		}
+		boolean createsResource = actions.stream().anyMatch(action ->
+			action instanceof SpawnInstanceNpcAction || action instanceof StartEscortAction);
+		if (terminalLifecycles > 1) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+				+ " has multiple terminal lifecycle actions");
+		}
+		if (createsResource && (terminalLifecycles == 1
+				|| finalExplicitStatus == QuestStatus.NONE || finalExplicitStatus == QuestStatus.COMPLETE)) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+				+ " combines terminal lifecycle with durable resource creation");
+		}
+	}
+
+	/**
+	 * 在当前状态条件足以确定输入时，按运行时同一规则证明 lifecycle 状态流不会在执行期固定失败。
+	 * Symbolically proves lifecycle state flow when current-status conditions determine the input, matching runtime rejection rules.
+	 */
+	private static void validateLifecycleStateFlow(int questId, String transitionId, List<Condition> conditions,
+			List<Action> actions) {
+		Set<QuestStatus> possibleStatuses = EnumSet.allOf(QuestStatus.class);
+		boolean statusConstrained = false;
+		for (Condition condition : conditions) {
+			if (condition instanceof QuestStatusCondition current
+					&& (current.questId() == null || current.questId() == questId)) {
+				statusConstrained = true;
+				if (current.operation() == com.aionemu.gameserver.questEngine.model.ConditionOperation.IN) {
+					possibleStatuses.retainAll(current.statuses());
+				} else {
+					possibleStatuses.removeAll(current.statuses());
+				}
+			}
+		}
+		if (statusConstrained && possibleStatuses.isEmpty()) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+				+ " has contradictory current quest-status conditions");
+		}
+		QuestStatus status = possibleStatuses.size() == 1 ? possibleStatuses.iterator().next() : null;
+		LifecycleHistoryState history = status == QuestStatus.LOCKED ? LifecycleHistoryState.EMPTY
+			: status == QuestStatus.COMPLETE ? LifecycleHistoryState.NON_EMPTY : LifecycleHistoryState.UNKNOWN;
+		for (Action action : actions) {
+			if (action instanceof StartQuestAction) {
+				if (status == QuestStatus.REWARD) {
+					throw invalidLifecycleState(questId, transitionId, "start-quest", status);
+				}
+				status = QuestStatus.START;
+			} else if (action instanceof StartEventQuestAction startEvent && startEvent.targetQuestId() == questId) {
+				status = startEvent.status();
+			} else if (action instanceof AbandonQuestAction) {
+				if (status == QuestStatus.NONE || status == QuestStatus.COMPLETE) {
+					throw invalidLifecycleState(questId, transitionId, "abandon-quest", status);
+				}
+				status = QuestStatus.NONE;
+			} else if (action instanceof SetQuestStatusAction set) {
+				if (set.status() == QuestStatus.REWARD && status != null && status != QuestStatus.START) {
+					throw invalidLifecycleState(questId, transitionId, "set-quest-status REWARD", status);
+				}
+				status = set.status();
+				if (status == QuestStatus.COMPLETE) {
+					history = LifecycleHistoryState.NON_EMPTY;
+				}
+			} else if (action instanceof SetCompletionCountAction set) {
+				history = set.count() == 0 ? LifecycleHistoryState.EMPTY : LifecycleHistoryState.NON_EMPTY;
+			} else if (action instanceof AddCompletionCountAction add) {
+				if (add.delta() < 0 && history == LifecycleHistoryState.EMPTY) {
+					throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+						+ " cannot decrement empty completion history");
+				}
+				history = add.delta() > 0 ? LifecycleHistoryState.NON_EMPTY : LifecycleHistoryState.UNKNOWN;
+			} else if (action instanceof FinishQuestAction) {
+				if (status != null && status != QuestStatus.REWARD) {
+					throw invalidLifecycleState(questId, transitionId, "finish-quest", status);
+				}
+				status = QuestStatus.COMPLETE;
+				history = LifecycleHistoryState.NON_EMPTY;
+			}
+			validateLifecycleHistory(questId, transitionId, action, status, history);
+		}
+	}
+
+	private static void validateLifecycleHistory(int questId, String transitionId, Action action, QuestStatus status,
+			LifecycleHistoryState history) {
+		if (status == QuestStatus.COMPLETE && history != LifecycleHistoryState.NON_EMPTY) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " action " + action.type()
+				+ " cannot prove completion history required by COMPLETE");
+		}
+		if (status == QuestStatus.LOCKED && history != LifecycleHistoryState.EMPTY) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " action " + action.type()
+				+ " cannot prove empty completion history required by LOCKED");
+		}
+	}
+
+	private enum LifecycleHistoryState {
+		EMPTY,
+		NON_EMPTY,
+		UNKNOWN
+	}
+
+	/** 证明任何可达路径都不会把已物化资源带入重置动作或无清理终点。 / Proves no reachable path carries materialized resources into reset actions or an uncleared endpoint. */
+	private static void validateLifecycleResourceFlow(int questId, String initialNode, Map<String, Node> nodes) {
+		ArrayDeque<ResourceFlowState> pending = new ArrayDeque<>();
+		Set<ResourceFlowState> visited = new HashSet<>();
+		pending.add(new ResourceFlowState(initialNode, false));
+		while (!pending.isEmpty()) {
+			ResourceFlowState current = pending.removeFirst();
+			if (!visited.add(current)) {
+				continue;
+			}
+			for (Transition transition : nodes.get(current.nodeId()).transitions()) {
+				boolean resourceActive = current.resourceActive();
+				for (Action action : transition.actions()) {
+					boolean resetsCurrentOwner = action instanceof StartQuestAction
+						|| action instanceof StartEventQuestAction startEvent && startEvent.targetQuestId() == questId;
+					if (resourceActive && resetsCurrentOwner) {
+						throw lifecycleResourceLeak(questId, transition.id(), "resets an owner with an active durable resource");
+					}
+					if (action instanceof SpawnInstanceNpcAction || action instanceof StartEscortAction) {
+						resourceActive = true;
+					} else if (action instanceof FinishQuestAction || action instanceof AbandonQuestAction) {
+						resourceActive = false;
+					} else if (resourceActive && action instanceof SetQuestStatusAction set
+							&& (set.status() == QuestStatus.NONE || set.status() == QuestStatus.COMPLETE
+								|| set.status() == QuestStatus.LOCKED)) {
+						throw lifecycleResourceLeak(questId, transition.id(), "enters " + set.status() + " without durable cleanup");
+					}
+				}
+				Node target = nodes.get(transition.targetNode());
+				if (resourceActive && target.terminal()) {
+					throw lifecycleResourceLeak(questId, transition.id(), "reaches terminal node " + target.id() + " with an active durable resource");
+				}
+				pending.addLast(new ResourceFlowState(target.id(), resourceActive));
+			}
+		}
+	}
+
+	private static IllegalArgumentException lifecycleResourceLeak(int questId, String transitionId, String reason) {
+		return new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " " + reason);
+	}
+
+	private record ResourceFlowState(String nodeId, boolean resourceActive) {
+	}
+
+	private static IllegalArgumentException invalidLifecycleState(int questId, String transitionId, String action,
+			QuestStatus status) {
+		return new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " cannot execute " + action
+			+ " from " + status);
+	}
+
+	/**
 	 * 强制交互资格查询为 actionless self-loop，禁止借查询入口写状态或产生副作用。
 	 * Forces interaction eligibility to be an actionless self-loop so query entry points cannot mutate state or cause effects.
 	 */
@@ -1291,7 +1740,8 @@ public final class QuestGraphCompiler {
 	 * 拒绝把事件专属条件挂到不提供相应服务端快照的事件。
 	 * Rejects event-specific conditions on events that do not provide the required server-authoritative snapshot.
 	 */
-	private static void validateEventConditions(int questId, String transitionId, Event event, List<Condition> conditions) {
+	private static void validateEventBoundCapabilities(int questId, String transitionId, Event event, List<Condition> conditions,
+			List<Action> actions) {
 		if (conditions.stream().anyMatch(KillVictimLevelDeltaCondition.class::isInstance)
 				&& event.type() != KILL_IN_WORLD) {
 			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
@@ -1301,6 +1751,33 @@ public final class QuestGraphCompiler {
 				&& event.type() != WORLD_ENTERED) {
 			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
 				+ " uses invasion-world-active outside WORLD_ENTERED");
+		}
+		if (conditions.stream().anyMatch(PlayerActiveHouseButlerCondition.class::isInstance)) {
+			requireDialogNpcSnapshot(questId, transitionId, event, "player-active-house-butler");
+		}
+		if (actions.stream().anyMatch(SendDialogAction.class::isInstance)
+				&& event.type() != DIALOG && event.type() != ITEM_USE && event.type() != ITEM_DIALOG) {
+			requireDialogNpcSnapshot(questId, transitionId, event, "send-dialog");
+		}
+		if (actions.stream().anyMatch(SendEmotionAction.class::isInstance)) {
+			requireDialogNpcSnapshot(questId, transitionId, event, "send-emotion");
+		}
+		if (actions.stream().anyMatch(ScheduleItemUseDialogAction.class::isInstance) && event.type() != ITEM_USE) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+				+ " uses schedule-item-use-dialog outside ITEM_USE");
+		}
+		if (actions.stream().filter(StartEscortAction.class::isInstance).map(StartEscortAction.class::cast)
+				.anyMatch(action -> action.source() == EscortSource.EVENT_NPC
+					|| action.source() == EscortSource.REPLACE_EVENT_NPC_AT_PLAYER_POSITION)) {
+			requireDialogNpcSnapshot(questId, transitionId, event, "event-NPC escort");
+		}
+	}
+
+	/** 要求事件提供可解析为真实 NPC objectId 的对话快照。 / Requires a dialog snapshot resolvable to a real NPC object id. */
+	private static void requireDialogNpcSnapshot(int questId, String transitionId, Event event, String capability) {
+		if (event.type() != DIALOG || event.dialogTargetKind() != DialogTargetKind.NPC) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " uses " + capability
+				+ " without a bound DIALOG NPC snapshot");
 		}
 	}
 
@@ -1349,9 +1826,37 @@ public final class QuestGraphCompiler {
 		if (reachable.size() != nodes.size()) {
 			List<String> unreachable = new ArrayList<>(nodes.keySet());
 			unreachable.removeAll(reachable);
-			throw new IllegalArgumentException("Quest " + questId + " has unreachable nodes " + unreachable);
+			// reward/complete 可经任务状态回灌进入（结算边常挂在 reward），不要求从 initial 有向可达。
+			// reward/complete may be entered via quest-status rehydration; settlement often hangs off reward.
+			unreachable.removeIf(nodeId -> "reward".equals(nodeId) || "complete".equals(nodeId));
+			if (!unreachable.isEmpty()) {
+				throw new IllegalArgumentException("Quest " + questId + " has unreachable nodes " + unreachable);
+			}
 		}
-		if (reachable.stream().noneMatch(nodeId -> nodes.get(nodeId).terminal())) {
+		boolean terminalReachable = reachable.stream().anyMatch(nodeId -> nodes.get(nodeId).terminal());
+		if (!terminalReachable) {
+			// 允许仅通过 reward→complete 结算链提供终态。
+			// Allow terminals provided only by the reward→complete settlement chain.
+			for (String statusNode : List.of("reward", "complete")) {
+				if (!nodes.containsKey(statusNode)) {
+					continue;
+				}
+				Set<String> fromStatus = new HashSet<>();
+				ArrayDeque<String> statusPending = new ArrayDeque<>();
+				statusPending.add(statusNode);
+				while (!statusPending.isEmpty()) {
+					String nodeId = statusPending.removeFirst();
+					if (fromStatus.add(nodeId)) {
+						nodes.get(nodeId).transitions().stream().map(Transition::targetNode).forEach(statusPending::addLast);
+					}
+				}
+				if (fromStatus.stream().anyMatch(nodeId -> nodes.get(nodeId).terminal())) {
+					terminalReachable = true;
+					break;
+				}
+			}
+		}
+		if (!terminalReachable) {
 			throw new IllegalArgumentException("Quest " + questId + " has no reachable terminal node");
 		}
 	}

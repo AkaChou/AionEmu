@@ -79,15 +79,20 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 	 * 表示玩家与 NPC 发生的对话事件。
 	 * Represents a dialog event between a player and an NPC.
 	 */
-	record DialogEvent(String eventId, int playerId, long occurredAt, int npcId, String dialog) implements QuestGraphEvent {
+	record DialogEvent(String eventId, int playerId, long occurredAt, int npcId, int npcObjectId, String dialog) implements QuestGraphEvent {
+		/** 兼容不执行对话协议投影的调用者。 / Compatibility constructor for callers that do not project dialog packets. */
+		public DialogEvent(String eventId, int playerId, long occurredAt, int npcId, String dialog) {
+			this(eventId, playerId, occurredAt, npcId, 0, dialog);
+		}
+
 		/**
 		 * 校验对话事件标识、玩家、时间、NPC 和对话动作。
 		 * Validates dialog event identity, player, time, NPC, and dialog action.
 		 */
 		public DialogEvent {
 			validateCommon(eventId, playerId, occurredAt);
-			if (npcId <= 0) {
-				throw new IllegalArgumentException("Dialog NPC id must be positive");
+			if (npcId < 0 || npcObjectId < 0 || npcId == 0 && npcObjectId != 0) {
+				throw new IllegalArgumentException("Dialog NPC identity is invalid");
 			}
 			dialog = requireText(dialog, "dialog action");
 		}
@@ -338,10 +343,10 @@ public sealed interface QuestGraphEvent permits QuestGraphEvent.DialogEvent, Que
 			return EventType.WORLD_ENTERED;
 		}
 
-		/** 进入世界为全局广播，使用固定路由键 0。 / World entry is globally broadcast using route key zero. */
+		/** 使用服务端世界快照作为可选路由键；0 路由仍由 router 解释为通配。 / Uses snapshot world as an optional route key; route 0 remains wildcard. */
 		@Override
 		public int targetId() {
-			return 0;
+			return worldId;
 		}
 	}
 

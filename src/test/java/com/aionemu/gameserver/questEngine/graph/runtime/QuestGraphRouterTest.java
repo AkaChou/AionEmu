@@ -69,9 +69,11 @@ class QuestGraphRouterTest {
 		Path xml = tempDir.resolve("graphs.xml");
 		Files.writeString(xml, document(), StandardCharsets.UTF_8);
 		CompiledQuestGraphData data = QuestGraphCompiler.load(xml, SCHEMA,
-			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(182200001), Set.of(), Set.of("TEST_ZONE"), Set.of(913),
+			new QuestGraphCompiler.References(Set.of(1, 2), Set.of(100), Set.of(182200001), Set.of(182200001), Set.of(),
+				Set.of("TEST_ZONE"), Set.of(913),
 				Set.of(new QuestGraphCompiler.WindstreamRouteReference(210130000, 405)),
-				Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832)));
+				Set.of(new QuestGraphCompiler.FlyingRingReference(210020000, "ELTNEN_AIR_BOOSTER_1")), Set.of(9832),
+				Set.of(210010000, 400010000), Set.of(), Set.of()));
 		router = new QuestGraphRouter(data);
 	}
 
@@ -125,6 +127,17 @@ class QuestGraphRouterTest {
 	}
 
 	@Test
+	void explicitNoTargetDialogRoutesOnlyTheZeroIdentityEvent() {
+		DispatchResult result = router.dispatch(new DialogEvent("no-target", 7, 1005, 0, 0, "ACCEPT_QUEST"),
+			new PlayerQuestGraphStateList(), match -> Status.APPLIED);
+
+		assertEquals(new DispatchResult(Status.APPLIED, Propagation.STOP), result);
+		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
+			router.dispatch(new DialogEvent("npc-dialog", 7, 1006, 100, 500, "ACCEPT_QUEST"),
+				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
+	}
+
+	@Test
 	void killBroadcastIsolatesFailuresAndContinuesOtherQuests() {
 		List<String> visited = new ArrayList<>();
 		DispatchResult result = router.dispatch(new KillEvent("kill-1", 7, 2000, 100), new PlayerQuestGraphStateList(), match -> {
@@ -154,8 +167,10 @@ class QuestGraphRouterTest {
 	@Test
 	void eventCodecRoundTripsAndRejectsCorruption() {
 		DialogEvent dialog = new DialogEvent("dialog", 7, 3000, 100, "QUEST_SELECT");
+		DialogEvent systemDialog = new DialogEvent("system-dialog", 7, 3000, 0, "ACCEPT_QUEST");
 		KillEvent kill = new KillEvent("kill", 8, 3001, 100);
 		assertEquals(dialog, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(dialog)));
+		assertEquals(systemDialog, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(systemDialog)));
 		assertEquals(kill, QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(kill)));
 		AttackEvent attack = new AttackEvent("attack", 7, 3002, 100, 40, 100);
 		PlayerDeathEvent death = new PlayerDeathEvent("death", 7, 3003);
@@ -303,22 +318,24 @@ class QuestGraphRouterTest {
 	void worldAndZoneEventsUseServerSnapshotsAndFixedRoutes() {
 		assertEquals(List.of("world-entered-q2", "world-entered-q1"),
 			visited(new WorldEnteredEvent("world-entered", 7, 6000, 210010000, 1, 10, 20, 30)));
+		assertEquals(List.of("world-entered-q2"),
+			visited(new WorldEnteredEvent("other-world-entered", 7, 6001, 210020000, 1, 10, 20, 30)));
 		assertEquals(List.of("zone-entered-q2", "zone-entered-q1"),
-			visited(new ZoneEnteredEvent("zone-entered", 7, 6001, "TEST_ZONE", 210010000, 1, 10, 20, 30)));
+			visited(new ZoneEnteredEvent("zone-entered", 7, 6002, "TEST_ZONE", 210010000, 1, 10, 20, 30)));
 		assertEquals(List.of("zone-left-q2", "zone-left-q1"),
-			visited(new ZoneLeftEvent("zone-left", 7, 6002, "TEST_ZONE", 210010000, 1)));
+			visited(new ZoneLeftEvent("zone-left", 7, 6003, "TEST_ZONE", 210010000, 1)));
 		assertEquals(List.of("zone-mission-ended-q1"),
-			visited(new ZoneMissionEndedEvent("zone-mission-ended", 7, 6003, 1)));
+			visited(new ZoneMissionEndedEvent("zone-mission-ended", 7, 6004, 1)));
 		assertEquals(new DispatchResult(Status.NO_MATCH, Propagation.CONTINUE),
-			router.dispatch(new ZoneMissionEndedEvent("missing-owner", 7, 6004, 3),
+			router.dispatch(new ZoneMissionEndedEvent("missing-owner", 7, 6005, 3),
 				new PlayerQuestGraphStateList(), match -> Status.APPLIED));
 		assertThrows(IllegalArgumentException.class,
-			() -> new WorldEnteredEvent("invalid", 7, 6005, 0, 1, 0, 0, 0));
+			() -> new WorldEnteredEvent("invalid", 7, 6006, 0, 1, 0, 0, 0));
 		assertThrows(IllegalArgumentException.class,
-			() -> new WorldEnteredEvent("invalid", 7, 6006, 210010000, 1, Float.NaN, 0, 0));
+			() -> new WorldEnteredEvent("invalid", 7, 6007, 210010000, 1, Float.NaN, 0, 0));
 		assertThrows(IllegalArgumentException.class,
-			() -> new ZoneEnteredEvent("invalid", 7, 6007, "lowercase", 210010000, 1, 0, 0, 0));
-		assertThrows(IllegalArgumentException.class, () -> new ZoneMissionEndedEvent("invalid", 7, 6008, 0));
+			() -> new ZoneEnteredEvent("invalid", 7, 6008, "lowercase", 210010000, 1, 0, 0, 0));
+		assertThrows(IllegalArgumentException.class, () -> new ZoneMissionEndedEvent("invalid", 7, 6009, 0));
 	}
 
 	/**
@@ -494,14 +511,14 @@ class QuestGraphRouterTest {
 	}
 
 	private static String document() {
-		String questOneTransitions = String.join("", dialogTransition("dialog-q1", 20), killTransition("kill-first", 15),
+		String questOneTransitions = String.join("", dialogTransition("dialog-q1", 20), noTargetDialogTransition(), killTransition("kill-first", 15),
 			killTransition("kill-second", 25), combatTransition("attack-q1", 10, "<attack npc_id=\"100\"/>"),
 			combatTransition("death-q1", 10, "<player-death/>"),
 			combatTransition("world-exact-q1", 20, "<kill-in-world world_id=\"400010000\"/>"),
 			itemTransition("item-use-q1", 20, "item-use"), itemDialogTransition("item-dialog-q1", 20),
 			itemTransition("item-obtained-q1", 20, "item-obtained"),
 			itemTransition("item-equipped-q1", 20, "item-equipped"), itemTransition("house-item-use-q1", 20, "house-item-use"),
-			worldZoneTransition("world-entered-q1", 20, "<world-entered/>"),
+			worldZoneTransition("world-entered-q1", 20, "<world-entered world_id=\"210010000\"/>"),
 				worldZoneTransition("zone-entered-q1", 20, "<zone-entered zone_name=\"TEST_ZONE\"/>"),
 				worldZoneTransition("zone-left-q1", 20, "<zone-left zone_name=\"TEST_ZONE\"/>"),
 				worldZoneTransition("zone-mission-ended-q1", 20, "<zone-mission-ended/>"),
@@ -567,6 +584,14 @@ class QuestGraphRouterTest {
 				<dialog npc_id="100" dialog="QUEST_SELECT"/>
 			</transition>
 			""".formatted(id, priority);
+	}
+
+	private static String noTargetDialogTransition() {
+		return """
+			<transition id="no-target-dialog" priority="5" to="done">
+				<dialog npc_id="0" target_kind="NO_TARGET" dialog="ACCEPT_QUEST"/>
+			</transition>
+			""";
 	}
 
 	private static String killTransition(String id, int priority) {

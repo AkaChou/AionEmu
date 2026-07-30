@@ -77,6 +77,7 @@ public class GameDAOClassProvider implements DAOClassProvider {
 			PlayerPassportsDAO.class,
 			PlayerPetsDAO.class,
 			PlayerPunishmentsDAO.class,
+			QuestGraphResourceOperationDAO.class,
 			PlayerQuestGraphStateDAO.class,
 			PlayerQuestListDAO.class,
 			PlayerRecipesDAO.class,

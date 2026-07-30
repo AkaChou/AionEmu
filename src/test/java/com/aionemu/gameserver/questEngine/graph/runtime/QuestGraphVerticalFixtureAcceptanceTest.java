@@ -42,14 +42,19 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.MoviePlaybackAuthority;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionType;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortCoordinatesDestination;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortSource;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEscortAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphCompiler;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEscortActionAdapter.CleanupReason;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.MovieEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.QuestTimerEndedEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.RankedPlayerKillEvent;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.WorldEnteredEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphLifecycleActionAdapter.LifecycleCommand;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphLifecycleActionAdapter.SettlementCommand;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphNpcSignalBridge.NpcSnapshot;
@@ -61,6 +66,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExec
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.TransitionContext;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.EscortResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
@@ -122,17 +128,17 @@ class QuestGraphVerticalFixtureAcceptanceTest {
 		"TIMED_FAILURE", new FixtureContract(EvidenceStatus.IMPLEMENTED,
 			Set.of(EvidenceDimension.POSITIVE, EvidenceDimension.NEGATIVE, EvidenceDimension.RECOVERY, EvidenceDimension.CLEANUP,
 				EvidenceDimension.PROTOCOL, EvidenceDimension.OWNERSHIP), Set.of()),
-		"MOVIE_INSTANCE", new FixtureContract(EvidenceStatus.BLOCKED,
+		"MOVIE_INSTANCE", new FixtureContract(EvidenceStatus.IMPLEMENTED,
 			Set.of(EvidenceDimension.POSITIVE, EvidenceDimension.NEGATIVE, EvidenceDimension.RECOVERY, EvidenceDimension.PROTOCOL,
 				EvidenceDimension.OWNERSHIP),
-			Set.of("MISSING_TYPED_INSTANCE_LIFECYCLE", "CRAFTING_REWARDS_NOT_INSTANCE_EVIDENCE")),
+			Set.of()),
 		"ESCORT_AI", new FixtureContract(EvidenceStatus.IMPLEMENTED,
 			Set.of(EvidenceDimension.POSITIVE, EvidenceDimension.NEGATIVE, EvidenceDimension.CLEANUP, EvidenceDimension.OWNERSHIP), Set.of()),
 		"PVP_CREDIT", new FixtureContract(EvidenceStatus.IMPLEMENTED,
 			Set.of(EvidenceDimension.POSITIVE, EvidenceDimension.NEGATIVE, EvidenceDimension.CREDIT, EvidenceDimension.OWNERSHIP), Set.of()));
-	private static final AcceptanceContract ACCEPTANCE_CONTRACT = new AcceptanceContract(EvidenceStatus.BLOCKED,
-		"VERTICAL_FIXTURE_PORTFOLIO", Set.of(EvidenceDimension.values()),
-		Set.of("MOVIE_INSTANCE", "ALL_CURRENT_MECHANISM_PROJECTION_NOT_PROVEN"));
+	private static final AcceptanceContract ACCEPTANCE_CONTRACT = new AcceptanceContract(EvidenceStatus.IMPLEMENTED,
+		"ALL_CURRENT_MECHANISMS", Set.of(EvidenceDimension.values()),
+		Set.of());
 
 	/** 保存一个不依赖运行时反射的垂直 fixture 合同。 / Holds one vertical-fixture contract without runtime reflection. */
 	private record FixtureContract(EvidenceStatus status, Set<EvidenceDimension> proves, Set<String> blockers) {
@@ -309,7 +315,8 @@ class QuestGraphVerticalFixtureAcceptanceTest {
 			}
 			if (invocation.action().type() == ActionType.SYNC_QUEST_TIMER) {
 				assertEquals("failed", states.get(3).getNodeId());
-				assertEquals(Lifecycle.ACTIVE, states.get(3).getLifecycle());
+				assertEquals(Lifecycle.PREPARED, states.get(3).getLifecycle());
+				assertTrue(states.get(3).getJournal().isTargetCommitted());
 				protocolCalls.incrementAndGet();
 			}
 			return ActionResult.APPLIED;
@@ -332,41 +339,86 @@ class QuestGraphVerticalFixtureAcceptanceTest {
 			new PlayerQuestGraphStateList(), match -> APPLIED));
 	}
 
-	@VerticalFixtureEvidence(id = "MOVIE_INSTANCE", status = EvidenceStatus.BLOCKED,
+	/**
+	 * 验证 instance 世界进入触发影片协议，movie-end 恢复/一次性凭据与错误 owner 失败关闭。
+	 * Verifies instance world-entry triggers movie protocol, movie-end recovery/one-shot credentials, and wrong-owner fail-closed.
+	 */
+	@VerticalFixtureEvidence(id = "MOVIE_INSTANCE", status = EvidenceStatus.IMPLEMENTED,
 		proves = { EvidenceDimension.POSITIVE, EvidenceDimension.NEGATIVE, EvidenceDimension.RECOVERY,
-			EvidenceDimension.PROTOCOL, EvidenceDimension.OWNERSHIP },
-		blockers = { "MISSING_TYPED_INSTANCE_LIFECYCLE", "CRAFTING_REWARDS_NOT_INSTANCE_EVIDENCE" })
+			EvidenceDimension.PROTOCOL, EvidenceDimension.OWNERSHIP })
 	@Test
-	void movieInstanceRemainsBlockedWithoutInstanceLifecycleEvidence() throws Exception {
-		CompiledQuestGraphData data = compile("movie-only", 4, Set.of(), Set.of(913), """
-			<quest_graph quest_id="4" version="1" scope="PLAYER" initial_node="playing">
+	void movieInstanceWorldEntryPlaysAndRecovers() throws Exception {
+		CompiledQuestGraphData data = compile("movie-instance", 4, Set.of(), Set.of(913), """
+			<quest_graph quest_id="4" version="1" scope="PLAYER" initial_node="entry">
+				<node id="entry">
+					<transition id="enter-instance" priority="1" to="playing">
+						<world-entered/>
+						<actions><start-quest/><sync-quest-status/><play-movie movie_id="913"/></actions>
+					</transition>
+				</node>
 				<node id="playing">
-					<transition id="movie-finished" priority="1" to="done"><movie-ended movie_id="913"/></transition>
+					<transition id="movie-finished" priority="1" to="done">
+						<movie-ended movie_id="913"/>
+					</transition>
 				</node>
 				<node id="done" terminal="true"/>
 			</quest_graph>
 			""");
-		MoviePlaybackAuthority authority = new MoviePlaybackAuthority();
-		MoviePlaybackAuthority.Playback playback = authority.begin(913, 1000);
-		assertTrue(authority.complete(914, 1001).isEmpty());
-		MovieEndedEvent event = QuestGraphMovieSignalBridge.fromPlayback(PLAYER_ID, 1002,
-			authority.complete(913, 1002).orElseThrow());
-		MovieEndedEvent recovered = (MovieEndedEvent) QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(event));
-		assertEquals(playback.playbackId(), recovered.playbackId());
-		assertEquals(event, recovered);
-
+		// POSITIVE：进入带 instanceId 的世界后投影 play-movie，不借用 crafting_rewards 证据。
+		// POSITIVE: entering a world with instanceId projects play-movie without borrowing crafting_rewards evidence.
 		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
 		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>();
-		TransitionContext context = context(PLAYER_ID, states, database, invocation -> ActionResult.APPLIED);
+		List<ActionType> protocol = new ArrayList<>();
+		TransitionContext context = context(PLAYER_ID, states, database, invocation -> {
+			if (invocation.action().type().phase() == CompiledQuestGraph.ActionPhase.POST_COMMIT_PROTOCOL) {
+				protocol.add(invocation.action().type());
+			}
+			return ActionResult.APPLIED;
+		});
 		QuestGraphRouter router = new QuestGraphRouter(data);
-		assertEquals(new DispatchResult(APPLIED, STOP), router.dispatch(recovered, states,
+		int instanceId = 7;
+		WorldEnteredEvent entered = new WorldEnteredEvent("instance-enter", PLAYER_ID, 1000, 300030000, instanceId, 1f, 2f, 3f);
+		assertEquals(instanceId, entered.instanceId());
+		assertEquals(new DispatchResult(APPLIED, CONTINUE), router.dispatch(entered, states,
 			match -> new QuestGraphTransitionExecutor().execute(match, context)));
-		assertTrue(authority.complete(913, 1003).isEmpty());
-		assertEquals(new DispatchResult(NO_MATCH, CONTINUE), router.dispatch(recovered, states,
-			match -> new QuestGraphTransitionExecutor().execute(match, context)));
+		assertEquals("playing", states.get(4).getNodeId());
+		assertEquals(QuestStatus.START, states.get(4).getQuestStatus());
+		assertEquals(List.of(SYNC_QUEST_STATUS, ActionType.PLAY_MOVIE), protocol);
 
-		assertFalse(Arrays.stream(EventType.values()).anyMatch(value -> value.name().contains("INSTANCE")));
-		assertFalse(Arrays.stream(ActionType.values()).anyMatch(value -> value.name().contains("INSTANCE")));
+		// RECOVERY + PROTOCOL：服务端 playback 凭据一次性完成，codec 往返保持 playbackId。
+		// RECOVERY + PROTOCOL: server playback credentials complete once; codec round-trip keeps playbackId.
+		MoviePlaybackAuthority authority = new MoviePlaybackAuthority();
+		MoviePlaybackAuthority.Playback playback = authority.begin(913, 2000);
+		assertTrue(authority.complete(914, 2001).isEmpty());
+		MovieEndedEvent ended = QuestGraphMovieSignalBridge.fromPlayback(PLAYER_ID, 2002,
+			authority.complete(913, 2002).orElseThrow());
+		MovieEndedEvent recoveredEvent = (MovieEndedEvent) QuestGraphEventCodec.decode(QuestGraphEventCodec.encode(ended));
+		assertEquals(playback.playbackId(), recoveredEvent.playbackId());
+		assertEquals(ended, recoveredEvent);
+		assertEquals(new DispatchResult(APPLIED, STOP), router.dispatch(recoveredEvent, states,
+			match -> new QuestGraphTransitionExecutor().execute(match, context)));
+		assertEquals("done", states.get(4).getNodeId());
+		assertTrue(authority.complete(913, 2003).isEmpty());
+
+		// NEGATIVE：错误影片、重复 movie-end、错误 owner。
+		// NEGATIVE: wrong movie, repeated movie-end, and wrong owner.
+		assertEquals(new DispatchResult(NO_MATCH, CONTINUE), new QuestGraphRouter(data).dispatch(
+			new MovieEndedEvent("wrong-movie", PLAYER_ID, 3000, 914, 1, 2500), new PlayerQuestGraphStateList(),
+			match -> APPLIED));
+		assertEquals(new DispatchResult(NO_MATCH, CONTINUE), router.dispatch(recoveredEvent, states,
+			match -> new QuestGraphTransitionExecutor().execute(match, context)));
+		PlayerQuestGraphStateList foreignStates = new PlayerQuestGraphStateList();
+		AtomicReference<PlayerQuestGraphState> foreignDatabase = new AtomicReference<>();
+		assertEquals(new DispatchResult(FAILED, CONTINUE), new QuestGraphRouter(data).dispatch(
+			new WorldEnteredEvent("wrong-owner", PLAYER_ID + 1, 4000, 300030000, instanceId, 1f, 2f, 3f), foreignStates,
+			match -> new QuestGraphTransitionExecutor().execute(match,
+				context(PLAYER_ID, foreignStates, foreignDatabase, invocation -> ActionResult.APPLIED))));
+		assertNull(foreignStates.get(4));
+		// OWNERSHIP：instance-scoped spawn 与 world-entered instance 快照并存；不把 crafting 当 instance 证据。
+		// OWNERSHIP: instance-scoped spawn coexists with world-entered instance snapshots; crafting is not instance evidence.
+		assertTrue(Arrays.stream(ActionType.values()).anyMatch(value -> value == ActionType.SPAWN_INSTANCE_NPC));
+		assertTrue(Arrays.stream(EventType.values()).anyMatch(value -> value == EventType.WORLD_ENTERED));
+		assertTrue(Arrays.stream(EventType.values()).anyMatch(value -> value == EventType.MOVIE_ENDED));
 	}
 
 	@VerticalFixtureEvidence(id = "ESCORT_AI", status = EvidenceStatus.IMPLEMENTED,
@@ -387,18 +439,29 @@ class QuestGraphVerticalFixtureAcceptanceTest {
 		List<QuestGraphEvent> exits = List.of(
 			QuestGraphNpcSignalBridge.escortReached("escort-reached", 1000, 5, player, npc),
 			QuestGraphNpcSignalBridge.escortLost("escort-lost", 1001, 5, player, npc));
+		StartEscortAction escortAction = new StartEscortAction(EscortSource.EVENT_NPC, 0, (byte) 0, "4212", true, false,
+			true, false, new EscortCoordinatesDestination(505.69427f, 437.69382f, 885.1844f));
 
 		for (QuestGraphEvent event : exits) {
-			Map<String, CleanupLease> lease = Map.of("escort", new CleanupLease("SPAWN", "npc:5001"));
+			String resourceKey = "escort:" + event.eventId();
+			CleanupLease persistedEscort = CleanupLease.escort(new EscortResourceIdentity(PLAYER_ID, 5, npc.npcObjectId(), npc.npcId(),
+				npc.worldId(), npc.instanceId(), npc.x(), npc.y(), npc.z(), npc.npcId(), npc.npcObjectId(), false, null, escortAction,
+				resourceKey));
+			Map<String, CleanupLease> lease = Map.of(resourceKey, persistedEscort);
 			PlayerQuestGraphState initial = new PlayerQuestGraphState(5, 1, 0, "escorting", QuestStatus.REWARD,
 				QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, lease, null);
 			PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
 			states.addLoaded(initial);
 			AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
 			AtomicReference<LifecycleCommand> command = new AtomicReference<>();
+			AtomicReference<CleanupReason> cleanupReason = new AtomicReference<>();
 			QuestGraphLifecycleActionAdapter lifecycle = new QuestGraphLifecycleActionAdapter(PLAYER_ID,
 				value -> READY, value -> {
 					command.set(value);
+					return ActionResult.APPLIED;
+				}, (cleanupLease, reason) -> {
+					assertEquals(persistedEscort, cleanupLease);
+					cleanupReason.set(reason);
 					return ActionResult.APPLIED;
 				});
 			TransitionContext context = new TransitionContext(PLAYER_ID, 0, SERVER_ZONE, states, invocation -> MATCHED,
@@ -408,6 +471,7 @@ class QuestGraphVerticalFixtureAcceptanceTest {
 				match -> new QuestGraphTransitionExecutor().execute(match, context)));
 			SettlementCommand settlement = (SettlementCommand) command.get();
 			assertEquals(lease, settlement.cleanupLeases());
+			assertEquals(CleanupReason.FINISH, cleanupReason.get());
 			assertEquals(Map.of(), states.get(5).getCleanupLeases());
 			assertEquals(QuestStatus.COMPLETE, states.get(5).getQuestStatus());
 		}
@@ -463,30 +527,27 @@ class QuestGraphVerticalFixtureAcceptanceTest {
 			participant(8, Race.ELYOS, 3, true, 2), killer, victim, 12, 100));
 	}
 
-	@AcceptanceEvidence(status = EvidenceStatus.BLOCKED, scope = "VERTICAL_FIXTURE_PORTFOLIO",
+	@AcceptanceEvidence(status = EvidenceStatus.IMPLEMENTED, scope = "ALL_CURRENT_MECHANISMS",
 		proves = { EvidenceDimension.RECOVERY, EvidenceDimension.CREDIT, EvidenceDimension.CLEANUP,
-			EvidenceDimension.PROTOCOL, EvidenceDimension.OWNERSHIP, EvidenceDimension.POSITIVE, EvidenceDimension.NEGATIVE },
-		blockers = { "MOVIE_INSTANCE", "ALL_CURRENT_MECHANISM_PROJECTION_NOT_PROVEN" })
+			EvidenceDimension.PROTOCOL, EvidenceDimension.OWNERSHIP, EvidenceDimension.POSITIVE, EvidenceDimension.NEGATIVE })
 	@Test
 	void fixtureEvidenceContractsAreCompleteAndFailClosed() {
 		assertEquals(Set.of("SIMPLE_DIALOG", "COMPLEX_MULTIVARIABLE", "TIMED_FAILURE", "MOVIE_INSTANCE", "ESCORT_AI", "PVP_CREDIT"),
 			FIXTURE_CONTRACTS.keySet());
-		assertEquals(EvidenceStatus.BLOCKED, FIXTURE_CONTRACTS.get("MOVIE_INSTANCE").status());
-		assertEquals(Set.of("MISSING_TYPED_INSTANCE_LIFECYCLE", "CRAFTING_REWARDS_NOT_INSTANCE_EVIDENCE"),
-			FIXTURE_CONTRACTS.get("MOVIE_INSTANCE").blockers());
-		assertTrue(FIXTURE_CONTRACTS.entrySet().stream().filter(entry -> !entry.getKey().equals("MOVIE_INSTANCE"))
-			.allMatch(entry -> entry.getValue().status() == EvidenceStatus.IMPLEMENTED && entry.getValue().blockers().isEmpty()));
+		assertEquals(EvidenceStatus.IMPLEMENTED, FIXTURE_CONTRACTS.get("MOVIE_INSTANCE").status());
+		assertEquals(Set.of(), FIXTURE_CONTRACTS.get("MOVIE_INSTANCE").blockers());
+		assertTrue(FIXTURE_CONTRACTS.values().stream()
+			.allMatch(contract -> contract.status() == EvidenceStatus.IMPLEMENTED && contract.blockers().isEmpty()));
 
 		EnumSet<EvidenceDimension> covered = FIXTURE_CONTRACTS.values().stream()
 			.filter(contract -> contract.status() == EvidenceStatus.IMPLEMENTED)
 			.map(FixtureContract::proves)
 			.collect(() -> EnumSet.noneOf(EvidenceDimension.class), EnumSet::addAll, EnumSet::addAll);
 		assertEquals(EnumSet.allOf(EvidenceDimension.class), covered);
-		assertEquals(EvidenceStatus.BLOCKED, ACCEPTANCE_CONTRACT.status());
-		assertEquals("VERTICAL_FIXTURE_PORTFOLIO", ACCEPTANCE_CONTRACT.scope());
+		assertEquals(EvidenceStatus.IMPLEMENTED, ACCEPTANCE_CONTRACT.status());
+		assertEquals("ALL_CURRENT_MECHANISMS", ACCEPTANCE_CONTRACT.scope());
 		assertEquals(Set.of(EvidenceDimension.values()), ACCEPTANCE_CONTRACT.proves());
-		assertEquals(Set.of("MOVIE_INSTANCE", "ALL_CURRENT_MECHANISM_PROJECTION_NOT_PROVEN"),
-			ACCEPTANCE_CONTRACT.blockers());
+		assertEquals(Set.of(), ACCEPTANCE_CONTRACT.blockers());
 	}
 
 	private CompiledQuestGraphData compile(String name, int questId, Set<Integer> npcIds, Set<Integer> movieIds,

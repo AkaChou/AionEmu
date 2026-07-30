@@ -17,6 +17,7 @@ import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransit
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.time.ZoneId;
@@ -30,6 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +42,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Action;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AddQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AnchoredCooldownRepeatDeadlinePolicy;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AbandonQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.BooleanVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Condition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CraftSkillEligibilityCondition;
@@ -65,11 +68,16 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollect
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendRepeatDeadlineMessageAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SpawnInstanceNpcAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEscortAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortCoordinatesDestination;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortSource;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetCompletionCountAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncCraftSkillRewardAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphCraftSkillReferenceCatalog;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
@@ -84,15 +92,20 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphRouter.Match;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionInvocation;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PersistenceResult;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.TransitionContext;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphItemUseAnimationAdapter.ScheduleResult;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.BooleanValue;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.EscortResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.InstanceSpawnResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.SpawnPlacementKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 
@@ -104,7 +117,7 @@ import jakarta.xml.bind.JAXBContext;
  */
 class QuestGraphTransitionExecutorTest {
 
-	private static final DialogEvent EVENT = new DialogEvent("dialog-1", 7, 1000, 100, "QUEST_SELECT");
+	private static final DialogEvent EVENT = new DialogEvent("dialog-1", 7, 1000, 100, 900100, "QUEST_SELECT");
 	private static final QuestGraphCraftSkillReferenceCatalog CRAFT_REFERENCES = craftReferences();
 	private static final ZoneId SERVER_ZONE = ZoneId.of("Asia/Shanghai");
 	private final QuestGraphTransitionExecutor executor = new QuestGraphTransitionExecutor();
@@ -369,6 +382,44 @@ class QuestGraphTransitionExecutorTest {
 	}
 
 	/**
+	 * 验证 LOCKED 不能保留既有完成历史，且在 lifecycle 外部预检、执行和持久化前关闭失败。
+	 * Verifies LOCKED cannot retain completion history and fails closed before lifecycle preflight, execution, or persistence.
+	 */
+	@Test
+	void lockedStatusWithCompletionHistoryFailsBeforeLifecycleSideEffects() {
+		Fixture fixture = fixture();
+		Transition original = fixture.match().route().transition();
+		Transition transition = new Transition(original.id(), original.priority(), original.targetNode(), original.event(), List.of(),
+			List.of(new SetQuestStatusAction(CompiledQuestGraph.QuestStatus.LOCKED), new AbandonQuestAction()));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", fixture.graph().variables(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		QuestHistory history = new QuestHistory(2, 1, 1_700_000_000_000L, null);
+		PlayerQuestGraphState state = new PlayerQuestGraphState(1, 1, 0, "offer", CompiledQuestGraph.QuestStatus.START, history, null,
+			Lifecycle.ACTIVE, Map.of("count", new IntValue(0), "enabled", new BooleanValue(false)), Map.of(), null, Map.of(), null);
+		fixture.states().addLoaded(state);
+		AtomicInteger preflights = new AtomicInteger();
+		AtomicInteger executions = new AtomicInteger();
+		AtomicInteger writes = new AtomicInteger();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(), invocation -> MATCHED, invocation -> {
+			preflights.incrementAndGet();
+			return READY;
+		}, invocation -> {
+			executions.incrementAndGet();
+			return APPLIED;
+		}, (expected, next) -> {
+			writes.incrementAndGet();
+			return PersistenceResult.APPLIED;
+		});
+
+		assertEquals(DispatchResult.Status.FAILED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "offer", transition), state), context));
+		assertEquals(0, preflights.get());
+		assertEquals(0, executions.get());
+		assertEquals(0, writes.get());
+		assertEquals(state, fixture.states().get(1));
+	}
+
+	/**
 	 * 验证重复接取从 COMPLETE 进入 START 时保留 canonical 历史。
 	 * Verifies that repeat acceptance preserves canonical history while moving from COMPLETE to START.
 	 */
@@ -445,15 +496,19 @@ class QuestGraphTransitionExecutorTest {
 		}, invocation -> {
 			executed.add(invocation.action().type());
 			if (invocation.action().type().phase() == CompiledQuestGraph.ActionPhase.POST_COMMIT_PROTOCOL) {
-				assertEquals(Lifecycle.ACTIVE, states.get(1).getLifecycle());
+				assertEquals(Lifecycle.PREPARED, states.get(1).getLifecycle());
 				assertEquals("done", states.get(1).getNodeId());
+				assertTrue(states.get(1).getJournal().isTargetCommitted());
+				if (invocation.action() instanceof SyncQuestStatusAction) {
+					throw new IllegalStateException("protocol endpoint failed");
+				}
 				return FAILED;
 			}
 			return APPLIED;
 		}, cas(database));
 		DialogEvent event = new DialogEvent("finish-1", 7, 1_700_000_000_000L, 100, "SELECT_REWARD");
 
-		assertEquals(DispatchResult.Status.APPLIED,
+		assertEquals(DispatchResult.Status.FAILED,
 			executor.execute(new Match(event, graph, new EventRoute(1, "active", transition), initial), context));
 
 		PlayerQuestGraphState completed = states.get(1);
@@ -461,9 +516,52 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(CompiledQuestGraph.QuestStatus.COMPLETE, completed.getQuestStatus());
 		assertEquals(new IntValue(0), completed.getVariables().get("var0"));
 		assertEquals(new QuestHistory(1, 0, 1_700_000_000_000L, null), completed.getHistory());
+		assertEquals(Lifecycle.PREPARED, completed.getLifecycle());
+		assertTrue(completed.getJournal().isTargetCommitted());
+		assertEquals(5, completed.getJournal().getNextActionIndex());
 		assertEquals(List.of(CompiledQuestGraph.ActionType.REMOVE_COLLECTED_ITEMS, CompiledQuestGraph.ActionType.FINISH_QUEST), preflighted);
 		assertEquals(List.of(CompiledQuestGraph.ActionType.REMOVE_COLLECTED_ITEMS, CompiledQuestGraph.ActionType.FINISH_QUEST,
-			CompiledQuestGraph.ActionType.SYNC_QUEST_STATUS, CompiledQuestGraph.ActionType.SEND_DIALOG), executed);
+			CompiledQuestGraph.ActionType.SYNC_QUEST_STATUS), executed);
+
+		List<CompiledQuestGraph.ActionType> recoveredProtocols = new java.util.ArrayList<>();
+		TransitionContext recovery = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY, invocation -> {
+			recoveredProtocols.add(invocation.action().type());
+			return APPLIED;
+		}, cas(database));
+		assertEquals(DispatchResult.Status.APPLIED, executor.recover(graph, recovery));
+		assertEquals(List.of(CompiledQuestGraph.ActionType.SYNC_QUEST_STATUS, CompiledQuestGraph.ActionType.SEND_DIALOG), recoveredProtocols);
+		assertEquals(Lifecycle.ACTIVE, states.get(1).getLifecycle());
+		assertNull(states.get(1).getJournal());
+		assertEquals(10, states.get(1).getRevision());
+	}
+
+	/** 验证通用 action endpoint 不能用普通 APPLIED 绕过 terminal lifecycle 的逐 lease 物理清理。 / Verifies a generic action endpoint cannot bypass per-lease terminal cleanup with a plain APPLIED result. */
+	@Test
+	void terminalLifecycleRequiresExplicitCleanupProofBeforeLedgerReduction() {
+		String resourceKey = "persisted-spawn";
+		CleanupLease lease = CleanupLease.instanceSpawn(new InstanceSpawnResourceIdentity(7, 1, 990001, 216608,
+			SpawnPlacementKind.FIXED, 0, 0, 210010000, 1, 10, 20, 30, (byte) 0, resourceKey));
+		Map<String, CleanupLease> leases = Map.of(resourceKey, lease);
+		Transition transition = new Transition("finish-with-resource", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(),
+			List.of(new FinishQuestAction(0)));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.REWARD,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, leases, null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> APPLIED, cas(database));
+
+		assertEquals(DispatchResult.Status.FAILED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), context));
+		PlayerQuestGraphState interrupted = states.get(1);
+		assertEquals(Lifecycle.PREPARED, interrupted.getLifecycle());
+		assertEquals(0, interrupted.getJournal().getNextActionIndex());
+		assertEquals(CompiledQuestGraph.QuestStatus.REWARD, interrupted.getQuestStatus());
+		assertEquals(leases, interrupted.getCleanupLeases());
+		assertEquals(interrupted, database.get());
 	}
 
 	/**
@@ -934,19 +1032,243 @@ class QuestGraphTransitionExecutorTest {
 		AtomicReference<QuestGraphMovieActionAdapter.PlayMovieCommand> movie = new AtomicReference<>();
 		QuestGraphMovieActionAdapter movies = new QuestGraphMovieActionAdapter(7, command -> {
 			assertEquals("done", states.get(1).getNodeId());
-			assertEquals(Lifecycle.ACTIVE, states.get(1).getLifecycle());
+			assertEquals(Lifecycle.PREPARED, states.get(1).getLifecycle());
+			assertTrue(states.get(1).getJournal().isTargetCommitted());
 			movie.set(command);
 			return APPLIED;
 		}, command -> FAILED);
 		QuestGraphTimerActionAdapter timers = new QuestGraphTimerActionAdapter(command -> FAILED, command -> FAILED, command -> FAILED);
+		QuestGraphItemUseAnimationAdapter itemUseAnimations = new QuestGraphItemUseAnimationAdapter(7, command -> FAILED,
+			(command, finish) -> new ScheduleResult(FAILED, null), command -> FAILED);
+		QuestGraphDialogProtocolAdapter dialogs = new QuestGraphDialogProtocolAdapter(7, command -> FAILED);
 		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
-			invocation -> FAILED, noItemActions(), timers, movies, cas(database));
+			invocation -> FAILED, noItemActions(), timers, movies, itemUseAnimations, dialogs, new QuestGraphTeleportActionAdapter(7, command -> FAILED),
+			noInstanceSpawns(), cas(database));
 
 		assertEquals(DispatchResult.Status.APPLIED,
 			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), context));
 		assertEquals(913, movie.get().movieId());
 		assertEquals("8:dialog-1:1:movie:7:0", movie.get().idempotencyKey());
 		assertEquals(states.get(1), database.get());
+	}
+
+	/** 验证 UNBOUND 对话协议在状态提交后经 typed adapter 投影。 / Verifies UNBOUND dialog protocol projects through the typed adapter after state commit. */
+	@Test
+	void unboundDialogProjectionRunsThroughTypedAdapterAfterCommit() {
+		Transition transition = new Transition("dialog", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(),
+			List.of(new SendDialogAction(1352, CompiledQuestGraph.DialogBindingMode.UNBOUND)));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		AtomicReference<QuestGraphDialogProtocolAdapter.DialogCommand> dialog = new AtomicReference<>();
+		QuestGraphDialogProtocolAdapter dialogs = new QuestGraphDialogProtocolAdapter(7, command -> {
+			assertEquals("done", states.get(1).getNodeId());
+			dialog.set(command);
+			return APPLIED;
+		});
+		QuestGraphTimerActionAdapter timers = new QuestGraphTimerActionAdapter(command -> FAILED, command -> FAILED, command -> FAILED);
+		QuestGraphMovieActionAdapter movies = new QuestGraphMovieActionAdapter(7, command -> FAILED, command -> FAILED);
+		QuestGraphItemUseAnimationAdapter itemUseAnimations = new QuestGraphItemUseAnimationAdapter(7, command -> FAILED,
+			(command, finish) -> new ScheduleResult(FAILED, null), command -> FAILED);
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> FAILED, noItemActions(), timers, movies, itemUseAnimations, dialogs, new QuestGraphTeleportActionAdapter(7, command -> FAILED),
+			noInstanceSpawns(), cas(database));
+
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), context));
+		assertEquals(CompiledQuestGraph.DialogBindingMode.UNBOUND, dialog.get().binding());
+		assertEquals(1352, dialog.get().dialogId());
+		assertEquals(states.get(1), database.get());
+	}
+
+	/** 验证 REQUIRED spawn/teleport 由 typed adapter 同时拥有预检和执行。 / Verifies typed adapters own preflight and execution for required spawn/teleport actions. */
+	@Test
+	void spawnAndTeleportRequiredActionsUseTypedPreflightAndExecution() {
+		AtomicInteger spawns = new AtomicInteger();
+		AtomicInteger teleports = new AtomicInteger();
+		QuestGraphInstanceSpawnAdapter instanceSpawns = new QuestGraphInstanceSpawnAdapter(7,
+			query -> new QuestGraphInstanceSpawnAdapter.SpawnSpot(210010000, 0, 1, 2, 3, (byte) 0), command -> {
+				spawns.incrementAndGet();
+				return new QuestGraphInstanceSpawnAdapter.SpawnResult(APPLIED, 990001);
+			}, command -> APPLIED);
+		QuestGraphTeleportActionAdapter teleportsAdapter = new QuestGraphTeleportActionAdapter(7, command -> {
+			teleports.incrementAndGet();
+			return APPLIED;
+		});
+		QuestGraphTimerActionAdapter timers = new QuestGraphTimerActionAdapter(command -> FAILED, command -> FAILED, command -> FAILED);
+		QuestGraphMovieActionAdapter movies = new QuestGraphMovieActionAdapter(7, command -> FAILED, command -> FAILED);
+		QuestGraphItemUseAnimationAdapter itemUseAnimations = new QuestGraphItemUseAnimationAdapter(7, command -> FAILED,
+			(command, finish) -> new ScheduleResult(FAILED, null), command -> FAILED);
+		QuestGraphDialogProtocolAdapter dialogs = new QuestGraphDialogProtocolAdapter(7, command -> FAILED);
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, new PlayerQuestGraphStateList(),
+			invocation -> MATCHED, invocation -> QuestGraphTransitionExecutor.PreflightResult.FAILED, invocation -> FAILED, noItemActions(), timers, movies,
+			itemUseAnimations, dialogs, teleportsAdapter, instanceSpawns, (expected, state) -> PersistenceResult.APPLIED);
+		ActionInvocation spawn = new ActionInvocation(new SpawnInstanceNpcAction(700759, 216608), 1, 0,
+			CompiledQuestGraph.QuestStatus.START, EVENT, RepeatDeadlineResolution.NOT_APPLICABLE, null, "spawn");
+		ActionInvocation teleport = new ActionInvocation(new TeleportPlayerAction(210010000, 0, 1, 2, 3, (byte) 0), 1, 0,
+			CompiledQuestGraph.QuestStatus.START, EVENT, RepeatDeadlineResolution.NOT_APPLICABLE, null, "teleport");
+
+		assertEquals(READY, context.actionPreflight().apply(spawn));
+		assertEquals(APPLIED, context.actionExecutor().apply(spawn));
+		assertEquals(READY, context.actionPreflight().apply(teleport));
+		assertEquals(APPLIED, context.actionExecutor().apply(teleport));
+		assertEquals(1, spawns.get());
+		assertEquals(1, teleports.get());
+	}
+
+	/** 验证 escort 作为 REQUIRED 原子动作执行，并在 canonical 状态中登记 QUEST_ESCORT cleanup lease。 / Verifies escort executes atomically as REQUIRED and registers a QUEST_ESCORT cleanup lease in canonical state. */
+	@Test
+	void escortRequiredActionUsesTypedAdapterAndPersistsCleanupLease() {
+		StartEscortAction action = new StartEscortAction(EscortSource.EVENT_NPC, 0, (byte) 0, "4212", true, false,
+			true, false, new EscortCoordinatesDestination(505.69427f, 437.69382f, 885.1844f));
+		Transition transition = new Transition("escort", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), List.of(action));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", Map.of(),
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		AtomicReference<PlayerQuestGraphState> preparedSnapshot = new AtomicReference<>();
+		AtomicInteger writes = new AtomicInteger();
+		AtomicInteger preflights = new AtomicInteger();
+		AtomicInteger starts = new AtomicInteger();
+		QuestGraphEscortActionAdapter escorts = new QuestGraphEscortActionAdapter(7,
+			() -> new QuestGraphEscortActionAdapter.PlayerContext(7, 210010000, 42, 501.5f, 438.25f, 885.0f), command -> {
+				preflights.incrementAndGet();
+				return READY;
+			}, command -> {
+				starts.incrementAndGet();
+				return new QuestGraphEscortActionAdapter.StartResult(APPLIED, 990003, false, null);
+			}, command -> APPLIED);
+		QuestGraphTimerActionAdapter timers = new QuestGraphTimerActionAdapter(command -> FAILED, command -> FAILED, command -> FAILED);
+		QuestGraphMovieActionAdapter movies = new QuestGraphMovieActionAdapter(7, command -> FAILED, command -> FAILED);
+		QuestGraphItemUseAnimationAdapter animations = new QuestGraphItemUseAnimationAdapter(7, command -> FAILED,
+			(command, finish) -> new ScheduleResult(FAILED, null), command -> FAILED);
+		QuestGraphDialogProtocolAdapter dialogs = new QuestGraphDialogProtocolAdapter(7, command -> FAILED);
+		QuestGraphLifecycleActionAdapter lifecycle = new QuestGraphLifecycleActionAdapter(7, command -> REJECTED, command -> FAILED);
+		BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence = cas(database);
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> REJECTED,
+			invocation -> FAILED, noItemActions(), timers, movies, animations, dialogs, new QuestGraphTeleportActionAdapter(7, command -> FAILED),
+			noInstanceSpawns(), escorts, lifecycle, (expected, state) -> {
+				if (state.getLifecycle() == Lifecycle.PREPARED && state.getJournal().getNextActionIndex() == 0) {
+					preparedSnapshot.set(state);
+				}
+				return writes.incrementAndGet() == 2 ? CONFLICT : persistence.apply(expected, state);
+			});
+
+		assertEquals(DispatchResult.Status.FAILED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), context));
+		assertEquals(Lifecycle.PREPARED, states.get(1).getLifecycle());
+		assertEquals(DispatchResult.Status.APPLIED, executor.recover(graph, context));
+		assertEquals(1, preflights.get());
+		assertEquals(1, starts.get());
+		assertEquals("done", states.get(1).getNodeId());
+		String idempotencyKey = "8:dialog-1:1:escort:7:0";
+		CleanupLease lease = states.get(1).getCleanupLeases().get(idempotencyKey);
+		assertTrue(lease.resolved());
+		assertEquals("QUEST_ESCORT", lease.capability());
+		assertEquals(idempotencyKey, lease.resourceKey());
+		EscortResourceIdentity identity = (EscortResourceIdentity) lease.identity();
+		EscortResourceIdentity plan = (EscortResourceIdentity) preparedSnapshot.get().getCleanupLeases()
+			.get(idempotencyKey).identity();
+		assertEquals(0, plan.objectId());
+		assertEquals(210010000, plan.worldId());
+		assertEquals(42, plan.instanceId());
+		assertEquals(900100, plan.eventNpcObjectId());
+		assertEquals(7, identity.playerId());
+		assertEquals(1, identity.questId());
+		assertEquals(990003, identity.objectId());
+		assertEquals(100, identity.npcId());
+		assertEquals(210010000, identity.worldId());
+		assertEquals(42, identity.instanceId());
+		assertEquals(100, identity.eventNpcId());
+		assertEquals(900100, identity.eventNpcObjectId());
+		assertEquals(action, identity.action());
+		assertEquals(idempotencyKey, identity.idempotencyKey());
+		assertFalse(identity.spawnedFollower());
+		assertEquals(states.get(1), database.get());
+	}
+
+	@Test
+	void startQuestPreservesFrozenResourcePlanAcrossRecovery() {
+		SpawnInstanceNpcAction spawn = new SpawnInstanceNpcAction(700759, 216608);
+		Transition transition = new Transition("start-and-spawn", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(),
+			List.of(new StartQuestAction(), spawn));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>();
+		AtomicInteger preparations = new AtomicInteger();
+		AtomicInteger spawnAttempts = new AtomicInteger();
+		AtomicReference<InstanceSpawnResourceIdentity> frozen = new AtomicReference<>();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY, invocation -> {
+			if (invocation.action() instanceof SpawnInstanceNpcAction) {
+				return spawnAttempts.incrementAndGet() == 1 ? FAILED : APPLIED;
+			}
+			return APPLIED;
+		}, ignored -> 0, ignored -> READY, invocation -> {
+			preparations.incrementAndGet();
+			InstanceSpawnResourceIdentity plan = new InstanceSpawnResourceIdentity(7, 1, 0, 216608, SpawnPlacementKind.FIXED,
+				0, 0, 210010000, 1, 10, 20, 30, (byte) 0, invocation.idempotencyKey());
+			frozen.set(plan);
+			return CleanupLease.instanceSpawn(plan);
+		}, invocation -> {
+			CleanupLease persisted = invocation.cleanupLeases().get(invocation.idempotencyKey());
+			assertEquals(frozen.get(), persisted.identity());
+			return CleanupLease.instanceSpawn(frozen.get().materialize(990001));
+		}, cas(database));
+		Match match = new Match(EVENT, graph, new EventRoute(1, "offer", transition), null);
+
+		assertEquals(DispatchResult.Status.FAILED, executor.execute(match, context));
+		PlayerQuestGraphState interrupted = states.get(1);
+		assertEquals(Lifecycle.PREPARED, interrupted.getLifecycle());
+		assertEquals(1, interrupted.getJournal().getNextActionIndex());
+		assertEquals(frozen.get(), interrupted.getCleanupLeases().values().iterator().next().identity());
+
+		assertEquals(DispatchResult.Status.APPLIED, executor.recover(graph, context));
+		assertEquals(1, preparations.get());
+		assertEquals(2, spawnAttempts.get());
+		assertTrue(states.get(1).getCleanupLeases().values().iterator().next().identity().materialized());
+		assertEquals(Lifecycle.ACTIVE, states.get(1).getLifecycle());
+	}
+
+	/** 验证原有组合构造器保持源码兼容，且新增动作仍由旧调用方的通用端口处理。 / Verifies legacy composite constructors remain source-compatible and route added actions through the caller's generic ports. */
+	@Test
+	void legacyCompositeConstructorsRemainCompatibleWithoutNullAdapters() throws NoSuchMethodException {
+		Class<?>[] prefix = { int.class, int.class, ZoneId.class, PlayerQuestGraphStateList.class,
+			Function.class, Function.class, Function.class, QuestGraphItemActionAdapter.class,
+			QuestGraphTimerActionAdapter.class, QuestGraphMovieActionAdapter.class };
+		TransitionContext.class.getConstructor(concat(prefix, QuestGraphLifecycleActionAdapter.class,
+			QuestGraphRecipeBridge.class, BiFunction.class));
+		TransitionContext.class.getConstructor(concat(prefix, QuestGraphLifecycleActionAdapter.class,
+			QuestGraphRecipeBridge.class, QuestGraphCraftSkillRewardBridge.class, BiFunction.class));
+		TransitionContext.class.getConstructor(concat(prefix, QuestGraphLifecycleActionAdapter.class, BiFunction.class));
+		TransitionContext.class.getConstructor(concat(prefix, BiFunction.class));
+
+		AtomicInteger preflights = new AtomicInteger();
+		AtomicInteger executions = new AtomicInteger();
+		QuestGraphTimerActionAdapter timers = new QuestGraphTimerActionAdapter(command -> FAILED, command -> FAILED, command -> FAILED);
+		QuestGraphMovieActionAdapter movies = new QuestGraphMovieActionAdapter(7, command -> FAILED, command -> FAILED);
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, new PlayerQuestGraphStateList(), invocation -> MATCHED,
+			invocation -> {
+				preflights.incrementAndGet();
+				return READY;
+			}, invocation -> {
+				executions.incrementAndGet();
+				return APPLIED;
+			}, noItemActions(), timers, movies, (expected, state) -> PersistenceResult.APPLIED);
+		ActionInvocation teleport = new ActionInvocation(new TeleportPlayerAction(210010000, 0, 1, 2, 3, (byte) 0), 1, 0,
+			CompiledQuestGraph.QuestStatus.START, EVENT, RepeatDeadlineResolution.NOT_APPLICABLE, null, "legacy-teleport");
+
+		assertEquals(READY, context.actionPreflight().apply(teleport));
+		assertEquals(APPLIED, context.actionExecutor().apply(teleport));
+		assertEquals(1, preflights.get());
+		assertEquals(1, executions.get());
 	}
 
 	/**
@@ -974,8 +1296,9 @@ class QuestGraphTransitionExecutorTest {
 			return APPLIED;
 		}, command -> {
 			protocols.incrementAndGet();
-			assertEquals(Lifecycle.ACTIVE, fixture.states().get(1941).getLifecycle());
+			assertEquals(Lifecycle.PREPARED, fixture.states().get(1941).getLifecycle());
 			assertEquals("reward", fixture.states().get(1941).getNodeId());
+			assertTrue(fixture.states().get(1941).getJournal().isTargetCommitted());
 			return APPLIED;
 		}, command -> FAILED);
 		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(), invocation -> {
@@ -997,7 +1320,7 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(0, delegatedConditions.get());
 		assertEquals(0, delegatedPreflights.get());
 		assertEquals(0, delegatedActions.get());
-		assertEquals(3, fixture.states().get(1941).getRevision());
+		assertEquals(5, fixture.states().get(1941).getRevision());
 		assertEquals(fixture.states().get(1941), fixture.database().get());
 	}
 
@@ -1037,7 +1360,8 @@ class QuestGraphTransitionExecutorTest {
 				return ALREADY_APPLIED;
 			}, command -> {
 				protocols.incrementAndGet();
-				assertEquals(Lifecycle.ACTIVE, fixture.states().get(1941).getLifecycle());
+				assertEquals(Lifecycle.PREPARED, fixture.states().get(1941).getLifecycle());
+				assertTrue(fixture.states().get(1941).getJournal().isTargetCommitted());
 				return APPLIED;
 			}, command -> FAILED);
 		TransitionContext recovery = new TransitionContext(7, 0, SERVER_ZONE, fixture.states(),
@@ -1169,6 +1493,21 @@ class QuestGraphTransitionExecutorTest {
 	private static QuestGraphItemActionAdapter noItemActions() {
 		return new QuestGraphItemActionAdapter(7, new Object(), ignored -> 0, values -> true, (itemId, delta) -> false,
 			(itemId, delta) -> false, () -> true, itemId -> true);
+	}
+
+	/** 拼接反射参数表。 / Concatenates reflected constructor parameter lists. */
+	private static Class<?>[] concat(Class<?>[] prefix, Class<?>... suffix) {
+		Class<?>[] result = new Class<?>[prefix.length + suffix.length];
+		System.arraycopy(prefix, 0, result, 0, prefix.length);
+		System.arraycopy(suffix, 0, result, prefix.length, suffix.length);
+		return result;
+	}
+
+	/** 创建拒绝所有 instance spawn 的测试 adapter。 / Creates a test adapter that rejects every instance spawn. */
+	private static QuestGraphInstanceSpawnAdapter noInstanceSpawns() {
+		return new QuestGraphInstanceSpawnAdapter(7,
+			query -> new QuestGraphInstanceSpawnAdapter.SpawnSpot(210010000, 0, 0, 0, 0, (byte) 0),
+			command -> new QuestGraphInstanceSpawnAdapter.SpawnResult(FAILED, 0), command -> FAILED);
 	}
 
 	/** 从正式 RecipeData 构造制作奖励测试共享的独立引用目录。 / Builds the independent formal-RecipeData reference catalog shared by craft-reward tests. */

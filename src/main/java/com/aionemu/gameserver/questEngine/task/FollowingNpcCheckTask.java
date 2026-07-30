@@ -1,12 +1,9 @@
 package com.aionemu.gameserver.questEngine.task;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
 
@@ -22,6 +19,10 @@ public class FollowingNpcCheckTask implements Runnable {
 	private final QuestEnv env;
 	/** 目的地检查器。 Destination checker. */
 	private final DestinationChecker destinationChecker;
+	/** 唯一终态 listener。 Single terminal-outcome listener. */
+	private final QuestEscortCompletionListener completionListener;
+	/** 防止同一 tick 的死亡、超距和到达检查重复投递终态。 / Prevents duplicate terminal delivery from one or later ticks. */
+	private boolean completed;
 
 	/**
 	 * 构造跟随检查任务。
@@ -31,8 +32,17 @@ public class FollowingNpcCheckTask implements Runnable {
 	 * @param destinationChecker 目的地检查器 / Destination checker
 	 */
 	FollowingNpcCheckTask(QuestEnv env, DestinationChecker destinationChecker) {
+		this(env, destinationChecker, QuestEscortCompletionListener.legacyQuestEngine());
+	}
+
+	/** 创建带显式 owner listener 的检查任务。 / Creates a check task with an explicit owner listener. */
+	FollowingNpcCheckTask(QuestEnv env, DestinationChecker destinationChecker, QuestEscortCompletionListener completionListener) {
+		if (env == null || destinationChecker == null || completionListener == null) {
+			throw new IllegalArgumentException("Escort check task dependencies are missing");
+		}
 		this.env = env;
 		this.destinationChecker = destinationChecker;
+		this.completionListener = completionListener;
 	}
 
 	/**
@@ -40,14 +50,19 @@ public class FollowingNpcCheckTask implements Runnable {
 	 * Runs one follow-state check: fail on death/out-of-range, succeed on destination reached.
 	 */
 	@Override
-	public void run() {
+	public synchronized void run() {
+		if (completed) {
+			return;
+		}
 		final Player player = env.getPlayer();
 		Npc npc = (Npc) destinationChecker.follower;
 		if (player.getLifeStats().isAlreadyDead() || npc.getLifeStats().isAlreadyDead()) {
 			onFail(env);
+			return;
 		}
 		if (!MathUtil.isIn3dRange(player, npc, 50)) {
 			onFail(env);
+			return;
 		}
 
 		if (destinationChecker.check()) {
@@ -61,9 +76,10 @@ public class FollowingNpcCheckTask implements Runnable {
 	 *
 	 * @param env 任务环境 / Quest environment
 	 */
-	private final void onSuccess(QuestEnv env) {
+	private void onSuccess(QuestEnv env) {
+		completed = true;
 		stopFollowing(env);
-		GameEngineServices.questEngine().onNpcReachTarget(env);
+		completionListener.onReached(env, (Npc) destinationChecker.follower);
 	}
 
 	/**
@@ -73,8 +89,9 @@ public class FollowingNpcCheckTask implements Runnable {
 	 * @param env 任务环境 / Quest environment
 	 */
 	protected void onFail(QuestEnv env) {
+		completed = true;
 		stopFollowing(env);
-		GameEngineServices.questEngine().onNpcLostTarget(env);
+		completionListener.onLost(env, (Npc) destinationChecker.follower);
 	}
 
 	/**
@@ -83,7 +100,7 @@ public class FollowingNpcCheckTask implements Runnable {
 	 *
 	 * @param env 任务环境 / Quest environment
 	 */
-	private final void stopFollowing(QuestEnv env) {
+	private void stopFollowing(QuestEnv env) {
 		Player player = env.getPlayer();
 		Npc npc = (Npc) destinationChecker.follower;
 		player.getController().cancelTask(TaskId.QUEST_FOLLOW);

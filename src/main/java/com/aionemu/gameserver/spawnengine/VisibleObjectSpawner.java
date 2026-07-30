@@ -259,6 +259,14 @@ public class VisibleObjectSpawner {
     }
 
     protected static VisibleObject spawnNpc(SpawnTemplate spawn, int instanceIndex) {
+		return spawnNpc(spawn, instanceIndex, GameWorldBootstrapServices.idFactory().nextId());
+	}
+
+	/** Spawns a regular NPC with an object id already reserved by a durable operation registry. */
+	static VisibleObject spawnNpc(SpawnTemplate spawn, int instanceIndex, int reservedObjectId) {
+		if (reservedObjectId <= 0) {
+			throw new IllegalArgumentException("Reserved NPC object id is invalid");
+		}
         int objectId = spawn.getNpcId();
         if (spawn.getAlternateIds()!=null){
             int[] selectprobs = spawn.getSelectProbs();
@@ -278,9 +286,8 @@ public class VisibleObjectSpawner {
             log.error(I18n.get("log.b1ee12e6edee", String.valueOf(objectId)));
             return null;
         }
-        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
 
-        Npc npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
+		Npc npc = new Npc(reservedObjectId, new NpcController(), spawn, npcTemplate);
         npc.setCreatorId(spawn.getCreatorId());
         npc.setMasterName(spawn.getMasterName());
         npc.setKnownlist(new NpcKnownList(npc));

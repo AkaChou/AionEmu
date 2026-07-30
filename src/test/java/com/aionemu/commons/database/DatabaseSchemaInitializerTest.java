@@ -6,7 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -70,6 +73,28 @@ class DatabaseSchemaInitializerTest {
 		assertTrue(schema.contains("KEY `idx_player_quest_graph_deadline` (`next_deadline_at`)"));
 		assertTrue(DatabaseSchemaInitializer.PLAYER_QUEST_GRAPH_STATE_TABLE_SQL.contains("CREATE TABLE IF NOT EXISTS"));
 		assertTrue(DatabaseSchemaInitializer.PLAYER_QUEST_GRAPH_STATE_TABLE_SQL.contains("FOREIGN KEY (`player_id`)"));
+		assertTrue(schema.contains("CREATE TABLE `quest_graph_resource_operations`"));
+		assertTrue(schema.contains("UNIQUE KEY `uq_quest_graph_resource_object` (`reserved_object_id`)"));
+		assertTrue(DatabaseSchemaInitializer.QUEST_GRAPH_RESOURCE_OPERATION_TABLE_SQL.contains("`operation_hash` BINARY(32)"));
+		assertTrue(DatabaseSchemaInitializer.QUEST_GRAPH_RESOURCE_OPERATION_TABLE_SQL.contains("`resource_payload` MEDIUMBLOB"));
+	}
+
+	@Test
+	void questGraphResourceOperationSchemaRequiresFullColumnsAndObjectIdUniqueness() {
+		Map<String, DatabaseSchemaInitializer.SchemaColumn> columns = validResourceOperationColumns();
+		List<DatabaseSchemaInitializer.SchemaIndexColumn> indexes = validResourceOperationIndexes();
+
+		assertTrue(DatabaseSchemaInitializer.questGraphResourceOperationSchemaViolations(columns, indexes).isEmpty());
+
+		columns.put("operation_key", new DatabaseSchemaInitializer.SchemaColumn("varchar", "varchar(512)", false, 512L));
+		List<DatabaseSchemaInitializer.SchemaIndexColumn> nonUniqueObjectId = new ArrayList<>(indexes);
+		nonUniqueObjectId.set(2,
+			new DatabaseSchemaInitializer.SchemaIndexColumn("uq_quest_graph_resource_object", false, 1, "reserved_object_id"));
+		List<String> violations = DatabaseSchemaInitializer.questGraphResourceOperationSchemaViolations(columns,
+			nonUniqueObjectId);
+
+		assertTrue(violations.contains("invalid operation_key column"));
+		assertTrue(violations.contains("missing unique reserved_object_id index"));
 	}
 
     @Test
@@ -109,4 +134,25 @@ class DatabaseSchemaInitializerTest {
             return new String(input.readAllBytes(), StandardCharsets.UTF_8);
         }
     }
+
+	private static Map<String, DatabaseSchemaInitializer.SchemaColumn> validResourceOperationColumns() {
+		Map<String, DatabaseSchemaInitializer.SchemaColumn> columns = new HashMap<>();
+		columns.put("player_id", new DatabaseSchemaInitializer.SchemaColumn("int", "int(11)", false, null));
+		columns.put("operation_hash", new DatabaseSchemaInitializer.SchemaColumn("binary", "binary(32)", false, 32L));
+		columns.put("operation_key", new DatabaseSchemaInitializer.SchemaColumn("varchar", "varchar(1024)", false, 1024L));
+		columns.put("quest_id", new DatabaseSchemaInitializer.SchemaColumn("int", "int(10) unsigned", false, null));
+		columns.put("capability", new DatabaseSchemaInitializer.SchemaColumn("varchar", "varchar(64)", false, 64L));
+		columns.put("reserved_object_id", new DatabaseSchemaInitializer.SchemaColumn("int", "int(10) unsigned", true, null));
+		columns.put("resource_payload", new DatabaseSchemaInitializer.SchemaColumn("mediumblob", "mediumblob", false, null));
+		return columns;
+	}
+
+	private static List<DatabaseSchemaInitializer.SchemaIndexColumn> validResourceOperationIndexes() {
+		return List.of(
+			new DatabaseSchemaInitializer.SchemaIndexColumn("PRIMARY", true, 1, "player_id"),
+			new DatabaseSchemaInitializer.SchemaIndexColumn("PRIMARY", true, 2, "operation_hash"),
+			new DatabaseSchemaInitializer.SchemaIndexColumn("uq_quest_graph_resource_object", true, 1, "reserved_object_id"),
+			new DatabaseSchemaInitializer.SchemaIndexColumn("idx_quest_graph_resource_quest", false, 1, "player_id"),
+			new DatabaseSchemaInitializer.SchemaIndexColumn("idx_quest_graph_resource_quest", false, 2, "quest_id"));
+	}
 }

@@ -2,7 +2,9 @@ package com.aionemu.gameserver.questEngine.graph.runtime;
 
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType.DIALOG;
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope.PLAYER;
+import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.ALREADY_APPLIED;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.APPLIED;
+import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.CLEANUP_CONFIRMED;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.FAILED;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionResult.MATCHED;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.PersistenceResult.CONFLICT;
@@ -22,6 +24,8 @@ import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.AbandonQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortCoordinatesDestination;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortSource;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
@@ -29,9 +33,11 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveCollectedItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestWorkItemsAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEventQuestAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEscortAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData.EventRoute;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEscortActionAdapter.CleanupReason;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphLifecycleActionAdapter.AbandonCommand;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphLifecycleActionAdapter.CollectedItemsCleanupCommand;
@@ -46,9 +52,12 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExec
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.TransitionContext;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.EscortResourceIdentity;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.InstanceSpawnResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.SpawnPlacementKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 
 /**
@@ -58,7 +67,14 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 class QuestGraphLifecycleActionAdapterTest {
 
 	private static final DialogEvent EVENT = new DialogEvent("lifecycle-event", 7, 1000, 100, "QUEST_SELECT");
-	private static final Map<String, CleanupLease> LEASES = Map.of("escort", new CleanupLease("SPAWN", "npc:9001"));
+	private static final String SPAWN_KEY = "spawn-a";
+	private static final CleanupLease SPAWN_LEASE = CleanupLease.instanceSpawn(new InstanceSpawnResourceIdentity(7, 1, 9001, 216608,
+		SpawnPlacementKind.FIXED, 0, 0, 210010000, 1, 10, 20, 30, (byte) 0, SPAWN_KEY));
+	private static final Map<String, CleanupLease> LEASES = Map.of(SPAWN_KEY, SPAWN_LEASE);
+	private static final String SECOND_SPAWN_KEY = "spawn-b";
+	private static final CleanupLease SECOND_SPAWN_LEASE = CleanupLease.instanceSpawn(new InstanceSpawnResourceIdentity(7, 1, 9002, 216609,
+		SpawnPlacementKind.FIXED, 0, 0, 210010000, 1, 11, 21, 31, (byte) 0, SECOND_SPAWN_KEY));
+	private static final Map<String, CleanupLease> MULTI_LEASES = Map.of(SPAWN_KEY, SPAWN_LEASE, SECOND_SPAWN_KEY, SECOND_SPAWN_LEASE);
 
 	/**
 	 * 验证五类 lifecycle 动作产生封闭命令，错误 owner 和非法状态失败关闭。
@@ -70,7 +86,7 @@ class QuestGraphLifecycleActionAdapterTest {
 		QuestGraphLifecycleActionAdapter adapter = new QuestGraphLifecycleActionAdapter(7, command -> {
 			commands.add(command);
 			return READY;
-		}, command -> APPLIED);
+		}, command -> APPLIED, (lease, reason) -> APPLIED);
 
 		assertEquals(READY, adapter.preflight(invocation(new StartQuestAction(), QuestStatus.NONE, "start")));
 		assertEquals(READY, adapter.preflight(invocation(new StartEventQuestAction(2, QuestStatus.START),
@@ -130,15 +146,27 @@ class QuestGraphLifecycleActionAdapterTest {
 		Transition transition = new Transition("finish", 1, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(),
 			List.of(new FinishQuestAction(2)));
 		CompiledQuestGraph graph = graph(transition);
-		PlayerQuestGraphState initial = state(QuestStatus.REWARD);
+		PlayerQuestGraphState initial = state(QuestStatus.REWARD, MULTI_LEASES);
 		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
 		states.addLoaded(initial);
 		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
-		AtomicInteger attempts = new AtomicInteger();
+		AtomicInteger cleanupAttempts = new AtomicInteger();
+		AtomicInteger lifecycleAttempts = new AtomicInteger();
 		List<String> keys = new ArrayList<>();
+		List<String> cleanedResources = new ArrayList<>();
+		List<CleanupReason> reasons = new ArrayList<>();
 		QuestGraphLifecycleActionAdapter adapter = new QuestGraphLifecycleActionAdapter(7, command -> READY, command -> {
+			lifecycleAttempts.incrementAndGet();
 			keys.add(command.idempotencyKey());
-			return attempts.getAndIncrement() == 0 ? FAILED : APPLIED;
+			return APPLIED;
+		}, (lease, reason) -> {
+			cleanedResources.add(lease.resourceKey());
+			reasons.add(reason);
+			return switch (cleanupAttempts.getAndIncrement()) {
+				case 0, 3 -> APPLIED;
+				case 1 -> FAILED;
+				default -> ALREADY_APPLIED;
+			};
 		});
 		TransitionContext context = new TransitionContext(7, 0, ZoneId.of("Asia/Shanghai"), states, invocation -> MATCHED,
 			invocation -> READY, invocation -> FAILED, adapter, cas(database));
@@ -146,9 +174,13 @@ class QuestGraphLifecycleActionAdapterTest {
 
 		assertEquals(DispatchResult.Status.FAILED, new QuestGraphTransitionExecutor().execute(match, context));
 		assertEquals(Lifecycle.PREPARED, states.get(1).getLifecycle());
-		assertEquals(LEASES, states.get(1).getCleanupLeases());
+		assertEquals(MULTI_LEASES, states.get(1).getCleanupLeases());
+		assertEquals(0, lifecycleAttempts.get());
 		assertEquals(DispatchResult.Status.APPLIED, new QuestGraphTransitionExecutor().recover(graph, context));
-		assertEquals(List.of(keys.getFirst(), keys.getFirst()), keys);
+		assertEquals(1, lifecycleAttempts.get());
+		assertEquals(1, keys.size());
+		assertEquals(List.of(SPAWN_KEY, SECOND_SPAWN_KEY, SPAWN_KEY, SECOND_SPAWN_KEY), cleanedResources);
+		assertEquals(List.of(CleanupReason.FINISH, CleanupReason.FINISH, CleanupReason.FINISH, CleanupReason.FINISH), reasons);
 		assertEquals(QuestStatus.COMPLETE, states.get(1).getQuestStatus());
 		assertEquals(Map.of(), states.get(1).getCleanupLeases());
 		assertEquals(Map.of(), states.get(1).getDeadlines());
@@ -166,8 +198,12 @@ class QuestGraphLifecycleActionAdapterTest {
 		states.addLoaded(initial);
 		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
 		AtomicReference<LifecycleCommand> command = new AtomicReference<>();
+		AtomicReference<CleanupReason> cleanupReason = new AtomicReference<>();
 		QuestGraphLifecycleActionAdapter adapter = new QuestGraphLifecycleActionAdapter(7, ignored -> READY, value -> {
 			command.set(value);
+			return APPLIED;
+		}, (lease, reason) -> {
+			cleanupReason.set(reason);
 			return APPLIED;
 		});
 		TransitionContext context = new TransitionContext(7, 0, ZoneId.of("Asia/Shanghai"), states, invocation -> MATCHED,
@@ -176,9 +212,71 @@ class QuestGraphLifecycleActionAdapterTest {
 		assertEquals(DispatchResult.Status.APPLIED, new QuestGraphTransitionExecutor().execute(
 			new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), context));
 		assertInstanceOf(AbandonCommand.class, command.get());
+		assertEquals(CleanupReason.ABANDON, cleanupReason.get());
 		assertEquals(QuestStatus.NONE, states.get(1).getQuestStatus());
 		assertEquals(Map.of(), states.get(1).getCleanupLeases());
 		assertEquals(Map.of(), states.get(1).getDeadlines());
+	}
+
+	/** 验证没有物理 cleaner 或持有旧 unresolved lease 时，结算在 PREPARED 前失败关闭。 / Verifies settlement fails before PREPARED when physical cleanup is unavailable or the lease is unresolved. */
+	@Test
+	void terminalLifecycleRejectsUnavailableOrUnresolvedCleanup() {
+		AtomicInteger lifecycleCalls = new AtomicInteger();
+		QuestGraphLifecycleActionAdapter unavailable = new QuestGraphLifecycleActionAdapter(7, command -> READY, command -> {
+			lifecycleCalls.incrementAndGet();
+			return APPLIED;
+		});
+		ActionInvocation finish = invocation(new FinishQuestAction(0), QuestStatus.REWARD, "finish");
+
+		assertEquals(QuestGraphTransitionExecutor.PreflightResult.FAILED, unavailable.preflight(finish));
+		assertEquals(FAILED, unavailable.execute(finish));
+		assertEquals(0, lifecycleCalls.get());
+
+		Map<String, CleanupLease> unresolved = Map.of("legacy", new CleanupLease("INSTANCE_SCOPED_SPAWN", "legacy"));
+		QuestGraphLifecycleActionAdapter configured = new QuestGraphLifecycleActionAdapter(7, command -> READY, command -> APPLIED,
+			(lease, reason) -> APPLIED);
+		ActionInvocation legacyFinish = new ActionInvocation(new FinishQuestAction(0), 1, 0, QuestStatus.REWARD, EVENT,
+			RepeatDeadlineResolution.NOT_APPLICABLE, null, unresolved, "legacy-finish");
+
+		assertEquals(QuestGraphTransitionExecutor.PreflightResult.FAILED, configured.preflight(legacyFinish));
+		assertEquals(FAILED, configured.execute(legacyFinish));
+	}
+
+	/** 验证正式 typed dispatcher 按稳定键逐项调用 instance despawn 与 escort cleanup。 / Verifies the typed dispatcher invokes instance despawn and escort cleanup per lease in stable key order. */
+	@Test
+	void terminalLifecycleDispatchesEveryTypedLeaseToPhysicalAdapter() {
+		List<String> cleanupOrder = new ArrayList<>();
+		QuestGraphInstanceSpawnAdapter instanceSpawns = new QuestGraphInstanceSpawnAdapter(7,
+			query -> new QuestGraphInstanceSpawnAdapter.SpawnSpot(210010000, 1, 10, 20, 30, (byte) 0),
+			command -> new QuestGraphInstanceSpawnAdapter.SpawnResult(FAILED, 0), command -> {
+				cleanupOrder.add("instance:" + command.idempotencyKey());
+				return APPLIED;
+			});
+		AtomicReference<CleanupReason> escortReason = new AtomicReference<>();
+		QuestGraphEscortActionAdapter escorts = new QuestGraphEscortActionAdapter(7, command -> READY,
+			command -> new QuestGraphEscortActionAdapter.StartResult(FAILED, 0, false, null), command -> {
+				cleanupOrder.add("escort:" + command.idempotencyKey());
+				escortReason.set(command.reason());
+				return APPLIED;
+			});
+		String escortKey = "escort-b";
+		StartEscortAction action = new StartEscortAction(EscortSource.EVENT_NPC, 0, (byte) 0, "4212", true, false,
+			true, false, new EscortCoordinatesDestination(50, 60, 70));
+		CleanupLease escortLease = CleanupLease.escort(new EscortResourceIdentity(7, 1, 9002, 100, 210010000, 1,
+			10, 20, 30, 100, 9002, false, null, action, escortKey));
+		Map<String, CleanupLease> leases = Map.of(escortKey, escortLease, SPAWN_KEY, SPAWN_LEASE);
+		AtomicInteger lifecycleCalls = new AtomicInteger();
+		QuestGraphLifecycleActionAdapter adapter = new QuestGraphLifecycleActionAdapter(7, command -> READY, command -> {
+			lifecycleCalls.incrementAndGet();
+			return ALREADY_APPLIED;
+		}, instanceSpawns, escorts);
+		ActionInvocation finish = new ActionInvocation(new FinishQuestAction(0), 1, 0, QuestStatus.REWARD, EVENT,
+			RepeatDeadlineResolution.NOT_APPLICABLE, null, leases, "typed-finish");
+
+		assertEquals(CLEANUP_CONFIRMED, adapter.execute(finish));
+		assertEquals(List.of("escort:" + escortKey, "instance:" + SPAWN_KEY), cleanupOrder);
+		assertEquals(CleanupReason.FINISH, escortReason.get());
+		assertEquals(1, lifecycleCalls.get());
 	}
 
 	/** 创建聚焦 adapter 调用。 / Creates a focused adapter invocation. */
@@ -194,8 +292,12 @@ class QuestGraphLifecycleActionAdapterTest {
 
 	/** 创建携带 deadline 与 cleanup lease 的稳定状态。 / Creates stable state with a deadline and cleanup lease. */
 	private static PlayerQuestGraphState state(QuestStatus status) {
+		return state(status, LEASES);
+	}
+
+	private static PlayerQuestGraphState state(QuestStatus status, Map<String, CleanupLease> leases) {
 		return new PlayerQuestGraphState(1, 1, 0, "active", status, QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of(),
-			Map.of("QUEST_TIMER", 5000L), null, LEASES, null);
+			Map.of("QUEST_TIMER", 5000L), null, leases, null);
 	}
 
 	/** 创建严格 revision CAS。 / Creates strict revision CAS. */

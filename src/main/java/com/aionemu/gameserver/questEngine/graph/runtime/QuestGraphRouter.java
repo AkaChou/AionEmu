@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DialogTargetKind;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SkillDuplicatePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData;
@@ -93,8 +94,8 @@ public final class QuestGraphRouter {
 	}
 
 	/**
-	 * 返回精确路由，并为世界击杀合并显式 wildcard=0 路由且保持稳定优先级。
-	 * Returns exact routes and merges explicit wildcard-zero world-kill routes in stable priority order.
+	 * 返回精确路由，并为带 world 键的事件合并显式 wildcard=0 路由且保持稳定优先级。
+	 * Returns exact routes and merges explicit wildcard-zero routes for world-keyed events in stable priority order.
 	 */
 	private List<EventRoute> routes(QuestGraphEvent event) {
 		List<EventRoute> exact = graphData.eventIndex().getOrDefault(event.eventKey(), List.of());
@@ -108,7 +109,9 @@ public final class QuestGraphRouter {
 				.thenComparingInt(EventRoute::questId).thenComparing(route -> route.transition().id()));
 			return ranged;
 		}
-		if (!(event instanceof KillInWorldEvent killInWorld) || killInWorld.worldId() == 0) {
+		boolean worldWildcard = event instanceof KillInWorldEvent killInWorld && killInWorld.worldId() != 0
+			|| event instanceof WorldEnteredEvent worldEntered && worldEntered.worldId() != 0;
+		if (!worldWildcard) {
 			return exact;
 		}
 		List<EventRoute> merged = new ArrayList<>(exact);
@@ -207,6 +210,7 @@ public final class QuestGraphRouter {
 		return switch (event) {
 			case DialogEvent dialog -> route.transition().event().type() == dialog.type()
 				&& route.transition().event().targetId() == dialog.npcId()
+				&& route.transition().event().dialogTargetKind() == dialogTargetKind(dialog)
 				&& route.transition().event().qualifier().equals(dialog.dialog());
 			case KillEvent kill -> route.transition().event().type() == kill.type()
 				&& route.transition().event().targetId() == kill.npcId();
@@ -222,7 +226,9 @@ public final class QuestGraphRouter {
 			case ItemObtainedEvent itemObtained -> matchesTarget(itemObtained, route);
 			case ItemEquippedEvent itemEquipped -> matchesTarget(itemEquipped, route);
 			case HouseItemUseEvent houseItemUse -> matchesTarget(houseItemUse, route);
-			case WorldEnteredEvent worldEntered -> matchesTarget(worldEntered, route);
+			case WorldEnteredEvent worldEntered -> route.transition().event().type() == worldEntered.type()
+				&& (route.transition().event().targetId() == 0
+					|| route.transition().event().targetId() == worldEntered.worldId());
 			case ZoneEnteredEvent zoneEntered -> matchesQualifiedTarget(zoneEntered, zoneEntered.zoneName(), route);
 				case ZoneLeftEvent zoneLeft -> matchesQualifiedTarget(zoneLeft, zoneLeft.zoneName(), route);
 				case ZoneMissionEndedEvent zoneMissionEnded -> matchesTarget(zoneMissionEnded, route);
@@ -245,6 +251,11 @@ public final class QuestGraphRouter {
 				case SkillUsedEvent skillUsed -> matchesTarget(skillUsed, route);
 				case InteractionEligibilityEvent eligibility -> matchesQualifiedTarget(eligibility, eligibility.action().name(), route);
 			};
+	}
+
+	/** 从服务端权威 NPC 双标识推导对话目标种类。 / Derives the dialog target kind from the authoritative NPC identity pair. */
+	private static DialogTargetKind dialogTargetKind(DialogEvent dialog) {
+		return dialog.npcId() == 0 && dialog.npcObjectId() == 0 ? DialogTargetKind.NO_TARGET : DialogTargetKind.NPC;
 	}
 
 	/** 校验无额外 XML qualifier 的目标事件。 / Matches a target event without an additional XML qualifier. */

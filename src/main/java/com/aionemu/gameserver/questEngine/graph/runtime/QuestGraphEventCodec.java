@@ -45,7 +45,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ZoneMiss
  */
 public final class QuestGraphEventCodec {
 
-	private static final int MAGIC = 0x51474532;
+	private static final int MAGIC = 0x51474533;
 	private static final int MAX_PAYLOAD = 128 * 1024;
 	private static final byte DIALOG = 1;
 	private static final byte KILL = 2;
@@ -98,6 +98,7 @@ public final class QuestGraphEventCodec {
 						output.writeByte(DIALOG);
 						writeCommon(output, dialog);
 						output.writeInt(dialog.npcId());
+						output.writeInt(dialog.npcObjectId());
 						output.writeUTF(dialog.dialog());
 					}
 					case KillEvent kill -> {
@@ -326,7 +327,7 @@ public final class QuestGraphEventCodec {
 			int playerId = input.readInt();
 			long occurredAt = input.readLong();
 			QuestGraphEvent event = switch (type) {
-				case DIALOG -> new DialogEvent(eventId, playerId, occurredAt, input.readInt(), input.readUTF());
+				case DIALOG -> new DialogEvent(eventId, playerId, occurredAt, input.readInt(), input.readInt(), input.readUTF());
 					case KILL -> new KillEvent(eventId, playerId, occurredAt, input.readInt());
 					case ATTACK -> new AttackEvent(eventId, playerId, occurredAt, input.readInt(), input.readLong(), input.readLong());
 					case PLAYER_DEATH -> new PlayerDeathEvent(eventId, playerId, occurredAt);

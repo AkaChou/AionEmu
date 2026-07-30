@@ -148,6 +148,7 @@ public final class QuestGraphItemActionAdapter {
 			boolean changed = switch (plan.kind()) {
 				case GIVE_TOP_UP_TO, GIVE_ADD_EXACT -> itemGrant.test(plan.itemId(), plan.afterCount() - plan.beforeCount());
 				case REMOVE_EXACT, REMOVE_OPTIONAL_EXACT -> itemRemoval.test(plan.itemId(), plan.requestedCount());
+				case REMOVE_ALL -> itemRemoval.test(plan.itemId(), plan.beforeCount());
 			};
 			if (!changed || itemCountReader.applyAsLong(plan.itemId()) != plan.afterCount()) {
 				return ActionResult.FAILED;
@@ -178,6 +179,7 @@ public final class QuestGraphItemActionAdapter {
 			ItemMutationKind expected = switch (remove.mode()) {
 				case EXACT -> ItemMutationKind.REMOVE_EXACT;
 				case OPTIONAL_EXACT -> ItemMutationKind.REMOVE_OPTIONAL_EXACT;
+				case ALL -> ItemMutationKind.REMOVE_ALL;
 			};
 			return plan.kind() == expected && plan.itemId() == remove.itemId()
 				&& plan.requestedCount() == remove.count();

@@ -7,6 +7,9 @@ import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 import com.aionemu.gameserver.model.templates.mail.Mails;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraphData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphDefinitionRegistry;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphReferenceCatalog;
 import com.aionemu.gameserver.utils.Util;
 
 import java.util.concurrent.TimeUnit;
@@ -149,6 +152,8 @@ public final class DataManager {
     public static BoostEventdata BOOST_EVENT_DATA;
     public static AtreianBestiaryData ATREIAN_BESTIARY;
     public static EventsWindowData EVENTS_WINDOW;
+	public static CompiledQuestGraphData QUEST_GRAPH_DATA;
+	public static final QuestGraphDefinitionRegistry QUEST_GRAPH_DEFINITIONS = new QuestGraphDefinitionRegistry();
     public static MailRewardData MAIL_REWARD;
     public static LunaDiceData LUNA_DICE;
     public static ReviveWorldStartPointsData REVIVE_WORLD_START_POINTS;
@@ -345,6 +350,10 @@ public final class DataManager {
         });
 
         awaitStaticDataAssignment(future);
+			QUEST_GRAPH_DATA = loader.loadQuestGraphData(QuestGraphReferenceCatalog.build(data.questData, data.npcData, itemData,
+				data.housingObjectData, data.titleData, data.zoneData, data.worldMapsData, data.skillData, data.recipeData,
+				data.windstreamsData, data.flyRingData, data.flyPath, data.walkerData, data.spawnsData2));
+		QUEST_GRAPH_DEFINITIONS.installInitial(QUEST_GRAPH_DATA);
 
         long timeMillis = System.currentTimeMillis() - start;
         log.info(I18n.get("log.07c1c49f4c8b"));

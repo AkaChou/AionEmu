@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -113,6 +114,9 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		DELETE_RECIPE(ActionPhase.REQUIRED),
 		GRANT_CRAFT_SKILL_REWARD(ActionPhase.REQUIRED),
 		FINISH_QUEST(ActionPhase.REQUIRED),
+		SPAWN_INSTANCE_NPC(ActionPhase.REQUIRED),
+		START_ESCORT(ActionPhase.REQUIRED),
+		TELEPORT_PLAYER(ActionPhase.REQUIRED),
 		START_QUEST_TIMER(ActionPhase.REQUIRED),
 		END_QUEST_TIMER(ActionPhase.REQUIRED),
 		SEND_DIALOG(ActionPhase.POST_COMMIT_PROTOCOL),
@@ -122,7 +126,11 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		SEND_REPEAT_DEADLINE_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL),
 		SYNC_QUEST_TIMER(ActionPhase.POST_COMMIT_PROTOCOL),
 		SEND_PLAYER_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL),
+		SEND_SYSTEM_MESSAGE(ActionPhase.POST_COMMIT_PROTOCOL),
+		SEND_EMOTION(ActionPhase.POST_COMMIT_PROTOCOL),
+		START_FLIGHT_TELEPORT(ActionPhase.POST_COMMIT_PROTOCOL),
 		PLAY_MOVIE(ActionPhase.POST_COMMIT_PROTOCOL),
+		SCHEDULE_ITEM_USE_DIALOG(ActionPhase.POST_COMMIT_PROTOCOL),
 		SYNC_CRAFT_SKILL_REWARD(ActionPhase.POST_COMMIT_PROTOCOL),
 		NOTIFY_RECIPE_REJECTION(ActionPhase.POST_COMMIT_PROTOCOL);
 
@@ -154,6 +162,69 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 */
 	public enum PlayerMessageChannel {
 		BRIGHT_YELLOW_CENTER
+	}
+
+	/** 封闭旧 Handler 使用的三种系统消息协议。 / Closes the three system-message protocols used by legacy handlers. */
+	public enum SystemMessageKind {
+		INSTANCE_DUNGEON_NEED_SOLO(1403080),
+		WAREHOUSE_FULL_INVENTORY(1390149),
+		COMMON_SAY_08(1111307);
+
+		private final int code;
+
+		SystemMessageKind(int code) {
+			this.code = code;
+		}
+
+		public int code() {
+			return code;
+		}
+	}
+
+	/** 定义表情动作的服务端权威发起者。 / Defines the server-authoritative emote actor. */
+	public enum EmotionTarget {
+		PLAYER,
+		DIALOG_NPC
+	}
+
+	/**
+	 * 对话协议是否绑定当前任务 ID（UNBOUND 对应真端 quest_id=0）。
+	 * Whether the dialog protocol binds the current quest id (UNBOUND matches retail quest_id=0).
+	 */
+	public enum DialogBindingMode {
+		BOUND,
+		UNBOUND
+	}
+
+	/** 区分具有 NPC 身份快照的对话与显式无目标任务对话。 / Distinguishes NPC-bound dialogs from explicit targetless quest dialogs. */
+	public enum DialogTargetKind {
+		NPC,
+		NO_TARGET
+	}
+
+	/** 定义传送目标 instance 的服务端解析策略。 / Defines how the server resolves the destination instance. */
+	public enum TeleportInstancePolicy {
+		/** 使用显式 instanceId；0 交由普通传送服务选择当前/默认 instance。 / Uses the explicit id; 0 delegates to normal current/default routing. */
+		EXPLICIT_OR_DEFAULT,
+		/** 复用玩家已注册副本；不存在时创建并注册。 / Reuses the player's registered instance, creating and registering one when absent. */
+		PLAYER_REGISTERED_OR_CREATE
+	}
+
+	/** 定义 escort follower 的服务端权威来源。 / Defines the server-authoritative source of an escort follower. */
+	public enum EscortSource {
+		/** 在玩家当前位置生成新的 follower。 / Spawns a new follower at the player's current position. */
+		PLAYER_POSITION_SPAWN,
+		/** 复用触发当前事件的 NPC。 / Reuses the NPC that triggered the current event. */
+		EVENT_NPC,
+		/** 生成 follower，并在全部准备完成后替换当前事件 NPC。 / Spawns the follower and replaces the event NPC after all preparation succeeds. */
+		REPLACE_EVENT_NPC_AT_PLAYER_POSITION
+	}
+
+	/** 定义 escort 到达判定的封闭目标种类。 / Defines the closed destination kinds used by escort arrival checks. */
+	public enum EscortDestinationKind {
+		ZONE,
+		NPC,
+		COORDINATES
 	}
 
 	/** 定义 repeat deadline 使用的时间基准。 / Defines the time basis used by repeat deadlines. */
@@ -321,7 +392,24 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * 表示已类型化的任务事件及其目标参数。
 	 * Represents a typed quest event and its target parameters.
 	 */
-	public record Event(EventType type, int targetId, String qualifier) {
+	public record Event(EventType type, int targetId, String qualifier, DialogTargetKind dialogTargetKind) {
+		/** 为现有非零 NPC 对话与非对话事件保留紧凑构造。 / Preserves the compact constructor for existing positive-NPC and non-dialog events. */
+		public Event(EventType type, int targetId, String qualifier) {
+			this(type, targetId, qualifier, type == EventType.DIALOG ? DialogTargetKind.NPC : null);
+		}
+
+		/** 校验只有 DIALOG 携带目标种类，并关闭 NPC/NO_TARGET 与 targetId 的组合。 / Closes target-kind combinations for DIALOG only. */
+		public Event {
+			Objects.requireNonNull(type, "event type");
+			if (type == EventType.DIALOG) {
+				if (dialogTargetKind == null || dialogTargetKind == DialogTargetKind.NPC && targetId <= 0
+						|| dialogTargetKind == DialogTargetKind.NO_TARGET && targetId != 0) {
+					throw new IllegalArgumentException("Dialog event target is invalid");
+				}
+			} else if (dialogTargetKind != null) {
+				throw new IllegalArgumentException("Non-dialog event cannot declare a dialog target kind");
+			}
+		}
 	}
 
 	/**
@@ -333,7 +421,17 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		QuestCollectItemsCondition, RecipeLearnableCondition, CraftSkillEligibilityCondition, PlayerLevelCondition,
 		KillVictimLevelDeltaCondition, PlayerRaceCondition, PlayerClassCondition,
 		PlayerGenderCondition, PlayerTitleCondition, PlayerAbyssRankCondition, PlayerInventoryCondition, QuestRewardCondition,
-		QuestCompletionCountCondition, PlayerEquippedCondition {
+		QuestCompletionCountCondition, PlayerEquippedCondition, PlayerRewardInventoryCapacityCondition,
+		PlayerActiveHouseButlerCondition, PlayerGroupMembershipCondition {
+	}
+
+	/**
+	 * 定义奖励结算前检查的库存范围；当前只证明 SPECIAL_CUBE。
+	 * Defines the inventory scope checked before reward settlement; only SPECIAL_CUBE is proven today.
+	 */
+	public enum RewardInventoryScope {
+		/** 特殊背包/任务奖励格 / Special cube used by fountain and similar reward flows */
+		SPECIAL_CUBE
 	}
 
 	/**
@@ -623,6 +721,27 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	}
 
 	/**
+	 * 比较奖励结算前特殊背包是否仍有空位；只读、无副作用。
+	 * Compares whether the special cube still has free slots before reward settlement; read-only and side-effect free.
+	 */
+	public record PlayerRewardInventoryCapacityCondition(RewardInventoryScope scope, boolean expected) implements Condition {
+		/** 校验封闭库存范围。 / Validates the closed inventory scope. */
+		public PlayerRewardInventoryCapacityCondition {
+			if (scope == null) {
+				throw new IllegalArgumentException("Reward inventory capacity scope is invalid");
+			}
+		}
+	}
+
+	/** 要求对话目标就是玩家当前住宅的管家；目标身份来自服务端 DIALOG 事件。 / Requires the dialog target to be the player's active-house butler. */
+	public record PlayerActiveHouseButlerCondition() implements Condition {
+	}
+
+	/** 精确比较玩家是否属于小队；语义对应 Player.isInGroup2()。 / Compares exact party membership via Player.isInGroup2(). */
+	public record PlayerGroupMembershipCondition(boolean expected) implements Condition {
+	}
+
+	/**
 	 * 定义转换动作的强类型封闭集合。
 	 * Defines the closed typed set of transition actions.
 	 */
@@ -632,7 +751,9 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		RemoveQuestWorkItemsAction, LearnRecipeAction, DeleteRecipeAction, GrantCraftSkillRewardAction,
 		SyncCraftSkillRewardAction, NotifyRecipeRejectionAction, FinishQuestAction,
 		StartQuestTimerAction, EndQuestTimerAction, SendDialogAction, CloseDialogAction, ShowQuestListAction, SyncQuestStatusAction,
-		SendRepeatDeadlineMessageAction, SyncQuestTimerAction, SendPlayerMessageAction, PlayMovieAction {
+		SendRepeatDeadlineMessageAction, SyncQuestTimerAction, SendPlayerMessageAction, SendEmotionAction, PlayMovieAction,
+		SendSystemMessageAction, StartFlightTeleportAction, ScheduleItemUseDialogAction, SpawnInstanceNpcAction,
+		StartEscortAction, TeleportPlayerAction {
 
 		/** 返回动作种类及其固定执行阶段。 / Returns the action kind and its fixed execution phase. */
 		default ActionType type() {
@@ -665,7 +786,14 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				case SendRepeatDeadlineMessageAction ignored -> ActionType.SEND_REPEAT_DEADLINE_MESSAGE;
 				case SyncQuestTimerAction ignored -> ActionType.SYNC_QUEST_TIMER;
 				case SendPlayerMessageAction ignored -> ActionType.SEND_PLAYER_MESSAGE;
+				case SendSystemMessageAction ignored -> ActionType.SEND_SYSTEM_MESSAGE;
+				case SendEmotionAction ignored -> ActionType.SEND_EMOTION;
+				case StartFlightTeleportAction ignored -> ActionType.START_FLIGHT_TELEPORT;
 				case PlayMovieAction ignored -> ActionType.PLAY_MOVIE;
+				case ScheduleItemUseDialogAction ignored -> ActionType.SCHEDULE_ITEM_USE_DIALOG;
+				case SpawnInstanceNpcAction ignored -> ActionType.SPAWN_INSTANCE_NPC;
+				case StartEscortAction ignored -> ActionType.START_ESCORT;
+				case TeleportPlayerAction ignored -> ActionType.TELEPORT_PLAYER;
 			};
 		}
 	}
@@ -761,7 +889,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	/** 定义移除任务物品时支持的封闭模式。 / Defines the closed set of supported quest-item removal modes. */
 	public enum QuestItemRemovalMode {
 		EXACT,
-		OPTIONAL_EXACT
+		OPTIONAL_EXACT,
+		ALL
 	}
 
 	/** 把玩家背包中的任务物品补齐到显式目标总数。 / Tops a quest item in the player's inventory up to an explicit target total. */
@@ -877,12 +1006,20 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		}
 	}
 
-	/** 提交后发送绑定当前任务的对话页面。 / Sends a quest-bound dialog page after commit. */
-	public record SendDialogAction(int dialogId) implements Action {
-		/** 校验正数对话页面 ID。 / Validates a positive dialog-page id. */
+	/**
+	 * 提交后发送对话页面；BOUND 附带 questId，UNBOUND 不绑定任务。
+	 * Sends a dialog page after commit; BOUND attaches questId, UNBOUND omits quest binding.
+	 */
+	public record SendDialogAction(int dialogId, DialogBindingMode binding) implements Action {
+		/** 默认 BOUND 的便捷构造。 / Convenience constructor defaulting to BOUND. */
+		public SendDialogAction(int dialogId) {
+			this(dialogId, DialogBindingMode.BOUND);
+		}
+
+		/** 校验正数对话页与绑定模式。 / Validates a positive dialog page and binding mode. */
 		public SendDialogAction {
-			if (dialogId <= 0) {
-				throw new IllegalArgumentException("Quest dialog id is invalid");
+			if (dialogId <= 0 || binding == null) {
+				throw new IllegalArgumentException("Quest dialog action is invalid");
 			}
 		}
 	}
@@ -944,12 +1081,160 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		}
 	}
 
+	/** 提交后发送一种封闭系统消息。 / Sends one closed system-message kind after commit. */
+	public record SendSystemMessageAction(SystemMessageKind kind) implements Action {
+		public SendSystemMessageAction {
+			if (kind == null) {
+				throw new IllegalArgumentException("System-message action kind is invalid");
+			}
+		}
+	}
+
+	/** 提交后启动引用闭合的客户端飞行路径；协议 ID 由 pathId 唯一推导。 / Starts a reference-closed flight path after commit. */
+	public record StartFlightTeleportAction(int pathId) implements Action {
+		public StartFlightTeleportAction {
+			if (pathId <= 0 || pathId > (Integer.MAX_VALUE - 1) / 1000) {
+				throw new IllegalArgumentException("Flight-teleport path is invalid");
+			}
+		}
+
+		/** 返回客户端使用的严格 path*1000+1 协议 ID。 / Returns the strict path*1000+1 client protocol id. */
+		public int protocolId() {
+			return pathId * 1000 + 1;
+		}
+	}
+
+	/** 提交后由玩家或当前对话 NPC 播放类型化表情。 / Plays a typed emote by the player or current dialog NPC after commit. */
+	public record SendEmotionAction(EmotionTarget target, EmotionId emotion, boolean broadcast) implements Action {
+		/** 校验封闭目标与有效表情。 / Validates the closed target and a meaningful emote. */
+		public SendEmotionAction {
+			if (target == null || emotion == null || emotion == EmotionId.NONE) {
+				throw new IllegalArgumentException("Emotion action is invalid");
+			}
+		}
+	}
+
 	/** 提交后通过客户端影片协议播放引用闭合的影片。 / Plays a reference-closed movie through the client protocol after commit. */
 	public record PlayMovieAction(int movieId) implements Action {
 		/** 校验影片 ID 可无损写入协议的无符号 16 位字段。 / Validates that the movie id fits the protocol unsigned 16-bit field. */
 		public PlayMovieAction {
 			if (movieId <= 0 || movieId > 0xFFFF) {
 				throw new IllegalArgumentException("Quest movie action id is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 提交后播放物品使用动画，并在固定延迟后打开对话页。
+	 * Plays the item-use animation after commit and opens a dialog page after a fixed delay.
+	 */
+	public record ScheduleItemUseDialogAction(int durationMs, int dialogId) implements Action {
+		/** 校验延迟与对话页均为正。 / Validates that delay and dialog page are positive. */
+		public ScheduleItemUseDialogAction {
+			if (durationMs <= 0 || dialogId <= 0) {
+				throw new IllegalArgumentException("Item-use dialog schedule is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 在玩家当前 instance 按 spawner 静态坐标召唤 NPC，并登记 instance-scoped cleanup lease。
+	 * Spawns an NPC in the player instance at the spawner static spot and registers an instance-scoped cleanup lease.
+	 */
+	public record SpawnInstanceNpcAction(int spawnerObjectId, int npcId) implements Action {
+		/** 校验 spawner 与 NPC 模板 ID 为正。 / Validates that spawner and NPC template ids are positive. */
+		public SpawnInstanceNpcAction {
+			if (spawnerObjectId <= 0 || npcId <= 0) {
+				throw new IllegalArgumentException("Instance spawn action is invalid");
+			}
+		}
+	}
+
+	/** 定义 escort 到达判定的强类型封闭参数。 / Defines the closed typed parameters for an escort destination. */
+	public sealed interface EscortDestination permits EscortZoneDestination, EscortNpcDestination, EscortCoordinatesDestination {
+		/** 返回目的地种类。 / Returns the destination kind. */
+		EscortDestinationKind kind();
+	}
+
+	/** 以静态数据中的命名区域作为 escort 目的地。 / Uses a static-data zone as the escort destination. */
+	public record EscortZoneDestination(String zoneName) implements EscortDestination {
+		/** 校验规范区域名。 / Validates the canonical zone name. */
+		public EscortZoneDestination {
+			if (zoneName == null || zoneName.isBlank()) {
+				throw new IllegalArgumentException("Escort zone destination is invalid");
+			}
+		}
+
+		@Override
+		public EscortDestinationKind kind() {
+			return EscortDestinationKind.ZONE;
+		}
+	}
+
+	/** 以指定 NPC 模板的服务端刷新坐标作为 escort 目的地。 / Uses the authoritative spawn location of an NPC template as the escort destination. */
+	public record EscortNpcDestination(int npcId) implements EscortDestination {
+		/** 校验目标 NPC 模板。 / Validates the destination NPC template. */
+		public EscortNpcDestination {
+			if (npcId <= 0) {
+				throw new IllegalArgumentException("Escort NPC destination is invalid");
+			}
+		}
+
+		@Override
+		public EscortDestinationKind kind() {
+			return EscortDestinationKind.NPC;
+		}
+	}
+
+	/** 以显式服务端坐标作为 escort 目的地。 / Uses explicit server coordinates as the escort destination. */
+	public record EscortCoordinatesDestination(float x, float y, float z) implements EscortDestination {
+		/** 校验有限坐标。 / Validates finite coordinates. */
+		public EscortCoordinatesDestination {
+			if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
+				throw new IllegalArgumentException("Escort coordinates destination is invalid");
+			}
+		}
+
+		@Override
+		public EscortDestinationKind kind() {
+			return EscortDestinationKind.COORDINATES;
+		}
+	}
+
+	/**
+	 * 原子启动一个 player/quest-scoped escort，并登记可清理 lease。
+	 * Atomically starts a player/quest-scoped escort and registers a cleanup lease.
+	 */
+	public record StartEscortAction(EscortSource source, int npcId, byte heading, String walkerId, boolean startWalking,
+			boolean followMe, boolean startEmote2, boolean sendNpcInfo, EscortDestination destination) implements Action {
+		/** 校验来源、生成模板、可选 walker 与跟随目标组合。 / Validates source, spawn template, optional walker, and follow destination. */
+		public StartEscortAction {
+			if (source == null || source == EscortSource.EVENT_NPC && npcId != 0
+					|| source != EscortSource.EVENT_NPC && npcId <= 0
+					|| walkerId != null && walkerId.isBlank() || destination == null) {
+				throw new IllegalArgumentException("Start escort action is invalid");
+			}
+			walkerId = walkerId == null ? null : walkerId.trim();
+		}
+	}
+
+	/**
+	 * 将玩家传送到服务端权威世界坐标（可选 instance）。
+	 * Teleports the player to server-authoritative world coordinates (optional instance).
+	 */
+	public record TeleportPlayerAction(int worldId, int instanceId, TeleportInstancePolicy instancePolicy, float x, float y,
+			float z, byte heading) implements Action {
+		/** 保持旧 XML/调用方的兼容构造，缺省使用普通显式/默认策略。 / Preserves existing callers and XML with the normal explicit/default policy. */
+		public TeleportPlayerAction(int worldId, int instanceId, float x, float y, float z, byte heading) {
+			this(worldId, instanceId, TeleportInstancePolicy.EXPLICIT_OR_DEFAULT, x, y, z, heading);
+		}
+
+		/** 校验世界、封闭策略、instance 组合与有限坐标。 / Validates the world, closed policy/id combination, and finite coordinates. */
+		public TeleportPlayerAction {
+			if (worldId <= 0 || instanceId < 0 || instancePolicy == null
+					|| instancePolicy == TeleportInstancePolicy.PLAYER_REGISTERED_OR_CREATE && instanceId != 0
+					|| !Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
+				throw new IllegalArgumentException("Teleport player action is invalid");
 			}
 		}
 	}

@@ -56,4 +56,14 @@ public class FlyPathData {
 	public FlyPathEntry getPathTemplate(byte i) {
 		return loctlistData.get((short) i);
 	}
+
+	/** 返回所有已加载飞行路径模板的不可变快照。 / Returns an immutable snapshot of all loaded fly path templates. */
+	public List<FlyPathEntry> getPathTemplates() {
+		return list == null ? List.of() : List.copyOf(list);
+	}
+
+	/** 判断已加载静态数据中是否存在指定路径 ID。 / Returns whether the loaded static data contains the path id. */
+	public boolean containsPath(int pathId) {
+		return pathId > 0 && pathId <= Short.MAX_VALUE && loctlistData.get((short) pathId) != null;
+	}
 }

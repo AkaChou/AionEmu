@@ -10,6 +10,7 @@ import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphSta
 import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.GIVE_ADD_EXACT;
 import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.REMOVE_EXACT;
 import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.REMOVE_OPTIONAL_EXACT;
+import static com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind.REMOVE_ALL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
@@ -146,6 +147,23 @@ class QuestGraphItemActionAdapterTest {
 		assertEquals(1, stores.get());
 		count.set(4);
 		assertEquals(FAILED, adapter.execute(invocation));
+		assertEquals(1, removals.get());
+		assertEquals(1, stores.get());
+	}
+
+	/** 验证全部扣除使用冻结 before 数量，并把库存严格收敛到零。 / Verifies remove-all uses frozen before count and converges to zero. */
+	@Test
+	void removeAllUsesFrozenInventoryCount() {
+		AtomicLong count = new AtomicLong(7);
+		AtomicInteger removals = new AtomicInteger();
+		AtomicInteger stores = new AtomicInteger();
+		QuestGraphItemActionAdapter adapter = adapter(count, new AtomicInteger(), removals, stores);
+		ItemMutationPlan plan = new ItemMutationPlan(0, REMOVE_ALL, 182200001, 1, 7, 0);
+		ActionInvocation invocation = invocation(new RemoveQuestItemAction(182200001, 1,
+			com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestItemRemovalMode.ALL), plan);
+
+		assertEquals(APPLIED, adapter.execute(invocation));
+		assertEquals(0, count.get());
 		assertEquals(1, removals.get());
 		assertEquals(1, stores.get());
 	}

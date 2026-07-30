@@ -28,8 +28,14 @@ public class QuestTasks {
 	 * Scheduled future
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, Npc target) {
+		return newFollowingToTargetCheckTask(env, npc, target, QuestEscortCompletionListener.legacyQuestEngine());
+	}
+
+	/** 调度带显式终态 listener 的目标 NPC 跟随检查。 / Schedules a target-NPC check with an explicit terminal listener. */
+	public static Future<?> newFollowingToTargetCheckTask(QuestEnv env, Npc npc, Npc target,
+			QuestEscortCompletionListener completionListener) {
 		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
-				new FollowingNpcCheckTask(env, new TargetDestinationChecker(npc, target)), 1000, 1000);
+				new FollowingNpcCheckTask(env, new TargetDestinationChecker(npc, target), completionListener), 1000, 1000);
 	}
 
 	/**
@@ -43,13 +49,19 @@ public class QuestTasks {
 	 * if the target NPC has no spawn in the map。
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, int npcTargetId) {
+		return newFollowingToTargetCheckTask(env, npc, npcTargetId, QuestEscortCompletionListener.legacyQuestEngine());
+	}
+
+	/** 调度带显式终态 listener 的模板目标跟随检查。 / Schedules a template-target check with an explicit terminal listener. */
+	public static Future<?> newFollowingToTargetCheckTask(QuestEnv env, Npc npc, int npcTargetId,
+			QuestEscortCompletionListener completionListener) {
 		SpawnSearchResult searchResult = DataManager.SPAWNS_DATA2.getFirstSpawnByNpcId(npc.getWorldId(), npcTargetId);
 		if (searchResult == null) {
 			throw new IllegalArgumentException("Supplied npc doesn't exist: " + npcTargetId);
 		}
 		return GameThreadPoolServices.threadPoolManager()
 				.scheduleAtFixedRate(new FollowingNpcCheckTask(env, new CoordinateDestinationChecker(npc,
-						searchResult.getSpot().getX(), searchResult.getSpot().getY(), searchResult.getSpot().getZ())),
+						searchResult.getSpot().getX(), searchResult.getSpot().getY(), searchResult.getSpot().getZ()), completionListener),
 						1000, 1000);
 	}
 
@@ -66,8 +78,14 @@ public class QuestTasks {
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, float x, float y,
 			float z) {
+		return newFollowingToTargetCheckTask(env, npc, x, y, z, QuestEscortCompletionListener.legacyQuestEngine());
+	}
+
+	/** 调度带显式终态 listener 的坐标跟随检查。 / Schedules a coordinate check with an explicit terminal listener. */
+	public static Future<?> newFollowingToTargetCheckTask(QuestEnv env, Npc npc, float x, float y, float z,
+			QuestEscortCompletionListener completionListener) {
 		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
-				new FollowingNpcCheckTask(env, new CoordinateDestinationChecker(npc, x, y, z)), 1000, 1000);
+				new FollowingNpcCheckTask(env, new CoordinateDestinationChecker(npc, x, y, z), completionListener), 1000, 1000);
 	}
 
 	/**
@@ -80,8 +98,14 @@ public class QuestTasks {
 	 * Scheduled future
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, ZoneName zoneName) {
+		return newFollowingToTargetCheckTask(env, npc, zoneName, QuestEscortCompletionListener.legacyQuestEngine());
+	}
+
+	/** 调度带显式终态 listener 的区域跟随检查。 / Schedules a zone check with an explicit terminal listener. */
+	public static Future<?> newFollowingToTargetCheckTask(QuestEnv env, Npc npc, ZoneName zoneName,
+			QuestEscortCompletionListener completionListener) {
 		return GameThreadPoolServices.threadPoolManager()
-				.scheduleAtFixedRate(new FollowingNpcCheckTask(env, new ZoneChecker(npc, zoneName)), 1000, 1000);
+				.scheduleAtFixedRate(new FollowingNpcCheckTask(env, new ZoneChecker(npc, zoneName), completionListener), 1000, 1000);
 	}
 
 	/**
@@ -96,7 +120,13 @@ public class QuestTasks {
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, ZoneName zoneName1,
 			ZoneName zoneName2) {
+		return newFollowingToTargetCheckTask(env, npc, zoneName1, zoneName2, QuestEscortCompletionListener.legacyQuestEngine());
+	}
+
+	/** 调度带显式终态 listener 的双区域跟随检查。 / Schedules a dual-zone check with an explicit terminal listener. */
+	public static Future<?> newFollowingToTargetCheckTask(QuestEnv env, Npc npc, ZoneName zoneName1, ZoneName zoneName2,
+			QuestEscortCompletionListener completionListener) {
 		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
-				new FollowingNpcCheckTask(env, new ZoneChecker2(npc, zoneName1, zoneName2)), 1000, 1000);
+				new FollowingNpcCheckTask(env, new ZoneChecker2(npc, zoneName1, zoneName2), completionListener), 1000, 1000);
 	}
 }

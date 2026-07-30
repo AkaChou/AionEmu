@@ -4,6 +4,7 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -17,7 +18,10 @@ import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerMinionsDAO;
+import com.aionemu.gameserver.dao.PlayerQuestGraphStateDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
+import com.aionemu.gameserver.dao.QuestGraphResourceOperationDAO;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
 
 /**
  * 线程安全的可回收整数 ID 分配器；非法操作抛出 {@link IDFactoryError}。
@@ -69,7 +73,31 @@ public class IDFactory {
 		lockIds(DAOManager.getDAO(GuideDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(HousesDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(PlayerMinionsDAO.class).getUsedIDs());
+		lockIds(questGraphResourceIds(
+			DAOManager.getDAO(PlayerQuestGraphStateDAO.class).getUsedResourceLeases(),
+			DAOManager.getDAO(QuestGraphResourceOperationDAO.class).getUsedResourceLeases()));
 		log.info(I18n.get("log.b00d0337832b", getUsedCount()));
+	}
+
+	static int[] questGraphResourceIds(Map<Integer, CleanupLease> stateLeases, Map<Integer, CleanupLease> operationLeases) {
+		Map<Integer, CleanupLease> leases = new java.util.TreeMap<>();
+		mergeQuestGraphResourceLeases(leases, stateLeases);
+		mergeQuestGraphResourceLeases(leases, operationLeases);
+		return leases.keySet().stream().mapToInt(Integer::intValue).toArray();
+	}
+
+	private static void mergeQuestGraphResourceLeases(Map<Integer, CleanupLease> merged, Map<Integer, CleanupLease> incoming) {
+		for (Map.Entry<Integer, CleanupLease> entry : incoming.entrySet()) {
+			CleanupLease lease = entry.getValue();
+			if (entry.getKey() == null || lease == null || !lease.resolved() || !lease.identity().materialized()
+					|| entry.getKey() != lease.identity().objectId()) {
+				throw new IDFactoryError("Quest graph resource id index is corrupt");
+			}
+			CleanupLease prior = merged.putIfAbsent(entry.getKey(), lease);
+			if (prior != null && !prior.equals(lease)) {
+				throw new IDFactoryError("Quest graph resource ID " + entry.getKey() + " has conflicting durable identities");
+			}
+		}
 	}
 
 	/**
