@@ -133,18 +133,11 @@ public class TeleportService2 {
 		}
 
 		if (location.getRequiredQuest() > 0) {
-			if (player.getRace() == Race.ELYOS) {
-				QuestState qs = player.getQuestStateList().getQuestState(location.getRequiredQuest());
-				if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) { // Memories Of Eternity.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(10521));
-					return;
-				}
-			} else if (player.getRace() == Race.ASMODIANS) {
-				QuestState qs = player.getQuestStateList().getQuestState(location.getRequiredQuest());
-				if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) { // Recovered Destiny.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(20521));
-					return;
-				}
+			QuestState qs = player.getQuestStateList().getQuestState(location.getRequiredQuest());
+			if (!meetsQuestRequirement(qs, location.getRequiredQuestStep())) {
+				PacketSendUtility.sendPacket(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(location.getRequiredQuest()));
+				return;
 			}
 		}
 
@@ -172,6 +165,18 @@ public class TeleportService2 {
 			instanceTransformation(player);
 			archdaevaTransformation(player);
 		}
+	}
+
+	static boolean meetsQuestRequirement(QuestState questState, int requiredQuestStep) {
+		if (questState == null) {
+			return false;
+		}
+		if (questState.getStatus() == QuestStatus.COMPLETE) {
+			return true;
+		}
+		return requiredQuestStep > 0
+				&& (questState.getStatus() == QuestStatus.START || questState.getStatus() == QuestStatus.REWARD)
+				&& questState.getQuestVarById(0) >= requiredQuestStep;
 	}
 
 	private static boolean checkKinahForTransportation(TeleportLocation location, Player player) {

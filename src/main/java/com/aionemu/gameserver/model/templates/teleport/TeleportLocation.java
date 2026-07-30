@@ -29,6 +29,9 @@ public class TeleportLocation {
 	@XmlAttribute(name = "requiredQuest")
 	private int requiredQuest = 0;
 
+	@XmlAttribute(name = "requiredQuestStep")
+	private int requiredQuestStep = 0;
+
 	@XmlAttribute(name = "type", required = true)
 	private TeleportType type;
 
@@ -55,6 +58,11 @@ public class TeleportLocation {
 	/** 返回 required quest / Returns the required quest */
 	public int getRequiredQuest() {
 		return requiredQuest;
+	}
+
+	/** 返回允许使用传送的最低任务步骤；0 表示必须完成任务。 / Returns the minimum active quest step; 0 requires completion. */
+	public int getRequiredQuestStep() {
+		return requiredQuestStep;
 	}
 
 	/** 获取类型。 / Returns the type. */

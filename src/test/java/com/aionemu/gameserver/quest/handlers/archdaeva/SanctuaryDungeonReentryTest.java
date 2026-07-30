@@ -16,16 +16,21 @@ class SanctuaryDungeonReentryTest {
 			Path.of("src/main/java/com/aionemu/gameserver/quest/handlers/archdaeva/_20520Lost_Destiny.java"));
 
 	@Test
-	void completedMovieStepCanReenterFromTeleporterOrTriggerZone() throws IOException {
+	void completedMovieStepCanReenterFromTeleporterWorldOrTriggerZone() throws IOException {
 		for (Path sourcePath : QUEST_SOURCES) {
 			String source = Files.readString(sourcePath);
 			String dialog = methodBody(source, "public boolean onDialogEvent(QuestEnv env)");
+			String enterWorld = methodBody(source, "public boolean onEnterWorldEvent(QuestEnv env)");
 			String enterZone = methodBody(source, "public boolean onEnterZoneEvent(QuestEnv env, ZoneName zoneName)");
 
-			assertTrue(dialog.contains("else if (var == 5) {\n\t\t\t\t\t\t\tenterSanctuaryDungeon(player);"),
+			assertTrue(dialog.contains("env.getDialog() == QuestDialog.START_DIALOG && isSanctuaryDungeonReentryPending(qs)"),
 					() -> sourcePath + " must allow reentry from the capital teleporter");
-			assertTrue(enterZone.contains("else if (var == 5) {\n\t\t\t\t\tenterSanctuaryDungeon(player);"),
+			assertTrue(enterWorld.contains("isSanctuaryDungeonReentryPending(qs)"),
+					() -> sourcePath + " must reenter after traveling back to the quest world");
+			assertTrue(enterZone.contains("else if (isSanctuaryDungeonReentryPending(qs))"),
 					() -> sourcePath + " must allow reentry from the original trigger zone");
+			assertTrue(source.contains("questState.getStatus() == QuestStatus.REWARD"),
+					() -> sourcePath + " must recover players who left after setting the reward state");
 		}
 	}
 
