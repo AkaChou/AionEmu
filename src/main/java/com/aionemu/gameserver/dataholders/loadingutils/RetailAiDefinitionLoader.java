@@ -521,6 +521,7 @@ final class RetailAiDefinitionLoader {
 					String ai = attribute(reader, "ai");
 					if (ai != null && !ai.isBlank()) {
 						npcs.put(id, new Npc(id, attribute(reader, "name"), ai,
+							parseInt(attribute(reader, "model_scale", "100")),
 							parseFloat(attribute(reader, "sensory_range")),
 							parseFloat(attribute(reader, "sensory_range_short")),
 							parseFloat(attribute(reader, "sensory_angle")),
