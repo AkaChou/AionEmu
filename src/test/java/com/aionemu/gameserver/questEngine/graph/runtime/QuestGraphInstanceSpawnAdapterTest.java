@@ -11,18 +11,16 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.dao.QuestGraphResourceOperationDAO.ObjectIdReservationConflictException;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventNpcPlacement;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SpawnInstanceNpcAction;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
-import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.DialogTargetPlacement;
-import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.FixedPlacement;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.NpcSnapshot;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.PlacementKind;
-import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.PlayerPlacement;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.PlayerSnapshot;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.SpawnCommand;
-import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.SpawnRequest;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.SpawnResult;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.SpawnSpot;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphInstanceSpawnAdapter.SpotQuery;
@@ -32,6 +30,7 @@ import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExec
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.CleanupLease;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.InstanceSpawnResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.SpawnPlacementKind;
 
 class QuestGraphInstanceSpawnAdapterTest {
 
@@ -84,12 +83,11 @@ class QuestGraphInstanceSpawnAdapterTest {
 				return new SpawnResult(ActionResult.APPLIED, 880001);
 			});
 		ActionInvocation invocation = dialogInvocation(7, 700060, 990060, "dialog-target");
-		SpawnRequest request = new SpawnRequest(210634, new DialogTargetPlacement(700060));
 
-		assertEquals(PreflightResult.READY, adapter.preflight(invocation, request));
-		assertEquals(ActionResult.APPLIED, adapter.execute(invocation, request));
-		assertEquals(PreflightResult.READY, adapter.preflight(invocation, request));
-		assertEquals(ActionResult.ALREADY_APPLIED, adapter.execute(invocation, request));
+		assertEquals(PreflightResult.READY, adapter.preflight(invocation));
+		assertEquals(ActionResult.APPLIED, adapter.execute(invocation));
+		assertEquals(PreflightResult.READY, adapter.preflight(invocation));
+		assertEquals(ActionResult.ALREADY_APPLIED, adapter.execute(invocation));
 		assertEquals(1, spawns.get());
 		assertEquals(2, lookups.get());
 		assertEquals(990060, query.get().objectId());
@@ -102,30 +100,59 @@ class QuestGraphInstanceSpawnAdapterTest {
 	}
 
 	@Test
+	void preparedEventNpcPlacementFreezesIdentityAndCoordinates() {
+		AtomicInteger lookups = new AtomicInteger();
+		AtomicReference<SpawnCommand> command = new AtomicReference<>();
+		QuestGraphInstanceSpawnAdapter adapter = adapter(player(), target -> {
+			if (lookups.incrementAndGet() > 1) {
+				throw new IllegalStateException("event NPC disappeared after PREPARED persistence");
+			}
+			return new NpcSnapshot(700060, 990060, 210040000, 3, 41, 42, 43, (byte) 44);
+		}, spawn -> {
+			command.set(spawn);
+			return new SpawnResult(ActionResult.APPLIED, 880002);
+		});
+		ActionInvocation invocation = dialogInvocation(7, 700060, 990060, "frozen-event-npc");
+
+		CleanupLease plan = adapter.prepareLease(invocation);
+		InstanceSpawnResourceIdentity identity = (InstanceSpawnResourceIdentity) plan.identity();
+		assertEquals(SpawnPlacementKind.DIALOG_TARGET, identity.placement());
+		assertEquals(700060, identity.sourceNpcId());
+		assertEquals(990060, identity.sourceObjectId());
+		assertEquals(41f, identity.x());
+		assertEquals(1, lookups.get());
+
+		assertEquals(ActionResult.APPLIED, adapter.execute(withLease(invocation, plan)));
+		assertEquals(1, lookups.get());
+		assertEquals(41f, command.get().x());
+		assertEquals(42f, command.get().y());
+		assertEquals(43f, command.get().z());
+	}
+
+	@Test
 	void dialogTargetFailsClosedForMissingOrChangedObjectAuthority() {
 		AtomicInteger spawns = new AtomicInteger();
-		SpawnRequest request = new SpawnRequest(210634, new DialogTargetPlacement(700060));
 		ActionInvocation valid = dialogInvocation(7, 700060, 990060, "valid");
 		QuestGraphInstanceSpawnAdapter missing = adapter(player(), target -> null, spawn -> {
 			spawns.incrementAndGet();
 			return new SpawnResult(ActionResult.APPLIED, 1);
 		});
-		assertEquals(PreflightResult.FAILED, missing.preflight(valid, request));
-		assertEquals(ActionResult.FAILED, missing.execute(valid, request));
+		assertEquals(PreflightResult.FAILED, missing.preflight(valid));
+		assertEquals(ActionResult.FAILED, missing.execute(valid));
 
 		QuestGraphInstanceSpawnAdapter wrongTemplate = adapter(player(),
 			target -> new NpcSnapshot(700061, 990060, 210040000, 3, 1, 2, 3, (byte) 0), failedSpawner());
-		assertEquals(PreflightResult.FAILED, wrongTemplate.preflight(valid, request));
+		assertEquals(PreflightResult.FAILED, wrongTemplate.preflight(valid));
 		QuestGraphInstanceSpawnAdapter wrongWorld = adapter(player(),
 			target -> new NpcSnapshot(700060, 990060, 210050000, 3, 1, 2, 3, (byte) 0), failedSpawner());
-		assertEquals(ActionResult.FAILED, wrongWorld.execute(valid, request));
+		assertEquals(ActionResult.FAILED, wrongWorld.execute(valid));
 		QuestGraphInstanceSpawnAdapter wrongInstance = adapter(player(),
 			target -> new NpcSnapshot(700060, 990060, 210040000, 4, 1, 2, 3, (byte) 0), failedSpawner());
-		assertEquals(ActionResult.FAILED, wrongInstance.execute(valid, request));
+		assertEquals(ActionResult.FAILED, wrongInstance.execute(valid));
 		assertEquals(ActionResult.FAILED,
-			missing.execute(new DialogEventInvocation("missing-object", 7, 700060, 0).invocation(), request));
+			missing.execute(new DialogEventInvocation("missing-object", 7, 700060, 0).invocation()));
 		assertEquals(ActionResult.FAILED,
-			missing.execute(dialogInvocation(7, 700061, 990060, "wrong-event-template"), request));
+			missing.execute(dialogInvocation(7, 700060, 700061, 990060, "wrong-event-template")));
 		assertEquals(0, spawns.get());
 	}
 
@@ -142,45 +169,74 @@ class QuestGraphInstanceSpawnAdapterTest {
 			}
 			return new SpawnResult(ActionResult.APPLIED, objectIds.incrementAndGet());
 		});
-		ActionInvocation invocation = invocation(7, new SpawnInstanceNpcAction(700759, 204830), "player");
+		ActionInvocation invocation = invocation(7,
+			new SpawnInstanceNpcAction(204830, new CompiledQuestGraph.PlayerPlacement()), "player");
 
-		assertEquals(ActionResult.APPLIED,
-			adapter.execute(invocation, new SpawnRequest(204830, new PlayerPlacement())));
+		assertEquals(ActionResult.APPLIED, adapter.execute(invocation));
 		assertEquals(7, playerCommand.get().sourceObjectId());
 		assertEquals(10f, playerCommand.get().x());
-		assertEquals(ActionResult.APPLIED, adapter.execute(
-			invocation(7, new SpawnInstanceNpcAction(700759, 799339), "fixed"),
-			new SpawnRequest(799339, new FixedPlacement(210040000, 3, 21f, 22f, 23f, (byte) 24))));
+		assertEquals(ActionResult.APPLIED, adapter.execute(invocation(7,
+			new SpawnInstanceNpcAction(799339,
+				new CompiledQuestGraph.FixedPlacement(210040000, 3, 21f, 22f, 23f, (byte) 24)), "fixed")));
 		assertEquals(PlacementKind.FIXED, fixedCommand.get().placement());
 		assertEquals(21f, fixedCommand.get().x());
+		assertEquals(ActionResult.APPLIED, adapter.execute(invocation(7,
+			new SpawnInstanceNpcAction(799339, new CompiledQuestGraph.FixedPlacement(
+				CompiledQuestGraph.SpawnWorldPolicy.EXPLICIT, 210040000,
+				CompiledQuestGraph.SpawnInstancePolicy.PLAYER_CURRENT, 0, 31f, 32f, 33f, (byte) 34)), "current-instance")));
+		assertEquals(210040000, fixedCommand.get().worldId());
+		assertEquals(3, fixedCommand.get().instanceId());
+		assertEquals(31f, fixedCommand.get().x());
 
-		assertEquals(PreflightResult.FAILED, adapter.preflight(
-			invocation(7, new SpawnInstanceNpcAction(700759, 799339), "wrong-world"),
-			new SpawnRequest(799339, new FixedPlacement(600110000, 3, 21, 22, 23, (byte) 0))));
-		assertEquals(ActionResult.FAILED, adapter.execute(
-			invocation(7, new SpawnInstanceNpcAction(700759, 799339), "wrong-instance"),
-			new SpawnRequest(799339, new FixedPlacement(210040000, 1, 21, 22, 23, (byte) 0))));
+		assertEquals(PreflightResult.FAILED, adapter.preflight(invocation(7,
+			new SpawnInstanceNpcAction(799339,
+				new CompiledQuestGraph.FixedPlacement(600110000, 3, 21, 22, 23, (byte) 0)), "wrong-world")));
+		assertEquals(ActionResult.FAILED, adapter.execute(invocation(7,
+			new SpawnInstanceNpcAction(799339,
+				new CompiledQuestGraph.FixedPlacement(210040000, 1, 21, 22, 23, (byte) 0)), "wrong-instance")));
+	}
+
+	@Test
+	void preparedPlayerCurrentContextRemainsFrozenWhenThePlayerMoves() {
+		AtomicReference<PlayerSnapshot> current = new AtomicReference<>(
+			new PlayerSnapshot(7, 210040000, 3, 10, 20, 30, (byte) 40));
+		AtomicReference<SpawnCommand> command = new AtomicReference<>();
+		QuestGraphInstanceSpawnAdapter adapter = adapter(current::get, target -> null, spawn -> {
+			command.set(spawn);
+			return new SpawnResult(ActionResult.APPLIED, 800010);
+		});
+		ActionInvocation invocation = invocation(7, new SpawnInstanceNpcAction(799339,
+			new CompiledQuestGraph.FixedPlacement(CompiledQuestGraph.SpawnWorldPolicy.PLAYER_CURRENT, 0,
+				CompiledQuestGraph.SpawnInstancePolicy.PLAYER_CURRENT, 0, 41, 42, 43, (byte) 44)), "frozen-context");
+
+		CleanupLease plan = adapter.prepareLease(invocation);
+		current.set(new PlayerSnapshot(7, 220050000, 4, 50, 60, 70, (byte) 80));
+		assertEquals(ActionResult.APPLIED, adapter.execute(withLease(invocation, plan)));
+		assertEquals(210040000, command.get().worldId());
+		assertEquals(3, command.get().instanceId());
 	}
 
 	@Test
 	void replayKeyCannotBeReusedForDifferentNpcOrPlacement() {
 		QuestGraphInstanceSpawnAdapter adapter = adapter(player(), target -> null,
 			command -> new SpawnResult(ActionResult.APPLIED, 800001));
-		ActionInvocation invocation = invocation(7, new SpawnInstanceNpcAction(700759, 204830), "same-key");
-		assertEquals(ActionResult.APPLIED,
-			adapter.execute(invocation, new SpawnRequest(204830, new PlayerPlacement())));
+		ActionInvocation invocation = invocation(7,
+			new SpawnInstanceNpcAction(204830, new CompiledQuestGraph.PlayerPlacement()), "same-key");
+		assertEquals(ActionResult.APPLIED, adapter.execute(invocation));
 		assertEquals(PreflightResult.FAILED,
-			adapter.preflight(invocation, new SpawnRequest(204831, new PlayerPlacement())));
+			adapter.preflight(invocation(7,
+				new SpawnInstanceNpcAction(204831, new CompiledQuestGraph.PlayerPlacement()), "same-key")));
 		assertEquals(ActionResult.FAILED,
-			adapter.execute(invocation, new SpawnRequest(204830, new FixedPlacement(210040000, 3, 1, 2, 3, (byte) 0))));
+			adapter.execute(invocation(7, new SpawnInstanceNpcAction(204830,
+				new CompiledQuestGraph.FixedPlacement(210040000, 3, 1, 2, 3, (byte) 0)), "same-key")));
 
 		QuestGraphInstanceSpawnAdapter fixed = adapter(player(), target -> null,
 			command -> new SpawnResult(ActionResult.APPLIED, 800002));
-		ActionInvocation fixedInvocation = invocation(7, new SpawnInstanceNpcAction(700759, 799339), "fixed-key");
-		assertEquals(ActionResult.APPLIED, fixed.execute(fixedInvocation,
-			new SpawnRequest(799339, new FixedPlacement(210040000, 3, 1, 2, 3, (byte) 4))));
-		assertEquals(ActionResult.FAILED, fixed.execute(fixedInvocation,
-			new SpawnRequest(799339, new FixedPlacement(210040000, 3, 1, 2, 4, (byte) 4))));
+		ActionInvocation fixedInvocation = invocation(7, new SpawnInstanceNpcAction(799339,
+			new CompiledQuestGraph.FixedPlacement(210040000, 3, 1, 2, 3, (byte) 4)), "fixed-key");
+		assertEquals(ActionResult.APPLIED, fixed.execute(fixedInvocation));
+		assertEquals(ActionResult.FAILED, fixed.execute(invocation(7, new SpawnInstanceNpcAction(799339,
+			new CompiledQuestGraph.FixedPlacement(210040000, 3, 1, 2, 4, (byte) 4)), "fixed-key")));
 
 		QuestGraphInstanceSpawnAdapter staticSpawn = new QuestGraphInstanceSpawnAdapter(7,
 			query -> new SpawnSpot(210040000, 3, 1, 2, 3, (byte) 4),
@@ -189,6 +245,18 @@ class QuestGraphInstanceSpawnAdapterTest {
 		assertEquals(ActionResult.APPLIED, staticSpawn.execute(staticInvocation));
 		assertEquals(ActionResult.FAILED, staticSpawn.execute(
 			invocation(7, new SpawnInstanceNpcAction(700760, 216608), "static-key")));
+	}
+
+	@Test
+	void explicitRequestCannotOverrideTypedActionPlacement() {
+		QuestGraphInstanceSpawnAdapter adapter = adapter(player(), target -> null, failedSpawner());
+		ActionInvocation player = invocation(7,
+			new SpawnInstanceNpcAction(204830, new CompiledQuestGraph.PlayerPlacement()), "typed-placement");
+		QuestGraphInstanceSpawnAdapter.SpawnRequest forged = new QuestGraphInstanceSpawnAdapter.SpawnRequest(204830,
+			new QuestGraphInstanceSpawnAdapter.FixedPlacement(210040000, 3, 1, 2, 3, (byte) 0));
+
+		assertEquals(PreflightResult.FAILED, adapter.preflight(player, forged));
+		assertEquals(ActionResult.FAILED, adapter.execute(player, forged));
 	}
 
 	@Test
@@ -245,12 +313,12 @@ class QuestGraphInstanceSpawnAdapterTest {
 			spawns.incrementAndGet();
 			return new SpawnResult(ActionResult.APPLIED, 990321);
 		});
-		SpawnRequest request = new SpawnRequest(204830, new PlayerPlacement());
-		ActionInvocation invocation = invocation(7, new SpawnInstanceNpcAction(700759, 204830), "durable-spawn");
-		CleanupLease plan = first.prepareLease(invocation, request);
+		ActionInvocation invocation = invocation(7,
+			new SpawnInstanceNpcAction(204830, new CompiledQuestGraph.PlayerPlacement()), "durable-spawn");
+		CleanupLease plan = first.prepareLease(invocation);
 		ActionInvocation prepared = withLease(invocation, plan);
 
-		assertEquals(ActionResult.APPLIED, first.execute(prepared, request));
+		assertEquals(ActionResult.APPLIED, first.execute(prepared));
 		CleanupLease materialized = first.leaseFor(invocation);
 		InstanceSpawnResourceIdentity identity = (InstanceSpawnResourceIdentity) materialized.identity();
 		assertEquals(990321, identity.objectId());
@@ -269,7 +337,7 @@ class QuestGraphInstanceSpawnAdapterTest {
 			cleanup.set(command);
 			return ActionResult.APPLIED;
 		});
-		assertEquals(ActionResult.ALREADY_APPLIED, recovered.execute(withLease(invocation, materialized), request));
+		assertEquals(ActionResult.ALREADY_APPLIED, recovered.execute(withLease(invocation, materialized)));
 		assertEquals(ActionResult.APPLIED, recovered.clear(materialized));
 		assertEquals(990321, cleanup.get().objectId());
 		assertEquals(204830, cleanup.get().npcId());
@@ -296,20 +364,79 @@ class QuestGraphInstanceSpawnAdapterTest {
 			}
 			return new SpawnResult(ActionResult.ALREADY_APPLIED, command.objectId());
 		};
-		ActionInvocation invocation = invocation(7, new SpawnInstanceNpcAction(700759, 204830), "durable-window");
-		SpawnRequest request = new SpawnRequest(204830, new PlayerPlacement());
+		ActionInvocation invocation = invocation(7,
+			new SpawnInstanceNpcAction(204830, new CompiledQuestGraph.PlayerPlacement()), "durable-window");
 		QuestGraphInstanceSpawnAdapter first = durableAdapter(operations, spawner,
 			() -> 990321 + allocations.getAndIncrement());
-		CleanupLease plan = first.prepareLease(invocation, request);
+		CleanupLease plan = first.prepareLease(invocation);
 
-		assertEquals(ActionResult.APPLIED, first.execute(withLease(invocation, plan), request));
+		assertEquals(ActionResult.APPLIED, first.execute(withLease(invocation, plan)));
 		QuestGraphInstanceSpawnAdapter recreated = durableAdapter(operations, spawner,
 			() -> 990321 + allocations.getAndIncrement());
-		assertEquals(ActionResult.ALREADY_APPLIED, recreated.execute(withLease(invocation, plan), request));
+		assertEquals(ActionResult.ALREADY_APPLIED, recreated.execute(withLease(invocation, plan)));
 		assertEquals(1, physicalSpawns.get());
 		assertEquals(1, allocations.get());
 		assertEquals(990321,
 			((InstanceSpawnResourceIdentity) recreated.leaseFor(invocation).identity()).objectId());
+	}
+
+	@Test
+	void preparedPlayerCurrentPlanRejectsARegistryIdentityFromAnotherWorldInstance() {
+		ActionInvocation invocation = invocation(7, new SpawnInstanceNpcAction(799339,
+			new CompiledQuestGraph.FixedPlacement(CompiledQuestGraph.SpawnWorldPolicy.PLAYER_CURRENT, 0,
+				CompiledQuestGraph.SpawnInstancePolicy.PLAYER_CURRENT, 0, 41, 42, 43, (byte) 44)), "registry-context-conflict");
+		CleanupLease plan = adapter(player(), target -> null, failedSpawner()).prepareLease(invocation);
+		InstanceSpawnResourceIdentity frozen = (InstanceSpawnResourceIdentity) plan.identity();
+		CleanupLease conflicting = CleanupLease.instanceSpawn(new InstanceSpawnResourceIdentity(frozen.playerId(), frozen.questId(),
+			990321, frozen.npcId(), frozen.placement(), frozen.sourceNpcId(), frozen.sourceObjectId(), 220050000, 4,
+			frozen.x(), frozen.y(), frozen.z(), frozen.heading(), frozen.idempotencyKey()));
+		QuestGraphResourceOperationRegistry operations = new QuestGraphResourceOperationRegistry(
+			(playerId, key) -> conflicting, candidate -> {
+				throw new AssertionError("conflicting durable identity must not be reserved again");
+			}, expected -> false);
+		AtomicInteger spawns = new AtomicInteger();
+		AtomicInteger allocations = new AtomicInteger();
+		QuestGraphInstanceSpawnAdapter adapter = durableAdapter(operations, command -> {
+			spawns.incrementAndGet();
+			return new SpawnResult(ActionResult.ALREADY_APPLIED, command.objectId());
+		}, () -> 990654 + allocations.getAndIncrement());
+		ActionInvocation prepared = withLease(invocation, plan);
+
+		assertEquals(PreflightResult.FAILED, adapter.preflight(prepared));
+		assertEquals(ActionResult.FAILED, adapter.execute(prepared));
+		assertEquals(0, spawns.get());
+		assertEquals(0, allocations.get());
+	}
+
+	@Test
+	void preparedPlayerCurrentPlanReusesAnExactlyMatchingRegistryIdentity() {
+		ActionInvocation invocation = invocation(7, new SpawnInstanceNpcAction(799339,
+			new CompiledQuestGraph.FixedPlacement(CompiledQuestGraph.SpawnWorldPolicy.PLAYER_CURRENT, 0,
+				CompiledQuestGraph.SpawnInstancePolicy.PLAYER_CURRENT, 0, 41, 42, 43, (byte) 44)), "registry-context-match");
+		CleanupLease plan = adapter(player(), target -> null, failedSpawner()).prepareLease(invocation);
+		InstanceSpawnResourceIdentity frozen = (InstanceSpawnResourceIdentity) plan.identity();
+		CleanupLease materialized = CleanupLease.instanceSpawn(frozen.materialize(990321));
+		QuestGraphResourceOperationRegistry operations = new QuestGraphResourceOperationRegistry(
+			(playerId, key) -> materialized, candidate -> {
+				throw new AssertionError("matching durable identity must not be reserved again");
+			}, expected -> false);
+		Set<Integer> worldObjects = new HashSet<>(Set.of(990321));
+		AtomicInteger physicalSpawns = new AtomicInteger();
+		AtomicInteger allocations = new AtomicInteger();
+		QuestGraphInstanceSpawnAdapter adapter = durableAdapter(operations, command -> {
+			if (worldObjects.add(command.objectId())) {
+				physicalSpawns.incrementAndGet();
+				return new SpawnResult(ActionResult.APPLIED, command.objectId());
+			}
+			return new SpawnResult(ActionResult.ALREADY_APPLIED, command.objectId());
+		}, () -> 990654 + allocations.getAndIncrement());
+		ActionInvocation prepared = withLease(invocation, plan);
+
+		assertEquals(PreflightResult.READY, adapter.preflight(prepared));
+		assertEquals(ActionResult.ALREADY_APPLIED, adapter.execute(prepared));
+		assertEquals(0, physicalSpawns.get());
+		assertEquals(0, allocations.get());
+		assertEquals(materialized, adapter.leaseFor(invocation));
 	}
 
 	@Test
@@ -324,10 +451,10 @@ class QuestGraphInstanceSpawnAdapterTest {
 			command -> {
 				throw new AssertionError("spawn must not run after reservation conflict");
 			}, command -> ActionResult.APPLIED, operations, () -> 990654, releasedId::set);
-		ActionInvocation invocation = invocation(7, new SpawnInstanceNpcAction(700759, 204830), "object-id-conflict");
-		SpawnRequest request = new SpawnRequest(204830, new PlayerPlacement());
+		ActionInvocation invocation = invocation(7,
+			new SpawnInstanceNpcAction(204830, new CompiledQuestGraph.PlayerPlacement()), "object-id-conflict");
 
-		assertEquals(ActionResult.FAILED, adapter.execute(withLease(invocation, adapter.prepareLease(invocation, request)), request));
+		assertEquals(ActionResult.FAILED, adapter.execute(withLease(invocation, adapter.prepareLease(invocation))));
 		assertEquals(990654, releasedId.get());
 	}
 
@@ -363,8 +490,12 @@ class QuestGraphInstanceSpawnAdapterTest {
 	}
 
 	private static ActionInvocation dialogInvocation(int playerId, int npcId, int npcObjectId, String key) {
-		return new ActionInvocation(new SpawnInstanceNpcAction(npcId, 210634), 1, 0, QuestStatus.START,
-			new DialogEvent("event", playerId, 1_700_000_000_000L, npcId, npcObjectId, "STEP_TO_1"),
+		return dialogInvocation(playerId, npcId, npcId, npcObjectId, key);
+	}
+
+	private static ActionInvocation dialogInvocation(int playerId, int placementNpcId, int eventNpcId, int npcObjectId, String key) {
+		return new ActionInvocation(new SpawnInstanceNpcAction(210634, new EventNpcPlacement(placementNpcId)), 1, 0, QuestStatus.START,
+			new DialogEvent("event", playerId, 1_700_000_000_000L, eventNpcId, npcObjectId, "STEP_TO_1"),
 			RepeatDeadlineResolution.NOT_APPLICABLE, null, key);
 	}
 

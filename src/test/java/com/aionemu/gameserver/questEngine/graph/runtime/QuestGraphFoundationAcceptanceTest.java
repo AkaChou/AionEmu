@@ -139,7 +139,7 @@ class QuestGraphFoundationAcceptanceTest {
 					<node id="active">
 						<transition id="accept" priority="1" to="done">
 							<dialog npc_id="100" dialog="QUEST_SELECT"/>
-							<actions><start-quest/><sync-quest-status/><close-dialog/></actions>
+							<actions><start-quest/><close-dialog/></actions>
 						</transition>
 					</node>
 					<node id="done" terminal="true"/>
@@ -154,7 +154,7 @@ class QuestGraphFoundationAcceptanceTest {
 		assertEquals(1, QuestGraphCompiler.load(validFile, SCHEMA, references).graphs().size());
 		Path invalidFile = tempDir.resolve("invalid.xml");
 		Files.writeString(invalidFile,
-			valid.replace("<start-quest/><sync-quest-status/><close-dialog/>", "<close-dialog/><start-quest/>"),
+			valid.replace("<start-quest/><close-dialog/>", "<close-dialog/><start-quest/>"),
 			StandardCharsets.UTF_8);
 		assertThrows(IllegalArgumentException.class, () -> QuestGraphCompiler.load(invalidFile, SCHEMA, references));
 	}
@@ -193,7 +193,7 @@ class QuestGraphFoundationAcceptanceTest {
 						<transition id="accept" priority="1" to="active">
 							<dialog npc_id="100" dialog="QUEST_ACCEPT"/>
 							<conditions><quest-status op="IN" values="NONE"/></conditions>
-							<actions><start-quest/><sync-quest-status/><close-dialog/></actions>
+							<actions><start-quest/><close-dialog/></actions>
 						</transition>
 					</node>
 					<node id="active">
@@ -210,7 +210,6 @@ class QuestGraphFoundationAcceptanceTest {
 							<actions>
 								<set-quest-status status="REWARD"/>
 								<finish-quest reward_index="0"/>
-								<sync-quest-status/>
 							</actions>
 						</transition>
 					</node>
@@ -337,7 +336,7 @@ class QuestGraphFoundationAcceptanceTest {
 					<node id="entry">
 						<transition id="enter" priority="1" to="playing">
 							<world-entered/>
-							<actions><start-quest/><sync-quest-status/><play-movie movie_id="913"/></actions>
+							<actions><start-quest/><play-movie movie_id="913"/></actions>
 						</transition>
 					</node>
 					<node id="playing">

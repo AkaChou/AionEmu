@@ -141,7 +141,7 @@ public final class QuestGraphDefinitionRegistry {
 		}
 		validateVariables(graph, state);
 		if (state.getLifecycle() == Lifecycle.PREPARED) {
-			validatePreparedTransition(state, node);
+			validatePreparedTransition(graph, state, node);
 		}
 	}
 
@@ -171,10 +171,13 @@ public final class QuestGraphDefinitionRegistry {
 	 * 校验 PREPARED journal 仍指向当前节点中的同名转换和有效动作边界。
 	 * Validates that a PREPARED journal still targets a named transition and valid action boundary in the current node.
 	 */
-	private static void validatePreparedTransition(PlayerQuestGraphState state, CompiledQuestGraph.Node node) {
+	private static void validatePreparedTransition(CompiledQuestGraph graph, PlayerQuestGraphState state, CompiledQuestGraph.Node node) {
 		PreparedTransition journal = state.getJournal();
-		CompiledQuestGraph.Transition transition = node.transitions().stream()
-			.filter(candidate -> candidate.id().equals(journal.getTransitionId())).findFirst().orElse(null);
+		CompiledQuestGraph.Transition transition = journal.isTargetCommitted()
+			? graph.nodes().values().stream().flatMap(candidate -> candidate.transitions().stream())
+				.filter(candidate -> candidate.id().equals(journal.getTransitionId())
+					&& candidate.targetNode().equals(state.getNodeId())).findFirst().orElse(null)
+			: node.transitions().stream().filter(candidate -> candidate.id().equals(journal.getTransitionId())).findFirst().orElse(null);
 		if (transition == null || journal.getNextActionIndex() > transition.actions().size()) {
 			throw new IllegalArgumentException("Quest " + state.getQuestId() + " PREPARED journal is incompatible");
 		}

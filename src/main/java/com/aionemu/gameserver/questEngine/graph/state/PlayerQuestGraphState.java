@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.aionemu.gameserver.model.items.ItemId;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortSource;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEscortAction;
@@ -92,28 +93,122 @@ public final class PlayerQuestGraphState {
 		GIVE_ADD_EXACT,
 		REMOVE_EXACT,
 		REMOVE_OPTIONAL_EXACT,
-		REMOVE_ALL
+		REMOVE_ALL,
+		PAY_KINAH_AND_ITEM,
+		REMOVE_EVENT_OBJECT_EXACT,
+		REMOVE_EVENT_TEMPLATE_EXACT
 	}
 
 	/**
 	 * 保存 PREPARED 前按动作序号冻结的物品数量转换。
 	 * Holds an item-count transition frozen by action index before PREPARED persistence.
 	 */
-	public record ItemMutationPlan(int actionIndex, ItemMutationKind kind, int itemId, long requestedCount, long beforeCount, long afterCount) {
+	public record ItemMutationPlan(int actionIndex, ItemMutationKind kind, int itemId, int itemObjectId, long requestedCount,
+			long beforeCount, long afterCount, long beforeObjectCount, long kinahAmount, long beforeKinah, long afterKinah) {
+		/** 保留模板级动作的旧构造签名。 / Preserves the legacy constructor for template-level mutations. */
+		public ItemMutationPlan(int actionIndex, ItemMutationKind kind, int itemId, long requestedCount, long beforeCount, long afterCount) {
+			this(actionIndex, kind, itemId, 0, requestedCount, beforeCount, afterCount, 0, 0, 0, 0);
+		}
+
+		/** 保留事件对象动作的旧构造签名。 / Preserves the event-object mutation constructor. */
+		public ItemMutationPlan(int actionIndex, ItemMutationKind kind, int itemId, int itemObjectId, long requestedCount,
+				long beforeCount, long afterCount, long beforeObjectCount) {
+			this(actionIndex, kind, itemId, itemObjectId, requestedCount, beforeCount, afterCount, beforeObjectCount, 0, 0, 0);
+		}
+
+		/** 创建 Kinah 与普通物品的原子支付计划。 / Creates an atomic Kinah-and-ordinary-item payment plan. */
+		public static ItemMutationPlan payment(int actionIndex, int itemId, long itemCount, long beforeCount, long kinahAmount,
+				long beforeKinah) {
+			return new ItemMutationPlan(actionIndex, ItemMutationKind.PAY_KINAH_AND_ITEM, itemId, 0, itemCount, beforeCount,
+				Math.subtractExact(beforeCount, itemCount), 0, kinahAmount, beforeKinah, Math.subtractExact(beforeKinah, kinahAmount));
+		}
+
 		/** 校验动作索引、物品引用和 before/after 关系。 / Validates the action index, item reference, and before/after relation. */
 		public ItemMutationPlan {
-			if (actionIndex < 0 || kind == null || itemId <= 0 || requestedCount <= 0 || beforeCount < 0 || afterCount < 0) {
+			if (actionIndex < 0 || kind == null || itemId <= 0 || itemObjectId < 0 || requestedCount <= 0
+					|| beforeCount < 0 || afterCount < 0 || beforeObjectCount < 0 || kinahAmount < 0 || beforeKinah < 0 || afterKinah < 0) {
 				throw new IllegalArgumentException("Item mutation plan is invalid");
 			}
 			boolean valid = switch (kind) {
-				case GIVE_TOP_UP_TO -> afterCount == Math.max(beforeCount, requestedCount);
-				case GIVE_ADD_EXACT -> afterCount == Math.addExact(beforeCount, requestedCount);
-				case REMOVE_EXACT -> beforeCount >= requestedCount && afterCount == beforeCount - requestedCount;
-				case REMOVE_OPTIONAL_EXACT -> afterCount == (beforeCount >= requestedCount ? beforeCount - requestedCount : beforeCount);
-				case REMOVE_ALL -> afterCount == 0;
+				case GIVE_TOP_UP_TO -> itemObjectId == 0 && beforeObjectCount == 0
+					&& afterCount == Math.max(beforeCount, requestedCount);
+				case GIVE_ADD_EXACT -> itemObjectId == 0 && beforeObjectCount == 0
+					&& afterCount == Math.addExact(beforeCount, requestedCount);
+				case REMOVE_EXACT -> itemObjectId == 0 && beforeObjectCount == 0 && beforeCount >= requestedCount
+					&& afterCount == beforeCount - requestedCount;
+				case REMOVE_OPTIONAL_EXACT -> itemObjectId == 0 && beforeObjectCount == 0
+					&& afterCount == (beforeCount >= requestedCount ? beforeCount - requestedCount : beforeCount);
+				case REMOVE_ALL -> itemObjectId == 0 && beforeObjectCount == 0 && afterCount == 0;
+				case PAY_KINAH_AND_ITEM -> itemId != ItemId.KINAH.value() && itemObjectId == 0 && beforeObjectCount == 0
+					&& beforeCount >= requestedCount
+					&& afterCount == beforeCount - requestedCount && kinahAmount > 0 && beforeKinah >= kinahAmount
+					&& afterKinah == beforeKinah - kinahAmount;
+				case REMOVE_EVENT_OBJECT_EXACT -> itemObjectId > 0 && beforeObjectCount >= requestedCount
+					&& beforeObjectCount <= beforeCount && beforeCount >= requestedCount
+					&& afterCount == beforeCount - requestedCount;
+				case REMOVE_EVENT_TEMPLATE_EXACT -> itemObjectId == 0 && beforeObjectCount == 0
+					&& beforeCount >= requestedCount && afterCount == beforeCount - requestedCount;
 			};
-			if (!valid) {
+			if (!valid || kind != ItemMutationKind.PAY_KINAH_AND_ITEM && (kinahAmount != 0 || beforeKinah != 0 || afterKinah != 0)) {
 				throw new IllegalArgumentException("Item mutation before/after counts do not match its semantics");
+			}
+		}
+	}
+
+	/**
+	 * 保存 PREPARED 前冻结的 Kinah+普通物品原子支付计划。
+	 * Holds a Kinah-and-ordinary-item atomic payment plan frozen before PREPARED.
+	 */
+	public record PaymentPlan(int actionIndex, int itemId, long itemCount, long kinah,
+		long beforeItemCount, long afterItemCount, long beforeKinah, long afterKinah) {
+		/** 校验支付数量及 before/after 收敛关系。 / Validates payment quantities and before/after convergence. */
+		public PaymentPlan {
+			if (actionIndex < 0 || itemId <= 0 || itemId == ItemId.KINAH.value() || itemCount <= 0 || kinah <= 0
+					|| beforeItemCount < itemCount || beforeKinah < kinah
+					|| afterItemCount != beforeItemCount - itemCount || afterKinah != beforeKinah - kinah) {
+				throw new IllegalArgumentException("Payment plan is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 保存 ITEM_USE 延迟屏障、冻结事件物品身份和由定义版本约束的 tail 边界。
+	 * Holds an ITEM_USE delay barrier, frozen event-item identity, and tail bounds constrained by the definition version.
+	 */
+	public record ItemUseContinuationPlan(int actionIndex, int itemId, int itemObjectId, int durationMs, long readyAt,
+			int tailStartActionIndex, int tailEndActionIndex) {
+		/** 校验正数身份、绝对时间和非空 tail。 / Validates positive identity, absolute time, and a non-empty tail. */
+		public ItemUseContinuationPlan {
+			if (actionIndex < 0 || itemId <= 0 || itemObjectId <= 0 || durationMs <= 0 || readyAt <= 0
+					|| tailStartActionIndex != actionIndex + 1 || tailEndActionIndex < tailStartActionIndex) {
+				throw new IllegalArgumentException("Item-use continuation plan is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 保存 PREPARED 前冻结的完整传送命令，不表示需要清理的持久资源。
+	 * Holds a complete teleport command frozen before PREPARED persistence and does not represent a cleanup-owned resource.
+	 */
+	public record TeleportPlan(int actionIndex, int worldId, int instanceId, float x, float y, float z, byte heading) {
+		/** 校验动作索引、世界、instance 和有限坐标。 / Validates the action index, world, instance, and finite coordinates. */
+		public TeleportPlan {
+			if (actionIndex < 0 || worldId <= 0 || instanceId < 0
+					|| !Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
+				throw new IllegalArgumentException("Teleport plan is invalid");
+			}
+		}
+	}
+
+	/**
+	 * 保存一个协议动作应发送的冻结任务状态与打包变量。
+	 * Holds the frozen quest status and packed variables that one protocol action must send.
+	 */
+	public record QuestStatusSyncSnapshot(int actionIndex, int snapshotAfterActionCount, QuestStatus status, int packedQuestVars) {
+		/** 校验动作索引、状态 checkpoint 与 canonical 状态。 / Validates the action index, state checkpoint, and canonical status. */
+		public QuestStatusSyncSnapshot {
+			if (actionIndex < 0 || snapshotAfterActionCount < 0 || status == null) {
+				throw new IllegalArgumentException("Quest status sync snapshot is invalid");
 			}
 		}
 	}
@@ -183,6 +278,17 @@ public final class PlayerQuestGraphState {
 		private final RepeatDeadlineResolution repeatDeadlineResolution;
 		/** 按动作序号排序的冻结物品动作。 / Frozen item actions ordered by action index. */
 		private final Map<Integer, ItemMutationPlan> itemMutationPlans;
+		/** 按动作序号排序的冻结 Kinah+物品支付动作。 / Frozen Kinah-and-item payments ordered by action index. */
+		private final Map<Integer, PaymentPlan> paymentPlans;
+		/** 按动作序号排序的冻结传送命令。 / Frozen teleport commands ordered by action index. */
+		private final Map<Integer, TeleportPlan> teleportPlans;
+		/** 按屏障动作序号排序的冻结物品使用 continuation。 / Frozen item-use continuations ordered by barrier action index. */
+		private final Map<Integer, ItemUseContinuationPlan> itemUseContinuationPlans;
+		/** 按协议动作序号排序的冻结任务状态快照。 / Frozen quest-status snapshots ordered by protocol action index. */
+		private final Map<Integer, QuestStatusSyncSnapshot> questStatusSyncSnapshots;
+		/** 冻结任务状态快照及其 journal 身份的可选 SHA-256 摘要。 / Optional SHA-256 digest of frozen snapshots and their journal identity. */
+		@Getter(AccessLevel.NONE)
+		private final byte[] questStatusSyncSnapshotDigest;
 		/** 类型化事件 codec 生成的不可变负载。 / Immutable payload produced by the typed event codec. */
 		@Getter(AccessLevel.NONE)
 		private final byte[] eventPayload;
@@ -192,7 +298,8 @@ public final class PlayerQuestGraphState {
 		 * Creates a prepared transition and copies its event payload.
 		 */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, byte[] eventPayload) {
-			this(baseRevision, eventId, transitionId, nextActionIndex, false, RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), eventPayload);
+			this(baseRevision, eventId, transitionId, nextActionIndex, false, RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), Map.of(), Map.of(),
+				new byte[0], eventPayload);
 		}
 
 		/**
@@ -201,7 +308,8 @@ public final class PlayerQuestGraphState {
 		 */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex,
 				RepeatDeadlineResolution repeatDeadlineResolution, byte[] eventPayload) {
-			this(baseRevision, eventId, transitionId, nextActionIndex, false, repeatDeadlineResolution, Map.of(), eventPayload);
+			this(baseRevision, eventId, transitionId, nextActionIndex, false, repeatDeadlineResolution, Map.of(), Map.of(), Map.of(), new byte[0],
+				eventPayload);
 		}
 
 		/**
@@ -210,12 +318,82 @@ public final class PlayerQuestGraphState {
 		 */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex,
 				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans, byte[] eventPayload) {
-			this(baseRevision, eventId, transitionId, nextActionIndex, false, repeatDeadlineResolution, itemMutationPlans, eventPayload);
+			this(baseRevision, eventId, transitionId, nextActionIndex, false, repeatDeadlineResolution, itemMutationPlans, Map.of(), Map.of(), new byte[0],
+				eventPayload);
+		}
+
+		/** 创建带冻结物品与传送计划的 journal。 / Creates a journal with frozen item and teleport plans. */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex,
+				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans,
+				Map<Integer, TeleportPlan> teleportPlans, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, false, repeatDeadlineResolution, itemMutationPlans, teleportPlans, Map.of(),
+				new byte[0], eventPayload);
+		}
+
+		/** 创建带全部冻结动作输入和协议快照的 journal。 / Creates a journal with every frozen action input and protocol snapshot. */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex,
+				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans,
+				Map<Integer, TeleportPlan> teleportPlans, Map<Integer, QuestStatusSyncSnapshot> questStatusSyncSnapshots, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, false, repeatDeadlineResolution, itemMutationPlans, teleportPlans,
+				questStatusSyncSnapshots, new byte[0], eventPayload);
+		}
+
+		/** 创建带 snapshot 完整性摘要的 journal。 / Creates a journal with a snapshot-integrity digest. */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex,
+				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans,
+				Map<Integer, TeleportPlan> teleportPlans, Map<Integer, QuestStatusSyncSnapshot> questStatusSyncSnapshots,
+				byte[] questStatusSyncSnapshotDigest, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, false, repeatDeadlineResolution, itemMutationPlans, teleportPlans,
+				questStatusSyncSnapshots, questStatusSyncSnapshotDigest, eventPayload);
 		}
 
 		/** 创建可恢复到已提交目标节点的 journal。 / Creates a journal that can resume after the target node was committed. */
 		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, boolean targetCommitted,
 				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, targetCommitted, repeatDeadlineResolution, itemMutationPlans, Map.of(), Map.of(),
+				new byte[0], eventPayload);
+		}
+
+		/** 创建包含全部冻结动作输入的可恢复 journal。 / Creates a recoverable journal containing every frozen action input. */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, boolean targetCommitted,
+				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans,
+				Map<Integer, TeleportPlan> teleportPlans, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, targetCommitted, repeatDeadlineResolution, itemMutationPlans, teleportPlans,
+				Map.of(), new byte[0], eventPayload);
+		}
+
+		/** 创建包含全部冻结动作输入与协议快照的可恢复 journal。 / Creates a recoverable journal with all frozen action inputs and protocol snapshots. */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, boolean targetCommitted,
+				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans,
+				Map<Integer, TeleportPlan> teleportPlans, Map<Integer, QuestStatusSyncSnapshot> questStatusSyncSnapshots, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, targetCommitted, repeatDeadlineResolution, itemMutationPlans, teleportPlans,
+				questStatusSyncSnapshots, new byte[0], eventPayload);
+		}
+
+		/** 创建带 snapshot 完整性摘要的完整可恢复 journal。 / Creates a complete recoverable journal with a snapshot-integrity digest. */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, boolean targetCommitted,
+				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans,
+				Map<Integer, TeleportPlan> teleportPlans, Map<Integer, QuestStatusSyncSnapshot> questStatusSyncSnapshots,
+				byte[] questStatusSyncSnapshotDigest, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, targetCommitted, repeatDeadlineResolution, itemMutationPlans,
+				teleportPlans, Map.of(), questStatusSyncSnapshots, questStatusSyncSnapshotDigest, eventPayload);
+		}
+
+		/** 创建带 durable item-use continuation 的完整可恢复 journal。 / Creates a complete recoverable journal with durable item-use continuations. */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, boolean targetCommitted,
+				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans,
+				Map<Integer, TeleportPlan> teleportPlans, Map<Integer, ItemUseContinuationPlan> itemUseContinuationPlans,
+				Map<Integer, QuestStatusSyncSnapshot> questStatusSyncSnapshots, byte[] questStatusSyncSnapshotDigest, byte[] eventPayload) {
+			this(baseRevision, eventId, transitionId, nextActionIndex, targetCommitted, repeatDeadlineResolution, itemMutationPlans,
+				Map.of(), teleportPlans, itemUseContinuationPlans, questStatusSyncSnapshots, questStatusSyncSnapshotDigest, eventPayload);
+		}
+
+		/** 创建包含 Kinah+普通物品支付计划的完整可恢复 journal。 / Creates a complete recoverable journal with payment plans. */
+		public PreparedTransition(long baseRevision, String eventId, String transitionId, int nextActionIndex, boolean targetCommitted,
+				RepeatDeadlineResolution repeatDeadlineResolution, Map<Integer, ItemMutationPlan> itemMutationPlans,
+				Map<Integer, PaymentPlan> paymentPlans, Map<Integer, TeleportPlan> teleportPlans,
+				Map<Integer, ItemUseContinuationPlan> itemUseContinuationPlans,
+				Map<Integer, QuestStatusSyncSnapshot> questStatusSyncSnapshots, byte[] questStatusSyncSnapshotDigest, byte[] eventPayload) {
 			if (baseRevision < -1 || nextActionIndex < 0) {
 				throw new IllegalArgumentException("Prepared transition base revision/action index is invalid");
 			}
@@ -234,7 +412,66 @@ public final class PlayerQuestGraphState {
 				});
 			}
 			this.itemMutationPlans = Collections.unmodifiableMap(plans);
+			TreeMap<Integer, PaymentPlan> frozenPayments = new TreeMap<>();
+			if (paymentPlans != null) {
+				paymentPlans.forEach((index, plan) -> {
+					ItemMutationPlan itemPlan = index == null ? null : plans.get(index);
+					if (index == null || plan == null || index != plan.actionIndex() || frozenPayments.putIfAbsent(index, plan) != null
+							|| itemPlan == null || itemPlan.kind() != ItemMutationKind.PAY_KINAH_AND_ITEM
+							|| itemPlan.itemId() != plan.itemId() || itemPlan.requestedCount() != plan.itemCount()
+							|| itemPlan.kinahAmount() != plan.kinah() || itemPlan.beforeCount() != plan.beforeItemCount()
+							|| itemPlan.afterCount() != plan.afterItemCount() || itemPlan.beforeKinah() != plan.beforeKinah()
+							|| itemPlan.afterKinah() != plan.afterKinah()) {
+						throw new IllegalArgumentException("Prepared payment plans are invalid");
+					}
+				});
+			}
+			if (plans.values().stream().anyMatch(itemPlan -> itemPlan.kind() == ItemMutationKind.PAY_KINAH_AND_ITEM
+					&& !frozenPayments.containsKey(itemPlan.actionIndex()))) {
+				throw new IllegalArgumentException("Prepared payment item plan is missing its typed payment plan");
+			}
+			this.paymentPlans = Collections.unmodifiableMap(frozenPayments);
+			TreeMap<Integer, TeleportPlan> frozenTeleports = new TreeMap<>();
+			if (teleportPlans != null) {
+				teleportPlans.forEach((index, plan) -> {
+					if (index == null || plan == null || index != plan.actionIndex() || frozenTeleports.putIfAbsent(index, plan) != null) {
+						throw new IllegalArgumentException("Prepared teleport plans are invalid");
+					}
+				});
+			}
+			this.teleportPlans = Collections.unmodifiableMap(frozenTeleports);
+			TreeMap<Integer, ItemUseContinuationPlan> frozenContinuations = new TreeMap<>();
+			if (itemUseContinuationPlans != null) {
+				itemUseContinuationPlans.forEach((index, plan) -> {
+					if (index == null || plan == null || index != plan.actionIndex()
+							|| frozenContinuations.putIfAbsent(index, plan) != null) {
+						throw new IllegalArgumentException("Prepared item-use continuation plans are invalid");
+					}
+				});
+			}
+			this.itemUseContinuationPlans = Collections.unmodifiableMap(frozenContinuations);
+			TreeMap<Integer, QuestStatusSyncSnapshot> syncSnapshots = new TreeMap<>();
+			if (questStatusSyncSnapshots != null) {
+				questStatusSyncSnapshots.forEach((index, snapshot) -> {
+					if (index == null || snapshot == null || index != snapshot.actionIndex()
+							|| syncSnapshots.putIfAbsent(index, snapshot) != null) {
+						throw new IllegalArgumentException("Prepared quest status sync snapshots are invalid");
+					}
+				});
+			}
+			this.questStatusSyncSnapshots = Collections.unmodifiableMap(syncSnapshots);
+			if (questStatusSyncSnapshotDigest != null && questStatusSyncSnapshotDigest.length != 0
+					&& questStatusSyncSnapshotDigest.length != 32) {
+				throw new IllegalArgumentException("Quest status sync snapshot digest must be empty or SHA-256 length");
+			}
+			this.questStatusSyncSnapshotDigest = questStatusSyncSnapshotDigest == null ? new byte[0]
+				: Arrays.copyOf(questStatusSyncSnapshotDigest, questStatusSyncSnapshotDigest.length);
 			this.eventPayload = eventPayload == null ? new byte[0] : Arrays.copyOf(eventPayload, eventPayload.length);
+		}
+
+		/** 返回 snapshot 摘要副本，防止 journal 完整性材料被修改。 / Returns a digest copy so journal integrity material cannot be mutated. */
+		public byte[] getQuestStatusSyncSnapshotDigest() {
+			return Arrays.copyOf(questStatusSyncSnapshotDigest, questStatusSyncSnapshotDigest.length);
 		}
 
 		/**

@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.graph.runtime;
 
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionType.CLOSE_DIALOG;
-import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ActionType.SYNC_QUEST_STATUS;
 import static com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Propagation.CONTINUE;
 import static com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Propagation.STOP;
 import static com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status.APPLIED;
@@ -157,7 +156,7 @@ class QuestGraphVerticalFixtureAcceptanceTest {
 				<node id="offer">
 					<transition id="accept" priority="1" to="done">
 						<dialog npc_id="100" dialog="QUEST_SELECT"/>
-						<actions><start-quest/><sync-quest-status/><close-dialog/></actions>
+						<actions><start-quest/><close-dialog/></actions>
 					</transition>
 				</node>
 				<node id="done" terminal="true"/>
@@ -179,7 +178,7 @@ class QuestGraphVerticalFixtureAcceptanceTest {
 			match -> new QuestGraphTransitionExecutor().execute(match, context)));
 		assertEquals("done", states.get(1).getNodeId());
 		assertEquals(QuestStatus.START, states.get(1).getQuestStatus());
-		assertEquals(List.of(SYNC_QUEST_STATUS, CLOSE_DIALOG), protocol);
+		assertEquals(List.of(CLOSE_DIALOG), protocol);
 
 		assertEquals(new DispatchResult(NO_MATCH, CONTINUE), new QuestGraphRouter(data).dispatch(
 			new DialogEvent("simple-wrong-dialog", PLAYER_ID, 1001, 100, "QUEST_ACCEPT"), new PlayerQuestGraphStateList(),
@@ -353,7 +352,7 @@ class QuestGraphVerticalFixtureAcceptanceTest {
 				<node id="entry">
 					<transition id="enter-instance" priority="1" to="playing">
 						<world-entered/>
-						<actions><start-quest/><sync-quest-status/><play-movie movie_id="913"/></actions>
+						<actions><start-quest/><play-movie movie_id="913"/></actions>
 					</transition>
 				</node>
 				<node id="playing">
@@ -383,7 +382,7 @@ class QuestGraphVerticalFixtureAcceptanceTest {
 			match -> new QuestGraphTransitionExecutor().execute(match, context)));
 		assertEquals("playing", states.get(4).getNodeId());
 		assertEquals(QuestStatus.START, states.get(4).getQuestStatus());
-		assertEquals(List.of(SYNC_QUEST_STATUS, ActionType.PLAY_MOVIE), protocol);
+		assertEquals(List.of(ActionType.PLAY_MOVIE), protocol);
 
 		// RECOVERY + PROTOCOL：服务端 playback 凭据一次性完成，codec 往返保持 playbackId。
 		// RECOVERY + PROTOCOL: server playback credentials complete once; codec round-trip keeps playbackId.

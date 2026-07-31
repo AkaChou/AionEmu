@@ -411,6 +411,12 @@
 
 	<xs:complexType name="questGraphEmptyAction"/>
 
+	<!-- 提交后同步最终快照，或显式指定已重放的 pre-protocol 动作数量。 -->
+	<!-- Post-commit synchronization of the final snapshot or an explicit replayed pre-protocol action count. -->
+	<xs:complexType name="questGraphSyncQuestStatusAction">
+		<xs:attribute name="snapshot_after_action_count" type="xs:nonNegativeInteger" use="optional"/>
+	</xs:complexType>
+
 	<xs:complexType name="questGraphStartEventQuestAction">
 		<xs:attribute name="quest_id" type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="status" type="questGraphQuestStatus" use="required"/>
@@ -469,6 +475,25 @@
 		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="count" type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="mode" type="questGraphQuestItemRemovalMode" use="required"/>
+	</xs:complexType>
+
+	<!-- 在一个可恢复 required 动作中原子扣除 Kinah 与普通背包物品。 -->
+	<!-- Atomically charges Kinah and ordinary inventory items in one recoverable required action. -->
+	<xs:complexType name="questGraphPayKinahAndItemAction">
+		<xs:attribute name="kinah" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="item_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="item_count" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="questGraphDialogNpcLifecycleMode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="DELETE"/>
+			<xs:enumeration value="SCHEDULE_RESPAWN_THEN_DELETE"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="questGraphDialogNpcLifecycleAction">
+		<xs:attribute name="mode" type="questGraphDialogNpcLifecycleMode" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="questGraphRecipeCondition">
@@ -591,11 +616,55 @@
 		<xs:attribute name="dialog_id" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
-	<!-- 在玩家当前 instance 于 spawner 坐标召唤 NPC，并登记 cleanup lease。 -->
-	<!-- Spawns an NPC in the player instance at the spawner spot and registers a cleanup lease. -->
+	<!-- ITEM_USE 的绝对时间屏障；后续 typed action 由持久 journal 在到期后继续。 -->
+	<!-- Absolute-time ITEM_USE barrier; the durable journal resumes subsequent typed actions after expiry. -->
+	<xs:complexType name="questGraphDelayItemUseContinuationAction">
+		<xs:attribute name="duration_ms" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="questGraphUsedItemRemovalMode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EVENT_OBJECT_EXACT"/>
+			<xs:enumeration value="EVENT_TEMPLATE_EXACT"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="questGraphRemoveUsedItemAction">
+		<xs:attribute name="count" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="mode" type="questGraphUsedItemRemovalMode" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="questGraphSpawnPlacement">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="STATIC_SPAWNER"/>
+			<xs:enumeration value="EVENT_NPC"/>
+			<xs:enumeration value="PLAYER"/>
+			<xs:enumeration value="FIXED"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphSpawnContextPolicy">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EXPLICIT"/>
+			<xs:enumeration value="PLAYER_CURRENT"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 以类型化位置召唤 NPC 并登记 cleanup lease；compiler 关闭各策略的字段组合。 -->
+	<!-- Spawns an NPC at a typed placement and registers a cleanup lease; the compiler closes per-policy field combinations. -->
 	<xs:complexType name="questGraphSpawnInstanceNpcAction">
-		<xs:attribute name="spawner_object_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="placement" type="questGraphSpawnPlacement" use="optional"/>
+		<xs:attribute name="spawner_object_id" type="xs:positiveInteger" use="optional"/>
+		<xs:attribute name="event_npc_id" type="xs:positiveInteger" use="optional"/>
 		<xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="world_policy" type="questGraphSpawnContextPolicy" use="optional"/>
+		<xs:attribute name="world_id" type="xs:positiveInteger" use="optional"/>
+		<xs:attribute name="instance_policy" type="questGraphSpawnContextPolicy" use="optional"/>
+		<xs:attribute name="instance_id" type="xs:nonNegativeInteger" use="optional"/>
+		<xs:attribute name="x" type="questGraphFiniteCoordinate" use="optional"/>
+		<xs:attribute name="y" type="questGraphFiniteCoordinate" use="optional"/>
+		<xs:attribute name="z" type="questGraphFiniteCoordinate" use="optional"/>
+		<xs:attribute name="heading" type="xs:byte" use="optional"/>
 	</xs:complexType>
 
 	<xs:simpleType name="questGraphEscortSource">
@@ -642,7 +711,15 @@
 	<xs:simpleType name="questGraphTeleportInstancePolicy">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="EXPLICIT_OR_DEFAULT"/>
+			<xs:enumeration value="PLAYER_CURRENT"/>
 			<xs:enumeration value="PLAYER_REGISTERED_OR_CREATE"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="questGraphTeleportHeadingPolicy">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EXPLICIT"/>
+			<xs:enumeration value="PLAYER_CURRENT"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -650,6 +727,7 @@
 		<xs:attribute name="world_id" type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="instance_id" type="xs:nonNegativeInteger" use="optional"/>
 		<xs:attribute name="instance_policy" type="questGraphTeleportInstancePolicy" default="EXPLICIT_OR_DEFAULT"/>
+		<xs:attribute name="heading_policy" type="questGraphTeleportHeadingPolicy" default="EXPLICIT"/>
 		<xs:attribute name="x" type="questGraphFiniteCoordinate" use="required"/>
 		<xs:attribute name="y" type="questGraphFiniteCoordinate" use="required"/>
 		<xs:attribute name="z" type="questGraphFiniteCoordinate" use="required"/>
@@ -778,6 +856,8 @@
 			<xs:element name="add-completion-count" type="questGraphAddCompletionCountAction"/>
 			<xs:element name="give-quest-item" type="questGraphGiveQuestItemAction"/>
 			<xs:element name="remove-quest-item" type="questGraphRemoveQuestItemAction"/>
+			<xs:element name="pay-kinah-and-item" type="questGraphPayKinahAndItemAction"/>
+			<xs:element name="dialog-npc-lifecycle" type="questGraphDialogNpcLifecycleAction"/>
 			<xs:element name="remove-collected-items" type="questGraphEmptyAction"/>
 			<xs:element name="remove-quest-work-items" type="questGraphEmptyAction"/>
 			<xs:element name="learn-recipe" type="questGraphRecipeAction"/>
@@ -789,7 +869,7 @@
 			<xs:element name="send-dialog" type="questGraphSendDialogAction"/>
 			<xs:element name="close-dialog" type="questGraphEmptyAction"/>
 			<xs:element name="show-quest-list" type="questGraphEmptyAction"/>
-			<xs:element name="sync-quest-status" type="questGraphEmptyAction"/>
+			<xs:element name="sync-quest-status" type="questGraphSyncQuestStatusAction"/>
 			<xs:element name="send-repeat-deadline-message" type="questGraphSendRepeatDeadlineMessageAction"/>
 			<xs:element name="send-player-message" type="questGraphSendPlayerMessageAction"/>
 			<xs:element name="send-system-message" type="questGraphSendSystemMessageAction"/>
@@ -797,6 +877,8 @@
 			<xs:element name="start-flight-teleport" type="questGraphStartFlightTeleportAction"/>
 			<xs:element name="play-movie" type="questGraphPlayMovieAction"/>
 			<xs:element name="schedule-item-use-dialog" type="questGraphScheduleItemUseDialogAction"/>
+			<xs:element name="delay-item-use-continuation" type="questGraphDelayItemUseContinuationAction"/>
+			<xs:element name="remove-used-item" type="questGraphRemoveUsedItemAction"/>
 			<xs:element name="spawn-instance-npc" type="questGraphSpawnInstanceNpcAction"/>
 			<xs:element name="start-escort" type="questGraphStartEscortAction"/>
 			<xs:element name="teleport-player" type="questGraphTeleportPlayerAction"/>

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.teleport;
 
+import java.util.function.BooleanSupplier;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
@@ -195,6 +196,11 @@ public class TeleportService2 {
 	}
 
 	private static void sendLoc(final Player player, final int mapId, final int instanceId, final float x, final float y, final float z, final byte h, final TeleportAnimation animation) {
+		sendLoc(player, mapId, instanceId, x, y, z, h, animation, () -> true, null);
+	}
+
+	private static void sendLoc(final Player player, final int mapId, final int instanceId, final float x, final float y, final float z, final byte h,
+			final TeleportAnimation animation, BooleanSupplier authorization, Runnable completion) {
 		boolean isInstance = DataManager.WORLD_MAPS_DATA.getTemplate(mapId).isInstance();
 
 		int delay = TELEPORT_DEFAULT_DELAY;
@@ -211,20 +217,35 @@ public class TeleportService2 {
 		playerTransformation(player);
 		instanceTransformation(player);
 		archdaevaTransformation(player);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (player.getLifeStats().isAlreadyDead() || !player.isSpawned()) {
-					return;
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> runScheduledTeleport(player, authorization, () -> {
 				if (animation.equals(TeleportAnimation.BEAM_ANIMATION)) {
 					PacketSendUtility.broadcastPacket(player, new SM_DELETE(player, 2), 50);
 				} else if (animation.equals(TeleportAnimation.JUMP_ANIMATION)) {
 					PacketSendUtility.broadcastPacket(player, new SM_DELETE(player, 11), 50);
 				}
 				changePosition(player, mapId, instanceId, x, y, z, h, animation);
-			}
-		}, delay);
+			}, completion), delay);
+	}
+
+	static void runScheduledTeleport(Player player, Runnable positionChange, Runnable completion) {
+		runScheduledTeleport(player, () -> true, positionChange, completion);
+	}
+
+	static void runScheduledTeleport(Player player, BooleanSupplier authorization, Runnable positionChange, Runnable completion) {
+		if (player.getLifeStats().isAlreadyDead() || !player.isSpawned()) {
+			return;
+		}
+		runAuthorizedTeleport(authorization, positionChange, completion);
+	}
+
+	static void runAuthorizedTeleport(BooleanSupplier authorization, Runnable positionChange, Runnable completion) {
+		if (!authorization.getAsBoolean()) {
+			return;
+		}
+		positionChange.run();
+		if (completion != null) {
+			completion.run();
+		}
 	}
 
 	/**
@@ -361,6 +382,21 @@ public class TeleportService2 {
 	}
 
 	/**
+	 * 传送到指定世界坐标，并在光束传送完整换位后通知调用方。
+	 * Teleports to world coordinates and notifies the caller after the beam position change fully completes.
+	 *
+	 * @return 是否已接受异步传送任务；死亡中返回 {@code false} / Whether the asynchronous teleport was accepted; {@code false} if dead
+	 * @throws RuntimeException 传送准备或异步调度失败 / If teleport preparation or asynchronous scheduling fails
+	 */
+	public static boolean teleportTo(Player player, int worldId, float x, float y, float z, byte h, Runnable completion) {
+		int instanceId = 1;
+		if (player.getWorldId() == worldId) {
+			instanceId = player.getInstanceId();
+		}
+		return teleportTo(player, worldId, instanceId, x, y, z, h, TeleportAnimation.BEAM_ANIMATION, () -> true, completion);
+	}
+
+	/**
 	 * 传送到指定世界坐标与朝向，可指定动画。
 	 * Teleports to world coordinates with heading and animation.
 	 *
@@ -400,6 +436,23 @@ public class TeleportService2 {
 	}
 
 	/**
+	 * 传送到指定世界/实例坐标，并在光束传送完整换位后通知调用方。
+	 * Teleports to world/instance coordinates and notifies the caller after the beam position change fully completes.
+	 *
+	 * @return 是否已接受异步传送任务；死亡中返回 {@code false} / Whether the asynchronous teleport was accepted; {@code false} if dead
+	 * @throws RuntimeException 传送准备或异步调度失败 / If teleport preparation or asynchronous scheduling fails
+	 */
+	public static boolean teleportTo(Player player, int worldId, int instanceId, float x, float y, float z, byte h, Runnable completion) {
+		return teleportTo(player, worldId, instanceId, x, y, z, h, TeleportAnimation.BEAM_ANIMATION, () -> true, completion);
+	}
+
+	/** Teleports only while the caller's physical-delivery authorization remains current. */
+	public static boolean teleportTo(Player player, int worldId, int instanceId, float x, float y, float z, byte h,
+			BooleanSupplier authorization, Runnable completion) {
+		return teleportTo(player, worldId, instanceId, x, y, z, h, TeleportAnimation.BEAM_ANIMATION, authorization, completion);
+	}
+
+	/**
 	 * 传送到指定世界/实例坐标（使用玩家朝向与默认动画）。
 	 * Teleports to world/instance coordinates (player heading, default animation).
 	 *
@@ -431,8 +484,16 @@ public class TeleportService2 {
 	 * @return 是否发起传送；死亡中返回 {@code false} / Whether initiated; {@code false} if dead
 	 */
 	public static boolean teleportTo(final Player player, final int worldId, final int instanceId, final float x, final float y, final float z, final byte heading, TeleportAnimation animation) {
+		return teleportTo(player, worldId, instanceId, x, y, z, heading, animation, () -> true, null);
+	}
+
+	private static boolean teleportTo(final Player player, final int worldId, final int instanceId, final float x, final float y, final float z,
+			final byte heading, TeleportAnimation animation, BooleanSupplier authorization, Runnable completion) {
 		if (player.getLifeStats().isAlreadyDead()) {
 			return false;
+		}
+		if (!authorization.getAsBoolean()) {
+			return true;
 		}
 
 		if (GameGameplayServices.duelService().isDueling(player.getObjectId())) {
@@ -444,13 +505,15 @@ public class TeleportService2 {
 		}
 
 		if (animation.isNoAnimation()) {
-			playerTransformation(player);
-			instanceTransformation(player);
-			archdaevaTransformation(player);
-			player.unsetPlayerMode(PlayerMode.RIDE);
-			changePosition(player, worldId, instanceId, x, y, z, heading, animation);
+			runAuthorizedTeleport(authorization, () -> {
+				playerTransformation(player);
+				instanceTransformation(player);
+				archdaevaTransformation(player);
+				player.unsetPlayerMode(PlayerMode.RIDE);
+				changePosition(player, worldId, instanceId, x, y, z, heading, animation);
+			}, completion);
 		} else {
-			sendLoc(player, worldId, instanceId, x, y, z, heading, animation);
+			sendLoc(player, worldId, instanceId, x, y, z, heading, animation, authorization, completion);
 		}
 		return true;
 	}

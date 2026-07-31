@@ -162,7 +162,7 @@ class QuestGraphItemDialogBridgeTest {
 						<transition id="accept" priority="20" to="active">
 							<item-dialog item_id="182200001" dialog="ACCEPT_QUEST"/>
 							<conditions><quest-status op="IN" values="NONE"/></conditions>
-							<actions><start-quest/><sync-quest-status/><close-dialog/></actions>
+							<actions><start-quest/><close-dialog/></actions>
 						</transition>
 						<transition id="refuse" priority="30" to="offer">
 							<item-dialog item_id="182200001" dialog="REFUSE_QUEST"/>

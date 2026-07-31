@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.questEngine.graph.runtime;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,6 +26,9 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EndQuestTimer
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PayKinahAndItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DelayItemUseContinuationAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveUsedItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GrantCraftSkillRewardAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
@@ -38,6 +44,11 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestWo
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.LearnRecipeAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DeleteRecipeAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DialogTargetKind;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DialogNpcLifecycleAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CloseDialogAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ShowQuestListAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendPlayerMessageAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendRepeatDeadlineMessageAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NotifyRecipeRejectionAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RecipeLearnableCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
@@ -52,8 +63,12 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEscortAc
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartFlightTeleportAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendSystemMessageAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestTimerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncCraftSkillRewardAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportHeadingPolicy;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportInstancePolicy;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.runtime.DispatchResult.Status;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphRouter.Match;
@@ -63,11 +78,15 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Clea
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationPlan;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemUseContinuationPlan;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PaymentPlan;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestStatusSyncSnapshot;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.TeleportPlan;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.VariableValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 
@@ -104,6 +123,10 @@ public final class QuestGraphTransitionExecutor {
 	public enum ActionResult {
 		APPLIED,
 		ALREADY_APPLIED,
+		/** The durable teleport outbox owns the action even though its asynchronous position change has not completed yet. */
+		DURABLY_ACCEPTED,
+		/** 持久 journal 保留在当前动作，绝对时间到期后由恢复入口继续 tail。 / The durable journal remains at this action until recovery resumes its tail. */
+		DEFERRED,
 		/** 仅表示 terminal lifecycle 已逐项清理非空持久 lease 并完成其 endpoint。 / Only proves terminal lifecycle cleaned every persisted lease and completed its endpoint. */
 		CLEANUP_CONFIRMED,
 		REJECTED,
@@ -157,25 +180,57 @@ public final class QuestGraphTransitionExecutor {
 	 * Holds immutable action input and its stable idempotency key for preflight or execution.
 	 */
 	public record ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event, Event transitionEvent,
-		RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, Map<String, CleanupLease> cleanupLeases,
+		RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, TeleportPlan teleportPlan,
+		QuestStatusSyncSnapshot questStatusSyncSnapshot, Map<String, CleanupLease> cleanupLeases, long baseRevision, String transitionId,
 		String idempotencyKey) {
+		private static final long NO_BASE_REVISION = Long.MIN_VALUE;
+
+		/** Retains the pre-outbox canonical signature for focused adapters and tests. */
+		public ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event, Event transitionEvent,
+				RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, TeleportPlan teleportPlan,
+				QuestStatusSyncSnapshot questStatusSyncSnapshot, Map<String, CleanupLease> cleanupLeases, String idempotencyKey) {
+			this(action, questId, actionIndex, questStatus, event, transitionEvent, repeatDeadlineResolution, itemMutationPlan, teleportPlan,
+				questStatusSyncSnapshot, cleanupLeases, NO_BASE_REVISION, null, idempotencyKey);
+		}
+
 		/** 创建不携带 cleanup 资源的兼容调用。 / Creates a compatibility invocation without cleanup resources. */
 		public ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event,
 				RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, String idempotencyKey) {
-			this(action, questId, actionIndex, questStatus, event, null, repeatDeadlineResolution, itemMutationPlan, Map.of(), idempotencyKey);
+			this(action, questId, actionIndex, questStatus, event, null, repeatDeadlineResolution, itemMutationPlan, null, null, Map.of(),
+				NO_BASE_REVISION, null, idempotencyKey);
 		}
 
 		/** 创建携带已编译 transition event、但不携带 cleanup 资源的调用。 / Creates an invocation with its compiled transition event and no cleanup resources. */
 		public ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event, Event transitionEvent,
 				RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, String idempotencyKey) {
-			this(action, questId, actionIndex, questStatus, event, transitionEvent, repeatDeadlineResolution, itemMutationPlan, Map.of(), idempotencyKey);
+			this(action, questId, actionIndex, questStatus, event, transitionEvent, repeatDeadlineResolution, itemMutationPlan, null, null, Map.of(),
+				NO_BASE_REVISION, null, idempotencyKey);
 		}
 
 		/** 创建未携带已编译 transition event 的兼容资源调用。 / Creates a compatibility resource invocation without its compiled transition event. */
 		public ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event,
 				RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, Map<String, CleanupLease> cleanupLeases,
 				String idempotencyKey) {
-			this(action, questId, actionIndex, questStatus, event, null, repeatDeadlineResolution, itemMutationPlan, cleanupLeases, idempotencyKey);
+			this(action, questId, actionIndex, questStatus, event, null, repeatDeadlineResolution, itemMutationPlan, null, null, cleanupLeases,
+				NO_BASE_REVISION, null, idempotencyKey);
+		}
+
+		/** 创建携带冻结传送计划的兼容调用。 / Creates a compatibility invocation carrying a frozen teleport plan. */
+		public ActionInvocation(Action action, int questId, int actionIndex, QuestStatus questStatus, QuestGraphEvent event,
+				RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan, TeleportPlan teleportPlan,
+				Map<String, CleanupLease> cleanupLeases, String idempotencyKey) {
+			this(action, questId, actionIndex, questStatus, event, null, repeatDeadlineResolution, itemMutationPlan, teleportPlan, null,
+				cleanupLeases, NO_BASE_REVISION, null, idempotencyKey);
+		}
+
+		/** Adds the exact PREPARED journal identity required by durable action acceptance. */
+		public ActionInvocation withJournalIdentity(long journalBaseRevision, String journalTransitionId) {
+			return new ActionInvocation(action, questId, actionIndex, questStatus, event, transitionEvent, repeatDeadlineResolution,
+				itemMutationPlan, teleportPlan, questStatusSyncSnapshot, cleanupLeases, journalBaseRevision, journalTransitionId, idempotencyKey);
+		}
+
+		public boolean hasJournalIdentity() {
+			return baseRevision != NO_BASE_REVISION;
 		}
 
 		/**
@@ -192,7 +247,13 @@ public final class QuestGraphTransitionExecutor {
 			}
 			Objects.requireNonNull(repeatDeadlineResolution, "repeatDeadlineResolution");
 			cleanupLeases = Map.copyOf(Objects.requireNonNull(cleanupLeases, "cleanup leases"));
-			if (actionIndex < 0 || idempotencyKey == null || idempotencyKey.isBlank()) {
+			if (actionIndex < 0 || teleportPlan != null && teleportPlan.actionIndex() != actionIndex
+					|| questStatusSyncSnapshot != null && (!(action instanceof SyncQuestStatusAction)
+						|| questStatusSyncSnapshot.actionIndex() != actionIndex)
+					|| baseRevision < -1 && baseRevision != NO_BASE_REVISION
+					|| (baseRevision == NO_BASE_REVISION) != (transitionId == null)
+					|| transitionId != null && transitionId.isBlank()
+					|| idempotencyKey == null || idempotencyKey.isBlank()) {
 				throw new IllegalArgumentException("Action index/idempotency key is invalid");
 			}
 		}
@@ -208,9 +269,26 @@ public final class QuestGraphTransitionExecutor {
 		Function<ActionInvocation, ActionResult> actionExecutor,
 		ToLongFunction<Integer> itemCountReader,
 		Function<Map<Integer, ItemMutationPlan>, PreflightResult> itemMutationPreflight,
+		Function<ActionInvocation, ItemMutationPlan> eventItemPlanPreparer,
 		Function<ActionInvocation, CleanupLease> resourceLeasePreparer,
 		Function<ActionInvocation, CleanupLease> resourceLeaseMaterializer,
+		Function<ActionInvocation, TeleportPlan> teleportPlanPreparer,
+		Function<ActionInvocation, ActionResult> teleportOutboxAcknowledger,
 		BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+		/** Retains callers that predate durable teleport acknowledgement. */
+		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
+				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
+				Function<ActionInvocation, ActionResult> actionExecutor, ToLongFunction<Integer> itemCountReader,
+				Function<Map<Integer, ItemMutationPlan>, PreflightResult> itemMutationPreflight,
+				Function<ActionInvocation, CleanupLease> resourceLeasePreparer,
+				Function<ActionInvocation, CleanupLease> resourceLeaseMaterializer,
+				Function<ActionInvocation, TeleportPlan> teleportPlanPreparer,
+				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator, actionPreflight, actionExecutor, itemCountReader,
+				itemMutationPreflight, invocation -> null, resourceLeasePreparer, resourceLeaseMaterializer, teleportPlanPreparer,
+				invocation -> ActionResult.ALREADY_APPLIED, persistence);
+		}
+
 		/** 保留不持有 typed resource adapter 的调用方。 / Retains callers that do not own typed resource adapters. */
 		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
 				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
@@ -218,7 +296,86 @@ public final class QuestGraphTransitionExecutor {
 				Function<Map<Integer, ItemMutationPlan>, PreflightResult> itemMutationPreflight,
 				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
 			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator, actionPreflight, actionExecutor, itemCountReader,
-				itemMutationPreflight, invocation -> null, invocation -> null, persistence);
+				itemMutationPreflight, invocation -> null, invocation -> null, invocation -> null, invocation -> null,
+				invocation -> ActionResult.ALREADY_APPLIED, persistence);
+		}
+
+		/**
+		 * 组合当前运行时的完整 typed 能力集合；新增正式能力必须只在此入口补齐。
+		 * Composes the complete current typed runtime capability set; every new production capability must be added here.
+		 */
+		public static TransitionContext complete(int playerId, int accessLevel, ZoneId serverZoneId,
+				PlayerQuestGraphStateList states, Function<ConditionInvocation, ConditionResult> conditionEvaluator,
+				Function<ActionInvocation, PreflightResult> actionPreflight, Function<ActionInvocation, ActionResult> actionExecutor,
+				QuestGraphItemActionAdapter itemActions, QuestGraphTimerActionAdapter timerActions,
+				QuestGraphMovieActionAdapter movieActions, QuestGraphItemUseAnimationAdapter itemUseAnimations,
+				QuestGraphDialogProtocolAdapter dialogProtocol, QuestGraphSystemMessageAdapter systemMessages,
+				QuestGraphQuestStatusSyncAdapter questStatusSync, QuestGraphFlightTeleportAdapter flightTeleports,
+				QuestGraphTeleportActionAdapter teleportActions, QuestGraphInstanceSpawnAdapter instanceSpawns,
+				QuestGraphEscortActionAdapter escortActions, QuestGraphLifecycleActionAdapter lifecycleActions,
+				QuestGraphDialogNpcLifecycleAdapter dialogNpcLifecycle, QuestGraphPostCommitProtocolAdapter postCommitProtocol,
+				QuestGraphRecipeBridge recipeBridge,
+				QuestGraphCraftSkillRewardBridge craftSkillRewards,
+				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			Objects.requireNonNull(conditionEvaluator, "condition evaluator");
+			Objects.requireNonNull(actionPreflight, "action preflight");
+			Objects.requireNonNull(actionExecutor, "action executor");
+			Objects.requireNonNull(itemActions, "item actions");
+			Objects.requireNonNull(timerActions, "timer actions");
+			Objects.requireNonNull(movieActions, "movie actions");
+			Objects.requireNonNull(itemUseAnimations, "item-use animations");
+			Objects.requireNonNull(dialogProtocol, "dialog protocol");
+			Objects.requireNonNull(systemMessages, "system messages");
+			Objects.requireNonNull(questStatusSync, "quest status sync");
+			Objects.requireNonNull(flightTeleports, "flight teleports");
+			Objects.requireNonNull(teleportActions, "teleport actions");
+			Objects.requireNonNull(instanceSpawns, "instance spawns");
+			Objects.requireNonNull(escortActions, "escort actions");
+			Objects.requireNonNull(lifecycleActions, "lifecycle actions");
+			Objects.requireNonNull(dialogNpcLifecycle, "dialog NPC lifecycle");
+			Objects.requireNonNull(postCommitProtocol, "post-commit protocol");
+			Objects.requireNonNull(recipeBridge, "recipe bridge");
+			Objects.requireNonNull(craftSkillRewards, "craft-skill rewards");
+			return new TransitionContext(playerId, accessLevel, serverZoneId, states,
+				invocation -> invocation.condition() instanceof RecipeLearnableCondition
+					? recipeBridge.evaluate(invocation)
+					: invocation.condition() instanceof CraftSkillEligibilityCondition
+						? craftSkillRewards.evaluate(invocation) : conditionEvaluator.apply(invocation),
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: invocation.action() instanceof DialogNpcLifecycleAction ? dialogNpcLifecycle.preflight(invocation)
+					: invocation.action() instanceof DelayItemUseContinuationAction ? itemUseAnimations.preflight(invocation)
+					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
+						: invocation.action() instanceof TeleportPlayerAction ? teleportActions.preflight(invocation)
+								: invocation.action() instanceof SpawnInstanceNpcAction ? instanceSpawns.preflight(invocation)
+									: invocation.action() instanceof StartEscortAction ? escortActions.preflight(invocation)
+										: isLifecycleAction(invocation.action()) ? lifecycleActions.preflight(invocation)
+															: isRequiredRecipeAction(invocation.action()) ? recipeBridge.preflight(invocation)
+																: isRequiredCraftSkillRewardAction(invocation.action())
+																	? craftSkillRewards.preflight(invocation) : PreflightResult.FAILED,
+				questStatusSyncExecutor(questStatusSync, invocation -> invocation.itemMutationPlan() != null
+					? itemActions.execute(invocation)
+					: invocation.action() instanceof DialogNpcLifecycleAction ? dialogNpcLifecycle.execute(invocation)
+					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
+						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
+							? movieActions.execute(invocation)
+							: isItemUseContinuationAction(invocation.action()) ? itemUseAnimations.execute(invocation)
+								: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction
+										|| invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendEmotionAction
+									? dialogProtocol.execute(invocation)
+									: invocation.action() instanceof SendSystemMessageAction ? systemMessages.execute(invocation)
+										: invocation.action() instanceof StartFlightTeleportAction ? flightTeleports.execute(invocation)
+											: invocation.action() instanceof TeleportPlayerAction ? teleportActions.execute(invocation)
+												: invocation.action() instanceof SpawnInstanceNpcAction ? instanceSpawns.execute(invocation)
+													: invocation.action() instanceof StartEscortAction ? escortActions.execute(invocation)
+											: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation)
+												: isPostCommitProtocolAction(invocation.action()) ? postCommitProtocol.execute(invocation)
+													: isRecipeAction(invocation.action()) ? recipeBridge.execute(invocation)
+																: isCraftSkillRewardAction(invocation.action())
+																	? craftSkillRewards.execute(invocation) : ActionResult.FAILED),
+				itemActions::itemCount, itemActions::preflight, itemActions::prepareUsedItemPlan,
+				invocation -> prepareResourceLease(invocation, instanceSpawns, escortActions),
+				invocation -> materializeResourceLease(invocation, instanceSpawns, escortActions), teleportActions::preparePlan,
+				teleportActions::acknowledgeGraph, persistence);
 		}
 
 		/** 组合 system-message、flight 与 escort 的完整正式 typed adapter 集。 / Composes the complete typed adapter set including system messages, flight, and escort. */
@@ -227,37 +384,81 @@ public final class QuestGraphTransitionExecutor {
 				Function<ActionInvocation, ActionResult> actionExecutor, QuestGraphItemActionAdapter itemActions,
 				QuestGraphTimerActionAdapter timerActions, QuestGraphMovieActionAdapter movieActions, QuestGraphItemUseAnimationAdapter itemUseAnimations,
 				QuestGraphDialogProtocolAdapter dialogProtocol, QuestGraphSystemMessageAdapter systemMessages,
+				QuestGraphQuestStatusSyncAdapter questStatusSync,
 				QuestGraphFlightTeleportAdapter flightTeleports, QuestGraphTeleportActionAdapter teleportActions,
 				QuestGraphInstanceSpawnAdapter instanceSpawns, QuestGraphEscortActionAdapter escortActions,
 				QuestGraphLifecycleActionAdapter lifecycleActions, BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
 			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator,
 				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: invocation.action() instanceof DelayItemUseContinuationAction ? itemUseAnimations.preflight(invocation)
 					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
-						: invocation.action() instanceof StartFlightTeleportAction ? flightTeleports.preflight(invocation)
-							: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction
+						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction
 								? teleportActions.preflight(invocation)
 								: invocation.action() instanceof SpawnInstanceNpcAction ? instanceSpawns.preflight(invocation)
 									: invocation.action() instanceof StartEscortAction ? escortActions.preflight(invocation)
 										: isLifecycleAction(invocation.action()) ? lifecycleActions.preflight(invocation) : actionPreflight.apply(invocation),
-				invocation -> invocation.itemMutationPlan() != null ? itemActions.execute(invocation)
+				questStatusSyncExecutor(questStatusSync, invocation -> invocation.itemMutationPlan() != null ? itemActions.execute(invocation)
 					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
 							? movieActions.execute(invocation)
-							: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ScheduleItemUseDialogAction
+							: isItemUseContinuationAction(invocation.action())
 								? itemUseAnimations.execute(invocation)
 								: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction
 										|| invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendEmotionAction
-									? dialogProtocol.execute(invocation)
-									: invocation.action() instanceof SendSystemMessageAction ? systemMessages.execute(invocation)
+					? dialogProtocol.execute(invocation)
+					: invocation.action() instanceof SendSystemMessageAction ? systemMessages.execute(invocation)
 										: invocation.action() instanceof StartFlightTeleportAction ? flightTeleports.execute(invocation)
 											: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction
 												? teleportActions.execute(invocation)
 												: invocation.action() instanceof SpawnInstanceNpcAction ? instanceSpawns.execute(invocation)
 													: invocation.action() instanceof StartEscortAction ? escortActions.execute(invocation)
-														: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation) : actionExecutor.apply(invocation),
-				itemActions::itemCount, itemActions::preflight,
+												: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation) : actionExecutor.apply(invocation)),
+				itemActions::itemCount, itemActions::preflight, itemActions::prepareUsedItemPlan,
 				invocation -> prepareResourceLease(invocation, instanceSpawns, escortActions),
-				invocation -> materializeResourceLease(invocation, instanceSpawns, escortActions), persistence);
+				invocation -> materializeResourceLease(invocation, instanceSpawns, escortActions), teleportActions::preparePlan,
+				teleportActions::acknowledgeGraph, persistence);
+		}
+
+		/**
+		 * 组合精确对话 NPC 生命周期 adapter；该动作不能落到通用 action fallback。
+		 * Composes the exact dialog-NPC lifecycle adapter; the action cannot fall through to a generic endpoint.
+		 */
+		public TransitionContext(int playerId, int accessLevel, ZoneId serverZoneId, PlayerQuestGraphStateList states,
+				Function<ConditionInvocation, ConditionResult> conditionEvaluator, Function<ActionInvocation, PreflightResult> actionPreflight,
+				Function<ActionInvocation, ActionResult> actionExecutor, QuestGraphItemActionAdapter itemActions,
+				QuestGraphTimerActionAdapter timerActions, QuestGraphMovieActionAdapter movieActions,
+				QuestGraphItemUseAnimationAdapter itemUseAnimations, QuestGraphDialogProtocolAdapter dialogProtocol,
+				QuestGraphTeleportActionAdapter teleportActions, QuestGraphInstanceSpawnAdapter instanceSpawns,
+				QuestGraphEscortActionAdapter escortActions, QuestGraphLifecycleActionAdapter lifecycleActions,
+				QuestGraphDialogNpcLifecycleAdapter dialogNpcLifecycle, BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
+			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator,
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: invocation.action() instanceof DialogNpcLifecycleAction ? dialogNpcLifecycle.preflight(invocation)
+					: invocation.action() instanceof DelayItemUseContinuationAction ? itemUseAnimations.preflight(invocation)
+					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
+						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction
+							? teleportActions.preflight(invocation)
+							: invocation.action() instanceof SpawnInstanceNpcAction ? instanceSpawns.preflight(invocation)
+								: invocation.action() instanceof StartEscortAction ? escortActions.preflight(invocation)
+									: isLifecycleAction(invocation.action()) ? lifecycleActions.preflight(invocation) : actionPreflight.apply(invocation),
+				invocation -> invocation.itemMutationPlan() != null ? itemActions.execute(invocation)
+					: invocation.action() instanceof DialogNpcLifecycleAction ? dialogNpcLifecycle.execute(invocation)
+					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
+						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
+							? movieActions.execute(invocation)
+							: isItemUseContinuationAction(invocation.action()) ? itemUseAnimations.execute(invocation)
+								: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction
+										|| invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendEmotionAction
+									? dialogProtocol.execute(invocation)
+									: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction
+										? teleportActions.execute(invocation)
+										: invocation.action() instanceof SpawnInstanceNpcAction ? instanceSpawns.execute(invocation)
+											: invocation.action() instanceof StartEscortAction ? escortActions.execute(invocation)
+												: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation) : actionExecutor.apply(invocation),
+				itemActions::itemCount, itemActions::preflight, itemActions::prepareUsedItemPlan,
+				invocation -> prepareResourceLease(invocation, instanceSpawns, escortActions),
+				invocation -> materializeResourceLease(invocation, instanceSpawns, escortActions), teleportActions::preparePlan,
+				teleportActions::acknowledgeGraph, persistence);
 		}
 
 		/**
@@ -310,6 +511,7 @@ public final class QuestGraphTransitionExecutor {
 				QuestGraphLifecycleActionAdapter lifecycleActions, BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
 			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator,
 				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: invocation.action() instanceof DelayItemUseContinuationAction ? itemUseAnimations.preflight(invocation)
 					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction
 							? teleportActions.preflight(invocation)
@@ -320,7 +522,7 @@ public final class QuestGraphTransitionExecutor {
 					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
 							? movieActions.execute(invocation)
-							: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ScheduleItemUseDialogAction
+							: isItemUseContinuationAction(invocation.action())
 								? itemUseAnimations.execute(invocation)
 								: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction
 										|| invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendEmotionAction
@@ -329,10 +531,11 @@ public final class QuestGraphTransitionExecutor {
 										? teleportActions.execute(invocation)
 										: invocation.action() instanceof SpawnInstanceNpcAction ? instanceSpawns.execute(invocation)
 											: invocation.action() instanceof StartEscortAction ? escortActions.execute(invocation)
-												: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation) : actionExecutor.apply(invocation),
-				itemActions::itemCount, itemActions::preflight,
+											: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation) : actionExecutor.apply(invocation),
+				itemActions::itemCount, itemActions::preflight, itemActions::prepareUsedItemPlan,
 				invocation -> prepareResourceLease(invocation, instanceSpawns, escortActions),
-				invocation -> materializeResourceLease(invocation, instanceSpawns, escortActions), persistence);
+				invocation -> materializeResourceLease(invocation, instanceSpawns, escortActions), teleportActions::preparePlan,
+				teleportActions::acknowledgeGraph, persistence);
 		}
 
 		/**
@@ -350,6 +553,7 @@ public final class QuestGraphTransitionExecutor {
 				invocation -> invocation.condition() instanceof RecipeLearnableCondition
 					? recipeBridge.evaluate(invocation) : conditionEvaluator.apply(invocation),
 				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: invocation.action() instanceof DelayItemUseContinuationAction ? itemUseAnimations.preflight(invocation)
 					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction
 							? teleportActions.preflight(invocation)
@@ -361,7 +565,7 @@ public final class QuestGraphTransitionExecutor {
 					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
 							? movieActions.execute(invocation)
-							: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ScheduleItemUseDialogAction
+							: isItemUseContinuationAction(invocation.action())
 								? itemUseAnimations.execute(invocation)
 								: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction
 										|| invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendEmotionAction
@@ -373,9 +577,10 @@ public final class QuestGraphTransitionExecutor {
 										: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation)
 										: isRecipeAction(invocation.action()) ? recipeBridge.execute(invocation)
 											: actionExecutor.apply(invocation),
-				itemActions::itemCount, itemActions::preflight,
+				itemActions::itemCount, itemActions::preflight, itemActions::prepareUsedItemPlan,
 				invocation -> prepareInstanceSpawnLease(invocation, instanceSpawns),
-				invocation -> materializeInstanceSpawnLease(invocation, instanceSpawns), persistence);
+				invocation -> materializeInstanceSpawnLease(invocation, instanceSpawns), teleportActions::preparePlan,
+				teleportActions::acknowledgeGraph, persistence);
 		}
 
 		/**
@@ -444,6 +649,7 @@ public final class QuestGraphTransitionExecutor {
 					: invocation.condition() instanceof CraftSkillEligibilityCondition
 						? craftSkillRewards.evaluate(invocation) : conditionEvaluator.apply(invocation),
 				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: invocation.action() instanceof DelayItemUseContinuationAction ? itemUseAnimations.preflight(invocation)
 					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction
 							? teleportActions.preflight(invocation)
@@ -456,7 +662,7 @@ public final class QuestGraphTransitionExecutor {
 					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
 							? movieActions.execute(invocation)
-							: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ScheduleItemUseDialogAction
+							: isItemUseContinuationAction(invocation.action())
 								? itemUseAnimations.execute(invocation)
 								: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction
 										|| invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendEmotionAction
@@ -469,9 +675,10 @@ public final class QuestGraphTransitionExecutor {
 										: isRecipeAction(invocation.action()) ? recipeBridge.execute(invocation)
 											: isCraftSkillRewardAction(invocation.action()) ? craftSkillRewards.execute(invocation)
 												: actionExecutor.apply(invocation),
-				itemActions::itemCount, itemActions::preflight,
+				itemActions::itemCount, itemActions::preflight, itemActions::prepareUsedItemPlan,
 				invocation -> prepareInstanceSpawnLease(invocation, instanceSpawns),
-				invocation -> materializeInstanceSpawnLease(invocation, instanceSpawns), persistence);
+				invocation -> materializeInstanceSpawnLease(invocation, instanceSpawns), teleportActions::preparePlan,
+				teleportActions::acknowledgeGraph, persistence);
 		}
 
 		/**
@@ -536,6 +743,7 @@ public final class QuestGraphTransitionExecutor {
 				BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
 			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator,
 				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: invocation.action() instanceof DelayItemUseContinuationAction ? itemUseAnimations.preflight(invocation)
 					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction
 							? teleportActions.preflight(invocation)
@@ -545,7 +753,7 @@ public final class QuestGraphTransitionExecutor {
 					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
 							? movieActions.execute(invocation)
-							: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ScheduleItemUseDialogAction
+							: isItemUseContinuationAction(invocation.action())
 								? itemUseAnimations.execute(invocation)
 								: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction
 										|| invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendEmotionAction
@@ -555,9 +763,10 @@ public final class QuestGraphTransitionExecutor {
 										: invocation.action() instanceof SpawnInstanceNpcAction
 											? instanceSpawns.execute(invocation)
 										: isLifecycleAction(invocation.action()) ? lifecycleActions.execute(invocation) : actionExecutor.apply(invocation),
-				itemActions::itemCount, itemActions::preflight,
+				itemActions::itemCount, itemActions::preflight, itemActions::prepareUsedItemPlan,
 				invocation -> prepareInstanceSpawnLease(invocation, instanceSpawns),
-				invocation -> materializeInstanceSpawnLease(invocation, instanceSpawns), persistence);
+				invocation -> materializeInstanceSpawnLease(invocation, instanceSpawns), teleportActions::preparePlan,
+				teleportActions::acknowledgeGraph, persistence);
 		}
 
 		/**
@@ -607,6 +816,7 @@ public final class QuestGraphTransitionExecutor {
 				QuestGraphInstanceSpawnAdapter instanceSpawns, BiFunction<Long, PlayerQuestGraphState, PersistenceResult> persistence) {
 			this(playerId, accessLevel, serverZoneId, states, conditionEvaluator,
 				invocation -> invocation.itemMutationPlan() != null ? itemActions.preflight(invocation)
+					: invocation.action() instanceof DelayItemUseContinuationAction ? itemUseAnimations.preflight(invocation)
 					: isRequiredTimerAction(invocation.action()) ? timerActions.preflight(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction
 							? teleportActions.preflight(invocation)
@@ -616,7 +826,7 @@ public final class QuestGraphTransitionExecutor {
 					: isTimerAction(invocation.action()) ? timerActions.execute(invocation)
 						: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction
 							? movieActions.execute(invocation)
-							: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ScheduleItemUseDialogAction
+							: isItemUseContinuationAction(invocation.action())
 								? itemUseAnimations.execute(invocation)
 								: invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendDialogAction
 										|| invocation.action() instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SendEmotionAction
@@ -625,9 +835,10 @@ public final class QuestGraphTransitionExecutor {
 										? teleportActions.execute(invocation)
 										: invocation.action() instanceof SpawnInstanceNpcAction
 											? instanceSpawns.execute(invocation) : actionExecutor.apply(invocation),
-				itemActions::itemCount, itemActions::preflight,
+				itemActions::itemCount, itemActions::preflight, itemActions::prepareUsedItemPlan,
 				invocation -> prepareInstanceSpawnLease(invocation, instanceSpawns),
-				invocation -> materializeInstanceSpawnLease(invocation, instanceSpawns), persistence);
+				invocation -> materializeInstanceSpawnLease(invocation, instanceSpawns), teleportActions::preparePlan,
+				teleportActions::acknowledgeGraph, persistence);
 		}
 
 		/**
@@ -645,8 +856,11 @@ public final class QuestGraphTransitionExecutor {
 			Objects.requireNonNull(actionExecutor, "actionExecutor");
 			Objects.requireNonNull(itemCountReader, "itemCountReader");
 			Objects.requireNonNull(itemMutationPreflight, "itemMutationPreflight");
+			Objects.requireNonNull(eventItemPlanPreparer, "eventItemPlanPreparer");
 			Objects.requireNonNull(resourceLeasePreparer, "resourceLeasePreparer");
 			Objects.requireNonNull(resourceLeaseMaterializer, "resourceLeaseMaterializer");
+			Objects.requireNonNull(teleportPlanPreparer, "teleportPlanPreparer");
+			Objects.requireNonNull(teleportOutboxAcknowledger, "teleportOutboxAcknowledger");
 			Objects.requireNonNull(persistence, "persistence");
 		}
 	}
@@ -685,21 +899,25 @@ public final class QuestGraphTransitionExecutor {
 		synchronized (context.states()) {
 			try {
 				PlayerQuestGraphState current = context.states().get(match.graph().questId());
-				if (current != match.state()) {
+				if (current != match.state() || current != null && current.getLifecycle() != Lifecycle.ACTIVE) {
 					return Status.FAILED;
 				}
 				Status conditionStatus = evaluateConditions(match, context);
 				if (conditionStatus != Status.APPLIED) {
 					return conditionStatus;
 				}
-				PreflightOutcome preflight = preflight(match.graph(), match.route().transition(), match.event(), current, 0, Map.of(), context);
+				PreflightOutcome preflight = preflight(match.graph(), match.route().transition(), match.event(), current, 0, Map.of(), Map.of(), context);
 				if (preflight.status() != Status.APPLIED) {
 					return preflight.status();
 				}
 				Map<String, CleanupLease> resourceLeases = prepareResourceLeases(match.graph(), match.route().transition(), match.event(),
 					current, preflight.itemMutationPlans(), context);
+				Map<Integer, QuestStatusSyncSnapshot> questStatusSyncSnapshots = prepareQuestStatusSyncSnapshots(match.graph(),
+					match.route().transition(), match.event(), current, context.serverZoneId(), context.accessLevel());
+				Map<Integer, ItemUseContinuationPlan> itemUseContinuationPlans = prepareItemUseContinuationPlans(
+					match.route().transition(), match.event());
 				PlayerQuestGraphState prepared = prepare(match, current, context.serverZoneId(), context.accessLevel(),
-					preflight.itemMutationPlans(), resourceLeases);
+					preflight.itemMutationPlans(), preflight.teleportPlans(), itemUseContinuationPlans, questStatusSyncSnapshots, resourceLeases);
 				Long expectedRevision = current == null ? null : current.getRevision();
 				if (persist(context, expectedRevision, prepared) != PersistenceResult.APPLIED) {
 					return Status.FAILED;
@@ -778,8 +996,17 @@ public final class QuestGraphTransitionExecutor {
 						: journal.getNextActionIndex() > protocolStart) {
 					return quarantinePrepared(context, state, "RECOVERY_PROTOCOL_OUTBOX_INCOMPATIBLE");
 				}
-				if (!validItemMutationPlans(transition, journal.getItemMutationPlans())) {
-					return quarantinePrepared(context, state, "RECOVERY_ITEM_PLAN_INCOMPATIBLE");
+					if (!validItemMutationPlans(transition, journal.getItemMutationPlans())) {
+						return quarantinePrepared(context, state, "RECOVERY_ITEM_PLAN_INCOMPATIBLE");
+					}
+					if (!validPaymentPlans(transition, journal)) {
+						return quarantinePrepared(context, state, "RECOVERY_PAYMENT_PLAN_INCOMPATIBLE");
+					}
+				if (!validTeleportPlans(transition, journal.getTeleportPlans())) {
+					return quarantinePrepared(context, state, "RECOVERY_TELEPORT_PLAN_INCOMPATIBLE");
+				}
+				if (!validQuestStatusSyncSnapshots(graph, transition, journal)) {
+					return quarantinePrepared(context, state, "RECOVERY_QUEST_STATUS_SYNC_SNAPSHOT_INCOMPATIBLE");
 				}
 				QuestGraphEvent event = QuestGraphEventCodec.decode(journal.getEventPayload());
 				if (event.playerId() != context.playerId()
@@ -787,8 +1014,16 @@ public final class QuestGraphTransitionExecutor {
 						|| !journal.getEventId().equals(event.eventId()) || !matches(event, transition.event())) {
 					return quarantinePrepared(context, state, "RECOVERY_EVENT_INCOMPATIBLE");
 				}
-				PreflightOutcome preflight = preflight(graph, transition, event, state, journal.getNextActionIndex(),
-					journal.getItemMutationPlans(), context);
+				for (int index = 0; index < transition.actions().size(); index++) {
+					if (transition.actions().get(index) instanceof RemoveUsedItemAction remove
+							&& !matchesUsedItemPlan(remove, event, index, journal.getItemMutationPlans().get(index))) {
+						return quarantinePrepared(context, state, "RECOVERY_USED_ITEM_PLAN_INCOMPATIBLE");
+					}
+				}
+				if (!validItemUseContinuationPlans(transition, event, journal.getItemUseContinuationPlans())) {
+					return quarantinePrepared(context, state, "RECOVERY_ITEM_USE_CONTINUATION_INCOMPATIBLE");
+				}
+				PreflightOutcome preflight = preflightRecovery(graph, transition, event, state, context);
 				if (preflight.unrecoverable()) {
 					return quarantinePrepared(context, state, "RECOVERY_STATE_TRANSITION_INVALID");
 				}
@@ -944,7 +1179,7 @@ public final class QuestGraphTransitionExecutor {
 	 * Preflights every remaining action from the given index without state or business side effects.
 	 */
 	private static PreflightOutcome preflight(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event, PlayerQuestGraphState current,
-		int startIndex, Map<Integer, ItemMutationPlan> frozenPlans, TransitionContext context) {
+		int startIndex, Map<Integer, ItemMutationPlan> frozenPlans, Map<Integer, TeleportPlan> frozenTeleportPlans, TransitionContext context) {
 		RepeatDeadlineResolution repeatResolution = current != null && current.getLifecycle() == Lifecycle.PREPARED
 			? current.getJournal().getRepeatDeadlineResolution()
 			: resolveRepeatDeadline(transition, event, context.serverZoneId(), context.accessLevel());
@@ -952,7 +1187,9 @@ public final class QuestGraphTransitionExecutor {
 			current == null ? initialVariables(graph) : current.getVariables(), current == null ? QuestHistory.EMPTY : current.getHistory(),
 			current == null ? Map.of() : current.getDeadlines(), current == null ? Map.of() : current.getCleanupLeases());
 		Map<Integer, ItemMutationPlan> plans = new LinkedHashMap<>(frozenPlans);
+		Map<Integer, TeleportPlan> teleportPlans = new LinkedHashMap<>(frozenTeleportPlans);
 		Map<Integer, Long> projectedCounts = new LinkedHashMap<>();
+		Long projectedKinah = null;
 		for (int index = startIndex; index < transition.actions().size(); index++) {
 			Action action = transition.actions().get(index);
 			QuestStatus invocationStatus = preview.questStatus();
@@ -960,7 +1197,7 @@ public final class QuestGraphTransitionExecutor {
 			try {
 				preview = reduceActionState(graph, preview, action, event.occurredAt(), repeatResolution);
 			} catch (RuntimeException e) {
-				return new PreflightOutcome(Status.FAILED, Map.of(), true);
+				return new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), true);
 			}
 			if (action.type().phase() != ActionPhase.REQUIRED && !isLifecycleAction(action)) {
 				continue;
@@ -969,22 +1206,66 @@ public final class QuestGraphTransitionExecutor {
 			try {
 				ItemMutationPlan plan = plans.get(index);
 				if (isItemMutation(action) && plan == null) {
-					plan = createItemMutationPlan(action, index, projectedCounts, context.itemCountReader());
+					if (action instanceof PayKinahAndItemAction payment) {
+						ActionInvocation unresolved = invocation(graph, transition, event, invocationStatus, index, repeatResolution,
+							null, null, invocationLeases);
+						ItemMutationPlan observed = context.eventItemPlanPreparer().apply(unresolved);
+						if (observed == null) {
+							return new PreflightOutcome(Status.REJECTED, Map.of(), Map.of(), false);
+						}
+						if (!matchesPaymentPlan(payment, index, observed)) {
+							return new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), true);
+						}
+						long beforeCount = projectedCounts.getOrDefault(payment.itemId(), observed.beforeCount());
+						long beforeKinah = projectedKinah == null ? observed.beforeKinah() : projectedKinah;
+						if (beforeCount < payment.itemCount() || beforeKinah < payment.kinah()) {
+							return new PreflightOutcome(Status.REJECTED, Map.of(), Map.of(), false);
+						}
+						plan = ItemMutationPlan.payment(index, payment.itemId(), payment.itemCount(), beforeCount, payment.kinah(), beforeKinah);
+						projectedCounts.put(payment.itemId(), plan.afterCount());
+						projectedKinah = plan.afterKinah();
+					} else if (action instanceof RemoveUsedItemAction) {
+						ActionInvocation unresolved = invocation(graph, transition, event, invocationStatus, index, repeatResolution,
+							null, null, invocationLeases);
+						plan = context.eventItemPlanPreparer().apply(unresolved);
+						if (plan == null) {
+							return new PreflightOutcome(Status.REJECTED, Map.of(), Map.of(), false);
+						}
+						if (!matchesUsedItemPlan((RemoveUsedItemAction) action, event, index, plan)) {
+							return new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), true);
+						}
+						projectedCounts.put(plan.itemId(), plan.afterCount());
+					} else {
+						plan = createItemMutationPlan(action, index, projectedCounts, context.itemCountReader());
+					}
 					plans.put(index, plan);
 				}
+				TeleportPlan teleportPlan = teleportPlans.get(index);
+				if (action instanceof TeleportPlayerAction teleport && teleport.requiresCurrentContext() && teleportPlan == null) {
+					if (current != null && current.getLifecycle() == Lifecycle.PREPARED) {
+						return new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), true);
+					}
+					ActionInvocation unresolved = invocation(graph, transition, event, invocationStatus, index, repeatResolution, plan, null,
+						invocationLeases);
+					teleportPlan = Objects.requireNonNull(context.teleportPlanPreparer().apply(unresolved), "teleport plan");
+					if (!matchesTeleportPlan(teleport, index, teleportPlan)) {
+						return new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), true);
+					}
+					teleportPlans.put(index, teleportPlan);
+				}
 				result = Objects.requireNonNull(context.actionPreflight().apply(invocation(graph, transition, event,
-					invocationStatus, index, repeatResolution, plan, invocationLeases)),
+					invocationStatus, index, repeatResolution, plan, teleportPlan, invocationLeases)),
 					"preflight result");
 			} catch (ItemMutationRejectedException e) {
-					return new PreflightOutcome(Status.REJECTED, Map.of(), false);
-			} catch (RuntimeException e) {
-					return new PreflightOutcome(Status.FAILED, Map.of(), false);
+					return new PreflightOutcome(Status.REJECTED, Map.of(), Map.of(), false);
+				} catch (RuntimeException e) {
+					return new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), false);
 			}
 			if (result == PreflightResult.REJECTED) {
-					return new PreflightOutcome(Status.REJECTED, Map.of(), false);
+					return new PreflightOutcome(Status.REJECTED, Map.of(), Map.of(), false);
 			}
 			if (result == PreflightResult.FAILED) {
-					return new PreflightOutcome(Status.FAILED, Map.of(), false);
+					return new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), false);
 			}
 		}
 		PreflightResult itemResult;
@@ -994,12 +1275,37 @@ public final class QuestGraphTransitionExecutor {
 				.collect(java.util.stream.Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
 			itemResult = Objects.requireNonNull(context.itemMutationPreflight().apply(remainingPlans), "item mutation preflight result");
 		} catch (RuntimeException e) {
-			return new PreflightOutcome(Status.FAILED, Map.of(), false);
+			return new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), false);
 		}
 		return switch (itemResult) {
-			case READY -> new PreflightOutcome(Status.APPLIED, Map.copyOf(plans), false);
-			case REJECTED -> new PreflightOutcome(Status.REJECTED, Map.of(), false);
-			case FAILED -> new PreflightOutcome(Status.FAILED, Map.of(), false);
+			case READY -> new PreflightOutcome(Status.APPLIED, Map.copyOf(plans), Map.copyOf(teleportPlans), false);
+			case REJECTED -> new PreflightOutcome(Status.REJECTED, Map.of(), Map.of(), false);
+			case FAILED -> new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), false);
+		};
+	}
+
+	/** 恢复停在 delay barrier 时只预检 barrier；tail 在结束动画并推进 journal 后再预检。 */
+	private static PreflightOutcome preflightRecovery(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event,
+			PlayerQuestGraphState state, TransitionContext context) {
+		PreparedTransition journal = state.getJournal();
+		int actionIndex = journal.getNextActionIndex();
+		if (actionIndex >= transition.actions().size()
+				|| !(transition.actions().get(actionIndex) instanceof DelayItemUseContinuationAction)) {
+			return preflight(graph, transition, event, state, actionIndex, journal.getItemMutationPlans(),
+				journal.getTeleportPlans(), context);
+		}
+		PreflightResult result;
+		try {
+			result = Objects.requireNonNull(context.actionPreflight().apply(invocation(graph, transition, event,
+				state.getQuestStatus(), actionIndex, journal.getRepeatDeadlineResolution(), null, null, state.getCleanupLeases())),
+				"delay barrier preflight result");
+		} catch (RuntimeException e) {
+			return new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), false);
+		}
+		return switch (result) {
+			case READY -> new PreflightOutcome(Status.APPLIED, journal.getItemMutationPlans(), journal.getTeleportPlans(), false);
+			case REJECTED -> new PreflightOutcome(Status.REJECTED, Map.of(), Map.of(), false);
+			case FAILED -> new PreflightOutcome(Status.FAILED, Map.of(), Map.of(), false);
 		};
 	}
 
@@ -1008,7 +1314,9 @@ public final class QuestGraphTransitionExecutor {
 	 * Creates the next-revision PREPARED state with an event snapshot and initialized variables.
 	 */
 	private static PlayerQuestGraphState prepare(Match match, PlayerQuestGraphState current, ZoneId serverZoneId, int accessLevel,
-		Map<Integer, ItemMutationPlan> itemMutationPlans, Map<String, CleanupLease> cleanupLeases) {
+		Map<Integer, ItemMutationPlan> itemMutationPlans, Map<Integer, TeleportPlan> teleportPlans,
+		Map<Integer, ItemUseContinuationPlan> itemUseContinuationPlans,
+		Map<Integer, QuestStatusSyncSnapshot> questStatusSyncSnapshots, Map<String, CleanupLease> cleanupLeases) {
 		long baseRevision = current == null ? -1 : current.getRevision();
 		long preparedRevision = Math.addExact(baseRevision, 1);
 		Map<String, VariableValue> variables = current == null ? initialVariables(match.graph()) : current.getVariables();
@@ -1016,12 +1324,110 @@ public final class QuestGraphTransitionExecutor {
 		Long instanceRunId = current == null ? null : current.getInstanceRunId();
 		String nodeId = current == null ? match.graph().initialNode() : current.getNodeId();
 		RepeatDeadlineResolution repeatResolution = resolveRepeatDeadline(match.route().transition(), match.event(), serverZoneId, accessLevel);
+		byte[] eventPayload = QuestGraphEventCodec.encode(match.event());
+		byte[] syncSnapshotDigest = questStatusSyncSnapshotDigest(match.graph(), match.route().transition(), baseRevision,
+			repeatResolution, questStatusSyncSnapshots, eventPayload);
 		PreparedTransition journal = new PreparedTransition(baseRevision, match.event().eventId(), match.route().transition().id(), 0, false,
-			repeatResolution, itemMutationPlans, QuestGraphEventCodec.encode(match.event()));
+				repeatResolution, itemMutationPlans, paymentPlansFromItemMutationPlans(itemMutationPlans), teleportPlans,
+				itemUseContinuationPlans, questStatusSyncSnapshots, syncSnapshotDigest, eventPayload);
 		QuestStatus questStatus = current == null ? QuestStatus.NONE : current.getQuestStatus();
 		QuestHistory history = current == null ? QuestHistory.EMPTY : current.getHistory();
 		return new PlayerQuestGraphState(match.graph().questId(), match.graph().version(), preparedRevision, nodeId, questStatus, history, instanceRunId,
 			Lifecycle.PREPARED, variables, deadlines, journal, cleanupLeases, null);
+	}
+
+	/** 在首次 PREPARED CAS 前重放纯 canonical reducer，并冻结每个任务状态同步 occurrence 的协议输入。 / Replays the pure canonical reducer before the first PREPARED CAS and freezes protocol input for every quest-status sync occurrence. */
+	private static Map<Integer, QuestStatusSyncSnapshot> prepareQuestStatusSyncSnapshots(CompiledQuestGraph graph, Transition transition,
+			QuestGraphEvent event, PlayerQuestGraphState current, ZoneId serverZoneId, int accessLevel) {
+		int protocolStart = firstProtocolIndex(transition);
+		RepeatDeadlineResolution repeatResolution = resolveRepeatDeadline(transition, event, serverZoneId, accessLevel);
+		ActionState preview = new ActionState(current == null ? QuestStatus.NONE : current.getQuestStatus(),
+			current == null ? initialVariables(graph) : current.getVariables(), current == null ? QuestHistory.EMPTY : current.getHistory(),
+			current == null ? Map.of() : current.getDeadlines(), current == null ? Map.of() : current.getCleanupLeases());
+		Map<Integer, ActionState> statesByActionCount = new LinkedHashMap<>();
+		statesByActionCount.put(0, preview);
+		for (int index = 0; index < protocolStart; index++) {
+			preview = reduceActionState(graph, preview, transition.actions().get(index), event.occurredAt(), repeatResolution);
+			statesByActionCount.put(index + 1, preview);
+		}
+		Map<Integer, QuestStatusSyncSnapshot> snapshots = new LinkedHashMap<>();
+		for (int index = protocolStart; index < transition.actions().size(); index++) {
+			if (!(transition.actions().get(index) instanceof SyncQuestStatusAction sync)) {
+				continue;
+			}
+			int checkpoint = resolvedQuestStatusSyncCheckpoint(sync, protocolStart);
+			ActionState snapshotState = statesByActionCount.get(checkpoint);
+			if (snapshotState == null) {
+				throw new IllegalStateException("Quest-status sync checkpoint has no canonical snapshot");
+			}
+			snapshots.put(index, new QuestStatusSyncSnapshot(index, checkpoint, snapshotState.questStatus(),
+				packQuestVariables(snapshotState.variables())));
+		}
+		return Map.copyOf(snapshots);
+	}
+
+	/** 冻结 ITEM_USE 事件身份、绝对到期时间与 definition-bound tail 边界。 / Freezes ITEM_USE identity, absolute expiry, and definition-bound tail bounds. */
+	private static Map<Integer, ItemUseContinuationPlan> prepareItemUseContinuationPlans(Transition transition, QuestGraphEvent event) {
+		Map<Integer, ItemUseContinuationPlan> plans = new LinkedHashMap<>();
+		for (int index = 0; index < transition.actions().size(); index++) {
+			if (!(transition.actions().get(index) instanceof DelayItemUseContinuationAction delay)) {
+				continue;
+			}
+			if (!(event instanceof QuestGraphEvent.ItemUseEvent itemUse)) {
+				throw new IllegalStateException("Item-use continuation requires an ITEM_USE event snapshot");
+			}
+			long readyAt = Math.addExact(event.occurredAt(), delay.durationMs());
+			plans.put(index, new ItemUseContinuationPlan(index, itemUse.itemId(), itemUse.itemObjectId(), delay.durationMs(), readyAt,
+				index + 1, transition.actions().size() - 1));
+		}
+		return Map.copyOf(plans);
+	}
+
+	/** 校验每个延迟屏障恰有一个与冻结事件和当前定义相符的计划。 / Validates one exact frozen plan for every delay barrier. */
+	private static boolean validItemUseContinuationPlans(Transition transition, QuestGraphEvent event,
+			Map<Integer, ItemUseContinuationPlan> plans) {
+		if (!(event instanceof QuestGraphEvent.ItemUseEvent itemUse)) {
+			return plans.isEmpty();
+		}
+		int expected = 0;
+		for (int index = 0; index < transition.actions().size(); index++) {
+			Action action = transition.actions().get(index);
+			ItemUseContinuationPlan plan = plans.get(index);
+			if (!(action instanceof DelayItemUseContinuationAction delay)) {
+				if (plan != null) {
+					return false;
+				}
+				continue;
+			}
+			expected++;
+			long readyAt;
+			try {
+				readyAt = Math.addExact(event.occurredAt(), delay.durationMs());
+			} catch (ArithmeticException e) {
+				return false;
+			}
+			if (plan == null || plan.itemId() != itemUse.itemId() || plan.itemObjectId() != itemUse.itemObjectId()
+					|| plan.durationMs() != delay.durationMs() || plan.readyAt() != readyAt
+					|| plan.tailStartActionIndex() != index + 1 || plan.tailEndActionIndex() != transition.actions().size() - 1) {
+				return false;
+			}
+		}
+		return plans.size() == expected;
+	}
+
+	/** 按 QuestVars 的原始 Java int 运算打包 var0..var5；缺失槽为 0。 / Packs var0..var5 with QuestVars' original Java int operations, defaulting missing slots to zero. */
+	private static int packQuestVariables(Map<String, VariableValue> variables) {
+		int packed = 0;
+		for (int index = 5; index >= 0; index--) {
+			VariableValue value = variables.get("var" + index);
+			if (value != null && !(value instanceof IntValue)) {
+				throw new IllegalStateException("Quest variable var" + index + " is not an integer");
+			}
+			int slot = value == null ? 0 : ((IntValue) value).value();
+			packed <<= 6;
+			packed |= slot;
+		}
+		return packed;
 	}
 
 	/** 冻结 required resource 的完整计划，使业务副作用前先持久化 owner、位置和幂等键。 / Freezes complete required-resource plans before side effects. */
@@ -1036,7 +1442,7 @@ public final class QuestGraphTransitionExecutor {
 			Action action = transition.actions().get(index);
 			if (isTypedResourceAction(action)) {
 				ActionInvocation invocation = invocation(graph, transition, event, preview.questStatus(), index, repeatResolution,
-					itemMutationPlans.get(index), leases);
+					itemMutationPlans.get(index), null, leases);
 				CleanupLease lease = leases.get(invocation.idempotencyKey());
 				if (lease == null) {
 					lease = context.resourceLeasePreparer().apply(invocation);
@@ -1085,10 +1491,12 @@ public final class QuestGraphTransitionExecutor {
 		if (!current.getJournal().isTargetCommitted()) {
 			for (int index = current.getJournal().getNextActionIndex(); index < protocolStart; index++) {
 				Action action = transition.actions().get(index);
+				ActionInvocation teleportOutboxInvocation = null;
 				if (action.type().phase() == ActionPhase.REQUIRED || isLifecycleAction(action)) {
 					ActionResult result;
 					ActionInvocation actionInvocation = invocation(graph, transition, event, current.getQuestStatus(), index, repeatResolution,
-						current.getJournal().getItemMutationPlans().get(index), current.getCleanupLeases());
+						current.getJournal().getItemMutationPlans().get(index), current.getJournal().getTeleportPlans().get(index), current.getCleanupLeases())
+						.withJournalIdentity(current.getJournal().getBaseRevision(), transition.id());
 					try {
 						result = Objects.requireNonNull(context.actionExecutor().apply(actionInvocation), "action result");
 					} catch (RuntimeException e) {
@@ -1097,10 +1505,18 @@ public final class QuestGraphTransitionExecutor {
 					if (result == ActionResult.REJECTED) {
 						return Status.REJECTED;
 					}
+					if (result == ActionResult.DEFERRED) {
+						return action instanceof DelayItemUseContinuationAction ? Status.APPLIED : Status.FAILED;
+					}
 					boolean cleanupRequired = isTerminalLifecycleAction(action) && !actionInvocation.cleanupLeases().isEmpty();
-					if (result == ActionResult.FAILED || cleanupRequired && result != ActionResult.CLEANUP_CONFIRMED
-							|| !cleanupRequired && result != ActionResult.APPLIED && result != ActionResult.ALREADY_APPLIED) {
+					if (result == ActionResult.DURABLY_ACCEPTED && !(action instanceof TeleportPlayerAction)
+							|| result == ActionResult.FAILED || cleanupRequired && result != ActionResult.CLEANUP_CONFIRMED
+							|| !cleanupRequired && result != ActionResult.APPLIED && result != ActionResult.ALREADY_APPLIED
+								&& result != ActionResult.DURABLY_ACCEPTED) {
 						return Status.FAILED;
+					}
+					if (action instanceof TeleportPlayerAction) {
+						teleportOutboxInvocation = actionInvocation;
 					}
 					if (isTypedResourceAction(action)) {
 						CleanupLease materialized;
@@ -1121,19 +1537,48 @@ public final class QuestGraphTransitionExecutor {
 				}
 				PlayerQuestGraphState progressed = copy(reduced, current.getRevision() + 1, current.getNodeId(), reduced.getQuestStatus(),
 					Lifecycle.PREPARED, new PreparedTransition(current.getJournal().getBaseRevision(), event.eventId(), transition.id(), index + 1,
-						false, repeatResolution, current.getJournal().getItemMutationPlans(), current.getJournal().getEventPayload()));
+							false, repeatResolution, current.getJournal().getItemMutationPlans(), current.getJournal().getPaymentPlans(), current.getJournal().getTeleportPlans(),
+						current.getJournal().getItemUseContinuationPlans(),
+						current.getJournal().getQuestStatusSyncSnapshots(), current.getJournal().getQuestStatusSyncSnapshotDigest(),
+						current.getJournal().getEventPayload()));
 				if (persist(context, current.getRevision(), progressed) != PersistenceResult.APPLIED) {
 					return Status.FAILED;
 				}
 				context.states().put(progressed);
+					if (teleportOutboxInvocation != null) {
+						try {
+							ActionResult acknowledgement = Objects.requireNonNull(
+								context.teleportOutboxAcknowledger().apply(teleportOutboxInvocation), "teleport outbox acknowledgement result");
+							if (acknowledgement == ActionResult.FAILED || acknowledgement == ActionResult.REJECTED) {
+								// Keep the PREPARED cursor durable so recovery can retry the graph acknowledgement.
+								return Status.FAILED;
+							}
+						} catch (RuntimeException ignored) {
+							// The progressed graph revision is durable; recovery reconciles an interrupted outbox acknowledgement.
+							return Status.FAILED;
+						}
+					}
 				current = progressed;
+				if (action instanceof DelayItemUseContinuationAction && index + 1 < protocolStart) {
+					PreflightOutcome tailPreflight = preflight(graph, transition, event, current, index + 1,
+						current.getJournal().getItemMutationPlans(), current.getJournal().getTeleportPlans(), context);
+					if (tailPreflight.unrecoverable()) {
+						return quarantinePrepared(context, current, "RECOVERY_STATE_TRANSITION_INVALID");
+					}
+					if (tailPreflight.status() != Status.APPLIED) {
+						return tailPreflight.status();
+					}
+				}
 			}
 			if (protocolStart == transition.actions().size()) {
 				return activateTarget(transition, current, context);
 			}
 			PlayerQuestGraphState committed = copy(current, current.getRevision() + 1, transition.targetNode(), current.getQuestStatus(),
 				Lifecycle.PREPARED, new PreparedTransition(current.getJournal().getBaseRevision(), event.eventId(), transition.id(), protocolStart,
-					true, repeatResolution, current.getJournal().getItemMutationPlans(), current.getJournal().getEventPayload()));
+						true, repeatResolution, current.getJournal().getItemMutationPlans(), current.getJournal().getPaymentPlans(), current.getJournal().getTeleportPlans(),
+					current.getJournal().getItemUseContinuationPlans(),
+					current.getJournal().getQuestStatusSyncSnapshots(), current.getJournal().getQuestStatusSyncSnapshotDigest(),
+					current.getJournal().getEventPayload()));
 			if (persist(context, current.getRevision(), committed) != PersistenceResult.APPLIED) {
 				return Status.FAILED;
 			}
@@ -1148,7 +1593,8 @@ public final class QuestGraphTransitionExecutor {
 			ActionResult result;
 			try {
 				result = Objects.requireNonNull(context.actionExecutor().apply(invocation(graph, transition, event,
-					current.getQuestStatus(), index, repeatResolution, null, current.getCleanupLeases())), "protocol action result");
+					current.getQuestStatus(), index, repeatResolution, null, null,
+					current.getJournal().getQuestStatusSyncSnapshots().get(index), current.getCleanupLeases())), "protocol action result");
 			} catch (RuntimeException e) {
 				return Status.FAILED;
 			}
@@ -1157,7 +1603,10 @@ public final class QuestGraphTransitionExecutor {
 			}
 			PlayerQuestGraphState progressed = copy(current, current.getRevision() + 1, current.getNodeId(), current.getQuestStatus(),
 				Lifecycle.PREPARED, new PreparedTransition(current.getJournal().getBaseRevision(), event.eventId(), transition.id(), index + 1,
-					true, repeatResolution, current.getJournal().getItemMutationPlans(), current.getJournal().getEventPayload()));
+						true, repeatResolution, current.getJournal().getItemMutationPlans(), current.getJournal().getPaymentPlans(), current.getJournal().getTeleportPlans(),
+					current.getJournal().getItemUseContinuationPlans(),
+					current.getJournal().getQuestStatusSyncSnapshots(), current.getJournal().getQuestStatusSyncSnapshotDigest(),
+					current.getJournal().getEventPayload()));
 			if (persist(context, current.getRevision(), progressed) != PersistenceResult.APPLIED) {
 				return Status.FAILED;
 			}
@@ -1191,20 +1640,39 @@ public final class QuestGraphTransitionExecutor {
 	 */
 	private static ActionInvocation invocation(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event,
 		QuestStatus questStatus, int actionIndex, RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan,
-		Map<String, CleanupLease> cleanupLeases) {
-		String key = event.eventId().length() + ":" + event.eventId() + ':' + graph.questId() + ':' + transition.id() + ':'
-			+ event.playerId() + ':' + actionIndex;
-		return new ActionInvocation(transition.actions().get(actionIndex), graph.questId(), actionIndex, questStatus, event, transition.event(),
-			repeatDeadlineResolution, itemMutationPlan, cleanupLeases, key);
+		TeleportPlan teleportPlan, Map<String, CleanupLease> cleanupLeases) {
+		return invocation(graph, transition, event, questStatus, actionIndex, repeatDeadlineResolution, itemMutationPlan, teleportPlan, null,
+			cleanupLeases);
 	}
 
-	/** 保存动作预检结果及准备写入 journal 的冻结物品计划。 / Holds preflight status and frozen item plans to persist in the journal. */
-	private record PreflightOutcome(Status status, Map<Integer, ItemMutationPlan> itemMutationPlans, boolean unrecoverable) {
+	private static ActionInvocation invocation(CompiledQuestGraph graph, Transition transition, QuestGraphEvent event,
+		QuestStatus questStatus, int actionIndex, RepeatDeadlineResolution repeatDeadlineResolution, ItemMutationPlan itemMutationPlan,
+		TeleportPlan teleportPlan, QuestStatusSyncSnapshot questStatusSyncSnapshot, Map<String, CleanupLease> cleanupLeases) {
+		String key = actionIdempotencyKey(event.eventId(), graph.questId(), transition.id(), event.playerId(), actionIndex);
+		return new ActionInvocation(transition.actions().get(actionIndex), graph.questId(), actionIndex, questStatus, event, transition.event(),
+			repeatDeadlineResolution, itemMutationPlan, teleportPlan, questStatusSyncSnapshot, cleanupLeases, key);
+	}
+
+	/** 构造由持久 journal 身份和动作位置唯一决定的稳定键。 / Builds the stable key uniquely determined by journal identity and action position. */
+	static String actionIdempotencyKey(String eventId, int questId, String transitionId, int playerId, int actionIndex) {
+		return eventId.length() + ":" + eventId + ':' + questId + ':' + transitionId + ':' + playerId + ':' + actionIndex;
+	}
+
+	/** 保存动作预检结果及准备写入 journal 的冻结动作输入。 / Holds preflight status and frozen action inputs to persist in the journal. */
+	private record PreflightOutcome(Status status, Map<Integer, ItemMutationPlan> itemMutationPlans,
+			Map<Integer, TeleportPlan> teleportPlans, boolean unrecoverable) {
 	}
 
 	/** 判断动作是否为显式物品数量变更。 / Returns whether an action is an explicit item-count mutation. */
 	private static boolean isItemMutation(Action action) {
-		return action instanceof GiveQuestItemAction || action instanceof RemoveQuestItemAction;
+		return action instanceof GiveQuestItemAction || action instanceof RemoveQuestItemAction || action instanceof PayKinahAndItemAction
+			|| action instanceof RemoveUsedItemAction;
+	}
+
+	/** 判断动作是否由 item-use 动画 adapter 承载。 / Returns whether an action belongs to the item-use animation adapter. */
+	private static boolean isItemUseContinuationAction(Action action) {
+		return action instanceof com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ScheduleItemUseDialogAction
+			|| action instanceof DelayItemUseContinuationAction;
 	}
 
 	/** 判断动作是否需要任务计时器 scheduler/cancel bridge。 / Returns whether an action requires the quest-timer scheduler/cancel bridge. */
@@ -1247,6 +1715,20 @@ public final class QuestGraphTransitionExecutor {
 	/** 判断动作是否属于制作技能奖励 bridge，包括提交后协议。 / Returns whether an action belongs to the craft-skill reward bridge, including protocol. */
 	private static boolean isCraftSkillRewardAction(Action action) {
 		return isRequiredCraftSkillRewardAction(action) || action instanceof SyncCraftSkillRewardAction;
+	}
+
+	/** 判断动作是否属于剩余提交后协议 typed adapter。 / Returns whether an action belongs to the remaining post-commit protocol adapter. */
+	private static boolean isPostCommitProtocolAction(Action action) {
+		return action instanceof CloseDialogAction || action instanceof ShowQuestListAction
+			|| action instanceof SendPlayerMessageAction || action instanceof SendRepeatDeadlineMessageAction;
+	}
+
+	/** 组合冻结任务状态同步 adapter，并立即校验完整正式上下文依赖。 / Composes the frozen quest-status sync adapter and eagerly validates the complete formal context dependency. */
+	private static Function<ActionInvocation, ActionResult> questStatusSyncExecutor(QuestGraphQuestStatusSyncAdapter adapter,
+			Function<ActionInvocation, ActionResult> delegate) {
+		Objects.requireNonNull(adapter, "quest status sync");
+		Objects.requireNonNull(delegate, "action executor");
+		return invocation -> invocation.action() instanceof SyncQuestStatusAction ? adapter.execute(invocation) : delegate.apply(invocation);
 	}
 
 	/** 组合制作资格条件并立即校验 bridge 依赖。 / Composes craft eligibility and eagerly validates the bridge dependency. */
@@ -1340,11 +1822,195 @@ public final class QuestGraphTransitionExecutor {
 						case OPTIONAL_EXACT -> ItemMutationKind.REMOVE_OPTIONAL_EXACT;
 						case ALL -> ItemMutationKind.REMOVE_ALL;
 					}
-							|| plan.itemId() != remove.itemId() || plan.requestedCount() != remove.count())) {
+							|| plan.itemId() != remove.itemId() || plan.requestedCount() != remove.count())
+					|| action instanceof PayKinahAndItemAction payment && !matchesPaymentPlan(payment, index, plan)
+					|| action instanceof RemoveUsedItemAction removeUsed
+						&& (plan.kind() != switch (removeUsed.mode()) {
+							case EVENT_OBJECT_EXACT -> ItemMutationKind.REMOVE_EVENT_OBJECT_EXACT;
+							case EVENT_TEMPLATE_EXACT -> ItemMutationKind.REMOVE_EVENT_TEMPLATE_EXACT;
+						} || plan.requestedCount() != removeUsed.count())) {
 				return false;
 			}
 		}
 		return plans.size() == transition.actions().stream().filter(QuestGraphTransitionExecutor::isItemMutation).count();
+	}
+
+	/** 将兼容物品计划中的支付语义投影为独立的 typed PaymentPlan journal。 / Projects compatibility item payment plans into the independent typed PaymentPlan journal. */
+	private static Map<Integer, PaymentPlan> paymentPlansFromItemMutationPlans(Map<Integer, ItemMutationPlan> itemPlans) {
+		Map<Integer, PaymentPlan> payments = new LinkedHashMap<>();
+		for (ItemMutationPlan plan : itemPlans.values()) {
+			if (plan.kind() != ItemMutationKind.PAY_KINAH_AND_ITEM) {
+				continue;
+			}
+			payments.put(plan.actionIndex(), new PaymentPlan(plan.actionIndex(), plan.itemId(), plan.requestedCount(), plan.kinahAmount(),
+				plan.beforeCount(), plan.afterCount(), plan.beforeKinah(), plan.afterKinah()));
+		}
+		return Map.copyOf(payments);
+	}
+
+	/** 校验 payment map 与兼容 item plan、编译动作完全一致，防止恢复时切换支付语义。 / Validates the payment map against the compatibility item plan and compiled action during recovery. */
+	private static boolean validPaymentPlans(Transition transition, PreparedTransition journal) {
+		Map<Integer, PaymentPlan> payments = journal.getPaymentPlans();
+		Map<Integer, PaymentPlan> expected;
+		try {
+			expected = paymentPlansFromItemMutationPlans(journal.getItemMutationPlans());
+		} catch (RuntimeException e) {
+			return false;
+		}
+		if (!expected.equals(payments)) {
+			return false;
+		}
+		for (int index = 0; index < transition.actions().size(); index++) {
+			Action action = transition.actions().get(index);
+			PaymentPlan plan = payments.get(index);
+			if (action instanceof PayKinahAndItemAction payment) {
+				if (plan == null || plan.itemId() != payment.itemId() || plan.itemCount() != payment.itemCount()
+						|| plan.kinah() != payment.kinah()) {
+					return false;
+				}
+			} else if (plan != null) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/** 校验支付动作与 journal 中冻结的 Kinah/物品计划完全一致。 / Validates exact agreement between a payment action and its frozen Kinah/item plan. */
+	private static boolean matchesPaymentPlan(PayKinahAndItemAction action, int actionIndex, ItemMutationPlan plan) {
+		return plan != null && plan.actionIndex() == actionIndex && plan.kind() == ItemMutationKind.PAY_KINAH_AND_ITEM
+			&& plan.itemId() == action.itemId() && plan.requestedCount() == action.itemCount() && plan.kinahAmount() == action.kinah();
+	}
+
+	/** 校验 used-item 计划与冻结 ITEM_USE 事件完全一致。 / Validates a used-item plan against the frozen ITEM_USE event. */
+	private static boolean matchesUsedItemPlan(RemoveUsedItemAction action, QuestGraphEvent event, int actionIndex, ItemMutationPlan plan) {
+		if (!(event instanceof QuestGraphEvent.ItemUseEvent itemUse) || plan == null || plan.actionIndex() != actionIndex
+				|| plan.itemId() != itemUse.itemId() || plan.requestedCount() != action.count()) {
+			return false;
+		}
+		return switch (action.mode()) {
+			case EVENT_OBJECT_EXACT -> plan.kind() == ItemMutationKind.REMOVE_EVENT_OBJECT_EXACT
+				&& plan.itemObjectId() == itemUse.itemObjectId() && plan.beforeObjectCount() >= action.count();
+			case EVENT_TEMPLATE_EXACT -> plan.kind() == ItemMutationKind.REMOVE_EVENT_TEMPLATE_EXACT
+				&& plan.itemObjectId() == 0 && plan.beforeObjectCount() == 0;
+		};
+	}
+
+	/** 校验每个动态传送恰有一个与编译动作一致的冻结计划。 / Validates exactly one matching frozen plan for every dynamic teleport. */
+	private static boolean validTeleportPlans(Transition transition, Map<Integer, TeleportPlan> plans) {
+		for (int index = 0; index < transition.actions().size(); index++) {
+			Action action = transition.actions().get(index);
+			TeleportPlan plan = plans.get(index);
+			if (!(action instanceof TeleportPlayerAction teleport) || !teleport.requiresCurrentContext()) {
+				if (plan != null) {
+					return false;
+				}
+				continue;
+			}
+			if (!matchesTeleportPlan(teleport, index, plan)) {
+				return false;
+			}
+		}
+		return plans.size() == transition.actions().stream()
+			.filter(TeleportPlayerAction.class::isInstance)
+			.map(TeleportPlayerAction.class::cast)
+			.filter(TeleportPlayerAction::requiresCurrentContext)
+			.count();
+	}
+
+	private static boolean matchesTeleportPlan(TeleportPlayerAction action, int actionIndex, TeleportPlan plan) {
+		return plan != null && plan.actionIndex() == actionIndex && plan.worldId() == action.worldId()
+			&& Float.compare(plan.x(), action.x()) == 0 && Float.compare(plan.y(), action.y()) == 0
+			&& Float.compare(plan.z(), action.z()) == 0
+			&& ((action.instancePolicy() == TeleportInstancePolicy.PLAYER_CURRENT
+				|| action.instancePolicy() == TeleportInstancePolicy.EXPLICIT_OR_DEFAULT && action.instanceId() == 0)
+				? plan.instanceId() > 0 : plan.instanceId() == action.instanceId())
+			&& (action.headingPolicy() == TeleportHeadingPolicy.PLAYER_CURRENT || plan.heading() == action.heading());
+	}
+
+	/** 校验每个 sync occurrence 的结构和 journal-bound 内容摘要。 / Validates every sync occurrence's structure and journal-bound content digest. */
+	private static boolean validQuestStatusSyncSnapshots(CompiledQuestGraph graph, Transition transition, PreparedTransition journal) {
+		Map<Integer, QuestStatusSyncSnapshot> snapshots = journal.getQuestStatusSyncSnapshots();
+		int protocolStart = firstProtocolIndex(transition);
+		int expectedCount = 0;
+		for (int index = 0; index < transition.actions().size(); index++) {
+			Action action = transition.actions().get(index);
+			QuestStatusSyncSnapshot snapshot = snapshots.get(index);
+			if (!(action instanceof SyncQuestStatusAction sync)) {
+				if (snapshot != null) {
+					return false;
+				}
+				continue;
+			}
+			expectedCount++;
+			if (snapshot == null || snapshot.actionIndex() != index
+					|| snapshot.snapshotAfterActionCount() != resolvedQuestStatusSyncCheckpoint(sync, protocolStart)) {
+				return false;
+			}
+		}
+		if (snapshots.size() != expectedCount) {
+			return false;
+		}
+		byte[] expectedDigest = questStatusSyncSnapshotDigest(graph, transition, journal.getBaseRevision(),
+			journal.getRepeatDeadlineResolution(), snapshots, journal.getEventPayload());
+		return MessageDigest.isEqual(expectedDigest, journal.getQuestStatusSyncSnapshotDigest());
+	}
+
+	/** 绑定 snapshot 内容与定义、事件和 PREPARED 基线，检测恢复前的持久化损坏。 / Binds snapshot contents to the definition, event, and PREPARED baseline to detect persisted corruption before recovery. */
+	private static byte[] questStatusSyncSnapshotDigest(CompiledQuestGraph graph, Transition transition, long baseRevision,
+			RepeatDeadlineResolution repeatResolution, Map<Integer, QuestStatusSyncSnapshot> snapshots, byte[] eventPayload) {
+		if (snapshots.isEmpty()) {
+			return new byte[0];
+		}
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			updateDigestText(digest, "QGS10-QUEST-STATUS-SYNC");
+			updateDigestInt(digest, graph.questId());
+			updateDigestInt(digest, graph.version());
+			updateDigestLong(digest, baseRevision);
+			updateDigestText(digest, transition.id());
+			updateDigestText(digest, repeatResolution.disposition().name());
+			updateDigestLong(digest, repeatResolution.deadlineAt() == null ? Long.MIN_VALUE : repeatResolution.deadlineAt());
+			updateDigestInt(digest, eventPayload.length);
+			digest.update(eventPayload);
+			updateDigestInt(digest, snapshots.size());
+			snapshots.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
+				QuestStatusSyncSnapshot snapshot = entry.getValue();
+				updateDigestInt(digest, entry.getKey());
+				updateDigestInt(digest, snapshot.actionIndex());
+				updateDigestInt(digest, snapshot.snapshotAfterActionCount());
+				updateDigestText(digest, snapshot.status().name());
+				updateDigestInt(digest, snapshot.packedQuestVars());
+			});
+			return digest.digest();
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalStateException("SHA-256 is unavailable", e);
+		}
+	}
+
+	private static void updateDigestText(MessageDigest digest, String value) {
+		byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
+		updateDigestInt(digest, bytes.length);
+		digest.update(bytes);
+	}
+
+	private static void updateDigestInt(MessageDigest digest, int value) {
+		digest.update((byte) (value >>> 24));
+		digest.update((byte) (value >>> 16));
+		digest.update((byte) (value >>> 8));
+		digest.update((byte) value);
+	}
+
+	private static void updateDigestLong(MessageDigest digest, long value) {
+		updateDigestInt(digest, (int) (value >>> 32));
+		updateDigestInt(digest, (int) value);
+	}
+
+	private static int resolvedQuestStatusSyncCheckpoint(SyncQuestStatusAction action, int protocolStart) {
+		int checkpoint = action.snapshotAfterActionCount() == -1 ? protocolStart : action.snapshotAfterActionCount();
+		if (checkpoint < 0 || checkpoint > protocolStart) {
+			throw new IllegalStateException("Quest-status sync checkpoint is outside the pre-protocol prefix");
+		}
+		return checkpoint;
 	}
 
 	/** 标记物品动作的可预期业务拒绝，避免把库存不足误报为基础设施失败。 / Marks an expected item-action rejection. */

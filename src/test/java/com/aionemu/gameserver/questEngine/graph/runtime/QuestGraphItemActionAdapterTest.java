@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PayKinahAndItemAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveQuestItemAction;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionInvocation;
@@ -194,6 +195,65 @@ class QuestGraphItemActionAdapterTest {
 			0, new ItemMutationPlan(0, GIVE_TOP_UP_TO, 182200001, 5, 0, 5))));
 	}
 
+	/** 验证 Kinah 与普通物品支付在同一冻结计划中收敛，并且恢复不会重复扣款。 / Verifies Kinah-and-item payment converges from one frozen plan and recovery does not double-charge. */
+	@Test
+	void paymentConvergesAndRecoversWithoutDoubleCharge() {
+		AtomicLong itemCount = new AtomicLong(5);
+		AtomicLong kinah = new AtomicLong(100);
+		AtomicInteger itemRemovals = new AtomicInteger();
+		AtomicInteger kinahRemovals = new AtomicInteger();
+		AtomicInteger stores = new AtomicInteger();
+		QuestGraphItemActionAdapter adapter = paymentAdapter(itemCount, kinah, itemRemovals, kinahRemovals, stores, true);
+		PayKinahAndItemAction action = new PayKinahAndItemAction(40, 182200001, 2);
+		ItemMutationPlan plan = ItemMutationPlan.payment(0, 182200001, 2, 5, 40, 100);
+		ActionInvocation invocation = invocation(action, plan);
+
+		assertEquals(READY, adapter.preflight(invocation));
+		assertEquals(FAILED, adapter.preflight(new ActionInvocation(action, 1, 1, START, EVENT,
+			RepeatDeadlineResolution.NOT_APPLICABLE, plan, "wrong-index")));
+		assertEquals(APPLIED, adapter.execute(invocation));
+		assertEquals(3, itemCount.get());
+		assertEquals(60, kinah.get());
+		assertEquals(1, itemRemovals.get());
+		assertEquals(1, kinahRemovals.get());
+		assertEquals(ALREADY_APPLIED, adapter.execute(invocation));
+		assertEquals(1, itemRemovals.get());
+		assertEquals(1, kinahRemovals.get());
+	}
+
+	/** 验证 Kinah 已扣、物品尚未扣除的崩溃中间态可恢复为完整支付。 / Verifies recovery from the Kinah-deducted/item-not-deducted crash midpoint. */
+	@Test
+	void paymentRecoveryCompletesKinahOnlyMidpoint() {
+		AtomicLong itemCount = new AtomicLong(5);
+		AtomicLong kinah = new AtomicLong(60);
+		AtomicInteger itemRemovals = new AtomicInteger();
+		AtomicInteger stores = new AtomicInteger();
+		QuestGraphItemActionAdapter adapter = paymentAdapter(itemCount, kinah, itemRemovals, new AtomicInteger(), stores, true);
+		ItemMutationPlan plan = ItemMutationPlan.payment(0, 182200001, 2, 5, 40, 100);
+
+		assertEquals(APPLIED, adapter.execute(invocation(new PayKinahAndItemAction(40, 182200001, 2), plan)));
+		assertEquals(3, itemCount.get());
+		assertEquals(60, kinah.get());
+		assertEquals(1, itemRemovals.get());
+		assertEquals(1, stores.get());
+	}
+
+	/** 验证物品扣除失败时会恢复已扣 Kinah，并把动作留在失败态供 journal 重试。 / Verifies failed item removal refunds Kinah and leaves the action failed for journal retry. */
+	@Test
+	void failedPaymentItemRemovalRefundsKinah() {
+		AtomicLong itemCount = new AtomicLong(5);
+		AtomicLong kinah = new AtomicLong(100);
+		AtomicInteger refunds = new AtomicInteger();
+		QuestGraphItemActionAdapter adapter = paymentAdapter(itemCount, kinah, new AtomicInteger(), new AtomicInteger(), new AtomicInteger(), false,
+			refunds);
+		ItemMutationPlan plan = ItemMutationPlan.payment(0, 182200001, 2, 5, 40, 100);
+
+		assertEquals(FAILED, adapter.execute(invocation(new PayKinahAndItemAction(40, 182200001, 2), plan)));
+		assertEquals(5, itemCount.get());
+		assertEquals(100, kinah.get());
+		assertEquals(1, refunds.get());
+	}
+
 	/** 创建由原子计数器驱动的 adapter。 / Creates an adapter backed by atomic counters. */
 	private static QuestGraphItemActionAdapter adapter(AtomicLong count, AtomicInteger grants, AtomicInteger removals, AtomicInteger stores) {
 		return new QuestGraphItemActionAdapter(7, new Object(), ignored -> count.get(), values -> true, (itemId, delta) -> {
@@ -208,6 +268,38 @@ class QuestGraphItemActionAdapterTest {
 			stores.incrementAndGet();
 			return true;
 		}, itemId -> true);
+	}
+
+	/** 创建包含 Kinah 原子扣除和可控物品扣除结果的 adapter。 / Creates an adapter with atomic Kinah deduction and controllable item-removal outcomes. */
+	private static QuestGraphItemActionAdapter paymentAdapter(AtomicLong itemCount, AtomicLong kinah, AtomicInteger itemRemovals,
+		AtomicInteger kinahRemovals, AtomicInteger stores, boolean itemRemovalSucceeds) {
+		return paymentAdapter(itemCount, kinah, itemRemovals, kinahRemovals, stores, itemRemovalSucceeds, new AtomicInteger());
+	}
+
+	/** 创建可观察退款次数的支付 adapter。 / Creates a payment adapter with observable refund count. */
+	private static QuestGraphItemActionAdapter paymentAdapter(AtomicLong itemCount, AtomicLong kinah, AtomicInteger itemRemovals,
+		AtomicInteger kinahRemovals, AtomicInteger stores, boolean itemRemovalSucceeds, AtomicInteger refunds) {
+		return new QuestGraphItemActionAdapter(7, new Object(), ignored -> itemCount.get(), objectId -> null, values -> true,
+			(itemId, delta) -> true, (itemId, delta) -> {
+				itemRemovals.incrementAndGet();
+				if (itemRemovalSucceeds) {
+					itemCount.addAndGet(-delta);
+				}
+				return itemRemovalSucceeds;
+			}, (objectId, delta) -> false, kinah::get, amount -> {
+				if (kinah.get() < amount) {
+					return false;
+				}
+				kinah.addAndGet(-amount);
+				kinahRemovals.incrementAndGet();
+				return true;
+			}, amount -> {
+				kinah.addAndGet(amount);
+				refunds.incrementAndGet();
+			}, () -> {
+				stores.incrementAndGet();
+				return true;
+			}, itemId -> true);
 	}
 
 	/** 创建物品动作调用。 / Creates an item-action invocation. */

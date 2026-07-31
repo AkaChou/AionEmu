@@ -883,6 +883,8 @@ public final class QuestGraphData {
 			@XmlElement(name = "add-completion-count", type = AddCompletionCountActionData.class),
 			@XmlElement(name = "give-quest-item", type = GiveQuestItemActionData.class),
 			@XmlElement(name = "remove-quest-item", type = RemoveQuestItemActionData.class),
+			@XmlElement(name = "pay-kinah-and-item", type = PayKinahAndItemActionData.class),
+			@XmlElement(name = "dialog-npc-lifecycle", type = DialogNpcLifecycleActionData.class),
 			@XmlElement(name = "remove-collected-items", type = RemoveCollectedItemsActionData.class),
 			@XmlElement(name = "remove-quest-work-items", type = RemoveQuestWorkItemsActionData.class),
 			@XmlElement(name = "learn-recipe", type = LearnRecipeActionData.class),
@@ -902,6 +904,8 @@ public final class QuestGraphData {
 			@XmlElement(name = "start-flight-teleport", type = StartFlightTeleportActionData.class),
 			@XmlElement(name = "play-movie", type = PlayMovieActionData.class),
 			@XmlElement(name = "schedule-item-use-dialog", type = ScheduleItemUseDialogActionData.class),
+			@XmlElement(name = "delay-item-use-continuation", type = DelayItemUseContinuationActionData.class),
+			@XmlElement(name = "remove-used-item", type = RemoveUsedItemActionData.class),
 			@XmlElement(name = "spawn-instance-npc", type = SpawnInstanceNpcActionData.class),
 			@XmlElement(name = "start-escort", type = StartEscortActionData.class),
 			@XmlElement(name = "teleport-player", type = TeleportPlayerActionData.class),
@@ -1042,6 +1046,27 @@ public final class QuestGraphData {
 		private String mode;
 	}
 
+	/** 表示一次 Kinah 与普通物品的原子支付。 / Represents one atomic Kinah-and-ordinary-item payment. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class PayKinahAndItemActionData {
+		@XmlAttribute(required = true)
+		private Long kinah;
+		@XmlAttribute(name = "item_id", required = true)
+		private Integer itemId;
+		@XmlAttribute(name = "item_count", required = true)
+		private Long itemCount;
+	}
+
+	/** 对话目标 NPC 的删除或重生后删除动作。 / Deletes the exact dialog-target NPC, optionally scheduling its respawn first. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class DialogNpcLifecycleActionData {
+		/** 封闭生命周期模式。 / Closed lifecycle mode. */
+		@XmlAttribute(required = true)
+		private String mode;
+	}
+
 	/** 扣除 quest_data 交付物品。 / Removes quest_data delivery items. */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static final class RemoveCollectedItemsActionData {
@@ -1171,7 +1196,11 @@ public final class QuestGraphData {
 
 	/** 同步任务状态和变量。 / Synchronizes quest status and variables. */
 	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
 	public static final class SyncQuestStatusActionData {
+		/** 已重放的 pre-protocol 动作数量；缺省使用最终已提交快照。 / Replayed pre-protocol action count; absent selects the final committed snapshot. */
+		@XmlAttribute(name = "snapshot_after_action_count")
+		private Integer snapshotAfterActionCount;
 	}
 
 	/** 发送 repeat deadline 系统提示。 / Sends the repeat-deadline system message. */
@@ -1263,19 +1292,67 @@ public final class QuestGraphData {
 		private Integer dialogId;
 	}
 
-	/**
-	 * 在 spawner 静态坐标召唤 instance-scoped NPC。
-	 * Spawns an instance-scoped NPC at the spawner static coordinates.
-	 */
+	/** ITEM_USE 动画的可恢复绝对时间屏障。 / Recoverable absolute-time barrier for an ITEM_USE animation. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class DelayItemUseContinuationActionData {
+		/** 动画与延迟持续时间（毫秒）。 / Animation and delay duration in milliseconds. */
+		@XmlAttribute(name = "duration_ms", required = true)
+		private Integer durationMs;
+	}
+
+	/** 按事件对象或事件模板扣除已冻结的使用物品。 / Removes the frozen used item by event object or event template. */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+	public static final class RemoveUsedItemActionData {
+		/** 扣除数量。 / Removal count. */
+		@XmlAttribute(required = true)
+		private Long count;
+		/** 封闭的事件物品身份模式。 / Closed event-item identity mode. */
+		@XmlAttribute(required = true)
+		private String mode;
+	}
+
+	/** 以封闭的位置策略召唤 instance-scoped NPC。 / Spawns an instance-scoped NPC using a closed placement policy. */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@Getter
 	public static final class SpawnInstanceNpcActionData {
-		/** 提供坐标的 spawner 物体模板 ID。 / Spawner object template id providing coordinates. */
-		@XmlAttribute(name = "spawner_object_id", required = true)
+		/** 位置策略；旧 spawner_object_id 语法仅兼容 STATIC_SPAWNER。 / Placement policy; legacy spawner_object_id syntax is STATIC_SPAWNER only. */
+		@XmlAttribute
+		private String placement;
+		/** 提供静态坐标的 spawner NPC 模板 ID。 / Spawner NPC template id providing static coordinates. */
+		@XmlAttribute(name = "spawner_object_id")
 		private Integer spawnerObjectId;
+		/** 提供实时坐标的事件 NPC 模板 ID。 / Event NPC template id providing live coordinates. */
+		@XmlAttribute(name = "event_npc_id")
+		private Integer eventNpcId;
 		/** 被召唤的 NPC 模板 ID。 / Spawned NPC template id. */
 		@XmlAttribute(name = "npc_id", required = true)
 		private Integer npcId;
+		/** FIXED 位置的世界 ID。 / World id for FIXED placement. */
+		@XmlAttribute(name = "world_id")
+		private Integer worldId;
+		/** FIXED 位置的世界解析策略。 / World resolution policy for FIXED placement. */
+		@XmlAttribute(name = "world_policy")
+		private String worldPolicy;
+		/** FIXED 位置的 instance ID。 / Instance id for FIXED placement. */
+		@XmlAttribute(name = "instance_id")
+		private Integer instanceId;
+		/** FIXED 位置的 instance 解析策略。 / Instance resolution policy for FIXED placement. */
+		@XmlAttribute(name = "instance_policy")
+		private String instancePolicy;
+		/** FIXED 位置 X。 / FIXED placement X coordinate. */
+		@XmlAttribute
+		private Float x;
+		/** FIXED 位置 Y。 / FIXED placement Y coordinate. */
+		@XmlAttribute
+		private Float y;
+		/** FIXED 位置 Z。 / FIXED placement Z coordinate. */
+		@XmlAttribute
+		private Float z;
+		/** FIXED 位置朝向。 / FIXED placement heading. */
+		@XmlAttribute
+		private Byte heading;
 	}
 
 	/** 表示原子 escort 启动动作的 XML 参数。 / Represents XML parameters for an atomic escort-start action. */
@@ -1342,6 +1419,9 @@ public final class QuestGraphData {
 		/** instance 解析策略（缺省普通显式/默认）。 / Instance resolution policy (defaults to normal explicit/default routing). */
 		@XmlAttribute(name = "instance_policy")
 		private String instancePolicy;
+		/** 朝向解析策略（缺省显式，未给 heading 时为 0）。 / Heading resolution policy (explicit by default, with zero when omitted). */
+		@XmlAttribute(name = "heading_policy")
+		private String headingPolicy;
 		/** 坐标 X。 / Coordinate X. */
 		@XmlAttribute(name = "x", required = true)
 		private Float x;

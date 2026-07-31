@@ -12,10 +12,16 @@ import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.CloseDialogAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Event;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventType;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntValue;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
 
 /**
  * 验证任务图定义启动安装、版本门禁、状态兼容和原子 reload。
@@ -83,6 +89,24 @@ class QuestGraphDefinitionRegistryTest {
 		assertDoesNotThrow(() -> registry.validateState(state(1, "legacy", 999, Lifecycle.QUARANTINED)));
 	}
 
+	@Test
+	void targetCommittedPreparedStateResolvesItsTransitionFromTheSourceNode() {
+		Transition transition = new Transition("advance", 1, "done",
+			new Event(EventType.DIALOG, 100, "QUEST_SELECT"), List.of(), List.of(new CloseDialogAction()));
+		Map<String, CompiledQuestGraph.Variable> variables = Map.of("count", new IntVariable("count", PLAYER, 0, 0, 5));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 2, PLAYER, "source", variables, Map.of(
+			"source", new Node("source", false, List.of(transition)),
+			"done", new Node("done", true, List.of()),
+			"other", new Node("other", true, List.of())));
+		QuestGraphDefinitionRegistry registry = new QuestGraphDefinitionRegistry();
+		registry.installInitial(data(graph));
+		PreparedTransition journal = new PreparedTransition(0, "event", "advance", 1, true,
+			RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), new byte[0]);
+
+		assertDoesNotThrow(() -> registry.validateState(preparedState("done", journal)));
+		assertThrows(IllegalArgumentException.class, () -> registry.validateState(preparedState("other", journal)));
+	}
+
 	/** 创建包含单个 owner 的不可变定义数据。 / Creates immutable definition data with one owner. */
 	private static CompiledQuestGraphData data(CompiledQuestGraph graph) {
 		return new CompiledQuestGraphData(Map.of(graph.questId(), graph), Map.of());
@@ -99,5 +123,10 @@ class QuestGraphDefinitionRegistryTest {
 		return new PlayerQuestGraphState(1, definitionVersion, 0, nodeId, CompiledQuestGraph.QuestStatus.START, QuestHistory.EMPTY, null,
 			lifecycle, Map.of("count", new IntValue(value)), Map.of(), null, Map.of(),
 			lifecycle == Lifecycle.QUARANTINED ? "TEST_QUARANTINE" : null);
+	}
+
+	private static PlayerQuestGraphState preparedState(String nodeId, PreparedTransition journal) {
+		return new PlayerQuestGraphState(1, 2, 3, nodeId, CompiledQuestGraph.QuestStatus.START, QuestHistory.EMPTY, null,
+			Lifecycle.PREPARED, Map.of("count", new IntValue(0)), Map.of(), journal, Map.of(), null);
 	}
 }

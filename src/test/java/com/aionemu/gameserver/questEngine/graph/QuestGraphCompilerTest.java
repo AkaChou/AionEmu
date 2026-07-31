@@ -96,7 +96,6 @@ class QuestGraphCompilerTest {
 			CompiledQuestGraph.ActionType.REMOVE_QUEST_ITEM,
 			CompiledQuestGraph.ActionType.REMOVE_COLLECTED_ITEMS,
 			CompiledQuestGraph.ActionType.FINISH_QUEST,
-			CompiledQuestGraph.ActionType.SYNC_QUEST_STATUS,
 			CompiledQuestGraph.ActionType.SEND_DIALOG,
 			CompiledQuestGraph.ActionType.CLOSE_DIALOG,
 			CompiledQuestGraph.ActionType.SHOW_QUEST_LIST,
@@ -174,6 +173,47 @@ class QuestGraphCompilerTest {
 	}
 
 	/**
+	 * 验证任务状态同步保留旧最终快照语义，并只接受首个 protocol 动作前的显式可重放 checkpoint。
+	 * Verifies quest-status synchronization preserves legacy final snapshots and accepts only explicit replayable checkpoints
+	 * before the first protocol action.
+	 */
+	@Test
+	void compilesAndValidatesQuestStatusSyncCheckpoints() throws Exception {
+		String legacyTransition = """
+			<transition id="checkpoint" priority="10" to="done">
+				<dialog npc_id="203709" dialog="QUEST_SELECT"/>
+				<actions>
+					<set-quest-variable variable="counter" value="1"/>
+					<sync-quest-status/>
+					<send-dialog dialog_id="5"/>
+				</actions>
+			</transition>
+			""";
+		CompiledQuestGraph.Transition legacy = load(document(graph(1, "offer", legacyTransition, terminal())))
+			.graphs().get(1).nodes().get("offer").transitions().getFirst();
+		assertEquals(new CompiledQuestGraph.SyncQuestStatusAction(-1), legacy.actions().get(1));
+
+		String initialCheckpoint = legacyTransition.replace("<sync-quest-status/>",
+			"<sync-quest-status snapshot_after_action_count=\"0\"/>");
+		CompiledQuestGraph.Transition initial = load(document(graph(1, "offer", initialCheckpoint, terminal())))
+			.graphs().get(1).nodes().get("offer").transitions().getFirst();
+		assertEquals(new CompiledQuestGraph.SyncQuestStatusAction(0), initial.actions().get(1));
+
+		String committedPrefix = legacyTransition.replace("<sync-quest-status/>",
+			"<sync-quest-status snapshot_after_action_count=\"1\"/>");
+		CompiledQuestGraph.Transition committed = load(document(graph(1, "offer", committedPrefix, terminal())))
+			.graphs().get(1).nodes().get("offer").transitions().getFirst();
+		assertEquals(new CompiledQuestGraph.SyncQuestStatusAction(1), committed.actions().get(1));
+
+		assertFailureContains(document(graph(1, "offer", legacyTransition.replace("<sync-quest-status/>",
+			"<sync-quest-status snapshot_after_action_count=\"3\"/>"), terminal())),
+			"quest-status sync checkpoint outside its replayable pre-protocol prefix");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer", legacyTransition.replace("<sync-quest-status/>",
+			"<sync-quest-status snapshot_after_action_count=\"-1\"/>"), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.SyncQuestStatusAction(-2));
+	}
+
+	/**
 	 * 验证入侵世界条件绑定 WORLD_ENTERED 事件并要求正式 world 引用闭包。
 	 * Verifies that invasion-world conditions bind to WORLD_ENTERED and require formal world-reference closure.
 	 */
@@ -186,7 +226,7 @@ class QuestGraphCompilerTest {
 					<quest-status op="IN" values="NONE"/>
 					<invasion-world-active world_id="220050000"/>
 				</conditions>
-				<actions><start-quest/><sync-quest-status/></actions>
+				<actions><start-quest/></actions>
 			</transition>
 			""";
 		CompiledQuestGraph.Transition compiled = load(document(graph(1, "offer", "", transition, terminal())))
@@ -374,7 +414,8 @@ class QuestGraphCompilerTest {
 	void compilerBuildsCompletionCountAndTimerActions() throws Exception {
 		String sourceTransition = transition("accept", 10, "done")
 			.replace("<give-quest-item", "<set-completion-count count=\"0\"/><add-completion-count delta=\"1\"/><give-quest-item")
-			.replace("<sync-quest-status/>", "<start-quest-timer timer=\"QUEST_TIMER\" duration_seconds=\"300\"/>");
+			.replace("<send-dialog dialog_id=\"5\"/>",
+				"<start-quest-timer timer=\"QUEST_TIMER\" duration_seconds=\"300\"/><send-dialog dialog_id=\"5\"/>");
 		List<CompiledQuestGraph.Action> actions = load(document(graph(1, "offer", sourceTransition, terminal()))).graphs().get(1)
 			.nodes().get("offer").transitions().getFirst().actions();
 
@@ -383,8 +424,8 @@ class QuestGraphCompilerTest {
 		assertTrue(actions.contains(new CompiledQuestGraph.StartQuestTimerAction("QUEST_TIMER", 300)));
 		assertTrue(actions.contains(new CompiledQuestGraph.SyncQuestTimerAction("QUEST_TIMER", 300)));
 
-		String endTimer = transition("end", 10, "done").replace("<sync-quest-status/>",
-			"<end-quest-timer timer=\"QUEST_TIMER\"/>");
+		String endTimer = transition("end", 10, "done").replace("<send-dialog dialog_id=\"5\"/>",
+			"<end-quest-timer timer=\"QUEST_TIMER\"/><send-dialog dialog_id=\"5\"/>");
 		List<CompiledQuestGraph.Action> endActions = load(document(graph(1, "offer", endTimer, terminal()))).graphs().get(1)
 			.nodes().get("offer").transitions().getFirst().actions();
 		assertTrue(endActions.contains(new CompiledQuestGraph.EndQuestTimerAction("QUEST_TIMER")));
@@ -1076,6 +1117,61 @@ class QuestGraphCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.ScheduleItemUseDialogAction(3000, 0));
 	}
 
+	/** 验证 durable ITEM_USE barrier 只接受单屏障、非空 tail 与屏障后的封闭物品扣除。 */
+	@Test
+	void compilerClosesDurableItemUseContinuationContract() throws Exception {
+		String transition = """
+			<transition id="durable-item-use" priority="1" to="done">
+				<item-use item_id="182200001"/>
+				<actions>
+					<delay-item-use-continuation duration_ms="3000"/>
+					<remove-used-item count="1" mode="EVENT_OBJECT_EXACT"/>
+					<set-quest-status status="START"/>
+					<play-movie movie_id="913"/>
+				</actions>
+			</transition>
+			""";
+		List<CompiledQuestGraph.Action> actions = load(document(graph(1, "offer", transition, terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().actions();
+		assertEquals(List.of(
+			new CompiledQuestGraph.DelayItemUseContinuationAction(3000),
+			new CompiledQuestGraph.RemoveUsedItemAction(1, CompiledQuestGraph.UsedItemRemovalMode.EVENT_OBJECT_EXACT),
+			new CompiledQuestGraph.SetQuestStatusAction(CompiledQuestGraph.QuestStatus.START),
+			new CompiledQuestGraph.PlayMovieAction(913)), actions);
+		CompiledQuestGraph.Action templateRemoval = load(document(graph(1, "offer",
+			transition.replace("EVENT_OBJECT_EXACT", "EVENT_TEMPLATE_EXACT"), terminal()))).graphs().get(1)
+			.nodes().get("offer").transitions().getFirst().actions().get(1);
+		assertEquals(new CompiledQuestGraph.RemoveUsedItemAction(1,
+			CompiledQuestGraph.UsedItemRemovalMode.EVENT_TEMPLATE_EXACT), templateRemoval);
+
+		assertFailureContains(document(graph(1, "offer",
+			transition.replace("<item-use item_id=\"182200001\"/>", "<kill npc_id=\"203709\"/>"), terminal())),
+			"uses delayed item-use continuation outside ITEM_USE");
+		assertFailureContains(document(graph(1, "offer",
+			transition.replace("<delay-item-use-continuation duration_ms=\"3000\"/>", ""), terminal())),
+			"removes the used item before its durable delay barrier");
+		assertFailureContains(document(graph(1, "offer",
+			transition.replace("<delay-item-use-continuation duration_ms=\"3000\"/>", "ITEM_USE_BARRIER")
+				.replace("<remove-used-item count=\"1\" mode=\"EVENT_OBJECT_EXACT\"/>",
+					"<delay-item-use-continuation duration_ms=\"3000\"/>")
+				.replace("ITEM_USE_BARRIER", "<remove-used-item count=\"1\" mode=\"EVENT_OBJECT_EXACT\"/>"), terminal())),
+			"removes the used item before its durable delay barrier");
+		assertFailureContains(document(graph(1, "offer",
+			transition.replace("<remove-used-item count=\"1\" mode=\"EVENT_OBJECT_EXACT\"/>", "")
+				.replace("<set-quest-status status=\"START\"/>", "")
+				.replace("<play-movie movie_id=\"913\"/>", ""), terminal())),
+			"delayed item-use barrier has no persisted action tail");
+		assertFailureContains(document(graph(1, "offer",
+			transition.replace("<remove-used-item count=\"1\" mode=\"EVENT_OBJECT_EXACT\"/>",
+				"<delay-item-use-continuation duration_ms=\"3000\"/>"
+					+ "<remove-used-item count=\"1\" mode=\"EVENT_OBJECT_EXACT\"/>"), terminal())),
+			"declares multiple delayed item-use barriers");
+		assertCompilerFailureContains(document(graph(1, "offer",
+			transition.replace("EVENT_OBJECT_EXACT", "UNKNOWN"), terminal())), "invalid remove-used-item action");
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "offer",
+			transition.replace("EVENT_OBJECT_EXACT", "UNKNOWN"), terminal()))));
+	}
+
 
 	/**
 	 * 验证 send-dialog 支持 BOUND/UNBOUND 绑定，缺省 BOUND，非法绑定失败关闭。
@@ -1133,9 +1229,26 @@ class QuestGraphCompilerTest {
 			.nodes().get("active").transitions().getFirst().actions().getFirst();
 		assertEquals(new CompiledQuestGraph.TeleportPlayerAction(301580000, 0,
 			CompiledQuestGraph.TeleportInstancePolicy.PLAYER_REGISTERED_OR_CREATE, 10f, 20f, 30f, (byte) 90), registeredAction);
+		String currentContext = transition.replace("210010000", "220050000")
+			.replace("heading=\"90\"", "instance_policy=\"PLAYER_CURRENT\" heading_policy=\"PLAYER_CURRENT\"");
+		CompiledQuestGraph.Action currentContextAction = load(document(graph(1, "active", currentContext, terminal()))).graphs().get(1)
+			.nodes().get("active").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.TeleportPlayerAction(220050000, 0,
+			CompiledQuestGraph.TeleportInstancePolicy.PLAYER_CURRENT, 10f, 20f, 30f,
+			CompiledQuestGraph.TeleportHeadingPolicy.PLAYER_CURRENT, (byte) 0), currentContextAction);
+		String registeredCurrentHeading = registered.replace("heading=\"90\"", "heading_policy=\"PLAYER_CURRENT\"");
+		CompiledQuestGraph.Action registeredCurrentHeadingAction = load(document(graph(1, "active", registeredCurrentHeading, terminal())))
+			.graphs().get(1).nodes().get("active").transitions().getFirst().actions().getFirst();
+		assertEquals(new CompiledQuestGraph.TeleportPlayerAction(301580000, 0,
+			CompiledQuestGraph.TeleportInstancePolicy.PLAYER_REGISTERED_OR_CREATE, 10f, 20f, 30f,
+			CompiledQuestGraph.TeleportHeadingPolicy.PLAYER_CURRENT, (byte) 0), registeredCurrentHeadingAction);
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
 			registered.replace("instance_policy=\"PLAYER_REGISTERED_OR_CREATE\"",
 				"instance_id=\"2\" instance_policy=\"PLAYER_REGISTERED_OR_CREATE\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			currentContext.replace("instance_policy=\"PLAYER_CURRENT\"", "instance_id=\"2\" instance_policy=\"PLAYER_CURRENT\""), terminal()))));
+		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active",
+			currentContext.replace("heading_policy=\"PLAYER_CURRENT\"", "heading_policy=\"PLAYER_CURRENT\" heading=\"9\""), terminal()))));
 		assertFailureContains(document(graph(1, "active",
 			registered.replace("301580000", "220050000"), terminal())), "references non-instance world 220050000");
 		assertThrows(IllegalArgumentException.class, () -> load(document(graph(1, "active", transition, terminal()))));
@@ -1170,6 +1283,54 @@ class QuestGraphCompilerTest {
 			transition.replace("spawner_object_id=\"700759\"", "spawner_object_id=\"203709\""), terminal())),
 			"spawn-instance-npc references missing static spawner 203709");
 		assertThrows(IllegalArgumentException.class, () -> new CompiledQuestGraph.SpawnInstanceNpcAction(0, 203709));
+
+		String explicitStatic = transition.replace("spawner_object_id=\"700759\"",
+			"placement=\"STATIC_SPAWNER\" spawner_object_id=\"700759\"");
+		assertEquals(new CompiledQuestGraph.SpawnInstanceNpcAction(203709,
+			new CompiledQuestGraph.StaticSpawnerPlacement(700759)), firstResourceAction(explicitStatic));
+
+		String eventNpc = transition.replace("spawner_object_id=\"700759\" npc_id=\"203709\"",
+			"placement=\"EVENT_NPC\" event_npc_id=\"203709\" npc_id=\"700759\"");
+		assertEquals(new CompiledQuestGraph.SpawnInstanceNpcAction(700759,
+			new CompiledQuestGraph.EventNpcPlacement(203709)), firstResourceAction(eventNpc));
+
+		String player = transition.replace("spawner_object_id=\"700759\"", "placement=\"PLAYER\"");
+		assertEquals(new CompiledQuestGraph.SpawnInstanceNpcAction(203709, new CompiledQuestGraph.PlayerPlacement()),
+			firstResourceAction(player));
+
+		String fixed = transition.replace("spawner_object_id=\"700759\"",
+			"placement=\"FIXED\" world_policy=\"EXPLICIT\" world_id=\"220050000\" "
+				+ "instance_policy=\"EXPLICIT\" instance_id=\"1\" x=\"10\" y=\"20\" z=\"30\" heading=\"90\"");
+		assertEquals(new CompiledQuestGraph.SpawnInstanceNpcAction(203709,
+			new CompiledQuestGraph.FixedPlacement(220050000, 1, 10, 20, 30, (byte) 90)), firstResourceAction(fixed));
+		String currentInstance = fixed.replace("instance_policy=\"EXPLICIT\" instance_id=\"1\"",
+			"instance_policy=\"PLAYER_CURRENT\"");
+		assertEquals(new CompiledQuestGraph.SpawnInstanceNpcAction(203709,
+			new CompiledQuestGraph.FixedPlacement(CompiledQuestGraph.SpawnWorldPolicy.EXPLICIT, 220050000,
+				CompiledQuestGraph.SpawnInstancePolicy.PLAYER_CURRENT, 0, 10, 20, 30, (byte) 90)),
+			firstResourceAction(currentInstance));
+
+		assertFailureContains(resourceGraph(player.replace("placement=\"PLAYER\"", "")), "must declare placement");
+		assertFailureContains(resourceGraph(player.replace("placement=\"PLAYER\"", "placement=\"PLAYER\" event_npc_id=\"203709\"")),
+			"fields incompatible with placement PLAYER");
+		assertFailureContains(resourceGraph(eventNpc.replace("event_npc_id=\"203709\"", "event_npc_id=\"700759\"")),
+			"does not match DIALOG target 203709");
+		assertFailureContains(resourceGraph(eventNpc.replace("<dialog npc_id=\"203709\" dialog=\"USE_OBJECT\"/>",
+			"<kill npc_id=\"203709\"/>")), "without a bound DIALOG NPC snapshot");
+		assertFailureContains(resourceGraph(eventNpc.replace("event_npc_id=\"203709\"", "event_npc_id=\"999999\"")),
+			"references missing event NPC 999999");
+		assertFailureContains(resourceGraph(fixed.replace(" heading=\"90\"", "")),
+			"requires x, y, z, and heading");
+		assertFailureContains(resourceGraph(fixed.replace(" world_policy=\"EXPLICIT\"", "")), "requires world_policy");
+		assertFailureContains(resourceGraph(currentInstance.replace("instance_policy=\"PLAYER_CURRENT\"",
+			"instance_policy=\"PLAYER_CURRENT\" instance_id=\"1\"")), "context fields do not match their policies");
+		assertFailureContains(resourceGraph(fixed.replace("220050000", "999999999")), "references missing world 999999999");
+		assertThrows(IllegalArgumentException.class,
+			() -> load(resourceGraph(player.replace("placement=\"PLAYER\"", "placement=\"AROUND_PLAYER\""))));
+	}
+
+	private CompiledQuestGraph.Action firstResourceAction(String transition) throws Exception {
+		return load(resourceGraph(transition)).graphs().get(1).nodes().get("active").transitions().getFirst().actions().getFirst();
 	}
 
 	/** 正式引用目录只收录确有坐标的静态刷新点，不把任意 NPC 模板或空刷新组算作证明。 / The formal catalog includes only static spawns with coordinates, not arbitrary NPC templates or empty groups. */
@@ -1471,7 +1632,6 @@ class QuestGraphCompilerTest {
 					<learn-recipe recipe_id="155004001"/>
 					<remove-quest-work-items/>
 					<delete-recipe recipe_id="155004001"/>
-					<sync-quest-status/>
 				</actions>
 			</transition>
 			""";
@@ -1620,6 +1780,33 @@ class QuestGraphCompilerTest {
 			() -> load(document(lifecycle.replace("status=\"START\"", "status=\"DYNAMIC\""))));
 	}
 
+	/** Lifecycle endpoints reject duplicate projection but a post-start state write may require its own frozen sync. */
+	@Test
+	void compilerValidatesGenericStatusSyncAlongsideLifecycleEndpoints() throws Exception {
+		String transition = """
+			<transition id="lifecycle-sync" priority="1" to="done">
+				<dialog npc_id="203709" dialog="USE_OBJECT"/>
+				<actions>%s</actions>
+			</transition>
+			""";
+		for (String actions : List.of(
+			"<start-quest/><sync-quest-status/>",
+			"<sync-quest-status snapshot_after_action_count=\"0\"/><start-event-quest quest_id=\"2\" status=\"START\"/>",
+			"<finish-quest reward_index=\"0\"/><sync-quest-status snapshot_after_action_count=\"1\"/>",
+			"<sync-quest-status snapshot_after_action_count=\"0\"/><abandon-quest/>")) {
+			assertFailureContains(document(graph(1, "active", transition.formatted(actions), terminal())),
+				"combines a lifecycle endpoint with generic quest-status sync");
+		}
+		String projectedStart = transition.formatted(
+			"<start-quest/><set-quest-status status=\"REWARD\"/><sync-quest-status/>");
+		assertEquals(3, load(document(graph(1, "active", projectedStart, terminal())))
+			.graphs().get(1).nodes().get("active").transitions().getFirst().actions().size());
+		assertFailureContains(document(graph(1, "active", transition.formatted(
+			"<start-quest/><set-quest-status status=\"REWARD\"/>"
+				+ "<sync-quest-status snapshot_after_action_count=\"1\"/>"), terminal())),
+			"combines a lifecycle endpoint with generic quest-status sync");
+	}
+
 	private CompiledQuestGraphData load(String xml) throws Exception {
 		return load(xml, REFERENCES);
 	}
@@ -1710,6 +1897,7 @@ class QuestGraphCompilerTest {
 					}
 					addIntegerAttribute(reader, "quest_id", questIds);
 					addIntegerAttribute(reader, "npc_id", npcIds);
+					addIntegerAttribute(reader, "event_npc_id", npcIds);
 					addIntegerAttribute(reader, "destination_npc_id", npcIds);
 					addIntegerAttribute(reader, "spawner_object_id", staticSpawnNpcIds);
 					if (reader.getLocalName().equals("start-escort")) {
@@ -1835,7 +2023,6 @@ class QuestGraphCompilerTest {
 					<remove-quest-item item_id="182200001" count="1" mode="EXACT"/>
 					<remove-collected-items/>
 					<finish-quest reward_index="0"/>
-					<sync-quest-status/>
 					<send-dialog dialog_id="5"/>
 					<close-dialog/>
 					<show-quest-list/>
@@ -1856,9 +2043,8 @@ class QuestGraphCompilerTest {
 	/** 创建带 finish/message 对的 repeat 转换。 / Creates a repeat transition with a paired finish/message protocol. */
 	private static String repeatTransition(String finishAttributes, String messageAttributes) {
 		return transition("repeat-finish", 10, "done")
-			.replace("<finish-quest reward_index=\"0\"/>", "<finish-quest reward_index=\"0\" " + finishAttributes + "/>")
-			.replace("<sync-quest-status/>",
-				"<sync-quest-status/><send-repeat-deadline-message " + messageAttributes + "/>");
+			.replace("<finish-quest reward_index=\"0\"/>", "<finish-quest reward_index=\"0\" " + finishAttributes
+				+ "/><send-repeat-deadline-message " + messageAttributes + "/>");
 	}
 
 	/** 返回已编译转换中的唯一 finish action。 / Returns the only compiled finish action in the transition. */

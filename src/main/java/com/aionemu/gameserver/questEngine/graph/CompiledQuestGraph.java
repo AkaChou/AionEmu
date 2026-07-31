@@ -12,6 +12,7 @@ import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.items.ItemId;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
@@ -108,6 +109,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		ADD_COMPLETION_COUNT(ActionPhase.STATE),
 		GIVE_QUEST_ITEM(ActionPhase.REQUIRED),
 		REMOVE_QUEST_ITEM(ActionPhase.REQUIRED),
+		PAY_KINAH_AND_ITEM(ActionPhase.REQUIRED),
+		DIALOG_NPC_LIFECYCLE(ActionPhase.REQUIRED),
 		REMOVE_COLLECTED_ITEMS(ActionPhase.REQUIRED),
 		REMOVE_QUEST_WORK_ITEMS(ActionPhase.REQUIRED),
 		LEARN_RECIPE(ActionPhase.REQUIRED),
@@ -117,6 +120,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 		SPAWN_INSTANCE_NPC(ActionPhase.REQUIRED),
 		START_ESCORT(ActionPhase.REQUIRED),
 		TELEPORT_PLAYER(ActionPhase.REQUIRED),
+		DELAY_ITEM_USE_CONTINUATION(ActionPhase.REQUIRED),
+		REMOVE_USED_ITEM(ActionPhase.REQUIRED),
 		START_QUEST_TIMER(ActionPhase.REQUIRED),
 		END_QUEST_TIMER(ActionPhase.REQUIRED),
 		SEND_DIALOG(ActionPhase.POST_COMMIT_PROTOCOL),
@@ -206,8 +211,18 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	public enum TeleportInstancePolicy {
 		/** 使用显式 instanceId；0 交由普通传送服务选择当前/默认 instance。 / Uses the explicit id; 0 delegates to normal current/default routing. */
 		EXPLICIT_OR_DEFAULT,
+		/** 在 PREPARED 前冻结玩家当前 instance，并在恢复时复用该快照。 / Freezes the player's current instance before PREPARED and reuses it during recovery. */
+		PLAYER_CURRENT,
 		/** 复用玩家已注册副本；不存在时创建并注册。 / Reuses the player's registered instance, creating and registering one when absent. */
 		PLAYER_REGISTERED_OR_CREATE
+	}
+
+	/** 定义传送朝向的服务端解析策略。 / Defines how the server resolves the destination heading. */
+	public enum TeleportHeadingPolicy {
+		/** 使用图中显式朝向；旧 XML 缺省为 0。 / Uses the explicit graph heading; legacy XML defaults to zero. */
+		EXPLICIT,
+		/** 在 PREPARED 前冻结玩家当前朝向，并在恢复时复用该快照。 / Freezes the player's current heading before PREPARED and reuses it during recovery. */
+		PLAYER_CURRENT
 	}
 
 	/** 定义 escort follower 的服务端权威来源。 / Defines the server-authoritative source of an escort follower. */
@@ -747,12 +762,13 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 */
 	public sealed interface Action permits StartQuestAction, StartEventQuestAction, AbandonQuestAction, SetQuestStatusAction, SetQuestVariableAction,
 		AddQuestVariableAction, IncrementPackedCounterAction,
-		SetCompletionCountAction, AddCompletionCountAction, GiveQuestItemAction, RemoveQuestItemAction, RemoveCollectedItemsAction,
+		SetCompletionCountAction, AddCompletionCountAction, GiveQuestItemAction, RemoveQuestItemAction, PayKinahAndItemAction, DialogNpcLifecycleAction, RemoveCollectedItemsAction,
 		RemoveQuestWorkItemsAction, LearnRecipeAction, DeleteRecipeAction, GrantCraftSkillRewardAction,
 		SyncCraftSkillRewardAction, NotifyRecipeRejectionAction, FinishQuestAction,
 		StartQuestTimerAction, EndQuestTimerAction, SendDialogAction, CloseDialogAction, ShowQuestListAction, SyncQuestStatusAction,
 		SendRepeatDeadlineMessageAction, SyncQuestTimerAction, SendPlayerMessageAction, SendEmotionAction, PlayMovieAction,
-		SendSystemMessageAction, StartFlightTeleportAction, ScheduleItemUseDialogAction, SpawnInstanceNpcAction,
+		SendSystemMessageAction, StartFlightTeleportAction, ScheduleItemUseDialogAction, DelayItemUseContinuationAction,
+		RemoveUsedItemAction, SpawnInstanceNpcAction,
 		StartEscortAction, TeleportPlayerAction {
 
 		/** 返回动作种类及其固定执行阶段。 / Returns the action kind and its fixed execution phase. */
@@ -769,6 +785,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				case AddCompletionCountAction ignored -> ActionType.ADD_COMPLETION_COUNT;
 				case GiveQuestItemAction ignored -> ActionType.GIVE_QUEST_ITEM;
 				case RemoveQuestItemAction ignored -> ActionType.REMOVE_QUEST_ITEM;
+				case PayKinahAndItemAction ignored -> ActionType.PAY_KINAH_AND_ITEM;
+				case DialogNpcLifecycleAction ignored -> ActionType.DIALOG_NPC_LIFECYCLE;
 				case RemoveCollectedItemsAction ignored -> ActionType.REMOVE_COLLECTED_ITEMS;
 				case RemoveQuestWorkItemsAction ignored -> ActionType.REMOVE_QUEST_WORK_ITEMS;
 				case LearnRecipeAction ignored -> ActionType.LEARN_RECIPE;
@@ -794,6 +812,8 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				case SpawnInstanceNpcAction ignored -> ActionType.SPAWN_INSTANCE_NPC;
 				case StartEscortAction ignored -> ActionType.START_ESCORT;
 				case TeleportPlayerAction ignored -> ActionType.TELEPORT_PLAYER;
+				case DelayItemUseContinuationAction ignored -> ActionType.DELAY_ITEM_USE_CONTINUATION;
+				case RemoveUsedItemAction ignored -> ActionType.REMOVE_USED_ITEM;
 			};
 		}
 	}
@@ -911,6 +931,31 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 				throw new IllegalArgumentException("Remove quest item action is invalid");
 			}
 		}
+	}
+
+	/** 原子扣除显式 Kinah 与普通背包物品；任一余额不足时不产生副作用。 / Atomically charges explicit Kinah and ordinary inventory items, with no side effect when either balance is insufficient. */
+	public record PayKinahAndItemAction(long kinah, int itemId, long itemCount) implements Action {
+		/** 校验正数货币、物品引用和数量。 / Validates positive currency, item reference, and count. */
+		public PayKinahAndItemAction {
+			if (kinah <= 0 || itemId <= 0 || itemId == ItemId.KINAH.value() || itemCount <= 0) {
+				throw new IllegalArgumentException("Kinah and item payment action is invalid");
+			}
+		}
+	}
+
+	/** 对话目标 NPC 的类型化生命周期动作；动作只接受当前 DIALOG 快照中的同一对象。 / Typed lifecycle action for the dialog-target NPC; only the exact object in the current DIALOG snapshot is accepted. */
+	public record DialogNpcLifecycleAction(DialogNpcLifecycleMode mode) implements Action {
+		public DialogNpcLifecycleAction {
+			if (mode == null) {
+				throw new IllegalArgumentException("Dialog NPC lifecycle mode is invalid");
+			}
+		}
+	}
+
+	/** 对话目标 NPC 生命周期的封闭模式。 / Closed modes for dialog-target NPC lifecycle. */
+	public enum DialogNpcLifecycleMode {
+		DELETE,
+		SCHEDULE_RESPAWN_THEN_DELETE
 	}
 
 	/** 扣除 quest_data 中声明的交付物品。 / Removes delivery items declared by quest_data. */
@@ -1032,8 +1077,22 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	public record ShowQuestListAction() implements Action {
 	}
 
-	/** 提交后向客户端同步 canonical 任务状态和变量。 / Syncs canonical quest status and variables after commit. */
-	public record SyncQuestStatusAction() implements Action {
+	/**
+	 * 提交后向客户端同步在指定 pre-protocol 动作前缀后冻结的任务状态和变量；-1 表示最终已提交快照。
+	 * Syncs quest status and variables frozen after a pre-protocol action prefix; -1 selects the final committed snapshot.
+	 */
+	public record SyncQuestStatusAction(int snapshotAfterActionCount) implements Action {
+		/** 保留旧空动作语义，使用最终已提交快照。 / Preserves the legacy empty action by selecting the final committed snapshot. */
+		public SyncQuestStatusAction() {
+			this(-1);
+		}
+
+		/** 拒绝除最终快照 sentinel 外的负 checkpoint。 / Rejects negative checkpoints other than the final-snapshot sentinel. */
+		public SyncQuestStatusAction {
+			if (snapshotAfterActionCount < -1) {
+				throw new IllegalArgumentException("Quest-status sync checkpoint is invalid");
+			}
+		}
 	}
 
 	/** 提交后发送与已持久化 repeat deadline 一致的系统提示。 / Sends a system message matching the persisted repeat deadline after commit. */
@@ -1138,15 +1197,138 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	}
 
 	/**
-	 * 在玩家当前 instance 按 spawner 静态坐标召唤 NPC，并登记 instance-scoped cleanup lease。
-	 * Spawns an NPC in the player instance at the spawner static spot and registers an instance-scoped cleanup lease.
+	 * 在 ITEM_USE 事件上建立可恢复的绝对时间屏障；屏障后的动作仍由 graph journal 顺序执行。
+	 * Establishes a recoverable absolute-time barrier for an ITEM_USE event; the graph journal still executes the tail in order.
 	 */
-	public record SpawnInstanceNpcAction(int spawnerObjectId, int npcId) implements Action {
-		/** 校验 spawner 与 NPC 模板 ID 为正。 / Validates that spawner and NPC template ids are positive. */
+	public record DelayItemUseContinuationAction(int durationMs) implements Action {
+		/** 校验动画与延迟时长。 / Validates the animation and delay duration. */
+		public DelayItemUseContinuationAction {
+			if (durationMs <= 0) {
+				throw new IllegalArgumentException("Item-use continuation duration is invalid");
+			}
+		}
+	}
+
+	/** 冻结 ITEM_USE 事件物品的扣除身份。 / Freezes how the ITEM_USE event item is identified for removal. */
+	public enum UsedItemRemovalMode {
+		/** 只扣除事件携带的具体物品对象。 / Removes only the exact item object carried by the event. */
+		EVENT_OBJECT_EXACT,
+		/** 按事件携带的物品模板从背包总量扣除。 / Removes by the item template carried by the event. */
+		EVENT_TEMPLATE_EXACT
+	}
+
+	/** 延迟屏障后扣除 ITEM_USE 事件冻结的物品。 / Removes the item frozen by the ITEM_USE event after the delay barrier. */
+	public record RemoveUsedItemAction(long count, UsedItemRemovalMode mode) implements Action {
+		/** 校验正数数量与封闭身份模式。 / Validates a positive count and closed identity mode. */
+		public RemoveUsedItemAction {
+			if (count <= 0 || mode == null) {
+				throw new IllegalArgumentException("Used-item removal action is invalid");
+			}
+		}
+	}
+
+	/** 定义 instance NPC 生成位置的封闭集合。 / Defines the closed set of instance-NPC spawn placements. */
+	public sealed interface SpawnPlacement permits StaticSpawnerPlacement, EventNpcPlacement, PlayerPlacement, FixedPlacement {
+		/** 返回位置策略种类。 / Returns the placement kind. */
+		SpawnPlacementKind kind();
+	}
+
+	/** Instance NPC 生成位置种类。 / Instance-NPC spawn placement kinds. */
+	public enum SpawnPlacementKind {
+		STATIC_SPAWNER,
+		EVENT_NPC,
+		PLAYER,
+		FIXED
+	}
+
+	/** 定义 FIXED 位置的世界解析策略。 / Defines how a FIXED placement resolves its world. */
+	public enum SpawnWorldPolicy {
+		EXPLICIT,
+		PLAYER_CURRENT
+	}
+
+	/** 定义 FIXED 位置的 instance 解析策略。 / Defines how a FIXED placement resolves its instance. */
+	public enum SpawnInstancePolicy {
+		EXPLICIT,
+		PLAYER_CURRENT
+	}
+
+	/** 使用静态刷新目录中一个 NPC 模板的权威坐标。 / Uses authoritative static-spawn coordinates for an NPC template. */
+	public record StaticSpawnerPlacement(int spawnerObjectId) implements SpawnPlacement {
+		public StaticSpawnerPlacement {
+			if (spawnerObjectId <= 0) {
+				throw new IllegalArgumentException("Static-spawner placement is invalid");
+			}
+		}
+
+		@Override
+		public SpawnPlacementKind kind() {
+			return SpawnPlacementKind.STATIC_SPAWNER;
+		}
+	}
+
+	/** 使用当前 DIALOG 事件 NPC 的权威实时坐标。 / Uses the authoritative live coordinates of the current DIALOG event NPC. */
+	public record EventNpcPlacement(int eventNpcId) implements SpawnPlacement {
+		public EventNpcPlacement {
+			if (eventNpcId <= 0) {
+				throw new IllegalArgumentException("Event-NPC placement is invalid");
+			}
+		}
+
+		@Override
+		public SpawnPlacementKind kind() {
+			return SpawnPlacementKind.EVENT_NPC;
+		}
+	}
+
+	/** 使用玩家的权威实时坐标。 / Uses the player's authoritative live coordinates. */
+	public record PlayerPlacement() implements SpawnPlacement {
+		@Override
+		public SpawnPlacementKind kind() {
+			return SpawnPlacementKind.PLAYER;
+		}
+	}
+
+	/** 使用显式或玩家当前 world/instance，以及显式坐标和朝向。 / Uses explicit or player-current context with fixed coordinates. */
+	public record FixedPlacement(SpawnWorldPolicy worldPolicy, int worldId, SpawnInstancePolicy instancePolicy, int instanceId,
+			float x, float y, float z, byte heading) implements SpawnPlacement {
+		/** 兼容全部显式 context 的调用。 / Preserves callers that provide a fully explicit context. */
+		public FixedPlacement(int worldId, int instanceId, float x, float y, float z, byte heading) {
+			this(SpawnWorldPolicy.EXPLICIT, worldId, SpawnInstancePolicy.EXPLICIT, instanceId, x, y, z, heading);
+		}
+
+		public FixedPlacement {
+			if (worldPolicy == null || instancePolicy == null
+					|| (worldPolicy == SpawnWorldPolicy.EXPLICIT ? worldId <= 0 : worldId != 0)
+					|| (instancePolicy == SpawnInstancePolicy.EXPLICIT ? instanceId < 0 : instanceId != 0)
+					|| !Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
+				throw new IllegalArgumentException("Fixed spawn placement is invalid");
+			}
+		}
+
+		@Override
+		public SpawnPlacementKind kind() {
+			return SpawnPlacementKind.FIXED;
+		}
+	}
+
+	/** 以类型化位置生成 NPC，并登记 instance-scoped cleanup lease。 / Spawns an NPC at a typed placement and registers an instance-scoped cleanup lease. */
+	public record SpawnInstanceNpcAction(int npcId, SpawnPlacement placement) implements Action {
+		/** 兼容旧静态 spawner 构造；位置仍被显式类型化。 / Preserves the legacy static-spawner constructor while keeping placement typed. */
+		public SpawnInstanceNpcAction(int spawnerObjectId, int npcId) {
+			this(npcId, new StaticSpawnerPlacement(spawnerObjectId));
+		}
+
+		/** 校验 NPC 模板与位置策略。 / Validates the NPC template and placement policy. */
 		public SpawnInstanceNpcAction {
-			if (spawnerObjectId <= 0 || npcId <= 0) {
+			if (npcId <= 0 || placement == null) {
 				throw new IllegalArgumentException("Instance spawn action is invalid");
 			}
+		}
+
+		/** 兼容旧适配器读取静态来源；非静态位置没有 spawner ID。 / Compatibility accessor for the legacy static adapter. */
+		public int spawnerObjectId() {
+			return placement instanceof StaticSpawnerPlacement source ? source.spawnerObjectId() : 0;
 		}
 	}
 
@@ -1223,19 +1405,32 @@ public record CompiledQuestGraph(int questId, int version, StateScope scope, Str
 	 * Teleports the player to server-authoritative world coordinates (optional instance).
 	 */
 	public record TeleportPlayerAction(int worldId, int instanceId, TeleportInstancePolicy instancePolicy, float x, float y,
-			float z, byte heading) implements Action {
+			float z, TeleportHeadingPolicy headingPolicy, byte heading) implements Action {
 		/** 保持旧 XML/调用方的兼容构造，缺省使用普通显式/默认策略。 / Preserves existing callers and XML with the normal explicit/default policy. */
 		public TeleportPlayerAction(int worldId, int instanceId, float x, float y, float z, byte heading) {
-			this(worldId, instanceId, TeleportInstancePolicy.EXPLICIT_OR_DEFAULT, x, y, z, heading);
+			this(worldId, instanceId, TeleportInstancePolicy.EXPLICIT_OR_DEFAULT, x, y, z, TeleportHeadingPolicy.EXPLICIT, heading);
+		}
+
+		/** 保持已有 instance 策略调用方兼容，并使用显式朝向。 / Preserves existing instance-policy callers with an explicit heading. */
+		public TeleportPlayerAction(int worldId, int instanceId, TeleportInstancePolicy instancePolicy, float x, float y, float z, byte heading) {
+			this(worldId, instanceId, instancePolicy, x, y, z, TeleportHeadingPolicy.EXPLICIT, heading);
 		}
 
 		/** 校验世界、封闭策略、instance 组合与有限坐标。 / Validates the world, closed policy/id combination, and finite coordinates. */
 		public TeleportPlayerAction {
-			if (worldId <= 0 || instanceId < 0 || instancePolicy == null
-					|| instancePolicy == TeleportInstancePolicy.PLAYER_REGISTERED_OR_CREATE && instanceId != 0
+			if (worldId <= 0 || instanceId < 0 || instancePolicy == null || headingPolicy == null
+					|| instancePolicy != TeleportInstancePolicy.EXPLICIT_OR_DEFAULT && instanceId != 0
+					|| headingPolicy == TeleportHeadingPolicy.PLAYER_CURRENT && heading != 0
 					|| !Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
 				throw new IllegalArgumentException("Teleport player action is invalid");
 			}
+		}
+
+		/** 是否必须在 PREPARED 前冻结玩家上下文。 / Returns whether player context must be frozen before PREPARED. */
+		public boolean requiresCurrentContext() {
+			return instancePolicy == TeleportInstancePolicy.PLAYER_CURRENT
+				|| instancePolicy == TeleportInstancePolicy.EXPLICIT_OR_DEFAULT && instanceId == 0
+				|| headingPolicy == TeleportHeadingPolicy.PLAYER_CURRENT;
 		}
 	}
 }

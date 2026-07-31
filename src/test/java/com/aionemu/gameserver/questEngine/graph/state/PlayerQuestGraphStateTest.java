@@ -31,9 +31,11 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Item
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestStatusSyncSnapshot;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.SpawnPlacementKind;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.TeleportPlan;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.VariableValue;
 
 class PlayerQuestGraphStateTest {
@@ -47,8 +49,21 @@ class PlayerQuestGraphStateTest {
 		reversedVariables.put("ready", new BooleanValue(true));
 		reversedVariables.put("score", new IntValue(7));
 		ItemMutationPlan itemPlan = new ItemMutationPlan(1, ItemMutationKind.REMOVE_EXACT, 182200001, 2, 5, 3);
+		TeleportPlan firstTeleport = new TeleportPlan(0, 210010000, 3, 10.5f, 20.5f, 30.5f, (byte) 64);
+		TeleportPlan secondTeleport = new TeleportPlan(3, 210020000, 7, 40.5f, 50.5f, 60.5f, (byte) 96);
+		Map<Integer, TeleportPlan> teleportPlans = new LinkedHashMap<>();
+		teleportPlans.put(3, secondTeleport);
+		teleportPlans.put(0, firstTeleport);
+		QuestStatusSyncSnapshot firstSync = new QuestStatusSyncSnapshot(2, 1, QuestStatus.START, Integer.MIN_VALUE);
+		QuestStatusSyncSnapshot secondSync = new QuestStatusSyncSnapshot(5, 4, QuestStatus.REWARD, Integer.MAX_VALUE);
+		Map<Integer, QuestStatusSyncSnapshot> syncSnapshots = new LinkedHashMap<>();
+		syncSnapshots.put(5, secondSync);
+		syncSnapshots.put(2, firstSync);
+		byte[] syncDigest = new byte[32];
+		syncDigest[0] = 1;
+		syncDigest[31] = -1;
 		PreparedTransition journal = new PreparedTransition(0, "event-9", "kill-advance", 2, RepeatDeadlineResolution.deadline(1_760_000_000_000L),
-			Map.of(1, itemPlan), new byte[] { 4, 5, 6 });
+			Map.of(1, itemPlan), teleportPlans, syncSnapshots, syncDigest, new byte[] { 4, 5, 6 });
 		PlayerQuestGraphState first = state(firstVariables, journal);
 		PlayerQuestGraphState reversed = state(reversedVariables, journal);
 
@@ -63,6 +78,11 @@ class PlayerQuestGraphStateTest {
 		assertEquals("event-9", decoded.getJournal().getEventId());
 		assertEquals(RepeatDeadlineResolution.deadline(1_760_000_000_000L), decoded.getJournal().getRepeatDeadlineResolution());
 		assertEquals(Map.of(1, itemPlan), decoded.getJournal().getItemMutationPlans());
+		assertEquals(List.of(0, 3), new ArrayList<>(decoded.getJournal().getTeleportPlans().keySet()));
+		assertEquals(Map.of(0, firstTeleport, 3, secondTeleport), decoded.getJournal().getTeleportPlans());
+		assertEquals(List.of(2, 5), new ArrayList<>(decoded.getJournal().getQuestStatusSyncSnapshots().keySet()));
+		assertEquals(Map.of(2, firstSync, 5, secondSync), decoded.getJournal().getQuestStatusSyncSnapshots());
+		assertArrayEquals(syncDigest, decoded.getJournal().getQuestStatusSyncSnapshotDigest());
 		assertFalse(decoded.getJournal().isTargetCommitted());
 		assertEquals(QuestStatus.START, decoded.getQuestStatus());
 		assertEquals(new QuestHistory(3, 2, 1_700_000_000_000L, 1_750_000_000_000L), decoded.getHistory());
@@ -175,18 +195,35 @@ class PlayerQuestGraphStateTest {
 	void stateAndJournalDefensivelyCopyInputs() {
 		Map<String, VariableValue> variables = new HashMap<>();
 		variables.put("score", new IntValue(1));
+		Map<Integer, TeleportPlan> teleportPlans = new HashMap<>();
+		teleportPlans.put(0, new TeleportPlan(0, 210010000, 3, 1, 2, 3, (byte) 4));
+		Map<Integer, QuestStatusSyncSnapshot> syncSnapshots = new HashMap<>();
+		syncSnapshots.put(1, new QuestStatusSyncSnapshot(1, 0, QuestStatus.START, 7));
+		byte[] syncDigest = new byte[32];
+		syncDigest[0] = 7;
 		byte[] eventPayload = { 1, 2 };
-		PreparedTransition journal = new PreparedTransition(2, "event", "transition", 0, eventPayload);
+		PreparedTransition journal = new PreparedTransition(2, "event", "transition", 0,
+			RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), teleportPlans, syncSnapshots, syncDigest, eventPayload);
 		PlayerQuestGraphState state = state(variables, journal);
 
 		variables.clear();
+		teleportPlans.clear();
+		syncSnapshots.clear();
+		syncDigest[0] = 9;
 		eventPayload[0] = 9;
+		byte[] returnedDigest = journal.getQuestStatusSyncSnapshotDigest();
+		returnedDigest[0] = 9;
 		byte[] returnedPayload = journal.getEventPayload();
 		returnedPayload[1] = 9;
 
 		assertTrue(state.getVariables().containsKey("score"));
+		assertEquals(1, journal.getTeleportPlans().size());
+		assertEquals(1, journal.getQuestStatusSyncSnapshots().size());
+		assertEquals(7, journal.getQuestStatusSyncSnapshotDigest()[0]);
 		assertArrayEquals(new byte[] { 1, 2 }, journal.getEventPayload());
 		assertThrows(UnsupportedOperationException.class, () -> state.getDeadlines().clear());
+		assertThrows(UnsupportedOperationException.class, () -> journal.getTeleportPlans().clear());
+		assertThrows(UnsupportedOperationException.class, () -> journal.getQuestStatusSyncSnapshots().clear());
 	}
 
 	@Test
@@ -203,6 +240,32 @@ class PlayerQuestGraphStateTest {
 			() -> new RepeatDeadlineResolution(RepeatDeadlineDisposition.DEADLINE, 0L));
 		assertThrows(IllegalArgumentException.class,
 			() -> new ItemMutationPlan(0, ItemMutationKind.REMOVE_EXACT, 182200001, 3, 2, 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new TeleportPlan(-1, 210010000, 1, 1, 2, 3, (byte) 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new TeleportPlan(0, 0, 1, 1, 2, 3, (byte) 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new TeleportPlan(0, 210010000, -1, 1, 2, 3, (byte) 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new TeleportPlan(0, 210010000, 1, Float.NaN, 2, 3, (byte) 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new PreparedTransition(-1, "event", "transition", 0, RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(),
+				Map.of(1, new TeleportPlan(0, 210010000, 1, 1, 2, 3, (byte) 0)), new byte[0]));
+		assertThrows(IllegalArgumentException.class,
+			() -> new QuestStatusSyncSnapshot(-1, 0, QuestStatus.START, 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new QuestStatusSyncSnapshot(0, -1, QuestStatus.START, 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new QuestStatusSyncSnapshot(0, 0, null, 0));
+		assertThrows(IllegalArgumentException.class,
+			() -> new PreparedTransition(-1, "event", "transition", 0, RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), Map.of(),
+				Map.of(1, new QuestStatusSyncSnapshot(0, 0, QuestStatus.START, 0)), new byte[0]));
+		assertThrows(IllegalArgumentException.class,
+			() -> new PreparedTransition(-1, "event", "transition", 0, RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), Map.of(), Map.of(),
+				new byte[31], new byte[0]));
+		assertThrows(IllegalArgumentException.class,
+			() -> new PreparedTransition(-1, "event", "transition", 0, RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), Map.of(), Map.of(),
+				new byte[33], new byte[0]));
 		assertThrows(IllegalArgumentException.class,
 			() -> new QuestHistory(1, 0, 1L, null, RepeatDeadlineDisposition.DEADLINE));
 		assertThrows(IllegalArgumentException.class,
@@ -244,7 +307,32 @@ class PlayerQuestGraphStateTest {
 		PlayerQuestGraphState decoded = PlayerQuestGraphStateCodec.decode(1, 1, 0, "offer", null, Lifecycle.PREPARED, payload);
 
 		assertTrue(decoded.getJournal().getItemMutationPlans().isEmpty());
+		assertTrue(decoded.getJournal().getTeleportPlans().isEmpty());
+		assertTrue(decoded.getJournal().getQuestStatusSyncSnapshots().isEmpty());
+		assertEquals(0, decoded.getJournal().getQuestStatusSyncSnapshotDigest().length);
 		assertEquals("legacy", decoded.getJournal().getEventId());
+	}
+
+	/** 验证旧 QGS6-9 payload 可读且新增摘要安全缺省为空。 / Verifies legacy QGS6-9 payloads with an empty digest. */
+	@Test
+	void codecReadsLegacyQgs6ThroughQgs9Payloads() throws Exception {
+		PlayerQuestGraphState qgs6 = PlayerQuestGraphStateCodec.decode(1, 1, 0, "active", null, Lifecycle.ACTIVE,
+			legacyQgs6ActivePayload());
+		PlayerQuestGraphState qgs7 = PlayerQuestGraphStateCodec.decode(1, 1, 0, "offer", null, Lifecycle.PREPARED,
+			legacyQgs7PreparedPayload());
+		PlayerQuestGraphState qgs8 = PlayerQuestGraphStateCodec.decode(1, 1, 0, "offer", null, Lifecycle.PREPARED,
+			legacyQgs8PreparedPayload());
+		PlayerQuestGraphState qgs9 = PlayerQuestGraphStateCodec.decode(1, 1, 0, "offer", null, Lifecycle.PREPARED,
+			legacyQgs9PreparedPayload());
+
+		assertEquals(QuestStatus.START, qgs6.getQuestStatus());
+		assertTrue(qgs7.getJournal().getTeleportPlans().isEmpty());
+		assertEquals("legacy-qgs7", qgs7.getJournal().getEventId());
+		assertTrue(qgs8.getJournal().getQuestStatusSyncSnapshots().isEmpty());
+		assertEquals("legacy-qgs8", qgs8.getJournal().getEventId());
+		assertEquals(new QuestStatusSyncSnapshot(2, 1, QuestStatus.START, -123), qgs9.getJournal().getQuestStatusSyncSnapshots().get(2));
+		assertEquals(0, qgs9.getJournal().getQuestStatusSyncSnapshotDigest().length);
+		assertEquals("legacy-qgs9", qgs9.getJournal().getEventId());
 	}
 
 	@Test
@@ -319,6 +407,117 @@ class PlayerQuestGraphStateTest {
 			output.writeUTF("legacy");
 			output.writeUTF("INSTANCE_SCOPED_SPAWN");
 			output.writeUTF("spawner:700759:npc:216608");
+			output.writeBoolean(false);
+		}
+		return bytes.toByteArray();
+	}
+
+	/** 创建最小旧 QGS6 ACTIVE payload。 / Creates a minimal legacy QGS6 ACTIVE payload. */
+	private static byte[] legacyQgs6ActivePayload() throws Exception {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		try (DataOutputStream output = new DataOutputStream(bytes)) {
+			output.writeInt(0x51475336);
+			output.writeByte(1);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeBoolean(false);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeInt(0);
+			output.writeBoolean(false);
+		}
+		return bytes.toByteArray();
+	}
+
+	/** 创建最小旧 QGS7 PREPARED payload。 / Creates a minimal legacy QGS7 PREPARED payload. */
+	private static byte[] legacyQgs7PreparedPayload() throws Exception {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		try (DataOutputStream output = new DataOutputStream(bytes)) {
+			output.writeInt(0x51475337);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeBoolean(false);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(true);
+			output.writeLong(-1);
+			output.writeUTF("legacy-qgs7");
+			output.writeUTF("accept");
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(false);
+		}
+		return bytes.toByteArray();
+	}
+
+	/** 创建最小旧 QGS8 PREPARED payload。 / Creates a minimal legacy QGS8 PREPARED payload. */
+	private static byte[] legacyQgs8PreparedPayload() throws Exception {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		try (DataOutputStream output = new DataOutputStream(bytes)) {
+			output.writeInt(0x51475338);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeBoolean(false);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(true);
+			output.writeLong(-1);
+			output.writeUTF("legacy-qgs8");
+			output.writeUTF("accept");
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(false);
+		}
+		return bytes.toByteArray();
+	}
+
+	/** 创建带一个冻结同步快照但没有摘要的旧 QGS9 PREPARED payload。 / Creates a legacy QGS9 journal with one snapshot and no digest. */
+	private static byte[] legacyQgs9PreparedPayload() throws Exception {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		try (DataOutputStream output = new DataOutputStream(bytes)) {
+			output.writeInt(0x51475339);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeBoolean(false);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeBoolean(true);
+			output.writeLong(-1);
+			output.writeUTF("legacy-qgs9");
+			output.writeUTF("accept");
+			output.writeInt(0);
+			output.writeBoolean(false);
+			output.writeByte(0);
+			output.writeInt(0);
+			output.writeInt(0);
+			output.writeInt(1);
+			output.writeInt(2);
+			output.writeInt(1);
+			output.writeByte(1);
+			output.writeInt(-123);
+			output.writeInt(0);
+			output.writeInt(0);
 			output.writeBoolean(false);
 		}
 		return bytes.toByteArray();

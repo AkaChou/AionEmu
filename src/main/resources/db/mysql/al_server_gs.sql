@@ -2069,6 +2069,28 @@ LOCK TABLES `player_quest_graph_states` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `quest_graph_zone_mission_signals`
+--
+
+DROP TABLE IF EXISTS `quest_graph_zone_mission_signals`;
+CREATE TABLE `quest_graph_zone_mission_signals` (
+  `player_id` int(11) NOT NULL,
+  `event_hash` binary(32) NOT NULL,
+  `event_id` varchar(255) NOT NULL,
+  `occurred_at` bigint(20) unsigned NOT NULL,
+  `source_quest_id` int(10) unsigned NOT NULL,
+  `target_quest_id` int(10) unsigned NOT NULL,
+  `status` varchar(16) NOT NULL,
+  `claim_generation` bigint(20) unsigned NOT NULL,
+  `lease_until` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`player_id`,`event_hash`),
+  UNIQUE KEY `uq_quest_graph_zone_signal_event` (`event_id`),
+  KEY `idx_quest_graph_zone_signal_target` (`player_id`,`target_quest_id`,`status`),
+  KEY `idx_quest_graph_zone_signal_lease` (`status`,`lease_until`),
+  CONSTRAINT `quest_graph_zone_mission_signals_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `quest_graph_resource_operations`
 --
 
@@ -2097,6 +2119,47 @@ CREATE TABLE `quest_graph_resource_operations` (
 LOCK TABLES `quest_graph_resource_operations` WRITE;
 /*!40000 ALTER TABLE `quest_graph_resource_operations` DISABLE KEYS */;
 /*!40000 ALTER TABLE `quest_graph_resource_operations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `quest_graph_action_outbox`
+--
+
+DROP TABLE IF EXISTS `quest_graph_action_outbox`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `quest_graph_action_outbox` (
+  `outbox_sequence` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int(11) NOT NULL,
+  `operation_hash` binary(32) NOT NULL,
+  `operation_key` varchar(1024) NOT NULL,
+  `quest_id` int(10) unsigned NOT NULL,
+  `base_revision` bigint(20) NOT NULL,
+  `transition_id` varchar(255) NOT NULL,
+  `action_index` int(10) unsigned NOT NULL,
+  `command_payload` mediumblob NOT NULL,
+  `status` varchar(16) NOT NULL,
+  `claim_generation` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `lease_until` bigint(20) unsigned DEFAULT NULL,
+  `accepted_at` bigint(20) unsigned NOT NULL,
+  `completed_at` bigint(20) unsigned DEFAULT NULL,
+  `graph_acked` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`player_id`,`operation_hash`),
+  UNIQUE KEY `uq_quest_graph_action_outbox_sequence` (`outbox_sequence`),
+  KEY `idx_quest_graph_action_outbox_pending` (`player_id`,`outbox_sequence`),
+  KEY `idx_quest_graph_action_outbox_lease` (`status`,`lease_until`),
+  KEY `idx_quest_graph_action_outbox_gc` (`status`,`graph_acked`,`completed_at`),
+  CONSTRAINT `quest_graph_action_outbox_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `quest_graph_action_outbox`
+--
+
+LOCK TABLES `quest_graph_action_outbox` WRITE;
+/*!40000 ALTER TABLE `quest_graph_action_outbox` DISABLE KEYS */;
+/*!40000 ALTER TABLE `quest_graph_action_outbox` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

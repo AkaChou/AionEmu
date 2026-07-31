@@ -31,7 +31,7 @@ public final class QuestGraphLifecycleActionAdapter {
 
 	private final int playerId;
 	private final Function<LifecycleCommand, PreflightResult> preflight;
-	private final Function<LifecycleCommand, ActionResult> executor;
+	private final LifecycleEndpoint endpoint;
 	private final BiFunction<CleanupLease, CleanupReason, ActionResult> resourceCleaner;
 
 	/**
@@ -39,28 +39,28 @@ public final class QuestGraphLifecycleActionAdapter {
 	 * Creates a typed bridge that accepts only closed lifecycle commands.
 	 */
 	public QuestGraphLifecycleActionAdapter(int playerId, Function<LifecycleCommand, PreflightResult> preflight,
-			Function<LifecycleCommand, ActionResult> executor) {
-		this(playerId, preflight, executor, null);
+			LifecycleEndpoint endpoint) {
+		this(playerId, preflight, endpoint, null);
 	}
 
 	/** 创建带逐 lease 物理清理端点的 lifecycle bridge。 / Creates a lifecycle bridge with a per-lease physical cleanup endpoint. */
 	public QuestGraphLifecycleActionAdapter(int playerId, Function<LifecycleCommand, PreflightResult> preflight,
-			Function<LifecycleCommand, ActionResult> executor,
+			LifecycleEndpoint endpoint,
 			BiFunction<CleanupLease, CleanupReason, ActionResult> resourceCleaner) {
 		if (playerId <= 0) {
 			throw new IllegalArgumentException("Lifecycle adapter player id is invalid");
 		}
 		this.playerId = playerId;
 		this.preflight = Objects.requireNonNull(preflight, "lifecycle preflight");
-		this.executor = Objects.requireNonNull(executor, "lifecycle executor");
+		this.endpoint = Objects.requireNonNull(endpoint, "lifecycle endpoint");
 		this.resourceCleaner = resourceCleaner;
 	}
 
 	/** 创建直接分派到 instance-spawn 与 escort adapter 的 lifecycle bridge。 / Creates a lifecycle bridge dispatching directly to instance-spawn and escort adapters. */
 	public QuestGraphLifecycleActionAdapter(int playerId, Function<LifecycleCommand, PreflightResult> preflight,
-			Function<LifecycleCommand, ActionResult> executor, QuestGraphInstanceSpawnAdapter instanceSpawns,
+			LifecycleEndpoint endpoint, QuestGraphInstanceSpawnAdapter instanceSpawns,
 			QuestGraphEscortActionAdapter escortActions) {
-		this(playerId, preflight, executor, typedCleaner(instanceSpawns, escortActions));
+		this(playerId, preflight, endpoint, typedCleaner(instanceSpawns, escortActions));
 	}
 
 	/**
@@ -99,7 +99,7 @@ public final class QuestGraphLifecycleActionAdapter {
 					return ActionResult.FAILED;
 				}
 			}
-			ActionResult result = Objects.requireNonNull(executor.apply(command), "lifecycle action result");
+			ActionResult result = Objects.requireNonNull(endpoint.execute(command), "lifecycle action result");
 			if (result != ActionResult.APPLIED && result != ActionResult.ALREADY_APPLIED) {
 				return result;
 			}
@@ -201,6 +201,21 @@ public final class QuestGraphLifecycleActionAdapter {
 		AbandonCommand {
 		/** 返回稳定幂等键。 / Returns the stable idempotency key. */
 		String idempotencyKey();
+	}
+
+	/**
+	 * 持久幂等地执行完整 lifecycle service 投影，包括该 service 自有的 packet、zone/nearby hooks 及完成通知。
+	 * Durably and idempotently executes the complete lifecycle-service projection, including its service-owned packet,
+	 * zone/nearby hooks, and finish notifications.
+	 *
+	 * <p>端点返回成功前必须持久接管同一 idempotency key；调用方不得再为同一 lifecycle occurrence 追加通用
+	 * {@code sync-quest-status}。</p>
+	 * <p>The endpoint must durably own the idempotency key before reporting success; callers must not append a generic
+	 * {@code sync-quest-status} for the same lifecycle occurrence.</p>
+	 */
+	@FunctionalInterface
+	public interface LifecycleEndpoint {
+		ActionResult execute(LifecycleCommand command);
 	}
 
 	/** 表示当前 owner 的标准或活动启动。 / Represents a standard or event start for the current owner. */

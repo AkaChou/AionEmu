@@ -66,6 +66,43 @@ final class DatabaseSchemaInitializer {
 		+ "CONSTRAINT `quest_graph_resource_operations_ibfk_1` FOREIGN KEY (`player_id`) "
 		+ "REFERENCES `al_server_gs`.`players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE"
 		+ ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
+	/** Creates the durable accepted outbox for asynchronous quest graph actions. */
+	static final String QUEST_GRAPH_ACTION_OUTBOX_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `al_server_gs`.`quest_graph_action_outbox` ("
+		+ "`outbox_sequence` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, "
+		+ "`player_id` INT NOT NULL, "
+		+ "`operation_hash` BINARY(32) NOT NULL, "
+		+ "`operation_key` VARCHAR(1024) NOT NULL, "
+		+ "`quest_id` INT UNSIGNED NOT NULL, "
+		+ "`base_revision` BIGINT NOT NULL, "
+		+ "`transition_id` VARCHAR(255) NOT NULL, "
+		+ "`action_index` INT UNSIGNED NOT NULL, "
+		+ "`command_payload` MEDIUMBLOB NOT NULL, "
+		+ "`status` VARCHAR(16) NOT NULL, "
+		+ "`claim_generation` BIGINT UNSIGNED NOT NULL DEFAULT 0, "
+		+ "`lease_until` BIGINT UNSIGNED NULL, "
+		+ "`accepted_at` BIGINT UNSIGNED NOT NULL, "
+		+ "`completed_at` BIGINT UNSIGNED NULL, "
+		+ "`graph_acked` TINYINT UNSIGNED NOT NULL DEFAULT 0, "
+		+ "PRIMARY KEY (`player_id`,`operation_hash`), "
+		+ "UNIQUE KEY `uq_quest_graph_action_outbox_sequence` (`outbox_sequence`), "
+		+ "KEY `idx_quest_graph_action_outbox_pending` (`player_id`,`outbox_sequence`), "
+		+ "KEY `idx_quest_graph_action_outbox_lease` (`status`,`lease_until`), "
+		+ "KEY `idx_quest_graph_action_outbox_gc` (`status`,`graph_acked`,`completed_at`), "
+		+ "CONSTRAINT `quest_graph_action_outbox_ibfk_1` FOREIGN KEY (`player_id`) "
+		+ "REFERENCES `al_server_gs`.`players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE"
+		+ ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
+	/** Creates the durable cross-owner zone-mission signal ledger. */
+	static final String QUEST_GRAPH_ZONE_MISSION_SIGNAL_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `al_server_gs`.`quest_graph_zone_mission_signals` ("
+		+ "`player_id` INT NOT NULL, `event_hash` BINARY(32) NOT NULL, `event_id` VARCHAR(255) NOT NULL, "
+		+ "`occurred_at` BIGINT UNSIGNED NOT NULL, `source_quest_id` INT UNSIGNED NOT NULL, "
+		+ "`target_quest_id` INT UNSIGNED NOT NULL, `status` VARCHAR(16) NOT NULL, "
+		+ "`claim_generation` BIGINT UNSIGNED NOT NULL, `lease_until` BIGINT UNSIGNED NOT NULL, "
+		+ "PRIMARY KEY (`player_id`,`event_hash`), UNIQUE KEY `uq_quest_graph_zone_signal_event` (`event_id`), "
+		+ "KEY `idx_quest_graph_zone_signal_target` (`player_id`,`target_quest_id`,`status`), "
+		+ "KEY `idx_quest_graph_zone_signal_lease` (`status`,`lease_until`), "
+		+ "CONSTRAINT `quest_graph_zone_mission_signals_ibfk_1` FOREIGN KEY (`player_id`) "
+		+ "REFERENCES `al_server_gs`.`players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE"
+		+ ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
     private DatabaseSchemaInitializer() {
     }
@@ -102,6 +139,8 @@ final class DatabaseSchemaInitializer {
                 migrateLimitedQuestCounters(connection, target.database());
 				migratePlayerQuestGraphStates(connection, target.database());
 				migrateQuestGraphResourceOperations(connection, target.database());
+					migrateQuestGraphActionOutbox(connection, target.database());
+					migrateQuestGraphZoneMissionSignals(connection, target.database());
                 migrateAccountVip(connection, target.database());
                 log.debug("Database {} already contains tables; skipping schema initialization.", target.database());
                 return;
@@ -234,6 +273,91 @@ final class DatabaseSchemaInitializer {
 		validateQuestGraphResourceOperationSchema(connection, database);
 	}
 
+	/** Idempotently creates the durable cross-owner zone-mission signal ledger. */
+	private static void migrateQuestGraphZoneMissionSignals(Connection connection, String database) throws SQLException {
+		if (!"al_server_gs".equals(database)) {
+			return;
+		}
+		try (Statement statement = connection.createStatement()) {
+			statement.execute(QUEST_GRAPH_ZONE_MISSION_SIGNAL_TABLE_SQL);
+		}
+		validateQuestGraphZoneMissionSignalSchema(connection, database);
+	}
+
+	/** Validates the durable zone-mission signal ledger used by the graph bridge. */
+	private static void validateQuestGraphZoneMissionSignalSchema(Connection connection, String database) throws SQLException {
+		Map<String, SchemaColumn> columns = new HashMap<>();
+		String columnsQuery = "SELECT column_name, data_type, column_type, is_nullable, character_maximum_length "
+			+ "FROM information_schema.columns WHERE table_schema = ? AND table_name = 'quest_graph_zone_mission_signals'";
+		try (PreparedStatement statement = connection.prepareStatement(columnsQuery)) {
+			statement.setString(1, database);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					long maximumLength = resultSet.getLong("character_maximum_length");
+					Long nullableMaximumLength = resultSet.wasNull() ? null : maximumLength;
+					columns.put(resultSet.getString("column_name"), new SchemaColumn(resultSet.getString("data_type"),
+						resultSet.getString("column_type"), "YES".equalsIgnoreCase(resultSet.getString("is_nullable")),
+						nullableMaximumLength));
+				}
+			}
+		}
+
+		List<SchemaIndexColumn> indexes = new ArrayList<>();
+		String indexesQuery = "SELECT index_name, non_unique, seq_in_index, column_name FROM information_schema.statistics "
+			+ "WHERE table_schema = ? AND table_name = 'quest_graph_zone_mission_signals'";
+		try (PreparedStatement statement = connection.prepareStatement(indexesQuery)) {
+			statement.setString(1, database);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					indexes.add(new SchemaIndexColumn(resultSet.getString("index_name"), resultSet.getInt("non_unique") == 0,
+						resultSet.getInt("seq_in_index"), resultSet.getString("column_name")));
+				}
+			}
+		}
+
+		List<String> violations = questGraphZoneMissionSignalSchemaViolations(columns, indexes,
+			hasQuestGraphZoneMissionSignalPlayerCascadeForeignKey(connection, database));
+		if (!violations.isEmpty()) {
+			throw new SQLException("Existing quest_graph_zone_mission_signals schema violates the runtime contract: "
+				+ String.join(", ", violations));
+		}
+	}
+
+	static List<String> questGraphZoneMissionSignalSchemaViolations(Map<String, SchemaColumn> columns,
+			List<SchemaIndexColumn> indexes) {
+		return questGraphZoneMissionSignalSchemaViolations(columns, indexes, true);
+	}
+
+	static List<String> questGraphZoneMissionSignalSchemaViolations(Map<String, SchemaColumn> columns,
+			List<SchemaIndexColumn> indexes, boolean hasPlayerCascadeForeignKey) {
+		List<String> violations = new ArrayList<>();
+		requireColumn(violations, columns, "player_id", "int", false, null, false);
+		requireColumn(violations, columns, "event_hash", "binary", false, 32L, false);
+		requireColumn(violations, columns, "event_id", "varchar", false, 255L, false);
+		requireColumn(violations, columns, "occurred_at", "bigint", false, null, true);
+		requireColumn(violations, columns, "source_quest_id", "int", false, null, true);
+		requireColumn(violations, columns, "target_quest_id", "int", false, null, true);
+		requireColumn(violations, columns, "status", "varchar", false, 16L, false);
+		requireColumn(violations, columns, "claim_generation", "bigint", false, null, true);
+		requireColumn(violations, columns, "lease_until", "bigint", false, null, true);
+		if (!hasExactIndex(indexes, true, List.of("player_id", "event_hash"))) {
+			violations.add("missing primary/unique player_id+event_hash index");
+		}
+		if (!hasExactIndex(indexes, true, List.of("event_id"))) {
+			violations.add("missing unique event_id index");
+		}
+		if (!hasExactIndex(indexes, false, List.of("player_id", "target_quest_id", "status"))) {
+			violations.add("missing player target/status lookup index");
+		}
+		if (!hasExactIndex(indexes, false, List.of("status", "lease_until"))) {
+			violations.add("missing expired lease lookup index");
+		}
+		if (!hasPlayerCascadeForeignKey) {
+			violations.add("missing cascading player_id foreign key");
+		}
+		return List.copyOf(violations);
+	}
+
 	private static void validateQuestGraphResourceOperationSchema(Connection connection, String database) throws SQLException {
 		Map<String, SchemaColumn> columns = new HashMap<>();
 		String columnsQuery = "SELECT column_name, data_type, column_type, is_nullable, character_maximum_length "
@@ -293,6 +417,139 @@ final class DatabaseSchemaInitializer {
 		return List.copyOf(violations);
 	}
 
+	/** Idempotently creates and validates the durable quest graph action outbox. */
+	private static void migrateQuestGraphActionOutbox(Connection connection, String database) throws SQLException {
+		if (!"al_server_gs".equals(database)) {
+			return;
+		}
+		try (Statement statement = connection.createStatement()) {
+			statement.execute(QUEST_GRAPH_ACTION_OUTBOX_TABLE_SQL);
+		}
+		validateQuestGraphActionOutboxSchema(connection, database);
+	}
+
+	private static void validateQuestGraphActionOutboxSchema(Connection connection, String database) throws SQLException {
+		Map<String, SchemaColumn> columns = new HashMap<>();
+		String columnsQuery = "SELECT column_name, data_type, column_type, is_nullable, character_maximum_length, extra "
+			+ "FROM information_schema.columns WHERE table_schema = ? AND table_name = 'quest_graph_action_outbox'";
+		try (PreparedStatement statement = connection.prepareStatement(columnsQuery)) {
+			statement.setString(1, database);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					long maximumLength = resultSet.getLong("character_maximum_length");
+					Long nullableMaximumLength = resultSet.wasNull() ? null : maximumLength;
+					columns.put(resultSet.getString("column_name"), new SchemaColumn(resultSet.getString("data_type"),
+							resultSet.getString("column_type"), "YES".equalsIgnoreCase(resultSet.getString("is_nullable")),
+							nullableMaximumLength, resultSet.getString("extra")));
+				}
+			}
+		}
+
+		List<SchemaIndexColumn> indexes = new ArrayList<>();
+		String indexesQuery = "SELECT index_name, non_unique, seq_in_index, column_name FROM information_schema.statistics "
+			+ "WHERE table_schema = ? AND table_name = 'quest_graph_action_outbox'";
+		try (PreparedStatement statement = connection.prepareStatement(indexesQuery)) {
+			statement.setString(1, database);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					indexes.add(new SchemaIndexColumn(resultSet.getString("index_name"), resultSet.getInt("non_unique") == 0,
+						resultSet.getInt("seq_in_index"), resultSet.getString("column_name")));
+				}
+			}
+		}
+
+		List<String> violations = questGraphActionOutboxSchemaViolations(columns, indexes,
+			hasQuestGraphActionOutboxPlayerCascadeForeignKey(connection, database));
+		if (!violations.isEmpty()) {
+			throw new SQLException("Existing quest_graph_action_outbox schema violates the runtime contract: "
+				+ String.join(", ", violations));
+		}
+	}
+
+	static List<String> questGraphActionOutboxSchemaViolations(Map<String, SchemaColumn> columns,
+			List<SchemaIndexColumn> indexes) {
+		return questGraphActionOutboxSchemaViolations(columns, indexes, true);
+	}
+
+	static List<String> questGraphActionOutboxSchemaViolations(Map<String, SchemaColumn> columns,
+			List<SchemaIndexColumn> indexes, boolean hasPlayerCascadeForeignKey) {
+		List<String> violations = new ArrayList<>();
+		requireColumn(violations, columns, "outbox_sequence", "bigint", false, null, true);
+		SchemaColumn sequence = columns.get("outbox_sequence");
+		if (sequence == null || !sequence.extra().toLowerCase(Locale.ROOT).contains("auto_increment")) {
+			violations.add("invalid outbox_sequence auto increment");
+		}
+		requireColumn(violations, columns, "player_id", "int", false, null, false);
+		requireColumn(violations, columns, "operation_hash", "binary", false, 32L, false);
+		requireColumn(violations, columns, "operation_key", "varchar", false, 1024L, false);
+		requireColumn(violations, columns, "quest_id", "int", false, null, true);
+		requireColumn(violations, columns, "base_revision", "bigint", false, null, false);
+		requireColumn(violations, columns, "transition_id", "varchar", false, 255L, false);
+		requireColumn(violations, columns, "action_index", "int", false, null, true);
+		requireColumn(violations, columns, "command_payload", "mediumblob", false, null, false);
+		requireColumn(violations, columns, "status", "varchar", false, 16L, false);
+		requireColumn(violations, columns, "claim_generation", "bigint", false, null, true);
+		requireColumn(violations, columns, "lease_until", "bigint", true, null, true);
+		requireColumn(violations, columns, "accepted_at", "bigint", false, null, true);
+		requireColumn(violations, columns, "completed_at", "bigint", true, null, true);
+		requireColumn(violations, columns, "graph_acked", "tinyint", false, null, true);
+		if (!hasExactIndex(indexes, true, List.of("player_id", "operation_hash"))) {
+			violations.add("missing primary/unique player_id+operation_hash index");
+		}
+		if (!hasExactIndex(indexes, true, List.of("outbox_sequence"))) {
+			violations.add("missing unique outbox_sequence index");
+		}
+		if (!hasExactIndex(indexes, false, List.of("player_id", "outbox_sequence"))) {
+			violations.add("missing player pending lookup index");
+		}
+		if (!hasExactIndex(indexes, false, List.of("status", "lease_until"))) {
+			violations.add("missing expired lease lookup index");
+		}
+		if (!hasExactIndex(indexes, false, List.of("status", "graph_acked", "completed_at"))) {
+			violations.add("missing acknowledged completion gc index");
+		}
+		if (!hasPlayerCascadeForeignKey) {
+			violations.add("missing cascading player_id foreign key");
+		}
+		return List.copyOf(violations);
+	}
+
+	private static boolean hasQuestGraphActionOutboxPlayerCascadeForeignKey(Connection connection, String database)
+			throws SQLException {
+		String query = "SELECT COUNT(*) FROM information_schema.key_column_usage kcu "
+			+ "JOIN information_schema.referential_constraints rc ON rc.constraint_schema = kcu.constraint_schema "
+			+ "AND rc.constraint_name = kcu.constraint_name AND rc.table_name = kcu.table_name "
+			+ "WHERE kcu.table_schema = ? AND kcu.table_name = 'quest_graph_action_outbox' "
+			+ "AND kcu.column_name = 'player_id' AND kcu.referenced_table_schema = ? "
+			+ "AND kcu.referenced_table_name = 'players' AND kcu.referenced_column_name = 'id' "
+			+ "AND rc.delete_rule = 'CASCADE' AND rc.update_rule = 'CASCADE'";
+		try (PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setString(1, database);
+			statement.setString(2, database);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				return resultSet.next() && resultSet.getInt(1) == 1;
+			}
+		}
+	}
+
+	private static boolean hasQuestGraphZoneMissionSignalPlayerCascadeForeignKey(Connection connection, String database)
+			throws SQLException {
+		String query = "SELECT COUNT(*) FROM information_schema.key_column_usage kcu "
+			+ "JOIN information_schema.referential_constraints rc ON rc.constraint_schema = kcu.constraint_schema "
+			+ "AND rc.constraint_name = kcu.constraint_name AND rc.table_name = kcu.table_name "
+			+ "WHERE kcu.table_schema = ? AND kcu.table_name = 'quest_graph_zone_mission_signals' "
+			+ "AND kcu.column_name = 'player_id' AND kcu.referenced_table_schema = ? "
+			+ "AND kcu.referenced_table_name = 'players' AND kcu.referenced_column_name = 'id' "
+			+ "AND rc.delete_rule = 'CASCADE' AND rc.update_rule = 'CASCADE'";
+		try (PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setString(1, database);
+			statement.setString(2, database);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				return resultSet.next() && resultSet.getInt(1) == 1;
+			}
+		}
+	}
+
 	private static void requireColumn(List<String> violations, Map<String, SchemaColumn> columns, String name,
 			String dataType, boolean nullable, Long maximumLength, boolean unsigned) {
 		SchemaColumn actual = columns.get(name);
@@ -315,7 +572,14 @@ final class DatabaseSchemaInitializer {
 		});
 	}
 
-	record SchemaColumn(String dataType, String columnType, boolean nullable, Long maximumLength) {
+	record SchemaColumn(String dataType, String columnType, boolean nullable, Long maximumLength, String extra) {
+		SchemaColumn(String dataType, String columnType, boolean nullable, Long maximumLength) {
+			this(dataType, columnType, nullable, maximumLength, "");
+		}
+
+		SchemaColumn {
+			extra = extra == null ? "" : extra;
+		}
 	}
 
 	record SchemaIndexColumn(String name, boolean unique, int sequence, String column) {

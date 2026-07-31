@@ -22,12 +22,16 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.IntV
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.InstanceSpawnResourceIdentity;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationKind;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemMutationPlan;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.ItemUseContinuationPlan;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PaymentPlan;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestStatusSyncSnapshot;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.SpawnPlacementKind;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.TeleportPlan;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.VariableValue;
 
 /**
@@ -40,11 +44,22 @@ public final class PlayerQuestGraphStateCodec {
 	private static final int MAGIC_QGS5 = 0x51475335;
 	private static final int MAGIC_QGS6 = 0x51475336;
 	private static final int MAGIC_QGS7 = 0x51475337;
+	private static final int MAGIC_QGS8 = 0x51475338;
+	private static final int MAGIC_QGS9 = 0x51475339;
+	private static final int MAGIC_QGS10 = 0x5147533A;
+	private static final int MAGIC_QGS11 = 0x5147533B;
+	private static final int MAGIC_QGS12 = 0x5147533C;
+	private static final int MAGIC_QGS13 = 0x5147533D;
 	private static final int MAGIC_QGR1 = 0x51475231;
 	private static final int MAX_VARIABLES = 1024;
 	private static final int MAX_DEADLINES = 256;
 	private static final int MAX_CLEANUP_LEASES = 1024;
 	private static final int MAX_ITEM_MUTATION_PLANS = 1024;
+	private static final int MAX_TELEPORT_PLANS = 1024;
+	private static final int MAX_ITEM_USE_CONTINUATION_PLANS = 64;
+	private static final int MAX_PAYMENT_PLANS = 1024;
+	private static final int MAX_QUEST_STATUS_SYNC_SNAPSHOTS = 1024;
+	private static final int SHA_256_DIGEST_BYTES = 32;
 	private static final int MAX_EVENT_PAYLOAD = 1024 * 1024;
 	private static final int MAX_TOTAL_PAYLOAD = 2 * 1024 * 1024;
 	private static final byte INT_VALUE = 1;
@@ -62,6 +77,9 @@ public final class PlayerQuestGraphStateCodec {
 	private static final byte ITEM_REMOVE_OPTIONAL_EXACT = 3;
 	private static final byte ITEM_GIVE_ADD_EXACT = 4;
 	private static final byte ITEM_REMOVE_ALL = 5;
+	private static final byte ITEM_REMOVE_EVENT_OBJECT_EXACT = 6;
+	private static final byte ITEM_REMOVE_EVENT_TEMPLATE_EXACT = 7;
+	private static final byte ITEM_PAY_KINAH_AND_ITEM = 8;
 	private static final byte RESOURCE_UNRESOLVED = 0;
 	private static final byte RESOURCE_INSTANCE_SPAWN = 1;
 	private static final byte RESOURCE_ESCORT = 2;
@@ -87,7 +105,7 @@ public final class PlayerQuestGraphStateCodec {
 		try {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 			try (DataOutputStream output = new DataOutputStream(bytes)) {
-				output.writeInt(MAGIC_QGS7);
+				output.writeInt(MAGIC_QGS13);
 				output.writeByte(switch (state.getQuestStatus()) {
 					case NONE -> STATUS_NONE;
 					case START -> STATUS_START;
@@ -123,7 +141,8 @@ public final class PlayerQuestGraphStateCodec {
 		}
 		try (DataInputStream input = new DataInputStream(new ByteArrayInputStream(payload))) {
 			int magic = input.readInt();
-			if (magic != MAGIC_QGS4 && magic != MAGIC_QGS5 && magic != MAGIC_QGS6 && magic != MAGIC_QGS7) {
+			if (magic != MAGIC_QGS4 && magic != MAGIC_QGS5 && magic != MAGIC_QGS6 && magic != MAGIC_QGS7 && magic != MAGIC_QGS8
+					&& magic != MAGIC_QGS9 && magic != MAGIC_QGS10 && magic != MAGIC_QGS11 && magic != MAGIC_QGS12 && magic != MAGIC_QGS13) {
 				throw new IllegalArgumentException("Unsupported quest graph state payload version");
 			}
 			QuestStatus questStatus = switch (input.readByte()) {
@@ -137,8 +156,16 @@ public final class PlayerQuestGraphStateCodec {
 			QuestHistory history = readHistory(input);
 			Map<String, VariableValue> variables = readVariables(input);
 			Map<String, Long> deadlines = readDeadlines(input);
-			PreparedTransition journal = readJournal(input, magic != MAGIC_QGS4, magic == MAGIC_QGS7);
-			Map<String, CleanupLease> cleanupLeases = readCleanupLeases(input, magic == MAGIC_QGS6 || magic == MAGIC_QGS7);
+			PreparedTransition journal = readJournal(input, magic != MAGIC_QGS4,
+				magic == MAGIC_QGS7 || magic == MAGIC_QGS8 || magic == MAGIC_QGS9 || magic == MAGIC_QGS10 || magic == MAGIC_QGS11 || magic == MAGIC_QGS12 || magic == MAGIC_QGS13,
+				magic == MAGIC_QGS8 || magic == MAGIC_QGS9 || magic == MAGIC_QGS10 || magic == MAGIC_QGS11 || magic == MAGIC_QGS12 || magic == MAGIC_QGS13,
+				magic == MAGIC_QGS9 || magic == MAGIC_QGS10 || magic == MAGIC_QGS11 || magic == MAGIC_QGS12 || magic == MAGIC_QGS13,
+				magic == MAGIC_QGS10 || magic == MAGIC_QGS11 || magic == MAGIC_QGS12 || magic == MAGIC_QGS13,
+				magic == MAGIC_QGS11 || magic == MAGIC_QGS12 || magic == MAGIC_QGS13,
+				magic == MAGIC_QGS12 || magic == MAGIC_QGS13, magic == MAGIC_QGS13);
+			Map<String, CleanupLease> cleanupLeases = readCleanupLeases(input,
+				magic == MAGIC_QGS6 || magic == MAGIC_QGS7 || magic == MAGIC_QGS8 || magic == MAGIC_QGS9 || magic == MAGIC_QGS10
+					|| magic == MAGIC_QGS11 || magic == MAGIC_QGS12 || magic == MAGIC_QGS13);
 			String quarantineReason = readOptionalText(input);
 			if (input.read() != -1) {
 				throw new IllegalArgumentException("Quest graph state payload has trailing data");
@@ -307,6 +334,11 @@ public final class PlayerQuestGraphStateCodec {
 		output.writeBoolean(journal.isTargetCommitted());
 		writeRepeatResolution(output, journal.getRepeatDeadlineResolution());
 		writeItemMutationPlans(output, journal.getItemMutationPlans());
+		writePaymentPlans(output, journal.getPaymentPlans());
+		writeTeleportPlans(output, journal.getTeleportPlans());
+		writeItemUseContinuationPlans(output, journal.getItemUseContinuationPlans());
+		writeQuestStatusSyncSnapshots(output, journal.getQuestStatusSyncSnapshots());
+		writeQuestStatusSyncSnapshotDigest(output, journal.getQuestStatusSyncSnapshotDigest());
 		byte[] eventPayload = journal.getEventPayload();
 		if (eventPayload.length > MAX_EVENT_PAYLOAD) {
 			throw new IllegalArgumentException("Prepared event payload exceeds " + MAX_EVENT_PAYLOAD + " bytes");
@@ -319,7 +351,9 @@ public final class PlayerQuestGraphStateCodec {
 	 * 读取可选 PREPARED journal。
 	 * Reads the optional PREPARED journal.
 	 */
-	private static PreparedTransition readJournal(DataInputStream input, boolean hasItemMutationPlans, boolean hasTargetCommitMarker) throws IOException {
+	private static PreparedTransition readJournal(DataInputStream input, boolean hasItemMutationPlans, boolean hasTargetCommitMarker,
+				boolean hasTeleportPlans, boolean hasQuestStatusSyncSnapshots, boolean hasQuestStatusSyncSnapshotDigest,
+				boolean hasItemUseContinuationPlans, boolean hasPaymentPlanFields, boolean hasPaymentPlans) throws IOException {
 		if (!input.readBoolean()) {
 			return null;
 		}
@@ -329,14 +363,23 @@ public final class PlayerQuestGraphStateCodec {
 		int nextActionIndex = input.readInt();
 		boolean targetCommitted = hasTargetCommitMarker && input.readBoolean();
 		RepeatDeadlineResolution repeatDeadlineResolution = readRepeatResolution(input);
-		Map<Integer, ItemMutationPlan> itemMutationPlans = hasItemMutationPlans ? readItemMutationPlans(input) : Map.of();
+		Map<Integer, ItemMutationPlan> itemMutationPlans = hasItemMutationPlans
+			? readItemMutationPlans(input, hasItemUseContinuationPlans, hasPaymentPlanFields) : Map.of();
+		Map<Integer, PaymentPlan> paymentPlans = hasPaymentPlans ? readPaymentPlans(input) : derivePaymentPlans(itemMutationPlans);
+		Map<Integer, TeleportPlan> teleportPlans = hasTeleportPlans ? readTeleportPlans(input) : Map.of();
+		Map<Integer, ItemUseContinuationPlan> itemUseContinuationPlans = hasItemUseContinuationPlans
+			? readItemUseContinuationPlans(input) : Map.of();
+		Map<Integer, QuestStatusSyncSnapshot> questStatusSyncSnapshots = hasQuestStatusSyncSnapshots
+			? readQuestStatusSyncSnapshots(input) : Map.of();
+		byte[] questStatusSyncSnapshotDigest = hasQuestStatusSyncSnapshotDigest ? readQuestStatusSyncSnapshotDigest(input) : new byte[0];
 		int payloadSize = readCount(input, "prepared event bytes", MAX_EVENT_PAYLOAD);
 		byte[] eventPayload = input.readNBytes(payloadSize);
 		if (eventPayload.length != payloadSize) {
 			throw new EOFException("Prepared event payload is truncated");
 		}
 		return new PreparedTransition(baseRevision, eventId, transitionId, nextActionIndex, targetCommitted, repeatDeadlineResolution,
-			itemMutationPlans, eventPayload);
+			itemMutationPlans, paymentPlans, teleportPlans, itemUseContinuationPlans, questStatusSyncSnapshots,
+			questStatusSyncSnapshotDigest, eventPayload);
 	}
 
 	/** 写入按动作序号排序的冻结物品计划。 / Writes frozen item plans ordered by action index. */
@@ -351,16 +394,25 @@ public final class PlayerQuestGraphStateCodec {
 				case REMOVE_EXACT -> ITEM_REMOVE_EXACT;
 				case REMOVE_OPTIONAL_EXACT -> ITEM_REMOVE_OPTIONAL_EXACT;
 				case REMOVE_ALL -> ITEM_REMOVE_ALL;
+				case REMOVE_EVENT_OBJECT_EXACT -> ITEM_REMOVE_EVENT_OBJECT_EXACT;
+				case REMOVE_EVENT_TEMPLATE_EXACT -> ITEM_REMOVE_EVENT_TEMPLATE_EXACT;
+				case PAY_KINAH_AND_ITEM -> ITEM_PAY_KINAH_AND_ITEM;
 			});
 			output.writeInt(plan.itemId());
+			output.writeInt(plan.itemObjectId());
 			output.writeLong(plan.requestedCount());
 			output.writeLong(plan.beforeCount());
 			output.writeLong(plan.afterCount());
+			output.writeLong(plan.beforeObjectCount());
+			output.writeLong(plan.kinahAmount());
+			output.writeLong(plan.beforeKinah());
+			output.writeLong(plan.afterKinah());
 		}
 	}
 
 	/** 读取冻结物品计划并拒绝未知语义或重复动作索引。 / Reads frozen item plans and rejects unknown semantics or duplicate action indices. */
-	private static Map<Integer, ItemMutationPlan> readItemMutationPlans(DataInputStream input) throws IOException {
+	private static Map<Integer, ItemMutationPlan> readItemMutationPlans(DataInputStream input, boolean hasEventItemIdentity,
+			boolean hasPaymentPlanFields) throws IOException {
 		int count = readCount(input, "item mutation plans", MAX_ITEM_MUTATION_PLANS);
 		Map<Integer, ItemMutationPlan> plans = new LinkedHashMap<>();
 		for (int i = 0; i < count; i++) {
@@ -371,14 +423,200 @@ public final class PlayerQuestGraphStateCodec {
 				case ITEM_REMOVE_EXACT -> ItemMutationKind.REMOVE_EXACT;
 				case ITEM_REMOVE_OPTIONAL_EXACT -> ItemMutationKind.REMOVE_OPTIONAL_EXACT;
 				case ITEM_REMOVE_ALL -> ItemMutationKind.REMOVE_ALL;
+				case ITEM_REMOVE_EVENT_OBJECT_EXACT -> hasEventItemIdentity ? ItemMutationKind.REMOVE_EVENT_OBJECT_EXACT
+					: throw new IllegalArgumentException("Event-object item mutation requires QGS11");
+				case ITEM_REMOVE_EVENT_TEMPLATE_EXACT -> hasEventItemIdentity ? ItemMutationKind.REMOVE_EVENT_TEMPLATE_EXACT
+					: throw new IllegalArgumentException("Event-template item mutation requires QGS11");
+				case ITEM_PAY_KINAH_AND_ITEM -> hasPaymentPlanFields ? ItemMutationKind.PAY_KINAH_AND_ITEM
+					: throw new IllegalArgumentException("Payment item mutation requires QGS12");
 				default -> throw new IllegalArgumentException("Unknown item mutation kind tag");
 			};
-			ItemMutationPlan plan = new ItemMutationPlan(actionIndex, kind, input.readInt(), input.readLong(), input.readLong(), input.readLong());
+			int itemId = input.readInt();
+			int itemObjectId = hasEventItemIdentity ? input.readInt() : 0;
+			long requestedCount = input.readLong();
+			long beforeCount = input.readLong();
+			long afterCount = input.readLong();
+			long beforeObjectCount = hasEventItemIdentity ? input.readLong() : 0;
+			long kinahAmount = hasPaymentPlanFields ? input.readLong() : 0;
+			long beforeKinah = hasPaymentPlanFields ? input.readLong() : 0;
+			long afterKinah = hasPaymentPlanFields ? input.readLong() : 0;
+			ItemMutationPlan plan = new ItemMutationPlan(actionIndex, kind, itemId, itemObjectId, requestedCount,
+				beforeCount, afterCount, beforeObjectCount, kinahAmount, beforeKinah, afterKinah);
 			if (plans.putIfAbsent(actionIndex, plan) != null) {
 				throw new IllegalArgumentException("Duplicate item mutation action index " + actionIndex);
 			}
 		}
 		return plans;
+	}
+
+	/** 写入按动作序号排序的独立支付计划。 / Writes independent payment plans ordered by action index. */
+	private static void writePaymentPlans(DataOutputStream output, Map<Integer, PaymentPlan> plans) throws IOException {
+		checkCount("payment plans", plans.size(), MAX_PAYMENT_PLANS);
+		output.writeInt(plans.size());
+		for (PaymentPlan plan : plans.values()) {
+			output.writeInt(plan.actionIndex());
+			output.writeInt(plan.itemId());
+			output.writeLong(plan.itemCount());
+			output.writeLong(plan.kinah());
+			output.writeLong(plan.beforeItemCount());
+			output.writeLong(plan.afterItemCount());
+			output.writeLong(plan.beforeKinah());
+			output.writeLong(plan.afterKinah());
+		}
+	}
+
+	/** 读取独立支付计划并拒绝重复动作索引。 / Reads independent payment plans and rejects duplicate action indexes. */
+	private static Map<Integer, PaymentPlan> readPaymentPlans(DataInputStream input) throws IOException {
+		int count = readCount(input, "payment plans", MAX_PAYMENT_PLANS);
+		Map<Integer, PaymentPlan> plans = new LinkedHashMap<>();
+		for (int i = 0; i < count; i++) {
+			PaymentPlan plan = new PaymentPlan(input.readInt(), input.readInt(), input.readLong(), input.readLong(), input.readLong(),
+				input.readLong(), input.readLong(), input.readLong());
+			if (plans.putIfAbsent(plan.actionIndex(), plan) != null) {
+				throw new IllegalArgumentException("Duplicate payment action index " + plan.actionIndex());
+			}
+		}
+		return plans;
+	}
+
+	/** 从 QGS12 的兼容 ItemMutationPlan payment tag 推导独立计划，保持旧 payload 可恢复。 / Derives independent plans from QGS12 compatibility payment tags for backward recovery. */
+	private static Map<Integer, PaymentPlan> derivePaymentPlans(Map<Integer, ItemMutationPlan> itemPlans) {
+		Map<Integer, PaymentPlan> plans = new LinkedHashMap<>();
+		for (ItemMutationPlan itemPlan : itemPlans.values()) {
+			if (itemPlan.kind() != ItemMutationKind.PAY_KINAH_AND_ITEM) {
+				continue;
+			}
+			PaymentPlan payment = new PaymentPlan(itemPlan.actionIndex(), itemPlan.itemId(), itemPlan.requestedCount(), itemPlan.kinahAmount(),
+				itemPlan.beforeCount(), itemPlan.afterCount(), itemPlan.beforeKinah(), itemPlan.afterKinah());
+			if (plans.putIfAbsent(payment.actionIndex(), payment) != null) {
+				throw new IllegalArgumentException("Duplicate derived payment action index " + payment.actionIndex());
+			}
+		}
+		return plans;
+	}
+
+	/** 写入冻结的 ITEM_USE continuation。 / Writes frozen ITEM_USE continuations. */
+	private static void writeItemUseContinuationPlans(DataOutputStream output, Map<Integer, ItemUseContinuationPlan> plans) throws IOException {
+		checkCount("item-use continuation plans", plans.size(), MAX_ITEM_USE_CONTINUATION_PLANS);
+		output.writeInt(plans.size());
+		for (ItemUseContinuationPlan plan : plans.values()) {
+			output.writeInt(plan.actionIndex());
+			output.writeInt(plan.itemId());
+			output.writeInt(plan.itemObjectId());
+			output.writeInt(plan.durationMs());
+			output.writeLong(plan.readyAt());
+			output.writeInt(plan.tailStartActionIndex());
+			output.writeInt(plan.tailEndActionIndex());
+		}
+	}
+
+	/** 读取冻结的 ITEM_USE continuation 并拒绝重复屏障索引。 / Reads frozen ITEM_USE continuations and rejects duplicate barriers. */
+	private static Map<Integer, ItemUseContinuationPlan> readItemUseContinuationPlans(DataInputStream input) throws IOException {
+		int count = readCount(input, "item-use continuation plans", MAX_ITEM_USE_CONTINUATION_PLANS);
+		Map<Integer, ItemUseContinuationPlan> plans = new LinkedHashMap<>();
+		for (int i = 0; i < count; i++) {
+			int actionIndex = input.readInt();
+			ItemUseContinuationPlan plan = new ItemUseContinuationPlan(actionIndex, input.readInt(), input.readInt(), input.readInt(),
+				input.readLong(), input.readInt(), input.readInt());
+			if (plans.putIfAbsent(actionIndex, plan) != null) {
+				throw new IllegalArgumentException("Duplicate item-use continuation action index " + actionIndex);
+			}
+		}
+		return plans;
+	}
+
+	/** 写入按动作序号排序的冻结传送命令。 / Writes frozen teleport commands ordered by action index. */
+	private static void writeTeleportPlans(DataOutputStream output, Map<Integer, TeleportPlan> plans) throws IOException {
+		checkCount("teleport plans", plans.size(), MAX_TELEPORT_PLANS);
+		output.writeInt(plans.size());
+		for (TeleportPlan plan : plans.values()) {
+			output.writeInt(plan.actionIndex());
+			output.writeInt(plan.worldId());
+			output.writeInt(plan.instanceId());
+			output.writeFloat(plan.x());
+			output.writeFloat(plan.y());
+			output.writeFloat(plan.z());
+			output.writeByte(plan.heading());
+		}
+	}
+
+	/** 读取冻结传送命令并拒绝重复动作索引。 / Reads frozen teleport commands and rejects duplicate action indices. */
+	private static Map<Integer, TeleportPlan> readTeleportPlans(DataInputStream input) throws IOException {
+		int count = readCount(input, "teleport plans", MAX_TELEPORT_PLANS);
+		Map<Integer, TeleportPlan> plans = new LinkedHashMap<>();
+		for (int i = 0; i < count; i++) {
+			int actionIndex = input.readInt();
+			TeleportPlan plan = new TeleportPlan(actionIndex, input.readInt(), input.readInt(), input.readFloat(), input.readFloat(),
+				input.readFloat(), input.readByte());
+			if (plans.putIfAbsent(actionIndex, plan) != null) {
+				throw new IllegalArgumentException("Duplicate teleport action index " + actionIndex);
+			}
+		}
+		return plans;
+	}
+
+	/** 写入按协议动作序号排序的冻结任务状态快照。 / Writes frozen quest-status snapshots ordered by protocol action index. */
+	private static void writeQuestStatusSyncSnapshots(DataOutputStream output, Map<Integer, QuestStatusSyncSnapshot> snapshots) throws IOException {
+		checkCount("quest status sync snapshots", snapshots.size(), MAX_QUEST_STATUS_SYNC_SNAPSHOTS);
+		output.writeInt(snapshots.size());
+		for (QuestStatusSyncSnapshot snapshot : snapshots.values()) {
+			output.writeInt(snapshot.actionIndex());
+			output.writeInt(snapshot.snapshotAfterActionCount());
+			output.writeByte(switch (snapshot.status()) {
+				case NONE -> STATUS_NONE;
+				case START -> STATUS_START;
+				case REWARD -> STATUS_REWARD;
+				case COMPLETE -> STATUS_COMPLETE;
+				case LOCKED -> STATUS_LOCKED;
+			});
+			output.writeInt(snapshot.packedQuestVars());
+		}
+	}
+
+	/** 读取冻结任务状态快照并拒绝未知状态或重复动作索引。 / Reads frozen quest-status snapshots and rejects unknown status or duplicate indices. */
+	private static Map<Integer, QuestStatusSyncSnapshot> readQuestStatusSyncSnapshots(DataInputStream input) throws IOException {
+		int count = readCount(input, "quest status sync snapshots", MAX_QUEST_STATUS_SYNC_SNAPSHOTS);
+		Map<Integer, QuestStatusSyncSnapshot> snapshots = new LinkedHashMap<>();
+		for (int i = 0; i < count; i++) {
+			int actionIndex = input.readInt();
+			int snapshotAfterActionCount = input.readInt();
+			QuestStatus status = switch (input.readByte()) {
+				case STATUS_NONE -> QuestStatus.NONE;
+				case STATUS_START -> QuestStatus.START;
+				case STATUS_REWARD -> QuestStatus.REWARD;
+				case STATUS_COMPLETE -> QuestStatus.COMPLETE;
+				case STATUS_LOCKED -> QuestStatus.LOCKED;
+				default -> throw new IllegalArgumentException("Unknown quest status sync snapshot tag");
+			};
+			QuestStatusSyncSnapshot snapshot = new QuestStatusSyncSnapshot(actionIndex, snapshotAfterActionCount, status, input.readInt());
+			if (snapshots.putIfAbsent(actionIndex, snapshot) != null) {
+				throw new IllegalArgumentException("Duplicate quest status sync action index " + actionIndex);
+			}
+		}
+		return snapshots;
+	}
+
+	/** 写入可选 SHA-256 snapshot 摘要。 / Writes the optional SHA-256 snapshot digest. */
+	private static void writeQuestStatusSyncSnapshotDigest(DataOutputStream output, byte[] digest) throws IOException {
+		if (digest.length != 0 && digest.length != SHA_256_DIGEST_BYTES) {
+			throw new IllegalArgumentException("Quest status sync snapshot digest has invalid length");
+		}
+		output.writeBoolean(digest.length != 0);
+		if (digest.length != 0) {
+			output.write(digest);
+		}
+	}
+
+	/** 读取可选 SHA-256 snapshot 摘要并拒绝截断。 / Reads the optional SHA-256 snapshot digest and rejects truncation. */
+	private static byte[] readQuestStatusSyncSnapshotDigest(DataInputStream input) throws IOException {
+		if (!input.readBoolean()) {
+			return new byte[0];
+		}
+		byte[] digest = input.readNBytes(SHA_256_DIGEST_BYTES);
+		if (digest.length != SHA_256_DIGEST_BYTES) {
+			throw new EOFException("Quest status sync snapshot digest is truncated");
+		}
+		return digest;
 	}
 
 	/** 写入 repeat deadline disposition 的稳定 tag。 / Writes the stable tag for a repeat-deadline disposition. */

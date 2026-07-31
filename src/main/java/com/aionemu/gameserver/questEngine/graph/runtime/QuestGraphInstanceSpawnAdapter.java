@@ -13,6 +13,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSearchResult;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SpawnInstanceNpcAction;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionInvocation;
@@ -79,7 +80,7 @@ public final class QuestGraphInstanceSpawnAdapter {
 		this.unusedResourceIdReleaser = Objects.requireNonNull(unusedResourceIdReleaser, "unusedResourceIdReleaser");
 	}
 
-	/** Preflights the original static-spawn action. */
+	/** Preflights a typed spawn action. */
 	public PreflightResult preflight(ActionInvocation invocation) {
 		try {
 			return preflight(invocation, request(invocation));
@@ -94,11 +95,15 @@ public final class QuestGraphInstanceSpawnAdapter {
 			InvocationIdentity identity = identity(invocation, request);
 			SpawnLease lease = activeSpawns.get(identity.idempotencyKey());
 			if (lease != null) {
-				return lease.matches(identity) ? PreflightResult.READY : PreflightResult.FAILED;
+				return lease.matches(identity) && matchesJournalIdentity(persistedIdentity(invocation), lease.identity())
+					? PreflightResult.READY : PreflightResult.FAILED;
 			}
 			CleanupLease reserved = operations.find(playerId, identity.idempotencyKey());
 			if (reserved != null) {
-				return matches(requireIdentity(reserved, true), identity) ? PreflightResult.READY : PreflightResult.FAILED;
+				InstanceSpawnResourceIdentity reservedIdentity = requireIdentity(reserved, true);
+				InstanceSpawnResourceIdentity persisted = persistedIdentity(invocation);
+				return matches(reservedIdentity, identity) && matchesJournalIdentity(persisted, reservedIdentity)
+					? PreflightResult.READY : PreflightResult.FAILED;
 			}
 			command(invocation, request);
 			return PreflightResult.READY;
@@ -117,7 +122,7 @@ public final class QuestGraphInstanceSpawnAdapter {
 		return CleanupLease.instanceSpawn(resource(command(invocation, request), 0));
 	}
 
-	/** Executes the original static-spawn action. */
+	/** Executes a typed spawn action. */
 	public ActionResult execute(ActionInvocation invocation) {
 		try {
 			return execute(invocation, request(invocation));
@@ -136,7 +141,11 @@ public final class QuestGraphInstanceSpawnAdapter {
 		}
 		SpawnLease existing = activeSpawns.get(identity.idempotencyKey());
 		if (existing != null) {
-			if (!existing.matches(identity)) {
+			try {
+				if (!existing.matches(identity) || !matchesJournalIdentity(persistedIdentity(invocation), existing.identity())) {
+					return ActionResult.FAILED;
+				}
+			} catch (RuntimeException e) {
 				return ActionResult.FAILED;
 			}
 			if (!operations.durable()) {
@@ -295,11 +304,33 @@ public final class QuestGraphInstanceSpawnAdapter {
 			case StaticSpawnPlacement placement -> resource.sourceNpcId() == placement.spawnerNpcId();
 			case DialogTargetPlacement placement -> resource.sourceNpcId() == placement.npcId();
 			case PlayerPlacement ignored -> true;
-			case FixedPlacement placement -> resource.worldId() == placement.worldId()
-				&& resource.instanceId() == placement.instanceId() && Float.compare(resource.x(), placement.x()) == 0
+			case FixedPlacement placement -> (placement.worldPolicy() == CompiledQuestGraph.SpawnWorldPolicy.PLAYER_CURRENT
+					|| resource.worldId() == placement.worldId())
+				&& (placement.instancePolicy() == CompiledQuestGraph.SpawnInstancePolicy.PLAYER_CURRENT
+					|| resource.instanceId() == placement.instanceId()) && Float.compare(resource.x(), placement.x()) == 0
 				&& Float.compare(resource.y(), placement.y()) == 0 && Float.compare(resource.z(), placement.z()) == 0
 				&& resource.heading() == placement.heading();
 		};
+	}
+
+	private static boolean matchesJournalIdentity(InstanceSpawnResourceIdentity journal,
+			InstanceSpawnResourceIdentity materialized) {
+		if (journal == null) {
+			return true;
+		}
+		return matchesFrozenIdentity(journal, materialized)
+			&& (!journal.materialized() || journal.objectId() == materialized.objectId());
+	}
+
+	private static boolean matchesFrozenIdentity(InstanceSpawnResourceIdentity expected,
+			InstanceSpawnResourceIdentity actual) {
+		return expected.playerId() == actual.playerId() && expected.questId() == actual.questId()
+			&& expected.npcId() == actual.npcId() && expected.placement() == actual.placement()
+			&& expected.sourceNpcId() == actual.sourceNpcId() && expected.sourceObjectId() == actual.sourceObjectId()
+			&& expected.worldId() == actual.worldId() && expected.instanceId() == actual.instanceId()
+			&& Float.compare(expected.x(), actual.x()) == 0 && Float.compare(expected.y(), actual.y()) == 0
+			&& Float.compare(expected.z(), actual.z()) == 0 && expected.heading() == actual.heading()
+			&& expected.idempotencyKey().equals(actual.idempotencyKey());
 	}
 
 	private static InstanceSpawnResourceIdentity resource(SpawnCommand command, int objectId) {
@@ -313,7 +344,7 @@ public final class QuestGraphInstanceSpawnAdapter {
 		CleanupLease existingLease = operations.find(playerId, invocationIdentity.idempotencyKey());
 		if (existingLease != null) {
 			InstanceSpawnResourceIdentity existing = requireIdentity(existingLease, true);
-			if (!matches(existing, invocationIdentity) || persisted != null && persisted.materialized() && !persisted.equals(existing)) {
+			if (!matches(existing, invocationIdentity) || !matchesJournalIdentity(persisted, existing)) {
 				throw new IllegalArgumentException("Reserved instance spawn identity conflicts with the invocation journal");
 			}
 			return existing;
@@ -341,7 +372,8 @@ public final class QuestGraphInstanceSpawnAdapter {
 		if (!candidate.equals(reserved) && (persisted == null || !persisted.materialized())) {
 			unusedResourceIdReleaser.accept(allocatedId);
 		}
-		if (!matches(reserved, invocationIdentity)) {
+		if (!matches(reserved, invocationIdentity) || !matchesJournalIdentity(persisted, reserved)
+				|| persisted == null && !matchesFrozenIdentity(candidate, reserved)) {
 			throw new IllegalArgumentException("Reserved instance spawn identity conflicts with the invocation");
 		}
 		return reserved;
@@ -373,7 +405,14 @@ public final class QuestGraphInstanceSpawnAdapter {
 		if (invocation == null || !(invocation.action() instanceof SpawnInstanceNpcAction action)) {
 			throw new IllegalArgumentException("Instance spawn invocation is invalid");
 		}
-		return new SpawnRequest(action.npcId(), new StaticSpawnPlacement(action.spawnerObjectId()));
+		SpawnPlacement placement = switch (action.placement()) {
+			case CompiledQuestGraph.StaticSpawnerPlacement source -> new StaticSpawnPlacement(source.spawnerObjectId());
+			case CompiledQuestGraph.EventNpcPlacement source -> new DialogTargetPlacement(source.eventNpcId());
+			case CompiledQuestGraph.PlayerPlacement ignored -> new PlayerPlacement();
+			case CompiledQuestGraph.FixedPlacement fixed -> new FixedPlacement(fixed.worldPolicy(), fixed.worldId(),
+				fixed.instancePolicy(), fixed.instanceId(), fixed.x(), fixed.y(), fixed.z(), fixed.heading());
+		};
+		return new SpawnRequest(action.npcId(), placement);
 	}
 
 	private InvocationIdentity identity(ActionInvocation invocation, SpawnRequest request) {
@@ -391,11 +430,17 @@ public final class QuestGraphInstanceSpawnAdapter {
 		if (action.npcId() != request.npcId()) {
 			return false;
 		}
-		return switch (request.placement()) {
-			case StaticSpawnPlacement placement -> action.spawnerObjectId() == placement.spawnerNpcId();
-			case DialogTargetPlacement placement -> action.spawnerObjectId() == placement.npcId();
-			case PlayerPlacement ignored -> true;
-			case FixedPlacement ignored -> true;
+		return switch (action.placement()) {
+			case CompiledQuestGraph.StaticSpawnerPlacement source -> request.placement() instanceof StaticSpawnPlacement placement
+				&& source.spawnerObjectId() == placement.spawnerNpcId();
+			case CompiledQuestGraph.EventNpcPlacement source -> request.placement() instanceof DialogTargetPlacement placement
+				&& source.eventNpcId() == placement.npcId();
+			case CompiledQuestGraph.PlayerPlacement ignored -> request.placement() instanceof PlayerPlacement;
+			case CompiledQuestGraph.FixedPlacement fixed -> request.placement() instanceof FixedPlacement placement
+				&& fixed.worldPolicy() == placement.worldPolicy() && fixed.worldId() == placement.worldId()
+				&& fixed.instancePolicy() == placement.instancePolicy() && fixed.instanceId() == placement.instanceId()
+				&& Float.compare(fixed.x(), placement.x()) == 0 && Float.compare(fixed.y(), placement.y()) == 0
+				&& Float.compare(fixed.z(), placement.z()) == 0 && fixed.heading() == placement.heading();
 		};
 	}
 
@@ -431,7 +476,7 @@ public final class QuestGraphInstanceSpawnAdapter {
 			}
 			case PlayerPlacement ignored -> new ResolvedPlacement(PlacementKind.PLAYER, 0, player.objectId(), player.spot());
 			case FixedPlacement fixed -> {
-				SpawnSpot spot = fixed.spot();
+				SpawnSpot spot = fixed.spot(player);
 				validateContext(player, spot);
 				yield new ResolvedPlacement(PlacementKind.FIXED, 0, 0, spot);
 			}
@@ -560,10 +605,17 @@ public final class QuestGraphInstanceSpawnAdapter {
 		}
 	}
 
-	/** Uses explicit coordinates and requires the player to remain in that world instance. */
-	public record FixedPlacement(int worldId, int instanceId, float x, float y, float z, byte heading) implements SpawnPlacement {
+	/** Uses fixed coordinates with an explicit or player-current world and instance. */
+	public record FixedPlacement(CompiledQuestGraph.SpawnWorldPolicy worldPolicy, int worldId,
+			CompiledQuestGraph.SpawnInstancePolicy instancePolicy, int instanceId, float x, float y, float z, byte heading)
+			implements SpawnPlacement {
+		public FixedPlacement(int worldId, int instanceId, float x, float y, float z, byte heading) {
+			this(CompiledQuestGraph.SpawnWorldPolicy.EXPLICIT, worldId, CompiledQuestGraph.SpawnInstancePolicy.EXPLICIT,
+				instanceId, x, y, z, heading);
+		}
+
 		public FixedPlacement {
-			new SpawnSpot(worldId, instanceId, x, y, z, heading);
+			new CompiledQuestGraph.FixedPlacement(worldPolicy, worldId, instancePolicy, instanceId, x, y, z, heading);
 		}
 
 		@Override
@@ -571,8 +623,11 @@ public final class QuestGraphInstanceSpawnAdapter {
 			return PlacementKind.FIXED;
 		}
 
-		private SpawnSpot spot() {
-			return new SpawnSpot(worldId, instanceId, x, y, z, heading);
+		private SpawnSpot spot(PlayerSnapshot player) {
+			int resolvedWorldId = worldPolicy == CompiledQuestGraph.SpawnWorldPolicy.PLAYER_CURRENT ? player.worldId() : worldId;
+			int resolvedInstanceId = instancePolicy == CompiledQuestGraph.SpawnInstancePolicy.PLAYER_CURRENT
+				? player.instanceId() : instanceId;
+			return new SpawnSpot(resolvedWorldId, resolvedInstanceId, x, y, z, heading);
 		}
 	}
 

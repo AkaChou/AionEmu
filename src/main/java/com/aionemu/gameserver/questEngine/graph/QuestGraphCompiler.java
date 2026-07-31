@@ -88,8 +88,19 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerRaceCon
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerTitleCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerMessageChannel;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EventNpcPlacement;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FixedPlacement;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerPlacement;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ScheduleItemUseDialogAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DelayItemUseContinuationAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.RemoveUsedItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.UsedItemRemovalMode;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SpawnPlacement;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SpawnPlacementKind;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SpawnInstancePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SpawnInstanceNpcAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SpawnWorldPolicy;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StaticSpawnerPlacement;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StartEscortAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortCoordinatesDestination;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortDestination;
@@ -98,12 +109,16 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortNpcDest
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortSource;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.EscortZoneDestination;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportHeadingPolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportInstancePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.IntVariable;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.InteractionAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.KillVictimLevelDeltaCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.FinishQuestAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PayKinahAndItemAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DialogNpcLifecycleAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DialogNpcLifecycleMode;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GrantCraftSkillRewardAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.NoRepeatDeadlinePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCollectItemsCondition;
@@ -172,6 +187,8 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.CraftSkillEligibi
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.FinishQuestActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.EndQuestTimerActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GiveQuestItemActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PayKinahAndItemActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DialogNpcLifecycleActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GrantCraftSkillRewardActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.GraphData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.KillEventData;
@@ -216,6 +233,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PackedCounterCond
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveCollectedItemsActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveQuestWorkItemsActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveQuestItemActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.RemoveUsedItemActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.LearnRecipeActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DeleteRecipeActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.NotifyRecipeRejectionActionData;
@@ -226,6 +244,7 @@ import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SendSystemMessage
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartFlightTeleportActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.PlayMovieActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.ScheduleItemUseDialogActionData;
+import com.aionemu.gameserver.questEngine.graph.QuestGraphData.DelayItemUseContinuationActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.SpawnInstanceNpcActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.StartEscortActionData;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphData.TeleportPlayerActionData;
@@ -546,7 +565,9 @@ public final class QuestGraphCompiler {
 				List<Action> actions = sourceTransition.getActions().stream()
 					.flatMap(value -> compileActions(questId, value, variables, references).stream()).toList();
 				validateEventBoundCapabilities(questId, sourceTransition.getId(), event, conditions, actions);
+				validateLifecycleSyncComposition(questId, sourceTransition.getId(), actions);
 				validateActionOrder(questId, sourceTransition.getId(), actions);
+				validateQuestStatusSyncCheckpoints(questId, sourceTransition.getId(), actions);
 				validateLifecycleResourceComposition(questId, sourceTransition.getId(), actions);
 				validateLifecycleStateFlow(questId, sourceTransition.getId(), conditions, actions);
 				validateRepeatDeadlineProtocol(questId, sourceTransition.getId(), actions);
@@ -1200,6 +1221,23 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid remove-quest-item action", e);
 			}
 		}
+		if (source instanceof PayKinahAndItemActionData action) {
+			if (action.getItemId() == null || !references.itemIds().contains(action.getItemId())) {
+				throw new IllegalArgumentException("Quest " + questId + " payment references missing item " + action.getItemId());
+			}
+			try {
+				return new PayKinahAndItemAction(action.getKinah(), action.getItemId(), action.getItemCount());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid Kinah-and-item payment action", e);
+			}
+		}
+		if (source instanceof DialogNpcLifecycleActionData action) {
+			try {
+				return new DialogNpcLifecycleAction(DialogNpcLifecycleMode.valueOf(action.getMode()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid dialog-NPC lifecycle action", e);
+			}
+		}
 		if (source instanceof RemoveCollectedItemsActionData) {
 			return new RemoveCollectedItemsAction();
 		}
@@ -1250,8 +1288,8 @@ public final class QuestGraphCompiler {
 		if (source instanceof ShowQuestListActionData) {
 			return new ShowQuestListAction();
 		}
-		if (source instanceof SyncQuestStatusActionData) {
-			return new SyncQuestStatusAction();
+		if (source instanceof SyncQuestStatusActionData action) {
+			return new SyncQuestStatusAction(action.getSnapshotAfterActionCount() == null ? -1 : action.getSnapshotAfterActionCount());
 		}
 		if (source instanceof SendRepeatDeadlineMessageActionData action) {
 			try {
@@ -1308,18 +1346,27 @@ public final class QuestGraphCompiler {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid schedule-item-use-dialog action", e);
 			}
 		}
-		if (source instanceof SpawnInstanceNpcActionData action) {
-			Integer spawnerObjectId = action.getSpawnerObjectId();
-			Integer npcId = action.getNpcId();
-			if (spawnerObjectId == null || !references.staticSpawnNpcIds().contains(spawnerObjectId)) {
-				throw new IllegalArgumentException(
-					"Quest " + questId + " spawn-instance-npc references missing static spawner " + spawnerObjectId);
+		if (source instanceof DelayItemUseContinuationActionData action) {
+			try {
+				return new DelayItemUseContinuationAction(action.getDurationMs());
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid delay-item-use-continuation action", e);
 			}
+		}
+		if (source instanceof RemoveUsedItemActionData action) {
+			try {
+				return new RemoveUsedItemAction(action.getCount(), UsedItemRemovalMode.valueOf(action.getMode()));
+			} catch (RuntimeException e) {
+				throw new IllegalArgumentException("Quest " + questId + " has an invalid remove-used-item action", e);
+			}
+		}
+		if (source instanceof SpawnInstanceNpcActionData action) {
+			Integer npcId = action.getNpcId();
 			if (npcId == null || !references.npcIds().contains(npcId)) {
 				throw new IllegalArgumentException("Quest " + questId + " spawn-instance-npc references missing npc " + npcId);
 			}
 			try {
-				return new SpawnInstanceNpcAction(spawnerObjectId, npcId);
+				return new SpawnInstanceNpcAction(npcId, compileSpawnPlacement(action, references));
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid spawn-instance-npc action", e);
 			}
@@ -1351,18 +1398,27 @@ public final class QuestGraphCompiler {
 			if (worldId == null || worldId <= 0 || !references.worldIds().contains(worldId)) {
 				throw new IllegalArgumentException("Quest " + questId + " teleport-player references missing world " + worldId);
 			}
-			int instanceId = action.getInstanceId() == null ? 0 : action.getInstanceId();
-			byte heading = action.getHeading() == null ? 0 : action.getHeading();
 			try {
 				TeleportInstancePolicy instancePolicy = action.getInstancePolicy() == null
 					? TeleportInstancePolicy.EXPLICIT_OR_DEFAULT
 					: TeleportInstancePolicy.valueOf(action.getInstancePolicy());
+				TeleportHeadingPolicy headingPolicy = action.getHeadingPolicy() == null
+					? TeleportHeadingPolicy.EXPLICIT
+					: TeleportHeadingPolicy.valueOf(action.getHeadingPolicy());
+				if (instancePolicy != TeleportInstancePolicy.EXPLICIT_OR_DEFAULT && action.getInstanceId() != null) {
+					throw new IllegalArgumentException("teleport-player instance field does not match its policy");
+				}
+				if (headingPolicy == TeleportHeadingPolicy.PLAYER_CURRENT && action.getHeading() != null) {
+					throw new IllegalArgumentException("teleport-player heading field does not match its policy");
+				}
 				if (instancePolicy == TeleportInstancePolicy.PLAYER_REGISTERED_OR_CREATE
 						&& !references.instanceWorldIds().contains(worldId)) {
 					throw new IllegalArgumentException(
 						"Quest " + questId + " registered-instance teleport references non-instance world " + worldId);
 				}
-				return new TeleportPlayerAction(worldId, instanceId, instancePolicy, action.getX(), action.getY(), action.getZ(), heading);
+				int instanceId = action.getInstanceId() == null ? 0 : action.getInstanceId();
+				byte heading = action.getHeading() == null ? 0 : action.getHeading();
+				return new TeleportPlayerAction(worldId, instanceId, instancePolicy, action.getX(), action.getY(), action.getZ(), headingPolicy, heading);
 			} catch (RuntimeException e) {
 				throw new IllegalArgumentException("Quest " + questId + " has an invalid teleport-player action", e);
 			}
@@ -1427,6 +1483,86 @@ public final class QuestGraphCompiler {
 			throw new IllegalArgumentException("Quest " + questId + " action references missing craft skill " + craftSkillId);
 		}
 		return craftSkillId;
+	}
+
+	/** 将 XML 字段编译为封闭位置，并拒绝缺省、混用和无引用参数。 / Compiles XML fields into a closed placement and rejects defaults, mixing, and unresolved parameters. */
+	private static SpawnPlacement compileSpawnPlacement(SpawnInstanceNpcActionData action, References references) {
+		String declared = action.getPlacement();
+		if (declared == null) {
+			if (action.getSpawnerObjectId() == null) {
+				throw new IllegalArgumentException("spawn-instance-npc must declare placement");
+			}
+			declared = SpawnPlacementKind.STATIC_SPAWNER.name();
+		}
+		SpawnPlacementKind kind = SpawnPlacementKind.valueOf(declared);
+		return switch (kind) {
+			case STATIC_SPAWNER -> {
+				requireNoSpawnFields(action, false, true, true, kind);
+				Integer spawnerObjectId = action.getSpawnerObjectId();
+				if (spawnerObjectId == null || !references.staticSpawnNpcIds().contains(spawnerObjectId)) {
+					throw new IllegalArgumentException("spawn-instance-npc references missing static spawner " + spawnerObjectId);
+				}
+				yield new StaticSpawnerPlacement(spawnerObjectId);
+			}
+			case EVENT_NPC -> {
+				requireNoSpawnFields(action, true, false, true, kind);
+				Integer eventNpcId = action.getEventNpcId();
+				if (eventNpcId == null || !references.npcIds().contains(eventNpcId)) {
+					throw new IllegalArgumentException("spawn-instance-npc references missing event NPC " + eventNpcId);
+				}
+				yield new EventNpcPlacement(eventNpcId);
+			}
+			case PLAYER -> {
+				requireNoSpawnFields(action, true, true, true, kind);
+				yield new PlayerPlacement();
+			}
+			case FIXED -> {
+				requireNoSpawnFields(action, true, true, false, kind);
+				SpawnWorldPolicy worldPolicy = requireSpawnWorldPolicy(action.getWorldPolicy());
+				SpawnInstancePolicy instancePolicy = requireSpawnInstancePolicy(action.getInstancePolicy());
+				Integer declaredWorldId = action.getWorldId();
+				if (worldPolicy == SpawnWorldPolicy.EXPLICIT
+						&& (declaredWorldId == null || !references.worldIds().contains(declaredWorldId))) {
+					throw new IllegalArgumentException("spawn-instance-npc references missing world " + declaredWorldId);
+				}
+				if ((worldPolicy == SpawnWorldPolicy.PLAYER_CURRENT && declaredWorldId != null)
+						|| (instancePolicy == SpawnInstancePolicy.EXPLICIT && action.getInstanceId() == null)
+						|| (instancePolicy == SpawnInstancePolicy.PLAYER_CURRENT && action.getInstanceId() != null)) {
+					throw new IllegalArgumentException("FIXED spawn-instance-npc context fields do not match their policies");
+				}
+				if (action.getX() == null || action.getY() == null || action.getZ() == null
+						|| action.getHeading() == null) {
+					throw new IllegalArgumentException("FIXED spawn-instance-npc requires x, y, z, and heading");
+				}
+				yield new FixedPlacement(worldPolicy, declaredWorldId == null ? 0 : declaredWorldId, instancePolicy,
+					action.getInstanceId() == null ? 0 : action.getInstanceId(), action.getX(), action.getY(), action.getZ(), action.getHeading());
+			}
+		};
+	}
+
+	private static SpawnWorldPolicy requireSpawnWorldPolicy(String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("FIXED spawn-instance-npc requires world_policy");
+		}
+		return SpawnWorldPolicy.valueOf(value);
+	}
+
+	private static SpawnInstancePolicy requireSpawnInstancePolicy(String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("FIXED spawn-instance-npc requires instance_policy");
+		}
+		return SpawnInstancePolicy.valueOf(value);
+	}
+
+	/** 拒绝位置策略不拥有的字段。 / Rejects fields not owned by the selected placement policy. */
+	private static void requireNoSpawnFields(SpawnInstanceNpcActionData action, boolean rejectSpawner, boolean rejectEventNpc,
+			boolean rejectFixed, SpawnPlacementKind kind) {
+		if ((rejectSpawner && action.getSpawnerObjectId() != null) || (rejectEventNpc && action.getEventNpcId() != null)
+				|| (rejectFixed && (action.getWorldPolicy() != null || action.getWorldId() != null || action.getInstancePolicy() != null
+					|| action.getInstanceId() != null || action.getX() != null
+					|| action.getY() != null || action.getZ() != null || action.getHeading() != null))) {
+			throw new IllegalArgumentException("spawn-instance-npc has fields incompatible with placement " + kind);
+		}
 	}
 
 	/**
@@ -1544,18 +1680,108 @@ public final class QuestGraphCompiler {
 	}
 
 	/**
-	 * 强制状态/必需副作用位于提交后协议之前，避免发包早于状态提交。
-	 * Forces state/required effects before post-commit protocol so packets cannot precede state commit.
+	 * 强制提交后协议位于末尾；durable ITEM_USE barrier 的 tail 可按旧 Handler 顺序交错状态与必需副作用。
+	 * Keeps post-commit protocol last while allowing a durable ITEM_USE tail to interleave state and required effects in legacy order.
 	 */
 	private static void validateActionOrder(int questId, String transitionId, List<Action> actions) {
 		ActionPhase previous = ActionPhase.STATE;
-		for (Action action : actions) {
+		int durableBarrier = -1;
+		for (int index = 0; index < actions.size(); index++) {
+			Action action = actions.get(index);
+			if (action instanceof DelayItemUseContinuationAction) {
+				durableBarrier = index;
+			}
 			ActionPhase phase = action.type().phase();
-			if (phase.ordinal() < previous.ordinal()) {
+			boolean durableTailState = durableBarrier >= 0 && index > durableBarrier
+				&& previous != ActionPhase.POST_COMMIT_PROTOCOL && phase == ActionPhase.STATE;
+			if (phase.ordinal() < previous.ordinal() && !durableTailState) {
 				throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId + " has invalid action phase order");
 			}
 			previous = phase;
 		}
+	}
+
+	/**
+	 * 校验显式任务状态快照只引用首个提交后协议前的可重放动作前缀；-1 保留最终快照兼容语义。
+	 * Validates that explicit quest-status snapshots reference replayable prefixes before the first post-commit protocol;
+	 * -1 preserves final-snapshot compatibility.
+	 */
+	private static void validateQuestStatusSyncCheckpoints(int questId, String transitionId, List<Action> actions) {
+		int firstProtocolIndex = actions.size();
+		for (int index = 0; index < actions.size(); index++) {
+			if (actions.get(index).type().phase() == ActionPhase.POST_COMMIT_PROTOCOL) {
+				firstProtocolIndex = index;
+				break;
+			}
+		}
+		for (Action action : actions) {
+			if (!(action instanceof SyncQuestStatusAction sync) || sync.snapshotAfterActionCount() == -1) {
+				continue;
+			}
+			int checkpoint = sync.snapshotAfterActionCount();
+			if (checkpoint < 0 || checkpoint > firstProtocolIndex
+					|| actions.subList(0, checkpoint).stream().anyMatch(prefix -> prefix.type().phase() == ActionPhase.POST_COMMIT_PROTOCOL)) {
+				throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+					+ " has quest-status sync checkpoint outside its replayable pre-protocol prefix");
+			}
+		}
+	}
+
+	/** Rejects duplicate lifecycle projections while allowing a start followed by an independently projected state write. */
+	private static void validateLifecycleSyncComposition(int questId, String transitionId, List<Action> actions) {
+		if (actions.stream().noneMatch(SyncQuestStatusAction.class::isInstance)) {
+			return;
+		}
+		if (actions.stream().anyMatch(action -> action instanceof FinishQuestAction || action instanceof AbandonQuestAction)) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+				+ " combines a lifecycle endpoint with generic quest-status sync");
+		}
+		int protocolStart = actions.size();
+		for (int index = 0; index < actions.size(); index++) {
+			if (actions.get(index).type().phase() == ActionPhase.POST_COMMIT_PROTOCOL) {
+				protocolStart = index;
+				break;
+			}
+		}
+		boolean hasStart = actions.stream().anyMatch(action -> action instanceof StartQuestAction
+			|| action instanceof StartEventQuestAction);
+		if (!hasStart) {
+			return;
+		}
+		for (Action action : actions) {
+			if (!(action instanceof SyncQuestStatusAction sync)) {
+				continue;
+			}
+			int checkpoint = sync.snapshotAfterActionCount() == -1 ? protocolStart : sync.snapshotAfterActionCount();
+			int lastCurrentStart = -1;
+			for (int index = 0; index < checkpoint; index++) {
+				Action prefix = actions.get(index);
+				if (prefix instanceof StartQuestAction
+						|| prefix instanceof StartEventQuestAction startEvent && startEvent.targetQuestId() == questId) {
+					lastCurrentStart = index;
+				}
+			}
+			boolean projectsIndependentState = actions.subList(lastCurrentStart + 1, checkpoint).stream()
+				.anyMatch(QuestGraphCompiler::isQuestStatusProjectionWrite);
+			if (!projectsIndependentState) {
+				throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+					+ " combines a lifecycle endpoint with generic quest-status sync");
+			}
+		}
+	}
+
+	private static boolean isQuestStatusProjectionWrite(Action action) {
+		if (action instanceof SetQuestStatusAction) {
+			return true;
+		}
+		if (action instanceof SetQuestVariableAction set) {
+			return set.variable().matches("var[0-5]");
+		}
+		if (action instanceof AddQuestVariableAction add) {
+			return add.variable().matches("var[0-5]");
+		}
+		return action instanceof IncrementPackedCounterAction packed
+			&& packed.variables().stream().allMatch(variable -> variable.matches("var[0-5]"));
 	}
 
 	/**
@@ -1766,10 +1992,46 @@ public final class QuestGraphCompiler {
 			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
 				+ " uses schedule-item-use-dialog outside ITEM_USE");
 		}
+		boolean delayedItemUse = actions.stream().anyMatch(DelayItemUseContinuationAction.class::isInstance);
+		boolean removesUsedItem = actions.stream().anyMatch(RemoveUsedItemAction.class::isInstance);
+		if ((delayedItemUse || removesUsedItem) && event.type() != ITEM_USE) {
+			throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+				+ " uses delayed item-use continuation outside ITEM_USE");
+		}
+		if (delayedItemUse || removesUsedItem) {
+			int delayIndex = -1;
+			for (int index = 0; index < actions.size(); index++) {
+				if (actions.get(index) instanceof DelayItemUseContinuationAction) {
+					if (delayIndex >= 0) {
+						throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+							+ " declares multiple delayed item-use barriers");
+					}
+					delayIndex = index;
+				}
+				if (actions.get(index) instanceof RemoveUsedItemAction && delayIndex < 0) {
+					throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+						+ " removes the used item before its durable delay barrier");
+				}
+			}
+			if (delayIndex < 0 || delayIndex + 1 >= actions.size()) {
+				throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+					+ " delayed item-use barrier has no persisted action tail");
+			}
+		}
 		if (actions.stream().filter(StartEscortAction.class::isInstance).map(StartEscortAction.class::cast)
 				.anyMatch(action -> action.source() == EscortSource.EVENT_NPC
 					|| action.source() == EscortSource.REPLACE_EVENT_NPC_AT_PLAYER_POSITION)) {
 			requireDialogNpcSnapshot(questId, transitionId, event, "event-NPC escort");
+		}
+		for (SpawnInstanceNpcAction action : actions.stream().filter(SpawnInstanceNpcAction.class::isInstance)
+				.map(SpawnInstanceNpcAction.class::cast).toList()) {
+			if (action.placement() instanceof EventNpcPlacement placement) {
+				requireDialogNpcSnapshot(questId, transitionId, event, "event-NPC spawn");
+				if (event.targetId() != placement.eventNpcId()) {
+					throw new IllegalArgumentException("Quest " + questId + " transition " + transitionId
+						+ " event-NPC spawn does not match DIALOG target " + event.targetId());
+				}
+			}
 		}
 	}
 

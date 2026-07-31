@@ -8,6 +8,7 @@ import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateS
 import static com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.StateScope.WORLD;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.ALREADY_APPLIED;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.APPLIED;
+import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.DURABLY_ACCEPTED;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionResult.FAILED;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionResult.MATCHED;
 import static com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ConditionResult.NOT_MATCHED;
@@ -57,6 +58,7 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GiveQuestItem
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.GrantCraftSkillRewardAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Node;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerLevelCondition;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayerPlacement;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestCompletionCountCondition;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestRewardCondition;
@@ -77,6 +79,8 @@ import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestStatu
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SetQuestVariableAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncQuestStatusAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.SyncCraftSkillRewardAction;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportHeadingPolicy;
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportInstancePolicy;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.TeleportPlayerAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.Transition;
 import com.aionemu.gameserver.questEngine.graph.QuestGraphCraftSkillReferenceCatalog;
@@ -103,9 +107,12 @@ import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Item
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.Lifecycle;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.PreparedTransition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestHistory;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.QuestStatusSyncSnapshot;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineDisposition;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.RepeatDeadlineResolution;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.SpawnPlacementKind;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphState.TeleportPlan;
+import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateCodec;
 import com.aionemu.gameserver.questEngine.graph.state.PlayerQuestGraphStateList;
 import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 
@@ -179,6 +186,111 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(new IntValue(0), states.get(1).getVariables().get("digit0"));
 		assertEquals(new IntValue(1), states.get(1).getVariables().get("digit1"));
 		assertEquals(states.get(1), database.get());
+	}
+
+	/** 验证每个 sync occurrence 在首次 PREPARED 前冻结其 checkpoint，并在 codec 恢复后复用原值。 / Verifies every sync occurrence freezes its checkpoint before the first PREPARED write and reuses it after codec recovery. */
+	@Test
+	void questStatusSyncSnapshotsFreezePerOccurrenceAndSurviveRecovery() {
+		Map<String, CompiledQuestGraph.Variable> variables = new LinkedHashMap<>();
+		variables.put("var0", new IntVariable("var0", PLAYER, 0, 0, 63));
+		variables.put("var1", new IntVariable("var1", PLAYER, 0, 0, 63));
+		Transition transition = new Transition("sync-checkpoints", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), List.of(
+			new SetQuestVariableAction("var0", 1),
+			new SetQuestVariableAction("var1", 2),
+			new SetQuestStatusAction(CompiledQuestGraph.QuestStatus.REWARD),
+			new SyncQuestStatusAction(0),
+			new SyncQuestStatusAction(1),
+			new SyncQuestStatusAction(-1)));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", variables,
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState initial = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of("var0", new IntValue(3), "var1", new IntValue(4)),
+			Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(initial);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(initial);
+		AtomicReference<PlayerQuestGraphState> firstPrepared = new AtomicReference<>();
+		List<QuestGraphQuestStatusSyncAdapter.QuestStatusSyncCommand> firstCommands = new java.util.ArrayList<>();
+		QuestGraphQuestStatusSyncAdapter firstAdapter = new QuestGraphQuestStatusSyncAdapter(7, command -> {
+			firstCommands.add(command);
+			return firstCommands.size() == 2 ? FAILED : APPLIED;
+		});
+		BiFunction<Long, PlayerQuestGraphState, PersistenceResult> databaseCas = cas(database);
+		TransitionContext firstContext = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			firstAdapter::execute, (expected, state) -> {
+				if (state.getLifecycle() == Lifecycle.PREPARED && state.getJournal().getNextActionIndex() == 0) {
+					firstPrepared.compareAndSet(null, state);
+				}
+				return databaseCas.apply(expected, state);
+			});
+
+		assertEquals(DispatchResult.Status.FAILED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), initial), firstContext));
+		Map<Integer, QuestStatusSyncSnapshot> expectedSnapshots = Map.of(
+			3, new QuestStatusSyncSnapshot(3, 0, CompiledQuestGraph.QuestStatus.START, 259),
+			4, new QuestStatusSyncSnapshot(4, 1, CompiledQuestGraph.QuestStatus.START, 257),
+			5, new QuestStatusSyncSnapshot(5, 3, CompiledQuestGraph.QuestStatus.REWARD, 129));
+		assertEquals(expectedSnapshots, firstPrepared.get().getJournal().getQuestStatusSyncSnapshots());
+		assertEquals(expectedSnapshots, states.get(1).getJournal().getQuestStatusSyncSnapshots());
+		assertTrue(states.get(1).getJournal().isTargetCommitted());
+		assertEquals(4, states.get(1).getJournal().getNextActionIndex());
+		assertEquals(List.of(259, 257), firstCommands.stream().map(
+			QuestGraphQuestStatusSyncAdapter.QuestStatusSyncCommand::packedQuestVars).toList());
+
+		PlayerQuestGraphState restartedState = PlayerQuestGraphStateCodec.decode(1, 1, states.get(1).getRevision(), states.get(1).getNodeId(),
+			states.get(1).getInstanceRunId(), states.get(1).getLifecycle(), PlayerQuestGraphStateCodec.encode(states.get(1)));
+		PlayerQuestGraphStateList restarted = new PlayerQuestGraphStateList();
+		restarted.addLoaded(restartedState);
+		AtomicReference<PlayerQuestGraphState> restartedDatabase = new AtomicReference<>(restartedState);
+		List<QuestGraphQuestStatusSyncAdapter.QuestStatusSyncCommand> recoveredCommands = new java.util.ArrayList<>();
+		QuestGraphQuestStatusSyncAdapter recoveryAdapter = new QuestGraphQuestStatusSyncAdapter(7, command -> {
+			recoveredCommands.add(command);
+			return APPLIED;
+		});
+		TransitionContext recovery = new TransitionContext(7, 0, SERVER_ZONE, restarted, invocation -> MATCHED, invocation -> READY,
+			recoveryAdapter::execute, cas(restartedDatabase));
+
+		assertEquals(DispatchResult.Status.APPLIED, executor.recover(graph, recovery));
+		assertEquals(List.of(257, 129), recoveredCommands.stream().map(
+			QuestGraphQuestStatusSyncAdapter.QuestStatusSyncCommand::packedQuestVars).toList());
+		assertEquals(firstCommands.get(1).idempotencyKey(), recoveredCommands.getFirst().idempotencyKey());
+		assertEquals(CompiledQuestGraph.QuestStatus.START, recoveredCommands.getFirst().status());
+		assertEquals(CompiledQuestGraph.QuestStatus.REWARD, recoveredCommands.getLast().status());
+		assertEquals(Lifecycle.ACTIVE, restarted.get(1).getLifecycle());
+		assertNull(restarted.get(1).getJournal());
+	}
+
+	/** 验证快照精确复现 QuestVars 的 int 溢出和非掩码语义。 / Verifies snapshots preserve QuestVars' int overflow and unmasked-slot semantics. */
+	@Test
+	void questStatusSyncPreservesLegacyQuestVarsPackingWithoutClamping() {
+		Map<String, CompiledQuestGraph.Variable> variables = Map.of(
+			"var0", new IntVariable("var0", PLAYER, 0, 0, 255),
+			"var5", new IntVariable("var5", PLAYER, 0, 0, 255));
+		Transition transition = new Transition("sync", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(),
+			List.of(new SyncQuestStatusAction()));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "active", variables,
+			Map.of("active", new Node("active", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphState current = new PlayerQuestGraphState(1, 1, 0, "active", CompiledQuestGraph.QuestStatus.START,
+			QuestHistory.EMPTY, null, Lifecycle.ACTIVE, Map.of("var0", new IntValue(64), "var5", new IntValue(2)), Map.of(), null, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(current);
+		AtomicInteger actions = new AtomicInteger();
+		AtomicInteger writes = new AtomicInteger();
+		AtomicReference<QuestStatusSyncSnapshot> snapshot = new AtomicReference<>();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY, invocation -> {
+			actions.incrementAndGet();
+			snapshot.set(invocation.questStatusSyncSnapshot());
+			return APPLIED;
+		}, (expected, state) -> {
+			writes.incrementAndGet();
+			return PersistenceResult.APPLIED;
+		});
+
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "active", transition), current), context));
+		assertEquals(1, actions.get());
+		assertTrue(writes.get() > 0);
+		assertEquals(Integer.MIN_VALUE | 64, snapshot.get().packedQuestVars());
 	}
 
 	/**
@@ -462,6 +574,226 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(CompiledQuestGraph.QuestStatus.NONE, state.getQuestStatus());
 		assertEquals(-1, state.getJournal().getBaseRevision());
 		assertEquals(0, state.getJournal().getNextActionIndex());
+	}
+
+	/** 验证动态传送计划在 PREPARED、target commit、codec 重启和协议恢复期间保持冻结。 / Verifies a dynamic teleport plan stays frozen through PREPARED, target commit, codec restart, and protocol recovery. */
+	@Test
+	void currentContextTeleportPlanSurvivesPreparedRecoveryWithoutResnapshot() {
+		TeleportPlayerAction teleport = new TeleportPlayerAction(210030000, 0, TeleportInstancePolicy.PLAYER_CURRENT,
+			1643, 1500, 120, TeleportHeadingPolicy.PLAYER_CURRENT, (byte) 0);
+		Transition transition = new Transition("teleport", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(),
+			List.of(teleport, new SyncQuestStatusAction()));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>();
+		AtomicInteger snapshots = new AtomicInteger();
+		AtomicReference<TeleportPlan> executedPlan = new AtomicReference<>();
+		AtomicReference<String> executedKey = new AtomicReference<>();
+		TransitionContext first = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY, invocation -> {
+			if (invocation.action() instanceof TeleportPlayerAction) {
+				executedPlan.set(invocation.teleportPlan());
+				executedKey.set(invocation.idempotencyKey());
+				return APPLIED;
+			}
+			return FAILED;
+		}, ignored -> 0, ignored -> READY, invocation -> null, invocation -> null, invocation -> {
+			snapshots.incrementAndGet();
+			return new TeleportPlan(invocation.actionIndex(), 210030000, 42, 1643, 1500, 120, (byte) 9);
+		}, cas(database));
+		Match match = new Match(EVENT, graph, new EventRoute(1, "offer", transition), null);
+
+		assertEquals(DispatchResult.Status.FAILED, executor.execute(match, first));
+		PlayerQuestGraphState interrupted = states.get(1);
+		assertTrue(interrupted.getJournal().isTargetCommitted());
+		assertEquals(Map.of(0, executedPlan.get()), interrupted.getJournal().getTeleportPlans());
+		assertEquals(1, snapshots.get());
+
+		PlayerQuestGraphState restartedState = PlayerQuestGraphStateCodec.decode(1, 1, interrupted.getRevision(), interrupted.getNodeId(),
+			interrupted.getInstanceRunId(), interrupted.getLifecycle(), PlayerQuestGraphStateCodec.encode(interrupted));
+		PlayerQuestGraphStateList restarted = new PlayerQuestGraphStateList();
+		restarted.addLoaded(restartedState);
+		AtomicReference<PlayerQuestGraphState> restartedDatabase = new AtomicReference<>(restartedState);
+		AtomicInteger teleports = new AtomicInteger();
+		TransitionContext recovery = new TransitionContext(7, 0, SERVER_ZONE, restarted, invocation -> MATCHED, invocation -> READY, invocation -> {
+			if (invocation.action() instanceof TeleportPlayerAction) {
+				teleports.incrementAndGet();
+			}
+			return APPLIED;
+		}, ignored -> 0, ignored -> READY, invocation -> null, invocation -> null,
+			invocation -> {
+				throw new AssertionError("recovery must not read current player context");
+			}, cas(restartedDatabase));
+
+		assertEquals(DispatchResult.Status.APPLIED, executor.recover(graph, recovery));
+		assertEquals(0, teleports.get());
+		assertEquals(1, snapshots.get());
+		assertEquals(Lifecycle.ACTIVE, restarted.get(1).getLifecycle());
+		assertNull(restarted.get(1).getJournal());
+		assertTrue(executedKey.get().endsWith(":0"));
+	}
+
+	/** 验证尚未执行的动态传送在 codec 重启后消费原冻结计划和幂等键，不重新读取玩家。 / Verifies a pending dynamic teleport consumes its original frozen plan and idempotency key after codec restart without rereading the player. */
+	@Test
+	void pendingCurrentContextTeleportRecoversFromFrozenPlanWithoutResnapshot() {
+		TeleportPlayerAction teleport = new TeleportPlayerAction(210030000, 0, TeleportInstancePolicy.PLAYER_CURRENT,
+			1643, 1500, 120, TeleportHeadingPolicy.PLAYER_CURRENT, (byte) 0);
+		Transition transition = new Transition("teleport", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), List.of(teleport));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		TeleportPlan frozenPlan = new TeleportPlan(0, 210030000, 42, 1643, 1500, 120, (byte) 9);
+		PreparedTransition journal = new PreparedTransition(-1, EVENT.eventId(), transition.id(), 0,
+			RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), Map.of(0, frozenPlan), QuestGraphEventCodec.encode(EVENT));
+		PlayerQuestGraphState prepared = new PlayerQuestGraphState(1, 1, 0, "offer", NONE, QuestHistory.EMPTY, null,
+			Lifecycle.PREPARED, Map.of(), Map.of(), journal, Map.of(), null);
+		PlayerQuestGraphState restartedState = PlayerQuestGraphStateCodec.decode(1, 1, prepared.getRevision(), prepared.getNodeId(),
+			prepared.getInstanceRunId(), prepared.getLifecycle(), PlayerQuestGraphStateCodec.encode(prepared));
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(restartedState);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(restartedState);
+		AtomicReference<QuestGraphTeleportActionAdapter.TeleportCommand> executed = new AtomicReference<>();
+		QuestGraphTeleportActionAdapter adapter = new QuestGraphTeleportActionAdapter(7,
+			QuestGraphTeleportActionAdapter.RegisteredInstanceGateway.UNAVAILABLE,
+			() -> {
+				throw new AssertionError("recovery must not read current player context");
+			}, command -> {
+				executed.set(command);
+				return APPLIED;
+			});
+		TransitionContext recovery = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, adapter::preflight,
+			adapter::execute, ignored -> 0, ignored -> READY, invocation -> null, invocation -> null, adapter::preparePlan, cas(database));
+
+		assertEquals(DispatchResult.Status.APPLIED, executor.recover(graph, recovery));
+		assertEquals(210030000, executed.get().worldId());
+		assertEquals(42, executed.get().instanceId());
+		assertEquals(1643f, executed.get().x());
+		assertEquals(1500f, executed.get().y());
+		assertEquals(120f, executed.get().z());
+		assertEquals(9, executed.get().heading());
+		assertEquals("8:dialog-1:1:teleport:7:0", executed.get().idempotencyKey());
+		assertEquals(Lifecycle.ACTIVE, states.get(1).getLifecycle());
+		assertNull(states.get(1).getJournal());
+	}
+
+	/** 验证动态传送缺失、额外或篡改冻结计划时恢复会在任何 adapter 调用前隔离。 / Verifies recovery quarantines missing, extra, or tampered dynamic teleport plans before any adapter invocation. */
+	@Test
+	void recoveryQuarantinesIncompatibleCurrentContextTeleportPlans() {
+		TeleportPlan valid = new TeleportPlan(0, 210030000, 42, 1643, 1500, 120, (byte) 9);
+		assertRecoveryQuarantinesTeleportPlans(Map.of());
+		assertRecoveryQuarantinesTeleportPlans(Map.of(0, valid,
+			1, new TeleportPlan(1, 210030000, 42, 1643, 1500, 120, (byte) 9)));
+		assertRecoveryQuarantinesTeleportPlans(Map.of(0,
+			new TeleportPlan(0, 210030000, 42, 1644, 1500, 120, (byte) 9)));
+	}
+
+	private void assertRecoveryQuarantinesTeleportPlans(Map<Integer, TeleportPlan> teleportPlans) {
+		TeleportPlayerAction teleport = new TeleportPlayerAction(210030000, 0, TeleportInstancePolicy.PLAYER_CURRENT,
+			1643, 1500, 120, TeleportHeadingPolicy.PLAYER_CURRENT, (byte) 0);
+		Transition transition = new Transition("teleport", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), List.of(teleport));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PreparedTransition journal = new PreparedTransition(-1, EVENT.eventId(), transition.id(), 0,
+			RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), teleportPlans, QuestGraphEventCodec.encode(EVENT));
+		PlayerQuestGraphState prepared = new PlayerQuestGraphState(1, 1, 0, "offer", NONE, QuestHistory.EMPTY, null,
+			Lifecycle.PREPARED, Map.of(), Map.of(), journal, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(prepared);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(prepared);
+		AtomicInteger callbacks = new AtomicInteger();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> {
+			callbacks.incrementAndGet();
+			return READY;
+		}, invocation -> {
+			callbacks.incrementAndGet();
+			return APPLIED;
+		}, ignored -> 0, ignored -> READY, invocation -> {
+			callbacks.incrementAndGet();
+			return null;
+		}, invocation -> {
+			callbacks.incrementAndGet();
+			return null;
+		}, invocation -> {
+			callbacks.incrementAndGet();
+			return null;
+		}, cas(database));
+
+		assertEquals(DispatchResult.Status.FAILED, executor.recover(graph, context));
+		assertEquals(0, callbacks.get());
+		assertEquals(Lifecycle.QUARANTINED, states.get(1).getLifecycle());
+		assertEquals("RECOVERY_TELEPORT_PLAN_INCOMPATIBLE", states.get(1).getQuarantineReason());
+	}
+
+	/** 验证旧 PREPARED journal 含 sync 但没有冻结快照时会在任何 adapter 回调前隔离。 / Verifies a legacy PREPARED journal with sync but no frozen snapshot is quarantined before adapter callbacks. */
+	@Test
+	void recoveryQuarantinesLegacySyncWithoutFrozenSnapshot() {
+		Transition transition = new Transition("sync", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(),
+			List.of(new SyncQuestStatusAction()));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PreparedTransition journal = new PreparedTransition(-1, EVENT.eventId(), transition.id(), 0,
+			RepeatDeadlineResolution.NOT_APPLICABLE, Map.of(), Map.of(), QuestGraphEventCodec.encode(EVENT));
+		PlayerQuestGraphState prepared = new PlayerQuestGraphState(1, 1, 0, "offer", NONE, QuestHistory.EMPTY, null,
+			Lifecycle.PREPARED, Map.of(), Map.of(), journal, Map.of(), null);
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		states.addLoaded(prepared);
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>(prepared);
+		AtomicInteger callbacks = new AtomicInteger();
+		TransitionContext recovery = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> {
+			callbacks.incrementAndGet();
+			return READY;
+		}, invocation -> {
+			callbacks.incrementAndGet();
+			return APPLIED;
+		}, cas(database));
+
+		assertEquals(DispatchResult.Status.FAILED, executor.recover(graph, recovery));
+		assertEquals(0, callbacks.get());
+		assertEquals(Lifecycle.QUARANTINED, states.get(1).getLifecycle());
+		assertEquals("RECOVERY_QUEST_STATUS_SYNC_SNAPSHOT_INCOMPATIBLE", states.get(1).getQuarantineReason());
+	}
+
+	/** 验证持久化 sync 内容被篡改时，恢复会在 adapter 前以原摘要失败关闭。 / Verifies recovery fails closed before the adapter when persisted sync content no longer matches its original digest. */
+	@Test
+	void recoveryQuarantinesTamperedSyncSnapshotContents() {
+		Transition transition = new Transition("sync", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(),
+			List.of(new SyncQuestStatusAction()));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphStateList firstStates = new PlayerQuestGraphStateList();
+		AtomicReference<PlayerQuestGraphState> firstDatabase = new AtomicReference<>();
+		TransitionContext first = new TransitionContext(7, 0, SERVER_ZONE, firstStates, invocation -> MATCHED, invocation -> READY,
+			invocation -> FAILED, cas(firstDatabase));
+
+		assertEquals(DispatchResult.Status.FAILED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "offer", transition), null), first));
+		PlayerQuestGraphState valid = firstStates.get(1);
+		PreparedTransition journal = valid.getJournal();
+		QuestStatusSyncSnapshot original = journal.getQuestStatusSyncSnapshots().get(0);
+		QuestStatusSyncSnapshot tamperedSnapshot = new QuestStatusSyncSnapshot(0, original.snapshotAfterActionCount(),
+			CompiledQuestGraph.QuestStatus.START, original.packedQuestVars() + 1);
+		PreparedTransition tamperedJournal = new PreparedTransition(journal.getBaseRevision(), journal.getEventId(),
+			journal.getTransitionId(), journal.getNextActionIndex(), journal.isTargetCommitted(), journal.getRepeatDeadlineResolution(),
+			journal.getItemMutationPlans(), journal.getTeleportPlans(), Map.of(0, tamperedSnapshot),
+			journal.getQuestStatusSyncSnapshotDigest(), journal.getEventPayload());
+		PlayerQuestGraphState tampered = new PlayerQuestGraphState(valid.getQuestId(), valid.getDefinitionVersion(), valid.getRevision(),
+			valid.getNodeId(), valid.getQuestStatus(), valid.getHistory(), valid.getInstanceRunId(), Lifecycle.PREPARED,
+			valid.getVariables(), valid.getDeadlines(), tamperedJournal, valid.getCleanupLeases(), null);
+		PlayerQuestGraphStateList recoveredStates = new PlayerQuestGraphStateList();
+		recoveredStates.addLoaded(tampered);
+		AtomicReference<PlayerQuestGraphState> recoveredDatabase = new AtomicReference<>(tampered);
+		AtomicInteger callbacks = new AtomicInteger();
+		TransitionContext recovery = new TransitionContext(7, 0, SERVER_ZONE, recoveredStates, invocation -> MATCHED, invocation -> {
+			callbacks.incrementAndGet();
+			return READY;
+		}, invocation -> {
+			callbacks.incrementAndGet();
+			return APPLIED;
+		}, cas(recoveredDatabase));
+
+		assertEquals(DispatchResult.Status.FAILED, executor.recover(graph, recovery));
+		assertEquals(0, callbacks.get());
+		assertEquals(Lifecycle.QUARANTINED, recoveredStates.get(1).getLifecycle());
+		assertEquals("RECOVERY_QUEST_STATUS_SYNC_SNAPSHOT_INCOMPATIBLE", recoveredStates.get(1).getQuarantineReason());
 	}
 
 	/**
@@ -1090,8 +1422,11 @@ class QuestGraphTransitionExecutorTest {
 	void spawnAndTeleportRequiredActionsUseTypedPreflightAndExecution() {
 		AtomicInteger spawns = new AtomicInteger();
 		AtomicInteger teleports = new AtomicInteger();
+		AtomicReference<QuestGraphInstanceSpawnAdapter.SpawnCommand> spawned = new AtomicReference<>();
 		QuestGraphInstanceSpawnAdapter instanceSpawns = new QuestGraphInstanceSpawnAdapter(7,
-			query -> new QuestGraphInstanceSpawnAdapter.SpawnSpot(210010000, 0, 1, 2, 3, (byte) 0), command -> {
+			() -> new QuestGraphInstanceSpawnAdapter.PlayerSnapshot(7, 210010000, 0, 11, 12, 13, (byte) 14),
+			query -> new QuestGraphInstanceSpawnAdapter.SpawnSpot(210010000, 0, 1, 2, 3, (byte) 0), target -> null, command -> {
+				spawned.set(command);
 				spawns.incrementAndGet();
 				return new QuestGraphInstanceSpawnAdapter.SpawnResult(APPLIED, 990001);
 			}, command -> APPLIED);
@@ -1107,13 +1442,17 @@ class QuestGraphTransitionExecutorTest {
 		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, new PlayerQuestGraphStateList(),
 			invocation -> MATCHED, invocation -> QuestGraphTransitionExecutor.PreflightResult.FAILED, invocation -> FAILED, noItemActions(), timers, movies,
 			itemUseAnimations, dialogs, teleportsAdapter, instanceSpawns, (expected, state) -> PersistenceResult.APPLIED);
-		ActionInvocation spawn = new ActionInvocation(new SpawnInstanceNpcAction(700759, 216608), 1, 0,
+		ActionInvocation spawn = new ActionInvocation(new SpawnInstanceNpcAction(216608, new PlayerPlacement()), 1, 0,
 			CompiledQuestGraph.QuestStatus.START, EVENT, RepeatDeadlineResolution.NOT_APPLICABLE, null, "spawn");
-		ActionInvocation teleport = new ActionInvocation(new TeleportPlayerAction(210010000, 0, 1, 2, 3, (byte) 0), 1, 0,
+		ActionInvocation teleport = new ActionInvocation(new TeleportPlayerAction(210010000, 1, 1, 2, 3, (byte) 0), 1, 0,
 			CompiledQuestGraph.QuestStatus.START, EVENT, RepeatDeadlineResolution.NOT_APPLICABLE, null, "teleport");
 
 		assertEquals(READY, context.actionPreflight().apply(spawn));
 		assertEquals(APPLIED, context.actionExecutor().apply(spawn));
+		assertEquals(QuestGraphInstanceSpawnAdapter.PlacementKind.PLAYER, spawned.get().placement());
+		assertEquals(11f, spawned.get().x());
+		assertEquals(12f, spawned.get().y());
+		assertEquals(13f, spawned.get().z());
 		assertEquals(READY, context.actionPreflight().apply(teleport));
 		assertEquals(APPLIED, context.actionExecutor().apply(teleport));
 		assertEquals(1, spawns.get());
@@ -1221,7 +1560,7 @@ class QuestGraphTransitionExecutorTest {
 			CleanupLease persisted = invocation.cleanupLeases().get(invocation.idempotencyKey());
 			assertEquals(frozen.get(), persisted.identity());
 			return CleanupLease.instanceSpawn(frozen.get().materialize(990001));
-		}, cas(database));
+		}, invocation -> null, cas(database));
 		Match match = new Match(EVENT, graph, new EventRoute(1, "offer", transition), null);
 
 		assertEquals(DispatchResult.Status.FAILED, executor.execute(match, context));
@@ -1463,6 +1802,97 @@ class QuestGraphTransitionExecutorTest {
 		assertEquals(Map.of(), states.get(1).getDeadlines());
 		assertEquals("QUEST_TIMER", end.get().timer());
 		assertEquals(0, sync.get().remainingSeconds());
+	}
+
+	@Test
+	void durableTeleportContinuesImmediatelyAndAcknowledgesOnlyAfterItsJournalCas() {
+		TeleportPlayerAction teleport = new TeleportPlayerAction(210010000, 1, 1, 2, 3, (byte) 4);
+		Transition transition = new Transition("teleport", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), List.of(teleport));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>();
+		List<String> order = new java.util.ArrayList<>();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> {
+				order.add("execute");
+				assertTrue(invocation.hasJournalIdentity());
+				assertEquals(-1, invocation.baseRevision());
+				assertEquals("teleport", invocation.transitionId());
+				return DURABLY_ACCEPTED;
+			}, itemId -> -1, plans -> plans.isEmpty() ? READY : QuestGraphTransitionExecutor.PreflightResult.FAILED,
+			invocation -> null, invocation -> null, invocation -> null, invocation -> {
+				order.add("ack");
+				assertEquals(1, database.get().getRevision());
+				assertEquals(1, database.get().getJournal().getNextActionIndex());
+				return ALREADY_APPLIED;
+			}, (expected, next) -> {
+				PersistenceResult result = cas(database).apply(expected, next);
+				if (result == PersistenceResult.APPLIED) {
+					order.add("persist:" + next.getRevision());
+				}
+				return result;
+			});
+
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "offer", transition), null), context));
+		assertEquals(List.of("persist:0", "execute", "persist:1", "ack", "persist:2"), order);
+		assertEquals(Lifecycle.ACTIVE, states.get(1).getLifecycle());
+	}
+
+	@Test
+	void durableTeleportIsNotAcknowledgedWhenItsJournalProgressCasFails() {
+		TeleportPlayerAction teleport = new TeleportPlayerAction(210010000, 1, 1, 2, 3, (byte) 4);
+		Transition transition = new Transition("teleport", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), List.of(teleport));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>();
+		AtomicInteger persistenceCalls = new AtomicInteger();
+		AtomicInteger acknowledgements = new AtomicInteger();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> DURABLY_ACCEPTED, itemId -> -1,
+			plans -> plans.isEmpty() ? READY : QuestGraphTransitionExecutor.PreflightResult.FAILED,
+			invocation -> null, invocation -> null, invocation -> null, invocation -> {
+				acknowledgements.incrementAndGet();
+				return ALREADY_APPLIED;
+			}, (expected, next) -> {
+				if (persistenceCalls.incrementAndGet() != 1) {
+					return CONFLICT;
+				}
+				database.set(next);
+				return PersistenceResult.APPLIED;
+			});
+
+		assertEquals(DispatchResult.Status.FAILED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "offer", transition), null), context));
+		assertEquals(0, acknowledgements.get());
+		assertEquals(Lifecycle.PREPARED, database.get().getLifecycle());
+		assertEquals(0, database.get().getJournal().getNextActionIndex());
+	}
+
+	@Test
+	void durableTeleportJournalRemainsCommittedWhenAcknowledgementIsInterrupted() {
+		TeleportPlayerAction teleport = new TeleportPlayerAction(210010000, 1, 1, 2, 3, (byte) 4);
+		Transition transition = new Transition("teleport", 10, "done", new Event(DIALOG, 100, "QUEST_SELECT"), List.of(), List.of(teleport));
+		CompiledQuestGraph graph = new CompiledQuestGraph(1, 1, PLAYER, "offer", Map.of(),
+			Map.of("offer", new Node("offer", false, List.of(transition)), "done", new Node("done", true, List.of())));
+		PlayerQuestGraphStateList states = new PlayerQuestGraphStateList();
+		AtomicReference<PlayerQuestGraphState> database = new AtomicReference<>();
+		AtomicInteger acknowledgementAttempts = new AtomicInteger();
+		TransitionContext context = new TransitionContext(7, 0, SERVER_ZONE, states, invocation -> MATCHED, invocation -> READY,
+			invocation -> DURABLY_ACCEPTED, itemId -> -1,
+			plans -> plans.isEmpty() ? READY : QuestGraphTransitionExecutor.PreflightResult.FAILED,
+			invocation -> null, invocation -> null, invocation -> null, invocation -> {
+				acknowledgementAttempts.incrementAndGet();
+				throw new IllegalStateException("crash between journal CAS and outbox ack");
+			}, cas(database));
+
+		assertEquals(DispatchResult.Status.APPLIED,
+			executor.execute(new Match(EVENT, graph, new EventRoute(1, "offer", transition), null), context));
+		assertEquals(1, acknowledgementAttempts.get());
+		assertEquals(Lifecycle.ACTIVE, database.get().getLifecycle());
+		assertEquals(2, database.get().getRevision());
 	}
 
 	/**

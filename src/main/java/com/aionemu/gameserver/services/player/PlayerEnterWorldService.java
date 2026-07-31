@@ -112,6 +112,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_UI_SETTINGS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_YOUTUBE_VIDEO;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTeleportRecoveryCoordinator;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.AStationService;
@@ -361,9 +362,26 @@ public final class PlayerEnterWorldService {
 				if (secondsOffline > 3600) {
 					player.getCommonData().setAuraOfGrowth(0);
 				}
-			}
-			InstanceService.onPlayerLogin(player);
-			client.sendPacket(new SM_A_STATION(1, 1, true));
+				}
+				InstanceService.onPlayerLogin(player);
+				try {
+					QuestGraphTeleportRecoveryCoordinator.recoverBeforeSpawn(player);
+				} catch (RuntimeException e) {
+					try {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().removeObject(player);
+					} catch (RuntimeException rollbackFailure) {
+						e.addSuppressed(rollbackFailure);
+					}
+					player.setClientConnection(null);
+					client.setActivePlayer(null);
+					try {
+						client.close(new SM_QUIT_RESPONSE(), false);
+					} catch (RuntimeException rollbackFailure) {
+						e.addSuppressed(rollbackFailure);
+					}
+					throw e;
+				}
+				client.sendPacket(new SM_A_STATION(1, 1, true));
 			AbyssSkillService.onEnterWorld(player);
 			client.sendPacket(new SM_SKILL_LIST(player, player.getSkillList().getBasicSkills()));
 			for (PlayerSkillEntry stigmaSkill : player.getSkillList().getStigmaSkills()) {

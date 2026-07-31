@@ -6,16 +6,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.DelayItemUseContinuationAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.PlayMovieAction;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.QuestStatus;
 import com.aionemu.gameserver.questEngine.graph.CompiledQuestGraph.ScheduleItemUseDialogAction;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.DialogEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphEvent.ItemUseEvent;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphItemUseAnimationAdapter.CompletionCommand;
+import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphItemUseAnimationAdapter.ContinuationCommand;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphItemUseAnimationAdapter.ScheduleResult;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphItemUseAnimationAdapter.StartCommand;
 import com.aionemu.gameserver.questEngine.graph.runtime.QuestGraphTransitionExecutor.ActionInvocation;
@@ -171,6 +174,120 @@ class QuestGraphItemUseAnimationAdapterTest {
 		assertEquals(ActionResult.APPLIED,
 			rejected.execute(itemUse(7, new ScheduleItemUseDialogAction(3000, 4), "unaccepted-key")));
 		assertThrows(IllegalStateException.class, rejectedPending.remove(0)::run);
+	}
+
+	@Test
+	void durableContinuationUsesAbsoluteReadyAtAndSchedulesOnlyOnce() {
+		AtomicLong now = new AtomicLong(1_700_000_001_250L);
+		AtomicInteger starts = new AtomicInteger();
+		AtomicInteger schedules = new AtomicInteger();
+		AtomicReference<StartCommand> start = new AtomicReference<>();
+		AtomicReference<ContinuationCommand> scheduled = new AtomicReference<>();
+		AtomicLong delay = new AtomicLong();
+		QuestGraphItemUseAnimationAdapter adapter = durableAdapter(now, command -> {
+			start.set(command);
+			starts.incrementAndGet();
+			return ActionResult.APPLIED;
+		}, (command, wakeup, delayMillis) -> {
+			scheduled.set(command);
+			delay.set(delayMillis);
+			schedules.incrementAndGet();
+			return new ScheduleResult(ActionResult.APPLIED, () -> {
+			});
+		}, command -> ActionResult.APPLIED, command -> ActionResult.APPLIED);
+		ActionInvocation invocation = durableItemUse("durable-key");
+
+		assertEquals(ActionResult.DEFERRED, adapter.execute(invocation));
+		assertEquals(ActionResult.DEFERRED, adapter.execute(invocation));
+		assertEquals(1, starts.get());
+		assertEquals(1, schedules.get());
+		assertEquals(1750, delay.get());
+		assertEquals(new StartCommand(1, 7, 182206034, 55, 1750, "durable-key"), start.get());
+		assertEquals(1_700_000_003_000L, scheduled.get().readyAt());
+		assertEquals(-1, scheduled.get().baseRevision());
+		assertEquals("item-use", scheduled.get().transitionId());
+	}
+
+	@Test
+	void durableSynchronousSchedulerWakeupIsNotLost() {
+		AtomicInteger resumptions = new AtomicInteger();
+		QuestGraphItemUseAnimationAdapter adapter = durableAdapter(new AtomicLong(1_700_000_001_000L),
+			command -> ActionResult.APPLIED, (command, wakeup, delayMillis) -> {
+				wakeup.run();
+				return new ScheduleResult(ActionResult.APPLIED, () -> {
+				});
+			}, command -> {
+				resumptions.incrementAndGet();
+				return ActionResult.APPLIED;
+			}, command -> ActionResult.APPLIED);
+
+		assertEquals(ActionResult.DEFERRED, adapter.execute(durableItemUse("sync-durable-key")));
+		assertEquals(1, resumptions.get());
+		assertEquals(0, adapter.size());
+	}
+
+	@Test
+	void durableContinuationAtDeadlineEndsAnimationWithoutScheduling() {
+		AtomicInteger schedules = new AtomicInteger();
+		AtomicInteger resumptions = new AtomicInteger();
+		AtomicReference<ContinuationCommand> ended = new AtomicReference<>();
+		QuestGraphItemUseAnimationAdapter adapter = durableAdapter(new AtomicLong(1_700_000_003_000L),
+			command -> ActionResult.APPLIED, (command, wakeup, delayMillis) -> {
+				schedules.incrementAndGet();
+				return new ScheduleResult(ActionResult.APPLIED, () -> {
+				});
+			}, command -> {
+				resumptions.incrementAndGet();
+				return ActionResult.APPLIED;
+			}, command -> {
+				ended.set(command);
+				return ActionResult.APPLIED;
+			});
+		ActionInvocation invocation = durableItemUse("expired-key");
+
+		assertEquals(ActionResult.APPLIED, adapter.execute(invocation));
+		assertEquals(ActionResult.ALREADY_APPLIED, adapter.execute(invocation));
+		assertEquals(0, schedules.get());
+		assertEquals(0, resumptions.get());
+		assertEquals(1_700_000_003_000L, ended.get().readyAt());
+	}
+
+	@Test
+	void durableClearCancelsScheduleAndIgnoresStaleWakeup() {
+		AtomicInteger cancellations = new AtomicInteger();
+		AtomicInteger resumptions = new AtomicInteger();
+		AtomicReference<Runnable> wakeup = new AtomicReference<>();
+		QuestGraphItemUseAnimationAdapter adapter = durableAdapter(new AtomicLong(1_700_000_001_000L),
+			command -> ActionResult.APPLIED, (command, callback, delayMillis) -> {
+				wakeup.set(callback);
+				return new ScheduleResult(ActionResult.APPLIED, cancellations::incrementAndGet);
+			}, command -> {
+				resumptions.incrementAndGet();
+				return ActionResult.APPLIED;
+			}, command -> ActionResult.APPLIED);
+
+		assertEquals(ActionResult.DEFERRED, adapter.execute(durableItemUse("clear-key")));
+		assertEquals(ActionResult.APPLIED, adapter.clear());
+		assertEquals(1, cancellations.get());
+		assertEquals(0, adapter.size());
+		wakeup.get().run();
+		assertEquals(0, resumptions.get());
+	}
+
+	private static QuestGraphItemUseAnimationAdapter durableAdapter(AtomicLong now,
+			java.util.function.Function<StartCommand, ActionResult> starter,
+			QuestGraphItemUseAnimationAdapter.ContinuationScheduler scheduler,
+			java.util.function.Function<ContinuationCommand, ActionResult> resumer,
+			java.util.function.Function<ContinuationCommand, ActionResult> ender) {
+		return new QuestGraphItemUseAnimationAdapter(7, starter,
+			(command, finish) -> new ScheduleResult(ActionResult.FAILED, null), command -> ActionResult.FAILED,
+			scheduler, resumer, ender, now::get);
+	}
+
+	private static ActionInvocation durableItemUse(String key) {
+		return new ActionInvocation(new DelayItemUseContinuationAction(3000), 1, 0, QuestStatus.NONE,
+			new ItemUseEvent("item-use-event", 7, 1_700_000_000_000L, 182206034, 55),
+			RepeatDeadlineResolution.NOT_APPLICABLE, null, key).withJournalIdentity(-1, "item-use");
 	}
 
 	private static ActionInvocation itemUse(int playerId,
