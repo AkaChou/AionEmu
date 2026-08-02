@@ -13,6 +13,7 @@
   <xs:simpleType name="persistence"><xs:restriction base="xs:string"><xs:enumeration value="PERSISTENT"/><xs:enumeration value="MEMORY"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="scope"><xs:restriction base="xs:string"><xs:enumeration value="LOCAL"/><xs:enumeration value="SHARED"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="drop-scope"><xs:restriction base="xs:string"><xs:enumeration value="NONE"/><xs:enumeration value="GROUP"/><xs:enumeration value="ALLIANCE"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="shadow-coverage"><xs:restriction base="xs:string"><xs:enumeration value="PRODUCTION_REQUIRED"/><xs:enumeration value="OFFLINE_ONLY"/></xs:restriction></xs:simpleType>
 
   <xs:simpleType name="timer-scope"><xs:restriction base="xs:string"><xs:enumeration value="PLAYER_QUEST"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="timer-persistence"><xs:restriction base="xs:string"><xs:enumeration value="SESSION"/></xs:restriction></xs:simpleType>
@@ -137,7 +138,7 @@
           <xs:element name="conditions" type="conditions-type" minOccurs="0"/>
           <xs:element name="actions" type="actions-type" minOccurs="0"/>
           <xs:element name="after-commit" type="after-commit-type" minOccurs="0"/>
-        </xs:sequence><xs:attribute name="source"/><xs:attribute name="target" use="required"/><xs:attribute name="priority" type="xs:int"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
+	        </xs:sequence><xs:attribute name="source"/><xs:attribute name="target" use="required"/><xs:attribute name="priority" type="xs:int"/><xs:attribute name="shadow-coverage" type="shadow-coverage" default="PRODUCTION_REQUIRED"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
       </xs:sequence>
       <xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="version" type="xs:int" use="required"/><xs:attribute name="ownership" type="ownership" use="required"/>
     </xs:complexType>

@@ -442,7 +442,7 @@ public final class QuestDsl {
 			List<AfterCommitAction> updated = new ArrayList<>(current.afterCommit());
 			updated.add(Objects.requireNonNull(action, "action"));
 			transitions.add(new QuestTransition(current.event(), current.conditions(), current.actions(),
-				current.targetNode(), updated, current.priority(), current.sourceNode()));
+				current.targetNode(), updated, current.priority(), current.sourceNode(), current.shadowCoverage()));
 			return this;
 		}
 
@@ -461,6 +461,7 @@ public final class QuestDsl {
 		private final List<AfterCommitAction> afterCommit = new ArrayList<>();
 		private Integer priority;
 		private String sourceNode;
+		private QuestShadowCoverageRequirement shadowCoverage = QuestShadowCoverageRequirement.PRODUCTION_REQUIRED;
 
 		private TransitionBuilder(QuestBuilder owner, QuestEvent event) {
 			this.owner = owner;
@@ -493,11 +494,17 @@ public final class QuestDsl {
 			return this;
 		}
 
+		public TransitionBuilder shadowCoverage(QuestShadowCoverageRequirement shadowCoverage) {
+			this.shadowCoverage = Objects.requireNonNull(shadowCoverage, "shadowCoverage");
+			return this;
+		}
+
 		public QuestBuilder goTo(String targetNode) {
 			if (targetNode == null || targetNode.isBlank()) {
 				throw new IllegalArgumentException("targetNode must not be blank");
 			}
-			owner.transitions.add(new QuestTransition(event, conditions, actions, targetNode, afterCommit, priority, sourceNode));
+			owner.transitions.add(new QuestTransition(event, conditions, actions, targetNode, afterCommit, priority,
+				sourceNode, shadowCoverage));
 			return owner;
 		}
 

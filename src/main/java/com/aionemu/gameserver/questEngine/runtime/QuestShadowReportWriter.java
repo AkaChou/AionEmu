@@ -32,8 +32,14 @@ import java.util.Set;
  */
 public final class QuestShadowReportWriter {
 	public static final int SCHEMA_VERSION = 2;
+	private static final Set<String> ROOT_FIELDS = Set.of("schemaVersion", "expectedOwners", "coveredOwners",
+		"missingOwners", "unexpectedOwners", "expectedCoverage", "coveredCoverage", "missingCoverage",
+		"unexpectedCoverage", "expectedCoverageCount", "coveredCoverageCount", "expectedInvocations",
+		"actualInvocations", "complete", "clean", "differenceCounts", "comparisons");
 	private static final Set<String> COVERAGE_FIELDS = Set.of("questId", "eventType", "eventSelector",
 		"sourceNode", "targetNode", "priority", "dispatchContract");
+	private static final Set<String> COMPARISON_FIELDS = Set.of("eventType", "differences");
+	private static final Set<String> DIFFERENCE_FIELDS = Set.of("kind", "questId");
 
 	private QuestShadowReportWriter() {
 	}
@@ -98,6 +104,12 @@ public final class QuestShadowReportWriter {
 	 * Duplicate entries, stale schemas and self-contradictory booleans fail closed.
 	 */
 	public static int readSchemaVersion(Path path) throws IOException {
+		read(path);
+		return SCHEMA_VERSION;
+	}
+
+	/** Returns the fully validated report so a production run can resume after restart. */
+	public static QuestShadowBatchReport read(Path path) throws IOException {
 		if (path == null) {
 			throw new IllegalArgumentException("path must not be null");
 		}
@@ -111,6 +123,9 @@ public final class QuestShadowReportWriter {
 				throw invalid(path, "root must be an object");
 			}
 			JsonObject root = parsed.getAsJsonObject();
+			if (!root.keySet().equals(ROOT_FIELDS)) {
+				throw invalid(path, "root fields do not match schema");
+			}
 			int version = integer(root, "schemaVersion");
 			if (version != SCHEMA_VERSION) {
 				throw invalid(path, "unsupported schemaVersion " + version);
@@ -136,7 +151,8 @@ public final class QuestShadowReportWriter {
 			if (bool(root, "complete") != complete) {
 				throw invalid(path, "complete does not match exact coverage");
 			}
-			Map<QuestShadowDifferenceKind, Integer> actualCounts = comparisonCounts(root, path);
+			List<QuestShadowComparison> comparisons = comparisons(root, path);
+			Map<QuestShadowDifferenceKind, Integer> actualCounts = comparisonCounts(comparisons);
 			Map<QuestShadowDifferenceKind, Integer> declaredCounts = differenceCounts(root, path);
 			if (!actualCounts.equals(declaredCounts)) {
 				throw invalid(path, "differenceCounts do not match comparisons");
@@ -144,7 +160,8 @@ public final class QuestShadowReportWriter {
 			if (bool(root, "clean") != (complete && actualCounts.isEmpty())) {
 				throw invalid(path, "clean does not match coverage and differences");
 			}
-			return version;
+			return new QuestShadowBatchReport(expectedOwners, coveredOwners, expectedCoverage,
+				coveredCoverage, comparisons);
 		} catch (JsonParseException | IllegalStateException | NumberFormatException e) {
 			throw invalid(path, "invalid JSON payload", e);
 		}
@@ -341,24 +358,40 @@ public final class QuestShadowReportWriter {
 		return Map.copyOf(counts);
 	}
 
-	private static Map<QuestShadowDifferenceKind, Integer> comparisonCounts(JsonObject root, Path path) {
-		EnumMap<QuestShadowDifferenceKind, Integer> counts = new EnumMap<>(QuestShadowDifferenceKind.class);
+	private static List<QuestShadowComparison> comparisons(JsonObject root, Path path) {
+		List<QuestShadowComparison> comparisons = new java.util.ArrayList<>();
 		for (JsonElement comparisonElement : array(root, "comparisons")) {
-			if (!comparisonElement.isJsonObject()) {
+			if (!comparisonElement.isJsonObject()
+					|| !comparisonElement.getAsJsonObject().keySet().equals(COMPARISON_FIELDS)) {
 				throw invalid(path, "comparison must be an object");
 			}
 			JsonObject comparison = comparisonElement.getAsJsonObject();
-			string(comparison, "eventType");
+			String eventType = string(comparison, "eventType");
+			List<QuestShadowDifference> differences = new java.util.ArrayList<>();
 			for (JsonElement differenceElement : array(comparison, "differences")) {
-				if (!differenceElement.isJsonObject()) {
+				if (!differenceElement.isJsonObject()
+						|| !differenceElement.getAsJsonObject().keySet().equals(DIFFERENCE_FIELDS)) {
 					throw invalid(path, "difference must be an object");
 				}
 				JsonObject difference = differenceElement.getAsJsonObject();
 				QuestShadowDifferenceKind kind = QuestShadowDifferenceKind.valueOf(string(difference, "kind"));
-				if (integer(difference, "questId") < 0) {
+				int questId = integer(difference, "questId");
+				if (questId < 0) {
 					throw invalid(path, "difference questId must be non-negative");
 				}
-				counts.merge(kind, 1, Integer::sum);
+				differences.add(new QuestShadowDifference(kind, questId));
+			}
+			comparisons.add(new QuestShadowComparison(eventType, differences));
+		}
+		return List.copyOf(comparisons);
+	}
+
+	private static Map<QuestShadowDifferenceKind, Integer> comparisonCounts(
+			List<QuestShadowComparison> comparisons) {
+		EnumMap<QuestShadowDifferenceKind, Integer> counts = new EnumMap<>(QuestShadowDifferenceKind.class);
+		for (QuestShadowComparison comparison : comparisons) {
+			for (QuestShadowDifference difference : comparison.differences()) {
+				counts.merge(difference.kind(), 1, Integer::sum);
 			}
 		}
 		return Map.copyOf(counts);

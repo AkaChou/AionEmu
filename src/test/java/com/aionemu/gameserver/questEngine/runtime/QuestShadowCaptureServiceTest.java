@@ -24,6 +24,8 @@ import org.junit.jupiter.api.io.TempDir;
 import org.objenesis.ObjenesisStd;
 
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.util.List;
@@ -125,15 +127,149 @@ class QuestShadowCaptureServiceTest {
 		assertTrue(again.complete(), "重装后采集链路应再次工作");
 	}
 
+	@Test
+	void productionFactoryLoadsOnlyPackaged1101AndRequiresFourteenObservablePaths() throws Exception {
+		service = QuestShadowCaptureService.production(tempDir.resolve("production-shadow.json"));
+
+		assertEquals(Set.of(1101), service.expectedOwners());
+		service.install(engine);
+		QuestShadowBatchReport empty = service.stop();
+
+		assertEquals(14, empty.expectedCoverage().size());
+		assertEquals(0, empty.coveredCoverage().size());
+		assertFalse(empty.complete());
+	}
+
+	@Test
+	void compatiblePersistedReportIsResumedAfterRestart() throws Exception {
+		service = newService();
+		service.install(engine);
+		engine.addQuestHandler(new KillHandler(QUEST_ID));
+		engine.onKill(new QuestEnv(npc(), player, 0, 0));
+		QuestShadowBatchReport first = service.stop();
+		assertTrue(first.clean());
+
+		service = newService();
+		service.install(engine);
+		QuestShadowBatchReport resumed = service.stop();
+
+		assertTrue(resumed.clean());
+		assertEquals(first.coveredCoverage(), resumed.coveredCoverage());
+		assertEquals(first.comparisons(), resumed.comparisons());
+	}
+
+	@Test
+	void failedPersistenceRetainsAccumulatedEvidenceForNextRetry() throws Exception {
+		Path blockedParent = tempDir.resolve("blocked-parent");
+		Files.writeString(blockedParent, "not-a-directory", StandardCharsets.UTF_8);
+		Path reportPath = blockedParent.resolve("shadow.json");
+		service = newService(reportPath, QUEST_ID, NPC_ID);
+		service.install(engine);
+		engine.addQuestHandler(new KillHandler(QUEST_ID));
+		engine.onKill(new QuestEnv(npc(), player, 0, 0));
+
+		assertThrows(java.io.IOException.class, service::drainAndPersist);
+		Files.delete(blockedParent);
+		Files.createDirectory(blockedParent);
+		QuestShadowBatchReport retried = service.drainAndPersist();
+
+		assertTrue(retried.complete(), "首次写入失败后，已采集证据必须保留到下次重试");
+		assertTrue(retried.clean());
+		assertTrue(retried.comparisons().isEmpty(), "clean 样本已有 coverage 证明，无需永久累计明细");
+		assertEquals(retried, QuestShadowReportWriter.read(reportPath));
+	}
+
+	@Test
+	void corruptOrDriftedReportFailsInstallWithoutAttachingCapture() throws Exception {
+		Path reportPath = tempDir.resolve("strict-resume.json");
+		Files.writeString(reportPath, "{", StandardCharsets.UTF_8);
+		service = newService(reportPath, QUEST_ID, NPC_ID);
+		assertThrows(IllegalArgumentException.class, () -> service.install(engine));
+		assertFalse(service.installed());
+		assertShadowDetached();
+
+		QuestShadowBatchReport ownerDrift = new QuestShadowBatchReport(Set.of(QUEST_ID + 1), Set.of(),
+			Set.of(), Set.of(), List.of());
+		QuestShadowReportWriter.writeAtomic(reportPath, ownerDrift);
+		service = newService(reportPath, QUEST_ID, NPC_ID);
+		assertThrows(IllegalArgumentException.class, () -> service.install(engine));
+		assertFalse(service.installed());
+		assertShadowDetached();
+
+		QuestShadowCaptureService otherCoverage = newService(reportPath, QUEST_ID, NPC_ID + 1);
+		Files.delete(reportPath);
+		otherCoverage.install(engine);
+		otherCoverage.stop();
+		service = newService(reportPath, QUEST_ID, NPC_ID);
+		assertThrows(IllegalArgumentException.class, () -> service.install(engine));
+		assertFalse(service.installed());
+		assertShadowDetached();
+
+		Files.delete(reportPath);
+		Files.createDirectory(reportPath);
+		service = newService(reportPath, QUEST_ID, NPC_ID);
+		assertThrows(IllegalArgumentException.class, () -> service.install(engine));
+		assertFalse(service.installed());
+		assertShadowDetached();
+	}
+
+	@Test
+	void abortDetachesWithoutPersistingOrLeakingPendingSamples() throws Exception {
+		Path reportPath = tempDir.resolve("aborted-shadow.json");
+		service = newService(reportPath, QUEST_ID, NPC_ID);
+		service.install(engine);
+		engine.addQuestHandler(new KillHandler(QUEST_ID));
+		engine.onKill(new QuestEnv(npc(), player, 0, 0));
+
+		service.abort();
+
+		assertFalse(service.installed());
+		assertFalse(Files.exists(reportPath));
+		assertShadowDetached();
+		service.install(engine);
+		QuestShadowBatchReport afterReinstall = service.stop();
+		assertTrue(afterReinstall.coveredOwners().isEmpty(), "abort 前的样本不得泄漏到重新安装后的报告");
+	}
+
+	@Test
+	void questEngineShutdownPersistsFinalBatchAndDetachesService() throws Exception {
+		Path reportPath = tempDir.resolve("shutdown-shadow.json");
+		service = newService(reportPath, QUEST_ID, NPC_ID);
+		service.install(engine);
+		setField(QuestEngine.class, engine, "shadowCaptureService", service);
+		engine.addQuestHandler(new KillHandler(QUEST_ID));
+		engine.onKill(new QuestEnv(npc(), player, 0, 0));
+
+		engine.shutdown();
+
+		assertFalse(service.installed());
+		assertTrue(Files.isRegularFile(reportPath));
+		assertTrue(QuestShadowReportWriter.read(reportPath).clean());
+		assertShadowDetached();
+	}
+
 	private QuestShadowCaptureService newService() throws Exception {
-		CompiledQuestDefinition definition = quest(QUEST_ID)
+		return newService(tempDir.resolve("unified-shadow-batch.json"), QUEST_ID, NPC_ID);
+	}
+
+	private QuestShadowCaptureService newService(Path reportPath, int questId, int npcId) throws Exception {
+		CompiledQuestDefinition definition = quest(questId)
 				.evidence(EVIDENCE)
 				.node("start", project(QuestStatus.START, java.util.Map.of()))
 				.node("reward", project(QuestStatus.REWARD, java.util.Map.of()))
-				.on(killNpc(NPC_ID)).when(statusIs(QuestStatus.START)).then(setStatus(QuestStatus.REWARD))
+				.on(killNpc(npcId)).when(statusIs(QuestStatus.START)).then(setStatus(QuestStatus.REWARD))
 				.goTo("reward").compile();
 		return new QuestShadowCaptureService(new ImmutableQuestCatalog(List.of(definition)),
-				Set.of(QUEST_ID), tempDir.resolve("unified-shadow-batch.json"));
+				Set.of(questId), reportPath);
+	}
+
+	private void assertShadowDetached() throws Exception {
+		Field assemblyField = QuestEngine.class.getDeclaredField("shadowAssembly");
+		assemblyField.setAccessible(true);
+		Object assembly = assemblyField.get(engine);
+		Field captureField = assembly.getClass().getDeclaredField("capture");
+		captureField.setAccessible(true);
+		assertEquals(null, captureField.get(assembly));
 	}
 
 	private void playerWithState0() throws Exception {

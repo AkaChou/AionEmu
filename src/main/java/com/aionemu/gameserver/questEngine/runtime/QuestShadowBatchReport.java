@@ -1,12 +1,15 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Immutable full-run shadow gate input.
@@ -79,5 +82,45 @@ public record QuestShadowBatchReport(Set<Integer> expectedOwners, Set<Integer> c
 			}
 		}
 		return Collections.unmodifiableMap(counts);
+	}
+
+	/**
+	 * Merges consecutive persisted batches for the same gate. Coverage is a set
+	 * union while every typed difference remains sticky and deduplicated by event:
+	 * a later clean or repeated sample cannot erase or unboundedly duplicate it.
+	 */
+	public QuestShadowBatchReport merge(QuestShadowBatchReport other) {
+		Objects.requireNonNull(other, "other");
+		if (!expectedOwners.equals(other.expectedOwners)
+				|| !expectedCoverage.equals(other.expectedCoverage)) {
+			throw new IllegalArgumentException("shadow reports belong to different owner/coverage gates");
+		}
+		Set<Integer> mergedOwners = new LinkedHashSet<>(coveredOwners);
+		mergedOwners.addAll(other.coveredOwners);
+		Set<QuestShadowCoverageKey> mergedCoverage = new LinkedHashSet<>(coveredCoverage);
+		mergedCoverage.addAll(other.coveredCoverage);
+		Map<String, Set<QuestShadowDifference>> differencesByEvent = new TreeMap<>();
+		Comparator<QuestShadowDifference> differenceOrder = Comparator
+			.comparingInt(QuestShadowDifference::questId)
+			.thenComparing(QuestShadowDifference::kind);
+		for (QuestShadowComparison comparison : concat(comparisons, other.comparisons)) {
+			if (!comparison.clean()) {
+				differencesByEvent.computeIfAbsent(comparison.eventType(), ignored -> new TreeSet<>(differenceOrder))
+					.addAll(comparison.differences());
+			}
+		}
+		List<QuestShadowComparison> mergedComparisons = differencesByEvent.entrySet().stream()
+			.map(entry -> new QuestShadowComparison(entry.getKey(), List.copyOf(entry.getValue())))
+			.toList();
+		return new QuestShadowBatchReport(expectedOwners, mergedOwners, expectedCoverage,
+			mergedCoverage, mergedComparisons);
+	}
+
+	private static List<QuestShadowComparison> concat(List<QuestShadowComparison> left,
+			List<QuestShadowComparison> right) {
+		List<QuestShadowComparison> result = new java.util.ArrayList<>(left.size() + right.size());
+		result.addAll(left);
+		result.addAll(right);
+		return result;
 	}
 }

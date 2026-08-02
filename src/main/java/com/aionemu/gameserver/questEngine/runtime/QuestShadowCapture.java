@@ -10,6 +10,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import lombok.extern.slf4j.Slf4j;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,9 +39,24 @@ import java.util.Set;
  */
 @Slf4j(topic = "QUEST_SHADOW")
 public final class QuestShadowCapture implements QuestLegacyObservationSink {
-		private final QuestLegacyObservationStore store = new QuestLegacyObservationStore();
-		private final ThreadLocal<Scope> current = new ThreadLocal<>();
-		private final List<QuestShadowBatchRunner.Envelope> envelopes = new ArrayList<>();
+	private final QuestStartEligibilityPort startEligibilityPort;
+	private final Set<Integer> startEligibilityOwners;
+	private final QuestLegacyObservationStore store = new QuestLegacyObservationStore();
+	private final ThreadLocal<Scope> current = new ThreadLocal<>();
+	private final List<QuestShadowBatchRunner.Envelope> envelopes = new ArrayList<>();
+
+	public QuestShadowCapture() {
+		this(null, Set.of());
+	}
+
+	QuestShadowCapture(QuestStartEligibilityPort startEligibilityPort, Set<Integer> startEligibilityOwners) {
+		this.startEligibilityPort = startEligibilityPort;
+		this.startEligibilityOwners = Set.copyOf(Objects.requireNonNull(startEligibilityOwners,
+			"startEligibilityOwners"));
+		if (!this.startEligibilityOwners.isEmpty() && startEligibilityPort == null) {
+			throw new IllegalArgumentException("startEligibilityPort is required for configured owners");
+		}
+	}
 
 	/**
 	 * Opens a capture scope for one physical event. Snapshots are frozen now,
@@ -58,6 +74,15 @@ public final class QuestShadowCapture implements QuestLegacyObservationSink {
 		for (int questId : questIds) {
 			if (questId > 0 && !snapshots.containsKey(questId)) {
 				QuestSnapshot snapshot = snapshotOf(player, questId);
+				if (startEligibilityOwners.contains(questId)) {
+					try {
+						snapshot = snapshot.withStartEligibility(
+							startEligibilityPort.snapshot(player.getObjectId(), questId));
+					} catch (SQLException failure) {
+						throw new IllegalStateException("failed to capture quest start eligibility for " + questId,
+							failure);
+					}
+				}
 				snapshot = PlayerQuestEventPort.enrich(snapshot, event);
 				if (event instanceof QuestEvent.KillRanked ranked && ranked.facts() != null
 					&& ranked.facts().recipientId() == player.getObjectId()) {
@@ -107,6 +132,11 @@ public final class QuestShadowCapture implements QuestLegacyObservationSink {
 		QuestShadowBatchReport report = report(runner, expectedOwners);
 		envelopes.clear();
 		return report;
+	}
+
+	/** Discards an aborted installation's pending samples without producing migration evidence. */
+	synchronized void discard() {
+		envelopes.clear();
 	}
 
 	private synchronized void bind(Scope scope) {

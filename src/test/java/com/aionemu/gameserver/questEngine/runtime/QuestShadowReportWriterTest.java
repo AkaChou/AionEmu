@@ -85,9 +85,14 @@ class QuestShadowReportWriterTest {
 
 		assertTrue(Files.exists(target));
 		assertEquals(QuestShadowReportWriter.SCHEMA_VERSION, QuestShadowReportWriter.readSchemaVersion(target));
+		assertEquals(report, QuestShadowReportWriter.read(target));
 
 		// 字段内部自相矛盾也必须 fail-closed，不能只检查 JSON 尾部和版本号
 		String valid = Files.readString(target, StandardCharsets.UTF_8);
+		Files.writeString(target, valid.replace("\"schemaVersion\":2", "\"schemaVersion\":2,\"extra\":true"),
+			StandardCharsets.UTF_8);
+		assertThrows(IllegalArgumentException.class, () -> QuestShadowReportWriter.readSchemaVersion(target));
+
 		Files.writeString(target, valid.replace("\"coveredCoverageCount\":1", "\"coveredCoverageCount\":0"),
 			StandardCharsets.UTF_8);
 		assertThrows(IllegalArgumentException.class, () -> QuestShadowReportWriter.readSchemaVersion(target));

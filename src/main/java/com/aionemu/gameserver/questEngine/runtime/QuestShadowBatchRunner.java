@@ -32,26 +32,34 @@ public final class QuestShadowBatchRunner {
 		Objects.requireNonNull(envelopes, "envelopes");
 		Objects.requireNonNull(expectedOwners, "expectedOwners");
 		Set<Integer> coveredOwners = new LinkedHashSet<>();
+		Set<Integer> candidateOwners = runner.ownerIds();
 		Set<QuestShadowCoverageKey> expectedCoverage = runner.expectedCoverage(expectedOwners);
 		Set<QuestShadowCoverageKey> coveredCoverage = new LinkedHashSet<>();
 		List<QuestShadowComparison> comparisons = new ArrayList<>(envelopes.size());
 		for (Envelope envelope : envelopes) {
 			QuestShadowRunner.QuestShadowResult candidate = runner.inspect(envelope.event(), envelope.snapshots());
+			QuestShadowObservation scopedObservation = envelope.observation().scopedTo(candidateOwners);
 			// 只比较本物理事件实际派发的 owner（快照集即派发集）。候选索引到同 NPC 的兄弟
-			// 任务未在本事件派发，保留它们会产生系统性假 ROUTE（talk 直通只派发触发 owner）。
-			Set<Integer> dispatched = new LinkedHashSet<>(envelope.snapshots().keySet());
-			dispatched.addAll(envelope.observation().owners().keySet());
+			// 任务未在本候选目录中，保留它们会使单 owner shadow 产生系统性假 ROUTE。
+			Set<Integer> dispatched = envelope.snapshots().keySet().stream()
+				.filter(candidateOwners::contains)
+				.collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
+			dispatched.addAll(scopedObservation.owners().keySet());
 			List<QuestShadowDifference> differences = QuestShadowComparator.compare(
-				candidate.scopedTo(dispatched), envelope.observation());
-			coveredOwners.addAll(envelope.observation().owners().keySet());
+				candidate.scopedTo(dispatched), scopedObservation);
+			coveredOwners.addAll(scopedObservation.owners().keySet());
 			for (QuestLegacyInvocation invocation : envelope.invocations()) {
-				QuestShadowObservation.Owner actualOwner = invocation.observation().owners().get(invocation.questId());
+				if (!candidateOwners.contains(invocation.questId())) {
+					continue;
+				}
+				QuestShadowObservation.Owner actualOwner = scopedObservation.owners().get(invocation.questId());
 				if (actualOwner == null || !actualOwner.conditionMatched()) {
 					continue;
 				}
 				candidate.owners().stream()
 					.filter(owner -> owner.questId() == invocation.questId() && owner.plan().isPresent())
 					.map(owner -> owner.observedCoverage(invocation.eventType(), invocation.contract()))
+					.filter(expectedCoverage::contains)
 					.forEach(coveredCoverage::add);
 			}
 			comparisons.add(new QuestShadowComparison(candidate.event().type(), differences));

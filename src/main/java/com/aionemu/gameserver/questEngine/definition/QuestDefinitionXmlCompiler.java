@@ -301,7 +301,11 @@ public final class QuestDefinitionXmlCompiler {
 			}
 			Integer priority = transition.hasAttribute("priority") ? integer(transition, "priority") : null;
 			String source = transition.hasAttribute("source") ? attribute(transition, "source") : null;
-			transitions.add(new QuestTransition(parsedEvent, conditions, actions, attribute(transition, "target"), afterCommit, priority, source));
+			QuestShadowCoverageRequirement shadowCoverage = transition.hasAttribute("shadow-coverage")
+				? enumValue(QuestShadowCoverageRequirement.class, transition, "shadow-coverage")
+				: QuestShadowCoverageRequirement.PRODUCTION_REQUIRED;
+			transitions.add(new QuestTransition(parsedEvent, conditions, actions, attribute(transition, "target"),
+				afterCommit, priority, source, shadowCoverage));
 		}
 		return transitions;
 	}

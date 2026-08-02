@@ -199,6 +199,21 @@ class QuestShadowCaptureTest {
 	}
 
 	@Test
+	void configuredOwnersFreezeStartEligibilityBeforeLegacyExecution() throws Exception {
+		Player player = playerWithState(QuestStatus.START, 0);
+		QuestShadowCapture capture = new QuestShadowCapture(
+			(playerId, questId) -> QuestStartEligibility.allowed(), Set.of(QUEST_ID));
+
+		try (QuestShadowCapture.Scope scope = capture.open(player, talkToNpc(700001), List.of(QUEST_ID))) {
+			runLegacyOwner(player, capture, () -> {
+			});
+		}
+
+		QuestSnapshot frozen = capture.envelopes().get(0).snapshots().get(QUEST_ID);
+		assertTrue(frozen.startEligibility().eligible());
+	}
+
+	@Test
 	void repeatedOwnerFiringCannotFillTheOwnerGate() throws Exception {
 		Player player = playerWithState(QuestStatus.START, 0);
 		QuestShadowCapture capture = new QuestShadowCapture();

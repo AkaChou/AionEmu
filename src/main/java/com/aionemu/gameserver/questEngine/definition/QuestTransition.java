@@ -6,10 +6,16 @@ import java.util.Objects;
 /** A pure event/condition to mutation transition. */
 public record QuestTransition(QuestEvent event, List<QuestCondition> conditions,
 		List<QuestAction> actions, String targetNode, List<AfterCommitAction> afterCommit,
-		Integer priority, String sourceNode) {
+		Integer priority, String sourceNode, QuestShadowCoverageRequirement shadowCoverage) {
 	public QuestTransition(QuestEvent event, List<QuestCondition> conditions, List<QuestAction> actions,
 			String targetNode, List<AfterCommitAction> afterCommit, Integer priority) {
 		this(event, conditions, actions, targetNode, afterCommit, priority, null);
+	}
+
+	public QuestTransition(QuestEvent event, List<QuestCondition> conditions, List<QuestAction> actions,
+			String targetNode, List<AfterCommitAction> afterCommit, Integer priority, String sourceNode) {
+		this(event, conditions, actions, targetNode, afterCommit, priority, sourceNode,
+			QuestShadowCoverageRequirement.PRODUCTION_REQUIRED);
 	}
 
 	public QuestTransition {
@@ -26,6 +32,7 @@ public record QuestTransition(QuestEvent event, List<QuestCondition> conditions,
 		if (sourceNode != null && sourceNode.isBlank()) {
 			throw new IllegalArgumentException("sourceNode must not be blank");
 		}
+		shadowCoverage = Objects.requireNonNull(shadowCoverage, "shadowCoverage");
 	}
 
 	public boolean hasExplicitPriority() {

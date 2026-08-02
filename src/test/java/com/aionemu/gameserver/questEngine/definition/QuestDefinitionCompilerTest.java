@@ -58,6 +58,7 @@ class QuestDefinitionCompilerTest {
 				.when(hasItem(182400001, 5))
 				.then(removeItem(182400001, 5))
 				.then(setVariable("var1", 1))
+				.shadowCoverage(QuestShadowCoverageRequirement.OFFLINE_ONLY)
 				.goTo("reward")
 				.afterCommit(closeDialog())
 				.compile();
@@ -72,7 +73,7 @@ class QuestDefinitionCompilerTest {
 				    <node label="reward"><project status="REWARD"><vars><var name="var1" value="1"/></vars></project></node>
 				  </nodes>
 				  <transitions>
-				    <transition target="reward">
+				    <transition target="reward" shadow-coverage="OFFLINE_ONLY">
 				      <event><talk-to-npc npc-id="700001"/></event>
 				      <conditions><status-is status="START"/><has-item item-id="182400001" count="5"/></conditions>
 				      <actions><remove-item item-id="182400001" count="5"/><set-variable field="var1" value="1"/></actions>
@@ -86,6 +87,24 @@ class QuestDefinitionCompilerTest {
 
 		assertEquals(fromDsl.definition(), fromXml.definition());
 		assertEquals(List.of("TALK_TO_NPC"), fromXml.transitionsByType().keySet().stream().toList());
+	}
+
+	@Test
+	void shadowCoverageDefaultsToProductionRequiredAndRejectsUnknownXmlValues() {
+		CompiledQuestDefinition defaultDsl = quest(1002)
+			.metadata(QuestMetadata.minimal("default", 1, "QUEST"))
+			.evidence(EVIDENCE)
+			.node("start", project(QuestStatus.START, Map.of()))
+			.on(talkToNpc(700001)).goTo("start").compile();
+		assertEquals(QuestShadowCoverageRequirement.PRODUCTION_REQUIRED,
+			defaultDsl.definition().transitions().get(0).shadowCoverage());
+
+		String invalidXml = xmlWithTransition("<event><talk-to-npc npc-id=\"700001\"/></event>", "")
+			.replace("<transition target=\"start\">",
+				"<transition target=\"start\" shadow-coverage=\"UNKNOWN\">");
+		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+				invalidXml.getBytes(StandardCharsets.UTF_8)))).code());
 	}
 
 	@Test

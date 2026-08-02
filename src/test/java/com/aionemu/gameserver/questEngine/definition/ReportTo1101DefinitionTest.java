@@ -54,6 +54,17 @@ class ReportTo1101DefinitionTest {
 		assertEquals(Set.of(-1, 1009), transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("reward"))
 			.map(t -> ((QuestEvent.TalkToNpc) t.event()).dialogId()).collect(Collectors.toSet()));
+		Set<Integer> offlineDialogs = transitions.stream()
+			.filter(t -> t.shadowCoverage() == QuestShadowCoverageRequirement.OFFLINE_ONLY)
+			.map(t -> ((QuestEvent.TalkToNpc) t.event()).dialogId()).collect(Collectors.toSet());
+		assertEquals(IntStream.rangeClosed(8, 22).boxed().collect(Collectors.toSet()), offlineDialogs);
+		assertEquals(15, transitions.stream()
+			.filter(t -> t.shadowCoverage() == QuestShadowCoverageRequirement.OFFLINE_ONLY).count());
+		assertEquals(14, transitions.stream()
+			.filter(t -> t.shadowCoverage() == QuestShadowCoverageRequirement.PRODUCTION_REQUIRED).count());
+		assertEquals(QuestShadowCoverageRequirement.PRODUCTION_REQUIRED,
+			transition(compiled, "reward", 203057, 23).shadowCoverage(),
+			"无选择奖励的完成响应仍须由真实生产 observation 证明");
 	}
 
 	@Test

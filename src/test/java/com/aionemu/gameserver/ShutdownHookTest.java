@@ -123,9 +123,10 @@ class ShutdownHookTest {
 
         assertFalse(source.contains("import com.aionemu.commons.services.CronService;"));
         assertFalse(source.contains("import com.aionemu.gameserver.utils.ThreadPoolManager;"));
-        assertFalse(source.contains("CronService.getInstance()"));
-        assertFalse(source.contains("ThreadPoolManager.getInstance()"));
-    }
+		assertFalse(source.contains("CronService.getInstance()"));
+		assertFalse(source.contains("ThreadPoolManager.getInstance()"));
+		assertTrue(source.contains("GameEngineServices.questEngine().shutdown()"));
+	}
 
     private void invokeSendShutdownStatus(boolean status) throws ReflectiveOperationException {
         Method method = ShutdownHook.class.getDeclaredMethod("sendShutdownStatus", boolean.class);

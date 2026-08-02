@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestShadowCoverageRequirement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,12 +77,20 @@ public final class QuestShadowRunner {
 				continue;
 			}
 			for (var transition : definition.definition().transitions()) {
+				if (transition.shadowCoverage() != QuestShadowCoverageRequirement.PRODUCTION_REQUIRED) {
+					continue;
+				}
 				if (!coverage.add(QuestShadowCoverageKey.expected(definition, transition))) {
 					throw new IllegalStateException("duplicate shadow coverage key for quest " + definition.id());
 				}
 			}
 		}
 		return Set.copyOf(coverage);
+	}
+
+	Set<Integer> ownerIds() {
+		return catalog.all().stream().map(CompiledQuestDefinition::id)
+			.collect(java.util.stream.Collectors.toUnmodifiableSet());
 	}
 
 	public record QuestShadowResult(QuestEvent event, List<QuestShadowOwner> owners) {

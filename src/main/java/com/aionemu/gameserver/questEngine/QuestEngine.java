@@ -22,6 +22,7 @@ import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
 import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.gameserver.GameServerError;
+import com.aionemu.gameserver.configs.main.QuestShadowConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
@@ -63,6 +64,8 @@ import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeResources;
 import com.aionemu.gameserver.questEngine.runtime.QuestShadowCapture;
+import com.aionemu.gameserver.questEngine.runtime.QuestShadowBatchReport;
+import com.aionemu.gameserver.questEngine.runtime.QuestShadowCaptureService;
 
 import com.aionemu.commons.utils.collections.IntArrayList;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
@@ -131,6 +134,10 @@ public class QuestEngine implements GameEngine {
 	private Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<Integer, Set<Integer>>();
 	/** 每日/周任务提醒定时任务 / Daily/weekly reminder scheduled task */
 	private ScheduledFuture<?> messageSendingTask;
+	/** Periodic persistence task for the explicitly enabled candidate-only shadow run. */
+	private ScheduledFuture<?> shadowPersistenceTask;
+	/** Installed production shadow service; null while diagnostics are disabled. */
+	private QuestShadowCaptureService shadowCaptureService;
 	/**
 	 * Atomic production assembly: the shadow capture scope provider and the
 	 * legacy observation bridge are swapped together, never one without the
@@ -2032,6 +2039,75 @@ public class QuestEngine implements GameEngine {
 		for (QuestDialog d : QuestDialog.values()) {
 			dialogMap.put(d.id(), d);
 		}
+		startQuestShadowCapture();
+	}
+
+	private synchronized void startQuestShadowCapture() {
+		if (!QuestShadowConfig.ENABLED) {
+			return;
+		}
+		if (shadowCaptureService != null) {
+			throw new IllegalStateException("quest shadow capture is already running");
+		}
+		QuestShadowCaptureService service = null;
+		try {
+			long interval = QuestShadowConfig.persistIntervalMillis();
+			service = QuestShadowCaptureService.production(QuestShadowConfig.reportPath());
+			service.install(this);
+			QuestShadowCaptureService installed = service;
+			shadowPersistenceTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
+				() -> persistQuestShadowReport(installed), interval, interval);
+			shadowCaptureService = service;
+			log.info("Quest shadow capture installed for owners {} with cumulative report {}",
+				service.expectedOwners(), service.reportPath().toAbsolutePath());
+		} catch (Exception failure) {
+			if (service != null && service.installed()) {
+				try {
+					service.abort();
+				} catch (Exception cleanupFailure) {
+					failure.addSuppressed(cleanupFailure);
+					setShadowCapture(null);
+				}
+			}
+			shadowPersistenceTask = null;
+			shadowCaptureService = null;
+			log.error("Quest shadow capture was requested but could not be installed; legacy owners remain active",
+				failure);
+		}
+	}
+
+	private void persistQuestShadowReport(QuestShadowCaptureService service) {
+		try {
+			QuestShadowBatchReport report = service.drainAndPersist();
+			log.info("Quest shadow report persisted: owners={}/{} paths={}/{} clean={}",
+				report.coveredOwners().size(), report.expectedOwners().size(),
+				report.coveredCoverage().size(), report.expectedCoverage().size(), report.clean());
+		} catch (Exception failure) {
+			// The service retains the accumulated in-memory report for the next retry.
+			log.error("Failed to persist quest shadow report; legacy routing is unchanged", failure);
+		}
+	}
+
+	private synchronized void stopQuestShadowCapture() {
+		if (shadowPersistenceTask != null) {
+			shadowPersistenceTask.cancel(false);
+			shadowPersistenceTask = null;
+		}
+		QuestShadowCaptureService service = shadowCaptureService;
+		shadowCaptureService = null;
+		if (service == null) {
+			setShadowCapture(null);
+			return;
+		}
+		try {
+			QuestShadowBatchReport report = service.stop();
+			log.info("Quest shadow capture stopped: owners={}/{} paths={}/{} clean={}",
+				report.coveredOwners().size(), report.expectedOwners().size(),
+				report.coveredCoverage().size(), report.expectedCoverage().size(), report.clean());
+		} catch (Exception failure) {
+			setShadowCapture(null);
+			log.error("Failed to persist the final quest shadow report; capture was detached", failure);
+		}
 	}
 
 	/**
@@ -2079,6 +2155,7 @@ public class QuestEngine implements GameEngine {
 	 * Shut down the engine: clear all registered data.
 	 */
 	public void shutdown() {
+		stopQuestShadowCapture();
 		clear();
 		log.info(I18n.get("log.dd61afc44888"));
 	}

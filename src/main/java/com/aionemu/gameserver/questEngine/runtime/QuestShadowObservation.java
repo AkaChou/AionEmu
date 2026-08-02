@@ -4,9 +4,11 @@ import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /** Typed, side-effect-free observation captured at a legacy helper boundary. */
 public record QuestShadowObservation(Map<Integer, Owner> owners, boolean consumed) {
@@ -20,6 +22,25 @@ public record QuestShadowObservation(Map<Integer, Owner> owners, boolean consume
 				throw new IllegalArgumentException("observation map key must match owner quest id");
 			}
 		});
+	}
+
+	/**
+	 * Restricts one physical-event observation to owners present in the candidate
+	 * catalog being audited. Legacy handlers registered on the same NPC but not
+	 * part of that catalog must not become false route drift for a single-owner
+	 * migration.
+	 */
+	public QuestShadowObservation scopedTo(Set<Integer> questIds) {
+		Objects.requireNonNull(questIds, "questIds");
+		Map<Integer, Owner> scoped = new LinkedHashMap<>();
+		for (Map.Entry<Integer, Owner> entry : owners.entrySet()) {
+			if (questIds.contains(entry.getKey())) {
+				scoped.put(entry.getKey(), entry.getValue());
+			}
+		}
+		boolean scopedConsumed = scoped.values().stream()
+			.anyMatch(owner -> owner.result() == QuestRouteResult.HANDLED);
+		return new QuestShadowObservation(scoped, scopedConsumed);
 	}
 
 	public record Owner(int questId, boolean conditionMatched, QuestStatus nextStatus,

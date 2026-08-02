@@ -18,6 +18,7 @@ import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager.SortBy;
 import com.aionemu.gameserver.configs.main.ShutdownConfig;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -282,6 +283,7 @@ public class ShutdownHook extends Thread {
 		runShutdownStep("dump runnable stats", () -> RunnableStatsManager.dumpClassStats(SortBy.AVG));
 		runShutdownStep("save periodic data", () -> GameRuntimeServices.periodicSaveService().onShutdown());
 		runShutdownStep("save game time", GameTimeManager::saveTime);
+		runShutdownStep("shutdown QuestEngine", () -> GameEngineServices.questEngine().shutdown());
 		runShutdownStep("shutdown CronService", GameCronServices::shutdownIfInitialized);
 		if (AionRuntimeMode.isBootEmbedded()) {
 			log.info(I18n.get("shutdown.threadpool_managed"));
