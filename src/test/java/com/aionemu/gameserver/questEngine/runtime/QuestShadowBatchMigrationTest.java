@@ -88,13 +88,16 @@ class QuestShadowBatchMigrationTest {
 
 	@Test
 	void capturedBatchPersistsToConsumablePayload() throws Exception {
-		service = newService(Set.of(QUEST_ID, OTHER_ID), fixturePath());
+		Path fixture = fixturePath();
+		// This path is a generated integration fixture, not resumable production
+		// evidence. Rebuild it so a prior schema cannot make the test order-dependent.
+		Files.deleteIfExists(fixture);
+		service = newService(Set.of(QUEST_ID, OTHER_ID), fixture);
 		service.install(engine);
 		engine.addQuestHandler(new KillHandler(QUEST_ID));
 
 		engine.onKill(new QuestEnv(npc(), player, 0, 0));
 		QuestShadowBatchReport report = service.drainAndPersist();
-		Path fixture = fixturePath();
 		assertTrue(Files.exists(fixture), "drainAndPersist 应原子落盘批次文件");
 		assertEquals(QuestShadowReportWriter.SCHEMA_VERSION, QuestShadowReportWriter.readSchemaVersion(fixture),
 			"落盘 payload 应携带 schemaVersion 且可读");

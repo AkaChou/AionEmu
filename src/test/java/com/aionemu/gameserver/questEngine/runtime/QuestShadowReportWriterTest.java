@@ -42,7 +42,7 @@ class QuestShadowReportWriterTest {
 			QuestRouteResult.HANDLED, List.of(new com.aionemu.gameserver.questEngine.definition.QuestAction.SetVariable("step", 1))), Set.of(QUEST_ID));
 
 		String json = QuestShadowReportWriter.toJson(report);
-		assertEquals("{\"schemaVersion\":2,"
+		assertEquals("{\"schemaVersion\":3,"
 			+ "\"expectedOwners\":[1001],\"coveredOwners\":[1001],\"missingOwners\":[],\"unexpectedOwners\":[],"
 			+ "\"expectedCoverage\":[{\"questId\":1001,\"eventType\":\"TALK_TO_NPC\","
 			+ "\"eventSelector\":\"TalkToNpc[npcId=700001, dialogId=null, interactionObjectId=0]\",\"sourceNode\":\"start\","
@@ -54,7 +54,10 @@ class QuestShadowReportWriterTest {
 			+ "\"expectedCoverageCount\":1,\"coveredCoverageCount\":1,"
 			+ "\"expectedInvocations\":1,\"actualInvocations\":1,"
 			+ "\"complete\":true,\"clean\":true,\"differenceCounts\":{},"
-			+ "\"comparisons\":[{\"eventType\":\"TALK_TO_NPC\",\"differences\":[]}]}",
+			+ "\"comparisons\":[{\"eventType\":\"TALK_TO_NPC\","
+			+ "\"eventSelector\":\"TalkToNpc[npcId=700001, dialogId=null, interactionObjectId=0]\","
+			+ "\"inputs\":[{\"questId\":1001,\"status\":\"START\",\"packedVariables\":0}],"
+			+ "\"differences\":[]}]}",
 			json);
 	}
 
@@ -72,6 +75,8 @@ class QuestShadowReportWriterTest {
 		assertTrue(json.contains("\"RESULT_CONSUMPTION\":2"));
 		assertTrue(json.contains("\"kind\":\"CONDITION\""));
 		assertTrue(json.contains("\"kind\":\"RESULT_CONSUMPTION\""));
+		assertTrue(json.contains("\"eventSelector\":\"TalkToNpc[npcId=700001"));
+		assertTrue(json.contains("\"status\":\"START\",\"packedVariables\":0"));
 	}
 
 	@Test
@@ -89,7 +94,7 @@ class QuestShadowReportWriterTest {
 
 		// 字段内部自相矛盾也必须 fail-closed，不能只检查 JSON 尾部和版本号
 		String valid = Files.readString(target, StandardCharsets.UTF_8);
-		Files.writeString(target, valid.replace("\"schemaVersion\":2", "\"schemaVersion\":2,\"extra\":true"),
+		Files.writeString(target, valid.replace("\"schemaVersion\":3", "\"schemaVersion\":3,\"extra\":true"),
 			StandardCharsets.UTF_8);
 		assertThrows(IllegalArgumentException.class, () -> QuestShadowReportWriter.readSchemaVersion(target));
 
@@ -97,7 +102,7 @@ class QuestShadowReportWriterTest {
 			StandardCharsets.UTF_8);
 		assertThrows(IllegalArgumentException.class, () -> QuestShadowReportWriter.readSchemaVersion(target));
 
-		Files.writeString(target, valid.replace("\"schemaVersion\":2", "\"schemaVersion\":1"),
+		Files.writeString(target, valid.replace("\"schemaVersion\":3", "\"schemaVersion\":2"),
 			StandardCharsets.UTF_8);
 		assertThrows(IllegalArgumentException.class, () -> QuestShadowReportWriter.readSchemaVersion(target));
 

@@ -64,7 +64,7 @@ public final class QuestLegacyObservationRecorder {
 
 	public boolean hasEffects(int questId) {
 		OwnerDraft owner = owner(questId);
-		return !owner.requiredActions.isEmpty() || !owner.afterCommit.isEmpty() || owner.nextStatus != null;
+		return !owner.requiredActions.isEmpty() || !owner.afterCommit.isEmpty();
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,14 +32,16 @@ import java.util.Set;
  * payloads so a corrupt batch can never masquerade as shadow evidence.</p>
  */
 public final class QuestShadowReportWriter {
-	public static final int SCHEMA_VERSION = 2;
+	public static final int SCHEMA_VERSION = 3;
 	private static final Set<String> ROOT_FIELDS = Set.of("schemaVersion", "expectedOwners", "coveredOwners",
 		"missingOwners", "unexpectedOwners", "expectedCoverage", "coveredCoverage", "missingCoverage",
 		"unexpectedCoverage", "expectedCoverageCount", "coveredCoverageCount", "expectedInvocations",
 		"actualInvocations", "complete", "clean", "differenceCounts", "comparisons");
 	private static final Set<String> COVERAGE_FIELDS = Set.of("questId", "eventType", "eventSelector",
 		"sourceNode", "targetNode", "priority", "dispatchContract");
-	private static final Set<String> COMPARISON_FIELDS = Set.of("eventType", "differences");
+	private static final Set<String> COMPARISON_FIELDS = Set.of("eventType", "eventSelector", "inputs",
+		"differences");
+	private static final Set<String> INPUT_FIELDS = Set.of("questId", "status", "packedVariables");
 	private static final Set<String> DIFFERENCE_FIELDS = Set.of("kind", "questId");
 
 	private QuestShadowReportWriter() {
@@ -246,6 +249,19 @@ public final class QuestShadowReportWriter {
 		StringBuilder out = new StringBuilder();
 		out.append('{');
 		out.append("\"eventType\":").append(json(comparison.eventType())).append(',');
+		out.append("\"eventSelector\":").append(json(comparison.eventSelector())).append(',');
+		out.append("\"inputs\":[");
+		List<QuestShadowComparison.OwnerInput> inputs = comparison.inputs();
+		for (int i = 0; i < inputs.size(); i++) {
+			if (i > 0) {
+				out.append(',');
+			}
+			QuestShadowComparison.OwnerInput input = inputs.get(i);
+			out.append("{\"questId\":").append(input.questId())
+				.append(",\"status\":").append(json(input.status().name()))
+				.append(",\"packedVariables\":").append(input.packedVariables()).append('}');
+		}
+		out.append("],");
 		out.append("\"differences\":[");
 		List<QuestShadowDifference> differences = comparison.differences();
 		for (int i = 0; i < differences.size(); i++) {
@@ -367,6 +383,26 @@ public final class QuestShadowReportWriter {
 			}
 			JsonObject comparison = comparisonElement.getAsJsonObject();
 			String eventType = string(comparison, "eventType");
+			String eventSelector = string(comparison, "eventSelector");
+			List<QuestShadowComparison.OwnerInput> inputs = new java.util.ArrayList<>();
+			Set<Integer> inputOwners = new java.util.HashSet<>();
+			for (JsonElement inputElement : array(comparison, "inputs")) {
+				if (!inputElement.isJsonObject()
+						|| !inputElement.getAsJsonObject().keySet().equals(INPUT_FIELDS)) {
+					throw invalid(path, "comparison input must be an object");
+				}
+				JsonObject input = inputElement.getAsJsonObject();
+				int questId = integer(input, "questId");
+				if (questId <= 0 || !inputOwners.add(questId)) {
+					throw invalid(path, "comparison input questId must be unique and positive");
+				}
+				QuestStatus status = QuestStatus.valueOf(string(input, "status"));
+				int packedVariables = integer(input, "packedVariables");
+				if (packedVariables < 0) {
+					throw invalid(path, "comparison input packedVariables must be non-negative");
+				}
+				inputs.add(new QuestShadowComparison.OwnerInput(questId, status, packedVariables));
+			}
 			List<QuestShadowDifference> differences = new java.util.ArrayList<>();
 			for (JsonElement differenceElement : array(comparison, "differences")) {
 				if (!differenceElement.isJsonObject()
@@ -381,7 +417,7 @@ public final class QuestShadowReportWriter {
 				}
 				differences.add(new QuestShadowDifference(kind, questId));
 			}
-			comparisons.add(new QuestShadowComparison(eventType, differences));
+			comparisons.add(new QuestShadowComparison(eventType, eventSelector, inputs, differences));
 		}
 		return List.copyOf(comparisons);
 	}

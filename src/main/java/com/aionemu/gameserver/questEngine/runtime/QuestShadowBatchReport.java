@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
@@ -86,7 +85,8 @@ public record QuestShadowBatchReport(Set<Integer> expectedOwners, Set<Integer> c
 
 	/**
 	 * Merges consecutive persisted batches for the same gate. Coverage is a set
-	 * union while every typed difference remains sticky and deduplicated by event:
+	 * union while every typed difference remains sticky and deduplicated by the
+	 * exact event selector and frozen owner inputs:
 	 * a later clean or repeated sample cannot erase or unboundedly duplicate it.
 	 */
 	public QuestShadowBatchReport merge(QuestShadowBatchReport other) {
@@ -99,18 +99,25 @@ public record QuestShadowBatchReport(Set<Integer> expectedOwners, Set<Integer> c
 		mergedOwners.addAll(other.coveredOwners);
 		Set<QuestShadowCoverageKey> mergedCoverage = new LinkedHashSet<>(coveredCoverage);
 		mergedCoverage.addAll(other.coveredCoverage);
-		Map<String, Set<QuestShadowDifference>> differencesByEvent = new TreeMap<>();
+		Map<ComparisonKey, Set<QuestShadowDifference>> differencesByEvent = new java.util.LinkedHashMap<>();
 		Comparator<QuestShadowDifference> differenceOrder = Comparator
 			.comparingInt(QuestShadowDifference::questId)
 			.thenComparing(QuestShadowDifference::kind);
 		for (QuestShadowComparison comparison : concat(comparisons, other.comparisons)) {
 			if (!comparison.clean()) {
-				differencesByEvent.computeIfAbsent(comparison.eventType(), ignored -> new TreeSet<>(differenceOrder))
+				ComparisonKey key = new ComparisonKey(comparison.eventType(), comparison.eventSelector(),
+					comparison.inputs());
+				differencesByEvent.computeIfAbsent(key, ignored -> new TreeSet<>(differenceOrder))
 					.addAll(comparison.differences());
 			}
 		}
 		List<QuestShadowComparison> mergedComparisons = differencesByEvent.entrySet().stream()
-			.map(entry -> new QuestShadowComparison(entry.getKey(), List.copyOf(entry.getValue())))
+			.sorted(Map.Entry.comparingByKey(Comparator
+				.comparing(ComparisonKey::eventType)
+				.thenComparing(ComparisonKey::eventSelector)
+				.thenComparing(key -> key.inputs().toString())))
+			.map(entry -> new QuestShadowComparison(entry.getKey().eventType(), entry.getKey().eventSelector(),
+				entry.getKey().inputs(), List.copyOf(entry.getValue())))
 			.toList();
 		return new QuestShadowBatchReport(expectedOwners, mergedOwners, expectedCoverage,
 			mergedCoverage, mergedComparisons);
@@ -122,5 +129,12 @@ public record QuestShadowBatchReport(Set<Integer> expectedOwners, Set<Integer> c
 		result.addAll(left);
 		result.addAll(right);
 		return result;
+	}
+
+	private record ComparisonKey(String eventType, String eventSelector,
+			List<QuestShadowComparison.OwnerInput> inputs) {
+		private ComparisonKey {
+			inputs = List.copyOf(inputs);
+		}
 	}
 }

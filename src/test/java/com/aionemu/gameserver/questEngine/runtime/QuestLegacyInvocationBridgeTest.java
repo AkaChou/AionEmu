@@ -69,7 +69,7 @@ class QuestLegacyInvocationBridgeTest {
 	}
 
 	@Test
-	void protocolOnlySuccessWithoutStateIsRecordedAsUnmatched() throws Exception {
+	void protocolOnlySuccessWithoutStateUsesCanonicalUnacceptedProjection() throws Exception {
 		Player player = emptyPlayer();
 		QuestLegacyObservationStore store = new QuestLegacyObservationStore();
 		QuestLegacyInvocationBridge bridge = new QuestLegacyInvocationBridge(store);
@@ -82,9 +82,29 @@ class QuestLegacyInvocationBridgeTest {
 
 		assertTrue(result);
 		QuestShadowObservation.Owner owner = store.snapshot().get(0).observation().owners().get(QUEST_ID);
-		assertTrue(!owner.conditionMatched());
+		assertTrue(owner.conditionMatched());
+		assertEquals(QuestStatus.NONE, owner.nextStatus());
+		assertEquals(0, owner.nextPackedVariables());
 		assertEquals(QuestRouteResult.HANDLED, owner.result());
 		assertEquals(1, owner.afterCommit().size());
+	}
+
+	@Test
+	void unchangedStateProjectionDoesNotTurnUnhandledRouteIntoConditionMatch() throws Exception {
+		Player player = playerWithState(QuestStatus.COMPLETE, 0);
+		QuestLegacyObservationStore store = new QuestLegacyObservationStore();
+		QuestLegacyInvocationBridge bridge = new QuestLegacyInvocationBridge(store);
+
+		boolean result = bridge.invoke(player, QUEST_ID, "TALK_TO_NPC", QuestDispatchContract.EXCLUSIVE,
+			() -> false,
+			(value, stateChanged, recorder) -> QuestRouteResult.NOT_HANDLED);
+
+		assertTrue(!result);
+		QuestShadowObservation.Owner owner = store.snapshot().get(0).observation().owners().get(QUEST_ID);
+		assertTrue(!owner.conditionMatched());
+		assertEquals(QuestStatus.COMPLETE, owner.nextStatus());
+		assertEquals(0, owner.nextPackedVariables());
+		assertEquals(QuestRouteResult.NOT_HANDLED, owner.result());
 	}
 
 	@Test

@@ -62,7 +62,14 @@ public final class QuestShadowBatchRunner {
 					.filter(expectedCoverage::contains)
 					.forEach(coveredCoverage::add);
 			}
-			comparisons.add(new QuestShadowComparison(candidate.event().type(), differences));
+			List<QuestShadowComparison.OwnerInput> inputs = dispatched.stream().sorted()
+				.map(envelope.snapshots()::get)
+				.filter(Objects::nonNull)
+				.map(snapshot -> new QuestShadowComparison.OwnerInput(snapshot.questId(), snapshot.status(),
+					snapshot.packedVariables()))
+				.toList();
+			comparisons.add(new QuestShadowComparison(candidate.event().type(), candidate.event().toString(),
+				inputs, differences));
 		}
 		return new QuestShadowBatchReport(expectedOwners, coveredOwners, expectedCoverage, coveredCoverage, comparisons);
 	}

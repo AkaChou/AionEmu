@@ -63,17 +63,17 @@ public final class QuestLegacyInvocationBridge {
 			}
 			QuestState afterState = state(player, questId);
 			boolean stateChanged = changed(beforeState, beforeStatus, beforePacked, afterState);
-			if (afterState != null) {
-				QuestLegacyObservationContext.state(questId, afterState.getStatus(),
-					afterState.getQuestVars().getQuestVars());
-			}
+			QuestStatus afterStatus = afterState == null ? QuestStatus.NONE : afterState.getStatus();
+			int afterPacked = afterState == null ? 0 : afterState.getQuestVars().getQuestVars();
+			QuestLegacyObservationContext.state(questId, afterStatus, afterPacked);
 			QuestRouteResult routeResult = Objects.requireNonNull(
 				classifier.classify(result, stateChanged, recorder), "classified result");
-			// A successful protocol-only callback is observable, but it is not a
-			// candidate state match without a canonical QuestStatus + quest_vars
-			// projection. Keep the result/action facts so shadow can report it.
-			boolean matched = afterState != null
-				&& ((routeResult == QuestRouteResult.HANDLED) || stateChanged || recorder.hasEffects(questId));
+			// A missing legacy QuestState has the same canonical projection as the
+			// candidate's unaccepted node: NONE with packed variables 0. The passive
+			// projection above is not an effect and must not turn an unhandled route
+			// into a condition match.
+			boolean matched = routeResult == QuestRouteResult.HANDLED
+				|| stateChanged || recorder.hasEffects(questId);
 			QuestLegacyObservationContext.conditionMatched(questId, matched);
 			QuestLegacyObservationContext.result(questId, routeResult);
 			recorder.completeOwner(questId);

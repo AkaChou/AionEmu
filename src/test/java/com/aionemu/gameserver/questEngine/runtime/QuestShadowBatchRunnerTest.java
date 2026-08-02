@@ -118,6 +118,11 @@ class QuestShadowBatchRunnerTest {
 		assertEquals(1, report.differenceCounts().get(QuestShadowDifferenceKind.VARIABLES));
 		assertEquals(1, report.differenceCounts().get(QuestShadowDifferenceKind.REWARD));
 		assertEquals(2, report.differenceCounts().get(QuestShadowDifferenceKind.RESULT_CONSUMPTION));
+		QuestShadowComparison comparison = report.comparisons().get(0);
+		assertEquals("TalkToNpc[npcId=700001, dialogId=null, interactionObjectId=0]",
+			comparison.eventSelector());
+		assertEquals(List.of(new QuestShadowComparison.OwnerInput(QUEST_ID, QuestStatus.START, 0)),
+			comparison.inputs());
 	}
 
 	@Test

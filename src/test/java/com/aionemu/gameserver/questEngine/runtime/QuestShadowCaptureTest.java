@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.closeDialog;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setVariable;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
@@ -153,6 +154,34 @@ class QuestShadowCaptureTest {
 	}
 
 	@Test
+	void protocolOnlyUnacceptedPathIsCleanWithoutLegacyQuestState() throws Exception {
+		Player player = emptyPlayer();
+		QuestShadowCapture capture = new QuestShadowCapture();
+		QuestEvent event = talkToNpc(700001);
+		CompiledQuestDefinition unaccepted = QuestDsl.quest(QUEST_ID)
+			.evidence(new EvidenceRef("test", "shadow-capture", "unaccepted protocol fixture"))
+			.node("unaccepted", project(QuestStatus.NONE, Map.of()))
+			.on(talkToNpc(700001)).when(statusIs(QuestStatus.NONE)).goTo("unaccepted")
+			.afterCommit(closeDialog()).compile();
+		QuestShadowRunner runner = new QuestShadowRunner(new ImmutableQuestCatalog(List.of(unaccepted)));
+
+		try (QuestShadowCapture.Scope scope = capture.open(player, event, List.of(QUEST_ID))) {
+			QuestLegacyInvocationBridge bridge = new QuestLegacyInvocationBridge(capture);
+			bridge.invoke(player, QUEST_ID, "TALK_TO_NPC", QuestDispatchContract.EXCLUSIVE,
+				() -> {
+					QuestLegacyObservationContext.afterCommitAction(QUEST_ID,
+						new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.CloseDialog());
+					return true;
+				}, (handled, stateChanged, recorder) -> QuestRouteResult.HANDLED);
+		}
+
+		QuestShadowBatchReport report = capture.report(runner, Set.of(QUEST_ID));
+		assertTrue(report.complete());
+		assertTrue(report.clean());
+		assertEquals(Map.of(), report.differenceCounts());
+	}
+
+	@Test
 	void batchReportWithUnmatchedLegacyShowsResultConsumptionDifference() throws Exception {
 		Player player = playerWithState(QuestStatus.START, 0);
 		QuestShadowCapture capture = new QuestShadowCapture();
@@ -165,12 +194,13 @@ class QuestShadowCaptureTest {
 		}
 
 		QuestShadowBatchReport report = capture.report(runner, Set.of(QUEST_ID));
-		assertTrue(report.complete());
+		assertFalse(report.complete());
 		assertFalse(report.clean());
 		// 玩家持有 START/step=0 状态,候选条件一致;legacy 返回 NOT_HANDLED
-		// 且未改变状态 → 只在结果消费维度暴露差异,不伪造 CONDITION 差异。
-		assertEquals(null, report.differenceCounts().get(QuestShadowDifferenceKind.CONDITION));
+		// 且未改变状态，因此这条候选路径没有获得 legacy 匹配证明。
+		assertEquals(1, report.differenceCounts().get(QuestShadowDifferenceKind.CONDITION));
 		assertEquals(2, report.differenceCounts().get(QuestShadowDifferenceKind.RESULT_CONSUMPTION));
+		assertEquals(1, report.missingCoverage().size());
 	}
 
 	@Test
