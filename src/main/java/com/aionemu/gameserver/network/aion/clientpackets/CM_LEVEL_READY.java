@@ -17,7 +17,6 @@ import com.aionemu.gameserver.ai.RetailDynamicAreaEngine;
 import com.aionemu.gameserver.ai.RetailWindstreamEngine;
 import com.aionemu.gameserver.model.gameobjects.Minion;
 import com.aionemu.gameserver.model.gameobjects.Pet;
-import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -40,6 +39,7 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.rift.RiftInformer;
+import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
@@ -146,10 +146,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(pet);
 		}
 		// 召唤 / Summon
-		Summon summon = activePlayer.getSummon();
-		if (summon != null && !summon.isSpawned()) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(summon);
-		}
+		SummonsService.restoreAfterTeleport(activePlayer);
 		// 随从 / Minion
 		Minion minion = activePlayer.getMinion();
 		if (minion != null && !minion.isSpawned()) {

@@ -52,6 +52,59 @@ public class SummonsService {
 	}
 
 	/**
+	 * 传送开始时临时隐藏召唤物，但保留主人关系和剩余有效期。
+	 * Temporarily hides a summon when teleport starts while retaining ownership and lifetime.
+	 */
+	public static void suspendForTeleport(Player master) {
+		Summon summon = master.getSummon();
+		if (summon == null) {
+			return;
+		}
+		synchronized (summon) {
+			if (summon.isSpawned()) {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(summon);
+			}
+		}
+	}
+
+	/**
+	 * 地图加载完成后恢复仍有效的召唤物，并重新同步客户端召唤面板。
+	 * Restores a still-valid summon after map loading and resynchronizes its client panel.
+	 */
+	public static void restoreAfterTeleport(Player master) {
+		Summon summon = master.getSummon();
+		if (summon == null) {
+			return;
+		}
+		synchronized (summon) {
+			if (summon.getMode() == SummonMode.RELEASE) {
+				return;
+			}
+			if (summon.isExpired()) {
+				doMode(SummonMode.RELEASE, summon, UnsummonType.UNSPECIFIED);
+				return;
+			}
+			if (!summon.isSpawned()) {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(summon, master.getWorldId(),
+						master.getInstanceId(), master.getX(), master.getY(), master.getZ(), master.getHeading());
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(summon);
+			}
+			PacketSendUtility.sendPacket(master, new SM_SUMMON_PANEL(summon));
+			PacketSendUtility.sendPacket(master, new SM_SUMMON_UPDATE(summon));
+		}
+	}
+
+	/** 到期并解散召唤物，与过图恢复使用同一把对象锁。 / Expires a summon under the same lock used by teleport restoration. */
+	public static void expire(Summon summon) {
+		if (summon == null) {
+			return;
+		}
+		synchronized (summon) {
+			doMode(SummonMode.RELEASE, summon, UnsummonType.UNSPECIFIED);
+		}
+	}
+
+	/**
 	 * 释放/解散召唤物，按原因发送消息并安排延迟删除任务。
 	 * Release/unsummon the summon, send reason messages and schedule delayed deletion.
 	 *

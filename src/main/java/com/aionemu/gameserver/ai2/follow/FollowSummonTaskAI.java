@@ -72,6 +72,9 @@ public class FollowSummonTaskAI implements Runnable {
 			}
 			return;
 		}
+		if (master.isUsingFlyTeleport()) {
+			return;
+		}
 		if (!isInMasterRange()) {
 			SummonsService.doMode(SummonMode.RELEASE, summon, UnsummonType.DISTANCE);
 			return;
