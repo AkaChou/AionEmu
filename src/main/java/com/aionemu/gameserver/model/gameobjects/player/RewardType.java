@@ -117,6 +117,13 @@ public enum RewardType {
 			return (reward);
 		}
 	},
+	/** Already-resolved XP amount; keeps generic XP effects without applying a source rate. */
+	EXACT {
+		@Override
+		public long calcReward(Player player, long reward) {
+			return reward;
+		}
+	},
 	QUEST {
 		/** 计算奖励。 / Calc reward. */
 		@Override

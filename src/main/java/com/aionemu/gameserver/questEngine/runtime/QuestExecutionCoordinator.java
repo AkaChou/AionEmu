@@ -56,6 +56,7 @@ public final class QuestExecutionCoordinator {
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
 			QuestAfterCommitPort afterCommitPort) throws Exception {
 		QuestTransactionParticipant participant = QuestTransactionParticipant.none();
+		QuestMutationPlan appliedPlan = null;
 		boolean committed = false;
 		try (QuestUnitOfWork unit = QuestUnitOfWork.open(connection)) {
 			QuestSnapshot snapshot = eventPort.snapshot(unit.connection(), playerId, definition.id(), event);
@@ -73,10 +74,12 @@ public final class QuestExecutionCoordinator {
 			QuestMutationPlan resolved = plan.orElseThrow();
 			var durableActions = resolved.requiredActions().stream()
 					.filter(action -> !(action instanceof QuestAction.SetVariable)
-						&& !(action instanceof QuestAction.SetStatus))
+						&& !(action instanceof QuestAction.SetStatus)
+						&& !(action instanceof QuestAction.CompleteQuest))
 					.toList();
 			actionPort.preflight(unit.connection(), snapshot, durableActions);
 			participant = actionPort.apply(unit.connection(), snapshot, durableActions);
+			appliedPlan = resolved;
 			statePort.apply(unit.connection(), playerId, resolved);
 			for (AfterCommitAction action : resolved.afterCommit()) {
 				unit.afterCommit(() -> afterCommitPort.execute(action, snapshot, resolved));
@@ -90,12 +93,22 @@ public final class QuestExecutionCoordinator {
 			committed = true;
 			// 只有提交成功后内存才前进;commit 失败时 publish 不执行,内存保持事件前值。
 			// required participant 先清理已提交的 dirty 状态，再发布 quest state 和协议动作。
-			participant.afterCommit();
-			statePort.publish(playerId, resolved);
+			try {
+				participant.afterCommit();
+			} finally {
+				statePort.publish(playerId, resolved);
+			}
 			unit.runAfterCommit();
 			return new QuestExecutionResult(QuestExecutionStatus.COMMITTED, resolved, unit.afterCommitFailures());
 		} catch (Exception failure) {
 			if (!committed) {
+				if (appliedPlan != null) {
+					try {
+						statePort.rollback(playerId, appliedPlan);
+					} catch (RuntimeException rollbackFailure) {
+						failure.addSuppressed(rollbackFailure);
+					}
+				}
 				try {
 					participant.afterRollback();
 				} catch (RuntimeException rollbackFailure) {

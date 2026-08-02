@@ -6,6 +6,7 @@ import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.closeDialog;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.completeQuest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.hasItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
@@ -26,6 +28,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.removeItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setVariable;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.spawnNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -111,6 +114,11 @@ class QuestExecutionCoordinatorTest {
 
 			@Override
 			public boolean showDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId) {
+				return true;
+			}
+
+			@Override
+			public boolean showSelectionDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId) {
 				return true;
 			}
 		});
@@ -268,9 +276,14 @@ class QuestExecutionCoordinatorTest {
 				public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
 					calls.add("publish");
 				}
+
+				@Override
+				public void rollback(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+					calls.add("state-rollback");
+				}
 			}, (ignoredAction, ignoredSnapshot, ignoredPlan) -> calls.add("after")));
 		assertEquals(List.of("setAutoCommit:false", "preflight", "required-apply", "state", "commit",
-			"rollback", "required-rollback"), calls);
+			"rollback", "state-rollback", "required-rollback"), calls);
 	}
 
 	@Test
@@ -361,6 +374,11 @@ class QuestExecutionCoordinatorTest {
 			public boolean showDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId) {
 				return true;
 			}
+
+			@Override
+			public boolean showSelectionDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId) {
+				return true;
+			}
 		}, null, null, spawnPort);
 	}
 
@@ -406,8 +424,8 @@ class QuestExecutionCoordinatorTest {
 			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var1", 0)))
 			.node("complete", project(QuestStatus.COMPLETE, vars("var1", 1)))
-			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).goTo("complete")
-			.afterCommit(closeDialog()).compile();
+			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).then(completeQuest(0)).goTo("complete")
+			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION)).afterCommit(closeDialog()).compile();
 	}
 
 	private static final class NoOpStatePort implements QuestStatePort {

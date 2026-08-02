@@ -234,6 +234,11 @@ public class QuestState {
 		return 0;
 	}
 
+	/** Returns the persisted reward index without applying the legacy zero fallback. */
+	public Integer getRewardOrNull() {
+		return reward;
+	}
+
 	/**
 	 * 判断该任务当前是否允许再次接取（状态、完成次数、变量与时间限制）。
 	 * Returns whether the quest may currently be repeated (status, completion count, vars and time limits).

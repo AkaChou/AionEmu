@@ -31,6 +31,14 @@ public final class QuestDefinitionCompiler {
 		if (definition.transitions().isEmpty()) {
 			fail("NO_TRANSITIONS", "executable definition has no transitions");
 		}
+		if (definition.metadata().maxCountLimitedQuest() > 1) {
+			fail("LIMITED_QUEST_START_UNSUPPORTED",
+				"limited quest quota acquisition is not part of the shared transaction");
+		}
+		if (definition.metadata().npcFactionId() != 0) {
+			fail("NPC_FACTION_START_UNSUPPORTED",
+				"NPC faction quest start has a transaction-external side effect");
+		}
 
 		Map<String, QuestNode> nodes = new HashMap<>();
 		Set<String> projections = new HashSet<>();
@@ -86,6 +94,48 @@ public final class QuestDefinitionCompiler {
 					}
 					definition.progressLayout().pack(Map.of(variable.field(), variable.value()));
 				}
+				if (action instanceof QuestAction.GrantReward reward
+						&& reward.amountMode() == QuestRewardAmountMode.QUEST_BASE
+						&& reward.rewardKind() != QuestRewardKind.GOLD
+						&& reward.rewardKind() != QuestRewardKind.KINAH
+						&& reward.rewardKind() != QuestRewardKind.AP
+						&& reward.rewardKind() != QuestRewardKind.GP
+						&& reward.rewardKind() != QuestRewardKind.EXP) {
+					fail("QUEST_BASE_REWARD_KIND_UNSUPPORTED",
+						"QUEST_BASE amount mode is unsupported for " + reward.rewardKind());
+				}
+			}
+			QuestStatus effectiveStatus = nodes.get(transition.targetNode()).projection().status();
+			for (QuestAction action : transition.actions()) {
+				if (action instanceof QuestAction.SetStatus setStatus) {
+					effectiveStatus = setStatus.status();
+				}
+			}
+			long completions = transition.actions().stream()
+				.filter(QuestAction.CompleteQuest.class::isInstance).count();
+			if (effectiveStatus == QuestStatus.COMPLETE && completions != 1) {
+				fail("COMPLETE_QUEST_ACTION_REQUIRED",
+					"a COMPLETE projection requires exactly one complete-quest action");
+			}
+			if (effectiveStatus != QuestStatus.COMPLETE && completions != 0) {
+				fail("COMPLETE_QUEST_STATUS_MISMATCH",
+					"complete-quest action requires a COMPLETE projection");
+			}
+			List<AfterCommitAction.SyncQuestState> stateSyncs = transition.afterCommit().stream()
+				.filter(AfterCommitAction.SyncQuestState.class::isInstance)
+				.map(AfterCommitAction.SyncQuestState.class::cast).toList();
+			if (stateSyncs.size() > 1) {
+				fail("DUPLICATE_QUEST_STATE_SYNC", "a transition may synchronize quest state only once");
+			}
+			boolean completionSync = stateSyncs.size() == 1
+				&& stateSyncs.get(0).mode() == QuestStateSyncMode.COMPLETION;
+			if (effectiveStatus == QuestStatus.COMPLETE && !completionSync) {
+				fail("COMPLETE_QUEST_SYNC_REQUIRED",
+					"a COMPLETE projection requires one COMPLETION quest-state sync");
+			}
+			if (effectiveStatus != QuestStatus.COMPLETE && completionSync) {
+				fail("COMPLETE_QUEST_SYNC_STATUS_MISMATCH",
+					"COMPLETION quest-state sync requires a COMPLETE projection");
 			}
 			String source = sourceLabel(definition, transition);
 			outgoing.computeIfAbsent(source, ignored -> new HashSet<>()).add(transition.targetNode());

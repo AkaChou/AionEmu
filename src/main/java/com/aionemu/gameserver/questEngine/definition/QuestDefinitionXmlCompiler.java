@@ -378,6 +378,7 @@ public final class QuestDefinitionXmlCompiler {
 				integer(element, "minimum"), integer(element, "maximum"));
 			case "pvp-recipient-in-zone" -> new QuestCondition.PvpRecipientInZone(
 				attribute(element, "zone"));
+			case "start-eligible" -> new QuestCondition.StartEligible();
 			default -> fail("UNKNOWN_CONDITION", element.getTagName());
 		};
 	}
@@ -388,6 +389,7 @@ public final class QuestDefinitionXmlCompiler {
 			case "set-variable" -> new QuestAction.SetVariable(attribute(element, "field"), integer(element, "value"));
 			case "set-status" -> new QuestAction.SetStatus(enumValue(QuestStatus.class, element, "status"));
 			case "grant-reward" -> parseGrantReward(element);
+			case "complete-quest" -> new QuestAction.CompleteQuest(integer(element, "reward-index"));
 			case "learn-recipe" -> new QuestAction.LearnRecipe(integer(element, "recipe-id"),
 				enumValue(QuestRecipeOwnership.class, element, "ownership"));
 			case "forget-recipe" -> new QuestAction.ForgetRecipe(integer(element, "recipe-id"));
@@ -400,7 +402,12 @@ public final class QuestDefinitionXmlCompiler {
 	private static AfterCommitAction parseAfterCommitAction(Element action) {
 		return switch (action.getTagName()) {
 			case "close-dialog" -> new AfterCommitAction.CloseDialog();
+			case "sync-quest-state" -> new AfterCommitAction.SyncQuestState(
+				enumValue(QuestStateSyncMode.class, action, "mode"));
+			case "refresh-player-stats" -> new AfterCommitAction.RefreshPlayerStats();
 			case "show-quest-dialog" -> new AfterCommitAction.ShowQuestDialog(integer(action, "dialog-id"));
+			case "show-quest-selection-dialog" -> new AfterCommitAction.ShowQuestSelectionDialog(
+				integer(action, "dialog-id"));
 			case "teleport-player-current-or-default" -> new AfterCommitAction.TeleportPlayer(
 				QuestInstanceTarget.currentOrDefault(), integer(action, "world-id"),
 				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
@@ -458,7 +465,10 @@ public final class QuestDefinitionXmlCompiler {
 		} catch (IllegalArgumentException e) {
 			return fail("UNKNOWN_REWARD_KIND", kind);
 		}
-		return new QuestAction.GrantReward(kind, integer(element, "id"), longInteger(element, "amount"));
+		QuestRewardAmountMode mode = element.hasAttribute("amount-mode")
+			? enumValue(QuestRewardAmountMode.class, element, "amount-mode")
+			: QuestRewardAmountMode.EXACT;
+		return new QuestAction.GrantReward(kind, integer(element, "id"), longInteger(element, "amount"), mode);
 	}
 
 	private static Element requiredChild(Element parent, String name) {

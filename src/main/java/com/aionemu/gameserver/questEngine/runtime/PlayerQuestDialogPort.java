@@ -48,4 +48,24 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, dialogId, snapshot.questId()));
 		return true;
 	}
+
+	@Override
+	public boolean showSelectionDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		if (dialogId <= 0) {
+			throw new IllegalArgumentException("dialogId must be positive");
+		}
+		Player player = players.find(snapshot.playerId());
+		if (player == null) {
+			return false;
+		}
+		int objectId = snapshot.interactionObjectId();
+		if (objectId == 0) {
+			throw new IllegalStateException("showSelectionDialog requires an authoritative interaction objectId "
+				+ "from the execution context for quest " + snapshot.questId());
+		}
+		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, dialogId));
+		return true;
+	}
 }

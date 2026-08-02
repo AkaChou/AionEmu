@@ -20,6 +20,8 @@
   <xs:simpleType name="timer-delivery"><xs:restriction base="xs:string"><xs:enumeration value="AT_MOST_ONCE"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="npc-emotion"><xs:restriction base="xs:string"><xs:enumeration value="START_EMOTE2"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="recipe-ownership"><xs:restriction base="xs:string"><xs:enumeration value="QUEST_OWNED"/><xs:enumeration value="PERMANENT"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="reward-amount-mode"><xs:restriction base="xs:string"><xs:enumeration value="EXACT"/><xs:enumeration value="QUEST_BASE"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="quest-state-sync-mode"><xs:restriction base="xs:string"><xs:enumeration value="PACKET_ONLY"/><xs:enumeration value="VISIBILITY_REFRESH"/><xs:enumeration value="LEVEL_AND_VISIBILITY_REFRESH"/><xs:enumeration value="COMPLETION"/></xs:restriction></xs:simpleType>
   <xs:complexType name="empty-type"/>
 
   <xs:attributeGroup name="timer-policy-attributes">
@@ -69,13 +71,15 @@
     <xs:element name="can-grant-craft-skill"><xs:complexType><xs:attribute name="skill-id" type="xs:int" use="required"/><xs:attribute name="target-level" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="pvp-victim-level-delta"><xs:complexType><xs:attribute name="minimum" type="xs:int" use="required"/><xs:attribute name="maximum" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="pvp-recipient-in-zone"><xs:complexType><xs:attribute name="zone" type="xs:string" use="required"/></xs:complexType></xs:element>
+	<xs:element name="start-eligible" type="empty-type"/>
   </xs:choice></xs:complexType>
 
   <xs:complexType name="actions-type"><xs:choice minOccurs="0" maxOccurs="unbounded">
     <xs:element name="remove-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="set-variable"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="value" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="set-status"><xs:complexType><xs:attribute name="status" type="status" use="required"/></xs:complexType></xs:element>
-    <xs:element name="grant-reward"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/></xs:complexType></xs:element>
+	<xs:element name="grant-reward"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/><xs:attribute name="amount-mode" type="reward-amount-mode" default="EXACT"/></xs:complexType></xs:element>
+	<xs:element name="complete-quest"><xs:complexType><xs:attribute name="reward-index" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="learn-recipe"><xs:complexType><xs:attribute name="recipe-id" type="xs:int" use="required"/><xs:attribute name="ownership" type="recipe-ownership" use="required"/></xs:complexType></xs:element>
     <xs:element name="forget-recipe"><xs:complexType><xs:attribute name="recipe-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="grant-craft-skill"><xs:complexType><xs:attribute name="skill-id" type="xs:int" use="required"/><xs:attribute name="target-level" type="xs:int" use="required"/><xs:attribute name="auto-learn-recipes" type="xs:boolean" use="required"/></xs:complexType></xs:element>
@@ -83,7 +87,10 @@
 
   <xs:complexType name="after-commit-type"><xs:choice minOccurs="0" maxOccurs="unbounded">
     <xs:element name="close-dialog" type="empty-type"/>
+	<xs:element name="sync-quest-state"><xs:complexType><xs:attribute name="mode" type="quest-state-sync-mode" use="required"/></xs:complexType></xs:element>
+	<xs:element name="refresh-player-stats" type="empty-type"/>
     <xs:element name="show-quest-dialog"><xs:complexType><xs:attribute name="dialog-id" type="xs:int" use="required"/></xs:complexType></xs:element>
+	<xs:element name="show-quest-selection-dialog"><xs:complexType><xs:attribute name="dialog-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="teleport-player-current-or-default"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="teleport-player-fixed-instance"><xs:complexType><xs:attribute name="instance-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="play-movie"><xs:complexType><xs:attribute name="movie-id" type="xs:int" use="required"/></xs:complexType></xs:element>

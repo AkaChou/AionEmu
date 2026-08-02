@@ -24,6 +24,7 @@ public final class QuestConditionEvaluator {
 					case QuestCondition.CanGrantCraftSkill skill -> canGrantCraftSkill(snapshot, skill);
 					case QuestCondition.PvpVictimLevelDelta level -> pvpVictimLevelDelta(snapshot, level);
 					case QuestCondition.PvpRecipientInZone zone -> pvpRecipientInZone(snapshot, zone);
+					case QuestCondition.StartEligible ignored -> startEligible(snapshot);
 				};
 			if (!matched) {
 				return false;
@@ -76,6 +77,14 @@ public final class QuestConditionEvaluator {
 			QuestCondition.PvpRecipientInZone condition) {
 		try {
 			return snapshot.pvpFacts().recipientInZone(condition.zone());
+		} catch (IllegalStateException unknownFacts) {
+			return false;
+		}
+	}
+
+	private static boolean startEligible(QuestSnapshot snapshot) {
+		try {
+			return snapshot.startEligibility().eligible();
 		} catch (IllegalStateException unknownFacts) {
 			return false;
 		}

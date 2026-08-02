@@ -342,12 +342,14 @@ public final class QuestService {
 		if (rewards.getGold() != null) {
 			long amount = (long) (player.getRates().getQuestKinahRate() * rewards.getGold());
 			player.getInventory().increaseKinah(amount, ItemUpdateType.INC_KINAH_QUEST);
-			observeReward(env, "GOLD", 0, amount);
+			observeReward(env, "GOLD", 0, rewards.getGold(),
+				com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE);
 		}
 		if (rewards.getExp() != null) {
 			NpcTemplate npcTemplate = DataManager.NPC_DATA.getNpcTemplate(env.getTargetId());
 			player.getCommonData().addExp(rewards.getExp(), RewardType.QUEST);
-			observeReward(env, "EXP", 0, rewards.getExp());
+			observeReward(env, "EXP", 0, rewards.getExp(),
+				com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE);
 		}
 		// 成长光环 / Aura Of Growth
 		if (rewards.getExpBoost() != null) {
@@ -382,12 +384,14 @@ public final class QuestService {
 		if (rewards.getAp() != null) { // Abyss Points
 			long amount = (long) (player.getRates().getQuestApRate() * rewards.getAp());
 			AbyssPointsService.addAp(player, (int) amount);
-			observeReward(env, "AP", 0, amount);
+			observeReward(env, "AP", 0, rewards.getAp(),
+				com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE);
 		}
 		if (rewards.getGp() != null) { // Glory Points
 			long amount = (long) (player.getRates().getQuestGpRate() * rewards.getGp());
 			AbyssPointsService.addGp(player, (int) amount);
-			observeReward(env, "GP", 0, amount);
+			observeReward(env, "GP", 0, rewards.getGp(),
+				com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE);
 		}
 		if (rewards.getExtendInventory() != null) {
 			observeReward(env, "EXTEND_INVENTORY", 0, rewards.getExtendInventory());
@@ -399,6 +403,8 @@ public final class QuestService {
 		}
 		// 发送：成长光环、伯丁眷顾与欧比斯眷顾 / Send for: "Aura Of Growth & Berdin's Favor & Abyss Favor"
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
+		QuestLegacyObservationContext.afterCommitAction(env.getQuestId(),
+			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.RefreshPlayerStats());
 	}
 
 	private static boolean setFinishingState(QuestEnv env, QuestTemplate template, int reward) {
@@ -427,12 +433,17 @@ public final class QuestService {
 		qs.setQuestVar(0);
 		qs.setReward(reward);
 		qs.setCompleteCount(qs.getCompleteCount() + 1);
+		QuestLegacyObservationContext.requiredAction(id,
+			new com.aionemu.gameserver.questEngine.definition.QuestAction.CompleteQuest(reward));
 		if (template.getRepeatCycle() != null && player.getAccessLevel() == 0 || template.getQuestCoolTime() > 0) {
 			qs.setNextRepeatTime(countNextRepeatTime(player, template));
 		} else if (template.isTimeBased() && player.getAccessLevel() > 0) {
 			PacketSendUtility.sendMessage(player, "You're GM! So system won't apply countNextRepeatTime()");
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
+		QuestLegacyObservationContext.afterCommitAction(id,
+			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.SyncQuestState(
+				com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode.COMPLETION));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		GameEngineServices.questEngine().onLvlUp(env);
@@ -445,9 +456,15 @@ public final class QuestService {
 	}
 
 	private static void observeReward(QuestEnv env, String kind, int id, long amount) {
+		observeReward(env, kind, id, amount,
+			com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.EXACT);
+	}
+
+	private static void observeReward(QuestEnv env, String kind, int id, long amount,
+			com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode amountMode) {
 		if (amount > 0) {
 			QuestLegacyObservationContext.requiredAction(env.getQuestId(),
-				new com.aionemu.gameserver.questEngine.definition.QuestAction.GrantReward(kind, id, amount));
+				new com.aionemu.gameserver.questEngine.definition.QuestAction.GrantReward(kind, id, amount, amountMode));
 		}
 	}
 
@@ -701,6 +718,9 @@ public final class QuestService {
 			QuestLegacyObservationContext.state(id, started.getStatus(), started.getQuestVars().getQuestVars());
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, status.value(), 0));
+		QuestLegacyObservationContext.afterCommitAction(id,
+			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.SyncQuestState(
+				com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode.VISIBILITY_REFRESH));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		return true;
@@ -737,6 +757,9 @@ public final class QuestService {
 			QuestLegacyObservationContext.state(questId, started.getStatus(), started.getQuestVars().getQuestVars());
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, status.value(), 0));
+		QuestLegacyObservationContext.afterCommitAction(questId,
+			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.SyncQuestState(
+				com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode.PACKET_ONLY));
 	}
 
 	/**

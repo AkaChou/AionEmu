@@ -13,20 +13,26 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.attackTarget;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.cancelQuestTimer;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.closeDialog;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.completeQuest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.despawnNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.playMovie;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.grantQuestBaseReward;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.showQuestDialog;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.showQuestSelectionDialog;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.spawnNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.spawnNpcInInstance;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.startFollow;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.startEligible;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.startInvisibleTimer;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.startQuestTimer;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.startWalking;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.stopFollow;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.teleportPlayer;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.hasItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.refreshPlayerStats;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.removeItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setVariable;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
@@ -198,7 +204,8 @@ class QuestDefinitionCompilerTest {
 				.node("complete", project(QuestStatus.COMPLETE, vars("var1", 2)))
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT));
 		builder.on(talkToNpc(700001)).from("start").goTo("reward");
-		builder.on(talkToNpc(700001)).from("start").goTo("complete");
+		builder.on(talkToNpc(700001)).from("start").then(completeQuest(0)).goTo("complete")
+			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION));
 		assertEquals("AMBIGUOUS_TRANSITION", assertThrows(QuestCompilationException.class, builder::compile).code());
 	}
 
@@ -269,6 +276,93 @@ class QuestDefinitionCompilerTest {
 				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
 
 		assertEquals(fromDsl.definition(), fromXml.definition());
+	}
+
+	@Test
+	void typedCompletionLifecycleCompilesIdenticallyThroughXmlAndDsl() {
+		CompiledQuestDefinition fromDsl = quest(1001)
+			.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
+			.evidence(EVIDENCE)
+			.node("reward", project(QuestStatus.REWARD, Map.of()))
+			.node("complete", project(QuestStatus.COMPLETE, Map.of()))
+			.on(new QuestEvent.TalkToNpc(700001, 8)).from("reward")
+			.when(statusIs(QuestStatus.REWARD)).when(startEligible())
+			.then(grantQuestBaseReward("GOLD", 0, 120)).then(completeQuest(0))
+			.goTo("complete").afterCommit(refreshPlayerStats())
+			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION))
+			.afterCommit(showQuestSelectionDialog(10))
+			.compile();
+
+		String xml = """
+			<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
+			  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+			  <nodes>
+			    <node label="reward"><project status="REWARD"/></node>
+			    <node label="complete"><project status="COMPLETE"/></node>
+			  </nodes>
+			  <transitions><transition source="reward" target="complete">
+			    <event><talk-to-npc npc-id="700001" dialog-id="8"/></event>
+			    <conditions><status-is status="REWARD"/><start-eligible/></conditions>
+			    <actions><grant-reward kind="GOLD" id="0" amount="120" amount-mode="QUEST_BASE"/><complete-quest reward-index="0"/></actions>
+			    <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
+			  </transition></transitions>
+			</quest-definition>
+			""";
+		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
+			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+
+		assertEquals(fromDsl.definition(), fromXml.definition());
+	}
+
+	@Test
+	void completeProjectionRequiresTheCompletionStateSyncMode() {
+		QuestCompilationException failure = assertThrows(QuestCompilationException.class, () -> quest(1001)
+			.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
+			.evidence(EVIDENCE)
+			.node("reward", project(QuestStatus.REWARD, Map.of()))
+			.node("complete", project(QuestStatus.COMPLETE, Map.of()))
+			.on(talkToNpc(700001)).from("reward").then(completeQuest(0)).goTo("complete")
+			.afterCommit(syncQuestState(QuestStateSyncMode.PACKET_ONLY))
+			.compile());
+
+		assertEquals("COMPLETE_QUEST_SYNC_REQUIRED", failure.code());
+	}
+
+	@Test
+	void rewardAmountModeIsRestrictedByTheXmlSchema() {
+		String xml = """
+			<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
+			  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+			  <nodes><node label="start"><project status="START"/></node></nodes>
+			  <transitions><transition target="start"><event><talk-to-npc npc-id="700001"/></event>
+			    <actions><grant-reward kind="GOLD" id="0" amount="120" amount-mode="SCALED"/></actions>
+			  </transition></transitions>
+			</quest-definition>
+			""";
+
+		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(
+				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)))).code());
+	}
+
+	@Test
+	void questStateSyncModeIsRequiredByTheXmlSchema() {
+		String xml = """
+			<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
+			  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+			  <nodes><node label="start"><project status="START"/></node></nodes>
+			  <transitions><transition target="start"><event><talk-to-npc npc-id="700001"/></event>
+			    <after-commit><sync-quest-state/></after-commit>
+			  </transition></transitions>
+			</quest-definition>
+			""";
+
+		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(
+				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)))).code());
 	}
 
 	@Test

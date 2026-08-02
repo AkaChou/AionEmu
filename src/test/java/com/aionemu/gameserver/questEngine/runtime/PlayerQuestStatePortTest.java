@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,8 +61,10 @@ class PlayerQuestStatePortTest {
 	void publishUpdatesLiveStateOnlyAfterCommit() throws Exception {
 		Player player = playerWithState(QuestStatus.START, 0);
 		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> player, new RecordingDao());
+		QuestMutationPlan plan = plan(QuestStatus.REWARD, 1);
 
-		port.publish(PLAYER_ID, plan(QuestStatus.REWARD, 1));
+		port.apply(connection(), PLAYER_ID, plan);
+		port.publish(PLAYER_ID, plan);
 
 		QuestState live = player.getQuestStateList().getQuestState(QUEST_ID);
 		assertEquals(QuestStatus.REWARD, live.getStatus());
@@ -71,10 +74,14 @@ class PlayerQuestStatePortTest {
 	}
 
 	@Test
-	void publishSkipsPlayerLoggedOutAfterCommit() {
-		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> null, new RecordingDao());
+	void publishSkipsPlayerLoggedOutAfterCommit() throws Exception {
+		AtomicReference<Player> live = new AtomicReference<>(playerWithState(QuestStatus.START, 0));
+		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> live.get(), new RecordingDao());
+		QuestMutationPlan plan = plan(QuestStatus.REWARD, 1);
+		port.apply(connection(), PLAYER_ID, plan);
+		live.set(null);
 		// 不抛:提交已成功,玩家登出则内存无可发布对象,重登从 DB 恢复。
-		port.publish(PLAYER_ID, plan(QuestStatus.REWARD, 1));
+		port.publish(PLAYER_ID, plan);
 	}
 
 	@Test
@@ -107,6 +114,49 @@ class PlayerQuestStatePortTest {
 		QuestState live = player.getQuestStateList().getQuestState(QUEST_ID);
 		assertEquals(QuestStatus.START, live.getStatus());
 		assertEquals(PersistentState.UPDATED, live.getPersistentState());
+	}
+
+	@Test
+	void completeQuestPersistsAndPublishesOneIdenticalLifecycleProjection() throws Exception {
+		Player player = playerWithState(QuestStatus.REWARD, 1);
+		QuestState before = player.getQuestStateList().getQuestState(QUEST_ID);
+		before.setCompleteCount(2);
+		before.setPersistentState(PersistentState.UPDATED);
+		RecordingDao dao = new RecordingDao();
+		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> player, dao);
+		QuestMutationPlan plan = new QuestMutationPlan(QUEST_ID, QuestStatus.COMPLETE, 0,
+			List.of(new com.aionemu.gameserver.questEngine.definition.QuestAction.CompleteQuest(3)), List.of());
+
+		port.apply(connection(), PLAYER_ID, plan);
+
+		QuestState shadow = dao.stores.get(0).get(0);
+		assertEquals(QuestStatus.COMPLETE, shadow.getStatus());
+		assertEquals(0, shadow.getQuestVars().getQuestVars());
+		assertEquals(3, shadow.getCompleteCount());
+		assertEquals(3, shadow.getRewardOrNull());
+		assertEquals(QuestStatus.REWARD, before.getStatus());
+		Timestamp persistedCompleteTime = shadow.getCompleteTime();
+
+		port.publish(PLAYER_ID, plan);
+
+		QuestState committed = player.getQuestStateList().getQuestState(QUEST_ID);
+		assertEquals(QuestStatus.COMPLETE, committed.getStatus());
+		assertEquals(3, committed.getCompleteCount());
+		assertEquals(3, committed.getRewardOrNull());
+		assertEquals(persistedCompleteTime, committed.getCompleteTime());
+	}
+
+	@Test
+	void rollbackDiscardsPreparedProjection() throws Exception {
+		Player player = playerWithState(QuestStatus.START, 0);
+		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> player, new RecordingDao());
+		QuestMutationPlan plan = plan(QuestStatus.REWARD, 1);
+		port.apply(connection(), PLAYER_ID, plan);
+
+		port.rollback(PLAYER_ID, plan);
+
+		assertThrows(IllegalStateException.class, () -> port.publish(PLAYER_ID, plan));
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(QUEST_ID).getStatus());
 	}
 
 	private static QuestMutationPlan plan(QuestStatus status, int packed) {

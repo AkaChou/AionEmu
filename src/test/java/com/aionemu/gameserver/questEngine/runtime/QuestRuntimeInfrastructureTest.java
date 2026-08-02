@@ -6,6 +6,7 @@ import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
@@ -18,12 +19,14 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.completeQuest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.hasItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.removeItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setVariable;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -161,7 +164,8 @@ class QuestRuntimeInfrastructureTest {
 		builder.on(talkToNpc(700001)).from("start").when(statusIs(QuestStatus.START))
 				.then(setVariable("step", 1)).goTo("reward");
 		builder.on(talkToNpc(700001)).from("reward").when(statusIs(QuestStatus.REWARD))
-				.then(setVariable("step", 2)).goTo("complete");
+			.then(setVariable("step", 2)).then(completeQuest(0)).goTo("complete")
+			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION));
 		CompiledQuestDefinition firstOwner = builder.compile();
 
 		QuestEventRouter router = new QuestEventRouter(new QuestEventIndex(new ImmutableQuestCatalog(

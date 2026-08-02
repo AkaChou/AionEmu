@@ -93,6 +93,11 @@ class PlayerQuestTeleportPortTest {
 				public boolean showDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId) {
 					return true;
 				}
+
+				@Override
+				public boolean showSelectionDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId) {
+					return true;
+				}
 			},
 			(snapshot, plan, worldId, x, y, z, heading) -> {
 				called[0] = true;

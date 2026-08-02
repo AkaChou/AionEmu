@@ -18,4 +18,8 @@ public interface QuestStatePort {
 	 * Only called after the owning transaction committed successfully.
 	 */
 	void publish(int playerId, QuestMutationPlan plan);
+
+	/** Clears any projection prepared by {@link #apply} when the owning transaction rolls back. */
+	default void rollback(int playerId, QuestMutationPlan plan) {
+	}
 }

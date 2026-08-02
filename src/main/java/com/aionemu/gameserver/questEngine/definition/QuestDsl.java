@@ -233,6 +233,10 @@ public final class QuestDsl {
 		return new QuestCondition.PvpRecipientInZone(zone);
 	}
 
+	public static QuestCondition startEligible() {
+		return new QuestCondition.StartEligible();
+	}
+
 	public static QuestAction removeItem(int itemId, int count) {
 		return new QuestAction.RemoveItem(itemId, count);
 	}
@@ -247,6 +251,14 @@ public final class QuestDsl {
 
 	public static QuestAction grantReward(String kind, int id, long amount) {
 		return new QuestAction.GrantReward(kind, id, amount);
+	}
+
+	public static QuestAction grantQuestBaseReward(String kind, int id, long amount) {
+		return new QuestAction.GrantReward(kind, id, amount, QuestRewardAmountMode.QUEST_BASE);
+	}
+
+	public static QuestAction completeQuest(int rewardIndex) {
+		return new QuestAction.CompleteQuest(rewardIndex);
 	}
 
 	public static QuestAction learnRecipe(int recipeId, QuestRecipeOwnership ownership) {
@@ -265,8 +277,20 @@ public final class QuestDsl {
 		return new AfterCommitAction.CloseDialog();
 	}
 
+	public static AfterCommitAction syncQuestState(QuestStateSyncMode mode) {
+		return new AfterCommitAction.SyncQuestState(mode);
+	}
+
+	public static AfterCommitAction refreshPlayerStats() {
+		return new AfterCommitAction.RefreshPlayerStats();
+	}
+
 	public static AfterCommitAction showQuestDialog(int dialogId) {
 		return new AfterCommitAction.ShowQuestDialog(dialogId);
+	}
+
+	public static AfterCommitAction showQuestSelectionDialog(int dialogId) {
+		return new AfterCommitAction.ShowQuestSelectionDialog(dialogId);
 	}
 
 	public static AfterCommitAction teleportPlayer(int worldId, float x, float y, float z, byte heading) {

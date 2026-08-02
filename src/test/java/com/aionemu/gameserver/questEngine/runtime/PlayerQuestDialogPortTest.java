@@ -73,6 +73,23 @@ class PlayerQuestDialogPortTest {
 		assertFalse(port.showDialog(snapshot().withInteractionObjectId(204160), plan(), 1011));
 	}
 
+	@Test
+	void showSelectionDialogUsesTheAuthoritativeObjectAndNoQuestIdProtocol() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
+
+		assertDoesNotThrow(() -> port.showSelectionDialog(
+			snapshot().withInteractionObjectId(204160), plan(), 10));
+	}
+
+	@Test
+	void showSelectionDialogFailsClosedWithoutAuthoritativeObjectId() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
+
+		assertThrows(IllegalStateException.class, () -> port.showSelectionDialog(snapshot(), plan(), 10));
+	}
+
 	private static QuestSnapshot snapshot() {
 		return new QuestSnapshot(PLAYER_ID, QUEST_ID, QuestStatus.START, 0, Map.of(), Map.of());
 	}

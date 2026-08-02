@@ -314,6 +314,7 @@ public double getExpMultiplier() {
 					}
 				}
 				break;
+			case EXACT:
 			case QUEST:
 				if (npcNameId == 0) {
 					PacketSendUtility.sendPacket(getPlayer(), SM_SYSTEM_MESSAGE.STR_GET_EXP2(reward));

@@ -3,7 +3,7 @@ package com.aionemu.gameserver.questEngine.definition;
 /** Closed set of required mutations in the quest transaction. */
 public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.SetVariable,
 		QuestAction.SetStatus, QuestAction.GrantReward, QuestAction.LearnRecipe,
-		QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill {
+		QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill, QuestAction.CompleteQuest {
 	record RemoveItem(int itemId, int count) implements QuestAction {
 		public RemoveItem {
 			if (itemId <= 0 || count <= 0) {
@@ -29,14 +29,30 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
-	record GrantReward(String kind, int id, long amount) implements QuestAction {
+	record GrantReward(String kind, int id, long amount, QuestRewardAmountMode amountMode) implements QuestAction {
+		public GrantReward(String kind, int id, long amount) {
+			this(kind, id, amount, QuestRewardAmountMode.EXACT);
+		}
+
 		public GrantReward {
 			QuestRewardKind.fromWire(kind);
 			new QuestReward(kind, id, amount);
+			if (amountMode == null) {
+				throw new NullPointerException("amountMode");
+			}
 		}
 
 		public QuestRewardKind rewardKind() {
 			return QuestRewardKind.fromWire(kind);
+		}
+	}
+
+	/** Completes the quest and freezes completion count, reward index, and timestamps in the state transaction. */
+	record CompleteQuest(int rewardIndex) implements QuestAction {
+		public CompleteQuest {
+			if (rewardIndex < 0) {
+				throw new IllegalArgumentException("rewardIndex must be non-negative");
+			}
 		}
 	}
 

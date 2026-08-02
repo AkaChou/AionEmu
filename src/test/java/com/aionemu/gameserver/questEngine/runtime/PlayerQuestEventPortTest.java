@@ -70,6 +70,18 @@ class PlayerQuestEventPortTest {
 	}
 
 	@Test
+	void productionEventBoundaryFreezesTypedStartEligibilityFacts() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player,
+			(playerId, questId) -> QuestStartEligibility.allowed());
+
+		QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID,
+			new QuestEvent.TalkToNpc(203700, 1002, 900007));
+
+		assertTrue(snapshot.startEligibility().eligible());
+	}
+
+	@Test
 	void snapshotFailsWhenPlayerIsUnavailable() {
 		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> null);
 

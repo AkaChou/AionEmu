@@ -9,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -59,6 +60,11 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			if (reward.amount() < 0) {
 				throw new SQLException("negative currency reward " + kind + " for player " + snapshot.playerId());
 			}
+			if (reward.amountMode() == com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE
+					&& kind != QuestRewardKind.GOLD && kind != QuestRewardKind.KINAH
+					&& kind != QuestRewardKind.AP && kind != QuestRewardKind.GP) {
+				throw new SQLException("QUEST_BASE is unsupported for currency reward " + kind);
+			}
 		}
 	}
 
@@ -77,7 +83,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 		int dp = 0;
 		for (QuestAction.GrantReward reward : rewards) {
 			QuestRewardKind kind = reward.rewardKind();
-			long amount = reward.amount();
+			long amount = QuestRewardAmounts.resolve(player, reward);
 			switch (kind) {
 				case GOLD, KINAH -> kinah += amount;
 				case AP -> ap += (int) amount;
@@ -95,7 +101,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 		var commonSnapshot = dp > 0 ? player.getCommonData().transactionSnapshot() : null;
 		try {
 			if (kinah > 0) {
-				player.getInventory().increaseKinah(kinah);
+				player.getInventory().increaseKinah(kinah, ItemUpdateType.INC_KINAH_QUEST);
 			}
 			List<Item> dirty = kinah > 0 ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
 			if (!dirty.isEmpty()) {

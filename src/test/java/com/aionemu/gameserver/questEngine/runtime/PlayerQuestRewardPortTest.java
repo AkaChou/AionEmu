@@ -12,6 +12,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Equipment;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
+import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.items.storage.ItemStorage;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.Storage;
@@ -19,6 +20,7 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -174,6 +176,14 @@ class PlayerQuestRewardPortTest {
 		assertSame(connection, playerDao.calls.get(0));
 		assertEquals(PLAYER_ID, playerDao.lastPlayerId);
 		assertSame(player.getCommonData(), playerDao.lastPcd);
+	}
+
+	@Test
+	void exactExpModeUsesAnIdentityRewardTypeInsteadOfTheQuestRate() {
+		assertEquals(1000, RewardType.EXACT.calcReward(null, 1000));
+		assertEquals(RewardType.EXACT, PlayerQuestRewardPort.expRewardType(reward("EXP", 0, 1000)));
+		assertEquals(RewardType.QUEST, PlayerQuestRewardPort.expRewardType(
+			new QuestAction.GrantReward("EXP", 0, 1000, QuestRewardAmountMode.QUEST_BASE)));
 	}
 
 	@Test

@@ -5,7 +5,11 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 /** Closed set of pure conditions evaluated against a quest snapshot. */
 public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCondition.HasItem,
 		QuestCondition.QuestVariableIs, QuestCondition.RecipeKnown, QuestCondition.CanGrantCraftSkill,
-		QuestCondition.PvpVictimLevelDelta, QuestCondition.PvpRecipientInZone {
+		QuestCondition.PvpVictimLevelDelta, QuestCondition.PvpRecipientInZone,
+		QuestCondition.StartEligible {
+	record StartEligible() implements QuestCondition {
+	}
+
 	record StatusIs(QuestStatus status) implements QuestCondition {
 		public StatusIs {
 			if (status == null) {

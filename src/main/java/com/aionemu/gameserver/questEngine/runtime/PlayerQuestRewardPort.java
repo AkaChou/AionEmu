@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 import com.aionemu.gameserver.services.item.ItemService;
 
@@ -67,6 +68,10 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 			if (kind == QuestRewardKind.ITEM && reward.id() <= 0) {
 				throw new SQLException("item reward without a positive item id for player " + snapshot.playerId());
 			}
+			if (reward.amountMode() == com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE
+					&& kind != QuestRewardKind.EXP) {
+				throw new SQLException("QUEST_BASE is unsupported for durable reward " + kind);
+			}
 		}
 	}
 
@@ -83,7 +88,7 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 		for (QuestAction.GrantReward reward : rewards) {
 			QuestRewardKind kind = reward.rewardKind();
 			switch (kind) {
-				case ITEM -> items.add(new QuestItems(reward.id(), (int) reward.amount()));
+				case ITEM -> items.add(new QuestItems(reward.id(), (int) QuestRewardAmounts.resolve(player, reward)));
 				case EXP, EXP_BOOST, AURA_OF_GROWTH -> {
 				}
 				default -> throw new SQLException("unsupported durable reward " + kind);
@@ -104,9 +109,10 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 				switch (reward.rewardKind()) {
 					case ITEM -> {
 					}
-					case EXP -> player.getCommonData().addExp(reward.amount(), RewardType.QUEST);
-					case EXP_BOOST -> player.getCommonData().addAuraOfGrowth(1060000L * reward.amount());
-					case AURA_OF_GROWTH -> player.getCommonData().addAuraOfGrowth(reward.amount());
+					case EXP -> player.getCommonData().addExp(QuestRewardAmounts.resolve(player, reward),
+						expRewardType(reward));
+					case EXP_BOOST -> player.getCommonData().addAuraOfGrowth(1060000L * QuestRewardAmounts.resolve(player, reward));
+					case AURA_OF_GROWTH -> player.getCommonData().addAuraOfGrowth(QuestRewardAmounts.resolve(player, reward));
 					default -> throw new SQLException("unsupported durable reward " + reward.rewardKind());
 				}
 			}
@@ -144,5 +150,9 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 	private static boolean supported(QuestRewardKind kind) {
 		return kind == QuestRewardKind.ITEM || kind == QuestRewardKind.EXP
 			|| kind == QuestRewardKind.EXP_BOOST || kind == QuestRewardKind.AURA_OF_GROWTH;
+	}
+
+	static RewardType expRewardType(QuestAction.GrantReward reward) {
+		return reward.amountMode() == QuestRewardAmountMode.QUEST_BASE ? RewardType.QUEST : RewardType.EXACT;
 	}
 }

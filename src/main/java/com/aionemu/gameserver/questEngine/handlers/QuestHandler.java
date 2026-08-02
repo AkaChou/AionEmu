@@ -170,8 +170,6 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	 */
 	public boolean closeDialogWindow(QuestEnv env) {
 		sendQuestSelectionPacket(env, 0);
-		QuestLegacyObservationContext.afterCommitAction(questId,
-			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.CloseDialog());
 		return true;
 	}
 
@@ -1690,6 +1688,11 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, qs.getStatus(), qs.getQuestVars().getQuestVars()));
+		QuestLegacyObservationContext.afterCommitAction(questId,
+			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.SyncQuestState(
+				qs.getStatus() == QuestStatus.COMPLETE || qs.getStatus() == QuestStatus.REWARD
+					? com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH
+					: com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode.PACKET_ONLY));
 		if (qs.getStatus() == QuestStatus.COMPLETE || qs.getStatus() == QuestStatus.REWARD) {
 			GameEngineServices.questEngine().onLvlUp(env);
 			player.getController().updateZone();
@@ -1710,6 +1713,8 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 			objId = env.getVisibleObject().getObjectId();
 		}
 		PacketSendUtility.sendPacket(env.getPlayer(), new SM_DIALOG_WINDOW(objId, dialogId, questId));
+		QuestLegacyObservationContext.afterCommitAction(questId,
+			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.ShowQuestDialog(dialogId));
 	}
 
 	/**
@@ -1725,6 +1730,9 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 			objId = env.getVisibleObject().getObjectId();
 		}
 		PacketSendUtility.sendPacket(env.getPlayer(), new SM_DIALOG_WINDOW(objId, dialogId));
+		QuestLegacyObservationContext.afterCommitAction(questId, dialogId == 0
+			? new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.CloseDialog()
+			: new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.ShowQuestSelectionDialog(dialogId));
 	}
 
 	/**

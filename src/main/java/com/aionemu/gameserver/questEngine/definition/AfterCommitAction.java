@@ -2,13 +2,28 @@ package com.aionemu.gameserver.questEngine.definition;
 
 /** Closed set of best-effort actions allowed after a successful commit. */
 public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
-		AfterCommitAction.ShowQuestDialog, AfterCommitAction.TeleportPlayer, AfterCommitAction.PlayMovie,
+		AfterCommitAction.ShowQuestDialog, AfterCommitAction.ShowQuestSelectionDialog,
+		AfterCommitAction.TeleportPlayer, AfterCommitAction.PlayMovie,
 		AfterCommitAction.SpawnNpc, AfterCommitAction.DespawnNpc, AfterCommitAction.StartFollow,
 		AfterCommitAction.StopFollow, AfterCommitAction.AttackTarget, AfterCommitAction.StartWalking,
 		AfterCommitAction.BroadcastNpcEmotion, AfterCommitAction.WatchFollowZone,
 		AfterCommitAction.StartQuestTimer, AfterCommitAction.StartInvisibleTimer,
-		AfterCommitAction.CancelQuestTimer {
+		AfterCommitAction.CancelQuestTimer, AfterCommitAction.SyncQuestState,
+		AfterCommitAction.RefreshPlayerStats {
 	record CloseDialog() implements AfterCommitAction {
+	}
+
+	/** Sends the committed QuestStatus/quest_vars projection and refreshes quest visibility. */
+	record SyncQuestState(QuestStateSyncMode mode) implements AfterCommitAction {
+		public SyncQuestState {
+			if (mode == null) {
+				throw new NullPointerException("mode");
+			}
+		}
+	}
+
+	/** Sends the committed player-stat projection after reward mutations. */
+	record RefreshPlayerStats() implements AfterCommitAction {
 	}
 
 	/** 打开指定 dialogId 的任务对话页。objectId 由执行上下文的权威交互对象提供。 */
@@ -16,6 +31,15 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		public ShowQuestDialog {
 			if (dialogId < 0) {
 				throw new IllegalArgumentException("dialogId must be non-negative");
+			}
+		}
+	}
+
+	/** 打开不携带 questId 的任务选择页。objectId 由执行上下文的权威交互对象提供。 */
+	record ShowQuestSelectionDialog(int dialogId) implements AfterCommitAction {
+		public ShowQuestSelectionDialog {
+			if (dialogId <= 0) {
+				throw new IllegalArgumentException("dialogId must be positive");
 			}
 		}
 	}

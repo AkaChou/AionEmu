@@ -1,128 +1,155 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
+import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
+import com.aionemu.gameserver.questEngine.runtime.QuestShadowRunner;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.closeDialog;
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setStatus;
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setVariable;
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.showQuestDialog;
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * 对话能力代表任务: 1101 (report_to, start 203049 / end 203057, 无任务物品)。
- *
- * 验证 ReportTo 模板 handler 的固定 dialog 分支可被完整、封闭地投影到统一 IR:
- *   NONE + START_DIALOG(31)   → show-quest-dialog(1011)          (显示接取页)
- *   NONE + ACCEPT_QUEST(1002) → set-status START + close-dialog   (接取)
- *   NONE + ACCEPT_QUEST_SIMPLE(20000) → set-status START          (简易接取)
- *   START + START_DIALOG(31)  → show-quest-dialog(2375)           (显示汇报页)
- *   START + SELECT_REWARD(1009) → var0=1 + set-status REWARD      (交任务)
- *
- * 这些 dialog 分支来自 ReportTo.java:83-146 的固定 switch, 不是 Python 猜测。
- * objectId 属于执行上下文 (show-quest-dialog 由 after-commit 端口携带权威交互对象),
- * 不由定义文件提供。
- */
+/** Full vertical proof for the current ReportTo owner of quest 1101. */
 class ReportTo1101DefinitionTest {
-	private static final int NPC_START = 203049;
-	private static final int NPC_END = 203057;
+	private static final String DEFINITION =
+		"/aion/data/static_data/quest_definition/candidates/reportto-1101.xml";
+	private static final String MANIFEST =
+		"/aion/data/static_data/quest_definition/quest_definition_candidate_manifest.xml";
 
 	@Test
-	void xmlAndDslCompileToTheSameDefinition() throws Exception {
-		CompiledQuestDefinition fromDsl = dslDefinition();
-		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(xmlFixture());
-
-		assertEquals(fromDsl.definition(), fromXml.definition());
-		assertFalse(fromXml.definition().transitions().isEmpty(), "代表任务应有 5 条对话 transition");
-	}
-
-	@Test
-	void everyDialogPathCarriesAnExplicitDialogId() throws Exception {
-		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(xmlFixture());
-		List<QuestTransition> transitions = fromXml.definition().transitions();
-		assertEquals(5, transitions.size(), "1101 应有 5 条可静态证明的对话分支");
-
-		for (QuestTransition transition : transitions) {
-			assertTrue(transition.event() instanceof QuestEvent.TalkToNpc,
-				"所有分支都应是 TalkToNpc 事件: " + transition.event());
-			QuestEvent.TalkToNpc talk = (QuestEvent.TalkToNpc) transition.event();
-			assertTrue(talk.dialogId() != null, "对话分支必须携带明确 dialogId");
+	void packagedSingleOwnerManifestCompilesTheProductionCandidate() throws Exception {
+		try (InputStream input = resource(MANIFEST)) {
+			QuestCatalog catalog = QuestDefinitionCandidateManifest.compile(input, getClass().getClassLoader());
+			assertEquals(List.of(1101), catalog.all().stream().map(CompiledQuestDefinition::id).toList());
 		}
 	}
 
 	@Test
-	void acceptAndRewardPathsAreMutuallyExclusiveByStatusAndDialog() throws Exception {
-		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(xmlFixture());
-		// 编译器已用 AMBIGUOUS_TRANSITION 门禁保证同事件 + 同条件无歧义;
-		// 这里再断言 start 与 end NPC 的 dialog 分支都指向预期目标状态。
-		long rewardPaths = fromXml.definition().transitions().stream()
-			.filter(t -> ((QuestEvent.TalkToNpc) t.event()).dialogId() == QuestDialog.SELECT_REWARD.id())
-			.count();
-		assertEquals(1, rewardPaths, "恰好一条 SELECT_REWARD 分支进入 REWARD");
+	void candidateCoversEveryHandleableReportToDialogPath() throws Exception {
+		CompiledQuestDefinition compiled = definition();
+		List<QuestTransition> transitions = compiled.definition().transitions();
+
+		assertEquals(29, transitions.size());
+		assertTrue(transitions.stream().allMatch(t -> t.event() instanceof QuestEvent.TalkToNpc talk
+			&& talk.dialogId() != null));
+		assertEquals(Set.of(31, 1007, 1002, 20000, 1003, 1004, 20001, 1008),
+			dialogIds(transitions, "unaccepted", 203049));
+		assertEquals(Set.of(1008), dialogIds(transitions, "started", 203049));
+		assertEquals(Set.of(31, 1009), dialogIds(transitions, "started", 203057));
+		Set<Integer> rewardDialogs = IntStream.rangeClosed(8, 23).boxed()
+			.collect(Collectors.toCollection(java.util.LinkedHashSet::new));
+		assertEquals(rewardDialogs,
+			transitions.stream().filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete"))
+				.map(t -> ((QuestEvent.TalkToNpc) t.event()).dialogId())
+				.collect(Collectors.toCollection(java.util.LinkedHashSet::new)));
+		assertEquals(Set.of(-1, 1009), transitions.stream()
+			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("reward"))
+			.map(t -> ((QuestEvent.TalkToNpc) t.event()).dialogId()).collect(Collectors.toSet()));
 	}
 
-	private static CompiledQuestDefinition dslDefinition() {
-		QuestMetadata metadata = new QuestMetadata("Sleeping On The Job", 1102201, 1, 2147483647,
-			java.util.Set.of("ELYOS"), "IMPORTANT", RepeatPolicy.once(), java.util.Set.of(),
-			List.of(), List.of(new QuestReward("GOLD", 0, 120), new QuestReward("EXP", 0, 130)), List.of());
-		return quest(1101)
-			.metadata(metadata)
-			.evidence(
-				new EvidenceRef("CURRENT_XML_OWNER", "src/main/resources/aion/data/static_data/quest_script_data/poeta.xml#report_to[1101]",
-					"report_to 模板声明 start 203049 与 end 203057, 无 item_id, 使用默认对话页 1011/2375"),
-				new EvidenceRef("TEMPLATE_HANDLER", "src/main/java/com/aionemu/gameserver/questEngine/handlers/template/ReportTo.java:83-146",
-					"ReportTo.onDialogEvent 的固定 dialog 分支: NONE+START_DIALOG 显示 1011, NONE+ACCEPT_QUEST 启动, START+START_DIALOG 显示 2375, START+SELECT_REWARD 收物品进 REWARD"),
-				new EvidenceRef("QUEST_DATA", "src/main/resources/aion/data/static_data/quest_data/quest_data.xml#quest[1101]",
-					"min-level=1, race=ELYOS, reward gold=120 exp=130 + 3 物品"))
-			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
-			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
-			.node("started", project(QuestStatus.START, vars("var0", 0)))
-			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
-			.on(talkToNpc(NPC_START, QuestDialog.START_DIALOG))
-				.from("unaccepted").when(statusIs(QuestStatus.NONE)).priority(1).goTo("unaccepted")
-				.afterCommit(showQuestDialog(1011))
-			.on(talkToNpc(NPC_START, QuestDialog.ACCEPT_QUEST))
-				.from("unaccepted").when(statusIs(QuestStatus.NONE)).priority(2)
-				.then(setStatus(QuestStatus.START)).goTo("started")
-				.afterCommit(closeDialog())
-			.on(talkToNpc(NPC_START, QuestDialog.ACCEPT_QUEST_SIMPLE))
-				.from("unaccepted").when(statusIs(QuestStatus.NONE)).priority(3)
-				.then(setStatus(QuestStatus.START)).goTo("started")
-				.afterCommit(closeDialog())
-			.on(talkToNpc(NPC_END, QuestDialog.START_DIALOG))
-				.from("started").when(statusIs(QuestStatus.START)).priority(1).goTo("started")
-				.afterCommit(showQuestDialog(2375))
-			.on(talkToNpc(NPC_END, QuestDialog.SELECT_REWARD))
-				.from("started").when(statusIs(QuestStatus.START)).priority(2)
-				.then(setVariable("var0", 1)).then(setStatus(QuestStatus.REWARD)).goTo("reward")
-				.afterCommit(closeDialog())
-			.compile();
+	@Test
+	void acceptanceFailsClosedWithoutEligibilityAndUsesTheCorrectProtocol() throws Exception {
+		CompiledQuestDefinition compiled = definition();
+		QuestTransition accept = transition(compiled, "unaccepted", 203049, 1002);
+		QuestSnapshot unknown = new QuestSnapshot(7, 1101, QuestStatus.NONE, 0, Map.of());
+		QuestSnapshot rejected = unknown.withStartEligibility(QuestStartEligibility.rejected("LEVEL"));
+		QuestSnapshot allowed = unknown.withStartEligibility(QuestStartEligibility.allowed());
+
+		assertTrue(QuestMutationPlanner.plan(compiled, unknown, accept).isEmpty());
+		assertTrue(QuestMutationPlanner.plan(compiled, rejected, accept).isEmpty());
+		assertTrue(QuestMutationPlanner.plan(compiled, allowed, accept).isPresent());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(1003)), accept.afterCommit());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+			new AfterCommitAction.CloseDialog()),
+			transition(compiled, "unaccepted", 203049, 20000).afterCommit());
 	}
 
-	private static InputStream xmlFixture() throws Exception {
-		byte[] bytes;
-		try (InputStream in = ReportTo1101DefinitionTest.class.getClassLoader()
-				.getResourceAsStream("quest-definition-candidates/reportto-1101.xml")) {
-			if (in == null) {
-				throw new IllegalStateException("missing fixture quest-definition-candidates/reportto-1101.xml");
-			}
-			bytes = in.readAllBytes();
+	@Test
+	void everyCompletionPathUsesTypedRewardsAndCompleteLifecycle() throws Exception {
+		CompiledQuestDefinition compiled = definition();
+		List<QuestAction> expected = List.of(
+			new QuestAction.GrantReward("ITEM", 164002010, 20),
+			new QuestAction.GrantReward("ITEM", 164002011, 20),
+			new QuestAction.GrantReward("ITEM", 164002057, 20),
+			new QuestAction.GrantReward("GOLD", 0, 120, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("EXP", 0, 130, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.CompleteQuest(0));
+		List<AfterCommitAction> afterCommit = List.of(new AfterCommitAction.RefreshPlayerStats(),
+			new AfterCommitAction.RefreshPlayerStats(),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+			new AfterCommitAction.ShowQuestSelectionDialog(10));
+
+		List<QuestTransition> completions = compiled.definition().transitions().stream()
+			.filter(t -> t.targetNode().equals("complete")).toList();
+		assertEquals(16, completions.size());
+		for (QuestTransition completion : completions) {
+			assertEquals(expected, completion.actions());
+			assertEquals(afterCommit, completion.afterCommit());
 		}
-		return new ByteArrayInputStream(bytes);
+	}
+
+	@Test
+	void noFivePathFixtureCanBeMistakenForReplacementProof() throws Exception {
+		CompiledQuestDefinition compiled = definition();
+		assertFalse(compiled.definition().transitions().size() == 5);
+		assertEquals(3, compiled.definition().metadata().rewards().stream()
+			.filter(reward -> reward.kind().equals("ITEM")).count());
+	}
+
+	@Test
+	void candidateOnlyDryRunBuildsAPlanForAllTwentyNinePaths() throws Exception {
+		CompiledQuestDefinition compiled = definition();
+		QuestShadowRunner runner = new QuestShadowRunner(new ImmutableQuestCatalog(List.of(compiled)));
+		for (QuestTransition transition : compiled.definition().transitions()) {
+			QuestEvent.TalkToNpc route = (QuestEvent.TalkToNpc) transition.event();
+			QuestSnapshot snapshot = switch (transition.sourceNode()) {
+				case "unaccepted" -> new QuestSnapshot(7, 1101, QuestStatus.NONE, 0, Map.of());
+				case "started" -> new QuestSnapshot(7, 1101, QuestStatus.START, 0, Map.of());
+				case "reward" -> new QuestSnapshot(7, 1101, QuestStatus.REWARD, 1, Map.of());
+				default -> throw new AssertionError("unexpected source " + transition.sourceNode());
+			};
+			snapshot = snapshot.withStartEligibility(QuestStartEligibility.allowed());
+			QuestEvent event = new QuestEvent.TalkToNpc(route.npcId(), route.dialogId(), 900007);
+
+			QuestShadowRunner.QuestShadowResult result = runner.inspect(event, Map.of(1101, snapshot));
+
+			assertTrue(result.hasCandidatePlan(), "no plan for " + transition.sourceNode() + ":" + route.dialogId());
+		}
+	}
+
+	private static Set<Integer> dialogIds(List<QuestTransition> transitions, String source, int npcId) {
+		return transitions.stream().filter(t -> t.sourceNode().equals(source))
+			.map(t -> (QuestEvent.TalkToNpc) t.event()).filter(t -> t.npcId() == npcId)
+			.map(QuestEvent.TalkToNpc::dialogId).collect(Collectors.toSet());
+	}
+
+	private static QuestTransition transition(CompiledQuestDefinition compiled, String source, int npcId,
+			int dialogId) {
+		return compiled.definition().transitions().stream().filter(t -> t.sourceNode().equals(source))
+			.filter(t -> t.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == npcId && talk.dialogId() == dialogId)
+			.findFirst().orElseThrow();
+	}
+
+	private CompiledQuestDefinition definition() throws Exception {
+		try (InputStream input = resource(DEFINITION)) {
+			return QuestDefinitionXmlCompiler.compile(input);
+		}
+	}
+
+	private InputStream resource(String path) {
+		InputStream input = getClass().getResourceAsStream(path);
+		if (input == null) throw new IllegalStateException("missing resource " + path);
+		return input;
 	}
 }

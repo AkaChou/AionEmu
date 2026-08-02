@@ -16,6 +16,7 @@ import java.util.Set;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.abandon;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.canGrantCraftSkill;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.completeQuest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.failCraft;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.forgetRecipe;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.grantCraftSkill;
@@ -26,6 +27,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.playMovie;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.recipeNotKnown;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,7 +68,7 @@ class CraftRepresentativeQuestDefinitionTest {
 		assertEquals(new QuestEvent.Abandon(), dsl.definition().transitions().get(1).event());
 		assertEquals(List.of(new QuestAction.ForgetRecipe(155004001)),
 			dsl.definition().transitions().get(1).actions());
-		assertEquals(List.of(new QuestAction.ForgetRecipe(155004001)),
+		assertEquals(List.of(new QuestAction.ForgetRecipe(155004001), new QuestAction.CompleteQuest(0)),
 			dsl.definition().transitions().get(2).actions());
 	}
 
@@ -81,7 +83,8 @@ class CraftRepresentativeQuestDefinitionTest {
 			.on(talkToNpc(203788, QuestDialog.ACCEPT_QUEST)).from("none")
 			.then(learnRecipe(155004001, QuestRecipeOwnership.QUEST_OWNED)).goTo("start")
 			.on(talkToNpc(203788, QuestDialog.SELECT_REWARD)).from("start")
-			.then(forgetRecipe(155004001)).goTo("complete")
+			.then(forgetRecipe(155004001)).then(completeQuest(0)).goTo("complete")
+			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION))
 			.compile());
 
 		assertEquals("CRAFT_LIFECYCLE_INCOMPLETE", failure.code());
@@ -151,7 +154,8 @@ class CraftRepresentativeQuestDefinitionTest {
 			.then(learnRecipe(155004001, QuestRecipeOwnership.QUEST_OWNED)).goTo("start")
 			.on(abandon()).from("start").then(forgetRecipe(155004001)).goTo("none")
 			.on(talkToNpc(203788, QuestDialog.SELECT_REWARD)).from("start")
-			.then(forgetRecipe(155004001)).goTo("complete")
+			.then(forgetRecipe(155004001)).then(completeQuest(0)).goTo("complete")
+			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION))
 			.compile();
 	}
 
@@ -171,7 +175,7 @@ class CraftRepresentativeQuestDefinitionTest {
 			      <actions><grant-reward kind="ITEM" id="182290000" amount="4"/><learn-recipe recipe-id="155004001" ownership="QUEST_OWNED"/></actions>
 			    </transition>
 			    <transition source="start" target="none"><event><abandon/></event><actions><forget-recipe recipe-id="155004001"/></actions></transition>
-			    <transition source="start" target="complete"><event><talk-to-npc npc-id="203788" dialog="SELECT_REWARD"/></event><actions><forget-recipe recipe-id="155004001"/></actions></transition>
+			    <transition source="start" target="complete"><event><talk-to-npc npc-id="203788" dialog="SELECT_REWARD"/></event><actions><forget-recipe recipe-id="155004001"/><complete-quest reward-index="0"/></actions><after-commit><sync-quest-state mode="COMPLETION"/></after-commit></transition>
 			  </transitions>
 			</quest-definition>
 			""";

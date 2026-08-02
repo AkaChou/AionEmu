@@ -10,9 +10,15 @@ import java.util.Objects;
 /** Real {@link QuestEventPort}: freezes the pre-event player facts for one owner. */
 public final class PlayerQuestEventPort implements QuestEventPort {
 	private final QuestPlayerPort players;
+	private final QuestStartEligibilityPort startEligibilityPort;
 
 	public PlayerQuestEventPort(QuestPlayerPort players) {
+		this(players, null);
+	}
+
+	public PlayerQuestEventPort(QuestPlayerPort players, QuestStartEligibilityPort startEligibilityPort) {
 		this.players = Objects.requireNonNull(players, "players");
+		this.startEligibilityPort = startEligibilityPort;
 	}
 
 	@Override
@@ -26,6 +32,9 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		}
 		QuestSnapshot snapshot = QuestShadowCapture.snapshotOf(player, questId);
 		snapshot = enrich(snapshot, event);
+		if (startEligibilityPort != null) {
+			snapshot = snapshot.withStartEligibility(startEligibilityPort.snapshot(playerId, questId));
+		}
 		if (event instanceof QuestEvent.TalkToNpc talk) {
 			return snapshot.withInteractionObjectId(talk.interactionObjectId());
 		}

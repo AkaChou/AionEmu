@@ -9,4 +9,7 @@ public interface QuestDialogPort {
 	 * interaction object of the current execution context (never a guessed target).
 	 */
 	boolean showDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId);
+
+	/** Opens a dialog page without the quest id, as used by the quest-selection protocol. */
+	boolean showSelectionDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId);
 }

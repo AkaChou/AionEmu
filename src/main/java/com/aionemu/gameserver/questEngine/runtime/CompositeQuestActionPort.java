@@ -88,8 +88,12 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 						|| action instanceof QuestAction.ForgetRecipe
 						|| action instanceof QuestAction.GrantCraftSkill) {
 					craft.add(action);
+				} else if (!(action instanceof QuestAction.SetVariable)
+						&& !(action instanceof QuestAction.SetStatus)
+						&& !(action instanceof QuestAction.CompleteQuest)) {
+					throw new IllegalArgumentException("unsupported quest action: " + action.getClass().getName());
 				}
-				// SetVariable and SetStatus are deliberately applied by QuestStatePort.
+				// SetVariable, SetStatus, and CompleteQuest are applied by QuestStatePort.
 			}
 			return new Buckets(List.copyOf(removals), List.copyOf(currency), List.copyOf(durable),
 				List.copyOf(craft));

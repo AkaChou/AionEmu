@@ -35,6 +35,11 @@ public final class LimitedQuestService {
 		return Holder.INSTANCE.acquire(template.getId(), template.getMaxCountLimitedQuest());
 	}
 
+	/** Whether starting this quest requires the global, transaction-external quota mutation. */
+	public static boolean requiresAcquisition(QuestTemplate template) {
+		return Holder.INSTANCE.requiresAcquisition(template.getId(), template.getMaxCountLimitedQuest());
+	}
+
 	/** 真端 AI 的 charge_limitedquest：恢复默认数量或直接充满。 */
 	public static boolean charge(int questId, boolean chargeMaxCount) {
 		return Holder.INSTANCE.chargeConfigured(questId, chargeMaxCount);
@@ -46,6 +51,10 @@ public final class LimitedQuestService {
 			return true;
 		}
 		return dao.tryAcquire(questId, limit == null ? templateMax : limit.maxCount());
+	}
+
+	boolean requiresAcquisition(int questId, int templateMax) {
+		return limits.containsKey(questId) || templateMax > 1;
 	}
 
 	boolean chargeConfigured(int questId, boolean chargeMaxCount) {
