@@ -1221,6 +1221,7 @@ public class PlayerController extends CreatureController<Player> {
 			player.setFlyState(2);
 			player.getGameStats().updateStatsAndSpeedVisually();
 		} else {
+			SummonsService.suspendForTeleport(player);
 			player.unsetState(CreatureState.FLIGHT_TELEPORT);
 			player.setFlightTeleportId(0);
 
@@ -1247,6 +1248,7 @@ public class PlayerController extends CreatureController<Player> {
 			player.setFlightDistance(0);
 			player.setState(CreatureState.ACTIVE);
 			updateZone();
+			SummonsService.restoreAfterTeleport(player);
 		}
 	}
 

@@ -32,10 +32,13 @@ import com.aionemu.gameserver.world.WorldPosition;
  */
 public class Summon extends Creature {
 
+	private static final long NANOS_PER_SECOND = 1_000_000_000L;
+
 	private Player master;
 	private SummonMode mode = SummonMode.GUARD;
 	private byte level;
 	private int liveTime = 0;
+	private long expirationTimeNanos;
 	private Future<?> releaseTask;
 	private final SkillElement alwaysResistElement;
 
@@ -56,7 +59,7 @@ public class Summon extends Creature {
 		moveController = (ai.equals("siege_weapon") ? new SiegeWeaponMoveController(this)
 				: new SummonMoveController(this));
 		this.level = level;
-		liveTime = time;
+		setLiveTime(time);
 		SummonStatsTemplate statsTemplate = DataManager.SUMMON_STATS_DATA
 				.getSummonTemplate(objectTemplate.getTemplateId(), level);
 		setGameStats(new SummonGameStats(this, statsTemplate));
@@ -222,17 +225,42 @@ public class Summon extends Creature {
 	}
 
 	/**
-	 * @return liveTime in sec.
+	 * @return remaining live time in seconds, or {@code 0} for a permanent summon
 	 */
 	public int getLiveTime() {
-		return liveTime;
+		return getLiveTime(System.nanoTime());
+	}
+
+	int getLiveTime(long currentTimeNanos) {
+		if (liveTime <= 0) {
+			return 0;
+		}
+		long remainingTime = expirationTimeNanos - currentTimeNanos;
+		if (remainingTime <= 0) {
+			return 0;
+		}
+		return (int) Math.min(Integer.MAX_VALUE, (remainingTime + NANOS_PER_SECOND - 1) / NANOS_PER_SECOND);
+	}
+
+	/** 是否已超过限时召唤的有效期。 / Whether this timed summon has expired. */
+	public boolean isExpired() {
+		return isExpired(System.nanoTime());
+	}
+
+	boolean isExpired(long currentTimeNanos) {
+		return liveTime > 0 && getLiveTime(currentTimeNanos) == 0;
 	}
 
 	/**
 	 * @param liveTime in sec.
 	 */
 	public void setLiveTime(int liveTime) {
+		setLiveTime(liveTime, System.nanoTime());
+	}
+
+	void setLiveTime(int liveTime, long currentTimeNanos) {
 		this.liveTime = liveTime;
+		expirationTimeNanos = liveTime > 0 ? currentTimeNanos + liveTime * NANOS_PER_SECOND : 0;
 	}
 
 	/** 设置释放任务 / Sets the release task */

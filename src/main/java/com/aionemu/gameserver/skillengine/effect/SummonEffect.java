@@ -13,8 +13,6 @@ import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.summons.SummonMode;
-import com.aionemu.gameserver.model.summons.UnsummonType;
 import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
@@ -52,9 +50,7 @@ public class SummonEffect extends EffectTemplate {
 
 				@Override
 				public void run() {
-					if ((summon != null) && (summon.isSpawned())) {
-						SummonsService.doMode(SummonMode.RELEASE, summon, UnsummonType.UNSPECIFIED);
-					}
+					SummonsService.expire(summon);
 				}
 			}, time * 1000);
 			summon.getController().addTask(TaskId.DESPAWN, task);

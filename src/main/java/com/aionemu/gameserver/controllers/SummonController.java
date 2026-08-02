@@ -53,12 +53,14 @@ public class SummonController extends CreatureController<Summon> {
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
 		super.notSee(object, isOutOfRange);
-		if (getOwner().getMaster() == null) {
-			return;
-		}
-		if (object.getObjectId() == getOwner().getMaster().getObjectId()) {
+		if (isMasterOutOfRange(getOwner(), object, isOutOfRange)) {
 			SummonsService.release(getOwner(), UnsummonType.DISTANCE, isAttacked);
 		}
+	}
+
+	static boolean isMasterOutOfRange(Summon summon, VisibleObject object, boolean isOutOfRange) {
+		Player master = summon.getMaster();
+		return isOutOfRange && master != null && object == master && !master.isUsingFlyTeleport();
 	}
 
 	/**

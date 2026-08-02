@@ -60,7 +60,7 @@ public class _10031A_Risk_For_The_Obelisk extends QuestHandler {
                     return true;
                 }
             }
-        } else if (player.getWorldId() == 210130000) {
+		} else if (player.getWorldId() == 210050000) {
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
                 int var = qs.getQuestVars().getQuestVars();
                 if (var == 3) {
@@ -115,7 +115,7 @@ public class _10031A_Risk_For_The_Obelisk extends QuestHandler {
 					} case STEP_TO_3: {
                         qs.setQuestVarById(0, var + 1);
 						updateQuestStatus(env);
-						TeleportService2.teleportTo(player, 210130000, 1320.3668f, 253.15457f, 591.18146f, (byte) 77);
+						TeleportService2.teleportTo(player, 210050000, 1336f, 277f, 590f, (byte) 77);
 						return true;
 					}
                 }

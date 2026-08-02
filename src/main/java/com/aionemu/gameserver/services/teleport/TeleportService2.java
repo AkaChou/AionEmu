@@ -67,6 +67,7 @@ import com.aionemu.gameserver.services.DuelService;
 import com.aionemu.gameserver.services.PrivateStoreService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.instance.InstanceService;
+import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
@@ -146,6 +147,7 @@ public class TeleportService2 {
 		}
 
 		if (location.getType() == TeleportType.FLIGHT) {
+			SummonsService.suspendForTeleport(player);
 			player.unsetPlayerMode(PlayerMode.RIDE);
 			player.setState(CreatureState.FLIGHT_TELEPORT);
 			player.unsetState(CreatureState.ACTIVE);
