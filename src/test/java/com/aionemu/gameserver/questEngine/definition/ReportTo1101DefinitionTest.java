@@ -54,17 +54,35 @@ class ReportTo1101DefinitionTest {
 		assertEquals(Set.of(-1, 1009), transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("reward"))
 			.map(t -> ((QuestEvent.TalkToNpc) t.event()).dialogId()).collect(Collectors.toSet()));
-		Set<Integer> offlineDialogs = transitions.stream()
+		Set<String> offlineRoutes = transitions.stream()
 			.filter(t -> t.shadowCoverage() == QuestShadowCoverageRequirement.OFFLINE_ONLY)
-			.map(t -> ((QuestEvent.TalkToNpc) t.event()).dialogId()).collect(Collectors.toSet());
-		assertEquals(IntStream.rangeClosed(8, 22).boxed().collect(Collectors.toSet()), offlineDialogs);
-		assertEquals(15, transitions.stream()
+			.map(ReportTo1101DefinitionTest::routeKey).collect(Collectors.toSet());
+		Set<String> expectedOfflineRoutes = IntStream.rangeClosed(8, 22)
+			.mapToObj(dialogId -> "reward:203057:" + dialogId).collect(Collectors.toSet());
+		expectedOfflineRoutes.addAll(Set.of(
+			"unaccepted:203049:1004",
+			"unaccepted:203049:1008",
+			"unaccepted:203049:20000",
+			"unaccepted:203049:20001",
+			"started:203049:1008",
+			"reward:203057:1009"));
+		assertEquals(expectedOfflineRoutes, offlineRoutes);
+		assertEquals(21, transitions.stream()
 			.filter(t -> t.shadowCoverage() == QuestShadowCoverageRequirement.OFFLINE_ONLY).count());
-		assertEquals(14, transitions.stream()
+		assertEquals(8, transitions.stream()
 			.filter(t -> t.shadowCoverage() == QuestShadowCoverageRequirement.PRODUCTION_REQUIRED).count());
 		assertEquals(QuestShadowCoverageRequirement.PRODUCTION_REQUIRED,
 			transition(compiled, "reward", 203057, 23).shadowCoverage(),
 			"无选择奖励的完成响应仍须由真实生产 observation 证明");
+		assertEquals(QuestShadowCoverageRequirement.PRODUCTION_REQUIRED,
+			transition(compiled, "reward", 203057, -1).shadowCoverage(),
+			"重新打开奖励界面的真实客户端响应必须保留在生产门禁");
+		assertEquals(QuestShadowCoverageRequirement.PRODUCTION_REQUIRED,
+			transition(compiled, "started", 203057, 1009).shadowCoverage(),
+			"从进行中进入奖励状态的真实客户端响应必须保留在生产门禁");
+		assertEquals(QuestShadowCoverageRequirement.PRODUCTION_REQUIRED,
+			transition(compiled, "unaccepted", 203049, 1002).shadowCoverage(),
+			"标准接取协议必须保留在生产门禁");
 	}
 
 	@Test
@@ -142,6 +160,11 @@ class ReportTo1101DefinitionTest {
 		return transitions.stream().filter(t -> t.sourceNode().equals(source))
 			.map(t -> (QuestEvent.TalkToNpc) t.event()).filter(t -> t.npcId() == npcId)
 			.map(QuestEvent.TalkToNpc::dialogId).collect(Collectors.toSet());
+	}
+
+	private static String routeKey(QuestTransition transition) {
+		QuestEvent.TalkToNpc event = (QuestEvent.TalkToNpc) transition.event();
+		return transition.sourceNode() + ":" + event.npcId() + ":" + event.dialogId();
 	}
 
 	private static QuestTransition transition(CompiledQuestDefinition compiled, String source, int npcId,

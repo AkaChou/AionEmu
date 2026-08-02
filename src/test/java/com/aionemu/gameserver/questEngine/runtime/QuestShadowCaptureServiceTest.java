@@ -128,14 +128,14 @@ class QuestShadowCaptureServiceTest {
 	}
 
 	@Test
-	void productionFactoryLoadsOnlyPackaged1101AndRequiresFourteenObservablePaths() throws Exception {
+	void productionFactoryLoadsOnlyPackaged1101AndRequiresEightClientReachablePaths() throws Exception {
 		service = QuestShadowCaptureService.production(tempDir.resolve("production-shadow.json"));
 
 		assertEquals(Set.of(1101), service.expectedOwners());
 		service.install(engine);
 		QuestShadowBatchReport empty = service.stop();
 
-		assertEquals(14, empty.expectedCoverage().size());
+		assertEquals(8, empty.expectedCoverage().size());
 		assertEquals(0, empty.coveredCoverage().size());
 		assertFalse(empty.complete());
 	}

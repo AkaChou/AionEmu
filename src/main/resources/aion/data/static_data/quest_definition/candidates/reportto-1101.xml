@@ -52,7 +52,7 @@
       <actions><set-status status="START"/></actions>
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
     </transition>
-    <transition source="unaccepted" target="started">
+    <transition source="unaccepted" target="started" shadow-coverage="OFFLINE_ONLY">
       <event><talk-to-npc npc-id="203049" dialog-id="20000"/></event>
       <conditions><status-is status="NONE"/><start-eligible/></conditions>
       <actions><set-status status="START"/></actions>
@@ -62,20 +62,20 @@
       <event><talk-to-npc npc-id="203049" dialog-id="1003"/></event>
       <conditions><status-is status="NONE"/></conditions><after-commit><close-dialog/></after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="unaccepted" target="unaccepted" shadow-coverage="OFFLINE_ONLY">
       <event><talk-to-npc npc-id="203049" dialog-id="1004"/></event>
       <conditions><status-is status="NONE"/></conditions><after-commit><close-dialog/></after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="unaccepted" target="unaccepted" shadow-coverage="OFFLINE_ONLY">
       <event><talk-to-npc npc-id="203049" dialog-id="20001"/></event>
       <conditions><status-is status="NONE"/></conditions><after-commit><close-dialog/></after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="unaccepted" target="unaccepted" shadow-coverage="OFFLINE_ONLY">
       <event><talk-to-npc npc-id="203049" dialog-id="1008"/></event>
       <conditions><status-is status="NONE"/></conditions>
       <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="started" shadow-coverage="OFFLINE_ONLY">
       <event><talk-to-npc npc-id="203049" dialog-id="1008"/></event>
       <conditions><status-is status="START"/></conditions>
       <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
@@ -91,7 +91,7 @@
       <actions><set-variable field="var0" value="1"/><set-status status="REWARD"/></actions>
       <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
-    <transition source="reward" target="reward">
+    <transition source="reward" target="reward" shadow-coverage="OFFLINE_ONLY">
       <event><talk-to-npc npc-id="203057" dialog-id="1009"/></event>
       <conditions><status-is status="REWARD"/></conditions>
       <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
