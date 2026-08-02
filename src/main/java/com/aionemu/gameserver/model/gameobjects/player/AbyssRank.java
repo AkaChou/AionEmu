@@ -300,6 +300,45 @@ public class AbyssRank {
 		}
 	}
 
+	/** Captures all fields changed by quest AP/GP rewards. */
+	public TransactionSnapshot transactionSnapshot() {
+		return new TransactionSnapshot();
+	}
+
+	public final class TransactionSnapshot {
+		private final int savedDailyAp = dailyAP;
+		private final int savedWeeklyAp = weeklyAP;
+		private final int savedCurrentAp = currentAp;
+		private final int savedDailyGp = dailyGP;
+		private final int savedWeeklyGp = weeklyGP;
+		private final int savedCurrentGp = currentGp;
+		private final AbyssRankEnum savedRank = rank;
+		private final int savedTopRanking = topRanking;
+		private final int savedMaxRank = maxRank;
+		private final PersistentState savedPersistentState = persistentState;
+		private boolean restored;
+
+		private TransactionSnapshot() {
+		}
+
+		public void restore() {
+			if (restored) {
+				return;
+			}
+			restored = true;
+			dailyAP = savedDailyAp;
+			weeklyAP = savedWeeklyAp;
+			currentAp = savedCurrentAp;
+			dailyGP = savedDailyGp;
+			weeklyGP = savedWeeklyGp;
+			currentGp = savedCurrentGp;
+			rank = savedRank;
+			topRanking = savedTopRanking;
+			maxRank = savedMaxRank;
+			persistentState = savedPersistentState;
+		}
+	}
+
 	/**
 	 * @return The last update of the AbyssRank
 	 */

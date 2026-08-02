@@ -26,7 +26,8 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	/** 查询配方 SQL / Select recipes SQL*/
 	private static final String SELECT_QUERY = "SELECT `recipe_id` FROM player_recipes WHERE `player_id`=?";
 	/** 添加配方 SQL / Add recipe SQL*/
-	private static final String ADD_QUERY = "INSERT INTO player_recipes (`player_id`, `recipe_id`) VALUES (?, ?)";
+	private static final String ADD_QUERY = "INSERT INTO player_recipes (`player_id`, `recipe_id`) VALUES (?, ?) "
+		+ "ON DUPLICATE KEY UPDATE `recipe_id`=VALUES(`recipe_id`)";
 	/** 删除配方 SQL / Delete recipe SQL*/
 	private static final String DELETE_QUERY = "DELETE FROM player_recipes WHERE `player_id`=? AND `recipe_id`=?";
 
@@ -68,12 +69,9 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	 */
 	@Override
 	public boolean addRecipe(final int playerId, final int recipeId) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement ps = con.prepareStatement(ADD_QUERY)) {
-
-			ps.setInt(1, playerId);
-			ps.setInt(2, recipeId);
-			return ps.executeUpdate() > 0;
+		try (Connection con = DatabaseFactory.getConnection()) {
+			addRecipeInTransaction(con, playerId, recipeId);
+			return true;
 		} catch (SQLException e) {
 			log.error(I18n.get("log.23c5276a9d26", playerId, recipeId, e));
 			return false;
@@ -91,15 +89,30 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	 */
 	@Override
 	public boolean delRecipe(final int playerId, final int recipeId) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement ps = con.prepareStatement(DELETE_QUERY)) {
-
-			ps.setInt(1, playerId);
-			ps.setInt(2, recipeId);
-			return ps.executeUpdate() > 0;
+		try (Connection con = DatabaseFactory.getConnection()) {
+			delRecipeInTransaction(con, playerId, recipeId);
+			return true;
 		} catch (SQLException e) {
 			log.error(I18n.get("log.05178d165c29", playerId, recipeId, e));
 			return false;
+		}
+	}
+
+	@Override
+	public void addRecipeInTransaction(Connection connection, int playerId, int recipeId) throws SQLException {
+		try (PreparedStatement ps = connection.prepareStatement(ADD_QUERY)) {
+			ps.setInt(1, playerId);
+			ps.setInt(2, recipeId);
+			ps.executeUpdate();
+		}
+	}
+
+	@Override
+	public void delRecipeInTransaction(Connection connection, int playerId, int recipeId) throws SQLException {
+		try (PreparedStatement ps = connection.prepareStatement(DELETE_QUERY)) {
+			ps.setInt(1, playerId);
+			ps.setInt(2, recipeId);
+			ps.executeUpdate();
 		}
 	}
 

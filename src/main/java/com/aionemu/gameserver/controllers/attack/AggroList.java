@@ -155,7 +155,7 @@ public class AggroList {
 				@Override
 				public void visit(Player player) {
 					if (MathUtil.isIn3dRange(owner, player, 50)) {
-						GameEngineServices.questEngine().onAddAggroList(new QuestEnv(owner, player, 0, 0));
+						GameEngineServices.questEngine().onAddAggroList(new QuestEnv(owner, player, 0, 0), creature);
 					}
 				}
 			});

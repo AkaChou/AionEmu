@@ -1,0 +1,40 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import java.util.Locale;
+
+/** Closed set of reward kinds that the candidate runtime is allowed to execute. */
+public enum QuestRewardKind {
+	ITEM,
+	SELECTABLE_ITEM,
+	GOLD,
+	KINAH,
+	EXP,
+	EXP_BOOST,
+	AP,
+	GP,
+	DP,
+	CP,
+	ABYSS_OP,
+	TITLE,
+	AURA_OF_GROWTH,
+	EXTEND_INVENTORY,
+	EXTEND_STIGMA;
+
+	public static QuestRewardKind fromWire(String value) {
+		if (value == null || value.isBlank()) {
+			throw new IllegalArgumentException("reward kind must not be blank");
+		}
+		try {
+			return valueOf(value.trim().toUpperCase(Locale.ROOT));
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException("unknown quest reward kind: " + value, e);
+		}
+	}
+
+	public boolean isCurrency() {
+		return switch (this) {
+			case GOLD, KINAH, AP, GP, DP, CP, ABYSS_OP -> true;
+			default -> false;
+		};
+	}
+}

@@ -39,6 +39,7 @@ import com.aionemu.gameserver.model.templates.InstanceCooltime;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.network.aion.SystemMessageId;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeResources;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.StaticDoorSpawnManager;
@@ -162,6 +163,7 @@ public class InstanceService {
 				}
 			}
 		} finally {
+			QuestRuntimeResources.cleanupInstance(instanceId);
 			pathService.instanceDestroyed(worldId, instanceId);
 		}
 	}

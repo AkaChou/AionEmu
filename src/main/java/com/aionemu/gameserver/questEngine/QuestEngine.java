@@ -28,6 +28,7 @@ import com.aionemu.gameserver.dataholders.XMLQuests;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.model.templates.quest.HandlerSideDrop;
@@ -37,6 +38,8 @@ import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.model.templates.rewards.BonusType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandlerLoader;
@@ -52,12 +55,22 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneName;
+import com.aionemu.gameserver.questEngine.runtime.QuestDispatchContract;
+import com.aionemu.gameserver.questEngine.runtime.QuestLegacyInvocationBridge;
+import com.aionemu.gameserver.questEngine.runtime.QuestLegacyObservationRecorder;
+import com.aionemu.gameserver.questEngine.runtime.QuestLegacyObservationSink;
+import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
+import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
+import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeResources;
+import com.aionemu.gameserver.questEngine.runtime.QuestShadowCapture;
 
 import com.aionemu.commons.utils.collections.IntArrayList;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.commons.utils.collections.IntProcedure;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * 任务引擎单例：加载脚本处理器、维护事件注册表，并向已注册处理器分发各类游戏事件。
@@ -118,6 +131,16 @@ public class QuestEngine implements GameEngine {
 	private Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<Integer, Set<Integer>>();
 	/** 每日/周任务提醒定时任务 / Daily/weekly reminder scheduled task */
 	private ScheduledFuture<?> messageSendingTask;
+	/**
+	 * Atomic production assembly: the shadow capture scope provider and the
+	 * legacy observation bridge are swapped together, never one without the
+	 * other. A null capture detaches back to the no-op bridge with zero
+	 * capture overhead; a failing scope, sink or report never changes the
+	 * legacy route or result.
+	 */
+	private volatile ShadowAssembly shadowAssembly = ShadowAssembly.detached();
+	/** Fully typed production ports; owner dispatch remains disabled until an owner passes every switch gate. */
+	private final QuestRuntimeComposition runtimeComposition = QuestRuntimeComposition.production();
 	/** 可行动作监听 / Can-act listeners */
 	private IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<IntArrayList>();
 	/** 挖掘号奖励监听 / Dredgion reward listeners */
@@ -146,6 +169,95 @@ public class QuestEngine implements GameEngine {
 	 * Create a quest-engine instance.
 	 */
 	public QuestEngine() {
+	}
+
+	QuestRuntimeComposition runtimeComposition() {
+		return runtimeComposition;
+	}
+
+	/**
+	 * Installs (or detaches) the production shadow capture assembly atomically.
+	 * Capture is both the scope provider (physical events open a capture scope
+	 * that freezes pre-event snapshots) and the bridge sink (legacy owner
+	 * observations produced inside the scope are recorded into it). Passing
+	 * {@code null} revokes the whole assembly: the engine returns to the no-op
+	 * bridge with zero capture overhead. Capture is diagnostic only and never
+	 * changes the old route or result.
+	 */
+	public void setShadowCapture(QuestShadowCapture capture) {
+		shadowAssembly = capture == null
+			? ShadowAssembly.detached()
+			: new ShadowAssembly(capture, new QuestLegacyInvocationBridge(capture));
+	}
+
+	/**
+	 * Installs a passive observation sink without a capture scope provider.
+	 * The sink receives immutable observations after legacy execution and is
+	 * never consulted for routing or fallback decisions.
+	 */
+	public void setLegacyObservationSink(QuestLegacyObservationSink sink) {
+		shadowAssembly = new ShadowAssembly(shadowAssembly.capture, new QuestLegacyInvocationBridge(sink));
+	}
+
+	/**
+	 * Opens a capture scope for one physical event when capture is installed.
+	 * A failing event construction or capture setup degrades to no capture and
+	 * never changes the legacy route.
+	 */
+	private QuestShadowCapture.Scope shadowScope(Player player, Supplier<QuestEvent> eventFactory,
+			Collection<Integer> questIds) {
+		QuestShadowCapture capture = shadowAssembly.capture;
+		if (capture == null) {
+			return null;
+		}
+		try {
+			return capture.open(player, eventFactory.get(), questIds);
+		} catch (RuntimeException ignored) {
+			return null;
+		}
+	}
+
+	private <T> T invokeObserved(QuestEnv env, int questId, String eventType,
+		QuestDispatchContract contract, QuestLegacyInvocationBridge.Invocation<T> invocation,
+		QuestLegacyInvocationBridge.ResultClassifier<T> classifier) {
+		return shadowAssembly.bridge.invoke(env.getPlayer(), questId, eventType, contract, invocation, classifier);
+	}
+
+	/** Immutable capture+bridge pair swapped atomically via one volatile reference. */
+	private static final class ShadowAssembly {
+		private final QuestShadowCapture capture;
+		private final QuestLegacyInvocationBridge bridge;
+
+		private ShadowAssembly(QuestShadowCapture capture, QuestLegacyInvocationBridge bridge) {
+			this.capture = capture;
+			this.bridge = bridge;
+		}
+
+		private static ShadowAssembly detached() {
+			return new ShadowAssembly(null, new QuestLegacyInvocationBridge());
+		}
+	}
+
+	private static QuestRouteResult booleanResult(Boolean result, boolean stateChanged,
+		QuestLegacyObservationRecorder recorder) {
+		return Boolean.TRUE.equals(result) ? QuestRouteResult.HANDLED : QuestRouteResult.NOT_HANDLED;
+	}
+
+	private static QuestRouteResult voidResult(int questId, Void ignored, boolean stateChanged,
+		QuestLegacyObservationRecorder recorder) {
+		return stateChanged || recorder.hasEffects(questId) ? QuestRouteResult.HANDLED : QuestRouteResult.UNKNOWN;
+	}
+
+	private static QuestRouteResult handlerResult(HandlerResult result, boolean stateChanged,
+		QuestLegacyObservationRecorder recorder) {
+		if (result == null) {
+			return QuestRouteResult.UNKNOWN;
+		}
+		return switch (result) {
+			case SUCCESS -> QuestRouteResult.HANDLED;
+			case FAILED -> QuestRouteResult.FAILED;
+			case UNKNOWN -> QuestRouteResult.UNKNOWN;
+		};
 	}
 
 	/**
@@ -182,50 +294,62 @@ public class QuestEngine implements GameEngine {
     public boolean onDialog(QuestEnv env) {
     Player player = env.getPlayer();
     try {
-        QuestHandler questHandler = null;
-        if (env.getQuestId() != 0) {
-            questHandler = getQuestHandlerByQuestId(env.getQuestId());
-            if (questHandler != null)
-                if (questHandler.onDialogEvent(env))
-                    return true;
-                else {
-                    QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(env.getQuestId());
-                    if (qt != null && qt.getCategory() == QuestCategory.CHALLENGE_TASK && player.getAccessLevel() > 0) {
-                        PacketSendUtility.sendMessage(player, "You're GM! So system won't apply countNextRepeatTime()");
-                        return true;
-                    } else if (qt != null && qt.getCategory() == QuestCategory.CHALLENGE_TASK && player.getAccessLevel() == 0) {
-                        PacketSendUtility.sendPacket(env.getPlayer(), new SM_SYSTEM_MESSAGE(1400855, 9));
-                    }
-                }
-        } else {
-            Npc npc = (Npc) env.getVisibleObject();
-            List<Integer> onTalkEvents = getQuestNpc(npc == null ? 0 : npc.getNpcId()).getOnTalkEvent();
-            if (onTalkEvents == null || onTalkEvents.isEmpty()) {
-                log.debug("No quests registered for NPC: {}", npc.getNpcId());
-                return false;
-            }
-            for (int questId : onTalkEvents) {
-                QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(questId);
-                if (qt == null) {
-                    log.warn(I18n.get("log.2e7b7247f488", questId));
-                    continue;
-                }
-                QuestState qs = player.getQuestStateList().getQuestState(questId);
-                if (qs == null || qs.getStatus() == QuestStatus.NONE) {
-                   QuestEnv checkEnv = new QuestEnv(env.getVisibleObject(), player, questId, env.getDialogId());
-                if (!QuestService.checkStartConditions(checkEnv, false)) {
-                      continue;
-                    }
-                }
-                questHandler = getQuestHandlerByQuestId(questId);
+        Npc npc = (Npc) env.getVisibleObject();
+        List<Integer> candidates = env.getQuestId() != 0
+            ? List.of(env.getQuestId())
+            : (npc == null ? List.of() : getQuestNpc(npc.getNpcId()).getOnTalkEvent());
+        try (QuestShadowCapture.Scope scope = shadowScope(player,
+                () -> new QuestEvent.TalkToNpc(env.getTargetId(), env.getDialogId(),
+                    npc == null ? 0 : npc.getObjectId()), candidates)) {
+            QuestHandler questHandler = null;
+            if (env.getQuestId() != 0) {
+                questHandler = getQuestHandlerByQuestId(env.getQuestId());
                 if (questHandler != null) {
-                    env.setQuestId(questId);
-                    if (questHandler.onDialogEvent(env)) {
+                    QuestHandler handler = questHandler;
+                    if (invokeObserved(env, env.getQuestId(), "TALK_TO_NPC", QuestDispatchContract.EXCLUSIVE,
+                            () -> handler.onDialogEvent(env), QuestEngine::booleanResult))
                         return true;
+                    else {
+                        QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(env.getQuestId());
+                        if (qt != null && qt.getCategory() == QuestCategory.CHALLENGE_TASK && player.getAccessLevel() > 0) {
+                            PacketSendUtility.sendMessage(player, "You're GM! So system won't apply countNextRepeatTime()");
+                            return true;
+                        } else if (qt != null && qt.getCategory() == QuestCategory.CHALLENGE_TASK && player.getAccessLevel() == 0) {
+                            PacketSendUtility.sendPacket(env.getPlayer(), new SM_SYSTEM_MESSAGE(1400855, 9));
+                            }
+                        }
+                    }
+                } else {
+                List<Integer> onTalkEvents = getQuestNpc(npc == null ? 0 : npc.getNpcId()).getOnTalkEvent();
+                if (onTalkEvents == null || onTalkEvents.isEmpty()) {
+                    log.debug("No quests registered for NPC: {}", npc.getNpcId());
+                    return false;
+                }
+                for (int questId : onTalkEvents) {
+                    QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(questId);
+                    if (qt == null) {
+                        log.warn(I18n.get("log.2e7b7247f488", questId));
+                        continue;
+                    }
+                    QuestState qs = player.getQuestStateList().getQuestState(questId);
+                    if (qs == null || qs.getStatus() == QuestStatus.NONE) {
+                       QuestEnv checkEnv = new QuestEnv(env.getVisibleObject(), player, questId, env.getDialogId());
+                    if (!QuestService.checkStartConditions(checkEnv, false)) {
+                          continue;
+                        }
+                    }
+                    questHandler = getQuestHandlerByQuestId(questId);
+                    if (questHandler != null) {
+                        env.setQuestId(questId);
+                        QuestHandler handler = questHandler;
+                        if (invokeObserved(env, questId, "TALK_TO_NPC", QuestDispatchContract.EXCLUSIVE,
+                                () -> handler.onDialogEvent(env), QuestEngine::booleanResult)) {
+                            return true;
+                        }
                     }
                 }
+                env.setQuestId(0);
             }
-            env.setQuestId(0);
         }
     } catch (Exception ex) {
         log.error(I18n.get("log.dd0b8ceead0c", ex));
@@ -244,11 +368,20 @@ public class QuestEngine implements GameEngine {
 	public boolean onKill(QuestEnv env) {
 		try {
 			Npc npc = (Npc) env.getVisibleObject();
-			for (int questId : getQuestNpc(npc.getNpcId()).getOnKillEvent()) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-				if (questHandler != null) {
-					env.setQuestId(questId);
-					questHandler.onKillEvent(env);
+			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnKillEvent();
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> new QuestEvent.KillNpc(npc.getNpcId()), questIds)) {
+				for (int questId : questIds) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+					if (questHandler != null) {
+						env.setQuestId(questId);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "KILL_NPC", QuestDispatchContract.BROADCAST,
+							() -> {
+								handler.onKillEvent(env);
+								return (Void) null;
+							}, (ignored, stateChanged, recorder) -> voidResult(questId, ignored, stateChanged, recorder));
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -268,11 +401,17 @@ public class QuestEngine implements GameEngine {
 	public boolean onAttack(QuestEnv env) {
 		try {
 			Npc npc = (Npc) env.getVisibleObject();
-			for (int questId : getQuestNpc(npc.getNpcId()).getOnAttackEvent()) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-				if (questHandler != null) {
-					env.setQuestId(questId);
-					questHandler.onAttackEvent(env);
+			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnAttackEvent();
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> new QuestEvent.AttackNpc(npc.getNpcId()), questIds)) {
+				for (int questId : questIds) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+					if (questHandler != null) {
+						env.setQuestId(questId);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "ATTACK_NPC", QuestDispatchContract.BROADCAST,
+							() -> handler.onAttackEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -291,15 +430,20 @@ public class QuestEngine implements GameEngine {
 	public void onLvlUp(QuestEnv env) {
 		try {
 			Player player = env.getPlayer();
-			for (int index = 0; index < questOnLevelUp.size(); index++) {
-				QuestHandler questHandler = null;
-				QuestState qs = player.getQuestStateList().getQuestState(questOnLevelUp.get(index));
-				if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
-					questHandler = getQuestHandlerByQuestId(questOnLevelUp.get(index));
-				}
-				if (questHandler != null) {
-					env.setQuestId(questOnLevelUp.get(index));
-					questHandler.onLvlUpEvent(env);
+			try (QuestShadowCapture.Scope scope = shadowScope(player, QuestEvent.LevelUp::new, questOnLevelUp)) {
+				for (int index = 0; index < questOnLevelUp.size(); index++) {
+					QuestHandler questHandler = null;
+					QuestState qs = player.getQuestStateList().getQuestState(questOnLevelUp.get(index));
+					if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
+						questHandler = getQuestHandlerByQuestId(questOnLevelUp.get(index));
+					}
+					if (questHandler != null) {
+						env.setQuestId(questOnLevelUp.get(index));
+						int questId = questOnLevelUp.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "LEVEL_UP", QuestDispatchContract.BROADCAST,
+							() -> handler.onLvlUpEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -315,14 +459,21 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onEnterZoneMissionEnd(QuestEnv env) {
 		try {
-			int result = questOnEnterZoneMissionEnd.indexOf(env.getQuestId());
-			QuestHandler questHandler = null;
-			if (result != -1) {
-				questHandler = getQuestHandlerByQuestId(questOnEnterZoneMissionEnd.get(result));
-			}
-			if (questHandler != null) {
-				env.setQuestId(questOnEnterZoneMissionEnd.get(result));
-				questHandler.onZoneMissionEndEvent(env);
+			List<Integer> candidates = List.of(env.getQuestId());
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					QuestEvent.ZoneMissionEnd::new, candidates)) {
+				int result = questOnEnterZoneMissionEnd.indexOf(env.getQuestId());
+				QuestHandler questHandler = null;
+				if (result != -1) {
+					questHandler = getQuestHandlerByQuestId(questOnEnterZoneMissionEnd.get(result));
+				}
+				if (questHandler != null) {
+					env.setQuestId(questOnEnterZoneMissionEnd.get(result));
+					int questId = questOnEnterZoneMissionEnd.get(result);
+					QuestHandler handler = questHandler;
+					invokeObserved(env, questId, "ZONE_MISSION_END", QuestDispatchContract.EXCLUSIVE,
+						() -> handler.onZoneMissionEndEvent(env), QuestEngine::booleanResult);
+				}
 			}
 		} catch (Exception ex) {
 			// log.error(I18n.get("log.b844c9346335", ex));
@@ -337,11 +488,17 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onDie(QuestEnv env) {
 		try {
-			for (int index = 0; index < questOnDie.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questOnDie.get(index));
-				if (questHandler != null) {
-					env.setQuestId(questOnDie.get(index));
-					questHandler.onDieEvent(env);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					QuestEvent.Die::new, questOnDie)) {
+				for (int index = 0; index < questOnDie.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questOnDie.get(index));
+					if (questHandler != null) {
+						env.setQuestId(questOnDie.get(index));
+						int questId = questOnDie.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "DIE", QuestDispatchContract.BROADCAST,
+							() -> handler.onDieEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -357,15 +514,23 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onLogOut(QuestEnv env) {
 		try {
-			for (int index = 0; index < questOnLogOut.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questOnLogOut.get(index));
-				if (questHandler != null) {
-					env.setQuestId(questOnLogOut.get(index));
-					questHandler.onLogOutEvent(env);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> runtimeComposition.recoveryEventPort().logOut(env), questOnLogOut)) {
+				for (int index = 0; index < questOnLogOut.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questOnLogOut.get(index));
+					if (questHandler != null) {
+						env.setQuestId(questOnLogOut.get(index));
+						int questId = questOnLogOut.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "LOG_OUT", QuestDispatchContract.BROADCAST,
+							() -> handler.onLogOutEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
 			// log.error(I18n.get("log.223296a535b7", ex));
+		} finally {
+			runtimeComposition.recoveryEventPort().recover(env);
 		}
 	}
 
@@ -377,11 +542,17 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onNpcReachTarget(QuestEnv env) {
 		try {
-			for (int index = 0; index < reachTarget.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(reachTarget.get(index));
-				if (questHandler != null && env.getQuestId() == reachTarget.get(index)) {
-					env.setQuestId(reachTarget.get(index));
-					questHandler.onNpcReachTargetEvent(env);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					QuestEvent.NpcReachTarget::new, reachTarget)) {
+				for (int index = 0; index < reachTarget.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(reachTarget.get(index));
+					if (questHandler != null && env.getQuestId() == reachTarget.get(index)) {
+						env.setQuestId(reachTarget.get(index));
+						int questId = reachTarget.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "NPC_REACH_TARGET", QuestDispatchContract.EXCLUSIVE,
+							() -> handler.onNpcReachTargetEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -397,11 +568,17 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onNpcLostTarget(QuestEnv env) {
 		try {
-			for (int index = 0; index < lostTarget.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(lostTarget.get(index));
-				if (questHandler != null && env.getQuestId() == lostTarget.get(index)) {
-					env.setQuestId(lostTarget.get(index));
-					questHandler.onNpcLostTargetEvent(env);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					QuestEvent.NpcLostTarget::new, lostTarget)) {
+				for (int index = 0; index < lostTarget.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(lostTarget.get(index));
+					if (questHandler != null && env.getQuestId() == lostTarget.get(index)) {
+						env.setQuestId(lostTarget.get(index));
+						int questId = lostTarget.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "NPC_LOST_TARGET", QuestDispatchContract.EXCLUSIVE,
+							() -> handler.onNpcLostTargetEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -419,11 +596,17 @@ public class QuestEngine implements GameEngine {
 	public void onPassFlyingRing(QuestEnv env, String FlyRing) {
 		try {
 			IntArrayList lists = getOnPassFlyingRingsQuests(FlyRing);
-			for (int index = 0; index < lists.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
-				if (questHandler != null) {
-					env.setQuestId(lists.get(index));
-					questHandler.onPassFlyingRingEvent(env, FlyRing);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> runtimeComposition.movementEventPort().passFlyingRing(env, FlyRing), lists)) {
+				for (int index = 0; index < lists.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
+					if (questHandler != null) {
+						env.setQuestId(lists.get(index));
+						int questId = lists.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "PASS_FLYING_RING", QuestDispatchContract.BROADCAST,
+							() -> handler.onPassFlyingRingEvent(env, FlyRing), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -439,11 +622,17 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onEnterWorld(QuestEnv env) {
 		try {
-			for (int index = 0; index < questOnEnterWorld.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questOnEnterWorld.get(index));
-				if (questHandler != null) {
-					env.setQuestId(questOnEnterWorld.get(index));
-					questHandler.onEnterWorldEvent(env);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					QuestEvent.EnterWorld::new, questOnEnterWorld)) {
+				for (int index = 0; index < questOnEnterWorld.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questOnEnterWorld.get(index));
+					if (questHandler != null) {
+						env.setQuestId(questOnEnterWorld.get(index));
+						int questId = questOnEnterWorld.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "ENTER_WORLD", QuestDispatchContract.BROADCAST,
+							() -> handler.onEnterWorldEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -462,14 +651,20 @@ public class QuestEngine implements GameEngine {
 	public HandlerResult onItemUseEvent(QuestEnv env, Item item) {
 		try {
 			IntArrayList lists = getItemRelatedQuests(item.getItemTemplate().getTemplateId());
-			for (int index = 0; index < lists.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
-				if (questHandler != null) {
-					env.setQuestId(lists.get(index));
-					HandlerResult result = questHandler.onItemUseEvent(env, item);
-					// 允许其他任务处理；同一物品可不只用于一个任务。 / allow other quests to process, the same item can be used not in one quest
-					if (result != HandlerResult.UNKNOWN) {
-						return result;
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> new QuestEvent.UseItem(item.getItemTemplate().getTemplateId()), lists)) {
+				for (int index = 0; index < lists.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
+					if (questHandler != null) {
+						env.setQuestId(lists.get(index));
+						int questId = lists.get(index);
+						QuestHandler handler = questHandler;
+						HandlerResult result = invokeObserved(env, questId, "USE_ITEM", QuestDispatchContract.FIRST_NON_UNKNOWN,
+							() -> handler.onItemUseEvent(env, item), QuestEngine::handlerResult);
+						// 允许其他任务处理；同一物品可不只用于一个任务。 / allow other quests to process, the same item can be used not in one quest
+						if (result != HandlerResult.UNKNOWN) {
+							return result;
+						}
 					}
 				}
 			}
@@ -489,12 +684,23 @@ public class QuestEngine implements GameEngine {
 	 * Always {@code false}。
 	 */
 	public boolean onHouseItemUseEvent(QuestEnv env, int itemId) {
+		return onHouseItemUseEvent(env, itemId, 0);
+	}
+
+	/** Dispatches a house item event with the client-provided house object identity when available. */
+	public boolean onHouseItemUseEvent(QuestEnv env, int itemId, int itemObjectId) {
 		IntArrayList lists = getHouseItemQuests(itemId);
-		for (int index = 0; index < lists.size(); index++) {
-			QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
-			if (questHandler != null) {
-				env.setQuestId(lists.get(index));
-				questHandler.onHouseItemUseEvent(env, itemId);
+		try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+				() -> runtimeComposition.housingEventPort().houseItemUse(env, itemId, itemObjectId), lists)) {
+			for (int index = 0; index < lists.size(); index++) {
+				QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
+				if (questHandler != null) {
+					env.setQuestId(lists.get(index));
+					int questId = lists.get(index);
+					QuestHandler handler = questHandler;
+					invokeObserved(env, questId, "HOUSE_ITEM_USE", QuestDispatchContract.BROADCAST,
+						() -> handler.onHouseItemUseEvent(env, itemId), QuestEngine::booleanResult);
+				}
 			}
 		}
 		return false;
@@ -509,12 +715,18 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onItemGet(QuestEnv env, int itemId) {
 		if (questItems.containsKey(itemId)) {
-			for (int i = 0; i < questItems.get(itemId).size(); i++) {
-				int questId = questItems.get(itemId).get(i);
-				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-				if (questHandler != null) {
-					env.setQuestId(questId);
-					questHandler.onGetItemEvent(env);
+			List<Integer> questIds = questItems.get(itemId);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> new QuestEvent.GetItem(itemId), questIds)) {
+				for (int i = 0; i < questIds.size(); i++) {
+					int questId = questIds.get(i);
+					QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+					if (questHandler != null) {
+						env.setQuestId(questId);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "GET_ITEM", QuestDispatchContract.BROADCAST,
+							() -> handler.onGetItemEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		}
@@ -529,15 +741,26 @@ public class QuestEngine implements GameEngine {
 	 * @return 是否处理成功 / Whether successful
 	 */
 	public boolean onKillRanked(QuestEnv env, AbyssRankEnum playerRank) {
+		return onKillRanked(env, playerRank, env == null ? null : env.getPlayer(), QuestPvpCreditSource.SOLO);
+	}
+
+	/** Dispatches a PvpService-authorized ranked kill with explicit credit source. */
+	public boolean onKillRanked(QuestEnv env, AbyssRankEnum playerRank, Player killer,
+		QuestPvpCreditSource creditSource) {
 		try {
 			if (playerRank != null) {
 				IntArrayList questList = getOnKillRankedQuests(playerRank);
-				for (int index = 0; index < questList.size(); index++) {
-					int id = questList.get(index);
-					QuestHandler questHandler = getQuestHandlerByQuestId(id);
-					if (questHandler != null) {
-						env.setQuestId(id);
-						questHandler.onKillRankedEvent(env);
+				try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> runtimeComposition.pvpEventPort().killRanked(env, killer, playerRank.getId(), creditSource), questList)) {
+					for (int index = 0; index < questList.size(); index++) {
+						int id = questList.get(index);
+						QuestHandler questHandler = getQuestHandlerByQuestId(id);
+						if (questHandler != null) {
+							env.setQuestId(id);
+							QuestHandler handler = questHandler;
+							invokeObserved(env, id, "KILL_RANKED", QuestDispatchContract.BROADCAST,
+								() -> handler.onKillRankedEvent(env), QuestEngine::booleanResult);
+						}
 					}
 				}
 			}
@@ -558,14 +781,28 @@ public class QuestEngine implements GameEngine {
 	 * @return 是否处理成功 / Whether successful
 	 */
 	public boolean onKillInWorld(QuestEnv env, int worldId) {
+		return onKillInWorld(env, worldId, env == null ? null : env.getPlayer(),
+			QuestPvpCreditSource.SOLO);
+	}
+
+	/** Dispatches a PvpService-authorized world kill with explicit credit source. */
+	public boolean onKillInWorld(QuestEnv env, int worldId, Player killer,
+		QuestPvpCreditSource creditSource) {
 		try {
 			if (questOnKillInWorld.containsKey(worldId)) {
 				IntArrayList killInWorldQuests = questOnKillInWorld.get(worldId);
-				for (int i = 0; i < killInWorldQuests.size(); i++) {
-					QuestHandler questHandler = getQuestHandlerByQuestId(killInWorldQuests.get(i));
-					if (questHandler != null) {
-						env.setQuestId(killInWorldQuests.get(i));
-						questHandler.onKillInWorldEvent(env);
+				try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> runtimeComposition.pvpEventPort().killInWorld(env, killer,
+						getVictimRankId(env), worldId, creditSource), killInWorldQuests)) {
+					for (int i = 0; i < killInWorldQuests.size(); i++) {
+						QuestHandler questHandler = getQuestHandlerByQuestId(killInWorldQuests.get(i));
+						if (questHandler != null) {
+							env.setQuestId(killInWorldQuests.get(i));
+							int questId = killInWorldQuests.get(i);
+							QuestHandler handler = questHandler;
+							invokeObserved(env, questId, "KILL_IN_WORLD", QuestDispatchContract.BROADCAST,
+								() -> handler.onKillInWorldEvent(env), QuestEngine::booleanResult);
+						}
 					}
 				}
 			}
@@ -574,6 +811,14 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		return true;
+	}
+
+	private static int getVictimRankId(QuestEnv env) {
+		if (env == null || !(env.getVisibleObject() instanceof Player victim)
+				|| victim.getAbyssRank() == null || victim.getAbyssRank().getRank() == null) {
+			throw new IllegalArgumentException("PvP victim rank is unavailable");
+		}
+		return victim.getAbyssRank().getRank().getId();
 	}
 
 	/**
@@ -588,11 +833,17 @@ public class QuestEngine implements GameEngine {
 	public boolean onEnterZone(QuestEnv env, ZoneName zoneName) {
 		try {
 			IntArrayList lists = getOnEnterZoneQuests(zoneName);
-			for (int index = 0; index < lists.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
-				if (questHandler != null) {
-					env.setQuestId(lists.get(index));
-					questHandler.onEnterZoneEvent(env, zoneName);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> new QuestEvent.EnterZone(zoneName.name()), lists)) {
+				for (int index = 0; index < lists.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
+					if (questHandler != null) {
+						env.setQuestId(lists.get(index));
+						int questId = lists.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "ENTER_ZONE", QuestDispatchContract.BROADCAST,
+							() -> handler.onEnterZoneEvent(env, zoneName), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -615,11 +866,17 @@ public class QuestEngine implements GameEngine {
 		try {
 			if (questOnLeaveZone.containsKey(zoneName)) {
 				IntArrayList leaveZoneList = questOnLeaveZone.get(zoneName);
-				for (int i = 0; i < leaveZoneList.size(); i++) {
-					QuestHandler questHandler = getQuestHandlerByQuestId(leaveZoneList.get(i));
-					if (questHandler != null) {
-						env.setQuestId(leaveZoneList.get(i));
-						questHandler.onLeaveZoneEvent(env, zoneName);
+				try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+						() -> new QuestEvent.LeaveZone(zoneName.name()), leaveZoneList)) {
+					for (int i = 0; i < leaveZoneList.size(); i++) {
+						QuestHandler questHandler = getQuestHandlerByQuestId(leaveZoneList.get(i));
+						if (questHandler != null) {
+							env.setQuestId(leaveZoneList.get(i));
+							int questId = leaveZoneList.get(i);
+							QuestHandler handler = questHandler;
+							invokeObserved(env, questId, "LEAVE_ZONE", QuestDispatchContract.BROADCAST,
+								() -> handler.onLeaveZoneEvent(env, zoneName), QuestEngine::booleanResult);
+						}
 					}
 				}
 			}
@@ -642,12 +899,17 @@ public class QuestEngine implements GameEngine {
 	public boolean onMovieEnd(QuestEnv env, int movieId) {
 		try {
 			IntArrayList onMovieEndQuests = getOnMovieEndQuests(movieId);
-			for (int index = 0; index < onMovieEndQuests.size(); index++) {
-				env.setQuestId(onMovieEndQuests.get(index));
-				QuestHandler questHandler = getQuestHandlerByQuestId(env.getQuestId());
-				if (questHandler != null) {
-					if (questHandler.onMovieEndEvent(env, movieId)) {
-						return true;
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> new QuestEvent.MovieEnd(movieId), onMovieEndQuests)) {
+				for (int index = 0; index < onMovieEndQuests.size(); index++) {
+					env.setQuestId(onMovieEndQuests.get(index));
+					QuestHandler questHandler = getQuestHandlerByQuestId(env.getQuestId());
+					if (questHandler != null) {
+						QuestHandler handler = questHandler;
+						if (invokeObserved(env, env.getQuestId(), "MOVIE_END", QuestDispatchContract.EXCLUSIVE,
+								() -> handler.onMovieEndEvent(env, movieId), QuestEngine::booleanResult)) {
+							return true;
+						}
 					}
 				}
 			}
@@ -664,12 +926,20 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onQuestTimerEnd(QuestEnv env) {
-		for (int questId : questOnTimerEnd) {
-			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-			if (questHandler != null) {
-				env.setQuestId(questId);
+		try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+				QuestEvent.QuestTimerEnd::new, questOnTimerEnd)) {
+			for (int questId : questOnTimerEnd) {
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+				if (questHandler != null) {
+					env.setQuestId(questId);
+					QuestHandler handler = questHandler;
+					invokeObserved(env, questId, "QUEST_TIMER_END", QuestDispatchContract.BROADCAST,
+						() -> {
+							handler.onQuestTimerEndEvent(env);
+							return (Void) null;
+						}, (ignored, stateChanged, recorder) -> voidResult(questId, ignored, stateChanged, recorder));
+				}
 			}
-			questHandler.onQuestTimerEndEvent(env);
 		}
 	}
 
@@ -680,11 +950,19 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onInvisibleTimerEnd(QuestEnv env) {
-		for (int questId : onInvisibleTimerEnd) {
-			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-			if (questHandler != null) {
-				env.setQuestId(Integer.valueOf(questId));
-				questHandler.onQuestTimerEndEvent(env);
+		try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+				QuestEvent.InvisibleTimerEnd::new, onInvisibleTimerEnd)) {
+			for (int questId : onInvisibleTimerEnd) {
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+				if (questHandler != null) {
+					env.setQuestId(Integer.valueOf(questId));
+					QuestHandler handler = questHandler;
+					invokeObserved(env, questId, "INVISIBLE_TIMER_END", QuestDispatchContract.BROADCAST,
+						() -> {
+							handler.onQuestTimerEndEvent(env);
+							return (Void) null;
+						}, (ignored, stateChanged, recorder) -> voidResult(questId, ignored, stateChanged, recorder));
+				}
 			}
 		}
 	}
@@ -702,11 +980,17 @@ public class QuestEngine implements GameEngine {
 		try {
 			if (questOnUseSkill.containsKey(skillId)) {
 				IntArrayList quests = questOnUseSkill.get(skillId);
-				for (int i = 0; i < quests.size(); i++) {
-					QuestHandler questHandler = getQuestHandlerByQuestId(quests.get(i));
-					if (questHandler != null) {
-						env.setQuestId(quests.get(i));
-						questHandler.onUseSkillEvent(env, skillId);
+				try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+						() -> runtimeComposition.skillEventPort().useSkill(env, skillId), quests)) {
+					for (int i = 0; i < quests.size(); i++) {
+						QuestHandler questHandler = getQuestHandlerByQuestId(quests.get(i));
+						if (questHandler != null) {
+							env.setQuestId(quests.get(i));
+							int questId = quests.get(i);
+							QuestHandler handler = questHandler;
+							invokeObserved(env, questId, "USE_SKILL", QuestDispatchContract.BROADCAST,
+								() -> handler.onUseSkillEvent(env, skillId), QuestEngine::booleanResult);
+						}
 					}
 				}
 			}
@@ -729,9 +1013,14 @@ public class QuestEngine implements GameEngine {
 			int questId = questOnFailCraft.get(itemId);
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 			if (questHandler != null) {
-				if (env.getPlayer().getInventory().getItemCountByItemId(itemId) == 0) {
-					env.setQuestId(questId);
-					questHandler.onFailCraftEvent(env, itemId);
+				try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+						() -> new QuestEvent.FailCraft(itemId), List.of(questId))) {
+					if (env.getPlayer().getInventory().getItemCountByItemId(itemId) == 0) {
+						env.setQuestId(questId);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "FAIL_CRAFT", QuestDispatchContract.EXCLUSIVE,
+							() -> handler.onFailCraftEvent(env, itemId), QuestEngine::booleanResult);
+					}
 				}
 			}
 		}
@@ -747,11 +1036,16 @@ public class QuestEngine implements GameEngine {
 	public void onEquipItem(QuestEnv env, int itemId) {
 		if (questOnEquipItem.containsKey(itemId)) {
 			Set<Integer> questIds = questOnEquipItem.get(itemId);
-			for (int questId : questIds) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-				if (questHandler != null) {
-					env.setQuestId(questId);
-					questHandler.onEquipItemEvent(env, itemId);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> new QuestEvent.EquipItem(itemId), questIds)) {
+				for (int questId : questIds) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+					if (questHandler != null) {
+						env.setQuestId(questId);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "EQUIP_ITEM", QuestDispatchContract.BROADCAST,
+							() -> handler.onEquipItemEvent(env, itemId), QuestEngine::booleanResult);
+					}
 				}
 			}
 		}
@@ -771,19 +1065,24 @@ public class QuestEngine implements GameEngine {
 			final Object... objects) {
 		if (questCanAct.containsKey(templateId)) {
 			IntArrayList questIds = questCanAct.get(templateId);
-			return !questIds.forEach(new IntProcedure() {
-				@Override
-				public boolean execute(int value) {
-					QuestHandler questHandler = getQuestHandlerByQuestId(value);
-					if (questHandler != null) {
-						env.setQuestId(value);
-						if (questHandler.onCanAct(env, questActionType, objects)) {
-							return false;
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> new QuestEvent.CanAct(templateId, questActionType.name()), questIds)) {
+				return !questIds.forEach(new IntProcedure() {
+					@Override
+					public boolean execute(int value) {
+						QuestHandler questHandler = getQuestHandlerByQuestId(value);
+						if (questHandler != null) {
+							env.setQuestId(value);
+							QuestHandler handler = questHandler;
+							if (invokeObserved(env, value, "CAN_ACT", QuestDispatchContract.EXCLUSIVE,
+								() -> handler.onCanAct(env, questActionType, objects), QuestEngine::booleanResult)) {
+								return false;
+							}
 						}
+						return true;
 					}
-					return true;
-				}
-			});
+				});
+			}
 		}
 		return false;
 	}
@@ -795,11 +1094,16 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onDredgionReward(QuestEnv env) {
-		for (int questId : questOnDredgionReward) {
-			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-			if (questHandler != null) {
-				env.setQuestId(questId);
-				questHandler.onDredgionRewardEvent(env);
+		try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+				() -> runtimeComposition.pvpInstanceEventPort().dredgionReward(env), questOnDredgionReward)) {
+			for (int questId : questOnDredgionReward) {
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+				if (questHandler != null) {
+					env.setQuestId(questId);
+					QuestHandler handler = questHandler;
+					invokeObserved(env, questId, "DREDGION_REWARD", QuestDispatchContract.BROADCAST,
+						() -> handler.onDredgionRewardEvent(env), QuestEngine::booleanResult);
+				}
 			}
 		}
 	}
@@ -811,11 +1115,16 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onKamarReward(QuestEnv env) {
-		for (int questId : questOnKamarReward) {
-			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-			if (questHandler != null) {
-				env.setQuestId(questId);
-				questHandler.onKamarRewardEvent(env);
+		try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+				() -> runtimeComposition.pvpInstanceEventPort().kamarReward(env), questOnKamarReward)) {
+			for (int questId : questOnKamarReward) {
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+				if (questHandler != null) {
+					env.setQuestId(questId);
+					QuestHandler handler = questHandler;
+					invokeObserved(env, questId, "KAMAR_REWARD", QuestDispatchContract.BROADCAST,
+						() -> handler.onKamarRewardEvent(env), QuestEngine::booleanResult);
+				}
 			}
 		}
 	}
@@ -827,11 +1136,16 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onOphidanReward(QuestEnv env) {
-		for (int questId : questOnOphidanReward) {
-			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-			if (questHandler != null) {
-				env.setQuestId(questId);
-				questHandler.onOphidanRewardEvent(env);
+		try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+				() -> runtimeComposition.pvpInstanceEventPort().ophidanReward(env), questOnOphidanReward)) {
+			for (int questId : questOnOphidanReward) {
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+				if (questHandler != null) {
+					env.setQuestId(questId);
+					QuestHandler handler = questHandler;
+					invokeObserved(env, questId, "OPHIDAN_REWARD", QuestDispatchContract.BROADCAST,
+						() -> handler.onOphidanRewardEvent(env), QuestEngine::booleanResult);
+				}
 			}
 		}
 	}
@@ -843,11 +1157,16 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onBastionReward(QuestEnv env) {
-		for (int questId : questOnBastionReward) {
-			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-			if (questHandler != null) {
-				env.setQuestId(questId);
-				questHandler.onBastionRewardEvent(env);
+		try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+				() -> runtimeComposition.pvpInstanceEventPort().bastionReward(env), questOnBastionReward)) {
+			for (int questId : questOnBastionReward) {
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+				if (questHandler != null) {
+					env.setQuestId(questId);
+					QuestHandler handler = questHandler;
+					invokeObserved(env, questId, "BASTION_REWARD", QuestDispatchContract.BROADCAST,
+						() -> handler.onBastionRewardEvent(env), QuestEngine::booleanResult);
+				}
 			}
 		}
 	}
@@ -864,14 +1183,20 @@ public class QuestEngine implements GameEngine {
 	public HandlerResult onBonusApplyEvent(QuestEnv env, BonusType bonusType, List<QuestItems> rewardItems) {
 		try {
 			IntArrayList lists = this.getOnBonusApplyQuests(bonusType);
-			for (int index = 0; index < lists.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
-				if (questHandler != null) {
-					env.setQuestId(lists.get(index));
-					return questHandler.onBonusApplyEvent(env, bonusType, rewardItems);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> new QuestEvent.BonusApply(bonusType.name()), lists)) {
+				for (int index = 0; index < lists.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
+					if (questHandler != null) {
+						env.setQuestId(lists.get(index));
+						int questId = lists.get(index);
+						QuestHandler handler = questHandler;
+						return invokeObserved(env, questId, "BONUS_APPLY", QuestDispatchContract.FIRST_REGISTERED,
+							() -> handler.onBonusApplyEvent(env, bonusType, rewardItems), QuestEngine::handlerResult);
+					}
 				}
+				return HandlerResult.UNKNOWN;
 			}
-			return HandlerResult.UNKNOWN;
 		} catch (Exception ex) {
 			// log.error(I18n.get("log.fc7e13ab7975", ex));
 			return HandlerResult.FAILED;
@@ -886,13 +1211,24 @@ public class QuestEngine implements GameEngine {
 	 * @return 是否处理成功 / Whether successful
 	 */
 	public boolean onAddAggroList(QuestEnv env) {
+		return onAddAggroList(env, null);
+	}
+
+	/** Dispatches an aggro observation with the actual hostile source supplied by AggroList. */
+	public boolean onAddAggroList(QuestEnv env, Creature aggroSource) {
 		try {
 			Npc npc = (Npc) env.getVisibleObject();
-			for (int questId : getQuestNpc(npc.getNpcId()).getOnAddAggroListEvent()) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-				if (questHandler != null) {
-					env.setQuestId(questId);
-					questHandler.onAddAggroListEvent(env);
+			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnAddAggroListEvent();
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> runtimeComposition.aiPerceptionEventPort().addAggroList(env, npc.getNpcId(), aggroSource), questIds)) {
+				for (int questId : questIds) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+					if (questHandler != null) {
+						env.setQuestId(questId);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "ADD_AGGRO_LIST", QuestDispatchContract.BROADCAST,
+							() -> handler.onAddAggroListEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -911,7 +1247,9 @@ public class QuestEngine implements GameEngine {
 	 */
 	public boolean onAtDistance(QuestEnv env) {
 		QuestNpc questNpc = null;
-		Npc npc = (Npc) env.getVisibleObject();
+		if (env == null || !(env.getVisibleObject() instanceof Npc npc) || env.getPlayer() == null) {
+			return false;
+		}
 		if (!questNpcs.containsKey(npc.getNpcId())) {
 			return false;
 		}
@@ -919,16 +1257,19 @@ public class QuestEngine implements GameEngine {
 		if (getQuestNpc(npc.getNpcId()).getOnDistanceEvent().size() == 0) {
 			return false;
 		}
-		Player player = env.getPlayer();
-		if (!MathUtil.isIn3dRange(npc, player, 20)) {
-			return false;
-		}
 		try {
-			for (int questId : questNpc.getOnDistanceEvent()) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-				if (questHandler != null) {
-					env.setQuestId(questId);
-					questHandler.onAtDistanceEvent(env);
+			QuestEvent.AtDistance proximityEvent = runtimeComposition.proximityEventPort()
+				.atDistance(env, npc.getNpcId());
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> proximityEvent, questNpc.getOnDistanceEvent())) {
+				for (int questId : questNpc.getOnDistanceEvent()) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+					if (questHandler != null) {
+						env.setQuestId(questId);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "AT_DISTANCE", QuestDispatchContract.BROADCAST,
+							() -> handler.onAtDistanceEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -945,13 +1286,19 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 * @param loc 位置 / 世界标识 / Location or world id
 	 */
-	public void onEnterWindStream(QuestEnv env, int loc) {
+	public void onEnterWindStream(QuestEnv env, int teleportId) {
 		try {
-			for (int index = 0; index < questOnEnterWindStream.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questOnEnterWindStream.get(index));
-				if (questHandler != null) {
-					env.setQuestId(questOnEnterWindStream.get(index));
-					questHandler.onEnterWindStreamEvent(env, loc);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> runtimeComposition.movementEventPort().enterWindStream(env, teleportId), questOnEnterWindStream)) {
+				for (int index = 0; index < questOnEnterWindStream.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questOnEnterWindStream.get(index));
+					if (questHandler != null) {
+						env.setQuestId(questOnEnterWindStream.get(index));
+						int questId = questOnEnterWindStream.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "ENTER_WIND_STREAM", QuestDispatchContract.BROADCAST,
+							() -> handler.onEnterWindStreamEvent(env, teleportId), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -968,11 +1315,17 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void rideAction(QuestEnv env, int itemId) {
 		try {
-			for (int index = 0; index < questRideAction.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questRideAction.get(index));
-				if (questHandler != null) {
-					env.setQuestId(questRideAction.get(index));
-					questHandler.rideAction(env, itemId);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					() -> new QuestEvent.RideAction(itemId), questRideAction)) {
+				for (int index = 0; index < questRideAction.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questRideAction.get(index));
+					if (questHandler != null) {
+						env.setQuestId(questRideAction.get(index));
+						int questId = questRideAction.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "RIDE_ACTION", QuestDispatchContract.BROADCAST,
+							() -> handler.rideAction(env, itemId), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -988,11 +1341,17 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onCreativityPoint(QuestEnv env) {
 		try {
-			for (int index = 0; index < questOnCreativityPoint.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questOnCreativityPoint.get(index));
-				if (questHandler != null) {
-					env.setQuestId(questOnCreativityPoint.get(index));
-					questHandler.onCreativityPointEvent(env);
+			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
+					QuestEvent.CreativityPoint::new, questOnCreativityPoint)) {
+				for (int index = 0; index < questOnCreativityPoint.size(); index++) {
+					QuestHandler questHandler = getQuestHandlerByQuestId(questOnCreativityPoint.get(index));
+					if (questHandler != null) {
+						env.setQuestId(questOnCreativityPoint.get(index));
+						int questId = questOnCreativityPoint.get(index);
+						QuestHandler handler = questHandler;
+						invokeObserved(env, questId, "CREATIVITY_POINT", QuestDispatchContract.BROADCAST,
+							() -> handler.onCreativityPointEvent(env), QuestEngine::booleanResult);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -1729,6 +2088,7 @@ public class QuestEngine implements GameEngine {
 	 * Clear every event registry and handler map; cancel the reminder task.
 	 */
 	public void clear() {
+		runtimeComposition.cleanupAll();
 		if (messageSendingTask != null) {
 			messageSendingTask.cancel(false);
 			messageSendingTask = null;

@@ -52,3 +52,10 @@ log
 /src/main/resources/aion/data/static_data/npc_drops.zip
 
 /docs
+!/docs/
+/docs/*
+!/docs/UNIFIED_RETAIL_QUEST_ENGINE_REBUILD_PLAN.zh-CN.md
+
+
+.codex
+.claude

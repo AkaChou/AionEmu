@@ -31,6 +31,10 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
     /** 插入或更新技能等级 / Insert or update skill level */
     public static final String INSERT_QUERY = "INSERT INTO `player_skills` (`player_id`, `skill_id`, `skill_level`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `skill_level` = VALUES(`skill_level`)";
 
+	/** Idempotent quest grant: retries never downgrade a skill that advanced independently. */
+	private static final String GRANT_QUERY = "INSERT INTO `player_skills` (`player_id`, `skill_id`, `skill_level`) "
+		+ "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `skill_level` = GREATEST(`skill_level`, VALUES(`skill_level`))";
+
     /** 更新技能等级 / Update skill level */
     public static final String UPDATE_QUERY = "UPDATE `player_skills` SET skill_level = ? WHERE player_id = ? AND skill_id = ?";
 
@@ -115,6 +119,17 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
         skillsActive.addAll(Lists.newArrayList(player.getSkillList().getDeletedSkills()));
         return store(player, skillsActive);
     }
+
+	@Override
+	public void storeSkillInTransaction(Connection connection, int playerId, int skillId, int targetLevel)
+			throws SQLException {
+		try (PreparedStatement ps = connection.prepareStatement(GRANT_QUERY)) {
+			ps.setInt(1, playerId);
+			ps.setInt(2, skillId);
+			ps.setInt(3, targetLevel);
+			ps.executeUpdate();
+		}
+	}
 
     /**
      * 在事务中删除、插入、更新技能及皮肤。

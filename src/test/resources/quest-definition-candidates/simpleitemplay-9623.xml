@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="9623" version="1" ownership="COMPILED_CANDIDATE">
+  <evidence>
+    <ref source="RETAIL_SIMPLE_ITEM_PLAY_XML" locator="58Server/Map/XML/Quest_SimpleItemPlay.xml#id[9623]" statement="the true-server item-play entry declares Rebecca_5, Rebecca_2, Rebecca_3 and ITEM_QUEST_9623A"/>
+    <ref source="RETAIL_SCRIPT_DLL" locator="58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:715-721,1071-1094" statement="the item_play type reads item-play parameters and initializes the common quest object"/>
+    <ref source="CURRENT_ITEM_TEMPLATE" locator="src/main/resources/aion/data/static_data/items/item/item_etc_templates.xml#questid[9623]" statement="ITEM_QUEST_9623A resolves to item 182214024"/>
+  </evidence>
+  <metadata name="SimpleItemPlay 9623" display-name-id="0" min-level="0" max-level="2147483647" category="QUEST"/>
+  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="first-dialog"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="second-dialog"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="item-played"><project status="REWARD"><vars><var name="var0" value="2"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="first-dialog"><event><talk-to-npc npc-id="203223"/></event><actions><set-variable field="var0" value="1"/></actions></transition>
+    <transition source="first-dialog" target="second-dialog"><event><talk-to-npc npc-id="203220"/></event><conditions><status-is status="START"/><variable-is field="var0" value="1"/></conditions><actions><set-variable field="var0" value="2"/></actions></transition>
+    <transition source="second-dialog" target="item-played"><event><item-play item-id="182214024" animation-millis="0"/></event><conditions><status-is status="START"/><variable-is field="var0" value="2"/></conditions><actions><set-status status="REWARD"/></actions></transition>
+  </transitions>
+</quest-definition>

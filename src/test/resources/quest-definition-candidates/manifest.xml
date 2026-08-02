@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition-candidate-manifest version="1" ownership="CATALOG_ONLY">
+  <definition id="1" resource="quest-definition-candidates/one.xml"/>
+  <definition id="2" resource="quest-definition-candidates/two.xml"/>
+</quest-definition-candidate-manifest>

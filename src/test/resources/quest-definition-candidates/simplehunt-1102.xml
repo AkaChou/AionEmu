@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1102" version="1" ownership="COMPILED_CANDIDATE">
+  <evidence>
+    <ref source="RETAIL_SIMPLE_HUNT_XML" locator="58Server/Map/XML/Quest_SimpleHunt.xml#id[1102]" statement="the true-server hunt entry declares Kerubar targets and count1=3"/>
+    <ref source="RETAIL_SCRIPT_DLL" locator="58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:688-693; SimpleHuntQuest.cpp:46-82" statement="the hunt type creates grouped kill progress objects"/>
+    <ref source="CURRENT_XML_OWNER" locator="src/main/resources/aion/data/static_data/quest_script_data/poeta.xml#monster_hunt[1102]" statement="current owner supplies start NPC 203057, target NPCs 210133/210134 and var0 end value 3"/>
+  </evidence>
+  <metadata name="SimpleHunt 1102" display-name-id="0" min-level="0" max-level="2147483647" category="IMPORTANT"/>
+  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="one-kill"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="two-kills"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="target-count-reached"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203057"/></event></transition>
+    <transition source="started" target="one-kill"><event><kill-npc npc-id="210133"/></event><conditions><status-is status="START"/><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions></transition>
+    <transition source="started" target="one-kill"><event><kill-npc npc-id="210134"/></event><conditions><status-is status="START"/><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions></transition>
+    <transition source="one-kill" target="two-kills"><event><kill-npc npc-id="210133"/></event><conditions><status-is status="START"/><variable-is field="var0" value="1"/></conditions><actions><set-variable field="var0" value="2"/></actions></transition>
+    <transition source="one-kill" target="two-kills"><event><kill-npc npc-id="210134"/></event><conditions><status-is status="START"/><variable-is field="var0" value="1"/></conditions><actions><set-variable field="var0" value="2"/></actions></transition>
+    <transition source="two-kills" target="target-count-reached"><event><kill-npc npc-id="210133"/></event><conditions><status-is status="START"/><variable-is field="var0" value="2"/></conditions><actions><set-variable field="var0" value="3"/></actions></transition>
+    <transition source="two-kills" target="target-count-reached"><event><kill-npc npc-id="210134"/></event><conditions><status-is status="START"/><variable-is field="var0" value="2"/></conditions><actions><set-variable field="var0" value="3"/></actions></transition>
+  </transitions>
+</quest-definition>

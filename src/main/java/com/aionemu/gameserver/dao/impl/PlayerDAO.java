@@ -248,6 +248,24 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
         }
     }
 
+    /** 更新玩家任务奖励列（含 durable 奖励的 exp/aura_of_growth）/ Update player quest-reward columns */
+    private static final String UPDATE_QUEST_CURRENCIES_QUERY = "UPDATE players SET exp = ?, dp = ?, creativity_point = ?, abyss_favor = ?, aura_of_growth = ? WHERE id = ?";
+
+    @Override
+    public void storeInTransaction(Connection con, int playerId, PlayerCommonData pcd) throws SQLException {
+        try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUEST_CURRENCIES_QUERY)) {
+            stmt.setLong(1, pcd.getExp());
+            stmt.setInt(2, pcd.getDp());
+            stmt.setInt(3, pcd.getCreativityPoint());
+            stmt.setLong(4, pcd.getAbyssFavor());
+            stmt.setLong(5, pcd.getAuraOfGrowth());
+            stmt.setInt(6, playerId);
+            if (stmt.executeUpdate() != 1) {
+                throw new SQLException("No player row changed for player " + playerId);
+            }
+        }
+    }
+
     /**
      * 插入新创建的角色记录，并按配置写入缓存。
      * Inserts a newly created character and updates caches when enabled.

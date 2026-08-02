@@ -32,6 +32,7 @@ import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -513,13 +514,17 @@ public class PvpService {
 		}
 
 		List<Player> rewarded = new ArrayList<Player>();
+		QuestPvpCreditSource creditSource;
 		int worldId = victim.getWorldId();
 
 		if (winner.isInGroup2()) {
+			creditSource = QuestPvpCreditSource.GROUP;
 			rewarded.addAll(winner.getPlayerGroup2().getOnlineMembers());
 		} else if (winner.isInAlliance2()) {
+			creditSource = QuestPvpCreditSource.ALLIANCE;
 			rewarded.addAll(winner.getPlayerAllianceGroup2().getOnlineMembers());
 		} else {
+			creditSource = QuestPvpCreditSource.SOLO;
 			rewarded.add(winner);
 		}
 
@@ -528,8 +533,10 @@ public class PvpService {
 				continue;
 			}
 			// 通知击杀任务 / notify Kill-Quests
-			GameEngineServices.questEngine().onKillInWorld(new QuestEnv(victim, p, 0, 0), worldId);
-			GameEngineServices.questEngine().onKillRanked(new QuestEnv(victim, p, 0, 0), victim.getAbyssRank().getRank());
+			GameEngineServices.questEngine().onKillInWorld(new QuestEnv(victim, p, 0, 0), worldId,
+				winner, creditSource);
+			GameEngineServices.questEngine().onKillRanked(new QuestEnv(victim, p, 0, 0),
+				victim.getAbyssRank().getRank(), winner, creditSource);
 		}
 		rewarded.clear();
 	}

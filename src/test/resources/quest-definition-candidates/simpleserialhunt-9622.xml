@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="9622" version="1" ownership="COMPILED_CANDIDATE">
+  <evidence>
+    <ref source="RETAIL_SIMPLE_SERIAL_HUNT_XML" locator="58Server/Map/XML/Quest_SimpleSerialHunt.xml#id[9622]" statement="the true-server serial hunt entry declares Rebecca and five ordered target groups"/>
+    <ref source="RETAIL_SCRIPT_DLL" locator="58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:724-729; SimpleSerialHuntQuest.cpp:46-82" statement="serial_hunt is a distinct type with the same grouped progress construction path"/>
+    <ref source="RETAIL_NPC_TEMPLATES" locator="src/main/resources/aion/data/static_data/npcs/npc_template.xml#name_desc[DF4_DaQ_Owllau_As_52]" statement="the first ordered target resolves to NPC 216626 and Rebecca_5 resolves to NPC 203223"/>
+  </evidence>
+  <metadata name="SimpleSerialHunt 9622" display-name-id="0" min-level="0" max-level="2147483647" category="QUEST"/>
+  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="first-target"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203223"/></event></transition>
+    <transition source="started" target="first-target"><event><kill-npc npc-id="216626"/></event><conditions><status-is status="START"/><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions></transition>
+  </transitions>
+</quest-definition>

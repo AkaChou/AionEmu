@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.dao;
 
 import java.sql.Timestamp;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,20 @@ public abstract class PlayerDAO implements IDFactoryAwareDAO {
 	 * 玩家 / player
 	 */
 	public abstract void storePlayer(Player player);
+
+	/**
+	 * 在调用方事务内持久化玩家公共数据的任务货币列（dp/creativity_point/abyss_favor）。
+	 * Persists the quest-currency columns of a player's common data inside the
+	 * caller-owned transaction, so currency rewards commit atomically with the
+	 * quest state. The caller must own and commit/rollback the connection.
+	 *
+	 * @param connection 调用方事务连接 / caller-owned transaction connection
+	 * @param playerId 玩家 object id / player object id
+	 * @param pcd 玩家公共数据 / player common data
+	 */
+	public void storeInTransaction(Connection connection, int playerId, PlayerCommonData pcd) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * 保存新创建的角色。

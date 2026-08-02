@@ -3,8 +3,11 @@ package com.aionemu.gameserver.model.items.storage;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -355,6 +358,83 @@ public abstract class Storage implements IStorage {
 	@Override
 	public final void setPersistentState(PersistentState persistentState) {
 		this.persistentState = persistentState;
+	}
+
+	/** Captures the exact live storage state for caller-owned transaction rollback. */
+	public TransactionSnapshot transactionSnapshot() {
+		return new TransactionSnapshot();
+	}
+
+	public final class TransactionSnapshot {
+		private final Map<Integer, ItemState> items = new LinkedHashMap<>();
+		private final ItemState kinah = kinahItem == null ? null : new ItemState(kinahItem);
+		private final List<Item> deleted = deletedItems == null ? List.of() : List.copyOf(deletedItems);
+		private final PersistentState storageState = persistentState;
+		private boolean restored;
+
+		private TransactionSnapshot() {
+			for (Item item : itemStorage.getItems()) {
+				items.put(item.getObjectId(), new ItemState(item));
+			}
+		}
+
+		public void restore() {
+			restore(item -> { });
+		}
+
+		public void restore(Consumer<Item> discardedItem) {
+			if (discardedItem == null) {
+				throw new IllegalArgumentException("discardedItem must not be null");
+			}
+			if (restored) {
+				return;
+			}
+			restored = true;
+			for (Item current : new ArrayList<>(itemStorage.getItems())) {
+				itemStorage.removeItem(current.getObjectId());
+				if (!items.containsKey(current.getObjectId()) && current.getPersistentState() == PersistentState.NEW) {
+					discardedItem.accept(current);
+				}
+			}
+			for (ItemState state : items.values()) {
+				if (!itemStorage.putItem(state.item)) {
+					throw new IllegalStateException("cannot restore storage item " + state.item.getObjectId());
+				}
+				state.restore();
+			}
+			if (kinah == null && kinahItem != null && kinahItem.getPersistentState() == PersistentState.NEW) {
+				discardedItem.accept(kinahItem);
+			}
+			kinahItem = kinah == null ? null : kinah.item;
+			if (kinah != null) {
+				kinah.restore();
+			}
+			if (deletedItems != null) {
+				deletedItems.clear();
+				deletedItems.addAll(deleted);
+			}
+			persistentState = storageState;
+		}
+	}
+
+	private static final class ItemState {
+		private final Item item;
+		private final long count;
+		private final int location;
+		private final PersistentState persistentState;
+
+		private ItemState(Item item) {
+			this.item = item;
+			this.count = item.getItemCount();
+			this.location = item.getItemLocation();
+			this.persistentState = item.getPersistentState();
+		}
+
+		private void restore() {
+			item.setItemCount(count);
+			item.setItemLocation(location);
+			item.setPersistentState(persistentState);
+		}
 	}
 
 	/** 大小 / size. */

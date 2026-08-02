@@ -131,7 +131,7 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 			player.getHouseRegistry().setPersistentState(PersistentState.UPDATE_REQUIRED);
 			sendPacket(new SM_HOUSE_EDIT(4, 1, itemObjectId));
 			GameEngineServices.questEngine().onHouseItemUseEvent(new QuestEnv(null, player, 0, 0),
-					obj.getObjectTemplate().getTemplateId());
+					obj.getObjectTemplate().getTemplateId(), itemObjectId);
 		} else if (action == HousingAction.MOVE_OBJECT) {
 			HouseObject<?> obj = player.getHouseRegistry().getObjectByObjId(itemObjectId);
 			if (obj == null) {

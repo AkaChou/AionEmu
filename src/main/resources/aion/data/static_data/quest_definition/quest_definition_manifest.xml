@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition-manifest version="1" production-owner-switch="0">
+  <input id="legacy-quest-data" family="LEGACY_METADATA" kind="STATIC_TEMPLATE"
+         path="repo:src/main/resources/aion/data/static_data/quest_data/quest_data.xml"/>
+</quest-definition-manifest>

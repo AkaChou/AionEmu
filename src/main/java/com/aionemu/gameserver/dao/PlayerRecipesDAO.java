@@ -3,6 +3,9 @@ package com.aionemu.gameserver.dao;
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.gameobjects.player.RecipeList;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 /**
  * 玩家配方列表数据访问抽象层。
  * DAO for player craft recipe list persistence.
@@ -50,4 +53,10 @@ public abstract class PlayerRecipesDAO implements DAO {
 	 * @return 是否删除成功 / true if deleted
 	 */
 	public abstract boolean delRecipe(final int playerId, final int recipeId);
+
+	/** Adds or converges a recipe on the caller-owned transaction. */
+	public abstract void addRecipeInTransaction(Connection connection, int playerId, int recipeId) throws SQLException;
+
+	/** Deletes a recipe on the caller-owned transaction; deleting an absent row is successful convergence. */
+	public abstract void delRecipeInTransaction(Connection connection, int playerId, int recipeId) throws SQLException;
 }

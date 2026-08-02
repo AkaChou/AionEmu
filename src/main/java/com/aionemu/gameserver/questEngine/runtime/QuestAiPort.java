@@ -1,0 +1,28 @@
+package com.aionemu.gameserver.questEngine.runtime;
+
+import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
+
+/** Typed boundary for AI commands issued to a quest-spawned NPC after commit. */
+public interface QuestAiPort {
+	/**
+	 * 让 slot 的权威 NPC 跟随玩家 (AIEventType.FOLLOW_ME, 护送)。
+	 *
+	 * @return true 表示已发出命令; false 表示 slot 无 handle / 玩家离线 / 失败 (best-effort)
+	 */
+	boolean startFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot);
+
+	/** 停止 slot 的权威 NPC 跟随玩家 (AIEventType.STOP_FOLLOW_ME)。 */
+	boolean stopFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot);
+
+	/** 让 slot 的权威 NPC 攻击事件快照中的 target (objectId 无法解析时跳过)。 */
+	boolean attackTarget(QuestSnapshot snapshot, QuestMutationPlan plan, String slot);
+
+	/** 让 slot 的权威 NPC 开始巡逻行走 (WalkManager.startWalking)。 */
+	boolean startWalking(QuestSnapshot snapshot, QuestMutationPlan plan, String slot);
+
+	/** Broadcasts one closed-set emotion for the authoritative slot handle. */
+	boolean broadcastEmotion(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, QuestNpcEmotion emotion);
+
+	/** Starts the quest follow checker for the authoritative slot and destination zone. */
+	boolean watchFollowZone(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, String zone);
+}

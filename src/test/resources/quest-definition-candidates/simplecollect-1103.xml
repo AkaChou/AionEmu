@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1103" version="1" ownership="COMPILED_CANDIDATE">
+  <evidence>
+    <ref source="RETAIL_SIMPLE_COLLECT_XML" locator="58Server/Map/XML/Quest_SimpleCollectItem.xml#id[1103]" statement="the true-server collect entry declares LF1_Cherubim_pouch"/>
+    <ref source="RETAIL_SCRIPT_DLL" locator="58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:697-703,1041-1049" statement="the collect type reads collect parameters and registers a collect object"/>
+    <ref source="CURRENT_XML_OWNER" locator="src/main/resources/aion/data/static_data/quest_script_data/poeta.xml#item_collecting[1103]" statement="current owner supplies start NPC 203057 and action item 700105"/>
+  </evidence>
+  <metadata name="SimpleCollect 1103" display-name-id="0" min-level="0" max-level="2147483647" category="IMPORTANT"/>
+  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="object-collected"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203057"/></event></transition>
+    <transition source="started" target="object-collected"><event><collect-item item-id="700105" count="1"/></event><conditions><status-is status="START"/><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions></transition>
+  </transitions>
+</quest-definition>

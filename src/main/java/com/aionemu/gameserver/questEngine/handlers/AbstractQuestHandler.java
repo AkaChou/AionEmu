@@ -293,11 +293,11 @@ public abstract class AbstractQuestHandler {
 	 * Entered a wind stream.
 	 *
 	 * Quest environment
-	 * 世界 ID / World id
+	 * 风道传送 ID / Wind-stream teleport id
 	 *
 	 * @return 是否已处理 / Whether handled
 	 */
-	public boolean onEnterWindStreamEvent(QuestEnv questEnv, int worldId) {
+	public boolean onEnterWindStreamEvent(QuestEnv questEnv, int teleportId) {
 		return false;
 	}
 

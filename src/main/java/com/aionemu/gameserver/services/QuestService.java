@@ -19,6 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.IntConsumer;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -29,7 +32,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.DropNpc;
@@ -69,12 +71,14 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestTimerPolicy;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.handlers.models.WorkOrdersData;
 import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.runtime.QuestLegacyObservationContext;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
@@ -97,6 +101,8 @@ public final class QuestService {
 	static QuestsData questsData = DataManager.QUEST_DATA;
 	/** NPC ID 到任务掉落条目的 Multimap / Multimap of NPC id to quest drop entries */
 	private static Multimap<Integer, QuestDrop> questDrop = ArrayListMultimap.create();
+	private static final ConcurrentMap<QuestTimerKey, ManagedQuestTimer> questTimers = new ConcurrentHashMap<>();
+	private static final Object questTimerLock = new Object();
 
 	/**
 	 * 清空全部任务掉落缓存。
@@ -150,6 +156,9 @@ public final class QuestService {
 			rewards = template.getRewards().get(reward);
 		}
 		if (ItemService.addQuestItems(player, questItems)) {
+			for (QuestItems item : questItems) {
+				observeReward(env, "ITEM", item.getItemId(), item.getCount());
+			}
 			giveReward(env, rewards);
 			giveReward(env, extendedRewards);
 			if (template.getCategory() == QuestCategory.CHALLENGE_TASK) {
@@ -331,15 +340,20 @@ public final class QuestService {
 	private static void giveReward(QuestEnv env, Rewards rewards) {
 		Player player = env.getPlayer();
 		if (rewards.getGold() != null) {
-			player.getInventory().increaseKinah((long) (player.getRates().getQuestKinahRate() * rewards.getGold()), ItemUpdateType.INC_KINAH_QUEST);
+			long amount = (long) (player.getRates().getQuestKinahRate() * rewards.getGold());
+			player.getInventory().increaseKinah(amount, ItemUpdateType.INC_KINAH_QUEST);
+			observeReward(env, "GOLD", 0, amount);
 		}
 		if (rewards.getExp() != null) {
 			NpcTemplate npcTemplate = DataManager.NPC_DATA.getNpcTemplate(env.getTargetId());
 			player.getCommonData().addExp(rewards.getExp(), RewardType.QUEST);
+			observeReward(env, "EXP", 0, rewards.getExp());
 		}
 		// 成长光环 / Aura Of Growth
 		if (rewards.getExpBoost() != null) {
-			player.getCommonData().addAuraOfGrowth(1060000 * rewards.getExpBoost());
+			long amount = 1060000L * rewards.getExpBoost();
+			player.getCommonData().addAuraOfGrowth((int) amount);
+			observeReward(env, "AURA_OF_GROWTH", 0, amount);
 		}
 		// CP 奖励 5.3 / CP Reward 5.3
 		if (rewards.getCP() != null) {
@@ -347,6 +361,7 @@ public final class QuestService {
 		}
 		// 欧比斯登陆 4.9.1 / Abyss Landing 4.9.1
 		if (rewards.getAbyssOp() != null) {
+			observeReward(env, "ABYSS_OP", 0, rewards.getAbyssOp());
 			GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(player, null, null, rewards.getAbyssOp(), LandingPointsEnum.QUEST);
 			if (player.getRace() == Race.ASMODIANS) {
 				GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
@@ -358,17 +373,24 @@ public final class QuestService {
 		// 玩家完成任务现可获得“DP”。 / Now player can win "Dp" if finish quest.
 		if (rewards.getDp() != null) {
 			player.getCommonData().addDp(rewards.getDp());
+			observeReward(env, "DP", 0, rewards.getDp());
 		}
 		if (rewards.getTitle() != null) {
 			player.getTitleList().addTitle(rewards.getTitle(), true, 0);
+			observeReward(env, "TITLE", rewards.getTitle(), 1);
 		}
 		if (rewards.getAp() != null) { // Abyss Points
-			AbyssPointsService.addAp(player, (int) (player.getRates().getQuestApRate() * rewards.getAp()));
+			long amount = (long) (player.getRates().getQuestApRate() * rewards.getAp());
+			AbyssPointsService.addAp(player, (int) amount);
+			observeReward(env, "AP", 0, amount);
 		}
 		if (rewards.getGp() != null) { // Glory Points
-			AbyssPointsService.addGp(player, (int) (player.getRates().getQuestGpRate() * rewards.getGp()));
+			long amount = (long) (player.getRates().getQuestGpRate() * rewards.getGp());
+			AbyssPointsService.addGp(player, (int) amount);
+			observeReward(env, "GP", 0, amount);
 		}
 		if (rewards.getExtendInventory() != null) {
+			observeReward(env, "EXTEND_INVENTORY", 0, rewards.getExtendInventory());
 			if (rewards.getExtendInventory() == 1) {
 				CubeExpandService.expand(player, false);
 			} else if (rewards.getExtendInventory() == 2) {
@@ -393,6 +415,10 @@ public final class QuestService {
 						if (!player.getInventory().decreaseByItemId(qi.getItemId(), count)) {
 							return false;
 						}
+						if (count <= Integer.MAX_VALUE) {
+							QuestLegacyObservationContext.requiredAction(id,
+								new com.aionemu.gameserver.questEngine.definition.QuestAction.RemoveItem(qi.getItemId(), (int) count));
+						}
 					}
 				}
 			}
@@ -414,7 +440,15 @@ public final class QuestService {
 			player.getNpcFactions().completeQuest(template);
 		}
 		notifyQuestFinished(env);
+		QuestLegacyObservationContext.state(id, qs.getStatus(), qs.getQuestVars().getQuestVars());
 		return true;
+	}
+
+	private static void observeReward(QuestEnv env, String kind, int id, long amount) {
+		if (amount > 0) {
+			QuestLegacyObservationContext.requiredAction(env.getQuestId(),
+				new com.aionemu.gameserver.questEngine.definition.QuestAction.GrantReward(kind, id, amount));
+		}
 	}
 
 	static void notifyQuestFinished(QuestEnv env) {
@@ -662,6 +696,10 @@ public final class QuestService {
 		if (template.getNpcFactionId() != 0 && !template.isTimeBased()) {
 			player.getNpcFactions().startQuest(template);
 		}
+		QuestState started = player.getQuestStateList().getQuestState(id);
+		if (started != null) {
+			QuestLegacyObservationContext.state(id, started.getStatus(), started.getQuestVars().getQuestVars());
+		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, status.value(), 0));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
@@ -693,6 +731,10 @@ public final class QuestService {
 			return;
 		} else {
 			player.getQuestStateList().addQuest(questId, new QuestState(questId, status, 0, 0, null, 0, null));
+		}
+		QuestState started = player.getQuestStateList().getQuestState(questId);
+		if (started != null) {
+			QuestLegacyObservationContext.state(questId, started.getStatus(), started.getQuestVars().getQuestVars());
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, status.value(), 0));
 	}
@@ -796,6 +838,7 @@ public final class QuestService {
 				qs.setQuestVar(0);
 			}
 		}
+		QuestLegacyObservationContext.state(id, qs.getStatus(), qs.getQuestVars().getQuestVars());
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		return true;
@@ -821,6 +864,7 @@ public final class QuestService {
 		}
 		qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
 		qs.setStatus(QuestStatus.REWARD);
+		QuestLegacyObservationContext.state(id, qs.getStatus(), qs.getQuestVars().getQuestVars());
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
@@ -856,7 +900,11 @@ public final class QuestService {
 			}
 			if (removeItem) {
 				for (InventoryItem inventoryItem : inventoryItems.getInventoryItem()) {
-					player.getInventory().decreaseByItemId(inventoryItem.getItemId(), 1);
+					if (player.getInventory().decreaseByItemId(inventoryItem.getItemId(), 1)) {
+						QuestLegacyObservationContext.requiredAction(env.getQuestId(),
+							new com.aionemu.gameserver.questEngine.definition.QuestAction.RemoveItem(
+								inventoryItem.getItemId(), 1));
+					}
 				}
 			}
 			return true;
@@ -870,11 +918,16 @@ public final class QuestService {
 		}
 		if (removeItem) {
 			for (CollectItem collectItem : collectItems.getCollectItem()) {
-				if (collectItem.getItemId() == 182400001) {
-					player.getInventory().decreaseKinah(collectItem.getCount());
-				} else {
-					player.getInventory().decreaseByItemId(collectItem.getItemId(), collectItem.getCount());
-				}
+					if (collectItem.getItemId() == 182400001) {
+						player.getInventory().decreaseKinah(collectItem.getCount());
+					} else {
+						if (player.getInventory().decreaseByItemId(collectItem.getItemId(), collectItem.getCount())
+								&& collectItem.getCount() <= Integer.MAX_VALUE) {
+							QuestLegacyObservationContext.requiredAction(env.getQuestId(),
+								new com.aionemu.gameserver.questEngine.definition.QuestAction.RemoveItem(
+									collectItem.getItemId(), collectItem.getCount()));
+						}
+					}
 			}
 		}
 		return true;
@@ -1226,15 +1279,17 @@ public final class QuestService {
 	 * @return 是否已启动 / whether started
 	 */
 	public static boolean questTimerStart(QuestEnv env, int timeInSeconds) {
-		final Player player = env.getPlayer();
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.questEngine().onQuestTimerEnd(new QuestEnv(null, player, 0, 0));
-			}
-		}, timeInSeconds * 1000);
-		player.getController().addTask(TaskId.QUEST_TIMER, task);
-		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(env.getQuestId(), timeInSeconds));
+		return questTimerStart(env, timeInSeconds, QuestTimerPolicy.visible());
+	}
+
+	public static boolean questTimerStart(QuestEnv env, int timeInSeconds, QuestTimerPolicy policy) {
+		Player player = requireTimerArguments(env, timeInSeconds, policy);
+		TimerStartOutcome outcome = startManagedTimer(player, env.getQuestId(), timeInSeconds, policy, true,
+			expiredQuestId -> GameEngineServices.questEngine().onQuestTimerEnd(
+				new QuestEnv(null, player, expiredQuestId, 0)));
+		if (outcome == TimerStartOutcome.STARTED) {
+			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(env.getQuestId(), timeInSeconds));
+		}
 		return true;
 	}
 
@@ -1248,13 +1303,14 @@ public final class QuestService {
 	 * @return 是否已启动 / whether started
 	 */
 	public static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds) {
-		final Player player = env.getPlayer();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.questEngine().onInvisibleTimerEnd(new QuestEnv(null, player, 0, 0));
-			}
-		}, timeInSeconds * 1000);
+		return invisibleTimerStart(env, timeInSeconds, QuestTimerPolicy.invisible());
+	}
+
+	public static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds, QuestTimerPolicy policy) {
+		Player player = requireTimerArguments(env, timeInSeconds, policy);
+		startManagedTimer(player, env.getQuestId(), timeInSeconds, policy, false,
+			expiredQuestId -> GameEngineServices.questEngine().onInvisibleTimerEnd(
+				new QuestEnv(null, player, expiredQuestId, 0)));
 		return true;
 	}
 
@@ -1266,10 +1322,155 @@ public final class QuestService {
 	 * whether successful
 	 */
 	public static boolean questTimerEnd(QuestEnv env) {
-		final Player player = env.getPlayer();
-		player.getController().cancelTask(TaskId.QUEST_TIMER);
-		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(env.getQuestId(), 0));
+		return questTimerEnd(env, QuestTimerPolicy.visible().identity());
+	}
+
+	public static boolean questTimerEnd(QuestEnv env, QuestTimerPolicy.Identity identity) {
+		if (env == null || env.getPlayer() == null || env.getQuestId() <= 0 || identity == null) {
+			return false;
+		}
+		Player player = env.getPlayer();
+		ManagedQuestTimer removed = cancelManagedTimer(player.getObjectId(), env.getQuestId(), identity);
+		if ((removed != null && removed.visible) || QuestTimerPolicy.VISIBLE_TIMER_ID.equals(identity.timerId())) {
+			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(env.getQuestId(), 0));
+		}
 		return true;
+	}
+
+	public static void cleanupQuestTimers(int playerId, int questId) {
+		cleanupTimers(key -> key.playerId == playerId && key.questId == questId);
+	}
+
+	public static void cleanupPlayerQuestTimers(int playerId) {
+		cleanupTimers(key -> key.playerId == playerId);
+	}
+
+	public static void cleanupInstanceQuestTimers(int instanceId) {
+		cleanupTimers(key -> {
+			ManagedQuestTimer timer = questTimers.get(key);
+			return timer != null && timer.instanceId == instanceId;
+		});
+	}
+
+	public static void cleanupAllQuestTimers() {
+		cleanupTimers(key -> true);
+	}
+
+	static boolean hasQuestTimers(int playerId, int questId) {
+		return questTimers.keySet().stream().anyMatch(key -> key.playerId == playerId && key.questId == questId);
+	}
+
+	private static Player requireTimerArguments(QuestEnv env, int seconds, QuestTimerPolicy policy) {
+		if (env == null || env.getPlayer() == null || env.getQuestId() <= 0) {
+			throw new IllegalArgumentException("timer requires a player and positive questId");
+		}
+		if (seconds <= 0) {
+			throw new IllegalArgumentException("timer seconds must be positive");
+		}
+		if (policy == null) {
+			throw new NullPointerException("policy");
+		}
+		return env.getPlayer();
+	}
+
+	private static TimerStartOutcome startManagedTimer(Player player, int questId, int seconds, QuestTimerPolicy policy,
+			boolean visible, IntConsumer callback) {
+		return startManagedTimer(player, questId, seconds, policy, visible, callback,
+			(task, delayMillis) -> GameThreadPoolServices.threadPoolManager().schedule(task, delayMillis));
+	}
+
+	static TimerStartOutcome startManagedTimer(Player player, int questId, int seconds, QuestTimerPolicy policy,
+			boolean visible, IntConsumer callback, QuestTimerScheduler scheduler) {
+		if (player == null || questId <= 0 || seconds <= 0) {
+			throw new IllegalArgumentException("managed timer requires a player, positive questId, and positive seconds");
+		}
+		if (policy == null || callback == null || scheduler == null) {
+			throw new NullPointerException("managed timer policy, callback, and scheduler are required");
+		}
+		QuestTimerKey key = new QuestTimerKey(player.getObjectId(), questId, policy.identity());
+		synchronized (questTimerLock) {
+			ManagedQuestTimer existing = questTimers.get(key);
+			if (existing != null) {
+				switch (policy.overwritePolicy()) {
+					case KEEP_EXISTING -> {
+						return TimerStartOutcome.KEPT_EXISTING;
+					}
+					case FAIL_IF_RUNNING -> throw new IllegalStateException(
+						"quest timer is already running: " + policy.identity().timerId());
+					case REPLACE -> existing.cancel();
+				}
+			}
+			ManagedQuestTimer timer = new ManagedQuestTimer(policy, player.getInstanceId(), visible);
+			Future<?> future = scheduler.schedule(() -> {
+				boolean deliver;
+				synchronized (questTimerLock) {
+					deliver = questTimers.remove(key, timer);
+				}
+				if (deliver) {
+					callback.accept(questId);
+				}
+			}, seconds * 1000L);
+			timer.future = future;
+			questTimers.put(key, timer);
+			return TimerStartOutcome.STARTED;
+		}
+	}
+
+	enum TimerStartOutcome {
+		STARTED,
+		KEPT_EXISTING
+	}
+
+	@FunctionalInterface
+	interface QuestTimerScheduler {
+		Future<?> schedule(Runnable task, long delayMillis);
+	}
+
+	private static ManagedQuestTimer cancelManagedTimer(int playerId, int questId,
+			QuestTimerPolicy.Identity identity) {
+		QuestTimerKey key = new QuestTimerKey(playerId, questId, identity);
+		synchronized (questTimerLock) {
+			ManagedQuestTimer timer = questTimers.remove(key);
+			if (timer != null) {
+				timer.cancel();
+			}
+			return timer;
+		}
+	}
+
+	private static void cleanupTimers(java.util.function.Predicate<QuestTimerKey> predicate) {
+		synchronized (questTimerLock) {
+			questTimers.entrySet().removeIf(entry -> {
+				boolean match = predicate.test(entry.getKey());
+				if (match) {
+					entry.getValue().cancel();
+				}
+				return match;
+			});
+		}
+	}
+
+	private record QuestTimerKey(int playerId, int questId, QuestTimerPolicy.Identity identity) {
+	}
+
+	private static final class ManagedQuestTimer {
+		private final QuestTimerPolicy policy;
+		private final int instanceId;
+		private final boolean visible;
+		private volatile Future<?> future;
+
+		private ManagedQuestTimer(QuestTimerPolicy policy, int instanceId, boolean visible) {
+			this.policy = policy;
+			this.instanceId = instanceId;
+			this.visible = visible;
+		}
+
+		private void cancel() {
+			Future<?> task = future;
+			if (task != null) {
+				task.cancel(false);
+			}
+		}
 	}
 
 	/**
@@ -1325,8 +1526,9 @@ public final class QuestService {
 				player.getRecipeList().deleteRecipe(player, wod.getRecipeId());
 			}
 		}
-		if (player.getController().getTask(TaskId.QUEST_TIMER) != null) {
-			questTimerEnd(new QuestEnv(null, player, questId, 0));
+		if (hasQuestTimers(player.getObjectId(), questId)) {
+			cleanupQuestTimers(player.getObjectId(), questId);
+			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, 0));
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId));
 		player.getController().updateZone();

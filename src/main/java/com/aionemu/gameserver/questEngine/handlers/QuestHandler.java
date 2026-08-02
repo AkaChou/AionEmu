@@ -32,6 +32,7 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.runtime.QuestLegacyObservationContext;
 import com.aionemu.gameserver.questEngine.task.QuestTasks;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -71,6 +72,10 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	 */
 	public synchronized void updateQuestStatus(QuestEnv env) {
 		sendUpdatePacket(env);
+		QuestState state = env.getPlayer().getQuestStateList().getQuestState(questId);
+		if (state != null) {
+			QuestLegacyObservationContext.state(questId, state.getStatus(), state.getQuestVars().getQuestVars());
+		}
 	}
 
 	/**
@@ -165,6 +170,8 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	 */
 	public boolean closeDialogWindow(QuestEnv env) {
 		sendQuestSelectionPacket(env, 0);
+		QuestLegacyObservationContext.afterCommitAction(questId,
+			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.CloseDialog());
 		return true;
 	}
 
@@ -630,8 +637,14 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 			long existentItemCount = player.getInventory().getItemCountByItemId(itemId);
 			if (existentItemCount < itemCount) {
 				int itemsToGive = (int) (itemCount - existentItemCount);
-				return (ItemService.addQuestItems(player,
-						Collections.singletonList(new QuestItems(itemId, itemsToGive))));
+				boolean added = ItemService.addQuestItems(player,
+						Collections.singletonList(new QuestItems(itemId, itemsToGive)));
+				if (added) {
+					QuestLegacyObservationContext.requiredAction(questId,
+						new com.aionemu.gameserver.questEngine.definition.QuestAction.GrantReward(
+							"ITEM", itemId, itemsToGive));
+				}
+				return added;
 			} else {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CAN_NOT_GET_LORE_ITEM((new DescriptionId(item.getNameId()))));
 				return true;
@@ -652,7 +665,12 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	public boolean removeQuestItem(QuestEnv env, int itemId, long itemCount) {
 		Player player = env.getPlayer();
 		if (itemId != 0 && itemCount != 0) {
-			return player.getInventory().decreaseByItemId(itemId, itemCount);
+			boolean removed = player.getInventory().decreaseByItemId(itemId, itemCount);
+			if (removed && itemCount <= Integer.MAX_VALUE) {
+				QuestLegacyObservationContext.requiredAction(questId,
+					new com.aionemu.gameserver.questEngine.definition.QuestAction.RemoveItem(itemId, (int) itemCount));
+			}
+			return removed;
 		}
 		return false;
 	}

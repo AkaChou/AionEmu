@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1101" version="1" ownership="COMPILED_CANDIDATE">
+  <evidence>
+    <ref source="CURRENT_XML_OWNER" locator="src/main/resources/aion/data/static_data/quest_script_data/poeta.xml#report_to[1101]"
+         statement="report_to 模板声明 start 203049 与 end 203057, 无 item_id, 使用默认对话页 1011/2375"/>
+    <ref source="TEMPLATE_HANDLER" locator="src/main/java/com/aionemu/gameserver/questEngine/handlers/template/ReportTo.java:83-146"
+         statement="ReportTo.onDialogEvent 的固定 dialog 分支: NONE+START_DIALOG 显示 1011, NONE+ACCEPT_QUEST 启动, START+START_DIALOG 显示 2375, START+SELECT_REWARD 收物品进 REWARD"/>
+    <ref source="QUEST_DATA" locator="src/main/resources/aion/data/static_data/quest_data/quest_data.xml#quest[1101]"
+         statement="min-level=1, race=ELYOS, reward gold=120 exp=130 + 3 物品"/>
+  </evidence>
+  <metadata name="Sleeping On The Job" display-name-id="1102201" min-level="1" max-level="2147483647"
+      category="IMPORTANT">
+    <races><race id="ELYOS"/></races>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="120"/>
+      <reward kind="EXP" id="0" amount="130"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="unaccepted" priority="1">
+      <event><talk-to-npc npc-id="203049" dialog-id="31"/></event>
+      <conditions><status-is status="NONE"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started" priority="2">
+      <event><talk-to-npc npc-id="203049" dialog-id="1002"/></event>
+      <conditions><status-is status="NONE"/></conditions>
+      <actions><set-status status="START"/></actions>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started" priority="3">
+      <event><talk-to-npc npc-id="203049" dialog-id="20000"/></event>
+      <conditions><status-is status="NONE"/></conditions>
+      <actions><set-status status="START"/></actions>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event><talk-to-npc npc-id="203057" dialog-id="31"/></event>
+      <conditions><status-is status="START"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="2">
+      <event><talk-to-npc npc-id="203057" dialog-id="1009"/></event>
+      <conditions><status-is status="START"/></conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-status status="REWARD"/>
+      </actions>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

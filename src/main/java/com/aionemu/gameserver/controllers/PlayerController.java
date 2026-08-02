@@ -842,8 +842,6 @@ public class PlayerController extends CreatureController<Player> {
 			skill.setTargetType(targetType, x, y, z);
 			skill.setHitTime(clientHitTime);
 			skill.useSkill();
-			QuestEnv env = new QuestEnv(player.getTarget(), player, 0, 0);
-			GameEngineServices.questEngine().onUseSkill(env, template.getSkillId());
 		}
 	}
 

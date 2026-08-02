@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.dao;
 
 import java.sql.Timestamp;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -44,6 +46,10 @@ public abstract class PlayerSkillListDAO implements DAO {
 	 * @return 是否保存成功 / true if stored
 	 */
 	public abstract boolean storeSkills(Player player);
+
+	/** Converges one skill to at least the target level on the caller-owned transaction. */
+	public abstract void storeSkillInTransaction(Connection connection, int playerId, int skillId, int targetLevel)
+		throws SQLException;
 
 	/**
 	 * 查询技能皮肤激活时间。

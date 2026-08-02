@@ -1,0 +1,170 @@
+package com.aionemu.gameserver.questEngine.runtime;
+
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
+
+import java.util.Objects;
+
+/** Routes the closed after-commit action set to typed protocol ports. */
+public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
+	private final QuestDialogPort dialogPort;
+	private final QuestTeleportPort teleportPort;
+	private final QuestMoviePort moviePort;
+	private final QuestSpawnPort spawnPort;
+	private final QuestAiPort aiPort;
+	private final QuestTimerPort timerPort;
+
+	public static TypedQuestAfterCommitPort fullyComposed(QuestDialogPort dialogPort,
+			QuestTeleportPort teleportPort, QuestMoviePort moviePort, QuestSpawnPort spawnPort,
+			QuestAiPort aiPort, QuestTimerPort timerPort) {
+		return new TypedQuestAfterCommitPort(
+			Objects.requireNonNull(dialogPort, "dialogPort"),
+			Objects.requireNonNull(teleportPort, "teleportPort"),
+			Objects.requireNonNull(moviePort, "moviePort"),
+			Objects.requireNonNull(spawnPort, "spawnPort"),
+			Objects.requireNonNull(aiPort, "aiPort"),
+			Objects.requireNonNull(timerPort, "timerPort"));
+	}
+
+	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort) {
+		this(dialogPort, null, null, null, null, null);
+	}
+
+	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort) {
+		this(dialogPort, teleportPort, null, null, null, null);
+	}
+
+	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
+			QuestMoviePort moviePort) {
+		this(dialogPort, teleportPort, moviePort, null, null, null);
+	}
+
+	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
+			QuestMoviePort moviePort, QuestSpawnPort spawnPort) {
+		this(dialogPort, teleportPort, moviePort, spawnPort, null, null);
+	}
+
+	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
+			QuestMoviePort moviePort, QuestSpawnPort spawnPort, QuestAiPort aiPort) {
+		this(dialogPort, teleportPort, moviePort, spawnPort, aiPort, null);
+	}
+
+	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
+			QuestMoviePort moviePort, QuestSpawnPort spawnPort, QuestAiPort aiPort, QuestTimerPort timerPort) {
+		this.dialogPort = Objects.requireNonNull(dialogPort, "dialogPort");
+		this.teleportPort = teleportPort;
+		this.moviePort = moviePort;
+		this.spawnPort = spawnPort;
+		this.aiPort = aiPort;
+		this.timerPort = timerPort;
+	}
+
+	private void requireAiPort() {
+		if (aiPort == null) {
+			throw new IllegalArgumentException("AI commands require an ai port");
+		}
+	}
+
+	private void requireTimerPort() {
+		if (timerPort == null) {
+			throw new IllegalArgumentException("quest timer actions require a timer port");
+		}
+	}
+
+	@Override
+	public void execute(AfterCommitAction action, QuestSnapshot snapshot, QuestMutationPlan plan) {
+		Objects.requireNonNull(action, "action");
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		if (action instanceof AfterCommitAction.CloseDialog) {
+			requireSuccess(dialogPort.closeDialog(snapshot, plan), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.ShowQuestDialog show) {
+			requireSuccess(dialogPort.showDialog(snapshot, plan, show.dialogId()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.TeleportPlayer teleport) {
+			if (teleportPort == null) {
+				throw new IllegalArgumentException("teleportPlayer requires a teleport port");
+			}
+			requireSuccess(teleportPort.teleportPlayer(snapshot, plan, teleport.instanceTarget(),
+				teleport.worldId(), teleport.x(), teleport.y(), teleport.z(), teleport.heading()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.PlayMovie movie) {
+			if (moviePort == null) {
+				throw new IllegalArgumentException("playMovie requires a movie port");
+			}
+			requireSuccess(moviePort.playMovie(snapshot, plan, movie.movieId()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.SpawnNpc spawnAction) {
+			if (spawnPort == null) {
+				throw new IllegalArgumentException("spawnNpc requires a spawn port");
+			}
+			requireSuccess(spawnPort.spawnNpc(snapshot, plan, spawnAction.slot(), spawnAction.templateId(),
+				spawnAction.location()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.DespawnNpc despawnAction) {
+			if (spawnPort == null) {
+				throw new IllegalArgumentException("despawnNpc requires a spawn port");
+			}
+			requireSuccess(spawnPort.despawnNpc(snapshot, plan, despawnAction.slot()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.StartFollow follow) {
+			requireAiPort();
+			requireSuccess(aiPort.startFollow(snapshot, plan, follow.slot()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.StopFollow stop) {
+			requireAiPort();
+			requireSuccess(aiPort.stopFollow(snapshot, plan, stop.slot()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.AttackTarget attack) {
+			requireAiPort();
+			requireSuccess(aiPort.attackTarget(snapshot, plan, attack.slot()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.StartWalking walking) {
+			requireAiPort();
+			requireSuccess(aiPort.startWalking(snapshot, plan, walking.slot()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.BroadcastNpcEmotion emotion) {
+			requireAiPort();
+			requireSuccess(aiPort.broadcastEmotion(snapshot, plan, emotion.slot(), emotion.emotion()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.WatchFollowZone followZone) {
+			requireAiPort();
+			requireSuccess(aiPort.watchFollowZone(snapshot, plan, followZone.slot(), followZone.zone()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.StartQuestTimer timer) {
+			requireTimerPort();
+			requireSuccess(timerPort.startQuestTimer(snapshot, plan, timer.seconds(), timer.policy()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.StartInvisibleTimer timer) {
+			requireTimerPort();
+			requireSuccess(timerPort.startInvisibleTimer(snapshot, plan, timer.seconds(), timer.policy()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.CancelQuestTimer) {
+			requireTimerPort();
+			AfterCommitAction.CancelQuestTimer cancel = (AfterCommitAction.CancelQuestTimer) action;
+			requireSuccess(timerPort.cancelQuestTimer(snapshot, plan, cancel.identity()), action, snapshot);
+			return;
+		}
+		throw new IllegalArgumentException("unsupported after-commit action: " + action.getClass().getName());
+	}
+
+	private static void requireSuccess(boolean success, AfterCommitAction action, QuestSnapshot snapshot) {
+		if (!success) {
+			throw new QuestAfterCommitException(action, snapshot);
+		}
+	}
+}

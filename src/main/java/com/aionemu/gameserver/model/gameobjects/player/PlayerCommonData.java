@@ -1012,6 +1012,47 @@ public double getExpMultiplier() {
 		return percent;
 	}
 
+	/** Captures fields changed by quest EXP, aura and DP rewards. */
+	public TransactionSnapshot transactionSnapshot() {
+		return new TransactionSnapshot();
+	}
+
+	public final class TransactionSnapshot {
+		private final int savedLevel = level;
+		private final long savedExp = exp;
+		private final long savedExpRecoverable = expRecoverable;
+		private final int savedDp = dp;
+		private final long savedReposteCurrent = reposteCurrent;
+		private final long savedReposteMax = reposteMax;
+		private final long savedSalvationPoint = salvationPoint;
+		private final long savedAuraOfGrowth = auraOfGrowth;
+		private final long savedAuraOfGrowthMax = auraOfGrowthMax;
+		private final long savedBerdinStar = berdinStar;
+		private final long savedAbyssFavor = abyssFavor;
+		private boolean restored;
+
+		private TransactionSnapshot() {
+		}
+
+		public void restore() {
+			if (restored) {
+				return;
+			}
+			restored = true;
+			level = savedLevel;
+			exp = savedExp;
+			expRecoverable = savedExpRecoverable;
+			dp = savedDp;
+			reposteCurrent = savedReposteCurrent;
+			reposteMax = savedReposteMax;
+			salvationPoint = savedSalvationPoint;
+			auraOfGrowth = savedAuraOfGrowth;
+			auraOfGrowthMax = savedAuraOfGrowthMax;
+			berdinStar = savedBerdinStar;
+			abyssFavor = savedAbyssFavor;
+		}
+	}
+
 	/**
 	 * Berdin's Star 5.1
 	 */
