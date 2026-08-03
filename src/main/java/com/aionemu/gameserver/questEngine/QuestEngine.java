@@ -463,6 +463,10 @@ public class QuestEngine implements GameEngine {
 	public void onLvlUp(QuestEnv env) {
 		try {
 			Player player = env.getPlayer();
+			QuestProductionDispatcher typed = productionDispatcher;
+			if (player != null) {
+				typed.dispatch(new QuestEvent.LevelUp(), player.getObjectId(), 0, QuestDispatchContract.BROADCAST);
+			}
 			try (QuestShadowCapture.Scope scope = shadowScope(player, QuestEvent.LevelUp::new, questOnLevelUp)) {
 				for (int index = 0; index < questOnLevelUp.size(); index++) {
 					QuestHandler questHandler = null;
@@ -655,6 +659,11 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onEnterWorld(QuestEnv env) {
 		try {
+			Player player = env.getPlayer();
+			QuestProductionDispatcher typed = productionDispatcher;
+			if (player != null) {
+				typed.dispatch(new QuestEvent.EnterWorld(), player.getObjectId(), 0, QuestDispatchContract.BROADCAST);
+			}
 			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
 					QuestEvent.EnterWorld::new, questOnEnterWorld)) {
 				for (int index = 0; index < questOnEnterWorld.size(); index++) {
@@ -865,6 +874,12 @@ public class QuestEngine implements GameEngine {
 	 */
 	public boolean onEnterZone(QuestEnv env, ZoneName zoneName) {
 		try {
+			QuestProductionDispatcher typed = productionDispatcher;
+			Player player = env.getPlayer();
+			if (player != null && typed.dispatch(new QuestEvent.EnterZone(zoneName.name()), player.getObjectId(), 0,
+					QuestDispatchContract.BROADCAST).claimed()) {
+				return true;
+			}
 			IntArrayList lists = getOnEnterZoneQuests(zoneName);
 			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
 					() -> new QuestEvent.EnterZone(zoneName.name()), lists)) {
@@ -2019,7 +2034,10 @@ public class QuestEngine implements GameEngine {
 			for (var transition : definition.definition().transitions()) {
 				if (!(transition.event() instanceof QuestEvent.TalkToNpc)
 						&& !(transition.event() instanceof QuestEvent.KillNpc)
-						&& !(transition.event() instanceof QuestEvent.CanAct)) {
+						&& !(transition.event() instanceof QuestEvent.CanAct)
+						&& !(transition.event() instanceof QuestEvent.EnterZone)
+						&& !(transition.event() instanceof QuestEvent.LevelUp)
+						&& !(transition.event() instanceof QuestEvent.EnterWorld)) {
 					throw new IllegalStateException("typed production event is not wired into QuestEngine: "
 						+ transition.event().type());
 				}

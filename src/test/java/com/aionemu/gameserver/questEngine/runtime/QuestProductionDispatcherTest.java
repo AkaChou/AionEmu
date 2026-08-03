@@ -102,6 +102,51 @@ class QuestProductionDispatcherTest {
 	}
 
 	@Test
+	void enterZoneAcceptRunsUnacceptedToStarted() {
+		List<String> calls = new ArrayList<>();
+		CompiledQuestDefinition definition = QuestDsl.quest(1100)
+			.ownership(QuestOwnership.RETAIL_ALIGNED)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(QuestDsl.enterZone("AKARIOS_VILLAGE_210010000")).from("unaccepted").goTo("started")
+			.compile();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), calls,
+			(connection, playerId, questId, event) -> new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0,
+				Map.of()).withStartEligibility(QuestStartEligibility.allowed()));
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.EnterZone("AKARIOS_VILLAGE_210010000"), 7, 0, QuestDispatchContract.BROADCAST);
+
+		assertTrue(result.consumed());
+		assertTrue(result.claimed());
+		assertEquals(List.of(1100), result.owners().stream().map(QuestEventRouter.OwnerResult::questId).toList());
+		assertEquals(List.of("setAutoCommit:false", "state", "commit", "publish", "close"), calls);
+	}
+
+	@Test
+	void levelUpAcceptRunsUnacceptedToStarted() {
+		List<String> calls = new ArrayList<>();
+		CompiledQuestDefinition definition = QuestDsl.quest(1001)
+			.ownership(QuestOwnership.RETAIL_ALIGNED)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(QuestDsl.levelUp()).from("unaccepted").goTo("started")
+			.compile();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), calls,
+			(connection, playerId, questId, event) -> new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0,
+				Map.of()).withStartEligibility(QuestStartEligibility.allowed()));
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.LevelUp(), 7, 0, QuestDispatchContract.BROADCAST);
+
+		assertTrue(result.consumed());
+		assertTrue(result.claimed());
+		assertEquals(List.of(1001), result.owners().stream().map(QuestEventRouter.OwnerResult::questId).toList());
+	}
+
+	@Test
 	void unrelatedEventDoesNotAcquireDatabaseConnection() {
 		AtomicInteger connections = new AtomicInteger();
 		CompiledQuestDefinition definition = definition(1101);
