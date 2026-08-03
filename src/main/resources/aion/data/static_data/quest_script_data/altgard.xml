@@ -96,12 +96,6 @@
 	<monster_hunt id="2264" start_npc_ids="203664">
 		<monster var="0" end_var="3" npc_ids="210754 210447"/>
 	</monster_hunt>
-	<monster_hunt id="2267" start_npc_ids="203656">
-		<monster var="0" end_var="5" npc_ids="210525"/>
-	</monster_hunt>
-	<monster_hunt id="2268" start_npc_ids="203656">
-		<monster var="0" end_var="5" npc_ids="210526 210527"/>
-	</monster_hunt>
 	<monster_hunt id="2280" start_npc_ids="203560">
 		<monster var="0" end_var="4" npc_ids="210508 210509"/>
 	</monster_hunt>
