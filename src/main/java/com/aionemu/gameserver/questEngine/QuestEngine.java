@@ -1096,13 +1096,22 @@ public class QuestEngine implements GameEngine {
 	 */
 	public boolean onCanAct(final QuestEnv env, int templateId, final QuestActionType questActionType,
 			final Object... objects) {
+		QuestProductionDispatcher typed = productionDispatcher;
+		QuestEvent event = new QuestEvent.CanAct(templateId, questActionType.name());
+		if (typed.dispatch(event, env.getPlayer().getObjectId(), 0,
+			QuestDispatchContract.EXCLUSIVE).claimed()) {
+			return true;
+		}
 		if (questCanAct.containsKey(templateId)) {
 			IntArrayList questIds = questCanAct.get(templateId);
 			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
-					() -> new QuestEvent.CanAct(templateId, questActionType.name()), questIds)) {
+					() -> event, questIds)) {
 				return !questIds.forEach(new IntProcedure() {
 					@Override
 					public boolean execute(int value) {
+						if (typed.owns(value)) {
+							return true;
+						}
 						QuestHandler questHandler = getQuestHandlerByQuestId(value);
 						if (questHandler != null) {
 							env.setQuestId(value);
@@ -2009,7 +2018,8 @@ public class QuestEngine implements GameEngine {
 			}
 			for (var transition : definition.definition().transitions()) {
 				if (!(transition.event() instanceof QuestEvent.TalkToNpc)
-						&& !(transition.event() instanceof QuestEvent.KillNpc)) {
+						&& !(transition.event() instanceof QuestEvent.KillNpc)
+						&& !(transition.event() instanceof QuestEvent.CanAct)) {
 					throw new IllegalStateException("typed production event is not wired into QuestEngine: "
 						+ transition.event().type());
 				}
@@ -2028,6 +2038,8 @@ public class QuestEngine implements GameEngine {
 					}
 				} else if (transition.event() instanceof QuestEvent.KillNpc kill) {
 					registerQuestNpc(kill.npcId()).addOnKillEvent(definition.id());
+				} else if (transition.event() instanceof QuestEvent.CanAct canAct) {
+					registerCanAct(definition.id(), canAct.templateId());
 				}
 			}
 		}

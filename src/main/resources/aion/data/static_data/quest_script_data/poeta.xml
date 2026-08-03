@@ -16,32 +16,8 @@
 	<!-- A Taste Of Namus's Medicine (Elyos Only) -->
 	<report_to id="1119" start_npc_ids="203075" end_npc_ids="203080" item_id="182200225"/>
 	
-	<!-- The Snuffler Headache (Elyos Only) -->
-	<item_collecting id="1105" start_npc_ids="203050"/>
-	<!-- Pernos's Robe (Elyos Only) -->
-	<item_collecting id="1116" start_npc_ids="203060"/>
-	<!-- Light Up The Night (Elyos Only) -->
-	<item_collecting id="1117" start_npc_ids="203074"/>
-	<!-- Oz's Prayer Beads (Elyos Only) -->
-	<item_collecting id="1121" start_npc_ids="203081" end_npc_ids="203081" start_dialog_id2="2375"/>
 	<!-- Avenging Tutty (Elyos Only) -->
 	<item_collecting id="1124" start_npc_ids="790001"/>
-	<!-- Mushroom Research (Elyos Only) -->
-	<item_collecting id="1126" start_npc_ids="203079"/>
-	<!-- Collecting Aria (Elyos Only) -->
-	<item_collecting id="1206" start_npc_ids="203059"/>
-	<!-- Uno's Ingredients (Elyos Only) -->
-	<item_collecting id="1108" start_npc_ids="203061" end_npc_ids="203072"/>
-	<!-- Scouting Timolia Mine (Elyos Only) -->
-	<item_collecting id="1129" start_npc_ids="203085" end_npc_ids="203067"/>
-	<!-- Tula's Music Box (Elyos Only) -->
-	<item_collecting id="1207" start_npc_ids="203082" end_npc_ids="203085"/>
-	<!-- Grain Thieves (Elyos Only) -->
-	<item_collecting id="1103" start_npc_ids="203057" action_item_ids="700105"/>
-	<!-- Abandoned Goods (Elyos Only) -->
-	<item_collecting id="1109" start_npc_ids="798007" action_item_ids="700106"/>
-	<!-- Suspicious Ore (Elyos Only) -->
-	<item_collecting id="1125" start_npc_ids="203085" end_npc_ids="203067" action_item_ids="700107"/>
 	
 	<!-- To Fish In Peace (Elyos Only) -->
 	<monster_hunt id="1112" start_npc_ids="203072">

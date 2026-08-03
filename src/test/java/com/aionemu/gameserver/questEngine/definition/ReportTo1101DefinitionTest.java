@@ -120,7 +120,6 @@ class ReportTo1101DefinitionTest {
 			new QuestAction.GrantReward("EXP", 0, 130, QuestRewardAmountMode.QUEST_BASE),
 			new QuestAction.CompleteQuest(0));
 		List<AfterCommitAction> afterCommit = List.of(new AfterCommitAction.RefreshPlayerStats(),
-			new AfterCommitAction.RefreshPlayerStats(),
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
 			new AfterCommitAction.ShowQuestSelectionDialog(10));
 
