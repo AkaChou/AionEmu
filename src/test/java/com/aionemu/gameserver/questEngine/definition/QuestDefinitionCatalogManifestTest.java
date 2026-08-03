@@ -16,7 +16,8 @@ class QuestDefinitionCatalogManifestTest {
 		try (InputStream input = getClass().getResourceAsStream(
 				"/aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
 			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			assertEquals(List.of(1101, 1102), catalog.all().stream().map(CompiledQuestDefinition::id).toList());
+			assertEquals(List.of(1101, 1102, 1103, 1105, 1108, 1109, 1116, 1117, 1121, 1124, 1125, 1126, 1129,
+				1206, 1207), catalog.all().stream().map(CompiledQuestDefinition::id).toList());
 			assertEquals(QuestOwnership.RETAIL_ALIGNED, catalog.find(1101).orElseThrow().ownership());
 			assertEquals(QuestOwnership.RETAIL_ALIGNED, catalog.find(1102).orElseThrow().ownership());
 		}

@@ -71,6 +71,25 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
     }
 
     /**
+     * 在调用方事务连接上保存玩家一条称号，与任务状态同事务提交/回滚。
+     * Stores a title on the caller-owned transaction connection.
+     *
+     * 调用方事务连接 / caller-owned transaction connection
+     * 玩家 object id / player object id
+     * 称号 ID / title id
+     * 剩余毫秒数，0 表示永久 / remaining ms, 0 for permanent
+     */
+    @Override
+    public void storeInTransaction(Connection con, int playerId, int titleId, int remaining) throws SQLException {
+        try (PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
+            stmt.setInt(1, playerId);
+            stmt.setInt(2, titleId);
+            stmt.setInt(3, remaining);
+            stmt.executeUpdate();
+        }
+    }
+
+    /**
      * 保存单个玩家称号。
      * Stores a single player title.
      *

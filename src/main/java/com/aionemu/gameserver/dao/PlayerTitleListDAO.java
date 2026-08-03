@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.title.Title;
@@ -32,6 +35,19 @@ public abstract class PlayerTitleListDAO implements DAO {
 	 * title list
 	 */
 	public abstract TitleList loadTitleList(int playerId);
+
+	/**
+	 * 在调用方事务连接上保存玩家一条称号记录，与任务状态同事务提交/回滚。
+	 * Stores a title entry for the player on the caller-owned transaction connection.
+	 *
+	 * @param connection 调用方事务连接 / caller-owned transaction connection
+	 * @param playerId 玩家 object id / player object id
+	 * @param titleId 称号 ID / title id
+	 * @param remaining 剩余毫秒数，0 表示永久 / remaining ms, 0 for permanent
+	 * @throws SQLException 写入失败时抛出 / on write failure
+	 */
+	public abstract void storeInTransaction(Connection connection, int playerId, int titleId, int remaining)
+			throws SQLException;
 
 	/**
 	 * 保存玩家一条称号记录。

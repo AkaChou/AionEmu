@@ -16,9 +16,6 @@
 	<!-- A Taste Of Namus's Medicine (Elyos Only) -->
 	<report_to id="1119" start_npc_ids="203075" end_npc_ids="203080" item_id="182200225"/>
 	
-	<!-- Avenging Tutty (Elyos Only) -->
-	<item_collecting id="1124" start_npc_ids="790001"/>
-	
 	<!-- To Fish In Peace (Elyos Only) -->
 	<monster_hunt id="1112" start_npc_ids="203072">
 		<monster npc_ids="210259 210260" var="0" end_var="5"/>

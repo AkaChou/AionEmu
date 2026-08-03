@@ -89,6 +89,11 @@ public class TitleList {
 		return false;
 	}
 
+	/** 仅从内存移除称号，不发包不持久化；用于任务奖励事务回滚。 / Removes from memory only; used by quest reward rollback. */
+	public void removeEntry(int titleId) {
+		titles.remove(titleId);
+	}
+
 	/** 设置 display title / Sets the display title */
 	public void setDisplayTitle(int titleId) {
 		PacketSendUtility.sendPacket(owner, new SM_TITLE_INFO(titleId));

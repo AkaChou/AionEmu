@@ -7,6 +7,7 @@ import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
+import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -156,7 +157,8 @@ public final class QuestRuntimeComposition {
 						new PlayerQuestInventoryPort(players, inventoryDao),
 						new PlayerQuestCurrencyPort(players, inventoryDao,
 							DAOManager.getDAO(AbyssRankDAO.class), playerDao),
-						new PlayerQuestRewardPort(players, inventoryDao, playerDao, ItemService::addQuestItems),
+						new PlayerQuestRewardPort(players, inventoryDao, playerDao, ItemService::addQuestItems,
+							DAOManager.getDAO(PlayerTitleListDAO.class)),
 						new PlayerQuestCraftPort(players, DAOManager.getDAO(PlayerRecipesDAO.class),
 							DAOManager.getDAO(PlayerSkillListDAO.class)));
 				}

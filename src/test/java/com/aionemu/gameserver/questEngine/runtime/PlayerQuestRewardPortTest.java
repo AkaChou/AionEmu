@@ -1,8 +1,11 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerTitleListDAO;
+import com.aionemu.gameserver.dataholders.TitleData;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -13,16 +16,20 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.gameobjects.player.RewardType;
+import com.aionemu.gameserver.model.gameobjects.player.title.Title;
+import com.aionemu.gameserver.model.gameobjects.player.title.TitleList;
 import com.aionemu.gameserver.model.items.storage.ItemStorage;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
+import com.aionemu.gameserver.model.templates.TitleTemplate;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
@@ -39,6 +46,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -57,6 +65,20 @@ class PlayerQuestRewardPortTest {
 	private static final int PLAYER_ID = 7;
 	private static final int QUEST_ID = 1001;
 	private static final int ITEM_A = 169001001;
+	private static final int TITLE_ID = 7;
+
+	private static TitleData originalTitleData;
+
+	@BeforeEach
+	void setUpTitleData() throws Exception {
+		originalTitleData = com.aionemu.gameserver.dataholders.DataManager.TITLE_DATA;
+		com.aionemu.gameserver.dataholders.DataManager.TITLE_DATA = emptyTitleData();
+	}
+
+	@AfterEach
+	void restoreTitleData() {
+		com.aionemu.gameserver.dataholders.DataManager.TITLE_DATA = originalTitleData;
+	}
 
 	@Test
 	void preflightFailsOnUnsupportedDurableKind() throws Exception {
@@ -64,7 +86,7 @@ class PlayerQuestRewardPortTest {
 			new RecordingPlayerDao(), (p, items) -> true);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot(), List.of(reward("TITLE", 0, 1))));
+			() -> port.preflight(connection(), snapshot(), List.of(reward("EXTEND_INVENTORY", 0, 1))));
 		assertTrue(thrown.getMessage().contains("no transactional durable reward store"));
 	}
 
@@ -84,7 +106,84 @@ class PlayerQuestRewardPortTest {
 			new RecordingPlayerDao(), (p, items) -> true);
 		port.preflight(connection(), snapshot(),
 			List.of(reward("ITEM", ITEM_A, 2), reward("EXP", 0, 1000),
-				reward("EXP_BOOST", 0, 3), reward("AURA_OF_GROWTH", 0, 5000)));
+				reward("EXP_BOOST", 0, 3), reward("AURA_OF_GROWTH", 0, 5000),
+				reward("TITLE", TITLE_ID, 1)));
+	}
+
+	@Test
+	void preflightFailsOnTitleWithoutPositiveId() throws Exception {
+		PlayerQuestRewardPort port = port(playerId -> null, new RecordingInventoryDao(),
+			new RecordingPlayerDao(), (p, items) -> true);
+
+		SQLException thrown = assertThrows(SQLException.class,
+			() -> port.preflight(connection(), snapshot(), List.of(reward("TITLE", 0, 1))));
+		assertTrue(thrown.getMessage().contains("without a positive title id"));
+	}
+
+	@Test
+	void applyGrantsTitleAndPersistsOnCallerConnection() throws Exception {
+		com.aionemu.gameserver.dataholders.DataManager.TITLE_DATA = titleDataWith(TITLE_ID);
+		Player player = emptyPlayer();
+		RecordingTitleListDao titleListDao = new RecordingTitleListDao();
+		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
+			new RecordingPlayerDao(), (p, items) -> true, titleListDao);
+		Connection connection = connection();
+
+		port.apply(connection, snapshot(), List.of(reward("TITLE", TITLE_ID, 1)));
+
+		assertTrue(player.getTitleList().contains(TITLE_ID));
+		assertEquals(1, titleListDao.calls.size());
+		assertSame(connection, titleListDao.calls.get(0));
+		assertEquals(TITLE_ID, titleListDao.lastTitleId);
+	}
+
+	@Test
+	void applySkipsAlreadyOwnedTitleIdempotently() throws Exception {
+		com.aionemu.gameserver.dataholders.DataManager.TITLE_DATA = titleDataWith(TITLE_ID);
+		Player player = emptyPlayer();
+		player.getTitleList().addEntry(TITLE_ID, 0);
+		RecordingTitleListDao titleListDao = new RecordingTitleListDao();
+		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
+			new RecordingPlayerDao(), (p, items) -> true, titleListDao);
+
+		QuestTransactionParticipant participant = port.apply(connection(), snapshot(),
+			List.of(reward("TITLE", TITLE_ID, 1)));
+
+		assertEquals(0, titleListDao.calls.size());
+		participant.afterRollback();
+		assertTrue(player.getTitleList().contains(TITLE_ID));
+	}
+
+	@Test
+	void rollbackRemovesGrantedTitleFromMemory() throws Exception {
+		com.aionemu.gameserver.dataholders.DataManager.TITLE_DATA = titleDataWith(TITLE_ID);
+		Player player = emptyPlayer();
+		RecordingTitleListDao titleListDao = new RecordingTitleListDao();
+		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
+			new RecordingPlayerDao(), (p, items) -> true, titleListDao);
+
+		QuestTransactionParticipant participant = port.apply(connection(), snapshot(),
+			List.of(reward("TITLE", TITLE_ID, 1)));
+
+		assertTrue(player.getTitleList().contains(TITLE_ID));
+		participant.afterRollback();
+		assertFalse(player.getTitleList().contains(TITLE_ID));
+		assertEquals(0, player.getInventory().getItemCountByItemId(ITEM_A));
+	}
+
+	@Test
+	void applyFailsOnInvalidTitleIdAndSkipsDao() throws Exception {
+		// TITLE_DATA 为空：addEntry 校验失败，整笔事务回滚且不持久化
+		Player player = emptyPlayer();
+		RecordingTitleListDao titleListDao = new RecordingTitleListDao();
+		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
+			new RecordingPlayerDao(), (p, items) -> true, titleListDao);
+
+		SQLException thrown = assertThrows(SQLException.class,
+			() -> port.apply(connection(), snapshot(), List.of(reward("TITLE", TITLE_ID, 1))));
+		assertTrue(thrown.getMessage().contains("invalid title id"));
+		assertEquals(0, titleListDao.calls.size());
+		assertFalse(player.getTitleList().contains(TITLE_ID));
 	}
 
 	@Test
@@ -226,7 +325,13 @@ class PlayerQuestRewardPortTest {
 
 	private static PlayerQuestRewardPort port(QuestPlayerPort players, InventoryDAO inventoryDao,
 			PlayerDAO playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder) {
-		return new PlayerQuestRewardPort(players, inventoryDao, playerDao, itemAdder, item -> { });
+		return port(players, inventoryDao, playerDao, itemAdder, new RecordingTitleListDao());
+	}
+
+	private static PlayerQuestRewardPort port(QuestPlayerPort players, InventoryDAO inventoryDao,
+			PlayerDAO playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder,
+			RecordingTitleListDao titleListDao) {
+		return new PlayerQuestRewardPort(players, inventoryDao, playerDao, itemAdder, item -> { }, titleListDao);
 	}
 
 	private static QuestSnapshot snapshot() {
@@ -262,10 +367,27 @@ class PlayerQuestRewardPortTest {
 			new Storage[StorageType.PET_BAG_MAX - StorageType.PET_BAG_MIN + 1]);
 		setField(Player.class, player, "cabinets",
 			new Storage[StorageType.HOUSE_WH_MAX - StorageType.HOUSE_WH_MIN + 1]);
+		setField(Player.class, player, "titleList", new TitleList());
 		PlayerStorage inventory = new PlayerStorage(StorageType.CUBE);
 		inventory.setOwner(player);
 		setField(Player.class, player, "inventory", inventory);
 		return player;
+	}
+
+	private static TitleData emptyTitleData() throws Exception {
+		TitleData data = new TitleData();
+		setField(TitleData.class, data, "titles", new IntObjectHashMap<>());
+		return data;
+	}
+
+	private static TitleData titleDataWith(int titleId) throws Exception {
+		TitleData data = new TitleData();
+		IntObjectHashMap<TitleTemplate> titles = new IntObjectHashMap<>();
+		TitleTemplate template = new ObjenesisStd().newInstance(TitleTemplate.class);
+		setField(TitleTemplate.class, template, "race", Race.ELYOS);
+		titles.put(titleId, template);
+		setField(TitleData.class, data, "titles", titles);
+		return data;
 	}
 
 	private static Item item(int itemId, int count) throws Exception {
@@ -616,6 +738,37 @@ class PlayerQuestRewardPortTest {
 		@Override
 		public int[] getUsedIDs() {
 			return new int[0];
+		}
+	}
+
+	private static final class RecordingTitleListDao extends PlayerTitleListDAO {
+		private final List<Connection> calls = new ArrayList<>();
+		private int lastTitleId;
+
+		@Override
+		public void storeInTransaction(Connection connection, int playerId, int titleId, int remaining) {
+			calls.add(connection);
+			lastTitleId = titleId;
+		}
+
+		@Override
+		public TitleList loadTitleList(int playerId) {
+			throw new AssertionError("unexpected loadTitleList");
+		}
+
+		@Override
+		public boolean storeTitles(Player player, Title entry) {
+			throw new AssertionError("unexpected storeTitles");
+		}
+
+		@Override
+		public boolean removeTitle(int playerId, int titleId) {
+			throw new AssertionError("unexpected removeTitle");
+		}
+
+		@Override
+		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
+			return false;
 		}
 	}
 }

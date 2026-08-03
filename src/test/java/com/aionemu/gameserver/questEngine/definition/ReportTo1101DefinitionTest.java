@@ -30,7 +30,8 @@ class ReportTo1101DefinitionTest {
 	void productionCatalogCompilesTheTaskDefinition() throws Exception {
 		try (InputStream input = resource(MANIFEST)) {
 			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			assertEquals(List.of(1101, 1102), catalog.all().stream().map(CompiledQuestDefinition::id).toList());
+			assertEquals(List.of(1101, 1102, 1103, 1105, 1108, 1109, 1116, 1117, 1121, 1124, 1125, 1126, 1129,
+				1206, 1207), catalog.all().stream().map(CompiledQuestDefinition::id).toList());
 		}
 	}
 
@@ -79,7 +80,8 @@ class ReportTo1101DefinitionTest {
 		assertFalse(legacy.contains("id=\"1101\""));
 		try (InputStream input = resource(MANIFEST)) {
 			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			assertEquals(List.of(1101, 1102), catalog.all().stream().map(CompiledQuestDefinition::id).toList());
+			assertEquals(List.of(1101, 1102, 1103, 1105, 1108, 1109, 1116, 1117, 1121, 1124, 1125, 1126, 1129,
+				1206, 1207), catalog.all().stream().map(CompiledQuestDefinition::id).toList());
 		}
 	}
 
