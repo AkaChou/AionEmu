@@ -91,6 +91,11 @@
   <definition id="1307" resource="aion/data/static_data/quest_definition/quests/1307.xml"/>
   <definition id="1308" resource="aion/data/static_data/quest_definition/quests/1308.xml"/>
   <definition id="1310" resource="aion/data/static_data/quest_definition/quests/1310.xml"/>
+  <definition id="1313" resource="aion/data/static_data/quest_definition/quests/1313.xml"/>
+  <definition id="1315" resource="aion/data/static_data/quest_definition/quests/1315.xml"/>
+  <definition id="1316" resource="aion/data/static_data/quest_definition/quests/1316.xml"/>
+  <definition id="1317" resource="aion/data/static_data/quest_definition/quests/1317.xml"/>
+  <definition id="1318" resource="aion/data/static_data/quest_definition/quests/1318.xml"/>
   <definition id="1365" resource="aion/data/static_data/quest_definition/quests/1365.xml"/>
   <definition id="1374" resource="aion/data/static_data/quest_definition/quests/1374.xml"/>
   <definition id="1382" resource="aion/data/static_data/quest_definition/quests/1382.xml"/>
