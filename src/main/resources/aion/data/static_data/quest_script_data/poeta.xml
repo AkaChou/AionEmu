@@ -3,19 +3,6 @@
 <!--
     Quest Poeta. Make By (Encom)
  -->
-	<!-- Report To Polina (Elyos Only) -->
-	<report_to id="1104" start_npc_ids="203057" end_npc_ids="203059"/>
-	<report_to_many id="1118" start_npc_ids="203059"  end_npc_ids="203079">
-		<npc_infos var="0" npc_id="203070" quest_dialog="1352"/>
-		<npc_infos var="1" npc_id="203079" quest_dialog="2375" close_dialog="1009"/>
-	</report_to_many>
-	<!-- Helping Kales (Elyos Only) -->
-	<report_to id="1106" start_npc_ids="203050" end_npc_ids="203061" item_id="182200203"/>
-	<!-- A Book For Namus (Elyos Only) -->
-	<report_to id="1110" start_npc_ids="203065" end_npc_ids="203075" item_id="182200206"/>
-	<!-- A Taste Of Namus's Medicine (Elyos Only) -->
-	<report_to id="1119" start_npc_ids="203075" end_npc_ids="203080" item_id="182200225"/>
-	
 	<!-- To Fish In Peace (Elyos Only) -->
 	<monster_hunt id="1112" start_npc_ids="203072">
 		<monster npc_ids="210259 210260" var="0" end_var="5"/>
