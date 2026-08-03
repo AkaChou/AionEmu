@@ -7,8 +7,6 @@
 	<report_to id="1312" start_npc_ids="203997" end_npc_ids="203932" item_id="182201306"/>
 	<report_to id="1335" start_npc_ids="203999" end_npc_ids="204006"/>
 	<report_to id="1338" start_npc_ids="204006" end_npc_ids="204008"/>
-	<report_to id="1359" start_npc_ids="798055" end_npc_ids="798051" item_id="182201324"/>
-	<report_to id="1360" start_npc_ids="798055" end_npc_ids="203944" item_id="182201325"/>
 	<report_to id="1369" start_npc_ids="204020" end_npc_ids="203949"/>
 	<report_to id="1378" start_npc_ids="203948" end_npc_ids="203995" item_id="182201339"/>
 	<report_to id="1390" start_npc_ids="203993" end_npc_ids="203761" item_id="182201368"/>
@@ -20,11 +18,6 @@
 	<report_to id="3337" start_npc_ids="203954" end_npc_ids="790006" item_id="182201439"/>
 	<report_to id="14241" start_npc_ids="203996" end_npc_ids="203900"/>
 	
-	<item_collecting id="1358" start_npc_ids="798055"/>
-	<item_collecting id="1362" start_npc_ids="203944"/>
-	<item_collecting id="1366" start_npc_ids="204020"/>
-	<item_collecting id="1368" start_npc_ids="204023"/>
-	<item_collecting id="1372" start_npc_ids="203947"/>
 	<item_collecting id="1375" start_npc_ids="203947"/>
 	<item_collecting id="1381" start_npc_ids="204040"/>
 	<item_collecting id="1384" start_npc_ids="204028"/>
@@ -96,9 +89,6 @@
 	<item_collecting id="3336" start_npc_ids="203954"/>
 	<item_collecting id="80003" start_npc_ids="799775"/>
 	
-	<monster_hunt id="1357" start_npc_ids="203933">
-		<monster var="0" end_var="7" npc_ids="211843"/>
-	</monster_hunt>
 	<monster_hunt id="1370" start_npc_ids="203949">
 		<monster var="0" end_var="1" npc_ids="210970"/>
 	</monster_hunt>
