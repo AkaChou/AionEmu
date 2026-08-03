@@ -35,7 +35,6 @@ class SimpleTalk1115DefinitionTest {
 		CompiledQuestDefinition fromDsl = simpleTalk1115().compile();
 
 		assertEquals(fromDsl.definition(), fromXml.definition());
-		assertEquals(QuestOwnership.RETAIL_ALIGNED, fromXml.ownership());
 		assertEquals(List.of("TALK_TO_NPC"), fromXml.transitionsByType().keySet().stream().toList());
 	}
 

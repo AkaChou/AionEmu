@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1" version="1">
   <metadata name="one" display-name-id="1" min-level="0" max-level="55" category="QUEST"/>
+  <nodes>
+    <node label="start"><project status="START"/></node>
+  </nodes>
+  <transitions>
+    <transition source="start" target="start">
+      <event><talk-to-npc npc-id="700001"/></event>
+    </transition>
+  </transitions>
 </quest-definition>

@@ -101,6 +101,17 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="v0">
+      <event>
+        <zone-mission-end/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="v0" target="v0">
       <event>
         <talk-to-npc npc-id="203082" dialog-id="31"/>
@@ -136,6 +147,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <player-emotion emotion="STAND"/>
       </after-commit>
     </transition>
     <transition source="v2" target="v2">
@@ -212,6 +224,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <player-emotion emotion="STAND"/>
       </after-commit>
     </transition>
     <transition source="v5" target="v5">

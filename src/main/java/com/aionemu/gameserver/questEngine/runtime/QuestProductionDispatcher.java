@@ -120,8 +120,15 @@ public final class QuestProductionDispatcher {
 				log.warn(I18n.get("log.quest_engine.typed_after_commit_failures",
 					definition.id(), result.afterCommitFailures().size()));
 			}
-			return result.status() == QuestExecutionStatus.COMMITTED
-				? QuestRouteResult.HANDLED : QuestRouteResult.NOT_HANDLED;
+			return switch (result.status()) {
+				case COMMITTED -> QuestRouteResult.HANDLED;
+				// 同一 owner 的一条路由可能被重复索引（例如同一物品用于不同任务状态）。
+				// FIRST_NON_UNKNOWN 应继续尝试，直到某个 transition 真正匹配。
+				// A route can be indexed more than once for one owner (for example
+				// one item used at different quest states). Let FIRST_NON_UNKNOWN
+				// continue until a transition actually matches.
+				case NO_MATCH -> QuestRouteResult.UNKNOWN;
+			};
 		} catch (RuntimeException failure) {
 			throw failure;
 		} catch (Exception failure) {

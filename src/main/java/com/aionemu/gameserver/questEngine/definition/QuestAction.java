@@ -6,10 +6,20 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill, QuestAction.CompleteQuest,
 		QuestAction.GiveItem {
 	record RemoveItem(int itemId, int count) implements QuestAction {
+		/**
+		 * transition 需要移除当前完整堆叠时使用的哨兵数量。
+		 * Sentinel count used when the transition must remove the complete live stack.
+		 */
+		public static final int ALL = -1;
+
 		public RemoveItem {
-			if (itemId <= 0 || count <= 0) {
-				throw new IllegalArgumentException("item id and count must be positive");
+			if (itemId <= 0 || (count <= 0 && count != ALL)) {
+				throw new IllegalArgumentException("item id must be positive and count must be positive or ALL");
 			}
+		}
+
+		public boolean removeAll() {
+			return count == ALL;
 		}
 	}
 

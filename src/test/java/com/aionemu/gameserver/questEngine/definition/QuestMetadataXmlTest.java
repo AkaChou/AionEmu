@@ -10,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestMetadataXmlTest {
 	@Test
-	void xmlCarriesLegacyStaticMetadataWithoutDroppingFields() {
+	void executableXmlCarriesSupportedStaticMetadataWithoutDroppingFields() {
 		String xml = """
 				<quest-definition id="1001" version="1">
 				  <metadata name="legacy" display-name-id="1101001" min-level="2" max-level="55" category="MISSION"
-				      rank="3" max-count-limited-quest="4" count-recover-limited-quest="2"
+				      rank="3" max-count-limited-quest="1" count-recover-limited-quest="2"
 				      cannot-share="true" cannot-giveup="true" bounty-reward="true" use-class-reward="2"
-				      combine-skill="9" combine-skill-point="399" timer="true" npc-faction-id="7"
+				      combine-skill="9" combine-skill-point="399" timer="true"
 				      mentor-type="MENTOR" target-type="FORCE" title-id="42">
 				    <races><race id="ELYOS"/></races>
 				    <classes><class id="FIGHTER"/></classes>
@@ -34,6 +34,10 @@ class QuestMetadataXmlTest {
 				    <start-conditions><condition type="finished" quest-id="999" reward-mode="1"/></start-conditions>
 				    <class-rewards><class id="FIGHTER"><reward kind="ITEM" id="100000001" amount="1"/></class></class-rewards>
 				  </metadata>
+				  <nodes><node label="start"><project status="START"/></node></nodes>
+				  <transitions><transition source="start" target="start">
+				    <event><talk-to-npc npc-id="700001"/></event>
+				  </transition></transitions>
 				</quest-definition>
 				""";
 
@@ -44,7 +48,7 @@ class QuestMetadataXmlTest {
 		assertEquals("FIGHTER", metadata.permittedClasses().iterator().next());
 		assertEquals("FEMALE", metadata.permittedGender());
 		assertEquals(3, metadata.repeatPolicy().maxRepeatCount());
-		assertEquals(4, metadata.maxCountLimitedQuest());
+		assertEquals(1, metadata.maxCountLimitedQuest());
 		assertTrue(metadata.cannotShare());
 		assertEquals(399, metadata.combineSkillPoint());
 		assertEquals(2, metadata.questWorkItems().get(0).count());

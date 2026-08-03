@@ -55,6 +55,22 @@ class PlayerQuestDialogPortTest {
 	}
 
 	@Test
+	void showDialogAllowsTargetlessQuestDialogWithObjectZero() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
+
+		assertDoesNotThrow(() -> port.showDialog(snapshot().withTargetlessDialog(), plan(), 4));
+	}
+
+	@Test
+	void showSelectionDialogAllowsTargetlessContextWithObjectZero() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
+
+		assertDoesNotThrow(() -> port.showSelectionDialog(snapshot().withTargetlessDialog(), plan(), 10));
+	}
+
+	@Test
 	void showDialogFailsClosedWithoutAuthoritativeObjectId() throws Exception {
 		Player player = emptyPlayer();
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);

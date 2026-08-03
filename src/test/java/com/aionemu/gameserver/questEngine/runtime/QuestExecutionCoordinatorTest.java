@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.EvidenceRef;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
@@ -37,8 +36,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestExecutionCoordinatorTest {
-	private static final EvidenceRef EVIDENCE = new EvidenceRef("test", "coordinator", "fixture");
-
 	@Test
 	void requiredFailureRollsBackAndDoesNotRunAfterCommit() {
 		List<String> calls = new ArrayList<>();
@@ -425,7 +422,6 @@ class QuestExecutionCoordinatorTest {
 
 	private static CompiledQuestDefinition spawnDefinition() {
 		return quest(1003)
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).goTo("start")
@@ -434,7 +430,6 @@ class QuestExecutionCoordinatorTest {
 
 	private static CompiledQuestDefinition protocolOnlyDefinition() {
 		return quest(1005)
-			.evidence(EVIDENCE)
 			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var1", 0)))
 			.on(talkToNpc(700001)).from("unaccepted").goTo("unaccepted")
@@ -448,7 +443,6 @@ class QuestExecutionCoordinatorTest {
 
 	private static CompiledQuestDefinition definition() {
 		return quest(1001)
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
@@ -459,7 +453,6 @@ class QuestExecutionCoordinatorTest {
 
 	private static CompiledQuestDefinition rewardDefinition() {
 		return quest(1002)
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
@@ -470,7 +463,6 @@ class QuestExecutionCoordinatorTest {
 
 	private static CompiledQuestDefinition terminalDefinition() {
 		return quest(1004)
-			.evidence(EVIDENCE)
 			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var1", 0)))
 			.node("complete", project(QuestStatus.COMPLETE, vars("var1", 1)))

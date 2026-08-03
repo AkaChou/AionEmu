@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.EvidenceRef;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
@@ -66,7 +65,6 @@ class RemainingCapabilityPortTest {
 	@Test
 	void runtimeFactsUseTheSameEventIndexRouteAsDefinitions() {
 		CompiledQuestDefinition definition = QuestDsl.quest(14211)
-			.evidence(new EvidenceRef("JAVA_HANDLER", "handlers", "aggro"))
 			.progress(QuestDsl.bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", QuestDsl.project(QuestStatus.START, QuestDsl.vars("var0", 0)))
 			.node("done", QuestDsl.project(QuestStatus.REWARD, QuestDsl.vars("var0", 1)))

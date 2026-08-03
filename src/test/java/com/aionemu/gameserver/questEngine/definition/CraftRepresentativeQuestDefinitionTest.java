@@ -36,16 +36,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /** CRAFT vertical proofs extracted from real owners 19038, 5000 and 1941. */
 class CraftRepresentativeQuestDefinitionTest {
-	private static final EvidenceRef FAIL_CRAFT_EVIDENCE = new EvidenceRef("HANDLER",
-		"src/main/java/com/aionemu/gameserver/quest/handlers/crafting/_19038MasterCooksPotential.java:180",
-		"onFailCraftEvent rolls var0 2/5/8/11 back to 1/4/7/10 for four exact item ids");
-	private static final EvidenceRef WORK_ORDER_EVIDENCE = new EvidenceRef("XML_TEMPLATE",
-		"src/main/resources/aion/data/static_data/quest_script_data/work_order.xml:8",
-		"work_order 5000 learns recipe 155004001 on accept and releases it on completion or abandon");
-	private static final EvidenceRef CRAFT_REWARD_EVIDENCE = new EvidenceRef("XML_TEMPLATE",
-		"src/main/resources/aion/data/static_data/quest_script_data/crafting.xml:9",
-		"crafting_rewards 1941 plays movie 93 then grants skill 40002 level 400 with auto recipes");
-
 	@Test
 	void failCraft19038ProjectsAllFourExactRollbacks() {
 		assertFailCraftRollback(182206773, 2, 1);
@@ -75,7 +65,6 @@ class CraftRepresentativeQuestDefinitionTest {
 	@Test
 	void questOwnedRecipeWithoutAbandonCleanupFailsCompilation() {
 		QuestCompilationException failure = assertThrows(QuestCompilationException.class, () -> quest(5000)
-			.evidence(WORK_ORDER_EVIDENCE)
 			.metadata(QuestMetadata.minimal("Steel Chisel Supplies", 1190000, "TASK"))
 			.node("none", project(QuestStatus.NONE, Map.of()))
 			.node("start", project(QuestStatus.START, Map.of()))
@@ -128,7 +117,6 @@ class CraftRepresentativeQuestDefinitionTest {
 
 	private static void assertFailCraftRollback(int itemId, int from, int to) {
 		CompiledQuestDefinition definition = quest(19038)
-			.evidence(FAIL_CRAFT_EVIDENCE)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("failed", project(QuestStatus.START, vars("var0", from)))
 			.node("retry", project(QuestStatus.START, vars("var0", to)))

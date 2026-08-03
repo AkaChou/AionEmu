@@ -68,7 +68,6 @@ class ReportTo1101DefinitionTest {
 		}
 		assertFalse(xml.contains("<evidence"));
 		assertFalse(xml.contains("ownership="));
-		assertFalse(xml.contains("shadow-coverage"));
 		assertTrue(xml.contains("dialog-ids=\"8..23\""));
 	}
 

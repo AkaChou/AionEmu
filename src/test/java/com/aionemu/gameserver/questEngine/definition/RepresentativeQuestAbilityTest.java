@@ -37,20 +37,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *   24154 Better Than Last Time → 影片+传送 (playQuestMovie 249/250, MovieEnd→teleport)
  */
 class RepresentativeQuestAbilityTest {
-	private static final EvidenceRef TIMER_EVIDENCE = new EvidenceRef("TEMPLATE_HANDLER",
-		"src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_2533BeritrasCurse.java:43,82",
-		"questTimerStart(env, 300) 在物品使用+区域内启动; SELECT_REWARD 分支 questTimerEnd 取消");
-	private static final EvidenceRef SPAWN_AI_EVIDENCE = new EvidenceRef("TEMPLATE_HANDLER",
-		"src/main/java/com/aionemu/gameserver/quest/handlers/morheim/_2333ARibbitOutOfWater.java:76-80",
-		"STEP_TO_2 在玩家当前 world/instance/position 刷 204416, startWalking, FOLLOW_ME, START_EMOTE2, 并注册 DF2_ITEMUSEAREA_Q2333 跟随检查");
-	private static final EvidenceRef MOVIE_TELEPORT_EVIDENCE = new EvidenceRef("TEMPLATE_HANDLER",
-		"src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_24154Better_Than_Last_Time.java:62,99,125",
-		"ACCEPT_QUEST→playQuestMovie(249); USE_OBJECT(var==2)→playQuestMovie(250); MovieEnd(250)→teleportTo(220040000,2452,2471,673,(byte)28)");
-
 	@Test
 	void timer2533StartFactsProjectFaithfully() {
 		CompiledQuestDefinition def = quest(2533)
-			.evidence(TIMER_EVIDENCE)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.on(useItem(182204425)).when(statusIs(QuestStatus.START)).goTo("start")
@@ -64,7 +53,6 @@ class RepresentativeQuestAbilityTest {
 	@Test
 	void timer2533CancelFactsProjectFaithfully() {
 		CompiledQuestDefinition def = quest(2533)
-			.evidence(TIMER_EVIDENCE)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.on(talkToNpc(204801)).when(statusIs(QuestStatus.START)).goTo("start")
@@ -78,7 +66,6 @@ class RepresentativeQuestAbilityTest {
 	@Test
 	void spawnAndAi2333FactsProjectFaithfully() {
 		CompiledQuestDefinition def = quest(2333)
-			.evidence(SPAWN_AI_EVIDENCE)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("ready", project(QuestStatus.START, vars("var0", 1)))
 			.node("following", project(QuestStatus.START, vars("var0", 2)))
@@ -105,7 +92,6 @@ class RepresentativeQuestAbilityTest {
 		// USE_OBJECT only starts movie 250. MovieEnd(250) is the authoritative callback
 		// that teleports and advances var0 from 2 to 3.
 		CompiledQuestDefinition movieDef = quest(24154)
-			.evidence(MOVIE_TELEPORT_EVIDENCE)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("movie-ready", project(QuestStatus.START, vars("var0", 2)))
 			.node("teleported", project(QuestStatus.START, vars("var0", 3)))
@@ -124,7 +110,6 @@ class RepresentativeQuestAbilityTest {
 
 		// 接取时播放 249。
 		CompiledQuestDefinition acceptDef = quest(24154)
-			.evidence(MOVIE_TELEPORT_EVIDENCE)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))

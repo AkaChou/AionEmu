@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.EvidenceRef;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
@@ -33,8 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestRuntimeInfrastructureTest {
-	private static final EvidenceRef EVIDENCE = new EvidenceRef("test", "runtime", "fixture");
-
 	@Test
 	void indexIsDeterministicAndPlannerHasNoSideEffects() {
 		CompiledQuestDefinition definition = definition(1001);
@@ -56,7 +53,6 @@ class QuestRuntimeInfrastructureTest {
 	@Test
 	void plannerRequiresSnapshotToMatchDeclaredSourceNode() {
 		CompiledQuestDefinition definition = quest(1001)
-			.evidence(EVIDENCE)
 			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("step", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
@@ -71,7 +67,7 @@ class QuestRuntimeInfrastructureTest {
 
 	@Test
 	void eventIndexOrdersOverlappingRoutesByOwnerThenPriority() {
-		var builder = quest(1001).evidence(EVIDENCE)
+		var builder = quest(1001)
 			.node("start", project(QuestStatus.START, Map.of()));
 		builder.on(talkToNpc(700001)).from("start").priority(20).goTo("start");
 		builder.on(talkToNpc(700001)).from("start").priority(10).goTo("start");
@@ -84,10 +80,10 @@ class QuestRuntimeInfrastructureTest {
 
 	@Test
 	void rankedThresholdsShareOnePvpRoute() {
-		CompiledQuestDefinition rankThree = quest(3741).evidence(EVIDENCE)
+		CompiledQuestDefinition rankThree = quest(3741)
 			.node("start", project(QuestStatus.START, Map.of()))
 			.on(new QuestEvent.KillRanked(3)).from("start").goTo("start").compile();
-		CompiledQuestDefinition rankEight = quest(3742).evidence(EVIDENCE)
+		CompiledQuestDefinition rankEight = quest(3742)
 			.node("start", project(QuestStatus.START, Map.of()))
 			.on(new QuestEvent.KillRanked(8)).from("start").goTo("start").compile();
 
@@ -156,8 +152,7 @@ class QuestRuntimeInfrastructureTest {
 	@Test
 	void broadcastStopsAdditionalTransitionsForOneOwnerButContinuesOtherOwners() {
 		var builder = QuestDsl.quest(1001);
-		builder.evidence(EVIDENCE)
-				.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))
+		builder.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("step", 0)))
 				.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
 				.node("complete", project(QuestStatus.COMPLETE, vars("step", 2)));
@@ -274,7 +269,6 @@ class QuestRuntimeInfrastructureTest {
 
 	private static CompiledQuestDefinition definition(int id) {
 		return quest(id)
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))

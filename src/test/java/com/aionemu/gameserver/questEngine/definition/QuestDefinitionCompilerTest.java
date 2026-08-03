@@ -42,8 +42,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QuestDefinitionCompilerTest {
-	private static final EvidenceRef EVIDENCE = new EvidenceRef("test", "quest/1001", "fixture");
-
 	@Test
 	void xmlAndDslCompileToTheSameImmutableDefinition() {
 		QuestMetadata metadata = QuestMetadata.minimal("A test quest", 1101001, "QUEST");
@@ -93,7 +91,7 @@ class QuestDefinitionCompilerTest {
 			valid.replace("version=\"1\"", "version=\"1\" ownership=\"CURRENT\""),
 			valid.replace("<metadata", "<evidence><ref source=\"test\" locator=\"x\" statement=\"y\"/></evidence><metadata"),
 			valid.replace("<transition target=\"start\">",
-				"<transition target=\"start\" shadow-coverage=\"OFFLINE_ONLY\">"));
+				"<transition target=\"start\" readiness=\"OFFLINE_ONLY\">"));
 		for (String xml : invalid) {
 			assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
 				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
@@ -194,10 +192,12 @@ class QuestDefinitionCompilerTest {
 
 	@Test
 	void duplicateOwnerFailsClosed() {
-		CompiledQuestDefinition first = QuestDefinitionCompiler.compile(QuestDefinition.catalogOnly(1001, 1,
-				QuestMetadata.minimal("a", 1, "QUEST"), List.of(EVIDENCE)));
-		CompiledQuestDefinition second = QuestDefinitionCompiler.compile(QuestDefinition.catalogOnly(1001, 2,
-				QuestMetadata.minimal("b", 2, "QUEST"), List.of(EVIDENCE)));
+		CompiledQuestDefinition first = quest(1001).version(1)
+			.node("start", project(QuestStatus.START, Map.of()))
+			.on(talkToNpc(700001)).from("start").goTo("start").compile();
+		CompiledQuestDefinition second = quest(1001).version(2)
+			.node("start", project(QuestStatus.START, Map.of()))
+			.on(talkToNpc(700001)).from("start").goTo("start").compile();
 		assertEquals("DUPLICATE_OWNER", assertThrows(QuestCompilationException.class,
 				() -> new ImmutableQuestCatalog(List.of(first, second))).code());
 	}
@@ -235,15 +235,6 @@ class QuestDefinitionCompilerTest {
 		builder.on(talkToNpc(700001)).from("start").then(completeQuest(0)).goTo("complete")
 			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION));
 		assertEquals("AMBIGUOUS_TRANSITION", assertThrows(QuestCompilationException.class, builder::compile).code());
-	}
-
-	@Test
-	void catalogOnlyCannotCarryExecution() {
-		QuestDefinition definition = new QuestDefinition(1001, 1, QuestOwnership.CATALOG_ONLY,
-				List.of(EVIDENCE), QuestMetadata.minimal("catalog", 1, "QUEST"), ProgressLayout.empty(),
-				List.of(new QuestNode("start", new NodeProjection(QuestStatus.START, java.util.Map.of()))), List.of());
-		assertEquals("CATALOG_ONLY_EXECUTION", assertThrows(QuestCompilationException.class,
-				() -> QuestDefinitionCompiler.compile(definition)).code());
 	}
 
 	@Test

@@ -68,7 +68,7 @@ class MissionFamilyDefinitionTest {
 				&& talk.npcId() == 203071 && talk.dialogId() == 10002)
 			.findFirst().orElseThrow();
 		assertTrue(turnIn.conditions().contains(new QuestCondition.HasItem(182200001, 3)));
-		assertTrue(turnIn.actions().contains(new QuestAction.RemoveItem(182200001, 3)));
+		assertTrue(turnIn.actions().contains(new QuestAction.RemoveItem(182200001, QuestAction.RemoveItem.ALL)));
 
 		List<QuestAction> completions = transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete"))

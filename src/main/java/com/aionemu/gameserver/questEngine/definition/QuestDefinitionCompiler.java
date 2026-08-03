@@ -16,12 +16,6 @@ public final class QuestDefinitionCompiler {
 
 	public static CompiledQuestDefinition compile(QuestDefinition definition) {
 		Objects.requireNonNull(definition, "definition");
-		if (definition.ownership() == QuestOwnership.CATALOG_ONLY) {
-			if (!definition.nodes().isEmpty() || !definition.transitions().isEmpty()) {
-				fail("CATALOG_ONLY_EXECUTION", "CATALOG_ONLY definitions cannot contain execution");
-			}
-			return new CompiledQuestDefinition(definition);
-		}
 		if (definition.nodes().isEmpty()) {
 			fail("NO_NODES", "executable definition has no nodes");
 		}

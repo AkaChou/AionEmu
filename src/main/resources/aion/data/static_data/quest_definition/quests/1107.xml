@@ -46,12 +46,28 @@
     </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started">
+    <transition source="unaccepted" target="unaccepted">
       <event>
         <use-item item-id="182200501"/>
       </event>
       <after-commit>
+        <show-quest-dialog dialog-id="4"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <quest-dialog dialog="ACCEPT_QUEST"/>
+      </event>
+      <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <quest-dialog dialog="REFUSE_QUEST"/>
+      </event>
+      <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>

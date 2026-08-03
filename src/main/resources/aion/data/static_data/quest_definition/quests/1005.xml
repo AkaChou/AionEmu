@@ -4,6 +4,13 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <prerequisites>
+      <quest id="1100"/>
+      <quest id="1001"/>
+      <quest id="1002"/>
+      <quest id="1003"/>
+      <quest id="1004"/>
+    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="28750"/>
       <reward kind="TITLE" id="1" amount="1"/>
@@ -105,6 +112,17 @@
     <transition source="unaccepted" target="v0">
       <event>
         <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="v0">
+      <event>
+        <zone-mission-end/>
       </event>
       <conditions>
         <start-eligible/>

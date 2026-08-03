@@ -78,7 +78,6 @@ import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.questEngine.runtime.QuestLegacyObservationContext;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
@@ -156,9 +155,6 @@ public final class QuestService {
 			rewards = template.getRewards().get(reward);
 		}
 		if (ItemService.addQuestItems(player, questItems)) {
-			for (QuestItems item : questItems) {
-				observeReward(env, "ITEM", item.getItemId(), item.getCount());
-			}
 			giveReward(env, rewards);
 			giveReward(env, extendedRewards);
 			if (template.getCategory() == QuestCategory.CHALLENGE_TASK) {
@@ -342,20 +338,15 @@ public final class QuestService {
 		if (rewards.getGold() != null) {
 			long amount = (long) (player.getRates().getQuestKinahRate() * rewards.getGold());
 			player.getInventory().increaseKinah(amount, ItemUpdateType.INC_KINAH_QUEST);
-			observeReward(env, "GOLD", 0, rewards.getGold(),
-				com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE);
 		}
 		if (rewards.getExp() != null) {
 			NpcTemplate npcTemplate = DataManager.NPC_DATA.getNpcTemplate(env.getTargetId());
 			player.getCommonData().addExp(rewards.getExp(), RewardType.QUEST);
-			observeReward(env, "EXP", 0, rewards.getExp(),
-				com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE);
 		}
 		// 成长光环 / Aura Of Growth
 		if (rewards.getExpBoost() != null) {
 			long amount = 1060000L * rewards.getExpBoost();
 			player.getCommonData().addAuraOfGrowth((int) amount);
-			observeReward(env, "AURA_OF_GROWTH", 0, amount);
 		}
 		// CP 奖励 5.3 / CP Reward 5.3
 		if (rewards.getCP() != null) {
@@ -363,7 +354,6 @@ public final class QuestService {
 		}
 		// 欧比斯登陆 4.9.1 / Abyss Landing 4.9.1
 		if (rewards.getAbyssOp() != null) {
-			observeReward(env, "ABYSS_OP", 0, rewards.getAbyssOp());
 			GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(player, null, null, rewards.getAbyssOp(), LandingPointsEnum.QUEST);
 			if (player.getRace() == Race.ASMODIANS) {
 				GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
@@ -375,26 +365,19 @@ public final class QuestService {
 		// 玩家完成任务现可获得“DP”。 / Now player can win "Dp" if finish quest.
 		if (rewards.getDp() != null) {
 			player.getCommonData().addDp(rewards.getDp());
-			observeReward(env, "DP", 0, rewards.getDp());
 		}
 		if (rewards.getTitle() != null) {
 			player.getTitleList().addTitle(rewards.getTitle(), true, 0);
-			observeReward(env, "TITLE", rewards.getTitle(), 1);
 		}
 		if (rewards.getAp() != null) { // Abyss Points
 			long amount = (long) (player.getRates().getQuestApRate() * rewards.getAp());
 			AbyssPointsService.addAp(player, (int) amount);
-			observeReward(env, "AP", 0, rewards.getAp(),
-				com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE);
 		}
 		if (rewards.getGp() != null) { // Glory Points
 			long amount = (long) (player.getRates().getQuestGpRate() * rewards.getGp());
 			AbyssPointsService.addGp(player, (int) amount);
-			observeReward(env, "GP", 0, rewards.getGp(),
-				com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE);
 		}
 		if (rewards.getExtendInventory() != null) {
-			observeReward(env, "EXTEND_INVENTORY", 0, rewards.getExtendInventory());
 			if (rewards.getExtendInventory() == 1) {
 				CubeExpandService.expand(player, false);
 			} else if (rewards.getExtendInventory() == 2) {
@@ -403,8 +386,6 @@ public final class QuestService {
 		}
 		// 发送：成长光环、伯丁眷顾与欧比斯眷顾 / Send for: "Aura Of Growth & Berdin's Favor & Abyss Favor"
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-		QuestLegacyObservationContext.afterCommitAction(env.getQuestId(),
-			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.RefreshPlayerStats());
 	}
 
 	private static boolean setFinishingState(QuestEnv env, QuestTemplate template, int reward) {
@@ -421,10 +402,6 @@ public final class QuestService {
 						if (!player.getInventory().decreaseByItemId(qi.getItemId(), count)) {
 							return false;
 						}
-						if (count <= Integer.MAX_VALUE) {
-							QuestLegacyObservationContext.requiredAction(id,
-								new com.aionemu.gameserver.questEngine.definition.QuestAction.RemoveItem(qi.getItemId(), (int) count));
-						}
 					}
 				}
 			}
@@ -433,17 +410,12 @@ public final class QuestService {
 		qs.setQuestVar(0);
 		qs.setReward(reward);
 		qs.setCompleteCount(qs.getCompleteCount() + 1);
-		QuestLegacyObservationContext.requiredAction(id,
-			new com.aionemu.gameserver.questEngine.definition.QuestAction.CompleteQuest(reward));
 		if (template.getRepeatCycle() != null && player.getAccessLevel() == 0 || template.getQuestCoolTime() > 0) {
 			qs.setNextRepeatTime(countNextRepeatTime(player, template));
 		} else if (template.isTimeBased() && player.getAccessLevel() > 0) {
 			PacketSendUtility.sendMessage(player, "You're GM! So system won't apply countNextRepeatTime()");
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
-		QuestLegacyObservationContext.afterCommitAction(id,
-			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.SyncQuestState(
-				com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode.COMPLETION));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		GameEngineServices.questEngine().onLvlUp(env);
@@ -451,21 +423,7 @@ public final class QuestService {
 			player.getNpcFactions().completeQuest(template);
 		}
 		notifyQuestFinished(env);
-		QuestLegacyObservationContext.state(id, qs.getStatus(), qs.getQuestVars().getQuestVars());
 		return true;
-	}
-
-	private static void observeReward(QuestEnv env, String kind, int id, long amount) {
-		observeReward(env, kind, id, amount,
-			com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.EXACT);
-	}
-
-	private static void observeReward(QuestEnv env, String kind, int id, long amount,
-			com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode amountMode) {
-		if (amount > 0) {
-			QuestLegacyObservationContext.requiredAction(env.getQuestId(),
-				new com.aionemu.gameserver.questEngine.definition.QuestAction.GrantReward(kind, id, amount, amountMode));
-		}
 	}
 
 	static void notifyQuestFinished(QuestEnv env) {
@@ -713,14 +671,7 @@ public final class QuestService {
 		if (template.getNpcFactionId() != 0 && !template.isTimeBased()) {
 			player.getNpcFactions().startQuest(template);
 		}
-		QuestState started = player.getQuestStateList().getQuestState(id);
-		if (started != null) {
-			QuestLegacyObservationContext.state(id, started.getStatus(), started.getQuestVars().getQuestVars());
-		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, status.value(), 0));
-		QuestLegacyObservationContext.afterCommitAction(id,
-			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.SyncQuestState(
-				com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode.VISIBILITY_REFRESH));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		return true;
@@ -752,14 +703,7 @@ public final class QuestService {
 		} else {
 			player.getQuestStateList().addQuest(questId, new QuestState(questId, status, 0, 0, null, 0, null));
 		}
-		QuestState started = player.getQuestStateList().getQuestState(questId);
-		if (started != null) {
-			QuestLegacyObservationContext.state(questId, started.getStatus(), started.getQuestVars().getQuestVars());
-		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, status.value(), 0));
-		QuestLegacyObservationContext.afterCommitAction(questId,
-			new com.aionemu.gameserver.questEngine.definition.AfterCommitAction.SyncQuestState(
-				com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode.PACKET_ONLY));
 	}
 
 	/**
@@ -861,7 +805,6 @@ public final class QuestService {
 				qs.setQuestVar(0);
 			}
 		}
-		QuestLegacyObservationContext.state(id, qs.getStatus(), qs.getQuestVars().getQuestVars());
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		return true;
@@ -887,7 +830,6 @@ public final class QuestService {
 		}
 		qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
 		qs.setStatus(QuestStatus.REWARD);
-		QuestLegacyObservationContext.state(id, qs.getStatus(), qs.getQuestVars().getQuestVars());
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
@@ -923,11 +865,7 @@ public final class QuestService {
 			}
 			if (removeItem) {
 				for (InventoryItem inventoryItem : inventoryItems.getInventoryItem()) {
-					if (player.getInventory().decreaseByItemId(inventoryItem.getItemId(), 1)) {
-						QuestLegacyObservationContext.requiredAction(env.getQuestId(),
-							new com.aionemu.gameserver.questEngine.definition.QuestAction.RemoveItem(
-								inventoryItem.getItemId(), 1));
-					}
+					player.getInventory().decreaseByItemId(inventoryItem.getItemId(), 1);
 				}
 			}
 			return true;
@@ -944,12 +882,7 @@ public final class QuestService {
 					if (collectItem.getItemId() == 182400001) {
 						player.getInventory().decreaseKinah(collectItem.getCount());
 					} else {
-						if (player.getInventory().decreaseByItemId(collectItem.getItemId(), collectItem.getCount())
-								&& collectItem.getCount() <= Integer.MAX_VALUE) {
-							QuestLegacyObservationContext.requiredAction(env.getQuestId(),
-								new com.aionemu.gameserver.questEngine.definition.QuestAction.RemoveItem(
-									collectItem.getItemId(), collectItem.getCount()));
-						}
+						player.getInventory().decreaseByItemId(collectItem.getItemId(), collectItem.getCount());
 					}
 			}
 		}

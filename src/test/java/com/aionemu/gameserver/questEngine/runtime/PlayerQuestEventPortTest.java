@@ -70,6 +70,31 @@ class PlayerQuestEventPortTest {
 	}
 
 	@Test
+	void useItemSnapshotKeepsDialogTargetlessWhileEventCarriesItemObjectId() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player);
+
+		QuestEvent.UseItem event = new QuestEvent.UseItem(182200501, 900008);
+		QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID, event);
+
+		assertEquals(0, snapshot.interactionObjectId());
+		assertTrue(snapshot.targetlessDialog());
+		assertEquals(900008, event.itemObjectId());
+	}
+
+	@Test
+	void targetlessDialogSnapshotMarksTheProtocolBoundary() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player);
+
+		QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID,
+			new QuestEvent.QuestDialog(1002));
+
+		assertEquals(0, snapshot.interactionObjectId());
+		assertTrue(snapshot.targetlessDialog());
+	}
+
+	@Test
 	void productionEventBoundaryFreezesTypedStartEligibilityFacts() throws Exception {
 		Player player = emptyPlayer();
 		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player,

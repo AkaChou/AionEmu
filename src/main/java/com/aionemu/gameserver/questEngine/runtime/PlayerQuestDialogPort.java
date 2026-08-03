@@ -39,8 +39,8 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 			// 提交已成功但玩家已登出:无可发送对象,best-effort 跳过。
 			return false;
 		}
-		int objectId = snapshot.interactionObjectId();
-		if (objectId == 0) {
+		int objectId = snapshot.targetlessDialog() ? 0 : snapshot.interactionObjectId();
+		if (objectId == 0 && !snapshot.targetlessDialog()) {
 			// 缺少权威交互 objectId 时必须 fail closed, 禁止用 NPC templateId 或玩家 target 猜测。
 			throw new IllegalStateException("showDialog requires an authoritative interaction objectId "
 				+ "from the execution context for quest " + snapshot.questId());
@@ -60,8 +60,8 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 		if (player == null) {
 			return false;
 		}
-		int objectId = snapshot.interactionObjectId();
-		if (objectId == 0) {
+		int objectId = snapshot.targetlessDialog() ? 0 : snapshot.interactionObjectId();
+		if (objectId == 0 && !snapshot.targetlessDialog()) {
 			throw new IllegalStateException("showSelectionDialog requires an authoritative interaction objectId "
 				+ "from the execution context for quest " + snapshot.questId());
 		}

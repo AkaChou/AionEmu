@@ -21,14 +21,12 @@ import com.aionemu.gameserver.model.templates.quest.QuestRepeatCycle;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 
 /**
- * Persists the canonical quest projection through the caller-owned transaction
- * without advancing the live in-memory state.
+ * 通过调用方事务持久化规范任务投影，不提前推进实时内存状态。
+ * Persists the canonical quest projection through the caller-owned transaction without advancing live memory.
  *
- * <p>{@link #apply} writes the projection from a shadow {@link QuestState} so a
- * failed commit never leaves the player's in-memory quest state ahead of the
- * database. {@link #publish} is invoked only after the transaction committed
- * and atomically publishes the projection to the live state, marking it as
- * persisted so the next store does not rewrite it.</p>
+ * <p>{@link #apply} 先写入暂存 {@link QuestState}，因此提交失败不会让玩家内存状态领先数据库；
+ * {@link #publish} 仅在事务提交后原子发布到实时状态并标记为已持久化。
+ * {@link #apply} first writes a staged {@link QuestState}; {@link #publish} atomically publishes it only after commit.</p>
  */
 public final class PlayerQuestStatePort implements QuestStatePort {
 	private final QuestPlayerPort players;
@@ -49,19 +47,19 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 			throw new IllegalStateException("player is unavailable: " + playerId);
 		}
 		QuestState state = player.getQuestStateList().getQuestState(plan.questId());
-		// 影子状态:写 DB 但不触碰 live 内存。新建状态保持 NEW 走 INSERT,
-		// 已存在状态标记 UPDATE_REQUIRED 走 UPDATE,由同一个 UoW 连接完成。
-		QuestState shadow = projection(player, state, plan);
+		// 暂存投影写入 DB 但不触碰 live 内存；新状态走 INSERT，已有状态走 UPDATE。
+		// The staged projection is written without mutating live memory; new states insert and existing states update.
+		QuestState stagedProjection = projection(player, state, plan);
 		if (state == null || state.getPersistentState() == PersistentState.NEW) {
-			shadow.setPersistentState(PersistentState.NEW);
+			stagedProjection.setPersistentState(PersistentState.NEW);
 		} else {
 			// QuestState 在 NEW 状态忽略 UPDATE_REQUIRED;先脱离 NEW 再标记 UPDATE。
-			shadow.setPersistentState(PersistentState.UPDATED);
-			shadow.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			stagedProjection.setPersistentState(PersistentState.UPDATED);
+			stagedProjection.setPersistentState(PersistentState.UPDATE_REQUIRED);
 		}
-		questDao.store(connection, playerId, List.of(shadow));
+		questDao.store(connection, playerId, List.of(stagedProjection));
 		PendingKey key = new PendingKey(playerId, plan);
-		if (pending.putIfAbsent(key, shadow) != null) {
+		if (pending.putIfAbsent(key, stagedProjection) != null) {
 			throw new IllegalStateException("quest projection is already pending: " + plan.questId());
 		}
 	}

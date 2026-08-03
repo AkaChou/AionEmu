@@ -1,10 +1,12 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.model.EmotionType;
+import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ASCENSION_MORPH;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
+import com.aionemu.gameserver.questEngine.definition.QuestPlayerEmotion;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
@@ -25,8 +27,8 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 	public boolean morph(QuestSnapshot snapshot, QuestMutationPlan plan, int ascensionId) {
 		Objects.requireNonNull(snapshot, "snapshot");
 		Objects.requireNonNull(plan, "plan");
-		if (ascensionId <= 0) {
-			throw new IllegalArgumentException("ascensionId must be positive");
+		if (ascensionId != 0 && ascensionId != 1) {
+			throw new IllegalArgumentException("ascension morph state must be 0 or 1");
 		}
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
@@ -34,6 +36,32 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 			return false;
 		}
 		PacketSendUtility.sendPacket(player, new SM_ASCENSION_MORPH(ascensionId));
+		return true;
+	}
+
+	@Override
+	public boolean playerEmotion(QuestSnapshot snapshot, QuestMutationPlan plan,
+			QuestPlayerEmotion emotion) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		Objects.requireNonNull(emotion, "emotion");
+		Player player = players.find(snapshot.playerId());
+		if (player == null) {
+			return false;
+		}
+		int targetObjectId = snapshot.interactionObjectId();
+		if (emotion != QuestPlayerEmotion.STAND) {
+			throw new IllegalArgumentException("unsupported player emotion: " + emotion);
+		}
+		if (targetObjectId <= 0) {
+			// STAND 必须发送给持有本次交互的 NPC；缺少权威对象时不能退化为目标 object 0 的数据包。
+			// STAND is emitted against the NPC that owns the interaction. Never
+			// turn a missing authoritative object into a packet targeting object 0.
+			throw new IllegalStateException("player emotion requires an authoritative interaction objectId "
+				+ "for quest " + snapshot.questId());
+		}
+		PacketSendUtility.broadcastPacket(player,
+			new SM_EMOTION(player, EmotionType.EMOTE, EmotionId.STAND.id(), targetObjectId), true);
 		return true;
 	}
 

@@ -37,13 +37,19 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	@Test
-	void lostAxeStartsByUsingTheAxeThenReportsBack() throws Exception {
+	void lostAxeUsesTheAxeThenAcceptsThroughTheTargetlessDialog() throws Exception {
 		CompiledQuestDefinition compiled = definition("1107.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
-		QuestTransition start = transitions.stream()
-			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("started"))
+		QuestTransition use = transitions.stream()
+			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("unaccepted")
+				&& t.event().equals(new QuestEvent.UseItem(182200501)))
 			.findFirst().orElseThrow();
-		assertEquals(new QuestEvent.UseItem(182200501), start.event());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(4)), use.afterCommit());
+		QuestTransition start = transitions.stream()
+			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("started")
+				&& t.event().equals(new QuestEvent.QuestDialog(1002)))
+			.findFirst().orElseThrow();
+		assertEquals(new QuestEvent.QuestDialog(1002), start.event());
 
 		QuestTransition reward = transitions.stream()
 			.filter(t -> t.sourceNode().equals("started") && t.targetNode().equals("reward")
@@ -62,10 +68,17 @@ class JavaHandlerFamilyDefinitionTest {
 		CompiledQuestDefinition compiled = definition("1114.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
-		QuestTransition start = transitions.stream()
-			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("v0"))
+		QuestTransition use = transitions.stream()
+			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("unaccepted")
+				&& t.event().equals(new QuestEvent.UseItem(182200214)))
 			.findFirst().orElseThrow();
-		assertEquals(new QuestEvent.UseItem(182200214), start.event());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(4)), use.afterCommit());
+
+		QuestTransition start = transitions.stream()
+			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("v0")
+				&& t.event().equals(new QuestEvent.QuestDialog(1002)))
+			.findFirst().orElseThrow();
+		assertEquals(new QuestEvent.QuestDialog(1002), start.event());
 		assertTrue(start.actions().contains(new QuestAction.GiveItem(182200226, 1)));
 		assertTrue(start.actions().contains(new QuestAction.RemoveItem(182200214, 1)));
 
@@ -74,6 +87,7 @@ class JavaHandlerFamilyDefinitionTest {
 				&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 700008)
 			.findFirst().orElseThrow();
 		assertTrue(dress.actions().contains(new QuestAction.GiveItem(182200217, 1)));
+		assertTrue(dress.afterCommit().contains(new AfterCommitAction.AddNpcAggro(203175, 50)));
 
 		List<QuestAction> reward4 = transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward4") && t.targetNode().equals("complete"))

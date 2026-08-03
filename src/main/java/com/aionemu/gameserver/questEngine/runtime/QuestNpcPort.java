@@ -9,4 +9,12 @@ public interface QuestNpcPort {
 	 * @return true 表示已删除; false 表示找不到交互 NPC (best-effort, 记录审计)
 	 */
 	boolean deleteInteractionNpc(QuestSnapshot snapshot, QuestMutationPlan plan, boolean scheduleRespawn);
+
+	/**
+	 * 将任务玩家造成的伤害/仇恨添加到指定模板的附近 NPC。
+	 * Adds damage/aggro from the quest player to nearby NPCs of a template.
+	 */
+	default boolean addNpcAggro(QuestSnapshot snapshot, QuestMutationPlan plan, int npcTemplateId, int damage) {
+		throw new UnsupportedOperationException("NPC aggro is not composed");
+	}
 }

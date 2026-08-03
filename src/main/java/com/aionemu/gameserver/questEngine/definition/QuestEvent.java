@@ -14,7 +14,8 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		QuestEvent.BastionReward, QuestEvent.BonusApply, QuestEvent.AddAggroList,
 		QuestEvent.AtDistance, QuestEvent.ProtectEnd, QuestEvent.ProtectFail,
 		QuestEvent.EnterWindStream, QuestEvent.RideAction, QuestEvent.CreativityPoint,
-		QuestEvent.NpcReachTarget, QuestEvent.NpcLostTarget, QuestEvent.Abandon {
+		QuestEvent.NpcReachTarget, QuestEvent.NpcLostTarget, QuestEvent.QuestDialog,
+		QuestEvent.Abandon {
 	String type();
 
 	record TalkToNpc(int npcId, Integer dialogId, int interactionObjectId) implements QuestEvent {
@@ -61,9 +62,16 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
-	record UseItem(int itemId) implements QuestEvent {
+	record UseItem(int itemId, int itemObjectId) implements QuestEvent {
+		public UseItem(int itemId) {
+			this(itemId, 0);
+		}
+
 		public UseItem {
 			checkId(itemId, "itemId");
+			if (itemObjectId < 0) {
+				throw new IllegalArgumentException("itemObjectId must be non-negative");
+			}
 		}
 
 		@Override
@@ -448,11 +456,32 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 无目标任务对话选择，用于物品触发任务及其他协议 object id 为零而非 NPC 的对话。
+	 * Targetless quest-dialog selection, used by item-start quests and other
+	 * dialogs whose protocol object id is zero rather than an NPC.
+	 */
+	record QuestDialog(int dialogId) implements QuestEvent {
+		public QuestDialog {
+			if (dialogId < 0) {
+				throw new IllegalArgumentException("dialogId must be non-negative");
+			}
+		}
+
+		@Override
+		public String type() {
+			return "QUEST_DIALOG";
+		}
+	}
+
 	/** Returns the event key used by the route index. Dialog is matched after routing. */
 	static QuestEvent routeKey(QuestEvent event) {
 		Objects.requireNonNull(event, "event");
 		if (event instanceof TalkToNpc talk) {
 			return new TalkToNpc(talk.npcId());
+		}
+		if (event instanceof UseItem useItem) {
+			return new UseItem(useItem.itemId());
 		}
 		if (event instanceof KillRanked) {
 			return new KillRanked(1);
@@ -504,6 +533,12 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 			return expected.npcId() == observed.npcId()
 				&& (expected.dialogId() == null || expected.dialogId().equals(observed.dialogId()));
 		}
+		if (definition instanceof UseItem expected && actual instanceof UseItem observed) {
+			return expected.itemId() == observed.itemId();
+		}
+		if (definition instanceof QuestDialog expected && actual instanceof QuestDialog observed) {
+			return expected.dialogId() == observed.dialogId();
+		}
 		if (definition instanceof KillRanked expected && actual instanceof KillRanked observed) {
 			return observed.rankId() >= expected.rankId();
 		}
@@ -545,6 +580,12 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (left instanceof TalkToNpc a && right instanceof TalkToNpc b) {
 			return a.npcId() == b.npcId()
 				&& (a.dialogId() == null || b.dialogId() == null || a.dialogId().equals(b.dialogId()));
+		}
+		if (left instanceof UseItem a && right instanceof UseItem b) {
+			return a.itemId() == b.itemId();
+		}
+		if (left instanceof QuestDialog a && right instanceof QuestDialog b) {
+			return a.dialogId() == b.dialogId();
 		}
 		if (left instanceof KillRanked && right instanceof KillRanked) {
 			return true;

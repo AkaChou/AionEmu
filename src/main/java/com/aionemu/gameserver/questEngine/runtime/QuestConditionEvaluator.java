@@ -38,9 +38,8 @@ public final class QuestConditionEvaluator {
 	}
 
 	/**
-	 * An item condition matches only when the snapshot actually captured
-	 * inventory facts. Unknown facts are treated as unmatched — never guessed
-	 * as zero — so the shadow exposes the difference instead of a fake plan.
+	 * 物品条件仅在快照已捕获库存事实时匹配；未知事实失败关闭，不猜测为零。
+	 * Item conditions match only captured inventory facts; unknown facts fail closed instead of being guessed as zero.
 	 */
 	private static boolean hasItem(QuestSnapshot snapshot, QuestCondition.HasItem item) {
 		try {

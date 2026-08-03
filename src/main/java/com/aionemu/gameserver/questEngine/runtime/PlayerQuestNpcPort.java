@@ -45,4 +45,27 @@ public final class PlayerQuestNpcPort implements QuestNpcPort {
 		controller.onDelete();
 		return true;
 	}
+
+	@Override
+	public boolean addNpcAggro(QuestSnapshot snapshot, QuestMutationPlan plan, int npcTemplateId, int damage) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		if (npcTemplateId <= 0 || damage < 0) {
+			throw new IllegalArgumentException("npcTemplateId must be positive and damage non-negative");
+		}
+		var player = world.world().findPlayer(snapshot.playerId());
+		if (player == null || !player.isSpawned()) {
+			return false;
+		}
+		boolean applied = false;
+		for (VisibleObject visible : player.getKnownList().getKnownObjectsSnapshot()) {
+			if (!(visible instanceof Npc npc) || npc.getNpcId() != npcTemplateId || !npc.isSpawned()
+				|| npc.getWorldId() != player.getWorldId() || npc.getInstanceId() != player.getInstanceId()) {
+				continue;
+			}
+			npc.getAggroList().addDamage(player, damage);
+			applied = true;
+		}
+		return applied;
+	}
 }

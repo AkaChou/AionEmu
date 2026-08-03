@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,8 @@ class RemainingCapabilityDefinitionTest {
 	@Test
 	void currentHandlerBackedEventsCompileThroughDslAndXml() {
 		assertEquivalent(14211, addAggroList(277224), "<add-aggro-list npc-id=\"277224\"/>");
+		assertEquivalent(14212, QuestDsl.questDialog(QuestDialog.ACCEPT_QUEST),
+			"<quest-dialog dialog=\"ACCEPT_QUEST\"/>");
 		assertEquivalent(18830, houseItemUse(3420021), "<house-item-use item-id=\"3420021\"/>");
 		assertEquivalent(1354, passFlyingRing("ERACUS_TEMPLE_AIR_BOOSTER_1"),
 			"<pass-flying-ring ring=\"ERACUS_TEMPLE_AIR_BOOSTER_1\"/>");
@@ -57,6 +60,46 @@ class RemainingCapabilityDefinitionTest {
 		assertTrue(QuestEvent.matches(new QuestEvent.AddAggroList(277224), new QuestEvent.AddAggroList(277224, ai)));
 		assertTrue(QuestEvent.matches(new QuestEvent.EnterWindStream(405001), new QuestEvent.EnterWindStream(405001, movement)));
 		assertTrue(QuestEvent.matches(new QuestEvent.UseSkill(9832), new QuestEvent.UseSkill(9832, skill)));
+		assertTrue(QuestEvent.matches(new QuestEvent.UseItem(182200501),
+			new QuestEvent.UseItem(182200501, 900008)));
+		assertTrue(QuestEvent.matches(new QuestEvent.QuestDialog(QuestDialog.ACCEPT_QUEST.id()),
+			new QuestEvent.QuestDialog(QuestDialog.ACCEPT_QUEST.id())));
+		assertEquals(new QuestEvent.UseItem(182200501),
+			QuestEvent.routeKey(new QuestEvent.UseItem(182200501, 900008)));
+	}
+
+	@Test
+	void xmlAndDslCompileTheNewTypedActionsAndRemoveAll() {
+		CompiledQuestDefinition dsl = quest(14213)
+			.metadata(QuestMetadata.minimal("typed-actions", 1, "QUEST"))
+			.progress(QuestDsl.bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, vars("var0", 0)))
+			.node("done", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(QuestDsl.questDialog(QuestDialog.ACCEPT_QUEST)).from("start")
+			.when(statusIs(QuestStatus.START))
+			.then(QuestDsl.removeAllItem(182200501))
+			.then(QuestDsl.setVariable("var0", 1))
+			.goTo("done")
+			.afterCommit(QuestDsl.playerEmotion(QuestPlayerEmotion.STAND))
+			.afterCommit(QuestDsl.addNpcAggro(203175, 50))
+			.compile();
+		String xml = """
+			<quest-definition id="14213" version="1">
+			  <metadata name="typed-actions" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+			  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+			  <nodes><node label="start"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+			    <node label="done"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node></nodes>
+			  <transitions><transition source="start" target="done"><event><quest-dialog dialog="ACCEPT_QUEST"/></event>
+			    <conditions><status-is status="START"/></conditions>
+			    <actions><remove-item item-id="182200501" count="ALL"/><set-variable field="var0" value="1"/></actions>
+			    <after-commit><player-emotion emotion="STAND"/><add-npc-aggro npc-id="203175" damage="50"/></after-commit>
+			  </transition></transitions>
+			</quest-definition>
+			""";
+		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
+			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+
+		assertEquals(dsl.definition(), fromXml.definition());
 	}
 
 	private static void assertEquivalent(int id, QuestEvent event, String xmlEvent) {

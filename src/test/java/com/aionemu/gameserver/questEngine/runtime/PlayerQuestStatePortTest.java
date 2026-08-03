@@ -36,7 +36,7 @@ class PlayerQuestStatePortTest {
 	}
 
 	@Test
-	void applyWritesShadowProjectionWithoutAdvancingLiveState() throws Exception {
+	void applyWritesStagedProjectionWithoutAdvancingLiveState() throws Exception {
 		Player player = playerWithState(QuestStatus.START, 0);
 		// 模拟已持久化的现有任务状态(非 NEW),推进应走 UPDATE 而非重复 INSERT。
 		player.getQuestStateList().getQuestState(QUEST_ID).setPersistentState(PersistentState.UPDATED);
@@ -45,12 +45,12 @@ class PlayerQuestStatePortTest {
 
 		port.apply(connection(), PLAYER_ID, plan(QuestStatus.REWARD, 1));
 
-		// 影子状态写 DB,带 plan 的新投影
+		// 暂存投影写入 DB，但不推进 live 状态。 The staged projection is persisted without advancing live state.
 		assertEquals(1, dao.stores.size());
-		QuestState shadow = dao.stores.get(0).get(0);
-		assertEquals(QuestStatus.REWARD, shadow.getStatus());
-		assertEquals(1, shadow.getQuestVars().getQuestVars());
-		assertEquals(PersistentState.UPDATE_REQUIRED, shadow.getPersistentState());
+		QuestState stagedProjection = dao.stores.get(0).get(0);
+		assertEquals(QuestStatus.REWARD, stagedProjection.getStatus());
+		assertEquals(1, stagedProjection.getQuestVars().getQuestVars());
+		assertEquals(PersistentState.UPDATE_REQUIRED, stagedProjection.getPersistentState());
 		// live 内存未被触碰
 		QuestState live = player.getQuestStateList().getQuestState(QUEST_ID);
 		assertEquals(QuestStatus.START, live.getStatus());
@@ -85,7 +85,7 @@ class PlayerQuestStatePortTest {
 	}
 
 	@Test
-	void newQuestStateStaysInsertableInShadow() throws Exception {
+	void newQuestStateStaysInsertableInStagedProjection() throws Exception {
 		Player player = playerWithState(QuestStatus.NONE, 0);
 		player.getQuestStateList().getQuestState(QUEST_ID).setPersistentState(PersistentState.NEW);
 		RecordingDao dao = new RecordingDao();
@@ -93,9 +93,9 @@ class PlayerQuestStatePortTest {
 
 		port.apply(connection(), PLAYER_ID, plan(QuestStatus.START, 0));
 
-		QuestState shadow = dao.stores.get(0).get(0);
+		QuestState stagedProjection = dao.stores.get(0).get(0);
 		// NEW 保持 NEW,由 DAO 走 INSERT(而非 UPDATE),不产生重复/丢失。
-		assertEquals(PersistentState.NEW, shadow.getPersistentState());
+		assertEquals(PersistentState.NEW, stagedProjection.getPersistentState());
 	}
 
 	@Test
@@ -129,13 +129,13 @@ class PlayerQuestStatePortTest {
 
 		port.apply(connection(), PLAYER_ID, plan);
 
-		QuestState shadow = dao.stores.get(0).get(0);
-		assertEquals(QuestStatus.COMPLETE, shadow.getStatus());
-		assertEquals(0, shadow.getQuestVars().getQuestVars());
-		assertEquals(3, shadow.getCompleteCount());
-		assertEquals(3, shadow.getRewardOrNull());
+		QuestState stagedProjection = dao.stores.get(0).get(0);
+		assertEquals(QuestStatus.COMPLETE, stagedProjection.getStatus());
+		assertEquals(0, stagedProjection.getQuestVars().getQuestVars());
+		assertEquals(3, stagedProjection.getCompleteCount());
+		assertEquals(3, stagedProjection.getRewardOrNull());
 		assertEquals(QuestStatus.REWARD, before.getStatus());
-		Timestamp persistedCompleteTime = shadow.getCompleteTime();
+		Timestamp persistedCompleteTime = stagedProjection.getCompleteTime();
 
 		port.publish(PLAYER_ID, plan);
 

@@ -75,15 +75,11 @@ class SimpleQuestFamilyDefinitionTest {
 			fromXml = QuestDefinitionXmlCompiler.compile(input);
 		}
 		assertEquals(fromDsl.definition(), fromXml.definition());
-		assertEquals(QuestOwnership.RETAIL_ALIGNED, fromXml.ownership());
 		return fromXml;
 	}
 
 	private static QuestDsl.QuestBuilder simpleSerialHunt9622() {
-		QuestDsl.QuestBuilder builder = base(9622, "SimpleSerialHunt 9622", "QUEST",
-				new EvidenceRef("RETAIL_SIMPLE_SERIAL_HUNT_XML", "58Server/Map/XML/Quest_SimpleSerialHunt.xml#id[9622]", "the true-server serial hunt entry declares Rebecca and five ordered target groups"),
-				new EvidenceRef("RETAIL_SCRIPT_DLL", "58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:724-729; SimpleSerialHuntQuest.cpp:46-82", "serial_hunt is a distinct type with the same grouped progress construction path"),
-				new EvidenceRef("RETAIL_NPC_TEMPLATES", "src/main/resources/aion/data/static_data/npcs/npc_template.xml#name_desc[DF4_DaQ_Owllau_As_52]", "the first ordered target resolves to NPC 216626 and Rebecca_5 resolves to NPC 203223"))
+		QuestDsl.QuestBuilder builder = base(9622, "SimpleSerialHunt 9622", "QUEST")
 			.progress(new BitField("var0", 0, 6, 0, 63, PersistenceMode.PERSISTENT, ProgressScope.LOCAL))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
@@ -95,10 +91,7 @@ class SimpleQuestFamilyDefinitionTest {
 	}
 
 	private static QuestDsl.QuestBuilder simpleCollect1103() {
-		QuestDsl.QuestBuilder builder = base(1103, "SimpleCollect 1103", "IMPORTANT",
-				new EvidenceRef("RETAIL_SIMPLE_COLLECT_XML", "58Server/Map/XML/Quest_SimpleCollectItem.xml#id[1103]", "the true-server collect entry declares LF1_Cherubim_pouch"),
-				new EvidenceRef("RETAIL_SCRIPT_DLL", "58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:697-703,1041-1049", "the collect type reads collect parameters and registers a collect object"),
-				new EvidenceRef("CURRENT_XML_OWNER", "src/main/resources/aion/data/static_data/quest_script_data/poeta.xml#item_collecting[1103]", "current owner supplies start NPC 203057 and action item 700105"))
+		QuestDsl.QuestBuilder builder = base(1103, "SimpleCollect 1103", "IMPORTANT")
 			.progress(new BitField("var0", 0, 6, 0, 63, PersistenceMode.PERSISTENT, ProgressScope.LOCAL))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
@@ -110,10 +103,7 @@ class SimpleQuestFamilyDefinitionTest {
 	}
 
 	private static QuestDsl.QuestBuilder simpleUseItem1107() {
-		QuestDsl.QuestBuilder builder = base(1107, "SimpleUseItem 1107", "QUEST",
-				new EvidenceRef("RETAIL_SIMPLE_USE_ITEM_XML", "58Server/Map/XML/Quest_SimpleUseItem.xml#id[1107]", "the true-server entry declares ITEM_QUEST_1107A and Namus as reward NPC"),
-				new EvidenceRef("RETAIL_SCRIPT_DLL", "58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:706-711,1050-1065", "the use_item type reads use-item parameters and initializes the common quest object"),
-				new EvidenceRef("CURRENT_ITEM_TEMPLATE", "src/main/resources/aion/data/static_data/items/item/item_etc_templates.xml#questid[1107]", "ITEM_QUEST_1107A resolves to item 182200501"))
+		QuestDsl.QuestBuilder builder = base(1107, "SimpleUseItem 1107", "QUEST")
 			.progress(new BitField("var0", 0, 6, 0, 63, PersistenceMode.PERSISTENT, ProgressScope.LOCAL))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
 			.node("item-used", project(QuestStatus.START, vars("var0", 1)))
@@ -125,10 +115,7 @@ class SimpleQuestFamilyDefinitionTest {
 	}
 
 	private static QuestDsl.QuestBuilder simpleItemPlay9623() {
-		QuestDsl.QuestBuilder builder = base(9623, "SimpleItemPlay 9623", "QUEST",
-				new EvidenceRef("RETAIL_SIMPLE_ITEM_PLAY_XML", "58Server/Map/XML/Quest_SimpleItemPlay.xml#id[9623]", "the true-server item-play entry declares Rebecca_5, Rebecca_2, Rebecca_3 and ITEM_QUEST_9623A"),
-				new EvidenceRef("RETAIL_SCRIPT_DLL", "58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:715-721,1071-1094", "the item_play type reads item-play parameters and initializes the common quest object"),
-				new EvidenceRef("CURRENT_ITEM_TEMPLATE", "src/main/resources/aion/data/static_data/items/item/item_etc_templates.xml#questid[9623]", "ITEM_QUEST_9623A resolves to item 182214024"))
+		QuestDsl.QuestBuilder builder = base(9623, "SimpleItemPlay 9623", "QUEST")
 			.progress(new BitField("var0", 0, 6, 0, 63, PersistenceMode.PERSISTENT, ProgressScope.LOCAL))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
 			.node("first-dialog", project(QuestStatus.START, vars("var0", 1)))
@@ -142,7 +129,7 @@ class SimpleQuestFamilyDefinitionTest {
 		return builder;
 	}
 
-	private static QuestDsl.QuestBuilder base(int id, String name, String category, EvidenceRef... evidence) {
+	private static QuestDsl.QuestBuilder base(int id, String name, String category) {
 		return quest(id).metadata(QuestMetadata.minimal(name, 0, category));
 	}
 }

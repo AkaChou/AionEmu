@@ -51,7 +51,7 @@ public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 			} catch (IllegalStateException unknownFacts) {
 				throw new SQLException("inventory facts are not captured for player " + snapshot.playerId());
 			}
-			if (available < removal.count()) {
+			if (!removal.removeAll() && available < removal.count()) {
 				throw new SQLException("insufficient item " + removal.itemId() + " for player " + snapshot.playerId());
 			}
 		}
@@ -77,7 +77,10 @@ public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 		var liveSnapshot = player.getInventory().transactionSnapshot();
 		try {
 			for (QuestAction.RemoveItem removal : removals) {
-				if (!player.getInventory().decreaseByItemId(removal.itemId(), removal.count())) {
+				int count = removal.removeAll()
+					? (int) Math.min(Integer.MAX_VALUE, player.getInventory().getItemCountByItemId(removal.itemId()))
+					: removal.count();
+				if (count > 0 && !player.getInventory().decreaseByItemId(removal.itemId(), count)) {
 					throw new SQLException("failed to remove item " + removal.itemId() + " for player " + snapshot.playerId());
 				}
 			}

@@ -22,8 +22,6 @@ class QuestDefinitionCatalogManifestTest {
 			// definition never requires touching this assertion.
 			assertEquals(packagedQuestFileIds(),
 				catalog.all().stream().map(CompiledQuestDefinition::id).toList());
-			assertEquals(QuestOwnership.RETAIL_ALIGNED, catalog.find(1101).orElseThrow().ownership());
-			assertEquals(QuestOwnership.RETAIL_ALIGNED, catalog.find(1102).orElseThrow().ownership());
 		}
 	}
 

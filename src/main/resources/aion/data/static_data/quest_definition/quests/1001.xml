@@ -108,6 +108,17 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="v0">
+      <event>
+        <zone-mission-end/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="v0" target="v0">
       <event>
         <talk-to-npc npc-id="203071" dialog-id="31"/>
@@ -190,7 +201,7 @@
         <show-quest-dialog dialog-id="1693"/>
       </after-commit>
     </transition>
-    <transition source="v7" target="v7">
+    <transition source="v0" target="v0">
       <event>
         <talk-to-npc npc-id="203071" dialog-id="1012"/>
       </event>
@@ -226,7 +237,7 @@
         <has-item item-id="182200001" count="3"/>
       </conditions>
       <actions>
-        <remove-item item-id="182200001" count="3"/>
+        <remove-item item-id="182200001" count="ALL"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

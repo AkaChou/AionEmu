@@ -57,6 +57,18 @@ public final class QuestDsl {
 		return new QuestEvent.UseItem(itemId);
 	}
 
+	/**
+	 * 无目标任务对话选择，例如物品触发任务的接受/拒绝流程。
+	 * Targetless quest-dialog selection, such as an item-start accept/refuse flow.
+	 */
+	public static QuestEvent questDialog(int dialogId) {
+		return new QuestEvent.QuestDialog(dialogId);
+	}
+
+	public static QuestEvent questDialog(QuestDialog dialog) {
+		return new QuestEvent.QuestDialog(Objects.requireNonNull(dialog, "dialog").id());
+	}
+
 	public static QuestEvent collectItem(int itemId, int count) {
 		return new QuestEvent.CollectItem(itemId, count);
 	}
@@ -245,6 +257,14 @@ public final class QuestDsl {
 		return new QuestAction.RemoveItem(itemId, count);
 	}
 
+	/**
+	 * 在同一事务中移除当前持有的某物品全部数量。
+	 * Removes every currently held copy of an item in the same transaction.
+	 */
+	public static QuestAction removeAllItem(int itemId) {
+		return new QuestAction.RemoveItem(itemId, QuestAction.RemoveItem.ALL);
+	}
+
 	public static QuestAction setVariable(String field, int value) {
 		return new QuestAction.SetVariable(field, value);
 	}
@@ -308,6 +328,18 @@ public final class QuestDsl {
 
 	public static AfterCommitAction playMovie(int movieId) {
 		return new AfterCommitAction.PlayMovie(movieId);
+	}
+
+	public static AfterCommitAction morph(int ascensionState) {
+		return new AfterCommitAction.Morph(ascensionState);
+	}
+
+	public static AfterCommitAction playerEmotion(QuestPlayerEmotion emotion) {
+		return new AfterCommitAction.PlayerEmotion(emotion);
+	}
+
+	public static AfterCommitAction addNpcAggro(int npcTemplateId, int damage) {
+		return new AfterCommitAction.AddNpcAggro(npcTemplateId, damage);
 	}
 
 	public static AfterCommitAction spawnNpc(String slot, int worldId, int templateId, float x, float y, float z,
@@ -384,8 +416,6 @@ public final class QuestDsl {
 	public static final class QuestBuilder {
 		private final int id;
 		private int version = 1;
-		private QuestOwnership ownership = QuestOwnership.RETAIL_ALIGNED;
-		private final List<EvidenceRef> evidence = new ArrayList<>();
 		private QuestMetadata metadata;
 		private final ProgressLayout.Builder progress = new ProgressLayout.Builder();
 		private final List<QuestNode> nodes = new ArrayList<>();
@@ -401,18 +431,6 @@ public final class QuestDsl {
 
 		public QuestBuilder version(int version) {
 			this.version = version;
-			return this;
-		}
-
-		public QuestBuilder ownership(QuestOwnership ownership) {
-			this.ownership = Objects.requireNonNull(ownership, "ownership");
-			return this;
-		}
-
-		public QuestBuilder evidence(EvidenceRef... evidence) {
-			for (EvidenceRef ref : evidence) {
-				this.evidence.add(Objects.requireNonNull(ref, "evidence"));
-			}
 			return this;
 		}
 
@@ -451,7 +469,7 @@ public final class QuestDsl {
 		}
 
 		public CompiledQuestDefinition compile() {
-			QuestDefinition definition = new QuestDefinition(id, version, ownership, evidence, metadata,
+			QuestDefinition definition = new QuestDefinition(id, version, metadata,
 				progress.build(), nodes, transitions);
 			return QuestDefinitionCompiler.compile(definition);
 		}

@@ -10,7 +10,8 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.StartQuestTimer, AfterCommitAction.StartInvisibleTimer,
 		AfterCommitAction.CancelQuestTimer, AfterCommitAction.SyncQuestState,
 		AfterCommitAction.RefreshPlayerStats, AfterCommitAction.Morph,
-		AfterCommitAction.FlightTeleport, AfterCommitAction.DeleteInteractionNpc {
+		AfterCommitAction.FlightTeleport, AfterCommitAction.PlayerEmotion,
+		AfterCommitAction.AddNpcAggro, AfterCommitAction.DeleteInteractionNpc {
 	record CloseDialog() implements AfterCommitAction {
 	}
 
@@ -219,11 +220,38 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Morphs the player into the ascension form for the given ascension id (SM_ASCENSION_MORPH). */
+	/**
+	 * 同步升华变身状态（0 = 普通，1 = 变身）。
+	 * Synchronizes the ascension morph state (0 = normal, 1 = morphed).
+	 */
 	record Morph(int ascensionId) implements AfterCommitAction {
 		public Morph {
-			if (ascensionId <= 0) {
-				throw new IllegalArgumentException("ascensionId must be positive");
+			if (ascensionId != 0 && ascensionId != 1) {
+				throw new IllegalArgumentException("ascension morph state must be 0 or 1");
+			}
+		}
+	}
+
+	/**
+	 * 存在权威交互目标时，以该目标触发玩家侧表情动作。
+	 * Emits a player-side emotion using the authoritative interaction target when present.
+	 */
+	record PlayerEmotion(QuestPlayerEmotion emotion) implements AfterCommitAction {
+		public PlayerEmotion {
+			if (emotion == null) {
+				throw new NullPointerException("emotion");
+			}
+		}
+	}
+
+	/**
+	 * 为指定模板的附近 NPC 增加任务 owner 的仇恨值。
+	 * Adds quest-owner aggro to nearby NPCs of the requested template.
+	 */
+	record AddNpcAggro(int npcTemplateId, int damage) implements AfterCommitAction {
+		public AddNpcAggro {
+			if (npcTemplateId <= 0 || damage < 0) {
+				throw new IllegalArgumentException("npcTemplateId must be positive and damage non-negative");
 			}
 		}
 	}

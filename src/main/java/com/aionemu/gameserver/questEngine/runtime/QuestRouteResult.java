@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-/** Result contract used by the legacy call-site adapters during shadowing. */
+/** 中央任务路由的结论合同。 Result contract for central quest routing. */
 public enum QuestRouteResult {
 	HANDLED,
 	NOT_HANDLED,

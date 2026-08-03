@@ -140,10 +140,6 @@ public final class QuestDefinitionCatalogManifest {
 				fail("CATALOG_ID_MISMATCH", entry.resource() + " expected=" + entry.id()
 					+ " actual=" + definition.id());
 			}
-			if (definition.ownership() != QuestOwnership.RETAIL_ALIGNED
-					|| definition.definition().transitions().isEmpty()) {
-				fail("CATALOG_DEFINITION_NOT_EXECUTABLE", entry.resource());
-			}
 			definitions.add(definition);
 		}
 		return new ImmutableQuestCatalog(definitions);

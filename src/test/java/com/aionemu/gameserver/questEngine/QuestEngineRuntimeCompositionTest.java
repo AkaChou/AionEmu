@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
-import com.aionemu.gameserver.questEngine.definition.QuestOwnership;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import com.aionemu.gameserver.questEngine.runtime.QuestSpawnRegistry;
@@ -87,7 +86,6 @@ class QuestEngineRuntimeCompositionTest {
 	void talkAndKillProductionEventsRegisterNpcIndexes() {
 		QuestEngine engine = new QuestEngine();
 		var definition = QuestDsl.quest(990001)
-			.ownership(QuestOwnership.RETAIL_ALIGNED)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
@@ -108,13 +106,11 @@ class QuestEngineRuntimeCompositionTest {
 	void unsupportedProductionEventFailsBeforeRegisteringAnyNpcOwner() {
 		QuestEngine engine = new QuestEngine();
 		var talk = QuestDsl.quest(990001)
-			.ownership(QuestOwnership.RETAIL_ALIGNED)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start").goTo("start")
 			.compile();
 		var attack = QuestDsl.quest(990002)
-			.ownership(QuestOwnership.RETAIL_ALIGNED)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.on(new QuestEvent.AttackNpc(210133)).from("start").goTo("start")

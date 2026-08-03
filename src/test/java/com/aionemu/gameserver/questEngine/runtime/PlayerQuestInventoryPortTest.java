@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Equipment;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.items.storage.ItemStorage;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
@@ -15,7 +16,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.EvidenceRef;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -86,6 +86,14 @@ class PlayerQuestInventoryPortTest {
 	}
 
 	@Test
+	void preflightAllowsRemoveAllWithoutRequiringAPositiveRequestedCount() throws Exception {
+		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> null, new RecordingDao());
+
+		port.preflight(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, QuestAction.RemoveItem.ALL), List.of());
+		port.preflight(connection(), snapshotWith(ITEM_A, 0), removals(ITEM_A, QuestAction.RemoveItem.ALL), List.of());
+	}
+
+	@Test
 	void applyRemovesItemsAndPersistsDirtyOnCallerConnection() throws Exception {
 		Player player = playerWithInventory(ITEM_A, 5);
 		RecordingDao dao = new RecordingDao();
@@ -105,6 +113,35 @@ class PlayerQuestInventoryPortTest {
 		participant.afterCommit();
 		// 仅 commit 后清 dirty,下一次提交不重复写
 		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
+	}
+
+	@Test
+	void applyRemoveAllUsesTheLiveCountAndRemovesTheWholeStack() throws Exception {
+		Player player = playerWithInventory(ITEM_A, 5);
+		RecordingDao dao = new RecordingDao();
+		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao);
+
+		QuestTransactionParticipant participant = port.apply(connection(), snapshotWith(ITEM_A, 5),
+			removals(ITEM_A, QuestAction.RemoveItem.ALL), List.of());
+
+		assertEquals(0, player.getInventory().getItemCountByItemId(ITEM_A));
+		assertEquals(1, dao.transactions.size());
+		participant.afterCommit();
+		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
+	}
+
+	@Test
+	void applyRemoveAllSkipsAnAbsentItemWithoutAFalseFailure() throws Exception {
+		Player player = playerWithInventory();
+		RecordingDao dao = new RecordingDao();
+		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao);
+
+		QuestTransactionParticipant participant = port.apply(connection(), snapshotWith(ITEM_A, 0),
+			removals(ITEM_A, QuestAction.RemoveItem.ALL), List.of());
+
+		assertEquals(0, player.getInventory().getItemCountByItemId(ITEM_A));
+		assertEquals(0, dao.transactions.size());
+		participant.afterCommit();
 	}
 
 	@Test
@@ -146,7 +183,6 @@ class PlayerQuestInventoryPortTest {
 			}
 		};
 		CompiledQuestDefinition definition = quest(QUEST_ID)
-			.evidence(new EvidenceRef("test", "real-port-commit-failure", "fixture"))
 			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("step", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
@@ -291,6 +327,8 @@ class PlayerQuestInventoryPortTest {
 	private static Player emptyPlayer() throws Exception {
 		Player player = new ObjenesisStd().newInstance(Player.class);
 		setField(AionObject.class, player, "objectId", PLAYER_ID);
+		setField(Player.class, player, "playerCommonData",
+			new ObjenesisStd().newInstance(PlayerCommonData.class));
 		setField(Player.class, player, "questStateList", new QuestStateList());
 		setField(Player.class, player, "equipment", new ObjenesisStd().newInstance(Equipment.class));
 		// 生产环境 Player 加载后这些仓库必非 null;getDirtyItemsToUpdate 对它们未判空

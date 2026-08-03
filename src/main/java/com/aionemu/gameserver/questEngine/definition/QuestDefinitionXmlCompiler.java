@@ -79,9 +79,7 @@ public final class QuestDefinitionXmlCompiler {
 		ProgressLayout progress = parseProgress(child(root, "progress"));
 		List<QuestNode> nodes = parseNodes(child(root, "nodes"));
 		List<QuestTransition> transitions = parseTransitions(child(root, "transitions"));
-		QuestOwnership ownership = nodes.isEmpty() && transitions.isEmpty()
-			? QuestOwnership.CATALOG_ONLY : QuestOwnership.RETAIL_ALIGNED;
-		return new QuestDefinition(id, version, ownership, List.of(), metadata, progress, nodes, transitions);
+		return new QuestDefinition(id, version, metadata, progress, nodes, transitions);
 	}
 
 	private static QuestMetadata parseMetadata(Element element) {
@@ -365,6 +363,7 @@ public final class QuestDefinitionXmlCompiler {
 			case "kill-npc" -> new QuestEvent.KillNpc(integer(element, "npc-id"));
 			case "attack-npc" -> new QuestEvent.AttackNpc(integer(element, "npc-id"));
 			case "use-item" -> new QuestEvent.UseItem(integer(element, "item-id"));
+			case "quest-dialog" -> new QuestEvent.QuestDialog(parseQuestDialogId(element));
 			case "collect-item" -> new QuestEvent.CollectItem(integer(element, "item-id"), integer(element, "count"));
 			case "item-play" -> new QuestEvent.ItemPlay(integer(element, "item-id"), integer(element, "animation-millis"));
 			case "house-item-use" -> new QuestEvent.HouseItemUse(integer(element, "item-id"));
@@ -418,6 +417,16 @@ public final class QuestDefinitionXmlCompiler {
 		return new QuestEvent.TalkToNpc(integer(element, "npc-id"), dialogId);
 	}
 
+	private static int parseQuestDialogId(Element element) {
+		if (element.hasAttribute("dialog") && element.hasAttribute("dialog-id")) {
+			return fail("AMBIGUOUS_DIALOG_EVENT", "declare dialog or dialog-id, not both");
+		}
+		if (element.hasAttribute("dialog")) {
+			return enumValue(QuestDialog.class, element, "dialog").id();
+		}
+		return integer(element, "dialog-id");
+	}
+
 	private static QuestCondition parseCondition(Element element) {
 		return switch (element.getTagName()) {
 			case "status-is" -> new QuestCondition.StatusIs(enumValue(QuestStatus.class, element, "status"));
@@ -442,7 +451,7 @@ public final class QuestDefinitionXmlCompiler {
 
 	private static QuestAction parseAction(Element element) {
 		return switch (element.getTagName()) {
-			case "remove-item" -> new QuestAction.RemoveItem(integer(element, "item-id"), integer(element, "count"));
+			case "remove-item" -> new QuestAction.RemoveItem(integer(element, "item-id"), removalCount(element));
 			case "give-item" -> new QuestAction.GiveItem(integer(element, "item-id"), integer(element, "count"));
 			case "set-variable" -> new QuestAction.SetVariable(attribute(element, "field"), integer(element, "value"));
 			case "set-status" -> new QuestAction.SetStatus(enumValue(QuestStatus.class, element, "status"));
@@ -480,6 +489,10 @@ public final class QuestDefinitionXmlCompiler {
 				byteValue(action, "heading"));
 			case "play-movie" -> new AfterCommitAction.PlayMovie(integer(action, "movie-id"));
 			case "morph" -> new AfterCommitAction.Morph(integer(action, "ascension-id"));
+			case "player-emotion" -> new AfterCommitAction.PlayerEmotion(
+				enumValue(QuestPlayerEmotion.class, action, "emotion"));
+			case "add-npc-aggro" -> new AfterCommitAction.AddNpcAggro(
+				integer(action, "npc-id"), integer(action, "damage"));
 			case "flight-teleport" -> new AfterCommitAction.FlightTeleport(integer(action, "flight-teleport-id"));
 			case "delete-interaction-npc" -> new AfterCommitAction.DeleteInteractionNpc(
 				booleanOrDefault(action, "schedule-respawn", true));
@@ -535,6 +548,18 @@ public final class QuestDefinitionXmlCompiler {
 			? enumValue(QuestRewardAmountMode.class, element, "amount-mode")
 			: QuestRewardAmountMode.EXACT;
 		return new QuestAction.GrantReward(kind, integer(element, "id"), longInteger(element, "amount"), mode);
+	}
+
+	private static int removalCount(Element element) {
+		String value = attribute(element, "count");
+		if ("ALL".equalsIgnoreCase(value)) {
+			return QuestAction.RemoveItem.ALL;
+		}
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			return fail("INVALID_INTEGER", element.getTagName() + ".count");
+		}
 	}
 
 	private static Element requiredChild(Element parent, String name) {

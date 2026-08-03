@@ -12,6 +12,8 @@
   <xs:simpleType name="timer-overwrite"><xs:restriction base="xs:string"><xs:enumeration value="REPLACE"/><xs:enumeration value="KEEP_EXISTING"/><xs:enumeration value="FAIL_IF_RUNNING"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="timer-delivery"><xs:restriction base="xs:string"><xs:enumeration value="AT_MOST_ONCE"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="npc-emotion"><xs:restriction base="xs:string"><xs:enumeration value="START_EMOTE2"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="player-emotion"><xs:restriction base="xs:string"><xs:enumeration value="STAND"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="ascension-state"><xs:restriction base="xs:int"><xs:enumeration value="0"/><xs:enumeration value="1"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="recipe-ownership"><xs:restriction base="xs:string"><xs:enumeration value="QUEST_OWNED"/><xs:enumeration value="PERMANENT"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="reward-amount-mode"><xs:restriction base="xs:string"><xs:enumeration value="EXACT"/><xs:enumeration value="QUEST_BASE"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="quest-state-sync-mode"><xs:restriction base="xs:string"><xs:enumeration value="PACKET_ONLY"/><xs:enumeration value="VISIBILITY_REFRESH"/><xs:enumeration value="LEVEL_AND_VISIBILITY_REFRESH"/><xs:enumeration value="COMPLETION"/></xs:restriction></xs:simpleType>
@@ -30,6 +32,7 @@
     <xs:element name="kill-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="attack-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="use-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="quest-dialog"><xs:complexType><xs:attribute name="dialog" type="xs:string"/><xs:attribute name="dialog-id" type="xs:int"/></xs:complexType></xs:element>
     <xs:element name="collect-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="item-play"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="animation-millis" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="house-item-use"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/></xs:complexType></xs:element>
@@ -70,7 +73,7 @@
   </xs:choice></xs:complexType>
 
   <xs:complexType name="actions-type"><xs:choice minOccurs="0" maxOccurs="unbounded">
-    <xs:element name="remove-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="remove-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="give-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="set-variable"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="value" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="set-status"><xs:complexType><xs:attribute name="status" type="status" use="required"/></xs:complexType></xs:element>
@@ -91,7 +94,9 @@
     <xs:element name="teleport-player-fixed-instance"><xs:complexType><xs:attribute name="instance-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="teleport-player-next-available-instance"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="play-movie"><xs:complexType><xs:attribute name="movie-id" type="xs:int" use="required"/></xs:complexType></xs:element>
-    <xs:element name="morph"><xs:complexType><xs:attribute name="ascension-id" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="morph"><xs:complexType><xs:attribute name="ascension-id" type="ascension-state" use="required"/></xs:complexType></xs:element>
+    <xs:element name="player-emotion"><xs:complexType><xs:attribute name="emotion" type="player-emotion" use="required"/></xs:complexType></xs:element>
+    <xs:element name="add-npc-aggro"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="damage" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="flight-teleport"><xs:complexType><xs:attribute name="flight-teleport-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="delete-interaction-npc"><xs:complexType><xs:attribute name="schedule-respawn" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="spawn-npc-current-or-default"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="template-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>

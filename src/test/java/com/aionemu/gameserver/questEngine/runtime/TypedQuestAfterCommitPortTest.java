@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
+import com.aionemu.gameserver.questEngine.definition.QuestPlayerEmotion;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTimerPolicy;
@@ -166,6 +167,53 @@ class TypedQuestAfterCommitPortTest {
 
 		org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
 			() -> port.execute(new AfterCommitAction.TeleportPlayer(110010000, 1f, 2f, 3f, (byte) 0), snapshot, plan));
+	}
+
+	@Test
+	void routesPlayerEmotionAndNpcAggroToTypedPorts() {
+		List<String> calls = new ArrayList<>();
+		QuestEffectPort effects = new QuestEffectPort() {
+			@Override
+			public boolean morph(QuestSnapshot snapshot, QuestMutationPlan plan, int ascensionId) {
+				return true;
+			}
+
+			@Override
+			public boolean flightTeleport(QuestSnapshot snapshot, QuestMutationPlan plan, int flightTeleportId) {
+				return true;
+			}
+
+			@Override
+			public boolean playerEmotion(QuestSnapshot snapshot, QuestMutationPlan plan,
+					QuestPlayerEmotion emotion) {
+				calls.add("emotion:" + emotion + ":" + snapshot.interactionObjectId());
+				return true;
+			}
+		};
+		QuestNpcPort npcs = new QuestNpcPort() {
+			@Override
+			public boolean deleteInteractionNpc(QuestSnapshot snapshot, QuestMutationPlan plan,
+					boolean scheduleRespawn) {
+				return true;
+			}
+
+			@Override
+			public boolean addNpcAggro(QuestSnapshot snapshot, QuestMutationPlan plan,
+					int npcTemplateId, int damage) {
+				calls.add("aggro:" + npcTemplateId + ":" + damage);
+				return true;
+			}
+		};
+		TypedQuestAfterCommitPort port = new TypedQuestAfterCommitPort(dialogPort(), null, null, null, null,
+			null, null, null, effects, npcs);
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of())
+			.withInteractionObjectId(900009);
+		QuestMutationPlan plan = new QuestMutationPlan(1001, QuestStatus.START, 0, List.of(), List.of());
+
+		port.execute(new AfterCommitAction.PlayerEmotion(QuestPlayerEmotion.STAND), snapshot, plan);
+		port.execute(new AfterCommitAction.AddNpcAggro(203175, 50), snapshot, plan);
+
+		assertEquals(List.of("emotion:STAND:900009", "aggro:203175:50"), calls);
 	}
 
 	@Test

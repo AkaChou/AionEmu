@@ -216,6 +216,13 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireSuccess(effectPort.morph(snapshot, plan, morph.ascensionId()), action, snapshot);
 			return;
 		}
+		if (action instanceof AfterCommitAction.PlayerEmotion emotion) {
+			if (effectPort == null) {
+				throw new IllegalArgumentException("playerEmotion requires an effect port");
+			}
+			requireSuccess(effectPort.playerEmotion(snapshot, plan, emotion.emotion()), action, snapshot);
+			return;
+		}
 		if (action instanceof AfterCommitAction.FlightTeleport flight) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("flightTeleport requires an effect port");
@@ -228,6 +235,13 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 				throw new IllegalArgumentException("deleteInteractionNpc requires an npc port");
 			}
 			requireSuccess(npcPort.deleteInteractionNpc(snapshot, plan, delete.scheduleRespawn()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.AddNpcAggro aggro) {
+			if (npcPort == null) {
+				throw new IllegalArgumentException("addNpcAggro requires an npc port");
+			}
+			requireSuccess(npcPort.addNpcAggro(snapshot, plan, aggro.npcTemplateId(), aggro.damage()), action, snapshot);
 			return;
 		}
 		throw new IllegalArgumentException("unsupported after-commit action: " + action.getClass().getName());

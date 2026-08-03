@@ -99,7 +99,6 @@ class MonsterHunt1102DefinitionTest {
 		}
 		assertFalse(definition.contains("<evidence"));
 		assertFalse(definition.contains("ownership="));
-		assertFalse(definition.contains("shadow-coverage"));
 
 		String legacy;
 		try (InputStream input = resource("/aion/data/static_data/quest_script_data/poeta.xml")) {

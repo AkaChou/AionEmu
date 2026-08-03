@@ -35,10 +35,6 @@ public final class CompiledQuestDefinition {
 		return definition.version();
 	}
 
-	public QuestOwnership ownership() {
-		return definition.ownership();
-	}
-
 	public List<QuestTransition> transitionsFor(String eventType) {
 		return transitionsByType.getOrDefault(eventType, List.of());
 	}

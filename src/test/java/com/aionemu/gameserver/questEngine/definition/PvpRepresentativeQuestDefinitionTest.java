@@ -26,23 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Real PvP handler facts projected through both canonical definition front ends. */
 class PvpRepresentativeQuestDefinitionTest {
-	private static final EvidenceRef RANK_EVIDENCE = new EvidenceRef("JAVA_HANDLER",
-		"src/main/java/com/aionemu/gameserver/quest/handlers/abyss/_3741.java:36",
-		"rank 3 is the minimum victim rank");
-	private static final EvidenceRef WORLD_EVIDENCE = new EvidenceRef("XML_TEMPLATE",
-		"src/main/resources/aion/data/static_data/quest_script_data/kill_in_world.xml:20",
-		"world 210070000 requires five credited kills");
-	private static final EvidenceRef LEVEL_EVIDENCE = new EvidenceRef("XML_TEMPLATE",
-		"src/main/resources/aion/data/static_data/quest_script_data/kill_in_world.xml:38",
-		"recipient level minus victim level is -5..9");
-	private static final EvidenceRef ZONE_EVIDENCE = new EvidenceRef("JAVA_HANDLER",
-		"src/main/java/com/aionemu/gameserver/quest/handlers/instances/_23851.java:42",
-		"SULFUR_FORTRESS zone and -5..9 level window");
-
 	@Test
 	void quest3741UsesMinimumRankAndRejectsLowerRank() {
 		CompiledQuestDefinition definition = quest(3741)
-			.evidence(RANK_EVIDENCE)
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(killRanked(3)).from("start").when(statusIs(QuestStatus.START)).goTo("reward")
@@ -78,7 +64,6 @@ class PvpRepresentativeQuestDefinitionTest {
 	@Test
 	void quest11362LevelDeltaIsInclusiveAndFailClosedWithoutFacts() {
 		CompiledQuestDefinition definition = quest(11362)
-			.evidence(LEVEL_EVIDENCE)
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(killInWorld(210130000)).from("start")
@@ -93,7 +78,6 @@ class PvpRepresentativeQuestDefinitionTest {
 	@Test
 	void quest23851RequiresZoneAndLevelDelta() {
 		CompiledQuestDefinition definition = quest(23851)
-			.evidence(ZONE_EVIDENCE)
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(killInWorld(400010000)).from("start")
@@ -127,7 +111,7 @@ class PvpRepresentativeQuestDefinitionTest {
 
 	@Test
 	void compilerRejectsPvpFactsOnNonPvpEvents() {
-		var builder = quest(23851).evidence(ZONE_EVIDENCE)
+		var builder = quest(23851)
 			.node("start", project(QuestStatus.START, Map.of()));
 		builder.on(com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc(1))
 			.from("start").when(pvpVictimLevelDelta(-5, 9)).goTo("start");

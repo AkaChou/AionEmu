@@ -76,9 +76,17 @@
     </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="v0">
+    <transition source="unaccepted" target="unaccepted">
       <event>
         <use-item item-id="182200214"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="v0">
+      <event>
+        <quest-dialog dialog="ACCEPT_QUEST"/>
       </event>
       <actions>
         <give-item item-id="182200226" count="1"/>
@@ -86,6 +94,14 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <quest-dialog dialog="REFUSE_QUEST"/>
+      </event>
+      <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
@@ -117,6 +133,7 @@
         <give-item item-id="182200217" count="1"/>
       </actions>
       <after-commit>
+        <add-npc-aggro npc-id="203175" damage="50"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>

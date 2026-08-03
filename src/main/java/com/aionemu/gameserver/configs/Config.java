@@ -48,7 +48,6 @@ import com.aionemu.gameserver.configs.main.PricesConfig;
 import com.aionemu.gameserver.configs.main.PunishmentConfig;
 import com.aionemu.gameserver.configs.main.PvPConfig;
 import com.aionemu.gameserver.configs.main.PvPModConfig;
-import com.aionemu.gameserver.configs.main.QuestShadowConfig;
 import com.aionemu.gameserver.configs.main.RankingConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
@@ -243,7 +242,6 @@ public class Config {
 			ConfigurableProcessor.process(PricesConfig.class, mainProps);
 			ConfigurableProcessor.process(PunishmentConfig.class, mainProps);
 			ConfigurableProcessor.process(PvPConfig.class, mainProps);
-			ConfigurableProcessor.process(QuestShadowConfig.class, mainProps);
 			ConfigurableProcessor.process(RankingConfig.class, mainProps);
 			ConfigurableProcessor.process(RateConfig.class, mainProps);
 			ConfigurableProcessor.process(SecurityConfig.class, mainProps);

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
-import com.aionemu.gameserver.questEngine.definition.QuestOwnership;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
@@ -105,7 +104,6 @@ class QuestProductionDispatcherTest {
 	void enterZoneAcceptRunsUnacceptedToStarted() {
 		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = QuestDsl.quest(1100)
-			.ownership(QuestOwnership.RETAIL_ALIGNED)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
@@ -128,7 +126,6 @@ class QuestProductionDispatcherTest {
 	void levelUpAcceptRunsUnacceptedToStarted() {
 		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = QuestDsl.quest(1001)
-			.ownership(QuestOwnership.RETAIL_ALIGNED)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
@@ -168,6 +165,28 @@ class QuestProductionDispatcherTest {
 		assertEquals(0, connections.get());
 	}
 
+	@Test
+	void firstNonUnknownContinuesPastAnUnmatchedTransitionOfTheSameOwner() {
+		CompiledQuestDefinition definition = QuestDsl.quest(1107)
+			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("step", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
+			.on(new QuestEvent.UseItem(182200501)).from("started").goTo("started")
+			.on(new QuestEvent.LevelUp()).from("started").goTo("reward")
+			.on(new QuestEvent.UseItem(182200501)).from("reward").goTo("reward")
+			.compile();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), new ArrayList<>(),
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.REWARD, 1, Map.of()));
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.UseItem(182200501, 900008), 7, 0, QuestDispatchContract.FIRST_NON_UNKNOWN);
+
+		assertTrue(result.consumed());
+		assertEquals(List.of(1107, 1107), result.owners().stream()
+			.map(QuestEventRouter.OwnerResult::questId).toList());
+	}
+
 	private static QuestProductionDispatcher dispatcher(List<CompiledQuestDefinition> definitions,
 			List<String> calls, QuestEventPort eventPort) {
 		return dispatcher(definitions, calls, eventPort, new ArrayList<>());
@@ -183,7 +202,6 @@ class QuestProductionDispatcherTest {
 
 	private static CompiledQuestDefinition definition(int id) {
 		return QuestDsl.quest(id)
-			.ownership(QuestOwnership.RETAIL_ALIGNED)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
@@ -193,7 +211,6 @@ class QuestProductionDispatcherTest {
 
 	private static CompiledQuestDefinition killDefinition(int id) {
 		return QuestDsl.quest(id)
-			.ownership(QuestOwnership.RETAIL_ALIGNED)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("one-kill", project(QuestStatus.START, vars("var0", 1)))
