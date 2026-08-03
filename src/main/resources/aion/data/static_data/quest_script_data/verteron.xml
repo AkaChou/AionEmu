@@ -29,7 +29,6 @@
 	<item_collecting id="1160" start_npc_ids="203127"/>
 	<item_collecting id="1166" start_npc_ids="203148"/>
 	<item_collecting id="1167" start_npc_ids="203162"/>
-	<item_collecting id="1168" start_npc_ids="203163" action_item_ids="700114"/>
 	<item_collecting id="1172" start_npc_ids="203110" end_npc_ids="203146" action_item_ids="700115"/>
 	<item_collecting id="1174" start_npc_ids="203155"/>
 	<item_collecting id="1176" start_npc_ids="203158"/>
@@ -83,25 +82,14 @@
 		<monster var="0" npc_ids="210176" end_var="5"/>
 		<monster var="1" npc_ids="210166" end_var="5"/>
 	</monster_hunt>
-	<monster_hunt id="1185" start_npc_ids="203178">
-		<monster var="0" npc_ids="210080" end_var="6"/>
-	</monster_hunt>
 	<monster_hunt id="1195" start_npc_ids="203098">
 		<monster var="0" npc_ids="210187" end_var="1"/>
-	</monster_hunt>
-	<monster_hunt id="1196" start_npc_ids="203179">
-		<monster var="0" npc_ids="210086" end_var="14"/>
-		<monster var="1" npc_ids="210711" end_var="8"/>
 	</monster_hunt>
 	<monster_hunt id="1200" start_npc_ids="203893">
 		<monster var="0" npc_ids="210743" end_var="1"/>
 	</monster_hunt>
 	<monster_hunt id="1201" start_npc_ids="203190">
 		<monster var="0" npc_ids="210268" end_var="9"/>
-	</monster_hunt>
-	<monster_hunt id="1202" start_npc_ids="203147">
-		<monster var="0" npc_ids="210176" end_var="5"/>
-		<monster var="1" npc_ids="210166" end_var="5"/>
 	</monster_hunt>
 	<monster_hunt id="1216" start_npc_ids="203169">
 		<monster var="0" npc_ids="210112" end_var="10"/>
