@@ -4,14 +4,14 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <prerequisites>
-      <quest id="1574"/>
-    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="806224"/>
       <reward kind="ITEM" id="164000076" amount="2"/>
       <reward kind="ITEM" id="186000003" amount="2"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="1574"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

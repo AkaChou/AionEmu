@@ -3,8 +3,6 @@
 <!--
     Quest Heiron Make By (Encom)
  -->
-	<report_to id="1586" start_npc_ids="204612" end_npc_ids="204545"/>
-	<report_to id="1588" start_npc_ids="204612" end_npc_ids="730024"/>
 	<report_to id="1615" start_npc_ids="204573" end_npc_ids="204832"/>
 	<report_to id="1633" start_npc_ids="204590" end_npc_ids="204547"/>
 	<report_to id="1671" start_npc_ids="798095" end_npc_ids="798027" item_id="182201771"/>
@@ -12,17 +10,6 @@
 	<report_to id="3528" start_npc_ids="204536" end_npc_ids="798165" item_id="182201836"/>
 	<report_to id="14251" start_npc_ids="204602" end_npc_ids="832824"/>
 	
-	<item_collecting id="1580" start_npc_ids="204612"/>
-	<item_collecting id="1585" start_npc_ids="204569"/>
-	<item_collecting id="1589" start_npc_ids="730024"/>
-	<item_collecting id="1591" start_npc_ids="204541"/>
-	<item_collecting id="1592" start_npc_ids="204585"/>
-	<item_collecting id="1594" start_npc_ids="798071"/>
-	<item_collecting id="1595" start_npc_ids="798071"/>
-	<item_collecting id="1596" start_npc_ids="798071"/>
-	<item_collecting id="1599" start_npc_ids="204625"/>
-	<item_collecting id="1602" start_npc_ids="204575"/>
-	<item_collecting id="1603" start_npc_ids="204576"/>
 	<item_collecting id="1610" start_npc_ids="204577"/>
 	<item_collecting id="1611" start_npc_ids="204574"/>
 	<item_collecting id="1616" start_npc_ids="204832" end_npc_ids="204832"/>
@@ -80,50 +67,6 @@
 	
 	<item_order start_item_id="182201710" talk_npc_id1="204582" talk_npc_id2="204505" end_npc_id="203831" id="1514"/>
 	
-	<monster_hunt id="1581" start_npc_ids="204612">
-		<monster var="0" end_var="1" npc_ids="211196"/>
-	</monster_hunt>
-	<monster_hunt id="1583" start_npc_ids="204625">
-		<monster var="0" end_var="7" npc_ids="211930 211967"/>
-		<monster var="1" end_var="1" npc_ids="212129"/>
-	</monster_hunt>
-	<monster_hunt id="1584" start_npc_ids="204612">
-		<monster var="0" end_var="2" npc_ids="211979 211980"/>
-		<monster var="1" end_var="2" npc_ids="211981 211982"/>
-	</monster_hunt>
-	<monster_hunt id="1587" start_npc_ids="204612">
-		<monster var="0" end_var="9" npc_ids="211254 212009"/>
-		<monster var="1" end_var="1" npc_ids="211259"/>
-	</monster_hunt>
-	<monster_hunt id="1590" start_npc_ids="204569">
-		<monster var="0" end_var="10" npc_ids="211977 211978"/>
-	</monster_hunt>
-	<monster_hunt id="1593" start_npc_ids="204577">
-		<monster var="0" end_var="2" npc_ids="212162"/>
-		<monster var="1" end_var="1" npc_ids="212166"/>
-		<monster var="2" end_var="1" npc_ids="212165"/>
-		<monster var="3" end_var="1" npc_ids="212149"/>
-		<monster var="4" end_var="1" npc_ids="212163"/>
-	</monster_hunt>
-	<monster_hunt id="1597" start_npc_ids="204579">
-		<monster var="0" end_var="2" npc_ids="212155"/>
-		<monster var="1" end_var="3" npc_ids="212157"/>
-		<monster var="2" end_var="2" npc_ids="211208"/>
-		<monster var="3" end_var="3" npc_ids="211914 211915"/>
-	</monster_hunt>
-	<monster_hunt id="1598" start_npc_ids="204625">
-		<monster var="0" end_var="6" npc_ids="211970 212107"/>
-		<monster var="1" end_var="4" npc_ids="211972 212106"/>
-	</monster_hunt>
-	<monster_hunt id="1600" start_npc_ids="204577">
-		<monster var="0" end_var="1" npc_ids="212176 212177 212175"/>
-		<monster var="1" end_var="1" npc_ids="212178"/>
-		<monster var="2" end_var="1" npc_ids="212183"/>
-		<monster var="3" end_var="1" npc_ids="212184"/>
-	</monster_hunt>
-	<monster_hunt id="1601" start_npc_ids="204575">
-		<monster var="0" end_var="1" npc_ids="211171"/>
-	</monster_hunt>
 	<monster_hunt id="1608" start_npc_ids="204574">
 		<monster var="0" end_var="6" npc_ids="700197"/>
 	</monster_hunt>
