@@ -36,7 +36,7 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 	public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions)
 			throws SQLException {
 		Buckets buckets = Buckets.from(actions);
-		inventory.preflight(connection, snapshot, buckets.removals());
+		inventory.preflight(connection, snapshot, buckets.removals(), buckets.gives());
 		currency.preflight(connection, snapshot, buckets.currencyRewards());
 		rewards.preflight(connection, snapshot, buckets.durableRewards());
 		if (!buckets.craftActions().isEmpty()) {
@@ -53,7 +53,7 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 		Buckets buckets = Buckets.from(actions);
 		List<QuestTransactionParticipant> participants = new ArrayList<>();
 		try {
-			participants.add(inventory.apply(connection, snapshot, buckets.removals()));
+			participants.add(inventory.apply(connection, snapshot, buckets.removals(), buckets.gives()));
 			participants.add(currency.apply(connection, snapshot, buckets.currencyRewards()));
 			participants.add(rewards.apply(connection, snapshot, buckets.durableRewards()));
 			if (!buckets.craftActions().isEmpty()) {
@@ -69,18 +69,21 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 		}
 	}
 
-	private record Buckets(List<QuestAction.RemoveItem> removals,
+	private record Buckets(List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives,
 			List<QuestAction.GrantReward> currencyRewards,
 			List<QuestAction.GrantReward> durableRewards, List<QuestAction> craftActions) {
 		private static Buckets from(List<QuestAction> actions) {
 			Objects.requireNonNull(actions, "actions");
 			List<QuestAction.RemoveItem> removals = new ArrayList<>();
+			List<QuestAction.GiveItem> gives = new ArrayList<>();
 			List<QuestAction.GrantReward> currency = new ArrayList<>();
 			List<QuestAction.GrantReward> durable = new ArrayList<>();
 			List<QuestAction> craft = new ArrayList<>();
 			for (QuestAction action : actions) {
 				if (action instanceof QuestAction.RemoveItem removal) {
 					removals.add(removal);
+				} else if (action instanceof QuestAction.GiveItem give) {
+					gives.add(give);
 				} else if (action instanceof QuestAction.GrantReward reward) {
 					QuestRewardKind kind = reward.rewardKind();
 					(kind.isCurrency() ? currency : durable).add(reward);
@@ -95,7 +98,7 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 				}
 				// SetVariable, SetStatus, and CompleteQuest are applied by QuestStatePort.
 			}
-			return new Buckets(List.copyOf(removals), List.copyOf(currency), List.copyOf(durable),
+			return new Buckets(List.copyOf(removals), List.copyOf(gives), List.copyOf(currency), List.copyOf(durable),
 				List.copyOf(craft));
 		}
 	}

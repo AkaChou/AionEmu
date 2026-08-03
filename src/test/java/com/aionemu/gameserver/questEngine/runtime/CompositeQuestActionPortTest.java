@@ -16,6 +16,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CompositeQuestActionPortTest {
 	@Test
@@ -71,12 +72,13 @@ class CompositeQuestActionPortTest {
 		private final Connection expected;
 		private final List<String> calls;
 		private RecordingInventory(Connection expected, List<String> calls) { this.expected = expected; this.calls = calls; }
-		@Override public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction.RemoveItem> removals) {
-			assertSame(expected, connection); assertEquals(1, removals.size()); calls.add("inventory.preflight");
+		@Override public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction.RemoveItem> removals,
+				List<QuestAction.GiveItem> gives) {
+			assertSame(expected, connection); assertEquals(1, removals.size()); assertTrue(gives.isEmpty()); calls.add("inventory.preflight");
 		}
 		@Override public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-				List<QuestAction.RemoveItem> removals) {
-			assertSame(expected, connection); assertEquals(1, removals.size()); calls.add("inventory.apply");
+				List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) {
+			assertSame(expected, connection); assertEquals(1, removals.size()); assertTrue(gives.isEmpty()); calls.add("inventory.apply");
 			return QuestTransactionParticipant.of(() -> calls.add("inventory.commit"), () -> calls.add("inventory.rollback"));
 		}
 	}

@@ -201,13 +201,14 @@ class QuestExecutionCoordinatorTest {
 		QuestEvent event = talkToNpc(700001);
 		QuestInventoryPort inventory = new QuestInventoryPort() {
 			@Override
-			public void preflight(Connection ignored, QuestSnapshot snapshot, List<QuestAction.RemoveItem> removals) {
+			public void preflight(Connection ignored, QuestSnapshot snapshot, List<QuestAction.RemoveItem> removals,
+					List<QuestAction.GiveItem> gives) {
 				calls.add("inventory-preflight");
 			}
 
 			@Override
 			public QuestTransactionParticipant apply(Connection ignored, QuestSnapshot snapshot,
-					List<QuestAction.RemoveItem> removals) {
+					List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) {
 				calls.add("inventory-apply");
 				return QuestTransactionParticipant.none();
 			}

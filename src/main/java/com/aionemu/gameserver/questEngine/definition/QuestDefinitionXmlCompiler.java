@@ -438,6 +438,7 @@ public final class QuestDefinitionXmlCompiler {
 	private static QuestAction parseAction(Element element) {
 		return switch (element.getTagName()) {
 			case "remove-item" -> new QuestAction.RemoveItem(integer(element, "item-id"), integer(element, "count"));
+			case "give-item" -> new QuestAction.GiveItem(integer(element, "item-id"), integer(element, "count"));
 			case "set-variable" -> new QuestAction.SetVariable(attribute(element, "field"), integer(element, "value"));
 			case "set-status" -> new QuestAction.SetStatus(enumValue(QuestStatus.class, element, "status"));
 			case "grant-reward" -> parseGrantReward(element);

@@ -3,9 +3,19 @@ package com.aionemu.gameserver.questEngine.definition;
 /** Closed set of required mutations in the quest transaction. */
 public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.SetVariable,
 		QuestAction.SetStatus, QuestAction.GrantReward, QuestAction.LearnRecipe,
-		QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill, QuestAction.CompleteQuest {
+		QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill, QuestAction.CompleteQuest,
+		QuestAction.GiveItem {
 	record RemoveItem(int itemId, int count) implements QuestAction {
 		public RemoveItem {
+			if (itemId <= 0 || count <= 0) {
+				throw new IllegalArgumentException("item id and count must be positive");
+			}
+		}
+	}
+
+	/** 发放任务工作物品（quest work item），接取/步骤推进时使用。 / Grants a quest work item. */
+	record GiveItem(int itemId, int count) implements QuestAction {
+		public GiveItem {
 			if (itemId <= 0 || count <= 0) {
 				throw new IllegalArgumentException("item id and count must be positive");
 			}

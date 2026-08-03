@@ -54,6 +54,8 @@ public final class QuestMutationPlanner {
 							return Optional.empty();
 						}
 					}
+				case QuestAction.GiveItem ignored -> {
+				}
 				case QuestAction.SetVariable set -> variables.put(set.field(), set.value());
 				case QuestAction.SetStatus ignored -> {
 				}

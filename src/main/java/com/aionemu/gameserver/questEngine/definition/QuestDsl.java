@@ -237,6 +237,10 @@ public final class QuestDsl {
 		return new QuestCondition.StartEligible();
 	}
 
+	public static QuestAction giveItem(int itemId, int count) {
+		return new QuestAction.GiveItem(itemId, count);
+	}
+
 	public static QuestAction removeItem(int itemId, int count) {
 		return new QuestAction.RemoveItem(itemId, count);
 	}

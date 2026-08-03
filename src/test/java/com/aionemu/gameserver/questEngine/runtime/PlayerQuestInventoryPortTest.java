@@ -12,6 +12,7 @@ import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.EvidenceRef;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -63,7 +65,7 @@ class PlayerQuestInventoryPortTest {
 			null, Map.of(), false, true, 0);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot, removals(ITEM_A, 1)));
+			() -> port.preflight(connection(), snapshot, removals(ITEM_A, 1), List.of()));
 		assertTrue(thrown.getMessage().contains("not captured"));
 	}
 
@@ -73,14 +75,14 @@ class PlayerQuestInventoryPortTest {
 		QuestSnapshot snapshot = snapshotWith(ITEM_A, 1);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot, removals(ITEM_A, 2)));
+			() -> port.preflight(connection(), snapshot, removals(ITEM_A, 2), List.of()));
 		assertTrue(thrown.getMessage().contains("insufficient"));
 	}
 
 	@Test
 	void preflightPassesWhenKnownCountIsSufficient() throws Exception {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> null, new RecordingDao());
-		port.preflight(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2));
+		port.preflight(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of());
 	}
 
 	@Test
@@ -90,7 +92,7 @@ class PlayerQuestInventoryPortTest {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao);
 		Connection connection = connection();
 
-		QuestTransactionParticipant participant = port.apply(connection, snapshotWith(ITEM_A, 5), removals(ITEM_A, 2));
+		QuestTransactionParticipant participant = port.apply(connection, snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of());
 
 		// 真实从 live 背包移除
 		assertEquals(3, player.getInventory().getItemCountByItemId(ITEM_A));
@@ -111,7 +113,7 @@ class PlayerQuestInventoryPortTest {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, new RecordingDao());
 
 		QuestTransactionParticipant participant = port.apply(
-			connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2));
+			connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of());
 		assertEquals(3, player.getInventory().getItemCountByItemId(ITEM_A));
 
 		participant.afterRollback();
@@ -132,7 +134,7 @@ class PlayerQuestInventoryPortTest {
 					throws SQLException {
 				inventory.preflight(connection, snapshot,
 					required.stream().filter(QuestAction.RemoveItem.class::isInstance)
-						.map(QuestAction.RemoveItem.class::cast).toList());
+						.map(QuestAction.RemoveItem.class::cast).toList(), List.of());
 			}
 
 			@Override
@@ -140,7 +142,7 @@ class PlayerQuestInventoryPortTest {
 					List<QuestAction> required) throws SQLException {
 				return inventory.apply(connection, snapshot,
 					required.stream().filter(QuestAction.RemoveItem.class::isInstance)
-						.map(QuestAction.RemoveItem.class::cast).toList());
+						.map(QuestAction.RemoveItem.class::cast).toList(), List.of());
 			}
 		};
 		CompiledQuestDefinition definition = quest(QUEST_ID)
@@ -174,12 +176,49 @@ class PlayerQuestInventoryPortTest {
 	}
 
 	@Test
+	void applyGivesQuestWorkItemsAndPersistsDirtyOnCallerConnection() throws Exception {
+		Player player = playerWithInventory();
+		RecordingDao dao = new RecordingDao();
+		AddingItemAdder adder = new AddingItemAdder();
+		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao, adder);
+		Connection connection = connection();
+
+		QuestTransactionParticipant participant = port.apply(connection, snapshotWith(ITEM_A, 0),
+			List.of(), gives(169001002, 2));
+
+		assertEquals(1, adder.calls.size());
+		assertEquals(169001002, adder.calls.get(0).get(0).getItemId());
+		assertEquals(2, adder.calls.get(0).get(0).getCount());
+		assertEquals(1, dao.transactions.size());
+		assertSame(connection, dao.transactions.get(0).connection);
+		assertEquals(2, player.getInventory().getItemCountByItemId(169001002));
+		participant.afterCommit();
+		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
+	}
+
+	@Test
+	void rollbackRestoresGivenQuestWorkItem() throws Exception {
+		Player player = playerWithInventory();
+		RecordingDao dao = new RecordingDao();
+		AddingItemAdder adder = new AddingItemAdder();
+		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao, adder);
+
+		QuestTransactionParticipant participant = port.apply(connection(), snapshotWith(ITEM_A, 0),
+			List.of(), gives(169001002, 2));
+		assertEquals(2, player.getInventory().getItemCountByItemId(169001002));
+
+		participant.afterRollback();
+
+		assertEquals(0, player.getInventory().getItemCountByItemId(169001002));
+	}
+
+	@Test
 	void applyFailsWhenPlayerIsUnavailableBeforeAnyDaoWrite() throws Exception {
 		RecordingDao dao = new RecordingDao();
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> null, dao);
 
 		assertThrows(SQLException.class,
-			() -> port.apply(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2)));
+			() -> port.apply(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of()));
 		assertEquals(0, dao.transactions.size());
 	}
 
@@ -191,7 +230,7 @@ class PlayerQuestInventoryPortTest {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao);
 
 		assertThrows(SQLException.class,
-			() -> port.apply(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2)));
+			() -> port.apply(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of()));
 		assertEquals(0, dao.transactions.size());
 		// 失败不能留下部分脏标记
 		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
@@ -203,6 +242,34 @@ class PlayerQuestInventoryPortTest {
 
 	private static List<QuestAction.RemoveItem> removals(int itemId, int count) {
 		return List.of(new QuestAction.RemoveItem(itemId, count));
+	}
+
+	private static List<QuestAction.GiveItem> gives(int itemId, int count) {
+		return List.of(new QuestAction.GiveItem(itemId, count));
+	}
+
+	/** itemAdder 把任务工作物品写入 CUBE 并标记 dirty,模拟真实 addQuestItems 副作用。 */
+	private static final class AddingItemAdder implements BiFunction<Player, List<QuestItems>, Boolean> {
+		private final List<List<QuestItems>> calls = new ArrayList<>();
+
+		@Override
+		public Boolean apply(Player player, List<QuestItems> items) {
+			calls.add(items);
+			try {
+				PlayerStorage storage = (PlayerStorage) player.getInventory();
+				ItemStorage itemStorage = (ItemStorage) getField(Storage.class, storage, "itemStorage");
+				@SuppressWarnings("unchecked")
+				Map<Integer, Item> slots = (Map<Integer, Item>) getField(ItemStorage.class, itemStorage, "items");
+				for (QuestItems qi : items) {
+					Item item = item(qi.getItemId(), qi.getCount());
+					slots.put(item.getObjectId(), item);
+				}
+				setField(Storage.class, storage, "persistentState", PersistentState.UPDATE_REQUIRED);
+			} catch (Exception e) {
+				throw new IllegalStateException("cannot add test work item", e);
+			}
+			return true;
+		}
 	}
 
 	private static Player playerWithInventory(int itemId, int count) throws Exception {
@@ -262,6 +329,12 @@ class PlayerQuestInventoryPortTest {
 		Field field = declaringClass.getDeclaredField(name);
 		field.setAccessible(true);
 		field.set(target, value);
+	}
+
+	private static Object getField(Class<?> declaringClass, Object target, String name) throws Exception {
+		Field field = declaringClass.getDeclaredField(name);
+		field.setAccessible(true);
+		return field.get(target);
 	}
 
 	private static Connection connection() {
