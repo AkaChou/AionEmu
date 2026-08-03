@@ -180,10 +180,6 @@
 	<monster_hunt id="1357" start_npc_ids="203933">
 		<monster var="0" end_var="7" npc_ids="211843"/>
 	</monster_hunt>
-	<monster_hunt id="1365" start_npc_ids="204020">
-		<monster var="0" end_var="5" npc_ids="211633"/>
-		<monster var="1" end_var="5" npc_ids="210913"/>
-	</monster_hunt>
 	<monster_hunt id="1370" start_npc_ids="203949">
 		<monster var="0" end_var="1" npc_ids="210970"/>
 	</monster_hunt>
