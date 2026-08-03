@@ -160,7 +160,6 @@
         <talk-to-npc npc-id="203100" dialog-ids="8..23"/>
       </event>
       <actions>
-        <remove-item item-id="182203101" count="ALL"/>
         <grant-reward kind="GOLD" id="0" amount="3170" amount-mode="QUEST_BASE"/>
         <grant-reward kind="EXP" id="0" amount="16200" amount-mode="QUEST_BASE"/>
         <complete-quest reward-index="0"/>
