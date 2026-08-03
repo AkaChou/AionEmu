@@ -14,14 +14,6 @@
 	<report_to id="3337" start_npc_ids="203954" end_npc_ids="790006" item_id="182201439"/>
 	<report_to id="14241" start_npc_ids="203996" end_npc_ids="203900"/>
 	
-	<item_collecting id="1431" start_npc_ids="203328"/>
-	<item_collecting id="1432" start_npc_ids="203328"/>
-	<item_collecting id="1433" start_npc_ids="798050"/>
-	<item_collecting id="1434" start_npc_ids="203936"/>
-	<item_collecting id="1435" start_npc_ids="203922"/>
-	<item_collecting id="1436" start_npc_ids="203923"/>
-	<item_collecting id="1437" start_npc_ids="203922"/>
-	<item_collecting id="1439" start_npc_ids="204020"/>
 	<item_collecting id="1440" start_npc_ids="204009"/>
 	<item_collecting id="1441" start_npc_ids="203969"/>
 	<item_collecting id="1443" start_npc_ids="798047"/>
