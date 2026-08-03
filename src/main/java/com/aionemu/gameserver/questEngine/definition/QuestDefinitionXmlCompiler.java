@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.w3c.dom.Document;
@@ -431,6 +432,10 @@ public final class QuestDefinitionXmlCompiler {
 			case "pvp-recipient-in-zone" -> new QuestCondition.PvpRecipientInZone(
 				attribute(element, "zone"));
 			case "start-eligible" -> new QuestCondition.StartEligible();
+			case "player-class-is" -> new QuestCondition.PlayerClassIs(
+				PlayerClass.valueOf(attribute(element, "starting-class")));
+			case "world-is" -> new QuestCondition.WorldIs(integer(element, "world-id"),
+				booleanOrDefault(element, "expected", true));
 			default -> fail("UNKNOWN_CONDITION", element.getTagName());
 		};
 	}
@@ -469,7 +474,15 @@ public final class QuestDefinitionXmlCompiler {
 				QuestInstanceTarget.fixed(integer(action, "instance-id")), integer(action, "world-id"),
 				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
 				byteValue(action, "heading"));
+			case "teleport-player-next-available-instance" -> new AfterCommitAction.TeleportPlayer(
+				QuestInstanceTarget.nextAvailable(integer(action, "world-id")), integer(action, "world-id"),
+				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
+				byteValue(action, "heading"));
 			case "play-movie" -> new AfterCommitAction.PlayMovie(integer(action, "movie-id"));
+			case "morph" -> new AfterCommitAction.Morph(integer(action, "ascension-id"));
+			case "flight-teleport" -> new AfterCommitAction.FlightTeleport(integer(action, "flight-teleport-id"));
+			case "delete-interaction-npc" -> new AfterCommitAction.DeleteInteractionNpc(
+				booleanOrDefault(action, "schedule-respawn", true));
 			case "spawn-npc-current-or-default" -> new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
 				integer(action, "template-id"), new QuestSpawnLocation.Fixed(integer(action, "world-id"),
 					QuestInstanceTarget.currentOrDefault(),

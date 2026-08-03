@@ -1,13 +1,32 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /** Closed set of pure conditions evaluated against a quest snapshot. */
 public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCondition.HasItem,
 		QuestCondition.QuestVariableIs, QuestCondition.RecipeKnown, QuestCondition.CanGrantCraftSkill,
 		QuestCondition.PvpVictimLevelDelta, QuestCondition.PvpRecipientInZone,
-		QuestCondition.StartEligible {
+		QuestCondition.StartEligible, QuestCondition.PlayerClassIs, QuestCondition.WorldIs {
 	record StartEligible() implements QuestCondition {
+	}
+
+	/** Matches the player's starting class (advanced classes normalize to their base). */
+	record PlayerClassIs(PlayerClass startingClass) implements QuestCondition {
+		public PlayerClassIs {
+			if (startingClass == null) {
+				throw new NullPointerException("startingClass");
+			}
+		}
+	}
+
+	/** Matches the world the player is currently in; expected=false is the explicit "not in world" case. */
+	record WorldIs(int worldId, boolean expected) implements QuestCondition {
+		public WorldIs {
+			if (worldId <= 0) {
+				throw new IllegalArgumentException("worldId must be positive");
+			}
+		}
 	}
 
 	record StatusIs(QuestStatus status) implements QuestCondition {

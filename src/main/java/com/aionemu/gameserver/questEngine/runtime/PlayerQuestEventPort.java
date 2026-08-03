@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 
 import java.sql.Connection;
@@ -34,6 +36,11 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		snapshot = enrich(snapshot, event);
 		if (startEligibilityPort != null) {
 			snapshot = snapshot.withStartEligibility(startEligibilityPort.snapshot(playerId, questId));
+		}
+		PlayerCommonData commonData = player.getCommonData();
+		if (commonData != null) {
+			snapshot = snapshot.withStartingClass(
+				PlayerClass.getStartingClassFor(commonData.getPlayerClass()));
 		}
 		if (event instanceof QuestEvent.TalkToNpc talk) {
 			return snapshot.withInteractionObjectId(talk.interactionObjectId());

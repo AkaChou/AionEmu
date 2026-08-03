@@ -9,7 +9,8 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.BroadcastNpcEmotion, AfterCommitAction.WatchFollowZone,
 		AfterCommitAction.StartQuestTimer, AfterCommitAction.StartInvisibleTimer,
 		AfterCommitAction.CancelQuestTimer, AfterCommitAction.SyncQuestState,
-		AfterCommitAction.RefreshPlayerStats {
+		AfterCommitAction.RefreshPlayerStats, AfterCommitAction.Morph,
+		AfterCommitAction.FlightTeleport, AfterCommitAction.DeleteInteractionNpc {
 	record CloseDialog() implements AfterCommitAction {
 	}
 
@@ -216,5 +217,31 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 				throw new NullPointerException("identity");
 			}
 		}
+	}
+
+	/** Morphs the player into the ascension form for the given ascension id (SM_ASCENSION_MORPH). */
+	record Morph(int ascensionId) implements AfterCommitAction {
+		public Morph {
+			if (ascensionId <= 0) {
+				throw new IllegalArgumentException("ascensionId must be positive");
+			}
+		}
+	}
+
+	/** Starts a flight teleport for the given route (FLIGHT_TELEPORT state + START_FLYTELEPORT emote). */
+	record FlightTeleport(int flightTeleportId) implements AfterCommitAction {
+		public FlightTeleport {
+			if (flightTeleportId <= 0) {
+				throw new IllegalArgumentException("flightTeleportId must be positive");
+			}
+		}
+	}
+
+	/**
+	 * Deletes the interaction NPC of this commit (the authoritative
+	 * interactionObjectId) and optionally schedules its respawn. Unlike
+	 * DespawnNpc, this addresses a world static NPC rather than a task-spawned one.
+	 */
+	record DeleteInteractionNpc(boolean scheduleRespawn) implements AfterCommitAction {
 	}
 }

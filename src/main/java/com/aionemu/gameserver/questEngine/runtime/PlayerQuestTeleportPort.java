@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget;
+import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 
 import java.util.Objects;
@@ -65,6 +66,8 @@ public final class PlayerQuestTeleportPort implements QuestTeleportPort {
 		int instanceId;
 		if (instanceTarget instanceof QuestInstanceTarget.Fixed fixed) {
 			instanceId = fixed.instanceId();
+		} else if (instanceTarget instanceof QuestInstanceTarget.NextAvailable next) {
+			instanceId = InstanceService.getNextAvailableInstance(next.worldId()).getInstanceId();
 		} else if (snapshot.worldId() > 0 && snapshot.instanceId() > 0) {
 			instanceId = snapshot.worldId() == worldId ? snapshot.instanceId() : 1;
 		} else {

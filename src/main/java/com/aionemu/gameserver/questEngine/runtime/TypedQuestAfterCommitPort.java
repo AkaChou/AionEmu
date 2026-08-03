@@ -14,11 +14,13 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 	private final QuestTimerPort timerPort;
 	private final QuestStateSyncPort stateSyncPort;
 	private final QuestStatsPort statsPort;
+	private final QuestEffectPort effectPort;
+	private final QuestNpcPort npcPort;
 
 	public static TypedQuestAfterCommitPort fullyComposed(QuestDialogPort dialogPort,
 			QuestTeleportPort teleportPort, QuestMoviePort moviePort, QuestSpawnPort spawnPort,
 			QuestAiPort aiPort, QuestTimerPort timerPort, QuestStateSyncPort stateSyncPort,
-			QuestStatsPort statsPort) {
+			QuestStatsPort statsPort, QuestEffectPort effectPort, QuestNpcPort npcPort) {
 		return new TypedQuestAfterCommitPort(
 			Objects.requireNonNull(dialogPort, "dialogPort"),
 			Objects.requireNonNull(teleportPort, "teleportPort"),
@@ -27,46 +29,55 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			Objects.requireNonNull(aiPort, "aiPort"),
 			Objects.requireNonNull(timerPort, "timerPort"),
 			Objects.requireNonNull(stateSyncPort, "stateSyncPort"),
-			Objects.requireNonNull(statsPort, "statsPort"));
+			Objects.requireNonNull(statsPort, "statsPort"),
+			Objects.requireNonNull(effectPort, "effectPort"),
+			Objects.requireNonNull(npcPort, "npcPort"));
 	}
 
 	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort) {
-		this(dialogPort, null, null, null, null, null, null, null);
+		this(dialogPort, null, null, null, null, null, null, null, null, null);
 	}
 
 	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort) {
-		this(dialogPort, teleportPort, null, null, null, null, null, null);
+		this(dialogPort, teleportPort, null, null, null, null, null, null, null, null);
 	}
 
 	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
 			QuestMoviePort moviePort) {
-		this(dialogPort, teleportPort, moviePort, null, null, null, null, null);
+		this(dialogPort, teleportPort, moviePort, null, null, null, null, null, null, null);
 	}
 
 	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
 			QuestMoviePort moviePort, QuestSpawnPort spawnPort) {
-		this(dialogPort, teleportPort, moviePort, spawnPort, null, null, null, null);
+		this(dialogPort, teleportPort, moviePort, spawnPort, null, null, null, null, null, null);
 	}
 
 	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
 			QuestMoviePort moviePort, QuestSpawnPort spawnPort, QuestAiPort aiPort) {
-		this(dialogPort, teleportPort, moviePort, spawnPort, aiPort, null, null, null);
+		this(dialogPort, teleportPort, moviePort, spawnPort, aiPort, null, null, null, null, null);
 	}
 
 	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
 			QuestMoviePort moviePort, QuestSpawnPort spawnPort, QuestAiPort aiPort, QuestTimerPort timerPort) {
-		this(dialogPort, teleportPort, moviePort, spawnPort, aiPort, timerPort, null, null);
+		this(dialogPort, teleportPort, moviePort, spawnPort, aiPort, timerPort, null, null, null, null);
 	}
 
 	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
 			QuestMoviePort moviePort, QuestSpawnPort spawnPort, QuestAiPort aiPort, QuestTimerPort timerPort,
 			QuestStateSyncPort stateSyncPort) {
-		this(dialogPort, teleportPort, moviePort, spawnPort, aiPort, timerPort, stateSyncPort, null);
+		this(dialogPort, teleportPort, moviePort, spawnPort, aiPort, timerPort, stateSyncPort, null, null, null);
 	}
 
 	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
 			QuestMoviePort moviePort, QuestSpawnPort spawnPort, QuestAiPort aiPort, QuestTimerPort timerPort,
 			QuestStateSyncPort stateSyncPort, QuestStatsPort statsPort) {
+		this(dialogPort, teleportPort, moviePort, spawnPort, aiPort, timerPort, stateSyncPort, statsPort, null, null);
+	}
+
+	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
+			QuestMoviePort moviePort, QuestSpawnPort spawnPort, QuestAiPort aiPort, QuestTimerPort timerPort,
+			QuestStateSyncPort stateSyncPort, QuestStatsPort statsPort, QuestEffectPort effectPort,
+			QuestNpcPort npcPort) {
 		this.dialogPort = Objects.requireNonNull(dialogPort, "dialogPort");
 		this.teleportPort = teleportPort;
 		this.moviePort = moviePort;
@@ -75,6 +86,8 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 		this.timerPort = timerPort;
 		this.stateSyncPort = stateSyncPort;
 		this.statsPort = statsPort;
+		this.effectPort = effectPort;
+		this.npcPort = npcPort;
 	}
 
 	private void requireAiPort() {
@@ -194,6 +207,27 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireTimerPort();
 			AfterCommitAction.CancelQuestTimer cancel = (AfterCommitAction.CancelQuestTimer) action;
 			requireSuccess(timerPort.cancelQuestTimer(snapshot, plan, cancel.identity()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.Morph morph) {
+			if (effectPort == null) {
+				throw new IllegalArgumentException("morph requires an effect port");
+			}
+			requireSuccess(effectPort.morph(snapshot, plan, morph.ascensionId()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.FlightTeleport flight) {
+			if (effectPort == null) {
+				throw new IllegalArgumentException("flightTeleport requires an effect port");
+			}
+			requireSuccess(effectPort.flightTeleport(snapshot, plan, flight.flightTeleportId()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.DeleteInteractionNpc delete) {
+			if (npcPort == null) {
+				throw new IllegalArgumentException("deleteInteractionNpc requires an npc port");
+			}
+			requireSuccess(npcPort.deleteInteractionNpc(snapshot, plan, delete.scheduleRespawn()), action, snapshot);
 			return;
 		}
 		throw new IllegalArgumentException("unsupported after-commit action: " + action.getClass().getName());

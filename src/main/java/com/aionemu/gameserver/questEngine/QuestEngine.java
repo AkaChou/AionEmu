@@ -496,6 +496,11 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onEnterZoneMissionEnd(QuestEnv env) {
 		try {
+			Player player = env.getPlayer();
+			if (player != null) {
+				productionDispatcher.dispatch(new QuestEvent.ZoneMissionEnd(), player.getObjectId(), 0,
+					QuestDispatchContract.EXCLUSIVE);
+			}
 			List<Integer> legacyOwners = List.of(env.getQuestId());
 			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
 					QuestEvent.ZoneMissionEnd::new, legacyOwners)) {
@@ -692,6 +697,12 @@ public class QuestEngine implements GameEngine {
 	 */
 	public HandlerResult onItemUseEvent(QuestEnv env, Item item) {
 		try {
+			QuestProductionDispatcher typed = productionDispatcher;
+			Player player = env.getPlayer();
+			if (player != null && typed.dispatch(new QuestEvent.UseItem(item.getItemTemplate().getTemplateId()),
+					player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimed()) {
+				return HandlerResult.SUCCESS;
+			}
 			IntArrayList lists = getItemRelatedQuests(item.getItemTemplate().getTemplateId());
 			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
 					() -> new QuestEvent.UseItem(item.getItemTemplate().getTemplateId()), lists)) {
@@ -946,6 +957,12 @@ public class QuestEngine implements GameEngine {
 	 */
 	public boolean onMovieEnd(QuestEnv env, int movieId) {
 		try {
+			QuestProductionDispatcher typed = productionDispatcher;
+			Player player = env.getPlayer();
+			if (player != null && typed.dispatch(new QuestEvent.MovieEnd(movieId), player.getObjectId(), 0,
+					QuestDispatchContract.EXCLUSIVE).claimed()) {
+				return true;
+			}
 			IntArrayList onMovieEndQuests = getOnMovieEndQuests(movieId);
 			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
 					() -> new QuestEvent.MovieEnd(movieId), onMovieEndQuests)) {
@@ -998,6 +1015,11 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onInvisibleTimerEnd(QuestEnv env) {
+		Player player = env.getPlayer();
+		if (player != null) {
+			productionDispatcher.dispatch(new QuestEvent.InvisibleTimerEnd(), player.getObjectId(), 0,
+				QuestDispatchContract.BROADCAST);
+		}
 		try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
 				QuestEvent.InvisibleTimerEnd::new, onInvisibleTimerEnd)) {
 			for (int questId : onInvisibleTimerEnd) {
@@ -2037,7 +2059,11 @@ public class QuestEngine implements GameEngine {
 						&& !(transition.event() instanceof QuestEvent.CanAct)
 						&& !(transition.event() instanceof QuestEvent.EnterZone)
 						&& !(transition.event() instanceof QuestEvent.LevelUp)
-						&& !(transition.event() instanceof QuestEvent.EnterWorld)) {
+						&& !(transition.event() instanceof QuestEvent.EnterWorld)
+						&& !(transition.event() instanceof QuestEvent.UseItem)
+						&& !(transition.event() instanceof QuestEvent.MovieEnd)
+						&& !(transition.event() instanceof QuestEvent.ZoneMissionEnd)
+						&& !(transition.event() instanceof QuestEvent.InvisibleTimerEnd)) {
 					throw new IllegalStateException("typed production event is not wired into QuestEngine: "
 						+ transition.event().type());
 				}
@@ -2058,6 +2084,14 @@ public class QuestEngine implements GameEngine {
 					registerQuestNpc(kill.npcId()).addOnKillEvent(definition.id());
 				} else if (transition.event() instanceof QuestEvent.CanAct canAct) {
 					registerCanAct(definition.id(), canAct.templateId());
+				} else if (transition.event() instanceof QuestEvent.UseItem use) {
+					registerQuestItem(use.itemId(), definition.id());
+				} else if (transition.event() instanceof QuestEvent.MovieEnd movie) {
+					registerOnMovieEndQuest(movie.movieId(), definition.id());
+				} else if (transition.event() instanceof QuestEvent.ZoneMissionEnd) {
+					registerOnEnterZoneMissionEnd(definition.id());
+				} else if (transition.event() instanceof QuestEvent.InvisibleTimerEnd) {
+					registerOnInvisibleTimerEnd(definition.id());
 				}
 			}
 		}

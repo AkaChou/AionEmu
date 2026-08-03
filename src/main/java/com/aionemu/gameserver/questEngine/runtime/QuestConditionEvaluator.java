@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.definition.ProgressLayout;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 
@@ -25,6 +26,9 @@ public final class QuestConditionEvaluator {
 					case QuestCondition.PvpVictimLevelDelta level -> pvpVictimLevelDelta(snapshot, level);
 					case QuestCondition.PvpRecipientInZone zone -> pvpRecipientInZone(snapshot, zone);
 					case QuestCondition.StartEligible ignored -> startEligible(snapshot);
+					case QuestCondition.PlayerClassIs playerClass -> playerClass(startingClass(snapshot),
+						playerClass.startingClass());
+					case QuestCondition.WorldIs world -> worldIs(snapshot, world);
 				};
 			if (!matched) {
 				return false;
@@ -88,5 +92,21 @@ public final class QuestConditionEvaluator {
 		} catch (IllegalStateException unknownFacts) {
 			return false;
 		}
+	}
+
+	private static boolean playerClass(PlayerClass snapshotClass, PlayerClass expected) {
+		return expected == snapshotClass;
+	}
+
+	private static PlayerClass startingClass(QuestSnapshot snapshot) {
+		PlayerClass playerClass = snapshot.startingClass();
+		if (playerClass == null) {
+			throw new IllegalStateException("player class facts are not captured in this snapshot");
+		}
+		return playerClass;
+	}
+
+	private static boolean worldIs(QuestSnapshot snapshot, QuestCondition.WorldIs condition) {
+		return (snapshot.worldId() == condition.worldId()) == condition.expected();
 	}
 }

@@ -260,6 +260,24 @@ class TypedQuestAfterCommitPortTest {
 			(snapshot, plan) -> {
 				commands.add("stats");
 				return true;
+			},
+			new QuestEffectPort() {
+				@Override
+				public boolean morph(QuestSnapshot snapshot, QuestMutationPlan plan, int ascensionId) {
+					commands.add("morph:" + ascensionId);
+					return true;
+				}
+
+				@Override
+				public boolean flightTeleport(QuestSnapshot snapshot, QuestMutationPlan plan,
+						int flightTeleportId) {
+					commands.add("flight:" + flightTeleportId);
+					return true;
+				}
+			},
+			(snapshot, plan, scheduleRespawn) -> {
+				commands.add("delete-npc:" + scheduleRespawn);
+				return true;
 			});
 		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of());
 		QuestMutationPlan plan = new QuestMutationPlan(1001, QuestStatus.START, 0, List.of(), List.of());

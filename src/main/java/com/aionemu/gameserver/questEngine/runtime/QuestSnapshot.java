@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpKillFacts;
@@ -21,7 +22,8 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		Map<Integer, Integer> inventory, Map<QuestRewardKind, Long> currencies,
 		boolean inventoryCaptured, boolean currenciesCaptured, int interactionObjectId,
 		int targetObjectId, int worldId, int instanceId, float x, float y, float z, byte heading,
-		QuestCraftSnapshot craftFacts, QuestPvpKillFacts pvpFacts, QuestStartEligibility startEligibility) {
+		QuestCraftSnapshot craftFacts, QuestPvpKillFacts pvpFacts, QuestStartEligibility startEligibility,
+		PlayerClass startingClass) {
 
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
 			Map<Integer, Integer> inventory, Map<QuestRewardKind, Long> currencies,
@@ -30,7 +32,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			QuestCraftSnapshot craftFacts, QuestPvpKillFacts pvpFacts) {
 		this(playerId, questId, status, packedVariables, inventory, currencies, inventoryCaptured,
 			currenciesCaptured, interactionObjectId, targetObjectId, worldId, instanceId, x, y, z, heading,
-			craftFacts, pvpFacts, null);
+			craftFacts, pvpFacts, null, null);
 	}
 
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
@@ -38,19 +40,20 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			boolean inventoryCaptured, boolean currenciesCaptured, int interactionObjectId,
 			int targetObjectId, int worldId, int instanceId, float x, float y, float z, byte heading) {
 		this(playerId, questId, status, packedVariables, inventory, currencies, inventoryCaptured,
-			currenciesCaptured, interactionObjectId, targetObjectId, worldId, instanceId, x, y, z, heading, null, null);
+			currenciesCaptured, interactionObjectId, targetObjectId, worldId, instanceId, x, y, z, heading,
+			null, null, null, null);
 	}
 
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
 			Map<Integer, Integer> inventory, Map<QuestRewardKind, Long> currencies) {
 		this(playerId, questId, status, packedVariables, inventory, currencies, true, true, 0,
-			0, 0, 0, 0f, 0f, 0f, (byte) 0);
+			0, 0, 0, 0f, 0f, 0f, (byte) 0, null, null, null, null);
 	}
 
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
 			Map<Integer, Integer> inventory) {
 		this(playerId, questId, status, packedVariables, inventory, Map.of(), true, true, 0,
-			0, 0, 0, 0f, 0f, 0f, (byte) 0);
+			0, 0, 0, 0f, 0f, 0f, (byte) 0, null, null, null, null);
 	}
 
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
@@ -58,7 +61,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			boolean inventoryCaptured, boolean currenciesCaptured, int interactionObjectId) {
 		this(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId,
-			0, 0, 0, 0f, 0f, 0f, (byte) 0);
+			0, 0, 0, 0f, 0f, 0f, (byte) 0, null, null, null, null);
 	}
 
 	public QuestSnapshot withInteractionObjectId(int objectId) {
@@ -67,7 +70,8 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		}
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, objectId, targetObjectId,
-			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility);
+			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
+			startingClass);
 	}
 
 	public QuestSnapshot withTargetObjectId(int objectId) {
@@ -76,14 +80,15 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		}
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, objectId,
-			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility);
+			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
+			startingClass);
 	}
 
 	public QuestSnapshot withCraftFacts(QuestCraftSnapshot facts) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, Objects.requireNonNull(facts, "facts"), pvpFacts,
-			startEligibility);
+			startEligibility, startingClass);
 	}
 
 	public QuestSnapshot withPvpFacts(QuestPvpKillFacts facts) {
@@ -93,14 +98,22 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		}
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
-			worldId, instanceId, x, y, z, heading, craftFacts, facts, startEligibility);
+			worldId, instanceId, x, y, z, heading, craftFacts, facts, startEligibility,
+			startingClass);
 	}
 
 	public QuestSnapshot withStartEligibility(QuestStartEligibility eligibility) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts,
-			Objects.requireNonNull(eligibility, "eligibility"));
+			Objects.requireNonNull(eligibility, "eligibility"), startingClass);
+	}
+
+	public QuestSnapshot withStartingClass(PlayerClass startingClass) {
+		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
+			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
+			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
+			startingClass);
 	}
 
 	public QuestSnapshot {
