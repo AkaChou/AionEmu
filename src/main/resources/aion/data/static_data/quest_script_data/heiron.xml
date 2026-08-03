@@ -3,8 +3,6 @@
 <!--
     Quest Heiron Make By (Encom)
  -->
-	<report_to id="1504" start_npc_ids="204500" end_npc_ids="278502" item_id="182201703"/>
-	<report_to id="1513" start_npc_ids="204580" end_npc_ids="204549" item_id="182201709"/>
 	<report_to id="1533" start_npc_ids="204609" end_npc_ids="203893" item_id="186000017"/>
 	<report_to id="1538" start_npc_ids="204588" end_npc_ids="203073"/>
 	<report_to id="1555" start_npc_ids="204583" end_npc_ids="204568" item_id="182201779"/>
@@ -17,14 +15,6 @@
 	<report_to id="3528" start_npc_ids="204536" end_npc_ids="798165" item_id="182201836"/>
 	<report_to id="14251" start_npc_ids="204602" end_npc_ids="832824"/>
 	
-	<item_collecting id="1502" start_npc_ids="204525"/>
-	<item_collecting id="1503" start_npc_ids="204505" action_item_ids="700189"/>
-	<item_collecting id="1506" start_npc_ids="204582"/>
-	<item_collecting id="1510" start_npc_ids="798095"/>
-	<item_collecting id="1511" start_npc_ids="204582"/>
-	<item_collecting id="1512" start_npc_ids="204581"/>
-	<item_collecting id="1516" start_npc_ids="204611"/>
-	<item_collecting id="1518" start_npc_ids="204651"/>
 	<item_collecting id="1523" start_npc_ids="204551"/>
 	<item_collecting id="1524" start_npc_ids="204553"/>
 	<item_collecting id="1526" start_npc_ids="204555"/>
@@ -112,17 +102,6 @@
 	
 	<item_order start_item_id="182201710" talk_npc_id1="204582" talk_npc_id2="204505" end_npc_id="203831" id="1514"/>
 	
-	<monster_hunt id="1501" start_npc_ids="204507">
-		<monster var="0" end_var="5" npc_ids="211046"/>
-	</monster_hunt>
-	<monster_hunt id="1507" start_npc_ids="204507">
-		<monster var="0" end_var="3" npc_ids="211051 211053"/>
-		<monster var="1" end_var="5" npc_ids="212082 211875"/>
-	</monster_hunt>
-	<monster_hunt id="1517" start_npc_ids="204651">
-		<monster var="0" end_var="4" npc_ids="214118 214119 214120"/>
-		<monster var="1" end_var="6" npc_ids="214112 214113 214114 214115 214116 214117"/>
-	</monster_hunt>
 	<monster_hunt id="1521" start_npc_ids="204552">
 		<monster var="0" end_var="7" npc_ids="211056 211061"/>
 	</monster_hunt>
