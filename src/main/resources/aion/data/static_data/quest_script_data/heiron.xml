@@ -15,9 +15,6 @@
 	<report_to id="3528" start_npc_ids="204536" end_npc_ids="798165" item_id="182201836"/>
 	<report_to id="14251" start_npc_ids="204602" end_npc_ids="832824"/>
 	
-	<item_collecting id="1523" start_npc_ids="204551"/>
-	<item_collecting id="1524" start_npc_ids="204553"/>
-	<item_collecting id="1526" start_npc_ids="204555"/>
 	<item_collecting id="1530" start_npc_ids="204550"/>
 	<item_collecting id="1532" start_npc_ids="204613"/>
 	<item_collecting id="1534" start_npc_ids="204553"/>
@@ -102,18 +99,6 @@
 	
 	<item_order start_item_id="182201710" talk_npc_id1="204582" talk_npc_id2="204505" end_npc_id="203831" id="1514"/>
 	
-	<monster_hunt id="1521" start_npc_ids="204552">
-		<monster var="0" end_var="7" npc_ids="211056 211061"/>
-	</monster_hunt>
-	<monster_hunt id="1522" start_npc_ids="204552">
-		<monster var="0" end_var="7" npc_ids="211062 211073"/>
-	</monster_hunt>
-	<monster_hunt id="1525" start_npc_ids="204555">
-		<monster var="0" end_var="10" npc_ids="211078 211087"/>
-	</monster_hunt>
-	<monster_hunt id="1529" start_npc_ids="204550">
-		<monster var="0" end_var="5" npc_ids="212092 212093"/>
-	</monster_hunt>
 	<monster_hunt id="1531" start_npc_ids="204613">
 		<monster var="0" end_var="7" npc_ids="211924 211925"/>
 	</monster_hunt>
