@@ -8,7 +8,6 @@
 	<report_to id="1335" start_npc_ids="203999" end_npc_ids="204006"/>
 	<report_to id="1338" start_npc_ids="204006" end_npc_ids="204008"/>
 	<report_to id="1369" start_npc_ids="204020" end_npc_ids="203949"/>
-	<report_to id="1378" start_npc_ids="203948" end_npc_ids="203995" item_id="182201339"/>
 	<report_to id="1390" start_npc_ids="203993" end_npc_ids="203761" item_id="182201368"/>
 	<report_to id="1392" start_npc_ids="203992" end_npc_ids="203994" item_id="182201369"/>
 	<report_to id="1412" start_npc_ids="203989" end_npc_ids="203902" item_id="182201354"/>
@@ -18,12 +17,6 @@
 	<report_to id="3337" start_npc_ids="203954" end_npc_ids="790006" item_id="182201439"/>
 	<report_to id="14241" start_npc_ids="203996" end_npc_ids="203900"/>
 	
-	<item_collecting id="1375" start_npc_ids="203947"/>
-	<item_collecting id="1381" start_npc_ids="204040"/>
-	<item_collecting id="1384" start_npc_ids="204028"/>
-	<item_collecting id="1386" start_npc_ids="204040"/>
-	<item_collecting id="1388" start_npc_ids="798054"/>
-	<item_collecting id="1389" start_npc_ids="203993"/>
 	<item_collecting id="1402" start_npc_ids="203942"/>
 	<item_collecting id="1403" start_npc_ids="203942"/>
 	<item_collecting id="1405" start_npc_ids="203995"/>
@@ -91,20 +84,6 @@
 	
 	<monster_hunt id="1370" start_npc_ids="203949">
 		<monster var="0" end_var="1" npc_ids="210970"/>
-	</monster_hunt>
-	<monster_hunt id="1377" start_npc_ids="203964">
-		<monster var="0" end_var="4" npc_ids="210976 210986"/>
-		<monster var="1" end_var="6" npc_ids="210977 210987"/>
-	</monster_hunt>
-	<monster_hunt id="1379" start_npc_ids="203993">
-		<monster var="0" end_var="6" npc_ids="210832 210853"/>
-		<monster var="1" end_var="4" npc_ids="210889"/>
-	</monster_hunt>
-	<monster_hunt id="1380" start_npc_ids="203993">
-		<monster var="0" end_var="8" npc_ids="210833 210851"/>
-	</monster_hunt>
-	<monster_hunt id="1383" start_npc_ids="204039">
-		<monster var="0" end_var="7" npc_ids="210940 210951"/>
 	</monster_hunt>
 	<monster_hunt id="1387" start_npc_ids="204040">
 		<monster var="0" end_var="10" npc_ids="210953 210958"/>
