@@ -4,9 +4,7 @@
     Quest Heiron Make By (Encom)
  -->
 	<report_to id="1504" start_npc_ids="204500" end_npc_ids="278502" item_id="182201703"/>
-	<report_to id="1505" start_npc_ids="204502" end_npc_ids="204582"/>
 	<report_to id="1513" start_npc_ids="204580" end_npc_ids="204549" item_id="182201709"/>
-	<report_to id="1515" start_npc_ids="204502" end_npc_ids="204549"/>
 	<report_to id="1533" start_npc_ids="204609" end_npc_ids="203893" item_id="186000017"/>
 	<report_to id="1538" start_npc_ids="204588" end_npc_ids="203073"/>
 	<report_to id="1555" start_npc_ids="204583" end_npc_ids="204568" item_id="182201779"/>

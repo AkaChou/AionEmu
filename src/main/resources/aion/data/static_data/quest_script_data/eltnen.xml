@@ -4,7 +4,6 @@
     Quest Eltnen Make By (Encom)
  -->
 	<report_to id="1302" start_npc_ids="203921" end_npc_ids="203932"/>
-	<report_to id="1310" start_npc_ids="203932" end_npc_ids="203997"/>
 	<report_to id="1312" start_npc_ids="203997" end_npc_ids="203932" item_id="182201306"/>
 	<report_to id="1329" start_npc_ids="203918" end_npc_ids="203998" item_id="182201375"/>
 	<report_to id="1335" start_npc_ids="203999" end_npc_ids="204006"/>
@@ -15,20 +14,12 @@
 	<report_to id="1359" start_npc_ids="798055" end_npc_ids="798051" item_id="182201324"/>
 	<report_to id="1360" start_npc_ids="798055" end_npc_ids="203944" item_id="182201325"/>
 	<report_to id="1369" start_npc_ids="204020" end_npc_ids="203949"/>
-	<report_to id="1374" start_npc_ids="203946" end_npc_ids="203992"/>
 	<report_to id="1378" start_npc_ids="203948" end_npc_ids="203995" item_id="182201339"/>
-	<report_to id="1382" start_npc_ids="203993" end_npc_ids="203943"/>
 	<report_to id="1390" start_npc_ids="203993" end_npc_ids="203761" item_id="182201368"/>
 	<report_to id="1392" start_npc_ids="203992" end_npc_ids="203994" item_id="182201369"/>
-	<report_to id="1410" start_npc_ids="203990" end_npc_ids="203989"/>
 	<report_to id="1412" start_npc_ids="203989" end_npc_ids="203902" item_id="182201354"/>
-	<report_to id="1413" start_npc_ids="203901" end_npc_ids="203989"/>
-	<report_to id="1417" start_npc_ids="203989" end_npc_ids="203901"/>
-	<report_to id="1445" start_npc_ids="204013" end_npc_ids="203790"/>
 	<report_to id="1449" start_npc_ids="790004" end_npc_ids="203992" item_id="182201377"/>
 	<report_to id="1451" start_npc_ids="203992" end_npc_ids="790004" item_id="182201378"/>
-	<report_to id="1465" start_npc_ids="203903" end_npc_ids="212649"/>
-	<report_to id="1479" start_npc_ids="730020" end_npc_ids="203912"/>
 	<report_to id="3330" start_npc_ids="203956" end_npc_ids="203949"/>
 	<report_to id="3337" start_npc_ids="203954" end_npc_ids="790006" item_id="182201439"/>
 	<report_to id="14241" start_npc_ids="203996" end_npc_ids="203900"/>

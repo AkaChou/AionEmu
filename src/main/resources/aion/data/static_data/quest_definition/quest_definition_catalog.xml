@@ -35,9 +35,23 @@
   <definition id="1126" resource="aion/data/static_data/quest_definition/quests/1126.xml"/>
   <definition id="1127" resource="aion/data/static_data/quest_definition/quests/1127.xml"/>
   <definition id="1129" resource="aion/data/static_data/quest_definition/quests/1129.xml"/>
+  <definition id="1142" resource="aion/data/static_data/quest_definition/quests/1142.xml"/>
+  <definition id="1150" resource="aion/data/static_data/quest_definition/quests/1150.xml"/>
+  <definition id="1184" resource="aion/data/static_data/quest_definition/quests/1184.xml"/>
   <definition id="1205" resource="aion/data/static_data/quest_definition/quests/1205.xml"/>
   <definition id="1206" resource="aion/data/static_data/quest_definition/quests/1206.xml"/>
   <definition id="1207" resource="aion/data/static_data/quest_definition/quests/1207.xml"/>
   <definition id="1230" resource="aion/data/static_data/quest_definition/quests/1230.xml"/>
   <definition id="1231" resource="aion/data/static_data/quest_definition/quests/1231.xml"/>
+  <definition id="1310" resource="aion/data/static_data/quest_definition/quests/1310.xml"/>
+  <definition id="1374" resource="aion/data/static_data/quest_definition/quests/1374.xml"/>
+  <definition id="1382" resource="aion/data/static_data/quest_definition/quests/1382.xml"/>
+  <definition id="1410" resource="aion/data/static_data/quest_definition/quests/1410.xml"/>
+  <definition id="1413" resource="aion/data/static_data/quest_definition/quests/1413.xml"/>
+  <definition id="1417" resource="aion/data/static_data/quest_definition/quests/1417.xml"/>
+  <definition id="1445" resource="aion/data/static_data/quest_definition/quests/1445.xml"/>
+  <definition id="1465" resource="aion/data/static_data/quest_definition/quests/1465.xml"/>
+  <definition id="1479" resource="aion/data/static_data/quest_definition/quests/1479.xml"/>
+  <definition id="1505" resource="aion/data/static_data/quest_definition/quests/1505.xml"/>
+  <definition id="1515" resource="aion/data/static_data/quest_definition/quests/1515.xml"/>
 </quest-definition-catalog>
