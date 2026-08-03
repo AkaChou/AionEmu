@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="2" version="1" ownership="CATALOG_ONLY">
-  <evidence><ref source="test" locator="two" statement="fixture"/></evidence>
+<quest-definition id="2" version="1">
   <metadata name="two" display-name-id="2" min-level="0" max-level="55" category="QUEST"/>
 </quest-definition>

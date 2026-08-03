@@ -16,9 +16,6 @@ public final class QuestDefinitionCompiler {
 
 	public static CompiledQuestDefinition compile(QuestDefinition definition) {
 		Objects.requireNonNull(definition, "definition");
-		if (definition.evidence().isEmpty()) {
-			fail("EVIDENCE_REQUIRED", "definition has no evidence");
-		}
 		if (definition.ownership() == QuestOwnership.CATALOG_ONLY) {
 			if (!definition.nodes().isEmpty() || !definition.transitions().isEmpty()) {
 				fail("CATALOG_ONLY_EXECUTION", "CATALOG_ONLY definitions cannot contain execution");
@@ -158,7 +155,7 @@ public final class QuestDefinitionCompiler {
 				.orElse("unknown");
 			fail("UNREACHABLE_NODE", "node is not reachable from the first node: " + unreachable);
 		}
-		validateTransitionConflicts(definition.transitions());
+		validateTransitionConflicts(definition.transitions(), nodes);
 		return new CompiledQuestDefinition(definition);
 	}
 
@@ -221,12 +218,16 @@ public final class QuestDefinitionCompiler {
 		return null;
 	}
 
-	private static void validateTransitionConflicts(List<QuestTransition> transitions) {
+	private static void validateTransitionConflicts(List<QuestTransition> transitions,
+			Map<String, QuestNode> nodes) {
 		for (int left = 0; left < transitions.size(); left++) {
 			QuestTransition a = transitions.get(left);
 			for (int right = left + 1; right < transitions.size(); right++) {
 				QuestTransition b = transitions.get(right);
 				if (!QuestEvent.overlaps(a.event(), b.event())) {
+					continue;
+				}
+				if (sourceNodesAreMutuallyExclusive(a, b, nodes)) {
 					continue;
 				}
 				if (mutuallyExclusive(a.conditions(), b.conditions())) {
@@ -238,6 +239,26 @@ public final class QuestDefinitionCompiler {
 				}
 			}
 		}
+	}
+
+	private static boolean sourceNodesAreMutuallyExclusive(QuestTransition left, QuestTransition right,
+			Map<String, QuestNode> nodes) {
+		if (left.sourceNode() == null || right.sourceNode() == null
+				|| left.sourceNode().equals(right.sourceNode())) {
+			return false;
+		}
+		NodeProjection leftProjection = nodes.get(left.sourceNode()).projection();
+		NodeProjection rightProjection = nodes.get(right.sourceNode()).projection();
+		if (leftProjection.status() != rightProjection.status()) {
+			return true;
+		}
+		for (Map.Entry<String, Integer> variable : leftProjection.variables().entrySet()) {
+			Integer rightValue = rightProjection.variables().get(variable.getKey());
+			if (rightValue != null && !variable.getValue().equals(rightValue)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static boolean mutuallyExclusive(List<QuestCondition> left, List<QuestCondition> right) {

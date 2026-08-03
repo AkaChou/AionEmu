@@ -97,8 +97,7 @@ public final class QuestMutationPlanner {
 	/**
 	 * A removal is feasible only when the snapshot actually captured inventory
 	 * facts. Unknown facts (player being logged out) never guess a zero balance:
-	 * the removal is treated as infeasible so the shadow exposes a difference
-	 * instead of inventing a matching candidate plan.
+	 * the removal is treated as infeasible instead of inventing a matching plan.
 	 */
 	private static boolean removalFeasible(QuestSnapshot snapshot, QuestAction.RemoveItem remove) {
 		try {

@@ -22,10 +22,19 @@ public final class QuestEventRouter {
 
 	public DispatchResult dispatch(QuestEvent event, QuestDispatchContract contract,
 			QuestRouteHandler handler) {
+		return dispatch(event, contract, handler, index.routesFor(event));
+	}
+
+	public DispatchResult dispatchOwner(QuestEvent event, int questId, QuestDispatchContract contract,
+			QuestRouteHandler handler) {
+		return dispatch(event, contract, handler, index.routesFor(event, questId));
+	}
+
+	private DispatchResult dispatch(QuestEvent event, QuestDispatchContract contract,
+			QuestRouteHandler handler, List<QuestEventIndex.Route> routes) {
 		Objects.requireNonNull(event, "event");
 		Objects.requireNonNull(contract, "contract");
 		Objects.requireNonNull(handler, "handler");
-		List<QuestEventIndex.Route> routes = index.routesFor(event);
 		metrics.onDispatch(contract, routes.size());
 		List<OwnerResult> results = new ArrayList<>();
 		switch (contract) {
@@ -34,7 +43,7 @@ public final class QuestEventRouter {
 					OwnerResult result = invoke(event, contract, route, handler);
 					results.add(result);
 					// Boolean legacy callers continue on false; UNKNOWN is also a
-					// non-conclusive candidate result. Any conclusion owns the
+					// non-conclusive route result. Any conclusion owns the
 					// exclusive event and prevents dialog fallback.
 					if (isConclusive(result.result())) {
 						break;
@@ -98,6 +107,11 @@ public final class QuestEventRouter {
 	public record DispatchResult(QuestDispatchContract contract, List<OwnerResult> owners) {
 		public boolean consumed() {
 			return owners.stream().anyMatch(owner -> owner.result() == QuestRouteResult.HANDLED);
+		}
+
+		/** A handled or failed owner conclusively claims the event, so no legacy fallback may run. */
+		public boolean claimed() {
+			return owners.stream().anyMatch(owner -> QuestEventRouter.isConclusive(owner.result()));
 		}
 	}
 

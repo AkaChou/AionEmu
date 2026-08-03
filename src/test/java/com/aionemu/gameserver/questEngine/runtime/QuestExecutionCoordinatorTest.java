@@ -104,6 +104,46 @@ class QuestExecutionCoordinatorTest {
 	}
 
 	@Test
+	void protocolOnlySelfTransitionDoesNotRewriteStateOrRunTerminalCleanup() throws Exception {
+		List<String> calls = new ArrayList<>();
+		CompiledQuestDefinition definition = protocolOnlyDefinition();
+		QuestStatePort state = new QuestStatePort() {
+			@Override
+			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+				throw new AssertionError("unchanged state must not be persisted");
+			}
+
+			@Override
+			public void publish(int playerId, QuestMutationPlan plan) {
+				throw new AssertionError("unchanged state must not be published");
+			}
+		};
+		QuestExecutionCoordinator coordinator = new QuestExecutionCoordinator(new PlayerSerialExecutor(),
+			(playerId, questId) -> calls.add("cleanup"));
+
+		QuestEventPort protocolSnapshot = (connection, playerId, questId, event) ->
+			new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of());
+		QuestActionPort actions = new QuestActionPort() {
+			@Override
+			public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> required) {
+				throw new AssertionError("empty required actions must not initialize the action port");
+			}
+
+			@Override
+			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+					List<QuestAction> required) {
+				throw new AssertionError("empty required actions must not initialize the action port");
+			}
+		};
+		QuestExecutionResult result = coordinator.execute(connection(calls), 7, definition, talkToNpc(700001),
+			definition.definition().transitions().get(0), protocolSnapshot, actions, state,
+			(action, snapshot, plan) -> calls.add("after"));
+
+		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
+		assertEquals(List.of("setAutoCommit:false", "commit", "after"), calls);
+	}
+
+	@Test
 	void typedPortFalseIsReportedAsAfterCommitFailure() throws Exception {
 		CompiledQuestDefinition definition = definition();
 		TypedQuestAfterCommitPort typedPort = new TypedQuestAfterCommitPort(new QuestDialogPort() {
@@ -389,6 +429,15 @@ class QuestExecutionCoordinatorTest {
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).goTo("start")
 				.afterCommit(spawnNpc("guardian", 310040000, 204830, 1f, 2f, 3f, (byte) 0)).compile();
+	}
+
+	private static CompiledQuestDefinition protocolOnlyDefinition() {
+		return quest(1005)
+			.evidence(EVIDENCE)
+			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, vars("var1", 0)))
+			.on(talkToNpc(700001)).from("unaccepted").goTo("unaccepted")
+			.afterCommit(closeDialog()).compile();
 	}
 
 	private static QuestEventPort snapshotPort() {

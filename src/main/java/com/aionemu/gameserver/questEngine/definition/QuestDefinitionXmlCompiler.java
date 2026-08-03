@@ -73,23 +73,14 @@ public final class QuestDefinitionXmlCompiler {
 		}
 		int id = integer(root, "id");
 		int version = integer(root, "version");
-		QuestOwnership ownership = enumValue(QuestOwnership.class, root, "ownership");
-
-		List<EvidenceRef> evidence = new ArrayList<>();
-		Element evidenceElement = child(root, "evidence");
-		if (evidenceElement != null) {
-			for (Element item : children(evidenceElement, "ref")) {
-				evidence.add(new EvidenceRef(attribute(item, "source"), attribute(item, "locator"),
-					attribute(item, "statement")));
-			}
-		}
-
 		Element metadataElement = requiredChild(root, "metadata");
 		QuestMetadata metadata = parseMetadata(metadataElement);
 		ProgressLayout progress = parseProgress(child(root, "progress"));
 		List<QuestNode> nodes = parseNodes(child(root, "nodes"));
 		List<QuestTransition> transitions = parseTransitions(child(root, "transitions"));
-		return new QuestDefinition(id, version, ownership, evidence, metadata, progress, nodes, transitions);
+		QuestOwnership ownership = nodes.isEmpty() && transitions.isEmpty()
+			? QuestOwnership.CATALOG_ONLY : QuestOwnership.RETAIL_ALIGNED;
+		return new QuestDefinition(id, version, ownership, List.of(), metadata, progress, nodes, transitions);
 	}
 
 	private static QuestMetadata parseMetadata(Element element) {
@@ -277,7 +268,7 @@ public final class QuestDefinitionXmlCompiler {
 		List<QuestTransition> transitions = new ArrayList<>();
 		for (Element transition : children(element, "transition")) {
 			Element event = onlyChild(requiredChild(transition, "event"));
-			QuestEvent parsedEvent = parseEvent(event);
+			List<QuestEvent> parsedEvents = parseEvents(event);
 			List<QuestCondition> conditions = new ArrayList<>();
 			Element conditionsElement = child(transition, "conditions");
 			if (conditionsElement != null) {
@@ -301,13 +292,70 @@ public final class QuestDefinitionXmlCompiler {
 			}
 			Integer priority = transition.hasAttribute("priority") ? integer(transition, "priority") : null;
 			String source = transition.hasAttribute("source") ? attribute(transition, "source") : null;
-			QuestShadowCoverageRequirement shadowCoverage = transition.hasAttribute("shadow-coverage")
-				? enumValue(QuestShadowCoverageRequirement.class, transition, "shadow-coverage")
-				: QuestShadowCoverageRequirement.PRODUCTION_REQUIRED;
-			transitions.add(new QuestTransition(parsedEvent, conditions, actions, attribute(transition, "target"),
-				afterCommit, priority, source, shadowCoverage));
+			for (QuestEvent parsedEvent : parsedEvents) {
+				transitions.add(new QuestTransition(parsedEvent, conditions, actions, attribute(transition, "target"),
+					afterCommit, priority, source));
+			}
 		}
 		return transitions;
+	}
+
+	private static List<QuestEvent> parseEvents(Element element) {
+		if (!"talk-to-npc".equals(element.getTagName()) || !element.hasAttribute("dialog-ids")) {
+			return List.of(parseEvent(element));
+		}
+		if (element.hasAttribute("dialog") || element.hasAttribute("dialog-id")) {
+			return fail("AMBIGUOUS_DIALOG_EVENT", "declare one of dialog, dialog-id, or dialog-ids");
+		}
+		int npcId = integer(element, "npc-id");
+		List<QuestEvent> events = new ArrayList<>();
+		Set<Integer> dialogIds = new java.util.LinkedHashSet<>();
+		for (String token : attribute(element, "dialog-ids").trim().split("[\\s,]+")) {
+			int delimiter = token.indexOf("..");
+			if (delimiter < 0) {
+				addDialogId(dialogIds, parseDialogId(token));
+				continue;
+			}
+			if (delimiter == 0 || delimiter + 2 == token.length()
+					|| token.indexOf("..", delimiter + 2) >= 0) {
+				return fail("INVALID_DIALOG_ID_SET", token);
+			}
+			int first = parseDialogId(token.substring(0, delimiter));
+			int last = parseDialogId(token.substring(delimiter + 2));
+			if (first > last || (long) last - first >= 256) {
+				return fail("INVALID_DIALOG_ID_RANGE", token);
+			}
+			for (int dialogId = first; ; dialogId++) {
+				addDialogId(dialogIds, dialogId);
+				if (dialogId == last) {
+					break;
+				}
+			}
+		}
+		if (dialogIds.isEmpty()) {
+			return fail("EMPTY_DIALOG_ID_SET", "talk-to-npc.dialog-ids");
+		}
+		for (int dialogId : dialogIds) {
+			events.add(new QuestEvent.TalkToNpc(npcId, dialogId));
+		}
+		return List.copyOf(events);
+	}
+
+	private static int parseDialogId(String token) {
+		try {
+			return Integer.parseInt(token);
+		} catch (NumberFormatException e) {
+			return fail("INVALID_DIALOG_ID_SET", token);
+		}
+	}
+
+	private static void addDialogId(Set<Integer> dialogIds, int dialogId) {
+		if (!dialogIds.contains(dialogId) && dialogIds.size() >= 256) {
+			fail("TOO_MANY_DIALOG_IDS", "talk-to-npc.dialog-ids");
+		}
+		if (!dialogIds.add(dialogId)) {
+			fail("DUPLICATE_DIALOG_ID", Integer.toString(dialogId));
+		}
 	}
 
 	private static QuestEvent parseEvent(Element element) {

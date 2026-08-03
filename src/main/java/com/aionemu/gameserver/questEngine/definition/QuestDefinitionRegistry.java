@@ -22,9 +22,9 @@ public final class QuestDefinitionRegistry implements QuestCatalog {
 				throw new QuestCompilationException("DUPLICATE_OWNER", "duplicate quest owner: " + definition.id());
 			}
 		}
-		ImmutableQuestCatalog candidate = new ImmutableQuestCatalog(compiled.values());
-		validateLayoutCompatibility(active.get(), candidate);
-		active.set(candidate);
+		ImmutableQuestCatalog nextCatalog = new ImmutableQuestCatalog(compiled.values());
+		validateLayoutCompatibility(active.get(), nextCatalog);
+		active.set(nextCatalog);
 	}
 
 	@Override
@@ -37,9 +37,9 @@ public final class QuestDefinitionRegistry implements QuestCatalog {
 		return active.get().all();
 	}
 
-	private static void validateLayoutCompatibility(QuestCatalog oldCatalog, QuestCatalog candidate) {
+	private static void validateLayoutCompatibility(QuestCatalog oldCatalog, QuestCatalog nextCatalog) {
 		for (CompiledQuestDefinition oldDefinition : oldCatalog.all()) {
-			CompiledQuestDefinition next = candidate.find(oldDefinition.id()).orElse(null);
+			CompiledQuestDefinition next = nextCatalog.find(oldDefinition.id()).orElse(null);
 			if (next != null && !oldDefinition.definition().progressLayout().equals(next.definition().progressLayout())) {
 				throw new QuestCompilationException("INCOMPATIBLE_PROGRESS_LAYOUT",
 						"reload changes progress layout for quest " + oldDefinition.id());

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -89,8 +90,8 @@ public final class QuestLegacyInvocationBridge {
 				recorder.snapshot()));
 		} catch (RuntimeException failure) {
 			// Observation is diagnostic only; report the loss without altering legacy behavior.
-			log.warn("Failed to record legacy quest observation for player {} quest {} event {}",
-				player.getObjectId(), questId, eventType, failure);
+			log.warn(I18n.get("log.quest_engine.legacy_observation_failed",
+				player.getObjectId(), questId, eventType), failure);
 		}
 	}
 

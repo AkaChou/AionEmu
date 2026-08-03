@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="1107" version="1" ownership="COMPILED_CANDIDATE">
-  <evidence>
-    <ref source="RETAIL_SIMPLE_USE_ITEM_XML" locator="58Server/Map/XML/Quest_SimpleUseItem.xml#id[1107]" statement="the true-server entry declares ITEM_QUEST_1107A and Namus as reward NPC"/>
-    <ref source="RETAIL_SCRIPT_DLL" locator="58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:706-711,1050-1065" statement="the use_item type reads use-item parameters and initializes the common quest object"/>
-    <ref source="CURRENT_ITEM_TEMPLATE" locator="src/main/resources/aion/data/static_data/items/item/item_etc_templates.xml#questid[1107]" statement="ITEM_QUEST_1107A resolves to item 182200501"/>
-  </evidence>
+<quest-definition id="1107" version="1">
   <metadata name="SimpleUseItem 1107" display-name-id="0" min-level="0" max-level="2147483647" category="QUEST"/>
   <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
   <nodes>

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.configs.main.CraftConfig;
@@ -291,8 +292,7 @@ public final class QuestShadowCapture implements QuestLegacyObservationSink {
 				bind(this);
 			} catch (RuntimeException failure) {
 				// 聚合/绑定失败降级为不采集,绝不影响旧路由或结果,但必须可诊断。
-				log.warn("Failed to bind quest shadow event {} with {} legacy invocations",
-					event.type(), invocations.size(), failure);
+				log.warn(I18n.get("log.quest_engine.shadow_bind_failed", event.type(), invocations.size()), failure);
 			}
 		}
 	}

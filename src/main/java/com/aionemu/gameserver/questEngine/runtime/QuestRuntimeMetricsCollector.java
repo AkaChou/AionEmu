@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.LongAdder;
 
-/** Thread-safe in-process metrics implementation for candidate and production adapters. */
+/** typed 路由的线程安全进程内指标实现。 Thread-safe in-process metrics for typed routing. */
 public final class QuestRuntimeMetricsCollector implements QuestRuntimeMetrics {
 	private final LongAdder dispatches = new LongAdder();
 	private final LongAdder routedOwners = new LongAdder();

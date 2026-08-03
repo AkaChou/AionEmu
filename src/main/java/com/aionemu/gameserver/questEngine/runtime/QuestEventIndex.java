@@ -38,6 +38,13 @@ public final class QuestEventIndex {
 		return routes.getOrDefault(QuestEvent.routeKey(event), List.of());
 	}
 
+	public List<Route> routesFor(QuestEvent event, int questId) {
+		if (questId <= 0) {
+			throw new IllegalArgumentException("questId must be positive");
+		}
+		return routesFor(event).stream().filter(route -> route.questId() == questId).toList();
+	}
+
 	public Map<QuestEvent, List<Route>> routes() {
 		return routes;
 	}

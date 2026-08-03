@@ -60,7 +60,6 @@ class PvpRepresentativeQuestDefinitionTest {
 	@Test
 	void quest15204WorldCountCompilesIdenticallyThroughDslAndXml() {
 		CompiledQuestDefinition dsl = quest(15204)
-			.evidence(WORLD_EVIDENCE)
 			.metadata(QuestMetadata.minimal("pvp-15204", 1, "QUEST"))
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 4)))
@@ -112,8 +111,7 @@ class PvpRepresentativeQuestDefinitionTest {
 	@Test
 	void xmlCompilerReadsPvpFactsConditionsAsTypedIr() {
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(("""
-			<quest-definition id="23851" version="1" ownership="COMPILED_CANDIDATE">
-			  <evidence><ref source="JAVA_HANDLER" locator="quest/23851" statement="zone and level window"/></evidence>
+			<quest-definition id="23851" version="1">
 			  <metadata name="pvp-23851" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 			  <nodes><node label="start"><project status="START"/></node><node label="reward"><project status="REWARD"/></node></nodes>
 			  <transitions><transition source="start" target="reward">
@@ -148,8 +146,7 @@ class PvpRepresentativeQuestDefinitionTest {
 	}
 
 	private static ByteArrayInputStream xml(int id, String progress, String startNode, String eventAndConditions) {
-		String document = "<quest-definition id=\"" + id + "\" version=\"1\" ownership=\"COMPILED_CANDIDATE\">"
-			+ "<evidence><ref source=\"XML_TEMPLATE\" locator=\"src/main/resources/aion/data/static_data/quest_script_data/kill_in_world.xml:20\" statement=\"world 210070000 requires five credited kills\"/></evidence>"
+		String document = "<quest-definition id=\"" + id + "\" version=\"1\">"
 			+ "<metadata name=\"pvp-" + id + "\" display-name-id=\"1\" min-level=\"0\" max-level=\"2147483647\" category=\"QUEST\"/>"
 			+ progress + "<nodes>" + startNode + "</nodes>"
 			+ "<transitions><transition source=\"start\" target=\"reward\">" + eventAndConditions

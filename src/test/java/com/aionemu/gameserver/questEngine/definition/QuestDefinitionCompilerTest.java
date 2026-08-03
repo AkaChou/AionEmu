@@ -49,7 +49,6 @@ class QuestDefinitionCompilerTest {
 		QuestMetadata metadata = QuestMetadata.minimal("A test quest", 1101001, "QUEST");
 		CompiledQuestDefinition fromDsl = quest(1001)
 				.metadata(metadata)
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
@@ -58,14 +57,12 @@ class QuestDefinitionCompilerTest {
 				.when(hasItem(182400001, 5))
 				.then(removeItem(182400001, 5))
 				.then(setVariable("var1", 1))
-				.shadowCoverage(QuestShadowCoverageRequirement.OFFLINE_ONLY)
 				.goTo("reward")
 				.afterCommit(closeDialog())
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+				<quest-definition id="1001" version="1">
 				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 				  <nodes>
@@ -73,7 +70,7 @@ class QuestDefinitionCompilerTest {
 				    <node label="reward"><project status="REWARD"><vars><var name="var1" value="1"/></vars></project></node>
 				  </nodes>
 				  <transitions>
-				    <transition target="reward" shadow-coverage="OFFLINE_ONLY">
+				    <transition target="reward">
 				      <event><talk-to-npc npc-id="700001"/></event>
 				      <conditions><status-is status="START"/><has-item item-id="182400001" count="5"/></conditions>
 				      <actions><remove-item item-id="182400001" count="5"/><set-variable field="var1" value="1"/></actions>
@@ -90,34 +87,54 @@ class QuestDefinitionCompilerTest {
 	}
 
 	@Test
-	void shadowCoverageDefaultsToProductionRequiredAndRejectsUnknownXmlValues() {
-		CompiledQuestDefinition defaultDsl = quest(1002)
-			.metadata(QuestMetadata.minimal("default", 1, "QUEST"))
-			.evidence(EVIDENCE)
-			.node("start", project(QuestStatus.START, Map.of()))
-			.on(talkToNpc(700001)).goTo("start").compile();
-		assertEquals(QuestShadowCoverageRequirement.PRODUCTION_REQUIRED,
-			defaultDsl.definition().transitions().get(0).shadowCoverage());
+	void taskXmlRejectsMigrationAnnotations() {
+		String valid = xmlWithTransition("<event><talk-to-npc npc-id=\"700001\"/></event>", "");
+		List<String> invalid = List.of(
+			valid.replace("version=\"1\"", "version=\"1\" ownership=\"CURRENT\""),
+			valid.replace("<metadata", "<evidence><ref source=\"test\" locator=\"x\" statement=\"y\"/></evidence><metadata"),
+			valid.replace("<transition target=\"start\">",
+				"<transition target=\"start\" shadow-coverage=\"OFFLINE_ONLY\">"));
+		for (String xml : invalid) {
+			assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
+				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+					xml.getBytes(StandardCharsets.UTF_8)))).code());
+		}
+	}
 
-		String invalidXml = xmlWithTransition("<event><talk-to-npc npc-id=\"700001\"/></event>", "")
-			.replace("<transition target=\"start\">",
-				"<transition target=\"start\" shadow-coverage=\"UNKNOWN\">");
-		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
-			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
-				invalidXml.getBytes(StandardCharsets.UTF_8)))).code());
+	@Test
+	void talkDialogIdSetsExpandToTypedTransitionsAndRejectAmbiguity() {
+		String expanded = xmlWithTransition(
+			"<event><talk-to-npc npc-id=\"700001\" dialog-ids=\"-1 8..10 2147483646..2147483647\"/></event>", "");
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+			expanded.getBytes(StandardCharsets.UTF_8)));
+		assertEquals(List.of(-1, 8, 9, 10, 2147483646, 2147483647),
+			definition.definition().transitions().stream()
+			.map(QuestTransition::event).map(QuestEvent.TalkToNpc.class::cast)
+			.map(QuestEvent.TalkToNpc::dialogId).toList());
+
+		Map<String, String> invalid = Map.of(
+			"AMBIGUOUS_DIALOG_EVENT",
+			"<event><talk-to-npc npc-id=\"700001\" dialog-id=\"8\" dialog-ids=\"8..10\"/></event>",
+			"INVALID_DIALOG_ID_RANGE",
+			"<event><talk-to-npc npc-id=\"700001\" dialog-ids=\"10..8\"/></event>",
+			"DUPLICATE_DIALOG_ID",
+			"<event><talk-to-npc npc-id=\"700001\" dialog-ids=\"8 8\"/></event>");
+		for (Map.Entry<String, String> entry : invalid.entrySet()) {
+			assertEquals(entry.getKey(), assertThrows(QuestCompilationException.class,
+				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+					xmlWithTransition(entry.getValue(), "").getBytes(StandardCharsets.UTF_8)))).code());
+		}
 	}
 
 	@Test
 	void extendedEventFamilyUsesTheSameTypedXmlAndDslFrontEnds() {
 		CompiledQuestDefinition fromDsl = quest(1004)
 			.metadata(QuestMetadata.minimal("a", 1, "QUEST"))
-			.evidence(new EvidenceRef("test", "quest/1004", "fixture"))
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(new QuestEvent.MovieEnd(9)).when(statusIs(QuestStatus.START)).goTo("reward").compile();
 		String xml = """
-				<quest-definition id="1004" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="quest/1004" statement="fixture"/></evidence>
+				<quest-definition id="1004" version="1">
 				  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 				  <nodes><node label="start"><project status="START"/></node><node label="reward"><project status="REWARD"/></node></nodes>
 				  <transitions><transition target="reward"><event><movie-end movie-id="9"/></event><conditions><status-is status="START"/></conditions></transition></transitions>
@@ -133,13 +150,11 @@ class QuestDefinitionCompilerTest {
 	void escortEventFamilyCompilesThroughXmlAndDsl() {
 		CompiledQuestDefinition reachDsl = quest(1005)
 			.metadata(QuestMetadata.minimal("a", 1, "QUEST"))
-			.evidence(new EvidenceRef("test", "quest/1005", "fixture"))
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(new QuestEvent.NpcReachTarget()).when(statusIs(QuestStatus.START)).goTo("reward").compile();
 		String reachXml = """
-				<quest-definition id="1005" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="quest/1005" statement="fixture"/></evidence>
+				<quest-definition id="1005" version="1">
 				  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 				  <nodes><node label="start"><project status="START"/></node><node label="reward"><project status="REWARD"/></node></nodes>
 				  <transitions><transition target="reward"><event><npc-reach-target/></event><conditions><status-is status="START"/></conditions></transition></transitions>
@@ -152,13 +167,11 @@ class QuestDefinitionCompilerTest {
 
 		CompiledQuestDefinition lostDsl = quest(1006)
 			.metadata(QuestMetadata.minimal("a", 1, "QUEST"))
-			.evidence(new EvidenceRef("test", "quest/1006", "fixture"))
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(new QuestEvent.NpcLostTarget()).when(statusIs(QuestStatus.START)).goTo("reward").compile();
 		String lostXml = """
-				<quest-definition id="1006" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="quest/1006" statement="fixture"/></evidence>
+				<quest-definition id="1006" version="1">
 				  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 				  <nodes><node label="start"><project status="START"/></node><node label="reward"><project status="REWARD"/></node></nodes>
 				  <transitions><transition target="reward"><event><npc-lost-target/></event><conditions><status-is status="START"/></conditions></transition></transitions>
@@ -192,13 +205,11 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void badReferenceAndUnreachableNodeFailClosed() {
 		assertEquals("BAD_NODE_REFERENCE", assertThrows(QuestCompilationException.class, () -> quest(1001)
-				.evidence(EVIDENCE)
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).goTo("missing").compile()).code());
 
 		assertEquals("UNREACHABLE_NODE", assertThrows(QuestCompilationException.class, () -> quest(1001)
-				.evidence(EVIDENCE)
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.node("orphan", project(QuestStatus.REWARD, vars("var1", 1)))
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
@@ -208,7 +219,6 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void executableDefinitionWithoutTransitionsFailsClosed() {
 		assertEquals("NO_TRANSITIONS", assertThrows(QuestCompilationException.class, () -> quest(1001)
-				.evidence(EVIDENCE)
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.compile()).code());
@@ -217,7 +227,6 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void ambiguousTransitionsRequireUniqueExplicitPriorities() {
 		var builder = quest(1001)
-				.evidence(EVIDENCE)
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
 				.node("complete", project(QuestStatus.COMPLETE, vars("var1", 2)))
@@ -240,7 +249,6 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void duplicateRuntimeProjectionFailsClosed() {
 		assertEquals("DUPLICATE_NODE_PROJECTION", assertThrows(QuestCompilationException.class, () -> quest(1001)
-				.evidence(EVIDENCE)
 				.node("first", project(QuestStatus.START, vars("var1", 0)))
 				.node("second", project(QuestStatus.START, vars("var1", 0)))
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
@@ -250,8 +258,7 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void unknownXmlActionIsRejected() {
 		String xml = """
-				<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="x" statement="y"/></evidence>
+				<quest-definition id="1001" version="1">
 				  <metadata name="a" display-name-id="1" min-level="0" max-level="1" category="QUEST"/>
 				  <nodes><node label="start"><project status="START"/></node></nodes>
 				  <transitions><transition target="start"><event><talk-to-npc npc-id="1"/></event><actions><arbitrary-service-call/></actions></transition></transitions>
@@ -265,7 +272,6 @@ class QuestDefinitionCompilerTest {
 	void showQuestDialogCompilesIdenticallyThroughXmlAndDsl() {
 		CompiledQuestDefinition fromDsl = quest(1001)
 				.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.on(talkToNpc(700001))
@@ -275,8 +281,7 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+				<quest-definition id="1001" version="1">
 				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 				  <nodes>
@@ -301,7 +306,6 @@ class QuestDefinitionCompilerTest {
 	void typedCompletionLifecycleCompilesIdenticallyThroughXmlAndDsl() {
 		CompiledQuestDefinition fromDsl = quest(1001)
 			.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
-			.evidence(EVIDENCE)
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.node("complete", project(QuestStatus.COMPLETE, Map.of()))
 			.on(new QuestEvent.TalkToNpc(700001, 8)).from("reward")
@@ -313,8 +317,7 @@ class QuestDefinitionCompilerTest {
 			.compile();
 
 		String xml = """
-			<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-			  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+				<quest-definition id="1001" version="1">
 			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 			  <nodes>
 			    <node label="reward"><project status="REWARD"/></node>
@@ -338,7 +341,6 @@ class QuestDefinitionCompilerTest {
 	void completeProjectionRequiresTheCompletionStateSyncMode() {
 		QuestCompilationException failure = assertThrows(QuestCompilationException.class, () -> quest(1001)
 			.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
-			.evidence(EVIDENCE)
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.node("complete", project(QuestStatus.COMPLETE, Map.of()))
 			.on(talkToNpc(700001)).from("reward").then(completeQuest(0)).goTo("complete")
@@ -351,8 +353,7 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void rewardAmountModeIsRestrictedByTheXmlSchema() {
 		String xml = """
-			<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-			  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+				<quest-definition id="1001" version="1">
 			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 			  <nodes><node label="start"><project status="START"/></node></nodes>
 			  <transitions><transition target="start"><event><talk-to-npc npc-id="700001"/></event>
@@ -369,8 +370,7 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void questStateSyncModeIsRequiredByTheXmlSchema() {
 		String xml = """
-			<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-			  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+				<quest-definition id="1001" version="1">
 			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 			  <nodes><node label="start"><project status="START"/></node></nodes>
 			  <transitions><transition target="start"><event><talk-to-npc npc-id="700001"/></event>
@@ -387,8 +387,7 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void unknownAfterCommitActionIsRejected() {
 		String xml = """
-				<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="x" statement="y"/></evidence>
+				<quest-definition id="1001" version="1">
 				  <metadata name="a" display-name-id="1" min-level="0" max-level="1" category="QUEST"/>
 				  <nodes><node label="start"><project status="START"/></node></nodes>
 				  <transitions><transition target="start"><event><talk-to-npc npc-id="1"/></event><after-commit><arbitrary-effect/></after-commit></transition></transitions>
@@ -402,7 +401,6 @@ class QuestDefinitionCompilerTest {
 	void teleportPlayerCompilesIdenticallyThroughXmlAndDsl() {
 		CompiledQuestDefinition fromDsl = quest(1001)
 				.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.on(talkToNpc(700001))
@@ -412,8 +410,7 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+				<quest-definition id="1001" version="1">
 				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 				  <nodes>
@@ -446,7 +443,6 @@ class QuestDefinitionCompilerTest {
 	void playMovieCompilesIdenticallyThroughXmlAndDsl() {
 		CompiledQuestDefinition fromDsl = quest(1001)
 				.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.on(talkToNpc(700001))
@@ -456,8 +452,7 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+				<quest-definition id="1001" version="1">
 				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 				  <nodes>
@@ -488,7 +483,6 @@ class QuestDefinitionCompilerTest {
 	void spawnNpcCompilesIdenticallyThroughXmlAndDsl() {
 		CompiledQuestDefinition fromDsl = quest(1001)
 				.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.on(talkToNpc(700001))
@@ -500,8 +494,7 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+				<quest-definition id="1001" version="1">
 				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 				  <nodes>
@@ -539,7 +532,6 @@ class QuestDefinitionCompilerTest {
 	void aiCommandsCompileIdenticallyThroughXmlAndDsl() {
 		CompiledQuestDefinition fromDsl = quest(1001)
 				.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.on(talkToNpc(700001))
@@ -552,8 +544,7 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+				<quest-definition id="1001" version="1">
 				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 				  <nodes>
@@ -586,7 +577,6 @@ class QuestDefinitionCompilerTest {
 	void questTimersCompileIdenticallyThroughXmlAndDsl() {
 		CompiledQuestDefinition fromDsl = quest(1001)
 				.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
-				.evidence(EVIDENCE)
 				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 				.node("start", project(QuestStatus.START, vars("var1", 0)))
 				.on(talkToNpc(700001))
@@ -598,8 +588,7 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-				  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+				<quest-definition id="1001" version="1">
 				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 				  <nodes>
@@ -632,7 +621,6 @@ class QuestDefinitionCompilerTest {
 			QuestTimerPolicy.OverwritePolicy.KEEP_EXISTING);
 		CompiledQuestDefinition fromDsl = quest(1001)
 			.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
-			.evidence(EVIDENCE)
 			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var1", 0)))
 			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).goTo("start")
@@ -673,8 +661,7 @@ class QuestDefinitionCompilerTest {
 
 	private static String xmlWithTransition(String event, String afterCommit) {
 		return """
-			<quest-definition id="1001" version="1" ownership="COMPILED_CANDIDATE">
-			  <evidence><ref source="test" locator="quest/1001" statement="fixture"/></evidence>
+			<quest-definition id="1001" version="1">
 			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 			  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 			  <nodes><node label="start"><project status="START"><vars><var name="var1" value="0"/></vars></project></node></nodes>

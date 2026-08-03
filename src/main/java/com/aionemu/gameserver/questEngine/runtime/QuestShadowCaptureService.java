@@ -1,17 +1,11 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.QuestEngine;
-import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
-import com.aionemu.gameserver.questEngine.definition.QuestCondition;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCandidateManifest;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,8 +19,6 @@ import java.util.Set;
  * 未安装时所有方法 fail-closed，绝不改变旧 QuestEngine 路由。</p>
  */
 public final class QuestShadowCaptureService {
-	private static final String CANDIDATE_MANIFEST =
-		"aion/data/static_data/quest_definition/quest_definition_candidate_manifest.xml";
 	private final QuestCatalog catalog;
 	private final Set<Integer> expectedOwners;
 	private final Path reportPath;
@@ -49,35 +41,6 @@ public final class QuestShadowCaptureService {
 		this.expectedOwners = owners;
 		this.reportPath = Objects.requireNonNull(reportPath, "reportPath");
 		this.capture = Objects.requireNonNull(capture, "capture");
-	}
-
-	/** Builds the production capture graph from the packaged single-owner candidate manifest. */
-	public static QuestShadowCaptureService production(Path reportPath) {
-		ClassLoader loader = QuestShadowCaptureService.class.getClassLoader();
-		QuestCatalog catalog;
-		try (InputStream manifest = loader.getResourceAsStream(CANDIDATE_MANIFEST)) {
-			if (manifest == null) {
-				throw new IllegalStateException("missing quest candidate manifest: " + CANDIDATE_MANIFEST);
-			}
-			catalog = QuestDefinitionCandidateManifest.compile(manifest, loader);
-		} catch (IOException failure) {
-			throw new IllegalStateException("failed to read quest candidate manifest", failure);
-		}
-		Set<Integer> owners = catalog.all().stream().map(CompiledQuestDefinition::id)
-			.collect(java.util.stream.Collectors.toUnmodifiableSet());
-		Set<Integer> eligibilityOwners = new LinkedHashSet<>();
-		for (CompiledQuestDefinition definition : catalog.all()) {
-			boolean required = definition.definition().transitions().stream()
-				.flatMap(transition -> transition.conditions().stream())
-				.anyMatch(QuestCondition.StartEligible.class::isInstance);
-			if (required) {
-				eligibilityOwners.add(definition.id());
-			}
-		}
-		QuestPlayerPort players = playerId -> GameWorldBootstrapServices.world().findPlayer(playerId);
-		QuestShadowCapture capture = new QuestShadowCapture(
-			new PlayerQuestStartEligibilityPort(players), eligibilityOwners);
-		return new QuestShadowCaptureService(catalog, owners, reportPath, capture);
 	}
 
 	/** 原子安装 capture 到目标引擎；重复安装 fail-closed。 */

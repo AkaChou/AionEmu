@@ -25,19 +25,8 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Candidate-only vertical fixtures for the remaining true-server Simple* families. */
+/** Vertical compiler fixtures for the remaining true-server Simple* families. */
 class SimpleQuestFamilyDefinitionTest {
-	@Test
-	void simpleHunt1102XmlAndDslMatchAndAdvanceARealTargetGroup() throws Exception {
-		CompiledQuestDefinition definition = assertEquivalent("simplehunt-1102.xml", simpleHunt1102().compile());
-		var plan = QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 1102, QuestStatus.START, 0, Map.of()),
-			killNpc(210134), definition.definition().transitions().get(2));
-		assertTrue(plan.isPresent());
-		assertEquals(QuestStatus.START, plan.orElseThrow().nextStatus());
-		assertEquals(1, plan.orElseThrow().nextPackedVariables());
-	}
-
 	@Test
 	void simpleSerialHunt9622XmlAndDslMatchTheFirstOrderedTarget() throws Exception {
 		CompiledQuestDefinition definition = assertEquivalent("simpleserialhunt-9622.xml", simpleSerialHunt9622().compile());
@@ -82,37 +71,12 @@ class SimpleQuestFamilyDefinitionTest {
 			throws Exception {
 		CompiledQuestDefinition fromXml;
 		try (InputStream input = SimpleQuestFamilyDefinitionTest.class.getResourceAsStream(
-			"/quest-definition-candidates/" + resource)) {
+			"/quest-definition-fixtures/" + resource)) {
 			fromXml = QuestDefinitionXmlCompiler.compile(input);
 		}
 		assertEquals(fromDsl.definition(), fromXml.definition());
-		assertEquals(QuestOwnership.COMPILED_CANDIDATE, fromXml.ownership());
+		assertEquals(QuestOwnership.RETAIL_ALIGNED, fromXml.ownership());
 		return fromXml;
-	}
-
-	private static QuestDsl.QuestBuilder simpleHunt1102() {
-		QuestDsl.QuestBuilder builder = base(1102, "SimpleHunt 1102", "IMPORTANT",
-				new EvidenceRef("RETAIL_SIMPLE_HUNT_XML", "58Server/Map/XML/Quest_SimpleHunt.xml#id[1102]", "the true-server hunt entry declares Kerubar targets and count1=3"),
-				new EvidenceRef("RETAIL_SCRIPT_DLL", "58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:688-693; SimpleHuntQuest.cpp:46-82", "the hunt type creates grouped kill progress objects"),
-				new EvidenceRef("CURRENT_XML_OWNER", "src/main/resources/aion/data/static_data/quest_script_data/poeta.xml#monster_hunt[1102]", "current owner supplies start NPC 203057, target NPCs 210133/210134 and var0 end value 3"))
-			.progress(new BitField("var0", 0, 6, 0, 63, PersistenceMode.PERSISTENT, ProgressScope.LOCAL))
-			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
-			.node("started", project(QuestStatus.START, vars("var0", 0)))
-			.node("one-kill", project(QuestStatus.START, vars("var0", 1)))
-			.node("two-kills", project(QuestStatus.START, vars("var0", 2)))
-			.node("target-count-reached", project(QuestStatus.START, vars("var0", 3)));
-		builder.on(talkToNpc(203057)).from("unaccepted").goTo("started");
-		addHuntStep(builder, "started", "one-kill", 0, 1);
-		addHuntStep(builder, "one-kill", "two-kills", 1, 2);
-		addHuntStep(builder, "two-kills", "target-count-reached", 2, 3);
-		return builder;
-	}
-
-	private static void addHuntStep(QuestDsl.QuestBuilder builder, String source, String target, int current, int next) {
-		for (int npcId : new int[]{210133, 210134}) {
-			builder.on(killNpc(npcId)).from(source).when(statusIs(QuestStatus.START))
-				.when(variableIs("var0", current)).then(setVariable("var0", next)).goTo(target);
-		}
 	}
 
 	private static QuestDsl.QuestBuilder simpleSerialHunt9622() {
@@ -179,8 +143,6 @@ class SimpleQuestFamilyDefinitionTest {
 	}
 
 	private static QuestDsl.QuestBuilder base(int id, String name, String category, EvidenceRef... evidence) {
-		return quest(id).ownership(QuestOwnership.COMPILED_CANDIDATE)
-			.metadata(QuestMetadata.minimal(name, 0, category))
-			.evidence(evidence);
+		return quest(id).metadata(QuestMetadata.minimal(name, 0, category));
 	}
 }

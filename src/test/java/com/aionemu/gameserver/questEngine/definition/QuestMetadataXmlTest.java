@@ -12,8 +12,7 @@ class QuestMetadataXmlTest {
 	@Test
 	void xmlCarriesLegacyStaticMetadataWithoutDroppingFields() {
 		String xml = """
-				<quest-definition id="1001" version="1" ownership="CATALOG_ONLY">
-				  <evidence><ref source="test" locator="quest/1001" statement="metadata"/></evidence>
+				<quest-definition id="1001" version="1">
 				  <metadata name="legacy" display-name-id="1101001" min-level="2" max-level="55" category="MISSION"
 				      rank="3" max-count-limited-quest="4" count-recover-limited-quest="2"
 				      cannot-share="true" cannot-giveup="true" bounty-reward="true" use-class-reward="2"

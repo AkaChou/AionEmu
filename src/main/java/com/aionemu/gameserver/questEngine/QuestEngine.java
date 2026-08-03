@@ -1,35 +1,38 @@
 package com.aionemu.gameserver.questEngine;
 
-
-import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledFuture;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
-import com.aionemu.commons.scripting.CompiledScriptLoader;
+import com.aionemu.commons.utils.collections.IntArrayList;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntProcedure;
 import com.aionemu.gameserver.GameServerError;
-import com.aionemu.gameserver.configs.main.QuestShadowConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.GameEngine;
+import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.model.templates.quest.HandlerSideDrop;
@@ -39,7 +42,11 @@ import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.model.templates.rewards.BonusType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
@@ -50,30 +57,23 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.runtime.QuestDispatchContract;
+import com.aionemu.gameserver.questEngine.runtime.QuestLegacyInvocationBridge;
+import com.aionemu.gameserver.questEngine.runtime.QuestLegacyObservationRecorder;
+import com.aionemu.gameserver.questEngine.runtime.QuestLegacyObservationSink;
+import com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcher;
+import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
+import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
+import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeResources;
+import com.aionemu.gameserver.questEngine.runtime.QuestShadowCapture;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import com.aionemu.gameserver.questEngine.runtime.QuestDispatchContract;
-import com.aionemu.gameserver.questEngine.runtime.QuestLegacyInvocationBridge;
-import com.aionemu.gameserver.questEngine.runtime.QuestLegacyObservationRecorder;
-import com.aionemu.gameserver.questEngine.runtime.QuestLegacyObservationSink;
-import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
-import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
-import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeResources;
-import com.aionemu.gameserver.questEngine.runtime.QuestShadowCapture;
-import com.aionemu.gameserver.questEngine.runtime.QuestShadowBatchReport;
-import com.aionemu.gameserver.questEngine.runtime.QuestShadowCaptureService;
 
-import com.aionemu.commons.utils.collections.IntArrayList;
-import com.aionemu.commons.utils.collections.IntObjectHashMap;
-import com.aionemu.commons.utils.collections.IntProcedure;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Supplier;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 任务引擎单例：加载脚本处理器、维护事件注册表，并向已注册处理器分发各类游戏事件。
@@ -85,6 +85,8 @@ import java.util.function.Supplier;
  */
 @Slf4j
 public class QuestEngine implements GameEngine {
+	private static final String PRODUCTION_DEFINITION_CATALOG =
+		"aion/data/static_data/quest_definition/quest_definition_catalog.xml";
 
 	/** Spring ObjectProvider 覆盖钩子 / Spring ObjectProvider override hook */
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
@@ -134,10 +136,6 @@ public class QuestEngine implements GameEngine {
 	private Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<Integer, Set<Integer>>();
 	/** 每日/周任务提醒定时任务 / Daily/weekly reminder scheduled task */
 	private ScheduledFuture<?> messageSendingTask;
-	/** Periodic persistence task for the explicitly enabled candidate-only shadow run. */
-	private ScheduledFuture<?> shadowPersistenceTask;
-	/** Installed production shadow service; null while diagnostics are disabled. */
-	private QuestShadowCaptureService shadowCaptureService;
 	/**
 	 * Atomic production assembly: the shadow capture scope provider and the
 	 * legacy observation bridge are swapped together, never one without the
@@ -146,8 +144,10 @@ public class QuestEngine implements GameEngine {
 	 * legacy route or result.
 	 */
 	private volatile ShadowAssembly shadowAssembly = ShadowAssembly.detached();
-	/** Fully typed production ports; owner dispatch remains disabled until an owner passes every switch gate. */
+	/** Fully composed production ports used by typed quest execution. */
 	private final QuestRuntimeComposition runtimeComposition = QuestRuntimeComposition.production();
+	/** Live typed owner catalog and central Router/Coordinator execution chain. */
+	private volatile QuestProductionDispatcher productionDispatcher = QuestProductionDispatcher.disabled();
 	/** 可行动作监听 / Can-act listeners */
 	private IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<IntArrayList>();
 	/** 挖掘号奖励监听 / Dredgion reward listeners */
@@ -298,72 +298,93 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 * @return 是否有处理器接管 / Whether a handler took over
 	 */
-    public boolean onDialog(QuestEnv env) {
-    Player player = env.getPlayer();
-    try {
-        Npc npc = (Npc) env.getVisibleObject();
-        List<Integer> candidates = env.getQuestId() != 0
-            ? List.of(env.getQuestId())
-            : (npc == null ? List.of() : getQuestNpc(npc.getNpcId()).getOnTalkEvent());
-        try (QuestShadowCapture.Scope scope = shadowScope(player,
-                () -> new QuestEvent.TalkToNpc(env.getTargetId(), env.getDialogId(),
-                    npc == null ? 0 : npc.getObjectId()), candidates)) {
-            QuestHandler questHandler = null;
-            if (env.getQuestId() != 0) {
-                questHandler = getQuestHandlerByQuestId(env.getQuestId());
-                if (questHandler != null) {
-                    QuestHandler handler = questHandler;
-                    if (invokeObserved(env, env.getQuestId(), "TALK_TO_NPC", QuestDispatchContract.EXCLUSIVE,
-                            () -> handler.onDialogEvent(env), QuestEngine::booleanResult))
-                        return true;
-                    else {
-                        QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(env.getQuestId());
-                        if (qt != null && qt.getCategory() == QuestCategory.CHALLENGE_TASK && player.getAccessLevel() > 0) {
-                            PacketSendUtility.sendMessage(player, "You're GM! So system won't apply countNextRepeatTime()");
-                            return true;
-                        } else if (qt != null && qt.getCategory() == QuestCategory.CHALLENGE_TASK && player.getAccessLevel() == 0) {
-                            PacketSendUtility.sendPacket(env.getPlayer(), new SM_SYSTEM_MESSAGE(1400855, 9));
-                            }
-                        }
-                    }
-                } else {
-                List<Integer> onTalkEvents = getQuestNpc(npc == null ? 0 : npc.getNpcId()).getOnTalkEvent();
-                if (onTalkEvents == null || onTalkEvents.isEmpty()) {
-                    log.debug("No quests registered for NPC: {}", npc.getNpcId());
-                    return false;
-                }
-                for (int questId : onTalkEvents) {
-                    QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(questId);
-                    if (qt == null) {
-                        log.warn(I18n.get("log.2e7b7247f488", questId));
-                        continue;
-                    }
-                    QuestState qs = player.getQuestStateList().getQuestState(questId);
-                    if (qs == null || qs.getStatus() == QuestStatus.NONE) {
-                       QuestEnv checkEnv = new QuestEnv(env.getVisibleObject(), player, questId, env.getDialogId());
-                    if (!QuestService.checkStartConditions(checkEnv, false)) {
-                          continue;
-                        }
-                    }
-                    questHandler = getQuestHandlerByQuestId(questId);
-                    if (questHandler != null) {
-                        env.setQuestId(questId);
-                        QuestHandler handler = questHandler;
-                        if (invokeObserved(env, questId, "TALK_TO_NPC", QuestDispatchContract.EXCLUSIVE,
-                                () -> handler.onDialogEvent(env), QuestEngine::booleanResult)) {
-                            return true;
-                        }
-                    }
-                }
-                env.setQuestId(0);
-            }
-        }
-    } catch (Exception ex) {
-        log.error(I18n.get("log.dd0b8ceead0c", ex));
-        return false;
-        }
-       return false;
-    }
+	public boolean onDialog(QuestEnv env) {
+		Player player = env.getPlayer();
+		try {
+			Npc npc = env.getVisibleObject() instanceof Npc target ? target : null;
+			int requestedOwner = env.getQuestId();
+			int npcId = npc == null ? 0 : npc.getNpcId();
+			QuestProductionDispatcher typed = productionDispatcher;
+			if (requestedOwner != 0 && typed.owns(requestedOwner)) {
+				if (npcId == 0) {
+					return false;
+				}
+				QuestEvent event = new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
+				return typed.dispatch(event, player.getObjectId(), requestedOwner,
+					QuestDispatchContract.EXCLUSIVE).claimed();
+			}
+
+			if (requestedOwner == 0 && npcId != 0) {
+				QuestEvent event = new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
+				if (typed.dispatch(event, player.getObjectId(), 0, QuestDispatchContract.EXCLUSIVE).claimed()) {
+					return true;
+				}
+			}
+
+			List<Integer> legacyOwners = requestedOwner != 0
+				? List.of(requestedOwner)
+				: (npc == null ? List.of() : getQuestNpc(npcId).getOnTalkEvent());
+			try (QuestShadowCapture.Scope scope = shadowScope(player,
+					() -> new QuestEvent.TalkToNpc(env.getTargetId(), env.getDialogId(),
+						npc == null ? 0 : npc.getObjectId()), legacyOwners)) {
+				QuestHandler questHandler = null;
+				if (requestedOwner != 0) {
+					questHandler = getQuestHandlerByQuestId(requestedOwner);
+					if (questHandler != null) {
+						QuestHandler handler = questHandler;
+						if (invokeObserved(env, requestedOwner, "TALK_TO_NPC", QuestDispatchContract.EXCLUSIVE,
+								() -> handler.onDialogEvent(env), QuestEngine::booleanResult)) {
+							return true;
+						}
+						QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(requestedOwner);
+						if (qt != null && qt.getCategory() == QuestCategory.CHALLENGE_TASK
+								&& player.getAccessLevel() > 0) {
+							PacketSendUtility.sendMessage(player,
+								"You're GM! So system won't apply countNextRepeatTime()");
+							return true;
+						} else if (qt != null && qt.getCategory() == QuestCategory.CHALLENGE_TASK
+								&& player.getAccessLevel() == 0) {
+							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400855, 9));
+						}
+					}
+				} else {
+					List<Integer> onTalkEvents = getQuestNpc(npcId).getOnTalkEvent();
+					if (onTalkEvents == null || onTalkEvents.isEmpty()) {
+						log.debug(I18n.get("log.quest_engine.no_quests_for_npc", npcId));
+						return false;
+					}
+					for (int questId : onTalkEvents) {
+						QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(questId);
+						if (qt == null) {
+							log.warn(I18n.get("log.2e7b7247f488", questId));
+							continue;
+						}
+						QuestState qs = player.getQuestStateList().getQuestState(questId);
+						if (qs == null || qs.getStatus() == QuestStatus.NONE) {
+							QuestEnv checkEnv = new QuestEnv(env.getVisibleObject(), player, questId, env.getDialogId());
+							if (!QuestService.checkStartConditions(checkEnv, false)) {
+								continue;
+							}
+						}
+						questHandler = getQuestHandlerByQuestId(questId);
+						if (questHandler != null) {
+							env.setQuestId(questId);
+							QuestHandler handler = questHandler;
+							if (invokeObserved(env, questId, "TALK_TO_NPC", QuestDispatchContract.EXCLUSIVE,
+									() -> handler.onDialogEvent(env), QuestEngine::booleanResult)) {
+								return true;
+							}
+						}
+					}
+					env.setQuestId(0);
+				}
+			}
+		} catch (Exception ex) {
+			log.error(I18n.get("log.dd0b8ceead0c", ex));
+			return false;
+		}
+		return false;
+	}
 
 	/**
 	 * 分发击杀事件。
@@ -375,10 +396,15 @@ public class QuestEngine implements GameEngine {
 	public boolean onKill(QuestEnv env) {
 		try {
 			Npc npc = (Npc) env.getVisibleObject();
-			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnKillEvent();
+			QuestEvent event = new QuestEvent.KillNpc(npc.getNpcId());
+			QuestProductionDispatcher typed = productionDispatcher;
+			typed.dispatch(event, env.getPlayer().getObjectId(), 0, QuestDispatchContract.BROADCAST);
+			List<Integer> legacyOwners = getQuestNpc(npc.getNpcId()).getOnKillEvent().stream()
+				.filter(questId -> !typed.owns(questId))
+				.toList();
 			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
-					() -> new QuestEvent.KillNpc(npc.getNpcId()), questIds)) {
-				for (int questId : questIds) {
+					() -> event, legacyOwners)) {
+				for (int questId : legacyOwners) {
 					QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 					if (questHandler != null) {
 						env.setQuestId(questId);
@@ -466,9 +492,9 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onEnterZoneMissionEnd(QuestEnv env) {
 		try {
-			List<Integer> candidates = List.of(env.getQuestId());
+			List<Integer> legacyOwners = List.of(env.getQuestId());
 			try (QuestShadowCapture.Scope scope = shadowScope(env.getPlayer(),
-					QuestEvent.ZoneMissionEnd::new, candidates)) {
+					QuestEvent.ZoneMissionEnd::new, legacyOwners)) {
 				int result = questOnEnterZoneMissionEnd.indexOf(env.getQuestId());
 				QuestHandler questHandler = null;
 				if (result != -1) {
@@ -1952,7 +1978,60 @@ public class QuestEngine implements GameEngine {
 	 * Whether present
 	 */
 	public boolean isHaveHandler(int questId) {
-		return questHandlers.containsKey(questId);
+		return productionDispatcher.owns(questId) || questHandlers.containsKey(questId);
+	}
+
+	/** 加载并编译正式 typed 任务 catalog。 Load and compile the production typed quest catalog. */
+	private QuestCatalog loadProductionCatalog() throws Exception {
+		ClassLoader loader = QuestEngine.class.getClassLoader();
+		try (InputStream input = loader.getResourceAsStream(PRODUCTION_DEFINITION_CATALOG)) {
+			if (input == null) {
+				throw new IllegalStateException("missing typed production catalog: "
+					+ PRODUCTION_DEFINITION_CATALOG);
+			}
+			return QuestDefinitionCatalogManifest.compile(input, loader);
+		}
+	}
+
+	/**
+	 * 在 legacy Handler 注册前校验并安装全部正式 typed owner。
+	 * Validate and install all production typed owners before legacy handlers register.
+	 *
+	 * <p>所有 owner 和事件接线会先完成校验，dispatcher 只在 NPC 索引注册完成后发布。
+	 * All owners and event wiring are validated first; the dispatcher is published only after
+	 * NPC indexes have been registered.</p>
+	 */
+	void installProductionDefinitions(QuestCatalog catalog) {
+		QuestProductionDispatcher dispatcher = QuestProductionDispatcher.production(catalog, runtimeComposition);
+		for (CompiledQuestDefinition definition : catalog.all()) {
+			if (questHandlers.containsKey(definition.id())) {
+				throw new IllegalStateException("quest " + definition.id() + " already has a legacy handler");
+			}
+			for (var transition : definition.definition().transitions()) {
+				if (!(transition.event() instanceof QuestEvent.TalkToNpc)
+						&& !(transition.event() instanceof QuestEvent.KillNpc)) {
+					throw new IllegalStateException("typed production event is not wired into QuestEngine: "
+						+ transition.event().type());
+				}
+			}
+		}
+		for (CompiledQuestDefinition definition : catalog.all()) {
+			for (var transition : definition.definition().transitions()) {
+				if (transition.event() instanceof QuestEvent.TalkToNpc talk) {
+					QuestNpc questNpc = registerQuestNpc(talk.npcId());
+					questNpc.addOnTalkEvent(definition.id());
+					if (transition.sourceNode() != null && definition.definition().nodes().stream()
+							.filter(node -> node.label().equals(transition.sourceNode()))
+							.map(QuestNode::projection)
+							.anyMatch(projection -> projection.status() == QuestStatus.NONE)) {
+						questNpc.addOnQuestStart(definition.id());
+					}
+				} else if (transition.event() instanceof QuestEvent.KillNpc kill) {
+					registerQuestNpc(kill.npcId()).addOnKillEvent(definition.id());
+				}
+			}
+		}
+		productionDispatcher = dispatcher;
 	}
 
 	/**
@@ -1962,8 +2041,11 @@ public class QuestEngine implements GameEngine {
 	 * @param questHandler 任务处理器 / Quest handler
 	 */
 	public void addQuestHandler(QuestHandler questHandler) {
-		questHandler.register();
 		int questId = questHandler.getQuestId();
+		if (productionDispatcher.owns(questId)) {
+			throw new IllegalStateException("quest " + questId + " is already owned by the typed production catalog");
+		}
+		questHandler.register();
 		if (questHandlers.containsKey(questId)) {
 			log.warn(I18n.get("log.6928c2152c98", questId));
 		}
@@ -2022,12 +2104,14 @@ public class QuestEngine implements GameEngine {
 		acl.addClassListener(new QuestHandlerLoader());
 
 		try {
+			installProductionDefinitions(loadProductionCatalog());
 			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.quest.handlers"));
 			XMLQuests xmlQuests = DataManager.XML_QUESTS;
 			for (XMLQuest xmlQuest : xmlQuests.getQuest()) {
 				xmlQuest.register(this);
 			}
 			log.info(I18n.get("log.490b5f534bb2", questHandlers.size()));
+			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners()));
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize quest handlers.", e);
 		} finally {
@@ -2038,75 +2122,6 @@ public class QuestEngine implements GameEngine {
 		addMessageSendingTask();
 		for (QuestDialog d : QuestDialog.values()) {
 			dialogMap.put(d.id(), d);
-		}
-		startQuestShadowCapture();
-	}
-
-	private synchronized void startQuestShadowCapture() {
-		if (!QuestShadowConfig.ENABLED) {
-			return;
-		}
-		if (shadowCaptureService != null) {
-			throw new IllegalStateException("quest shadow capture is already running");
-		}
-		QuestShadowCaptureService service = null;
-		try {
-			long interval = QuestShadowConfig.persistIntervalMillis();
-			service = QuestShadowCaptureService.production(QuestShadowConfig.reportPath());
-			service.install(this);
-			QuestShadowCaptureService installed = service;
-			shadowPersistenceTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
-				() -> persistQuestShadowReport(installed), interval, interval);
-			shadowCaptureService = service;
-			log.info("Quest shadow capture installed for owners {} with cumulative report {}",
-				service.expectedOwners(), service.reportPath().toAbsolutePath());
-		} catch (Exception failure) {
-			if (service != null && service.installed()) {
-				try {
-					service.abort();
-				} catch (Exception cleanupFailure) {
-					failure.addSuppressed(cleanupFailure);
-					setShadowCapture(null);
-				}
-			}
-			shadowPersistenceTask = null;
-			shadowCaptureService = null;
-			log.error("Quest shadow capture was requested but could not be installed; legacy owners remain active",
-				failure);
-		}
-	}
-
-	private void persistQuestShadowReport(QuestShadowCaptureService service) {
-		try {
-			QuestShadowBatchReport report = service.drainAndPersist();
-			log.info("Quest shadow report persisted: owners={}/{} paths={}/{} clean={}",
-				report.coveredOwners().size(), report.expectedOwners().size(),
-				report.coveredCoverage().size(), report.expectedCoverage().size(), report.clean());
-		} catch (Exception failure) {
-			// The service retains the accumulated in-memory report for the next retry.
-			log.error("Failed to persist quest shadow report; legacy routing is unchanged", failure);
-		}
-	}
-
-	private synchronized void stopQuestShadowCapture() {
-		if (shadowPersistenceTask != null) {
-			shadowPersistenceTask.cancel(false);
-			shadowPersistenceTask = null;
-		}
-		QuestShadowCaptureService service = shadowCaptureService;
-		shadowCaptureService = null;
-		if (service == null) {
-			setShadowCapture(null);
-			return;
-		}
-		try {
-			QuestShadowBatchReport report = service.stop();
-			log.info("Quest shadow capture stopped: owners={}/{} paths={}/{} clean={}",
-				report.coveredOwners().size(), report.expectedOwners().size(),
-				report.coveredCoverage().size(), report.expectedCoverage().size(), report.clean());
-		} catch (Exception failure) {
-			setShadowCapture(null);
-			log.error("Failed to persist the final quest shadow report; capture was detached", failure);
 		}
 	}
 
@@ -2155,7 +2170,7 @@ public class QuestEngine implements GameEngine {
 	 * Shut down the engine: clear all registered data.
 	 */
 	public void shutdown() {
-		stopQuestShadowCapture();
+		setShadowCapture(null);
 		clear();
 		log.info(I18n.get("log.dd61afc44888"));
 	}
@@ -2166,6 +2181,7 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void clear() {
 		runtimeComposition.cleanupAll();
+		productionDispatcher = QuestProductionDispatcher.disabled();
 		if (messageSendingTask != null) {
 			messageSendingTask.cancel(false);
 			messageSendingTask = null;

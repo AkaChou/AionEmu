@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
-import com.aionemu.gameserver.questEngine.definition.QuestShadowCoverageRequirement;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
@@ -126,15 +125,14 @@ class QuestShadowBatchRunnerTest {
 	}
 
 	@Test
-	void offlineOnlyPathKeepsTypedDifferencesWithoutAffectingProductionCoverage() {
+	void everyTypedPathParticipatesInDiagnosticCoverage() {
 		var builder = QuestDsl.quest(QUEST_ID)
 			.evidence(new EvidenceRef("test", "shadow-batch", "offline coverage fixture"))
 			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("step", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)));
 		builder.on(talkToNpc(700001)).from("start").when(variableIs("step", 0))
-			.then(setVariable("step", 1)).shadowCoverage(QuestShadowCoverageRequirement.OFFLINE_ONLY)
-			.goTo("reward");
+			.then(setVariable("step", 1)).goTo("reward");
 		builder.on(talkToNpc(700002)).from("start").when(variableIs("step", 0))
 			.then(setVariable("step", 1)).goTo("reward");
 		QuestShadowRunner runner = new QuestShadowRunner(new ImmutableQuestCatalog(List.of(builder.compile())));
@@ -144,11 +142,11 @@ class QuestShadowBatchRunnerTest {
 		QuestShadowBatchReport report = QuestShadowBatchRunner.compare(runner,
 			List.of(envelope(actual)), Set.of(QUEST_ID));
 
-		assertEquals(1, report.expectedCoverage().size());
-		assertTrue(report.coveredCoverage().isEmpty(), "离线路径不能填充生产必需 coverage");
-		assertTrue(report.unexpectedCoverage().isEmpty(), "离线路径不能制造 unexpected coverage");
-		assertFalse(report.comparisons().get(0).clean(), "离线路径仍必须保留 typed difference");
-		assertFalse(report.complete(), "另一条生产必需路径尚未观察");
+		assertEquals(2, report.expectedCoverage().size());
+		assertEquals(1, report.coveredCoverage().size());
+		assertTrue(report.unexpectedCoverage().isEmpty());
+		assertFalse(report.comparisons().get(0).clean(), "诊断路径必须保留 typed difference");
+		assertFalse(report.complete(), "另一条任务路径尚未观察");
 	}
 
 	@Test

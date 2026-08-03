@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -169,7 +170,7 @@ public final class PlayerQuestCraftPort implements QuestCraftPort {
 				publisher.publish(player, learned, forgotten, targetSkills);
 			} catch (RuntimeException failure) {
 				// The database is already authoritative. Relog or an idempotent retry reconciles live state.
-				log.error("Failed to publish committed quest craft mutation for player {}", snapshot.playerId(), failure);
+				log.error(I18n.get("log.quest_engine.craft_publish_failed", snapshot.playerId()), failure);
 			}
 		}, () -> { });
 	}

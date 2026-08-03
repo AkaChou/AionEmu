@@ -47,9 +47,6 @@ class ProximityRepresentativeQuestDefinitionTest {
 	private static CompiledQuestDefinition dslDefinition() {
 		return quest(29600)
 			.metadata(QuestMetadata.minimal("proximity-29600", 1, "QUEST"))
-			.evidence(new EvidenceRef("JAVA_HANDLER",
-				"src/main/java/com/aionemu/gameserver/quest/handlers/fatebound_abbey/_29600Daeva_Welcome.java:54",
-				"NPC 806700 proximity starts the quest and advances var0 from 0 to 1"))
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
 			.node("started", project(QuestStatus.START, vars("var0", 1)))
@@ -60,8 +57,7 @@ class ProximityRepresentativeQuestDefinitionTest {
 
 	private static String xml() {
 		return """
-			<quest-definition id="29600" version="1" ownership="COMPILED_CANDIDATE">
-			  <evidence><ref source="JAVA_HANDLER" locator="src/main/java/com/aionemu/gameserver/quest/handlers/fatebound_abbey/_29600Daeva_Welcome.java:54" statement="NPC 806700 proximity starts the quest and advances var0 from 0 to 1"/></evidence>
+			<quest-definition id="29600" version="1">
 			  <metadata name="proximity-29600" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 			  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 			  <nodes><node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node><node label="started"><project status="START"><vars><var name="var0" value="1"/></vars></project></node></nodes>

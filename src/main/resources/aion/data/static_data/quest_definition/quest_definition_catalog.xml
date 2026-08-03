@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition-catalog version="1">
+  <definition id="1101" resource="aion/data/static_data/quest_definition/quests/1101.xml"/>
+  <definition id="1102" resource="aion/data/static_data/quest_definition/quests/1102.xml"/>
+</quest-definition-catalog>

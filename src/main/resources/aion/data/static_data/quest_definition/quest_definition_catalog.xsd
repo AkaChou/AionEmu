@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="quest-definition-candidate-manifest">
+  <xs:element name="quest-definition-catalog">
     <xs:complexType>
       <xs:sequence>
         <xs:element name="definition" minOccurs="1" maxOccurs="unbounded">
@@ -11,14 +11,6 @@
         </xs:element>
       </xs:sequence>
       <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
-      <xs:attribute name="ownership" use="required">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="CATALOG_ONLY"/>
-            <xs:enumeration value="COMPILED_CANDIDATE"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
     </xs:complexType>
   </xs:element>
 </xs:schema>

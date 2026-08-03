@@ -15,29 +15,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /** Production object graph for typed quest required and after-commit capabilities. */
 public final class QuestRuntimeComposition {
-	public enum BridgeClosure {
-		AI_PERCEPTION,
-		ESCORT_AI,
-		HOUSING,
-		MOVEMENT,
-		MOVIE,
-		TIME,
-		CRAFT,
-		PVP,
-		PVP_INSTANCE,
-		RECOVERY,
-		SKILL
-	}
-
-	private static final Set<BridgeClosure> BRIDGE_CLOSURES = Set.of(
-		BridgeClosure.AI_PERCEPTION, BridgeClosure.ESCORT_AI, BridgeClosure.HOUSING,
-		BridgeClosure.MOVEMENT, BridgeClosure.MOVIE, BridgeClosure.TIME, BridgeClosure.CRAFT,
-		BridgeClosure.PVP, BridgeClosure.PVP_INSTANCE, BridgeClosure.RECOVERY, BridgeClosure.SKILL);
-
 	private final QuestAfterCommitPort afterCommitPort;
 	private final QuestEventPort eventPort;
 	private final QuestActionPort actionPort;
@@ -138,14 +118,6 @@ public final class QuestRuntimeComposition {
 		return recoveryEventPort;
 	}
 
-	public Set<BridgeClosure> bridgeClosures() {
-		return BRIDGE_CLOSURES;
-	}
-
-	public boolean closes(BridgeClosure capability) {
-		return BRIDGE_CLOSURES.contains(capability);
-	}
-
 	public void cleanupAll() {
 		QuestRuntimeResources.cleanupAll();
 	}
@@ -209,6 +181,11 @@ public final class QuestRuntimeComposition {
 		@Override
 		public void publish(int playerId, QuestMutationPlan plan) {
 			delegate().publish(playerId, plan);
+		}
+
+		@Override
+		public void rollback(int playerId, QuestMutationPlan plan) {
+			delegate().rollback(playerId, plan);
 		}
 
 		private QuestStatePort delegate() {

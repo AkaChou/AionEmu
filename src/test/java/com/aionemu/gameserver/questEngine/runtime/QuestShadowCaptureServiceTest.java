@@ -128,19 +128,6 @@ class QuestShadowCaptureServiceTest {
 	}
 
 	@Test
-	void productionFactoryLoadsOnlyPackaged1101AndRequiresEightClientReachablePaths() throws Exception {
-		service = QuestShadowCaptureService.production(tempDir.resolve("production-shadow.json"));
-
-		assertEquals(Set.of(1101), service.expectedOwners());
-		service.install(engine);
-		QuestShadowBatchReport empty = service.stop();
-
-		assertEquals(8, empty.expectedCoverage().size());
-		assertEquals(0, empty.coveredCoverage().size());
-		assertFalse(empty.complete());
-	}
-
-	@Test
 	void compatiblePersistedReportIsResumedAfterRestart() throws Exception {
 		service = newService();
 		service.install(engine);
@@ -232,14 +219,14 @@ class QuestShadowCaptureServiceTest {
 	}
 
 	@Test
-	void questEngineShutdownPersistsFinalBatchAndDetachesService() throws Exception {
+	void explicitStopPersistsFinalBatchBeforeQuestEngineShutdown() throws Exception {
 		Path reportPath = tempDir.resolve("shutdown-shadow.json");
 		service = newService(reportPath, QUEST_ID, NPC_ID);
 		service.install(engine);
-		setField(QuestEngine.class, engine, "shadowCaptureService", service);
 		engine.addQuestHandler(new KillHandler(QUEST_ID));
 		engine.onKill(new QuestEnv(npc(), player, 0, 0));
 
+		service.stop();
 		engine.shutdown();
 
 		assertFalse(service.installed());

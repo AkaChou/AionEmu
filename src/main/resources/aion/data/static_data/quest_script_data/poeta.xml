@@ -3,8 +3,6 @@
 <!--
     Quest Poeta. Make By (Encom)
  -->
-	<!-- Sleeping On The Job (Elyos Only) -->
-	<report_to id="1101" start_npc_ids="203049" end_npc_ids="203057"/>
 	<!-- Report To Polina (Elyos Only) -->
 	<report_to id="1104" start_npc_ids="203057" end_npc_ids="203059"/>
 	<report_to_many id="1118" start_npc_ids="203059"  end_npc_ids="203079">
@@ -45,10 +43,6 @@
 	<!-- Suspicious Ore (Elyos Only) -->
 	<item_collecting id="1125" start_npc_ids="203085" end_npc_ids="203067" action_item_ids="700107"/>
 	
-	<!-- Kerubar Hunt (Elyos Only) -->
-	<monster_hunt id="1102" start_npc_ids="203057">
-		<monster npc_ids="210133 210134" var="0" end_var="3"/>
-	</monster_hunt>
 	<!-- To Fish In Peace (Elyos Only) -->
 	<monster_hunt id="1112" start_npc_ids="203072">
 		<monster npc_ids="210259 210260" var="0" end_var="5"/>

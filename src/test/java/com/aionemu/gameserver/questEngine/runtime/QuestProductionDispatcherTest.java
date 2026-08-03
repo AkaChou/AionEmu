@@ -1,0 +1,226 @@
+package com.aionemu.gameserver.questEngine.runtime;
+
+import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
+import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDsl;
+import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestOwnership;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Proxy;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class QuestProductionDispatcherTest {
+	@Test
+	void liveOwnerCommitsThroughRouterAndCoordinator() {
+		List<String> calls = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition(1101)), calls,
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.START, 0, Map.of()));
+
+		QuestEvent event = new QuestEvent.TalkToNpc(203057, 1009, 77);
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(event, 7, 1101,
+			QuestDispatchContract.EXCLUSIVE);
+
+		assertTrue(result.consumed());
+		assertTrue(result.claimed());
+		assertEquals(List.of(1101), result.owners().stream().map(QuestEventRouter.OwnerResult::questId).toList());
+		assertEquals(List.of("setAutoCommit:false", "state", "commit", "publish", "close"),
+			calls);
+	}
+
+	@Test
+	void typedExecutionFailureClaimsOwnerAndCannotFallBack() {
+		List<String> calls = new ArrayList<>();
+		List<QuestAuditEvent> audits = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition(1101)), calls,
+			(connection, playerId, questId, event) -> {
+				throw new SQLException("snapshot failed");
+			}, audits);
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.TalkToNpc(203057, 1009), 7, 1101, QuestDispatchContract.EXCLUSIVE);
+
+		assertFalse(result.consumed());
+		assertTrue(result.claimed(), "FAILED is conclusive and must block legacy fallback");
+		assertEquals(QuestRouteResult.FAILED, result.owners().get(0).result());
+		assertEquals(1, audits.size());
+		assertEquals(List.of("setAutoCommit:false", "rollback", "close"), calls);
+	}
+
+	@Test
+	void explicitOwnerDispatchCannotExecuteAnotherTypedOwner() {
+		List<String> calls = new ArrayList<>();
+		List<Integer> snapshots = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition(1101), definition(1102)), calls,
+			(connection, playerId, questId, event) -> {
+				snapshots.add(questId);
+				return new QuestSnapshot(playerId, questId, QuestStatus.START, 0, Map.of());
+			});
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.TalkToNpc(203057, 1009), 7, 1102, QuestDispatchContract.EXCLUSIVE);
+
+		assertTrue(result.claimed());
+		assertEquals(List.of(1102), snapshots);
+		assertEquals(List.of(1102), result.owners().stream().map(QuestEventRouter.OwnerResult::questId).toList());
+	}
+
+	@Test
+	void killBroadcastExecutesEveryMatchingTypedOwner() {
+		List<String> calls = new ArrayList<>();
+		List<Integer> snapshots = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(
+			List.of(killDefinition(1101), killDefinition(1102)), calls,
+			(connection, playerId, questId, event) -> {
+				snapshots.add(questId);
+				return new QuestSnapshot(playerId, questId, QuestStatus.START, 0, Map.of());
+			});
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.KillNpc(210133), 7, 0, QuestDispatchContract.BROADCAST);
+
+		assertEquals(List.of(1101, 1102), snapshots);
+		assertEquals(List.of(1101, 1102),
+			result.owners().stream().map(QuestEventRouter.OwnerResult::questId).toList());
+		assertTrue(result.consumed());
+	}
+
+	@Test
+	void unrelatedEventDoesNotAcquireDatabaseConnection() {
+		AtomicInteger connections = new AtomicInteger();
+		CompiledQuestDefinition definition = definition(1101);
+		QuestProductionDispatcher dispatcher = new QuestProductionDispatcher(
+			new ImmutableQuestCatalog(List.of(definition)), new QuestExecutionCoordinator(new PlayerSerialExecutor()),
+			(connection, playerId, questId, event) -> {
+				throw new AssertionError("snapshot must not run");
+			}, noOpActions(), noOpState(), (action, snapshot, plan) -> { },
+			() -> {
+				connections.incrementAndGet();
+				return connection(new ArrayList<>());
+			}, ignored -> { }, new QuestRuntimeMetricsCollector());
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.TalkToNpc(203049, 31), 7, 1101, QuestDispatchContract.EXCLUSIVE);
+
+		assertFalse(result.claimed());
+		assertTrue(result.owners().isEmpty());
+		assertEquals(0, connections.get());
+	}
+
+	private static QuestProductionDispatcher dispatcher(List<CompiledQuestDefinition> definitions,
+			List<String> calls, QuestEventPort eventPort) {
+		return dispatcher(definitions, calls, eventPort, new ArrayList<>());
+	}
+
+	private static QuestProductionDispatcher dispatcher(List<CompiledQuestDefinition> definitions,
+			List<String> calls, QuestEventPort eventPort, List<QuestAuditEvent> audits) {
+		return new QuestProductionDispatcher(new ImmutableQuestCatalog(definitions),
+			new QuestExecutionCoordinator(new PlayerSerialExecutor()), eventPort, recordingActions(calls),
+			recordingState(calls), (action, snapshot, plan) -> { }, () -> connection(calls),
+			audits::add, new QuestRuntimeMetricsCollector());
+	}
+
+	private static CompiledQuestDefinition definition(int id) {
+		return QuestDsl.quest(id)
+			.ownership(QuestOwnership.RETAIL_ALIGNED)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.TalkToNpc(203057, 1009)).from("started").goTo("reward")
+			.compile();
+	}
+
+	private static CompiledQuestDefinition killDefinition(int id) {
+		return QuestDsl.quest(id)
+			.ownership(QuestOwnership.RETAIL_ALIGNED)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("one-kill", project(QuestStatus.START, vars("var0", 1)))
+			.on(new QuestEvent.KillNpc(210133)).from("started").goTo("one-kill")
+			.compile();
+	}
+
+	private static QuestActionPort recordingActions(List<String> calls) {
+		return new QuestActionPort() {
+			@Override
+			public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+				calls.add("preflight");
+			}
+
+			@Override
+			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+					List<QuestAction> actions) {
+				calls.add("apply");
+				return QuestTransactionParticipant.none();
+			}
+		};
+	}
+
+	private static QuestActionPort noOpActions() {
+		return new QuestActionPort() {
+			@Override
+			public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+			}
+
+			@Override
+			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+					List<QuestAction> actions) {
+				return QuestTransactionParticipant.none();
+			}
+		};
+	}
+
+	private static QuestStatePort recordingState(List<String> calls) {
+		return new QuestStatePort() {
+			@Override
+			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+				calls.add("state");
+			}
+
+			@Override
+			public void publish(int playerId, QuestMutationPlan plan) {
+				calls.add("publish");
+			}
+		};
+	}
+
+	private static QuestStatePort noOpState() {
+		return new QuestStatePort() {
+			@Override
+			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+			}
+
+			@Override
+			public void publish(int playerId, QuestMutationPlan plan) {
+			}
+		};
+	}
+
+	private static Connection connection(List<String> calls) {
+		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), new Class<?>[]{Connection.class},
+			(proxy, method, args) -> switch (method.getName()) {
+				case "getAutoCommit" -> true;
+				case "setAutoCommit" -> { calls.add("setAutoCommit:" + args[0]); yield null; }
+				case "commit" -> { calls.add("commit"); yield null; }
+				case "rollback" -> { calls.add("rollback"); yield null; }
+				case "close" -> { calls.add("close"); yield null; }
+				default -> method.getReturnType() == boolean.class ? false : null;
+			});
+	}
+}

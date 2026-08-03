@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:simpleType name="ownership"><xs:restriction base="xs:string">
-    <xs:enumeration value="CURRENT"/><xs:enumeration value="CURRENT_FALLBACK"/>
-    <xs:enumeration value="UNRESOLVED"/><xs:enumeration value="CATALOG_ONLY"/>
-    <xs:enumeration value="ANALYSIS_DRAFT"/>
-    <xs:enumeration value="COMPILED_CANDIDATE"/><xs:enumeration value="RETAIL_ALIGNED"/>
-  </xs:restriction></xs:simpleType>
   <xs:simpleType name="status"><xs:restriction base="xs:string">
     <xs:enumeration value="NONE"/><xs:enumeration value="START"/><xs:enumeration value="REWARD"/>
     <xs:enumeration value="COMPLETE"/><xs:enumeration value="LOCKED"/>
@@ -13,8 +7,6 @@
   <xs:simpleType name="persistence"><xs:restriction base="xs:string"><xs:enumeration value="PERSISTENT"/><xs:enumeration value="MEMORY"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="scope"><xs:restriction base="xs:string"><xs:enumeration value="LOCAL"/><xs:enumeration value="SHARED"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="drop-scope"><xs:restriction base="xs:string"><xs:enumeration value="NONE"/><xs:enumeration value="GROUP"/><xs:enumeration value="ALLIANCE"/></xs:restriction></xs:simpleType>
-  <xs:simpleType name="shadow-coverage"><xs:restriction base="xs:string"><xs:enumeration value="PRODUCTION_REQUIRED"/><xs:enumeration value="OFFLINE_ONLY"/></xs:restriction></xs:simpleType>
-
   <xs:simpleType name="timer-scope"><xs:restriction base="xs:string"><xs:enumeration value="PLAYER_QUEST"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="timer-persistence"><xs:restriction base="xs:string"><xs:enumeration value="SESSION"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="timer-overwrite"><xs:restriction base="xs:string"><xs:enumeration value="REPLACE"/><xs:enumeration value="KEEP_EXISTING"/><xs:enumeration value="FAIL_IF_RUNNING"/></xs:restriction></xs:simpleType>
@@ -34,7 +26,7 @@
   </xs:attributeGroup>
 
   <xs:complexType name="event-type"><xs:choice>
-    <xs:element name="talk-to-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="dialog"/><xs:attribute name="dialog-id" type="xs:int"/></xs:complexType></xs:element>
+    <xs:element name="talk-to-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="dialog"/><xs:attribute name="dialog-id" type="xs:int"/><xs:attribute name="dialog-ids" type="xs:string"/></xs:complexType></xs:element>
     <xs:element name="kill-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="attack-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="use-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/></xs:complexType></xs:element>
@@ -113,7 +105,6 @@
   <xs:element name="quest-definition">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="evidence" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="ref" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="source" use="required"/><xs:attribute name="locator" use="required"/><xs:attribute name="statement" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
         <xs:element name="metadata"><xs:complexType><xs:sequence>
           <xs:element name="races" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="race" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="id" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
           <xs:element name="classes" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="class" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="id" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
@@ -138,9 +129,9 @@
           <xs:element name="conditions" type="conditions-type" minOccurs="0"/>
           <xs:element name="actions" type="actions-type" minOccurs="0"/>
           <xs:element name="after-commit" type="after-commit-type" minOccurs="0"/>
-	        </xs:sequence><xs:attribute name="source"/><xs:attribute name="target" use="required"/><xs:attribute name="priority" type="xs:int"/><xs:attribute name="shadow-coverage" type="shadow-coverage" default="PRODUCTION_REQUIRED"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
+	        </xs:sequence><xs:attribute name="source"/><xs:attribute name="target" use="required"/><xs:attribute name="priority" type="xs:int"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
       </xs:sequence>
-      <xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="version" type="xs:int" use="required"/><xs:attribute name="ownership" type="ownership" use="required"/>
+      <xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="version" type="xs:int" use="required"/>
     </xs:complexType>
   </xs:element>
 </xs:schema>

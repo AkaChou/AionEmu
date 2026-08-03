@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class QuestDefinitionForbiddenPatternTest {
 	@Test
-	void candidateDefinitionAndRuntimeDoNotAddOpenEndedExecutionHooks() throws Exception {
+	void typedDefinitionAndRuntimeDoNotAddOpenEndedExecutionHooks() throws Exception {
 		List<String> forbidden = List.of("Class.forName(", "java.lang.reflect", ".invoke(", "ScriptEngine",
 			"Runtime.getRuntime(", "ProcessBuilder(", "QuestHandlerLoader", "QuestHandler");
 		try (Stream<Path> paths = Stream.concat(

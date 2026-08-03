@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="1115" version="1" ownership="COMPILED_CANDIDATE">
-  <evidence>
-    <ref source="RETAIL_SIMPLE_TALK_XML" locator="58Server/Map/XML/Quest_SimpleTalk.xml#id[1115]"
-         statement="acquired Namus, intermediate Feira and reward Asteros are declared by the true-server SimpleTalk entry"/>
-    <ref source="RETAIL_SCRIPT_DLL" locator="58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:678-685,989-1005"
-         statement="the talk type is selected and its common quest object is initialized without an open execution hook"/>
-    <ref source="CURRENT_XML_OWNER" locator="src/main/resources/aion/data/static_data/quest_script_data/poeta.xml#xml_quest[1115]"
-         statement="current owner supplies NPC ids 203075, 203072 and 203058 plus var 0 transitions"/>
-  </evidence>
+<quest-definition id="1115" version="1">
   <metadata name="The Elim's Message" display-name-id="1102215" min-level="4" max-level="2147483647"
       category="QUEST" cannot-share="true">
     <races><race id="ELYOS"/></races>

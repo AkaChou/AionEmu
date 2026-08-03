@@ -93,7 +93,6 @@ class CraftRepresentativeQuestDefinitionTest {
 	@Test
 	void craftingReward1941UsesMovieCallbackForSkillAndAutoRecipes() {
 		CompiledQuestDefinition definition = quest(1941)
-			.evidence(CRAFT_REWARD_EVIDENCE)
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(talkToNpc(203700, QuestDialog.SELECT_REWARD)).from("start")
@@ -143,7 +142,6 @@ class CraftRepresentativeQuestDefinitionTest {
 
 	private static CompiledQuestDefinition workOrder5000Dsl() {
 		return quest(5000)
-			.evidence(WORK_ORDER_EVIDENCE)
 			.metadata(QuestMetadata.minimal("Steel Chisel Supplies", 1190000, "TASK"))
 			.node("none", project(QuestStatus.NONE, Map.of()))
 			.node("start", project(QuestStatus.START, Map.of()))
@@ -161,8 +159,7 @@ class CraftRepresentativeQuestDefinitionTest {
 
 	private static String workOrder5000Xml() {
 		return """
-			<quest-definition id="5000" version="1" ownership="COMPILED_CANDIDATE">
-			  <evidence><ref source="XML_TEMPLATE" locator="src/main/resources/aion/data/static_data/quest_script_data/work_order.xml:8" statement="work_order 5000 learns recipe 155004001 on accept and releases it on completion or abandon"/></evidence>
+			<quest-definition id="5000" version="1">
 			  <metadata name="Steel Chisel Supplies" display-name-id="1190000" min-level="0" max-level="2147483647" category="TASK"/>
 			  <nodes>
 			    <node label="none"><project status="NONE"/></node>
@@ -183,8 +180,7 @@ class CraftRepresentativeQuestDefinitionTest {
 
 	private static String craftReward1941Xml() {
 		return """
-			<quest-definition id="1941" version="1" ownership="COMPILED_CANDIDATE">
-			  <evidence><ref source="XML_TEMPLATE" locator="src/main/resources/aion/data/static_data/quest_script_data/crafting.xml:9" statement="crafting_rewards 1941 plays movie 93 then grants skill 40002 level 400 with auto recipes"/></evidence>
+			<quest-definition id="1941" version="1">
 			  <metadata name="quest-1941" display-name-id="0" min-level="0" max-level="2147483647" category="QUEST"/>
 			  <nodes><node label="start"><project status="START"/></node><node label="reward"><project status="REWARD"/></node></nodes>
 			  <transitions>

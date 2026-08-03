@@ -16,10 +16,6 @@ public final class ImmutableQuestCatalog implements QuestCatalog {
 		Map<Integer, CompiledQuestDefinition> index = new LinkedHashMap<>();
 		for (CompiledQuestDefinition definition : definitions) {
 			Objects.requireNonNull(definition, "definition");
-			if (definition.ownership() == QuestOwnership.ANALYSIS_DRAFT) {
-				throw new QuestCompilationException("ANALYSIS_DRAFT_CATALOG_FORBIDDEN",
-					"analysis draft cannot enter quest catalog: " + definition.id());
-			}
 			if (index.putIfAbsent(definition.id(), definition) != null) {
 				throw new QuestCompilationException("DUPLICATE_OWNER", "duplicate quest owner: " + definition.id());
 			}

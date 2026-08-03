@@ -43,18 +43,9 @@ class RemainingCapabilityDefinitionTest {
 
 	@Test
 	void instanceRewardVariantsWithoutCurrentHandlerOwnersRemainTypedFixtures() {
-		assertEquivalent(90001, kamarReward(), "<kamar-reward/>", new EvidenceRef(
-			"PRODUCTION_CALLBACK_NO_CURRENT_HANDLER_OWNER",
-			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KamarBattlefieldInstance.java",
-			"typed compiler fixture; not a representative quest owner"));
-		assertEquivalent(90002, ophidanReward(), "<ophidan-reward/>", new EvidenceRef(
-			"TYPED_RESERVED_VARIANT",
-			"src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java#onOphidanReward",
-			"typed compiler fixture; no production caller or current Handler owner"));
-		assertEquivalent(90003, bastionReward(), "<bastion-reward/>", new EvidenceRef(
-			"TYPED_RESERVED_VARIANT",
-			"src/main/java/com/aionemu/gameserver/questEngine/QuestEngine.java#onBastionReward",
-			"typed compiler fixture; no production caller or current Handler owner"));
+		assertEquivalent(90001, kamarReward(), "<kamar-reward/>");
+		assertEquivalent(90002, ophidanReward(), "<ophidan-reward/>");
+		assertEquivalent(90003, bastionReward(), "<bastion-reward/>");
 	}
 
 	@Test
@@ -69,12 +60,7 @@ class RemainingCapabilityDefinitionTest {
 	}
 
 	private static void assertEquivalent(int id, QuestEvent event, String xmlEvent) {
-		assertEquivalent(id, event, xmlEvent, representativeEvidence(id));
-	}
-
-	private static void assertEquivalent(int id, QuestEvent event, String xmlEvent, EvidenceRef evidence) {
 		CompiledQuestDefinition dsl = quest(id)
-			.evidence(evidence)
 			.metadata(QuestMetadata.minimal("representative", 1, "QUEST"))
 			.progress(QuestDsl.bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
@@ -82,15 +68,14 @@ class RemainingCapabilityDefinitionTest {
 			.on(event).from("start").when(statusIs(QuestStatus.START))
 			.then(QuestDsl.setVariable("var0", 1)).goTo("done").compile();
 		String xml = """
-			<quest-definition id="%d" version="1" ownership="COMPILED_CANDIDATE">
-			  <evidence><ref source="%s" locator="%s" statement="%s"/></evidence>
+			<quest-definition id="%d" version="1">
 			  <metadata name="representative" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 			  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 			  <nodes><node label="start"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
 			    <node label="done"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node></nodes>
 			  <transitions><transition source="start" target="done"><event>%s</event><conditions><status-is status="START"/></conditions><actions><set-variable field="var0" value="1"/></actions></transition></transitions>
 			</quest-definition>
-			""".formatted(id, evidence.source(), evidence.locator(), evidence.statement(), xmlEvent);
+			""".formatted(id, xmlEvent);
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
 		assertEquals(dsl.definition(), fromXml.definition());
@@ -103,17 +88,4 @@ class RemainingCapabilityDefinitionTest {
 		assertEquals(1, plan.orElseThrow().nextPackedVariables());
 	}
 
-	private static EvidenceRef representativeEvidence(int questId) {
-		String locator = switch (questId) {
-			case 1354 -> "src/main/java/com/aionemu/gameserver/quest/handlers/eltnen/_1354Pratical_Aerobatics.java";
-			case 3050 -> "src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3050Rescuing_Ruria.java";
-			case 3718 -> "src/main/java/com/aionemu/gameserver/quest/handlers/baranath_dredgion/_3718Dredging_The_Dredgion.java";
-			case 11076 -> "src/main/java/com/aionemu/gameserver/quest/handlers/inggison/_11076ProofOfTalent.java";
-			case 11468 -> "src/main/java/com/aionemu/gameserver/quest/handlers/taloc_hollow/_11468WithFriendsLikeThese.java";
-			case 14211 -> "src/main/java/com/aionemu/gameserver/quest/handlers/transidium_annex/_14211Empyrean_Scribe.java";
-			case 18830 -> "src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18830MovingIn.java";
-			default -> throw new IllegalArgumentException("No representative handler evidence for quest " + questId);
-		};
-		return new EvidenceRef("JAVA_HANDLER", locator, "registered production handler event");
-	}
 }

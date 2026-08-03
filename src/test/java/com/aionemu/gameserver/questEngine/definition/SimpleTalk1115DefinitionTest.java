@@ -24,26 +24,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Vertical fixture for the true-server SimpleTalk entry 1115. */
 class SimpleTalk1115DefinitionTest {
-	private static final List<EvidenceRef> EVIDENCE = List.of(
-		new EvidenceRef("RETAIL_SIMPLE_TALK_XML", "58Server/Map/XML/Quest_SimpleTalk.xml#id[1115]",
-			"acquired Namus, intermediate Feira and reward Asteros are declared by the true-server SimpleTalk entry"),
-		new EvidenceRef("RETAIL_SCRIPT_DLL", "58Server/server58-source/MainServer_ScriptDLL64/fun/fun_912.cpp:678-685,989-1005",
-			"the talk type is selected and its common quest object is initialized without an open execution hook"),
-		new EvidenceRef("CURRENT_XML_OWNER", "src/main/resources/aion/data/static_data/quest_script_data/poeta.xml#xml_quest[1115]",
-			"current owner supplies NPC ids 203075, 203072 and 203058 plus var 0 transitions"));
-
 	@Test
 	void trueServerSimpleTalkXmlAndDslCompileToTheSameDefinition() throws Exception {
 		CompiledQuestDefinition fromXml;
 		try (InputStream input = getClass().getResourceAsStream(
-			"/quest-definition-candidates/simpletalk-1115.xml")) {
+			"/quest-definition-fixtures/simpletalk-1115.xml")) {
 			fromXml = QuestDefinitionXmlCompiler.compile(input);
 		}
 
 		CompiledQuestDefinition fromDsl = simpleTalk1115().compile();
 
 		assertEquals(fromDsl.definition(), fromXml.definition());
-		assertEquals(QuestOwnership.COMPILED_CANDIDATE, fromXml.ownership());
+		assertEquals(QuestOwnership.RETAIL_ALIGNED, fromXml.ownership());
 		assertEquals(List.of("TALK_TO_NPC"), fromXml.transitionsByType().keySet().stream().toList());
 	}
 
@@ -80,9 +72,7 @@ class SimpleTalk1115DefinitionTest {
 			1, 1, true, false, false, 0, null, null, false, Set.of(), 0, "NONE", "NONE", 0,
 			List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), Map.of());
 		QuestDsl.QuestBuilder builder = quest(1115)
-			.ownership(QuestOwnership.COMPILED_CANDIDATE)
 			.metadata(metadata)
-			.evidence(EVIDENCE.toArray(EvidenceRef[]::new))
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
