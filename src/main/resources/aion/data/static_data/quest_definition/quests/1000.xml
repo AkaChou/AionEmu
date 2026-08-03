@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1000" version="1">
+  <metadata name="Prologue" display-name-id="1102000" min-level="1" max-level="2147483647" category="QUEST" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="started">
+      <event>
+        <enter-zone zone="AKARIOS_PLAINS_210010000"/>
+      </event>
+      <after-commit>
+        <play-movie movie-id="1"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="complete">
+      <event>
+        <movie-end movie-id="1"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="1" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

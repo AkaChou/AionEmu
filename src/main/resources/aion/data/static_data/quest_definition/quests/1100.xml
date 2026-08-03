@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1100" version="1">
+  <metadata name="Kalio's Call" display-name-id="1102200" min-level="3" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="510"/>
+      <reward kind="SELECTABLE_ITEM" id="100000095" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100200113" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100100012" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100600035" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="started">
+      <event>
+        <enter-zone zone="AKARIOS_VILLAGE_210010000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-ids="-1 1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="8"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100000095" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="9"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100200113" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="10"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100100012" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="11"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100600035" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1002" version="1">
+  <metadata name="Request Of The Elim" display-name-id="1102002" min-level="3" max-level="2147483647" category="MISSION">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <prerequisites>
+      <quest id="1100"/>
+    </prerequisites>
+    <rewards>
+      <reward kind="EXP" id="0" amount="5943"/>
+      <reward kind="TITLE" id="4" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100200613" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100000651" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100100505" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100600544" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101800514" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="102000535" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s0">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s4">
+      <project status="START">
+        <vars>
+          <var name="var0" value="4"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s5">
+      <project status="START">
+        <vars>
+          <var name="var0" value="5"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s6">
+      <project status="START">
+        <vars>
+          <var name="var0" value="6"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s12">
+      <project status="START">
+        <vars>
+          <var name="var0" value="12"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s13">
+      <project status="START">
+        <vars>
+          <var name="var0" value="13"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s14">
+      <project status="START">
+        <vars>
+          <var name="var0" value="14"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s20">
+      <project status="START">
+        <vars>
+          <var name="var0" value="20"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="14"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 启动:升级或区域任务结束,前置 1100 完成才可接取。 -->
+    <transition source="unaccepted" target="s0">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="s0">
+      <event>
+        <zone-mission-end/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- Ampeis (203076)。 -->
+    <transition source="s0" target="s0">
+      <event>
+        <talk-to-npc npc-id="203076" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="s0" target="s1">
+      <event>
+        <talk-to-npc npc-id="203076" dialog-id="10000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- Forest Protector Noah (730007)。 -->
+    <transition source="s1" target="s1">
+      <event>
+        <talk-to-npc npc-id="730007" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <talk-to-npc npc-id="730007" dialog-id="1353"/>
+      </event>
+      <after-commit>
+        <play-movie movie-id="20"/>
+        <show-quest-dialog dialog-id="1353"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2">
+      <event>
+        <talk-to-npc npc-id="730007" dialog-id="10001"/>
+      </event>
+      <actions>
+        <give-item item-id="182200002" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s6">
+      <event>
+        <talk-to-npc npc-id="730007" dialog-id="10002"/>
+      </event>
+      <actions>
+        <remove-item item-id="182200002" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="s6" target="s12" priority="0">
+      <event>
+        <talk-to-npc npc-id="730007" dialog-id="39"/>
+      </event>
+      <conditions>
+        <has-item item-id="182200003" count="3"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182200003" count="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="2120"/>
+      </after-commit>
+    </transition>
+    <transition source="s6" target="s6" priority="10">
+      <event>
+        <talk-to-npc npc-id="730007" dialog-id="39"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2205"/>
+      </after-commit>
+    </transition>
+    <transition source="s12" target="s12">
+      <event>
+        <talk-to-npc npc-id="730007" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2120"/>
+      </after-commit>
+    </transition>
+    <transition source="s12" target="s13">
+      <event>
+        <talk-to-npc npc-id="730007" dialog-id="10003"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- Sleeping Elder (730010): 交付吊坠并删除该静态 NPC。 -->
+    <transition source="s2" target="s4">
+      <event>
+        <talk-to-npc npc-id="730010" dialog-id="-1"/>
+      </event>
+      <conditions>
+        <has-item item-id="182200002" count="1"/>
+      </conditions>
+      <after-commit>
+        <delete-interaction-npc schedule-respawn="true"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s5">
+      <event>
+        <talk-to-npc npc-id="730010" dialog-id="-1"/>
+      </event>
+      <conditions>
+        <has-item item-id="182200002" count="1"/>
+      </conditions>
+      <after-commit>
+        <delete-interaction-npc schedule-respawn="true"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- Daminu (730008): 分配新副本实例并传送。 -->
+    <transition source="s13" target="s13">
+      <event>
+        <talk-to-npc npc-id="730008" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="s13" target="s20">
+      <event>
+        <talk-to-npc npc-id="730008" dialog-id="10004"/>
+      </event>
+      <after-commit>
+        <teleport-player-next-available-instance world-id="310010000" x="52" y="174" z="229" heading="0"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s14" target="s14">
+      <event>
+        <talk-to-npc npc-id="730008" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2461"/>
+      </after-commit>
+    </transition>
+    <transition source="s14" target="reward">
+      <event>
+        <talk-to-npc npc-id="730008" dialog-id="10005"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- Belpartan (205000): 飞行传送启动 + 43 秒延迟回程。 -->
+    <transition source="s20" target="s20">
+      <event>
+        <talk-to-npc npc-id="205000" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <flight-teleport flight-teleport-id="1001"/>
+        <start-invisible-timer seconds="43" timer-id="1002-return" scope="PLAYER_QUEST"
+          persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
+      </after-commit>
+    </transition>
+    <transition source="s20" target="s14">
+      <event>
+        <invisible-timer-end/>
+      </event>
+      <after-commit>
+        <teleport-player-current-or-default world-id="210010000" x="603" y="1537" z="116" heading="20"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- 进入副本世界时变身;非副本世界且 var0=20 时回退到 13。 -->
+    <transition source="s0" target="s0">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000"/>
+      </conditions>
+      <after-commit>
+        <morph ascension-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000"/>
+      </conditions>
+      <after-commit>
+        <morph ascension-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000"/>
+      </conditions>
+      <after-commit>
+        <morph ascension-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000"/>
+      </conditions>
+      <after-commit>
+        <morph ascension-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000"/>
+      </conditions>
+      <after-commit>
+        <morph ascension-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="s6" target="s6">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000"/>
+      </conditions>
+      <after-commit>
+        <morph ascension-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="s12" target="s12">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000"/>
+      </conditions>
+      <after-commit>
+        <morph ascension-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="s13" target="s13">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000"/>
+      </conditions>
+      <after-commit>
+        <morph ascension-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="s14" target="s14">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000"/>
+      </conditions>
+      <after-commit>
+        <morph ascension-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="s20" target="s20" priority="0">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000"/>
+      </conditions>
+      <after-commit>
+        <morph ascension-id="1"/>
+      </after-commit>
+    </transition>
+    <transition source="s20" target="s13" priority="10">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="310010000" expected="false"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- Sleeping Elder 仅在对应步骤可交互。 -->
+    <transition source="s2" target="s2">
+      <event>
+        <can-act template-id="730010" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <can-act template-id="730010" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+
+    <!-- Kalio (203067): 奖励结算,六个可选奖励各占一条 dialog。 -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2716"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="8"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="5943" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="4" amount="1"/>
+        <grant-reward kind="ITEM" id="100200613" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="9"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="5943" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="4" amount="1"/>
+        <grant-reward kind="ITEM" id="100000651" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="10"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="5943" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="4" amount="1"/>
+        <grant-reward kind="ITEM" id="100100505" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="11"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="5943" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="4" amount="1"/>
+        <grant-reward kind="ITEM" id="100600544" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="12"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="5943" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="4" amount="1"/>
+        <grant-reward kind="ITEM" id="101800514" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203067" dialog-id="13"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="5943" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="4" amount="1"/>
+        <grant-reward kind="ITEM" id="102000535" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

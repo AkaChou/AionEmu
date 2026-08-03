@@ -3,8 +3,10 @@ package com.aionemu.gameserver.questEngine.definition;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,15 +14,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QuestDefinitionCatalogManifestTest {
 	@Test
-	void packagedProductionCatalogContainsTheLiveTypedOwners() throws Exception {
+	void packagedProductionCatalogMatchesEveryPackagedQuestDefinitionFile() throws Exception {
 		try (InputStream input = getClass().getResourceAsStream(
 				"/aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
 			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			assertEquals(List.of(1101, 1102, 1103, 1104, 1105, 1106, 1108, 1109, 1110, 1116, 1117, 1118, 1119,
-				1121, 1124, 1125, 1126, 1129, 1206, 1207), catalog.all().stream().map(CompiledQuestDefinition::id).toList());
+			// The catalog must mirror the packaged quests/*.xml set exactly, so adding a
+			// definition never requires touching this assertion.
+			assertEquals(packagedQuestFileIds(),
+				catalog.all().stream().map(CompiledQuestDefinition::id).toList());
 			assertEquals(QuestOwnership.RETAIL_ALIGNED, catalog.find(1101).orElseThrow().ownership());
 			assertEquals(QuestOwnership.RETAIL_ALIGNED, catalog.find(1102).orElseThrow().ownership());
 		}
+	}
+
+	private static List<Integer> packagedQuestFileIds() throws Exception {
+		File dir = new File(QuestDefinitionCatalogManifestTest.class.getResource(
+				"/aion/data/static_data/quest_definition/quests").toURI());
+		File[] files = dir.listFiles(file -> file.getName().endsWith(".xml"));
+		return Arrays.stream(files).map(file -> Integer.parseInt(file.getName().replace(".xml", "")))
+			.sorted().toList();
 	}
 
 	@Test
