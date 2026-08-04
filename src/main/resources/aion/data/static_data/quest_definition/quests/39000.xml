@@ -4,6 +4,7 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <repeat max-repeat-count="1" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
     <rewards>
       <reward kind="GOLD" id="0" amount="110340"/>
       <reward kind="EXP" id="0" amount="202483"/>

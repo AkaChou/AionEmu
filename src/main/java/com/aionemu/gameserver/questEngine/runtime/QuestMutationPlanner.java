@@ -46,7 +46,6 @@ public final class QuestMutationPlanner {
 				.filter(node -> node.label().equals(transition.targetNode())).findFirst().orElseThrow();
 		NodeProjection projection = target.projection();
 		Map<String, Integer> variables = new LinkedHashMap<>(layout.unpack(snapshot.packedVariables()));
-		variables.putAll(projection.variables());
 		for (QuestAction action : transition.actions()) {
 				switch (action) {
 					case QuestAction.RemoveItem remove -> {
@@ -57,6 +56,8 @@ public final class QuestMutationPlanner {
 				case QuestAction.GiveItem ignored -> {
 				}
 				case QuestAction.SetVariable set -> variables.put(set.field(), set.value());
+					case QuestAction.IncrementVariable inc ->
+						variables.merge(inc.field(), inc.delta(), Integer::sum);
 				case QuestAction.SetStatus ignored -> {
 				}
 				case QuestAction.GrantReward ignored -> {
@@ -71,6 +72,7 @@ public final class QuestMutationPlanner {
 					}
 			}
 		}
+		variables.putAll(projection.variables());
 		int packed = layout.pack(variables);
 		var status = projection.status();
 		for (QuestAction action : transition.actions()) {

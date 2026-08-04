@@ -76,6 +76,7 @@
     <xs:element name="remove-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="give-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="set-variable"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="value" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="increment-variable"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="delta" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="set-status"><xs:complexType><xs:attribute name="status" type="status" use="required"/></xs:complexType></xs:element>
 	<xs:element name="grant-reward"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/><xs:attribute name="amount-mode" type="reward-amount-mode" default="EXACT"/></xs:complexType></xs:element>
 	<xs:element name="complete-quest"><xs:complexType><xs:attribute name="reward-index" type="xs:int" use="required"/></xs:complexType></xs:element>

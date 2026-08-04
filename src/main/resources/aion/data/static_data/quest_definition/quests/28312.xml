@@ -4,6 +4,7 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <repeat max-repeat-count="1" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
     <items>
       <item id="182212119" count="10"/>
     </items>

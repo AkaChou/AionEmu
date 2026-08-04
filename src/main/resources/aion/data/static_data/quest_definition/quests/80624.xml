@@ -4,7 +4,7 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
     <rewards>
       <reward kind="DP" id="0" amount="100"/>
       <reward kind="ITEM" id="188053528" amount="1"/>

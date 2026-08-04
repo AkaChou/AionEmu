@@ -269,6 +269,10 @@ public final class QuestDsl {
 		return new QuestAction.SetVariable(field, value);
 	}
 
+	public static QuestAction incrementVariable(String field, int delta) {
+		return new QuestAction.IncrementVariable(field, delta);
+	}
+
 	public static QuestAction setStatus(QuestStatus status) {
 		return new QuestAction.SetStatus(status);
 	}

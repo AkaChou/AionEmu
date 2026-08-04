@@ -4,6 +4,7 @@
     <races>
       <race id="PC_ALL"/>
     </races>
+    <repeat max-repeat-count="1" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
     <rewards>
       <reward kind="ITEM" id="188055662" amount="1"/>
     </rewards>

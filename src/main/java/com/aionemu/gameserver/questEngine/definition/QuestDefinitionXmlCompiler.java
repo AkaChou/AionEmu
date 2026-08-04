@@ -454,6 +454,8 @@ public final class QuestDefinitionXmlCompiler {
 			case "remove-item" -> new QuestAction.RemoveItem(integer(element, "item-id"), removalCount(element));
 			case "give-item" -> new QuestAction.GiveItem(integer(element, "item-id"), integer(element, "count"));
 			case "set-variable" -> new QuestAction.SetVariable(attribute(element, "field"), integer(element, "value"));
+			case "increment-variable" -> new QuestAction.IncrementVariable(attribute(element, "field"),
+				integer(element, "delta"));
 			case "set-status" -> new QuestAction.SetStatus(enumValue(QuestStatus.class, element, "status"));
 			case "grant-reward" -> parseGrantReward(element);
 			case "complete-quest" -> new QuestAction.CompleteQuest(integer(element, "reward-index"));

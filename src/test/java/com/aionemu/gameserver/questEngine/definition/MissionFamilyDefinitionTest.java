@@ -96,7 +96,7 @@ class MissionFamilyDefinitionTest {
 		List<QuestAction> completions = transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete"))
 			.flatMap(t -> t.actions().stream()).toList();
-		assertEquals(4, completions.stream().filter(a -> a instanceof QuestAction.GrantReward granted
+		assertEquals(7, completions.stream().filter(a -> a instanceof QuestAction.GrantReward granted
 			&& granted.rewardKind() == QuestRewardKind.ITEM).count());
 		assertTrue(completions.contains(new QuestAction.GrantReward("EXP", 0, 510, QuestRewardAmountMode.QUEST_BASE)));
 		assertTrue(completions.contains(new QuestAction.GrantReward("ITEM", 100000095, 1)));

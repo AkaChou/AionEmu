@@ -2,9 +2,9 @@ package com.aionemu.gameserver.questEngine.definition;
 
 /** Closed set of required mutations in the quest transaction. */
 public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.SetVariable,
-		QuestAction.SetStatus, QuestAction.GrantReward, QuestAction.LearnRecipe,
-		QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill, QuestAction.CompleteQuest,
-		QuestAction.GiveItem {
+		QuestAction.IncrementVariable, QuestAction.SetStatus, QuestAction.GrantReward,
+		QuestAction.LearnRecipe, QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill,
+		QuestAction.CompleteQuest, QuestAction.GiveItem {
 	record RemoveItem(int itemId, int count) implements QuestAction {
 		/**
 		 * transition 需要移除当前完整堆叠时使用的哨兵数量。
@@ -36,6 +36,18 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		public SetVariable {
 			if (field == null || field.isBlank()) {
 				throw new IllegalArgumentException("field must not be blank");
+			}
+		}
+	}
+
+	/** 在现有值上做增量（delta 可正可负），用于多次收集/击杀/使用技能的计数推进。 */
+	record IncrementVariable(String field, int delta) implements QuestAction {
+		public IncrementVariable {
+			if (field == null || field.isBlank()) {
+				throw new IllegalArgumentException("field must not be blank");
+			}
+			if (delta == 0) {
+				throw new IllegalArgumentException("delta must be non-zero");
 			}
 		}
 	}

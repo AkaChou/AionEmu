@@ -4,7 +4,7 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="WED"/>
     <rewards>
       <reward kind="ITEM" id="186000406" amount="8"/>
     </rewards>

@@ -6,7 +6,7 @@
 -->
 <quest-definition id="50020" version="1">
   <metadata name="[Event/Daily] Extra-Bitter Chocolate" display-name-id="1150063" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
     <prerequisites>
       <quest id="50010"/>
     </prerequisites>
