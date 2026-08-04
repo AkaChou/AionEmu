@@ -14,6 +14,9 @@
       <reward kind="SELECTABLE_ITEM" id="164000134" amount="9"/>
       <reward kind="SELECTABLE_ITEM" id="164000079" amount="9"/>
     </rewards>
+    <drops>
+      <drop npc-id="700979" item-id="182212115" chance="100" each-member="false" collecting-step="0"/>
+    </drops>
     <start-conditions>
       <condition type="finished" quest-id="28303"/>
     </start-conditions>

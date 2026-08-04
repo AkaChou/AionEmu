@@ -12,6 +12,12 @@
       <reward kind="EXP" id="0" amount="7086913"/>
       <reward kind="ITEM" id="169000009" amount="761"/>
     </rewards>
+    <drops>
+      <drop npc-id="219374" item-id="182213260" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="219375" item-id="182213260" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="219376" item-id="182213260" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="219377" item-id="182213260" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
