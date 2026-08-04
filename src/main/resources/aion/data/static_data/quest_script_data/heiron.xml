@@ -7,11 +7,6 @@
 	<report_to id="3528" start_npc_ids="204536" end_npc_ids="798165" item_id="182201836"/>
 	<report_to id="14251" start_npc_ids="204602" end_npc_ids="832824"/>
 	
-	<item_collecting id="1672" start_npc_ids="203784"/>
-	<item_collecting id="1673" start_npc_ids="204508"/>
-	<item_collecting id="1674" start_npc_ids="204554"/>
-	<item_collecting id="1675" start_npc_ids="204633"/>
-	<item_collecting id="1676" start_npc_ids="204608"/>
 	<item_collecting id="1677" start_npc_ids="204558"/>
 	<item_collecting id="1678" start_npc_ids="204598"/>
 	<item_collecting id="1679" start_npc_ids="790019"/>
