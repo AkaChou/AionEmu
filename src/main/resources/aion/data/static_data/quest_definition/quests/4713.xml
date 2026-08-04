@@ -1,0 +1,3880 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 击杀任务：从 279042 接取，击杀 700497 1 次、10 种 Dredgion 怪物各 20 次后向同一 NPC 报告领奖。
+     Monster-hunt quest: accept from 279042, kill 700497 x1 and 10 Dredgion mobs x20, report to the same NPC for reward. -->
+<quest-definition id="4713" version="1">
+<metadata name="[Group] Chaos On The Dredgion" display-name-id="1120006" min-level="46" max-level="50" category="QUEST" cannot-share="true">
+    <races>
+        <race id="ASMODIANS"/>
+    </races>
+    <repeat max-repeat-count="30" cooldown-seconds="0" daily="false" weekly="false"/>
+    <rewards>
+        <reward kind="EXP" id="0" amount="2632651"/>
+        <reward kind="AP" id="0" amount="800"/>
+        <reward kind="ITEM" id="186000010" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="186000010" amount="6"/>
+        <reward kind="SELECTABLE_ITEM" id="188050926" amount="1"/>
+    </rewards>
+</metadata>
+    <progress>
+        <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+        <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    </progress>
+    <nodes>
+        <node label="unaccepted">
+            <project status="NONE">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="0"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b0">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="0"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b1">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="1"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b2">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="2"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b3">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="3"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b4">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="4"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b5">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="5"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b6">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="6"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b7">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="7"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b8">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="8"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b9">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="9"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b10">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="10"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b11">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="11"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b12">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="12"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b13">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="13"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b14">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="14"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b15">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="15"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b16">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="16"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b17">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="17"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b18">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="18"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b19">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="19"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a0b20">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="20"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b0">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="0"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b1">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="1"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b2">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="2"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b3">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="3"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b4">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="4"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b5">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="5"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b6">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="6"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b7">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="7"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b8">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="8"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b9">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="9"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b10">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="10"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b11">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="11"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b12">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="12"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b13">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="13"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b14">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="14"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b15">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="15"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b16">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="16"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b17">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="17"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b18">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="18"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b19">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="19"/>
+                </vars>
+            </project>
+        </node>
+        <node label="a1b20">
+            <project status="START">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="20"/>
+                </vars>
+            </project>
+        </node>
+        <node label="reward">
+            <project status="REWARD">
+                <vars>
+                    <var name="var0" value="1"/>
+                    <var name="var1" value="20"/>
+                </vars>
+            </project>
+        </node>
+        <node label="complete">
+            <project status="COMPLETE">
+                <vars>
+                    <var name="var0" value="0"/>
+                    <var name="var1" value="0"/>
+                </vars>
+            </project>
+        </node>
+    </nodes>
+    <transitions>
+        <!-- 接取：预览、拒绝与选择对话 / Accept: preview, decline and selection dialogs -->
+        <transition source="unaccepted" target="unaccepted">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-id="31"/>
+            </event>
+            <after-commit>
+                <show-quest-dialog dialog-id="1011"/>
+            </after-commit>
+        </transition>
+        <transition source="unaccepted" target="unaccepted">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-id="1007"/>
+            </event>
+            <after-commit>
+                <show-quest-dialog dialog-id="4"/>
+            </after-commit>
+        </transition>
+        <transition source="unaccepted" target="a0b0">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-id="1002"/>
+            </event>
+            <conditions>
+                <start-eligible/>
+            </conditions>
+            <after-commit>
+                <sync-quest-state mode="VISIBILITY_REFRESH"/>
+                <show-quest-dialog dialog-id="1003"/>
+            </after-commit>
+        </transition>
+        <transition source="unaccepted" target="a0b0">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-id="20000"/>
+            </event>
+            <conditions>
+                <start-eligible/>
+            </conditions>
+            <after-commit>
+                <sync-quest-state mode="VISIBILITY_REFRESH"/>
+                <close-dialog/>
+            </after-commit>
+        </transition>
+        <transition source="unaccepted" target="unaccepted">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-ids="1003 1004 20001"/>
+            </event>
+            <after-commit>
+                <close-dialog/>
+            </after-commit>
+        </transition>
+        <transition source="unaccepted" target="unaccepted">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-id="1008"/>
+            </event>
+            <after-commit>
+                <show-quest-selection-dialog dialog-id="10"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b0">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-id="1008"/>
+            </event>
+            <after-commit>
+                <show-quest-selection-dialog dialog-id="10"/>
+            </after-commit>
+        </transition>
+        <!-- 击杀进度：var0 组 700497，var1 组 10 种怪物 / Kill progress: var0 group, var1 group -->
+        <transition source="a0b0" target="a1b0">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a1b1">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a1b2">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a1b3">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a1b4">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a1b5">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a1b6">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a1b7">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a1b8">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a1b9">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a1b10">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a1b11">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a1b12">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a1b13">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a1b14">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a1b15">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a1b16">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a1b17">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a1b18">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a1b19">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b20" target="a1b20">
+            <event>
+                <kill-npc npc-id="700497"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b1">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b1">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b1">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b1">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b1">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b1">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b1">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b1">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b1">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b0" target="a0b1">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b0" target="a1b1">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b0" target="a1b1">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b0" target="a1b1">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b0" target="a1b1">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b0" target="a1b1">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b0" target="a1b1">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b0" target="a1b1">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b0" target="a1b1">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b0" target="a1b1">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b0" target="a1b1">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a0b2">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a0b2">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a0b2">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a0b2">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a0b2">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a0b2">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a0b2">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a0b2">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a0b2">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b1" target="a0b2">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b1" target="a1b2">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b1" target="a1b2">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b1" target="a1b2">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b1" target="a1b2">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b1" target="a1b2">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b1" target="a1b2">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b1" target="a1b2">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b1" target="a1b2">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b1" target="a1b2">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b1" target="a1b2">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a0b3">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a0b3">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a0b3">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a0b3">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a0b3">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a0b3">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a0b3">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a0b3">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a0b3">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b2" target="a0b3">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b2" target="a1b3">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b2" target="a1b3">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b2" target="a1b3">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b2" target="a1b3">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b2" target="a1b3">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b2" target="a1b3">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b2" target="a1b3">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b2" target="a1b3">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b2" target="a1b3">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b2" target="a1b3">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a0b4">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a0b4">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a0b4">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a0b4">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a0b4">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a0b4">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a0b4">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a0b4">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a0b4">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b3" target="a0b4">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b3" target="a1b4">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b3" target="a1b4">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b3" target="a1b4">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b3" target="a1b4">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b3" target="a1b4">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b3" target="a1b4">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b3" target="a1b4">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b3" target="a1b4">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b3" target="a1b4">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b3" target="a1b4">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a0b5">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a0b5">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a0b5">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a0b5">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a0b5">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a0b5">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a0b5">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a0b5">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a0b5">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b4" target="a0b5">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b4" target="a1b5">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b4" target="a1b5">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b4" target="a1b5">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b4" target="a1b5">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b4" target="a1b5">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b4" target="a1b5">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b4" target="a1b5">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b4" target="a1b5">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b4" target="a1b5">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b4" target="a1b5">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a0b6">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a0b6">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a0b6">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a0b6">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a0b6">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a0b6">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a0b6">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a0b6">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a0b6">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b5" target="a0b6">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b5" target="a1b6">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b5" target="a1b6">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b5" target="a1b6">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b5" target="a1b6">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b5" target="a1b6">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b5" target="a1b6">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b5" target="a1b6">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b5" target="a1b6">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b5" target="a1b6">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b5" target="a1b6">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a0b7">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a0b7">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a0b7">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a0b7">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a0b7">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a0b7">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a0b7">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a0b7">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a0b7">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b6" target="a0b7">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b6" target="a1b7">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b6" target="a1b7">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b6" target="a1b7">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b6" target="a1b7">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b6" target="a1b7">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b6" target="a1b7">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b6" target="a1b7">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b6" target="a1b7">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b6" target="a1b7">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b6" target="a1b7">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a0b8">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a0b8">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a0b8">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a0b8">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a0b8">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a0b8">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a0b8">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a0b8">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a0b8">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b7" target="a0b8">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b7" target="a1b8">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b7" target="a1b8">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b7" target="a1b8">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b7" target="a1b8">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b7" target="a1b8">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b7" target="a1b8">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b7" target="a1b8">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b7" target="a1b8">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b7" target="a1b8">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b7" target="a1b8">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a0b9">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a0b9">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a0b9">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a0b9">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a0b9">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a0b9">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a0b9">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a0b9">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a0b9">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b8" target="a0b9">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b8" target="a1b9">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b8" target="a1b9">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b8" target="a1b9">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b8" target="a1b9">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b8" target="a1b9">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b8" target="a1b9">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b8" target="a1b9">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b8" target="a1b9">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b8" target="a1b9">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b8" target="a1b9">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a0b10">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a0b10">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a0b10">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a0b10">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a0b10">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a0b10">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a0b10">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a0b10">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a0b10">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b9" target="a0b10">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b9" target="a1b10">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b9" target="a1b10">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b9" target="a1b10">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b9" target="a1b10">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b9" target="a1b10">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b9" target="a1b10">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b9" target="a1b10">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b9" target="a1b10">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b9" target="a1b10">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b9" target="a1b10">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a0b11">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a0b11">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a0b11">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a0b11">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a0b11">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a0b11">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a0b11">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a0b11">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a0b11">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b10" target="a0b11">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b10" target="a1b11">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b10" target="a1b11">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b10" target="a1b11">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b10" target="a1b11">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b10" target="a1b11">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b10" target="a1b11">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b10" target="a1b11">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b10" target="a1b11">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b10" target="a1b11">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b10" target="a1b11">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a0b12">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a0b12">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a0b12">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a0b12">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a0b12">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a0b12">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a0b12">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a0b12">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a0b12">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b11" target="a0b12">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b11" target="a1b12">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b11" target="a1b12">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b11" target="a1b12">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b11" target="a1b12">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b11" target="a1b12">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b11" target="a1b12">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b11" target="a1b12">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b11" target="a1b12">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b11" target="a1b12">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b11" target="a1b12">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a0b13">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a0b13">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a0b13">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a0b13">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a0b13">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a0b13">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a0b13">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a0b13">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a0b13">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b12" target="a0b13">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b12" target="a1b13">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b12" target="a1b13">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b12" target="a1b13">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b12" target="a1b13">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b12" target="a1b13">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b12" target="a1b13">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b12" target="a1b13">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b12" target="a1b13">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b12" target="a1b13">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b12" target="a1b13">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a0b14">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a0b14">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a0b14">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a0b14">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a0b14">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a0b14">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a0b14">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a0b14">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a0b14">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b13" target="a0b14">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b13" target="a1b14">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b13" target="a1b14">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b13" target="a1b14">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b13" target="a1b14">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b13" target="a1b14">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b13" target="a1b14">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b13" target="a1b14">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b13" target="a1b14">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b13" target="a1b14">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b13" target="a1b14">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a0b15">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a0b15">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a0b15">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a0b15">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a0b15">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a0b15">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a0b15">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a0b15">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a0b15">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b14" target="a0b15">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b14" target="a1b15">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b14" target="a1b15">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b14" target="a1b15">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b14" target="a1b15">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b14" target="a1b15">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b14" target="a1b15">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b14" target="a1b15">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b14" target="a1b15">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b14" target="a1b15">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b14" target="a1b15">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a0b16">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a0b16">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a0b16">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a0b16">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a0b16">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a0b16">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a0b16">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a0b16">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a0b16">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b15" target="a0b16">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b15" target="a1b16">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b15" target="a1b16">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b15" target="a1b16">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b15" target="a1b16">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b15" target="a1b16">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b15" target="a1b16">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b15" target="a1b16">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b15" target="a1b16">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b15" target="a1b16">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b15" target="a1b16">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a0b17">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a0b17">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a0b17">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a0b17">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a0b17">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a0b17">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a0b17">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a0b17">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a0b17">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b16" target="a0b17">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b16" target="a1b17">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b16" target="a1b17">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b16" target="a1b17">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b16" target="a1b17">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b16" target="a1b17">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b16" target="a1b17">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b16" target="a1b17">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b16" target="a1b17">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b16" target="a1b17">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b16" target="a1b17">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a0b18">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a0b18">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a0b18">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a0b18">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a0b18">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a0b18">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a0b18">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a0b18">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a0b18">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b17" target="a0b18">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b17" target="a1b18">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b17" target="a1b18">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b17" target="a1b18">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b17" target="a1b18">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b17" target="a1b18">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b17" target="a1b18">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b17" target="a1b18">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b17" target="a1b18">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b17" target="a1b18">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b17" target="a1b18">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a0b19">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a0b19">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a0b19">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a0b19">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a0b19">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a0b19">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a0b19">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a0b19">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a0b19">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b18" target="a0b19">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b18" target="a1b19">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b18" target="a1b19">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b18" target="a1b19">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b18" target="a1b19">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b18" target="a1b19">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b18" target="a1b19">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b18" target="a1b19">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b18" target="a1b19">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b18" target="a1b19">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b18" target="a1b19">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a0b20">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a0b20">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a0b20">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a0b20">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a0b20">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a0b20">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a0b20">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a0b20">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a0b20">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a0b19" target="a0b20">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b19" target="a1b20">
+            <event>
+                <kill-npc npc-id="214806"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b19" target="a1b20">
+            <event>
+                <kill-npc npc-id="214808"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b19" target="a1b20">
+            <event>
+                <kill-npc npc-id="214811"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b19" target="a1b20">
+            <event>
+                <kill-npc npc-id="214812"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b19" target="a1b20">
+            <event>
+                <kill-npc npc-id="214813"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b19" target="a1b20">
+            <event>
+                <kill-npc npc-id="214814"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b19" target="a1b20">
+            <event>
+                <kill-npc npc-id="214819"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b19" target="a1b20">
+            <event>
+                <kill-npc npc-id="214820"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b19" target="a1b20">
+            <event>
+                <kill-npc npc-id="214821"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b19" target="a1b20">
+            <event>
+                <kill-npc npc-id="214822"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+            </after-commit>
+        </transition>
+        <!-- 终态报告与领奖 / Final report and reward -->
+        <transition source="a1b20" target="a1b20">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-id="31"/>
+            </event>
+            <after-commit>
+                <show-quest-dialog dialog-id="1352"/>
+            </after-commit>
+        </transition>
+        <transition source="a1b20" target="reward">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-id="1009"/>
+            </event>
+            <after-commit>
+                <sync-quest-state mode="PACKET_ONLY"/>
+                <show-quest-dialog dialog-id="5"/>
+            </after-commit>
+        </transition>
+        <transition source="reward" target="reward">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-ids="-1 1009"/>
+            </event>
+            <after-commit>
+                <show-quest-dialog dialog-id="5"/>
+            </after-commit>
+        </transition>
+        <transition source="reward" target="complete">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-id="8"/>
+            </event>
+            <actions>
+                <grant-reward kind="EXP" id="0" amount="2632651" amount-mode="QUEST_BASE"/>
+                <grant-reward kind="AP" id="0" amount="800" amount-mode="QUEST_BASE"/>
+                <grant-reward kind="ITEM" id="186000010" amount="1"/>
+                <grant-reward kind="ITEM" id="186000010" amount="6"/>
+                <complete-quest reward-index="0"/>
+            </actions>
+            <after-commit>
+                <refresh-player-stats/>
+                <sync-quest-state mode="COMPLETION"/>
+                <show-quest-selection-dialog dialog-id="10"/>
+            </after-commit>
+        </transition>
+        <transition source="reward" target="complete">
+            <event>
+                <talk-to-npc npc-id="279042" dialog-id="9"/>
+            </event>
+            <actions>
+                <grant-reward kind="EXP" id="0" amount="2632651" amount-mode="QUEST_BASE"/>
+                <grant-reward kind="AP" id="0" amount="800" amount-mode="QUEST_BASE"/>
+                <grant-reward kind="ITEM" id="186000010" amount="1"/>
+                <grant-reward kind="ITEM" id="188050926" amount="1"/>
+                <complete-quest reward-index="0"/>
+            </actions>
+            <after-commit>
+                <refresh-player-stats/>
+                <sync-quest-state mode="COMPLETION"/>
+                <show-quest-selection-dialog dialog-id="10"/>
+            </after-commit>
+        </transition>
+    </transitions>
+</quest-definition>

@@ -4,44 +4,12 @@
     Quest Event
 	Make By (Encom)
  -->
-	<!-- [Event] Chasing The Grankers -->
-	<item_collecting start_npc_ids="798301" id="9548"/>
-	<!-- [Event] Solorius Invitations -->
-	<item_collecting start_npc_ids="798301" id="9549"/>
-	<!-- [Event] The Lost Contract -->
-	<item_collecting start_npc_ids="798302" id="9551"/>
-	<!-- [Event] Runaway Invitations -->
-	<item_collecting start_npc_ids="798302" id="9552"/>
-	<!-- [Event/Daily] Cranky Grankers -->
-	<item_collecting start_npc_ids="831032 831038" id="50007"/>
-	<!-- [Event] Lover Or Loner ? -->
-	<item_collecting start_npc_ids="202549" id="50010"/>
 	<!-- [Event/Daily] Cranky Grankers -->
 	<item_collecting start_npc_ids="831032 831038" id="50011"/>
 	<!-- [Event/Daily] Cranky Grankers -->
 	<item_collecting start_npc_ids="831032 831038" id="50012"/>
 	<!-- [Event/Daily] Sweetie Choco Wuv-Ums -->
 	<item_collecting start_npc_ids="202549" id="50019"/>
-	<!-- [Event/Daily] Extra-Bitter Chocolate -->
-	<item_collecting start_npc_ids="202549" id="50020"/>
-	<!-- [Event/Daily] Candygeddon -->
-    <monster_hunt start_npc_ids="202549" id="50021">
-        <monster var="0" npc_ids="217161" end_var="15"/>
-    </monster_hunt>
-	<!-- [Event/Daily] Shove-l It -->
-	<item_collecting start_npc_ids="202549" id="50022"/>
-	<!-- [Event] Elyos Perseverance -->
-	<item_collecting start_npc_ids="831071" id="50023"/>
-	<!-- [Event] What's A Heart Worth -->
-	<item_collecting start_npc_ids="701471" id="50024"/>
-	<!-- [Event] Half A Heart -->
-	<item_collecting start_npc_ids="701471" id="50025"/>
-	<!-- [Event] Fragmented Blessings -->
-	<item_collecting start_npc_ids="831080" id="50026"/>
-	<!-- [Event/Weekly] Seeking Soul Vigor -->
-	<item_collecting start_npc_ids="831090" id="50027"/>
-	<!-- [Event/Weekly] Seeking Life Essence -->
-	<item_collecting start_npc_ids="831090" id="50028"/>
 	<!-- [Event/Daily] Alchemist's Experiment -->
 	<item_collecting start_npc_ids="831090" id="50029"/>
 	<!-- [Event/Repeat] Alchemist's Trade -->
@@ -77,9 +45,6 @@
 	<!-- [Event/Daily] Chocolate, Extra-Bitter -->
 	<item_collecting start_npc_ids="202549" id="51020"/>
 	<!-- [Event/Daily] Candypocalypse -->
-    <monster_hunt start_npc_ids="202549" id="51021">
-        <monster var="0" npc_ids="217161" end_var="15"/>
-    </monster_hunt>
 	<!-- [Event/Daily] Just Shove-l It -->
 	<item_collecting start_npc_ids="202549" id="51022"/>
 	<!-- [Event] Asmodian Perseverance -->
@@ -114,112 +79,7 @@
 	<item_collecting id="51042" start_npc_ids="832851"/>
 	<!-- [Event] Material For Studying The Corridor Of Dimension 4 -->
 	<item_collecting id="51043" start_npc_ids="832851"/>
-	<!-- [Event] The Shulack Sugarcrooks -->
-    <monster_hunt start_npc_ids="799767" id="80010">
-        <monster var="0" npc_ids="217161" end_var="15"/>
-    </monster_hunt>
-	<!-- [Event] Pumpkin King Continues To Descend! -->
-    <monster_hunt start_npc_ids="799767" id="80011">
-        <monster var="0" npc_ids="217161" end_var="12"/>
-    </monster_hunt>
-	<!-- [Event] The Great Candy Hunt -->
-	<item_collecting start_npc_ids="799767" id="80012"/>
 	<!-- [Event] The Pumpkin King -->
-    <monster_hunt start_npc_ids="799788" id="80013">
-        <monster var="0" npc_ids="217161" end_var="15"/>
-    </monster_hunt>
-	<!-- [Event] The Desperate Pumpkin King -->
-    <monster_hunt start_npc_ids="799788" id="80014">
-        <monster var="0" npc_ids="217161" end_var="12"/>
-    </monster_hunt>
-	<!-- [Event] Candy, Candy Everywhere! -->
-	<item_collecting start_npc_ids="799788" id="80015"/>
-	<!-- [Event] Feeding The Children -->
-	<item_collecting start_npc_ids="799762" id="80022"/>
-	<!-- [Event] Feeding The Elders -->
-	<item_collecting start_npc_ids="799762" id="80023"/>
-	<!-- [Event] Feeding The Family -->
-	<item_collecting start_npc_ids="799762" id="80024"/>
-	<!-- [Event] Basic Vittles -->
-	<item_collecting start_npc_ids="799777" id="80025"/>
-	<!-- [Event] Regular Vittles -->
-	<item_collecting start_npc_ids="799777" id="80026"/>
-	<!-- [Event] Plentiful Vittles -->
-	<item_collecting start_npc_ids="799777" id="80027"/>
-	<!-- [Event] Pass The Enlightenment -->
-	<item_collecting start_npc_ids="799770" id="80040"/>
-	<!-- [Event] The Mortality Festival -->
-	<item_collecting start_npc_ids="799785" id="80041"/>
-	<!-- [Event] Making The Best Of It -->
-	<item_collecting start_npc_ids="799771" id="80042"/>
-	<!-- [Event] The Best From The Worst -->
-	<item_collecting start_npc_ids="799771" id="80043"/>
-	<!-- [Event] I'd Rather Be Sailing -->
-	<item_collecting start_npc_ids="799771" id="80044"/>
-	<!-- [Event] Sail Away -->
-	<item_collecting start_npc_ids="799771" id="80045"/>
-	<!-- [Event] Remember The Best -->
-	<item_collecting start_npc_ids="799787" id="80046"/>
-	<!-- [Event] I'd Hate To See The Worst -->
-	<item_collecting start_npc_ids="799787" id="80047"/>
-	<!-- [Event] Landlubber No More -->
-	<item_collecting start_npc_ids="799787" id="80048"/>
-	<!-- [Event] Soon We'll Sail -->
-	<item_collecting start_npc_ids="799787" id="80049"/>
-	<!-- [Event] Pauno Provided -->
-	<item_collecting start_npc_ids="799773" id="80050"/>
-	<!-- [Event] Sponsorship Stolen -->
-	<item_collecting start_npc_ids="799773" id="80051"/>
-	<!-- [Event] Lazy Larceny -->
-	<item_collecting start_npc_ids="799786" id="80052"/>
-	<!-- [Event] Wickless Wonder -->
-	<item_collecting start_npc_ids="799786" id="80053"/>
-	<!-- [Event] Dedication Defalcator -->
-	<item_collecting start_npc_ids="205473" id="80054"/>
-	<!-- [Event] Sinking Scrounger -->
-	<item_collecting start_npc_ids="205473" id="80055"/>
-	<!-- [Event] O-Ribbon-Al Prankster -->
-	<item_collecting start_npc_ids="799782" id="80056"/>
-	<!-- [Event] Ribbon Robber -->
-	<item_collecting start_npc_ids="799782" id="80057"/>
-	<!-- [Event] Espionage! -->
-	<item_collecting start_npc_ids="205474" id="80058"/>
-	<!-- [Event] Information Dealing -->
-	<item_collecting start_npc_ids="205474" id="80059"/>
-	<!-- [Event] Parchment Problem -->
-	<item_collecting start_npc_ids="205478" id="80060"/>
-	<!-- [Event] Envelope Envy -->
-	<item_collecting start_npc_ids="205478" id="80061"/>
-	<!-- [Event] For The Want Of Ink -->
-	<item_collecting start_npc_ids="205478" id="80062"/>
-	<!-- [Event] Sealed With A Kiss -->
-	<item_collecting start_npc_ids="205478" id="80063"/>
-	<!-- [Event] Mysterious Mission -->
-	<item_collecting start_npc_ids="205475" id="80064"/>
-	<!-- [Event] Confidentiel -->
-	<item_collecting start_npc_ids="205475" id="80065"/>
-	<!-- [Event] Not Worth the Paper It's On -->
-	<item_collecting start_npc_ids="205479" id="80066"/>
-	<!-- [Event] Earning Envelopes -->
-	<item_collecting start_npc_ids="205479" id="80067"/>
-	<!-- [Event] Before The Ink Dries -->
-	<item_collecting start_npc_ids="205479" id="80068"/>
-	<!-- [Event] Wax On, Wax Off -->
-	<item_collecting start_npc_ids="205479" id="80069"/>
-	<!-- [Event] Swimsuit Swap -->
-	<item_collecting start_npc_ids="205480" id="80072"/>
-	<!-- [Event] Kinah Swap -->
-	<item_collecting start_npc_ids="205480" id="80073"/>
-	<!-- [Event] Swimsuits Galore -->
-	<item_collecting start_npc_ids="205481" id="80074"/>
-	<!-- [Event] Kinah Galore -->
-	<item_collecting start_npc_ids="205481" id="80075"/>
-	<!-- [Event] Doing Good During Daru Days -->
-	<item_collecting start_npc_ids="205482" id="80076"/>
-	<!-- [Event] Delving Into Daru Days -->
-	<item_collecting start_npc_ids="205483" id="80077"/>
-	<!-- [Event] The Daru Diet -->
-	<item_collecting start_npc_ids="205482" id="80078"/>
 	<!-- [Event] Daru Munchies -->
 	<item_collecting start_npc_ids="205482" id="80079"/>
 	<!-- [Event] Feeding Darus -->
@@ -638,9 +498,6 @@
 		</on_talk_event>
 	</xml_quest>
 	<!-- Faviolla's Request -->
-	<monster_hunt start_npc_ids="831422" id="80313">
-        <monster var="0" npc_ids="219643" end_var="12"/>
-    </monster_hunt>
 	<!-- For The Elyos -->
 	<item_collecting start_npc_ids="831422" end_npc_ids="831423" id="80314"/>
 	<!-- Befitting The Hero Of The Guardians -->
@@ -669,9 +526,6 @@
 		</on_talk_event>
 	</xml_quest>
 	<!-- Ziba's Request -->
-	<monster_hunt start_npc_ids="831426" id="80319">
-        <monster var="0" npc_ids="219645" end_var="12"/>
-    </monster_hunt>
 	<!-- For The Asmodians -->
 	<item_collecting start_npc_ids="831426" end_npc_ids="831427" id="80320"/>
 	<!-- Befitting The Hero Of The Archons -->
@@ -806,20 +660,10 @@
 	<!-- [Event] Throbbing Hearts At Sword's Edge -->
 	<item_collecting start_npc_ids="831963" id="80480"/>
 	<!-- [Event] Heads Rolling At Sword's Edge -->
-	<monster_hunt start_npc_ids="831963" id="80481">
-        <monster var="0" npc_ids="233884" end_var="1"/>
-    </monster_hunt>
-	<!-- [Event] The Secret Of Sword's Edge -->
-	<report_to id="80482" start_npc_ids="831963" end_npc_ids="831959" item_id="182215419"/>
 	<!-- 80483 [Event] Stories Of Sword's Edge SCRIPT -->
 	<!-- [Event] A Stroll Through Sword's Edge -->
 	<item_collecting start_npc_ids="831963" id="80484"/>
 	<!-- [Event] In The Shadows Of Sword's Edge -->
-	<monster_hunt start_npc_ids="831963" id="80485">
-        <monster var="0" npc_ids="233884" end_var="1"/>
-    </monster_hunt>
-	<!-- [Event] The Horrors Of Sword's Edge -->
-	<report_to id="80486" start_npc_ids="831963" end_npc_ids="831961" item_id="182215421"/>
 	<!-- [Hero] Only Because You're The Best -->
 	<item_collecting start_npc_ids="831983" id="80539"/>
 	<!-- [Hero] Only For The Chosen -->

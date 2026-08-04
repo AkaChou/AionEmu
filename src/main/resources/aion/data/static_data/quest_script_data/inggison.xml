@@ -4,29 +4,10 @@
     Quest Inggison 5.3
 	Make By (Encom)
  -->
-	<report_to id="11074" start_npc_ids="798938" end_npc_ids="799025"/>
-	<report_to id="11075" start_npc_ids="798939" end_npc_ids="799067"/>
-	<report_to id="11451" start_npc_ids="798952" end_npc_ids="798933"/>
-	<report_to id="11453" start_npc_ids="798933" end_npc_ids="799070"/>
-	<report_to id="30001" start_npc_ids="798927" end_npc_ids="799029"/>
-	<report_to id="30012" start_npc_ids="799032" end_npc_ids="799030"/>
-	<report_to id="30015" start_npc_ids="798903" end_npc_ids="799032"/>
-	<report_to id="30017" start_npc_ids="798903" end_npc_ids="799032"/>
-	<report_to id="30019" start_npc_ids="798903" end_npc_ids="799032"/>
-	<report_to id="30021" start_npc_ids="798903" end_npc_ids="799032"/>
-	<report_to id="30023" start_npc_ids="798903" end_npc_ids="799032"/>
-	<report_to id="30025" start_npc_ids="798903" end_npc_ids="799032"/>
-	<report_to id="30027" start_npc_ids="798903" end_npc_ids="799032"/>
-	<report_to id="30029" start_npc_ids="798903" end_npc_ids="799032"/>
-	<report_to id="30031" start_npc_ids="798903" end_npc_ids="799032"/>
 	<!-- Shameful Display (Elyos Only) -->
-	<report_to id="30034" start_npc_ids="798903" end_npc_ids="799032"/>
 	<!-- The Saddest Aethercannon (Elyos Only) -->
-	<report_to id="30036" start_npc_ids="798903" end_npc_ids="799032"/>
 	<!-- Restoration Referral (Elyos Only) -->
-	<report_to id="30038" start_npc_ids="798903" end_npc_ids="799032"/>
 	<!-- Tampering with the Weapon (Elyos Only) -->
-	<report_to id="30040" start_npc_ids="798903" end_npc_ids="799032"/>
 	<item_collecting id="11004" start_npc_ids="798933" action_item_ids="700609"/>
 	<item_collecting id="11011" start_npc_ids="799071" action_item_ids="700908"/>
 	<item_collecting id="11022" start_npc_ids="798914"/>
@@ -98,7 +79,6 @@
 	<item_collecting id="38503" start_npc_ids="799086"/>
 	<item_collecting id="38505" start_npc_ids="799085"/>
 	<item_collecting id="38506" start_npc_ids="799086"/>
-	
 	<relic_rewards id="11279" start_npc_ids="799945 205553" relic_var1="186000066" relic_var2="186000065" relic_var3="186000064" relic_var4="186000063"/>
 	<relic_rewards id="11280" start_npc_ids="799946 205554" relic_var1="186000062" relic_var2="186000061" relic_var3="186000060" relic_var4="186000059"/>
 	<relic_rewards id="11281" start_npc_ids="799947 205555" relic_var1="186000058" relic_var2="186000057" relic_var3="186000056" relic_var4="186000055"/>
@@ -107,114 +87,11 @@
 	<relic_rewards id="11284" start_npc_ids="799954 205540" relic_var1="186000062" relic_var2="186000061" relic_var3="186000060" relic_var4="186000059" relic_count="10"/>
 	<relic_rewards id="11285" start_npc_ids="799955 205541" relic_var1="186000058" relic_var2="186000057" relic_var3="186000056" relic_var4="186000055" relic_count="10"/>
 	<relic_rewards id="11286" start_npc_ids="799956 205542" relic_var1="186000054" relic_var2="186000053" relic_var3="186000052" relic_var4="186000051" relic_count="10"/>
-	
-	<monster_hunt id="11002" start_npc_ids="798939">
-		<monster var="0" end_var="3" npc_ids="215780 215781"/>
-		<monster var="1" end_var="7" npc_ids="215496 215497"/>
-	</monster_hunt>
-	<monster_hunt id="11023" start_npc_ids="798951">
-		<monster var="0" end_var="3" npc_ids="215498 215499"/>
-		<monster var="1" end_var="7" npc_ids="215490 215491"/>
-	</monster_hunt>
-	<monster_hunt id="11027" start_npc_ids="798951">
-		<monster var="0" end_var="4" npc_ids="215517 215519 216648 216692"/>
-		<monster var="1" end_var="6" npc_ids="215516 215518 216647 216691"/>
-	</monster_hunt>
-	<monster_hunt id="11029" start_npc_ids="798960">
-		<monster var="0" end_var="10" npc_ids="216693 216694 215536 215537"/>
-	</monster_hunt>
-	<monster_hunt id="11030" start_npc_ids="798960">
-		<monster var="0" end_var="1" npc_ids="216486"/>
-	</monster_hunt>
-	<monster_hunt id="11034" start_npc_ids="798957">
-		<monster var="0" end_var="6" npc_ids="215576 215577"/>
-		<monster var="1" end_var="4" npc_ids="215528 215529"/>
-	</monster_hunt>
-	<monster_hunt id="11035" start_npc_ids="798955">
-		<monster var="0" end_var="9" npc_ids="215530 215531"/>
-		<monster var="1" end_var="1" npc_ids="216487"/>
-	</monster_hunt>
-	<monster_hunt id="11038" start_npc_ids="799035">
-		<monster var="0" end_var="6" npc_ids="215550 215551 215553 215554 215555 216466 216467 216655 216705 216706 216707 216708 216709 216710"/>
-		<monster var="1" end_var="4" npc_ids="215562 215563 215564 215565 215566 215567 215640 216468 216469 216657 216658 216717 216718"/>
-	</monster_hunt>
-	<monster_hunt id="11045" start_npc_ids="798952">
-		<monster var="0" end_var="10" npc_ids="215525"/>
-	</monster_hunt>
-	<monster_hunt id="11071" start_npc_ids="798943">
-		<monster var="0" end_var="10" npc_ids="215532 215533"/>
-	</monster_hunt>
-	<monster_hunt id="11073" start_npc_ids="798936">
-		<monster var="0" end_var="4" npc_ids="215534 215535"/>
-		<monster var="1" end_var="6" npc_ids="215528 215529"/>
-	</monster_hunt>
-	<monster_hunt id="11100" start_npc_ids="798983">
-		<monster var="0" end_var="10" npc_ids="215593 215594"/>
-	</monster_hunt>
 	<monster_hunt id="11102" start_npc_ids="798981">
 		<monster var="0" end_var="1" npc_ids="216489"/>
 		<monster var="1" end_var="1" npc_ids="216490"/>
 		<monster var="2" end_var="1" npc_ids="216491"/>
 	</monster_hunt>
-	<monster_hunt id="11119" start_npc_ids="798989">
-		<monster var="0" end_var="6" npc_ids="215658 215659"/>
-		<monster var="1" end_var="4" npc_ids="215652 215653"/>
-	</monster_hunt>
-	<monster_hunt id="11120" start_npc_ids="798991">
-		<monster var="0" end_var="3" npc_ids="215642 215643"/>
-		<monster var="1" end_var="3" npc_ids="215644 215645"/>
-		<monster var="2" end_var="3" npc_ids="215648 215649"/>
-	</monster_hunt>
-	<monster_hunt id="11122" start_npc_ids="798990">
-		<monster var="0" end_var="1" npc_ids="216495"/>
-		<monster var="1" end_var="1" npc_ids="216496"/>
-	</monster_hunt>
-	<monster_hunt id="11124" start_npc_ids="798999">
-		<monster var="0" end_var="6" npc_ids="215716 215717"/>
-		<monster var="1" end_var="4" npc_ids="215718 215719"/>
-	</monster_hunt>
-	<monster_hunt id="11126" start_npc_ids="798998">
-		<monster var="0" end_var="6" npc_ids="215694 215695"/>
-		<monster var="1" end_var="4" npc_ids="215696 215697"/>
-	</monster_hunt>
-	<monster_hunt id="11138" start_npc_ids="798981">
-		<monster var="0" end_var="10" npc_ids="215597 215598"/>
-	</monster_hunt>
-	<monster_hunt id="11140" start_npc_ids="799076">
-		<monster var="0" end_var="10" npc_ids="215599 215600"/>
-	</monster_hunt>
-	<monster_hunt id="11141" start_npc_ids="798985">
-		<monster var="0" end_var="10" npc_ids="215636 215637 215638 215639 215640 215641"/>
-	</monster_hunt>
-	<monster_hunt id="11144" start_npc_ids="799030">
-		<monster var="0" end_var="7" npc_ids="215656 215657"/>
-		<monster var="1" end_var="3" npc_ids="215654 215655"/>
-	</monster_hunt>
-	<monster_hunt id="11145" start_npc_ids="799030">
-		<monster var="0" end_var="5" npc_ids="215660 215661 215662 215663"/>
-		<monster var="1" end_var="5" npc_ids="215668 215669 215670 215671"/>
-	</monster_hunt>
-	<monster_hunt id="11202" start_npc_ids="799009">
-		<monster var="0" end_var="4" npc_ids="215730"/>
-		<monster var="1" end_var="6" npc_ids="216732 215733"/>
-	</monster_hunt>
-	<monster_hunt id="11210" start_npc_ids="799010">
-		<monster var="0" end_var="7" npc_ids="215746"/>
-		<monster var="1" end_var="3" npc_ids="215752"/>
-	</monster_hunt>
-	<monster_hunt id="11213" start_npc_ids="799019">
-		<monster var="0" end_var="6" npc_ids="215758"/>
-		<monster var="1" end_var="4" npc_ids="215870"/>
-	</monster_hunt>
-	<monster_hunt id="11222" start_npc_ids="257225">
-		<monster var="0" end_var="4" npc_ids="215872"/>
-		<monster var="1" end_var="6" npc_ids="215873"/>
-	</monster_hunt>
-	<monster_hunt id="11224" start_npc_ids="799019">
-		<monster var="0" end_var="5" npc_ids="216593"/>
-		<monster var="1" end_var="5" npc_ids="216594"/>
-	</monster_hunt>
-	
 	<!-- Quest 4.7 -->
 	<!-- The Exterminator (Elyos Only) -->
 	<monster_hunt id="11456" start_npc_ids="798954">
@@ -224,12 +101,6 @@
 		<monster var="0" npc_ids="216136 216137 216138 216139 216140 216141" end_var="100"/>
 		<monster var="0" npc_ids="216142 216143 216144 216145 216146 216459 216460" end_var="100"/>
 	</monster_hunt>
-	<!-- The Balance (Elyos Only) -->
-	<monster_hunt id="11459" start_npc_ids="798952">
-		<monster var="0" npc_ids="215468 215469 215470 215471 215472 215473" end_var="40"/>
-		<monster var="0" npc_ids="215474 215475 215476 215477 215478 215479 215480" end_var="40"/>
-	</monster_hunt>
-	
 	<!-- Quest 4.8 -->
 	<!-- [Daily/Spy] No Mo' Asmos (Elyos Only) -->
 	<kill_in_world id="11324" start_npc_ids="798927" end_npc_ids="798927" worlds="220140000" amount="2"/>

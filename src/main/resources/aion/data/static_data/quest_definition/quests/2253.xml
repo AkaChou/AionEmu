@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="2253" version="1">
+  <metadata name="Kagorinerk's Gift" display-name-id="1103353" min-level="14" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="850"/>
+      <reward kind="EXP" id="0" amount="3810"/>
+      <reward kind="ITEM" id="186000006" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="798035" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="798035" dialog-id="1007"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="798035" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="182203236" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="798035" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="182203236" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="798035" dialog-ids="1003 1004 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="798035" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="798035" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="798031" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="798031" dialog-id="1009"/>
+      </event>
+      <conditions>
+        <has-item item-id="182203236" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182203236" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="798031" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="798031" dialog-ids="-1 1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="798031" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="850" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="3810" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000006" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

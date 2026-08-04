@@ -5,9 +5,7 @@
 	Make By (Encom)
  -->
 	<!-- [Housing] Heart Of Rock (Elyos Only) -->
-	<report_to id="18801" start_npc_ids="830001" end_npc_ids="830005"/>
 	<!-- Taltaros' Proxy (Elyos Only) -->
-	<report_to id="18810" start_npc_ids="830034" end_npc_ids="830070"/>
 	<!-- Pink Is The Color (Elyos Only) -->
 	<item_collecting id="18812" start_npc_ids="830522"/>
 	<!-- Exquisite Shugo Reproduction (Elyos Only) -->
@@ -35,11 +33,8 @@
 	<!-- Painted Letters (Elyos Only) -->
 	<item_collecting id="18825" start_npc_ids="830523"/>
 	<!-- [Housing] Unlock The Future (Elyos Only) -->
-	<report_to id="18827" start_npc_ids="830069" end_npc_ids="810017 810018 810019 810020 810021"/>
 	<!-- [Housing] Furnishing The Emptiness (Elyos Only) -->
-	<report_to id="18829" start_npc_ids="810017 810018 810019 810020 810021" end_npc_ids="830584"/>
 	<!-- [Housing] Nothing Wrong With Free (Elyos Only) -->
-	<report_to id="18831" start_npc_ids="830645" end_npc_ids="810017 810018 810019 810020 810021"/>
 	<!-- [Daily] Compost Pick-Up (Elyos Only) -->
 	<item_collecting id="18834" start_npc_ids="830655"/>
 	<!-- [Daily] Compost Program (Elyos Only) -->
@@ -53,11 +48,9 @@
 	<!-- Leaves Of Four Seasons III (Elyos Only) -->
 	<item_collecting id="18842" start_npc_ids="830196"/>
 	<!-- Homeowners Anonymous (Elyos Only) -->
-	<report_to id="18843" start_npc_ids="830365" end_npc_ids="830194"/>
 	<!-- [Daily] Fertile Deal (Elyos Only) -->
 	<item_collecting id="18844" start_npc_ids="830192"/>
 	<!-- Free Gift Just For Visiting ! (Elyos Only) -->
-	<report_to id="18846" start_npc_ids="830205" end_npc_ids="798455"/>
 	<!-- [Relic Bundle Reward] Ancient Goblet (Elyos Only) -->
 	<relic_rewards id="18849" start_npc_ids="831382" relic_var1="186000058" relic_var2="186000057" relic_var3="186000056" relic_var4="186000055" relic_count="10"/>
 	<!-- [Relic Bundle Reward] Ancient Crown (Elyos Only) -->

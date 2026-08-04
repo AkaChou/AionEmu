@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80010" version="1">
+  <metadata name="[Event] The Shulack Sugarcrooks" display-name-id="1180010" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="100000"/>
+      <reward kind="EXP" id="0" amount="50000"/>
+      <reward kind="ITEM" id="125030008" amount="1"/>
+      <reward kind="ITEM" id="188051103" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a0">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a3">
+      <project status="START">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a4">
+      <project status="START">
+        <vars>
+          <var name="var0" value="4"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a5">
+      <project status="START">
+        <vars>
+          <var name="var0" value="5"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a6">
+      <project status="START">
+        <vars>
+          <var name="var0" value="6"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a7">
+      <project status="START">
+        <vars>
+          <var name="var0" value="7"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a8">
+      <project status="START">
+        <vars>
+          <var name="var0" value="8"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a9">
+      <project status="START">
+        <vars>
+          <var name="var0" value="9"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a10">
+      <project status="START">
+        <vars>
+          <var name="var0" value="10"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a11">
+      <project status="START">
+        <vars>
+          <var name="var0" value="11"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a12">
+      <project status="START">
+        <vars>
+          <var name="var0" value="12"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a13">
+      <project status="START">
+        <vars>
+          <var name="var0" value="13"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a14">
+      <project status="START">
+        <vars>
+          <var name="var0" value="14"/>
+        </vars>
+      </project>
+    </node>
+    <node label="a15">
+      <project status="START">
+        <vars>
+          <var name="var0" value="15"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="15"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799767" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799767" dialog-id="1007"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="a0">
+      <event>
+        <talk-to-npc npc-id="799767" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="a0">
+      <event>
+        <talk-to-npc npc-id="799767" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799767" dialog-ids="1003 1004 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799767" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="a0" target="a1">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1" target="a2">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a2" target="a3">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a3" target="a4">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a4" target="a5">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a5" target="a6">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a6" target="a7">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a7" target="a8">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a8" target="a9">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a9" target="a10">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a10" target="a11">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a11" target="a12">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a12" target="a13">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a13" target="a14">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a14" target="a15">
+      <event>
+        <kill-npc npc-id="217161"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a15" target="a15">
+      <event>
+        <talk-to-npc npc-id="799767" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <transition source="a15" target="reward">
+      <event>
+        <talk-to-npc npc-id="799767" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="799767" dialog-ids="-1 1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="799767" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="100000" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="50000" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="125030008" amount="1"/>
+        <grant-reward kind="ITEM" id="188051103" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

@@ -3,42 +3,16 @@
 <!--
     Quest Sanctum 5.1 Make By (Encom)
  -->
-	<report_to id="1950" start_npc_ids="203755" end_npc_ids="204424" item_id="182206023"/>
-	<report_to id="1951" start_npc_ids="203788" end_npc_ids="278510" item_id="182206024"/>
-	<report_to id="1952" start_npc_ids="203790" end_npc_ids="278511" item_id="182206025"/>
-	<report_to id="1953" start_npc_ids="203792" end_npc_ids="278510" item_id="182206026"/>
-	<report_to id="1954" start_npc_ids="203784" end_npc_ids="278507" item_id="182206027"/>
-	<report_to id="1955" start_npc_ids="203786" end_npc_ids="278510" item_id="182206028"/>
-	<report_to id="1956" start_npc_ids="203793" end_npc_ids="278511" item_id="182206029"/>
-    <report_to id="1986" start_npc_ids="798009" end_npc_ids="203810"/> 
-	<report_to id="3917" start_npc_ids="204656" end_npc_ids="804603"/>
-	<report_to id="3960" start_npc_ids="798322" end_npc_ids="203711"/>
-	<report_to id="3971" start_npc_ids="798386" end_npc_ids="203893" item_id="182206135"/>
-	<report_to id="3974" start_npc_ids="798949" end_npc_ids="203893"/>
-	<report_to id="3976" start_npc_ids="203723" end_npc_ids="798222" item_id="182206136"/>
-	<report_to id="19040" start_npc_ids="203725" end_npc_ids="798440"/>
-	<report_to id="19041" start_npc_ids="203711" end_npc_ids="798322"/>
-	<report_to id="19044" start_npc_ids="798440" end_npc_ids="798438"/>
-	<report_to id="19045" start_npc_ids="798438" end_npc_ids="798439"/>
-    <report_to id="19051" start_npc_ids="798450" end_npc_ids="832975" item_id="182212225"/>
-	<report_to id="19065" start_npc_ids="203752" end_npc_ids="203701"/>
-	
 	<report_to_many id="1971" start_npc_ids="203812" end_npc_ids="203812">
 		<npc_infos npc_id="203820" var="0" quest_dialog="1352"/>
 		<npc_infos npc_id="203812" var="1" quest_dialog="2375" close_dialog="1009"/>
 	</report_to_many>
-
-	<monster_hunt id="1939" start_npc_ids="203703">
-		<monster var="0" npc_ids="700265" end_var="3"/>
-	</monster_hunt>
-	
 	<item_order start_item_id="182206034" end_npc_id="278555" id="1965"/>
 	<item_order start_item_id="182206035" end_npc_id="278555" id="1966"/>
 	<item_order start_item_id="182206036" end_npc_id="278555" id="1967"/>
 	<item_order start_item_id="182206037" end_npc_id="278556" id="1968"/>
 	<item_order start_item_id="182206038" end_npc_id="278556" id="1969"/>
 	<item_order start_item_id="182206039" end_npc_id="278556" id="1970"/>
-	
     <item_collecting id="1902" start_npc_ids="203788"/>
     <item_collecting id="1903" start_npc_ids="203790"/>
     <item_collecting id="1904" start_npc_ids="203784"/>
@@ -64,46 +38,33 @@
 	<!-- [Expert] Weaponsmith's Craft -->
 	<item_collecting id="3942" start_npc_ids="203788"/>
 	<!-- [Expert] Expert Weaponsmith -->
-	<report_to id="3943" start_npc_ids="203788" end_npc_ids="203700" item_id="182206102"/>
 	<!-- [Expert] Zest For Armorsmithing -->
 	<item_collecting id="3944" start_npc_ids="203790"/>
 	<!-- [Expert] Armorsmith's Craft -->
 	<item_collecting id="3945" start_npc_ids="203790"/>
-	<!-- [Expert] Expert Armorsmith -->
-	<report_to id="3946" start_npc_ids="203790" end_npc_ids="203700" item_id="182206103"/>
 	<!-- [Expert] Zest For Handicrafting -->
 	<item_collecting id="3947" start_npc_ids="203792"/>
 	<!-- [Expert] Handicrafter's Craft -->
 	<item_collecting id="3948" start_npc_ids="203792"/>
-	<!-- [Expert] Expert Handicrafter -->
-	<report_to id="3949" start_npc_ids="203792" end_npc_ids="203700" item_id="182206104"/>
 	<!-- [Expert] Zest For Cooking -->
 	<item_collecting id="3950" start_npc_ids="203784"/>
 	<!-- [Expert] Cook's Craft -->
 	<item_collecting id="3951" start_npc_ids="203784"/>
-	<!-- [Expert] Expert Cook -->
-	<report_to id="3952" start_npc_ids="203784" end_npc_ids="203700" item_id="182206105"/>
 	<!-- [Expert] Zest For Alchemy -->
 	<item_collecting id="3953" start_npc_ids="203786"/>
 	<!-- [Expert] Alchemist's Craft -->
 	<item_collecting id="3954" start_npc_ids="203786"/>
 	<!-- [Expert] Expert Alchemist -->
-	<report_to id="3955" start_npc_ids="203786" end_npc_ids="203700" item_id="182206106"/>
 	<!-- [Expert] Zest For Tailoring -->
 	<item_collecting id="3956" start_npc_ids="203793"/>
 	<!-- [Expert] Tailor's Craft -->
 	<item_collecting id="3957" start_npc_ids="203793"/>
-	<!-- [Expert] Expert Tailor -->
-	<report_to id="3958" start_npc_ids="203793" end_npc_ids="203700" item_id="182206107"/>
 	<!-- [Expert] Constructor's Test -->
 	<item_collecting id="19052" start_npc_ids="798450"/>
 	<!-- [Expert] Expert Of Construction -->
 	<item_collecting id="19053" start_npc_ids="798450"/>
 	<!-- [Expert] Requirements For Construction Expert -->
 	<item_collecting id="19055" start_npc_ids="798450"/>
-	<!-- [Expert] Construction Expert -->
-	<report_to id="19056" start_npc_ids="798450" end_npc_ids="203700" item_id="182212226"/>
-	
 	<!-- Meaning Of Life -->
 	<skill_use id="3910" start_npc_id="203707">
 		<skill end_var="100" ids="9912"/>

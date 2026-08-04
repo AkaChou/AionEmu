@@ -6,13 +6,7 @@
  -->
     <!-- ELYOS QUEST -->
     <!-- Dreams Of The Dungeon (Elyos Only) -->
-	<monster_hunt start_npc_ids="205230" id="18605">
-        <monster var="0" npc_ids="216970 216971 216972 217026 217027" end_var="8"/>
-    </monster_hunt>
 	<!-- To Dream, To Die (Elyos Only) -->
-	<monster_hunt start_npc_ids="205231" id="18606">
-        <monster var="0" npc_ids="216968" end_var="1"/>
-    </monster_hunt>
 	<!-- Dream Fragment (Elyos Only) -->
 	<item_collecting start_npc_ids="205232" id="18607"/>
 	<!-- The Crying Sword (Elyos Only) -->
@@ -43,9 +37,6 @@
 	<item_collecting start_npc_ids="205232" id="18646"/>
 	
 	<!-- [Coin] Quell The Nightmare (Elyos Only) -->
-	<monster_hunt start_npc_ids="205230" id="18617">
-        <monster var="0" npc_ids="217005 217006" end_var="1"/>
-    </monster_hunt>
 	<!-- Judge's Flame-Heated Sword (Elyos Only) -->
 	<item_collecting start_npc_ids="205232" id="18628"/>
 	<!-- Judge's Flame-Heated Warhammer (Elyos Only) -->
@@ -75,13 +66,7 @@
 	
 	<!-- ASMODIANS QUEST -->
 	<!-- Seeking Slumber (Asmodian Only) -->
-	<monster_hunt start_npc_ids="205235" id="28605">
-		<monster var="0" npc_ids="216970 216971 216972 217026 217027" end_var="8"/>
-    </monster_hunt>
 	<!-- An Honorable Death (Asmodian Only) -->
-	<monster_hunt start_npc_ids="205236" id="28606">
-        <monster var="0" npc_ids="216968" end_var="1"/>
-    </monster_hunt>
 	<!-- A Blacksmith's Dream (Asmodian Only) -->
 	<item_collecting start_npc_ids="205237" id="28607"/>
 	<!-- Judge's Tear-Soaked Sword (Asmodian Only) -->
@@ -112,9 +97,6 @@
 	<item_collecting start_npc_ids="205237" id="28646"/>
 	
 	<!-- [Coin] Confirmation In Dream's (Asmodian Only) -->
-	<monster_hunt start_npc_ids="205235" id="28617">
-        <monster var="0" npc_ids="217005 217006" end_var="1"/>
-    </monster_hunt>
 	<!-- Judge's Flame-Heated Sword (Asmodian Only) -->
 	<item_collecting start_npc_ids="205237" id="28628"/>
 	<!-- Judge's Flame-Heated Warhammer (Asmodian Only) -->

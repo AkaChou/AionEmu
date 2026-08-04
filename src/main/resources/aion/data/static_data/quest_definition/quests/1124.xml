@@ -16,6 +16,10 @@
       <reward kind="TITLE" id="7" amount="1"/>
       <reward kind="ITEM" id="162000048" amount="1"/>
     </rewards>
+    <drops>
+      <drop npc-id="210092" item-id="182200210" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="210096" item-id="182200210" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

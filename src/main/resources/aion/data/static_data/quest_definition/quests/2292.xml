@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 单 NPC 物品收集任务：从 832822 接取，收集 3 种物品各 1 个后交回领奖，奖励为经验加二选一可选取物。
+     Single-NPC item-collecting quest: accept from 832822, collect 1 of each of 3 items, turn in to the same NPC for a choose-1-of-2 selectable reward. -->
+<quest-definition id="2292" version="1">
+  <metadata name="Making a New Start" display-name-id="1103392" min-level="14" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <prerequisites>
+      <quest id="24112"/>
+    </prerequisites>
+    <items>
+      <item id="122000039" count="1"/>
+      <item id="122000040" count="1"/>
+      <item id="122000041" count="1"/>
+    </items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="25768"/>
+      <reward kind="SELECTABLE_ITEM" id="120001520" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="120001521" amount="1"/>
+    </rewards>
+    <drops>
+      <drop npc-id="210599" item-id="122000039" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="210622" item-id="122000039" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="210623" item-id="122000040" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="210620" item-id="122000040" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="210621" item-id="122000041" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="210624" item-id="122000041" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="1007"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="10000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-ids="1003 1004 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="39"/>
+      </event>
+      <conditions>
+        <has-item item-id="122000039" count="1"/>
+        <has-item item-id="122000040" count="1"/>
+        <has-item item-id="122000041" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="122000039" count="1"/>
+        <remove-item item-id="122000040" count="1"/>
+        <remove-item item-id="122000041" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="39"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2716"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="20002"/>
+      </event>
+      <conditions>
+        <has-item item-id="122000039" count="1"/>
+        <has-item item-id="122000040" count="1"/>
+        <has-item item-id="122000041" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="122000039" count="1"/>
+        <remove-item item-id="122000040" count="1"/>
+        <remove-item item-id="122000041" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="20002"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="10255"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 领奖:经验加二选一物品各占一条 dialog(8-9) // Reward settlement: exp plus one dialog per selectable item (8-9) -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-ids="-1 1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="8"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="25768" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="120001520" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="832822" dialog-id="9"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="25768" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="120001521" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>
