@@ -4,7 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="1" cooldown-seconds="0" daily="false" weekly="false"/>
     <prerequisites>
       <quest id="2642"/>
     </prerequisites>
