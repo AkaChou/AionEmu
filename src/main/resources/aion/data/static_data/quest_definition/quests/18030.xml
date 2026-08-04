@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18030" version="1">
-  <metadata name="[Alliance] Accounting for Orders" display-name-id="1129838" min-level="65" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Alliance] Accounting for Orders" display-name-id="1129838" min-level="65" max-level="2147483647" category="QUEST" cannot-share="true" target-type="AREA">
     <races>
       <race id="ELYOS"/>
     </races>

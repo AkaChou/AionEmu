@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="11292" version="1">
-  <metadata name="[League] Dramata Hunt" display-name-id="1129621" min-level="55" max-level="2147483647" category="QUEST">
+  <metadata name="[League] Dramata Hunt" display-name-id="1129621" min-level="55" max-level="2147483647" category="QUEST" target-type="UNION">
     <races>
       <race id="ELYOS"/>
     </races>
