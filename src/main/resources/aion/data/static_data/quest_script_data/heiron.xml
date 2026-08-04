@@ -3,12 +3,9 @@
 <!--
     Quest Heiron Make By (Encom)
  -->
-	<report_to id="1686" start_npc_ids="204500" end_npc_ids="278501" item_id="182201808"/>
 	<report_to id="3528" start_npc_ids="204536" end_npc_ids="798165" item_id="182201836"/>
 	<report_to id="14251" start_npc_ids="204602" end_npc_ids="832824"/>
 	
-	<item_collecting id="1688" start_npc_ids="204601"/>
-	<item_collecting id="1689" start_npc_ids="204601"/>
 	<item_collecting id="1690" start_npc_ids="204601"/>
 	<item_collecting id="3505" start_npc_ids="204541"/>
 	<item_collecting id="3506" start_npc_ids="204577"/>
