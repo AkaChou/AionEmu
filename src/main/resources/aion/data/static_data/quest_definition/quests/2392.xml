@@ -213,6 +213,9 @@
         <talk-to-npc npc-id="798085" dialog-ids="8..23"/>
       </event>
       <actions>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
         <grant-reward kind="EXP" id="0" amount="1244918" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="162000048" amount="8"/>
         <grant-reward kind="ITEM" id="186000008" amount="2"/>
@@ -228,6 +231,11 @@
       <event>
         <talk-to-npc npc-id="798085" dialog-ids="-1 1009"/>
       </event>
+      <actions>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
+      </actions>
       <after-commit>
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
@@ -237,6 +245,9 @@
         <talk-to-npc npc-id="798085" dialog-ids="8..23"/>
       </event>
       <actions>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
         <grant-reward kind="EXP" id="0" amount="1244918" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="162000048" amount="4"/>
         <grant-reward kind="ITEM" id="186000008" amount="2"/>
@@ -252,6 +263,11 @@
       <event>
         <talk-to-npc npc-id="798085" dialog-ids="-1 1009"/>
       </event>
+      <actions>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
+      </actions>
       <after-commit>
         <show-quest-dialog dialog-id="6"/>
       </after-commit>
@@ -261,6 +277,9 @@
         <talk-to-npc npc-id="798085" dialog-ids="8..23"/>
       </event>
       <actions>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
         <grant-reward kind="EXP" id="0" amount="1244918" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="162000048" amount="4"/>
         <grant-reward kind="ITEM" id="186000008" amount="2"/>
@@ -276,6 +295,11 @@
       <event>
         <talk-to-npc npc-id="798085" dialog-ids="-1 1009"/>
       </event>
+      <actions>
+        <remove-item item-id="182204159" count="ALL"/>
+        <remove-item item-id="182204160" count="ALL"/>
+        <remove-item item-id="182204161" count="ALL"/>
+      </actions>
       <after-commit>
         <show-quest-dialog dialog-id="7"/>
       </after-commit>
