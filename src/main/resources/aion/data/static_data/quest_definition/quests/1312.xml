@@ -4,6 +4,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <work-items>
+      <item id="182201306" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="GOLD" id="0" amount="4690"/>
       <reward kind="EXP" id="0" amount="272769"/>

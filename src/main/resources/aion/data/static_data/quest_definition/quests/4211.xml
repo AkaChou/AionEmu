@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4211" version="1">
-  <metadata name="[Instance/Group] The Firepower Of The Steel Rake" display-name-id="1104238" min-level="43" max-level="2147483647" category="QUEST" cannot-share="true" title-id="85">
+  <metadata name="[Instance/Group] The Firepower Of The Steel Rake" display-name-id="1104238" min-level="43" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <rewards>
       <reward kind="GOLD" id="0" amount="102910"/>
       <reward kind="EXP" id="0" amount="2815297"/>
+      <reward kind="TITLE" id="85" amount="1"/>
       <reward kind="ITEM" id="188100335" amount="288"/>
     </rewards>
   </metadata>
@@ -309,6 +310,7 @@
       <actions>
         <grant-reward kind="GOLD" id="0" amount="102910" amount-mode="QUEST_BASE"/>
         <grant-reward kind="EXP" id="0" amount="2815297" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="85" amount="1"/>
         <grant-reward kind="ITEM" id="188100335" amount="288"/>
         <complete-quest reward-index="0"/>
       </actions>

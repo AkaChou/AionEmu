@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1619" version="1">
-  <metadata name="[Group] RM-114c" display-name-id="1102818" min-level="41" max-level="2147483647" category="QUEST" cannot-share="true" title-id="44">
+  <metadata name="[Group] RM-114c" display-name-id="1102818" min-level="41" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

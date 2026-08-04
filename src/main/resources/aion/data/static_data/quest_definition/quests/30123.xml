@@ -4,6 +4,14 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <classes>
+      <class id="MAGE"/>
+      <class id="SORCERER"/>
+      <class id="SPIRIT_MASTER"/>
+    </classes>
+    <inventory-items>
+      <item id="100600758" count="1"/>
+    </inventory-items>
     <rewards>
       <reward kind="EXP" id="0" amount="3501850"/>
     </rewards>

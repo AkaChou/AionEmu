@@ -2,7 +2,8 @@
 <quest-definition id="80342" version="1">
   <metadata name="[Event] Ringmaster Rukibuki's Conspiracy Continues" display-name-id="1185540" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
-      <race id="PC_ALL"/>
+      <race id="ELYOS"/>
+      <race id="ASMODIANS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
     <start-conditions>

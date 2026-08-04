@@ -7,6 +7,9 @@
     <prerequisites>
       <quest id="2430"/>
     </prerequisites>
+    <work-items>
+      <item id="182204223" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="GOLD" id="0" amount="32760"/>
       <reward kind="EXP" id="0" amount="12951"/>

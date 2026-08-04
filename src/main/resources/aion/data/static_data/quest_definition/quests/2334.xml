@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2334" version="1">
-  <metadata name="A New Recipe" display-name-id="1103534" min-level="24" max-level="2147483647" category="QUEST" cannot-share="true" title-id="61">
+  <metadata name="A New Recipe" display-name-id="1103534" min-level="24" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -15,6 +15,7 @@
     </items>
     <rewards>
       <reward kind="EXP" id="0" amount="134338"/>
+      <reward kind="TITLE" id="61" amount="1"/>
       <reward kind="ITEM" id="100100499" amount="1"/>
       <reward kind="ITEM" id="152206412" amount="1"/>
       <reward kind="ITEM" id="186000007" amount="1"/>
@@ -211,6 +212,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="134338" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="61" amount="1"/>
         <grant-reward kind="ITEM" id="100100499" amount="1"/>
         <grant-reward kind="ITEM" id="152206412" amount="1"/>
         <grant-reward kind="ITEM" id="186000007" amount="1"/>

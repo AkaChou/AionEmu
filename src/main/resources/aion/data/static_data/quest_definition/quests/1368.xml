@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1368" version="1">
-  <metadata name="A Secret Recipe" display-name-id="1102468" min-level="30" max-level="2147483647" category="QUEST" cannot-share="true" title-id="15">
+  <metadata name="A Secret Recipe" display-name-id="1102468" min-level="30" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -15,6 +15,7 @@
     </items>
     <rewards>
       <reward kind="EXP" id="0" amount="404557"/>
+      <reward kind="TITLE" id="15" amount="1"/>
       <reward kind="ITEM" id="152201407" amount="1"/>
       <reward kind="ITEM" id="186000003" amount="1"/>
     </rewards>
@@ -217,6 +218,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="404557" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="15" amount="1"/>
         <grant-reward kind="ITEM" id="152201407" amount="1"/>
         <grant-reward kind="ITEM" id="186000003" amount="1"/>
         <complete-quest reward-index="0"/>

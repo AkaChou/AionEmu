@@ -7,6 +7,9 @@
     <prerequisites>
       <quest id="80481"/>
     </prerequisites>
+    <items>
+      <item id="182215419" count="1"/>
+    </items>
     <work-items>
       <item id="182215419" count="1"/>
     </work-items>

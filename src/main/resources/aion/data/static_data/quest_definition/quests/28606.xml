@@ -9,8 +9,10 @@
       <reward kind="GOLD" id="0" amount="4400"/>
       <reward kind="EXP" id="0" amount="3921386"/>
       <reward kind="ITEM" id="186000009" amount="5"/>
-      <reward kind="ITEM" id="190000016" amount="1"/>
     </rewards>
+    <extended-rewards>
+      <reward kind="ITEM" id="190000016" amount="1"/>
+    </extended-rewards>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -158,7 +160,6 @@
         <grant-reward kind="GOLD" id="0" amount="4400" amount-mode="QUEST_BASE"/>
         <grant-reward kind="EXP" id="0" amount="3921386" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="186000009" amount="5"/>
-        <grant-reward kind="ITEM" id="190000016" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
