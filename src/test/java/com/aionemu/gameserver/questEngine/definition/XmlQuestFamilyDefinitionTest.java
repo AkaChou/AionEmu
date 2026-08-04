@@ -11,17 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Full vertical proof for the current XmlQuest owners 1115 / 1127. */
 class XmlQuestFamilyDefinitionTest {
-	private static final String MANIFEST =
-		"/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
-
 	@Test
-	void packagedProductionCatalogCompilesTheTwoXmlQuestOwners() throws Exception {
-		try (InputStream input = resource(MANIFEST)) {
-			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			// Full catalog <-> quests/*.xml agreement is proven by QuestDefinitionCatalogManifestTest.
-			assertTrue(catalog.find(1115).isPresent());
-			assertTrue(catalog.find(1127).isPresent());
-		}
+	void packagedProductionDirectoryCompilesTheTwoXmlQuestOwners() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		assertTrue(catalog.find(1115).isPresent());
+		assertTrue(catalog.find(1127).isPresent());
 	}
 
 	@Test

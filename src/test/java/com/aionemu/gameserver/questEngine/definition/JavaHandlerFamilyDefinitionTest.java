@@ -19,21 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Full vertical proof for the migrated Poeta Java-handler owners 1122 / 1123 / 1230 / 1231 / 1205. */
 class JavaHandlerFamilyDefinitionTest {
-	private static final String MANIFEST =
-		"/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
-
 	@Test
-	void packagedProductionCatalogCompilesTheMigratedHandlerOwners() throws Exception {
-		try (InputStream input = resource(MANIFEST)) {
-			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			// Full catalog <-> quests/*.xml agreement is proven by QuestDefinitionCatalogManifestTest.
-			assertTrue(catalog.find(1107).isPresent());
-			assertTrue(catalog.find(1111).isPresent());
-			assertTrue(catalog.find(1122).isPresent());
-			assertTrue(catalog.find(1230).isPresent());
-			assertTrue(catalog.find(1231).isPresent());
-			assertTrue(catalog.find(1205).isPresent());
-		}
+	void packagedProductionDirectoryCompilesTheMigratedHandlerOwners() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		assertTrue(catalog.find(1107).isPresent());
+		assertTrue(catalog.find(1111).isPresent());
+		assertTrue(catalog.find(1122).isPresent());
+		assertTrue(catalog.find(1230).isPresent());
+		assertTrue(catalog.find(1231).isPresent());
+		assertTrue(catalog.find(1205).isPresent());
 	}
 
 	@Test

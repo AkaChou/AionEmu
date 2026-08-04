@@ -23,18 +23,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ReportTo1101DefinitionTest {
 	private static final String DEFINITION =
 		"/aion/data/static_data/quest_definition/quests/1101.xml";
-	private static final String MANIFEST =
-		"/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
 
 	@Test
-	void productionCatalogCompilesTheTaskDefinition() throws Exception {
-		try (InputStream input = resource(MANIFEST)) {
-			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			// Full catalog <-> quests/*.xml agreement is proven by QuestDefinitionCatalogManifestTest;
-			// this test only pins the owners it exercises.
-			assertTrue(catalog.find(1101).isPresent());
-			assertTrue(catalog.find(1102).isPresent());
-		}
+	void productionDirectoryCompilesTheTaskDefinition() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		assertTrue(catalog.find(1101).isPresent());
+		assertTrue(catalog.find(1102).isPresent());
 	}
 
 	@Test
@@ -79,13 +73,9 @@ class ReportTo1101DefinitionTest {
 			legacy = new String(input.readAllBytes(), StandardCharsets.UTF_8);
 		}
 		assertFalse(legacy.contains("id=\"1101\""));
-		try (InputStream input = resource(MANIFEST)) {
-			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			// Full catalog <-> quests/*.xml agreement is proven by QuestDefinitionCatalogManifestTest;
-			// this test only pins the owners it exercises.
-			assertTrue(catalog.find(1101).isPresent());
-			assertTrue(catalog.find(1102).isPresent());
-		}
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		assertTrue(catalog.find(1101).isPresent());
+		assertTrue(catalog.find(1102).isPresent());
 	}
 
 	@Test

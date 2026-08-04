@@ -14,18 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Full vertical proof for the current MonsterHunt owners 1112 / 1113 / 1120. */
 class MonsterHuntFamilyDefinitionTest {
-	private static final String MANIFEST =
-		"/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
-
 	@Test
-	void packagedProductionCatalogCompilesTheThreeHuntOwners() throws Exception {
-		try (InputStream input = resource(MANIFEST)) {
-			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			// Full catalog <-> quests/*.xml agreement is proven by QuestDefinitionCatalogManifestTest.
-			assertTrue(catalog.find(1112).isPresent());
-			assertTrue(catalog.find(1113).isPresent());
-			assertTrue(catalog.find(1120).isPresent());
-		}
+	void packagedProductionDirectoryCompilesTheThreeHuntOwners() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		assertTrue(catalog.find(1112).isPresent());
+		assertTrue(catalog.find(1113).isPresent());
+		assertTrue(catalog.find(1120).isPresent());
 	}
 
 	@Test

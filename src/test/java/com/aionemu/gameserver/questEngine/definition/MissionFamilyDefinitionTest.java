@@ -13,20 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Full vertical proof for the migrated Poeta mission-chain owners 1000 / 1002 / 1003 / 1100. */
 class MissionFamilyDefinitionTest {
-	private static final String MANIFEST =
-		"/aion/data/static_data/quest_definition/quest_definition_catalog.xml";
-
 	@Test
-	void packagedProductionCatalogCompilesTheMigratedMissionOwners() throws Exception {
-		try (InputStream input = resource(MANIFEST)) {
-			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			// Full catalog <-> quests/*.xml agreement is proven by QuestDefinitionCatalogManifestTest.
-			assertTrue(catalog.find(1000).isPresent());
-			assertTrue(catalog.find(1002).isPresent());
-			assertTrue(catalog.find(1003).isPresent());
-			assertTrue(catalog.find(1005).isPresent());
-			assertTrue(catalog.find(1100).isPresent());
-		}
+	void packagedProductionDirectoryCompilesTheMigratedMissionOwners() throws Exception {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		assertTrue(catalog.find(1000).isPresent());
+		assertTrue(catalog.find(1002).isPresent());
+		assertTrue(catalog.find(1003).isPresent());
+		assertTrue(catalog.find(1005).isPresent());
+		assertTrue(catalog.find(1100).isPresent());
 	}
 
 	@Test

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -42,7 +41,7 @@ import com.aionemu.gameserver.model.templates.rewards.BonusType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinitionDirectoryLoader;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
@@ -79,9 +78,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class QuestEngine implements GameEngine {
-	private static final String PRODUCTION_DEFINITION_CATALOG =
-		"aion/data/static_data/quest_definition/quest_definition_catalog.xml";
-
 	/** Spring ObjectProvider 覆盖钩子 / Spring ObjectProvider override hook */
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
 	/** 任务 ID → 处理器映射 / questId → handler map */
@@ -1759,10 +1755,10 @@ public class QuestEngine implements GameEngine {
 		return productionDispatcher.owns(questId) || questHandlers.containsKey(questId);
 	}
 
-	/** 从 quest_definition/quests 目录直接加载全部 typed 定义（无需手写 catalog 条目）。 */
+	/** 从 quest_definition/quests 目录直接加载全部 typed 定义。 */
 	private QuestCatalog loadProductionCatalog() throws Exception {
 		ClassLoader loader = QuestEngine.class.getClassLoader();
-		return QuestDefinitionCatalogManifest.compileFromQuestsDirectory(loader);
+		return QuestDefinitionDirectoryLoader.compile(loader);
 	}
 
 	/**
