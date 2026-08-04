@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="14120" version="1">
+  <metadata name="The Bucket List" display-name-id="1129981" min-level="24" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <items>
+      <item id="182215478" count="1"/>
+    </items>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="17100"/>
+      <reward kind="EXP" id="0" amount="432724"/>
+      <reward kind="SELECTABLE_ITEM" id="111101653" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="111301756" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="111301758" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="111501705" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="111501707" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="111601588" amount="1"/>
+    </rewards>
+    <drops>
+      <drop npc-id="700157" item-id="182215478" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="v1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="203932" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="203932" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="203932" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="203932" dialog-ids="1003 1004 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="203932" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="203932" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="730020" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="v1">
+      <event>
+        <talk-to-npc npc-id="730020" dialog-id="10000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <talk-to-npc npc-id="700157" dialog="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <talk-to-npc npc-id="730019" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="730019" dialog-id="20002"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215478" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215478" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="730019" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="730019" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="730019" dialog-id="8"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="17100" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="432724" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="111101653" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="730019" dialog-id="9"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="17100" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="432724" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="111301756" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="730019" dialog-id="10"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="17100" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="432724" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="111301758" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="730019" dialog-id="11"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="17100" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="432724" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="111501705" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="730019" dialog-id="12"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="17100" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="432724" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="111501707" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="730019" dialog-id="13"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="17100" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="432724" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="111601588" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>
