@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledFuture;
@@ -39,6 +40,7 @@ import com.aionemu.gameserver.model.templates.quest.QuestDrop;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.model.templates.rewards.BonusType;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
@@ -563,7 +565,13 @@ public class QuestEngine implements GameEngine {
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
 			if (player != null) {
-				QuestEvent.UseItem event = new QuestEvent.UseItem(item.getItemTemplate().getTemplateId(),
+				int itemId = item.getItemTemplate().getTemplateId();
+				OptionalInt itemPlayDuration = typed.itemPlayAnimationMillis(itemId);
+				if (itemPlayDuration.isPresent()) {
+					scheduleTypedItemPlay(player, item, itemPlayDuration.getAsInt());
+					return HandlerResult.SUCCESS;
+				}
+				QuestEvent.UseItem event = new QuestEvent.UseItem(itemId,
 					item.getObjectId());
 				var typedResult = typed.dispatch(event, player.getObjectId(), 0,
 					QuestDispatchContract.FIRST_NON_UNKNOWN);
@@ -592,6 +600,38 @@ public class QuestEngine implements GameEngine {
 			// log.error(I18n.get("log.882dbd53a6cc", ex));
 			return HandlerResult.FAILED;
 		}
+	}
+
+	/**
+	 * 调度带客户端使用动画的 typed item-play 事件。
+	 * Schedules a typed item-play event with the client-side use animation.
+	 *
+	 * @param player 使用物品的玩家 / player using the item
+	 * @param item 使用的物品 / used item
+	 * @param animationMillis 动画时长 / animation duration
+	 */
+	private void scheduleTypedItemPlay(Player player, Item item, int animationMillis) {
+		int playerId = player.getObjectId();
+		int itemId = item.getItemTemplate().getTemplateId();
+		int itemObjectId = item.getObjectId();
+		PacketSendUtility.broadcastPacket(player,
+			new SM_ITEM_USAGE_ANIMATION(playerId, itemObjectId, itemId, animationMillis, 0, 0), true);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (player.isOnline()) {
+				PacketSendUtility.broadcastPacket(player,
+					new SM_ITEM_USAGE_ANIMATION(playerId, itemObjectId, itemId, 0, 1, 0), true);
+			}
+			if (!player.isOnline() || player.getInventory() == null) {
+				return;
+			}
+			Item current = player.getInventory().getItemByObjId(itemObjectId);
+			if (current == null || current.getItemTemplate().getTemplateId() != itemId
+					|| current.getItemCount() <= 0) {
+				return;
+			}
+			productionDispatcher.dispatch(new QuestEvent.ItemPlay(itemId, animationMillis), playerId, 0,
+				QuestDispatchContract.FIRST_NON_UNKNOWN);
+		}, animationMillis);
 	}
 
 	/**
@@ -1790,6 +1830,7 @@ public class QuestEngine implements GameEngine {
 						&& !(transition.event() instanceof QuestEvent.LevelUp)
 						&& !(transition.event() instanceof QuestEvent.EnterWorld)
 						&& !(transition.event() instanceof QuestEvent.UseItem)
+						&& !(transition.event() instanceof QuestEvent.ItemPlay)
 						&& !(transition.event() instanceof QuestEvent.MovieEnd)
 						&& !(transition.event() instanceof QuestEvent.ZoneMissionEnd)
 						&& !(transition.event() instanceof QuestEvent.InvisibleTimerEnd)
@@ -1797,6 +1838,15 @@ public class QuestEngine implements GameEngine {
 					throw new IllegalStateException("typed production event is not wired into QuestEngine: "
 						+ transition.event().type());
 				}
+			}
+			if (definition.definition().transitions().stream()
+					.map(com.aionemu.gameserver.questEngine.definition.QuestTransition::event)
+					.filter(QuestEvent.ItemPlay.class::isInstance)
+					.map(QuestEvent.ItemPlay.class::cast)
+					.mapToInt(QuestEvent.ItemPlay::itemId)
+					.distinct()
+					.anyMatch(itemId -> dispatcher.itemPlayAnimationMillis(itemId).isEmpty())) {
+				throw new IllegalStateException("typed item-play event has no indexed route");
 			}
 		}
 		for (CompiledQuestDefinition definition : catalog.all()) {

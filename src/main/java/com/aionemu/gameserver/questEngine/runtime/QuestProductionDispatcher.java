@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.OptionalInt;
 
 /**
  * 通过中央路由器和事务协调器执行正式 typed owner。
@@ -83,6 +84,17 @@ public final class QuestProductionDispatcher {
 	/** 返回排序后的正式 owner ID。 Return sorted production owner IDs. */
 	public List<Integer> owners() {
 		return catalog.all().stream().map(CompiledQuestDefinition::id).sorted().toList();
+	}
+
+	/**
+	 * 返回 item-play 入口所需的唯一动画时长。
+	 * Returns the unique animation duration required by the item-play entry point.
+	 *
+	 * @param itemId 物品模板 ID / item template id
+	 * 播放时长；没有 typed owner 时为空 / duration, or empty without a typed owner
+	 */
+	public OptionalInt itemPlayAnimationMillis(int itemId) {
+		return index.itemPlayAnimationMillis(itemId);
 	}
 
 	/**

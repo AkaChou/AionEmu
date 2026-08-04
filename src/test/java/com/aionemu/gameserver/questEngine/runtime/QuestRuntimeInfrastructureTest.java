@@ -79,6 +79,23 @@ class QuestRuntimeInfrastructureTest {
 	}
 
 	@Test
+	void itemPlayRoutesUseTheItemKeyAndExposeOneAnimationDuration() {
+		CompiledQuestDefinition definition = quest(1561)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(new QuestEvent.ItemPlay(182201728, 3000)).from("unaccepted")
+			.then(removeItem(182201728, 1)).goTo("started").compile();
+
+		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)));
+
+		assertEquals(List.of(1561), index.routesFor(new QuestEvent.ItemPlay(182201728, 0)).stream()
+			.map(QuestEventIndex.Route::questId).toList());
+		assertEquals(3000, index.itemPlayAnimationMillis(182201728).getAsInt());
+		assertTrue(index.itemPlayAnimationMillis(182201729).isEmpty());
+	}
+
+	@Test
 	void rankedThresholdsShareOnePvpRoute() {
 		CompiledQuestDefinition rankThree = quest(3741)
 			.node("start", project(QuestStatus.START, Map.of()))

@@ -1,9 +1,10 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -26,6 +27,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.useSkill;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Real handler-backed representative events plus explicitly non-representative typed variants. */
@@ -42,6 +44,30 @@ class RemainingCapabilityDefinitionTest {
 		assertEquivalent(3718, dredgionReward(), "<dredgion-reward/>");
 		assertEquivalent(3050, logOut(), "<log-out/>");
 		assertEquivalent(11468, useSkill(9832), "<use-skill skill-id=\"9832\"/>");
+		assertEquivalent(1561, new QuestEvent.ItemPlay(182201728, 3000),
+			"<item-play item-id=\"182201728\" animation-millis=\"3000\"/>");
+	}
+
+	@Test
+	void packaged1561DefinitionComposesItemPlayStartAndRemoval() {
+		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		CompiledQuestDefinition definition = catalog.find(1561).orElseThrow();
+		QuestTransition transition = definition.definition().transitions().stream()
+			.filter(candidate -> candidate.event().equals(new QuestEvent.ItemPlay(182201728, 3000)))
+			.findFirst().orElseThrow();
+
+		assertEquals("unaccepted", transition.sourceNode());
+		assertEquals("started", transition.targetNode());
+		assertTrue(transition.conditions().contains(new QuestCondition.StartEligible()));
+		assertEquals(List.of(new QuestAction.RemoveItem(182201728, 1)), transition.actions());
+
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1561, QuestStatus.NONE, 0,
+			Map.of(182201728, 1)).withStartEligibility(QuestStartEligibility.allowed());
+		var plan = QuestMutationPlanner.plan(definition, snapshot,
+			new QuestEvent.ItemPlay(182201728, 3000), transition);
+		assertTrue(plan.isPresent());
+		assertEquals(QuestStatus.START, plan.orElseThrow().nextStatus());
+		assertEquals(List.of(new QuestAction.RemoveItem(182201728, 1)), plan.orElseThrow().requiredActions());
 	}
 
 	@Test
@@ -62,10 +88,16 @@ class RemainingCapabilityDefinitionTest {
 		assertTrue(QuestEvent.matches(new QuestEvent.UseSkill(9832), new QuestEvent.UseSkill(9832, skill)));
 		assertTrue(QuestEvent.matches(new QuestEvent.UseItem(182200501),
 			new QuestEvent.UseItem(182200501, 900008)));
+		assertTrue(QuestEvent.matches(new QuestEvent.ItemPlay(182201728, 3000),
+			new QuestEvent.ItemPlay(182201728, 3000)));
+		assertFalse(QuestEvent.matches(new QuestEvent.ItemPlay(182201728, 3000),
+			new QuestEvent.ItemPlay(182201728, 0)));
 		assertTrue(QuestEvent.matches(new QuestEvent.QuestDialog(QuestDialog.ACCEPT_QUEST.id()),
 			new QuestEvent.QuestDialog(QuestDialog.ACCEPT_QUEST.id())));
 		assertEquals(new QuestEvent.UseItem(182200501),
 			QuestEvent.routeKey(new QuestEvent.UseItem(182200501, 900008)));
+		assertEquals(new QuestEvent.ItemPlay(182201728, 0),
+			QuestEvent.routeKey(new QuestEvent.ItemPlay(182201728, 3000)));
 	}
 
 	@Test

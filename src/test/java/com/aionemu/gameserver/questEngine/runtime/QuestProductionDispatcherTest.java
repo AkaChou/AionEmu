@@ -188,6 +188,28 @@ class QuestProductionDispatcherTest {
 	}
 
 	@Test
+	void itemPlayCommitsItsDelayedUseMutationThroughTheCentralCoordinator() {
+		CompiledQuestDefinition definition = QuestDsl.quest(1561)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, Map.of("var0", 0)))
+			.node("started", project(QuestStatus.START, Map.of("var0", 0)))
+			.on(new QuestEvent.ItemPlay(182201728, 3000)).from("unaccepted")
+			.then(QuestDsl.removeItem(182201728, 1)).goTo("started").compile();
+		List<String> calls = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), calls,
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of(182201728, 1)));
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.ItemPlay(182201728, 3000), 7, 0, QuestDispatchContract.FIRST_NON_UNKNOWN);
+
+		assertTrue(result.consumed());
+		assertTrue(result.claimed());
+		assertEquals(List.of("setAutoCommit:false", "preflight", "apply", "state", "commit", "publish", "close"),
+			calls);
+	}
+
+	@Test
 	void sameNpcDifferentDialogIsUnknownAndFallsThroughToMatchingRoute() {
 		CompiledQuestDefinition definition = QuestDsl.quest(1108)
 			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))

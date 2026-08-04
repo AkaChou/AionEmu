@@ -483,6 +483,9 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (event instanceof UseItem useItem) {
 			return new UseItem(useItem.itemId());
 		}
+		if (event instanceof ItemPlay itemPlay) {
+			return new ItemPlay(itemPlay.itemId(), 0);
+		}
 		if (event instanceof KillRanked) {
 			return new KillRanked(1);
 		}
@@ -536,6 +539,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (definition instanceof UseItem expected && actual instanceof UseItem observed) {
 			return expected.itemId() == observed.itemId();
 		}
+		if (definition instanceof ItemPlay expected && actual instanceof ItemPlay observed) {
+			return expected.itemId() == observed.itemId()
+				&& expected.animationMillis() == observed.animationMillis();
+		}
 		if (definition instanceof QuestDialog expected && actual instanceof QuestDialog observed) {
 			return expected.dialogId() == observed.dialogId();
 		}
@@ -582,6 +589,9 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 				&& (a.dialogId() == null || b.dialogId() == null || a.dialogId().equals(b.dialogId()));
 		}
 		if (left instanceof UseItem a && right instanceof UseItem b) {
+			return a.itemId() == b.itemId();
+		}
+		if (left instanceof ItemPlay a && right instanceof ItemPlay b) {
 			return a.itemId() == b.itemId();
 		}
 		if (left instanceof QuestDialog a && right instanceof QuestDialog b) {

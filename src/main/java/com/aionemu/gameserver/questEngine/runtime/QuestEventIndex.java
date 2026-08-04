@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 
 /** Deterministic event-to-owner index built only from compiled definitions. */
 public final class QuestEventIndex {
@@ -43,6 +44,36 @@ public final class QuestEventIndex {
 			throw new IllegalArgumentException("questId must be positive");
 		}
 		return routesFor(event).stream().filter(route -> route.questId() == questId).toList();
+	}
+
+	/**
+	 * 返回指定物品的唯一播放时长；不同 owner 声明冲突时拒绝启动。
+	 * Returns the unique play duration for an item; conflicting owner declarations fail startup.
+	 *
+	 * @param itemId 物品模板 ID / item template id
+	 * 播放时长；未注册时为空 / play duration, or empty when unregistered
+	 */
+	public OptionalInt itemPlayAnimationMillis(int itemId) {
+		if (itemId <= 0) {
+			throw new IllegalArgumentException("itemId must be positive");
+		}
+		List<Route> candidates = routesFor(new QuestEvent.ItemPlay(itemId, 0));
+		if (candidates.isEmpty()) {
+			return OptionalInt.empty();
+		}
+		int duration = -1;
+		for (Route route : candidates) {
+			if (!(route.transition().event() instanceof QuestEvent.ItemPlay itemPlay)) {
+				continue;
+			}
+			if (duration < 0) {
+				duration = itemPlay.animationMillis();
+			} else if (duration != itemPlay.animationMillis()) {
+				throw new IllegalStateException("item " + itemId
+					+ " has conflicting item-play animation durations");
+			}
+		}
+		return OptionalInt.of(duration);
 	}
 
 	public Map<QuestEvent, List<Route>> routes() {
