@@ -434,6 +434,8 @@ public final class QuestDefinitionXmlCompiler {
 			case "variable-is" -> new QuestCondition.QuestVariableIs(attribute(element, "field"), integer(element, "value"));
 			case "variable-at-least" -> new QuestCondition.VariableAtLeast(attribute(element, "field"),
 				integer(element, "value"));
+			case "variable-below" -> new QuestCondition.VariableBelow(attribute(element, "field"),
+				integer(element, "value"));
 			case "recipe-known" -> new QuestCondition.RecipeKnown(integer(element, "recipe-id"),
 				booleanOrDefault(element, "expected", false));
 			case "can-grant-craft-skill" -> new QuestCondition.CanGrantCraftSkill(

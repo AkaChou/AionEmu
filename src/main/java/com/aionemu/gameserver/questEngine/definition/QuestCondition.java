@@ -5,8 +5,8 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /** Closed set of pure conditions evaluated against a quest snapshot. */
 public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCondition.HasItem,
-		QuestCondition.QuestVariableIs, QuestCondition.VariableAtLeast, QuestCondition.RecipeKnown,
-		QuestCondition.CanGrantCraftSkill, QuestCondition.PvpVictimLevelDelta,
+		QuestCondition.QuestVariableIs, QuestCondition.VariableAtLeast, QuestCondition.VariableBelow,
+		QuestCondition.RecipeKnown, QuestCondition.CanGrantCraftSkill, QuestCondition.PvpVictimLevelDelta,
 		QuestCondition.PvpRecipientInZone, QuestCondition.StartEligible, QuestCondition.PlayerClassIs,
 		QuestCondition.WorldIs {
 	record StartEligible() implements QuestCondition {
@@ -57,6 +57,15 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 	/** 字段值达到阈值（大于等于）。Matches when the field is at least the given value. */
 	record VariableAtLeast(String field, int value) implements QuestCondition {
 		public VariableAtLeast {
+			if (field == null || field.isBlank()) {
+				throw new IllegalArgumentException("field must not be blank");
+			}
+		}
+	}
+
+	/** 字段值低于上限（小于）。Matches when the field is below the given cap. */
+	record VariableBelow(String field, int value) implements QuestCondition {
+		public VariableBelow {
 			if (field == null || field.isBlank()) {
 				throw new IllegalArgumentException("field must not be blank");
 			}

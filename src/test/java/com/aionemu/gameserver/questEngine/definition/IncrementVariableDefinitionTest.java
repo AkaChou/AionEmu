@@ -5,6 +5,8 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.*;
@@ -62,5 +64,63 @@ class IncrementVariableDefinitionTest {
 			new QuestEvent.TalkToNpc(203057, 31, 0),
 			at.definition().transitions().getFirst());
 		assertTrue(atPlan.isPresent());
+	}
+
+	@Test
+	void variableBelowGatesUntilTheCounterReachesTheCap() {
+		var below = quest(990034)
+			.metadata(QuestMetadata.minimal("below-demo", 1, "QUEST"))
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, vars("var0", 2)))
+			.node("done", project(QuestStatus.REWARD, vars("var0", 3)))
+			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
+			.when(variableBelow("var0", 3)).goTo("done").compile();
+		assertTrue(QuestMutationPlanner.plan(below,
+			new QuestSnapshot(7, 990034, QuestStatus.START, 2, Map.of()),
+			new QuestEvent.TalkToNpc(203057, 31, 0),
+			below.definition().transitions().getFirst()).isPresent());
+
+		var atCap = new QuestSnapshot(7, 990034, QuestStatus.START, 3, Map.of());
+		assertTrue(QuestMutationPlanner.plan(below, atCap,
+			new QuestEvent.TalkToNpc(203057, 31, 0),
+			below.definition().transitions().getFirst()).isEmpty());
+	}
+
+	@Test
+	void variableBelowCompilesFromXmlAndUnknownFieldsFailClosed() {
+		String xml = """
+				<quest-definition id="990035" version="1">
+				  <metadata name="below-xml" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+				  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+				  <nodes><node label="start"><project status="START"><vars><var name="var0" value="0"/></vars></project></node><node label="done"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node></nodes>
+				  <transitions><transition source="start" target="done"><event><talk-to-npc npc-id="203057" dialog-id="31"/></event><conditions><variable-below field="var0" value="1"/></conditions></transition></transitions>
+				</quest-definition>
+				""";
+		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
+			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+		assertTrue(compiled.definition().transitions().getFirst().conditions()
+			.contains(new QuestCondition.VariableBelow("var0", 1)));
+
+		String invalid = xml.replace("field=\"var0\"", "field=\"missing\"");
+		assertEquals("UNKNOWN_PROGRESS_FIELD", org.junit.jupiter.api.Assertions.assertThrows(
+			QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+					invalid.getBytes(StandardCharsets.UTF_8)))).code());
+	}
+
+	@Test
+	void complementaryVariableRangesDisambiguateSameEventTransitions() {
+		var definition = quest(990036)
+			.metadata(QuestMetadata.minimal("range-demo", 1, "QUEST"))
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, vars("var0", 0)))
+			.node("below", project(QuestStatus.REWARD, vars("var0", 1)))
+			.node("atLeast", project(QuestStatus.REWARD, vars("var0", 2)))
+			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
+			.when(variableBelow("var0", 3)).goTo("below")
+			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
+			.when(variableAtLeast("var0", 3)).goTo("atLeast")
+			.compile();
+		assertEquals(2, definition.definition().transitions().size());
 	}
 }

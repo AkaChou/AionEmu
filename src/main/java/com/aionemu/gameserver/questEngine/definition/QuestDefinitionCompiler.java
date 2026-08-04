@@ -70,12 +70,15 @@ public final class QuestDefinitionCompiler {
 					fail("PVP_CONDITION_EVENT_MISMATCH",
 						"pvp-recipient-in-zone is only valid on PvP kill events");
 				}
-				if (condition instanceof QuestCondition.QuestVariableIs variable
-						&& definition.progressLayout().field(variable.field()) == null) {
-					fail("UNKNOWN_PROGRESS_FIELD", "condition references unknown field: " + variable.field());
-				}
 				if (condition instanceof QuestCondition.QuestVariableIs variable) {
+					validateProgressField(definition, variable.field(), "condition");
 					definition.progressLayout().pack(Map.of(variable.field(), variable.value()));
+				}
+				if (condition instanceof QuestCondition.VariableAtLeast variable) {
+					validateProgressField(definition, variable.field(), "condition");
+				}
+				if (condition instanceof QuestCondition.VariableBelow variable) {
+					validateProgressField(definition, variable.field(), "condition");
 				}
 			}
 			for (QuestAction action : transition.actions()) {
@@ -151,6 +154,12 @@ public final class QuestDefinitionCompiler {
 		}
 		validateTransitionConflicts(definition.transitions(), nodes);
 		return new CompiledQuestDefinition(definition);
+	}
+
+	private static void validateProgressField(QuestDefinition definition, String field, String context) {
+		if (definition.progressLayout().field(field) == null) {
+			fail("UNKNOWN_PROGRESS_FIELD", context + " references unknown field: " + field);
+		}
 	}
 
 	private static void validateCraftLifecycle(QuestDefinition definition, Map<String, QuestNode> nodes) {
@@ -278,6 +287,45 @@ public final class QuestDefinitionCompiler {
 					return true;
 				}
 			}
+		}
+		for (QuestCondition a : left) {
+			for (QuestCondition b : right) {
+				if (variableConditionsAreMutuallyExclusive(a, b)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static boolean variableConditionsAreMutuallyExclusive(QuestCondition left, QuestCondition right) {
+		if (left instanceof QuestCondition.QuestVariableIs a
+				&& right instanceof QuestCondition.QuestVariableIs b) {
+			return a.field().equals(b.field()) && a.value() != b.value();
+		}
+		if (left instanceof QuestCondition.QuestVariableIs a
+				&& right instanceof QuestCondition.VariableAtLeast b) {
+			return a.field().equals(b.field()) && a.value() < b.value();
+		}
+		if (left instanceof QuestCondition.VariableAtLeast a
+				&& right instanceof QuestCondition.QuestVariableIs b) {
+			return a.field().equals(b.field()) && b.value() < a.value();
+		}
+		if (left instanceof QuestCondition.QuestVariableIs a
+				&& right instanceof QuestCondition.VariableBelow b) {
+			return a.field().equals(b.field()) && a.value() >= b.value();
+		}
+		if (left instanceof QuestCondition.VariableBelow a
+				&& right instanceof QuestCondition.QuestVariableIs b) {
+			return a.field().equals(b.field()) && b.value() >= a.value();
+		}
+		if (left instanceof QuestCondition.VariableAtLeast a
+				&& right instanceof QuestCondition.VariableBelow b) {
+			return a.field().equals(b.field()) && a.value() >= b.value();
+		}
+		if (left instanceof QuestCondition.VariableBelow a
+				&& right instanceof QuestCondition.VariableAtLeast b) {
+			return a.field().equals(b.field()) && b.value() >= a.value();
 		}
 		return false;
 	}
