@@ -10,27 +10,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestDefinitionCatalogManifestTest {
 	@Test
-	void packagedProductionCatalogMatchesEveryPackagedQuestDefinitionFile() throws Exception {
-		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
-			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-			// The catalog must mirror the packaged quests/*.xml set exactly, so adding a
-			// definition never requires touching this assertion.
-			assertEquals(packagedQuestFileIds(),
-				catalog.all().stream().map(CompiledQuestDefinition::id).toList());
-		}
-	}
-
-	private static List<Integer> packagedQuestFileIds() throws Exception {
-		File dir = new File(QuestDefinitionCatalogManifestTest.class.getResource(
-				"/aion/data/static_data/quest_definition/quests").toURI());
-		File[] files = dir.listFiles(file -> file.getName().endsWith(".xml"));
-		return Arrays.stream(files).map(file -> Integer.parseInt(file.getName().replace(".xml", "")))
-			.sorted().toList();
+	void packagedProductionQuestsCompileFromDirectory() throws Exception {
+		QuestCatalog catalog = QuestDefinitionCatalogManifest.compileFromQuestsDirectory(getClass().getClassLoader());
+		// Every quests/*.xml compiles and the ids are positive and unique (ImmutableQuestCatalog enforces uniqueness).
+		assertFalse(catalog.all().isEmpty());
+		assertTrue(catalog.all().stream().map(CompiledQuestDefinition::id).allMatch(id -> id > 0));
 	}
 
 	@Test

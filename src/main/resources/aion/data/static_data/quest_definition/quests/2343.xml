@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="2343" version="1">
+  <metadata name="Ancient Ginseng" display-name-id="1103543" min-level="29" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <work-items>
+      <item id="182204134" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="231750"/>
+      <reward kind="TITLE" id="62" amount="1"/>
+      <reward kind="ITEM" id="123000867" amount="1"/>
+      <reward kind="ITEM" id="188100335" amount="34"/>
+      <reward kind="ITEM" id="186000008" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <use-item item-id="182204134"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <quest-dialog dialog-id="1003"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <quest-dialog dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="complete">
+      <event>
+        <talk-to-npc npc-id="700243" dialog="USE_OBJECT"/>
+      </event>
+      <actions>
+        <remove-item item-id="182204134" count="1"/>
+        <grant-reward kind="EXP" id="0" amount="231750" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="62" amount="1"/>
+        <grant-reward kind="ITEM" id="123000867" amount="1"/>
+        <grant-reward kind="ITEM" id="188100335" amount="34"/>
+        <grant-reward kind="ITEM" id="186000008" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <spawn-npc-current-or-default slot="ginseng" template-id="212814" world-id="220020000" x="1008.36" y="481.88" z="509.3" heading="60"/>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

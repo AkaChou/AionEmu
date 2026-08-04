@@ -225,6 +225,10 @@ public final class QuestDsl {
 		return new QuestCondition.QuestVariableIs(field, value);
 	}
 
+	public static QuestCondition variableAtLeast(String field, int value) {
+		return new QuestCondition.VariableAtLeast(field, value);
+	}
+
 	public static QuestCondition recipeKnown(int recipeId) {
 		return new QuestCondition.RecipeKnown(recipeId, true);
 	}

@@ -63,6 +63,7 @@
     <xs:element name="status-is"><xs:complexType><xs:attribute name="status" type="status" use="required"/></xs:complexType></xs:element>
     <xs:element name="has-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="variable-is"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="value" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="variable-at-least"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="value" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="recipe-known"><xs:complexType><xs:attribute name="recipe-id" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" use="required"/></xs:complexType></xs:element>
     <xs:element name="can-grant-craft-skill"><xs:complexType><xs:attribute name="skill-id" type="xs:int" use="required"/><xs:attribute name="target-level" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="pvp-victim-level-delta"><xs:complexType><xs:attribute name="minimum" type="xs:int" use="required"/><xs:attribute name="maximum" type="xs:int" use="required"/></xs:complexType></xs:element>

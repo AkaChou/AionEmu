@@ -21,6 +21,8 @@ public final class QuestConditionEvaluator {
 					case QuestCondition.HasItem item -> hasItem(snapshot, item);
 					case QuestCondition.QuestVariableIs variable -> variables.getOrDefault(variable.field(), Integer.MIN_VALUE)
 							== variable.value();
+						case QuestCondition.VariableAtLeast variable ->
+							variables.getOrDefault(variable.field(), Integer.MIN_VALUE) >= variable.value();
 					case QuestCondition.RecipeKnown recipe -> recipeKnown(snapshot, recipe);
 					case QuestCondition.CanGrantCraftSkill skill -> canGrantCraftSkill(snapshot, skill);
 					case QuestCondition.PvpVictimLevelDelta level -> pvpVictimLevelDelta(snapshot, level);

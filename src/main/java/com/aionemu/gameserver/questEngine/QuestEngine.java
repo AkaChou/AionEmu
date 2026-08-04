@@ -1759,16 +1759,10 @@ public class QuestEngine implements GameEngine {
 		return productionDispatcher.owns(questId) || questHandlers.containsKey(questId);
 	}
 
-	/** 加载并编译正式 typed 任务 catalog。 Load and compile the production typed quest catalog. */
+	/** 从 quest_definition/quests 目录直接加载全部 typed 定义（无需手写 catalog 条目）。 */
 	private QuestCatalog loadProductionCatalog() throws Exception {
 		ClassLoader loader = QuestEngine.class.getClassLoader();
-		try (InputStream input = loader.getResourceAsStream(PRODUCTION_DEFINITION_CATALOG)) {
-			if (input == null) {
-				throw new IllegalStateException("missing typed production catalog: "
-					+ PRODUCTION_DEFINITION_CATALOG);
-			}
-			return QuestDefinitionCatalogManifest.compile(input, loader);
-		}
+		return QuestDefinitionCatalogManifest.compileFromQuestsDirectory(loader);
 	}
 
 	/**
