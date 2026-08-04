@@ -187,6 +187,31 @@ class QuestProductionDispatcherTest {
 			.map(QuestEventRouter.OwnerResult::questId).toList());
 	}
 
+	@Test
+	void sameNpcDifferentDialogIsUnknownAndFallsThroughToMatchingRoute() {
+		CompiledQuestDefinition definition = QuestDsl.quest(1108)
+			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("step", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
+			.on(new QuestEvent.TalkToNpc(798125, 31)).from("started").goTo("reward")
+			.on(new QuestEvent.TalkToNpc(798125, -1)).from("reward").goTo("reward")
+			.afterCommit(QuestDsl.showQuestDialog(1352))
+			.compile();
+		List<String> calls = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), calls,
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.REWARD, 1, Map.of()));
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.TalkToNpc(798125, -1), 7, 0, QuestDispatchContract.EXCLUSIVE);
+
+		assertTrue(result.consumed());
+		assertTrue(result.claimed());
+		assertEquals(List.of(QuestRouteResult.UNKNOWN, QuestRouteResult.HANDLED),
+			result.owners().stream().map(QuestEventRouter.OwnerResult::result).toList());
+		assertEquals(List.of("setAutoCommit:false", "commit", "close"), calls);
+	}
+
 	private static QuestProductionDispatcher dispatcher(List<CompiledQuestDefinition> definitions,
 			List<String> calls, QuestEventPort eventPort) {
 		return dispatcher(definitions, calls, eventPort, new ArrayList<>());

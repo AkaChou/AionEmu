@@ -105,7 +105,8 @@ public final class QuestMutationPlanner {
 	 */
 	private static boolean removalFeasible(QuestSnapshot snapshot, QuestAction.RemoveItem remove) {
 		try {
-			return snapshot.itemCount(remove.itemId()) >= remove.count();
+			int available = snapshot.itemCount(remove.itemId());
+			return remove.removeAll() || available >= remove.count();
 		} catch (IllegalStateException unknownFacts) {
 			return false;
 		}

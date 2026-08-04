@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.configs.main.CraftConfig;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.Item;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.items.storage.Storage;
@@ -14,9 +15,11 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /** Real {@link QuestEventPort}: freezes the pre-event player facts for one owner. */
 public final class PlayerQuestEventPort implements QuestEventPort {
@@ -94,7 +97,22 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			positionCaptured ? player.getY() : 0f,
 			positionCaptured ? player.getZ() : 0f,
 			positionCaptured ? player.getHeading() : (byte) 0,
-			craftFactsOf(player), null);
+			craftFactsOf(player), null).withWorldFacts(worldFactsOf(player));
+	}
+
+	/** Captures NPC template presence in the player's current world instance. */
+	private static QuestWorldFacts worldFactsOf(Player player) {
+		var position = player.getPosition();
+		if (position == null || !position.isSpawned() || position.getWorldMapInstance() == null) {
+			return null;
+		}
+		Set<Integer> npcTemplateIds = new HashSet<>();
+		for (Npc npc : position.getWorldMapInstance().getNpcs()) {
+			if (npc != null && npc.getNpcId() > 0) {
+				npcTemplateIds.add(npc.getNpcId());
+			}
+		}
+		return new QuestWorldFacts(npcTemplateIds);
 	}
 
 	/**

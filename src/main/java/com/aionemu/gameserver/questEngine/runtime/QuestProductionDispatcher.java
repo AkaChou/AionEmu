@@ -111,7 +111,13 @@ public final class QuestProductionDispatcher {
 	}
 
 	private QuestRouteResult execute(LazyConnection connection, int playerId, QuestEvent event,
-			QuestEventIndex.Route route) {
+		QuestEventIndex.Route route) {
+		// The index deliberately routes all dialogs for one NPC through one broad key.
+		// A candidate with another dialog is an ordinary non-match, not an execution
+		// failure; keep it non-conclusive so the router can try the next transition.
+		if (!QuestEvent.matches(route.transition().event(), event)) {
+			return QuestRouteResult.UNKNOWN;
+		}
 		CompiledQuestDefinition definition = catalog.find(route.questId()).orElseThrow();
 		try {
 			QuestExecutionResult result = coordinator.execute(connection.get(), playerId, definition, event,

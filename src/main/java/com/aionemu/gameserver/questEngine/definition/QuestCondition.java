@@ -8,7 +8,7 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		QuestCondition.QuestVariableIs, QuestCondition.VariableAtLeast, QuestCondition.VariableBelow,
 		QuestCondition.RecipeKnown, QuestCondition.CanGrantCraftSkill, QuestCondition.PvpVictimLevelDelta,
 		QuestCondition.PvpRecipientInZone, QuestCondition.StartEligible, QuestCondition.PlayerClassIs,
-		QuestCondition.WorldIs {
+		QuestCondition.WorldIs, QuestCondition.WorldNpcIs {
 	record StartEligible() implements QuestCondition {
 	}
 
@@ -26,6 +26,15 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		public WorldIs {
 			if (worldId <= 0) {
 				throw new IllegalArgumentException("worldId must be positive");
+			}
+		}
+	}
+
+	/** Matches presence of an NPC template in the player's current world instance. */
+	record WorldNpcIs(int npcId, boolean expected) implements QuestCondition {
+		public WorldNpcIs {
+			if (npcId <= 0) {
+				throw new IllegalArgumentException("npcId must be positive");
 			}
 		}
 	}

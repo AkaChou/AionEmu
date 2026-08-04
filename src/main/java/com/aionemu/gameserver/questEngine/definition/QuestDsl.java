@@ -257,6 +257,10 @@ public final class QuestDsl {
 		return new QuestCondition.StartEligible();
 	}
 
+	public static QuestCondition worldNpcIs(int npcId, boolean expected) {
+		return new QuestCondition.WorldNpcIs(npcId, expected);
+	}
+
 	public static QuestAction giveItem(int itemId, int count) {
 		return new QuestAction.GiveItem(itemId, count);
 	}

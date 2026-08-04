@@ -33,6 +33,7 @@ public final class QuestConditionEvaluator {
 					case QuestCondition.PlayerClassIs playerClass -> playerClass(startingClass(snapshot),
 						playerClass.startingClass());
 					case QuestCondition.WorldIs world -> worldIs(snapshot, world);
+					case QuestCondition.WorldNpcIs npc -> worldNpcIs(snapshot, npc);
 				};
 			if (!matched) {
 				return false;
@@ -111,5 +112,10 @@ public final class QuestConditionEvaluator {
 
 	private static boolean worldIs(QuestSnapshot snapshot, QuestCondition.WorldIs condition) {
 		return (snapshot.worldId() == condition.worldId()) == condition.expected();
+	}
+
+	private static boolean worldNpcIs(QuestSnapshot snapshot, QuestCondition.WorldNpcIs condition) {
+		QuestWorldFacts facts = snapshot.worldFacts();
+		return facts != null && facts.containsNpc(condition.npcId()) == condition.expected();
 	}
 }

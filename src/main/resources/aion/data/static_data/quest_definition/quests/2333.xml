@@ -173,7 +173,9 @@
       </event>
       <after-commit>
         <spawn-npc-at-player slot="escort" template-id="204416" heading="8"/>
+        <start-walking slot="escort"/>
         <start-follow slot="escort"/>
+        <broadcast-npc-emotion slot="escort" emotion="START_EMOTE2"/>
         <watch-follow-zone slot="escort" zone="DF2_ITEMUSEAREA_Q2333"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
@@ -192,6 +194,7 @@
         <npc-lost-target/>
       </event>
       <after-commit>
+        <despawn-npc slot="escort"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
@@ -200,6 +203,7 @@
         <die/>
       </event>
       <after-commit>
+        <despawn-npc slot="escort"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
@@ -208,6 +212,7 @@
         <log-out/>
       </event>
       <after-commit>
+        <despawn-npc slot="escort"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>

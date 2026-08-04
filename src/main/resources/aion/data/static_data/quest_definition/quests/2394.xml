@@ -146,7 +146,9 @@
       </event>
       <after-commit>
         <spawn-npc-at-player slot="orlan" template-id="790021" heading="8"/>
+        <start-walking slot="orlan"/>
         <start-follow slot="orlan"/>
+        <broadcast-npc-emotion slot="orlan" emotion="START_EMOTE2"/>
         <watch-follow-zone slot="orlan" zone="HALABANA_HOT_SPRINGS_220020000"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
@@ -165,6 +167,7 @@
         <npc-lost-target/>
       </event>
       <after-commit>
+        <despawn-npc slot="orlan"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
@@ -173,6 +176,7 @@
         <die/>
       </event>
       <after-commit>
+        <despawn-npc slot="orlan"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
@@ -181,6 +185,7 @@
         <log-out/>
       </event>
       <after-commit>
+        <despawn-npc slot="orlan"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>

@@ -449,6 +449,8 @@ public final class QuestDefinitionXmlCompiler {
 				PlayerClass.valueOf(attribute(element, "starting-class")));
 			case "world-is" -> new QuestCondition.WorldIs(integer(element, "world-id"),
 				booleanOrDefault(element, "expected", true));
+			case "world-npc-is" -> new QuestCondition.WorldNpcIs(integer(element, "npc-id"),
+				booleanOrDefault(element, "expected", true));
 			default -> fail("UNKNOWN_CONDITION", element.getTagName());
 		};
 	}
