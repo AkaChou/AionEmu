@@ -8,6 +8,18 @@
       <reward kind="EXP" id="0" amount="5605367"/>
       <reward kind="ITEM" id="186000005" amount="20"/>
     </rewards>
+    <kills>
+      <kill sequence="1">
+        <npc id="219050"/>
+      </kill>
+      <kill sequence="2">
+        <npc id="219051"/>
+      </kill>
+      <kill sequence="3">
+        <npc id="219074"/>
+        <npc id="219060"/>
+      </kill>
+    </kills>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

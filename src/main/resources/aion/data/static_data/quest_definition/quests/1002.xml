@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1002" version="1">
-  <metadata name="Request Of The Elim" display-name-id="1102002" min-level="3" max-level="2147483647" category="MISSION">
+  <metadata name="Request Of The Elim" display-name-id="1102002" min-level="3" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>
     <prerequisites>
       <quest id="1100"/>
     </prerequisites>
+    <items>
+      <item id="182200003" count="3"/>
+    </items>
     <rewards>
       <reward kind="EXP" id="0" amount="5943"/>
       <reward kind="TITLE" id="4" amount="1"/>
