@@ -24,6 +24,14 @@
       <reward kind="SELECTABLE_ITEM" id="112500829" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="112600844" amount="1"/>
     </rewards>
+    <kills>
+      <kill sequence="1">
+        <npc id="214521"/>
+      </kill>
+      <kill sequence="2">
+        <npc id="214516"/>
+      </kill>
+    </kills>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
