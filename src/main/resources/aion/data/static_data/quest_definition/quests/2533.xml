@@ -81,6 +81,9 @@
       <event>
         <use-item item-id="182204425"/>
       </event>
+      <conditions>
+        <zone-is zone="BERITRAS_WEAPON_220040000"/>
+      </conditions>
       <actions>
         <remove-item item-id="182204425" count="1"/>
         <give-item item-id="182204426" count="1"/>

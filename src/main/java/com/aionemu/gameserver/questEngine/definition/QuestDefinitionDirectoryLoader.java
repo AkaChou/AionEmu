@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-/** Loads every production quest definition directly from the packaged quests directory. */
+/** Scans every packaged quest definition for compile and consistency checks. */
 public final class QuestDefinitionDirectoryLoader {
 	private static final String QUEST_DIRECTORY =
 		"aion/data/static_data/quest_definition/quests";
@@ -24,7 +24,8 @@ public final class QuestDefinitionDirectoryLoader {
 
 	/**
 	 * Scan and compile every {@code quests/<numericQuestId>.xml} resource.
-	 * The directory is the production owner boundary; no second manifest is consulted.
+	 * This is deliberately separate from production ownership: the directory also contains
+	 * candidates that are not yet safe to install as live owners.
 	 */
 	public static QuestCatalog compile(ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");

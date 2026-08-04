@@ -112,7 +112,14 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 				npcTemplateIds.add(npc.getNpcId());
 			}
 		}
-		return new QuestWorldFacts(npcTemplateIds);
+		Set<String> zoneNames = new HashSet<>();
+		for (var zone : position.getMapRegion().getZones(player)) {
+			var zoneName = zone.getAreaTemplate().getZoneName();
+			if (zoneName != null) {
+				zoneNames.add(zoneName.name());
+			}
+		}
+		return new QuestWorldFacts(npcTemplateIds, zoneNames);
 	}
 
 	/**

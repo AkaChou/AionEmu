@@ -8,7 +8,7 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		QuestCondition.QuestVariableIs, QuestCondition.VariableAtLeast, QuestCondition.VariableBelow,
 		QuestCondition.RecipeKnown, QuestCondition.CanGrantCraftSkill, QuestCondition.PvpVictimLevelDelta,
 		QuestCondition.PvpRecipientInZone, QuestCondition.StartEligible, QuestCondition.PlayerClassIs,
-		QuestCondition.WorldIs, QuestCondition.WorldNpcIs {
+		QuestCondition.WorldIs, QuestCondition.WorldNpcIs, QuestCondition.ZoneIs {
 	record StartEligible() implements QuestCondition {
 	}
 
@@ -27,6 +27,20 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 			if (worldId <= 0) {
 				throw new IllegalArgumentException("worldId must be positive");
 			}
+		}
+	}
+
+	/** Matches one authoritative zone occupied by the player. */
+	record ZoneIs(String zone, boolean expected) implements QuestCondition {
+		public ZoneIs {
+			if (zone == null || zone.isBlank()) {
+				throw new IllegalArgumentException("zone must not be blank");
+			}
+			zone = zone.toUpperCase(java.util.Locale.ROOT);
+		}
+
+		public ZoneIs(String zone) {
+			this(zone, true);
 		}
 	}
 

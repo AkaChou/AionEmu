@@ -13,28 +13,17 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.JarURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
-/**
- * 正式 typed 任务定义的确定性 classpath catalog。
- * Deterministic classpath catalog for typed definitions that own live quest execution.
- */
+/** Explicit production owner allow-list for definitions in the quests directory. */
 public final class QuestDefinitionCatalogManifest {
+	private static final String RESOURCE =
+		"aion/data/static_data/quest_definition/quest_definition_catalog.xml";
 	private static final String SCHEMA =
 		"/aion/data/static_data/quest_definition/quest_definition_catalog.xsd";
 
@@ -61,10 +50,22 @@ public final class QuestDefinitionCatalogManifest {
 		this.entries = List.copyOf(entries);
 	}
 
-	/**
-	 * 解析并校验正式 catalog。
-	 * Parse and validate the production catalog.
-	 */
+	/** Load the explicit production owner manifest from classpath resources. */
+	public static QuestCatalog compile(ClassLoader loader) {
+		Objects.requireNonNull(loader, "loader");
+		try (InputStream input = loader.getResourceAsStream(RESOURCE)) {
+			if (input == null) {
+				fail("PRODUCTION_CATALOG_MISSING", RESOURCE);
+			}
+			return compile(input, loader);
+		} catch (QuestCompilationException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new QuestCompilationException("PRODUCTION_CATALOG_READ_FAILED", e.getMessage());
+		}
+	}
+
+	/** Parse and validate an explicit production owner manifest. */
 	public static QuestDefinitionCatalogManifest load(InputStream input) {
 		Objects.requireNonNull(input, "input");
 		try {
@@ -73,12 +74,12 @@ public final class QuestDefinitionCatalogManifest {
 			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-			try (InputStream schemaStream = QuestDefinitionCatalogManifest.class.getResourceAsStream(SCHEMA)) {
-				if (schemaStream == null) {
-					fail("CATALOG_SCHEMA_MISSING", "production catalog schema is not packaged");
+			try (InputStream schema = QuestDefinitionCatalogManifest.class.getResourceAsStream(SCHEMA)) {
+				if (schema == null) {
+					fail("CATALOG_SCHEMA_MISSING", SCHEMA);
 				}
 				factory.setSchema(SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-					.newSchema(new StreamSource(schemaStream)));
+					.newSchema(new StreamSource(schema)));
 			}
 			var builder = factory.newDocumentBuilder();
 			builder.setErrorHandler(new DefaultHandler() {
@@ -124,10 +125,7 @@ public final class QuestDefinitionCatalogManifest {
 		}
 	}
 
-	/**
-	 * 加载 catalog 中列出的 XML 并编译为统一 IR。
-	 * Load the listed XML definitions and compile them into the unified IR.
-	 */
+	/** Compile only the entries explicitly promoted to production ownership. */
 	public static QuestCatalog compile(InputStream manifest, ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
 		QuestDefinitionCatalogManifest parsed = load(manifest);
@@ -155,73 +153,10 @@ public final class QuestDefinitionCatalogManifest {
 		return new ImmutableQuestCatalog(definitions);
 	}
 
-	/**
-	 * 直接从 quest_definition/quests 目录扫描全部 XML 编译为 catalog（无需手写条目清单）。
-	 * Compile every quests/*.xml in the packaged directory into the catalog, so the
-	 * manifest file no longer needs to list each definition.
-	 */
-	public static QuestCatalog compileFromQuestsDirectory(ClassLoader loader) {
-		Objects.requireNonNull(loader, "loader");
-		String dir = "aion/data/static_data/quest_definition/quests";
-		URL url = loader.getResource(dir);
-		if (url == null) {
-			fail("QUEST_DIR_MISSING", dir);
-		}
-		List<Path> files = new ArrayList<>();
-		if ("file".equals(url.getProtocol())) {
-			try {
-				File directory = new File(url.toURI());
-				File[] xml = directory.listFiles(f -> f.getName().endsWith(".xml"));
-				if (xml == null) {
-					fail("QUEST_DIR_UNREADABLE", dir);
-				}
-				for (File f : xml) {
-					files.add(Path.of(dir, f.getName()));
-				}
-			} catch (URISyntaxException e) {
-				fail("QUEST_DIR_BAD_URI", url.toString());
-			}
-		} else if ("jar".equals(url.getProtocol())) {
-			try {
-				JarURLConnection connection = (JarURLConnection) url.openConnection();
-				try (JarFile jar = connection.getJarFile()) {
-					Enumeration<JarEntry> entries = jar.entries();
-					while (entries.hasMoreElements()) {
-						JarEntry entry = entries.nextElement();
-						if (!entry.isDirectory() && entry.getName().startsWith(dir + "/")
-							&& entry.getName().endsWith(".xml")) {
-							files.add(Path.of(entry.getName()));
-						}
-					}
-				}
-			} catch (IOException e) {
-				fail("QUEST_DIR_READ_FAILED", dir);
-			}
-		} else {
-			fail("QUEST_DIR_UNSUPPORTED_PROTOCOL", url.getProtocol());
-		}
-		files.sort(Comparator.comparingInt(p -> Integer.parseInt(p.getFileName().toString().replace(".xml", ""))));
-		List<CompiledQuestDefinition> definitions = new ArrayList<>();
-		for (Path path : files) {
-			String resource = path.toString().replace('\\', '/');
-			try (InputStream input = loader.getResourceAsStream(resource)) {
-				if (input == null) {
-					fail("QUEST_RESOURCE_MISSING", resource);
-				}
-				definitions.add(QuestDefinitionXmlCompiler.compile(input));
-			} catch (IOException e) {
-				fail("QUEST_RESOURCE_READ_FAILED", resource);
-			}
-		}
-		return new ImmutableQuestCatalog(definitions);
-	}
-
-	/** 返回 catalog 版本。 Return the catalog version. */
 	public int version() {
 		return version;
 	}
 
-	/** 返回正式 owner 条目。 Return the production owner entries. */
 	public List<Entry> entries() {
 		return entries;
 	}

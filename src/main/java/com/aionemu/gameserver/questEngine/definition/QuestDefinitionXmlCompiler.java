@@ -451,6 +451,8 @@ public final class QuestDefinitionXmlCompiler {
 				booleanOrDefault(element, "expected", true));
 			case "world-npc-is" -> new QuestCondition.WorldNpcIs(integer(element, "npc-id"),
 				booleanOrDefault(element, "expected", true));
+			case "zone-is" -> new QuestCondition.ZoneIs(attribute(element, "zone"),
+				booleanOrDefault(element, "expected", true));
 			default -> fail("UNKNOWN_CONDITION", element.getTagName());
 		};
 	}

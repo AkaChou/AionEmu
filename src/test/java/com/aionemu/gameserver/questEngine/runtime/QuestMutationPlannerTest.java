@@ -73,6 +73,31 @@ class QuestMutationPlannerTest {
 	}
 
 	@Test
+	void zoneConditionUsesCapturedCurrentZoneFactsAndFailsClosedWhenUnknown() {
+		CompiledQuestDefinition definition = QuestDsl.quest(QUEST_ID + 2)
+			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("step", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
+			.on(new QuestEvent.UseItem(182400002)).from("started")
+			.when(QuestDsl.zoneIs("BERITRAS_WEAPON_220040000"))
+			.goTo("reward")
+			.compile();
+		var transition = definition.definition().transitions().get(0);
+		QuestSnapshot inside = new QuestSnapshot(7, QUEST_ID + 2, QuestStatus.START, 0, Map.of())
+			.withWorldFacts(new QuestWorldFacts(Set.of(), Set.of("BERITRAS_WEAPON_220040000")));
+		QuestSnapshot outside = new QuestSnapshot(7, QUEST_ID + 2, QuestStatus.START, 0, Map.of())
+			.withWorldFacts(new QuestWorldFacts(Set.of(), Set.of("BELUSLAN_FORTRESS_220040000")));
+		QuestSnapshot unknown = new QuestSnapshot(7, QUEST_ID + 2, QuestStatus.START, 0, Map.of());
+
+		assertTrue(QuestMutationPlanner.plan(definition, inside,
+			new QuestEvent.UseItem(182400002), transition).isPresent());
+		assertFalse(QuestMutationPlanner.plan(definition, outside,
+			new QuestEvent.UseItem(182400002), transition).isPresent());
+		assertFalse(QuestMutationPlanner.plan(definition, unknown,
+			new QuestEvent.UseItem(182400002), transition).isPresent());
+	}
+
+	@Test
 	void beautifulFeatherCleansEveryWorkItemOnRewardRoutes() throws Exception {
 		CompiledQuestDefinition definition;
 		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
@@ -91,6 +116,23 @@ class QuestMutationPlannerTest {
 
 		assertTrue(routes.size() >= 6);
 		assertTrue(routes.stream().allMatch(route -> route.actions().containsAll(cleanup)));
+	}
+
+	@Test
+	void ringForLuckRemovesItsQuestWorkItemWhenCompleting() throws Exception {
+		CompiledQuestDefinition definition;
+		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
+			"/aion/data/static_data/quest_definition/quests/2578.xml"))) {
+			definition = QuestDefinitionXmlCompiler.compile(input);
+		}
+
+		var completion = definition.definition().transitions().stream()
+			.filter(transition -> "reward".equals(transition.sourceNode())
+				&& "complete".equals(transition.targetNode()))
+			.findFirst().orElseThrow();
+
+		assertTrue(completion.actions().contains(
+			new QuestAction.RemoveItem(182204453, QuestAction.RemoveItem.ALL)));
 	}
 
 	private static CompiledQuestDefinition definition() {

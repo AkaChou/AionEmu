@@ -261,6 +261,10 @@ public final class QuestDsl {
 		return new QuestCondition.WorldNpcIs(npcId, expected);
 	}
 
+	public static QuestCondition zoneIs(String zone) {
+		return new QuestCondition.ZoneIs(zone);
+	}
+
 	public static QuestAction giveItem(int itemId, int count) {
 		return new QuestAction.GiveItem(itemId, count);
 	}

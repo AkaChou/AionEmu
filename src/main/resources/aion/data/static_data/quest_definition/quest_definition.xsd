@@ -73,6 +73,7 @@
     <xs:element name="player-class-is"><xs:complexType><xs:attribute name="starting-class" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="world-is"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="world-npc-is"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
+	<xs:element name="zone-is"><xs:complexType><xs:attribute name="zone" type="xs:string" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
   </xs:choice></xs:complexType>
 
   <xs:complexType name="actions-type"><xs:choice minOccurs="0" maxOccurs="unbounded">
