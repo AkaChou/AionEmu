@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80411" version="1">
-  <metadata name="[Growth] The Things We Leave Behind" display-name-id="1185608" min-level="46" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] The Things We Leave Behind" display-name-id="1185608" min-level="46" max-level="82" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

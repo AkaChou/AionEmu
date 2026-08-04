@@ -74,29 +74,8 @@
 		<npc_infos var="0" npc_id="804709" quest_dialog="1352"/>
 		<npc_infos var="1" npc_id="804944" quest_dialog="2375" close_dialog="1009"/>
 	</report_to_many>
-	
-	<item_collecting id="35007" start_npc_ids="0" end_npc_ids="799805" action_item_ids="700788"/>
-	<item_collecting id="35008" start_npc_ids="0" end_npc_ids="799805" action_item_ids="700789"/>
-	<item_collecting id="35014" start_npc_ids="0" end_npc_ids="799806" action_item_ids="700791"/>
-	<item_collecting id="35015" start_npc_ids="0" end_npc_ids="799806" action_item_ids="700792"/>
-	<item_collecting id="35021" start_npc_ids="0" end_npc_ids="799800 799801" action_item_ids="700765"/>
-	<item_collecting id="35022" start_npc_ids="0" end_npc_ids="799800 799801" action_item_ids="700766"/>
-	<item_collecting id="35031" start_npc_ids="0" end_npc_ids="799805"/>
-	<item_collecting id="35032" start_npc_ids="0" end_npc_ids="799805"/>
-	<item_collecting id="35033" start_npc_ids="0" end_npc_ids="799805"/>
-	<item_collecting id="35034" start_npc_ids="0" end_npc_ids="799805"/>
-	<item_collecting id="35039" start_npc_ids="0" end_npc_ids="799806"/>
-	<item_collecting id="35040" start_npc_ids="0" end_npc_ids="799806"/>
-	<item_collecting id="35041" start_npc_ids="0" end_npc_ids="799806"/>
-	<item_collecting id="35042" start_npc_ids="0" end_npc_ids="799806"/>
-	<item_collecting id="35045" start_npc_ids="0" end_npc_ids="799800 799801"/>
-	<item_collecting id="35046" start_npc_ids="0" end_npc_ids="799800 799801"/>
-	<item_collecting id="35047" start_npc_ids="0" end_npc_ids="799800 799801"/>
-	<item_collecting id="35048" start_npc_ids="0" end_npc_ids="799800 799801"/>
 	<!-- [Daily] Clam Power -->
-	<item_collecting id="35053" start_npc_ids="0" end_npc_ids="804941" action_item_ids="702761"/>
 	<!-- [Daily] Hand Over Sandsalt Shards -->
-	<item_collecting id="35054" start_npc_ids="0" end_npc_ids="804941" action_item_ids="702762"/>
 	
 	<monster_hunt id="35009" start_npc_ids="0" end_npc_ids="799805">
 		<monster end_var="3" var="0" npc_ids="700790"/>

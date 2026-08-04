@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80604" version="1">
-  <metadata name="[Service/Group] Terrors Of The Terath" display-name-id="1136976" min-level="61" max-level="2147483647" category="QUEST">
+  <metadata name="[Service/Group] Terrors Of The Terath" display-name-id="1136976" min-level="61" max-level="82" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

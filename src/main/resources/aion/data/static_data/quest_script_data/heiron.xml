@@ -4,5 +4,4 @@
     Quest Heiron Make By (Encom)
  -->
 	<item_collecting id="1690" start_npc_ids="204601"/>
-	<item_order start_item_id="182201710" talk_npc_id1="204582" talk_npc_id2="204505" end_npc_id="203831" id="1514"/>
 </quest_scripts>

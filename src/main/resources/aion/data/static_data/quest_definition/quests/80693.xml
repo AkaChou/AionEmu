@@ -2,8 +2,7 @@
 <quest-definition id="80693" version="1">
   <metadata name="[Event] Zodica, the Crazed" display-name-id="1800542" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
-      <race id="ASMODIANS"/>
+      <race id="PC_ALL"/>
     </races>
     <rewards>
       <reward kind="ITEM" id="185000221" amount="2"/>

@@ -6,6 +6,7 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <repeat max-repeat-count="100" cooldown-seconds="0" daily="false" weekly="false"/>
     <prerequisites>
       <quest id="1186"/>
     </prerequisites>

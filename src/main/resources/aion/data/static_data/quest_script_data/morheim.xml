@@ -3,10 +3,6 @@
 <!--
     Quest Morheim Make By (Encom)
  -->
-	<report_to_many id="24120" start_npc_ids="204304" end_npc_ids="802441">
-		<npc_infos npc_id="730038" var="0" quest_dialog="1352"/>
-		<npc_infos npc_id="802441" var="1" quest_dialog="2375" close_dialog="1009"/>
-	</report_to_many>
 	<item_collecting id="2451" start_npc_ids="204312"/>
 	<monster_hunt id="2434" start_npc_ids="204388">
 		<monster var="0" end_var="4" npc_ids="211595 211608"/>

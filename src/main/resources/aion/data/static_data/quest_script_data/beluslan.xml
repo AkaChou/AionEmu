@@ -7,59 +7,5 @@
 	<report_to id="2667" start_npc_ids="204814" end_npc_ids="204749" item_id="182204499"/>
 	<item_collecting id="2511" start_npc_ids="204711"/>
 	<item_collecting id="2585" start_npc_ids="204739" action_item_ids="700331"/>
-	<item_collecting id="2596" start_npc_ids="204735"/>
-	<item_collecting id="2597" start_npc_ids="204735"/>
 	<item_collecting id="2599" start_npc_ids="204725"/>
-	<item_collecting id="2602" start_npc_ids="204808" action_item_ids="700332"/>
-	<item_collecting id="2612" start_npc_ids="204790"/>
-	<item_collecting id="2614" start_npc_ids="204784"/>
-	<item_collecting id="2617" start_npc_ids="204750" action_item_ids="700334"/>
-	<item_collecting id="2623" start_npc_ids="204751" end_npc_ids="204751"/>
-	<item_collecting id="2625" start_npc_ids="204792"/>
-	<item_collecting id="2626" start_npc_ids="204752"/>
-	<item_collecting id="2627" start_npc_ids="204790" end_npc_ids="204790" action_item_ids="700335"/>
-	<item_collecting id="2631" start_npc_ids="204784"/>
-	<item_collecting id="2640" start_npc_ids="204792"/>
-	<item_collecting id="2642" start_npc_ids="204796"/>
-	<item_collecting id="2643" start_npc_ids="204795"/>
-	<item_collecting id="2645" start_npc_ids="204795" action_item_ids="700336"/>
-	<item_collecting id="2649" start_npc_ids="204796"/>
-	<item_collecting id="2652" start_npc_ids="204650"/>
-	<item_collecting id="2657" start_npc_ids="204817"/>
-	<item_collecting id="2658" start_npc_ids="204785"/>
-	<item_collecting id="2660" start_npc_ids="204651"/>
-	<item_collecting id="2673" start_npc_ids="204785"/>
-	<item_collecting id="2675" start_npc_ids="204785"/>
-	<item_collecting id="2677" start_npc_ids="204817"/>
-	<item_collecting id="2678" start_npc_ids="204817"/>
-	<item_collecting id="2679" start_npc_ids="204817"/>
-	<item_collecting id="2680" start_npc_ids="204720"/>
-	<item_collecting id="2681" start_npc_ids="204804"/>
-	<item_collecting id="2682" start_npc_ids="798117"/>
-	<item_collecting id="2683" start_npc_ids="204745"/>
-	<item_collecting id="2684" start_npc_ids="204786"/>
-	<item_collecting id="2685" start_npc_ids="204788"/>
-	<item_collecting id="2686" start_npc_ids="204751"/>
-	<item_collecting id="2687" start_npc_ids="790017"/>
-	<item_collecting id="2688" start_npc_ids="204798"/>
-	<item_collecting id="2689" start_npc_ids="204795"/>
-	<item_collecting id="2691" start_npc_ids="204777" end_npc_ids="204225" action_item_ids="700356 700357 700358"/>
-	<item_collecting id="2694" start_npc_ids="204803" end_npc_ids="204702"/>
-	<item_collecting id="2698" start_npc_ids="204814" action_item_ids="700362"/>
-	<item_collecting id="2699" start_npc_ids="204774"/>
-	<item_collecting id="4500" start_npc_ids="802051"/>
-	<item_collecting id="4504" start_npc_ids="204739" action_item_ids="700331"/>
-	<item_collecting id="4505" start_npc_ids="204808" action_item_ids="700332"/>
-	<item_collecting id="4507" start_npc_ids="204792"/>
-	<item_collecting id="4508" start_npc_ids="204752"/>
-	<item_collecting id="4509" start_npc_ids="204796"/>
-	<item_collecting id="4511" start_npc_ids="798118"/>
-	<item_collecting id="4513" start_npc_ids="798119"/>
-	<item_collecting id="4514" start_npc_ids="204725"/>
-	<item_collecting id="4515" start_npc_ids="204802"/>
-	<item_collecting id="4518" start_npc_ids="204798"/>
-	<item_collecting id="4519" start_npc_ids="204790"/>
-	<item_collecting id="4522" start_npc_ids="204777"/>
-	<item_collecting id="4530" start_npc_ids="798118"/>
-	<item_collecting id="4535" start_npc_ids="204803"/>
 </quest_scripts>

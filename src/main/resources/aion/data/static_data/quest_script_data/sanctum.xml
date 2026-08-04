@@ -3,68 +3,23 @@
 <!--
     Quest Sanctum 5.1 Make By (Encom)
  -->
-	<report_to_many id="1971" start_npc_ids="203812" end_npc_ids="203812">
-		<npc_infos npc_id="203820" var="0" quest_dialog="1352"/>
-		<npc_infos npc_id="203812" var="1" quest_dialog="2375" close_dialog="1009"/>
-	</report_to_many>
-	<item_order start_item_id="182206034" end_npc_id="278555" id="1965"/>
-	<item_order start_item_id="182206035" end_npc_id="278555" id="1966"/>
-	<item_order start_item_id="182206036" end_npc_id="278555" id="1967"/>
-	<item_order start_item_id="182206037" end_npc_id="278556" id="1968"/>
-	<item_order start_item_id="182206038" end_npc_id="278556" id="1969"/>
-	<item_order start_item_id="182206039" end_npc_id="278556" id="1970"/>
-    <item_collecting id="1902" start_npc_ids="203788"/>
-    <item_collecting id="1903" start_npc_ids="203790"/>
-    <item_collecting id="1904" start_npc_ids="203784"/>
-    <item_collecting id="1905" start_npc_ids="203792"/>
-    <item_collecting id="1906" start_npc_ids="203786"/>
-    <item_collecting id="1907" start_npc_ids="203793"/>
-    <item_collecting id="1910" start_npc_ids="203833"/>
-    <item_collecting id="1911" start_npc_ids="203864"/>
-    <item_collecting id="1912" start_npc_ids="203864"/>
-	<item_collecting id="1930" start_npc_ids="203767"/>
-	<item_collecting id="1931" start_npc_ids="203837" action_item_ids="700230"/>
-	<item_collecting id="1933" start_npc_ids="203833"/>
-	<item_collecting id="1934" start_npc_ids="203833"/>
-	<item_collecting id="3915" start_npc_ids="204656"/>
-	<item_collecting id="3916" start_npc_ids="204656"/>
-	<item_collecting id="3918" start_npc_ids="804603"/>
-	<item_collecting id="3919" start_npc_ids="804603"/>
-	<item_collecting id="3975" start_npc_ids="798321"/>
-	<item_collecting id="19042" start_npc_ids="798322" end_npc_ids="798322"/>
-	<item_collecting id="19043" start_npc_ids="798444"/>
 	<!-- [Expert] Zest For Weaponsmithing -->
-	<item_collecting id="3941" start_npc_ids="203788"/>
 	<!-- [Expert] Weaponsmith's Craft -->
-	<item_collecting id="3942" start_npc_ids="203788"/>
 	<!-- [Expert] Expert Weaponsmith -->
 	<!-- [Expert] Zest For Armorsmithing -->
-	<item_collecting id="3944" start_npc_ids="203790"/>
 	<!-- [Expert] Armorsmith's Craft -->
-	<item_collecting id="3945" start_npc_ids="203790"/>
 	<!-- [Expert] Zest For Handicrafting -->
-	<item_collecting id="3947" start_npc_ids="203792"/>
 	<!-- [Expert] Handicrafter's Craft -->
-	<item_collecting id="3948" start_npc_ids="203792"/>
 	<!-- [Expert] Zest For Cooking -->
-	<item_collecting id="3950" start_npc_ids="203784"/>
 	<!-- [Expert] Cook's Craft -->
-	<item_collecting id="3951" start_npc_ids="203784"/>
 	<!-- [Expert] Zest For Alchemy -->
-	<item_collecting id="3953" start_npc_ids="203786"/>
 	<!-- [Expert] Alchemist's Craft -->
-	<item_collecting id="3954" start_npc_ids="203786"/>
 	<!-- [Expert] Expert Alchemist -->
 	<!-- [Expert] Zest For Tailoring -->
-	<item_collecting id="3956" start_npc_ids="203793"/>
 	<!-- [Expert] Tailor's Craft -->
-	<item_collecting id="3957" start_npc_ids="203793"/>
 	<!-- [Expert] Constructor's Test -->
-	<item_collecting id="19052" start_npc_ids="798450"/>
 	<!-- [Expert] Expert Of Construction -->
-	<item_collecting id="19053" start_npc_ids="798450"/>
 	<!-- [Expert] Requirements For Construction Expert -->
-	<item_collecting id="19055" start_npc_ids="798450"/>
 	<!-- Meaning Of Life -->
 	<skill_use id="3910" start_npc_id="203707">
 		<skill end_var="100" ids="9912"/>

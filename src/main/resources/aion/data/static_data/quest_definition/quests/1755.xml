@@ -2,8 +2,7 @@
 <quest-definition id="1755" version="1">
   <metadata name="Root Of The Problem" display-name-id="1104555" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
-      <race id="ASMODIANS"/>
+      <race id="PC_ALL"/>
     </races>
     <rewards>
       <reward kind="GOLD" id="0" amount="185880"/>

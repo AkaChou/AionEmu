@@ -8,6 +8,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <prerequisites>
+      <quest id="1192"/>
+    </prerequisites>
     <items>
       <item id="182200557" count="1"/>
     </items>

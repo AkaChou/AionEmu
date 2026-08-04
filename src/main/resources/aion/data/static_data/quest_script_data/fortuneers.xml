@@ -4,22 +4,7 @@
     Quest Fortuneer's 4.8
 	Make By (Encom)
  -->
-	<item_collecting id="36015" start_npc_ids="0" end_npc_ids="799837 799838" action_item_ids="700768"/>
-	<item_collecting id="36016" start_npc_ids="0" end_npc_ids="799837 799838" action_item_ids="700769"/>
-	<item_collecting id="36503" start_npc_ids="0" end_npc_ids="799837 799838"/>
-	<item_collecting id="36509" start_npc_ids="0" end_npc_ids="799837 799838"/>
-	<item_collecting id="36515" start_npc_ids="0" end_npc_ids="799837 799838"/>
-	<item_collecting id="36520" start_npc_ids="0" end_npc_ids="799837 799838"/>
-	<item_collecting id="36522" start_npc_ids="0" end_npc_ids="799837 799838"/>
-	<item_collecting id="36524" start_npc_ids="0" end_npc_ids="799837 799838"/>
-	<item_collecting id="36525" start_npc_ids="0" end_npc_ids="799837 799838"/>
-	<item_collecting id="36527" start_npc_ids="0" end_npc_ids="799837 799838"/>
-	<item_collecting id="36528" start_npc_ids="0" end_npc_ids="799837 799838"/>
 	<item_collecting id="36519" start_npc_ids="0" end_npc_ids="799837 799838"/>
-	<item_collecting id="36529" start_npc_ids="0" end_npc_ids="804958" action_item_ids="702763"/>
-	<item_collecting id="36530" start_npc_ids="0" end_npc_ids="804948" action_item_ids="702764"/>
-	<item_collecting id="36537" start_npc_ids="0" end_npc_ids="804950" action_item_ids="702765"/>
-	<item_collecting id="36538" start_npc_ids="0" end_npc_ids="804951" action_item_ids="702766"/>
 	
 	<monster_hunt id="36500" start_npc_ids="0" end_npc_ids="799837 799838" reward="true">
 		<monster end_var="1" var="0" npc_ids="216604"/>
@@ -118,4 +103,19 @@
 	<kill_spawned id="36517" start_npc_ids="0" end_npc_ids="799837 799838">
 		<spawned_monster end_var="1" var="0" spawner_object="700764" npc_ids="216621"/>
 	</kill_spawned>
+	<item_collecting id="36015" start_npc_ids="0" end_npc_ids="799837 799838" action_item_ids="700768"/>
+	<item_collecting id="36016" start_npc_ids="0" end_npc_ids="799837 799838" action_item_ids="700769"/>
+	<item_collecting id="36503" start_npc_ids="0" end_npc_ids="799837 799838"/>
+	<item_collecting id="36509" start_npc_ids="0" end_npc_ids="799837 799838"/>
+	<item_collecting id="36515" start_npc_ids="0" end_npc_ids="799837 799838"/>
+	<item_collecting id="36520" start_npc_ids="0" end_npc_ids="799837 799838"/>
+	<item_collecting id="36522" start_npc_ids="0" end_npc_ids="799837 799838"/>
+	<item_collecting id="36524" start_npc_ids="0" end_npc_ids="799837 799838"/>
+	<item_collecting id="36525" start_npc_ids="0" end_npc_ids="799837 799838"/>
+	<item_collecting id="36527" start_npc_ids="0" end_npc_ids="799837 799838"/>
+	<item_collecting id="36528" start_npc_ids="0" end_npc_ids="799837 799838"/>
+	<item_collecting id="36529" start_npc_ids="0" end_npc_ids="804958" action_item_ids="702763"/>
+	<item_collecting id="36530" start_npc_ids="0" end_npc_ids="804948" action_item_ids="702764"/>
+	<item_collecting id="36537" start_npc_ids="0" end_npc_ids="804950" action_item_ids="702765"/>
+	<item_collecting id="36538" start_npc_ids="0" end_npc_ids="804951" action_item_ids="702766"/>
 </quest_scripts>

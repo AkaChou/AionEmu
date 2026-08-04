@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80452" version="1">
-  <metadata name="[Growth] Nimbarka's Last Battle" display-name-id="1185649" min-level="46" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] Nimbarka's Last Battle" display-name-id="1185649" min-level="46" max-level="82" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -8,6 +8,7 @@
       <reward kind="EXP" id="0" amount="4800000"/>
       <reward kind="ITEM" id="186000010" amount="5"/>
       <reward kind="ITEM" id="188052667" amount="1"/>
+      <reward kind="ITEM" id="188052679" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -156,6 +157,7 @@
         <grant-reward kind="EXP" id="0" amount="4800000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="186000010" amount="5"/>
         <grant-reward kind="ITEM" id="188052667" amount="1"/>
+        <grant-reward kind="ITEM" id="188052679" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

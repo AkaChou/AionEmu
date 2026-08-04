@@ -2,10 +2,12 @@
 <quest-definition id="80337" version="1">
   <metadata name="[Event] IU Rescue Operation" display-name-id="1185535" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
-      <race id="ASMODIANS"/>
+      <race id="PC_ALL"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <rewards>
+      <reward kind="ITEM" id="188600206" amount="1"/>
+    </rewards>
     <start-conditions>
       <condition type="finished" quest-id="80333"/>
     </start-conditions>
@@ -374,6 +376,7 @@
         <talk-to-npc npc-id="831541" dialog-ids="8..23"/>
       </event>
       <actions>
+        <grant-reward kind="ITEM" id="188600206" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -387,6 +390,7 @@
         <talk-to-npc npc-id="831542" dialog-ids="8..23"/>
       </event>
       <actions>
+        <grant-reward kind="ITEM" id="188600206" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -400,6 +404,7 @@
         <talk-to-npc npc-id="831543" dialog-ids="8..23"/>
       </event>
       <actions>
+        <grant-reward kind="ITEM" id="188600206" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -413,6 +418,7 @@
         <talk-to-npc npc-id="831544" dialog-ids="8..23"/>
       </event>
       <actions>
+        <grant-reward kind="ITEM" id="188600206" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -426,6 +432,7 @@
         <talk-to-npc npc-id="831545" dialog-ids="8..23"/>
       </event>
       <actions>
+        <grant-reward kind="ITEM" id="188600206" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -439,6 +446,7 @@
         <talk-to-npc npc-id="831546" dialog-ids="8..23"/>
       </event>
       <actions>
+        <grant-reward kind="ITEM" id="188600206" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -452,6 +460,7 @@
         <talk-to-npc npc-id="831547" dialog-ids="8..23"/>
       </event>
       <actions>
+        <grant-reward kind="ITEM" id="188600206" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -465,6 +474,7 @@
         <talk-to-npc npc-id="831548" dialog-ids="8..23"/>
       </event>
       <actions>
+        <grant-reward kind="ITEM" id="188600206" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

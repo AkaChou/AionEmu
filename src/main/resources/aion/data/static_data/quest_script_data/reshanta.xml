@@ -5,23 +5,4 @@
 	Make By (Encom)
  -->
 	<!-- Silver For The Fountain -->
-	<fountain_rewards id="1717" start_npc_ids="806559"/>
-	<fountain_rewards id="2717" start_npc_ids="806560"/>
-	<item_collecting id="1730" start_npc_ids="278593" end_npc_ids="278593"/>
-	<item_collecting id="1734" start_npc_ids="278556"/>
-	<item_collecting id="1735" start_npc_ids="278556"/>
-	<item_collecting id="1743" start_npc_ids="279015" end_npc_ids="279015"/>
-	<item_collecting id="1744" start_npc_ids="279015"/>
-	<item_collecting id="1751" start_npc_ids="278588"/>
-	<item_collecting id="2728" start_npc_ids="278000"/>
-	<item_collecting id="2733" start_npc_ids="278056"/>
-	<item_collecting id="2734" start_npc_ids="278056"/>
-	<item_collecting id="2741" start_npc_ids="278090"/>
-	<item_collecting id="2744" start_npc_ids="278090"/>
-	<item_collecting id="2751" start_npc_ids="278088"/>
-	<item_collecting id="2849" start_npc_ids="278006"/>
-	<item_collecting id="38500" start_npc_ids="278653"/>
-	<item_collecting id="38501" start_npc_ids="278654"/>
-	<item_collecting id="48500" start_npc_ids="278153"/>
-	<item_collecting id="48501" start_npc_ids="278654"/>
 	<monster_hunt id="1842" start_npc_ids="268080">		<monster var="0" end_var="80" npc_ids="215094"/>		<monster var="1" end_var="1" npc_ids="215134"/>	</monster_hunt>	<monster_hunt id="1843" start_npc_ids="269265">		<monster var="0" end_var="80" npc_ids="215137"/>		<monster var="1" end_var="1" npc_ids="215177"/>	</monster_hunt>	<monster_hunt id="1844" start_npc_ids="270165">		<monster var="0" end_var="80" npc_ids="215180"/>		<monster var="1" end_var="1" npc_ids="215220"/>	</monster_hunt>	<monster_hunt id="2844" start_npc_ids="269266">		<monster var="0" end_var="80" npc_ids="215137"/>		<monster var="1" end_var="1" npc_ids="215177"/>	</monster_hunt>	<monster_hunt id="2845" start_npc_ids="215220">		<monster var="0" end_var="80" npc_ids="215180"/>		<monster var="1" end_var="1" npc_ids="215220"/>	</monster_hunt></quest_scripts>

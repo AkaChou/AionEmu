@@ -29,5 +29,4 @@
 		<monster var="2" npc_ids="219530" end_var="1"/>
     </monster_hunt>
 	<!-- [Event] Secret Of The Map Piece -->
-	<item_collecting id="80282" start_npc_ids="831117" end_npc_ids="831350"/>
 </quest_scripts>

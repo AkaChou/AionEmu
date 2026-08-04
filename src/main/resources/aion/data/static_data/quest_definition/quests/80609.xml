@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80609" version="1">
-  <metadata name="[Service/Group] Officer's Mess" display-name-id="1136981" min-level="61" max-level="2147483647" category="QUEST">
+  <metadata name="[Service/Group] Officer's Mess" display-name-id="1136981" min-level="61" max-level="82" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

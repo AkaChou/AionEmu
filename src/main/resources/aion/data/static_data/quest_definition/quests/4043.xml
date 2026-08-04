@@ -4,6 +4,9 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <prerequisites>
+      <quest id="4042"/>
+    </prerequisites>
     <rewards>
       <reward kind="GOLD" id="0" amount="126540"/>
       <reward kind="EXP" id="0" amount="4451099"/>

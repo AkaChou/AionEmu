@@ -2,8 +2,7 @@
 <quest-definition id="2311" version="1">
   <metadata name="Disease Carriers" display-name-id="1103511" min-level="21" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
-      <race id="ASMODIANS"/>
+      <race id="PC_ALL"/>
     </races>
     <items>
       <item id="182204110" count="10"/>

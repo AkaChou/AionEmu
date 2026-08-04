@@ -5,7 +5,5 @@
 	Make By (Encom)
  -->
 	<!-- [Daily] Tillen's Order (Elyos Only) -->
-	<kill_in_world id="39022" start_npc_ids="799552" end_npc_ids="799552" worlds="210130000" amount="5"/>
 	<!-- [Daily] Relyt's Order (Asmodians Only) -->
-	<kill_in_world id="49022" start_npc_ids="799557" end_npc_ids="799557" worlds="220140000" amount="5"/>
  </quest_scripts>

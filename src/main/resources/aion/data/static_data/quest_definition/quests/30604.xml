@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="30604" version="1">
-  <metadata name="[Service/Group] Unending Assault" display-name-id="1136977" min-level="56" max-level="2147483647" category="QUEST">
+  <metadata name="[Service/Group] Unending Assault" display-name-id="1136977" min-level="56" max-level="60" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

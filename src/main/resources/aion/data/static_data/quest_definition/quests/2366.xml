@@ -2,8 +2,7 @@
 <quest-definition id="2366" version="1">
   <metadata name="Destroyer Hamitemon" display-name-id="1103566" min-level="31" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
-      <race id="ASMODIANS"/>
+      <race id="PC_ALL"/>
     </races>
     <rewards>
       <reward kind="EXP" id="0" amount="806224"/>

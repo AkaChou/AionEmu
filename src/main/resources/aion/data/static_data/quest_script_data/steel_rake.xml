@@ -5,44 +5,22 @@
 -->
     <!-- Elyos -->
     <!-- Snow Blessing -->
-	<report_to_many id="3201" start_npc_ids="798318" end_npc_ids="204534">
-		<npc_infos npc_id="278651" var="0" quest_dialog="1352"/>
-		<npc_infos npc_id="204534" var="1" quest_dialog="2375" close_dialog="1009"/>
-	</report_to_many>
 	<!-- A Promise To A Customer -->
-	<item_collecting id="3202" start_npc_ids="204534" action_item_ids="700523"/>
 	<!-- The Manduri Imperative -->
-	<item_collecting id="3203" start_npc_ids="805834"/>
 	<!-- Hairpin Ahoy! -->
-	<item_collecting id="3206" start_npc_ids="805835"/>
 	<!-- The Pirates' Log -->
-	<item_collecting id="3207" start_npc_ids="805836" action_item_ids="700524"/>
 	<!-- [Group] The Pirates' Pouch -->
-	<item_collecting id="3214" start_npc_ids="805835"/>
 	<!-- [Group] Bring Back The Booty -->
-	<item_collecting id="3215" start_npc_ids="805838"/>
 	<!-- [Group] Plunder The Pirates -->
-	<item_collecting id="3216" start_npc_ids="805833"/>
 	<!-- [Group] Against The Steel Rake -->
 	<!-- [Group] Revenge Of Maximus -->
     <!-- Asmodians -->
 	<!-- Sandblossom Wine -->
-	<report_to_many id="4201" start_npc_ids="278151" end_npc_ids="204791">
-		<npc_infos npc_id="205233" var="0" quest_dialog="1352"/>
-		<npc_infos npc_id="204791" var="1" quest_dialog="2375" close_dialog="1009"/>
-	</report_to_many>
 	<!-- Request Of A Wine Lover -->
-	<item_collecting id="4202" start_npc_ids="204791"/>
 	<!-- Anikiki's Taming Manual -->
-	<item_collecting id="4203" start_npc_ids="805841"/>
 	<!-- Hat Of The Steel Rake Pirates -->
-	<item_collecting id="4206" start_npc_ids="805842"/>
 	<!-- Log Of The Steel Rake -->
-	<item_collecting id="4207" start_npc_ids="805843" action_item_ids="700524"/>
 	<!-- [Group] Black Cloud Ledgers -->
-	<item_collecting id="4214" start_npc_ids="805843"/>
 	<!-- [Group] The Medicine Thief -->
-	<item_collecting id="4215" start_npc_ids="805846"/>
 	<!-- [Group] A Present For Father -->
-	<item_collecting id="4216" start_npc_ids="805840"/>
 </quest_scripts>

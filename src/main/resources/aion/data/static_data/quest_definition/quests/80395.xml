@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80395" version="1">
-  <metadata name="[Growth] Indratu Fortress Blues" display-name-id="1185592" min-level="41" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] Indratu Fortress Blues" display-name-id="1185592" min-level="41" max-level="82" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

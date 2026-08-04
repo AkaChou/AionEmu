@@ -4,6 +4,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <prerequisites>
+      <quest id="1464"/>
+    </prerequisites>
     <work-items>
       <item id="182206023" count="1"/>
     </work-items>

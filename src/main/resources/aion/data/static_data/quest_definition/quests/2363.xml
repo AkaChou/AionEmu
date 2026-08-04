@@ -2,8 +2,7 @@
 <quest-definition id="2363" version="1">
   <metadata name="Peace at The Last" display-name-id="1103563" min-level="33" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
-      <race id="ASMODIANS"/>
+      <race id="PC_ALL"/>
     </races>
     <rewards>
       <reward kind="EXP" id="0" amount="961458"/>

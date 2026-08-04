@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80420" version="1">
-  <metadata name="[Growth] The Future of Fungie" display-name-id="1185617" min-level="48" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] The Future of Fungie" display-name-id="1185617" min-level="48" max-level="55" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

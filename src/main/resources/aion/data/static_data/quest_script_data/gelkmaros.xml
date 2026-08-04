@@ -8,69 +8,13 @@
 	<!-- 손상된 마력포 (Asmodians Only) -->
 	<!-- 손상된 현악기 (Asmodians Only) -->
 	<!-- 손상된 기동쇠 (Asmodians Only) -->
-	<item_collecting id="21000" start_npc_ids="799202" action_item_ids="700708"/>
-	<item_collecting id="21001" start_npc_ids="799227"/>
 	<item_collecting id="21015" start_npc_ids="799246" action_item_ids="700721"/>
-	<item_collecting id="21022" start_npc_ids="799249"/>
 	<item_collecting id="21025" start_npc_ids="799252" action_item_ids="700723"/>
-	<item_collecting id="21028" start_npc_ids="799254"/>
-	<item_collecting id="21030" start_npc_ids="799252" action_item_ids="730246"/>
-	<item_collecting id="21031" start_npc_ids="799256" action_item_ids="700724"/>
-	<item_collecting id="21032" start_npc_ids="799256"/>
-	<item_collecting id="21035" start_npc_ids="799258"/>
-	<item_collecting id="21039" start_npc_ids="799213"/>
-	<item_collecting id="21041" start_npc_ids="799216"/>
-	<item_collecting id="21042" start_npc_ids="799215"/>
-	<item_collecting id="21043" start_npc_ids="799215"/>
-	<item_collecting id="21069" start_npc_ids="799406" action_item_ids="700932 700933"/>
-	<item_collecting id="21072" start_npc_ids="799407" action_item_ids="700931"/>
-	<item_collecting id="21078" start_npc_ids="799249"/>
-	<item_collecting id="21100" start_npc_ids="799280"/>
-	<item_collecting id="21101" start_npc_ids="799280"/>
-	<item_collecting id="21104" start_npc_ids="799270" action_item_ids="700725"/>
-	<item_collecting id="21107" start_npc_ids="799262"/>
-	<item_collecting id="21112" start_npc_ids="799282" action_item_ids="700726"/>
-	<item_collecting id="21116" start_npc_ids="799289"/>
-	<item_collecting id="21123" start_npc_ids="799296"/>
-	<item_collecting id="21126" start_npc_ids="799297"/>
-	<item_collecting id="21200" start_npc_ids="799300" action_item_ids="700731 700751"/>
-	<item_collecting id="21201" start_npc_ids="799300"/>
-	<item_collecting id="21205" start_npc_ids="799308" action_item_ids="700733"/>
-	<item_collecting id="21207" start_npc_ids="799308"/>
-	<item_collecting id="21212" start_npc_ids="799317" action_item_ids="700734"/>
-	<item_collecting id="21214" start_npc_ids="799317" action_item_ids="700735"/>
-	<item_collecting id="21220" start_npc_ids="799320" action_item_ids="700736"/>
 	<item_collecting id="21224" start_npc_ids="799318"/>
-	<item_collecting id="21242" start_npc_ids="799421"/>
-	<item_collecting id="21245" start_npc_ids="799317"/>
-	<item_collecting id="21247" start_npc_ids="799416"/>
-	<item_collecting id="21248" start_npc_ids="799416" action_item_ids="700930"/>
-	<item_collecting id="21273" start_npc_ids="799421"/>
-	<item_collecting id="21274" start_npc_ids="799421"/>
-	<item_collecting id="21452" start_npc_ids="799240"/>
-	<item_collecting id="21454" start_npc_ids="799404"/>
-	<item_collecting id="21457" start_npc_ids="799249" action_item_ids="700635"/>
-	<item_collecting id="30116" start_npc_ids="799336"/>
-	<item_collecting id="30118" start_npc_ids="799336"/>
-	<item_collecting id="30120" start_npc_ids="799336"/>
-	<item_collecting id="30122" start_npc_ids="799336"/>
-	<item_collecting id="30124" start_npc_ids="799336"/>
-	<item_collecting id="30126" start_npc_ids="799336"/>
-	<item_collecting id="30128" start_npc_ids="799336"/>
-	<item_collecting id="30130" start_npc_ids="799336"/>
-	<item_collecting id="30132" start_npc_ids="799336"/>
 	<!-- Releasing the Pistol's Potential (Asmodians Only) -->
-	<item_collecting id="30135" start_npc_ids="799336"/>
 	<!-- Releasing the Aethercannon's Potential (Asmodians Only) -->
-	<item_collecting id="30137" start_npc_ids="799336"/>
 	<!-- Releasing the Harp's Potential (Asmodians Only) -->
-	<item_collecting id="30139" start_npc_ids="799336"/>
 	<!-- Restoring Weapons (Asmodians Only) -->
-	<item_collecting id="30141" start_npc_ids="799336"/>
-	<item_collecting id="48502" start_npc_ids="799424"/>
-	<item_collecting id="48503" start_npc_ids="799425"/>
-	<item_collecting id="48505" start_npc_ids="799424"/>
-	<item_collecting id="48506" start_npc_ids="799425"/>
 	<relic_rewards id="21281" start_npc_ids="799949 205621" relic_var1="186000066" relic_var2="186000065" relic_var3="186000064" relic_var4="186000063"/>
 	<relic_rewards id="21282" start_npc_ids="799950 205622" relic_var1="186000062" relic_var2="186000061" relic_var3="186000060" relic_var4="186000059"/>
 	<relic_rewards id="21283" start_npc_ids="799951 205623" relic_var1="186000058" relic_var2="186000057" relic_var3="186000056" relic_var4="186000055"/>
@@ -93,7 +37,5 @@
 	</monster_hunt>
 	<!-- Quest 4.8 -->
 	<!-- [Daily/Spy] No Elyos In Gelkmaros (Asmodians Only) -->
-	<kill_in_world id="21324" start_npc_ids="799226" end_npc_ids="799226" worlds="210130000" amount="2"/>
 	<!-- [Daily] Erase The Elyos (Asmodians Only) -->
-	<kill_in_world id="21325" start_npc_ids="799226" end_npc_ids="799226" worlds="220140000" amount="2"/>
 </quest_scripts>

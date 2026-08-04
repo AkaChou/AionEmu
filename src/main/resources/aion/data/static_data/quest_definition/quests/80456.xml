@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80456" version="1">
-  <metadata name="[Growth] Infernal Machines" display-name-id="1185653" min-level="48" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] Infernal Machines" display-name-id="1185653" min-level="48" max-level="82" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <rewards>
       <reward kind="EXP" id="0" amount="5300000"/>
       <reward kind="ITEM" id="186000010" amount="5"/>
+      <reward kind="ITEM" id="188052680" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -308,6 +309,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="5300000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="186000010" amount="5"/>
+        <grant-reward kind="ITEM" id="188052680" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

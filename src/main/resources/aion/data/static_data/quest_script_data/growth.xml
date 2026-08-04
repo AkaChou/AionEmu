@@ -6,7 +6,6 @@
  -->
 	<!-- [Growth] Training Camp Trouble -->
 	<!-- [Growth] Hearts Of Fire -->
-	<item_collecting id="80213" start_npc_ids="831030"/>
 	<!-- [Growth] Aether Intervention -->
 	<monster_hunt id="80214" start_npc_ids="831030">
 		<monster var="0" npc_ids="204024 211014 211016 211017 211018 211019 211020 211033" end_var="100"/>
@@ -26,7 +25,6 @@
 	<!-- [Growth] Dark Poeta Finale -->
 	<!-- [Growth] Nochsana Infiltration -->
 	<!-- [Growth] Heartburn -->
-	<item_collecting start_npc_ids="831028" id="80222"/>
 	<!-- [Growth] Mist Mane Oww -->
 	<monster_hunt id="80223" start_npc_ids="831028">
 		<monster var="0" npc_ids="211615 212556 212724 212725 212726 212727" end_var="100"/>
@@ -42,41 +40,23 @@
 	<!-- [Growth] Final Test In Dark Poeta -->
 	<!-- [Growth] Final Test In Dark Poeta -->
 	<!-- [Growth] Conversation With Protector Siz -->
-	<report_to start_npc_ids="831833" end_npc_ids="831837" id="80369"/>
 	<!-- [Growth] Conversation With Protector Jacques -->
-	<report_to start_npc_ids="831833" end_npc_ids="831838" id="80370"/>
 	<!-- [Growth] Conversation With Protector Paulcoes -->
-	<report_to start_npc_ids="831833" end_npc_ids="831839" id="80371"/>
 	<!-- [Growth] Conversation With Protector Kentro -->
-	<report_to start_npc_ids="831833" end_npc_ids="831840" id="80372"/>
 	<!-- [Growth] Converse With Bree -->
-	<report_to start_npc_ids="831834" end_npc_ids="831841" id="80373"/>
 	<!-- [Growth] Converse With Mione -->
-	<report_to start_npc_ids="831834" end_npc_ids="831842" id="80374"/>
 	<!-- [Growth] Converse With Nico -->
-	<report_to start_npc_ids="831834" end_npc_ids="831843" id="80375"/>
 	<!-- [Growth] Converse With Kentro -->
-	<report_to start_npc_ids="831834" end_npc_ids="831840" id="80376"/>
 	<!-- [Growth] Converse With Mosswing -->
-	<report_to start_npc_ids="831834" end_npc_ids="831844" id="80377"/>
 	<!-- [Growth] Helping Eddval -->
-	<report_to start_npc_ids="831835" end_npc_ids="831845" id="80378"/>
 	<!-- [Growth] Helping Idmund -->
-	<report_to start_npc_ids="831835" end_npc_ids="831846" id="80379"/>
 	<!-- [Growth] Helping Ketil -->
-	<report_to start_npc_ids="831835" end_npc_ids="831847" id="80380"/>
 	<!-- [Growth] Helping Melnir -->
-	<report_to start_npc_ids="831835" end_npc_ids="831848" id="80381"/>
 	<!-- [Growth] Assisting Kolfrosta -->
-	<report_to start_npc_ids="831836" end_npc_ids="831849" id="80382"/>
 	<!-- [Growth] Assisting Geirrid -->
-	<report_to start_npc_ids="831836" end_npc_ids="831850" id="80383"/>
 	<!-- [Growth] Assisting Vaetild -->
-	<report_to start_npc_ids="831836" end_npc_ids="831851" id="80384"/>
 	<!-- [Growth] Assisting Melnir -->
-	<report_to start_npc_ids="831836" end_npc_ids="831848" id="80385"/>
 	<!-- [Growth] Assisting Mirian -->
-	<report_to start_npc_ids="831836" end_npc_ids="831852" id="80386"/>
 	<!-- [Growth] Kralltumagna Balaur Blues -->
 	<!-- [Growth] Kralltumagna Kill Zone -->
 	<!-- [Growth] No No Nagarant -->
@@ -96,7 +76,6 @@
 	<!-- [Growth] Blasting In Blasted Lands -->
 	<!-- [Growth] Zombie Eggs -->
 	<!-- [Growth] Bring Bree Proof -->
-	<item_collecting start_npc_ids="831841" id="80405"/>
 	<!-- [Growth] It Takes A Village Out -->
 	<!-- [Growth] To The Bat Cave -->
 	<!-- [Growth] A Many Peded Thing -->
@@ -116,7 +95,6 @@
 	<!-- [Growth] In The Lair Of The Drake -->
 	<!-- [Growth] Cleansing The Lair -->
 	<!-- [Growth] Bloody Balaur Rags -->
-	<item_collecting start_npc_ids="831845" id="80424"/>
 	<!-- [Growth] Slaying The General -->
 	<!-- [Growth] Shulack, I Need More Power! -->
 	<!-- [Growth] Unforeseen Problems -->
@@ -131,7 +109,6 @@
 	<!-- [Growth] Full Battle Disarray -->
 	<!-- [Growth] Pest Control -->
 	<!-- [Growth] The Sap's The Thing -->
-	<item_collecting start_npc_ids="831849" id="80438"/>
 	<!-- [Growth] From The Grave -->
 	<!-- [Growth] The Wailing Dead -->
 	<!-- [Growth] Hostile Waters -->
@@ -151,7 +128,5 @@
 	<!-- [Growth] Doom Fungie -->
 	<!-- [Growth] Infernal Machines -->
 	<!-- [Growth/Weekly] Lessons In Time -->
-	<item_collecting id="80473" start_npc_ids="831869"/>
 	<!-- [Growth/Weekly] Save Time And Effort -->
-	<item_collecting id="80474" start_npc_ids="831870"/>
 </quest_scripts>

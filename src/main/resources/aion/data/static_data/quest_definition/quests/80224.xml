@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80224" version="1">
-  <metadata name="[Growth] Bad Bakarma" display-name-id="1180188" min-level="39" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Growth] Bad Bakarma" display-name-id="1180188" min-level="39" max-level="82" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
     <rewards>
       <reward kind="EXP" id="0" amount="883000"/>
+      <reward kind="ITEM" id="188051857" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -20115,6 +20116,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="883000" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188051857" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

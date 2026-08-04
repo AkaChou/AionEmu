@@ -6,29 +6,17 @@
  -->
 	<!-- QUEST ELYOS -->
 	<!-- [Hero/Group] A Test Of Courage (Elyos Only) -->
-	<item_collecting id="13901" start_npc_ids="798514"/>
 	<!-- [Hero] Beyond The Basics (Elyos Only) -->
-	<item_collecting id="13903" start_npc_ids="798926"/>
 	<!-- [Hero/Daily] Ace Of Bases (Elyos Only) -->
-	<item_collecting id="13904" start_npc_ids="798926"/>
 	<!-- [Hero/Alliance] Full Throttle (Elyos Only) -->
-	<item_collecting id="13914" start_npc_ids="798515"/>
 	<!-- [Hero/Weekly/Alliance] Take 2 (Elyos Only) -->
-	<item_collecting id="13915" start_npc_ids="798515"/>
 	<!-- [Hero/Alliance] A Shadow Over Levinshor (Elyos Only) -->
-	<item_collecting id="13916" start_npc_ids="802350"/>
 	<!-- QUEST ASMODIANS -->
 	<!-- [Hero/Group] A Test Of Valiance (Asmodians Only) -->
-	<item_collecting id="23901" start_npc_ids="798718"/>
 	<!-- [Hero] Prove Your Supremacy (Asmodians Only) -->
-	<item_collecting id="23903" start_npc_ids="799225"/>
 	<!-- [Hero/Daily] Cover Your Bases (Asmodians Only) -->
-	<item_collecting id="23904" start_npc_ids="799225"/>
 	<!-- [Hero/Daily] Northern Occupation (Asmodians Only) -->
 	<!-- [Hero/Alliance] Stemming The Tide (Asmodians Only) -->
-	<item_collecting id="23914" start_npc_ids="798719"/>
 	<!-- [Hero/Weekly/Alliance] I'm not Quite Stemmed Yet (Asmodians Only) -->
-	<item_collecting id="23915" start_npc_ids="798719"/>
 	<!-- [Hero/Alliance] Un-Veille The Agents (Asmodians Only) -->
-	<item_collecting id="23916" start_npc_ids="802353"/>
  </quest_scripts>

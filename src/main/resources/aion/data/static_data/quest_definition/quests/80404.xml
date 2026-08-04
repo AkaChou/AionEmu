@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80404" version="1">
-  <metadata name="[Growth] Zombie Eggs" display-name-id="1185601" min-level="45" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] Zombie Eggs" display-name-id="1185601" min-level="45" max-level="82" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

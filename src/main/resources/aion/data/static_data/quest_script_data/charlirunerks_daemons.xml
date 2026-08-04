@@ -4,19 +4,6 @@
     Quest Charlirunerk's Daemon's 4.8
 	Make By (Encom)
  -->
-	<item_collecting id="46015" start_npc_ids="0" end_npc_ids="799882 799883" action_item_ids="700781"/>
-	<item_collecting id="46016" start_npc_ids="0" end_npc_ids="799882 799883" action_item_ids="700782"/>
-	<item_collecting id="46503" start_npc_ids="0" end_npc_ids="799882 799883"/>
-	<item_collecting id="46509" start_npc_ids="0" end_npc_ids="799882 799883"/>
-	<item_collecting id="46521" start_npc_ids="0" end_npc_ids="799882 799883"/>
-	<item_collecting id="46524" start_npc_ids="0" end_npc_ids="799882 799883"/>
-	<item_collecting id="46525" start_npc_ids="0" end_npc_ids="799882 799883"/>
-	<item_collecting id="46526" start_npc_ids="0" end_npc_ids="799882 799883"/>
-	<item_collecting id="46528" start_npc_ids="0" end_npc_ids="799882 799883"/>
-	<item_collecting id="46529" start_npc_ids="0" end_npc_ids="804955" action_item_ids="702756"/>
-	<item_collecting id="46530" start_npc_ids="0" end_npc_ids="804955" action_item_ids="702757"/>
-	<item_collecting id="46537" start_npc_ids="0" end_npc_ids="804956" action_item_ids="702758"/>
-	<item_collecting id="46538" start_npc_ids="0" end_npc_ids="804957" action_item_ids="702759"/>
 
 	<monster_hunt id="46500" start_npc_ids="0" end_npc_ids="799882 799883" reward="true">
 		<monster end_var="1" var="0" npc_ids="216624"/>
@@ -115,4 +102,17 @@
 	<kill_spawned id="46517" start_npc_ids="0" end_npc_ids="799882 799883">
 		<spawned_monster end_var="1" var="0" spawner_object="700777" npc_ids="216643"/>
 	</kill_spawned>
+	<item_collecting id="46015" start_npc_ids="0" end_npc_ids="799882 799883" action_item_ids="700781"/>
+	<item_collecting id="46016" start_npc_ids="0" end_npc_ids="799882 799883" action_item_ids="700782"/>
+	<item_collecting id="46503" start_npc_ids="0" end_npc_ids="799882 799883"/>
+	<item_collecting id="46509" start_npc_ids="0" end_npc_ids="799882 799883"/>
+	<item_collecting id="46521" start_npc_ids="0" end_npc_ids="799882 799883"/>
+	<item_collecting id="46524" start_npc_ids="0" end_npc_ids="799882 799883"/>
+	<item_collecting id="46525" start_npc_ids="0" end_npc_ids="799882 799883"/>
+	<item_collecting id="46526" start_npc_ids="0" end_npc_ids="799882 799883"/>
+	<item_collecting id="46528" start_npc_ids="0" end_npc_ids="799882 799883"/>
+	<item_collecting id="46529" start_npc_ids="0" end_npc_ids="804955" action_item_ids="702756"/>
+	<item_collecting id="46530" start_npc_ids="0" end_npc_ids="804955" action_item_ids="702757"/>
+	<item_collecting id="46537" start_npc_ids="0" end_npc_ids="804956" action_item_ids="702758"/>
+	<item_collecting id="46538" start_npc_ids="0" end_npc_ids="804957" action_item_ids="702759"/>
 </quest_scripts>

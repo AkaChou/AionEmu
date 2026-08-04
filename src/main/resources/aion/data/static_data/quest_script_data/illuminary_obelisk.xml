@@ -6,8 +6,6 @@
  -->
 	<!-- 16990 Strengthen The Defense handled by script (Elyos Only) -->
 	<!-- A Test Weapon (Elyos Only) -->
-	<item_collecting id="16992" start_npc_ids="802048" end_npc_ids="804598"/>
 	<!-- 26990 Protection Tower Researcher Kamaz handled by script (Asmodians Only) -->
 	<!-- The Powerful Mechanical Weapon (Asmodians Only) -->
-	<item_collecting id="26992" start_npc_ids="802049" end_npc_ids="804599"/>
 </quest_scripts>

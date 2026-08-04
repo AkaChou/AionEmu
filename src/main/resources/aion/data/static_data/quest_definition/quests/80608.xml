@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80608" version="1">
-  <metadata name="[Group] Break The Chain Of Command" display-name-id="1185787" min-level="61" max-level="2147483647" category="QUEST">
+  <metadata name="[Group] Break The Chain Of Command" display-name-id="1185787" min-level="61" max-level="82" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

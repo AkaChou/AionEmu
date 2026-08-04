@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="30611" version="1">
-  <metadata name="[Group] Alluna's Crew Cuts" display-name-id="1136979" min-level="56" max-level="2147483647" category="QUEST">
+  <metadata name="[Group] Alluna's Crew Cuts" display-name-id="1136979" min-level="56" max-level="60" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

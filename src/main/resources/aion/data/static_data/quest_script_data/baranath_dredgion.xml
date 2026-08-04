@@ -5,12 +5,8 @@
 	Make By (Encom)
  -->
 	<!-- [Group] Steal The Surkanate (Elyos Only) -->
-	<item_collecting id="3715" start_npc_ids="279045" action_item_ids="700415"/>
 	<!-- [Group] Key To Chaos (Elyos Only) -->
-	<item_collecting id="3717" start_npc_ids="279045" end_npc_ids="278501"/>
 	<!-- [Group] Chaos On The Dredgion (Asmodian Only) -->
 	<!-- [Group] Capturing The Surkanate (Asmodian Only) -->
-	<item_collecting id="4715" start_npc_ids="279042"/>
 	<!-- [Group] This Time It's Personnel (Asmodian Only) -->
-	<item_collecting id="4717" start_npc_ids="279042" end_npc_ids="278001"/>
 </quest_scripts>

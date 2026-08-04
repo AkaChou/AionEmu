@@ -4,13 +4,4 @@
     Quest Udas Temple 2.0
 	Make By (Encom)
  -->
-	<item_collecting id="30002" start_npc_ids="799029"/>
-	<item_collecting id="30008" start_npc_ids="799029" action_item_ids="700566"/>
-	<item_collecting id="30009" start_npc_ids="799029"/>
-	<item_collecting id="30010" start_npc_ids="799031" action_item_ids="700567"/>
-	<item_collecting id="30013" start_npc_ids="799030"/>
-	<item_collecting id="30014" start_npc_ids="799030"/>
-	<item_collecting id="30102" start_npc_ids="799333"/>
-	<item_collecting id="30108" start_npc_ids="799333" action_item_ids="700566"/>
-	<item_collecting id="30110" start_npc_ids="799335" action_item_ids="700567"/>
 </quest_scripts>

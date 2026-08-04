@@ -3,15 +3,7 @@
 	<!-- Elyos -->
 	<!-- Darkness Unpassed -->
 	<!-- The Balaur Report -->
-	<report_to_many id="3914" start_item_id="182206084" end_npc_ids="203384">
-		<npc_infos npc_id="203752" var="0" quest_dialog="1352"/>
-		<npc_infos npc_id="203384" var="1" quest_dialog="2375" close_dialog="1009"/>
-	</report_to_many>
 	<!-- Asmodians -->
 	<!-- Lifeform Remodeling Report -->
-	<report_to_many id="4914" start_item_id="182207127" end_npc_ids="204837">
-		<npc_infos npc_id="204182" var="0" quest_dialog="1352"/>
-		<npc_infos npc_id="203385" var="1" quest_dialog="2375" close_dialog="1009"/>
-	</report_to_many>
 	<!-- [Coin/Group] Drana Gluttony -->
 </quest_scripts>

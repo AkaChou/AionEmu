@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80434" version="1">
-  <metadata name="[Growth] Be Kind, Re-Grind" display-name-id="1185631" min-level="40" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] Be Kind, Re-Grind" display-name-id="1185631" min-level="40" max-level="82" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>

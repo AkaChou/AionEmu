@@ -6,14 +6,12 @@
  -->
 	<!-- QUEST ELYOS -->
 	<!-- North Relay Relay (Elyos Only) -->
-	<item_collecting id="13706" start_npc_ids="802329" action_item_ids="702615"/>
 	<!-- Mettling With Medals (Elyos Only) -->
 	<item_collecting id="13712" start_npc_ids="802565"/>
 	<!-- Itea's Enticing Offer (Elyos Only) -->
 	<item_collecting id="13714" start_npc_ids="802610"/>
 	<!-- QUEST ASMODIANS -->
 	<!-- Don't Eat The Messenger (Asmodians Only) -->
-	<item_collecting id="23706" start_npc_ids="802349" action_item_ids="702616"/>
 	<!-- Abeorn Makes Medals (Asmodians Only) -->
 	<item_collecting id="23712" start_npc_ids="802579"/>
 	<!-- Legen-dary Medals (Asmodians Only) -->

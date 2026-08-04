@@ -5,17 +5,13 @@
 	Make By (Encom)
  -->
 	<!-- [Group] The Prophet's Book (Elyos Only) -->
-	<item_collecting id="30706" start_npc_ids="800368" end_npc_ids="804870"/>
 	<!-- The Tahabata Legion's Future Plans (Elyos Only) -->
 	<!-- [Group] Breaking Through (Elyos Only) -->
 	<!-- [Group] Alpha Strike (Elyos Only) -->
 	<!-- Treachery's Reward (Elyos Only) -->
 	<!-- [Alliance] Dragon Song (Elyos Only) -->
-	<item_order id="30720" start_item_id="182213272" end_npc_id="804897"/>
 	<!-- [Spy/Alliance] Sabat's Song (Asmodians Only) -->
-	<item_order id="30723" start_item_id="182215691" end_npc_id="804898"/>
 	<!-- [Group] Prophets United (Asmodians Only) -->
-	<item_collecting id="30756" start_npc_ids="800368" end_npc_ids="804871"/>
 	<!-- [Group] Run The Savage Gauntlet (Asmodians Only) -->
 	<!-- [Group] Leading The Charge (Asmodians Only) -->
 </quest_scripts>

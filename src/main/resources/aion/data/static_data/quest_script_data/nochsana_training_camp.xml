@@ -3,11 +3,9 @@
 	<!-- Elyos -->
 	<!-- New Nochsana Orders -->
 	<!-- [Group] Pilfering Prototypes -->
-	<item_collecting id="3734" start_npc_ids="800518" action_item_ids="700415"/>
 	<!-- Asmodians -->
 	<!-- Nochsana Calls -->
 	<!-- You Have A Choice... -->
 	<!-- [Group] Weapons Wanted -->
-	<item_collecting id="4734" start_npc_ids="800519" action_item_ids="700415"/>
 	<!-- [Group] Training Terminated -->
 </quest_scripts>

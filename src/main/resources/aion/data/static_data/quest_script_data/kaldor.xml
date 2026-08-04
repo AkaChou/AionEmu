@@ -6,20 +6,12 @@
  -->
     <!-- QUEST ELYOS -->
 	<!-- [Urgent Order] Minus One (Elyos Only) -->
-	<kill_in_world id="13801" start_npc_ids="802431" end_npc_ids="802431" worlds="600090000" amount="1"/>
 	<!-- Hymrunerk Power And Associates (Elyos Only) -->
-	<item_collecting id="13806" start_npc_ids="802358" action_item_ids="702551"/>
 	<!-- The Flames Of Kaldor (Elyos Only) -->
-	<item_collecting id="13807" start_npc_ids="802432"/>
 	<!-- Legends Of Folly (Elyos Only) -->
-	<item_collecting id="13810" start_npc_ids="802428"/>
 	<!-- QUEST ASMODIANS -->
 	<!-- [Urgent Order] Feroz's Request (Asmodians Only) -->
-	<kill_in_world id="23801" start_npc_ids="802433" end_npc_ids="802433" worlds="600090000" amount="1"/>
 	<!-- Talking 'Bout My Generators (Asmodians Only) -->
-	<item_collecting id="23806" start_npc_ids="802362" action_item_ids="702552"/>
 	<!-- An Ample Sample (Elyos Only) -->
-	<item_collecting id="23807" start_npc_ids="802434"/>
 	<!-- Memory Of The Collapsed Rune (Asmodians Only) -->
-	<item_collecting id="23810" start_npc_ids="802430"/>
 </quest_scripts>

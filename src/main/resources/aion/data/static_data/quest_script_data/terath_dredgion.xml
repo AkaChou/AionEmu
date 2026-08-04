@@ -7,12 +7,10 @@
     <!-- 3.0 VERSION -->
 	<!-- [Group] Crew Cut (Elyos Only) -->
 	<!-- [Group] Supplant The Supplies (Elyos Only) -->
-	<item_collecting id="30602" start_npc_ids="800324" action_item_ids="701440"/>
 	<!-- [Service/Group] Terrors Of The Terath (Elyos Only) -->
 	<!-- [Service/Group] Unending Assault (Elyos Only) -->
 	<!-- [Group] Alluna's Crew Cuts (Asmodians Only) -->
 	<!-- [Group] Supply Seizure (Asmodians Only) -->
-	<item_collecting id="30612" start_npc_ids="800326" action_item_ids="701440"/>
 	<!-- [Service/Group] Officer's Mess (Asmodians Only) -->
 	<!-- [Service/Group] Wrath Of Terath (Asmodians Only) -->
 	<!-- 4.5 VERSION -->

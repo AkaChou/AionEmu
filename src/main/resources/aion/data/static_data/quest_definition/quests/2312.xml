@@ -2,8 +2,7 @@
 <quest-definition id="2312" version="1">
   <metadata name="Sylphen Pollution" display-name-id="1103512" min-level="21" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
-      <race id="ASMODIANS"/>
+      <race id="PC_ALL"/>
     </races>
     <prerequisites>
       <quest id="2311"/>

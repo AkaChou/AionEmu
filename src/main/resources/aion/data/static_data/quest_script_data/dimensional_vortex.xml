@@ -5,32 +5,21 @@
 	Make By (Encom)
  -->
 	<!-- Jump In Brusthonin (Elyos Only) -->
-	<report_to_many id="39000" start_npc_ids="800165" end_npc_ids="800500">
-        <npc_infos var="0" npc_id="800501" quest_dialog="1352"/>
-        <npc_infos npc_id="800500" var="1" quest_dialog="2375" close_dialog="1009"/>
-    </report_to_many>
 	<!-- Griffon Aid (Elyos Only) -->
 	<!-- Triple Kill (Elyos Only) -->
 	<!-- Breakout (Elyos Only) -->
 	<!-- Artillery Strike (Elyos Only) -->
 	<!-- A Handful Of Problems (Elyos Only) -->
-	<kill_in_world id="39006" end_npc_ids="800500" worlds="220050000" amount="5" invasion_world="220050000"/>
 	<!-- Homeland Defense (Elyos Only) -->
 	<!-- Theobomos Throwdown (Elyos Only) -->
-	<kill_in_world id="39008" end_npc_ids="800500" worlds="210060000" amount="5" invasion_world="210060000"/>
 	<!-- Thrill Of The Hunt (Elyos Only) -->
 	<!-- A New Battlefront Opens (Asmodians Only) -->
-	<report_to_many id="49000" start_npc_ids="800170" end_npc_ids="800502">
-		<npc_infos var="0" npc_id="800503" quest_dialog="1352"/>
-	</report_to_many>
 	<!-- Clear A Path To Jamanok Inn (Asmodians Only) -->
 	<!-- A Grim Warning To Others (Asmodians Only) -->
 	<!-- Document Destruction (Asmodians Only) -->
 	<!-- Clear The Assault Path (Asmodians Only) -->
 	<!-- Eliminating Elyos Associates (Asmodians Only) -->
-	<kill_in_world id="49006" end_npc_ids="800502" worlds="210060000" amount="5" invasion_world="210060000"/>
 	<!-- Stop The Elyos Infiltration (Asmodians Only) -->
 	<!-- Prevent An Elyos Attack (Asmodians Only) -->
-	<kill_in_world id="49008" end_npc_ids="800502" worlds="220050000" amount="5" invasion_world="220050000"/>
 	<!-- Kill Nevma! (Asmodians Only) -->
 </quest_scripts>

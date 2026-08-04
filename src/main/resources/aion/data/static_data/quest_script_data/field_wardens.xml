@@ -70,29 +70,8 @@
 		<npc_infos var="0" npc_id="804924" quest_dialog="1352"/>
 		<npc_infos var="1" npc_id="804933" quest_dialog="2375" close_dialog="1009"/>
 	</report_to_many>
-	
-	<item_collecting id="45007" start_npc_ids="0" end_npc_ids="799848" action_item_ids="700800"/>
-	<item_collecting id="45008" start_npc_ids="0" end_npc_ids="799848" action_item_ids="700801"/>
-	<item_collecting id="45014" start_npc_ids="0" end_npc_ids="799849" action_item_ids="700803"/>
-	<item_collecting id="45015" start_npc_ids="0" end_npc_ids="799849" action_item_ids="700804"/>
-	<item_collecting id="45021" start_npc_ids="0" end_npc_ids="799842 799843" action_item_ids="700778"/>
-	<item_collecting id="45022" start_npc_ids="0" end_npc_ids="799842 799843" action_item_ids="700779"/>
-	<item_collecting id="45031" start_npc_ids="0" end_npc_ids="799848"/>
-	<item_collecting id="45032" start_npc_ids="0" end_npc_ids="799848"/>
-	<item_collecting id="45033" start_npc_ids="0" end_npc_ids="799848"/>
-	<item_collecting id="45034" start_npc_ids="0" end_npc_ids="799848"/>
-	<item_collecting id="45039" start_npc_ids="0" end_npc_ids="799849"/>
-	<item_collecting id="45040" start_npc_ids="0" end_npc_ids="799849"/>
-	<item_collecting id="45041" start_npc_ids="0" end_npc_ids="799849"/>
-	<item_collecting id="45042" start_npc_ids="0" end_npc_ids="799849"/>
-	<item_collecting id="45045" start_npc_ids="0" end_npc_ids="799842 799843"/>
-	<item_collecting id="45046" start_npc_ids="0" end_npc_ids="799842 799843"/>
-	<item_collecting id="45047" start_npc_ids="0" end_npc_ids="799842 799843"/>
-	<item_collecting id="45048" start_npc_ids="0" end_npc_ids="799842 799843"/>
 	<!-- [일일] 힘이 깃든 진주를 보급하라 -->
-	<item_collecting id="45053" start_npc_ids="0" end_npc_ids="804930" action_item_ids="700754"/>
 	<!-- [일일] 태고의 드라나를 보급하라 -->
-	<item_collecting id="45054" start_npc_ids="0" end_npc_ids="804930" action_item_ids="700755"/>
 	
 	<monster_hunt id="45009" start_npc_ids="0" end_npc_ids="799848">
 		<monster end_var="3" var="0" npc_ids="700802"/>
@@ -166,4 +145,24 @@
 	<monster_hunt id="45065" start_npc_ids="0" end_npc_ids="804937">
 		<monster end_var="10" var="0" npc_ids="219797 219798"/>
 	</monster_hunt>
+	<item_collecting id="45007" start_npc_ids="0" end_npc_ids="799848" action_item_ids="700800"/>
+	<item_collecting id="45008" start_npc_ids="0" end_npc_ids="799848" action_item_ids="700801"/>
+	<item_collecting id="45014" start_npc_ids="0" end_npc_ids="799849" action_item_ids="700803"/>
+	<item_collecting id="45015" start_npc_ids="0" end_npc_ids="799849" action_item_ids="700804"/>
+	<item_collecting id="45021" start_npc_ids="0" end_npc_ids="799842 799843" action_item_ids="700778"/>
+	<item_collecting id="45022" start_npc_ids="0" end_npc_ids="799842 799843" action_item_ids="700779"/>
+	<item_collecting id="45031" start_npc_ids="0" end_npc_ids="799848"/>
+	<item_collecting id="45032" start_npc_ids="0" end_npc_ids="799848"/>
+	<item_collecting id="45033" start_npc_ids="0" end_npc_ids="799848"/>
+	<item_collecting id="45034" start_npc_ids="0" end_npc_ids="799848"/>
+	<item_collecting id="45039" start_npc_ids="0" end_npc_ids="799849"/>
+	<item_collecting id="45040" start_npc_ids="0" end_npc_ids="799849"/>
+	<item_collecting id="45041" start_npc_ids="0" end_npc_ids="799849"/>
+	<item_collecting id="45042" start_npc_ids="0" end_npc_ids="799849"/>
+	<item_collecting id="45045" start_npc_ids="0" end_npc_ids="799842 799843"/>
+	<item_collecting id="45046" start_npc_ids="0" end_npc_ids="799842 799843"/>
+	<item_collecting id="45047" start_npc_ids="0" end_npc_ids="799842 799843"/>
+	<item_collecting id="45048" start_npc_ids="0" end_npc_ids="799842 799843"/>
+	<item_collecting id="45053" start_npc_ids="0" end_npc_ids="804930" action_item_ids="700754"/>
+	<item_collecting id="45054" start_npc_ids="0" end_npc_ids="804930" action_item_ids="700755"/>
 </quest_scripts>

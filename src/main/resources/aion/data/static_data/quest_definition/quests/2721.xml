@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="2721" version="1">
+  <metadata name="Meeting with The Brigade General" display-name-id="1104821" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="125280"/>
+      <reward kind="EXP" id="0" amount="1665056"/>
+      <reward kind="AP" id="0" amount="100"/>
+      <reward kind="ITEM" id="162000027" amount="5"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278001" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278001" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="278001" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="278001" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278001" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278001" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="278001" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="278001" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="278001" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="278001" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="278001" dialog-ids="8..23"/></event><actions>        <grant-reward kind="GOLD" id="0" amount="125280" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="1665056" amount-mode="QUEST_BASE"/>        <grant-reward kind="AP" id="0" amount="100" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="162000027" amount="5"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278002" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278002" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="278002" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="278002" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278002" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278002" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="278002" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="278002" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="278002" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="278002" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="278002" dialog-ids="8..23"/></event><actions>        <grant-reward kind="GOLD" id="0" amount="125280" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="1665056" amount-mode="QUEST_BASE"/>        <grant-reward kind="AP" id="0" amount="100" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="162000027" amount="5"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278003" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278003" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="278003" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="278003" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278003" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278003" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="278003" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="278003" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="278003" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="278003" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="278003" dialog-ids="8..23"/></event><actions>        <grant-reward kind="GOLD" id="0" amount="125280" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="1665056" amount-mode="QUEST_BASE"/>        <grant-reward kind="AP" id="0" amount="100" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="162000027" amount="5"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278054" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278054" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="278054" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="278054" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278054" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278054" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="278054" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="278054" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="278054" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="278054" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="278054" dialog-ids="8..23"/></event><actions>        <grant-reward kind="GOLD" id="0" amount="125280" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="1665056" amount-mode="QUEST_BASE"/>        <grant-reward kind="AP" id="0" amount="100" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="162000027" amount="5"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+  </transitions>
+</quest-definition>

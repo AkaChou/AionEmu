@@ -12,13 +12,11 @@
 	<!-- [Alliance] Artillery Action (Elyos Only) -->
 	<!-- [Alliance] Retreat Into Death (Elyos Only) -->
 	<!-- [Alliance] The Follow-Through (Elyos Only) -->
-	<item_collecting id="18034" start_npc_ids="801226"/>
 	<!-- [포스] 계속되는 보루 수비 (Elyos Only) -->
 	<!-- [포스] 계속되는 보루 수비 (Elyos Only) -->
 	<!-- 23305 A Fierce Struggle handled by script (Asmodians Only) -->
 	<!-- 28035 [Alliance] Trust In None, But Verify handled by script (Asmodians Only) -->
 	<!-- 28036 Interrogate Kvash handled by script (Asmodians Only) -->
 	<!-- [Alliance] Conquering Ambitions (Asmodians Only) -->
-	<item_collecting id="28034" start_npc_ids="801047"/>
 	<!-- [포스] 계속되는 보루 방어 (Asmodians Only) -->
 </quest_scripts>

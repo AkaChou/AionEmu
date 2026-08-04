@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80394" version="1">
-  <metadata name="[Growth] Drakan Back In Style" display-name-id="1185591" min-level="41" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] Drakan Back In Style" display-name-id="1185591" min-level="41" max-level="82" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

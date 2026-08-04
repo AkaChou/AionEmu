@@ -4,10 +4,4 @@
     Quest Silentera Canyon 2.0
 	Make By (Encom)
 -->
-	<item_collecting id="30052" start_npc_ids="799033" end_npc_ids="798929" action_item_ids="700568"/>
-	<item_collecting id="30152" start_npc_ids="799338" end_npc_ids="799227" action_item_ids="700568"/>
-	<item_collecting id="38504" start_npc_ids="799087"/>
-	<item_collecting id="38507" start_npc_ids="799087"/>
-	<item_collecting id="48504" start_npc_ids="799426"/>
-	<item_collecting id="48507" start_npc_ids="799426"/>
 </quest_scripts>

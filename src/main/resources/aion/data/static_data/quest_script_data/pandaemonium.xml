@@ -3,67 +3,25 @@
 <!--
     Quest Pandaemonium 5.1 Make By (Encom)
  -->
-	<item_collecting id="2905" start_npc_ids="204104"/>
-	<item_collecting id="2906" start_npc_ids="204106"/>
-	<item_collecting id="2907" start_npc_ids="204100"/>
-	<item_collecting id="2908" start_npc_ids="204108"/>
-	<item_collecting id="2909" start_npc_ids="204102"/>
-	<item_collecting id="2910" start_npc_ids="204110"/>
-	<item_collecting id="2915" start_npc_ids="204173"/>
-	<item_collecting id="2923" start_npc_ids="798058"/>
-	<item_collecting id="2924" start_npc_ids="204108"/>
-	<item_collecting id="2926" start_npc_ids="204261"/>
-	<item_collecting id="2927" start_npc_ids="204235" end_npc_ids="204261"/>
-	<item_collecting id="2956" start_npc_ids="204127"/>
-	<item_collecting id="2960" start_npc_ids="204164"/>
-	<item_collecting id="4907" start_npc_ids="204208" action_item_ids="700511"/>
-	<item_collecting id="4915" start_npc_ids="204837"/>
-	<item_collecting id="4916" start_npc_ids="204837"/>
-	<item_collecting id="4918" start_npc_ids="804609"/>
-	<item_collecting id="4919" start_npc_ids="804609"/>
-	<item_collecting id="4975" start_npc_ids="204283"/>
-	<item_collecting id="29042" start_npc_ids="204286" end_npc_ids="204286"/>
-	<item_collecting id="29043" start_npc_ids="798445"/>
-	<item_order start_item_id="182207044" end_npc_id="278055" id="2966"/>
-	<item_order start_item_id="182207045" end_npc_id="278055" id="2967"/>
-	<item_order start_item_id="182207046" end_npc_id="278055" id="2968"/>
-	<item_order start_item_id="182207047" end_npc_id="278056" id="2969"/>
-	<item_order start_item_id="182207048" end_npc_id="278056" id="2970"/>
-	<item_order start_item_id="182207049" end_npc_id="278056" id="2971"/>
 	<!-- CRAFT QUEST -->
 	<!-- [Expert] Weaponsmithing Zeal -->
-	<item_collecting id="4945" start_npc_ids="204104"/>
 	<!-- [Expert] Weaponsmith's Skill -->
-	<item_collecting id="4946" start_npc_ids="204104"/>
 	<!-- [Expert] Weaponsmithing Expert -->
 	<!-- [Expert] Armorsmithing Zeal -->
-	<item_collecting id="4948" start_npc_ids="204106"/>
 	<!-- [Expert] Armorsmith's Skill -->
-	<item_collecting id="4949" start_npc_ids="204106"/>
 	<!-- [Expert] Handicrafting Zeal -->
-	<item_collecting id="4951" start_npc_ids="204108"/>
 	<!-- [Expert] Handicrafter's Skill -->
-	<item_collecting id="4952" start_npc_ids="204108"/>
 	<!-- [Expert] Handicrafting Expert -->
 	<!-- [Expert] Cooking Zeal -->
-	<item_collecting id="4954" start_npc_ids="204100"/>
 	<!-- [Expert] Cook's Skill -->
-	<item_collecting id="4955" start_npc_ids="204100"/>
 	<!-- [Expert] Alchemy Zeal -->
-	<item_collecting id="4957" start_npc_ids="204102"/>
 	<!-- [Expert] Alchemist's Skill -->
-	<item_collecting id="4958" start_npc_ids="204102"/>
 	<!-- [Expert] Alchemy Expert -->
 	<!-- [Expert] Tailoring Zeal -->
-	<item_collecting id="4960" start_npc_ids="204110"/>
 	<!-- [Expert] Tailor's Skill -->
-	<item_collecting id="4961" start_npc_ids="204110"/>
 	<!-- [Expert] Passion For Construction -->
-	<item_collecting id="29052" start_npc_ids="798452"/>
 	<!-- [Expert] Expert Of Construction -->
-	<item_collecting id="29053" start_npc_ids="798452"/>
 	<!-- [Expert] Constructor's Final Exam -->
-	<item_collecting id="29055" start_npc_ids="798452"/>
 	<!-- [Expert] Expert Constructor -->
 	<!-- SKILL USE QUEST -->
 	<!-- Enlightenment Of Destiny -->

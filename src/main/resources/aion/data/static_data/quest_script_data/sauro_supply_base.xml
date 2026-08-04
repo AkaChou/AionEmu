@@ -7,17 +7,11 @@
     <!-- 18910 The Sauro Supply Base handled by script (Elyos Only) -->
 	<!-- [Group] Slay Sheba, Blind Beritra (Elyos Only) -->
 	<!-- [Group] What Sheba Hath Wrought (Elyos Only) -->
-	<item_collecting id="18913" start_npc_ids="801945"/>
 	<!-- [Group] Hunks Of Junk (Elyos Only) -->
-	<item_collecting id="18914" start_npc_ids="801945" action_item_ids="801955"/>
 	<!-- [Group] Sauro: The Final Assault (Elyos Only) -->
 	<!-- [Group] For The Folks Back Home (Elyos Only) -->
-	<item_collecting id="18916" start_npc_ids="801945" end_npc_ids="801944"/>
 	<!-- 28910 [Group] A Stabbing In Sauro handled by script (Asmodians Only) -->
 	<!-- [Group] Alas, Poor Shugo, Nyerk (Asmodians Only) -->
-	<item_collecting id="28913" start_npc_ids="801947"/>
 	<!-- [Group] Prototype Of Destruction (Asmodians Only) -->
-	<item_collecting id="28914" start_npc_ids="801947" action_item_ids="801955"/>
 	<!-- [Group] Precious Seal (Asmodians Only) -->
-	<item_collecting id="28916" start_npc_ids="801947" end_npc_ids="801946"/>
 </quest_scripts>
