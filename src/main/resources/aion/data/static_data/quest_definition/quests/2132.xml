@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="2132" version="1">
+  <metadata name="A New Skill" display-name-id="1103232" min-level="3" max-level="2147483647" category="IMPORTANT" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="275"/>
+    </rewards>
+    <class-rewards>
+      <class id="WARRIOR">
+        <reward kind="EXP" id="0" amount="275"/>
+      </class>
+      <class id="SCOUT">
+        <reward kind="EXP" id="0" amount="275"/>
+      </class>
+      <class id="MAGE">
+        <reward kind="EXP" id="0" amount="275"/>
+      </class>
+      <class id="PRIEST">
+        <reward kind="EXP" id="0" amount="275"/>
+      </class>
+      <class id="TECHNIST">
+        <reward kind="EXP" id="0" amount="275"/>
+      </class>
+      <class id="MUSE">
+        <reward kind="EXP" id="0" amount="275"/>
+      </class>
+    </class-rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="w_reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s_reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="m_reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="p_reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="4"/>
+        </vars>
+      </project>
+    </node>
+    <node label="t_reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="5"/>
+        </vars>
+      </project>
+    </node>
+    <node label="u_reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="6"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="w_reward" priority="0">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="WARRIOR"/>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="s_reward" priority="1">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="SCOUT"/>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="m_reward" priority="2">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MAGE"/>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="p_reward" priority="3">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="PRIEST"/>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="t_reward" priority="4">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="TECHNIST"/>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="u_reward" priority="5">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <player-class-is starting-class="MUSE"/>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="w_reward" target="w_reward">
+      <event>
+        <talk-to-npc npc-id="203527" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="w_reward" target="w_reward">
+      <event>
+        <talk-to-npc npc-id="203527" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="w_reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203527" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="s_reward" target="s_reward">
+      <event>
+        <talk-to-npc npc-id="203528" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <transition source="s_reward" target="s_reward">
+      <event>
+        <talk-to-npc npc-id="203528" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="6"/>
+      </after-commit>
+    </transition>
+    <transition source="s_reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203528" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="m_reward" target="m_reward">
+      <event>
+        <talk-to-npc npc-id="203529" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1693"/>
+      </after-commit>
+    </transition>
+    <transition source="m_reward" target="m_reward">
+      <event>
+        <talk-to-npc npc-id="203529" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="7"/>
+      </after-commit>
+    </transition>
+    <transition source="m_reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203529" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="p_reward" target="p_reward">
+      <event>
+        <talk-to-npc npc-id="203530" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2034"/>
+      </after-commit>
+    </transition>
+    <transition source="p_reward" target="p_reward">
+      <event>
+        <talk-to-npc npc-id="203530" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="8"/>
+      </after-commit>
+    </transition>
+    <transition source="p_reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203530" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="t_reward" target="t_reward">
+      <event>
+        <talk-to-npc npc-id="801218" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="t_reward" target="t_reward">
+      <event>
+        <talk-to-npc npc-id="801218" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="45"/>
+      </after-commit>
+    </transition>
+    <transition source="t_reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="801218" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="u_reward" target="u_reward">
+      <event>
+        <talk-to-npc npc-id="801219" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2716"/>
+      </after-commit>
+    </transition>
+    <transition source="u_reward" target="u_reward">
+      <event>
+        <talk-to-npc npc-id="801219" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="46"/>
+      </after-commit>
+    </transition>
+    <transition source="u_reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="801219" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>
