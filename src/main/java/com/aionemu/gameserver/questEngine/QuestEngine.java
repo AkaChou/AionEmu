@@ -417,6 +417,13 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onLogOut(QuestEnv env) {
 		try {
+			Player player = env.getPlayer();
+			QuestProductionDispatcher typed = productionDispatcher;
+			if (player != null) {
+				// 分发到 typed owner：玩家登出（广播全部 log-out 路由）。
+				// Dispatch to typed owners: player logged out (broadcast all log-out routes).
+				typed.dispatch(new QuestEvent.LogOut(), player.getObjectId(), 0, QuestDispatchContract.BROADCAST);
+			}
 			for (int index = 0; index < questOnLogOut.size(); index++) {
 				QuestHandler questHandler = getQuestHandlerByQuestId(questOnLogOut.get(index));
 				if (questHandler != null) {
@@ -439,6 +446,20 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onNpcReachTarget(QuestEnv env) {
 		try {
+			Player player = env.getPlayer();
+			QuestProductionDispatcher typed = productionDispatcher;
+			if (player != null) {
+				// 分发到 typed owner：护送 NPC 到达目标（有 owner 则独占，否则广播）。
+				// Dispatch to typed owners: escort NPC reached target (exclusive if owner is set, else broadcast).
+				int owner = env.getQuestId();
+				if (owner > 0) {
+					typed.dispatch(new QuestEvent.NpcReachTarget(), player.getObjectId(), owner,
+						QuestDispatchContract.EXCLUSIVE);
+				} else {
+					typed.dispatch(new QuestEvent.NpcReachTarget(), player.getObjectId(), 0,
+						QuestDispatchContract.BROADCAST);
+				}
+			}
 			for (int index = 0; index < reachTarget.size(); index++) {
 				QuestHandler questHandler = getQuestHandlerByQuestId(reachTarget.get(index));
 				if (questHandler != null && env.getQuestId() == reachTarget.get(index)) {
@@ -459,6 +480,20 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onNpcLostTarget(QuestEnv env) {
 		try {
+			Player player = env.getPlayer();
+			QuestProductionDispatcher typed = productionDispatcher;
+			if (player != null) {
+				// 分发到 typed owner：护送 NPC 丢失目标（有 owner 则独占，否则广播）。
+				// Dispatch to typed owners: escort NPC lost target (exclusive if owner is set, else broadcast).
+				int owner = env.getQuestId();
+				if (owner > 0) {
+					typed.dispatch(new QuestEvent.NpcLostTarget(), player.getObjectId(), owner,
+						QuestDispatchContract.EXCLUSIVE);
+				} else {
+					typed.dispatch(new QuestEvent.NpcLostTarget(), player.getObjectId(), 0,
+						QuestDispatchContract.BROADCAST);
+				}
+			}
 			for (int index = 0; index < lostTarget.size(); index++) {
 				QuestHandler questHandler = getQuestHandlerByQuestId(lostTarget.get(index));
 				if (questHandler != null && env.getQuestId() == lostTarget.get(index)) {
@@ -775,6 +810,14 @@ public class QuestEngine implements GameEngine {
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onQuestTimerEnd(QuestEnv env) {
+		Player player = env.getPlayer();
+		QuestProductionDispatcher typed = productionDispatcher;
+		if (player != null && env.getQuestId() > 0) {
+			// 分发到 typed owner：任务计时器结束（独占指定 owner）。
+			// Dispatch to typed owners: quest timer ended (exclusive to the named owner).
+			typed.dispatch(new QuestEvent.QuestTimerEnd(), player.getObjectId(), env.getQuestId(),
+				QuestDispatchContract.EXCLUSIVE);
+		}
 		for (int questId : questOnTimerEnd) {
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 			if (questHandler != null) {
