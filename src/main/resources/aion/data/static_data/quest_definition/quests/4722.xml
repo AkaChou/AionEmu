@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="4722" version="1">
+  <metadata name="[Group] New Weapon Test" display-name-id="1120013" min-level="51" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <items><item id="182205692" count="1"/></items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="3953541"/>
+      <reward kind="AP" id="0" amount="900"/>
+      <reward kind="SELECTABLE_ITEM" id="164000073" amount="5"/>
+      <reward kind="SELECTABLE_ITEM" id="164000076" amount="5"/>
+      <reward kind="SELECTABLE_ITEM" id="164000070" amount="8"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799403" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799403" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="799403" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="182205692" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="799403" dialog-id="20000"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="182205692" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799403" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799403" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="799403" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="799403" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="799403" dialog-id="8"/></event><actions>        <remove-item item-id="182205692" count="ALL"/>        <grant-reward kind="EXP" id="0" amount="3953541" amount-mode="QUEST_BASE"/>        <grant-reward kind="AP" id="0" amount="900" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="164000073" amount="5"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="799403" dialog-id="9"/></event><actions>        <remove-item item-id="182205692" count="ALL"/>        <grant-reward kind="EXP" id="0" amount="3953541" amount-mode="QUEST_BASE"/>        <grant-reward kind="AP" id="0" amount="900" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="164000076" amount="5"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="799403" dialog-id="10"/></event><actions>        <remove-item item-id="182205692" count="ALL"/>        <grant-reward kind="EXP" id="0" amount="3953541" amount-mode="QUEST_BASE"/>        <grant-reward kind="AP" id="0" amount="900" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="164000070" amount="8"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="reward"><event><use-item item-id="182205692"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+  </transitions>
+</quest-definition>
