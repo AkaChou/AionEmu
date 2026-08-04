@@ -6,6 +6,7 @@
     </races>
 <prerequisites>
       <quest id="1671"/>
+      <quest id="14054"/>
     </prerequisites>
     <items>
       <item id="182201809" count="10"/>
