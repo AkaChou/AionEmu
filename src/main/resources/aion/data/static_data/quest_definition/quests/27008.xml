@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="27008" version="1">
-  <metadata name="[Alliance] Muada's Fate" display-name-id="1140088" min-level="65" max-level="2147483647" category="CHALLENGE_TASK" cannot-share="true">
+  <metadata name="[Alliance] Muada's Fate" display-name-id="1140088" min-level="65" max-level="2147483647" category="CHALLENGE_TASK" cannot-share="true" target-type="FORCE">
     <races>
       <race id="ASMODIANS"/>
     </races>

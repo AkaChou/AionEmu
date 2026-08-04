@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="27019" version="1">
-  <metadata name="[League] Incarnation Destruction" display-name-id="1140099" min-level="66" max-level="2147483647" category="CHALLENGE_TASK" cannot-share="true">
+  <metadata name="[League] Incarnation Destruction" display-name-id="1140099" min-level="66" max-level="2147483647" category="CHALLENGE_TASK" cannot-share="true" target-type="UNION">
     <races>
       <race id="ASMODIANS"/>
     </races>
