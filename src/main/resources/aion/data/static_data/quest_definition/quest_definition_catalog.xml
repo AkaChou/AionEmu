@@ -503,9 +503,15 @@
   <definition id="1910" resource="aion/data/static_data/quest_definition/quests/1910.xml"/>
   <definition id="1911" resource="aion/data/static_data/quest_definition/quests/1911.xml"/>
   <definition id="1912" resource="aion/data/static_data/quest_definition/quests/1912.xml"/>
+  <definition id="1913" resource="aion/data/static_data/quest_definition/quests/1913.xml"/>
+  <definition id="1914" resource="aion/data/static_data/quest_definition/quests/1914.xml"/>
+  <definition id="1915" resource="aion/data/static_data/quest_definition/quests/1915.xml"/>
+  <definition id="1916" resource="aion/data/static_data/quest_definition/quests/1916.xml"/>
   <definition id="1917" resource="aion/data/static_data/quest_definition/quests/1917.xml"/>
   <definition id="1918" resource="aion/data/static_data/quest_definition/quests/1918.xml"/>
   <definition id="1919" resource="aion/data/static_data/quest_definition/quests/1919.xml"/>
+  <definition id="1920" resource="aion/data/static_data/quest_definition/quests/1920.xml"/>
+  <definition id="1926" resource="aion/data/static_data/quest_definition/quests/1926.xml"/>
   <definition id="1928" resource="aion/data/static_data/quest_definition/quests/1928.xml"/>
   <definition id="1930" resource="aion/data/static_data/quest_definition/quests/1930.xml"/>
   <definition id="1931" resource="aion/data/static_data/quest_definition/quests/1931.xml"/>
@@ -517,6 +523,7 @@
   <definition id="1937" resource="aion/data/static_data/quest_definition/quests/1937.xml"/>
   <definition id="1938" resource="aion/data/static_data/quest_definition/quests/1938.xml"/>
   <definition id="1939" resource="aion/data/static_data/quest_definition/quests/1939.xml"/>
+  <definition id="1940" resource="aion/data/static_data/quest_definition/quests/1940.xml"/>
   <definition id="1950" resource="aion/data/static_data/quest_definition/quests/1950.xml"/>
   <definition id="1951" resource="aion/data/static_data/quest_definition/quests/1951.xml"/>
   <definition id="1952" resource="aion/data/static_data/quest_definition/quests/1952.xml"/>
@@ -1061,6 +1068,10 @@
   <definition id="2886" resource="aion/data/static_data/quest_definition/quests/2886.xml"/>
   <definition id="2887" resource="aion/data/static_data/quest_definition/quests/2887.xml"/>
   <definition id="2888" resource="aion/data/static_data/quest_definition/quests/2888.xml"/>
+  <definition id="2901" resource="aion/data/static_data/quest_definition/quests/2901.xml"/>
+  <definition id="2902" resource="aion/data/static_data/quest_definition/quests/2902.xml"/>
+  <definition id="2903" resource="aion/data/static_data/quest_definition/quests/2903.xml"/>
+  <definition id="2904" resource="aion/data/static_data/quest_definition/quests/2904.xml"/>
   <definition id="2905" resource="aion/data/static_data/quest_definition/quests/2905.xml"/>
   <definition id="2906" resource="aion/data/static_data/quest_definition/quests/2906.xml"/>
   <definition id="2907" resource="aion/data/static_data/quest_definition/quests/2907.xml"/>
@@ -1085,12 +1096,15 @@
   <definition id="2927" resource="aion/data/static_data/quest_definition/quests/2927.xml"/>
   <definition id="2928" resource="aion/data/static_data/quest_definition/quests/2928.xml"/>
   <definition id="2929" resource="aion/data/static_data/quest_definition/quests/2929.xml"/>
+  <definition id="2938" resource="aion/data/static_data/quest_definition/quests/2938.xml"/>
   <definition id="2939" resource="aion/data/static_data/quest_definition/quests/2939.xml"/>
   <definition id="2940" resource="aion/data/static_data/quest_definition/quests/2940.xml"/>
   <definition id="2941" resource="aion/data/static_data/quest_definition/quests/2941.xml"/>
   <definition id="2942" resource="aion/data/static_data/quest_definition/quests/2942.xml"/>
   <definition id="2943" resource="aion/data/static_data/quest_definition/quests/2943.xml"/>
   <definition id="2944" resource="aion/data/static_data/quest_definition/quests/2944.xml"/>
+  <definition id="2945" resource="aion/data/static_data/quest_definition/quests/2945.xml"/>
+  <definition id="2948" resource="aion/data/static_data/quest_definition/quests/2948.xml"/>
   <definition id="2953" resource="aion/data/static_data/quest_definition/quests/2953.xml"/>
   <definition id="2954" resource="aion/data/static_data/quest_definition/quests/2954.xml"/>
   <definition id="2955" resource="aion/data/static_data/quest_definition/quests/2955.xml"/>
@@ -2468,6 +2482,9 @@
   <definition id="13963" resource="aion/data/static_data/quest_definition/quests/13963.xml"/>
   <definition id="13964" resource="aion/data/static_data/quest_definition/quests/13964.xml"/>
   <definition id="13968" resource="aion/data/static_data/quest_definition/quests/13968.xml"/>
+  <definition id="14013" resource="aion/data/static_data/quest_definition/quests/14013.xml"/>
+  <definition id="14015" resource="aion/data/static_data/quest_definition/quests/14015.xml"/>
+  <definition id="14053" resource="aion/data/static_data/quest_definition/quests/14053.xml"/>
   <definition id="14110" resource="aion/data/static_data/quest_definition/quests/14110.xml"/>
   <definition id="14111" resource="aion/data/static_data/quest_definition/quests/14111.xml"/>
   <definition id="14113" resource="aion/data/static_data/quest_definition/quests/14113.xml"/>
@@ -2735,9 +2752,13 @@
   <definition id="15715" resource="aion/data/static_data/quest_definition/quests/15715.xml"/>
   <definition id="15716" resource="aion/data/static_data/quest_definition/quests/15716.xml"/>
   <definition id="15717" resource="aion/data/static_data/quest_definition/quests/15717.xml"/>
+  <definition id="16802" resource="aion/data/static_data/quest_definition/quests/16802.xml"/>
+  <definition id="16803" resource="aion/data/static_data/quest_definition/quests/16803.xml"/>
+  <definition id="16804" resource="aion/data/static_data/quest_definition/quests/16804.xml"/>
   <definition id="16809" resource="aion/data/static_data/quest_definition/quests/16809.xml"/>
   <definition id="16810" resource="aion/data/static_data/quest_definition/quests/16810.xml"/>
   <definition id="16811" resource="aion/data/static_data/quest_definition/quests/16811.xml"/>
+  <definition id="16823" resource="aion/data/static_data/quest_definition/quests/16823.xml"/>
   <definition id="16837" resource="aion/data/static_data/quest_definition/quests/16837.xml"/>
   <definition id="16838" resource="aion/data/static_data/quest_definition/quests/16838.xml"/>
   <definition id="16900" resource="aion/data/static_data/quest_definition/quests/16900.xml"/>
@@ -3046,6 +3067,8 @@
   <definition id="19057" resource="aion/data/static_data/quest_definition/quests/19057.xml"/>
   <definition id="19064" resource="aion/data/static_data/quest_definition/quests/19064.xml"/>
   <definition id="19065" resource="aion/data/static_data/quest_definition/quests/19065.xml"/>
+  <definition id="19070" resource="aion/data/static_data/quest_definition/quests/19070.xml"/>
+  <definition id="19071" resource="aion/data/static_data/quest_definition/quests/19071.xml"/>
   <definition id="19600" resource="aion/data/static_data/quest_definition/quests/19600.xml"/>
   <definition id="19601" resource="aion/data/static_data/quest_definition/quests/19601.xml"/>
   <definition id="19602" resource="aion/data/static_data/quest_definition/quests/19602.xml"/>
@@ -3391,6 +3414,9 @@
   <definition id="23946" resource="aion/data/static_data/quest_definition/quests/23946.xml"/>
   <definition id="23952" resource="aion/data/static_data/quest_definition/quests/23952.xml"/>
   <definition id="23968" resource="aion/data/static_data/quest_definition/quests/23968.xml"/>
+  <definition id="24015" resource="aion/data/static_data/quest_definition/quests/24015.xml"/>
+  <definition id="24052" resource="aion/data/static_data/quest_definition/quests/24052.xml"/>
+  <definition id="24054" resource="aion/data/static_data/quest_definition/quests/24054.xml"/>
   <definition id="24110" resource="aion/data/static_data/quest_definition/quests/24110.xml"/>
   <definition id="24111" resource="aion/data/static_data/quest_definition/quests/24111.xml"/>
   <definition id="24112" resource="aion/data/static_data/quest_definition/quests/24112.xml"/>
@@ -3653,9 +3679,13 @@
   <definition id="25715" resource="aion/data/static_data/quest_definition/quests/25715.xml"/>
   <definition id="25716" resource="aion/data/static_data/quest_definition/quests/25716.xml"/>
   <definition id="25717" resource="aion/data/static_data/quest_definition/quests/25717.xml"/>
+  <definition id="26802" resource="aion/data/static_data/quest_definition/quests/26802.xml"/>
+  <definition id="26803" resource="aion/data/static_data/quest_definition/quests/26803.xml"/>
+  <definition id="26804" resource="aion/data/static_data/quest_definition/quests/26804.xml"/>
   <definition id="26809" resource="aion/data/static_data/quest_definition/quests/26809.xml"/>
   <definition id="26810" resource="aion/data/static_data/quest_definition/quests/26810.xml"/>
   <definition id="26811" resource="aion/data/static_data/quest_definition/quests/26811.xml"/>
+  <definition id="26823" resource="aion/data/static_data/quest_definition/quests/26823.xml"/>
   <definition id="26829" resource="aion/data/static_data/quest_definition/quests/26829.xml"/>
   <definition id="26837" resource="aion/data/static_data/quest_definition/quests/26837.xml"/>
   <definition id="26838" resource="aion/data/static_data/quest_definition/quests/26838.xml"/>
@@ -3965,6 +3995,8 @@
   <definition id="29057" resource="aion/data/static_data/quest_definition/quests/29057.xml"/>
   <definition id="29064" resource="aion/data/static_data/quest_definition/quests/29064.xml"/>
   <definition id="29065" resource="aion/data/static_data/quest_definition/quests/29065.xml"/>
+  <definition id="29070" resource="aion/data/static_data/quest_definition/quests/29070.xml"/>
+  <definition id="29071" resource="aion/data/static_data/quest_definition/quests/29071.xml"/>
   <definition id="29600" resource="aion/data/static_data/quest_definition/quests/29600.xml"/>
   <definition id="29601" resource="aion/data/static_data/quest_definition/quests/29601.xml"/>
   <definition id="29602" resource="aion/data/static_data/quest_definition/quests/29602.xml"/>
@@ -4766,6 +4798,58 @@
   <definition id="80484" resource="aion/data/static_data/quest_definition/quests/80484.xml"/>
   <definition id="80485" resource="aion/data/static_data/quest_definition/quests/80485.xml"/>
   <definition id="80486" resource="aion/data/static_data/quest_definition/quests/80486.xml"/>
+  <definition id="80487" resource="aion/data/static_data/quest_definition/quests/80487.xml"/>
+  <definition id="80488" resource="aion/data/static_data/quest_definition/quests/80488.xml"/>
+  <definition id="80489" resource="aion/data/static_data/quest_definition/quests/80489.xml"/>
+  <definition id="80490" resource="aion/data/static_data/quest_definition/quests/80490.xml"/>
+  <definition id="80491" resource="aion/data/static_data/quest_definition/quests/80491.xml"/>
+  <definition id="80492" resource="aion/data/static_data/quest_definition/quests/80492.xml"/>
+  <definition id="80493" resource="aion/data/static_data/quest_definition/quests/80493.xml"/>
+  <definition id="80494" resource="aion/data/static_data/quest_definition/quests/80494.xml"/>
+  <definition id="80495" resource="aion/data/static_data/quest_definition/quests/80495.xml"/>
+  <definition id="80496" resource="aion/data/static_data/quest_definition/quests/80496.xml"/>
+  <definition id="80497" resource="aion/data/static_data/quest_definition/quests/80497.xml"/>
+  <definition id="80498" resource="aion/data/static_data/quest_definition/quests/80498.xml"/>
+  <definition id="80499" resource="aion/data/static_data/quest_definition/quests/80499.xml"/>
+  <definition id="80500" resource="aion/data/static_data/quest_definition/quests/80500.xml"/>
+  <definition id="80501" resource="aion/data/static_data/quest_definition/quests/80501.xml"/>
+  <definition id="80502" resource="aion/data/static_data/quest_definition/quests/80502.xml"/>
+  <definition id="80503" resource="aion/data/static_data/quest_definition/quests/80503.xml"/>
+  <definition id="80504" resource="aion/data/static_data/quest_definition/quests/80504.xml"/>
+  <definition id="80505" resource="aion/data/static_data/quest_definition/quests/80505.xml"/>
+  <definition id="80506" resource="aion/data/static_data/quest_definition/quests/80506.xml"/>
+  <definition id="80507" resource="aion/data/static_data/quest_definition/quests/80507.xml"/>
+  <definition id="80508" resource="aion/data/static_data/quest_definition/quests/80508.xml"/>
+  <definition id="80509" resource="aion/data/static_data/quest_definition/quests/80509.xml"/>
+  <definition id="80510" resource="aion/data/static_data/quest_definition/quests/80510.xml"/>
+  <definition id="80511" resource="aion/data/static_data/quest_definition/quests/80511.xml"/>
+  <definition id="80512" resource="aion/data/static_data/quest_definition/quests/80512.xml"/>
+  <definition id="80513" resource="aion/data/static_data/quest_definition/quests/80513.xml"/>
+  <definition id="80514" resource="aion/data/static_data/quest_definition/quests/80514.xml"/>
+  <definition id="80515" resource="aion/data/static_data/quest_definition/quests/80515.xml"/>
+  <definition id="80516" resource="aion/data/static_data/quest_definition/quests/80516.xml"/>
+  <definition id="80517" resource="aion/data/static_data/quest_definition/quests/80517.xml"/>
+  <definition id="80518" resource="aion/data/static_data/quest_definition/quests/80518.xml"/>
+  <definition id="80519" resource="aion/data/static_data/quest_definition/quests/80519.xml"/>
+  <definition id="80520" resource="aion/data/static_data/quest_definition/quests/80520.xml"/>
+  <definition id="80521" resource="aion/data/static_data/quest_definition/quests/80521.xml"/>
+  <definition id="80522" resource="aion/data/static_data/quest_definition/quests/80522.xml"/>
+  <definition id="80523" resource="aion/data/static_data/quest_definition/quests/80523.xml"/>
+  <definition id="80524" resource="aion/data/static_data/quest_definition/quests/80524.xml"/>
+  <definition id="80525" resource="aion/data/static_data/quest_definition/quests/80525.xml"/>
+  <definition id="80526" resource="aion/data/static_data/quest_definition/quests/80526.xml"/>
+  <definition id="80527" resource="aion/data/static_data/quest_definition/quests/80527.xml"/>
+  <definition id="80528" resource="aion/data/static_data/quest_definition/quests/80528.xml"/>
+  <definition id="80529" resource="aion/data/static_data/quest_definition/quests/80529.xml"/>
+  <definition id="80530" resource="aion/data/static_data/quest_definition/quests/80530.xml"/>
+  <definition id="80531" resource="aion/data/static_data/quest_definition/quests/80531.xml"/>
+  <definition id="80532" resource="aion/data/static_data/quest_definition/quests/80532.xml"/>
+  <definition id="80533" resource="aion/data/static_data/quest_definition/quests/80533.xml"/>
+  <definition id="80534" resource="aion/data/static_data/quest_definition/quests/80534.xml"/>
+  <definition id="80535" resource="aion/data/static_data/quest_definition/quests/80535.xml"/>
+  <definition id="80536" resource="aion/data/static_data/quest_definition/quests/80536.xml"/>
+  <definition id="80537" resource="aion/data/static_data/quest_definition/quests/80537.xml"/>
+  <definition id="80538" resource="aion/data/static_data/quest_definition/quests/80538.xml"/>
   <definition id="80539" resource="aion/data/static_data/quest_definition/quests/80539.xml"/>
   <definition id="80540" resource="aion/data/static_data/quest_definition/quests/80540.xml"/>
   <definition id="80541" resource="aion/data/static_data/quest_definition/quests/80541.xml"/>
