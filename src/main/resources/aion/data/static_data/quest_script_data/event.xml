@@ -162,25 +162,6 @@
 	<!-- Befitting The Hero Of The Guardians -->
 	<!-- ASMODIANS -->
 	<!-- Troubled Arabella -->
-	<xml_quest start_npc_id="831425" end_npc_id="831426" id="80318">
-		<on_talk_event ids="831426">
-			<var value="0">
-				<npc id="831426">
-					<dialog id="31">
-					<operations>
-						<npc_dialog id="1352"/>
-					</operations>
-					</dialog>
-					<dialog id="1353">
-					<operations>
-					<set_quest_status status="REWARD"/>
-						<npc_dialog id="5"/>
-						</operations>
-					</dialog>
-				</npc>
-			</var>
-		</on_talk_event>
-	</xml_quest>
 	<!-- Ziba's Request -->
 	<!-- For The Asmodians -->
 	<!-- Befitting The Hero Of The Archons -->

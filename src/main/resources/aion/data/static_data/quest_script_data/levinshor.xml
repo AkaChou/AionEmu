@@ -9,11 +9,8 @@
 	<!-- Mettling With Medals (Elyos Only) -->
 	<item_collecting id="13712" start_npc_ids="802565"/>
 	<!-- Itea's Enticing Offer (Elyos Only) -->
-	<item_collecting id="13714" start_npc_ids="802610"/>
 	<!-- QUEST ASMODIANS -->
 	<!-- Don't Eat The Messenger (Asmodians Only) -->
 	<!-- Abeorn Makes Medals (Asmodians Only) -->
-	<item_collecting id="23712" start_npc_ids="802579"/>
 	<!-- Legen-dary Medals (Asmodians Only) -->
-	<item_collecting id="23714" start_npc_ids="802596"/>
 </quest_scripts>
