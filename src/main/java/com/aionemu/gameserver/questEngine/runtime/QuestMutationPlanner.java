@@ -4,12 +4,14 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.NodeProjection;
 import com.aionemu.gameserver.questEngine.definition.ProgressLayout;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestReward;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -120,12 +122,28 @@ public final class QuestMutationPlanner {
 		}
 		QuestNode source = definition.definition().nodes().stream()
 			.filter(node -> node.label().equals(transition.sourceNode())).findFirst().orElseThrow();
-		if (snapshot.status() != source.projection().status()) {
+		if (!matchesSourceStatus(snapshot, source, transition)) {
 			return false;
 		}
 		Map<String, Integer> actual = layout.unpack(snapshot.packedVariables());
 		return source.projection().variables().entrySet().stream()
 			.allMatch(entry -> entry.getValue().equals(actual.get(entry.getKey())));
+	}
+
+	/**
+	 * A repeatable quest is persisted as COMPLETE between runs, while its next
+	 * start transition is declared from the NONE/unaccepted node. Only an
+	 * explicitly start-eligible transition may cross that lifecycle boundary;
+	 * ordinary unaccepted dialog routes must not fire after completion.
+	 */
+	private static boolean matchesSourceStatus(QuestSnapshot snapshot, QuestNode source,
+		QuestTransition transition) {
+		if (snapshot.status() == source.projection().status()) {
+			return true;
+		}
+		return snapshot.status() == QuestStatus.COMPLETE
+			&& source.projection().status() == QuestStatus.NONE
+			&& transition.conditions().stream().anyMatch(QuestCondition.StartEligible.class::isInstance);
 	}
 
 	/**
