@@ -48,7 +48,14 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 			return QuestStartEligibility.rejected("QUEST_TEMPLATE_MISSING");
 		}
 		if (template.getNpcFactionId() != 0) {
-			return QuestStartEligibility.rejected("NPC_FACTION_START_SIDE_EFFECT_UNSUPPORTED");
+			var factions = player.getNpcFactions();
+			var faction = factions == null ? null : factions.getNpcFactionById(template.getNpcFactionId());
+			if (faction == null || !faction.isActive() || faction.getQuestId() != questId) {
+				return QuestStartEligibility.rejected("NPC_FACTION_QUEST_NOT_ACTIVE");
+			}
+			if (!template.isTimeBased() && !factions.canStartQuest(template)) {
+				return QuestStartEligibility.rejected("NPC_FACTION_QUEST_COOLDOWN");
+			}
 		}
 		if (limitedQuestRequiresAcquisition.test(template)) {
 			return QuestStartEligibility.rejected("LIMITED_QUEST_ACQUISITION_UNSUPPORTED");

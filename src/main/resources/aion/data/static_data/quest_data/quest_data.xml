@@ -49789,6 +49789,15 @@
       <reward_item item_id="188050737" count="1"/>
     </rewards>
   </quest>
+  <quest id="36517" name="[每日]德拉坎的宠物" nameId="1126103" minlevel_permitted="55" maxlevel_permitted="55" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="FACTION" npcfaction_id="4" repeat_cycle="ALL">
+    <rewards exp="1621827">
+      <reward_item item_id="186000102" count="2"/>
+      <reward_item item_id="188050737" count="1"/>
+    </rewards>
+    <quest_work_items>
+      <quest_work_item item_id="182210026"/>
+    </quest_work_items>
+  </quest>
   <quest id="36520" name="[Daily] Watching You Die" nameId="1126113" minlevel_permitted="50" maxlevel_permitted="52" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="FACTION" npcfaction_id="4" repeat_cycle="ALL">
     <collect_items>
       <collect_item item_id="182210028" count="1"/>

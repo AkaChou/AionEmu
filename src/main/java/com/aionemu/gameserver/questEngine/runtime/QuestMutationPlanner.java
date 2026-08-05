@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.NodeProjection;
 import com.aionemu.gameserver.questEngine.definition.ProgressLayout;
@@ -97,7 +98,41 @@ public final class QuestMutationPlanner {
 				status = setStatus.status();
 			}
 		}
-		return Optional.of(new QuestMutationPlan(definition.id(), status, packed, actions, transition.afterCommit()));
+		return Optional.of(new QuestMutationPlan(definition.id(), status, packed, actions,
+			npcFactionLifecycleActions(definition, snapshot, event, transition, target)));
+	}
+
+	/**
+	 * NPC-faction state is a player-side lifecycle resource rather than a quest
+	 * variable. Keep it outside the SQL mutation, but schedule the same start,
+	 * complete, and explicit-abandon hooks that the legacy QuestService invokes.
+	 */
+	private static List<AfterCommitAction> npcFactionLifecycleActions(CompiledQuestDefinition definition,
+		QuestSnapshot snapshot, QuestEvent event, QuestTransition transition, QuestNode target) {
+		int npcFactionId = definition.definition().metadata().npcFactionId();
+		if (npcFactionId == 0) {
+			return transition.afterCommit();
+		}
+		QuestStatus sourceStatus = transition.sourceNode() == null ? snapshot.status() : QuestStatus.NONE;
+		if (transition.sourceNode() != null) {
+			sourceStatus = definition.definition().nodes().stream()
+				.filter(node -> node.label().equals(transition.sourceNode()))
+				.map(node -> node.projection().status()).findFirst().orElse(QuestStatus.NONE);
+		}
+		List<AfterCommitAction> lifecycle = new ArrayList<>();
+		boolean timeBased = !definition.definition().metadata().repeatCycles().isEmpty();
+		if (!timeBased && sourceStatus == QuestStatus.NONE && target.projection().status() == QuestStatus.START) {
+			lifecycle.add(new AfterCommitAction.StartNpcFactionQuest(npcFactionId));
+		}
+		if (target.projection().status() == QuestStatus.COMPLETE) {
+			lifecycle.add(new AfterCommitAction.CompleteNpcFactionQuest(npcFactionId));
+		}
+		if (event instanceof QuestEvent.Abandon && sourceStatus != QuestStatus.NONE
+			&& target.projection().status() == QuestStatus.NONE) {
+			lifecycle.add(new AfterCommitAction.AbortNpcFactionQuest(npcFactionId));
+		}
+		lifecycle.addAll(transition.afterCommit());
+		return lifecycle;
 	}
 
 	private static void appendFinalRepeatRewards(CompiledQuestDefinition definition, QuestSnapshot snapshot,
