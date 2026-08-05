@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="10521" version="1">
+  <metadata name="Memories of Eternity" display-name-id="1802009" min-level="65" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true" title-id="306">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="451980"/>
+      <reward kind="SELECTABLE_ITEM" id="100201657" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100001994" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100101476" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100901511" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101301395" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101501497" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101701492" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100601552" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100501434" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="102001355" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101801327" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101901232" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="102101170" amount="1"/>
+      <reward kind="ITEM" id="187000186" amount="1"/>
+      <reward kind="ITEM" id="166100009" amount="10"/>
+    </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="10520"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="14" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="s3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="s4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="s5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
+    <node label="s6"><project status="START"><vars><var name="var0" value="6"/></vars></project></node>
+    <node label="s7"><project status="START"><vars><var name="var0" value="7"/></vars></project></node>
+    <node label="s8"><project status="START"><vars><var name="var0" value="8"/></vars></project></node>
+    <node label="s9"><project status="START"><vars><var name="var0" value="9"/></vars></project></node>
+    <node label="s10"><project status="START"><vars><var name="var0" value="10"/></vars></project></node>
+    <node label="s11"><project status="START"><vars><var name="var0" value="11"/></vars></project></node>
+    <node label="s12"><project status="START"><vars><var name="var0" value="12"/></vars></project></node>
+    <node label="s13"><project status="START"><vars><var name="var0" value="13"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="14"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+  </nodes>
+  <transitions>
+    <!-- 接取：10520 完成后的 zone-mission-end 广播 / 升级时自动接取（defaultOnLvlUpEvent(10520,true)）。 -->
+    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <!-- 806134 Ador：var0=0 对话分支。 -->
+    <transition source="started" target="started"><event><talk-to-npc npc-id="806134" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="806134" dialog-id="1012"/></event><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
+    <transition source="started" target="s1"><event><talk-to-npc npc-id="806134" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 806075 Weatha：var0=1 对话分支。 -->
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="806075" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="806075" dialog-id="1353"/></event><after-commit><show-quest-dialog dialog-id="1353"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="806075" dialog-id="10001"/></event><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 703164 Tower Fragment：var0=2 使用后播放电影 999。 -->
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="703164" dialog-id="-1"/></event><after-commit><play-movie movie-id="999"/><close-dialog/></after-commit></transition>
+    <!-- 电影 999 结束：传送入 301570000 副本（next available instance）。 -->
+    <transition source="s2" target="s3"><event><movie-end movie-id="999"/></event><actions><set-variable field="var0" value="3"/></actions><after-commit><teleport-player-next-available-instance world-id="301570000" x="737" y="512" z="469" heading="0"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <!-- 进入感官区 A：var0 3→4。 -->
+    <transition source="s3" target="s4"><event><enter-zone zone="ID_ETERNITY_Q_SENSORYAREA_A_301570000"/></event><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <!-- 击杀 857783：var0 4→5。 -->
+    <transition source="s4" target="s5"><event><kill-npc npc-id="857783"/></event><actions><set-variable field="var0" value="5"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <!-- 731667 FOBJ A：var0=5 对话分支。 -->
+    <transition source="s5" target="s5"><event><talk-to-npc npc-id="731667" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
+    <transition source="s5" target="s5"><event><talk-to-npc npc-id="731667" dialog-id="2717"/></event><after-commit><show-quest-dialog dialog-id="2717"/></after-commit></transition>
+    <transition source="s5" target="s6"><event><talk-to-npc npc-id="731667" dialog-id="10005"/></event><actions><set-variable field="var0" value="6"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 731668 FOBJ B：var0=6 对话分支。 -->
+    <transition source="s6" target="s6"><event><talk-to-npc npc-id="731668" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="3057"/></after-commit></transition>
+    <transition source="s6" target="s6"><event><talk-to-npc npc-id="731668" dialog-id="3058"/></event><after-commit><show-quest-dialog dialog-id="3058"/></after-commit></transition>
+    <transition source="s6" target="s7"><event><talk-to-npc npc-id="731668" dialog-id="10006"/></event><actions><set-variable field="var0" value="7"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 进入感官区 B：var0 7→8。 -->
+    <transition source="s7" target="s8"><event><enter-zone zone="ID_ETERNITY_Q_SENSORYAREA_B_301570000"/></event><actions><set-variable field="var0" value="8"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <!-- 806136 Leibo01：var0=8 对话；STEP_TO_9 删除自身并延迟 3 秒刷出 3 个 NPC（对应旧 handler 延迟调度）。 -->
+    <transition source="s8" target="s8"><event><talk-to-npc npc-id="806136" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="3739"/></after-commit></transition>
+    <transition source="s8" target="s8"><event><talk-to-npc npc-id="806136" dialog-id="3740"/></event><after-commit><show-quest-dialog dialog-id="3740"/></after-commit></transition>
+    <transition source="s8" target="s9"><event><talk-to-npc npc-id="806136" dialog-id="10008"/></event><actions><set-variable field="var0" value="9"/></actions><after-commit><delete-interaction-npc schedule-respawn="false"/><start-invisible-timer seconds="3" timer-id="10521-leibo1-spawn" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s9" target="s9"><event><invisible-timer-end/></event><after-commit>
+        <spawn-npc-current-or-default slot="sado-wi-1" template-id="857948" world-id="301570000" x="446.12146" y="654.5927" z="468.97745" heading="19"/>
+        <spawn-npc-current-or-default slot="sado-wi-n" template-id="857903" world-id="301570000" x="451.2063" y="654.0501" z="468.97745" heading="20"/>
+        <spawn-npc-current-or-default slot="sado-wi-2" template-id="857948" world-id="301570000" x="453.82755" y="650.27997" z="468.97745" heading="19"/>
+        <sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <!-- 731669 FOBJ C：var0=9 对话分支。 -->
+    <transition source="s9" target="s9"><event><talk-to-npc npc-id="731669" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="4080"/></after-commit></transition>
+    <transition source="s9" target="s9"><event><talk-to-npc npc-id="731669" dialog-id="4081"/></event><after-commit><show-quest-dialog dialog-id="4081"/></after-commit></transition>
+    <transition source="s9" target="s9"><event><talk-to-npc npc-id="731669" dialog-id="4166"/></event><after-commit><show-quest-dialog dialog-id="4166"/></after-commit></transition>
+    <transition source="s9" target="s10"><event><talk-to-npc npc-id="731669" dialog-id="10009"/></event><actions><set-variable field="var0" value="10"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 进入感官区 C：var0 10→11。 -->
+    <transition source="s10" target="s11"><event><enter-zone zone="ID_ETERNITY_Q_SENSORYAREA_C_301570000"/></event><actions><set-variable field="var0" value="11"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <!-- 806137 Leibo02：var0=11 对话；STEP_TO_12 删除自身并延迟 3 秒刷出 3 个 NPC。 -->
+    <transition source="s11" target="s11"><event><talk-to-npc npc-id="806137" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="6841"/></after-commit></transition>
+    <transition source="s11" target="s11"><event><talk-to-npc npc-id="806137" dialog-id="6842"/></event><after-commit><show-quest-dialog dialog-id="6842"/></after-commit></transition>
+    <transition source="s11" target="s12"><event><talk-to-npc npc-id="806137" dialog-id="10011"/></event><actions><set-variable field="var0" value="12"/></actions><after-commit><delete-interaction-npc schedule-respawn="false"/><start-invisible-timer seconds="3" timer-id="10521-leibo2-spawn" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s12" target="s12"><event><invisible-timer-end/></event><after-commit>
+        <spawn-npc-current-or-default slot="cube-as-1" template-id="857915" world-id="301570000" x="346.18872" y="516.0532" z="468.937" heading="119"/>
+        <spawn-npc-current-or-default slot="energy-wi" template-id="857916" world-id="301570000" x="347.85834" y="511.8845" z="468.937" heading="0"/>
+        <spawn-npc-current-or-default slot="cube-as-2" template-id="857915" world-id="301570000" x="346.09894" y="507.7084" z="468.937" heading="119"/>
+        <sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <!-- 703130 FOBJ D：var0=12 使用后播放电影 923。 -->
+    <transition source="s12" target="s12"><event><talk-to-npc npc-id="703130" dialog-id="-1"/></event><after-commit><play-movie movie-id="923"/><close-dialog/></after-commit></transition>
+    <!-- 电影 923 结束：按性别刷出不同 NPC（MALE 857788 / FEMALE 857795）并发送系统消息 1403364。 -->
+    <transition source="s12" target="s13"><event><movie-end movie-id="923"/></event><conditions><gender-is gender="MALE"/></conditions><actions><set-variable field="var0" value="13"/></actions><after-commit><system-message message-id="1403364"/><spawn-npc-current-or-default slot="wind-li" template-id="857788" world-id="301570000" x="231.63109" y="511.9707" z="468.80215" heading="0"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s12" target="s13"><event><movie-end movie-id="923"/></event><conditions><gender-is gender="FEMALE"/></conditions><actions><set-variable field="var0" value="13"/></actions><after-commit><system-message message-id="1403364"/><spawn-npc-current-or-default slot="wind-li" template-id="857795" world-id="301570000" x="231.63109" y="511.9707" z="468.80215" heading="0"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <!-- 击杀 857785/857792（二选一）：var0 13→14 并进入 REWARD。 -->
+    <transition source="s13" target="reward"><event><kill-npc npc-ids="857785 857792"/></event><actions><set-variable field="var0" value="14"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <!-- 806075 Weatha：奖励领取。 -->
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="806075" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="806075" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="806075" dialog-ids="8..23"/></event><actions>
+        <grant-reward kind="GOLD" id="0" amount="451980"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="100201657" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="100001994" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="100101476" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="100901511" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="101301395" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="101501497" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="101701492" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="100601552" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="100501434" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="102001355" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="101801327" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="101901232" amount="1"/>
+        <grant-reward kind="SELECTABLE_ITEM" id="102101170" amount="1"/>
+        <grant-reward kind="ITEM" id="187000186" amount="1"/>
+        <grant-reward kind="ITEM" id="166100009" amount="10"/>
+        <complete-quest reward-index="0"/></actions><after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <!-- 失败重置：var0∈[3,13] 时死亡/登出 → var0=0 回到 started；死亡额外发 QUEST_FAILED 系统消息。 -->
+    <transition source="s3" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s4" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s5" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s6" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s7" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s8" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s9" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s10" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s11" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s12" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s13" target="started"><event><die/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s3" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s4" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s5" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s6" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s7" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s8" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s9" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s10" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s11" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s12" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s13" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+  </transitions>
+</quest-definition>
