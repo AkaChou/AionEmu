@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="3076" version="1">
-  <metadata name="Bolstering The Aetheric Field" display-name-id="1113075" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
+<quest-definition id="11033" version="1">
+  <metadata name="You Make Me Sick" display-name-id="1125033" min-level="50" max-level="2147483647" category="QUEST" cannot-share="true" title-id="107">
     <races>
       <race id="ELYOS"/>
     </races>
+    <prerequisites>
+      <quest id="11032"/>
+    </prerequisites>
+    <items>
+      <item id="182206727" count="10"/>
+    </items>
     <work-items>
-      <item id="182208047" count="1"/>
+      <item id="182206728" count="1"/>
     </work-items>
     <rewards>
-      <reward kind="GOLD" id="0" amount="27300"/>
-      <reward kind="EXP" id="0" amount="2954681"/>
-      <reward kind="ITEM" id="186000005" amount="4"/>
+      <reward kind="GOLD" id="0" amount="145780"/>
+      <reward kind="EXP" id="0" amount="6454760"/>
+      <reward kind="ITEM" id="186000018" amount="6"/>
     </rewards>
+    <drops>
+      <drop npc-id="215532" item-id="182206727" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="215533" item-id="182206727" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -63,23 +73,15 @@
   <transitions>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="798155" dialog-id="31"/>
+        <talk-to-npc npc-id="798959" dialog-id="31"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="798155" dialog-id="1007"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <show-quest-dialog dialog-id="4762"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="798155" dialog-id="1002"/>
+        <talk-to-npc npc-id="798959" dialog-id="1002"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -91,7 +93,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="798155" dialog-id="1003"/>
+        <talk-to-npc npc-id="798959" dialog-ids="1003 1004"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -99,95 +101,71 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="278503" dialog-id="31"/>
+        <talk-to-npc npc-id="798959" dialog-id="31"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="v1" priority="0">
+      <event>
+        <talk-to-npc npc-id="798959" dialog-id="39"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206727" count="10"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182206727" count="ALL"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="10000"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="798959" dialog-id="39"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10001"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <talk-to-npc npc-id="798959" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="278503" dialog-id="1353"/>
-      </event>
-      <conditions>
-        <variable-is field="var0" value="0"/>
-      </conditions>
-      <after-commit>
-        <show-quest-dialog dialog-id="1353"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="v1">
-      <event>
-        <talk-to-npc npc-id="278503" dialog-id="10000"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="v1" target="v1">
-      <event>
-        <talk-to-npc npc-id="278556" dialog-id="31"/>
-      </event>
-      <conditions>
-        <variable-is field="var0" value="1"/>
-      </conditions>
-      <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
-      </after-commit>
-    </transition>
-    <transition source="v1" target="v1">
-      <event>
-        <talk-to-npc npc-id="278556" dialog-id="1694"/>
-      </event>
-      <conditions>
-        <variable-is field="var0" value="1"/>
-      </conditions>
-      <after-commit>
-        <show-quest-dialog dialog-id="1694"/>
-      </after-commit>
-    </transition>
     <transition source="v1" target="v2">
       <event>
-        <talk-to-npc npc-id="278556" dialog-id="10001"/>
+        <talk-to-npc npc-id="798959" dialog-id="10001"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <give-item item-id="182206728" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="v2" target="v2">
-      <event>
-        <talk-to-npc npc-id="798155" dialog-id="31"/>
-      </event>
-      <conditions>
-        <variable-is field="var0" value="2"/>
-      </conditions>
-      <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
-      </after-commit>
-    </transition>
-    <transition source="v2" target="v2">
-      <event>
-        <talk-to-npc npc-id="798155" dialog-id="2376"/>
-      </event>
-      <conditions>
-        <variable-is field="var0" value="2"/>
-      </conditions>
-      <after-commit>
-        <show-quest-dialog dialog-id="2376"/>
       </after-commit>
     </transition>
     <transition source="v2" target="reward">
       <event>
-        <talk-to-npc npc-id="798155" dialog-id="1009"/>
+        <use-item item-id="182206728"/>
       </event>
-      <conditions>
-        <variable-is field="var0" value="2"/>
-      </conditions>
+      <actions>
+        <remove-item item-id="182206728" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <show-quest-selection-dialog dialog-id="10"/>
@@ -195,7 +173,15 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="798155" dialog-ids="-1 1009"/>
+        <talk-to-npc npc-id="798959" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="798959" dialog-id="1009"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="5"/>
@@ -203,12 +189,12 @@
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="798155" dialog-ids="8..23"/>
+        <talk-to-npc npc-id="798959" dialog-ids="8..23"/>
       </event>
       <actions>
-        <grant-reward kind="GOLD" id="0" amount="27300"/>
-        <grant-reward kind="EXP" id="0" amount="2954681"/>
-        <grant-reward kind="ITEM" id="186000005" amount="4"/>
+        <grant-reward kind="GOLD" id="0" amount="145780"/>
+        <grant-reward kind="EXP" id="0" amount="6454760"/>
+        <grant-reward kind="ITEM" id="186000018" amount="6"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
