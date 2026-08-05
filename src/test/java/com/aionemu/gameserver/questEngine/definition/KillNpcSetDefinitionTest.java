@@ -12,6 +12,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** A kill of any listed npc satisfies the KillNpcSet event. */
@@ -100,5 +101,23 @@ class KillNpcSetDefinitionTest {
 		QuestTransition killTransition = compiled.definition().transitions().stream()
 			.filter(t -> t.event() instanceof QuestEvent.KillNpc).findFirst().orElseThrow();
 		assertInstanceOf(QuestEvent.KillNpc.class, killTransition.event());
+	}
+
+	@Test
+	void xmlRejectsBothSingleAndSetNpcIds() {
+		var failure = assertThrows(QuestCompilationException.class, () -> QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(
+				("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+					+ "<quest-definition id=\"990045\" version=\"1\">\n"
+					+ "  <metadata name=\"xml-ambiguous-kill\" display-name-id=\"990045\" min-level=\"1\" max-level=\"99\" category=\"QUEST\"/>\n"
+					+ "  <progress><bit-field name=\"var0\" offset=\"0\" width=\"3\" min=\"0\" max=\"3\" persistence=\"PERSISTENT\" scope=\"LOCAL\"/></progress>\n"
+					+ "  <nodes>\n"
+					+ "    <node label=\"start\"><project status=\"START\"><vars><var name=\"var0\" value=\"0\"/></vars></project></node>\n"
+					+ "    <node label=\"done\"><project status=\"REWARD\"><vars><var name=\"var0\" value=\"1\"/></vars></project></node>\n"
+					+ "  </nodes>\n"
+					+ "  <transitions><transition source=\"start\" target=\"done\"><event><kill-npc npc-id=\"210133\" npc-ids=\"210133 210134\"/></event></transition></transitions>\n"
+					+ "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8))));
+
+		assertEquals("AMBIGUOUS_KILL_NPC_EVENT", failure.code());
 	}
 }

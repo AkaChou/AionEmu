@@ -408,6 +408,9 @@ public final class QuestDefinitionXmlCompiler {
 
 	/** Single {@code npc-id} or space-separated {@code npc-ids} both lower to a kill event. */
 	private static QuestEvent parseKillNpc(Element element) {
+		if (element.hasAttribute("npc-id") && element.hasAttribute("npc-ids")) {
+			return fail("AMBIGUOUS_KILL_NPC_EVENT", "declare npc-id or npc-ids, not both");
+		}
 		String ids = element.getAttribute("npc-ids");
 		if (ids == null || ids.isBlank()) {
 			return new QuestEvent.KillNpc(integer(element, "npc-id"));
