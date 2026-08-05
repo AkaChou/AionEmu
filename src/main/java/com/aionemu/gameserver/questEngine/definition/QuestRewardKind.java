@@ -6,6 +6,7 @@ import java.util.Locale;
 public enum QuestRewardKind {
 	ITEM,
 	SELECTABLE_ITEM,
+	RANDOM,
 	GOLD,
 	KINAH,
 	EXP,

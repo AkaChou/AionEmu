@@ -35,6 +35,8 @@ public class StaticData {
 	public QuestsData questData;
 	@XmlElement(name = "quest_scripts")
 	public XMLQuests questsScriptData;
+	@XmlElement(name = "quest_random_rewards")
+	public QuestRandomRewardsData questRandomRewardsData;
 	@XmlElement(name = "player_experience_table")
 	public PlayerExperienceTable playerExperienceTable;
 	@XmlElement(name = "player_stats_templates")

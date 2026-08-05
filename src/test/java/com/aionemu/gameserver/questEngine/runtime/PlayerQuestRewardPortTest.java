@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -107,7 +108,30 @@ class PlayerQuestRewardPortTest {
 		port.preflight(connection(), snapshot(),
 			List.of(reward("ITEM", ITEM_A, 2), reward("EXP", 0, 1000),
 				reward("EXP_BOOST", 0, 3), reward("AURA_OF_GROWTH", 0, 5000),
-				reward("TITLE", TITLE_ID, 1)));
+				reward("TITLE", TITLE_ID, 1), reward("RANDOM", 18505, 1)));
+	}
+
+	@Test
+	void preflightFailsOnUnknownRandomRewardPool() throws Exception {
+		PlayerQuestRewardPort port = new PlayerQuestRewardPort(playerId -> null,
+			new RecordingInventoryDao(), new RecordingPlayerDao(), (p, items) -> true, item -> { },
+			new RecordingTitleListDao(), poolId -> false, poolId -> new QuestItems(ITEM_A, 1));
+
+		SQLException thrown = assertThrows(SQLException.class,
+			() -> port.preflight(connection(), snapshot(), List.of(reward("RANDOM", 18505, 1))));
+
+		assertTrue(thrown.getMessage().contains("unknown quest random reward pool 18505"));
+	}
+
+	@Test
+	void preflightRejectsMultipleDrawsFromOneRandomRewardEntry() throws Exception {
+		PlayerQuestRewardPort port = port(playerId -> null, new RecordingInventoryDao(),
+			new RecordingPlayerDao(), (p, items) -> true);
+
+		SQLException thrown = assertThrows(SQLException.class,
+			() -> port.preflight(connection(), snapshot(), List.of(reward("RANDOM", 18505, 2))));
+
+		assertTrue(thrown.getMessage().contains("must draw exactly one pool entry"));
 	}
 
 	@Test
@@ -228,6 +252,47 @@ class PlayerQuestRewardPortTest {
 	}
 
 	@Test
+	void applyDrawsRandomRewardOnceAndGrantsTheResolvedItem() throws Exception {
+		Player player = emptyPlayer();
+		RecordingItemAdder adder = new RecordingItemAdder(true);
+		AtomicInteger draws = new AtomicInteger();
+		PlayerQuestRewardPort port = new PlayerQuestRewardPort(playerId -> player,
+			new RecordingInventoryDao(), new RecordingPlayerDao(), adder, item -> { },
+			new RecordingTitleListDao(), poolId -> poolId == 18505, poolId -> {
+				draws.incrementAndGet();
+				return new QuestItems(182005205, 1);
+			});
+
+		List<QuestAction.GrantReward> rewards = List.of(reward("RANDOM", 18505, 1));
+		port.preflight(connection(), snapshot(), rewards);
+		port.apply(connection(), snapshot(), rewards);
+
+		assertEquals(1, draws.get());
+		assertEquals(1, adder.calls.size());
+		assertEquals(182005205, adder.calls.get(0).get(0).getItemId());
+		assertEquals(1, adder.calls.get(0).get(0).getCount());
+	}
+
+	@Test
+	void randomDrawFailureRollsBackEarlierTitleMutation() throws Exception {
+		com.aionemu.gameserver.dataholders.DataManager.TITLE_DATA = titleDataWith(TITLE_ID);
+		Player player = emptyPlayer();
+		RecordingTitleListDao titleListDao = new RecordingTitleListDao();
+		PlayerQuestRewardPort port = new PlayerQuestRewardPort(playerId -> player,
+			new RecordingInventoryDao(), new RecordingPlayerDao(), (p, items) -> true, item -> { },
+			titleListDao, poolId -> true, poolId -> {
+				throw new IllegalStateException("invalid random pool result");
+			});
+
+		SQLException thrown = assertThrows(SQLException.class, () -> port.apply(connection(), snapshot(),
+			List.of(reward("TITLE", TITLE_ID, 1), reward("RANDOM", 18505, 1))));
+
+		assertTrue(thrown.getMessage().contains("failed to draw quest random reward pool 18505"));
+		assertFalse(player.getTitleList().contains(TITLE_ID));
+		assertEquals(1, titleListDao.calls.size());
+	}
+
+	@Test
 	void rollbackRestoresGrantedItemsAndAura() throws Exception {
 		Player player = playerWithCommonData(false, 66, 1_000_000_000L);
 		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
@@ -257,6 +322,35 @@ class PlayerQuestRewardPortTest {
 			() -> port.apply(connection(), snapshot(), List.of(reward("ITEM", ITEM_A, 1))));
 		assertTrue(thrown.getMessage().contains("failed to add quest items"));
 		assertEquals(0, inventoryDao.transactions.size());
+	}
+
+	@Test
+	void applyRandomRewardAddsDrawnPoolItem() throws Exception {
+		Player player = emptyPlayer();
+		AddingItemAdder adder = new AddingItemAdder();
+		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
+		PlayerQuestRewardPort port = new PlayerQuestRewardPort(playerId -> player, inventoryDao,
+			new RecordingPlayerDao(), adder, item -> { }, new RecordingTitleListDao(),
+			poolId -> true, poolId -> new QuestItems(182005205, 1));
+
+		QuestTransactionParticipant participant = port.apply(
+			connection(), snapshot(), List.of(reward("RANDOM", 18505, 1)));
+
+		assertEquals(1, adder.calls.size());
+		assertEquals(182005205, adder.calls.get(0).get(0).getItemId());
+		assertEquals(1, adder.calls.get(0).get(0).getCount());
+		participant.afterCommit();
+	}
+
+	@Test
+	void preflightRejectsRandomRewardWithoutPoolId() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
+			new RecordingPlayerDao(), new AddingItemAdder());
+
+		SQLException thrown = assertThrows(SQLException.class,
+			() -> port.preflight(connection(), snapshot(), List.of(reward("RANDOM", 0, 1))));
+		assertTrue(thrown.getMessage().contains("positive pool id"));
 	}
 
 	@Test
@@ -331,7 +425,8 @@ class PlayerQuestRewardPortTest {
 	private static PlayerQuestRewardPort port(QuestPlayerPort players, InventoryDAO inventoryDao,
 			PlayerDAO playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder,
 			RecordingTitleListDao titleListDao) {
-		return new PlayerQuestRewardPort(players, inventoryDao, playerDao, itemAdder, item -> { }, titleListDao);
+		return new PlayerQuestRewardPort(players, inventoryDao, playerDao, itemAdder, item -> { }, titleListDao,
+			poolId -> true, poolId -> new QuestItems(poolId, 1));
 	}
 
 	private static QuestSnapshot snapshot() {

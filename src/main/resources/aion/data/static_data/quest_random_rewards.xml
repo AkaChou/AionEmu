@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest_random_rewards>
+  <quest_random_reward>
+    <id>18505</id>
+    <name>%Quest_medal_05b</name>
+    <items>
+      <data>
+        <item>182005205</item>
+        <item_count>1</item_count>
+        <prob>700000</prob>
+      </data>
+      <data>
+        <item>186000469</item>
+        <item_count>210</item_count>
+        <prob>300000</prob>
+      </data>
+    </items>
+  </quest_random_reward>
+</quest_random_rewards>

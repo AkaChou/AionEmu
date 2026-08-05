@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="quest-random-reward-positive-int">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="quest_random_rewards">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="quest_random_reward" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" type="quest-random-reward-positive-int"/>
+              <xs:element name="name" type="xs:string"/>
+              <xs:element name="items">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="data" minOccurs="1" maxOccurs="60">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="item" type="quest-random-reward-positive-int"/>
+                          <xs:element name="item_count" type="quest-random-reward-positive-int"/>
+                          <xs:element name="prob" type="quest-random-reward-positive-int"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

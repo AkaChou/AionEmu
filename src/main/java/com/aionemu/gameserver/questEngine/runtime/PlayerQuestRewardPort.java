@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.RewardType;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.IntFunction;
+import java.util.function.IntPredicate;
 
 /**
  * Real {@link QuestRewardPort}: applies durable (non-currency) quest rewards to
@@ -45,21 +48,28 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 	private final PlayerTitleListDAO titleListDao;
 	private final BiFunction<Player, List<QuestItems>, Boolean> itemAdder;
 	private final Consumer<Item> itemReleaser;
+	private final IntPredicate randomPoolExists;
+	private final IntFunction<QuestItems> randomDraw;
 
 	public PlayerQuestRewardPort(QuestPlayerPort players, InventoryDAO inventoryDao, PlayerDAO playerDao,
 			BiFunction<Player, List<QuestItems>, Boolean> itemAdder, PlayerTitleListDAO titleListDao) {
-		this(players, inventoryDao, playerDao, itemAdder, ItemService::releaseItemId, titleListDao);
+		this(players, inventoryDao, playerDao, itemAdder, ItemService::releaseItemId, titleListDao,
+			poolId -> DataManager.QUEST_RANDOM_REWARDS != null
+				&& DataManager.QUEST_RANDOM_REWARDS.containsPool(poolId),
+			poolId -> DataManager.QUEST_RANDOM_REWARDS.draw(poolId));
 	}
 
 	PlayerQuestRewardPort(QuestPlayerPort players, InventoryDAO inventoryDao, PlayerDAO playerDao,
 			BiFunction<Player, List<QuestItems>, Boolean> itemAdder, Consumer<Item> itemReleaser,
-			PlayerTitleListDAO titleListDao) {
+			PlayerTitleListDAO titleListDao, IntPredicate randomPoolExists, IntFunction<QuestItems> randomDraw) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.inventoryDao = Objects.requireNonNull(inventoryDao, "inventoryDao");
 		this.playerDao = Objects.requireNonNull(playerDao, "playerDao");
 		this.titleListDao = Objects.requireNonNull(titleListDao, "titleListDao");
 		this.itemAdder = Objects.requireNonNull(itemAdder, "itemAdder");
 		this.itemReleaser = Objects.requireNonNull(itemReleaser, "itemReleaser");
+		this.randomPoolExists = Objects.requireNonNull(randomPoolExists, "randomPoolExists");
+		this.randomDraw = Objects.requireNonNull(randomDraw, "randomDraw");
 	}
 
 	@Override
@@ -77,6 +87,17 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 			}
 			if (kind == QuestRewardKind.ITEM && reward.id() <= 0) {
 				throw new SQLException("item reward without a positive item id for player " + snapshot.playerId());
+			}
+			if (kind == QuestRewardKind.RANDOM) {
+				if (reward.id() <= 0) {
+					throw new SQLException("random reward without a positive pool id for player " + snapshot.playerId());
+				}
+				if (reward.amount() != 1) {
+					throw new SQLException("random reward must draw exactly one pool entry for player " + snapshot.playerId());
+				}
+				if (!randomPoolExists.test(reward.id())) {
+					throw new SQLException("unknown quest random reward pool " + reward.id());
+				}
 			}
 			if (kind == QuestRewardKind.TITLE && reward.id() <= 0) {
 				throw new SQLException("title reward without a positive title id for player " + snapshot.playerId());
@@ -97,44 +118,48 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 		if (player == null) {
 			throw new SQLException("player is unavailable: " + snapshot.playerId());
 		}
-		List<QuestItems> items = new ArrayList<>();
-		List<Integer> grantedTitles = new ArrayList<>();
-		for (QuestAction.GrantReward reward : rewards) {
+		boolean itemRewards = rewards.stream().anyMatch(reward -> {
 			QuestRewardKind kind = reward.rewardKind();
-			switch (kind) {
-				case ITEM -> items.add(new QuestItems(reward.id(), (int) QuestRewardAmounts.resolve(player, reward)));
-				case EXP, EXP_BOOST, AURA_OF_GROWTH -> {
-				}
-				case TITLE -> grantTitle(connection, snapshot, player, reward, grantedTitles);
-				default -> throw new SQLException("unsupported durable reward " + kind);
-			}
-		}
-		boolean itemRewards = !items.isEmpty();
+			return kind == QuestRewardKind.ITEM || kind == QuestRewardKind.RANDOM;
+		});
 		boolean commonDataChanged = rewards.stream().anyMatch(reward -> {
 			QuestRewardKind kind = reward.rewardKind();
-			return kind != QuestRewardKind.ITEM && kind != QuestRewardKind.TITLE;
+			return kind != QuestRewardKind.ITEM && kind != QuestRewardKind.TITLE && kind != QuestRewardKind.RANDOM;
 		});
-		if (!itemRewards && !commonDataChanged && grantedTitles.isEmpty()) {
-			return QuestTransactionParticipant.none();
-		}
+		List<QuestItems> items = new ArrayList<>();
+		List<Integer> grantedTitles = new ArrayList<>();
 		var inventorySnapshot = itemRewards ? player.getInventory().transactionSnapshot() : null;
 		var commonSnapshot = commonDataChanged ? player.getCommonData().transactionSnapshot() : null;
 		try {
+			for (QuestAction.GrantReward reward : rewards) {
+				QuestRewardKind kind = reward.rewardKind();
+				switch (kind) {
+					case ITEM -> items.add(new QuestItems(reward.id(), (int) QuestRewardAmounts.resolve(player, reward)));
+					case RANDOM -> items.add(drawRandomReward(snapshot, reward.id()));
+					case EXP, EXP_BOOST, AURA_OF_GROWTH -> {
+					}
+					case TITLE -> grantTitle(connection, snapshot, player, reward, grantedTitles);
+					default -> throw new SQLException("unsupported durable reward " + kind);
+				}
+			}
+			if (!itemRewards && !commonDataChanged && grantedTitles.isEmpty()) {
+				return QuestTransactionParticipant.none();
+			}
 			if (itemRewards && !itemAdder.apply(player, items)) {
 				throw new SQLException("failed to add quest items for player " + snapshot.playerId());
 			}
 			for (QuestAction.GrantReward reward : rewards) {
 				switch (reward.rewardKind()) {
-					case ITEM -> {
+					case ITEM, RANDOM -> {
 					}
 					case EXP -> player.getCommonData().addExp(QuestRewardAmounts.resolve(player, reward),
 						expRewardType(reward));
 					case EXP_BOOST -> player.getCommonData().addAuraOfGrowth(1060000L * QuestRewardAmounts.resolve(player, reward));
 					case AURA_OF_GROWTH -> player.getCommonData().addAuraOfGrowth(QuestRewardAmounts.resolve(player, reward));
 					case TITLE -> {
-					// 已在首个循环中经 grantTitle 处理，仅内存+连接持久化，不回写 common data
-				}
-				default -> throw new SQLException("unsupported durable reward " + reward.rewardKind());
+						// 已在首个循环中经 grantTitle 处理，仅内存+连接持久化，不回写 common data
+					}
+					default -> throw new SQLException("unsupported durable reward " + reward.rewardKind());
 				}
 			}
 			List<Item> dirty = itemRewards ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
@@ -170,6 +195,20 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 		}
 	}
 
+	private QuestItems drawRandomReward(QuestSnapshot snapshot, int poolId) throws SQLException {
+		try {
+			QuestItems item = randomDraw.apply(poolId);
+			if (item == null || item.getItemId() == null || item.getItemId() <= 0
+					|| item.getCount() == null || item.getCount() <= 0) {
+				throw new IllegalArgumentException("pool returned an invalid item");
+			}
+			return item;
+		} catch (RuntimeException e) {
+			throw new SQLException("failed to draw quest random reward pool " + poolId
+				+ " for player " + snapshot.playerId(), e);
+		}
+	}
+
 	/**
 	 * 发放称号奖励：内存加入 TitleList 并在调用方连接上持久化，已拥有则幂等跳过。
 	 * Grants a title reward: adds to the in-memory TitleList and persists on the caller connection; idempotent.
@@ -189,8 +228,8 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 		} catch (IllegalArgumentException e) {
 			throw new SQLException("invalid title id " + titleId + " for player " + snapshot.playerId(), e);
 		}
-		titleListDao.storeInTransaction(connection, snapshot.playerId(), titleId, 0);
 		grantedTitles.add(titleId);
+		titleListDao.storeInTransaction(connection, snapshot.playerId(), titleId, 0);
 	}
 
 	private static void rollbackTitles(Player player, List<Integer> grantedTitles) {
@@ -202,7 +241,7 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 	}
 
 	private static boolean supported(QuestRewardKind kind) {
-		return kind == QuestRewardKind.ITEM || kind == QuestRewardKind.EXP
+		return kind == QuestRewardKind.ITEM || kind == QuestRewardKind.RANDOM || kind == QuestRewardKind.EXP
 			|| kind == QuestRewardKind.EXP_BOOST || kind == QuestRewardKind.AURA_OF_GROWTH
 			|| kind == QuestRewardKind.TITLE;
 	}
