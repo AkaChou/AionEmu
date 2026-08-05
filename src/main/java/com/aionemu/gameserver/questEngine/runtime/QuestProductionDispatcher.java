@@ -82,6 +82,12 @@ public final class QuestProductionDispatcher {
 		return questId > 0 && catalog.find(questId).isPresent();
 	}
 
+	/** Returns whether the catalog has a route for the supplied event key. */
+	public boolean hasRoutes(QuestEvent event) {
+		Objects.requireNonNull(event, "event");
+		return !index.routesFor(event).isEmpty();
+	}
+
 	/** 返回排序后的正式 owner ID。 Return sorted production owner IDs. */
 	public List<Integer> owners() {
 		return catalog.all().stream().map(CompiledQuestDefinition::id).sorted().toList();

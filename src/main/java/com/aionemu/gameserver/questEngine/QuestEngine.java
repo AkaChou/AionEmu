@@ -1179,10 +1179,20 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onEnterWindStream(QuestEnv env, int teleportId) {
 		try {
+			QuestProductionDispatcher typed = productionDispatcher;
+			Player player = env == null ? null : env.getPlayer();
+			if (player != null && typed.hasRoutes(new QuestEvent.EnterWindStream(teleportId))) {
+					typed.dispatch(runtimeComposition.movementEventPort().enterWindStream(env, teleportId),
+						player.getObjectId(), 0, QuestDispatchContract.BROADCAST);
+			}
 			for (int index = 0; index < questOnEnterWindStream.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questOnEnterWindStream.get(index));
+				int questId = questOnEnterWindStream.get(index);
+				if (typed.owns(questId)) {
+					continue;
+				}
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 				if (questHandler != null) {
-					env.setQuestId(questOnEnterWindStream.get(index));
+					env.setQuestId(questId);
 					questHandler.onEnterWindStreamEvent(env, teleportId);
 				}
 			}
