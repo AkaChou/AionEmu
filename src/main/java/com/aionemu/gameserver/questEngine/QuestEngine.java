@@ -287,11 +287,20 @@ public class QuestEngine implements GameEngine {
 			Npc npc = (Npc) env.getVisibleObject();
 			QuestEvent event = new QuestEvent.KillNpc(npc.getNpcId());
 			QuestProductionDispatcher typed = productionDispatcher;
-			typed.dispatch(event, env.getPlayer().getObjectId(), 0, QuestDispatchContract.BROADCAST);
-			List<Integer> legacyOwners = getQuestNpc(npc.getNpcId()).getOnKillEvent().stream()
-				.filter(questId -> !typed.owns(questId))
-				.toList();
-			for (int questId : legacyOwners) {
+			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnKillEvent();
+			boolean typedDispatchSucceeded = false;
+			if (env.getPlayer() != null && questIds.stream().anyMatch(typed::owns)) {
+				try {
+					typed.dispatch(event, env.getPlayer().getObjectId(), 0, QuestDispatchContract.BROADCAST);
+					typedDispatchSucceeded = true;
+				} catch (RuntimeException ignored) {
+					// Preserve legacy owners when the typed kill event cannot be dispatched.
+				}
+			}
+			for (int questId : questIds) {
+				if (typedDispatchSucceeded && typed.owns(questId)) {
+					continue;
+				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 				if (questHandler != null) {
 					env.setQuestId(questId);
@@ -671,21 +680,27 @@ public class QuestEngine implements GameEngine {
 	public void onItemGet(QuestEnv env, int itemId) {
 		QuestProductionDispatcher typed = productionDispatcher;
 		Player player = env == null ? null : env.getPlayer();
-		if (player != null && itemId > 0) {
+		List<Integer> questIds = questItems.get(itemId);
+		boolean typedDispatchSucceeded = false;
+		if (player != null && itemId > 0 && questIds != null && questIds.stream().anyMatch(typed::owns)) {
 			// 物品进入玩家背包后先进入正式 typed owner；同一物品可被多个
 			// 任务监听，因此使用广播契约，不因一个 owner 的状态而截断其他 owner。
 			// Route the obtain fact through typed owners first. The same item may
 			// belong to multiple quests, so use the broadcast contract.
-			typed.dispatch(new QuestEvent.GetItem(itemId), player.getObjectId(), 0,
-				QuestDispatchContract.BROADCAST);
+			try {
+				typed.dispatch(new QuestEvent.GetItem(itemId), player.getObjectId(), 0,
+					QuestDispatchContract.BROADCAST);
+				typedDispatchSucceeded = true;
+			} catch (RuntimeException ignored) {
+				// Preserve legacy owners when the obtain event cannot be dispatched.
+			}
 		}
-		if (questItems.containsKey(itemId)) {
-			List<Integer> questIds = questItems.get(itemId);
+		if (questIds != null) {
 			for (int i = 0; i < questIds.size(); i++) {
 				int questId = questIds.get(i);
 				// A typed owner has already been given the authoritative event and
 				// must never fall back into a legacy handler.
-				if (typed.owns(questId)) {
+				if (typedDispatchSucceeded && typed.owns(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -1149,12 +1164,18 @@ public class QuestEngine implements GameEngine {
 		}
 		try {
 			QuestProductionDispatcher typed = productionDispatcher;
+			boolean typedDispatchSucceeded = false;
 			if (questNpc.getOnDistanceEvent().stream().anyMatch(typed::owns)) {
-				typed.dispatch(runtimeComposition.proximityEventPort().atDistance(env, npc.getNpcId()),
-					env.getPlayer().getObjectId(), 0, QuestDispatchContract.BROADCAST);
+				try {
+					typed.dispatch(runtimeComposition.proximityEventPort().atDistance(env, npc.getNpcId()),
+						env.getPlayer().getObjectId(), 0, QuestDispatchContract.BROADCAST);
+					typedDispatchSucceeded = true;
+				} catch (RuntimeException ignored) {
+					// Preserve legacy owners when the proximity fact cannot be captured.
+				}
 			}
 			for (int questId : questNpc.getOnDistanceEvent()) {
-				if (typed.owns(questId)) {
+				if (typedDispatchSucceeded && typed.owns(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -1181,13 +1202,19 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env == null ? null : env.getPlayer();
+			boolean typedDispatchSucceeded = false;
 			if (player != null && typed.hasRoutes(new QuestEvent.EnterWindStream(teleportId))) {
+				try {
 					typed.dispatch(runtimeComposition.movementEventPort().enterWindStream(env, teleportId),
 						player.getObjectId(), 0, QuestDispatchContract.BROADCAST);
+					typedDispatchSucceeded = true;
+				} catch (RuntimeException ignored) {
+					// Preserve legacy wind-stream owners when typed fact capture fails.
+				}
 			}
 			for (int index = 0; index < questOnEnterWindStream.size(); index++) {
 				int questId = questOnEnterWindStream.get(index);
-				if (typed.owns(questId)) {
+				if (typedDispatchSucceeded && typed.owns(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
