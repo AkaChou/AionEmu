@@ -25,6 +25,8 @@ public final class QuestConditionEvaluator {
 							variables.getOrDefault(variable.field(), Integer.MIN_VALUE) >= variable.value();
 						case QuestCondition.VariableBelow variable ->
 							variables.getOrDefault(variable.field(), Integer.MIN_VALUE) < variable.value();
+					case QuestCondition.VariableSumIs variable -> variableSum(variables, variable.fields()) == variable.value();
+					case QuestCondition.VariableSumBelow variable -> variableSum(variables, variable.fields()) < variable.value();
 					case QuestCondition.RecipeKnown recipe -> recipeKnown(snapshot, recipe);
 					case QuestCondition.CanGrantCraftSkill skill -> canGrantCraftSkill(snapshot, skill);
 					case QuestCondition.PvpVictimLevelDelta level -> pvpVictimLevelDelta(snapshot, level);
@@ -41,6 +43,18 @@ public final class QuestConditionEvaluator {
 			}
 		}
 		return true;
+	}
+
+	private static long variableSum(Map<String, Integer> variables, List<String> fields) {
+		long sum = 0;
+		for (String field : fields) {
+			Integer value = variables.get(field);
+			if (value == null) {
+				return Long.MIN_VALUE;
+			}
+			sum += value;
+		}
+		return sum;
 	}
 
 	/**

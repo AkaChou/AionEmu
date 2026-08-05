@@ -3,9 +3,14 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+
 /** Closed set of pure conditions evaluated against a quest snapshot. */
 public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCondition.HasItem,
 		QuestCondition.QuestVariableIs, QuestCondition.VariableAtLeast, QuestCondition.VariableBelow,
+		QuestCondition.VariableSumIs, QuestCondition.VariableSumBelow,
 		QuestCondition.RecipeKnown, QuestCondition.CanGrantCraftSkill, QuestCondition.PvpVictimLevelDelta,
 		QuestCondition.PvpRecipientInZone, QuestCondition.StartEligible, QuestCondition.PlayerClassIs,
 		QuestCondition.WorldIs, QuestCondition.WorldNpcIs, QuestCondition.ZoneIs {
@@ -95,6 +100,20 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
+	/** Matches when the sum of the listed progress fields equals the target value. */
+	record VariableSumIs(List<String> fields, int value) implements QuestCondition {
+		public VariableSumIs {
+			fields = validatedFields(fields);
+		}
+	}
+
+	/** Matches when the sum of the listed progress fields is below the target value. */
+	record VariableSumBelow(List<String> fields, int value) implements QuestCondition {
+		public VariableSumBelow {
+			fields = validatedFields(fields);
+		}
+	}
+
 	/** Matches an authoritative recipe fact, including the explicit "not known" case. */
 	record RecipeKnown(int recipeId, boolean expected) implements QuestCondition {
 		public RecipeKnown {
@@ -130,5 +149,20 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 			}
 			zone = zone.toUpperCase(java.util.Locale.ROOT);
 		}
+	}
+
+	private static List<String> validatedFields(List<String> fields) {
+		Objects.requireNonNull(fields, "fields");
+		if (fields.isEmpty()) {
+			throw new IllegalArgumentException("fields must not be empty");
+		}
+		List<String> copy = List.copyOf(fields);
+		if (copy.stream().anyMatch(field -> field == null || field.isBlank())) {
+			throw new IllegalArgumentException("fields must not contain blank values");
+		}
+		if (copy.size() != new HashSet<>(copy).size()) {
+			throw new IllegalArgumentException("fields must not contain duplicates");
+		}
+		return copy;
 	}
 }

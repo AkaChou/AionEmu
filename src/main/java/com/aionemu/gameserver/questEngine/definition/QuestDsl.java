@@ -238,6 +238,14 @@ public final class QuestDsl {
 		return new QuestCondition.VariableBelow(field, value);
 	}
 
+	public static QuestCondition variableSumIs(List<String> fields, int value) {
+		return new QuestCondition.VariableSumIs(fields, value);
+	}
+
+	public static QuestCondition variableSumBelow(List<String> fields, int value) {
+		return new QuestCondition.VariableSumBelow(fields, value);
+	}
+
 	public static QuestCondition recipeKnown(int recipeId) {
 		return new QuestCondition.RecipeKnown(recipeId, true);
 	}

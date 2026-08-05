@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.*;
@@ -87,6 +88,44 @@ class IncrementVariableDefinitionTest {
 	}
 
 	@Test
+	void variableSumConditionsEvaluateAcrossMultipleProgressFields() {
+		var definition = quest(990037)
+			.metadata(QuestMetadata.minimal("sum-demo", 1, "QUEST"))
+			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+			.progress(bitField("var2", 6, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, Map.of()))
+			.node("done", project(QuestStatus.REWARD, vars("var1", 3, "var2", 2)))
+			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
+			.when(variableSumIs(List.of("var1", "var2"), 5)).goTo("done")
+			.compile();
+		var event = new QuestEvent.TalkToNpc(203057, 31, 0);
+		int exactPacked = definition.definition().progressLayout().pack(Map.of("var1", 3, "var2", 2));
+		int belowPacked = definition.definition().progressLayout().pack(Map.of("var1", 2, "var2", 2));
+		var transition = definition.definition().transitions().getFirst();
+
+		assertTrue(QuestMutationPlanner.plan(definition,
+			new com.aionemu.gameserver.questEngine.runtime.QuestSnapshot(7, 990037, QuestStatus.START,
+				exactPacked, Map.of()), event, transition).isPresent());
+		assertTrue(QuestMutationPlanner.plan(definition,
+			new com.aionemu.gameserver.questEngine.runtime.QuestSnapshot(7, 990037, QuestStatus.START,
+				belowPacked, Map.of()), event, transition).isEmpty());
+
+		var belowDefinition = quest(990038)
+			.metadata(QuestMetadata.minimal("sum-below-demo", 1, "QUEST"))
+			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+			.progress(bitField("var2", 6, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, Map.of()))
+			.node("done", project(QuestStatus.REWARD, vars("var1", 1, "var2", 1)))
+			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
+			.when(variableSumBelow(List.of("var1", "var2"), 5)).goTo("done")
+			.compile();
+		assertTrue(QuestMutationPlanner.plan(belowDefinition,
+			new com.aionemu.gameserver.questEngine.runtime.QuestSnapshot(7, 990038, QuestStatus.START,
+				belowDefinition.definition().progressLayout().pack(Map.of("var1", 2, "var2", 2)), Map.of()),
+			event, belowDefinition.definition().transitions().getFirst()).isPresent());
+	}
+
+	@Test
 	void variableBelowCompilesFromXmlAndUnknownFieldsFailClosed() {
 		String xml = """
 				<quest-definition id="990035" version="1">
@@ -106,6 +145,13 @@ class IncrementVariableDefinitionTest {
 			QuestCompilationException.class,
 			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
 					invalid.getBytes(StandardCharsets.UTF_8)))).code());
+
+		String sumXml = xml.replace("variable-below field=\"var0\" value=\"1\"",
+			"variable-sum-is fields=\"var0\" value=\"0\"");
+		CompiledQuestDefinition sumCompiled = QuestDefinitionXmlCompiler.compile(
+			new ByteArrayInputStream(sumXml.getBytes(StandardCharsets.UTF_8)));
+		assertTrue(sumCompiled.definition().transitions().getFirst().conditions()
+			.contains(new QuestCondition.VariableSumIs(List.of("var0"), 0)));
 	}
 
 	@Test

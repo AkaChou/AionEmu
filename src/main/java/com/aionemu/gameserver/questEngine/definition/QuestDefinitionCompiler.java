@@ -80,6 +80,12 @@ public final class QuestDefinitionCompiler {
 				if (condition instanceof QuestCondition.VariableBelow variable) {
 					validateProgressField(definition, variable.field(), "condition");
 				}
+				if (condition instanceof QuestCondition.VariableSumIs variable) {
+					validateProgressFields(definition, variable.fields(), "condition");
+				}
+				if (condition instanceof QuestCondition.VariableSumBelow variable) {
+					validateProgressFields(definition, variable.fields(), "condition");
+				}
 			}
 			for (QuestAction action : transition.actions()) {
 				if (action instanceof QuestAction.SetVariable variable) {
@@ -170,6 +176,12 @@ public final class QuestDefinitionCompiler {
 	private static void validateProgressField(QuestDefinition definition, String field, String context) {
 		if (definition.progressLayout().field(field) == null) {
 			fail("UNKNOWN_PROGRESS_FIELD", context + " references unknown field: " + field);
+		}
+	}
+
+	private static void validateProgressFields(QuestDefinition definition, List<String> fields, String context) {
+		for (String field : fields) {
+			validateProgressField(definition, field, context);
 		}
 	}
 

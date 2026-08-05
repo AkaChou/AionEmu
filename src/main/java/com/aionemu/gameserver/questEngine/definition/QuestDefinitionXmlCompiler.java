@@ -148,6 +148,10 @@ public final class QuestDefinitionXmlCompiler {
 		return result;
 	}
 
+	private static List<String> parseFields(Element element) {
+		return Arrays.asList(attribute(element, "fields").trim().split("\\s+"));
+	}
+
 	private static List<QuestItemRequirement> parseItems(Element parent) {
 		List<QuestItemRequirement> result = new ArrayList<>();
 		if (parent != null) {
@@ -474,6 +478,10 @@ public final class QuestDefinitionXmlCompiler {
 			case "variable-at-least" -> new QuestCondition.VariableAtLeast(attribute(element, "field"),
 				integer(element, "value"));
 			case "variable-below" -> new QuestCondition.VariableBelow(attribute(element, "field"),
+				integer(element, "value"));
+			case "variable-sum-is" -> new QuestCondition.VariableSumIs(parseFields(element),
+				integer(element, "value"));
+			case "variable-sum-below" -> new QuestCondition.VariableSumBelow(parseFields(element),
 				integer(element, "value"));
 			case "recipe-known" -> new QuestCondition.RecipeKnown(integer(element, "recipe-id"),
 				booleanOrDefault(element, "expected", false));
