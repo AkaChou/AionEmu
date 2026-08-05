@@ -5,4 +5,4 @@
 	Make By (Encom)
  -->
 	<!-- Silver For The Fountain -->
-	<monster_hunt id="1843" start_npc_ids="269265">		<monster var="0" end_var="80" npc_ids="215137"/>		<monster var="1" end_var="1" npc_ids="215177"/>	</monster_hunt>	<monster_hunt id="1844" start_npc_ids="270165">		<monster var="0" end_var="80" npc_ids="215180"/>		<monster var="1" end_var="1" npc_ids="215220"/>	</monster_hunt>	<monster_hunt id="2845" start_npc_ids="215220">		<monster var="0" end_var="80" npc_ids="215180"/>		<monster var="1" end_var="1" npc_ids="215220"/>	</monster_hunt></quest_scripts>
+			</quest_scripts>

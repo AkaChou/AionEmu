@@ -14,8 +14,4 @@
 	<!-- [Group] For The Reians' Sake (Asmodian Only) -->
 	<!-- [Group] Slaking Bloodthirst (Asmodian Only) -->
 	<!-- [Group] Never Bow Down (Asmodian Only) -->
-	<item_collecting id="30511" start_npc_ids="0"/>
-	<item_collecting id="30513" start_npc_ids="0" end_npc_ids="0"/>
-	<item_collecting id="30561" start_npc_ids="0"/>
-	<item_collecting id="30563" start_npc_ids="0" end_npc_ids="0"/>
-	<monster_hunt id="30512" start_npc_ids="0">        <monster var="0" npc_ids="217290 217295 236267 236289" end_var="15"/>    </monster_hunt>	<monster_hunt id="30562" start_npc_ids="0">        <monster var="0" npc_ids="217290 217295 236267 236289" end_var="15"/>    </monster_hunt></quest_scripts>
+</quest_scripts>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="1842" version="1">
-  <metadata name="A New Battle" display-name-id="1104642" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
+<quest-definition id="1844" version="1">
+  <metadata name="Target: Balaur" display-name-id="1104644" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
     <rewards>
       <reward kind="EXP" id="0" amount="2103000"/>
       <reward kind="AP" id="0" amount="1000"/>
@@ -15,72 +14,72 @@
     <bit-field name="var1" offset="7" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/><var name="var1" value="0"/></vars></project></node>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars></vars></project></node>
     <node label="m1"><project status="START"><vars><var name="var0" value="80"/></vars></project></node>
     <node label="reward"><project status="REWARD"><vars><var name="var0" value="80"/><var name="var1" value="1"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="80"/><var name="var1" value="1"/></vars></project></node>
   </nodes>
   <transitions>
-    <!-- 接取:Reshanta 的 Vasha (268080) 提供任务。 -->
+    <!-- 接取:Reshanta 的 Poeas (270165) 提供任务。 -->
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="268080" dialog-id="31"/></event>
+      <event><talk-to-npc npc-id="270165" dialog-id="31"/></event>
       <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="268080" dialog-id="1007"/></event>
+      <event><talk-to-npc npc-id="270165" dialog-id="1007"/></event>
       <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="268080" dialog-id="1002"/></event>
+      <event><talk-to-npc npc-id="270165" dialog-id="1002"/></event>
       <conditions><start-eligible/></conditions>
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="268080" dialog-id="20000"/></event>
+      <event><talk-to-npc npc-id="270165" dialog-id="20000"/></event>
       <conditions><start-eligible/></conditions>
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="268080" dialog-ids="1003 1004 20001"/></event>
+      <event><talk-to-npc npc-id="270165" dialog-ids="1003 1004 20001"/></event>
       <after-commit><close-dialog/></after-commit>
     </transition>
 
-    <!-- 击杀 Dukaki (215094) 80 只:var0 计数 0→80,priority 1 计数、0 完成。 -->
+    <!-- 击杀 Ranx Fighter (215180) 80 只:var0 计数 0→80,priority 1 计数、0 完成。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-id="215094"/></event>
+      <event><kill-npc npc-id="215180"/></event>
       <conditions><variable-below field="var0" value="80"/></conditions>
       <actions><increment-variable field="var0" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <transition source="started" target="m1" priority="0">
-      <event><kill-npc npc-id="215094"/></event>
+      <event><kill-npc npc-id="215180"/></event>
       <conditions><variable-at-least field="var0" value="80"/></conditions>
       <actions><set-variable field="var0" value="80"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
 
-    <!-- 击杀 Dukaki General (215134) 1 只:var1 计数 0→1,完成后进入奖励。 -->
+    <!-- 击杀 Ebonlord Vershinak (215220) 1 只:var1 计数 0→1,完成后进入奖励。 -->
     <transition source="m1" target="m1" priority="1">
-      <event><kill-npc npc-id="215134"/></event>
+      <event><kill-npc npc-id="215220"/></event>
       <conditions><variable-below field="var1" value="1"/></conditions>
       <actions><increment-variable field="var1" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <transition source="m1" target="reward" priority="0">
-      <event><kill-npc npc-id="215134"/></event>
+      <event><kill-npc npc-id="215220"/></event>
       <conditions><variable-at-least field="var1" value="1"/></conditions>
       <actions><set-variable field="var1" value="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
 
-    <!-- 奖励:Vasha (268080) 领取固定奖励 (exp/ap)。 -->
+    <!-- 奖励:Poeas (270165) 领取固定奖励 (exp/ap)。 -->
     <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="268080" dialog-ids="-1 1009"/></event>
+      <event><talk-to-npc npc-id="270165" dialog-ids="-1 1009"/></event>
       <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="268080" dialog-ids="8..23"/></event>
+      <event><talk-to-npc npc-id="270165" dialog-ids="8..23"/></event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2103000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="AP" id="0" amount="1000" amount-mode="QUEST_BASE"/>

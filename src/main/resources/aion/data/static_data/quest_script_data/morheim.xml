@@ -4,11 +4,4 @@
     Quest Morheim Make By (Encom)
  -->
 	<item_collecting id="2451" start_npc_ids="204312"/>
-	<monster_hunt id="2434" start_npc_ids="204388">
-		<monster var="0" end_var="4" npc_ids="211595 211608"/>
-		<monster var="1" end_var="6" npc_ids="211575 211601"/>
-		<monster var="2" end_var="4" npc_ids="211612 212726 212727"/>
-		<monster var="3" end_var="6" npc_ids="211574 211599"/>
-		<monster var="4" end_var="4" npc_ids="212729"/>
-	</monster_hunt>
 </quest_scripts>

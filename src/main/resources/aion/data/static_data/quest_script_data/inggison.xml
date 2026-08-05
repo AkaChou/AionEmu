@@ -8,40 +8,12 @@
 	<!-- The Saddest Aethercannon (Elyos Only) -->
 	<!-- Restoration Referral (Elyos Only) -->
 	<!-- Tampering with the Weapon (Elyos Only) -->
-	<item_collecting id="11064" start_npc_ids="799043"/>
-	<item_collecting id="11065" start_npc_ids="799043"/>
-	<item_collecting id="11066" start_npc_ids="799049"/>
-	<item_collecting id="11067" start_npc_ids="799049"/>
-	<item_collecting id="21233" start_npc_ids="799354"/>
-	<item_collecting id="21234" start_npc_ids="799354"/>
-	<item_collecting id="21235" start_npc_ids="799360"/>
-	<item_collecting id="21236" start_npc_ids="799360"/>
 	<!-- Shameless (Elyos Only) -->
 	<!-- Restoring Former Glory (Elyos Only) -->
 	<!-- Resoration Project (Elyos Only) -->
 	<!-- Restorations (Elyos Only) -->
-	<relic_rewards id="11279" start_npc_ids="799945 205553" relic_var1="186000066" relic_var2="186000065" relic_var3="186000064" relic_var4="186000063"/>
-	<relic_rewards id="11280" start_npc_ids="799946 205554" relic_var1="186000062" relic_var2="186000061" relic_var3="186000060" relic_var4="186000059"/>
-	<relic_rewards id="11281" start_npc_ids="799947 205555" relic_var1="186000058" relic_var2="186000057" relic_var3="186000056" relic_var4="186000055"/>
-	<relic_rewards id="11282" start_npc_ids="799948 205556" relic_var1="186000054" relic_var2="186000053" relic_var3="186000052" relic_var4="186000051"/>
-	<relic_rewards id="11283" start_npc_ids="799953 205539" relic_var1="186000066" relic_var2="186000065" relic_var3="186000064" relic_var4="186000063" relic_count="10"/>
-	<relic_rewards id="11284" start_npc_ids="799954 205540" relic_var1="186000062" relic_var2="186000061" relic_var3="186000060" relic_var4="186000059" relic_count="10"/>
-	<relic_rewards id="11285" start_npc_ids="799955 205541" relic_var1="186000058" relic_var2="186000057" relic_var3="186000056" relic_var4="186000055" relic_count="10"/>
-	<relic_rewards id="11286" start_npc_ids="799956 205542" relic_var1="186000054" relic_var2="186000053" relic_var3="186000052" relic_var4="186000051" relic_count="10"/>
-	<monster_hunt id="11102" start_npc_ids="798981">
-		<monster var="0" end_var="1" npc_ids="216489"/>
-		<monster var="1" end_var="1" npc_ids="216490"/>
-		<monster var="2" end_var="1" npc_ids="216491"/>
-	</monster_hunt>
 	<!-- Quest 4.7 -->
 	<!-- The Exterminator (Elyos Only) -->
-	<monster_hunt id="11456" start_npc_ids="798954">
-		<monster var="0" npc_ids="215454 215455 215456 215457 215458 215459" end_var="100"/>
-		<monster var="0" npc_ids="215460 215461 215462 215463 215464 215465" end_var="100"/>
-		<monster var="0" npc_ids="215466 215467 215482 216133 216134 216135" end_var="100"/>
-		<monster var="0" npc_ids="216136 216137 216138 216139 216140 216141" end_var="100"/>
-		<monster var="0" npc_ids="216142 216143 216144 216145 216146 216459 216460" end_var="100"/>
-	</monster_hunt>
 	<!-- Quest 4.8 -->
 	<!-- [Daily/Spy] No Mo' Asmos (Elyos Only) -->
 	<!-- [Daily] Get 'em Out Of Inggison (Elyos Only) -->

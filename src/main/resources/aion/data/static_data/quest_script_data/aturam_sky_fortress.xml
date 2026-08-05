@@ -6,18 +6,7 @@
  -->
 	<!-- Relics Reclaimed (Elyos Only) -->
 	<!-- Surveillance Systems (Elyos Only) -->
-	<!-- Fortress Interrupted (Elyos Only) -->
-	<monster_hunt id="18313" start_npc_ids="804820">
-		<monster var="0" npc_ids="217371" end_var="1"/>
-		<monster var="1" npc_ids="217373" end_var="1"/>
-		<monster var="2" npc_ids="217376" end_var="1"/>
-	</monster_hunt>
 	<!-- Reian Relics Reclaimed (Asmodian Only) -->
 	<!-- Outrun A Resonator Network (Elyos Only) -->
-	<!-- A Wealthy Patron (Asmodian Only) -->
-	<monster_hunt id="28313" start_npc_ids="804821">
-		<monster var="0" npc_ids="217371" end_var="1"/>
-		<monster var="1" npc_ids="217373" end_var="1"/>
-		<monster var="2" npc_ids="217376" end_var="1"/>
-	</monster_hunt>
+
 </quest_scripts>

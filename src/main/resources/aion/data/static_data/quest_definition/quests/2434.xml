@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="2434" version="1">
+  <metadata name="[Group] Revenge is Sweet" display-name-id="1103634" min-level="37" max-level="2147483647" category="QUEST" cannot-share="true" title-id="66">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <prerequisites>
+      <quest id="2433"/>
+    </prerequisites>
+    <rewards>
+      <reward kind="EXP" id="0" amount="1496758"/>
+      <reward kind="SELECTABLE_ITEM" id="114100801" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114300811" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114500773" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114600732" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="6" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var3" offset="18" width="6" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var4" offset="24" width="6" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE"/>
+    </node>
+    <node label="started">
+      <project status="START"/>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="4"/>
+          <var name="var1" value="6"/>
+          <var name="var2" value="4"/>
+          <var name="var3" value="6"/>
+          <var name="var4" value="4"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="4"/>
+          <var name="var1" value="6"/>
+          <var name="var2" value="4"/>
+          <var name="var3" value="6"/>
+          <var name="var4" value="4"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取:Morheim 的 Chaikata (204388) 提供任务;前置任务 2433。 -->
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="204388" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="204388" dialog-id="1007"/></event>
+      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="204388" dialog-id="1002"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="204388" dialog-id="20000"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="204388" dialog-ids="1003 1004 20001"/></event>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="204388" dialog-id="1008"/></event>
+      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event><talk-to-npc npc-id="204388" dialog-id="1008"/></event>
+      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+    <!-- 击杀 var0 组 211595 211608 4 只(var0):未满则计数 +1;已满击杀无路由被忽略。 -->
+    <transition source="started" target="started">
+      <event><kill-npc npc-ids="211595 211608"/></event>
+      <conditions><variable-below field="var0" value="4"/></conditions>
+      <actions><increment-variable field="var0" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <!-- 击杀 var1 组 211575 211601 6 只(var1):未满则计数 +1;已满击杀无路由被忽略。 -->
+    <transition source="started" target="started">
+      <event><kill-npc npc-ids="211575 211601"/></event>
+      <conditions><variable-below field="var1" value="6"/></conditions>
+      <actions><increment-variable field="var1" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <!-- 击杀 var2 组 211612 212726 212727 4 只(var2):未满则计数 +1;已满击杀无路由被忽略。 -->
+    <transition source="started" target="started">
+      <event><kill-npc npc-ids="211612 212726 212727"/></event>
+      <conditions><variable-below field="var2" value="4"/></conditions>
+      <actions><increment-variable field="var2" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <!-- 击杀 var3 组 211574 211599 6 只(var3):未满则计数 +1;已满击杀无路由被忽略。 -->
+    <transition source="started" target="started">
+      <event><kill-npc npc-ids="211574 211599"/></event>
+      <conditions><variable-below field="var3" value="6"/></conditions>
+      <actions><increment-variable field="var3" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <!-- 击杀 var4 组 212729 4 只(var4):未满则计数 +1;已满击杀无路由被忽略。 -->
+    <transition source="started" target="started">
+      <event><kill-npc npc-ids="212729"/></event>
+      <conditions><variable-below field="var4" value="4"/></conditions>
+      <actions><increment-variable field="var4" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event><talk-to-npc npc-id="204388" dialog-id="31"/></event>
+      <conditions><variable-at-least field="var0" value="4"/><variable-at-least field="var1" value="6"/><variable-at-least field="var2" value="4"/><variable-at-least field="var3" value="6"/><variable-at-least field="var4" value="4"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event><talk-to-npc npc-id="204388" dialog-id="1009"/></event>
+      <conditions><variable-at-least field="var0" value="4"/><variable-at-least field="var1" value="6"/><variable-at-least field="var2" value="4"/><variable-at-least field="var3" value="6"/><variable-at-least field="var4" value="4"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+    <!-- 奖励:Chaikata (204388) 领取;4 选 1 鞋子 (114100801/114300811/114500773/114600732)。 -->
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="204388" dialog-ids="-1 1009"/></event>
+      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event><talk-to-npc npc-id="204388" dialog-id="8"/></event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="1496758" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="114100801" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event><talk-to-npc npc-id="204388" dialog-id="9"/></event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="1496758" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="114300811" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event><talk-to-npc npc-id="204388" dialog-id="10"/></event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="1496758" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="114500773" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event><talk-to-npc npc-id="204388" dialog-id="11"/></event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="1496758" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="114600732" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>
