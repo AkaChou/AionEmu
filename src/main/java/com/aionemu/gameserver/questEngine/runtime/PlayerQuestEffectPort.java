@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -18,9 +19,25 @@ import java.util.Objects;
  */
 public final class PlayerQuestEffectPort implements QuestEffectPort {
 	private final QuestPlayerPort players;
+	private final EffectOperations effectOperations;
 
 	public PlayerQuestEffectPort(QuestPlayerPort players) {
+		this(players, new EffectOperations() {
+			@Override
+			public void apply(Player player, int skillId, int durationMillis) {
+				GameEngineServices.skillEngine().applyEffectDirectly(skillId, player, player, durationMillis);
+			}
+
+			@Override
+			public void remove(Player player, int effectId) {
+				player.getEffectController().removeEffect(effectId);
+			}
+		});
+	}
+
+	PlayerQuestEffectPort(QuestPlayerPort players, EffectOperations effectOperations) {
 		this.players = Objects.requireNonNull(players, "players");
+		this.effectOperations = Objects.requireNonNull(effectOperations, "effectOperations");
 	}
 
 	@Override
@@ -66,6 +83,36 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 	}
 
 	@Override
+	public boolean applyEffect(QuestSnapshot snapshot, QuestMutationPlan plan, int skillId, int durationMillis) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		if (skillId <= 0 || durationMillis < 0) {
+			throw new IllegalArgumentException("skillId must be positive and durationMillis non-negative");
+		}
+		Player player = players.find(snapshot.playerId());
+		if (player == null) {
+			return false;
+		}
+		effectOperations.apply(player, skillId, durationMillis);
+		return true;
+	}
+
+	@Override
+	public boolean removeEffect(QuestSnapshot snapshot, QuestMutationPlan plan, int effectId) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		if (effectId <= 0) {
+			throw new IllegalArgumentException("effectId must be positive");
+		}
+		Player player = players.find(snapshot.playerId());
+		if (player == null) {
+			return false;
+		}
+		effectOperations.remove(player, effectId);
+		return true;
+	}
+
+	@Override
 	public boolean flightTeleport(QuestSnapshot snapshot, QuestMutationPlan plan, int flightTeleportId) {
 		Objects.requireNonNull(snapshot, "snapshot");
 		Objects.requireNonNull(plan, "plan");
@@ -83,5 +130,11 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 		PacketSendUtility.sendPacket(player,
 			new SM_EMOTION(player, EmotionType.START_FLYTELEPORT, flightTeleportId, 0));
 		return true;
+	}
+
+	interface EffectOperations {
+		void apply(Player player, int skillId, int durationMillis);
+
+		void remove(Player player, int effectId);
 	}
 }

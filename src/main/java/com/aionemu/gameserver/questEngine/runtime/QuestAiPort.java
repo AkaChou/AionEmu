@@ -11,6 +11,12 @@ public interface QuestAiPort {
 	 */
 	boolean startFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot);
 
+	/** 让当前权威交互 NPC 跟随玩家到坐标目标。 */
+	default boolean startFollowCurrentTargetToPoint(QuestSnapshot snapshot, QuestMutationPlan plan,
+			float x, float y, float z) {
+		return false;
+	}
+
 	/** 停止 slot 的权威 NPC 跟随玩家 (AIEventType.STOP_FOLLOW_ME)。 */
 	boolean stopFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot);
 

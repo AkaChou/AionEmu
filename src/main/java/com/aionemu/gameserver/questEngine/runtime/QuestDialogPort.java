@@ -12,4 +12,13 @@ public interface QuestDialogPort {
 
 	/** Opens a dialog page without the quest id, as used by the quest-selection protocol. */
 	boolean showSelectionDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId);
+
+	/**
+	 * Opens an arbitrary SM_DIALOG_WINDOW page without attaching a quest id.
+	 * Implementations that do not need the raw packet may use the regular quest
+	 * dialog path as a conservative compatibility default.
+	 */
+	default boolean showDialogWindow(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId) {
+		return showDialog(snapshot, plan, dialogId);
+	}
 }

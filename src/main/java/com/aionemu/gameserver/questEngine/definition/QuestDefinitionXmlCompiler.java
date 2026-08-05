@@ -581,6 +581,8 @@ public final class QuestDefinitionXmlCompiler {
 				integer(action, "template-id"), new QuestSpawnLocation.PlayerPosition(byteValue(action, "heading")));
 			case "despawn-npc" -> new AfterCommitAction.DespawnNpc(attribute(action, "slot"));
 			case "start-follow" -> new AfterCommitAction.StartFollow(attribute(action, "slot"));
+			case "start-follow-current-target" -> new AfterCommitAction.StartFollowCurrentTargetToPoint(
+				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"));
 			case "stop-follow" -> new AfterCommitAction.StopFollow(attribute(action, "slot"));
 			case "attack-target" -> new AfterCommitAction.AttackTarget(attribute(action, "slot"));
 			case "start-walking" -> new AfterCommitAction.StartWalking(attribute(action, "slot"));

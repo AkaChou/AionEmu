@@ -6,9 +6,14 @@ import com.aionemu.gameserver.questEngine.definition.ProgressLayout;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
+import com.aionemu.gameserver.questEngine.definition.QuestReward;
+import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
+import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,8 +50,10 @@ public final class QuestMutationPlanner {
 		QuestNode target = definition.definition().nodes().stream()
 				.filter(node -> node.label().equals(transition.targetNode())).findFirst().orElseThrow();
 		NodeProjection projection = target.projection();
+		List<QuestAction> actions = new ArrayList<>(transition.actions());
+		appendFinalRepeatRewards(definition, snapshot, actions);
 		Map<String, Integer> variables = new LinkedHashMap<>(layout.unpack(snapshot.packedVariables()));
-		for (QuestAction action : transition.actions()) {
+		for (QuestAction action : actions) {
 			switch (action) {
 				case QuestAction.RemoveItem remove -> {
 					if (!removalFeasible(snapshot, remove)) {
@@ -77,12 +84,33 @@ public final class QuestMutationPlanner {
 		variables.putAll(projection.variables());
 		int packed = layout.pack(variables);
 		var status = projection.status();
-		for (QuestAction action : transition.actions()) {
+		for (QuestAction action : actions) {
 			if (action instanceof QuestAction.SetStatus setStatus) {
 				status = setStatus.status();
 			}
 		}
-		return Optional.of(new QuestMutationPlan(definition.id(), status, packed, transition.actions(), transition.afterCommit()));
+		return Optional.of(new QuestMutationPlan(definition.id(), status, packed, actions, transition.afterCommit()));
+	}
+
+	private static void appendFinalRepeatRewards(CompiledQuestDefinition definition, QuestSnapshot snapshot,
+			List<QuestAction> actions) {
+		if (definition.definition().metadata().extendedRewards().isEmpty()
+				|| actions.stream().noneMatch(QuestAction.CompleteQuest.class::isInstance)) {
+			return;
+		}
+		var repeat = definition.definition().metadata().repeatPolicy();
+		if (repeat.maxRepeatCount() >= 255
+				|| snapshot.completeCount() != repeat.maxRepeatCount() - 1) {
+			return;
+		}
+		for (QuestReward reward : definition.definition().metadata().extendedRewards()) {
+			QuestRewardKind kind = QuestRewardKind.fromWire(reward.kind());
+			QuestRewardAmountMode mode = switch (kind) {
+				case GOLD, KINAH, EXP, AP, GP -> QuestRewardAmountMode.QUEST_BASE;
+				default -> QuestRewardAmountMode.EXACT;
+			};
+			actions.add(new QuestAction.GrantReward(reward.kind(), reward.id(), reward.amount(), mode));
+		}
 	}
 
 	private static boolean matchesSourceNode(CompiledQuestDefinition definition, ProgressLayout layout,

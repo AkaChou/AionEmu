@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30700" version="1">
+  <metadata name="[Group] Race for the Relics" display-name-id="1137101" min-level="57" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="7086913"/>
+      <reward kind="ITEM" id="188051598" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="3" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="step1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="step2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="step3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="step4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="step5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="6"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <!-- 接取:Mandreya (804868) 提供任务。Accept: Mandreya (804868) offers the quest. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="804868" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="4762"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="804868" dialog-id="1007"/></event>
+      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="804868" dialog-id="1002"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="804868" dialog-id="20000"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="804868" dialog-ids="1003 1004 20001"/></event>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="804868" dialog-id="1008"/></event>
+      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+
+    <!-- 进入提亚马特要塞副本 (300510000) 后从 0 推进到 1。
+         Entering Tiamat Stronghold (300510000) advances 0 to 1. -->
+    <transition source="started" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <!-- 击杀强化的提亚马特哨兵 (219352) 从 1 推进到 2。
+         Killing the fortified Tiamat sentry (219352) advances 1 to 2. -->
+    <transition source="step1" target="step2">
+      <event><kill-npc npc-id="219352"/></event>
+      <conditions><variable-is field="var0" value="1"/></conditions>
+      <actions><set-variable field="var0" value="2"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <!-- 进入控制中心区域 (DREDGION_CONTROL_CENTER_2) 从 2 推进到 3。
+         Entering the control center zone advances 2 to 3. -->
+    <transition source="step2" target="step3">
+      <event><enter-zone zone="DREDGION_CONTROL_CENTER_2_300510000"/></event>
+      <conditions><variable-is field="var0" value="2"/></conditions>
+      <actions><set-variable field="var0" value="3"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <!-- 侦察兵 (800368) 在步骤 3 对话推进到 4。
+         Scout (800368) dialog at step 3 advances to 4. -->
+    <transition source="step3" target="step3">
+      <event><talk-to-npc npc-id="800368" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="3"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="2034"/></after-commit>
+    </transition>
+    <transition source="step3" target="step4">
+      <event><talk-to-npc npc-id="800368" dialog-id="10003"/></event>
+      <conditions><variable-is field="var0" value="3"/></conditions>
+      <actions><set-variable field="var0" value="4"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+
+    <!-- 击杀深渊控制塔管理员 (219358) 从 4 推进到 5。
+         Killing the Abyssal Control Tower custodian (219358) advances 4 to 5. -->
+    <transition source="step4" target="step5">
+      <event><kill-npc npc-id="219358"/></event>
+      <conditions><variable-is field="var0" value="4"/></conditions>
+      <actions><set-variable field="var0" value="5"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <!-- 指挥官 (800338) 在步骤 5 对话;SET_REWARD 进入奖励状态。
+         Commander (800338) dialog at step 5; SET_REWARD enters REWARD. -->
+    <transition source="step5" target="step5">
+      <event><talk-to-npc npc-id="800338" dialog-id="-1"/></event>
+      <conditions><variable-is field="var0" value="5"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="2716"/></after-commit>
+    </transition>
+    <transition source="step5" target="reward">
+      <event><talk-to-npc npc-id="800338" dialog-id="10255"/></event>
+      <conditions><variable-is field="var0" value="5"/></conditions>
+      <actions><set-variable field="var0" value="6"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+
+    <!-- 离开副本:步骤 1-5 重置回 1 并提示任务失败（仅提示,不改变状态）。
+         Leaving the instance: steps 1-5 reset to 1 with a quest-failed notice (message only). -->
+    <transition source="step1" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000" expected="false"/></conditions>
+      <actions><set-variable field="var0" value="1"/></actions>
+      <after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="step2" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000" expected="false"/></conditions>
+      <actions><set-variable field="var0" value="1"/></actions>
+      <after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="step3" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000" expected="false"/></conditions>
+      <actions><set-variable field="var0" value="1"/></actions>
+      <after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="step4" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000" expected="false"/></conditions>
+      <actions><set-variable field="var0" value="1"/></actions>
+      <after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="step5" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000" expected="false"/></conditions>
+      <actions><set-variable field="var0" value="1"/></actions>
+      <after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <!-- 奖励:Mandreya (804868) 结算。
+         Reward: settled with Mandreya (804868). -->
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="804868" dialog-id="-1"/></event>
+      <after-commit><show-quest-dialog dialog-id="10002"/></after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="804868" dialog-id="1009"/></event>
+      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event><talk-to-npc npc-id="804868" dialog-ids="8..23"/></event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="7086913" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188051598" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

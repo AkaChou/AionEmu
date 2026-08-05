@@ -289,6 +289,13 @@ public final class QuestDefinitionCompiler {
 
 	private static boolean mutuallyExclusive(List<QuestCondition> left, List<QuestCondition> right) {
 		for (QuestCondition a : left) {
+			for (QuestCondition b : right) {
+				if (factConditionsAreMutuallyExclusive(a, b)) {
+					return true;
+				}
+			}
+		}
+		for (QuestCondition a : left) {
 			if (!(a instanceof QuestCondition.StatusIs leftStatus)) {
 				continue;
 			}
@@ -317,6 +324,31 @@ public final class QuestDefinitionCompiler {
 					return true;
 				}
 			}
+		}
+		return false;
+	}
+
+	private static boolean factConditionsAreMutuallyExclusive(QuestCondition left, QuestCondition right) {
+		if (left instanceof QuestCondition.PlayerInGroup a && right instanceof QuestCondition.PlayerInGroup b) {
+			return a.expected() != b.expected();
+		}
+		if (left instanceof QuestCondition.GenderIs a && right instanceof QuestCondition.GenderIs b) {
+			return a.gender() != b.gender();
+		}
+		if (left instanceof QuestCondition.PlayerClassIs a && right instanceof QuestCondition.PlayerClassIs b) {
+			return a.startingClass() != b.startingClass();
+		}
+		if (left instanceof QuestCondition.AdvancedClassIs a && right instanceof QuestCondition.AdvancedClassIs b) {
+			return a.playerClass() != b.playerClass();
+		}
+		if (left instanceof QuestCondition.WorldIs a && right instanceof QuestCondition.WorldIs b) {
+			return a.worldId() == b.worldId() && a.expected() != b.expected();
+		}
+		if (left instanceof QuestCondition.WorldNpcIs a && right instanceof QuestCondition.WorldNpcIs b) {
+			return a.npcId() == b.npcId() && a.expected() != b.expected();
+		}
+		if (left instanceof QuestCondition.ZoneIs a && right instanceof QuestCondition.ZoneIs b) {
+			return a.zone().equals(b.zone()) && a.expected() != b.expected();
 		}
 		return false;
 	}

@@ -669,10 +669,25 @@ public class QuestEngine implements GameEngine {
 	 * Item id
 	 */
 	public void onItemGet(QuestEnv env, int itemId) {
+		QuestProductionDispatcher typed = productionDispatcher;
+		Player player = env == null ? null : env.getPlayer();
+		if (player != null && itemId > 0) {
+			// 物品进入玩家背包后先进入正式 typed owner；同一物品可被多个
+			// 任务监听，因此使用广播契约，不因一个 owner 的状态而截断其他 owner。
+			// Route the obtain fact through typed owners first. The same item may
+			// belong to multiple quests, so use the broadcast contract.
+			typed.dispatch(new QuestEvent.GetItem(itemId), player.getObjectId(), 0,
+				QuestDispatchContract.BROADCAST);
+		}
 		if (questItems.containsKey(itemId)) {
 			List<Integer> questIds = questItems.get(itemId);
 			for (int i = 0; i < questIds.size(); i++) {
 				int questId = questIds.get(i);
+				// A typed owner has already been given the authoritative event and
+				// must never fall back into a legacy handler.
+				if (typed.owns(questId)) {
+					continue;
+				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 				if (questHandler != null) {
 					env.setQuestId(questId);
@@ -1844,6 +1859,7 @@ public class QuestEngine implements GameEngine {
 						&& !(transition.event() instanceof QuestEvent.EnterWorld)
 						&& !(transition.event() instanceof QuestEvent.UseItem)
 						&& !(transition.event() instanceof QuestEvent.ItemPlay)
+						&& !(transition.event() instanceof QuestEvent.GetItem)
 						&& !(transition.event() instanceof QuestEvent.MovieEnd)
 						&& !(transition.event() instanceof QuestEvent.ZoneMissionEnd)
 						&& !(transition.event() instanceof QuestEvent.InvisibleTimerEnd)
@@ -1883,6 +1899,11 @@ public class QuestEngine implements GameEngine {
 					registerCanAct(definition.id(), canAct.templateId());
 				} else if (transition.event() instanceof QuestEvent.UseItem use) {
 					registerQuestItem(use.itemId(), definition.id());
+				} else if (transition.event() instanceof QuestEvent.GetItem get) {
+					// Keep the obtain-event index in sync with the typed catalog. The
+					// runtime dispatcher remains authoritative; this index only lets
+					// the legacy loop skip typed owners safely.
+					registerGetingItem(get.itemId(), definition.id());
 				} else if (transition.event() instanceof QuestEvent.MovieEnd movie) {
 					registerOnMovieEndQuest(movie.movieId(), definition.id());
 				} else if (transition.event() instanceof QuestEvent.ZoneMissionEnd) {

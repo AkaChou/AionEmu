@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80946" version="1">
+  <metadata name="[Event/Daily] Misfortune Extermination" display-name-id="1803261" min-level="66" max-level="82" category="EVENT">
+    <races>
+      <race id="PC_ALL"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <rewards>
+      <reward kind="ITEM" id="188057142" amount="5"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 835303 厄运封印树：靠近自动接取并发放 3 个护符（对应 onAtDistanceEvent）。 -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <at-distance npc-id="835303"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="182007418" count="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 246845 巨大厄运：持有护符时使用，消耗 1 护符、获得 1 封印袋，NPC 删除并重刷。 -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="246845" dialog-id="-1"/>
+      </event>
+      <conditions>
+        <has-item item-id="182007418" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182007418" count="1"/>
+        <give-item item-id="182007420" count="1"/>
+      </actions>
+      <after-commit>
+        <delete-interaction-npc schedule-respawn="true"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 835303 进行中对话。 -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="835303" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- 集齐 3 个封印袋 → 进入 REWARD（对应 CHECK_COLLECTED_ITEMS 成功分支）。 -->
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="835303" dialog-id="39"/>
+      </event>
+      <conditions>
+        <has-item item-id="182007420" count="3"/>
+      </conditions>
+      <actions>
+        <set-status status="REWARD"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="10000"/>
+      </after-commit>
+    </transition>
+    <!-- 封印袋不足 → 提示继续收集（对应 CHECK_COLLECTED_ITEMS 失败分支）。 -->
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="835303" dialog-id="39"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10001"/>
+      </after-commit>
+    </transition>
+    <!-- FINISH_DIALOG → 任务选择列表。 -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="835303" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- REWARD 状态对话：START_DIALOG → 10002。 -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="835303" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <!-- REWARD 状态：SELECT_REWARD / USE_OBJECT → 5（奖励列表）。 -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="835303" dialog-ids="-1 1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 领取奖励并完成任务。 -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="835303" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="ITEM" id="188057142" amount="5"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

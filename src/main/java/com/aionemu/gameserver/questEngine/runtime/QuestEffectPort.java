@@ -10,6 +10,16 @@ public interface QuestEffectPort {
 	/** Starts a flight teleport for the given route id. */
 	boolean flightTeleport(QuestSnapshot snapshot, QuestMutationPlan plan, int flightTeleportId);
 
+	/** Applies a skill effect to the quest owner. */
+	default boolean applyEffect(QuestSnapshot snapshot, QuestMutationPlan plan, int skillId, int durationMillis) {
+		throw new UnsupportedOperationException("apply effect is not composed");
+	}
+
+	/** Removes an effect from the quest owner by effect id. */
+	default boolean removeEffect(QuestSnapshot snapshot, QuestMutationPlan plan, int effectId) {
+		throw new UnsupportedOperationException("remove effect is not composed");
+	}
+
 	/**
 	 * 触发玩家侧任务表情；旧测试端口可以不支持该能力。
 	 * Emits a player-side quest emotion. Older test ports may leave this unsupported.

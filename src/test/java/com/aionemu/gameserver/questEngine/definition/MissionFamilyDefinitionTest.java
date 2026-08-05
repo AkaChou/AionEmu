@@ -14,6 +14,45 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /** Full vertical proof for the migrated Poeta mission-chain owners 1000 / 1002 / 1003 / 1100. */
 class MissionFamilyDefinitionTest {
 	@Test
+	void revolutionInterventionPreservesItsTransformEffectLifecycle() throws Exception {
+		CompiledQuestDefinition compiled = definition("14114.xml");
+		QuestTransition apply = compiled.definition().transitions().stream()
+			.filter(t -> t.sourceNode().equals("started") && t.targetNode().equals("v1"))
+			.findFirst().orElseThrow();
+		QuestTransition remove = compiled.definition().transitions().stream()
+			.filter(t -> t.sourceNode().equals("v2") && t.targetNode().equals("v3"))
+			.findFirst().orElseThrow();
+
+		assertTrue(apply.afterCommit().contains(new AfterCommitAction.ApplyEffect(8197, 0)));
+		assertTrue(remove.afterCommit().contains(new AfterCommitAction.RemoveEffect(8197)));
+	}
+
+	@Test
+	void betterThanLastTimePreservesTimedEffectAndFailureMessagePaths() throws Exception {
+		CompiledQuestDefinition compiled = definition("24154.xml");
+		List<QuestTransition> transitions = compiled.definition().transitions();
+
+		QuestTransition transform = transitions.stream()
+			.filter(t -> t.sourceNode().equals("v1") && t.targetNode().equals("v2")
+				&& t.event().equals(new QuestEvent.TalkToNpc(204809, 10001)))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), transform.actions());
+		assertTrue(transform.afterCommit().contains(new AfterCommitAction.ApplyEffect(267, 350000)));
+
+		QuestTransition remove = transitions.stream()
+			.filter(t -> t.sourceNode().equals("v4")
+				&& t.event().equals(new QuestEvent.ItemPlay(182215463, 3000)))
+			.findFirst().orElseThrow();
+		assertTrue(remove.afterCommit().contains(new AfterCommitAction.RemoveEffect(267)));
+
+		QuestTransition failed = transitions.stream()
+			.filter(t -> t.sourceNode().equals("v3") && t.event().equals(new QuestEvent.EnterWorld()))
+			.findFirst().orElseThrow();
+		assertTrue(failed.conditions().contains(new QuestCondition.WorldIs(320110000, false)));
+		assertTrue(failed.afterCommit().contains(new AfterCommitAction.SendSystemMessage(QuestSystemMessage.QUEST_FAILED)));
+	}
+
+	@Test
 	void packagedProductionDirectoryCompilesTheMigratedMissionOwners() throws Exception {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		assertTrue(catalog.find(1000).isPresent());

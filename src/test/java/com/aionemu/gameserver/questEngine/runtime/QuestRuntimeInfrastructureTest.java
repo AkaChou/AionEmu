@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -96,6 +97,22 @@ class QuestRuntimeInfrastructureTest {
 	}
 
 	@Test
+	void getItemRoutesUseTheItemKey() {
+		CompiledQuestDefinition definition = quest(1562)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.GetItem(182216178)).from("started").goTo("reward")
+			.compile();
+
+		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)));
+
+		assertEquals(List.of(1562), index.routesFor(new QuestEvent.GetItem(182216178)).stream()
+			.map(QuestEventIndex.Route::questId).toList());
+		assertTrue(index.routesFor(new QuestEvent.GetItem(182216179)).isEmpty());
+	}
+
+	@Test
 	void rankedThresholdsShareOnePvpRoute() {
 		CompiledQuestDefinition rankThree = quest(3741)
 			.node("start", project(QuestStatus.START, Map.of()))
@@ -107,6 +124,20 @@ class QuestRuntimeInfrastructureTest {
 		List<QuestEventIndex.Route> routes = new QuestEventIndex(new ImmutableQuestCatalog(
 			List.of(rankThree, rankEight))).routesFor(new QuestEvent.KillRanked(12));
 		assertEquals(List.of(3741, 3742), routes.stream().map(QuestEventIndex.Route::questId).toList());
+	}
+
+	@Test
+	void killNpcSetRoutesEachMemberToTheRuntimeKillEvent() {
+		CompiledQuestDefinition definition = quest(17551)
+			.node("start", project(QuestStatus.START, Map.of()))
+			.on(new QuestEvent.KillNpcSet(Set.of(830001, 830002))).from("start").goTo("start").compile();
+		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)));
+
+		assertEquals(List.of(17551), index.routesFor(new QuestEvent.KillNpc(830001)).stream()
+			.map(QuestEventIndex.Route::questId).toList());
+		assertEquals(List.of(17551), index.routesFor(new QuestEvent.KillNpc(830002)).stream()
+			.map(QuestEventIndex.Route::questId).toList());
+		assertTrue(index.routesFor(new QuestEvent.KillNpc(830003)).isEmpty());
 	}
 
 	@Test

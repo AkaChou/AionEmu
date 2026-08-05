@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.util.HashSet;
@@ -13,6 +14,7 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		QuestCondition.VariableSumIs, QuestCondition.VariableSumBelow,
 		QuestCondition.RecipeKnown, QuestCondition.CanGrantCraftSkill, QuestCondition.PvpVictimLevelDelta,
 		QuestCondition.PvpRecipientInZone, QuestCondition.StartEligible, QuestCondition.PlayerClassIs,
+		QuestCondition.AdvancedClassIs, QuestCondition.GenderIs, QuestCondition.PlayerInGroup,
 		QuestCondition.WorldIs, QuestCondition.WorldNpcIs, QuestCondition.ZoneIs {
 	record StartEligible() implements QuestCondition {
 	}
@@ -23,6 +25,31 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 			if (startingClass == null) {
 				throw new NullPointerException("startingClass");
 			}
+		}
+	}
+
+	/** Matches the concrete advanced class captured from the player. */
+	record AdvancedClassIs(PlayerClass playerClass) implements QuestCondition {
+		public AdvancedClassIs {
+			if (playerClass == null || playerClass == PlayerClass.ALL || playerClass.isStartingClass()) {
+				throw new IllegalArgumentException("playerClass must be a concrete advanced class");
+			}
+		}
+	}
+
+	/** 匹配快照中的玩家性别；未知事实安全失败。Matches captured gender; unknown facts fail closed. */
+	record GenderIs(Gender gender) implements QuestCondition {
+		public GenderIs {
+			if (gender == null || gender == Gender.DUMMY) {
+				throw new IllegalArgumentException("gender must be MALE or FEMALE");
+			}
+		}
+	}
+
+	/** Matches whether the player is in a regular group (not merely an alliance). */
+	record PlayerInGroup(boolean expected) implements QuestCondition {
+		public PlayerInGroup() {
+			this(true);
 		}
 	}
 

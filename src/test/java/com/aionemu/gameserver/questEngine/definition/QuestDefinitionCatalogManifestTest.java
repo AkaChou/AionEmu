@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QuestDefinitionCatalogManifestTest {
@@ -17,6 +18,12 @@ class QuestDefinitionCatalogManifestTest {
 				"/aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
 			QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
 			assertFalse(catalog.all().isEmpty());
+			assertTrue(catalog.find(11036).orElseThrow().definition().transitions().stream()
+				.anyMatch(transition -> transition.event() instanceof QuestEvent.CanAct canAct
+					&& canAct.templateId() == 700610));
+			assertTrue(catalog.find(11143).orElseThrow().definition().transitions().stream()
+				.anyMatch(transition -> transition.event() instanceof QuestEvent.CanAct canAct
+					&& canAct.templateId() == 700909));
 		}
 	}
 

@@ -73,6 +73,32 @@ class MigratedQuestRepairDefinitionTest {
 				112301840, 112301841, 112101727, 112101728));
 	}
 
+	@Test
+	void repairedBlockedOwnersExposeTheNewFailureMessageAndEffectCapabilities() {
+		for (int questId : List.of(10101, 20101)) {
+			CompiledQuestDefinition definition = load(questId);
+			assertTrue(definition.definition().transitions().stream().anyMatch(transition ->
+				transition.event() instanceof QuestEvent.Die
+					&& transition.afterCommit().contains(new AfterCommitAction.SendSystemMessage(
+						QuestSystemMessage.QUEST_FAILED))));
+		}
+
+		CompiledQuestDefinition hypervention = load(14031);
+		assertEquals(3, hypervention.definition().transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.ItemPlay itemPlay
+				&& itemPlay.animationMillis() == 3000).count());
+		assertTrue(hypervention.definition().transitions().stream().anyMatch(transition ->
+			transition.event() instanceof QuestEvent.Die
+				&& transition.afterCommit().contains(new AfterCommitAction.SendSystemMessage(
+					QuestSystemMessage.QUEST_FAILED))));
+
+		CompiledQuestDefinition fissure = load(17510);
+		assertTrue(fissure.definition().transitions().stream().anyMatch(transition ->
+			transition.sourceNode().equals("s4")
+				&& transition.afterCommit().contains(new AfterCommitAction.RemoveEffect(4808))
+				&& transition.afterCommit().contains(new AfterCommitAction.RemoveEffect(4836))));
+	}
+
 	private static void assertGroupQuest(int questId, int itemId, int itemCount, int dropNpcId, int rewardNpcId,
 		Set<Integer> selectableItems) {
 		CompiledQuestDefinition definition = load(questId);

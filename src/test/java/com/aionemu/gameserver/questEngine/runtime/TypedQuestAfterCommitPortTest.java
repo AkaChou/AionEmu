@@ -5,6 +5,9 @@ import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
 import com.aionemu.gameserver.questEngine.definition.QuestPlayerEmotion;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
+import com.aionemu.gameserver.questEngine.definition.QuestSystemMessage;
+import com.aionemu.gameserver.questEngine.definition.QuestSystemMessagePacket;
+import com.aionemu.gameserver.questEngine.definition.QuestSystemMessageTarget;
 import com.aionemu.gameserver.questEngine.definition.QuestTimerPolicy;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
@@ -189,6 +192,19 @@ class TypedQuestAfterCommitPortTest {
 				calls.add("emotion:" + emotion + ":" + snapshot.interactionObjectId());
 				return true;
 			}
+
+			@Override
+			public boolean applyEffect(QuestSnapshot snapshot, QuestMutationPlan plan,
+					int skillId, int durationMillis) {
+				calls.add("apply:" + skillId + ":" + durationMillis);
+				return true;
+			}
+
+			@Override
+			public boolean removeEffect(QuestSnapshot snapshot, QuestMutationPlan plan, int effectId) {
+				calls.add("remove:" + effectId);
+				return true;
+			}
 		};
 		QuestNpcPort npcs = new QuestNpcPort() {
 			@Override
@@ -211,9 +227,66 @@ class TypedQuestAfterCommitPortTest {
 		QuestMutationPlan plan = new QuestMutationPlan(1001, QuestStatus.START, 0, List.of(), List.of());
 
 		port.execute(new AfterCommitAction.PlayerEmotion(QuestPlayerEmotion.STAND), snapshot, plan);
+		port.execute(new AfterCommitAction.ApplyEffect(8197, 0), snapshot, plan);
+		port.execute(new AfterCommitAction.RemoveEffect(8197), snapshot, plan);
 		port.execute(new AfterCommitAction.AddNpcAggro(203175, 50), snapshot, plan);
 
-		assertEquals(List.of("emotion:STAND:900009", "aggro:203175:50"), calls);
+		assertEquals(List.of("emotion:STAND:900009", "apply:8197:0", "remove:8197", "aggro:203175:50"), calls);
+	}
+
+	@Test
+	void routesModeledSystemMessageToTypedPort() {
+		List<QuestSystemMessage> calls = new ArrayList<>();
+		QuestEffectPort effects = new QuestEffectPort() {
+			@Override
+			public boolean morph(QuestSnapshot snapshot, QuestMutationPlan plan, int ascensionId) {
+				return true;
+			}
+
+			@Override
+			public boolean flightTeleport(QuestSnapshot snapshot, QuestMutationPlan plan, int flightTeleportId) {
+				return true;
+			}
+		};
+		TypedQuestAfterCommitPort port = new TypedQuestAfterCommitPort(dialogPort(), null, null, null, null,
+			null, null, null, effects, (snapshot, plan, scheduleRespawn) -> true,
+			(snapshot, plan, message) -> {
+				calls.add(message);
+				return true;
+			});
+		QuestSnapshot snapshot = new QuestSnapshot(7, 24154, QuestStatus.START, 3, Map.of());
+		QuestMutationPlan plan = new QuestMutationPlan(24154, QuestStatus.START, 1, List.of(), List.of());
+
+		port.execute(new AfterCommitAction.SendSystemMessage(QuestSystemMessage.QUEST_FAILED), snapshot, plan);
+
+		assertEquals(List.of(QuestSystemMessage.QUEST_FAILED), calls);
+	}
+
+	@Test
+	void routesQuestSpecificSystemMessagePacketToTypedPort() {
+		List<QuestSystemMessagePacket> calls = new ArrayList<>();
+		QuestSystemMessagePort messages = new QuestSystemMessagePort() {
+			@Override
+			public boolean send(QuestSnapshot snapshot, QuestMutationPlan plan, QuestSystemMessage message) {
+				return true;
+			}
+
+			@Override
+			public boolean send(QuestSnapshot snapshot, QuestMutationPlan plan, QuestSystemMessagePacket message) {
+				calls.add(message);
+				return true;
+			}
+		};
+		TypedQuestAfterCommitPort port = new TypedQuestAfterCommitPort(dialogPort(), null, null, null, null,
+			null, null, null, null, (snapshot, plan, scheduleRespawn) -> true, messages);
+		QuestSnapshot snapshot = new QuestSnapshot(7, 18602, QuestStatus.START, 3, Map.of());
+		QuestMutationPlan plan = new QuestMutationPlan(18602, QuestStatus.START, 3, List.of(), List.of());
+		QuestSystemMessagePacket packet = new QuestSystemMessagePacket(1111307, QuestSystemMessageTarget.PLAYER,
+			false, 2, List.of());
+
+		port.execute(new AfterCommitAction.SendSystemMessagePacket(packet), snapshot, plan);
+
+		assertEquals(List.of(packet), calls);
 	}
 
 	@Test
@@ -261,6 +334,21 @@ class TypedQuestAfterCommitPortTest {
 		port.execute(new AfterCommitAction.WatchFollowZone("escort", "DF2_ITEMUSEAREA_Q2333"), snapshot, plan);
 
 		assertEquals(List.of("emotion:escort:START_EMOTE2", "zone:escort:DF2_ITEMUSEAREA_Q2333"), commands);
+	}
+
+	@Test
+	void routesResidentCoordinateFollowToTypedAiPort() {
+		List<String> commands = new ArrayList<>();
+		TypedQuestAfterCommitPort port = new TypedQuestAfterCommitPort(dialogPort(), null, null, null,
+			new RecordingAiPort(commands), null);
+		QuestSnapshot snapshot = new QuestSnapshot(7, 11040, QuestStatus.START, 0, Map.of())
+			.withInteractionObjectId(799036);
+		QuestMutationPlan plan = new QuestMutationPlan(11040, QuestStatus.START, 1, List.of(), List.of());
+
+		port.execute(new AfterCommitAction.StartFollowCurrentTargetToPoint(292.63895f, 489.47452f, 574.2429f),
+			snapshot, plan);
+
+		assertEquals(List.of("follow-point:292.63895:489.47452:574.2429"), commands);
 	}
 
 	@Test
@@ -348,6 +436,13 @@ class TypedQuestAfterCommitPortTest {
 		@Override
 		public boolean startFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
 			commands.add("follow:" + slot);
+			return true;
+		}
+
+		@Override
+		public boolean startFollowCurrentTargetToPoint(QuestSnapshot snapshot, QuestMutationPlan plan,
+				float x, float y, float z) {
+			commands.add("follow-point:" + x + ":" + y + ":" + z);
 			return true;
 		}
 

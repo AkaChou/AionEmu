@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30750" version="1">
+  <metadata name="[Group] Attack on Tiamat Stronghold" display-name-id="1137121" min-level="57" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="7086913"/>
+      <reward kind="ITEM" id="188051598" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="3" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="step1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="step2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="step3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="step4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="step5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="6"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <!-- 接取 NPC 804869：开始对话与接取/拒绝分支。 Start NPC 804869: start dialog and accept/refuse branches. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="804869" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="4762"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="804869" dialog-id="1007"/></event>
+      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="804869" dialog-id="1002"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="804869" dialog-id="20000"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="804869" dialog-ids="1003 1004 20001"/></event>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="804869" dialog-id="1008"/></event>
+      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+
+    <!-- 进入世界时若已在 Dredgion（300510000）推进 var0=0→1。 On entering the world while in Dredgion, advance var0 0→1. -->
+    <transition source="started" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <!-- 步骤 1：击杀 219352（Dredgion 控制中心）推进到 2。 Step 1: kill 219352 to advance to 2. -->
+    <transition source="step1" target="step2">
+      <event><kill-npc npc-id="219352"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <!-- 离开 Dredgion 世界时失败回退 var0=1。 Leaving the Dredgion world fails the quest and resets var0 to 1. -->
+    <transition source="step1" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000" expected="false"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><system-message message="QUEST_FAILED"/></after-commit>
+    </transition>
+
+    <!-- 步骤 2：进入 DREDGION_CONTROL_CENTER_2 区域推进到 3。 Step 2: enter Dredgion Control Center zone to advance to 3. -->
+    <transition source="step2" target="step3">
+      <event><enter-zone zone="DREDGION_CONTROL_CENTER_2_300510000"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="step2" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000" expected="false"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><system-message message="QUEST_FAILED"/></after-commit>
+    </transition>
+
+    <!-- 步骤 3：800368 对话显示 2034，STEP_TO_4(10003) 推进到 4。 Step 3: talk to 800368 for dialog 2034, STEP_TO_4 advances to 4. -->
+    <transition source="step3" target="step3">
+      <event><talk-to-npc npc-id="800368" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="2034"/></after-commit>
+    </transition>
+    <transition source="step3" target="step4">
+      <event><talk-to-npc npc-id="800368" dialog-id="10003"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="step3" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000" expected="false"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><system-message message="QUEST_FAILED"/></after-commit>
+    </transition>
+
+    <!-- 步骤 4：击杀 219358 推进到 5。 Step 4: kill 219358 to advance to 5. -->
+    <transition source="step4" target="step5">
+      <event><kill-npc npc-id="219358"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="step4" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000" expected="false"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><system-message message="QUEST_FAILED"/></after-commit>
+    </transition>
+
+    <!-- 步骤 5：800338 使用对象显示 2716，SET_REWARD(10255) 进入 REWARD。 Step 5: use object at 800338 for dialog 2716, SET_REWARD enters REWARD. -->
+    <transition source="step5" target="step5">
+      <event><talk-to-npc npc-id="800338" dialog-id="-1"/></event>
+      <after-commit><show-quest-dialog dialog-id="2716"/></after-commit>
+    </transition>
+    <transition source="step5" target="reward">
+      <event><talk-to-npc npc-id="800338" dialog-id="10255"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="step5" target="step1">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300510000" expected="false"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><system-message message="QUEST_FAILED"/></after-commit>
+    </transition>
+
+    <!-- 奖励：804869 领取。 Reward: claim at NPC 804869. -->
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="804869" dialog-id="-1"/></event>
+      <after-commit><show-quest-dialog dialog-id="10002"/></after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="804869" dialog-id="1009"/></event>
+      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event><talk-to-npc npc-id="804869" dialog-ids="8..23"/></event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="7086913" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188051598" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

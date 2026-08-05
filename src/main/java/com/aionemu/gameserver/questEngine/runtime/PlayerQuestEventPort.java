@@ -51,9 +51,16 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		}
 		PlayerCommonData commonData = player.getCommonData();
 		if (commonData != null) {
-			snapshot = snapshot.withStartingClass(
-				PlayerClass.getStartingClassFor(commonData.getPlayerClass()));
+			if (commonData.getPlayerClass() != null) {
+				PlayerClass actualClass = commonData.getPlayerClass();
+				snapshot = snapshot.withStartingClass(PlayerClass.getStartingClassFor(actualClass))
+					.withPlayerClass(actualClass);
+			}
+			if (commonData.getGender() != null) {
+				snapshot = snapshot.withGender(commonData.getGender());
+			}
 		}
+		snapshot = snapshot.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()));
 		return switch (event) {
 			case QuestEvent.TalkToNpc talk -> snapshot.withInteractionObjectId(talk.interactionObjectId());
 			case QuestEvent.UseItem _ -> snapshot.withTargetlessDialog();
@@ -97,7 +104,9 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			positionCaptured ? player.getY() : 0f,
 			positionCaptured ? player.getZ() : 0f,
 			positionCaptured ? player.getHeading() : (byte) 0,
-			craftFactsOf(player), null).withWorldFacts(worldFactsOf(player));
+			craftFactsOf(player), null).withWorldFacts(worldFactsOf(player))
+			.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()))
+			.withCompleteCount(state == null ? 0 : state.getCompleteCount());
 	}
 
 	/** Captures NPC template presence in the player's current world instance. */

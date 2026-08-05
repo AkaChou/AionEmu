@@ -3,13 +3,17 @@ package com.aionemu.gameserver.questEngine.definition;
 /** Closed set of best-effort actions allowed after a successful commit. */
 public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.ShowQuestDialog, AfterCommitAction.ShowQuestSelectionDialog,
+		AfterCommitAction.ShowDialogWindow,
 		AfterCommitAction.TeleportPlayer, AfterCommitAction.PlayMovie,
 		AfterCommitAction.SpawnNpc, AfterCommitAction.DespawnNpc, AfterCommitAction.StartFollow,
 		AfterCommitAction.StopFollow, AfterCommitAction.AttackTarget, AfterCommitAction.StartWalking,
-		AfterCommitAction.BroadcastNpcEmotion, AfterCommitAction.WatchFollowZone,
+		AfterCommitAction.StartFollowCurrentTargetToPoint, AfterCommitAction.BroadcastNpcEmotion,
+		AfterCommitAction.WatchFollowZone,
 		AfterCommitAction.StartQuestTimer, AfterCommitAction.StartInvisibleTimer,
 		AfterCommitAction.CancelQuestTimer, AfterCommitAction.SyncQuestState,
 		AfterCommitAction.RefreshPlayerStats, AfterCommitAction.Morph,
+		AfterCommitAction.ApplyEffect, AfterCommitAction.RemoveEffect,
+		AfterCommitAction.SendSystemMessage, AfterCommitAction.SendSystemMessagePacket,
 		AfterCommitAction.FlightTeleport, AfterCommitAction.PlayerEmotion,
 		AfterCommitAction.AddNpcAggro, AfterCommitAction.DeleteInteractionNpc,
 		AfterCommitAction.BroadcastZoneMissionEnd {
@@ -43,6 +47,15 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		public ShowQuestSelectionDialog {
 			if (dialogId <= 0) {
 				throw new IllegalArgumentException("dialogId must be positive");
+			}
+		}
+	}
+
+	/** Sends a raw SM_DIALOG_WINDOW page without attaching the quest id. */
+	record ShowDialogWindow(int dialogId) implements AfterCommitAction {
+		public ShowDialogWindow {
+			if (dialogId < 0) {
+				throw new IllegalArgumentException("dialogId must be non-negative");
 			}
 		}
 	}
@@ -123,6 +136,15 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		public StartFollow {
 			if (slot == null || slot.isBlank()) {
 				throw new IllegalArgumentException("slot must not be blank");
+			}
+		}
+	}
+
+	/** 让本次交互的地图常驻 NPC 跟随玩家到指定坐标。 */
+	record StartFollowCurrentTargetToPoint(float x, float y, float z) implements AfterCommitAction {
+		public StartFollowCurrentTargetToPoint {
+			if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
+				throw new IllegalArgumentException("follow destination coordinates must be finite");
 			}
 		}
 	}
@@ -229,6 +251,45 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		public Morph {
 			if (ascensionId != 0 && ascensionId != 1) {
 				throw new IllegalArgumentException("ascension morph state must be 0 or 1");
+			}
+		}
+	}
+
+	/** Applies a skill effect to the quest owner after the state transaction commits. */
+	record ApplyEffect(int skillId, int durationMillis) implements AfterCommitAction {
+		public ApplyEffect {
+			if (skillId <= 0) {
+				throw new IllegalArgumentException("skillId must be positive");
+			}
+			if (durationMillis < 0) {
+				throw new IllegalArgumentException("durationMillis must be non-negative");
+			}
+		}
+	}
+
+	/** Removes the effect identified by its skill/effect id from the quest owner. */
+	record RemoveEffect(int effectId) implements AfterCommitAction {
+		public RemoveEffect {
+			if (effectId <= 0) {
+				throw new IllegalArgumentException("effectId must be positive");
+			}
+		}
+	}
+
+	/** Sends a modeled system message after the quest state transaction commits. */
+	record SendSystemMessage(QuestSystemMessage message) implements AfterCommitAction {
+		public SendSystemMessage {
+			if (message == null) {
+				throw new NullPointerException("message");
+			}
+		}
+	}
+
+	/** 提交后发送显式建模的扩展系统消息包。Sends an explicitly modeled packet after commit. */
+	record SendSystemMessagePacket(QuestSystemMessagePacket message) implements AfterCommitAction {
+		public SendSystemMessagePacket {
+			if (message == null) {
+				throw new NullPointerException("message");
 			}
 		}
 	}

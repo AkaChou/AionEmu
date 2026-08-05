@@ -26359,6 +26359,46 @@
     <quest_drop npc_id="215840" item_id="182206841" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="215838" item_id="182206841" chance="100" drop_each_member="1"/>
   </quest>
+  <quest id="11064" name="[잠입/일일] 스타니스의 고민" nameId="1125064" minlevel_permitted="999" maxlevel_permitted="999" max_repeat_count="20" cannot_share="true" race_permitted="ELYOS" category="QUEST" repeat_cycle="ALL">
+    <collect_items>
+      <collect_item item_id="182206853" count="10"/>
+    </collect_items>
+    <rewards exp="4931644" ap="400">
+      <reward_item item_id="186000469" count="54"/>
+    </rewards>
+    <quest_drop npc_id="216003" item_id="182206853" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216004" item_id="182206853" chance="100" drop_each_member="1"/>
+  </quest>
+  <quest id="11065" name="[잠입/일일] 비스콤 늪지의 바이올란트" nameId="1125065" minlevel_permitted="999" maxlevel_permitted="999" max_repeat_count="20" cannot_share="true" race_permitted="ELYOS" category="QUEST" repeat_cycle="ALL">
+    <collect_items>
+      <collect_item item_id="182206851" count="10"/>
+    </collect_items>
+    <rewards exp="6112882" ap="400">
+      <reward_item item_id="186000469" count="54"/>
+    </rewards>
+    <quest_drop npc_id="215990" item_id="182206851" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215991" item_id="182206851" chance="100" drop_each_member="1"/>
+  </quest>
+  <quest id="11066" name="[잠입/일일] 방어선 구축의 재료" nameId="1125066" minlevel_permitted="999" maxlevel_permitted="999" max_repeat_count="20" cannot_share="true" race_permitted="ELYOS" category="QUEST" repeat_cycle="ALL">
+    <collect_items>
+      <collect_item item_id="182206854" count="10"/>
+    </collect_items>
+    <rewards exp="4931644" ap="400">
+      <reward_item item_id="186000469" count="54"/>
+    </rewards>
+    <quest_drop npc_id="215923" item_id="182206854" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215924" item_id="182206854" chance="100" drop_each_member="1"/>
+  </quest>
+  <quest id="11067" name="[잠입/일일] 테메노스의 부탁" nameId="1125067" minlevel_permitted="999" maxlevel_permitted="999" max_repeat_count="20" cannot_share="true" race_permitted="ELYOS" category="QUEST" repeat_cycle="ALL">
+    <collect_items>
+      <collect_item item_id="182206852" count="10"/>
+    </collect_items>
+    <rewards exp="6112882" ap="400">
+      <reward_item item_id="186000469" count="54"/>
+    </rewards>
+    <quest_drop npc_id="215927" item_id="182206852" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215928" item_id="182206852" chance="100" drop_each_member="1"/>
+  </quest>
   <quest id="11068" name="A Mysterious Wind" nameId="1125068" minlevel_permitted="52" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards gold="2280" exp="3713547"/>
     <quest_work_items>

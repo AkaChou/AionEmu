@@ -118,6 +118,21 @@ class QuestEngineRuntimeCompositionTest {
 	}
 
 	@Test
+	void getItemProductionEventIsAcceptedByTheCentralInstallationGate() {
+		QuestEngine engine = new QuestEngine();
+		var definition = QuestDsl.quest(990004)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.GetItem(182216178)).from("started").goTo("reward")
+			.compile();
+
+		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(definition)));
+
+		assertTrue(engine.isHaveHandler(990004));
+	}
+
+	@Test
 	void unsupportedProductionEventFailsBeforeRegisteringAnyNpcOwner() {
 		QuestEngine engine = new QuestEngine();
 		var talk = QuestDsl.quest(990001)

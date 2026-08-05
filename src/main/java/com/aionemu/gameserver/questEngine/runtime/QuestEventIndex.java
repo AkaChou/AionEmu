@@ -23,8 +23,10 @@ public final class QuestEventIndex {
 		Map<QuestEvent, List<Route>> mutable = new LinkedHashMap<>();
 		for (CompiledQuestDefinition definition : definitions) {
 			for (QuestTransition transition : definition.definition().transitions()) {
-				mutable.computeIfAbsent(QuestEvent.routeKey(transition.event()), ignored -> new ArrayList<>())
-						.add(new Route(definition.id(), transition));
+				for (QuestEvent routeKey : routeKeys(transition.event())) {
+					mutable.computeIfAbsent(routeKey, ignored -> new ArrayList<>())
+							.add(new Route(definition.id(), transition));
+				}
 			}
 		}
 		Map<QuestEvent, List<Route>> frozen = new LinkedHashMap<>();
@@ -33,6 +35,14 @@ public final class QuestEventIndex {
 		mutable.forEach((event, entries) -> frozen.put(event,
 			entries.stream().sorted(routeOrder).toList()));
 		this.routes = Collections.unmodifiableMap(frozen);
+	}
+
+	private static List<QuestEvent> routeKeys(QuestEvent event) {
+		if (event instanceof QuestEvent.KillNpcSet kills) {
+			return kills.npcIds().stream().sorted()
+				.map(npcId -> (QuestEvent) new QuestEvent.KillNpc(npcId)).toList();
+		}
+		return List.of(QuestEvent.routeKey(event));
 	}
 
 	public List<Route> routesFor(QuestEvent event) {

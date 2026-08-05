@@ -2,6 +2,8 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.model.PlayerClass;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -270,6 +272,18 @@ public final class QuestDsl {
 		return new QuestCondition.StartEligible();
 	}
 
+	public static QuestCondition advancedClassIs(PlayerClass playerClass) {
+		return new QuestCondition.AdvancedClassIs(playerClass);
+	}
+
+	public static QuestCondition playerInGroup() {
+		return new QuestCondition.PlayerInGroup();
+	}
+
+	public static QuestCondition playerInGroup(boolean expected) {
+		return new QuestCondition.PlayerInGroup(expected);
+	}
+
 	public static QuestCondition worldNpcIs(int npcId, boolean expected) {
 		return new QuestCondition.WorldNpcIs(npcId, expected);
 	}
@@ -350,6 +364,11 @@ public final class QuestDsl {
 		return new AfterCommitAction.ShowQuestDialog(dialogId);
 	}
 
+	/** Sends a raw SM_DIALOG_WINDOW without attaching the quest id. */
+	public static AfterCommitAction showDialogWindow(int dialogId) {
+		return new AfterCommitAction.ShowDialogWindow(dialogId);
+	}
+
 	public static AfterCommitAction showQuestSelectionDialog(int dialogId) {
 		return new AfterCommitAction.ShowQuestSelectionDialog(dialogId);
 	}
@@ -369,6 +388,26 @@ public final class QuestDsl {
 
 	public static AfterCommitAction morph(int ascensionState) {
 		return new AfterCommitAction.Morph(ascensionState);
+	}
+
+	public static AfterCommitAction applyEffect(int skillId, int durationMillis) {
+		return new AfterCommitAction.ApplyEffect(skillId, durationMillis);
+	}
+
+	public static AfterCommitAction removeEffect(int effectId) {
+		return new AfterCommitAction.RemoveEffect(effectId);
+	}
+
+	public static AfterCommitAction systemMessage(QuestSystemMessage message) {
+		return new AfterCommitAction.SendSystemMessage(message);
+	}
+
+	public static AfterCommitAction systemMessage(QuestSystemMessagePacket message) {
+		return new AfterCommitAction.SendSystemMessagePacket(message);
+	}
+
+	public static QuestCondition genderIs(Gender gender) {
+		return new QuestCondition.GenderIs(gender);
 	}
 
 	public static AfterCommitAction playerEmotion(QuestPlayerEmotion emotion) {
@@ -404,6 +443,10 @@ public final class QuestDsl {
 
 	public static AfterCommitAction startFollow(String slot) {
 		return new AfterCommitAction.StartFollow(slot);
+	}
+
+	public static AfterCommitAction startFollowCurrentTargetToPoint(float x, float y, float z) {
+		return new AfterCommitAction.StartFollowCurrentTargetToPoint(x, y, z);
 	}
 
 	public static AfterCommitAction stopFollow(String slot) {

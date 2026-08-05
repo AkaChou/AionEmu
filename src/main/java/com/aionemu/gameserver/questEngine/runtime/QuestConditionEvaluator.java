@@ -16,28 +16,32 @@ public final class QuestConditionEvaluator {
 			List<QuestCondition> conditions) {
 		Map<String, Integer> variables = layout.unpack(snapshot.packedVariables());
 		for (QuestCondition condition : conditions) {
-				boolean matched = switch (condition) {
-					case QuestCondition.StatusIs status -> snapshot.status() == status.status();
-					case QuestCondition.HasItem item -> hasItem(snapshot, item);
-					case QuestCondition.QuestVariableIs variable -> variables.getOrDefault(variable.field(), Integer.MIN_VALUE)
-							== variable.value();
-						case QuestCondition.VariableAtLeast variable ->
-							variables.getOrDefault(variable.field(), Integer.MIN_VALUE) >= variable.value();
-						case QuestCondition.VariableBelow variable ->
-							variables.getOrDefault(variable.field(), Integer.MIN_VALUE) < variable.value();
-					case QuestCondition.VariableSumIs variable -> variableSum(variables, variable.fields()) == variable.value();
-					case QuestCondition.VariableSumBelow variable -> variableSum(variables, variable.fields()) < variable.value();
-					case QuestCondition.RecipeKnown recipe -> recipeKnown(snapshot, recipe);
-					case QuestCondition.CanGrantCraftSkill skill -> canGrantCraftSkill(snapshot, skill);
-					case QuestCondition.PvpVictimLevelDelta level -> pvpVictimLevelDelta(snapshot, level);
-					case QuestCondition.PvpRecipientInZone zone -> pvpRecipientInZone(snapshot, zone);
-					case QuestCondition.StartEligible ignored -> startEligible(snapshot);
-					case QuestCondition.PlayerClassIs playerClass -> playerClass(startingClass(snapshot),
-						playerClass.startingClass());
-					case QuestCondition.WorldIs world -> worldIs(snapshot, world);
-					case QuestCondition.WorldNpcIs npc -> worldNpcIs(snapshot, npc);
-					case QuestCondition.ZoneIs zone -> zoneIs(snapshot, zone);
-				};
+			boolean matched = switch (condition) {
+				case QuestCondition.StatusIs status -> snapshot.status() == status.status();
+				case QuestCondition.HasItem item -> hasItem(snapshot, item);
+				case QuestCondition.QuestVariableIs variable -> variables.getOrDefault(variable.field(), Integer.MIN_VALUE)
+					== variable.value();
+				case QuestCondition.VariableAtLeast variable ->
+					variables.getOrDefault(variable.field(), Integer.MIN_VALUE) >= variable.value();
+				case QuestCondition.VariableBelow variable ->
+					variables.getOrDefault(variable.field(), Integer.MIN_VALUE) < variable.value();
+				case QuestCondition.VariableSumIs variable -> variableSum(variables, variable.fields()) == variable.value();
+				case QuestCondition.VariableSumBelow variable -> variableSum(variables, variable.fields()) < variable.value();
+				case QuestCondition.RecipeKnown recipe -> recipeKnown(snapshot, recipe);
+				case QuestCondition.CanGrantCraftSkill skill -> canGrantCraftSkill(snapshot, skill);
+				case QuestCondition.PvpVictimLevelDelta level -> pvpVictimLevelDelta(snapshot, level);
+				case QuestCondition.PvpRecipientInZone zone -> pvpRecipientInZone(snapshot, zone);
+				case QuestCondition.StartEligible ignored -> startEligible(snapshot);
+				case QuestCondition.PlayerClassIs playerClass -> playerClass(startingClass(snapshot),
+					playerClass.startingClass());
+				case QuestCondition.AdvancedClassIs playerClass ->
+					advancedClass(snapshot, playerClass.playerClass());
+				case QuestCondition.GenderIs gender -> gender(snapshot, gender);
+				case QuestCondition.PlayerInGroup group -> playerInGroup(snapshot, group);
+				case QuestCondition.WorldIs world -> worldIs(snapshot, world);
+				case QuestCondition.WorldNpcIs npc -> worldNpcIs(snapshot, npc);
+				case QuestCondition.ZoneIs zone -> zoneIs(snapshot, zone);
+			};
 			if (!matched) {
 				return false;
 			}
@@ -123,6 +127,20 @@ public final class QuestConditionEvaluator {
 			throw new IllegalStateException("player class facts are not captured in this snapshot");
 		}
 		return playerClass;
+	}
+
+	private static boolean advancedClass(QuestSnapshot snapshot, PlayerClass expected) {
+		PlayerClass actual = snapshot.playerClass();
+		return actual != null && actual == expected;
+	}
+
+	private static boolean gender(QuestSnapshot snapshot, QuestCondition.GenderIs condition) {
+		return snapshot.gender() == condition.gender();
+	}
+
+	private static boolean playerInGroup(QuestSnapshot snapshot, QuestCondition.PlayerInGroup condition) {
+		QuestTeamFacts facts = snapshot.teamFacts();
+		return facts != null && facts.inGroup() == condition.expected();
 	}
 
 	private static boolean worldIs(QuestSnapshot snapshot, QuestCondition.WorldIs condition) {

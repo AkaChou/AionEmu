@@ -16,12 +16,22 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 	private final QuestStatsPort statsPort;
 	private final QuestEffectPort effectPort;
 	private final QuestNpcPort npcPort;
+	private final QuestSystemMessagePort systemMessagePort;
 	private volatile QuestBroadcastPort broadcastPort;
 
 	public static TypedQuestAfterCommitPort fullyComposed(QuestDialogPort dialogPort,
 			QuestTeleportPort teleportPort, QuestMoviePort moviePort, QuestSpawnPort spawnPort,
 			QuestAiPort aiPort, QuestTimerPort timerPort, QuestStateSyncPort stateSyncPort,
 			QuestStatsPort statsPort, QuestEffectPort effectPort, QuestNpcPort npcPort) {
+		return fullyComposed(dialogPort, teleportPort, moviePort, spawnPort, aiPort, timerPort,
+			stateSyncPort, statsPort, effectPort, npcPort, null);
+	}
+
+	public static TypedQuestAfterCommitPort fullyComposed(QuestDialogPort dialogPort,
+			QuestTeleportPort teleportPort, QuestMoviePort moviePort, QuestSpawnPort spawnPort,
+			QuestAiPort aiPort, QuestTimerPort timerPort, QuestStateSyncPort stateSyncPort,
+			QuestStatsPort statsPort, QuestEffectPort effectPort, QuestNpcPort npcPort,
+			QuestSystemMessagePort systemMessagePort) {
 		return new TypedQuestAfterCommitPort(
 			Objects.requireNonNull(dialogPort, "dialogPort"),
 			Objects.requireNonNull(teleportPort, "teleportPort"),
@@ -32,7 +42,7 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			Objects.requireNonNull(stateSyncPort, "stateSyncPort"),
 			Objects.requireNonNull(statsPort, "statsPort"),
 			Objects.requireNonNull(effectPort, "effectPort"),
-			Objects.requireNonNull(npcPort, "npcPort"));
+			Objects.requireNonNull(npcPort, "npcPort"), systemMessagePort);
 	}
 
 	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort) {
@@ -79,6 +89,14 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			QuestMoviePort moviePort, QuestSpawnPort spawnPort, QuestAiPort aiPort, QuestTimerPort timerPort,
 			QuestStateSyncPort stateSyncPort, QuestStatsPort statsPort, QuestEffectPort effectPort,
 			QuestNpcPort npcPort) {
+		this(dialogPort, teleportPort, moviePort, spawnPort, aiPort, timerPort, stateSyncPort, statsPort,
+			effectPort, npcPort, null);
+	}
+
+	public TypedQuestAfterCommitPort(QuestDialogPort dialogPort, QuestTeleportPort teleportPort,
+			QuestMoviePort moviePort, QuestSpawnPort spawnPort, QuestAiPort aiPort, QuestTimerPort timerPort,
+			QuestStateSyncPort stateSyncPort, QuestStatsPort statsPort, QuestEffectPort effectPort,
+			QuestNpcPort npcPort, QuestSystemMessagePort systemMessagePort) {
 		this.dialogPort = Objects.requireNonNull(dialogPort, "dialogPort");
 		this.teleportPort = teleportPort;
 		this.moviePort = moviePort;
@@ -89,6 +107,7 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 		this.statsPort = statsPort;
 		this.effectPort = effectPort;
 		this.npcPort = npcPort;
+		this.systemMessagePort = systemMessagePort;
 	}
 
 	/** 广播 port 由生产侧在 dispatcher 构造后注入, 打破 composition 循环。 */
@@ -123,6 +142,10 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 		}
 		if (action instanceof AfterCommitAction.ShowQuestSelectionDialog show) {
 			requireSuccess(dialogPort.showSelectionDialog(snapshot, plan, show.dialogId()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.ShowDialogWindow show) {
+			requireSuccess(dialogPort.showDialogWindow(snapshot, plan, show.dialogId()), action, snapshot);
 			return;
 		}
 		if (action instanceof AfterCommitAction.SyncQuestState sync) {
@@ -174,6 +197,12 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireSuccess(aiPort.startFollow(snapshot, plan, follow.slot()), action, snapshot);
 			return;
 		}
+		if (action instanceof AfterCommitAction.StartFollowCurrentTargetToPoint follow) {
+			requireAiPort();
+			requireSuccess(aiPort.startFollowCurrentTargetToPoint(snapshot, plan, follow.x(), follow.y(), follow.z()),
+				action, snapshot);
+			return;
+		}
 		if (action instanceof AfterCommitAction.StopFollow stop) {
 			requireAiPort();
 			requireSuccess(aiPort.stopFollow(snapshot, plan, stop.slot()), action, snapshot);
@@ -220,6 +249,35 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 				throw new IllegalArgumentException("morph requires an effect port");
 			}
 			requireSuccess(effectPort.morph(snapshot, plan, morph.ascensionId()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.ApplyEffect apply) {
+			if (effectPort == null) {
+				throw new IllegalArgumentException("applyEffect requires an effect port");
+			}
+			requireSuccess(effectPort.applyEffect(snapshot, plan, apply.skillId(), apply.durationMillis()),
+				action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.RemoveEffect remove) {
+			if (effectPort == null) {
+				throw new IllegalArgumentException("removeEffect requires an effect port");
+			}
+			requireSuccess(effectPort.removeEffect(snapshot, plan, remove.effectId()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.SendSystemMessage message) {
+			if (systemMessagePort == null) {
+				throw new IllegalArgumentException("systemMessage requires a system-message port");
+			}
+			requireSuccess(systemMessagePort.send(snapshot, plan, message.message()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.SendSystemMessagePacket message) {
+			if (systemMessagePort == null) {
+				throw new IllegalArgumentException("systemMessage requires a system-message port");
+			}
+			requireSuccess(systemMessagePort.send(snapshot, plan, message.message()), action, snapshot);
 			return;
 		}
 		if (action instanceof AfterCommitAction.PlayerEmotion emotion) {

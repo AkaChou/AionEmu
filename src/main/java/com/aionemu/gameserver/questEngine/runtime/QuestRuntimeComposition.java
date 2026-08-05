@@ -63,7 +63,7 @@ public final class QuestRuntimeComposition {
 			new PlayerQuestAiPort(players, spawns),
 			new PlayerQuestTimerPort(players), new PlayerQuestStateSyncPort(players),
 			new PlayerQuestStatsPort(players), new PlayerQuestEffectPort(players),
-			new PlayerQuestNpcPort(GameWorldBootstrapServices::world)),
+			new PlayerQuestNpcPort(GameWorldBootstrapServices::world), new PlayerQuestSystemMessagePort(players)),
 			new PlayerQuestEventPort(players, new PlayerQuestStartEligibilityPort(players)),
 			new LazyProductionActionPort(players), new LazyProductionStatePort(players),
 			new PlayerQuestPvpEventPort(), new PlayerQuestProximityEventPort(),

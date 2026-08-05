@@ -5,10 +5,12 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.EmotionType;
+import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_NPC_INFO;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.task.QuestTasks;
@@ -48,11 +50,32 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		Future<?> start(Player player, Npc npc, int questId, String zone);
 	}
 
+	@FunctionalInterface
+	public interface CoordinateFollowCall {
+		Future<?> start(Player player, Npc npc, int questId, float x, float y, float z);
+	}
+
+	@FunctionalInterface
+	public interface FollowTaskRegistrar {
+		void register(Player player, Future<?> task);
+	}
+
+	/**
+	 * 向玩家同步常驻 NPC 信息。生产实现发送真实的 {@code SM_NPC_INFO}，测试可注入无副作用记录器。
+	 */
+	@FunctionalInterface
+	public interface NpcInfoCall {
+		void send(Player player, Npc npc);
+	}
+
 	private final QuestPlayerPort players;
 	private final QuestSpawnRegistry registry;
 	private final AiCall ai;
 	private final TargetResolver targets;
 	private final FollowCall follow;
+	private final CoordinateFollowCall coordinateFollow;
+	private final FollowTaskRegistrar taskRegistrar;
+	private final NpcInfoCall npcInfo;
 
 	public PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry) {
 		this(players, registry, (npc, player, target, command, argument) -> switch (command) {
@@ -81,27 +104,79 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 			}
 		}, objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
 		(player, npc, questId, zone) -> QuestTasks.newFollowingToTargetCheckTask(
-			new QuestEnv(null, player, questId, 0), npc, ZoneName.get(zone)));
+			new QuestEnv(null, player, questId, 0), npc, ZoneName.get(zone)),
+		(player, npc, questId, x, y, z) -> QuestTasks.newFollowingToTargetCheckTask(
+			new QuestEnv(null, player, questId, 0), npc, x, y, z),
+		(player, task) -> player.getController().addTask(TaskId.QUEST_FOLLOW, task));
 	}
 
 	public PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry, AiCall ai) {
 		this(players, registry, ai, objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
 			(player, npc, questId, zone) -> QuestTasks.newFollowingToTargetCheckTask(
-				new QuestEnv(null, player, questId, 0), npc, ZoneName.get(zone)));
+				new QuestEnv(null, player, questId, 0), npc, ZoneName.get(zone)),
+			(player, npc, questId, x, y, z) -> QuestTasks.newFollowingToTargetCheckTask(
+				new QuestEnv(null, player, questId, 0), npc, x, y, z),
+			(player, task) -> player.getController().addTask(TaskId.QUEST_FOLLOW, task));
 	}
 
 	public PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry, AiCall ai,
 			TargetResolver targets, FollowCall follow) {
+		this(players, registry, ai, targets, follow,
+			(player, npc, questId, x, y, z) -> QuestTasks.newFollowingToTargetCheckTask(
+				new QuestEnv(null, player, questId, 0), npc, x, y, z),
+			(player, task) -> player.getController().addTask(TaskId.QUEST_FOLLOW, task));
+	}
+
+	public PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry, AiCall ai,
+			TargetResolver targets, FollowCall follow, CoordinateFollowCall coordinateFollow,
+			FollowTaskRegistrar taskRegistrar) {
+		this(players, registry, ai, targets, follow, coordinateFollow, taskRegistrar,
+			(player, npc) -> PacketSendUtility.sendPacket(player, new SM_NPC_INFO(npc, player)));
+	}
+
+	public PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry, AiCall ai,
+			TargetResolver targets, FollowCall follow, CoordinateFollowCall coordinateFollow,
+			FollowTaskRegistrar taskRegistrar, NpcInfoCall npcInfo) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.registry = Objects.requireNonNull(registry, "registry");
 		this.ai = Objects.requireNonNull(ai, "ai");
 		this.targets = Objects.requireNonNull(targets, "targets");
 		this.follow = Objects.requireNonNull(follow, "follow");
+		this.coordinateFollow = Objects.requireNonNull(coordinateFollow, "coordinateFollow");
+		this.taskRegistrar = Objects.requireNonNull(taskRegistrar, "taskRegistrar");
+		this.npcInfo = Objects.requireNonNull(npcInfo, "npcInfo");
 	}
 
 	@Override
 	public boolean startFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
 		return run(snapshot, slot, Command.START_FOLLOW);
+	}
+
+	@Override
+	public boolean startFollowCurrentTargetToPoint(QuestSnapshot snapshot, QuestMutationPlan plan,
+			float x, float y, float z) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
+			throw new IllegalArgumentException("follow destination coordinates must be finite");
+		}
+		Player player = players.find(snapshot.playerId());
+		if (player == null || snapshot.interactionObjectId() == 0) {
+			return false;
+		}
+		VisibleObject visible = targets.find(snapshot.interactionObjectId());
+		if (!(visible instanceof Npc npc)) {
+			return false;
+		}
+		npcInfo.send(player, npc);
+		if (!ai.apply(npc, player, null, Command.START_FOLLOW, null)) {
+			return false;
+		}
+		Future<?> task = coordinateFollow.start(player, npc, snapshot.questId(), x, y, z);
+		if (task == null) {
+			return false;
+		}
+		taskRegistrar.register(player, task);
+		return true;
 	}
 
 	@Override

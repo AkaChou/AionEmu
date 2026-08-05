@@ -102,6 +102,30 @@ class PlayerQuestAiPortTest {
 	}
 
 	@Test
+	void residentInteractionNpcCanFollowPlayerToCoordinateTarget() {
+		QuestSpawnRegistry registry = new QuestSpawnRegistry();
+		Npc escort = npc(799036);
+		Player player = player();
+		List<String> calls = new ArrayList<>();
+		CompletableFuture<Void> watcher = new CompletableFuture<>();
+		PlayerQuestAiPort port = new PlayerQuestAiPort(playerId -> player, registry,
+			(npc, p, target, command, argument) -> {
+				calls.add(command.name());
+				return true;
+			}, objectId -> objectId == escort.getObjectId() ? escort : null,
+			(p, npc, questId, zone) -> CompletableFuture.completedFuture(null),
+			(p, npc, questId, x, y, z) -> {
+				calls.add("POINT:" + x + ":" + y + ":" + z);
+				return watcher;
+			}, (p, task) -> calls.add("REGISTER"), (p, npc) -> calls.add("NPC_INFO"));
+
+		assertTrue(port.startFollowCurrentTargetToPoint(snapshot().withInteractionObjectId(escort.getObjectId()),
+			plan(), 292.63895f, 489.47452f, 574.2429f));
+		assertEquals(List.of("NPC_INFO", "START_FOLLOW", "POINT:292.63895:489.47452:574.2429", "REGISTER"), calls);
+		assertFalse(watcher.isCancelled());
+	}
+
+	@Test
 	void aiCommandSkipsWhenSlotHasNoHandle() {
 		PlayerQuestAiPort port = new PlayerQuestAiPort(playerId -> player(), new QuestSpawnRegistry(),
 			(npc, p, target, command, argument) -> true);
