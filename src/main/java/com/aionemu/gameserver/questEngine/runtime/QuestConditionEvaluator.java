@@ -3,6 +3,9 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.definition.ProgressLayout;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
+import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestMembershipPermission;
+import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +16,11 @@ public final class QuestConditionEvaluator {
 	}
 
 	public static boolean matches(ProgressLayout layout, QuestSnapshot snapshot,
+			List<QuestCondition> conditions) {
+		return matches(layout, snapshot, null, conditions);
+	}
+
+	public static boolean matches(ProgressLayout layout, QuestSnapshot snapshot, QuestEvent event,
 			List<QuestCondition> conditions) {
 		Map<String, Integer> variables = layout.unpack(snapshot.packedVariables());
 		for (QuestCondition condition : conditions) {
@@ -41,12 +49,45 @@ public final class QuestConditionEvaluator {
 				case QuestCondition.WorldIs world -> worldIs(snapshot, world);
 				case QuestCondition.WorldNpcIs npc -> worldNpcIs(snapshot, npc);
 				case QuestCondition.ZoneIs zone -> zoneIs(snapshot, zone);
+				case QuestCondition.NpcHpBelowPercent hp -> npcHpBelowPercent(event, hp);
+				case QuestCondition.CurrencyAtLeast currency -> currencyAtLeast(snapshot, currency);
+				case QuestCondition.CurrencyBelow currency -> currencyBelow(snapshot, currency);
+				case QuestCondition.QuestsFinished quests -> questsFinished(snapshot, quests);
+				case QuestCondition.EquipmentSetEquipped equipment -> equipmentSetEquipped(snapshot, equipment);
+				case QuestCondition.EquippedItem equipped -> equippedItem(snapshot, equipped);
+				case QuestCondition.MembershipPermission permission -> membershipPermission(snapshot, permission);
+				case QuestCondition.DpAtMax ignored -> dpAtMax(snapshot);
 			};
 			if (!matched) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	private static boolean npcHpBelowPercent(QuestEvent event, QuestCondition.NpcHpBelowPercent condition) {
+		if (!(event instanceof QuestEvent.AttackNpc attack)) {
+			return false;
+		}
+		QuestNpcAttackFacts facts = attack.facts();
+		return facts != null && facts.npcTemplateId() == condition.npcId()
+			&& facts.belowPercent(condition.percent());
+	}
+
+	private static boolean currencyAtLeast(QuestSnapshot snapshot, QuestCondition.CurrencyAtLeast condition) {
+		try {
+			return snapshot.balance(condition.kind()) >= condition.amount();
+		} catch (IllegalStateException unknownFacts) {
+			return false;
+		}
+	}
+
+	private static boolean currencyBelow(QuestSnapshot snapshot, QuestCondition.CurrencyBelow condition) {
+		try {
+			return snapshot.balance(condition.kind()) < condition.amount();
+		} catch (IllegalStateException unknownFacts) {
+			return false;
+		}
 	}
 
 	private static long variableSum(Map<String, Integer> variables, List<String> fields) {
@@ -67,7 +108,7 @@ public final class QuestConditionEvaluator {
 	 */
 	private static boolean hasItem(QuestSnapshot snapshot, QuestCondition.HasItem item) {
 		try {
-			return snapshot.itemCount(item.itemId()) >= item.count();
+			return (snapshot.itemCount(item.itemId()) >= item.count()) == item.expected();
 		} catch (IllegalStateException unknownFacts) {
 			return false;
 		}
@@ -155,5 +196,34 @@ public final class QuestConditionEvaluator {
 	private static boolean zoneIs(QuestSnapshot snapshot, QuestCondition.ZoneIs condition) {
 		QuestWorldFacts facts = snapshot.worldFacts();
 		return facts != null && facts.containsZone(condition.zone()) == condition.expected();
+	}
+
+	private static boolean questsFinished(QuestSnapshot snapshot, QuestCondition.QuestsFinished condition) {
+		if (!snapshot.completedQuestsCaptured()) {
+			return false;
+		}
+		return condition.questIds().stream().allMatch(snapshot::hasCompletedQuest);
+	}
+
+	private static boolean equipmentSetEquipped(QuestSnapshot snapshot,
+		QuestCondition.EquipmentSetEquipped condition) {
+		QuestEquipmentFacts facts = snapshot.equipmentFacts();
+		return facts != null && facts.anySetHasExactly(condition.setIds(), condition.count()) == condition.expected();
+	}
+
+	private static boolean equippedItem(QuestSnapshot snapshot, QuestCondition.EquippedItem condition) {
+		QuestEquipmentFacts facts = snapshot.equipmentFacts();
+		return facts != null && (facts.equippedItemCount(condition.itemId()) >= condition.count())
+			== condition.expected();
+	}
+
+	private static boolean membershipPermission(QuestSnapshot snapshot,
+		QuestCondition.MembershipPermission condition) {
+		QuestMembershipFacts facts = snapshot.membershipFacts();
+		return facts != null && facts.has(condition.permission()) == condition.expected();
+	}
+
+	private static boolean dpAtMax(QuestSnapshot snapshot) {
+		return snapshot.dpAtMax();
 	}
 }

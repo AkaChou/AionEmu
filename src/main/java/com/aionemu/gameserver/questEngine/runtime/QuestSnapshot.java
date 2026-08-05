@@ -8,6 +8,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestPvpKillFacts;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Immutable fact snapshot supplied to pure condition evaluation.
@@ -25,7 +26,22 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		int targetObjectId, int worldId, int instanceId, float x, float y, float z, byte heading,
 		QuestCraftSnapshot craftFacts, QuestPvpKillFacts pvpFacts, QuestStartEligibility startEligibility,
 		PlayerClass startingClass, PlayerClass playerClass, Gender gender, boolean targetlessDialog,
-		QuestWorldFacts worldFacts, QuestTeamFacts teamFacts, int completeCount) {
+		QuestWorldFacts worldFacts, QuestTeamFacts teamFacts, int completeCount, Set<Integer> completedQuestIds,
+		QuestEquipmentFacts equipmentFacts, Integer maxDp, QuestMembershipFacts membershipFacts) {
+
+	/** Compatibility constructor for callers that predate completed-quest facts. */
+	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
+			Map<Integer, Integer> inventory, Map<QuestRewardKind, Long> currencies,
+			boolean inventoryCaptured, boolean currenciesCaptured, int interactionObjectId,
+			int targetObjectId, int worldId, int instanceId, float x, float y, float z, byte heading,
+			QuestCraftSnapshot craftFacts, QuestPvpKillFacts pvpFacts, QuestStartEligibility startEligibility,
+			PlayerClass startingClass, PlayerClass playerClass, Gender gender, boolean targetlessDialog,
+			QuestWorldFacts worldFacts, QuestTeamFacts teamFacts, int completeCount) {
+		this(playerId, questId, status, packedVariables, inventory, currencies, inventoryCaptured,
+			currenciesCaptured, interactionObjectId, targetObjectId, worldId, instanceId, x, y, z, heading,
+			craftFacts, pvpFacts, startEligibility, startingClass, playerClass, gender, targetlessDialog,
+			worldFacts, teamFacts, completeCount, null, null, null, null);
+	}
 
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
 			Map<Integer, Integer> inventory, Map<QuestRewardKind, Long> currencies,
@@ -34,7 +50,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			QuestCraftSnapshot craftFacts, QuestPvpKillFacts pvpFacts) {
 		this(playerId, questId, status, packedVariables, inventory, currencies, inventoryCaptured,
 			currenciesCaptured, interactionObjectId, targetObjectId, worldId, instanceId, x, y, z, heading,
-			craftFacts, pvpFacts, null, null, null, null, false, null, null, 0);
+			craftFacts, pvpFacts, null, null, null, null, false, null, null, 0, null, null, null, null);
 	}
 
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
@@ -43,19 +59,19 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			int targetObjectId, int worldId, int instanceId, float x, float y, float z, byte heading) {
 		this(playerId, questId, status, packedVariables, inventory, currencies, inventoryCaptured,
 			currenciesCaptured, interactionObjectId, targetObjectId, worldId, instanceId, x, y, z, heading,
-			null, null, null, null, null, null, false, null, null, 0);
+			null, null, null, null, null, null, false, null, null, 0, null, null, null, null);
 	}
 
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
 			Map<Integer, Integer> inventory, Map<QuestRewardKind, Long> currencies) {
 		this(playerId, questId, status, packedVariables, inventory, currencies, true, true, 0,
-			0, 0, 0, 0f, 0f, 0f, (byte) 0, null, null, null, null, null, null, false, null, null, 0);
+			0, 0, 0, 0f, 0f, 0f, (byte) 0, null, null, null, null, null, null, false, null, null, 0, null, null, null, null);
 	}
 
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
 			Map<Integer, Integer> inventory) {
 		this(playerId, questId, status, packedVariables, inventory, Map.of(), true, true, 0,
-			0, 0, 0, 0f, 0f, 0f, (byte) 0, null, null, null, null, null, null, false, null, null, 0);
+			0, 0, 0, 0f, 0f, 0f, (byte) 0, null, null, null, null, null, null, false, null, null, 0, null, null, null, null);
 	}
 
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
@@ -63,7 +79,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			boolean inventoryCaptured, boolean currenciesCaptured, int interactionObjectId) {
 		this(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId,
-			0, 0, 0, 0f, 0f, 0f, (byte) 0, null, null, null, null, null, null, false, null, null, 0);
+			0, 0, 0, 0f, 0f, 0f, (byte) 0, null, null, null, null, null, null, false, null, null, 0, null, null, null, null);
 	}
 
 	public QuestSnapshot withInteractionObjectId(int objectId) {
@@ -73,7 +89,8 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, objectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
-			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount);
+			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount,
+			completedQuestIds, equipmentFacts, maxDp, membershipFacts);
 	}
 
 	public QuestSnapshot withTargetObjectId(int objectId) {
@@ -83,7 +100,8 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, objectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
-			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount);
+			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount,
+			completedQuestIds, equipmentFacts, maxDp, membershipFacts);
 	}
 
 	public QuestSnapshot withCraftFacts(QuestCraftSnapshot facts) {
@@ -91,7 +109,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, Objects.requireNonNull(facts, "facts"), pvpFacts,
 			startEligibility, startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts,
-			completeCount);
+			completeCount, completedQuestIds, equipmentFacts, maxDp, membershipFacts);
 	}
 
 	public QuestSnapshot withPvpFacts(QuestPvpKillFacts facts) {
@@ -102,7 +120,8 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, facts, startEligibility,
-			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount);
+			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount,
+			completedQuestIds, equipmentFacts, maxDp, membershipFacts);
 	}
 
 	public QuestSnapshot withStartEligibility(QuestStartEligibility eligibility) {
@@ -110,14 +129,15 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts,
 			Objects.requireNonNull(eligibility, "eligibility"), startingClass, playerClass, gender, targetlessDialog,
-			worldFacts, teamFacts, completeCount);
+			worldFacts, teamFacts, completeCount, completedQuestIds, equipmentFacts, maxDp, membershipFacts);
 	}
 
 	public QuestSnapshot withStartingClass(PlayerClass startingClass) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
-			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount);
+			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount,
+			completedQuestIds, equipmentFacts, maxDp, membershipFacts);
 	}
 
 	public QuestSnapshot withPlayerClass(PlayerClass playerClass) {
@@ -125,7 +145,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
 			startingClass, Objects.requireNonNull(playerClass, "playerClass"), gender, targetlessDialog,
-			worldFacts, teamFacts, completeCount);
+			worldFacts, teamFacts, completeCount, completedQuestIds, equipmentFacts, maxDp, membershipFacts);
 	}
 
 	public QuestSnapshot withGender(Gender gender) {
@@ -133,21 +153,23 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
 			startingClass, playerClass, Objects.requireNonNull(gender, "gender"), targetlessDialog, worldFacts,
-			teamFacts, completeCount);
+			teamFacts, completeCount, completedQuestIds, equipmentFacts, maxDp, membershipFacts);
 	}
 
 	public QuestSnapshot withTargetlessDialog() {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
-			startingClass, playerClass, gender, true, worldFacts, teamFacts, completeCount);
+			startingClass, playerClass, gender, true, worldFacts, teamFacts, completeCount, completedQuestIds,
+			equipmentFacts, maxDp, membershipFacts);
 	}
 
 	public QuestSnapshot withWorldFacts(QuestWorldFacts facts) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
-			startingClass, playerClass, gender, targetlessDialog, facts, teamFacts, completeCount);
+			startingClass, playerClass, gender, targetlessDialog, facts, teamFacts, completeCount,
+			completedQuestIds, equipmentFacts, maxDp, membershipFacts);
 	}
 
 	public QuestSnapshot withTeamFacts(QuestTeamFacts facts) {
@@ -155,7 +177,8 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
 			startingClass, playerClass, gender, targetlessDialog, worldFacts,
-			Objects.requireNonNull(facts, "facts"), completeCount);
+			Objects.requireNonNull(facts, "facts"), completeCount, completedQuestIds, equipmentFacts, maxDp,
+			membershipFacts);
 	}
 
 	public QuestSnapshot withCompleteCount(int count) {
@@ -165,7 +188,47 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
 			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
-			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, count);
+			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, count,
+			completedQuestIds, equipmentFacts, maxDp, membershipFacts);
+	}
+
+	/** Captures the player's completed quest ids for prerequisite evaluation. */
+	public QuestSnapshot withCompletedQuestIds(Set<Integer> questIds) {
+		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
+			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
+			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
+			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount,
+			Objects.requireNonNull(questIds, "questIds"), equipmentFacts, maxDp, membershipFacts);
+	}
+
+	/** Captures equipped item-set facts for equipment-dependent dialog conditions. */
+	public QuestSnapshot withEquipmentFacts(QuestEquipmentFacts facts) {
+		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
+			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
+			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
+			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount,
+			completedQuestIds, Objects.requireNonNull(facts, "facts"), maxDp, membershipFacts);
+	}
+
+	/** Captures typed membership permissions for permission-dependent quest routes. */
+	public QuestSnapshot withMembershipFacts(QuestMembershipFacts facts) {
+		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
+			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
+			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
+			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount,
+			completedQuestIds, equipmentFacts, maxDp, Objects.requireNonNull(facts, "facts"));
+	}
+
+	/** Captures the player's maximum DP for a {@code dp-at-max} condition. */
+	public QuestSnapshot withMaxDp(int value) {
+		if (value < 0) {
+			throw new IllegalArgumentException("maxDp must be non-negative");
+		}
+		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
+			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
+			worldId, instanceId, x, y, z, heading, craftFacts, pvpFacts, startEligibility,
+			startingClass, playerClass, gender, targetlessDialog, worldFacts, teamFacts, completeCount,
+			completedQuestIds, equipmentFacts, value, membershipFacts);
 	}
 
 	public QuestSnapshot {
@@ -174,6 +237,15 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		}
 		if (completeCount < 0) {
 			throw new IllegalArgumentException("completeCount must be non-negative");
+		}
+		if (maxDp != null && maxDp < 0) {
+			throw new IllegalArgumentException("maxDp must be non-negative");
+		}
+		if (completedQuestIds != null) {
+			completedQuestIds = Set.copyOf(completedQuestIds);
+			if (completedQuestIds.stream().anyMatch(id -> id == null || id <= 0)) {
+				throw new IllegalArgumentException("completed quest ids must be positive");
+			}
 		}
 		if (interactionObjectId < 0 || targetObjectId < 0 || worldId < 0 || instanceId < 0) {
 			throw new IllegalArgumentException("object, world, and instance ids must be non-negative");
@@ -212,6 +284,16 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		return currenciesCaptured;
 	}
 
+	/** Whether completed-quest facts were captured for this snapshot. */
+	public boolean completedQuestsCaptured() {
+		return completedQuestIds != null;
+	}
+
+	/** Returns true only when captured facts contain the requested completed quest. */
+	public boolean hasCompletedQuest(int requiredQuestId) {
+		return completedQuestIds != null && completedQuestIds.contains(requiredQuestId);
+	}
+
 	public int itemCount(int itemId) {
 		if (!inventoryCaptured) {
 			throw new IllegalStateException("inventory facts are not captured in this snapshot");
@@ -245,6 +327,23 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 
 	public boolean craftFactsCaptured() {
 		return craftFacts != null;
+	}
+
+	/** Returns whether maximum-DP facts were captured. */
+	public boolean maxDpCaptured() {
+		return maxDp != null;
+	}
+
+	/** Matches a captured current DP balance against the captured maximum DP. */
+	public boolean dpAtMax() {
+		if (maxDp == null) {
+			return false;
+		}
+		try {
+			return balance(QuestRewardKind.DP) == maxDp;
+		} catch (IllegalStateException unknownFacts) {
+			return false;
+		}
 	}
 
 	public boolean pvpFactsCaptured() {

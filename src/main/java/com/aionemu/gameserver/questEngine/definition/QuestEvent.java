@@ -70,9 +70,16 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
-	record AttackNpc(int npcId) implements QuestEvent {
+	record AttackNpc(int npcId, QuestNpcAttackFacts facts) implements QuestEvent {
+		public AttackNpc(int npcId) {
+			this(npcId, null);
+		}
+
 		public AttackNpc {
 			checkId(npcId, "npcId");
+			if (facts != null && facts.npcTemplateId() != npcId) {
+				throw new IllegalArgumentException("NPC attack facts do not match the route");
+			}
 		}
 
 		@Override
@@ -499,6 +506,9 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (event instanceof TalkToNpc talk) {
 			return new TalkToNpc(talk.npcId());
 		}
+		if (event instanceof AttackNpc attack) {
+			return new AttackNpc(attack.npcId());
+		}
 		if (event instanceof UseItem useItem) {
 			return new UseItem(useItem.itemId());
 		}
@@ -558,6 +568,9 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (definition instanceof UseItem expected && actual instanceof UseItem observed) {
 			return expected.itemId() == observed.itemId();
 		}
+		if (definition instanceof AttackNpc expected && actual instanceof AttackNpc observed) {
+			return expected.npcId() == observed.npcId();
+		}
 		if (definition instanceof ItemPlay expected && actual instanceof ItemPlay observed) {
 			return expected.itemId() == observed.itemId()
 				&& expected.animationMillis() == observed.animationMillis();
@@ -612,6 +625,9 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 		if (left instanceof UseItem a && right instanceof UseItem b) {
 			return a.itemId() == b.itemId();
+		}
+		if (left instanceof AttackNpc a && right instanceof AttackNpc b) {
+			return a.npcId() == b.npcId();
 		}
 		if (left instanceof ItemPlay a && right instanceof ItemPlay b) {
 			return a.itemId() == b.itemId();

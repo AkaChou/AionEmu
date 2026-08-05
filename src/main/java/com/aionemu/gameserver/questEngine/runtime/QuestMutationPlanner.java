@@ -29,7 +29,7 @@ public final class QuestMutationPlanner {
 		if (definition.id() != snapshot.questId()) {
 			return Optional.empty();
 		}
-		return build(definition, snapshot, transition);
+		return build(definition, snapshot, null, transition);
 	}
 
 	public static Optional<QuestMutationPlan> plan(CompiledQuestDefinition definition,
@@ -37,16 +37,22 @@ public final class QuestMutationPlanner {
 		if (!QuestEvent.matches(transition.event(), event)) {
 			return Optional.empty();
 		}
-		return plan(definition, snapshot, transition);
+		if (definition.id() != snapshot.questId()) {
+			return Optional.empty();
+		}
+		return build(definition, snapshot, event, transition);
 	}
 
 	private static Optional<QuestMutationPlan> build(CompiledQuestDefinition definition,
-			QuestSnapshot snapshot, QuestTransition transition) {
+			QuestSnapshot snapshot, QuestEvent event, QuestTransition transition) {
 		ProgressLayout layout = definition.definition().progressLayout();
 		if (!matchesSourceNode(definition, layout, snapshot, transition)) {
 			return Optional.empty();
 		}
-		if (!QuestConditionEvaluator.matches(layout, snapshot, transition.conditions())) {
+		if (!metadataPrerequisitesSatisfied(definition, snapshot, transition)) {
+			return Optional.empty();
+		}
+		if (!QuestConditionEvaluator.matches(layout, snapshot, event, transition.conditions())) {
 			return Optional.empty();
 		}
 		QuestNode target = definition.definition().nodes().stream()
@@ -128,6 +134,24 @@ public final class QuestMutationPlanner {
 		Map<String, Integer> actual = layout.unpack(snapshot.packedVariables());
 		return source.projection().variables().entrySet().stream()
 			.allMatch(entry -> entry.getValue().equals(actual.get(entry.getKey())));
+	}
+
+	/** Metadata prerequisites gate only transitions that acquire an unaccepted quest. */
+	private static boolean metadataPrerequisitesSatisfied(CompiledQuestDefinition definition,
+		QuestSnapshot snapshot, QuestTransition transition) {
+		if (definition.definition().metadata().prerequisites().isEmpty() || transition.sourceNode() == null) {
+			return true;
+		}
+		QuestNode source = definition.definition().nodes().stream()
+			.filter(node -> node.label().equals(transition.sourceNode())).findFirst().orElseThrow();
+		QuestNode target = definition.definition().nodes().stream()
+			.filter(node -> node.label().equals(transition.targetNode())).findFirst().orElseThrow();
+		if (source.projection().status() != QuestStatus.NONE
+			|| target.projection().status() == QuestStatus.NONE) {
+			return true;
+		}
+		return QuestConditionEvaluator.matches(definition.definition().progressLayout(), snapshot,
+			List.of(new QuestCondition.QuestsFinished(definition.definition().metadata().prerequisites())));
 	}
 
 	/**

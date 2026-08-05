@@ -1,13 +1,19 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.EmotionId;
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.npcFaction.ENpcFactionQuestState;
+import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFaction;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
+import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ASCENSION_MORPH;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.questEngine.definition.QuestPlayerEmotion;
+import com.aionemu.gameserver.services.ClassChangeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
@@ -54,6 +60,80 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 		}
 		PacketSendUtility.sendPacket(player, new SM_ASCENSION_MORPH(ascensionId));
 		return true;
+	}
+
+	@Override
+	public boolean setPlayerClass(QuestSnapshot snapshot, QuestMutationPlan plan, PlayerClass playerClass) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		if (playerClass == null || playerClass == PlayerClass.ALL || playerClass.isStartingClass()) {
+			throw new IllegalArgumentException("playerClass must be a concrete advanced class");
+		}
+		Player player = players.find(snapshot.playerId());
+		if (player == null) {
+			return false;
+		}
+		ClassChangeService.setClass(player, playerClass);
+		return player.getPlayerClass() == playerClass;
+	}
+
+	@Override
+	public boolean startNpcFactionQuest(QuestSnapshot snapshot, QuestMutationPlan plan, int npcFactionId) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		Player player = players.find(snapshot.playerId());
+		QuestTemplate template = npcFactionTemplate(snapshot, npcFactionId);
+		if (player == null || template == null || player.getNpcFactions() == null) {
+			return false;
+		}
+		NpcFaction faction = player.getNpcFactions().getNpcFactionById(npcFactionId);
+		if (faction == null || !faction.isActive() || faction.getQuestId() != snapshot.questId()) {
+			return false;
+		}
+		player.getNpcFactions().startQuest(template);
+		return faction.getState() == ENpcFactionQuestState.START;
+	}
+
+	@Override
+	public boolean completeNpcFactionQuest(QuestSnapshot snapshot, QuestMutationPlan plan, int npcFactionId) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		Player player = players.find(snapshot.playerId());
+		QuestTemplate template = npcFactionTemplate(snapshot, npcFactionId);
+		if (player == null || template == null || player.getNpcFactions() == null) {
+			return false;
+		}
+		NpcFaction faction = player.getNpcFactions().getNpcFactionById(npcFactionId);
+		if (faction == null || !faction.isActive()) {
+			return false;
+		}
+		player.getNpcFactions().completeQuest(template);
+		return faction.getState() == ENpcFactionQuestState.COMPLETE;
+	}
+
+	@Override
+	public boolean abortNpcFactionQuest(QuestSnapshot snapshot, QuestMutationPlan plan, int npcFactionId) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		Player player = players.find(snapshot.playerId());
+		QuestTemplate template = npcFactionTemplate(snapshot, npcFactionId);
+		if (player == null || template == null || player.getNpcFactions() == null) {
+			return false;
+		}
+		NpcFaction faction = player.getNpcFactions().getNpcFactionById(npcFactionId);
+		if (faction == null || !faction.isActive()) {
+			return false;
+		}
+		player.getNpcFactions().abortQuest(template);
+		return faction.getState() == ENpcFactionQuestState.NOTING;
+	}
+
+	private static QuestTemplate npcFactionTemplate(QuestSnapshot snapshot, int npcFactionId) {
+		if (npcFactionId <= 0 || DataManager.QUEST_DATA == null) {
+			return null;
+		}
+		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(snapshot.questId());
+		return template != null && template.getNpcFactionId() == npcFactionId ? template : null;
 	}
 
 	@Override

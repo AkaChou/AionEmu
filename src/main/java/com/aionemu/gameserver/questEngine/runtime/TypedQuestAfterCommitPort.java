@@ -251,6 +251,34 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireSuccess(effectPort.morph(snapshot, plan, morph.ascensionId()), action, snapshot);
 			return;
 		}
+		if (action instanceof AfterCommitAction.SetPlayerClass setClass) {
+			if (effectPort == null) {
+				throw new IllegalArgumentException("set-class requires an effect port");
+			}
+			requireSuccess(effectPort.setPlayerClass(snapshot, plan, setClass.playerClass()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.StartNpcFactionQuest start) {
+			if (effectPort == null) {
+				throw new IllegalArgumentException("NPC faction quest start requires an effect port");
+			}
+			requireSuccess(effectPort.startNpcFactionQuest(snapshot, plan, start.npcFactionId()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.CompleteNpcFactionQuest complete) {
+			if (effectPort == null) {
+				throw new IllegalArgumentException("NPC faction quest completion requires an effect port");
+			}
+			requireSuccess(effectPort.completeNpcFactionQuest(snapshot, plan, complete.npcFactionId()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.AbortNpcFactionQuest abort) {
+			if (effectPort == null) {
+				throw new IllegalArgumentException("NPC faction quest abort requires an effect port");
+			}
+			requireSuccess(effectPort.abortNpcFactionQuest(snapshot, plan, abort.npcFactionId()), action, snapshot);
+			return;
+		}
 		if (action instanceof AfterCommitAction.ApplyEffect apply) {
 			if (effectPort == null) {
 				throw new IllegalArgumentException("applyEffect requires an effect port");

@@ -46,6 +46,7 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
@@ -324,8 +325,25 @@ public class QuestEngine implements GameEngine {
 	public boolean onAttack(QuestEnv env) {
 		try {
 			Npc npc = (Npc) env.getVisibleObject();
+			QuestProductionDispatcher typed = productionDispatcher;
+			Player player = env.getPlayer();
 			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnAttackEvent();
+			boolean typedDispatchSucceeded = false;
+			if (player != null && questIds.stream().anyMatch(typed::owns)) {
+				// 攻击事实广播给所有匹配 typed owner；同一 NPC 可服务多个任务。
+				// Broadcast the authoritative attack fact to every matching typed owner.
+				try {
+					QuestNpcAttackFacts facts = attackFacts(npc, player);
+					typedDispatchSucceeded = typed.dispatch(new QuestEvent.AttackNpc(npc.getNpcId(), facts),
+						player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimed();
+				} catch (RuntimeException ignored) {
+					// Preserve legacy owners when the authoritative attack fact cannot be captured.
+				}
+			}
 			for (int questId : questIds) {
+				if (typedDispatchSucceeded && typed.owns(questId)) {
+					continue;
+				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 				if (questHandler != null) {
 					env.setQuestId(questId);
@@ -337,6 +355,16 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		return true;
+	}
+
+	private static QuestNpcAttackFacts attackFacts(Npc npc, Player player) {
+		if (npc == null || player == null || npc.getLifeStats() == null
+				|| player.getPosition() == null || player.getWorldId() <= 0 || player.getInstanceId() <= 0) {
+			return null;
+		}
+		return new QuestNpcAttackFacts(player.getObjectId(), npc.getObjectId(), npc.getNpcId(),
+			npc.getLifeStats().getCurrentHp(), npc.getLifeStats().getMaxHp(),
+			player.getWorldId(), player.getInstanceId());
 	}
 
 	/**
@@ -406,10 +434,29 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onDie(QuestEnv env) {
 		try {
+			QuestProductionDispatcher typed = productionDispatcher;
+			Player player = env == null ? null : env.getPlayer();
+			boolean typedDispatchSucceeded = false;
+			if (player != null && questOnDie.stream().anyMatch(typed::owns)) {
+				// 死亡事实由正式 owner 广播消费；同一玩家可同时拥有多个死亡回退任务。
+				// Broadcast the authoritative death fact to every matching typed owner.
+				try {
+					typedDispatchSucceeded = typed.dispatch(new QuestEvent.Die(), player.getObjectId(), 0,
+						QuestDispatchContract.BROADCAST).claimed();
+				} catch (RuntimeException ignored) {
+					// Preserve legacy owners when the death event cannot be dispatched.
+				}
+			}
 			for (int index = 0; index < questOnDie.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questOnDie.get(index));
+				int questId = questOnDie.get(index);
+				// Typed owners already received the event and must not fall back to a
+				// legacy handler with the same quest id.
+				if (typedDispatchSucceeded && typed.owns(questId)) {
+					continue;
+				}
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 				if (questHandler != null) {
-					env.setQuestId(questOnDie.get(index));
+					env.setQuestId(questId);
 					questHandler.onDieEvent(env);
 				}
 			}
@@ -1897,6 +1944,7 @@ public class QuestEngine implements GameEngine {
 				if (!(transition.event() instanceof QuestEvent.TalkToNpc)
 						&& !(transition.event() instanceof QuestEvent.KillNpc)
 						&& !(transition.event() instanceof QuestEvent.KillNpcSet)
+						&& !(transition.event() instanceof QuestEvent.AttackNpc)
 						&& !(transition.event() instanceof QuestEvent.CanAct)
 						&& !(transition.event() instanceof QuestEvent.EnterZone)
 						&& !(transition.event() instanceof QuestEvent.LevelUp)
@@ -1905,6 +1953,7 @@ public class QuestEngine implements GameEngine {
 						&& !(transition.event() instanceof QuestEvent.ItemPlay)
 						&& !(transition.event() instanceof QuestEvent.GetItem)
 						&& !(transition.event() instanceof QuestEvent.AtDistance)
+						&& !(transition.event() instanceof QuestEvent.Die)
 						&& !(transition.event() instanceof QuestEvent.LogOut)
 						&& !(transition.event() instanceof QuestEvent.MovieEnd)
 						&& !(transition.event() instanceof QuestEvent.NpcReachTarget)
@@ -1939,10 +1988,12 @@ public class QuestEngine implements GameEngine {
 					}
 				} else if (transition.event() instanceof QuestEvent.KillNpc kill) {
 					registerQuestNpc(kill.npcId()).addOnKillEvent(definition.id());
-				} else if (transition.event() instanceof QuestEvent.KillNpcSet kills) {
-					for (int npcId : kills.npcIds()) {
-						registerQuestNpc(npcId).addOnKillEvent(definition.id());
-					}
+					} else if (transition.event() instanceof QuestEvent.KillNpcSet kills) {
+						for (int npcId : kills.npcIds()) {
+							registerQuestNpc(npcId).addOnKillEvent(definition.id());
+						}
+				} else if (transition.event() instanceof QuestEvent.AttackNpc attack) {
+					registerQuestNpc(attack.npcId()).addOnAttackEvent(definition.id());
 				} else if (transition.event() instanceof QuestEvent.CanAct canAct) {
 					registerCanAct(definition.id(), canAct.templateId());
 				} else if (transition.event() instanceof QuestEvent.UseItem use) {

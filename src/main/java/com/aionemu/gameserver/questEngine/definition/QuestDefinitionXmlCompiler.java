@@ -153,6 +153,22 @@ public final class QuestDefinitionXmlCompiler {
 		return Arrays.asList(attribute(element, "fields").trim().split("\\s+"));
 	}
 
+	private static Set<Integer> parseIdSetAttribute(Element element, String attributeName) {
+		String raw = attribute(element, attributeName);
+		if (raw == null || raw.isBlank()) {
+			return fail("INVALID_ID_SET", attributeName + " must be a space-separated list");
+		}
+		Set<Integer> values = new java.util.LinkedHashSet<>();
+		for (String token : raw.trim().split("\\s+")) {
+			try {
+				values.add(Integer.parseInt(token));
+			} catch (NumberFormatException e) {
+				return fail("INVALID_ID_SET", attributeName + " contains non-numeric '" + token + "'");
+			}
+		}
+		return values;
+	}
+
 	private static List<QuestItemRequirement> parseItems(Element parent) {
 		List<QuestItemRequirement> result = new ArrayList<>();
 		if (parent != null) {
@@ -440,6 +456,11 @@ public final class QuestDefinitionXmlCompiler {
 		}).toArray();
 	}
 
+	private static Set<Integer> parseQuestIdSet(Element element, String attr) {
+		return Arrays.stream(parseQuestIdArray(element, attr)).boxed()
+			.collect(Collectors.toCollection(java.util.LinkedHashSet::new));
+	}
+
 	private static int parseNpcId(Element element, String token) {
 		try {
 			return Integer.parseInt(token);
@@ -474,7 +495,8 @@ public final class QuestDefinitionXmlCompiler {
 	private static QuestCondition parseCondition(Element element) {
 		return switch (element.getTagName()) {
 			case "status-is" -> new QuestCondition.StatusIs(enumValue(QuestStatus.class, element, "status"));
-			case "has-item" -> new QuestCondition.HasItem(integer(element, "item-id"), integer(element, "count"));
+			case "has-item" -> new QuestCondition.HasItem(integer(element, "item-id"), integer(element, "count"),
+				booleanOrDefault(element, "expected", true));
 			case "variable-is" -> new QuestCondition.QuestVariableIs(attribute(element, "field"), integer(element, "value"));
 			case "variable-at-least" -> new QuestCondition.VariableAtLeast(attribute(element, "field"),
 				integer(element, "value"));
@@ -506,6 +528,22 @@ public final class QuestDefinitionXmlCompiler {
 				booleanOrDefault(element, "expected", true));
 			case "zone-is" -> new QuestCondition.ZoneIs(attribute(element, "zone"),
 				booleanOrDefault(element, "expected", true));
+			case "npc-hp-below-percent" -> new QuestCondition.NpcHpBelowPercent(
+				integer(element, "npc-id"), integer(element, "percent"));
+			case "currency-at-least" -> new QuestCondition.CurrencyAtLeast(
+				QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
+			case "currency-below" -> new QuestCondition.CurrencyBelow(
+				QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
+			case "quests-finished" -> new QuestCondition.QuestsFinished(parseQuestIdSet(element, "quest-ids"));
+			case "equipment-set-equipped" -> new QuestCondition.EquipmentSetEquipped(
+				parseIdSetAttribute(element, "set-ids"), integer(element, "count"),
+				booleanOrDefault(element, "expected", true));
+			case "equipped-item" -> new QuestCondition.EquippedItem(integer(element, "item-id"),
+				integerOrDefault(element, "count", 1), booleanOrDefault(element, "expected", true));
+			case "membership-permission" -> new QuestCondition.MembershipPermission(
+				QuestMembershipPermission.fromWire(attribute(element, "permission")),
+				booleanOrDefault(element, "expected", true));
+			case "dp-at-max" -> new QuestCondition.DpAtMax();
 			default -> fail("UNKNOWN_CONDITION", element.getTagName());
 		};
 	}
@@ -554,6 +592,8 @@ public final class QuestDefinitionXmlCompiler {
 				byteValue(action, "heading"));
 			case "play-movie" -> new AfterCommitAction.PlayMovie(integer(action, "movie-id"));
 			case "morph" -> new AfterCommitAction.Morph(integer(action, "ascension-id"));
+			case "set-class" -> new AfterCommitAction.SetPlayerClass(
+				enumValue(PlayerClass.class, action, "class"));
 			case "apply-effect" -> new AfterCommitAction.ApplyEffect(integer(action, "skill-id"),
 				integer(action, "duration-ms"));
 			case "remove-effect" -> new AfterCommitAction.RemoveEffect(integer(action, "effect-id"));

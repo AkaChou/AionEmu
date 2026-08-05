@@ -197,11 +197,15 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	record HasItem(int itemId, int count) implements QuestCondition {
+	record HasItem(int itemId, int count, boolean expected) implements QuestCondition {
 		public HasItem {
 			if (itemId <= 0 || count <= 0) {
 				throw new IllegalArgumentException("item id and count must be positive");
 			}
+		}
+
+		public HasItem(int itemId, int count) {
+			this(itemId, count, true);
 		}
 	}
 

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
+
 /** Closed set of best-effort actions allowed after a successful commit. */
 public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.ShowQuestDialog, AfterCommitAction.ShowQuestSelectionDialog,
@@ -12,9 +14,12 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.StartQuestTimer, AfterCommitAction.StartInvisibleTimer,
 		AfterCommitAction.CancelQuestTimer, AfterCommitAction.SyncQuestState,
 		AfterCommitAction.RefreshPlayerStats, AfterCommitAction.Morph,
+		AfterCommitAction.SetPlayerClass,
 		AfterCommitAction.ApplyEffect, AfterCommitAction.RemoveEffect,
 		AfterCommitAction.SendSystemMessage, AfterCommitAction.SendSystemMessagePacket,
 		AfterCommitAction.FlightTeleport, AfterCommitAction.PlayerEmotion,
+		AfterCommitAction.StartNpcFactionQuest, AfterCommitAction.CompleteNpcFactionQuest,
+		AfterCommitAction.AbortNpcFactionQuest,
 		AfterCommitAction.AddNpcAggro, AfterCommitAction.DeleteInteractionNpc,
 		AfterCommitAction.BroadcastZoneMissionEnd {
 	record CloseDialog() implements AfterCommitAction {
@@ -251,6 +256,45 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		public Morph {
 			if (ascensionId != 0 && ascensionId != 1) {
 				throw new IllegalArgumentException("ascension morph state must be 0 or 1");
+			}
+		}
+	}
+
+	/**
+	 * Changes the player's concrete advanced class and refreshes the player
+	 * projection through the same class-change service used by legacy quests.
+	 */
+	record SetPlayerClass(PlayerClass playerClass) implements AfterCommitAction {
+		public SetPlayerClass {
+			if (playerClass == null || playerClass == PlayerClass.ALL || playerClass.isStartingClass()) {
+				throw new IllegalArgumentException("playerClass must be a concrete advanced class");
+			}
+		}
+	}
+
+	/** Starts the NPC-faction quest lifecycle after the quest state commit. */
+	record StartNpcFactionQuest(int npcFactionId) implements AfterCommitAction {
+		public StartNpcFactionQuest {
+			if (npcFactionId <= 0) {
+				throw new IllegalArgumentException("npcFactionId must be positive");
+			}
+		}
+	}
+
+	/** Marks the NPC-faction quest complete after rewards and quest state commit. */
+	record CompleteNpcFactionQuest(int npcFactionId) implements AfterCommitAction {
+		public CompleteNpcFactionQuest {
+			if (npcFactionId <= 0) {
+				throw new IllegalArgumentException("npcFactionId must be positive");
+			}
+		}
+	}
+
+	/** Aborts the NPC-faction quest after an explicit abandon transition. */
+	record AbortNpcFactionQuest(int npcFactionId) implements AfterCommitAction {
+		public AbortNpcFactionQuest {
+			if (npcFactionId <= 0) {
+				throw new IllegalArgumentException("npcFactionId must be positive");
 			}
 		}
 	}

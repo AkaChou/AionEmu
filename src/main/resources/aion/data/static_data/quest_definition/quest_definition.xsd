@@ -64,7 +64,7 @@
 
   <xs:complexType name="conditions-type"><xs:choice minOccurs="0" maxOccurs="unbounded">
     <xs:element name="status-is"><xs:complexType><xs:attribute name="status" type="status" use="required"/></xs:complexType></xs:element>
-    <xs:element name="has-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="has-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="variable-is"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="value" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="variable-at-least"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="value" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="variable-below"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="value" type="xs:int" use="required"/></xs:complexType></xs:element>
@@ -82,6 +82,14 @@
     <xs:element name="world-is"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="world-npc-is"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
 	<xs:element name="zone-is"><xs:complexType><xs:attribute name="zone" type="xs:string" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
+    <xs:element name="npc-hp-below-percent"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="percent" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="currency-at-least"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/></xs:complexType></xs:element>
+    <xs:element name="currency-below"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/></xs:complexType></xs:element>
+    <xs:element name="quests-finished"><xs:complexType><xs:attribute name="quest-ids" type="xs:string" use="required"/></xs:complexType></xs:element>
+    <xs:element name="equipment-set-equipped"><xs:complexType><xs:attribute name="set-ids" type="xs:string" use="required"/><xs:attribute name="count" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
+    <xs:element name="equipped-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" default="1"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
+    <xs:element name="membership-permission"><xs:complexType><xs:attribute name="permission" type="xs:string" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
+    <xs:element name="dp-at-max" type="empty-type"/>
   </xs:choice></xs:complexType>
 
   <xs:complexType name="actions-type"><xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -110,6 +118,7 @@
     <xs:element name="teleport-player-next-available-instance"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="play-movie"><xs:complexType><xs:attribute name="movie-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="morph"><xs:complexType><xs:attribute name="ascension-id" type="ascension-state" use="required"/></xs:complexType></xs:element>
+    <xs:element name="set-class"><xs:complexType><xs:attribute name="class" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="apply-effect"><xs:complexType><xs:attribute name="skill-id" type="xs:int" use="required"/><xs:attribute name="duration-ms" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="remove-effect"><xs:complexType><xs:attribute name="effect-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="system-message"><xs:complexType><xs:attribute name="message" type="quest-system-message"/><xs:attribute name="message-id" type="xs:int"/><xs:attribute name="target" type="quest-system-message-target" default="NONE"/><xs:attribute name="npc-shout" type="xs:boolean" default="false"/><xs:attribute name="text-color-id" type="xs:int" default="26"/><xs:attribute name="params" type="xs:string"/></xs:complexType></xs:element>

@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1006" version="1">
+  <metadata name="Ascension" display-name-id="1102006" min-level="9" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="73200"/>
+    </rewards>
+  </metadata>
+
+  <!-- var0 follows the retail handler's quest-step values, including the temporary 99 instance step. -->
+  <progress>
+    <bit-field name="var0" offset="0" width="7" min="0" max="127" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars><var name="var0" value="0"/></vars>
+      </project>
+    </node>
+    <node label="s0">
+      <project status="START">
+        <vars><var name="var0" value="0"/></vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars><var name="var0" value="1"/></vars>
+      </project>
+    </node>
+    <node label="s2">
+      <project status="START">
+        <vars><var name="var0" value="2"/></vars>
+      </project>
+    </node>
+    <node label="s3">
+      <project status="START">
+        <vars><var name="var0" value="3"/></vars>
+      </project>
+    </node>
+    <node label="s4">
+      <project status="START">
+        <vars><var name="var0" value="4"/></vars>
+      </project>
+    </node>
+    <node label="s5">
+      <project status="START">
+        <vars><var name="var0" value="5"/></vars>
+      </project>
+    </node>
+    <node label="s50">
+      <project status="START">
+        <vars><var name="var0" value="50"/></vars>
+      </project>
+    </node>
+    <node label="s51">
+      <project status="START">
+        <vars><var name="var0" value="51"/></vars>
+      </project>
+    </node>
+    <node label="s52">
+      <project status="START">
+        <vars><var name="var0" value="52"/></vars>
+      </project>
+    </node>
+    <node label="s53">
+      <project status="START">
+        <vars><var name="var0" value="53"/></vars>
+      </project>
+    </node>
+    <node label="s54">
+      <project status="START">
+        <vars><var name="var0" value="54"/></vars>
+      </project>
+    </node>
+    <node label="s99">
+      <project status="START">
+        <vars><var name="var0" value="99"/></vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars><var name="var0" value="5"/></vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars><var name="var0" value="0"/></vars>
+      </project>
+    </node>
+  </nodes>
+
+  <transitions>
+    <!-- Level 9 auto-accept. -->
+    <transition source="unaccepted" target="s0">
+      <event><level-up/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit>
+    </transition>
+
+    <!-- Pernos (790001): start the ascension sequence. -->
+    <transition source="s0" target="s0">
+      <event><talk-to-npc npc-id="790001" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+    </transition>
+    <transition source="s0" target="s1">
+      <event><talk-to-npc npc-id="790001" dialog-id="10000"/></event>
+      <conditions><has-item item-id="182200007" count="1" expected="false"/></conditions>
+      <actions><give-item item-id="182200007" count="1"/></actions>
+      <after-commit>
+        <teleport-player-current-or-default world-id="210010000" x="657" y="1071" z="99.375" heading="72"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- Ascension item: retain the authoritative 3000ms client animation. -->
+    <transition source="s1" target="s2">
+      <event><item-play item-id="182200007" animation-millis="3000"/></event>
+      <conditions><zone-is zone="CLIONA_LAKE_210010000"/></conditions>
+      <actions>
+        <remove-item item-id="182200007" count="1"/>
+        <give-item item-id="182200008" count="1"/>
+      </actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <!-- Daminu (730008): movie 14 advances the item chain. -->
+    <transition source="s2" target="s2">
+      <event><talk-to-npc npc-id="730008" dialog-id="31"/></event>
+      <conditions><has-item item-id="182200008" count="1"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event><talk-to-npc npc-id="730008" dialog-id="10001"/></event>
+      <after-commit>
+        <play-movie movie-id="14"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s3">
+      <event><movie-end movie-id="14"/></event>
+      <actions>
+        <remove-item item-id="182200008" count="1"/>
+        <give-item item-id="182200009" count="1"/>
+      </actions>
+      <after-commit>
+        <teleport-player-current-or-default world-id="210010000" x="246" y="1639" z="100.316" heading="56"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- Pernos: enter the instance, or choose the starting-class branch. -->
+    <transition source="s3" target="s3">
+      <event><talk-to-npc npc-id="790001" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="1693"/></after-commit>
+    </transition>
+    <transition source="s3" target="s99">
+      <event><talk-to-npc npc-id="790001" dialog-id="10002"/></event>
+      <actions><remove-item item-id="182200009" count="1"/></actions>
+      <after-commit>
+        <teleport-player-next-available-instance world-id="310010000" x="52" y="174" z="229" heading="0"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="s5" target="s5">
+      <event><talk-to-npc npc-id="790001" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="2034"/></after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event><talk-to-npc npc-id="790001" dialog-id="10003"/></event>
+      <conditions><player-class-is starting-class="WARRIOR"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event><talk-to-npc npc-id="790001" dialog-id="10003"/></event>
+      <conditions><player-class-is starting-class="SCOUT"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="2716"/></after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event><talk-to-npc npc-id="790001" dialog-id="10003"/></event>
+      <conditions><player-class-is starting-class="MAGE"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="3057"/></after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event><talk-to-npc npc-id="790001" dialog-id="10003"/></event>
+      <conditions><player-class-is starting-class="PRIEST"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="3398"/></after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event><talk-to-npc npc-id="790001" dialog-id="10003"/></event>
+      <conditions><player-class-is starting-class="TECHNIST"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="3739"/></after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event><talk-to-npc npc-id="790001" dialog-id="10003"/></event>
+      <conditions><player-class-is starting-class="MUSE"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4080"/></after-commit>
+    </transition>
+
+    <!-- The eleven concrete class choices. ClassChangeService performs the same validation and upgradePlayer refresh. -->
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10004"/></event>
+      <conditions><player-class-is starting-class="WARRIOR"/></conditions>
+      <after-commit>
+        <set-class class="GLADIATOR"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10005"/></event>
+      <conditions><player-class-is starting-class="WARRIOR"/></conditions>
+      <after-commit>
+        <set-class class="TEMPLAR"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10006"/></event>
+      <conditions><player-class-is starting-class="SCOUT"/></conditions>
+      <after-commit>
+        <set-class class="ASSASSIN"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10007"/></event>
+      <conditions><player-class-is starting-class="SCOUT"/></conditions>
+      <after-commit>
+        <set-class class="RANGER"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10008"/></event>
+      <conditions><player-class-is starting-class="MAGE"/></conditions>
+      <after-commit>
+        <set-class class="SORCERER"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10009"/></event>
+      <conditions><player-class-is starting-class="MAGE"/></conditions>
+      <after-commit>
+        <set-class class="SPIRIT_MASTER"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10010"/></event>
+      <conditions><player-class-is starting-class="PRIEST"/></conditions>
+      <after-commit>
+        <set-class class="CLERIC"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10011"/></event>
+      <conditions><player-class-is starting-class="PRIEST"/></conditions>
+      <after-commit>
+        <set-class class="CHANTER"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10012"/></event>
+      <conditions><player-class-is starting-class="TECHNIST"/></conditions>
+      <after-commit>
+        <set-class class="GUNSLINGER"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10013"/></event>
+      <conditions><player-class-is starting-class="MUSE"/></conditions>
+      <after-commit>
+        <set-class class="SONGWEAVER"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-id="10014"/></event>
+      <conditions><player-class-is starting-class="TECHNIST"/></conditions>
+      <after-commit>
+        <set-class class="AETHERTECH"/>
+        <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- Belpartan (205000): flight teleport, then the 43-second invisible timer. -->
+    <transition source="s99" target="s50">
+      <event><talk-to-npc npc-id="205000" dialog-id="-1"/></event>
+      <after-commit>
+        <flight-teleport flight-teleport-id="1001"/>
+        <start-invisible-timer seconds="43" timer-id="1006-return" scope="PLAYER_QUEST"
+          persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s50" target="s51">
+      <event><invisible-timer-end/></event>
+      <after-commit>
+        <spawn-npc-current-or-default slot="wave-1" template-id="211042" world-id="310010000"
+          x="224.073" y="239.1" z="206.7" heading="0"/>
+        <add-npc-aggro npc-id="211042" damage="1000"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- Four sequential 211042 waves, each with a distinct spawn slot. -->
+    <transition source="s51" target="s52">
+      <event><kill-npc npc-id="211042"/></event>
+      <after-commit>
+        <spawn-npc-current-or-default slot="wave-2" template-id="211042" world-id="310010000"
+          x="233.5" y="241.04" z="206.365" heading="0"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s52" target="s53">
+      <event><kill-npc npc-id="211042"/></event>
+      <after-commit>
+        <spawn-npc-current-or-default slot="wave-3" template-id="211042" world-id="310010000"
+          x="229.6" y="265.7" z="205.7" heading="0"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s53" target="s54">
+      <event><kill-npc npc-id="211042"/></event>
+      <after-commit>
+        <spawn-npc-current-or-default slot="wave-4" template-id="211042" world-id="310010000"
+          x="222.8" y="262.5" z="205.7" heading="0"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s54" target="s4">
+      <event><kill-npc npc-id="211042"/></event>
+      <after-commit>
+        <spawn-npc-current-or-default slot="boss" template-id="211043" world-id="310010000"
+          x="226.7" y="251.5" z="205.5" heading="0"/>
+        <add-npc-aggro npc-id="211043" damage="1000"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- Boss transition is strict: the authoritative attack fact must be below 50%, not at 50%. -->
+    <transition source="s4" target="s4">
+      <event><attack-npc npc-id="211043"/></event>
+      <conditions><npc-hp-below-percent npc-id="211043" percent="50"/></conditions>
+      <after-commit>
+        <play-movie movie-id="151"/>
+        <despawn-npc slot="boss"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s5">
+      <event><movie-end movie-id="151"/></event>
+      <after-commit>
+        <spawn-npc-current-or-default slot="pernos-return" template-id="790001" world-id="310010000"
+          x="220.6" y="247.8" z="206.0" heading="0"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- The intended death recovery applies while the player is in the instance combat segment. -->
+    <transition source="s4" target="s3">
+      <event><die/></event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s50" target="s3">
+      <event><die/></event>
+      <after-commit>
+        <cancel-quest-timer timer-id="1006-return" scope="PLAYER_QUEST"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s51" target="s3">
+      <event><die/></event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s52" target="s3">
+      <event><die/></event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s53" target="s3">
+      <event><die/></event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s54" target="s3">
+      <event><die/></event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+
+    <!-- Instance entry morph and leaving the instance failure guard. -->
+    <transition source="s99" target="s99">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000"/></conditions>
+      <after-commit><morph ascension-id="1"/></after-commit>
+    </transition>
+    <transition source="s50" target="s50">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000"/></conditions>
+      <after-commit><morph ascension-id="1"/></after-commit>
+    </transition>
+    <transition source="s51" target="s51">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000"/></conditions>
+      <after-commit><morph ascension-id="1"/></after-commit>
+    </transition>
+    <transition source="s52" target="s52">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000"/></conditions>
+      <after-commit><morph ascension-id="1"/></after-commit>
+    </transition>
+    <transition source="s53" target="s53">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000"/></conditions>
+      <after-commit><morph ascension-id="1"/></after-commit>
+    </transition>
+    <transition source="s54" target="s54">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000"/></conditions>
+      <after-commit><morph ascension-id="1"/></after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000"/></conditions>
+      <after-commit><morph ascension-id="1"/></after-commit>
+    </transition>
+
+    <transition source="s99" target="s3">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000" expected="false"/></conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s50" target="s3">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000" expected="false"/></conditions>
+      <after-commit>
+        <cancel-quest-timer timer-id="1006-return" scope="PLAYER_QUEST"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s51" target="s3">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000" expected="false"/></conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s52" target="s3">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000" expected="false"/></conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s53" target="s3">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000" expected="false"/></conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s54" target="s3">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000" expected="false"/></conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s3">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="310010000" expected="false"/></conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <system-message message="QUEST_FAILED"/>
+      </after-commit>
+    </transition>
+
+    <!-- Reward report and the legacy 8..23 completion dialog range. -->
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="790001" dialog-ids="-1 1009"/></event>
+      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event><talk-to-npc npc-id="790001" dialog-ids="8..23"/></event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="73200" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>
