@@ -9,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 
 import java.sql.Connection;
@@ -118,9 +119,16 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 		var inventorySnapshot = kinah > 0 ? player.getInventory().transactionSnapshot() : null;
 		var rankSnapshot = rankChanged ? player.getAbyssRank().transactionSnapshot() : null;
 		var commonSnapshot = dp > 0 ? player.getCommonData().transactionSnapshot() : null;
+		Item rewardKinahItem = null;
+		boolean rewardKinahItemCreated = false;
 		try {
 			if (kinah > 0) {
-				player.getInventory().increaseKinah(kinah, ItemUpdateType.INC_KINAH_QUEST);
+				rewardKinahItemCreated = player.getInventory().getKinahItem() == null;
+				if (player.getInventory().increaseKinahSilently(kinah) != 0) {
+					throw new SQLException("kinah reward exceeds the live stack limit for player "
+						+ snapshot.playerId());
+				}
+				rewardKinahItem = player.getInventory().getKinahItem();
 			}
 			List<Item> dirty = kinah > 0 ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
 			if (!dirty.isEmpty()) {
@@ -136,16 +144,29 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 				abyssRankDao.storeInTransaction(connection, player.getObjectId(), player.getAbyssRank());
 			}
 			if (dp > 0) {
-				player.getCommonData().setDp(player.getCommonData().getDp() + dp);
+				player.getCommonData().setDpSilently(player.getCommonData().getDp() + dp);
 				playerDao.storeInTransaction(connection, player.getObjectId(), player.getCommonData());
 			}
+			final Item committedKinahItem = rewardKinahItem;
+			final boolean committedKinahItemCreated = rewardKinahItemCreated;
 			return QuestTransactionParticipant.of(() -> {
 				if (!dirty.isEmpty()) {
 					inventoryDao.markStored(dirty);
 					player.markDirtyItemContainersStored();
+					if (committedKinahItem != null) {
+						if (committedKinahItemCreated) {
+							ItemPacketService.sendStorageUpdatePacket(player, player.getInventory().getStorageType(),
+								committedKinahItem);
+						}
+						ItemPacketService.sendItemPacket(player, player.getInventory().getStorageType(), committedKinahItem,
+							ItemUpdateType.INC_KINAH_QUEST);
+					}
 				}
 				if (rankChanged) {
 					player.getAbyssRank().setPersistentState(PersistentState.UPDATED);
+				}
+				if (commonSnapshot != null) {
+					player.getCommonData().publishDp();
 				}
 			}, () -> {
 				if (commonSnapshot != null) {

@@ -632,13 +632,26 @@ public double getExpMultiplier() {
 
 	/** 设置神圣能量。 / Sets dp. */
 	public void setDp(int dp) {
+		setDpSilently(dp);
+		publishDp();
+	}
+
+	/** 设置神圣能量但不发送客户端协议包。 / Sets dp without publishing client packets. */
+	public void setDpSilently(int dp) {
 		if (playerClass.isStartingClass()) {
 			return;
 		}
 		Player player = getPlayer();
 		int maxDp = player == null ? -1 : player.getGameStats().getMaxDp().getCurrent();
 		this.dp = maxDp >= 0 && dp > maxDp ? maxDp : dp;
+	}
 
+	/** 提交后发布神圣能量变化。 / Publishes a committed dp change. */
+	public void publishDp() {
+		if (playerClass.isStartingClass()) {
+			return;
+		}
+		Player player = getPlayer();
 		if (player != null) {
 			PacketSendUtility.broadcastPacket(player, new SM_DP_INFO(playerObjId, this.dp), true);
 			player.getGameStats().updateStatsAndSpeedVisually();

@@ -83,6 +83,25 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
+	 * Increases kinah without sending a client packet. Transactional callers must
+	 * publish the item update only after their JDBC transaction commits.
+	 *
+	 * @return the amount that could not fit in the kinah stack
+	 */
+	public long increaseKinahSilently(long amount) {
+		if (amount <= 0) {
+			return 0;
+		}
+		if (kinahItem == null) {
+			kinahItem = ItemFactory.newItem(ItemId.KINAH.value(), 0);
+			kinahItem.setItemLocation(storageType.getId());
+		}
+		long leftCount = kinahItem.increaseItemCount(amount);
+		setPersistentState(PersistentState.UPDATE_REQUIRED);
+		return leftCount;
+	}
+
+	/**
 	 * 减少基纳（先检查存量是否足够）。 / Decrease kinah by {@code amount} but check first that its enough in storage.
 	 */
 	boolean tryDecreaseKinah(long amount, Player actor) {
