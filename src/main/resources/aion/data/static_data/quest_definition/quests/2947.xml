@@ -72,6 +72,7 @@
       </event>
       <conditions>
         <start-eligible/>
+        <quests-finished quest-ids="2946"/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>

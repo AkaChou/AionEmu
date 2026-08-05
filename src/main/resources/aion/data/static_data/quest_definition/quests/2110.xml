@@ -4,6 +4,9 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <work-items>
+      <item id="182203110" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="2112"/>
       <reward kind="ITEM" id="160003503" amount="1"/>
@@ -66,6 +69,9 @@
       <conditions>
         <start-eligible/>
       </conditions>
+      <actions>
+        <give-item item-id="182203110" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <show-quest-dialog dialog-id="1003"/>
@@ -78,6 +84,9 @@
       <conditions>
         <start-eligible/>
       </conditions>
+      <actions>
+        <give-item item-id="182203110" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>
@@ -115,13 +124,27 @@
         <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="203533" dialog-id="1009"/>
+      </event>
+      <conditions>
+        <has-item item-id="182203110" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182203110" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
       <event>
         <talk-to-npc npc-id="203533" dialog-id="1009"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="5"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

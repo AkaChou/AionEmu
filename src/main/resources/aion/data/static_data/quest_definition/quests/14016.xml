@@ -92,6 +92,7 @@
       </event>
       <conditions>
         <start-eligible/>
+        <quests-finished quest-ids="14010 14011 14012 14013 14014 14015"/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
@@ -104,6 +105,7 @@
       </event>
       <conditions>
         <start-eligible/>
+        <quests-finished quest-ids="14010 14011 14012 14013 14014 14015"/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>

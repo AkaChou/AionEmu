@@ -106,6 +106,9 @@
       <event>
         <zone-mission-end/>
       </event>
+      <conditions>
+        <quests-finished quest-ids="2100 2001 2002 2003 2004 2005 2006"/>
+      </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
@@ -116,6 +119,7 @@
       </event>
       <conditions>
         <start-eligible/>
+        <quests-finished quest-ids="2100 2001 2002 2003 2004 2005 2006"/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
