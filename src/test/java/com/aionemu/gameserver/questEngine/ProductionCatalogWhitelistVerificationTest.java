@@ -30,6 +30,11 @@ public class ProductionCatalogWhitelistVerificationTest {
 			List<String> violations = new ArrayList<>();
 			int ok = 0;
 			for (var entry : manifest.entries()) {
+				String expectedResource = "aion/data/static_data/quest_definition/quests/"
+					+ entry.id() + ".xml";
+				if (!expectedResource.equals(entry.resource())) {
+					violations.add(entry.id() + ":RESOURCE_NOT_CANONICAL:" + entry.resource());
+				}
 				byte[] xml;
 				try (InputStream ris = loader.getResourceAsStream(entry.resource())) {
 					if (ris == null) {
@@ -46,6 +51,9 @@ public class ProductionCatalogWhitelistVerificationTest {
 					continue;
 				}
 				ok++;
+				if (d.id() != entry.id()) {
+					violations.add(entry.id() + ":ID_MISMATCH:" + d.id());
+				}
 				for (var t : d.definition().transitions()) {
 					if (!(t.event() instanceof QuestEvent.TalkToNpc)
 							&& !(t.event() instanceof QuestEvent.KillNpc)
@@ -78,6 +86,12 @@ public class ProductionCatalogWhitelistVerificationTest {
 			compileFailures.stream().limit(30).forEach(System.out::println);
 			System.out.println("PRODUCTION_WHITELIST_VIOLATIONS=" + violations.size());
 			violations.stream().limit(60).forEach(System.out::println);
+			org.junit.jupiter.api.Assertions.assertEquals(manifest.entries().size(), ok,
+				() -> "production catalog compile failures: " + compileFailures);
+			org.junit.jupiter.api.Assertions.assertTrue(compileFailures.isEmpty(),
+				() -> "production catalog compile failures: " + compileFailures);
+			org.junit.jupiter.api.Assertions.assertTrue(violations.isEmpty(),
+				() -> "production catalog whitelist violations: " + violations);
 		}
 	}
 }
