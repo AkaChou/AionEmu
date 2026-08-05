@@ -137,25 +137,6 @@
     </monster_hunt>
 	<!-- ELYOS -->
 	<!-- Troubled Ciello -->
-	<xml_quest start_npc_id="831421" end_npc_id="831422" id="80312">
-		<on_talk_event ids="831422">
-			<var value="0">
-				<npc id="831422">
-					<dialog id="31">
-					<operations>
-							<npc_dialog id="1352"/>
-					</operations>
-					</dialog>
-					<dialog id="1353">
-					<operations>
-					<set_quest_status status="REWARD"/>
-						<npc_dialog id="5"/>
-						</operations>
-					</dialog>
-				</npc>
-			</var>
-		</on_talk_event>
-	</xml_quest>
 	<!-- Faviolla's Request -->
 	<!-- For The Elyos -->
 	<!-- Befitting The Hero Of The Guardians -->
