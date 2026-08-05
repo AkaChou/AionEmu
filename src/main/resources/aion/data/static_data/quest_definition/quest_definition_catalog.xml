@@ -2316,6 +2316,7 @@
   <definition id="11033" resource="aion/data/static_data/quest_definition/quests/11033.xml"/>
   <definition id="11034" resource="aion/data/static_data/quest_definition/quests/11034.xml"/>
   <definition id="11035" resource="aion/data/static_data/quest_definition/quests/11035.xml"/>
+  <definition id="11036" resource="aion/data/static_data/quest_definition/quests/11036.xml"/>
   <definition id="11037" resource="aion/data/static_data/quest_definition/quests/11037.xml"/>
   <definition id="11038" resource="aion/data/static_data/quest_definition/quests/11038.xml"/>
   <definition id="11039" resource="aion/data/static_data/quest_definition/quests/11039.xml"/>
@@ -2373,6 +2374,7 @@
   <definition id="11140" resource="aion/data/static_data/quest_definition/quests/11140.xml"/>
   <definition id="11141" resource="aion/data/static_data/quest_definition/quests/11141.xml"/>
   <definition id="11142" resource="aion/data/static_data/quest_definition/quests/11142.xml"/>
+  <definition id="11143" resource="aion/data/static_data/quest_definition/quests/11143.xml"/>
   <definition id="11144" resource="aion/data/static_data/quest_definition/quests/11144.xml"/>
   <definition id="11145" resource="aion/data/static_data/quest_definition/quests/11145.xml"/>
   <definition id="11146" resource="aion/data/static_data/quest_definition/quests/11146.xml"/>
@@ -2396,6 +2398,7 @@
   <definition id="11230" resource="aion/data/static_data/quest_definition/quests/11230.xml"/>
   <definition id="11231" resource="aion/data/static_data/quest_definition/quests/11231.xml"/>
   <definition id="11232" resource="aion/data/static_data/quest_definition/quests/11232.xml"/>
+  <definition id="11233" resource="aion/data/static_data/quest_definition/quests/11233.xml"/>
   <definition id="11290" resource="aion/data/static_data/quest_definition/quests/11290.xml"/>
   <definition id="11291" resource="aion/data/static_data/quest_definition/quests/11291.xml"/>
   <definition id="11292" resource="aion/data/static_data/quest_definition/quests/11292.xml"/>
