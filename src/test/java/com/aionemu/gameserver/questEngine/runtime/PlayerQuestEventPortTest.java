@@ -1,8 +1,10 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.model.gameobjects.AionObject;
+import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Equipment;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
@@ -42,7 +44,7 @@ class PlayerQuestEventPortTest {
 		assertEquals(QUEST_ID, snapshot.questId());
 		assertEquals(QuestStatus.LOCKED, snapshot.status());
 		assertEquals(0x42, snapshot.packedVariables());
-		// 有背包即认为 inventory/currency 事实已捕获
+		// 背包、CommonData 和 AbyssRank 都存在时才认为货币事实已完整捕获
 		assertTrue(snapshot.inventoryCaptured());
 		assertTrue(snapshot.currenciesCaptured());
 	}
@@ -130,7 +132,10 @@ class PlayerQuestEventPortTest {
 		Player player = new ObjenesisStd().newInstance(Player.class);
 		setField(AionObject.class, player, "objectId", PLAYER_ID);
 		setField(Player.class, player, "questStateList", new QuestStateList());
-		setField(Player.class, player, "equipment", new ObjenesisStd().newInstance(Equipment.class));
+		setField(Player.class, player, "playerCommonData", new PlayerCommonData(PLAYER_ID));
+		setField(Player.class, player, "abyssRank",
+			new AbyssRank(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0));
+		setField(Player.class, player, "equipment", new Equipment(player));
 		setField(Player.class, player, "regularWarehouse", new PlayerStorage(StorageType.REGULAR_WAREHOUSE));
 		setField(Player.class, player, "accountWarehouse", new PlayerStorage(StorageType.ACCOUNT_WAREHOUSE));
 		setField(Player.class, player, "petBag",

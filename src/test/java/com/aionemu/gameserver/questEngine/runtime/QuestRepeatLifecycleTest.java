@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,7 +27,8 @@ class QuestRepeatLifecycleTest {
 			.filter(candidate -> candidate.event().equals(event))
 			.findFirst().orElseThrow();
 		QuestSnapshot completed = new QuestSnapshot(7, 15476, QuestStatus.COMPLETE, 0,
-			Map.of(), Map.of()).withStartEligibility(QuestStartEligibility.allowed());
+			Map.of(), Map.of()).withStartEligibility(QuestStartEligibility.allowed())
+			.withCompletedQuestIds(Set.of(15402));
 
 		assertTrue(QuestMutationPlanner.plan(definition, completed, event, transition).isPresent());
 	}
