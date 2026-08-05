@@ -1148,7 +1148,15 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		try {
+			QuestProductionDispatcher typed = productionDispatcher;
+			if (questNpc.getOnDistanceEvent().stream().anyMatch(typed::owns)) {
+				typed.dispatch(runtimeComposition.proximityEventPort().atDistance(env, npc.getNpcId()),
+					env.getPlayer().getObjectId(), 0, QuestDispatchContract.BROADCAST);
+			}
 			for (int questId : questNpc.getOnDistanceEvent()) {
+				if (typed.owns(questId)) {
+					continue;
+				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 				if (questHandler != null) {
 					env.setQuestId(questId);
@@ -1860,7 +1868,11 @@ public class QuestEngine implements GameEngine {
 						&& !(transition.event() instanceof QuestEvent.UseItem)
 						&& !(transition.event() instanceof QuestEvent.ItemPlay)
 						&& !(transition.event() instanceof QuestEvent.GetItem)
+						&& !(transition.event() instanceof QuestEvent.AtDistance)
+						&& !(transition.event() instanceof QuestEvent.LogOut)
 						&& !(transition.event() instanceof QuestEvent.MovieEnd)
+						&& !(transition.event() instanceof QuestEvent.NpcReachTarget)
+						&& !(transition.event() instanceof QuestEvent.NpcLostTarget)
 						&& !(transition.event() instanceof QuestEvent.ZoneMissionEnd)
 						&& !(transition.event() instanceof QuestEvent.InvisibleTimerEnd)
 						&& !(transition.event() instanceof QuestEvent.QuestDialog)) {
@@ -1904,6 +1916,14 @@ public class QuestEngine implements GameEngine {
 					// runtime dispatcher remains authoritative; this index only lets
 					// the legacy loop skip typed owners safely.
 					registerGetingItem(get.itemId(), definition.id());
+				} else if (transition.event() instanceof QuestEvent.AtDistance atDistance) {
+					registerQuestNpc(atDistance.npcId()).addOnAtDistanceEvent(definition.id());
+				} else if (transition.event() instanceof QuestEvent.LogOut) {
+					registerOnLogOut(definition.id());
+				} else if (transition.event() instanceof QuestEvent.NpcReachTarget) {
+					registerAddOnReachTargetEvent(definition.id());
+				} else if (transition.event() instanceof QuestEvent.NpcLostTarget) {
+					registerAddOnLostTargetEvent(definition.id());
 				} else if (transition.event() instanceof QuestEvent.MovieEnd movie) {
 					registerOnMovieEndQuest(movie.movieId(), definition.id());
 				} else if (transition.event() instanceof QuestEvent.ZoneMissionEnd) {
