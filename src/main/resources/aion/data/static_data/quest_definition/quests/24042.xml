@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="24042" version="1">
+  <metadata name="A Ready Rescue" display-name-id="1129918" min-level="45" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="8325278"/>
+      <reward kind="AP" id="0" amount="1000"/>
+      <reward kind="ITEM" id="164000079" amount="5"/>
+      <reward kind="ITEM" id="188050934" amount="1"/>
+      <reward kind="ITEM" id="186000469" amount="10"/>
+    </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="24041"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="v1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="v2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="v3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="v4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="4"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <!-- 接取:主线任务链,24041 完成后 zone-mission-end / level-up 自动接取。 -->
+    <transition source="unaccepted" target="started">
+      <event><zone-mission-end/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><level-up/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit>
+    </transition>
+
+    <!-- 步骤 0:Jebal (278002) 对话推进到 1。 -->
+    <transition source="started" target="started">
+      <event><talk-to-npc npc-id="278002" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="0"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+    </transition>
+    <transition source="started" target="v1">
+      <event><talk-to-npc npc-id="278002" dialog-id="10000"/></event>
+      <conditions><variable-is field="var0" value="0"/></conditions>
+      <actions><set-variable field="var0" value="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+
+    <!-- 步骤 1:Lakadi (278019) 对话,传送至 Reshanta 点位后推进到 2。 -->
+    <transition source="v1" target="v1">
+      <event><talk-to-npc npc-id="278019" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="1"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+    </transition>
+    <transition source="v1" target="v2">
+      <event><talk-to-npc npc-id="278019" dialog-id="10001"/></event>
+      <conditions><variable-is field="var0" value="1"/></conditions>
+      <actions><set-variable field="var0" value="2"/></actions>
+      <after-commit><teleport-player-current-or-default world-id="400010000" x="679.1217" y="1541.4647" z="1605.3022" heading="34"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+
+    <!-- 步骤 2:Glati (278088) 对话,传送至 Reshanta 点位后推进到 3。 -->
+    <transition source="v2" target="v2">
+      <event><talk-to-npc npc-id="278088" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="2"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1693"/></after-commit>
+    </transition>
+    <transition source="v2" target="v3">
+      <event><talk-to-npc npc-id="278088" dialog-id="10002"/></event>
+      <conditions><variable-is field="var0" value="2"/></conditions>
+      <actions><set-variable field="var0" value="3"/></actions>
+      <after-commit><teleport-player-current-or-default world-id="400010000" x="1014.8797" y="1077.7836" z="1543.2881" heading="34"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+
+    <!-- 步骤 3:被俘的阿斯莫迪安囚犯 (253626) 对话,电影 294 后选择跟随其前往搜救队。 -->
+    <transition source="v3" target="v3">
+      <event><talk-to-npc npc-id="253626" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="3"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="2034"/></after-commit>
+    </transition>
+    <transition source="v3" target="v3">
+      <event><talk-to-npc npc-id="253626" dialog-id="2035"/></event>
+      <conditions><variable-is field="var0" value="3"/></conditions>
+      <after-commit><play-movie movie-id="294"/><show-quest-dialog dialog-id="2035"/></after-commit>
+    </transition>
+    <transition source="v3" target="v4">
+      <event><talk-to-npc npc-id="253626" dialog-id="10003"/></event>
+      <conditions><variable-is field="var0" value="3"/></conditions>
+      <actions><set-variable field="var0" value="4"/></actions>
+      <after-commit><start-follow-current-target x="805.9167" y="1082.6732" z="1570.419"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+
+    <!-- 跟随结算:到达目标坐标 (监狱搜救队 253641 处) 进入奖励并播放电影 290;丢失目标/登出回退到 3。 -->
+    <transition source="v4" target="reward">
+      <event><npc-reach-target/></event>
+      <after-commit><play-movie movie-id="290"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="v4" target="v3">
+      <event><npc-lost-target/></event>
+      <actions><set-variable field="var0" value="3"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="v4" target="v3">
+      <event><log-out/></event>
+      <actions><set-variable field="var0" value="3"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <!-- 奖励:Lakadi (278019) 领取固定奖励 (exp/ap/物品)。 -->
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="278019" dialog-id="-1"/></event>
+      <after-commit><show-quest-dialog dialog-id="10002"/></after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="278019" dialog-id="1009"/></event>
+      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event><talk-to-npc npc-id="278019" dialog-ids="8..23"/></event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="AP" id="0" amount="1000" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="164000079" amount="5"/>
+        <grant-reward kind="ITEM" id="188050934" amount="1"/>
+        <grant-reward kind="ITEM" id="186000469" amount="10"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>
