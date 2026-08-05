@@ -650,6 +650,22 @@ class QuestDefinitionCompilerTest {
 		assertEquals("INVALID_XML", missingInstance.code());
 	}
 
+	@Test
+	void blockingItemUseCannotPromoteAQuestToComplete() {
+		assertEquals("COMPLETE_QUEST_ACTION_REQUIRED", assertThrows(QuestCompilationException.class,
+			() -> quest(1001)
+				.node("started", project(QuestStatus.START, vars("var0", 0)))
+				.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+				.node("complete", project(QuestStatus.COMPLETE, vars("var0", 0)))
+				.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+				.on(new QuestEvent.UseItem(182200501)).from("started").goTo("reward")
+				.on(new QuestEvent.UseItem(182200501)).from("reward")
+				.then(new QuestAction.BlockDefaultItemUse()).goTo("complete")
+				.on(new QuestEvent.UseItem(182200501)).from("complete")
+				.then(new QuestAction.BlockDefaultItemUse()).goTo("complete")
+				.compile()).code());
+	}
+
 	private static String xmlWithTransition(String event, String afterCommit) {
 		return """
 			<quest-definition id="1001" version="1">

@@ -47,17 +47,17 @@ public final class QuestMutationPlanner {
 		NodeProjection projection = target.projection();
 		Map<String, Integer> variables = new LinkedHashMap<>(layout.unpack(snapshot.packedVariables()));
 		for (QuestAction action : transition.actions()) {
-				switch (action) {
-					case QuestAction.RemoveItem remove -> {
-						if (!removalFeasible(snapshot, remove)) {
-							return Optional.empty();
-						}
+			switch (action) {
+				case QuestAction.RemoveItem remove -> {
+					if (!removalFeasible(snapshot, remove)) {
+						return Optional.empty();
 					}
+				}
 				case QuestAction.GiveItem ignored -> {
 				}
 				case QuestAction.SetVariable set -> variables.put(set.field(), set.value());
-					case QuestAction.IncrementVariable inc ->
-						variables.merge(inc.field(), inc.delta(), Integer::sum);
+				case QuestAction.IncrementVariable inc ->
+					variables.merge(inc.field(), inc.delta(), Integer::sum);
 				case QuestAction.SetStatus ignored -> {
 				}
 				case QuestAction.GrantReward ignored -> {
@@ -66,12 +66,12 @@ public final class QuestMutationPlanner {
 				}
 				case QuestAction.ForgetRecipe ignored -> {
 				}
-					case QuestAction.GrantCraftSkill ignored -> {
-					}
-						case QuestAction.CompleteQuest ignored -> {
-					}
-					case QuestAction.BlockDefaultItemUse ignored -> {
-					}
+				case QuestAction.GrantCraftSkill ignored -> {
+				}
+				case QuestAction.CompleteQuest ignored -> {
+				}
+				case QuestAction.BlockDefaultItemUse ignored -> {
+				}
 			}
 		}
 		variables.putAll(projection.variables());

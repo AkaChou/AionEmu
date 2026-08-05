@@ -32,7 +32,7 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
-	/** Prevents the normal item action when the quest owns this item-use state. */
+	/** 阻止任务占有该物品时执行普通物品动作。 / Prevents the normal item action when the quest owns this item-use state. */
 	record BlockDefaultItemUse() implements QuestAction {
 	}
 
