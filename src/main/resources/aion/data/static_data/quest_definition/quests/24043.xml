@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="24043" version="1">
+  <metadata name="Lazy Language Lessons" display-name-id="1129919" min-level="45" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="8325278"/>
+      <reward kind="AP" id="0" amount="800"/>
+      <reward kind="TITLE" id="80" amount="1"/>
+      <reward kind="ITEM" id="188051194" amount="1"/>
+      <reward kind="ITEM" id="186000469" amount="10"/>
+    </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="24042"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s3">
+      <project status="START">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s4">
+      <project status="START">
+        <vars>
+          <var name="var0" value="4"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s5">
+      <project status="START">
+        <vars>
+          <var name="var0" value="5"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s6">
+      <project status="START">
+        <vars>
+          <var name="var0" value="6"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="6"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars/>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 升级达标且前置 24042 完成时自动接取 / Auto-start on level-up when 24042 finished -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 区域任务结束时自动接取 / Auto-start on zone mission end -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <zone-mission-end/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 278003 引导对话 / NPC 278003 guidance dialog -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="278003" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 278003 推进 / NPC 278003 advance -->
+    <transition source="started" target="s1">
+      <event>
+        <talk-to-npc npc-id="278003" dialog-id="10000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- NPC 278086 引导对话 / NPC 278086 guidance dialog -->
+    <transition source="s1" target="s1">
+      <event>
+        <talk-to-npc npc-id="278086" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 278086 推进 / NPC 278086 advance -->
+    <transition source="s1" target="s2">
+      <event>
+        <talk-to-npc npc-id="278086" dialog-id="10001"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 攻击懒惰语言怪 253610 推进 / Attacking the lazy language monster 253610 advances -->
+    <transition source="s2" target="s3">
+      <event>
+        <attack-npc npc-id="253610"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 278039 引导对话 / NPC 278039 guidance dialog -->
+    <transition source="s3" target="s3">
+      <event>
+        <talk-to-npc npc-id="278039" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2034"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 278039 推进 / NPC 278039 advance -->
+    <transition source="s3" target="s4">
+      <event>
+        <talk-to-npc npc-id="278039" dialog-id="10003"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- NPC 279027 var0=4 引导对话 / NPC 279027 guidance dialog at var0=4 -->
+    <transition source="s4" target="s4">
+      <event>
+        <talk-to-npc npc-id="279027" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 279027 过场 293 / NPC 279027 movie 293 -->
+    <transition source="s4" target="s4">
+      <event>
+        <talk-to-npc npc-id="279027" dialog-id="3058"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215373" count="1"/>
+      </actions>
+      <after-commit>
+        <play-movie movie-id="293"/>
+        <show-quest-dialog dialog-id="3058"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 279027 推进 / NPC 279027 advance -->
+    <transition source="s4" target="s5">
+      <event>
+        <talk-to-npc npc-id="279027" dialog-id="10004"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204210 引导对话 / NPC 204210 guidance dialog -->
+    <transition source="s5" target="s5">
+      <event>
+        <talk-to-npc npc-id="204210" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2716"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204210 推进并给 182215373 / NPC 204210 advance and give 182215373 -->
+    <transition source="s5" target="s6">
+      <event>
+        <talk-to-npc npc-id="204210" dialog-id="10005"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <give-item item-id="182215373" count="1"/>
+        <set-variable field="var0" value="6"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- NPC 279027 var0=6 引导对话 / NPC 279027 guidance dialog at var0=6 -->
+    <transition source="s6" target="s6">
+      <event>
+        <talk-to-npc npc-id="279027" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="6"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="3057"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 279027 设置为领奖状态 / NPC 279027 sets reward state -->
+    <transition source="s6" target="reward">
+      <event>
+        <talk-to-npc npc-id="279027" dialog-id="10255"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="6"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 领奖对话 / Reward dialog -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="278003" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="278003" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 固定奖励结算 / Fixed reward completion -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="278003" dialog-id="8"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="AP" id="0" amount="800"/>
+        <grant-reward kind="TITLE" id="80" amount="1"/>
+        <grant-reward kind="ITEM" id="188051194" amount="1"/>
+        <grant-reward kind="ITEM" id="186000469" amount="10"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="20507" version="1">
+  <metadata name="It's Worse than We Thought" display-name-id="1800507" min-level="64" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="25408188"/>
+      <reward kind="SELECTABLE_ITEM" id="113101410" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="113301409" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="113301507" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="113501379" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="113501461" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="113601332" amount="1"/>
+      <reward kind="ITEM" id="186000231" amount="25"/>
+      <reward kind="ITEM" id="186000237" amount="80"/>
+    </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="20500"/>
+      <condition type="finished" quest-id="20501"/>
+      <condition type="finished" quest-id="20502"/>
+      <condition type="finished" quest-id="20503"/>
+      <condition type="finished" quest-id="20504"/>
+      <condition type="finished" quest-id="20505"/>
+      <condition type="finished" quest-id="20506"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="s3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="s4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="5"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="804738" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="804738" dialog-id="1012"/></event><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
+    <transition source="started" target="s1"><event><talk-to-npc npc-id="804738" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="804739" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="804739" dialog-id="1353"/></event><after-commit><show-quest-dialog dialog-id="1353"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="804739" dialog-id="10001"/></event><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="804740" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="804740" dialog-id="1694"/></event><after-commit><show-quest-dialog dialog-id="1694"/></after-commit></transition>
+    <transition source="s2" target="s3"><event><talk-to-npc npc-id="804740" dialog-id="10002"/></event><actions><set-variable field="var0" value="3"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s3" target="s3"><event><talk-to-npc npc-id="804741" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2034"/></after-commit></transition>
+    <transition source="s3" target="s3"><event><talk-to-npc npc-id="804741" dialog-id="2035"/></event><after-commit><show-quest-dialog dialog-id="2035"/></after-commit></transition>
+    <transition source="s3" target="s4"><event><talk-to-npc npc-id="804741" dialog-id="10003"/></event><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s4" target="s4"><event><enter-zone zone="UNCHARTED_CAVE_220080000"/></event><conditions><variable-is field="var0" value="4"/></conditions><after-commit><play-movie movie-id="864"/></after-commit></transition>
+    <transition source="s4" target="reward"><event><movie-end movie-id="864"/></event><conditions><variable-is field="var0" value="4"/></conditions><actions><set-variable field="var0" value="5"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="804738" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="804738" dialog-id="1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="804738" dialog-id="8"/></event><actions>
+        <grant-reward kind="EXP" id="0" amount="25408188" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="80"/>
+        <grant-reward kind="ITEM" id="113101410" amount="1"/>
+        <complete-quest reward-index="0"/></actions><after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="804738" dialog-id="9"/></event><actions>
+        <grant-reward kind="EXP" id="0" amount="25408188" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="80"/>
+        <grant-reward kind="ITEM" id="113301409" amount="1"/>
+        <complete-quest reward-index="0"/></actions><after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="804738" dialog-id="10"/></event><actions>
+        <grant-reward kind="EXP" id="0" amount="25408188" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="80"/>
+        <grant-reward kind="ITEM" id="113301507" amount="1"/>
+        <complete-quest reward-index="0"/></actions><after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="804738" dialog-id="11"/></event><actions>
+        <grant-reward kind="EXP" id="0" amount="25408188" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="80"/>
+        <grant-reward kind="ITEM" id="113501379" amount="1"/>
+        <complete-quest reward-index="0"/></actions><after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="804738" dialog-id="12"/></event><actions>
+        <grant-reward kind="EXP" id="0" amount="25408188" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="80"/>
+        <grant-reward kind="ITEM" id="113501461" amount="1"/>
+        <complete-quest reward-index="0"/></actions><after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="804738" dialog-id="13"/></event><actions>
+        <grant-reward kind="EXP" id="0" amount="25408188" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="80"/>
+        <grant-reward kind="ITEM" id="113601332" amount="1"/>
+        <complete-quest reward-index="0"/></actions><after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+  </transitions>
+</quest-definition>

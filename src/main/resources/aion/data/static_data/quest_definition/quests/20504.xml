@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="20504" version="1">
+  <metadata name="Tiamat's Shadow" display-name-id="1800504" min-level="60" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="24154189"/>
+      <reward kind="SELECTABLE_ITEM" id="114101439" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114301445" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114301547" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114501387" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114501469" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114601330" amount="1"/>
+      <reward kind="ITEM" id="186000231" amount="25"/>
+      <reward kind="ITEM" id="186000237" amount="60"/>
+    </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="20503"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="4" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s3">
+      <project status="START">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s4">
+      <project status="START">
+        <vars>
+          <var name="var0" value="4"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s5">
+      <project status="START">
+        <vars>
+          <var name="var0" value="5"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s6">
+      <project status="START">
+        <vars>
+          <var name="var0" value="6"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="7"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars/>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 升级自动接取，前置任务 20503 完成。 Auto-start on level-up once quest 20503 is finished. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 区域任务链广播时自动接取。 Auto-start when the zone mission chain broadcasts. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <zone-mission-end/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 804730：任务起始对话。 NPC 804730: opening dialog. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="1012"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1012"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="s1">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="10000"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 击杀 Beritra 守备怪：var1 计数 0-3 时递增，var1 到 4 后推进到 s2。 Kill Beritra guards: increment var1 while below 4, then advance to s2. -->
+    <transition source="s1" target="s1" priority="1">
+      <event>
+        <kill-npc npc-ids="219943 219944 219945"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+        <variable-below field="var1" value="4"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2" priority="0">
+      <event>
+        <kill-npc npc-ids="219943 219944 219945"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+        <variable-at-least field="var1" value="4"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 804730：推进到复仇守卫阶段。 NPC 804730: advance to the vengeful guard stage. -->
+    <transition source="s2" target="s2">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1693"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="1694"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1694"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s3">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="10002"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 击杀复仇守卫（var1 已继承为 4，故条件为 >=4 直接推进到 s4）。 Kill vengeful guards (var1 already at 4, so >=4 advances to s4). -->
+    <transition source="s3" target="s3" priority="1">
+      <event>
+        <kill-npc npc-ids="219946 219947 219948"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+        <variable-below field="var1" value="4"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s4" priority="0">
+      <event>
+        <kill-npc npc-ids="219946 219947 219948"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+        <variable-at-least field="var1" value="4"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀诅咒吉尔伽美什后在玩家位置生成 804742。 Kill cursed Gilgamesh and spawn 804742 at the player position. -->
+    <transition source="s4" target="s5">
+      <event>
+        <kill-npc npc-id="219949"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <spawn-npc-at-player slot="tiamat_shadow" template-id="804742" heading="0"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 804742：交回标记后登出回退到 s4。 NPC 804742: hand-in dialog; logging out rolls back to s4. -->
+    <transition source="s5" target="s5">
+      <event>
+        <talk-to-npc npc-id="804742" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2716"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <talk-to-npc npc-id="804742" dialog-id="2717"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2717"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s6">
+      <event>
+        <talk-to-npc npc-id="804742" dialog-id="10005"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="6"/>
+      </actions>
+      <after-commit>
+        <despawn-npc slot="tiamat_shadow"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s4">
+      <event>
+        <log-out/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 804731：进入领奖。 NPC 804731: enter reward stage. -->
+    <transition source="s6" target="s6">
+      <event>
+        <talk-to-npc npc-id="804731" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="3057"/>
+      </after-commit>
+    </transition>
+    <transition source="s6" target="s6">
+      <event>
+        <talk-to-npc npc-id="804731" dialog-id="3058"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="3058"/>
+      </after-commit>
+    </transition>
+    <transition source="s6" target="reward">
+      <event>
+        <talk-to-npc npc-id="804731" dialog-id="10255"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="7"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 领奖阶段，NPC 804730。 Reward stage, NPC 804730. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励选择 1：可选物品 114101439。 Reward choice 1: selectable item 114101439. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="8"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="24154189" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="60"/>
+        <grant-reward kind="ITEM" id="114101439" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励选择 2：可选物品 114301445。 Reward choice 2: selectable item 114301445. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="9"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="24154189" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="60"/>
+        <grant-reward kind="ITEM" id="114301445" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励选择 3：可选物品 114301547。 Reward choice 3: selectable item 114301547. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="10"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="24154189" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="60"/>
+        <grant-reward kind="ITEM" id="114301547" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励选择 4：可选物品 114501387。 Reward choice 4: selectable item 114501387. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="11"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="24154189" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="60"/>
+        <grant-reward kind="ITEM" id="114501387" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励选择 5：可选物品 114501469。 Reward choice 5: selectable item 114501469. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="12"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="24154189" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="60"/>
+        <grant-reward kind="ITEM" id="114501469" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励选择 6：可选物品 114601330。 Reward choice 6: selectable item 114601330. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="804730" dialog-id="13"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="24154189" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="25"/>
+        <grant-reward kind="ITEM" id="186000237" amount="60"/>
+        <grant-reward kind="ITEM" id="114601330" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

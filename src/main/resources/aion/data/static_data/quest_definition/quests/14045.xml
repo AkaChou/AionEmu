@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="14045" version="1">
+  <metadata name="Rumors on Wings" display-name-id="1129905" min-level="45" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <prerequisites>
+      <quest id="14041"/>
+    </prerequisites>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="27550"/>
+      <reward kind="EXP" id="0" amount="8325278"/>
+      <reward kind="AP" id="0" amount="2000"/>
+      <reward kind="ITEM" id="162000027" amount="8"/>
+      <reward kind="ITEM" id="188051194" amount="1"/>
+      <reward kind="ITEM" id="186000469" amount="20"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="12" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="12"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="278506" dialog-id="31"/></event><conditions><variable-is field="var0" value="0"/></conditions><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="278506" dialog-id="1013"/></event><conditions><variable-is field="var0" value="0"/></conditions><after-commit><play-movie movie-id="272"/></after-commit></transition>
+    <transition source="started" target="s1"><event><talk-to-npc npc-id="278506" dialog-id="10000"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><teleport-player-current-or-default world-id="400010000" x="136.4838" y="790.4456" z="2836.5127" heading="48"/><close-dialog/></after-commit></transition>
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="279023" dialog-id="31"/></event><conditions><variable-is field="var0" value="1"/></conditions><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="279023" dialog-id="10001"/></event><conditions><variable-is field="var0" value="1"/></conditions><actions><give-item item-id="182215918" count="1"/><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><flight-teleport flight-teleport-id="57001"/><close-dialog/></after-commit></transition>
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="279006" dialog-id="31"/></event><conditions><variable-is field="var0" value="2"/></conditions><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="279006" dialog-id="1694"/></event><conditions><variable-is field="var0" value="2"/></conditions><actions><remove-item item-id="182215918" count="1"/></actions><after-commit><show-quest-dialog dialog-id="1694"/></after-commit></transition>
+    <transition source="s2" target="reward"><event><talk-to-npc npc-id="279006" dialog-id="10002"/></event><conditions><variable-is field="var0" value="2"/></conditions><actions><set-variable field="var0" value="12"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><flight-teleport flight-teleport-id="58001"/><close-dialog/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="279023" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="279023" dialog-id="1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="279023" dialog-ids="8..23"/></event><actions>
+        <grant-reward kind="GOLD" id="0" amount="27550" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="AP" id="0" amount="2000" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="162000027" amount="8"/>
+        <grant-reward kind="ITEM" id="188051194" amount="1"/>
+        <grant-reward kind="ITEM" id="186000469" amount="20"/>
+        <complete-quest reward-index="0"/></actions><after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+  </transitions>
+</quest-definition>

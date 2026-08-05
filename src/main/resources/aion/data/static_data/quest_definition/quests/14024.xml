@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="14024" version="1">
+  <metadata name="A Krall-ing Suspicion" display-name-id="1129883" min-level="28" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <items>
+      <item id="182215322" count="1"/>
+    </items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="893476"/>
+      <reward kind="TITLE" id="10" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="125004149" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="125004150" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="125004151" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="125004152" amount="1"/>
+      <reward kind="ITEM" id="162000048" amount="6"/>
+    </rewards>
+    <drops>
+      <drop npc-id="235480" item-id="182215322" chance="100" each-member="true" collecting-step="2"/>
+      <drop npc-id="232131" item-id="182215322" chance="100" each-member="true" collecting-step="2"/>
+      <drop npc-id="235481" item-id="182215322" chance="100" each-member="true" collecting-step="2"/>
+      <drop npc-id="210838" item-id="182215322" chance="100" each-member="true" collecting-step="2"/>
+    </drops>
+    <start-conditions>
+      <condition type="finished" quest-id="14020"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s3">
+      <project status="START">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 区域任务链结束自动接取（前置由 start-conditions 声明）。 Auto-start when the zone mission chain ends. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <zone-mission-end/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 升级自动接取（前置由 start-conditions 声明）。 Auto-start on level-up once prerequisites are met. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 蕾拉对话起始页。 Laira start dialog. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="203904" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- 蕾拉对话分支 1012。 Laira dialog branch 1012. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="203904" dialog-id="1012"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1012"/>
+      </after-commit>
+    </transition>
+    <!-- 蕾拉推进到下一对话者。 Laira advances to the next contact. -->
+    <transition source="started" target="s1">
+      <event>
+        <talk-to-npc npc-id="203904" dialog-id="10000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 对话者 204045 起始页。 Contact 204045 start dialog. -->
+    <transition source="s1" target="s1">
+      <event>
+        <talk-to-npc npc-id="204045" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <!-- 对话者 204045 对话分支 1353。 Contact 204045 dialog branch 1353. -->
+    <transition source="s1" target="s1">
+      <event>
+        <talk-to-npc npc-id="204045" dialog-id="1353"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1353"/>
+      </after-commit>
+    </transition>
+    <!-- 对话者 204045 推进到收集步骤。 Contact 204045 advances to the collect step. -->
+    <transition source="s1" target="s2">
+      <event>
+        <talk-to-npc npc-id="204045" dialog-id="10001"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 对话者 204004 起始页。 Contact 204004 start dialog. -->
+    <transition source="s2" target="s2">
+      <event>
+        <talk-to-npc npc-id="204004" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2034"/>
+      </after-commit>
+    </transition>
+    <!-- 对话者 204004 对话分支 2035。 Contact 204004 dialog branch 2035. -->
+    <transition source="s2" target="s2">
+      <event>
+        <talk-to-npc npc-id="204004" dialog-id="2035"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2035"/>
+      </after-commit>
+    </transition>
+    <!-- 收集检查：物品齐全则推进到第 3 步。 Collect check: item held advances to step 3. -->
+    <transition source="s2" target="s3" priority="0">
+      <event>
+        <talk-to-npc npc-id="204004" dialog-id="39"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+        <has-item item-id="182215322" count="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="2120"/>
+      </after-commit>
+    </transition>
+    <!-- 收集检查：物品缺失时提示继续收集。 Collect check: missing item shows the continue hint. -->
+    <transition source="s2" target="s2" priority="1">
+      <event>
+        <talk-to-npc npc-id="204004" dialog-id="39"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2035"/>
+      </after-commit>
+    </transition>
+    <!-- 对话者 204004 对话分支 2120。 Contact 204004 dialog branch 2120. -->
+    <transition source="s3" target="s3">
+      <event>
+        <talk-to-npc npc-id="204004" dialog-id="2120"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2120"/>
+      </after-commit>
+    </transition>
+    <!-- 对话者 204004 传送回圣天界并进入奖励状态。 Contact 204004 teleports to Sanctum and enters reward state. -->
+    <transition source="s3" target="reward">
+      <event>
+        <talk-to-npc npc-id="204004" dialog-id="10003"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <teleport-player-current-or-default world-id="210020000" x="1610" y="1528" z="318" heading="2"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 奖励窗口：USE_OBJECT 显示任务提示。 Reward window on USE_OBJECT. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="204020" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励窗口：SELECT_REWARD 显示奖励选择。 Reward window on SELECT_REWARD. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="204020" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励选择 1。 Reward selection 1. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="204020" dialog-id="8"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="893476" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="10" amount="1"/>
+        <grant-reward kind="ITEM" id="162000048" amount="6"/>
+        <grant-reward kind="ITEM" id="125004149" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励选择 2。 Reward selection 2. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="204020" dialog-id="9"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="893476" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="10" amount="1"/>
+        <grant-reward kind="ITEM" id="162000048" amount="6"/>
+        <grant-reward kind="ITEM" id="125004150" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励选择 3。 Reward selection 3. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="204020" dialog-id="10"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="893476" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="10" amount="1"/>
+        <grant-reward kind="ITEM" id="162000048" amount="6"/>
+        <grant-reward kind="ITEM" id="125004151" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励选择 4。 Reward selection 4. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="204020" dialog-id="11"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="893476" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="TITLE" id="10" amount="1"/>
+        <grant-reward kind="ITEM" id="162000048" amount="6"/>
+        <grant-reward kind="ITEM" id="125004152" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

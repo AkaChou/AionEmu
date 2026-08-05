@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.w3c.dom.Document;
@@ -494,6 +495,11 @@ public final class QuestDefinitionXmlCompiler {
 			case "start-eligible" -> new QuestCondition.StartEligible();
 			case "player-class-is" -> new QuestCondition.PlayerClassIs(
 				PlayerClass.valueOf(attribute(element, "starting-class")));
+			case "advanced-class-is" -> new QuestCondition.AdvancedClassIs(
+				PlayerClass.valueOf(attribute(element, "class")));
+			case "gender-is" -> new QuestCondition.GenderIs(enumValue(Gender.class, element, "gender"));
+			case "player-in-group" -> new QuestCondition.PlayerInGroup(
+				booleanOrDefault(element, "expected", true));
 			case "world-is" -> new QuestCondition.WorldIs(integer(element, "world-id"),
 				booleanOrDefault(element, "expected", true));
 			case "world-npc-is" -> new QuestCondition.WorldNpcIs(integer(element, "npc-id"),
@@ -533,6 +539,7 @@ public final class QuestDefinitionXmlCompiler {
 			case "show-quest-dialog" -> new AfterCommitAction.ShowQuestDialog(integer(action, "dialog-id"));
 			case "show-quest-selection-dialog" -> new AfterCommitAction.ShowQuestSelectionDialog(
 				integer(action, "dialog-id"));
+			case "show-dialog-window" -> new AfterCommitAction.ShowDialogWindow(integer(action, "dialog-id"));
 			case "teleport-player-current-or-default" -> new AfterCommitAction.TeleportPlayer(
 				QuestInstanceTarget.currentOrDefault(), integer(action, "world-id"),
 				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
@@ -547,6 +554,10 @@ public final class QuestDefinitionXmlCompiler {
 				byteValue(action, "heading"));
 			case "play-movie" -> new AfterCommitAction.PlayMovie(integer(action, "movie-id"));
 			case "morph" -> new AfterCommitAction.Morph(integer(action, "ascension-id"));
+			case "apply-effect" -> new AfterCommitAction.ApplyEffect(integer(action, "skill-id"),
+				integer(action, "duration-ms"));
+			case "remove-effect" -> new AfterCommitAction.RemoveEffect(integer(action, "effect-id"));
+			case "system-message" -> parseSystemMessage(action);
 			case "player-emotion" -> new AfterCommitAction.PlayerEmotion(
 				enumValue(QuestPlayerEmotion.class, action, "emotion"));
 			case "add-npc-aggro" -> new AfterCommitAction.AddNpcAggro(
@@ -586,6 +597,32 @@ public final class QuestDefinitionXmlCompiler {
 					enumValue(QuestTimerPolicy.Scope.class, action, "scope")));
 			default -> fail("UNKNOWN_AFTER_COMMIT_ACTION", action.getTagName());
 		};
+	}
+
+	private static AfterCommitAction parseSystemMessage(Element action) {
+		if (action.hasAttribute("message")) {
+			// XSD 默认属性（target=NONE 等）在 schema 验证后会被插入 DOM，hasAttribute 会误判，
+			// 因此按实际值判断而非属性存在性。Defaults injected by schema validation would
+			// make hasAttribute true; compare effective values instead.
+			if (action.hasAttribute("message-id")
+					|| !"NONE".equals(attributeOrDefault(action, "target", "NONE"))
+					|| booleanOrDefault(action, "npc-shout", false)
+					|| integerOrDefault(action, "text-color-id", 26) != 26
+					|| !attributeOrDefault(action, "params", "").isBlank()) {
+				return fail("AMBIGUOUS_SYSTEM_MESSAGE", "declare message or message-id, not both");
+			}
+			return new AfterCommitAction.SendSystemMessage(enumValue(QuestSystemMessage.class, action, "message"));
+		}
+		if (!action.hasAttribute("message-id")) {
+			return fail("MISSING_ATTRIBUTE", "system-message.message or message-id");
+		}
+		QuestSystemMessageTarget target = enumValueOrDefault(QuestSystemMessageTarget.class, action, "target",
+			QuestSystemMessageTarget.NONE);
+		String rawParams = attributeOrDefault(action, "params", "");
+		List<String> params = rawParams.isBlank() ? List.of() : List.of(rawParams.split("\\|", -1));
+		return new AfterCommitAction.SendSystemMessagePacket(new QuestSystemMessagePacket(
+			integer(action, "message-id"), target, booleanOrDefault(action, "npc-shout", false),
+			integerOrDefault(action, "text-color-id", 26), params));
 	}
 
 	private static QuestTimerPolicy parseTimerPolicy(Element action) {
@@ -736,6 +773,11 @@ public final class QuestDefinitionXmlCompiler {
 			fail("INVALID_ENUM", element.getTagName() + "." + name);
 			return null;
 		}
+	}
+
+	private static <T extends Enum<T>> T enumValueOrDefault(Class<T> type, Element element, String name, T defaultValue) {
+		return element.hasAttribute(name) && !element.getAttribute(name).isBlank()
+			? enumValue(type, element, name) : defaultValue;
 	}
 
 	private static <T> T fail(String code, String message) {

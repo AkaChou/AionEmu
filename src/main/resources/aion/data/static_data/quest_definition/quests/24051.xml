@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="24051" version="1">
+  <metadata name="Investigate the Disappearance" display-name-id="1129924" min-level="36" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <prerequisites>
+      <quest id="24050"/>
+    </prerequisites>
+    <items>
+      <item id="182215377" count="1"/>
+    </items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="4272047"/>
+      <reward kind="ITEM" id="162000050" amount="40"/>
+      <reward kind="ITEM" id="186000009" amount="20"/>
+      <reward kind="ITEM" id="188053200" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100001745" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100101342" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100201511" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100501322" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100601439" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100901383" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101301275" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101501365" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101701376" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101801226" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101901135" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="102001254" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="102101080" amount="1"/>
+    </rewards>
+    <drops>
+      <drop npc-id="213281" item-id="182215377" chance="100" each-member="true" collecting-step="5"/>
+      <drop npc-id="213282" item-id="182215377" chance="100" each-member="true" collecting-step="5"/>
+      <drop npc-id="213266" item-id="182215377" chance="100" each-member="true" collecting-step="5"/>
+      <drop npc-id="213267" item-id="182215377" chance="100" each-member="true" collecting-step="5"/>
+    </drops>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="s3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="s4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="s5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="5"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="204707" dialog-id="31"/></event><conditions><variable-is field="var0" value="0"/></conditions><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="started" target="s1"><event><talk-to-npc npc-id="204707" dialog-id="10000"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="204749" dialog-id="31"/></event><conditions><variable-is field="var0" value="1"/></conditions><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="204749" dialog-id="10001"/></event><conditions><variable-is field="var0" value="1"/></conditions><actions><give-item item-id="182215375" count="1"/><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s2" target="s3"><event><use-item item-id="182215375"/></event><conditions><variable-is field="var0" value="2"/></conditions><actions><remove-item item-id="182215375" count="1"/><set-variable field="var0" value="3"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s3" target="s3"><event><talk-to-npc npc-id="204707" dialog-id="31"/></event><conditions><variable-is field="var0" value="3"/></conditions><after-commit><show-quest-dialog dialog-id="2034"/></after-commit></transition>
+    <transition source="s3" target="s4"><event><talk-to-npc npc-id="204707" dialog-id="10003"/></event><conditions><variable-is field="var0" value="3"/></conditions><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s4" target="s4"><event><talk-to-npc npc-id="204800" dialog-id="31"/></event><conditions><variable-is field="var0" value="4"/></conditions><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <transition source="s4" target="s5"><event><talk-to-npc npc-id="204800" dialog-id="10004"/></event><conditions><variable-is field="var0" value="4"/></conditions><actions><give-item item-id="182215376" count="1"/><set-variable field="var0" value="5"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s5" target="s5"><event><talk-to-npc npc-id="700359" dialog-id="-1"/></event><conditions><variable-is field="var0" value="5"/><has-item item-id="182215377" count="1"/></conditions><after-commit><teleport-player-current-or-default world-id="220040000" x="1757.82" y="1392.94" z="401.75" heading="94"/></after-commit></transition>
+    <transition source="s5" target="s5"><event><enter-zone zone="MINE_PORT_220040000"/></event><conditions><variable-is field="var0" value="5"/></conditions><after-commit><play-movie movie-id="236"/></after-commit></transition>
+    <transition source="s5" target="reward"><event><movie-end movie-id="236"/></event><conditions><variable-is field="var0" value="5"/></conditions><actions><remove-item item-id="182215377" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="204707" dialog-id="-1"/></event><actions><remove-item item-id="182215376" count="1"/></actions><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="204707" dialog-id="1009"/></event><actions><remove-item item-id="182215376" count="1"/></actions><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="8"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="100001745" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="9"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="100101342" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="10"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="100201511" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="11"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="100501322" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="12"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="100601439" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="13"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="100901383" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="14"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="101301275" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="15"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="101501365" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="16"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="101701376" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="17"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="101801226" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="18"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="101901135" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="19"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="102001254" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204707" dialog-id="20"/></event><actions><remove-item item-id="182215376" count="1"/><grant-reward kind="EXP" id="0" amount="4272047" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="162000050" amount="40"/><grant-reward kind="ITEM" id="186000009" amount="20"/><grant-reward kind="ITEM" id="188053200" amount="1"/><grant-reward kind="ITEM" id="102101080" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+  </transitions>
+</quest-definition>

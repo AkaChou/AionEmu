@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="10011" version="1">
+  <metadata name="A Flower That Needs Blood to Bloom" display-name-id="1803216" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true" target-type="FORCE">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <prerequisites>
+      <quest id="10010"/>
+    </prerequisites>
+    <rewards>
+      <reward kind="EXP" id="0" amount="61295166"/>
+      <reward kind="SELECTABLE_ITEM" id="167010286" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010287" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010288" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010289" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010290" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010291" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="9" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="4" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/><var name="var1" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="s3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="s4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="s5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
+    <node label="s6"><project status="START"><vars><var name="var0" value="6"/></vars></project></node>
+    <node label="s7"><project status="START"><vars><var name="var0" value="7"/></vars></project></node>
+    <node label="s8"><project status="START"><vars><var name="var0" value="8"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="9"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="806585" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="806585" dialog-id="1012"/></event><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="806585" dialog-id="1013"/></event><after-commit><show-quest-dialog dialog-id="1013"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="806585" dialog-id="1014"/></event><after-commit><show-quest-dialog dialog-id="1014"/></after-commit></transition>
+    <transition source="started" target="s1"><event><talk-to-npc npc-id="806585" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="731785" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="731785" dialog-id="1353"/></event><after-commit><show-quest-dialog dialog-id="1353"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="731785" dialog-id="10001"/></event><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="731786" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="731786" dialog-id="1694"/></event><after-commit><show-quest-dialog dialog-id="1694"/></after-commit></transition>
+    <transition source="s2" target="s3"><event><talk-to-npc npc-id="731786" dialog-id="10002"/></event><actions><set-variable field="var0" value="3"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s3" target="s3"><event><talk-to-npc npc-id="731787" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="2034"/></after-commit></transition>
+    <transition source="s3" target="s3"><event><talk-to-npc npc-id="731787" dialog-id="2035"/></event><after-commit><show-quest-dialog dialog-id="2035"/></after-commit></transition>
+    <transition source="s3" target="s4"><event><talk-to-npc npc-id="731787" dialog-id="10003"/></event><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s4" target="s5"><event><enter-zone zone="IDAB1_ERE_Q10011_A_302340000"/></event><conditions><variable-is field="var0" value="4"/></conditions><actions><set-variable field="var0" value="5"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s5" target="s5" priority="1"><event><kill-npc npc-id="246810"/></event><conditions><variable-is field="var0" value="5"/><variable-below field="var1" value="4"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s5" target="s6" priority="0"><event><kill-npc npc-id="246810"/></event><conditions><variable-is field="var0" value="5"/><variable-at-least field="var1" value="4"/></conditions><actions><set-variable field="var0" value="6"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s6" target="s7"><event><kill-npc npc-id="246509"/></event><conditions><variable-is field="var0" value="6"/></conditions><actions><set-variable field="var0" value="7"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s7" target="s8"><event><enter-zone zone="IDAB1_ERE_Q10011_B_302340000"/></event><conditions><variable-is field="var0" value="7"/></conditions><actions><set-variable field="var0" value="8"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s8" target="s8"><event><talk-to-npc npc-id="806589" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="3739"/></after-commit></transition>
+    <transition source="s8" target="s8"><event><talk-to-npc npc-id="806589" dialog-id="3740"/></event><after-commit><show-quest-dialog dialog-id="3740"/></after-commit></transition>
+    <transition source="s8" target="s8"><event><talk-to-npc npc-id="806589" dialog-id="3741"/></event><after-commit><show-quest-dialog dialog-id="3741"/></after-commit></transition>
+    <transition source="s8" target="reward"><event><talk-to-npc npc-id="806589" dialog-id="10255"/></event><actions><set-variable field="var0" value="9"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="806075" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="806075" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="806075" dialog-ids="8..23"/></event><actions>
+        <grant-reward kind="EXP" id="0" amount="61295166" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/></actions><after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+  </transitions>
+</quest-definition>

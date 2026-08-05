@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="24024" version="1">
+  <metadata name="A Nepra Protector" display-name-id="1129897" min-level="35" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="3504765"/>
+      <reward kind="SELECTABLE_ITEM" id="120001536" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="120001537" amount="1"/>
+      <reward kind="ITEM" id="169000008" amount="400"/>
+      <reward kind="ITEM" id="186000008" amount="40"/>
+    </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="24020"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s3">
+      <project status="START">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s4">
+      <project status="START">
+        <vars>
+          <var name="var0" value="4"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="4"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars/>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 升级达标且前置 24020 完成时自动接取 / Auto-start on level-up when 24020 finished -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 区域任务结束时自动接取 / Auto-start on zone mission end -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <zone-mission-end/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204369 引导对话 / NPC 204369 guidance dialog -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="204369" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204369 推进并播放过场 80 / NPC 204369 advance with movie 80 -->
+    <transition source="started" target="s1">
+      <event>
+        <talk-to-npc npc-id="204369" dialog-id="10000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <play-movie movie-id="80"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204361 引导对话 / NPC 204361 guidance dialog -->
+    <transition source="s1" target="s1">
+      <event>
+        <talk-to-npc npc-id="204361" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204361 推进 / NPC 204361 advance -->
+    <transition source="s1" target="s2">
+      <event>
+        <talk-to-npc npc-id="204361" dialog-id="10001"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- NPC 730739 引导对话 / NPC 730739 guidance dialog -->
+    <transition source="s2" target="s2">
+      <event>
+        <talk-to-npc npc-id="730739" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1693"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 730739 推进并传送至黑龙祭坛 / NPC 730739 advance and teleport to Altar of the Black Dragon -->
+    <transition source="s2" target="s3">
+      <event>
+        <talk-to-npc npc-id="730739" dialog-id="10002"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <teleport-player-current-or-default world-id="220020000" x="1979.7205" y="853.2568" z="248.5204" heading="115"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 进入黑龙祭坛区域播放过场 81 并推进 / Enter Altar zone plays movie 81 and advances -->
+    <transition source="s3" target="s4">
+      <event>
+        <enter-zone zone="ALTAR_OF_THE_BLACK_DRAGON_220020000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <play-movie movie-id="81"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀 212861 后进入领奖状态 / Killing 212861 enters reward state -->
+    <transition source="s4" target="reward">
+      <event>
+        <kill-npc npc-id="212861"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖对话 / Reward dialog -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="204369" dialog-ids="-1 1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励 1 / Select reward 1 -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="204369" dialog-id="8"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="169000008" amount="400"/>
+        <grant-reward kind="ITEM" id="186000008" amount="40"/>
+        <grant-reward kind="ITEM" id="120001536" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励 2 / Select reward 2 -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="204369" dialog-id="9"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="169000008" amount="400"/>
+        <grant-reward kind="ITEM" id="186000008" amount="40"/>
+        <grant-reward kind="ITEM" id="120001537" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>
