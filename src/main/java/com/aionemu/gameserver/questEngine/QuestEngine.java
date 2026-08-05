@@ -57,6 +57,7 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.runtime.PlayerQuestBroadcastPort;
 import com.aionemu.gameserver.questEngine.runtime.QuestDispatchContract;
 import com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
@@ -1819,6 +1820,16 @@ public class QuestEngine implements GameEngine {
 	 */
 	void installProductionDefinitions(QuestCatalog catalog) {
 		QuestProductionDispatcher dispatcher = QuestProductionDispatcher.production(catalog, runtimeComposition);
+		runtimeComposition.installBroadcastPort(new PlayerQuestBroadcastPort(
+			playerId -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId),
+			(player, questIds) -> {
+				boolean any = false;
+				for (int questId : questIds) {
+					any |= dispatcher.dispatch(new QuestEvent.ZoneMissionEnd(), player.getObjectId(), questId,
+						QuestDispatchContract.EXCLUSIVE).claimed();
+				}
+				return any;
+			}));
 		for (CompiledQuestDefinition definition : catalog.all()) {
 			if (questHandlers.containsKey(definition.id())) {
 				throw new IllegalStateException("quest " + definition.id() + " already has a legacy handler");

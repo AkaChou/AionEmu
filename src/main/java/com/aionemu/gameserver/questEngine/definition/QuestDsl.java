@@ -442,6 +442,11 @@ public final class QuestDsl {
 		return new AfterCommitAction.CancelQuestTimer(identity);
 	}
 
+	/** 对若干目标任务广播 zone-mission-end 事件, 触发其启动/推进。 */
+	public static AfterCommitAction broadcastZoneMissionEnd(int... questIds) {
+		return new AfterCommitAction.BroadcastZoneMissionEnd(questIds);
+	}
+
 	public static final class QuestBuilder {
 		private final int id;
 		private int version = 1;

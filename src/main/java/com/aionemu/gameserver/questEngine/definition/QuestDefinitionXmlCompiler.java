@@ -421,6 +421,20 @@ public final class QuestDefinitionXmlCompiler {
 		return new QuestEvent.KillNpcSet(npcIds);
 	}
 
+	private static int[] parseQuestIdArray(Element element, String attr) {
+		String raw = element.getAttribute(attr);
+		if (raw == null || raw.isBlank()) {
+			return fail("INVALID_QUEST_IDS", attr + " must be a space-separated list of quest ids");
+		}
+		return Arrays.stream(raw.trim().split("\\s+")).mapToInt(token -> {
+			try {
+				return Integer.parseInt(token);
+			} catch (NumberFormatException e) {
+				return fail("INVALID_QUEST_IDS", attr + " contains non-numeric '" + token + "'");
+			}
+		}).toArray();
+	}
+
 	private static int parseNpcId(Element element, String token) {
 		try {
 			return Integer.parseInt(token);
@@ -532,6 +546,8 @@ public final class QuestDefinitionXmlCompiler {
 			case "flight-teleport" -> new AfterCommitAction.FlightTeleport(integer(action, "flight-teleport-id"));
 			case "delete-interaction-npc" -> new AfterCommitAction.DeleteInteractionNpc(
 				booleanOrDefault(action, "schedule-respawn", true));
+			case "broadcast-zone-mission-end" -> new AfterCommitAction.BroadcastZoneMissionEnd(
+				parseQuestIdArray(action, "quest-ids"));
 			case "spawn-npc-current-or-default" -> new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
 				integer(action, "template-id"), new QuestSpawnLocation.Fixed(integer(action, "world-id"),
 					QuestInstanceTarget.currentOrDefault(),

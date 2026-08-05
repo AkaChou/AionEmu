@@ -16,6 +16,7 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 	private final QuestStatsPort statsPort;
 	private final QuestEffectPort effectPort;
 	private final QuestNpcPort npcPort;
+	private volatile QuestBroadcastPort broadcastPort;
 
 	public static TypedQuestAfterCommitPort fullyComposed(QuestDialogPort dialogPort,
 			QuestTeleportPort teleportPort, QuestMoviePort moviePort, QuestSpawnPort spawnPort,
@@ -88,6 +89,11 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 		this.statsPort = statsPort;
 		this.effectPort = effectPort;
 		this.npcPort = npcPort;
+	}
+
+	/** 广播 port 由生产侧在 dispatcher 构造后注入, 打破 composition 循环。 */
+	public void withBroadcastPort(QuestBroadcastPort broadcastPort) {
+		this.broadcastPort = Objects.requireNonNull(broadcastPort, "broadcastPort");
 	}
 
 	private void requireAiPort() {
@@ -242,6 +248,13 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 				throw new IllegalArgumentException("addNpcAggro requires an npc port");
 			}
 			requireSuccess(npcPort.addNpcAggro(snapshot, plan, aggro.npcTemplateId(), aggro.damage()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.BroadcastZoneMissionEnd broadcast) {
+			if (broadcastPort == null) {
+				throw new IllegalArgumentException("broadcastZoneMissionEnd requires a broadcast port");
+			}
+			requireSuccess(broadcastPort.broadcastZoneMissionEnd(snapshot, plan, broadcast.questIds()), action, snapshot);
 			return;
 		}
 		throw new IllegalArgumentException("unsupported after-commit action: " + action.getClass().getName());

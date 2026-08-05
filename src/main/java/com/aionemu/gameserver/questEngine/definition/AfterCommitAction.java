@@ -11,7 +11,8 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.CancelQuestTimer, AfterCommitAction.SyncQuestState,
 		AfterCommitAction.RefreshPlayerStats, AfterCommitAction.Morph,
 		AfterCommitAction.FlightTeleport, AfterCommitAction.PlayerEmotion,
-		AfterCommitAction.AddNpcAggro, AfterCommitAction.DeleteInteractionNpc {
+		AfterCommitAction.AddNpcAggro, AfterCommitAction.DeleteInteractionNpc,
+		AfterCommitAction.BroadcastZoneMissionEnd {
 	record CloseDialog() implements AfterCommitAction {
 	}
 
@@ -271,5 +272,19 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 	 * DespawnNpc, this addresses a world static NPC rather than a task-spawned one.
 	 */
 	record DeleteInteractionNpc(boolean scheduleRespawn) implements AfterCommitAction {
+	}
+
+	/** 对若干目标任务广播 zone-mission-end 事件, 触发其启动/推进。 */
+	record BroadcastZoneMissionEnd(int[] questIds) implements AfterCommitAction {
+		public BroadcastZoneMissionEnd {
+			if (questIds == null || questIds.length == 0) {
+				throw new IllegalArgumentException("questIds must not be empty");
+			}
+			for (int id : questIds) {
+				if (id <= 0) {
+					throw new IllegalArgumentException("questIds must be positive");
+				}
+			}
+		}
 	}
 }

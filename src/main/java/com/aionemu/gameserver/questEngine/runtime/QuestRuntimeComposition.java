@@ -76,6 +76,13 @@ public final class QuestRuntimeComposition {
 		return afterCommitPort;
 	}
 
+	/** 注入跨任务广播 port(生产侧在 dispatcher 构造后调用, 打破循环依赖)。 */
+	public void installBroadcastPort(QuestBroadcastPort broadcastPort) {
+		if (afterCommitPort instanceof TypedQuestAfterCommitPort typed) {
+			typed.withBroadcastPort(broadcastPort);
+		}
+	}
+
 	public QuestEventPort eventPort() {
 		return eventPort;
 	}
