@@ -4,6 +4,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.Objects;
 
@@ -67,7 +68,15 @@ public final class PlayerQuestTeleportPort implements QuestTeleportPort {
 		if (instanceTarget instanceof QuestInstanceTarget.Fixed fixed) {
 			instanceId = fixed.instanceId();
 		} else if (instanceTarget instanceof QuestInstanceTarget.NextAvailable next) {
-			instanceId = InstanceService.getNextAvailableInstance(next.worldId()).getInstanceId();
+			// 优先复用玩家已注册的实例;否则分配下一个可用实例并把玩家注册进去。
+			WorldMapInstance registered = InstanceService.getRegisteredInstance(next.worldId(), player.getObjectId());
+			WorldMapInstance instance = registered != null
+				? registered
+				: InstanceService.getNextAvailableInstance(next.worldId());
+			if (registered == null) {
+				InstanceService.registerPlayerWithInstance(instance, player);
+			}
+			instanceId = instance.getInstanceId();
 		} else if (snapshot.worldId() > 0 && snapshot.instanceId() > 0) {
 			instanceId = snapshot.worldId() == worldId ? snapshot.instanceId() : 1;
 		} else {
