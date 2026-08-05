@@ -7,6 +7,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /** Closed set of pure conditions evaluated against a quest snapshot. */
 public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCondition.HasItem,
@@ -15,8 +16,54 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		QuestCondition.RecipeKnown, QuestCondition.CanGrantCraftSkill, QuestCondition.PvpVictimLevelDelta,
 		QuestCondition.PvpRecipientInZone, QuestCondition.StartEligible, QuestCondition.PlayerClassIs,
 		QuestCondition.AdvancedClassIs, QuestCondition.GenderIs, QuestCondition.PlayerInGroup,
-		QuestCondition.WorldIs, QuestCondition.WorldNpcIs, QuestCondition.ZoneIs {
+		QuestCondition.WorldIs, QuestCondition.WorldNpcIs, QuestCondition.ZoneIs,
+		QuestCondition.NpcHpBelowPercent, QuestCondition.CurrencyAtLeast, QuestCondition.CurrencyBelow,
+		QuestCondition.QuestsFinished, QuestCondition.EquipmentSetEquipped, QuestCondition.EquippedItem,
+		QuestCondition.MembershipPermission, QuestCondition.DpAtMax {
+	/** Matches a typed membership capability captured from the live account. */
+	record MembershipPermission(QuestMembershipPermission permission, boolean expected) implements QuestCondition {
+		public MembershipPermission {
+			if (permission == null) {
+				throw new NullPointerException("permission");
+			}
+		}
+
+		public MembershipPermission(QuestMembershipPermission permission) {
+			this(permission, true);
+		}
+	}
+
+	/** Matches the number of copies of a concrete item in the equipment projection. */
+	record EquippedItem(int itemId, int count, boolean expected) implements QuestCondition {
+		public EquippedItem {
+			if (itemId <= 0 || count <= 0) {
+				throw new IllegalArgumentException("item id and count must be positive");
+			}
+		}
+
+		public EquippedItem(int itemId, int count) {
+			this(itemId, count, true);
+		}
+
+		public EquippedItem(int itemId) {
+			this(itemId, 1, true);
+		}
+	}
+
 	record StartEligible() implements QuestCondition {
+	}
+
+	/** Matches when every listed prerequisite quest is already completed. */
+	record QuestsFinished(Set<Integer> questIds) implements QuestCondition {
+		public QuestsFinished {
+			if (questIds == null || questIds.isEmpty()) {
+				throw new IllegalArgumentException("questIds must not be empty");
+			}
+			if (questIds.stream().anyMatch(id -> id == null || id <= 0)) {
+				throw new IllegalArgumentException("questIds must be positive");
+			}
+			questIds = Set.copyOf(questIds);
+		}
 	}
 
 	/** Matches the player's starting class (advanced classes normalize to their base). */
@@ -74,6 +121,63 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		public ZoneIs(String zone) {
 			this(zone, true);
 		}
+	}
+
+	/** Matches an authoritative AttackNpc callback while the target is below a strict HP percentage. */
+	record NpcHpBelowPercent(int npcId, int percent) implements QuestCondition {
+		public NpcHpBelowPercent {
+			if (npcId <= 0) {
+				throw new IllegalArgumentException("npcId must be positive");
+			}
+			if (percent < 0 || percent > 100) {
+				throw new IllegalArgumentException("percent must be between 0 and 100");
+			}
+		}
+	}
+
+	/** Matches a captured balance before a currency debit branch. */
+	record CurrencyAtLeast(QuestRewardKind kind, long amount) implements QuestCondition {
+		public CurrencyAtLeast {
+			if (kind == null || !kind.isCurrency()) {
+				throw new IllegalArgumentException("kind must be a supported currency");
+			}
+			if (amount <= 0) {
+				throw new IllegalArgumentException("amount must be positive");
+			}
+		}
+	}
+
+	/** Matches a captured currency balance strictly below the required amount. */
+	record CurrencyBelow(QuestRewardKind kind, long amount) implements QuestCondition {
+		public CurrencyBelow {
+			if (kind == null || !kind.isCurrency()) {
+				throw new IllegalArgumentException("kind must be a supported currency");
+			}
+			if (amount <= 0) {
+				throw new IllegalArgumentException("amount must be positive");
+			}
+		}
+	}
+
+	/** Matches whether any listed equipment set has exactly the requested equipped-part count. */
+	record EquipmentSetEquipped(Set<Integer> setIds, int count, boolean expected) implements QuestCondition {
+		public EquipmentSetEquipped {
+			if (setIds == null || setIds.isEmpty() || setIds.stream().anyMatch(id -> id == null || id <= 0)) {
+				throw new IllegalArgumentException("setIds must contain positive ids");
+			}
+			if (count < 0) {
+				throw new IllegalArgumentException("count must be non-negative");
+			}
+			setIds = Set.copyOf(setIds);
+		}
+
+		public EquipmentSetEquipped(Set<Integer> setIds, int count) {
+			this(setIds, count, true);
+		}
+	}
+
+	/** Matches when the captured current DP equals the captured maximum DP. */
+	record DpAtMax() implements QuestCondition {
 	}
 
 	/** Matches presence of an NPC template in the player's current world instance. */
