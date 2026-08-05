@@ -90,8 +90,11 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		int packed = state == null ? 0 : state.getQuestVars().getQuestVars();
 		Storage inventory = player.getInventory();
 		boolean inventoryCaptured = inventory != null;
-		boolean currenciesCaptured = inventory != null || player.getCommonData() != null
-			|| player.getAbyssRank() != null;
+		// 货币条件要求所有持久化货币来源都已捕获；部分玩家投影不能把未知 AP/DP 当成 0。
+		// Currency conditions require every persistent source to be captured; a partial
+		// player projection must never turn an unavailable AP/DP balance into zero.
+		boolean currenciesCaptured = inventory != null && player.getCommonData() != null
+			&& player.getAbyssRank() != null;
 		var target = player.getTarget();
 		boolean positionCaptured = player.getPosition() != null;
 		return new QuestSnapshot(player.getObjectId(), questId, status, packed,

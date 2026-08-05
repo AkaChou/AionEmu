@@ -226,7 +226,21 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		if (kind == null || !kind.isCurrency()) {
 			throw new IllegalArgumentException("currency balance requires a currency reward kind");
 		}
-		return currencies.getOrDefault(kind, 0L);
+		Long exact = currencies.get(kind);
+		if (exact != null) {
+			return exact;
+		}
+		// GOLD and KINAH are two wire names for the same persistent kinah field.
+		if (kind == QuestRewardKind.GOLD || kind == QuestRewardKind.KINAH) {
+			return currencies.getOrDefault(kind == QuestRewardKind.GOLD
+				? QuestRewardKind.KINAH : QuestRewardKind.GOLD, 0L);
+		}
+		if (kind == QuestRewardKind.CP || kind == QuestRewardKind.ABYSS_OP) {
+			// These wire currencies have no captured production balance source yet.
+			// Do not interpret an absent source as a known zero balance.
+			throw new IllegalStateException("currency facts are not captured for " + kind);
+		}
+		return 0L;
 	}
 
 	public boolean craftFactsCaptured() {
