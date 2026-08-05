@@ -52,6 +52,31 @@ class PlayerQuestCurrencyPortTest {
 	private static final int QUEST_ID = 1001;
 
 	@Test
+	void emptyCurrencyActionsDoNotRequireCapturedBalances() throws Exception {
+		PlayerQuestCurrencyPort port = port(playerId -> null, new RecordingInventoryDao(),
+			new RecordingAbyssRankDao(), new RecordingPlayerDao());
+		QuestSnapshot snapshot = new QuestSnapshot(PLAYER_ID, QUEST_ID, QuestStatus.START, 0,
+			Map.of(), null, true, false, 0);
+
+		port.preflight(connection(), snapshot, List.of());
+		port.apply(connection(), snapshot, List.of());
+		port.preflightDebits(connection(), snapshot, List.of());
+		port.preflightSets(connection(), snapshot, List.of());
+	}
+
+	@Test
+	void grantFailsClosedBeforeMutationWhenLiveApWouldOverflow() throws Exception {
+		Player player = playerWithCurrency(0, 0, 0, 0);
+		setField(AbyssRank.class, player.getAbyssRank(), "currentAp", Integer.MAX_VALUE);
+		PlayerQuestCurrencyPort port = port(playerId -> player, new RecordingInventoryDao(),
+			new RecordingAbyssRankDao(), new RecordingPlayerDao());
+
+		assertThrows(SQLException.class,
+			() -> port.apply(connection(), snapshotCaptured(), List.of(reward("AP", 1))));
+		assertEquals(Integer.MAX_VALUE, player.getAbyssRank().getAp());
+	}
+
+	@Test
 	void preflightFailsWhenCurrencyFactsWereNotCaptured() throws Exception {
 		PlayerQuestCurrencyPort port = port(playerId -> null, new RecordingInventoryDao(),
 			new RecordingAbyssRankDao(), new RecordingPlayerDao());
@@ -80,6 +105,20 @@ class PlayerQuestCurrencyPortTest {
 			new RecordingAbyssRankDao(), new RecordingPlayerDao());
 		port.preflight(connection(), snapshotCaptured(),
 			List.of(reward("GOLD", 500), reward("AP", 100), reward("GP", 50), reward("DP", 20)));
+	}
+
+	@Test
+	void preflightDebitsRejectsInsufficientCapturedBalance() throws Exception {
+		PlayerQuestCurrencyPort port = port(playerId -> null, new RecordingInventoryDao(),
+			new RecordingAbyssRankDao(), new RecordingPlayerDao());
+		QuestSnapshot snapshot = new QuestSnapshot(PLAYER_ID, QUEST_ID, QuestStatus.START, 0,
+			Map.of(), Map.of(QuestRewardKind.GOLD, 100L));
+
+		SQLException thrown = assertThrows(SQLException.class,
+			() -> port.preflightDebits(connection(), snapshot,
+				List.of(new QuestAction.DecreaseCurrency(QuestRewardKind.GOLD, 60),
+					new QuestAction.DecreaseCurrency(QuestRewardKind.KINAH, 60))));
+		assertTrue(thrown.getMessage().contains("insufficient"));
 	}
 
 	@Test
@@ -177,6 +216,31 @@ class PlayerQuestCurrencyPortTest {
 		assertEquals(0, inventoryDao.transactions.size());
 		assertEquals(0, abyssRankDao.calls.size());
 		assertEquals(0, playerDao.calls.size());
+	}
+
+	@Test
+	void applyDebitsKinahPersistsAndRollbackRestoresTheLiveBalance() throws Exception {
+		Player player = playerWithCurrency(0, 0, 0, 100);
+		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
+		PlayerQuestCurrencyPort port = port(playerId -> player, inventoryDao,
+			new RecordingAbyssRankDao(), new RecordingPlayerDao());
+		Connection connection = connection();
+		QuestSnapshot snapshot = new QuestSnapshot(PLAYER_ID, QUEST_ID, QuestStatus.START, 0,
+			Map.of(), Map.of(QuestRewardKind.GOLD, 100L));
+
+		QuestTransactionParticipant participant = port.applyDebits(connection, snapshot,
+			List.of(new QuestAction.DecreaseCurrency(QuestRewardKind.KINAH, 40)));
+
+		assertEquals(60, player.getInventory().getKinah());
+		assertEquals(1, inventoryDao.transactions.size());
+		assertSame(connection, inventoryDao.transactions.get(0).connection);
+		assertEquals(PersistentState.UPDATE_REQUIRED, player.getInventory().getPersistentState());
+
+		participant.afterCommit();
+		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
+		participant.afterRollback();
+		assertEquals(100, player.getInventory().getKinah());
+		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
 	}
 
 	private static PlayerQuestCurrencyPort port(QuestPlayerPort players, InventoryDAO inventoryDao,

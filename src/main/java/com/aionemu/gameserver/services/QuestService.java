@@ -1450,6 +1450,14 @@ public final class QuestService {
 		if (qs == null) {
 			return false;
 		}
+		QuestEngine questEngine = GameEngineServices.questEngine();
+		if (questEngine.isProductionOwner(questId) && questEngine.hasProductionAbandonRoute(questId)) {
+			if (!questEngine.onAbandon(player, questId)) {
+				return false;
+			}
+			finishAbandon(player, questId);
+			return true;
+		}
  
 		if (template.getNpcFactionId() != 0) {
 			player.getNpcFactions().abortQuest(template);
@@ -1482,6 +1490,11 @@ public final class QuestService {
 				player.getRecipeList().deleteRecipe(player, wod.getRecipeId());
 			}
 		}
+		finishAbandon(player, questId);
+		return true;
+	}
+
+	private static void finishAbandon(Player player, int questId) {
 		if (hasQuestTimers(player.getObjectId(), questId)) {
 			cleanupQuestTimers(player.getObjectId(), questId);
 			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, 0));
@@ -1489,7 +1502,6 @@ public final class QuestService {
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
-		return true;
 	}
 
 	/**

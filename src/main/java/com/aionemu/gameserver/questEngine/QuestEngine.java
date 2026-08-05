@@ -289,17 +289,17 @@ public class QuestEngine implements GameEngine {
 			QuestEvent event = new QuestEvent.KillNpc(npc.getNpcId());
 			QuestProductionDispatcher typed = productionDispatcher;
 			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnKillEvent();
-			boolean typedDispatchSucceeded = false;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (env.getPlayer() != null && questIds.stream().anyMatch(typed::owns)) {
 				try {
-					typedDispatchSucceeded = typed.dispatch(event, env.getPlayer().getObjectId(), 0,
-						QuestDispatchContract.BROADCAST).claimed();
+					typedClaimedOwners = typed.dispatch(event, env.getPlayer().getObjectId(), 0,
+						QuestDispatchContract.BROADCAST).claimedOwners();
 				} catch (RuntimeException ignored) {
 					// Preserve legacy owners when the typed kill event cannot be dispatched.
 				}
 			}
 			for (int questId : questIds) {
-				if (typedDispatchSucceeded && typed.owns(questId)) {
+				if (typedClaimedOwners.contains(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -328,20 +328,20 @@ public class QuestEngine implements GameEngine {
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
 			List<Integer> questIds = getQuestNpc(npc.getNpcId()).getOnAttackEvent();
-			boolean typedDispatchSucceeded = false;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null && questIds.stream().anyMatch(typed::owns)) {
 				// 攻击事实广播给所有匹配 typed owner；同一 NPC 可服务多个任务。
 				// Broadcast the authoritative attack fact to every matching typed owner.
 				try {
 					QuestNpcAttackFacts facts = attackFacts(npc, player);
-					typedDispatchSucceeded = typed.dispatch(new QuestEvent.AttackNpc(npc.getNpcId(), facts),
-						player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimed();
+					typedClaimedOwners = typed.dispatch(new QuestEvent.AttackNpc(npc.getNpcId(), facts),
+						player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimedOwners();
 				} catch (RuntimeException ignored) {
 					// Preserve legacy owners when the authoritative attack fact cannot be captured.
 				}
 			}
 			for (int questId : questIds) {
-				if (typedDispatchSucceeded && typed.owns(questId)) {
+				if (typedClaimedOwners.contains(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -377,17 +377,27 @@ public class QuestEngine implements GameEngine {
 		try {
 			Player player = env.getPlayer();
 			QuestProductionDispatcher typed = productionDispatcher;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null) {
-				typed.dispatch(new QuestEvent.LevelUp(), player.getObjectId(), 0, QuestDispatchContract.BROADCAST);
+				try {
+					typedClaimedOwners = typed.dispatch(new QuestEvent.LevelUp(), player.getObjectId(), 0,
+						QuestDispatchContract.BROADCAST).claimedOwners();
+				} catch (RuntimeException ignored) {
+					// Preserve legacy owners when the typed level-up event cannot be dispatched.
+				}
 			}
 			for (int index = 0; index < questOnLevelUp.size(); index++) {
+				int questId = questOnLevelUp.get(index);
+				if (typedClaimedOwners.contains(questId)) {
+					continue;
+				}
 				QuestHandler questHandler = null;
-				QuestState qs = player.getQuestStateList().getQuestState(questOnLevelUp.get(index));
+				QuestState qs = player.getQuestStateList().getQuestState(questId);
 				if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
-					questHandler = getQuestHandlerByQuestId(questOnLevelUp.get(index));
+					questHandler = getQuestHandlerByQuestId(questId);
 				}
 				if (questHandler != null) {
-					env.setQuestId(questOnLevelUp.get(index));
+					env.setQuestId(questId);
 					questHandler.onLvlUpEvent(env);
 				}
 			}
@@ -405,17 +415,25 @@ public class QuestEngine implements GameEngine {
 	public void onEnterZoneMissionEnd(QuestEnv env) {
 		try {
 			Player player = env.getPlayer();
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null) {
-				int owner = env.getQuestId();
-				if (owner > 0) {
-					productionDispatcher.dispatch(new QuestEvent.ZoneMissionEnd(), player.getObjectId(), owner,
-						QuestDispatchContract.EXCLUSIVE);
+				// Zone-mission completion has no authoritative quest owner: a single
+				// preceding mission may unlock several typed follow-up owners. Broadcast
+				// the fact so each definition can evaluate its own prerequisites.
+				try {
+					typedClaimedOwners = productionDispatcher.dispatch(new QuestEvent.ZoneMissionEnd(),
+						player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimedOwners();
+				} catch (RuntimeException ignored) {
+					// Preserve the legacy mission-end owner when typed dispatch is unavailable.
 				}
 			}
 			int result = questOnEnterZoneMissionEnd.indexOf(env.getQuestId());
 			QuestHandler questHandler = null;
 			if (result != -1) {
-				questHandler = getQuestHandlerByQuestId(questOnEnterZoneMissionEnd.get(result));
+				int questId = questOnEnterZoneMissionEnd.get(result);
+				if (!typedClaimedOwners.contains(questId)) {
+					questHandler = getQuestHandlerByQuestId(questId);
+				}
 			}
 			if (questHandler != null) {
 				env.setQuestId(questOnEnterZoneMissionEnd.get(result));
@@ -436,13 +454,13 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env == null ? null : env.getPlayer();
-			boolean typedDispatchSucceeded = false;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null && questOnDie.stream().anyMatch(typed::owns)) {
 				// 死亡事实由正式 owner 广播消费；同一玩家可同时拥有多个死亡回退任务。
 				// Broadcast the authoritative death fact to every matching typed owner.
 				try {
-					typedDispatchSucceeded = typed.dispatch(new QuestEvent.Die(), player.getObjectId(), 0,
-						QuestDispatchContract.BROADCAST).claimed();
+					typedClaimedOwners = typed.dispatch(new QuestEvent.Die(), player.getObjectId(), 0,
+						QuestDispatchContract.BROADCAST).claimedOwners();
 				} catch (RuntimeException ignored) {
 					// Preserve legacy owners when the death event cannot be dispatched.
 				}
@@ -451,7 +469,7 @@ public class QuestEngine implements GameEngine {
 				int questId = questOnDie.get(index);
 				// Typed owners already received the event and must not fall back to a
 				// legacy handler with the same quest id.
-				if (typedDispatchSucceeded && typed.owns(questId)) {
+				if (typedClaimedOwners.contains(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -475,15 +493,25 @@ public class QuestEngine implements GameEngine {
 		try {
 			Player player = env.getPlayer();
 			QuestProductionDispatcher typed = productionDispatcher;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null) {
 				// 分发到 typed owner：玩家登出（广播全部 log-out 路由）。
 				// Dispatch to typed owners: player logged out (broadcast all log-out routes).
-				typed.dispatch(new QuestEvent.LogOut(), player.getObjectId(), 0, QuestDispatchContract.BROADCAST);
+				try {
+					typedClaimedOwners = typed.dispatch(new QuestEvent.LogOut(), player.getObjectId(), 0,
+						QuestDispatchContract.BROADCAST).claimedOwners();
+				} catch (RuntimeException ignored) {
+					// Preserve legacy logout owners when the typed event cannot be dispatched.
+				}
 			}
 			for (int index = 0; index < questOnLogOut.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questOnLogOut.get(index));
+				int questId = questOnLogOut.get(index);
+				if (typedClaimedOwners.contains(questId)) {
+					continue;
+				}
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 				if (questHandler != null) {
-					env.setQuestId(questOnLogOut.get(index));
+					env.setQuestId(questId);
 					questHandler.onLogOutEvent(env);
 				}
 			}
@@ -504,22 +532,26 @@ public class QuestEngine implements GameEngine {
 		try {
 			Player player = env.getPlayer();
 			QuestProductionDispatcher typed = productionDispatcher;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null) {
 				// 分发到 typed owner：护送 NPC 到达目标（有 owner 则独占，否则广播）。
 				// Dispatch to typed owners: escort NPC reached target (exclusive if owner is set, else broadcast).
 				int owner = env.getQuestId();
-				if (owner > 0) {
-					typed.dispatch(new QuestEvent.NpcReachTarget(), player.getObjectId(), owner,
-						QuestDispatchContract.EXCLUSIVE);
-				} else {
-					typed.dispatch(new QuestEvent.NpcReachTarget(), player.getObjectId(), 0,
-						QuestDispatchContract.BROADCAST);
+				try {
+					typedClaimedOwners = (owner > 0
+						? typed.dispatch(new QuestEvent.NpcReachTarget(), player.getObjectId(), owner,
+							QuestDispatchContract.EXCLUSIVE)
+						: typed.dispatch(new QuestEvent.NpcReachTarget(), player.getObjectId(), 0,
+							QuestDispatchContract.BROADCAST)).claimedOwners();
+				} catch (RuntimeException ignored) {
+					// Preserve legacy escort owners when the typed event cannot be dispatched.
 				}
 			}
 			for (int index = 0; index < reachTarget.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(reachTarget.get(index));
-				if (questHandler != null && env.getQuestId() == reachTarget.get(index)) {
-					env.setQuestId(reachTarget.get(index));
+				int questId = reachTarget.get(index);
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+				if (questHandler != null && env.getQuestId() == questId && !typedClaimedOwners.contains(questId)) {
+					env.setQuestId(questId);
 					questHandler.onNpcReachTargetEvent(env);
 				}
 			}
@@ -538,22 +570,26 @@ public class QuestEngine implements GameEngine {
 		try {
 			Player player = env.getPlayer();
 			QuestProductionDispatcher typed = productionDispatcher;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null) {
 				// 分发到 typed owner：护送 NPC 丢失目标（有 owner 则独占，否则广播）。
 				// Dispatch to typed owners: escort NPC lost target (exclusive if owner is set, else broadcast).
 				int owner = env.getQuestId();
-				if (owner > 0) {
-					typed.dispatch(new QuestEvent.NpcLostTarget(), player.getObjectId(), owner,
-						QuestDispatchContract.EXCLUSIVE);
-				} else {
-					typed.dispatch(new QuestEvent.NpcLostTarget(), player.getObjectId(), 0,
-						QuestDispatchContract.BROADCAST);
+				try {
+					typedClaimedOwners = (owner > 0
+						? typed.dispatch(new QuestEvent.NpcLostTarget(), player.getObjectId(), owner,
+							QuestDispatchContract.EXCLUSIVE)
+						: typed.dispatch(new QuestEvent.NpcLostTarget(), player.getObjectId(), 0,
+							QuestDispatchContract.BROADCAST)).claimedOwners();
+				} catch (RuntimeException ignored) {
+					// Preserve legacy escort owners when the typed event cannot be dispatched.
 				}
 			}
 			for (int index = 0; index < lostTarget.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(lostTarget.get(index));
-				if (questHandler != null && env.getQuestId() == lostTarget.get(index)) {
-					env.setQuestId(lostTarget.get(index));
+				int questId = lostTarget.get(index);
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
+				if (questHandler != null && env.getQuestId() == questId && !typedClaimedOwners.contains(questId)) {
+					env.setQuestId(questId);
 					questHandler.onNpcLostTargetEvent(env);
 				}
 			}
@@ -594,13 +630,23 @@ public class QuestEngine implements GameEngine {
 		try {
 			Player player = env.getPlayer();
 			QuestProductionDispatcher typed = productionDispatcher;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null) {
-				typed.dispatch(new QuestEvent.EnterWorld(), player.getObjectId(), 0, QuestDispatchContract.BROADCAST);
+				try {
+					typedClaimedOwners = typed.dispatch(new QuestEvent.EnterWorld(), player.getObjectId(), 0,
+						QuestDispatchContract.BROADCAST).claimedOwners();
+				} catch (RuntimeException ignored) {
+					// Preserve legacy enter-world owners when the typed event cannot be dispatched.
+				}
 			}
 			for (int index = 0; index < questOnEnterWorld.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(questOnEnterWorld.get(index));
+				int questId = questOnEnterWorld.get(index);
+				if (typedClaimedOwners.contains(questId)) {
+					continue;
+				}
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 				if (questHandler != null) {
-					env.setQuestId(questOnEnterWorld.get(index));
+					env.setQuestId(questId);
 					questHandler.onEnterWorldEvent(env);
 				}
 			}
@@ -728,15 +774,15 @@ public class QuestEngine implements GameEngine {
 		QuestProductionDispatcher typed = productionDispatcher;
 		Player player = env == null ? null : env.getPlayer();
 		List<Integer> questIds = questItems.get(itemId);
-		boolean typedDispatchSucceeded = false;
+		Set<Integer> typedClaimedOwners = Set.of();
 		if (player != null && itemId > 0 && questIds != null && questIds.stream().anyMatch(typed::owns)) {
 			// 物品进入玩家背包后先进入正式 typed owner；同一物品可被多个
 			// 任务监听，因此使用广播契约，不因一个 owner 的状态而截断其他 owner。
 			// Route the obtain fact through typed owners first. The same item may
 			// belong to multiple quests, so use the broadcast contract.
 			try {
-				typedDispatchSucceeded = typed.dispatch(new QuestEvent.GetItem(itemId), player.getObjectId(), 0,
-					QuestDispatchContract.BROADCAST).claimed();
+				typedClaimedOwners = typed.dispatch(new QuestEvent.GetItem(itemId), player.getObjectId(), 0,
+					QuestDispatchContract.BROADCAST).claimedOwners();
 			} catch (RuntimeException ignored) {
 				// Preserve legacy owners when the obtain event cannot be dispatched.
 			}
@@ -746,7 +792,7 @@ public class QuestEngine implements GameEngine {
 				int questId = questIds.get(i);
 				// A typed owner has already been given the authoritative event and
 				// must never fall back into a legacy handler.
-				if (typedDispatchSucceeded && typed.owns(questId)) {
+				if (typedClaimedOwners.contains(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -840,11 +886,11 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
-			boolean typedDispatchSucceeded = false;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null) {
 				try {
-					typedDispatchSucceeded = typed.dispatch(new QuestEvent.EnterZone(zoneName.name()),
-						player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimed();
+					typedClaimedOwners = typed.dispatch(new QuestEvent.EnterZone(zoneName.name()),
+						player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimedOwners();
 				} catch (RuntimeException ignored) {
 					// Preserve unrelated legacy owners when typed fact capture or execution fails.
 				}
@@ -852,7 +898,7 @@ public class QuestEngine implements GameEngine {
 			IntArrayList lists = getOnEnterZoneQuests(zoneName);
 			for (int index = 0; index < lists.size(); index++) {
 				int questId = lists.get(index);
-				if (typedDispatchSucceeded && typed.owns(questId)) {
+				if (typedClaimedOwners.contains(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -881,11 +927,11 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
-			boolean typedDispatchSucceeded = false;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null) {
 				try {
-					typedDispatchSucceeded = typed.dispatch(new QuestEvent.LeaveZone(zoneName.name()),
-						player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimed();
+					typedClaimedOwners = typed.dispatch(new QuestEvent.LeaveZone(zoneName.name()),
+						player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimedOwners();
 				} catch (RuntimeException ignored) {
 					// Preserve unrelated legacy owners when typed fact capture or execution fails.
 				}
@@ -894,7 +940,7 @@ public class QuestEngine implements GameEngine {
 				IntArrayList leaveZoneList = questOnLeaveZone.get(zoneName);
 				for (int i = 0; i < leaveZoneList.size(); i++) {
 					int questId = leaveZoneList.get(i);
-					if (typedDispatchSucceeded && typed.owns(questId)) {
+					if (typedClaimedOwners.contains(questId)) {
 						continue;
 					}
 					QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -924,11 +970,11 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
-			boolean typedDispatchSucceeded = false;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null) {
 				try {
-					typedDispatchSucceeded = typed.dispatch(new QuestEvent.MovieEnd(movieId), player.getObjectId(), 0,
-						QuestDispatchContract.EXCLUSIVE).claimed();
+					typedClaimedOwners = typed.dispatch(new QuestEvent.MovieEnd(movieId), player.getObjectId(), 0,
+						QuestDispatchContract.EXCLUSIVE).claimedOwners();
 				} catch (RuntimeException ignored) {
 					// Preserve unrelated legacy owners when typed movie facts cannot be executed.
 				}
@@ -936,7 +982,7 @@ public class QuestEngine implements GameEngine {
 			IntArrayList onMovieEndQuests = getOnMovieEndQuests(movieId);
 			for (int index = 0; index < onMovieEndQuests.size(); index++) {
 				int questId = onMovieEndQuests.get(index);
-				if (typedDispatchSucceeded && typed.owns(questId)) {
+				if (typedClaimedOwners.contains(questId)) {
 					continue;
 				}
 				env.setQuestId(questId);
@@ -945,7 +991,7 @@ public class QuestEngine implements GameEngine {
 					return true;
 				}
 			}
-			return typedDispatchSucceeded;
+			return !typedClaimedOwners.isEmpty();
 		} catch (Exception ex) {
 			// log.error(I18n.get("log.e20bb13d3b6a", ex));
 		}
@@ -961,13 +1007,17 @@ public class QuestEngine implements GameEngine {
 	public void onQuestTimerEnd(QuestEnv env) {
 		Player player = env.getPlayer();
 		QuestProductionDispatcher typed = productionDispatcher;
+		Set<Integer> typedClaimedOwners = Set.of();
 		if (player != null && env.getQuestId() > 0) {
 			// 分发到 typed owner：任务计时器结束（独占指定 owner）。
 			// Dispatch to typed owners: quest timer ended (exclusive to the named owner).
-			typed.dispatch(new QuestEvent.QuestTimerEnd(), player.getObjectId(), env.getQuestId(),
-				QuestDispatchContract.EXCLUSIVE);
+			typedClaimedOwners = typed.dispatch(new QuestEvent.QuestTimerEnd(), player.getObjectId(), env.getQuestId(),
+				QuestDispatchContract.EXCLUSIVE).claimedOwners();
 		}
 		for (int questId : questOnTimerEnd) {
+			if (typedClaimedOwners.contains(questId)) {
+				continue;
+			}
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 			if (questHandler != null) {
 				env.setQuestId(questId);
@@ -984,11 +1034,15 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void onInvisibleTimerEnd(QuestEnv env) {
 		Player player = env.getPlayer();
+		Set<Integer> typedClaimedOwners = Set.of();
 		if (player != null) {
-			productionDispatcher.dispatch(new QuestEvent.InvisibleTimerEnd(), player.getObjectId(), 0,
-				QuestDispatchContract.BROADCAST);
+			typedClaimedOwners = productionDispatcher.dispatch(new QuestEvent.InvisibleTimerEnd(), player.getObjectId(), 0,
+				QuestDispatchContract.BROADCAST).claimedOwners();
 		}
 		for (int questId : onInvisibleTimerEnd) {
+			if (typedClaimedOwners.contains(questId)) {
+				continue;
+			}
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 			if (questHandler != null) {
 				env.setQuestId(Integer.valueOf(questId));
@@ -1035,19 +1089,19 @@ public class QuestEngine implements GameEngine {
 	public void onFailCraft(QuestEnv env, int itemId) {
 		Player player = env == null ? null : env.getPlayer();
 		QuestProductionDispatcher typed = productionDispatcher;
-		boolean typedDispatchSucceeded = false;
+		Set<Integer> typedClaimedOwners = Set.of();
 		if (player != null && player.getInventory() != null
 				&& player.getInventory().getItemCountByItemId(itemId) == 0) {
 			try {
-				typedDispatchSucceeded = typed.dispatch(new QuestEvent.FailCraft(itemId), player.getObjectId(), 0,
-					QuestDispatchContract.BROADCAST).claimed();
+				typedClaimedOwners = typed.dispatch(new QuestEvent.FailCraft(itemId), player.getObjectId(), 0,
+					QuestDispatchContract.BROADCAST).claimedOwners();
 			} catch (RuntimeException ignored) {
 				// Preserve unrelated legacy owners when the typed craft-fail fact is unavailable.
 			}
 		}
 		if (questOnFailCraft.containsKey(itemId)) {
 			int questId = questOnFailCraft.get(itemId);
-			if (typedDispatchSucceeded && typed.owns(questId)) {
+			if (typedClaimedOwners.contains(questId)) {
 				return;
 			}
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -1069,11 +1123,11 @@ public class QuestEngine implements GameEngine {
 	public void onEquipItem(QuestEnv env, int itemId) {
 		Player player = env == null ? null : env.getPlayer();
 		QuestProductionDispatcher typed = productionDispatcher;
-		boolean typedDispatchSucceeded = false;
+		Set<Integer> typedClaimedOwners = Set.of();
 		if (player != null) {
 			try {
-				typedDispatchSucceeded = typed.dispatch(new QuestEvent.EquipItem(itemId),
-					player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimed();
+				typedClaimedOwners = typed.dispatch(new QuestEvent.EquipItem(itemId),
+					player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimedOwners();
 			} catch (RuntimeException ignored) {
 				// Preserve unrelated legacy owners when the typed equipment fact is unavailable.
 			}
@@ -1081,7 +1135,7 @@ public class QuestEngine implements GameEngine {
 		if (questOnEquipItem.containsKey(itemId)) {
 			Set<Integer> questIds = questOnEquipItem.get(itemId);
 			for (int questId : questIds) {
-				if (typedDispatchSucceeded && typed.owns(questId)) {
+				if (typedClaimedOwners.contains(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -1107,14 +1161,14 @@ public class QuestEngine implements GameEngine {
 			final Object... objects) {
 		QuestProductionDispatcher typed = productionDispatcher;
 		QuestEvent event = new QuestEvent.CanAct(templateId, questActionType.name());
-		boolean typedDispatchSucceeded = typed.dispatch(event, env.getPlayer().getObjectId(), 0,
-			QuestDispatchContract.EXCLUSIVE).claimed();
+		Set<Integer> typedClaimedOwners = typed.dispatch(event, env.getPlayer().getObjectId(), 0,
+			QuestDispatchContract.EXCLUSIVE).claimedOwners();
 		if (questCanAct.containsKey(templateId)) {
 			IntArrayList questIds = questCanAct.get(templateId);
 			boolean legacyHandled = !questIds.forEach(new IntProcedure() {
 					@Override
 					public boolean execute(int value) {
-						if (typed.owns(value)) {
+						if (typedClaimedOwners.contains(value)) {
 							return true;
 						}
 						QuestHandler questHandler = getQuestHandlerByQuestId(value);
@@ -1127,9 +1181,9 @@ public class QuestEngine implements GameEngine {
 						return true;
 					}
 				});
-			return typedDispatchSucceeded || legacyHandled;
+			return !typedClaimedOwners.isEmpty() || legacyHandled;
 		}
-		return typedDispatchSucceeded;
+		return !typedClaimedOwners.isEmpty();
 	}
 
 	/**
@@ -1273,18 +1327,18 @@ public class QuestEngine implements GameEngine {
 		}
 		try {
 			QuestProductionDispatcher typed = productionDispatcher;
-			boolean typedDispatchSucceeded = false;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (questNpc.getOnDistanceEvent().stream().anyMatch(typed::owns)) {
 				try {
-					typedDispatchSucceeded = typed.dispatch(runtimeComposition.proximityEventPort()
+					typedClaimedOwners = typed.dispatch(runtimeComposition.proximityEventPort()
 						.atDistance(env, npc.getNpcId()), env.getPlayer().getObjectId(), 0,
-						QuestDispatchContract.BROADCAST).claimed();
+						QuestDispatchContract.BROADCAST).claimedOwners();
 				} catch (RuntimeException ignored) {
 					// Preserve legacy owners when the proximity fact cannot be captured.
 				}
 			}
 			for (int questId : questNpc.getOnDistanceEvent()) {
-				if (typedDispatchSucceeded && typed.owns(questId)) {
+				if (typedClaimedOwners.contains(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -1311,19 +1365,19 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env == null ? null : env.getPlayer();
-			boolean typedDispatchSucceeded = false;
+			Set<Integer> typedClaimedOwners = Set.of();
 			if (player != null && typed.hasRoutes(new QuestEvent.EnterWindStream(teleportId))) {
 				try {
-					typedDispatchSucceeded = typed.dispatch(runtimeComposition.movementEventPort()
+					typedClaimedOwners = typed.dispatch(runtimeComposition.movementEventPort()
 						.enterWindStream(env, teleportId), player.getObjectId(), 0,
-						QuestDispatchContract.BROADCAST).claimed();
+						QuestDispatchContract.BROADCAST).claimedOwners();
 				} catch (RuntimeException ignored) {
 					// Preserve legacy wind-stream owners when typed fact capture fails.
 				}
 			}
 			for (int index = 0; index < questOnEnterWindStream.size(); index++) {
 				int questId = questOnEnterWindStream.get(index);
-				if (typedDispatchSucceeded && typed.owns(questId)) {
+				if (typedClaimedOwners.contains(questId)) {
 					continue;
 				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -1965,6 +2019,25 @@ public class QuestEngine implements GameEngine {
 	 */
 	public boolean isHaveHandler(int questId) {
 		return productionDispatcher.owns(questId) || questHandlers.containsKey(questId);
+	}
+
+	/** 返回正式 typed catalog 是否为该任务的权威 owner。 Returns whether the live typed catalog is authoritative. */
+	public boolean isProductionOwner(int questId) {
+		return productionDispatcher.owns(questId);
+	}
+
+	/** 返回指定 typed owner 是否声明了放弃过渡。 Returns whether the typed owner declares abandon routing. */
+	public boolean hasProductionAbandonRoute(int questId) {
+		return productionDispatcher.hasRoutes(new QuestEvent.Abandon(), questId);
+	}
+
+	/** 将放弃清理分发给指定 typed owner，禁止回退 legacy。 Dispatches abandon cleanup without legacy fallback. */
+	public boolean onAbandon(Player player, int questId) {
+		if (player == null || questId <= 0 || !productionDispatcher.owns(questId)) {
+			return false;
+		}
+		return productionDispatcher.dispatch(new QuestEvent.Abandon(), player.getObjectId(), questId,
+			QuestDispatchContract.EXCLUSIVE).claimed();
 	}
 
 	/** 从显式 production catalog 加载已通过 owner 审核的 typed 定义。 */

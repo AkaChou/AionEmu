@@ -26,6 +26,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestProductionDispatcherTest {
 	@Test
+	void ownerRouteLookupDoesNotConfuseAnotherTypedOwner() {
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition(1101)), new ArrayList<>(),
+			(connection, playerId, questId, event) -> new QuestSnapshot(playerId, questId, QuestStatus.START, 0,
+				Map.of()));
+		QuestEvent event = new QuestEvent.TalkToNpc(203057, 1009);
+
+		assertTrue(dispatcher.hasRoutes(event));
+		assertTrue(dispatcher.hasRoutes(event, 1101));
+		assertFalse(dispatcher.hasRoutes(event, 1102));
+	}
+
+	@Test
 	void liveOwnerCommitsThroughRouterAndCoordinator() {
 		List<String> calls = new ArrayList<>();
 		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition(1101)), calls,

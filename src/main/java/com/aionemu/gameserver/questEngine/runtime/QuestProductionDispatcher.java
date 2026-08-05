@@ -88,6 +88,15 @@ public final class QuestProductionDispatcher {
 		return !index.routesFor(event).isEmpty();
 	}
 
+	/** Returns whether the named typed owner has a route for the supplied event key. */
+	public boolean hasRoutes(QuestEvent event, int questId) {
+		Objects.requireNonNull(event, "event");
+		if (questId <= 0) {
+			return false;
+		}
+		return !index.routesFor(event, questId).isEmpty();
+	}
+
 	/** 返回排序后的正式 owner ID。 Return sorted production owner IDs. */
 	public List<Integer> owners() {
 		return catalog.all().stream().map(CompiledQuestDefinition::id).sorted().toList();

@@ -6,15 +6,22 @@ import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANK;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
+import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
+import com.aionemu.gameserver.services.item.ItemPacketService;
+import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -50,6 +57,9 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			List<QuestAction.GrantReward> rewards) throws SQLException {
 		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
+		if (rewards.isEmpty()) {
+			return;
+		}
 		if (!snapshot.currenciesCaptured()) {
 			throw new SQLException("currency facts are not captured for player " + snapshot.playerId());
 		}
@@ -74,6 +84,9 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			List<QuestAction.GrantReward> rewards) throws SQLException {
 		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
+		if (rewards.isEmpty()) {
+			return QuestTransactionParticipant.none();
+		}
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
 			throw new SQLException("player is unavailable: " + snapshot.playerId());
@@ -115,10 +128,12 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 		if (kinah == 0 && ap == 0 && gp == 0 && dp == 0) {
 			return QuestTransactionParticipant.none();
 		}
+		validateGrantBalances(player, snapshot.playerId(), kinah, ap, gp, dp);
 		boolean rankChanged = ap > 0 || gp > 0;
 		var inventorySnapshot = kinah > 0 ? player.getInventory().transactionSnapshot() : null;
 		var rankSnapshot = rankChanged ? player.getAbyssRank().transactionSnapshot() : null;
 		var commonSnapshot = dp > 0 ? player.getCommonData().transactionSnapshot() : null;
+		final AbyssRankEnum oldRank = rankChanged ? player.getAbyssRank().getRank() : null;
 		Item rewardKinahItem = null;
 		boolean rewardKinahItemCreated = false;
 		try {
@@ -149,9 +164,16 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			}
 			final Item committedKinahItem = rewardKinahItem;
 			final boolean committedKinahItemCreated = rewardKinahItemCreated;
+			final List<Item> committedDirty = dirty;
+			final boolean committedRankChanged = rankChanged;
+			final var committedCommonSnapshot = commonSnapshot;
+			final int committedAp = ap;
+			final int committedGp = gp;
+			final AbyssRankEnum committedOldRank = oldRank;
+			final AbyssRankEnum committedNewRank = rankChanged ? player.getAbyssRank().getRank() : null;
 			return QuestTransactionParticipant.of(() -> {
-				if (!dirty.isEmpty()) {
-					inventoryDao.markStored(dirty);
+				if (!committedDirty.isEmpty()) {
+					inventoryDao.markStored(committedDirty);
 					player.markDirtyItemContainersStored();
 					if (committedKinahItem != null) {
 						if (committedKinahItemCreated) {
@@ -162,15 +184,28 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 							ItemUpdateType.INC_KINAH_QUEST);
 					}
 				}
-				if (rankChanged) {
+				if (committedRankChanged) {
 					player.getAbyssRank().setPersistentState(PersistentState.UPDATED);
+					if (committedOldRank != committedNewRank) {
+						AbyssPointsService.checkRankChanged(player, committedOldRank, committedNewRank);
+					} else {
+						PacketSendUtility.sendPacket(player, new SM_ABYSS_RANK(player.getAbyssRank()));
+					}
+					if (committedAp > 0) {
+						PacketSendUtility.sendPacket(player,
+							SM_SYSTEM_MESSAGE.STR_MSG_COMBAT_MY_ABYSS_POINT_GAIN(committedAp));
+					}
+					if (committedGp > 0) {
+						PacketSendUtility.sendPacket(player,
+							SM_SYSTEM_MESSAGE.STR_MSG_GLORY_POINT_GAIN(committedGp));
+					}
 				}
-				if (commonSnapshot != null) {
+				if (committedCommonSnapshot != null) {
 					player.getCommonData().publishDp();
 				}
 			}, () -> {
-				if (commonSnapshot != null) {
-					commonSnapshot.restore();
+				if (committedCommonSnapshot != null) {
+					committedCommonSnapshot.restore();
 				}
 				if (rankSnapshot != null) {
 					rankSnapshot.restore();
@@ -195,5 +230,35 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 		return kind == QuestRewardKind.GOLD || kind == QuestRewardKind.KINAH
 			|| kind == QuestRewardKind.AP || kind == QuestRewardKind.GP
 			|| kind == QuestRewardKind.DP;
+	}
+
+	private static void validateGrantBalances(Player player, int playerId, long kinah, int ap, int gp, int dp)
+			throws SQLException {
+		try {
+			if (kinah > 0) {
+				Math.addExact(player.getInventory().getKinah(), kinah);
+			}
+			if (ap > 0) {
+				Math.addExact(player.getAbyssRank().getAp(), ap);
+				Math.addExact(player.getAbyssRank().getDailyAP(), ap);
+				Math.addExact(player.getAbyssRank().getWeeklyAP(), ap);
+			}
+			if (gp > 0) {
+				Math.addExact(player.getAbyssRank().getGp(), gp);
+				Math.addExact(player.getAbyssRank().getDailyGP(), gp);
+				Math.addExact(player.getAbyssRank().getWeeklyGP(), gp);
+			}
+			if (dp > 0) {
+				Math.addExact((long) player.getCommonData().getDp(), dp);
+			}
+		} catch (NullPointerException missingBalance) {
+			throw new SQLException("live currency balance is unavailable for player " + playerId, missingBalance);
+		} catch (ArithmeticException overflow) {
+			throw new SQLException("live currency balance would overflow for player " + playerId, overflow);
+		}
+	}
+
+	private static QuestRewardKind canonicalCurrencyKind(QuestRewardKind kind) {
+		return kind == QuestRewardKind.KINAH ? QuestRewardKind.GOLD : kind;
 	}
 }

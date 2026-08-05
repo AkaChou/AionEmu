@@ -30,7 +30,7 @@ class QuestMetadataFieldMappingTest {
 		}
 		assertEquals("quests", document.getDocumentElement().getTagName());
 		NodeList quests = document.getDocumentElement().getElementsByTagName("quest");
-		assertEquals(6429, quests.getLength());
+		assertEquals(6430, quests.getLength());
 
 		Set<String> attributes = new HashSet<>();
 		Set<String> elements = new HashSet<>();

@@ -113,6 +113,14 @@ public final class QuestEventRouter {
 		public boolean claimed() {
 			return owners.stream().anyMatch(owner -> QuestEventRouter.isConclusive(owner.result()));
 		}
+
+		/** Returns only the owners whose own route conclusively claimed the event. */
+		public Set<Integer> claimedOwners() {
+			return Set.copyOf(owners.stream()
+				.filter(owner -> QuestEventRouter.isConclusive(owner.result()))
+				.map(OwnerResult::questId)
+				.toList());
+		}
 	}
 
 	public record OwnerResult(int questId, QuestRouteResult result, RuntimeException failure) {

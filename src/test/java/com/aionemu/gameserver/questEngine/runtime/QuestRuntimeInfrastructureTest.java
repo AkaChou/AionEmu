@@ -30,6 +30,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestSt
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestRuntimeInfrastructureTest {
@@ -162,6 +163,20 @@ class QuestRuntimeInfrastructureTest {
 		assertEquals(QuestDispatchContract.BROADCAST, audits.get(0).contract());
 		assertEquals(1, metrics.snapshot().outcomeCount(QuestRouteResult.FAILED));
 		assertEquals(1, metrics.snapshot().outcomeCount(QuestRouteResult.HANDLED));
+	}
+
+	@Test
+	void claimedOwnersAreTrackedIndependently() {
+		QuestEventRouter router = new QuestEventRouter(new QuestEventIndex(
+			new ImmutableQuestCatalog(List.of(definition(1001), definition(1002)))),
+			ignored -> { }, new QuestRuntimeMetricsCollector());
+
+		QuestEventRouter.DispatchResult result = router.dispatch(talkToNpc(700001),
+			QuestDispatchContract.BROADCAST, route -> route.questId() == 1001
+				? QuestRouteResult.UNKNOWN : QuestRouteResult.HANDLED);
+
+		assertEquals(Set.of(1002), result.claimedOwners());
+		assertFalse(result.claimedOwners().contains(1001));
 	}
 
 	@Test
