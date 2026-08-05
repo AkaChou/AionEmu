@@ -128,6 +128,102 @@
         <close-dialog/>
       </after-commit>
     </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <can-act template-id="700624" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <can-act template-id="700625" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <can-act template-id="700626" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <can-act template-id="700627" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="v1" target="v1" priority="0">
+      <event>
+        <talk-to-npc npc-id="700624" dialog="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206827" count="1"/>
+      </conditions>
+    </transition>
+    <transition source="v1" target="v1" priority="1">
+      <event>
+        <talk-to-npc npc-id="700624" dialog="USE_OBJECT"/>
+      </event>
+      <actions>
+        <give-item item-id="182206827" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1" priority="0">
+      <event>
+        <talk-to-npc npc-id="700625" dialog="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206828" count="1"/>
+      </conditions>
+    </transition>
+    <transition source="v1" target="v1" priority="1">
+      <event>
+        <talk-to-npc npc-id="700625" dialog="USE_OBJECT"/>
+      </event>
+      <actions>
+        <give-item item-id="182206828" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1" priority="0">
+      <event>
+        <talk-to-npc npc-id="700626" dialog="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206829" count="1"/>
+      </conditions>
+    </transition>
+    <transition source="v1" target="v1" priority="1">
+      <event>
+        <talk-to-npc npc-id="700626" dialog="USE_OBJECT"/>
+      </event>
+      <actions>
+        <give-item item-id="182206829" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1" priority="0">
+      <event>
+        <talk-to-npc npc-id="700627" dialog="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182206830" count="1"/>
+      </conditions>
+    </transition>
+    <transition source="v1" target="v1" priority="1">
+      <event>
+        <talk-to-npc npc-id="700627" dialog="USE_OBJECT"/>
+      </event>
+      <actions>
+        <give-item item-id="182206830" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="v1" target="reward" priority="0">
       <event>
         <talk-to-npc npc-id="799017" dialog-id="39"/>
