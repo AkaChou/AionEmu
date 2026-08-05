@@ -17,6 +17,11 @@ public interface QuestAiPort {
 		return false;
 	}
 
+	/** 让当前权威交互 NPC 跟随玩家到当前世界中的指定 NPC。 */
+	default boolean startFollowCurrentTargetToNpc(QuestSnapshot snapshot, QuestMutationPlan plan, int npcId) {
+		return false;
+	}
+
 	/** 停止 slot 的权威 NPC 跟随玩家 (AIEventType.STOP_FOLLOW_ME)。 */
 	boolean stopFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot);
 

@@ -203,6 +203,11 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 				action, snapshot);
 			return;
 		}
+		if (action instanceof AfterCommitAction.StartFollowCurrentTargetToNpc follow) {
+			requireAiPort();
+			requireSuccess(aiPort.startFollowCurrentTargetToNpc(snapshot, plan, follow.npcId()), action, snapshot);
+			return;
+		}
 		if (action instanceof AfterCommitAction.StopFollow stop) {
 			requireAiPort();
 			requireSuccess(aiPort.stopFollow(snapshot, plan, stop.slot()), action, snapshot);

@@ -9,7 +9,8 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.TeleportPlayer, AfterCommitAction.PlayMovie,
 		AfterCommitAction.SpawnNpc, AfterCommitAction.DespawnNpc, AfterCommitAction.StartFollow,
 		AfterCommitAction.StopFollow, AfterCommitAction.AttackTarget, AfterCommitAction.StartWalking,
-		AfterCommitAction.StartFollowCurrentTargetToPoint, AfterCommitAction.BroadcastNpcEmotion,
+		AfterCommitAction.StartFollowCurrentTargetToPoint, AfterCommitAction.StartFollowCurrentTargetToNpc,
+		AfterCommitAction.BroadcastNpcEmotion,
 		AfterCommitAction.WatchFollowZone,
 		AfterCommitAction.StartQuestTimer, AfterCommitAction.StartInvisibleTimer,
 		AfterCommitAction.CancelQuestTimer, AfterCommitAction.SyncQuestState,
@@ -151,6 +152,15 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		public StartFollowCurrentTargetToPoint {
 			if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
 				throw new IllegalArgumentException("follow destination coordinates must be finite");
+			}
+		}
+	}
+
+	/** 让本次交互的地图常驻 NPC 跟随玩家到当前世界中的指定 NPC。 */
+	record StartFollowCurrentTargetToNpc(int npcId) implements AfterCommitAction {
+		public StartFollowCurrentTargetToNpc {
+			if (npcId <= 0) {
+				throw new IllegalArgumentException("npcId must be positive");
 			}
 		}
 	}

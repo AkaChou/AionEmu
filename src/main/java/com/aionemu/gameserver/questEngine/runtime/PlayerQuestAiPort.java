@@ -56,6 +56,16 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 	}
 
 	@FunctionalInterface
+	public interface TargetNpcFollowCall {
+		Future<?> start(Player player, Npc npc, Npc target, int questId);
+	}
+
+	@FunctionalInterface
+	public interface TargetNpcResolver {
+		Npc find(Player player, int templateId);
+	}
+
+	@FunctionalInterface
 	public interface FollowTaskRegistrar {
 		void register(Player player, Future<?> task);
 	}
@@ -74,6 +84,8 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 	private final TargetResolver targets;
 	private final FollowCall follow;
 	private final CoordinateFollowCall coordinateFollow;
+	private TargetNpcFollowCall targetNpcFollow;
+	private TargetNpcResolver targetNpcResolver;
 	private final FollowTaskRegistrar taskRegistrar;
 	private final NpcInfoCall npcInfo;
 
@@ -143,6 +155,11 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		this.targets = Objects.requireNonNull(targets, "targets");
 		this.follow = Objects.requireNonNull(follow, "follow");
 		this.coordinateFollow = Objects.requireNonNull(coordinateFollow, "coordinateFollow");
+		this.targetNpcFollow = (player, npc, target, questId) -> QuestTasks.newFollowingToTargetCheckTask(
+			new QuestEnv(null, player, questId, 0), npc, target);
+		this.targetNpcResolver = (player, templateId) -> player.getPosition() == null
+			|| player.getPosition().getWorldMapInstance() == null ? null
+			: player.getPosition().getWorldMapInstance().getNpc(templateId);
 		this.taskRegistrar = Objects.requireNonNull(taskRegistrar, "taskRegistrar");
 		this.npcInfo = Objects.requireNonNull(npcInfo, "npcInfo");
 	}
@@ -172,6 +189,45 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 			return false;
 		}
 		Future<?> task = coordinateFollow.start(player, npc, snapshot.questId(), x, y, z);
+		if (task == null) {
+			return false;
+		}
+		taskRegistrar.register(player, task);
+		return true;
+	}
+
+	PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry, AiCall ai,
+		TargetResolver targets, FollowCall follow, CoordinateFollowCall coordinateFollow,
+		FollowTaskRegistrar taskRegistrar, NpcInfoCall npcInfo, TargetNpcResolver targetNpcResolver,
+		TargetNpcFollowCall targetNpcFollow) {
+		this(players, registry, ai, targets, follow, coordinateFollow, taskRegistrar, npcInfo);
+		this.targetNpcResolver = Objects.requireNonNull(targetNpcResolver, "targetNpcResolver");
+		this.targetNpcFollow = Objects.requireNonNull(targetNpcFollow, "targetNpcFollow");
+	}
+
+	@Override
+	public boolean startFollowCurrentTargetToNpc(QuestSnapshot snapshot, QuestMutationPlan plan, int npcId) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		if (npcId <= 0) {
+			throw new IllegalArgumentException("npcId must be positive");
+		}
+		Player player = players.find(snapshot.playerId());
+		if (player == null || snapshot.interactionObjectId() == 0) {
+			return false;
+		}
+		VisibleObject visible = targets.find(snapshot.interactionObjectId());
+		if (!(visible instanceof Npc npc)) {
+			return false;
+		}
+		Npc target = targetNpcResolver.find(player, npcId);
+		if (target == null) {
+			return false;
+		}
+		npcInfo.send(player, npc);
+		if (!ai.apply(npc, player, null, Command.START_FOLLOW, null)) {
+			return false;
+		}
+		Future<?> task = targetNpcFollow.start(player, npc, target, snapshot.questId());
 		if (task == null) {
 			return false;
 		}

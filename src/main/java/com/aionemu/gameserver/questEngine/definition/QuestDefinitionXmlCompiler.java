@@ -624,6 +624,8 @@ public final class QuestDefinitionXmlCompiler {
 			case "start-follow" -> new AfterCommitAction.StartFollow(attribute(action, "slot"));
 			case "start-follow-current-target" -> new AfterCommitAction.StartFollowCurrentTargetToPoint(
 				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"));
+			case "start-follow-current-target-npc" -> new AfterCommitAction.StartFollowCurrentTargetToNpc(
+				integer(action, "npc-id"));
 			case "stop-follow" -> new AfterCommitAction.StopFollow(attribute(action, "slot"));
 			case "attack-target" -> new AfterCommitAction.AttackTarget(attribute(action, "slot"));
 			case "start-walking" -> new AfterCommitAction.StartWalking(attribute(action, "slot"));

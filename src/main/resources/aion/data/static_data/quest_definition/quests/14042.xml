@@ -95,7 +95,7 @@
       <event><talk-to-npc npc-id="253623" dialog-id="10003"/></event>
       <conditions><variable-is field="var0" value="3"/></conditions>
       <actions><set-variable field="var0" value="4"/></actions>
-      <after-commit><start-follow-current-target x="802.3017" y="1074.598" z="1570.7717"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <after-commit><start-follow-current-target-npc npc-id="253635"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
     </transition>
 
     <!-- 跟随结算:到达目标坐标 (监狱搜救队 253635 处) 进入奖励并播放电影 270;丢失目标/登出回退到 3。 -->

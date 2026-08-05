@@ -132,6 +132,7 @@
     <xs:element name="despawn-npc"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="start-follow"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="start-follow-current-target"><xs:complexType><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/></xs:complexType></xs:element>
+    <xs:element name="start-follow-current-target-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="stop-follow"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="attack-target"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="start-walking"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>

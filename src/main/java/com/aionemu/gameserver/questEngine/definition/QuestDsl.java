@@ -449,6 +449,10 @@ public final class QuestDsl {
 		return new AfterCommitAction.StartFollowCurrentTargetToPoint(x, y, z);
 	}
 
+	public static AfterCommitAction startFollowCurrentTargetToNpc(int npcId) {
+		return new AfterCommitAction.StartFollowCurrentTargetToNpc(npcId);
+	}
+
 	public static AfterCommitAction stopFollow(String slot) {
 		return new AfterCommitAction.StopFollow(slot);
 	}
