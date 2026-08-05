@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14114" version="1">
-  <metadata name="Revolution Intervention" display-name-id="1129967" min-level="20" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Revolution Intervention" display-name-id="1129967" min-level="20" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -13,6 +13,9 @@
       <reward kind="ITEM" id="188053058" amount="2"/>
       <reward kind="ITEM" id="188050790" amount="4"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="14111"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
