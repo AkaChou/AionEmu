@@ -291,8 +291,8 @@ public class QuestEngine implements GameEngine {
 			boolean typedDispatchSucceeded = false;
 			if (env.getPlayer() != null && questIds.stream().anyMatch(typed::owns)) {
 				try {
-					typed.dispatch(event, env.getPlayer().getObjectId(), 0, QuestDispatchContract.BROADCAST);
-					typedDispatchSucceeded = true;
+					typedDispatchSucceeded = typed.dispatch(event, env.getPlayer().getObjectId(), 0,
+						QuestDispatchContract.BROADCAST).claimed();
 				} catch (RuntimeException ignored) {
 					// Preserve legacy owners when the typed kill event cannot be dispatched.
 				}
@@ -688,9 +688,8 @@ public class QuestEngine implements GameEngine {
 			// Route the obtain fact through typed owners first. The same item may
 			// belong to multiple quests, so use the broadcast contract.
 			try {
-				typed.dispatch(new QuestEvent.GetItem(itemId), player.getObjectId(), 0,
-					QuestDispatchContract.BROADCAST);
-				typedDispatchSucceeded = true;
+				typedDispatchSucceeded = typed.dispatch(new QuestEvent.GetItem(itemId), player.getObjectId(), 0,
+					QuestDispatchContract.BROADCAST).claimed();
 			} catch (RuntimeException ignored) {
 				// Preserve legacy owners when the obtain event cannot be dispatched.
 			}
@@ -1167,9 +1166,9 @@ public class QuestEngine implements GameEngine {
 			boolean typedDispatchSucceeded = false;
 			if (questNpc.getOnDistanceEvent().stream().anyMatch(typed::owns)) {
 				try {
-					typed.dispatch(runtimeComposition.proximityEventPort().atDistance(env, npc.getNpcId()),
-						env.getPlayer().getObjectId(), 0, QuestDispatchContract.BROADCAST);
-					typedDispatchSucceeded = true;
+					typedDispatchSucceeded = typed.dispatch(runtimeComposition.proximityEventPort()
+						.atDistance(env, npc.getNpcId()), env.getPlayer().getObjectId(), 0,
+						QuestDispatchContract.BROADCAST).claimed();
 				} catch (RuntimeException ignored) {
 					// Preserve legacy owners when the proximity fact cannot be captured.
 				}
@@ -1205,9 +1204,9 @@ public class QuestEngine implements GameEngine {
 			boolean typedDispatchSucceeded = false;
 			if (player != null && typed.hasRoutes(new QuestEvent.EnterWindStream(teleportId))) {
 				try {
-					typed.dispatch(runtimeComposition.movementEventPort().enterWindStream(env, teleportId),
-						player.getObjectId(), 0, QuestDispatchContract.BROADCAST);
-					typedDispatchSucceeded = true;
+					typedDispatchSucceeded = typed.dispatch(runtimeComposition.movementEventPort()
+						.enterWindStream(env, teleportId), player.getObjectId(), 0,
+						QuestDispatchContract.BROADCAST).claimed();
 				} catch (RuntimeException ignored) {
 					// Preserve legacy wind-stream owners when typed fact capture fails.
 				}
@@ -1955,6 +1954,8 @@ public class QuestEngine implements GameEngine {
 					registerGetingItem(get.itemId(), definition.id());
 				} else if (transition.event() instanceof QuestEvent.AtDistance atDistance) {
 					registerQuestNpc(atDistance.npcId()).addOnAtDistanceEvent(definition.id());
+				} else if (transition.event() instanceof QuestEvent.Die) {
+					registerOnDie(definition.id());
 				} else if (transition.event() instanceof QuestEvent.LogOut) {
 					registerOnLogOut(definition.id());
 				} else if (transition.event() instanceof QuestEvent.NpcReachTarget) {
