@@ -67,8 +67,8 @@ evidence、源码 locator、迁移状态、比对覆盖率和 blocker 等过程�
 
 ## 当前落地
 
-- 正式定义位于 `src/main/resources/aion/data/static_data/quest_definition/quests/`，生产启动时直接扫描该目录下的 `<questId>.xml`。
-- 目录中的每个 XML 都是正式 owner；加载器按数字文件名排序、编译并在重复 owner、文件名/根 ID 不一致或资源缺失时 fail-closed。
+- 正式定义位于 `src/main/resources/aion/data/static_data/quest_definition/quests/`；生产启动通过 `quest_definition_catalog.xml` 装载已审核并完成 owner 接管的 typed 定义。
+- `quests/` 目录扫描器只用于全量编译和一致性校验；目录中仍可能有尚未完成接管的候选 XML，不能直接把整个目录当生产 owner。生产 catalog 条目仍按数字 ID 唯一、文件名/根 ID 一致和资源存在性 fail-closed。
 - 1101、1102 已从 `quest_script_data/poeta.xml` 删除，不存在同 owner fallback。
 - 当前生产入口已接通对话、击杀、升级、进入世界、物品使用、进入区域、影片结束、隐形定时器结束、
   Zone Mission 结束和对象交互资格等 typed 事件；其他事件需先接入通用中央入口再迁移对应 owner。
