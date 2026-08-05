@@ -185,7 +185,10 @@ public final class QuestConditionEvaluator {
 	}
 
 	private static boolean worldIs(QuestSnapshot snapshot, QuestCondition.WorldIs condition) {
-		return (snapshot.worldId() == condition.worldId()) == condition.expected();
+		// worldId == 0 means the player's position was not captured; do not turn
+		// that unknown fact into a successful "not in world" condition.
+		return snapshot.worldId() > 0
+			&& (snapshot.worldId() == condition.worldId()) == condition.expected();
 	}
 
 	private static boolean worldNpcIs(QuestSnapshot snapshot, QuestCondition.WorldNpcIs condition) {
