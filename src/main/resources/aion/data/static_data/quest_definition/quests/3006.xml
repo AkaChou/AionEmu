@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="3001" version="1">
-  <metadata name="Unearthing The Truth" display-name-id="1113000" min-level="20" max-level="2147483647" category="QUEST" cannot-share="true">
+<quest-definition id="3006" version="1">
+  <metadata name="The Shugo Fugitive" display-name-id="1113005" min-level="21" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
+    <prerequisites>
+      <quest id="3002"/>
+    </prerequisites>
+    <work-items>
+      <item id="182208003" count="1"/>
+    </work-items>
     <rewards>
-      <reward kind="GOLD" id="0" amount="320"/>
-      <reward kind="EXP" id="0" amount="50008"/>
-      <reward kind="ITEM" id="188051196" amount="1"/>
+      <reward kind="GOLD" id="0" amount="10040"/>
+      <reward kind="EXP" id="0" amount="80494"/>
       <reward kind="ITEM" id="186000002" amount="1"/>
     </rewards>
   </metadata>
@@ -29,24 +34,17 @@
         </vars>
       </project>
     </node>
-    <node label="v1">
+    <node label="step1">
       <project status="START">
         <vars>
           <var name="var0" value="1"/>
         </vars>
       </project>
     </node>
-    <node label="v2">
+    <node label="step2">
       <project status="START">
         <vars>
           <var name="var0" value="2"/>
-        </vars>
-      </project>
-    </node>
-    <node label="v3">
-      <project status="START">
-        <vars>
-          <var name="var0" value="3"/>
         </vars>
       </project>
     </node>
@@ -96,7 +94,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="798133" dialog-id="31"/>
+        <talk-to-npc npc-id="798146" dialog-id="31"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -105,18 +103,18 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="started" target="v1">
+    <transition source="started" target="step1">
       <event>
-        <talk-to-npc npc-id="798133" dialog-id="10000"/>
+        <talk-to-npc npc-id="798146" dialog-id="10000"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="v1" target="v1">
+    <transition source="step1" target="step1">
       <event>
-        <talk-to-npc npc-id="798136" dialog-id="31"/>
+        <talk-to-npc npc-id="700339" dialog="USE_OBJECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -125,52 +123,42 @@
         <show-quest-dialog dialog-id="1693"/>
       </after-commit>
     </transition>
-    <transition source="v1" target="v2">
+    <transition source="step1" target="step1">
       <event>
-        <talk-to-npc npc-id="798136" dialog-id="10001"/>
+        <talk-to-npc npc-id="700339" dialog-id="10001"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <play-movie movie-id="361"/>
+      </after-commit>
+    </transition>
+    <transition source="step1" target="step2">
+      <event>
+        <movie-end movie-id="361"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="v2" target="v2">
+    <transition source="step2" target="step2">
       <event>
-        <talk-to-npc npc-id="798139" dialog-id="31"/>
+        <talk-to-npc npc-id="798132" dialog-id="31"/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
-      </after-commit>
-    </transition>
-    <transition source="v2" target="v3">
-      <event>
-        <talk-to-npc npc-id="798139" dialog-id="10002"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="v3" target="v3">
-      <event>
-        <talk-to-npc npc-id="798132" dialog-id="31"/>
-      </event>
-      <conditions>
-        <variable-is field="var0" value="3"/>
-      </conditions>
-      <after-commit>
         <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
-    <transition source="v3" target="reward">
+    <transition source="step2" target="reward">
       <event>
         <talk-to-npc npc-id="798132" dialog-id="1009"/>
       </event>
       <conditions>
-        <variable-is field="var0" value="3"/>
+        <variable-is field="var0" value="2"/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -190,9 +178,8 @@
         <talk-to-npc npc-id="798132" dialog-ids="8..23"/>
       </event>
       <actions>
-        <grant-reward kind="GOLD" id="0" amount="320"/>
-        <grant-reward kind="EXP" id="0" amount="50008"/>
-        <grant-reward kind="ITEM" id="188051196" amount="1"/>
+        <grant-reward kind="GOLD" id="0" amount="10040"/>
+        <grant-reward kind="EXP" id="0" amount="80494"/>
         <grant-reward kind="ITEM" id="186000002" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
