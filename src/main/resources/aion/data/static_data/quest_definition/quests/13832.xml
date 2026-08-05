@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="13832" version="1">
+  <metadata name="StiGreat" display-name-id="1801121" min-level="45" max-level="2147483647" category="PRIMARY" cannot-share="true" use-class-reward="1">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <work-items>
+      <item id="182216120" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="555019"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 45 级升级自动接取，并发放试炼工作物品 182216120。 -->
+    <!-- Level-up auto-accept at 45, granting the trial work item 182216120. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="182216120" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 任务进行中且已持有工作物品时，进入圣天界 (110010000) 短路，不再补发。 -->
+    <!-- Short-circuit when the work item is already held on entering Sanctum (110010000). -->
+    <transition source="started" target="started" priority="0">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="110010000"/>
+        <has-item item-id="182216120" count="1"/>
+      </conditions>
+    </transition>
+    <!-- 任务进行中且缺少工作物品时，进入圣天界 (110010000) 补发 1 个（物品丢失保护）。 -->
+    <!-- Re-entering Sanctum (110010000) without the work item grants one as loss protection. -->
+    <transition source="started" target="started" priority="1">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="110010000"/>
+      </conditions>
+      <actions>
+        <give-item item-id="182216120" count="1"/>
+      </actions>
+    </transition>
+    <!-- 使用工作物品 182216120 完成试炼，进入领奖状态。 -->
+    <!-- Using the work item completes the trial and enters reward. -->
+    <transition source="started" target="reward">
+      <event>
+        <use-item item-id="182216120"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：与 Miriya (203711) 对话打开任务结束窗口。 -->
+    <!-- Reward: talking to Miriya (203711) opens the quest-end window. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：打开奖励选择窗口。 -->
+    <!-- Reward: opens the reward selection window. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（GLADIATOR / 战士）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (GLADIATOR). -->
+    <transition source="reward" target="complete" priority="0">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001105" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（TEMPLAR / 守护星）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (TEMPLAR). -->
+    <transition source="reward" target="complete" priority="1">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="TEMPLAR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001123" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（RANGER / 弓星）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (RANGER). -->
+    <transition source="reward" target="complete" priority="2">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="RANGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001154" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（ASSASSIN / 杀星）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (ASSASSIN). -->
+    <transition source="reward" target="complete" priority="3">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="ASSASSIN"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001136" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（SORCERER / 魔道星）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (SORCERER). -->
+    <transition source="reward" target="complete" priority="4">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SORCERER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001177" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（SPIRIT_MASTER / 精灵星）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (SPIRIT_MASTER). -->
+    <transition source="reward" target="complete" priority="5">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SPIRIT_MASTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001196" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（CLERIC / 治愈星）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (CLERIC). -->
+    <transition source="reward" target="complete" priority="6">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CLERIC"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001230" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（CHANTER / 护法星）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (CHANTER). -->
+    <transition source="reward" target="complete" priority="7">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CHANTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001216" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（GUNSLINGER / 枪炮星）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (GUNSLINGER). -->
+    <transition source="reward" target="complete" priority="8">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GUNSLINGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001249" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（SONGWEAVER / 吟游星）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (SONGWEAVER). -->
+    <transition source="reward" target="complete" priority="9">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SONGWEAVER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001284" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：按职业发放可选择的职业奖励并完成（AETHERTECH / 机甲星）。 -->
+    <!-- Reward: grants the class-selected reward per class and completes (AETHERTECH). -->
+    <transition source="reward" target="complete" priority="10">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="AETHERTECH"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001264" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="555019" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216120" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

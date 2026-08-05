@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="11036" version="1">
-  <metadata name="Uncommon Recipe" display-name-id="1125036" min-level="50" max-level="2147483647" category="QUEST" cannot-share="true">
+<quest-definition id="11465" version="1">
+  <metadata name="[Coin] Mysterious Seed" display-name-id="1125526" min-level="51" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
     <work-items>
-      <item id="182206731" count="1"/>
+      <item id="182209523" count="1"/>
     </work-items>
     <rewards>
-      <reward kind="EXP" id="0" amount="5980975"/>
-      <reward kind="ITEM" id="186000018" amount="6"/>
+      <reward kind="EXP" id="0" amount="5233353"/>
+      <reward kind="ITEM" id="186000018" amount="5"/>
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted">
@@ -46,9 +46,10 @@
     </node>
   </nodes>
   <transitions>
+    <!-- 接取:使用神秘种子 182209523 打开接取对话框(dialog 4)。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <use-item item-id="182206731"/>
+        <use-item item-id="182209523"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="4"/>
@@ -58,12 +59,8 @@
       <event>
         <quest-dialog dialog-id="1002"/>
       </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
@@ -74,79 +71,52 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="700610" dialog="USE_OBJECT"/>
-      </event>
-      <actions>
-        <give-item item-id="182206731" count="1"/>
-      </actions>
-      <after-commit>
-        <delete-interaction-npc/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <can-act template-id="700610" action-type="ACTION_ITEM_USE"/>
-      </event>
-    </transition>
+
+    <!-- 进行中:Taloc 树 (279000) 使用对象交互。 -->
     <transition source="started" target="started">
       <event>
-        <use-item item-id="182206731"/>
-      </event>
-      <actions>
-        <block-default-item-use/>
-      </actions>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="798955" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <talk-to-npc npc-id="798955" dialog-id="10000"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="798956" dialog="USE_OBJECT"/>
+        <talk-to-npc npc-id="279000" dialog-id="-1"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
+    <transition source="started" target="reward">
+      <event>
+        <talk-to-npc npc-id="279000" dialog-id="1009"/>
+      </event>
+      <actions>
+        <remove-item item-id="182209523" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- 奖励:Taloc 树 (279000) 领取。 -->
     <transition source="reward" target="reward">
       <event>
-        <use-item item-id="182206731"/>
+        <talk-to-npc npc-id="279000" dialog-id="-1"/>
       </event>
-      <actions>
-        <block-default-item-use/>
-      </actions>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
     </transition>
-    <transition source="complete" target="complete">
+    <transition source="reward" target="reward">
       <event>
-        <use-item item-id="182206731"/>
+        <talk-to-npc npc-id="279000" dialog-id="1009"/>
       </event>
-      <actions>
-        <block-default-item-use/>
-      </actions>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="798956" dialog-ids="8..23"/>
+        <talk-to-npc npc-id="279000" dialog-ids="8..23"/>
       </event>
       <actions>
-        <remove-item item-id="182206731" count="ALL"/>
-        <grant-reward kind="EXP" id="0" amount="5980975"/>
-        <grant-reward kind="ITEM" id="186000018" amount="6"/>
+        <grant-reward kind="EXP" id="0" amount="5233353" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000018" amount="5"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

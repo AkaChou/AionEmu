@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="28828" version="1">
+  <!-- 房屋任务：玩家与自宅管家对话接取；house.getButler() 防御条件由自宅实例保证（与 28829/18830 一致）。
+       Housing quest: player talks to own house butler; the house.getButler() guard is implied by the private-house instance (same as 28829/18830). -->
+  <metadata name="[Housing] The Many Facets Of Friendship" display-name-id="1136849" min-level="21" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <prerequisites>
+      <quest id="28827"/>
+    </prerequisites>
+    <work-items>
+      <item id="182213205" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="12951"/>
+      <reward kind="ITEM" id="182213218" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 管家 810022：接取对话。 Butler 810022: accept dialog. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="810022" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="810022" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="182213205" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 管家 810023：接取对话。 Butler 810023: accept dialog. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="810023" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="810023" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="182213205" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 管家 810024：接取对话。 Butler 810024: accept dialog. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="810024" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="810024" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="182213205" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 管家 810025：接取对话。 Butler 810025: accept dialog. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="810025" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="810025" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="182213205" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 管家 810026：接取对话。 Butler 810026: accept dialog. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="810026" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="810026" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="182213205" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 使用任务物品 182213205 进入领奖状态（var0=1, REWARD）。 Use quest item 182213205 to enter reward state (var0=1, REWARD). -->
+    <transition source="started" target="reward">
+      <event>
+        <use-item item-id="182213205"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 管家 810022：领奖对话；USE_OBJECT 展示提示，1009/23 移除物品并完成任务。 Butler 810022: reward dialog; USE_OBJECT shows hint, 1009/23 removes item and completes. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="810022" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="810022" dialog-ids="23 1009"/>
+      </event>
+      <actions>
+        <remove-item item-id="182213205" count="1"/>
+        <grant-reward kind="EXP" id="0" amount="12951" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="182213218" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 管家 810023：领奖对话。 Butler 810023: reward dialog. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="810023" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="810023" dialog-ids="23 1009"/>
+      </event>
+      <actions>
+        <remove-item item-id="182213205" count="1"/>
+        <grant-reward kind="EXP" id="0" amount="12951" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="182213218" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 管家 810024：领奖对话。 Butler 810024: reward dialog. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="810024" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="810024" dialog-ids="23 1009"/>
+      </event>
+      <actions>
+        <remove-item item-id="182213205" count="1"/>
+        <grant-reward kind="EXP" id="0" amount="12951" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="182213218" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 管家 810025：领奖对话。 Butler 810025: reward dialog. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="810025" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="810025" dialog-ids="23 1009"/>
+      </event>
+      <actions>
+        <remove-item item-id="182213205" count="1"/>
+        <grant-reward kind="EXP" id="0" amount="12951" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="182213218" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 管家 810026：领奖对话。 Butler 810026: reward dialog. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="810026" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="810026" dialog-ids="23 1009"/>
+      </event>
+      <actions>
+        <remove-item item-id="182213205" count="1"/>
+        <grant-reward kind="EXP" id="0" amount="12951" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="182213218" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

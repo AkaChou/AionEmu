@@ -13,6 +13,9 @@
   <xs:simpleType name="timer-delivery"><xs:restriction base="xs:string"><xs:enumeration value="AT_MOST_ONCE"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="npc-emotion"><xs:restriction base="xs:string"><xs:enumeration value="START_EMOTE2"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="player-emotion"><xs:restriction base="xs:string"><xs:enumeration value="STAND"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="quest-system-message"><xs:restriction base="xs:string"><xs:enumeration value="QUEST_FAILED"/><xs:enumeration value="WAREHOUSE_FULL_INVENTORY"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="quest-system-message-target"><xs:restriction base="xs:string"><xs:enumeration value="NONE"/><xs:enumeration value="PLAYER"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="quest-gender"><xs:restriction base="xs:string"><xs:enumeration value="MALE"/><xs:enumeration value="FEMALE"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="ascension-state"><xs:restriction base="xs:int"><xs:enumeration value="0"/><xs:enumeration value="1"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="recipe-ownership"><xs:restriction base="xs:string"><xs:enumeration value="QUEST_OWNED"/><xs:enumeration value="PERMANENT"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="reward-amount-mode"><xs:restriction base="xs:string"><xs:enumeration value="EXACT"/><xs:enumeration value="QUEST_BASE"/></xs:restriction></xs:simpleType>
@@ -73,6 +76,9 @@
     <xs:element name="pvp-recipient-in-zone"><xs:complexType><xs:attribute name="zone" type="xs:string" use="required"/></xs:complexType></xs:element>
 	<xs:element name="start-eligible" type="empty-type"/>
     <xs:element name="player-class-is"><xs:complexType><xs:attribute name="starting-class" type="xs:string" use="required"/></xs:complexType></xs:element>
+    <xs:element name="advanced-class-is"><xs:complexType><xs:attribute name="class" type="xs:string" use="required"/></xs:complexType></xs:element>
+    <xs:element name="gender-is"><xs:complexType><xs:attribute name="gender" type="quest-gender" use="required"/></xs:complexType></xs:element>
+    <xs:element name="player-in-group"><xs:complexType><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="world-is"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="world-npc-is"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
 	<xs:element name="zone-is"><xs:complexType><xs:attribute name="zone" type="xs:string" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
@@ -98,11 +104,15 @@
 	<xs:element name="refresh-player-stats" type="empty-type"/>
     <xs:element name="show-quest-dialog"><xs:complexType><xs:attribute name="dialog-id" type="xs:int" use="required"/></xs:complexType></xs:element>
 	<xs:element name="show-quest-selection-dialog"><xs:complexType><xs:attribute name="dialog-id" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="show-dialog-window"><xs:complexType><xs:attribute name="dialog-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="teleport-player-current-or-default"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="teleport-player-fixed-instance"><xs:complexType><xs:attribute name="instance-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="teleport-player-next-available-instance"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="play-movie"><xs:complexType><xs:attribute name="movie-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="morph"><xs:complexType><xs:attribute name="ascension-id" type="ascension-state" use="required"/></xs:complexType></xs:element>
+    <xs:element name="apply-effect"><xs:complexType><xs:attribute name="skill-id" type="xs:int" use="required"/><xs:attribute name="duration-ms" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="remove-effect"><xs:complexType><xs:attribute name="effect-id" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="system-message"><xs:complexType><xs:attribute name="message" type="quest-system-message"/><xs:attribute name="message-id" type="xs:int"/><xs:attribute name="target" type="quest-system-message-target" default="NONE"/><xs:attribute name="npc-shout" type="xs:boolean" default="false"/><xs:attribute name="text-color-id" type="xs:int" default="26"/><xs:attribute name="params" type="xs:string"/></xs:complexType></xs:element>
     <xs:element name="player-emotion"><xs:complexType><xs:attribute name="emotion" type="player-emotion" use="required"/></xs:complexType></xs:element>
     <xs:element name="add-npc-aggro"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="damage" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="flight-teleport"><xs:complexType><xs:attribute name="flight-teleport-id" type="xs:int" use="required"/></xs:complexType></xs:element>
@@ -112,6 +122,7 @@
     <xs:element name="spawn-npc-at-player"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="template-id" type="xs:int" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="despawn-npc"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="start-follow"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
+    <xs:element name="start-follow-current-target"><xs:complexType><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/></xs:complexType></xs:element>
     <xs:element name="stop-follow"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="attack-target"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="start-walking"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>

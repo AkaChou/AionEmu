@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1364" version="1">
+  <metadata name="Journey to Agairon" display-name-id="1102464" min-level="28" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <prerequisites>
+      <quest id="1362"/>
+    </prerequisites>
+    <rewards>
+      <reward kind="EXP" id="0" amount="291412"/>
+      <reward kind="ITEM" id="162000048" amount="8"/>
+      <reward kind="ITEM" id="186000003" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="v1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="v2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取:Ernia (203944) 对话。 -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="203944" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="203944" dialog-id="1007"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="203944" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="203944" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="203944" dialog-ids="1003 1004 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="203944" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+
+    <!-- 找到 Teos (203945),开始护送其回 Agairon 村的 Dellome (790007)。 -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="203945" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1693"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="v1">
+      <event>
+        <talk-to-npc npc-id="203945" dialog-id="10000"/>
+      </event>
+      <after-commit>
+        <spawn-npc-at-player slot="teos" template-id="203945" heading="0"/>
+        <start-follow slot="teos"/>
+        <watch-follow-zone slot="teos" zone="AGAIRON_VILLAGE_210020000"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <!-- 护送 Teos 到达 Agairon 村,播放 movie 47,进入与 Dellome 对话阶段。 -->
+    <transition source="v1" target="v2">
+      <event>
+        <npc-reach-target/>
+      </event>
+      <after-commit>
+        <play-movie movie-id="47"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 护送失败(丢失目标或登出)回退到步骤 0。 -->
+    <transition source="v1" target="started">
+      <event>
+        <npc-lost-target/>
+      </event>
+      <after-commit>
+        <despawn-npc slot="teos"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="started">
+      <event>
+        <log-out/>
+      </event>
+      <after-commit>
+        <despawn-npc slot="teos"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- 到达后与 Dellome (790007) 对话,进入奖励。 -->
+    <transition source="v2" target="v2">
+      <event>
+        <talk-to-npc npc-id="790007" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <transition source="v2" target="reward">
+      <event>
+        <talk-to-npc npc-id="790007" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+
+    <!-- 奖励:Dellome (790007) 领取。 -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="790007" dialog-ids="-1 1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="790007" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="291412" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="162000048" amount="8"/>
+        <grant-reward kind="ITEM" id="186000003" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

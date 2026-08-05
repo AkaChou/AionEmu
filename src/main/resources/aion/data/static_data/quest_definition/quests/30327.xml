@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30327" version="1">
+  <metadata name="[Group] Mired Souls" display-name-id="1114427" min-level="53" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="7205248"/>
+      <reward kind="SELECTABLE_ITEM" id="112101019" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112301007" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112500995" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="112601008" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="186000098" amount="5"/>
+      <reward kind="ITEM" id="188050590" amount="1"/>
+    </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="30326"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="v1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="v2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars/>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 未接取状态与凯伦对话：凯伦（799244）展示任务简介。 Pre-start dialog with Kaluen (799244). -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4762"/>
+      </after-commit>
+    </transition>
+    <!-- 接受任务。 Accept the quest. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <!-- 一键接受任务。 Accept the quest (simple). -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 拒绝任务。 Refuse the quest. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-ids="1003 1004 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 未接取时查看任务详情。 Quest detail window while unaccepted. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 与施林（799521）对话获取进度提示。 Talk to Shirin (799521) for a hint. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="799521" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- 与施林对话推进到击杀阶段。 Talk to Shirin, advance to the kill step. -->
+    <transition source="started" target="v1">
+      <event>
+        <talk-to-npc npc-id="799521" dialog-id="10000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 与施拉（799517）对话启动 300 秒限时击杀。 Talk to Shira (799517) to start the 300s timed kill. -->
+    <transition source="v1" target="v1">
+      <event>
+        <talk-to-npc npc-id="799517" dialog-id="10000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <start-quest-timer seconds="300" timer-id="visible" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 计时结束未完成：重置进度，需重新开始。 Timer expired: reset back to the start. -->
+    <transition source="v1" target="started">
+      <event>
+        <quest-timer-end/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀德拉克精灵 216586：取消计时并播放过场。 Kill the Drakan 216586, cancel timer and play movie. -->
+    <transition source="v1" target="v2">
+      <event>
+        <kill-npc npc-id="216586"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <cancel-quest-timer timer-id="visible" scope="PLAYER_QUEST"/>
+        <play-movie movie-id="445"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀任意精英怪完成目标，进入奖励状态。 Kill any elite mob to finish, move to reward. -->
+    <transition source="v2" target="reward">
+      <event>
+        <kill-npc npc-ids="216735 216734 216737 216245"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-status status="REWARD"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励状态与凯伦对话：打开结算窗口。 Reward dialog with Kaluen. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励 1：多棱石盾。 Select reward 1: prismatic shield. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="8"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="7205248" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188050590" amount="1"/>
+        <grant-reward kind="ITEM" id="112101019" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励 2：多棱长剑。 Select reward 2: prismatic sword. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="9"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="7205248" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188050590" amount="1"/>
+        <grant-reward kind="ITEM" id="112301007" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励 3：多棱法杖。 Select reward 3: prismatic staff. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="10"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="7205248" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188050590" amount="1"/>
+        <grant-reward kind="ITEM" id="112500995" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励 4：多棱弓。 Select reward 4: prismatic bow. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="11"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="7205248" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188050590" amount="1"/>
+        <grant-reward kind="ITEM" id="112601008" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励 5：装备魔石 ×5。 Select reward 5: manastones x5. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="799244" dialog-id="12"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="7205248" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188050590" amount="1"/>
+        <grant-reward kind="ITEM" id="186000098" amount="5"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

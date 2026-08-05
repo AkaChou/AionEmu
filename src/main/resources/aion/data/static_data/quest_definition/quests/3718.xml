@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="3718" version="1">
+  <metadata name="[Group] Dredging The Dredgion" display-name-id="1104717" min-level="46" max-level="50" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="2719217"/>
+      <reward kind="ITEM" id="186000469" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="2" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="4" width="4" min="0" max="8" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+          <var name="var1" value="0"/>
+          <var name="var2" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+          <var name="var1" value="0"/>
+          <var name="var2" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+          <var name="var1" value="0"/>
+          <var name="var2" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+          <var name="var1" value="3"/>
+          <var name="var2" value="8"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="1"/>
+          <var name="var1" value="3"/>
+          <var name="var2" value="8"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 未接取状态与塔马林（279045）对话。 Pre-start dialog with Tamarin (279045). -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4762"/>
+      </after-commit>
+    </transition>
+    <!-- 接受任务。 Accept the quest. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <!-- 一键接受任务。 Accept the quest (simple). -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 拒绝任务。 Refuse the quest. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-ids="1003 1004 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 未接取时查看任务详情。 Quest detail window while unaccepted. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 与塔马林对话获取任务提示。 Talk to Tamarin for a hint. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- 与塔马林对话推进到击杀阶段。 Talk to Tamarin, advance to the kill step. -->
+    <transition source="started" target="s1">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-id="10000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 击杀护卫舰 214814 推进击杀计数。 Kill the frigate 214814 to advance the kill counter. -->
+    <transition source="s1" target="s1">
+      <event>
+        <kill-npc npc-id="214814"/>
+      </event>
+      <conditions>
+        <variable-below field="var2" value="8"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var2" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- Dredgion 结算推进轮次计数。 Dredgion settlement advances the round counter. -->
+    <transition source="s1" target="s1">
+      <event>
+        <dredgion-reward/>
+      </event>
+      <conditions>
+        <variable-below field="var1" value="3"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 双条件达成后的完成提示。 Completion prompt once both counters are met. -->
+    <transition source="s1" target="s1">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="3"/>
+        <variable-is field="var2" value="8"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <!-- 双条件达成后进入奖励阶段。 Enter the reward stage once both counters are met. -->
+    <transition source="s1" target="reward">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-id="1009"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="3"/>
+        <variable-is field="var2" value="8"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励阶段对话。 Reward-stage dialog. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励并完成任务。 Choose reward and complete. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="279045" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="2719217" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000469" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="11040" version="1">
+  <metadata name="Squamp On The Cooking Plate" display-name-id="1125040" min-level="51" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <rewards>
+      <reward kind="EXP" id="0" amount="5647915"/>
+      <reward kind="ITEM" id="100001037" amount="1"/>
+      <reward kind="ITEM" id="100100782" amount="1"/>
+      <reward kind="ITEM" id="100200917" amount="1"/>
+      <reward kind="ITEM" id="100900779" amount="1"/>
+      <reward kind="ITEM" id="101300751" amount="1"/>
+      <reward kind="ITEM" id="101700824" amount="1"/>
+      <reward kind="ITEM" id="100500802" amount="1"/>
+      <reward kind="ITEM" id="100600857" amount="1"/>
+      <reward kind="ITEM" id="101500807" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="v1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取提示与接取；对应旧 onDialogEvent 的 4762 与 sendQuestStartDialog。 Start hint and accept; mirrors the old onDialogEvent 4762 and sendQuestStartDialog. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799036" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4762"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="799036" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="799036" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="799036" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- 开始护送：在玩家处生成 Squamp 克隆并跟随至迪迈亚喷泉瀑布区域（旧代码跟随至精确坐标 292.6/489.5/574.2，DSL 无坐标目标，按 3050/4051 先例用小 zone 近似）。 Start escort: spawn a Squamp clone at the player and follow to the Dimaia fountainfall zone (old code followed to exact coordinates 292.6/489.5/574.2; the DSL has no coordinate target, approximated by a small zone per the 3050/4051 precedent). -->
+    <transition source="started" target="v1">
+      <event>
+        <talk-to-npc npc-id="799036" dialog-id="10000"/>
+      </event>
+      <after-commit>
+        <spawn-npc-at-player slot="squamp" template-id="799036" heading="0"/>
+        <start-follow slot="squamp"/>
+        <watch-follow-zone slot="squamp" zone="DIMAIA_FOUNTAINFALL_210050000"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 护送到达：进入领奖并回收克隆。 Escort arrival: enter reward and reclaim the clone. -->
+    <transition source="v1" target="reward">
+      <event>
+        <npc-reach-target/>
+      </event>
+      <after-commit>
+        <despawn-npc slot="squamp"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 护送失败（丢失目标）：回退到 var0=0 并回收克隆。 Escort failed (target lost): revert to var0=0 and reclaim the clone. -->
+    <transition source="v1" target="started">
+      <event>
+        <npc-lost-target/>
+      </event>
+      <after-commit>
+        <despawn-npc slot="squamp"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 登出回退：对应旧 onLogOutEvent 的 var0 1→0。 Logout revert: mirrors the old onLogOutEvent var0 1→0. -->
+    <transition source="v1" target="started">
+      <event>
+        <log-out/>
+      </event>
+      <after-commit>
+        <despawn-npc slot="squamp"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="799035" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <!-- 领取奖励并完成；经验为 quest_data 总量，可选奖励按 24053 先例全部发放。 Claim rewards and complete; EXP is the quest_data total, selectable rewards granted in full per the 24053 precedent. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="799035" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="5647915" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100001037" amount="1"/>
+        <grant-reward kind="ITEM" id="100100782" amount="1"/>
+        <grant-reward kind="ITEM" id="100200917" amount="1"/>
+        <grant-reward kind="ITEM" id="100900779" amount="1"/>
+        <grant-reward kind="ITEM" id="101300751" amount="1"/>
+        <grant-reward kind="ITEM" id="101700824" amount="1"/>
+        <grant-reward kind="ITEM" id="100500802" amount="1"/>
+        <grant-reward kind="ITEM" id="100600857" amount="1"/>
+        <grant-reward kind="ITEM" id="101500807" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

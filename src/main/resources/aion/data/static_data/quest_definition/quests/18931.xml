@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="18931" version="1">
+  <metadata name="[Instanced Dungeon/Daily/Group] Seizing the Weapons of the Ashunatal Dredgion" display-name-id="1141629" min-level="66" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="7911702"/>
+      <reward kind="ITEM" id="188100391" amount="500"/>
+      <reward kind="ITEM" id="162000196" amount="5"/>
+    </rewards>
+    <drops>
+      <drop npc-id="703344" item-id="182213555" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="2" width="2" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+          <var name="var1" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+          <var name="var1" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+          <var name="var1" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="k1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+          <var name="var1" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1k1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+          <var name="var1" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="2"/>
+          <var name="var1" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars/>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="806259" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4762"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="806259" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="806259" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="806259" dialog-id="20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 容器 703344 对话仅关闭窗口，无状态变化。 Container 703344 dialog only closes the window, no state change. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="703344" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 获取补给品：var0 0→1。 Obtain supplies: var0 0→1. -->
+    <transition source="started" target="s1">
+      <event>
+        <get-item item-id="182213555"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="s1k1">
+      <event>
+        <get-item item-id="182213555"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀 Drakan Convoy Officer 243797：var1 计数，两次后进入领奖。 Kill Drakan Convoy Officer 243797: var1 counts, reward after two kills. -->
+    <transition source="started" target="k1">
+      <event>
+        <kill-npc npc-id="243797"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="0"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1k1">
+      <event>
+        <kill-npc npc-id="243797"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="0"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="reward">
+      <event>
+        <kill-npc npc-id="243797"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+        <set-variable field="var0" value="2"/>
+        <set-status status="REWARD"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s1k1" target="reward">
+      <event>
+        <kill-npc npc-id="243797"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+        <set-variable field="var0" value="2"/>
+        <set-status status="REWARD"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 向 806258 结算：先移除补给品再展示奖励。 Settle with 806258: remove supplies before showing rewards. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="806258" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="806258" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="806258" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <remove-item item-id="182213555" count="1"/>
+        <grant-reward kind="EXP" id="0" amount="7911702" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188100391" amount="500"/>
+        <grant-reward kind="ITEM" id="162000196" amount="5"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="21467" version="1">
+  <metadata name="[Coin] Spawning The Sap Suckers" display-name-id="1125533" min-level="51" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <repeat max-repeat-count="20" cooldown-seconds="0" daily="false" weekly="false"/>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="25400"/>
+      <reward kind="EXP" id="0" amount="3663347"/>
+      <reward kind="ITEM" id="186000019" amount="6"/>
+      <reward kind="ITEM" id="186000019" amount="3"/>
+      <reward kind="ITEM" id="186000019" amount="2"/>
+      <reward kind="ITEM" id="186000019" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="r0">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="r1">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="r2">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取对话：NPC 799527 显示任务介绍。 Start dialog: NPC 799527 shows the quest intro. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799527" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4762"/>
+      </after-commit>
+    </transition>
+    <!-- 接受任务：启动 480 秒计时器并开始任务。 Accept quest: start 480s timer and begin. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="799527" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <start-quest-timer seconds="480" timer-id="21467-timer" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <!-- 简化接受：旧 handler 经 ACCEPT_QUEST_SIMPLE 走默认分支，不启动计时器。 Simple accept: legacy handler default branch, no timer started. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="799527" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 拒绝任务：关闭对话框。 Refuse quest: close dialog. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799527" dialog-ids="1003 1004 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 任务日志重新打开任务列表。 Quest log reopens the quest list. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799527" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 计时器结束 var0=0：推进到 var0=1 并重启 240 秒计时器。 Timer end var0=0: advance to var0=1, restart 240s timer. -->
+    <transition source="started" target="s1">
+      <event>
+        <quest-timer-end/>
+      </event>
+      <after-commit>
+        <start-quest-timer seconds="240" timer-id="21467-timer" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 计时器结束 var0=1：推进到 var0=2 并重启 240 秒计时器。 Timer end var0=1: advance to var0=2, restart 240s timer. -->
+    <transition source="s1" target="s2">
+      <event>
+        <quest-timer-end/>
+      </event>
+      <after-commit>
+        <start-quest-timer seconds="240" timer-id="21467-timer" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 计时器结束 var0=2：旧 handler 的 var==3 分支为死代码（条件与 changeQuestStep 期望不符），此处无动作。 Timer end var0=2: legacy var==3 branch is dead code (condition never matches changeQuestStep), no-op. -->
+    <transition source="s2" target="s2">
+      <event>
+        <quest-timer-end/>
+      </event>
+    </transition>
+    <!-- 击杀 215480：取消计时器并按当前 var 进入对应奖励节点。 Kill 215480: cancel timer, enter reward node matching current var. -->
+    <transition source="started" target="r0">
+      <event>
+        <kill-npc npc-id="215480"/>
+      </event>
+      <after-commit>
+        <cancel-quest-timer timer-id="21467-timer" scope="PLAYER_QUEST"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="r1">
+      <event>
+        <kill-npc npc-id="215480"/>
+      </event>
+      <after-commit>
+        <cancel-quest-timer timer-id="21467-timer" scope="PLAYER_QUEST"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="r2">
+      <event>
+        <kill-npc npc-id="215480"/>
+      </event>
+      <after-commit>
+        <cancel-quest-timer timer-id="21467-timer" scope="PLAYER_QUEST"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 死亡失败：重置为未接取。 Death fail: reset to unaccepted. -->
+    <transition source="started" target="unaccepted">
+      <event>
+        <die/>
+      </event>
+      <actions>
+        <set-status status="NONE"/>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="unaccepted">
+      <event>
+        <die/>
+      </event>
+      <actions>
+        <set-status status="NONE"/>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="unaccepted">
+      <event>
+        <die/>
+      </event>
+      <actions>
+        <set-status status="NONE"/>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 登出失败：重置为未接取。 Logout fail: reset to unaccepted. -->
+    <transition source="started" target="unaccepted">
+      <event>
+        <log-out/>
+      </event>
+      <actions>
+        <set-status status="NONE"/>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="unaccepted">
+      <event>
+        <log-out/>
+      </event>
+      <actions>
+        <set-status status="NONE"/>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="unaccepted">
+      <event>
+        <log-out/>
+      </event>
+      <actions>
+        <set-status status="NONE"/>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励 var0=0：rewards[0] = 6 个币。 Reward var0=0: rewards[0] = 6 coins. -->
+    <transition source="r0" target="r0">
+      <event>
+        <talk-to-npc npc-id="799503" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="r0" target="r0">
+      <event>
+        <talk-to-npc npc-id="799503" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="r0" target="complete">
+      <event>
+        <talk-to-npc npc-id="799503" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="25400" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="3663347" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000019" amount="6"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励 var0=1：rewards[1] = 3 个币。 Reward var0=1: rewards[1] = 3 coins. -->
+    <transition source="r1" target="r1">
+      <event>
+        <talk-to-npc npc-id="799503" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="r1" target="r1">
+      <event>
+        <talk-to-npc npc-id="799503" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="6"/>
+      </after-commit>
+    </transition>
+    <transition source="r1" target="complete">
+      <event>
+        <talk-to-npc npc-id="799503" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="25400" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="3663347" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000019" amount="3"/>
+        <complete-quest reward-index="1"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励 var0=2：rewards[2] = 2 个币。 Reward var0=2: rewards[2] = 2 coins. -->
+    <transition source="r2" target="r2">
+      <event>
+        <talk-to-npc npc-id="799503" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="r2" target="r2">
+      <event>
+        <talk-to-npc npc-id="799503" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="7"/>
+      </after-commit>
+    </transition>
+    <transition source="r2" target="complete">
+      <event>
+        <talk-to-npc npc-id="799503" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="25400" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="3663347" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000019" amount="2"/>
+        <complete-quest reward-index="2"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

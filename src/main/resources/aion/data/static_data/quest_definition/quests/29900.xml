@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="29900" version="1">
+  <metadata name="New Allies: Minions" display-name-id="1803766" min-level="10" max-level="2147483647" category="PRIMARY" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <items>
+      <item id="190080011" count="1"/>
+    </items>
+    <work-items>
+      <item id="190080021" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="ITEM" id="190080012" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取:升级达到 10 级(Asmodian)自动接取,并发放守护灵契约 190080011。 -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="190080021" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- 未接取状态与 NPC 836074 对话(对应旧 handler qs==null 分支)。 -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="836074" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="836074" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+
+    <!-- 奖励:Pandaemonium NPC 836074 领取。使用守护灵契约 190080011 后由 MinionService 将任务置为 REWARD(var0=1)。 -->
+    <transition source="started" target="reward"> <event> <use-item item-id="190080021"/> </event> <conditions> <variable-is field="var0" value="0"/> </conditions> <after-commit> <sync-quest-state mode="PACKET_ONLY"/> </after-commit> </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="836074" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="836074" dialog-ids="-1 1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="836074" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="ITEM" id="190080012" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

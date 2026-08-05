@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="11143" version="1">
-  <metadata name="Baby Shulack's Journey" display-name-id="1125119" min-level="54" max-level="2147483647" category="QUEST" cannot-share="true">
+<quest-definition id="4053" version="1">
+  <metadata name="Glossy Hoe" display-name-id="1114052" min-level="48" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
+      <race id="ASMODIANS"/>
     </races>
     <work-items>
-      <item id="182206866" count="1"/>
+      <item id="182209031" count="1"/>
     </work-items>
     <rewards>
-      <reward kind="EXP" id="0" amount="6240944"/>
-      <reward kind="SELECTABLE_ITEM" id="164000134" amount="4"/>
-      <reward kind="SELECTABLE_ITEM" id="164000073" amount="4"/>
+      <reward kind="GOLD" id="0" amount="37720"/>
+      <reward kind="EXP" id="0" amount="4451099"/>
+      <reward kind="ITEM" id="186000019" amount="6"/>
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="2" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted">
@@ -31,14 +31,14 @@
         </vars>
       </project>
     </node>
-    <node label="v1">
+    <node label="s1">
       <project status="START">
         <vars>
           <var name="var0" value="1"/>
         </vars>
       </project>
     </node>
-    <node label="v2">
+    <node label="s2">
       <project status="START">
         <vars>
           <var name="var0" value="2"/>
@@ -48,30 +48,32 @@
     <node label="reward">
       <project status="REWARD">
         <vars>
-          <var name="var0" value="3"/>
+          <var name="var0" value="2"/>
         </vars>
       </project>
     </node>
     <node label="complete">
       <project status="COMPLETE">
         <vars>
-          <var name="var0" value="3"/>
+          <var name="var0" value="2"/>
         </vars>
       </project>
     </node>
   </nodes>
   <transitions>
+    <!-- 未接取时使用 Ornate Hoe 显示接取确认框。 Using Ornate Hoe while unaccepted shows the start-confirm dialog. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <use-item item-id="182206866"/>
+        <use-item item-id="182209031"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="4"/>
       </after-commit>
     </transition>
+    <!-- 接受任务。 Accept the quest. -->
     <transition source="unaccepted" target="started">
       <event>
-        <quest-dialog dialog-id="1002"/>
+        <quest-dialog dialog="ACCEPT_QUEST"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -81,58 +83,46 @@
         <show-quest-dialog dialog-id="1003"/>
       </after-commit>
     </transition>
+    <!-- 拒绝任务。 Decline the quest. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <quest-dialog dialog-id="1003"/>
+        <quest-dialog dialog="REFUSE_QUEST"/>
       </event>
       <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="700909" dialog="USE_OBJECT"/>
-      </event>
-      <actions>
-        <give-item item-id="182206866" count="1"/>
-      </actions>
-      <after-commit>
-        <delete-interaction-npc/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <can-act template-id="700909" action-type="ACTION_ITEM_USE"/>
-      </event>
-    </transition>
+    <!-- BuBu Don: 对话与推进。 BuBu Don: dialog and step advance. -->
     <transition source="started" target="started">
       <event>
-        <use-item item-id="182206866"/>
+        <talk-to-npc npc-id="205165" dialog-id="31"/>
       </event>
-      <actions>
-        <block-default-item-use/>
-      </actions>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="798985" dialog-id="31"/>
-      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
       <after-commit>
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="started" target="v1">
+    <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="798985" dialog-id="10000"/>
+        <talk-to-npc npc-id="205165" dialog-id="10000"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="v1" target="v1">
+    <!-- BuBu Taan: 对话与推进。 BuBu Taan: dialog and step advance. -->
+    <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="798984" dialog-id="31"/>
+        <talk-to-npc npc-id="205167" dialog-id="31"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -141,83 +131,74 @@
         <show-quest-dialog dialog-id="1693"/>
       </after-commit>
     </transition>
-    <transition source="v1" target="v2">
+    <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="798984" dialog-id="10001"/>
+        <talk-to-npc npc-id="205167" dialog-id="10001"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="v2" target="v2">
+    <!-- Hilebard: 最终对话，交付 Ornate Hoe 进入奖励阶段。 Hilebard: final dialog, hand over Ornate Hoe and enter reward stage. -->
+    <transition source="s2" target="s2">
       <event>
-        <talk-to-npc npc-id="798976" dialog-id="31"/>
+        <talk-to-npc npc-id="205178" dialog-id="31"/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
-      </after-commit>
-    </transition>
-    <transition source="v2" target="reward">
-      <event>
-        <talk-to-npc npc-id="798976" dialog-id="10002"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="798948" dialog="USE_OBJECT"/>
-      </event>
-      <after-commit>
         <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="reward">
+    <transition source="s2" target="reward">
       <event>
-        <use-item item-id="182206866"/>
+        <talk-to-npc npc-id="205178" dialog-id="1009"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
       <actions>
-        <block-default-item-use/>
-      </actions>
-    </transition>
-    <transition source="complete" target="complete">
-      <event>
-        <use-item item-id="182206866"/>
-      </event>
-      <actions>
-        <block-default-item-use/>
-      </actions>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="798948" dialog-id="8"/>
-      </event>
-      <actions>
-        <remove-item item-id="182206866" count="ALL"/>
-        <grant-reward kind="EXP" id="0" amount="6240944"/>
-        <grant-reward kind="ITEM" id="164000134" amount="4"/>
-        <complete-quest reward-index="0"/>
+        <remove-item item-id="182209031" count="1"/>
       </actions>
       <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
+    <!-- 奖励阶段对话。 Reward-stage dialog. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="205178" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="205178" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励并完成。 Choose reward and complete. -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="798948" dialog-id="9"/>
+        <talk-to-npc npc-id="205178" dialog-ids="8..23"/>
       </event>
       <actions>
-        <remove-item item-id="182206866" count="ALL"/>
-        <grant-reward kind="EXP" id="0" amount="6240944"/>
-        <grant-reward kind="ITEM" id="164000073" amount="4"/>
+        <grant-reward kind="GOLD" id="0" amount="37720" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="4451099" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000019" amount="6"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

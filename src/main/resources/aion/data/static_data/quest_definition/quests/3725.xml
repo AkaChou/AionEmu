@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="3725" version="1">
+  <metadata name="[Group] My Lucky Number" display-name-id="1104722" min-level="51" max-level="55" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="3953541"/>
+      <reward kind="ITEM" id="186000469" amount="5"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var1" offset="0" width="3" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="3" width="4" min="0" max="15" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var1" value="0"/>
+          <var name="var2" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var1" value="0"/>
+          <var name="var2" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var1" value="6"/>
+          <var name="var2" value="15"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var1" value="6"/>
+          <var name="var2" value="15"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 未接取状态与雅尼斯（799069）对话。 Pre-start dialog with Yannis (799069). -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799069" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4762"/>
+      </after-commit>
+    </transition>
+    <!-- 接受任务。 Accept the quest. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="799069" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <!-- 一键接受任务。 Accept the quest (simple). -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="799069" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 拒绝任务。 Refuse the quest. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799069" dialog-ids="1003 1004 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 未接取时查看任务详情。 Quest detail window while unaccepted. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799069" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀钱特拉军团长 216866 推进击杀计数。 Kill Chantra Legatus 216866 to advance the kill counter. -->
+    <transition source="started" target="started">
+      <event>
+        <kill-npc npc-id="216866"/>
+      </event>
+      <conditions>
+        <variable-below field="var2" value="15"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var2" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- Dredgion 结算推进轮次计数。 Dredgion settlement advances the round counter. -->
+    <transition source="started" target="started">
+      <event>
+        <dredgion-reward/>
+      </event>
+      <conditions>
+        <variable-below field="var1" value="6"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 双条件达成后的完成提示。 Completion prompt once both counters are met. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="798928" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="6"/>
+        <variable-is field="var2" value="15"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <!-- 双条件达成后进入奖励阶段。 Enter the reward stage once both counters are met. -->
+    <transition source="started" target="reward">
+      <event>
+        <talk-to-npc npc-id="798928" dialog-id="1009"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="6"/>
+        <variable-is field="var2" value="15"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励阶段对话。 Reward-stage dialog. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="798928" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="798928" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励并完成任务。 Choose reward and complete. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="798928" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="3953541" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000469" amount="5"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

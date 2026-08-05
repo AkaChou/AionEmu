@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="18511" version="1">
+  <metadata name="Out Of The Past" display-name-id="1135011" min-level="16" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="1" cooldown-seconds="0" daily="false" weekly="false"/>
+    <items>
+      <item id="182212010" count="5"/>
+    </items>
+    <work-items>
+      <item id="182212011" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="33480"/>
+      <reward kind="EXP" id="0" amount="75359"/>
+      <reward kind="ITEM" id="186000002" amount="3"/>
+    </rewards>
+    <drops>
+      <drop npc-id="700954" item-id="182212010" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
+    <start-conditions>
+      <condition type="finished" quest-id="18507"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+  </nodes>
+  <transitions>
+    <!-- 未接取时对话显示提示。 Unaccepted dialog shows the prompt. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799522" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4762"/>
+      </after-commit>
+    </transition>
+    <!-- 接受接取。 Accept the quest. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="799522" dialog-ids="1002 20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 拒绝接取。 Refuse the quest. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="799522" dialog-ids="1003 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 掉落源 NPC 对话无操作。 Drop-source NPC dialog is a no-op. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="700954"/>
+      </event>
+    </transition>
+    <!-- 大锅对话显示提示。 Cauldron dialog shows the prompt. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="730359" dialog-id="-1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- 收集物齐全时显示成功页。 Collected items sufficient shows the success page. -->
+    <transition source="started" target="started" priority="0">
+      <event>
+        <talk-to-npc npc-id="730359" dialog-id="39"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+        <has-item item-id="182212010" count="5"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <!-- 收集物不足时提示。 Missing collectibles shows the fail prompt. -->
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="730359" dialog-id="39"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="10001"/>
+      </after-commit>
+    </transition>
+    <!-- 领取工作物品。 Take the work item. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="730359" dialog-id="10001"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <give-item item-id="182212011" count="1"/>
+      </actions>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 获得工作物品后进入领奖。 Get the work item to reach reward. -->
+    <transition source="started" target="reward">
+      <event>
+        <get-item item-id="182212011"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励 NPC 打开奖励页。 Reward NPC opens the reward page. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="790000" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="790000" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="790000" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="33480" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="75359" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000002" amount="3"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

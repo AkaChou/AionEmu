@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="13961" version="1">
+  <metadata name="[Instanced Dungeon] Main Operation to Retrieve the Core Fragment" display-name-id="1803241" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="232740"/>
+      <reward kind="EXP" id="0" amount="13262400"/>
+      <reward kind="ITEM" id="188100391" amount="100"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="1" min="0" max="0" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars/>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 进入永风峡谷副本自动接取。Auto-start on entering the Evergale Canyon instance. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="302350000"/>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="835219" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- 播放过场动画。Play the cutscene. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="835219" dialog-id="1012"/>
+      </event>
+      <after-commit>
+        <play-movie movie-id="962"/>
+        <show-quest-dialog dialog-id="1012"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="835219" dialog-id="1013"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1013"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <talk-to-npc npc-id="835219" dialog-id="10255"/>
+      </event>
+      <actions>
+        <set-status status="REWARD"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="835223" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="835223" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="835223" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="232740" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="13262400" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188100391" amount="100"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

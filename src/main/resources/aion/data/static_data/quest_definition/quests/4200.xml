@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="4200" version="1">
+  <metadata name="A Suspicious Call" display-name-id="1104227" min-level="40" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <work-items>
+      <item id="182209097" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="1974220"/>
+    </rewards>
+    <drops>
+      <drop npc-id="700522" item-id="182209097" chance="100" each-member="true" collecting-step="2"/>
+    </drops>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="3" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s3">
+      <project status="START">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取介绍。 Quest-start intro dialog. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="204839" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="4762"/>
+      </after-commit>
+    </transition>
+    <!-- 接受任务。 Accept the quest. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="204839" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <!-- 拒绝任务。 Decline the quest. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <talk-to-npc npc-id="204839" dialog-ids="1003 1004 20001"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- Uikinerk 对话。 Dialog with Uikinerk. -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="204839" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="204839" dialog-id="1011"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- 传送到 Steel Rake 实例。 Teleport into the Steel Rake instance. -->
+    <transition source="started" target="s1">
+      <event>
+        <talk-to-npc npc-id="204839" dialog-id="10000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <teleport-player-next-available-instance world-id="300100000" x="403.55" y="508.11" z="885.77" heading="0"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- Haorunerk 对话与过场动画。 Dialog and cutscene with Haorunerk. -->
+    <transition source="s1" target="s1">
+      <event>
+        <talk-to-npc npc-id="798332" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <talk-to-npc npc-id="798332" dialog-id="1353"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <play-movie movie-id="431"/>
+        <show-quest-dialog dialog-id="1353"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2">
+      <event>
+        <talk-to-npc npc-id="798332" dialog-id="10001"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 使用 Teleport Scroll 返回并推进。 Use the Teleport Scroll to return and advance. -->
+    <transition source="s2" target="s3">
+      <event>
+        <use-item item-id="182209097"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182209097" count="1"/>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <teleport-player-current-or-default world-id="220040000" x="367.9981" y="429.9916" z="222.11166" heading="38"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- Hudrunerk 对话与交付。 Dialog and delivery with Hudrunerk. -->
+    <transition source="s3" target="s3">
+      <event>
+        <talk-to-npc npc-id="205233" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2034"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <talk-to-npc npc-id="205233" dialog-id="2035"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2035"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="reward">
+      <event>
+        <talk-to-npc npc-id="205233" dialog-id="10255"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 奖励阶段对话。 Reward-stage dialog. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="805839" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="805839" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励并完成。 Choose reward and complete. -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="805839" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="1974220" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="24031" version="1">
+  <metadata name="Enemy at the Doorstep" display-name-id="1129941" min-level="50" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <work-items>
+      <item id="182215394" count="1"/>
+      <item id="182215395" count="1"/>
+      <item id="182215396" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="15918337"/>
+      <reward kind="SELECTABLE_ITEM" id="121000844" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="121000845" amount="1"/>
+      <reward kind="ITEM" id="187000007" amount="1"/>
+      <reward kind="ITEM" id="188050928" amount="1"/>
+    </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="24030"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="11" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s3">
+      <project status="START">
+        <vars>
+          <var name="var0" value="3"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s4">
+      <project status="START">
+        <vars>
+          <var name="var0" value="4"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s5">
+      <project status="START">
+        <vars>
+          <var name="var0" value="5"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s6">
+      <project status="START">
+        <vars>
+          <var name="var0" value="6"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s7">
+      <project status="START">
+        <vars>
+          <var name="var0" value="7"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s8">
+      <project status="START">
+        <vars>
+          <var name="var0" value="8"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s9">
+      <project status="START">
+        <vars>
+          <var name="var0" value="9"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s10">
+      <project status="START">
+        <vars>
+          <var name="var0" value="10"/>
+        </vars>
+      </project>
+    </node>
+    <node label="s11">
+      <project status="START">
+        <vars>
+          <var name="var0" value="11"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="11"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars/>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 升级达标且前置 24030 完成时自动接取 / Auto-start on level-up when 24030 finished -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 区域任务结束时自动接取 / Auto-start on zone mission end -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <zone-mission-end/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204052 引导对话 / NPC 204052 guidance dialog -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="204052" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204052 推进 / NPC 204052 advance -->
+    <transition source="started" target="s1">
+      <event>
+        <talk-to-npc npc-id="204052" dialog-id="10000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- NPC 801224 引导对话 / NPC 801224 guidance dialog -->
+    <transition source="s1" target="s1">
+      <event>
+        <talk-to-npc npc-id="801224" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 801224 推进 / NPC 801224 advance -->
+    <transition source="s1" target="s2">
+      <event>
+        <talk-to-npc npc-id="801224" dialog-id="10001"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- NPC 203550 引导对话 / NPC 203550 guidance dialog -->
+    <transition source="s2" target="s2">
+      <event>
+        <talk-to-npc npc-id="203550" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1693"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 203550 推进并给穆宁侦查装置 / NPC 203550 advance and give Munin's device -->
+    <transition source="s2" target="s3">
+      <event>
+        <talk-to-npc npc-id="203550" dialog-id="10002"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <give-item item-id="182215394" count="1"/>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 在 DF1 区域使用 182215394 装置并推进 / Use device 182215394 in DF1 zone and advance -->
+    <transition source="s3" target="s4">
+      <event>
+        <item-play item-id="182215394" animation-millis="3000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+        <zone-is zone="DF1_USE_ITEM_AREA_Q24031"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215394" count="1"/>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 203654 引导对话 / NPC 203654 guidance dialog -->
+    <transition source="s4" target="s4">
+      <event>
+        <talk-to-npc npc-id="203654" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2376"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 203654 推进并给奥尔特里侦查装置 / NPC 203654 advance and give Aurtri's device -->
+    <transition source="s4" target="s5">
+      <event>
+        <talk-to-npc npc-id="203654" dialog-id="10004"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <actions>
+        <give-item item-id="182215395" count="1"/>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 在 DF1A 区域使用 182215395 装置并推进 / Use device 182215395 in DF1A zone and advance -->
+    <transition source="s5" target="s6">
+      <event>
+        <item-play item-id="182215395" animation-millis="3000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5"/>
+        <zone-is zone="DF1A_USE_ITEM_AREA_Q24031"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215395" count="1"/>
+        <set-variable field="var0" value="6"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204369 var0=6 引导对话 / NPC 204369 guidance dialog at var0=6 -->
+    <transition source="s6" target="s6">
+      <event>
+        <talk-to-npc npc-id="204369" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="6"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="3057"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204369 推进并给提尔侦查装置 / NPC 204369 advance and give Tyr's device -->
+    <transition source="s6" target="s7">
+      <event>
+        <talk-to-npc npc-id="204369" dialog-id="10006"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="6"/>
+      </conditions>
+      <actions>
+        <give-item item-id="182215396" count="1"/>
+        <set-variable field="var0" value="7"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 在 DF2 区域使用 182215396 装置并推进 / Use device 182215396 in DF2 zone and advance -->
+    <transition source="s7" target="s8">
+      <event>
+        <item-play item-id="182215396" animation-millis="3000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="7"/>
+        <zone-is zone="DF2_USE_ITEM_AREA_Q24031"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215396" count="1"/>
+        <set-variable field="var0" value="8"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204369 var0=8 引导对话 / NPC 204369 guidance dialog at var0=8 -->
+    <transition source="s8" target="s8">
+      <event>
+        <talk-to-npc npc-id="204369" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="8"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="3740"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 204369 推进至击杀阶段 / NPC 204369 advance to kill phase -->
+    <transition source="s8" target="s9">
+      <event>
+        <talk-to-npc npc-id="204369" dialog-id="10008"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="8"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="9"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 进入 NIDALBER 区域推进至击杀阶段 / Entering NIDALBER zone advances to kill phase -->
+    <transition source="s8" target="s9">
+      <event>
+        <enter-zone zone="NIDALBER_320040000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="8"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="9"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀队长哈加坎 233879 / Killing Captain Hagarkan 233879 -->
+    <transition source="s9" target="s10">
+      <event>
+        <kill-npc npc-id="233879"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="9"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="10"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 使用 730888 触发过场并刷出 730898 / Use 730888 plays movie and spawns 730898 -->
+    <transition source="s10" target="s11">
+      <event>
+        <talk-to-npc npc-id="730888" dialog-id="-1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="10"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="11"/>
+      </actions>
+      <after-commit>
+        <play-movie movie-id="898"/>
+        <spawn-npc-current-or-default slot="gate" template-id="730898" world-id="320040000"
+          x="257.10001" y="257.0600" z="226.40285" heading="0"/>
+        <delete-interaction-npc schedule-respawn="false"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 使用 730898 传送回城并进入领奖 / Use 730898 teleports back and enters reward state -->
+    <transition source="s11" target="reward">
+      <event>
+        <talk-to-npc npc-id="730898" dialog-id="-1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="11"/>
+      </conditions>
+      <after-commit>
+        <delete-interaction-npc schedule-respawn="false"/>
+        <teleport-player-current-or-default world-id="120010000" x="1275.116" y="1173.6276" z="215.21492" heading="91"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀阶段死亡回退 / Die during kill phase reverts to var0=8 -->
+    <transition source="s9" target="s8">
+      <event>
+        <die/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="9"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="8"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s10" target="s8">
+      <event>
+        <die/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="10"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="8"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 击杀阶段登出回退 / Logout during kill phase reverts to var0=8 -->
+    <transition source="s9" target="s8">
+      <event>
+        <log-out/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="9"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="8"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s10" target="s8">
+      <event>
+        <log-out/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="10"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="8"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖对话 / Reward dialog -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="204052" dialog-ids="-1 1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励 1 / Select reward 1 -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="204052" dialog-id="8"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="15918337" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="187000007" amount="1"/>
+        <grant-reward kind="ITEM" id="188050928" amount="1"/>
+        <grant-reward kind="ITEM" id="121000844" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励 2 / Select reward 2 -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="204052" dialog-id="9"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="15918337" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="187000007" amount="1"/>
+        <grant-reward kind="ITEM" id="188050928" amount="1"/>
+        <grant-reward kind="ITEM" id="121000845" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

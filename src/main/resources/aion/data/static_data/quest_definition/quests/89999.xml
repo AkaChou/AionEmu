@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="89999" version="1">
+  <metadata name="[Event] Item Giving" display-name-id="1189999" min-level="1" max-level="2147483647" category="EVENT" cannot-share="true"/>
+  <progress>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <!-- Laylin (799702) / Ronya (799703): 对话打开页面 1011，选择 1012 领取果汁 (160009017)。 -->
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799702" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799703" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted" priority="0"><event><talk-to-npc npc-id="799702" dialog-id="1012"/></event><conditions><has-item item-id="160009017" count="1"/></conditions><after-commit><show-quest-dialog dialog-id="1097"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted" priority="0"><event><talk-to-npc npc-id="799703" dialog-id="1012"/></event><conditions><has-item item-id="160009017" count="1"/></conditions><after-commit><show-quest-dialog dialog-id="1097"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted" priority="10"><event><talk-to-npc npc-id="799702" dialog-id="1012"/></event><actions><give-item item-id="160009017" count="1"/></actions><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted" priority="10"><event><talk-to-npc npc-id="799703" dialog-id="1012"/></event><actions><give-item item-id="160009017" count="1"/></actions><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
+
+    <!-- Brios (798414) / Bothen (798416): 对话打开页面 1011，选择 1012 领取蛋糕 (160010073)。 -->
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="798414" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="798416" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted" priority="0"><event><talk-to-npc npc-id="798414" dialog-id="1012"/></event><conditions><has-item item-id="160010073" count="1"/></conditions><after-commit><show-quest-dialog dialog-id="1097"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted" priority="0"><event><talk-to-npc npc-id="798416" dialog-id="1012"/></event><conditions><has-item item-id="160010073" count="1"/></conditions><after-commit><show-quest-dialog dialog-id="1097"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted" priority="10"><event><talk-to-npc npc-id="798414" dialog-id="1012"/></event><actions><give-item item-id="160010073" count="1"/></actions><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted" priority="10"><event><talk-to-npc npc-id="798416" dialog-id="1012"/></event><actions><give-item item-id="160010073" count="1"/></actions><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
+  </transitions>
+</quest-definition>

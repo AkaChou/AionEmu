@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="11143" version="1">
-  <metadata name="Baby Shulack's Journey" display-name-id="1125119" min-level="54" max-level="2147483647" category="QUEST" cannot-share="true">
+<quest-definition id="3208" version="1">
+  <metadata name="[Instance] A Mysterious Plan" display-name-id="1103031" min-level="40" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
     <work-items>
-      <item id="182206866" count="1"/>
+      <item id="182209088" count="1"/>
     </work-items>
     <rewards>
-      <reward kind="EXP" id="0" amount="6240944"/>
-      <reward kind="SELECTABLE_ITEM" id="164000134" amount="4"/>
-      <reward kind="SELECTABLE_ITEM" id="164000073" amount="4"/>
+      <reward kind="GOLD" id="0" amount="33580"/>
+      <reward kind="EXP" id="0" amount="1974220"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="3200"/>
+    </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted">
@@ -31,14 +33,14 @@
         </vars>
       </project>
     </node>
-    <node label="v1">
+    <node label="s1">
       <project status="START">
         <vars>
           <var name="var0" value="1"/>
         </vars>
       </project>
     </node>
-    <node label="v2">
+    <node label="s2">
       <project status="START">
         <vars>
           <var name="var0" value="2"/>
@@ -54,21 +56,21 @@
     </node>
     <node label="complete">
       <project status="COMPLETE">
-        <vars>
-          <var name="var0" value="3"/>
-        </vars>
+        <vars/>
       </project>
     </node>
   </nodes>
   <transitions>
+    <!-- 使用神秘蓝图触发任务简介。 Use the mysterious blueprint to show the intro dialog. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <use-item item-id="182206866"/>
+        <use-item item-id="182209088"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="4"/>
       </after-commit>
     </transition>
+    <!-- 物品触发的接受对话。 Targetless accept dialog from the item. -->
     <transition source="unaccepted" target="started">
       <event>
         <quest-dialog dialog-id="1002"/>
@@ -78,9 +80,10 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <close-dialog/>
       </after-commit>
     </transition>
+    <!-- 物品触发的拒绝对话。 Targetless refuse dialog from the item. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
         <quest-dialog dialog-id="1003"/>
@@ -89,50 +92,32 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="700909" dialog="USE_OBJECT"/>
-      </event>
-      <actions>
-        <give-item item-id="182206866" count="1"/>
-      </actions>
-      <after-commit>
-        <delete-interaction-npc/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <can-act template-id="700909" action-type="ACTION_ITEM_USE"/>
-      </event>
-    </transition>
+    <!-- 与罗伊基内克（798026）对话获取提示。 Talk to Roikinerk (798026) for a hint. -->
     <transition source="started" target="started">
       <event>
-        <use-item item-id="182206866"/>
-      </event>
-      <actions>
-        <block-default-item-use/>
-      </actions>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="798985" dialog-id="31"/>
+        <talk-to-npc npc-id="798026" dialog-id="31"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="started" target="v1">
+    <!-- 与罗伊基内克对话推进。 Talk to Roikinerk, advance the step. -->
+    <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="798985" dialog-id="10000"/>
+        <talk-to-npc npc-id="798026" dialog-id="10000"/>
       </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="v1" target="v1">
+    <!-- 与哈奥鲁内克（203830）对话获取提示。 Talk to Haorunerk (203830) for a hint. -->
+    <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="798984" dialog-id="31"/>
+        <talk-to-npc npc-id="203830" dialog-id="31"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -141,83 +126,75 @@
         <show-quest-dialog dialog-id="1693"/>
       </after-commit>
     </transition>
-    <transition source="v1" target="v2">
+    <!-- 与哈奥鲁内克对话推进。 Talk to Haorunerk, advance the step. -->
+    <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="798984" dialog-id="10001"/>
+        <talk-to-npc npc-id="203830" dialog-id="10001"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="v2" target="v2">
+    <!-- 与奥布里科（805836）对话获取提示。 Talk to Aubrik (805836) for a hint. -->
+    <transition source="s2" target="s2">
       <event>
-        <talk-to-npc npc-id="798976" dialog-id="31"/>
+        <talk-to-npc npc-id="805836" dialog-id="31"/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
-      </after-commit>
-    </transition>
-    <transition source="v2" target="reward">
-      <event>
-        <talk-to-npc npc-id="798976" dialog-id="10002"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="798948" dialog="USE_OBJECT"/>
-      </event>
-      <after-commit>
         <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="reward">
+    <!-- 与奥布里科对话进入奖励结算。 Talk to Aubrik, move to reward. -->
+    <transition source="s2" target="reward">
       <event>
-        <use-item item-id="182206866"/>
+        <talk-to-npc npc-id="805836" dialog-id="1009"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
       <actions>
-        <block-default-item-use/>
-      </actions>
-    </transition>
-    <transition source="complete" target="complete">
-      <event>
-        <use-item item-id="182206866"/>
-      </event>
-      <actions>
-        <block-default-item-use/>
-      </actions>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="798948" dialog-id="8"/>
-      </event>
-      <actions>
-        <remove-item item-id="182206866" count="ALL"/>
-        <grant-reward kind="EXP" id="0" amount="6240944"/>
-        <grant-reward kind="ITEM" id="164000134" amount="4"/>
-        <complete-quest reward-index="0"/>
+        <set-variable field="var0" value="3"/>
+        <set-status status="REWARD"/>
       </actions>
       <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 奖励状态与奥布里科对话。 Reward dialog with Aubrik. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="805836" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="805836" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 选择奖励并完成任务。 Choose a reward and complete the quest. -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="798948" dialog-id="9"/>
+        <talk-to-npc npc-id="805836" dialog-ids="8..23"/>
       </event>
       <actions>
-        <remove-item item-id="182206866" count="ALL"/>
-        <grant-reward kind="EXP" id="0" amount="6240944"/>
-        <grant-reward kind="ITEM" id="164000073" amount="4"/>
+        <grant-reward kind="GOLD" id="0" amount="33580" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="1974220" amount-mode="QUEST_BASE"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

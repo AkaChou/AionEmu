@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="13830" version="1">
+  <metadata name="Stigma 101" display-name-id="1801119" min-level="30" max-level="2147483647" category="PRIMARY" cannot-share="true" use-class-reward="1">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <work-items>
+      <item id="182216118" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="46544"/>
+    </rewards>
+    <class-rewards>
+      <class id="FIGHTER">
+        <reward kind="ITEM" id="140001109" amount="1"/>
+      </class>
+      <class id="KNIGHT">
+        <reward kind="ITEM" id="140001130" amount="1"/>
+      </class>
+      <class id="RANGER">
+        <reward kind="ITEM" id="140001168" amount="1"/>
+      </class>
+      <class id="ASSASSIN">
+        <reward kind="ITEM" id="140001145" amount="1"/>
+      </class>
+      <class id="WIZARD">
+        <reward kind="ITEM" id="140001189" amount="1"/>
+      </class>
+      <class id="ELEMENTALIST">
+        <reward kind="ITEM" id="140001202" amount="1"/>
+      </class>
+      <class id="PRIEST">
+        <reward kind="ITEM" id="140001236" amount="1"/>
+      </class>
+      <class id="CHANTER">
+        <reward kind="ITEM" id="140001221" amount="1"/>
+      </class>
+      <class id="GUNSLINGER">
+        <reward kind="ITEM" id="140001253" amount="1"/>
+      </class>
+      <class id="SONGWEAVER">
+        <reward kind="ITEM" id="140001289" amount="1"/>
+      </class>
+      <class id="AETHERTECH">
+        <reward kind="ITEM" id="140001271" amount="1"/>
+      </class>
+    </class-rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 30 级升级时自动接取并发放工作物品。Auto-start on level-up at 30 and grant the work item. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="182216118" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- 进入圣天界时，持有工作物品则无事发生；缺失则补发（旧 handler 的 onEnterWorldEvent 修复）。 -->
+    <!-- On entering Sanctum, do nothing when holding the work item; re-grant it when missing (old onEnterWorldEvent fix). -->
+    <transition source="started" target="started" priority="0">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="110010000"/>
+        <has-item item-id="182216118" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="110010000"/>
+      </conditions>
+      <actions>
+        <give-item item-id="182216118" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- 使用工作物品后进入奖励阶段。Using the work item enters the reward stage. -->
+    <transition source="started" target="reward">
+      <event>
+        <use-item item-id="182216118"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- Miriya (203711)：奖励对话。Miriya (203711): reward dialogs. -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+
+    <!-- 完成并发放职业奖励武器（每职业一件，条件互斥）。Complete and grant the class reward weapon (one per class, mutually exclusive). -->
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001109" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="TEMPLAR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001130" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="RANGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001168" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="ASSASSIN"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001145" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SORCERER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001189" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SPIRIT_MASTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001202" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CLERIC"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001236" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CHANTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001221" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GUNSLINGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001253" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SONGWEAVER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001289" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="AETHERTECH"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="140001271" amount="1"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>
