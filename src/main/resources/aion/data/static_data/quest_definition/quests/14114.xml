@@ -146,6 +146,7 @@
       </event>
       <after-commit>
         <play-movie movie-id="30"/>
+        <apply-effect skill-id="8197" duration-ms="0"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
@@ -179,6 +180,7 @@
         <talk-to-npc npc-id="203183" dialog-id="10001"/>
       </event>
       <after-commit>
+        <remove-effect effect-id="8197"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
