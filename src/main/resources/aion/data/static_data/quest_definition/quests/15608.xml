@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="15608" version="1">
-  <metadata name="[Group] Spoiled Spores" display-name-id="1802261" min-level="68" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Spoiled Spores" display-name-id="1802261" min-level="68" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

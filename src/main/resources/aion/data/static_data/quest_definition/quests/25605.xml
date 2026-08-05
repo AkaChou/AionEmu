@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="25605" version="1">
-  <metadata name="[Alliance] An Adventure in Time" display-name-id="1802268" min-level="72" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Alliance] An Adventure in Time" display-name-id="1802268" min-level="72" max-level="2147483647" category="QUEST" target-type="FORCE">
     <races>
       <race id="ASMODIANS"/>
     </races>
