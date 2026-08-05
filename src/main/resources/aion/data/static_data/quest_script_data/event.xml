@@ -59,7 +59,6 @@
 	<!-- [Event] Don't Feed The Wildlife -->
 	<item_collecting start_npc_ids="799763" id="80174"/>
 	<!-- [Event] Herbal Remedy -->
-	<item_collecting start_npc_ids="799763" id="80175"/>
 	<!-- [Event] A Father's Letter -->
 	<item_collecting start_npc_ids="799763" id="80176"/>
 	<!-- [Event] Mother's Medicine -->
@@ -67,7 +66,6 @@
 	<!-- [Event] Don't Feed The Wildlife -->
 	<item_collecting start_npc_ids="799763" id="80178"/>
 	<!-- [Event] Herbal Remedy -->
-	<item_collecting start_npc_ids="799763" id="80179"/>
 	<!-- [Event] Mysterious Proposal -->
 	<item_collecting start_npc_ids="799763" id="80180"/>
 	<!-- [Event] Find Mother -->
@@ -75,7 +73,6 @@
 	<!-- [Event] Mother's Happiness -->
 	<item_collecting start_npc_ids="799763" id="80182"/>
 	<!-- [Event] Daughter's Wrath -->
-	<item_collecting start_npc_ids="799763" id="80183"/>
 	<!-- [Event] Worst Proposal Ever -->
 	<item_collecting start_npc_ids="799763" id="80184"/>
 	<!-- [Event] Taking Her Time -->
@@ -83,7 +80,6 @@
 	<!-- [Event] Never, Ever, Ever Together -->
 	<item_collecting start_npc_ids="799763" id="80186"/>
 	<!-- [Event] Forget You -->
-	<item_collecting start_npc_ids="799763" id="80187"/>
 	<!-- [Event] The Wrights Of Dawn -->
 	<item_collecting start_npc_ids="799763" id="80188"/>
 	<!-- [Event] Wright Recommendation -->
@@ -91,7 +87,6 @@
 	<!-- [Event] Wright For The Job -->
 	<item_collecting start_npc_ids="799763" id="80190"/>
 	<!-- [Event] Got The Wright One -->
-	<item_collecting start_npc_ids="799763" id="80191"/>
 	<!-- [Event] The Shapers Of Dusk -->
 	<item_collecting start_npc_ids="799763" id="80192"/>
 	<!-- [Event] Shaper Recommendation -->
@@ -99,9 +94,7 @@
 	<!-- [Event] Shaper's Test -->
 	<item_collecting start_npc_ids="799763" id="80194"/>
 	<!-- [Event] Shaping Expectations -->
-	<item_collecting start_npc_ids="799763" id="80195"/>
 	<!-- [Event] A Difficult Confession -->
-	<item_collecting start_npc_ids="799763" id="80196"/>
 	<!-- [Event] Love Confession -->
 	<item_collecting start_npc_ids="799763" id="80197"/>
 	<!-- [Event] Affection For That Person -->
@@ -109,7 +102,6 @@
 	<!-- [Event] Crossing Minds -->
 	<item_collecting start_npc_ids="799763" id="80199"/>
 	<!-- [Event] A Difficult Confession -->
-	<item_collecting start_npc_ids="799763" id="80200"/>
 	<!-- [Event] Love Confession -->
 	<item_collecting start_npc_ids="799763" id="80201"/>
 	<!-- [Event] Affection For That Person -->
@@ -125,14 +117,12 @@
 		<monster var="0" npc_ids="219524 219525 219526" end_var="18"/>
     </monster_hunt>
 	<!-- [Event] No! Bad Manduri! -->
-	<item_collecting start_npc_ids="799763" id="80206"/>
 	<!-- [Event] Who Throws Away A Shoe ? -->
 	<!-- [Event] Ring Her, Maybe ? -->
 	<item_collecting start_npc_ids="799763" id="80208"/>
 	<!-- [Event] Request From The D.E.R.P -->
 	<item_collecting start_npc_ids="799763" id="80209"/>
 	<!-- [Event] Stealing Sweet Dado -->
-	<item_collecting start_npc_ids="799763" id="80210"/>
 	<!-- [이벤트] 놀러와요, 메이드 카페 -->
 	<item_collecting start_npc_ids="799763" id="80267"/>
 	<!-- [Event] Waiting On You -->
