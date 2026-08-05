@@ -4,9 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <items>
-      <item id="190080011" count="1"/>
-    </items>
     <work-items>
       <item id="190080021" count="1"/>
     </work-items>
@@ -35,14 +32,14 @@
     <node label="reward">
       <project status="REWARD">
         <vars>
-          <var name="var0" value="1"/>
+          <var name="var0" value="0"/>
         </vars>
       </project>
     </node>
     <node label="complete">
       <project status="COMPLETE">
         <vars>
-          <var name="var0" value="1"/>
+          <var name="var0" value="0"/>
         </vars>
       </project>
     </node>
@@ -82,8 +79,21 @@
       </after-commit>
     </transition>
 
-    <!-- 奖励:Pandaemonium NPC 836074 领取。使用守护灵契约 190080011 后由 MinionService 将任务置为 REWARD(var0=1)。 -->
-    <transition source="started" target="reward"> <event> <use-item item-id="190080021"/> </event> <conditions> <variable-is field="var0" value="0"/> </conditions> <after-commit> <sync-quest-state mode="PACKET_ONLY"/> </after-commit> </transition>
+    <!-- 真端按任务工作物品播放使用动画后推进奖励状态。 -->
+    <transition source="started" target="reward">
+      <event>
+        <item-play item-id="190080021" animation-millis="1500"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="190080021" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="836074" dialog-id="31"/>

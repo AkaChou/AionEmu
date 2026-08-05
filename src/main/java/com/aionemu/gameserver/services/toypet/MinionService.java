@@ -300,15 +300,6 @@ public class MinionService {
 					player.getController().updateNearbyQuests();
 				}
 			}
-            if (player.getQuestStateList().hasQuest(19900) && item.getItemId() == 190080010) {
-                QuestState qs = player.getQuestStateList().getQuestState(19900);
-                if (qs != null && qs.getStatus() == QuestStatus.START) {
-                    qs.setQuestVar(1);
-                    qs.setStatus(QuestStatus.REWARD);
-                    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(19900, qs.getStatus(), qs.getQuestVars().getQuestVars()));
-                    player.getController().updateNearbyQuests();
-                }
-            }
             break;
 		case ASMODIANS:
 			if (player.getQuestStateList().hasQuest(25545) && item.getItemId() == 190080011) {
@@ -320,15 +311,6 @@ public class MinionService {
 					player.getController().updateNearbyQuests();
 				}
 			}
-            if (player.getQuestStateList().hasQuest(29900) && item.getItemId() == 190080011) {
-                QuestState qs = player.getQuestStateList().getQuestState(29900);
-                if (qs != null && qs.getStatus() == QuestStatus.START) {
-                    qs.setQuestVar(1);
-                    qs.setStatus(QuestStatus.REWARD);
-                    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(29900, qs.getStatus(), qs.getQuestVars().getQuestVars()));
-                    player.getController().updateNearbyQuests();
-                }
-            }
             break;
         default:
             break;
