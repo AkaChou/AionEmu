@@ -11,6 +11,15 @@ public interface QuestNpcPort {
 	boolean deleteInteractionNpc(QuestSnapshot snapshot, QuestMutationPlan plan, boolean scheduleRespawn);
 
 	/**
+	 * Deletes all NPCs in the player's current authoritative world-map instance.
+	 *
+	 * @return true when the player's current world instance was available and the cleanup was applied
+	 */
+	default boolean deleteWorldNpcs(QuestSnapshot snapshot, QuestMutationPlan plan) {
+		throw new UnsupportedOperationException("deleteWorldNpcs is not composed");
+	}
+
+	/**
 	 * 将任务玩家造成的伤害/仇恨添加到指定模板的附近 NPC。
 	 * Adds damage/aggro from the quest player to nearby NPCs of a template.
 	 */

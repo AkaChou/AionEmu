@@ -329,6 +329,13 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireSuccess(npcPort.deleteInteractionNpc(snapshot, plan, delete.scheduleRespawn()), action, snapshot);
 			return;
 		}
+		if (action instanceof AfterCommitAction.DeleteWorldNpcs) {
+			if (npcPort == null) {
+				throw new IllegalArgumentException("deleteWorldNpcs requires an npc port");
+			}
+			requireSuccess(npcPort.deleteWorldNpcs(snapshot, plan), action, snapshot);
+			return;
+		}
 		if (action instanceof AfterCommitAction.AddNpcAggro aggro) {
 			if (npcPort == null) {
 				throw new IllegalArgumentException("addNpcAggro requires an npc port");

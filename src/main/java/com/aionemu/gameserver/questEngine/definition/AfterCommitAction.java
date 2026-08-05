@@ -21,6 +21,7 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.StartNpcFactionQuest, AfterCommitAction.CompleteNpcFactionQuest,
 		AfterCommitAction.AbortNpcFactionQuest,
 		AfterCommitAction.AddNpcAggro, AfterCommitAction.DeleteInteractionNpc,
+		AfterCommitAction.DeleteWorldNpcs,
 		AfterCommitAction.BroadcastZoneMissionEnd {
 	record CloseDialog() implements AfterCommitAction {
 	}
@@ -377,6 +378,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 	 * DespawnNpc, this addresses a world static NPC rather than a task-spawned one.
 	 */
 	record DeleteInteractionNpc(boolean scheduleRespawn) implements AfterCommitAction {
+	}
+
+	/** Deletes every NPC currently present in the player's authoritative world-map instance. */
+	record DeleteWorldNpcs() implements AfterCommitAction {
 	}
 
 	/** 对若干目标任务广播 zone-mission-end 事件, 触发其启动/推进。 */

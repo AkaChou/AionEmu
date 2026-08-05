@@ -47,6 +47,22 @@ public final class PlayerQuestNpcPort implements QuestNpcPort {
 	}
 
 	@Override
+	public boolean deleteWorldNpcs(QuestSnapshot snapshot, QuestMutationPlan plan) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		var player = world.world().findPlayer(snapshot.playerId());
+		if (player == null || player.getPosition() == null || player.getPosition().getWorldMapInstance() == null) {
+			return false;
+		}
+		for (Npc npc : player.getPosition().getWorldMapInstance().getNpcs()) {
+			if (npc != null && npc.isSpawned()) {
+				npc.getController().onDelete();
+			}
+		}
+		return true;
+	}
+
+	@Override
 	public boolean addNpcAggro(QuestSnapshot snapshot, QuestMutationPlan plan, int npcTemplateId, int damage) {
 		Objects.requireNonNull(snapshot, "snapshot");
 		Objects.requireNonNull(plan, "plan");

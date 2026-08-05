@@ -605,6 +605,7 @@ public final class QuestDefinitionXmlCompiler {
 			case "flight-teleport" -> new AfterCommitAction.FlightTeleport(integer(action, "flight-teleport-id"));
 			case "delete-interaction-npc" -> new AfterCommitAction.DeleteInteractionNpc(
 				booleanOrDefault(action, "schedule-respawn", true));
+			case "delete-world-npcs" -> new AfterCommitAction.DeleteWorldNpcs();
 			case "broadcast-zone-mission-end" -> new AfterCommitAction.BroadcastZoneMissionEnd(
 				parseQuestIdArray(action, "quest-ids"));
 			case "spawn-npc-current-or-default" -> new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
