@@ -78,19 +78,38 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			throw new SQLException("player is unavailable: " + snapshot.playerId());
 		}
 		long kinah = 0;
-		int ap = 0;
-		int gp = 0;
-		int dp = 0;
+		long apTotal = 0;
+		long gpTotal = 0;
+		long dpTotal = 0;
 		for (QuestAction.GrantReward reward : rewards) {
 			QuestRewardKind kind = reward.rewardKind();
 			long amount = QuestRewardAmounts.resolve(player, reward);
-			switch (kind) {
-				case GOLD, KINAH -> kinah += amount;
-				case AP -> ap += (int) amount;
-				case GP -> gp += (int) amount;
-				case DP -> dp += (int) amount;
-				default -> throw new SQLException("unsupported currency reward " + kind);
+			if (amount < 0) {
+				throw new SQLException("negative resolved currency reward " + kind + " for player "
+					+ snapshot.playerId());
 			}
+			try {
+				switch (kind) {
+					case GOLD, KINAH -> kinah = Math.addExact(kinah, amount);
+					case AP -> apTotal = Math.addExact(apTotal, amount);
+					case GP -> gpTotal = Math.addExact(gpTotal, amount);
+					case DP -> dpTotal = Math.addExact(dpTotal, amount);
+					default -> throw new SQLException("unsupported currency reward " + kind);
+				}
+			} catch (ArithmeticException overflow) {
+				throw new SQLException("currency reward amount overflow for player " + snapshot.playerId(), overflow);
+			}
+		}
+		final int ap;
+		final int gp;
+		final int dp;
+		try {
+			ap = Math.toIntExact(apTotal);
+			gp = Math.toIntExact(gpTotal);
+			dp = Math.toIntExact(dpTotal);
+		} catch (ArithmeticException overflow) {
+			throw new SQLException("currency reward amount exceeds live integer balance for player "
+				+ snapshot.playerId(), overflow);
 		}
 		if (kinah == 0 && ap == 0 && gp == 0 && dp == 0) {
 			return QuestTransactionParticipant.none();

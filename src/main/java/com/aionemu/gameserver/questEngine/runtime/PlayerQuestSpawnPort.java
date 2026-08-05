@@ -69,7 +69,11 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 		if (npc == null) {
 			return false;
 		}
-		return registry.register(snapshot, slot, npc);
+		if (!registry.register(snapshot, slot, npc)) {
+			deleteUnregistered(npc);
+			return registry.contains(snapshot, slot);
+		}
+		return true;
 	}
 
 	@Override
@@ -107,6 +111,12 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 			return null;
 		}
 		return new ResolvedLocation(fixed.worldId(), instanceId, fixed.x(), fixed.y(), fixed.z(), fixed.heading());
+	}
+
+	private static void deleteUnregistered(Npc npc) {
+		if (npc.isSpawned() && npc.getController() != null) {
+			npc.getController().onDelete();
+		}
 	}
 
 	private record ResolvedLocation(int worldId, int instanceId, float x, float y, float z, byte heading) {
