@@ -840,15 +840,24 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
-			if (player != null && typed.dispatch(new QuestEvent.EnterZone(zoneName.name()), player.getObjectId(), 0,
-					QuestDispatchContract.BROADCAST).claimed()) {
-				return true;
+			boolean typedDispatchSucceeded = false;
+			if (player != null) {
+				try {
+					typedDispatchSucceeded = typed.dispatch(new QuestEvent.EnterZone(zoneName.name()),
+						player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimed();
+				} catch (RuntimeException ignored) {
+					// Preserve unrelated legacy owners when typed fact capture or execution fails.
+				}
 			}
 			IntArrayList lists = getOnEnterZoneQuests(zoneName);
 			for (int index = 0; index < lists.size(); index++) {
-				QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
+				int questId = lists.get(index);
+				if (typedDispatchSucceeded && typed.owns(questId)) {
+					continue;
+				}
+				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 				if (questHandler != null) {
-					env.setQuestId(lists.get(index));
+					env.setQuestId(questId);
 					questHandler.onEnterZoneEvent(env, zoneName);
 				}
 			}
@@ -870,12 +879,27 @@ public class QuestEngine implements GameEngine {
 	 */
 	public boolean onLeaveZone(QuestEnv env, ZoneName zoneName) {
 		try {
+			QuestProductionDispatcher typed = productionDispatcher;
+			Player player = env.getPlayer();
+			boolean typedDispatchSucceeded = false;
+			if (player != null) {
+				try {
+					typedDispatchSucceeded = typed.dispatch(new QuestEvent.LeaveZone(zoneName.name()),
+						player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimed();
+				} catch (RuntimeException ignored) {
+					// Preserve unrelated legacy owners when typed fact capture or execution fails.
+				}
+			}
 			if (questOnLeaveZone.containsKey(zoneName)) {
 				IntArrayList leaveZoneList = questOnLeaveZone.get(zoneName);
 				for (int i = 0; i < leaveZoneList.size(); i++) {
-					QuestHandler questHandler = getQuestHandlerByQuestId(leaveZoneList.get(i));
+					int questId = leaveZoneList.get(i);
+					if (typedDispatchSucceeded && typed.owns(questId)) {
+						continue;
+					}
+					QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 					if (questHandler != null) {
-						env.setQuestId(leaveZoneList.get(i));
+						env.setQuestId(questId);
 						questHandler.onLeaveZoneEvent(env, zoneName);
 					}
 				}
@@ -900,18 +924,28 @@ public class QuestEngine implements GameEngine {
 		try {
 			QuestProductionDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
-			if (player != null && typed.dispatch(new QuestEvent.MovieEnd(movieId), player.getObjectId(), 0,
-					QuestDispatchContract.EXCLUSIVE).claimed()) {
-				return true;
+			boolean typedDispatchSucceeded = false;
+			if (player != null) {
+				try {
+					typedDispatchSucceeded = typed.dispatch(new QuestEvent.MovieEnd(movieId), player.getObjectId(), 0,
+						QuestDispatchContract.EXCLUSIVE).claimed();
+				} catch (RuntimeException ignored) {
+					// Preserve unrelated legacy owners when typed movie facts cannot be executed.
+				}
 			}
 			IntArrayList onMovieEndQuests = getOnMovieEndQuests(movieId);
 			for (int index = 0; index < onMovieEndQuests.size(); index++) {
-				env.setQuestId(onMovieEndQuests.get(index));
+				int questId = onMovieEndQuests.get(index);
+				if (typedDispatchSucceeded && typed.owns(questId)) {
+					continue;
+				}
+				env.setQuestId(questId);
 				QuestHandler questHandler = getQuestHandlerByQuestId(env.getQuestId());
 				if (questHandler != null && questHandler.onMovieEndEvent(env, movieId)) {
 					return true;
 				}
 			}
+			return typedDispatchSucceeded;
 		} catch (Exception ex) {
 			// log.error(I18n.get("log.e20bb13d3b6a", ex));
 		}
@@ -999,10 +1033,26 @@ public class QuestEngine implements GameEngine {
 	 * Item id
 	 */
 	public void onFailCraft(QuestEnv env, int itemId) {
+		Player player = env == null ? null : env.getPlayer();
+		QuestProductionDispatcher typed = productionDispatcher;
+		boolean typedDispatchSucceeded = false;
+		if (player != null && player.getInventory() != null
+				&& player.getInventory().getItemCountByItemId(itemId) == 0) {
+			try {
+				typedDispatchSucceeded = typed.dispatch(new QuestEvent.FailCraft(itemId), player.getObjectId(), 0,
+					QuestDispatchContract.BROADCAST).claimed();
+			} catch (RuntimeException ignored) {
+				// Preserve unrelated legacy owners when the typed craft-fail fact is unavailable.
+			}
+		}
 		if (questOnFailCraft.containsKey(itemId)) {
 			int questId = questOnFailCraft.get(itemId);
+			if (typedDispatchSucceeded && typed.owns(questId)) {
+				return;
+			}
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
-			if (questHandler != null && env.getPlayer().getInventory().getItemCountByItemId(itemId) == 0) {
+			if (questHandler != null && player != null && player.getInventory() != null
+					&& player.getInventory().getItemCountByItemId(itemId) == 0) {
 				env.setQuestId(questId);
 				questHandler.onFailCraftEvent(env, itemId);
 			}
@@ -1017,9 +1067,23 @@ public class QuestEngine implements GameEngine {
 	 * Item id
 	 */
 	public void onEquipItem(QuestEnv env, int itemId) {
+		Player player = env == null ? null : env.getPlayer();
+		QuestProductionDispatcher typed = productionDispatcher;
+		boolean typedDispatchSucceeded = false;
+		if (player != null) {
+			try {
+				typedDispatchSucceeded = typed.dispatch(new QuestEvent.EquipItem(itemId),
+					player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimed();
+			} catch (RuntimeException ignored) {
+				// Preserve unrelated legacy owners when the typed equipment fact is unavailable.
+			}
+		}
 		if (questOnEquipItem.containsKey(itemId)) {
 			Set<Integer> questIds = questOnEquipItem.get(itemId);
 			for (int questId : questIds) {
+				if (typedDispatchSucceeded && typed.owns(questId)) {
+					continue;
+				}
 				QuestHandler questHandler = getQuestHandlerByQuestId(questId);
 				if (questHandler != null) {
 					env.setQuestId(questId);
@@ -1043,13 +1107,11 @@ public class QuestEngine implements GameEngine {
 			final Object... objects) {
 		QuestProductionDispatcher typed = productionDispatcher;
 		QuestEvent event = new QuestEvent.CanAct(templateId, questActionType.name());
-		if (typed.dispatch(event, env.getPlayer().getObjectId(), 0,
-			QuestDispatchContract.EXCLUSIVE).claimed()) {
-			return true;
-		}
+		boolean typedDispatchSucceeded = typed.dispatch(event, env.getPlayer().getObjectId(), 0,
+			QuestDispatchContract.EXCLUSIVE).claimed();
 		if (questCanAct.containsKey(templateId)) {
 			IntArrayList questIds = questCanAct.get(templateId);
-			return !questIds.forEach(new IntProcedure() {
+			boolean legacyHandled = !questIds.forEach(new IntProcedure() {
 					@Override
 					public boolean execute(int value) {
 						if (typed.owns(value)) {
@@ -1065,8 +1127,9 @@ public class QuestEngine implements GameEngine {
 						return true;
 					}
 				});
+			return typedDispatchSucceeded || legacyHandled;
 		}
-		return false;
+		return typedDispatchSucceeded;
 	}
 
 	/**
