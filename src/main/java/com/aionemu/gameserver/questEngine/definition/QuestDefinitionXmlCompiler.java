@@ -17,11 +17,13 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /** Strict XML front end for the canonical definition IR. */
 public final class QuestDefinitionXmlCompiler {
@@ -360,7 +362,7 @@ public final class QuestDefinitionXmlCompiler {
 	private static QuestEvent parseEvent(Element element) {
 		return switch (element.getTagName()) {
 			case "talk-to-npc" -> parseTalkEvent(element);
-			case "kill-npc" -> new QuestEvent.KillNpc(integer(element, "npc-id"));
+			case "kill-npc" -> parseKillNpc(element);
 			case "attack-npc" -> new QuestEvent.AttackNpc(integer(element, "npc-id"));
 			case "use-item" -> new QuestEvent.UseItem(integer(element, "item-id"));
 			case "quest-dialog" -> new QuestEvent.QuestDialog(parseQuestDialogId(element));
@@ -402,6 +404,26 @@ public final class QuestDefinitionXmlCompiler {
 			case "npc-lost-target" -> new QuestEvent.NpcLostTarget();
 			default -> fail("UNKNOWN_EVENT", element.getTagName());
 		};
+	}
+
+	/** Single {@code npc-id} or space-separated {@code npc-ids} both lower to a kill event. */
+	private static QuestEvent parseKillNpc(Element element) {
+		String ids = element.getAttribute("npc-ids");
+		if (ids == null || ids.isBlank()) {
+			return new QuestEvent.KillNpc(integer(element, "npc-id"));
+		}
+		Set<Integer> npcIds = Arrays.stream(ids.trim().split("\\s+"))
+			.map(s -> parseNpcId(element, s))
+			.collect(Collectors.toSet());
+		return new QuestEvent.KillNpcSet(npcIds);
+	}
+
+	private static int parseNpcId(Element element, String token) {
+		try {
+			return Integer.parseInt(token);
+		} catch (NumberFormatException e) {
+			return fail("INVALID_NPC_IDS", "kill-npc npc-ids contains non-numeric '" + token + "'");
+		}
 	}
 
 	private static QuestEvent parseTalkEvent(Element element) {

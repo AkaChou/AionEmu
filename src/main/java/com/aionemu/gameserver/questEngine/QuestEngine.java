@@ -1826,6 +1826,7 @@ public class QuestEngine implements GameEngine {
 			for (var transition : definition.definition().transitions()) {
 				if (!(transition.event() instanceof QuestEvent.TalkToNpc)
 						&& !(transition.event() instanceof QuestEvent.KillNpc)
+						&& !(transition.event() instanceof QuestEvent.KillNpcSet)
 						&& !(transition.event() instanceof QuestEvent.CanAct)
 						&& !(transition.event() instanceof QuestEvent.EnterZone)
 						&& !(transition.event() instanceof QuestEvent.LevelUp)
@@ -1863,6 +1864,10 @@ public class QuestEngine implements GameEngine {
 					}
 				} else if (transition.event() instanceof QuestEvent.KillNpc kill) {
 					registerQuestNpc(kill.npcId()).addOnKillEvent(definition.id());
+				} else if (transition.event() instanceof QuestEvent.KillNpcSet kills) {
+					for (int npcId : kills.npcIds()) {
+						registerQuestNpc(npcId).addOnKillEvent(definition.id());
+					}
 				} else if (transition.event() instanceof QuestEvent.CanAct canAct) {
 					registerCanAct(definition.id(), canAct.templateId());
 				} else if (transition.event() instanceof QuestEvent.UseItem use) {

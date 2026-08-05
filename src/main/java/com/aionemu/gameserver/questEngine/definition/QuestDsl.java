@@ -49,6 +49,11 @@ public final class QuestDsl {
 		return new QuestEvent.KillNpc(npcId);
 	}
 
+	/** 任一列出的 npc 击杀都满足该事件。Any listed npc kill satisfies the event. */
+	public static QuestEvent killNpcIds(int... npcIds) {
+		return new QuestEvent.KillNpcSet(java.util.Arrays.stream(npcIds).boxed().collect(java.util.stream.Collectors.toSet()));
+	}
+
 	public static QuestEvent attackNpc(int npcId) {
 		return new QuestEvent.AttackNpc(npcId);
 	}

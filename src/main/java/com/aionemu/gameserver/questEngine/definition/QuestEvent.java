@@ -1,16 +1,17 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import java.util.Objects;
+import java.util.Set;
 
 /** Closed set of event facts accepted by the quest engine. */
 public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.KillNpc,
-		QuestEvent.AttackNpc, QuestEvent.UseItem, QuestEvent.CollectItem, QuestEvent.ItemPlay,
-		QuestEvent.HouseItemUse, QuestEvent.GetItem, QuestEvent.LevelUp, QuestEvent.ZoneMissionEnd,
-		QuestEvent.Die, QuestEvent.LogOut, QuestEvent.EnterWorld, QuestEvent.EnterZone,
-		QuestEvent.LeaveZone, QuestEvent.PassFlyingRing, QuestEvent.MovieEnd, QuestEvent.QuestTimerEnd,
-		QuestEvent.InvisibleTimerEnd, QuestEvent.KillRanked, QuestEvent.KillInWorld,
-		QuestEvent.UseSkill, QuestEvent.FailCraft, QuestEvent.EquipItem, QuestEvent.CanAct,
-		QuestEvent.DredgionReward, QuestEvent.KamarReward, QuestEvent.OphidanReward,
+		QuestEvent.KillNpcSet, QuestEvent.AttackNpc, QuestEvent.UseItem, QuestEvent.CollectItem,
+		QuestEvent.ItemPlay, QuestEvent.HouseItemUse, QuestEvent.GetItem, QuestEvent.LevelUp,
+		QuestEvent.ZoneMissionEnd, QuestEvent.Die, QuestEvent.LogOut, QuestEvent.EnterWorld,
+		QuestEvent.EnterZone, QuestEvent.LeaveZone, QuestEvent.PassFlyingRing, QuestEvent.MovieEnd,
+		QuestEvent.QuestTimerEnd, QuestEvent.InvisibleTimerEnd, QuestEvent.KillRanked,
+		QuestEvent.KillInWorld, QuestEvent.UseSkill, QuestEvent.FailCraft, QuestEvent.EquipItem,
+		QuestEvent.CanAct, QuestEvent.DredgionReward, QuestEvent.KamarReward, QuestEvent.OphidanReward,
 		QuestEvent.BastionReward, QuestEvent.BonusApply, QuestEvent.AddAggroList,
 		QuestEvent.AtDistance, QuestEvent.ProtectEnd, QuestEvent.ProtectFail,
 		QuestEvent.EnterWindStream, QuestEvent.RideAction, QuestEvent.CreativityPoint,
@@ -43,6 +44,24 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	record KillNpc(int npcId) implements QuestEvent {
 		public KillNpc {
 			checkId(npcId, "npcId");
+		}
+
+		@Override
+		public String type() {
+			return "KILL_NPC";
+		}
+	}
+
+	/** Kills of any listed npc satisfy the event (one transition covering a mob family). */
+	record KillNpcSet(Set<Integer> npcIds) implements QuestEvent {
+		public KillNpcSet {
+			if (npcIds == null || npcIds.isEmpty()) {
+				throw new IllegalArgumentException("npcIds must not be empty");
+			}
+			if (npcIds.stream().anyMatch(id -> id <= 0)) {
+				throw new IllegalArgumentException("npcIds must be positive");
+			}
+			npcIds = Set.copyOf(npcIds);
 		}
 
 		@Override
@@ -552,6 +571,9 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (definition instanceof KillInWorld expected && actual instanceof KillInWorld observed) {
 			return expected.worldId() == observed.worldId();
 		}
+		if (definition instanceof KillNpcSet expected && actual instanceof KillNpc observed) {
+			return expected.npcIds().contains(observed.npcId());
+		}
 		if (definition instanceof AtDistance expected && actual instanceof AtDistance observed) {
 			return expected.npcId() == observed.npcId();
 		}
@@ -605,6 +627,15 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 		if (left instanceof KillInWorld a && right instanceof KillInWorld b) {
 			return a.worldId() == b.worldId();
+		}
+		if (left instanceof KillNpcSet a && right instanceof KillNpcSet b) {
+			return !java.util.Collections.disjoint(a.npcIds(), b.npcIds());
+		}
+		if (left instanceof KillNpcSet a && right instanceof KillNpc single) {
+			return a.npcIds().contains(single.npcId());
+		}
+		if (left instanceof KillNpc single && right instanceof KillNpcSet a) {
+			return a.npcIds().contains(single.npcId());
 		}
 		return left.equals(right);
 	}

@@ -29,7 +29,7 @@
 
   <xs:complexType name="event-type"><xs:choice>
     <xs:element name="talk-to-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="dialog"/><xs:attribute name="dialog-id" type="xs:int"/><xs:attribute name="dialog-ids" type="xs:string"/></xs:complexType></xs:element>
-    <xs:element name="kill-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="kill-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int"/><xs:attribute name="npc-ids" type="xs:string"/></xs:complexType></xs:element>
     <xs:element name="attack-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="use-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="quest-dialog"><xs:complexType><xs:attribute name="dialog" type="xs:string"/><xs:attribute name="dialog-id" type="xs:int"/></xs:complexType></xs:element>
