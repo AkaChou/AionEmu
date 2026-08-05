@@ -289,6 +289,10 @@ public final class QuestDsl {
 		return new QuestAction.IncrementVariable(field, delta);
 	}
 
+	public static QuestAction blockDefaultItemUse() {
+		return new QuestAction.BlockDefaultItemUse();
+	}
+
 	public static QuestAction setStatus(QuestStatus status) {
 		return new QuestAction.SetStatus(status);
 	}

@@ -107,7 +107,9 @@ public final class QuestDefinitionCompiler {
 			}
 			long completions = transition.actions().stream()
 				.filter(QuestAction.CompleteQuest.class::isInstance).count();
-			if (effectiveStatus == QuestStatus.COMPLETE && completions != 1) {
+			boolean blockOnly = transition.actions().size() == 1
+				&& transition.actions().get(0) instanceof QuestAction.BlockDefaultItemUse;
+			if (effectiveStatus == QuestStatus.COMPLETE && completions != 1 && !blockOnly) {
 				fail("COMPLETE_QUEST_ACTION_REQUIRED",
 					"a COMPLETE projection requires exactly one complete-quest action");
 			}
@@ -123,7 +125,7 @@ public final class QuestDefinitionCompiler {
 			}
 			boolean completionSync = stateSyncs.size() == 1
 				&& stateSyncs.get(0).mode() == QuestStateSyncMode.COMPLETION;
-			if (effectiveStatus == QuestStatus.COMPLETE && !completionSync) {
+			if (effectiveStatus == QuestStatus.COMPLETE && !completionSync && !blockOnly) {
 				fail("COMPLETE_QUEST_SYNC_REQUIRED",
 					"a COMPLETE projection requires one COMPLETION quest-state sync");
 			}

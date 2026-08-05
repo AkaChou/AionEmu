@@ -4,7 +4,7 @@ package com.aionemu.gameserver.questEngine.definition;
 public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.SetVariable,
 		QuestAction.IncrementVariable, QuestAction.SetStatus, QuestAction.GrantReward,
 		QuestAction.LearnRecipe, QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill,
-		QuestAction.CompleteQuest, QuestAction.GiveItem {
+		QuestAction.CompleteQuest, QuestAction.GiveItem, QuestAction.BlockDefaultItemUse {
 	record RemoveItem(int itemId, int count) implements QuestAction {
 		/**
 		 * transition 需要移除当前完整堆叠时使用的哨兵数量。
@@ -30,6 +30,10 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 				throw new IllegalArgumentException("item id and count must be positive");
 			}
 		}
+	}
+
+	/** Prevents the normal item action when the quest owns this item-use state. */
+	record BlockDefaultItemUse() implements QuestAction {
 	}
 
 	record SetVariable(String field, int value) implements QuestAction {

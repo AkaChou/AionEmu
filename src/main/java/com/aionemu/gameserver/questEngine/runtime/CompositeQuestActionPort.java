@@ -94,7 +94,8 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 				} else if (!(action instanceof QuestAction.SetVariable)
 						&& !(action instanceof QuestAction.IncrementVariable)
 						&& !(action instanceof QuestAction.SetStatus)
-						&& !(action instanceof QuestAction.CompleteQuest)) {
+						&& !(action instanceof QuestAction.CompleteQuest)
+						&& !(action instanceof QuestAction.BlockDefaultItemUse)) {
 					throw new IllegalArgumentException("unsupported quest action: " + action.getClass().getName());
 				}
 				// SetVariable, IncrementVariable, SetStatus, and CompleteQuest are applied by QuestStatePort.

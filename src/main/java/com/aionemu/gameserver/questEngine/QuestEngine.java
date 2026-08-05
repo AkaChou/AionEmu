@@ -575,7 +575,8 @@ public class QuestEngine implements GameEngine {
 					item.getObjectId());
 				var typedResult = typed.dispatch(event, player.getObjectId(), 0,
 					QuestDispatchContract.FIRST_NON_UNKNOWN);
-				if (typedResult.owners().stream().anyMatch(owner -> owner.result() == QuestRouteResult.FAILED)) {
+				if (typedResult.owners().stream().anyMatch(owner -> owner.result() == QuestRouteResult.FAILED
+						|| owner.result() == QuestRouteResult.BLOCKED)) {
 					return HandlerResult.FAILED;
 				}
 				if (typedResult.consumed()) {

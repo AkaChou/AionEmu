@@ -68,7 +68,9 @@ public final class QuestMutationPlanner {
 				}
 					case QuestAction.GrantCraftSkill ignored -> {
 					}
-					case QuestAction.CompleteQuest ignored -> {
+						case QuestAction.CompleteQuest ignored -> {
+					}
+					case QuestAction.BlockDefaultItemUse ignored -> {
 					}
 			}
 		}

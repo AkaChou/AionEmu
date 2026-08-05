@@ -188,6 +188,26 @@ class QuestProductionDispatcherTest {
 	}
 
 	@Test
+	void blockDefaultItemUseReturnsAConclusiveBlockingRoute() {
+		CompiledQuestDefinition definition = QuestDsl.quest(1109)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(new QuestEvent.UseItem(182200501)).from("started")
+			.then(QuestDsl.blockDefaultItemUse()).goTo("started")
+			.compile();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), new ArrayList<>(),
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.START, 0, Map.of()));
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.UseItem(182200501), 7, 0, QuestDispatchContract.FIRST_NON_UNKNOWN);
+
+		assertFalse(result.consumed());
+		assertTrue(result.claimed());
+		assertEquals(QuestRouteResult.BLOCKED, result.owners().get(0).result());
+	}
+
+	@Test
 	void itemPlayCommitsItsDelayedUseMutationThroughTheCentralCoordinator() {
 		CompiledQuestDefinition definition = QuestDsl.quest(1561)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))

@@ -4,6 +4,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -139,7 +140,9 @@ public final class QuestProductionDispatcher {
 					definition.id(), result.afterCommitFailures().size()));
 			}
 			return switch (result.status()) {
-				case COMMITTED -> QuestRouteResult.HANDLED;
+				case COMMITTED -> result.plan().requiredActions().stream()
+					.anyMatch(QuestAction.BlockDefaultItemUse.class::isInstance)
+					? QuestRouteResult.BLOCKED : QuestRouteResult.HANDLED;
 				// 同一 owner 的一条路由可能被重复索引（例如同一物品用于不同任务状态）。
 				// FIRST_NON_UNKNOWN 应继续尝试，直到某个 transition 真正匹配。
 				// A route can be indexed more than once for one owner (for example
