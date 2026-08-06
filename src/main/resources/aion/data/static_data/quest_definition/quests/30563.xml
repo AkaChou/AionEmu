@@ -9,7 +9,7 @@
     </items>
     <rewards>
       <reward kind="EXP" id="0" amount="6907092"/>
-      <reward kind="GOLD" id="0" amount="8974"/>
+      <reward kind="GOLD" id="0" amount="897480"/>
     </rewards>
     <drops>
       <drop npc-id="217298" item-id="182212510" chance="100" each-member="true" collecting-step="0"/>
@@ -181,7 +181,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="6907092" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="GOLD" id="0" amount="8974" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="GOLD" id="0" amount="897480" amount-mode="QUEST_BASE"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

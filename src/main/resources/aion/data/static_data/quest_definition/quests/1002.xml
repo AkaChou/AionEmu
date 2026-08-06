@@ -4,7 +4,7 @@
     <races>
       <race id="ELYOS"/>
     </races>
-        <items>
+    <items>
       <item id="182200003" count="3"/>
     </items>
     <rewards>
@@ -124,7 +124,7 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 启动:升级或区域任务结束,前置 1100 完成才可接取。 -->
+    <!-- 启动:升级或区域任务结束自动接取(客户端无此前置 1100 门控)。 -->
     <transition source="unaccepted" target="s0">
       <event>
         <level-up/>

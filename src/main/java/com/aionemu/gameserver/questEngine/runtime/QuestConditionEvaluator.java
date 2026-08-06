@@ -53,6 +53,9 @@ public final class QuestConditionEvaluator {
 				case QuestCondition.CurrencyAtLeast currency -> currencyAtLeast(snapshot, currency);
 				case QuestCondition.CurrencyBelow currency -> currencyBelow(snapshot, currency);
 				case QuestCondition.QuestsFinished quests -> questsFinished(snapshot, quests);
+				case QuestCondition.UnfinishedQuest quests -> unfinishedQuest(snapshot, quests);
+				case QuestCondition.NoAcquiredQuest quests -> noAcquiredQuest(snapshot, quests);
+				case QuestCondition.AcquiredQuest quests -> acquiredQuest(snapshot, quests);
 				case QuestCondition.EquipmentSetEquipped equipment -> equipmentSetEquipped(snapshot, equipment);
 				case QuestCondition.EquippedItem equipped -> equippedItem(snapshot, equipped);
 				case QuestCondition.MembershipPermission permission -> membershipPermission(snapshot, permission);
@@ -208,6 +211,43 @@ public final class QuestConditionEvaluator {
 			return false;
 		}
 		return condition.questIds().stream().allMatch(snapshot::hasCompletedQuest);
+	}
+
+	/**
+	 * 未完成条件仅在快照已采集完成事实时匹配;未知事实失败关闭。
+	 * Unfinished-quest conditions match only captured facts; unknown facts fail closed.
+	 */
+	private static boolean unfinishedQuest(QuestSnapshot snapshot, QuestCondition.UnfinishedQuest condition) {
+		if (!snapshot.completedQuestsCaptured()) {
+			return false;
+		}
+		return condition.questIds().stream().noneMatch(snapshot::hasCompletedQuest);
+	}
+
+	/**
+	 * 未接取条件要求完成与进行中事实均已采集;未知事实失败关闭。
+	 * No-acquired conditions require both completed and active facts; unknown facts fail closed.
+	 */
+	private static boolean noAcquiredQuest(QuestSnapshot snapshot, QuestCondition.NoAcquiredQuest condition) {
+		if (!snapshot.completedQuestsCaptured() || !snapshot.activeQuestsCaptured()) {
+			return false;
+		}
+		return condition.questIds().stream()
+			.noneMatch(id -> snapshot.hasCompletedQuest(id) || snapshot.hasActiveQuest(id));
+	}
+
+	/**
+	 * 已接取条件(legacy {@code acquired})要求完成与进行中事实均已采集;
+	 * 匹配每个列出的任务已完成或进行中。
+	 * Acquired conditions require both completed and active facts; each listed quest
+	 * must be completed or in progress.
+	 */
+	private static boolean acquiredQuest(QuestSnapshot snapshot, QuestCondition.AcquiredQuest condition) {
+		if (!snapshot.completedQuestsCaptured() || !snapshot.activeQuestsCaptured()) {
+			return false;
+		}
+		return condition.questIds().stream()
+			.allMatch(id -> snapshot.hasCompletedQuest(id) || snapshot.hasActiveQuest(id));
 	}
 
 	private static boolean equipmentSetEquipped(QuestSnapshot snapshot,

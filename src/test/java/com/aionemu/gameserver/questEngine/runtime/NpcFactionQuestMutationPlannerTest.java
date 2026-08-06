@@ -11,7 +11,6 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NpcFactionQuestMutationPlannerTest {
@@ -38,7 +37,8 @@ class NpcFactionQuestMutationPlannerTest {
 	}
 
 	@Test
-	void doesNotStartFactionLifecycleForTimeBasedQuest() {
+	void startsFactionLifecycleForDailyQuestOnAccept() {
+		// 真端依据:阵营任务 daily 标志不可靠,接取即启动生命周期,不再按 timeBased 取消。
 		CompiledQuestDefinition definition = compile(true);
 		var start = definition.definition().transitions().get(0);
 
@@ -47,7 +47,7 @@ class NpcFactionQuestMutationPlannerTest {
 				.withStartEligibility(QuestStartEligibility.allowed()),
 			new QuestEvent.TalkToNpc(700001, 1002), start).orElseThrow();
 
-		assertFalse(plan.afterCommit().stream()
+		assertTrue(plan.afterCommit().stream()
 			.anyMatch(AfterCommitAction.StartNpcFactionQuest.class::isInstance));
 	}
 

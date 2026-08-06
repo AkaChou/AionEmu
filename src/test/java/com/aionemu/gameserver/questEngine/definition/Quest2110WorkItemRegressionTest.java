@@ -12,10 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Quest2110WorkItemRegressionTest {
 	@Test
-	void preservesLegacyReportToWorkItemLifecycle() {
+	void retailQuestHasNoWorkItemAndAcceptsWithoutGiving182203110() {
+		// 客户端/真端证据:quest.xml 2110 块 work-item 的 itemId=0、count=0,
+		// 接取不发 182203110,reward 转移无 has-item/remove-item。
 		CompiledQuestDefinition definition = load();
-		assertEquals(List.of(new QuestItemRequirement(182203110, 1)),
-			definition.definition().metadata().questWorkItems());
+		assertEquals(List.of(), definition.definition().metadata().questWorkItems());
 
 		List<QuestTransition> starts = definition.definition().transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
@@ -23,7 +24,7 @@ class Quest2110WorkItemRegressionTest {
 				&& transition.targetNode().equals("started"))
 			.toList();
 		assertEquals(2, starts.size());
-		assertTrue(starts.stream().allMatch(transition -> transition.actions()
+		assertTrue(starts.stream().noneMatch(transition -> transition.actions()
 			.contains(new QuestAction.GiveItem(182203110, 1))));
 
 		QuestTransition report = definition.definition().transitions().stream()
@@ -35,8 +36,11 @@ class Quest2110WorkItemRegressionTest {
 		assertEquals(QuestStatus.REWARD,
 			definition.definition().nodes().stream().filter(node -> node.label().equals("reward"))
 			.findFirst().orElseThrow().projection().status());
-		assertTrue(report.conditions().contains(new QuestCondition.HasItem(182203110, 1)));
-		assertTrue(report.actions().contains(new QuestAction.RemoveItem(182203110, 1)));
+		assertTrue(report.conditions().stream()
+			.noneMatch(QuestCondition.HasItem.class::isInstance));
+		assertTrue(report.actions().stream()
+			.noneMatch(action -> action instanceof QuestAction.RemoveItem remove
+				&& remove.itemId() == 182203110));
 		assertTrue(definition.definition().transitions().stream().anyMatch(transition ->
 			transition.sourceNode().equals("started") && transition.targetNode().equals("started")
 				&& transition.event().equals(new QuestEvent.TalkToNpc(203533, 1009))

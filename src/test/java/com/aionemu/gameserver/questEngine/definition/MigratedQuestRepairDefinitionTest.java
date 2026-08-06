@@ -166,6 +166,7 @@ class MigratedQuestRepairDefinitionTest {
 		int packed = definition.definition().progressLayout().pack(Map.of("var0", 0));
 		QuestSnapshot ready = new QuestSnapshot(7, 14026, QuestStatus.NONE, packed, Map.of())
 			.withCompletedQuestIds(Set.of(14020, 14021, 14022, 14023, 14024, 14025))
+			.withActiveQuestIds(Set.of())
 			.withStartEligibility(QuestStartEligibility.allowed());
 		QuestSnapshot blocked = ready.withCompletedQuestIds(Set.of(14020, 14021));
 		assertTrue(QuestMutationPlanner.plan(definition, ready, new QuestEvent.ZoneMissionEnd(), start).isPresent());

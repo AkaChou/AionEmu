@@ -25,7 +25,7 @@ class Quest19004RetailAlignmentTest {
 		assertEquals("Perikles's Insight", metadata.name());
 		assertEquals(1124504, metadata.displayNameId());
 		assertEquals(29, metadata.minLevel());
-		assertEquals("SIGNIFICANT", metadata.category());
+		assertEquals("QUEST", metadata.category());
 		assertTrue(metadata.cannotShare());
 		assertEquals(List.of(new QuestReward("GOLD", 0, 9830), new QuestReward("EXP", 0, 37405)),
 			metadata.rewards());

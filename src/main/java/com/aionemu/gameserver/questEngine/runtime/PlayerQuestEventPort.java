@@ -113,6 +113,7 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			craftFactsOf(player), null).withWorldFacts(worldFactsOf(player))
 			.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()))
 			.withCompletedQuestIds(completedQuestIdsOf(player))
+			.withActiveQuestIds(activeQuestIdsOf(player))
 			.withCompleteCount(state == null ? 0 : state.getCompleteCount());
 		snapshot = snapshot.withEventActive(eventActiveOf(questId));
 		QuestEquipmentFacts equipmentFacts = equipmentFactsOf(player);
@@ -176,6 +177,20 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		}
 		int maxDp = player.getGameStats().getMaxDp().getCurrent();
 		return maxDp < 0 ? null : maxDp;
+	}
+
+	/** Captures quest states currently in progress (START or REWARD); absent states are not active. */
+	private static Set<Integer> activeQuestIdsOf(Player player) {
+		Set<Integer> active = new HashSet<>();
+		for (QuestState questState : player.getQuestStateList().getAllQuestState()) {
+			if (questState != null && questState.getQuestId() > 0) {
+				QuestStatus status = questState.getStatus();
+				if (status == QuestStatus.START || status == QuestStatus.REWARD) {
+					active.add(questState.getQuestId());
+				}
+			}
+		}
+		return Set.copyOf(active);
 	}
 
 	/** Captures only quest states that are explicitly COMPLETE; absent states are not completed. */

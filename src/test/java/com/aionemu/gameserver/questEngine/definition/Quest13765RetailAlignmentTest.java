@@ -31,10 +31,13 @@ class Quest13765RetailAlignmentTest {
 		assertEquals(255, metadata.repeatPolicy().maxRepeatCount());
 		assertEquals(List.of(new QuestReward("EXP", 0, 3618881), new QuestReward("ITEM", 186000236, 5)),
 			metadata.rewards());
-		assertEquals(List.of(new QuestKill(1, List.of(235357))), metadata.kills());
+		// 客户端证据:quest.xml 13765 块的 8 个击杀序列,metadata 需与之对齐。
+		assertEquals(java.util.stream.IntStream.rangeClosed(1, 8)
+				.mapToObj(sequence -> new QuestKill(sequence, List.of(235357))).toList(),
+			metadata.kills());
 
 		List<QuestTransition> transitions = definition.transitions();
-		assertEquals(5, transitions.stream()
+		assertEquals(8, transitions.stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc kill
 				&& kill.npcId() == 235357)
 			.count());

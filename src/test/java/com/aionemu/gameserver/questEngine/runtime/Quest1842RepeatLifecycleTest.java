@@ -21,7 +21,7 @@ class Quest1842RepeatLifecycleTest {
 			"/aion/data/static_data/quest_definition/quests/1842.xml"))) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
-		QuestEvent event = new QuestEvent.TalkToNpc(268080, 1002);
+		QuestEvent event = new QuestEvent.TalkToNpc(805430, 1002);
 		var transition = definition.definition().transitions().stream()
 			.filter(candidate -> candidate.sourceNode().equals("unaccepted"))
 			.filter(candidate -> candidate.event().equals(event))

@@ -18,6 +18,14 @@
       <class id="TECHNIST"/>
       <class id="AETHERTECH"/>
     </classes>
+    <prerequisites>
+      <quest id="24020"/>
+      <quest id="24021"/>
+      <quest id="24022"/>
+      <quest id="24023"/>
+      <quest id="24024"/>
+      <quest id="24025"/>
+    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="3504765"/>
       <reward kind="TITLE" id="60" amount="1"/>
@@ -52,12 +60,12 @@
     <!-- The campaign starts only after all six preceding missions are complete. -->
     <transition source="unaccepted" target="started">
       <event><zone-mission-end/></event>
-      <conditions><start-eligible/></conditions>
+      <conditions><start-eligible/><quests-finished quest-ids="24020 24021 24022 24023 24024 24025"/></conditions>
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event><level-up/></event>
-      <conditions><start-eligible/></conditions>
+      <conditions><start-eligible/><quests-finished quest-ids="24020 24021 24022 24023 24024 24025"/></conditions>
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit>
     </transition>
 

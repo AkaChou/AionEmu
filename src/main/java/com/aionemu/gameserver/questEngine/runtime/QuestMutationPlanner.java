@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /** Builds a plan without mutating player state or performing external effects. */
 public final class QuestMutationPlanner {
@@ -161,6 +162,9 @@ public final class QuestMutationPlanner {
 	 * NPC-faction state is a player-side lifecycle resource rather than a quest
 	 * variable. Keep it outside the SQL mutation, but schedule the same start,
 	 * complete, and explicit-abandon hooks that the legacy QuestService invokes.
+	 * The daily/weekly gate was dropped: retail faction rotation is daily and the
+	 * daily flag is unreliable, so StartNpcFactionQuest fires on every NONE-to-START
+	 * acquire; min-level 999 already guards the rotated window.
 	 */
 	private static List<AfterCommitAction> npcFactionLifecycleActions(CompiledQuestDefinition definition,
 		QuestSnapshot snapshot, QuestEvent event, QuestTransition transition, QuestNode target) {
@@ -175,8 +179,7 @@ public final class QuestMutationPlanner {
 				.map(node -> node.projection().status()).findFirst().orElse(QuestStatus.NONE);
 		}
 		List<AfterCommitAction> lifecycle = new ArrayList<>();
-		boolean timeBased = !definition.definition().metadata().repeatCycles().isEmpty();
-		if (!timeBased && sourceStatus == QuestStatus.NONE && target.projection().status() == QuestStatus.START) {
+		if (sourceStatus == QuestStatus.NONE && target.projection().status() == QuestStatus.START) {
 			lifecycle.add(new AfterCommitAction.StartNpcFactionQuest(npcFactionId));
 		}
 		if (target.projection().status() == QuestStatus.COMPLETE) {
@@ -271,10 +274,10 @@ public final class QuestMutationPlanner {
 			.allMatch(entry -> entry.getValue().equals(actual.get(entry.getKey())));
 	}
 
-	/** Metadata prerequisites gate only transitions that acquire an unaccepted quest. */
+	/** Metadata prerequisites and start conditions gate only transitions that acquire an unaccepted quest. */
 	private static boolean metadataPrerequisitesSatisfied(CompiledQuestDefinition definition,
 		QuestSnapshot snapshot, QuestTransition transition) {
-		if (definition.definition().metadata().prerequisites().isEmpty() || transition.sourceNode() == null) {
+		if (transition.sourceNode() == null) {
 			return true;
 		}
 		QuestNode source = definition.definition().nodes().stream()
@@ -285,8 +288,24 @@ public final class QuestMutationPlanner {
 			|| target.projection().status() == QuestStatus.NONE) {
 			return true;
 		}
-		return QuestConditionEvaluator.matches(definition.definition().progressLayout(), snapshot,
-			List.of(new QuestCondition.QuestsFinished(definition.definition().metadata().prerequisites())));
+		List<QuestCondition> conditions = new ArrayList<>();
+		if (!definition.definition().metadata().prerequisites().isEmpty()) {
+			conditions.add(new QuestCondition.QuestsFinished(definition.definition().metadata().prerequisites()));
+		}
+		for (var startCondition : definition.definition().metadata().startConditions()) {
+			conditions.add(switch (startCondition.type()) {
+				case "finished" -> new QuestCondition.QuestsFinished(Set.of(startCondition.questId()));
+				case "unfinished" -> new QuestCondition.UnfinishedQuest(Set.of(startCondition.questId()));
+				case "noacquired" -> new QuestCondition.NoAcquiredQuest(Set.of(startCondition.questId()));
+				case "acquired" -> new QuestCondition.AcquiredQuest(Set.of(startCondition.questId()));
+				default -> throw new IllegalArgumentException(
+					"unsupported start condition type: " + startCondition.type());
+			});
+		}
+		if (conditions.isEmpty()) {
+			return true;
+		}
+		return QuestConditionEvaluator.matches(definition.definition().progressLayout(), snapshot, conditions);
 	}
 
 	/**

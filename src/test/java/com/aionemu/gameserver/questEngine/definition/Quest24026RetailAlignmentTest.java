@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,6 +27,9 @@ class Quest24026RetailAlignmentTest {
 		assertTrue(metadata.cannotShare());
 		assertTrue(metadata.cannotGiveup());
 		assertEquals(Set.of(24020, 24021, 24022, 24023, 24024, 24025), metadata.prerequisites());
+		// 客户端证据:24026 保留 start-conditions unfinished+noacquired Q2041。
+		assertEquals(List.of(new QuestStartCondition("unfinished", 2041, 0),
+			new QuestStartCondition("noacquired", 2041, 0)), metadata.startConditions());
 		assertEquals(10, metadata.rewards().size());
 		assertEquals(new QuestReward("EXP", 0, 3504765), metadata.rewards().get(0));
 		assertEquals(new QuestReward("TITLE", 60, 1), metadata.rewards().get(1));

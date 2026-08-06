@@ -17,7 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Quest24053PrerequisiteTest {
 	@Test
-	void keepsTheLegacyPrerequisitePerAutomaticStartEvent() throws Exception {
+	void gatesAutomaticStartsOnUnfinishedAndUnacquired2061() throws Exception {
+		// 客户端证据:24053 的 start-conditions 为 unfinished+noacquired Q2061,
+		// 两条自动接取转移无 24050/24040 完成依赖(照 24051 先例);快照含 Q2061
+		// 的 START/COMPLETE 均拒,从未接取(且事实已采集)时可接,未采集失败关闭。
 		CompiledQuestDefinition definition = load(24053);
 		QuestTransition levelUp = definition.definition().transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.LevelUp)
@@ -26,17 +29,21 @@ class Quest24053PrerequisiteTest {
 			.filter(transition -> transition.event() instanceof QuestEvent.ZoneMissionEnd)
 			.findFirst().orElseThrow();
 
-		QuestSnapshot noPrerequisites = snapshot(Set.of());
-		QuestSnapshot levelUpReady = snapshot(Set.of(24050));
-		QuestSnapshot zoneMissionReady = snapshot(Set.of(24040));
-
-		assertFalse(QuestMutationPlanner.plan(definition, noPrerequisites,
+		assertFalse(QuestMutationPlanner.plan(definition, snapshotUncaptured(),
 			new QuestEvent.LevelUp(), levelUp).isPresent());
-		assertTrue(QuestMutationPlanner.plan(definition, levelUpReady,
+		assertFalse(QuestMutationPlanner.plan(definition, snapshot(Set.of(2061), Set.of()),
 			new QuestEvent.LevelUp(), levelUp).isPresent());
-		assertFalse(QuestMutationPlanner.plan(definition, noPrerequisites,
+		assertFalse(QuestMutationPlanner.plan(definition, snapshot(Set.of(), Set.of(2061)),
+			new QuestEvent.LevelUp(), levelUp).isPresent());
+		assertTrue(QuestMutationPlanner.plan(definition, snapshot(Set.of(), Set.of()),
+			new QuestEvent.LevelUp(), levelUp).isPresent());
+		assertFalse(QuestMutationPlanner.plan(definition, snapshotUncaptured(),
 			new QuestEvent.ZoneMissionEnd(), zoneMissionEnd).isPresent());
-		assertTrue(QuestMutationPlanner.plan(definition, zoneMissionReady,
+		assertFalse(QuestMutationPlanner.plan(definition, snapshot(Set.of(2061), Set.of()),
+			new QuestEvent.ZoneMissionEnd(), zoneMissionEnd).isPresent());
+		assertFalse(QuestMutationPlanner.plan(definition, snapshot(Set.of(), Set.of(2061)),
+			new QuestEvent.ZoneMissionEnd(), zoneMissionEnd).isPresent());
+		assertTrue(QuestMutationPlanner.plan(definition, snapshot(Set.of(), Set.of()),
 			new QuestEvent.ZoneMissionEnd(), zoneMissionEnd).isPresent());
 	}
 
@@ -55,10 +62,17 @@ class Quest24053PrerequisiteTest {
 		assertArrayEquals(new int[] {24051, 24052, 24053, 24054}, broadcast.questIds());
 	}
 
-	private static QuestSnapshot snapshot(Set<Integer> completedQuestIds) {
+	private static QuestSnapshot snapshot(Set<Integer> completedQuestIds, Set<Integer> activeQuestIds) {
 		return new QuestSnapshot(7, 24053, QuestStatus.NONE, 0, Map.of())
 			.withStartEligibility(QuestStartEligibility.allowed())
-			.withCompletedQuestIds(completedQuestIds);
+			.withCompletedQuestIds(completedQuestIds)
+			.withActiveQuestIds(activeQuestIds);
+	}
+
+	/** No completed/active facts captured: the planner must fail closed instead of guessing. */
+	private static QuestSnapshot snapshotUncaptured() {
+		return new QuestSnapshot(7, 24053, QuestStatus.NONE, 0, Map.of())
+			.withStartEligibility(QuestStartEligibility.allowed());
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {

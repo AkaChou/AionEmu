@@ -823,7 +823,7 @@ public class QuestEngine implements GameEngine {
 		}
 		QuestProductionDispatcher typed = productionDispatcher;
 		Player player = env == null ? null : env.getPlayer();
-		Set<Integer> typedClaimedOwners = Set.of();
+		Set<Integer> typedClaimedOwners = new HashSet<>();
 		if (player != null && itemId > 0 && typed.hasRoutes(new QuestEvent.HouseItemUse(itemId))) {
 			try {
 				QuestEvent.HouseItemUse event = runtimeComposition.housingEventPort()
@@ -871,8 +871,13 @@ public class QuestEngine implements GameEngine {
 			// Route the obtain fact through typed owners first. The same item may
 			// belong to multiple quests, so use the broadcast contract.
 			try {
-				typedClaimedOwners = typed.dispatch(new QuestEvent.GetItem(itemId), player.getObjectId(), 0,
-					QuestDispatchContract.BROADCAST).claimedOwners();
+				typedClaimedOwners.addAll(typed.dispatch(new QuestEvent.GetItem(itemId), player.getObjectId(), 0,
+					QuestDispatchContract.BROADCAST).claimedOwners());
+				long inventoryCount = player.getInventory() == null
+					? 1L : player.getInventory().getItemCountByItemId(itemId);
+				int collectedCount = (int) Math.min(Integer.MAX_VALUE, Math.max(1L, inventoryCount));
+				typedClaimedOwners.addAll(typed.dispatch(new QuestEvent.CollectItem(itemId, collectedCount),
+					player.getObjectId(), 0, QuestDispatchContract.BROADCAST).claimedOwners());
 			} catch (RuntimeException ignored) {
 				// Preserve legacy owners when the obtain event cannot be dispatched.
 			}
@@ -2335,6 +2340,7 @@ public class QuestEngine implements GameEngine {
 						&& !(transition.event() instanceof QuestEvent.UseItem)
 						&& !(transition.event() instanceof QuestEvent.ItemPlay)
 						&& !(transition.event() instanceof QuestEvent.GetItem)
+						&& !(transition.event() instanceof QuestEvent.CollectItem)
 						&& !(transition.event() instanceof QuestEvent.PassFlyingRing)
 						&& !(transition.event() instanceof QuestEvent.EnterWindStream)
 						&& !(transition.event() instanceof QuestEvent.AtDistance)
@@ -2399,6 +2405,10 @@ public class QuestEngine implements GameEngine {
 					// runtime dispatcher remains authoritative; this index only lets
 					// the legacy loop skip typed owners safely.
 					registerGetingItem(get.itemId(), definition.id());
+				} else if (transition.event() instanceof QuestEvent.CollectItem collect) {
+					// Collection routes share the item-obtain ingress while retaining
+					// their own event type for count matching.
+					registerGetingItem(collect.itemId(), definition.id());
 				} else if (transition.event() instanceof QuestEvent.PassFlyingRing ring) {
 					registerOnPassFlyingRings(ring.ring(), definition.id());
 				} else if (transition.event() instanceof QuestEvent.EnterWindStream) {

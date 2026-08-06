@@ -30,6 +30,46 @@
         <npc id="235354"/>
         <npc id="235355"/>
       </kill>
+      <kill sequence="6">
+        <npc id="235354"/>
+        <npc id="235355"/>
+      </kill>
+      <kill sequence="7">
+        <npc id="235354"/>
+        <npc id="235355"/>
+      </kill>
+      <kill sequence="8">
+        <npc id="235354"/>
+        <npc id="235355"/>
+      </kill>
+      <kill sequence="9">
+        <npc id="235354"/>
+        <npc id="235355"/>
+      </kill>
+      <kill sequence="10">
+        <npc id="235354"/>
+        <npc id="235355"/>
+      </kill>
+      <kill sequence="11">
+        <npc id="235354"/>
+        <npc id="235355"/>
+      </kill>
+      <kill sequence="12">
+        <npc id="235354"/>
+        <npc id="235355"/>
+      </kill>
+      <kill sequence="13">
+        <npc id="235354"/>
+        <npc id="235355"/>
+      </kill>
+      <kill sequence="14">
+        <npc id="235354"/>
+        <npc id="235355"/>
+      </kill>
+      <kill sequence="15">
+        <npc id="235354"/>
+        <npc id="235355"/>
+      </kill>
     </kills>
   </metadata>
   <progress>
@@ -85,10 +125,80 @@
         </vars>
       </project>
     </node>
+    <node label="k6">
+      <project status="START">
+        <vars>
+          <var name="var0" value="6"/>
+        </vars>
+      </project>
+    </node>
+    <node label="k7">
+      <project status="START">
+        <vars>
+          <var name="var0" value="7"/>
+        </vars>
+      </project>
+    </node>
+    <node label="k8">
+      <project status="START">
+        <vars>
+          <var name="var0" value="8"/>
+        </vars>
+      </project>
+    </node>
+    <node label="k9">
+      <project status="START">
+        <vars>
+          <var name="var0" value="9"/>
+        </vars>
+      </project>
+    </node>
+    <node label="k10">
+      <project status="START">
+        <vars>
+          <var name="var0" value="10"/>
+        </vars>
+      </project>
+    </node>
+    <node label="k11">
+      <project status="START">
+        <vars>
+          <var name="var0" value="11"/>
+        </vars>
+      </project>
+    </node>
+    <node label="k12">
+      <project status="START">
+        <vars>
+          <var name="var0" value="12"/>
+        </vars>
+      </project>
+    </node>
+    <node label="k13">
+      <project status="START">
+        <vars>
+          <var name="var0" value="13"/>
+        </vars>
+      </project>
+    </node>
+    <node label="k14">
+      <project status="START">
+        <vars>
+          <var name="var0" value="14"/>
+        </vars>
+      </project>
+    </node>
+    <node label="k15">
+      <project status="START">
+        <vars>
+          <var name="var0" value="15"/>
+        </vars>
+      </project>
+    </node>
     <node label="reward">
       <project status="REWARD">
         <vars>
-          <var name="var0" value="5"/>
+          <var name="var0" value="15"/>
         </vars>
       </project>
     </node>
@@ -181,6 +291,166 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="k5" target="k6">
+      <event>
+        <kill-npc npc-id="235354"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k5" target="k6">
+      <event>
+        <kill-npc npc-id="235355"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k6" target="k7">
+      <event>
+        <kill-npc npc-id="235354"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k6" target="k7">
+      <event>
+        <kill-npc npc-id="235355"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k7" target="k8">
+      <event>
+        <kill-npc npc-id="235354"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k7" target="k8">
+      <event>
+        <kill-npc npc-id="235355"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k8" target="k9">
+      <event>
+        <kill-npc npc-id="235354"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k8" target="k9">
+      <event>
+        <kill-npc npc-id="235355"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k9" target="k10">
+      <event>
+        <kill-npc npc-id="235354"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k9" target="k10">
+      <event>
+        <kill-npc npc-id="235355"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k10" target="k11">
+      <event>
+        <kill-npc npc-id="235354"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k10" target="k11">
+      <event>
+        <kill-npc npc-id="235355"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k11" target="k12">
+      <event>
+        <kill-npc npc-id="235354"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k11" target="k12">
+      <event>
+        <kill-npc npc-id="235355"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k12" target="k13">
+      <event>
+        <kill-npc npc-id="235354"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k12" target="k13">
+      <event>
+        <kill-npc npc-id="235355"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k13" target="k14">
+      <event>
+        <kill-npc npc-id="235354"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k13" target="k14">
+      <event>
+        <kill-npc npc-id="235355"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k14" target="k15">
+      <event>
+        <kill-npc npc-id="235354"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k14" target="k15">
+      <event>
+        <kill-npc npc-id="235355"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <talk-to-npc npc-id="805272" dialog-id="31"/>
@@ -237,7 +507,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k15" target="k15">
       <event>
         <talk-to-npc npc-id="805272" dialog-id="1008"/>
       </event>
@@ -245,7 +515,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k15" target="k15">
       <event>
         <talk-to-npc npc-id="805272" dialog-id="31"/>
       </event>
@@ -253,7 +523,7 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="reward">
+    <transition source="k15" target="reward">
       <event>
         <talk-to-npc npc-id="805272" dialog-id="1009"/>
       </event>
@@ -341,7 +611,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k15" target="k15">
       <event>
         <talk-to-npc npc-id="805273" dialog-id="1008"/>
       </event>
@@ -349,7 +619,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k15" target="k15">
       <event>
         <talk-to-npc npc-id="805273" dialog-id="31"/>
       </event>
@@ -357,7 +627,7 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="reward">
+    <transition source="k15" target="reward">
       <event>
         <talk-to-npc npc-id="805273" dialog-id="1009"/>
       </event>
@@ -445,7 +715,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k15" target="k15">
       <event>
         <talk-to-npc npc-id="805274" dialog-id="1008"/>
       </event>
@@ -453,7 +723,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k15" target="k15">
       <event>
         <talk-to-npc npc-id="805274" dialog-id="31"/>
       </event>
@@ -461,7 +731,7 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="reward">
+    <transition source="k15" target="reward">
       <event>
         <talk-to-npc npc-id="805274" dialog-id="1009"/>
       </event>

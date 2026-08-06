@@ -257,7 +257,9 @@ class QuestMutationPlannerTest {
 	}
 
 	@Test
-	void timeBasedNpcFactionQuestDoesNotStartTheFactionLifecycle() throws Exception {
+	void dailyRotatingNpcFactionQuestStartsTheFactionLifecycleOnAccept() throws Exception {
+		// 真端依据:36517 阵营任务每日轮换,daily 标志不可靠;NONE→START 接取即应
+		// 启动阵营生命周期(min-level 999 已防护轮换窗口),不再按 timeBased 取消。
 		CompiledQuestDefinition definition;
 		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
 			"/aion/data/static_data/quest_definition/quests/36517.xml"))) {
@@ -273,7 +275,7 @@ class QuestMutationPlannerTest {
 				.withStartEligibility(QuestStartEligibility.allowed()),
 			new QuestEvent.TalkToNpc(799837, 1002), accept).orElseThrow();
 
-		assertFalse(acceptPlan.afterCommit().stream()
+		assertTrue(acceptPlan.afterCommit().stream()
 			.anyMatch(AfterCommitAction.StartNpcFactionQuest.class::isInstance));
 	}
 

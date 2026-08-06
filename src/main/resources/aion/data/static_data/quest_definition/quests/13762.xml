@@ -25,6 +25,9 @@
       <kill sequence="5">
         <npc id="235373"/>
       </kill>
+      <kill sequence="6">
+        <npc id="235373"/>
+      </kill>
     </kills>
   </metadata>
   <progress>
@@ -80,10 +83,17 @@
         </vars>
       </project>
     </node>
+    <node label="k6">
+      <project status="START">
+        <vars>
+          <var name="var0" value="6"/>
+        </vars>
+      </project>
+    </node>
     <node label="reward">
       <project status="REWARD">
         <vars>
-          <var name="var0" value="5"/>
+          <var name="var0" value="6"/>
         </vars>
       </project>
     </node>
@@ -129,6 +139,14 @@
       </after-commit>
     </transition>
     <transition source="k4" target="k5">
+      <event>
+        <kill-npc npc-id="235373"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k5" target="k6">
       <event>
         <kill-npc npc-id="235373"/>
       </event>
@@ -192,7 +210,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k6" target="k6">
       <event>
         <talk-to-npc npc-id="805275" dialog-id="1008"/>
       </event>
@@ -200,7 +218,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k6" target="k6">
       <event>
         <talk-to-npc npc-id="805275" dialog-id="31"/>
       </event>
@@ -208,7 +226,7 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="reward">
+    <transition source="k6" target="reward">
       <event>
         <talk-to-npc npc-id="805275" dialog-id="1009"/>
       </event>
@@ -296,7 +314,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k6" target="k6">
       <event>
         <talk-to-npc npc-id="805276" dialog-id="1008"/>
       </event>
@@ -304,7 +322,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k6" target="k6">
       <event>
         <talk-to-npc npc-id="805276" dialog-id="31"/>
       </event>
@@ -312,7 +330,7 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="reward">
+    <transition source="k6" target="reward">
       <event>
         <talk-to-npc npc-id="805276" dialog-id="1009"/>
       </event>
@@ -400,7 +418,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k6" target="k6">
       <event>
         <talk-to-npc npc-id="805277" dialog-id="1008"/>
       </event>
@@ -408,7 +426,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="k5">
+    <transition source="k6" target="k6">
       <event>
         <talk-to-npc npc-id="805277" dialog-id="31"/>
       </event>
@@ -416,7 +434,7 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="k5" target="reward">
+    <transition source="k6" target="reward">
       <event>
         <talk-to-npc npc-id="805277" dialog-id="1009"/>
       </event>

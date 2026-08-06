@@ -18,7 +18,8 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		QuestCondition.AdvancedClassIs, QuestCondition.GenderIs, QuestCondition.PlayerInGroup,
 		QuestCondition.WorldIs, QuestCondition.WorldNpcIs, QuestCondition.ZoneIs,
 		QuestCondition.NpcHpBelowPercent, QuestCondition.CurrencyAtLeast, QuestCondition.CurrencyBelow,
-		QuestCondition.QuestsFinished, QuestCondition.EquipmentSetEquipped, QuestCondition.EquippedItem,
+		QuestCondition.QuestsFinished, QuestCondition.UnfinishedQuest, QuestCondition.NoAcquiredQuest,
+		QuestCondition.AcquiredQuest, QuestCondition.EquipmentSetEquipped, QuestCondition.EquippedItem,
 		QuestCondition.MembershipPermission, QuestCondition.DpAtMax, QuestCondition.CompleteCountIs,
 		QuestCondition.EventActive {
 	/** Matches a typed membership capability captured from the live account. */
@@ -57,6 +58,48 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 	/** Matches when every listed prerequisite quest is already completed. */
 	record QuestsFinished(Set<Integer> questIds) implements QuestCondition {
 		public QuestsFinished {
+			if (questIds == null || questIds.isEmpty()) {
+				throw new IllegalArgumentException("questIds must not be empty");
+			}
+			if (questIds.stream().anyMatch(id -> id == null || id <= 0)) {
+				throw new IllegalArgumentException("questIds must be positive");
+			}
+			questIds = Set.copyOf(questIds);
+		}
+	}
+
+	/** Matches when none of the listed prerequisite quests is completed yet. */
+	record UnfinishedQuest(Set<Integer> questIds) implements QuestCondition {
+		public UnfinishedQuest {
+			if (questIds == null || questIds.isEmpty()) {
+				throw new IllegalArgumentException("questIds must not be empty");
+			}
+			if (questIds.stream().anyMatch(id -> id == null || id <= 0)) {
+				throw new IllegalArgumentException("questIds must be positive");
+			}
+			questIds = Set.copyOf(questIds);
+		}
+	}
+
+	/** Matches when none of the listed quests is completed or currently acquired (START/REWARD). */
+	record NoAcquiredQuest(Set<Integer> questIds) implements QuestCondition {
+		public NoAcquiredQuest {
+			if (questIds == null || questIds.isEmpty()) {
+				throw new IllegalArgumentException("questIds must not be empty");
+			}
+			if (questIds.stream().anyMatch(id -> id == null || id <= 0)) {
+				throw new IllegalArgumentException("questIds must be positive");
+			}
+			questIds = Set.copyOf(questIds);
+		}
+	}
+
+	/**
+	 * Matches when every listed quest is already acquired (completed or in progress),
+	 * mirroring the legacy {@code acquired} start condition.
+	 */
+	record AcquiredQuest(Set<Integer> questIds) implements QuestCondition {
+		public AcquiredQuest {
 			if (questIds == null || questIds.isEmpty()) {
 				throw new IllegalArgumentException("questIds must not be empty");
 			}

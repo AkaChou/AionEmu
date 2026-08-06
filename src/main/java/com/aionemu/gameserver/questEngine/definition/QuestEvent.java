@@ -517,6 +517,11 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		if (event instanceof UseItem useItem) {
 			return new UseItem(useItem.itemId());
 		}
+		if (event instanceof CollectItem collectItem) {
+			// Collection routes are keyed by item; the count is checked against the
+			// authoritative inventory snapshot when the route is executed.
+			return new CollectItem(collectItem.itemId(), 1);
+		}
 		if (event instanceof ItemPlay itemPlay) {
 			return new ItemPlay(itemPlay.itemId(), 0);
 		}
@@ -572,6 +577,9 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 		if (definition instanceof UseItem expected && actual instanceof UseItem observed) {
 			return expected.itemId() == observed.itemId();
+		}
+		if (definition instanceof CollectItem expected && actual instanceof CollectItem observed) {
+			return expected.itemId() == observed.itemId() && observed.count() >= expected.count();
 		}
 		if (definition instanceof AttackNpc expected && actual instanceof AttackNpc observed) {
 			return expected.npcId() == observed.npcId();

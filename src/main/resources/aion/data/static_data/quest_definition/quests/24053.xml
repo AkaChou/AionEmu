@@ -33,8 +33,8 @@
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
-    <!-- 自动接取：升级需完成 24050，区域任务结束需完成 24040。 -->
-    <!-- Auto-accept: level-up requires 24050; zone-mission-end requires 24040. -->
+    <!-- 自动接取：无 24050/24040 完成门控（客户端无依赖），由 start-conditions 2061 约束。 -->
+    <!-- Auto-accept: no 24050/24040 completion gate (client has none); start-conditions 2061 applies. -->
     <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <!-- NPC 204787：var 0 起始对话 / 影片 252 / 推进到 var 1 -->
