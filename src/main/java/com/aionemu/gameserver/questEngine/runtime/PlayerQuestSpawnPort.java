@@ -4,9 +4,12 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
+import com.aionemu.gameserver.questEngine.definition.QuestSpawnVariant;
 import com.aionemu.gameserver.services.QuestService;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Real {@link QuestSpawnPort}: after commit, spawns/despawns quest NPCs through
@@ -21,9 +24,15 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 		Npc spawn(int worldId, int instanceId, int templateId, float x, float y, float z, byte heading);
 	}
 
+	@FunctionalInterface
+	public interface VariantSelector {
+		int select(int bound);
+	}
+
 	private final QuestPlayerPort players;
 	private final QuestSpawnRegistry registry;
 	private final SpawnCall spawn;
+	private final VariantSelector variantSelector;
 
 	public PlayerQuestSpawnPort(QuestPlayerPort players) {
 		this(players, QuestSpawnRegistry.global());
@@ -35,9 +44,64 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 	}
 
 	public PlayerQuestSpawnPort(QuestPlayerPort players, QuestSpawnRegistry registry, SpawnCall spawn) {
+		this(players, registry, spawn, bound -> ThreadLocalRandom.current().nextInt(bound));
+	}
+
+	PlayerQuestSpawnPort(QuestPlayerPort players, QuestSpawnRegistry registry, SpawnCall spawn,
+		VariantSelector variantSelector) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.registry = Objects.requireNonNull(registry, "registry");
 		this.spawn = Objects.requireNonNull(spawn, "spawn");
+		this.variantSelector = Objects.requireNonNull(variantSelector, "variantSelector");
+	}
+
+	@Override
+	public boolean spawnNpcRandom(QuestSnapshot snapshot, QuestMutationPlan plan, String slot,
+		List<QuestSpawnVariant> variants, boolean replaceExisting) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(plan, "plan");
+		if (slot == null || slot.isBlank()) {
+			throw new IllegalArgumentException("slot must not be blank");
+		}
+		if (variants == null || variants.isEmpty()) {
+			throw new IllegalArgumentException("variants must not be empty");
+		}
+		if (!replaceExisting && registry.contains(snapshot, slot)) {
+			return true;
+		}
+		Player player = players.find(snapshot.playerId());
+		if (player == null) {
+			return false;
+		}
+		int selected = variantSelector.select(variants.size());
+		if (selected < 0 || selected >= variants.size()) {
+			throw new IllegalArgumentException("variant selector returned an invalid index: " + selected);
+		}
+		QuestSpawnVariant variant = Objects.requireNonNull(variants.get(selected), "variant");
+		ResolvedLocation resolved = resolve(snapshot, variant.location());
+		if (resolved == null) {
+			return false;
+		}
+		Npc npc = spawn.spawn(resolved.worldId, resolved.instanceId, variant.templateId(),
+			resolved.x, resolved.y, resolved.z, resolved.heading);
+		if (npc == null) {
+			return false;
+		}
+		if (replaceExisting) {
+			Npc previous = registry.replace(snapshot, slot, npc);
+			if (previous != null && previous != npc && previous.isSpawned()) {
+				previous.getController().onDelete();
+			}
+			return true;
+		}
+		if (!registry.register(snapshot, slot, npc)) {
+			deleteUnregistered(npc);
+			// Another after-commit execution won the slot while this NPC was being
+			// created. The desired slot state is still satisfied only if that handle
+			// remains authoritative; do not report an unconditional success.
+			return registry.contains(snapshot, slot);
+		}
+		return true;
 	}
 
 	@Override

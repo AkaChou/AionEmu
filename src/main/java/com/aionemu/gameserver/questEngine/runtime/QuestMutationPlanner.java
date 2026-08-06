@@ -59,9 +59,11 @@ public final class QuestMutationPlanner {
 		QuestNode target = definition.definition().nodes().stream()
 				.filter(node -> node.label().equals(transition.targetNode())).findFirst().orElseThrow();
 		NodeProjection projection = target.projection();
-		List<QuestAction> actions = new ArrayList<>(transition.actions());
+		List<QuestAction> actions = expandSelectedRewards(definition, transition.actions());
 		appendFinalRepeatRewards(definition, snapshot, actions);
+		appendAbandonWorkItemCleanup(definition, event, transition.event(), actions);
 		Map<String, Integer> variables = new LinkedHashMap<>(layout.unpack(snapshot.packedVariables()));
+		Map<QuestRewardKind, Long> plannedDebits = new LinkedHashMap<>();
 		Map<Integer, Integer> unequippedItems = new LinkedHashMap<>();
 		Map<Integer, Integer> returnedItemRemovals = new LinkedHashMap<>();
 		Map<Integer, Integer> plannedRemovals = new LinkedHashMap<>();
@@ -107,6 +109,26 @@ public final class QuestMutationPlanner {
 				}
 				case QuestAction.GrantReward ignored -> {
 				}
+				case QuestAction.GrantSelectedReward ignored -> {
+					// Lowered to GrantReward before this validation loop.
+				}
+				case QuestAction.DecreaseCurrency debit -> {
+					QuestRewardKind balanceKind = canonicalCurrencyKind(debit.kind());
+					long total;
+					try {
+						total = plannedDebits.merge(balanceKind, debit.amount(), Math::addExact);
+					} catch (ArithmeticException overflow) {
+						return Optional.empty();
+					}
+					if (!debitFeasible(snapshot, balanceKind, total)) {
+						return Optional.empty();
+					}
+				}
+				case QuestAction.SetCurrency set -> {
+					if (!setCurrencyFeasible(snapshot, set)) {
+						return Optional.empty();
+					}
+				}
 				case QuestAction.LearnRecipe ignored -> {
 				}
 				case QuestAction.ForgetRecipe ignored -> {
@@ -116,6 +138,10 @@ public final class QuestMutationPlanner {
 				case QuestAction.CompleteQuest ignored -> {
 				}
 				case QuestAction.BlockDefaultItemUse ignored -> {
+				}
+				case QuestAction.AbandonQuest ignored -> {
+					// The NONE projection is persisted by QuestStatePort; terminal cleanup
+					// is registered by QuestExecutionCoordinator after commit.
 				}
 			}
 		}
@@ -162,6 +188,51 @@ public final class QuestMutationPlanner {
 		}
 		lifecycle.addAll(transition.afterCommit());
 		return lifecycle;
+	}
+
+	private static List<QuestAction> expandSelectedRewards(CompiledQuestDefinition definition,
+			List<QuestAction> declaredActions) {
+		List<QuestReward> metadataRewards = definition.definition().metadata().rewards();
+		List<QuestAction> expanded = new ArrayList<>(declaredActions.size());
+		for (QuestAction action : declaredActions) {
+			if (!(action instanceof QuestAction.GrantSelectedReward selected)) {
+				expanded.add(action);
+				continue;
+			}
+			if (selected.rewardIndex() >= metadataRewards.size()) {
+				throw new IllegalStateException("selected reward index " + selected.rewardIndex()
+					+ " is not present in quest metadata " + definition.id());
+			}
+			QuestReward reward = metadataRewards.get(selected.rewardIndex());
+			QuestRewardKind kind = QuestRewardKind.fromWire(reward.kind());
+			QuestRewardAmountMode mode = switch (kind) {
+				case GOLD, KINAH, AP, GP, EXP -> QuestRewardAmountMode.QUEST_BASE;
+				default -> QuestRewardAmountMode.EXACT;
+			};
+			expanded.add(new QuestAction.GrantReward(reward.kind(), reward.id(), reward.amount(), mode));
+		}
+		return expanded;
+	}
+
+	/**
+	 * Abandonment must remove legacy quest work items in the same transaction as
+	 * the NONE projection. Ordinary collected items remain untouched.
+	 */
+	private static void appendAbandonWorkItemCleanup(CompiledQuestDefinition definition, QuestEvent event,
+			QuestEvent declaredEvent, List<QuestAction> actions) {
+		boolean abandons = event instanceof QuestEvent.Abandon
+			|| declaredEvent instanceof QuestEvent.Abandon
+			|| actions.stream().anyMatch(QuestAction.AbandonQuest.class::isInstance);
+		if (!abandons) {
+			return;
+		}
+		for (var item : definition.definition().metadata().questWorkItems()) {
+			boolean alreadyRemovesAll = actions.stream().anyMatch(action -> action instanceof QuestAction.RemoveItem removal
+				&& removal.itemId() == item.itemId() && removal.removeAll());
+			if (!alreadyRemovesAll) {
+				actions.add(new QuestAction.RemoveItem(item.itemId(), QuestAction.RemoveItem.ALL));
+			}
+		}
 	}
 
 	private static void appendFinalRepeatRewards(CompiledQuestDefinition definition, QuestSnapshot snapshot,
@@ -255,4 +326,32 @@ public final class QuestMutationPlanner {
 		}
 	}
 
+	/**
+	 * A debit is feasible only when the balance was captured and the cumulative
+	 * amount for this transition fits. Unknown balances fail closed.
+	 */
+	private static boolean debitFeasible(QuestSnapshot snapshot, QuestRewardKind kind, long amount) {
+		try {
+			return snapshot.balance(kind) >= amount;
+		} catch (IllegalStateException unknownFacts) {
+			return false;
+		}
+	}
+
+	/** Exact currency writes require captured balances and currently support DP as a reset/set resource. */
+	private static boolean setCurrencyFeasible(QuestSnapshot snapshot, QuestAction.SetCurrency set) {
+		if (set.kind() != QuestRewardKind.DP || set.amount() > Integer.MAX_VALUE) {
+			return false;
+		}
+		try {
+			snapshot.balance(set.kind());
+			return true;
+		} catch (IllegalStateException unknownFacts) {
+			return false;
+		}
+	}
+
+	private static QuestRewardKind canonicalCurrencyKind(QuestRewardKind kind) {
+		return kind == QuestRewardKind.KINAH ? QuestRewardKind.GOLD : kind;
+	}
 }

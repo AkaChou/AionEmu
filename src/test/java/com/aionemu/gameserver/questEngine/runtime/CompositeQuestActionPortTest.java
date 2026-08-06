@@ -59,6 +59,123 @@ class CompositeQuestActionPortTest {
 	}
 
 	@Test
+	void routesCurrencyDebitsThroughTheSameTransactionalCurrencyPort() throws Exception {
+		Connection connection = connection();
+		List<String> calls = new ArrayList<>();
+		CompositeQuestActionPort port = new CompositeQuestActionPort(
+			new RecordingInventory(connection, calls), new RecordingCurrency(connection, calls),
+			new RecordingRewards(connection, calls));
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of(),
+			Map.of(QuestRewardKind.GOLD, 10L));
+		List<QuestAction> actions = List.of(
+			new QuestAction.DecreaseCurrency(QuestRewardKind.GOLD, 3));
+
+		port.preflight(connection, snapshot, actions);
+		QuestTransactionParticipant participant = port.apply(connection, snapshot, actions);
+		participant.afterCommit();
+
+		assertEquals(List.of("currency.debit.preflight", "currency.debit.apply", "currency.debit.commit"), calls);
+	}
+
+	@Test
+	void routesCurrencySetsThroughTheSameTransactionalCurrencyPort() throws Exception {
+		Connection connection = connection();
+		List<String> calls = new ArrayList<>();
+		CompositeQuestActionPort port = new CompositeQuestActionPort(
+			new RecordingInventory(connection, calls), new RecordingCurrency(connection, calls),
+			new RecordingRewards(connection, calls));
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of(),
+			Map.of(QuestRewardKind.DP, 10L));
+
+		List<QuestAction> actions = List.of(new QuestAction.SetCurrency(QuestRewardKind.DP, 0));
+		port.preflight(connection, snapshot, actions);
+		QuestTransactionParticipant participant = port.apply(connection, snapshot, actions);
+		participant.afterCommit();
+
+		assertEquals(List.of("currency.set.preflight", "currency.set.apply", "currency.set.commit"), calls);
+	}
+
+	@Test
+	void rejectsMixedCurrencyOperationFamiliesBeforeAnyPortCall() {
+		Connection connection = connection();
+		List<String> calls = new ArrayList<>();
+		CompositeQuestActionPort port = new CompositeQuestActionPort(
+			new RecordingInventory(connection, calls), new RecordingCurrency(connection, calls),
+			new RecordingRewards(connection, calls));
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of(),
+			Map.of(QuestRewardKind.DP, 10L));
+		List<QuestAction> actions = List.of(new QuestAction.SetCurrency(QuestRewardKind.DP, 0),
+			new QuestAction.DecreaseCurrency(QuestRewardKind.DP, 1),
+			new QuestAction.GrantReward("DP", 0, 1));
+
+		assertThrows(SQLException.class, () -> port.preflight(connection, snapshot, actions));
+		assertThrows(SQLException.class, () -> port.apply(connection, snapshot, actions));
+		assertTrue(calls.isEmpty());
+	}
+
+	@Test
+	void rollsBackCurrencyParticipantWhenLaterDurableApplyFails() throws Exception {
+		Connection connection = connection();
+		List<String> calls = new ArrayList<>();
+		QuestRewardPort failingRewards = new QuestRewardPort() {
+			@Override public void preflight(Connection ignored, QuestSnapshot snapshot,
+				List<QuestAction.GrantReward> rewards) {
+			}
+
+			@Override public QuestTransactionParticipant apply(Connection ignored, QuestSnapshot snapshot,
+				List<QuestAction.GrantReward> rewards) throws SQLException {
+				calls.add("reward.apply");
+				throw new SQLException("recording durable reward failure");
+			}
+		};
+		CompositeQuestActionPort port = new CompositeQuestActionPort(
+			new RecordingInventory(connection, calls), new RecordingCurrency(connection, calls), failingRewards);
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of(),
+			Map.of(QuestRewardKind.GOLD, 10L));
+
+		List<QuestAction> actions = List.of(new QuestAction.DecreaseCurrency(QuestRewardKind.GOLD, 3),
+			new QuestAction.GrantReward("ITEM", 188050000, 1));
+		port.preflight(connection, snapshot, actions);
+
+		assertThrows(SQLException.class, () -> port.apply(connection, snapshot, actions));
+		assertEquals(List.of("currency.debit.preflight", "currency.debit.apply", "reward.apply",
+			"currency.debit.rollback"), calls);
+	}
+
+	@Test
+	void unequipsBeforeInventoryRemovalOnTheSameTransaction() throws Exception {
+		Connection connection = connection();
+		List<String> calls = new ArrayList<>();
+		CompositeQuestActionPort port = new CompositeQuestActionPort(
+			new RecordingInventory(connection, calls), new RecordingCurrency(connection, calls),
+			new RecordingRewards(connection, calls), null, new RecordingEquipment(connection, calls));
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0,
+			Map.of(140000003, 0)).withEquipmentFacts(
+				new QuestEquipmentFacts(Map.of(), Map.of(140000003, 1)));
+		List<QuestAction> actions = List.of(new QuestAction.UnequipItem(140000003),
+			new QuestAction.RemoveItem(140000003, 1));
+
+		port.preflight(connection, snapshot, actions);
+		QuestTransactionParticipant participant = port.apply(connection, snapshot, actions);
+		participant.afterCommit();
+
+		assertEquals(List.of("equipment.preflight", "inventory.preflight", "equipment.apply",
+			"inventory.apply", "equipment.commit", "inventory.commit"), calls);
+	}
+
+	@Test
+	void unequipFailsClosedWhenCompositionOmitsEquipmentPort() {
+		CompositeQuestActionPort port = new CompositeQuestActionPort(
+			new RecordingInventory(connection(), new ArrayList<>()),
+			new RecordingCurrency(connection(), new ArrayList<>()),
+			new RecordingRewards(connection(), new ArrayList<>()));
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of())
+			.withEquipmentFacts(new QuestEquipmentFacts(Map.of(), Map.of(140000003, 1)));
+		assertThrows(SQLException.class, () -> port.preflight(connection(), snapshot,
+			List.of(new QuestAction.UnequipItem(140000003))));
+	}
+
+	@Test
 	void unknownRewardKindFailsClosed() {
 		assertThrows(IllegalArgumentException.class, () -> new QuestAction.GrantReward("teleport", 1, 1));
 	}
@@ -74,10 +191,12 @@ class CompositeQuestActionPortTest {
 		private RecordingInventory(Connection expected, List<String> calls) { this.expected = expected; this.calls = calls; }
 		@Override public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction.RemoveItem> removals,
 				List<QuestAction.GiveItem> gives) {
+			if (removals.isEmpty() && gives.isEmpty()) return;
 			assertSame(expected, connection); assertEquals(1, removals.size()); assertTrue(gives.isEmpty()); calls.add("inventory.preflight");
 		}
 		@Override public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
 				List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) {
+			if (removals.isEmpty() && gives.isEmpty()) return QuestTransactionParticipant.none();
 			assertSame(expected, connection); assertEquals(1, removals.size()); assertTrue(gives.isEmpty()); calls.add("inventory.apply");
 			return QuestTransactionParticipant.of(() -> calls.add("inventory.commit"), () -> calls.add("inventory.rollback"));
 		}
@@ -88,12 +207,38 @@ class CompositeQuestActionPortTest {
 		private final List<String> calls;
 		private RecordingCurrency(Connection expected, List<String> calls) { this.expected = expected; this.calls = calls; }
 		@Override public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction.GrantReward> rewards) {
+			if (rewards.isEmpty()) return;
 			assertSame(expected, connection); assertEquals(1, rewards.size()); calls.add("currency.preflight");
 		}
 		@Override public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
 				List<QuestAction.GrantReward> rewards) {
+			if (rewards.isEmpty()) return QuestTransactionParticipant.none();
 			assertSame(expected, connection); assertEquals(1, rewards.size()); calls.add("currency.apply");
 			return QuestTransactionParticipant.of(() -> calls.add("currency.commit"), () -> calls.add("currency.rollback"));
+		}
+		@Override public void preflightDebits(Connection connection, QuestSnapshot snapshot,
+				List<QuestAction.DecreaseCurrency> debits) {
+			if (debits.isEmpty()) return;
+			assertSame(expected, connection); assertEquals(1, debits.size()); calls.add("currency.debit.preflight");
+		}
+		@Override public QuestTransactionParticipant applyDebits(Connection connection, QuestSnapshot snapshot,
+				List<QuestAction.DecreaseCurrency> debits) {
+			if (debits.isEmpty()) return QuestTransactionParticipant.none();
+			assertSame(expected, connection); assertEquals(1, debits.size()); calls.add("currency.debit.apply");
+			return QuestTransactionParticipant.of(() -> calls.add("currency.debit.commit"),
+				() -> calls.add("currency.debit.rollback"));
+		}
+		@Override public void preflightSets(Connection connection, QuestSnapshot snapshot,
+				List<QuestAction.SetCurrency> sets) {
+			if (sets.isEmpty()) return;
+			assertSame(expected, connection); assertEquals(1, sets.size()); calls.add("currency.set.preflight");
+		}
+		@Override public QuestTransactionParticipant applySets(Connection connection, QuestSnapshot snapshot,
+				List<QuestAction.SetCurrency> sets) {
+			if (sets.isEmpty()) return QuestTransactionParticipant.none();
+			assertSame(expected, connection); assertEquals(1, sets.size()); calls.add("currency.set.apply");
+			return QuestTransactionParticipant.of(() -> calls.add("currency.set.commit"),
+				() -> calls.add("currency.set.rollback"));
 		}
 	}
 
@@ -102,10 +247,12 @@ class CompositeQuestActionPortTest {
 		private final List<String> calls;
 		private RecordingRewards(Connection expected, List<String> calls) { this.expected = expected; this.calls = calls; }
 		@Override public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction.GrantReward> rewards) {
+			if (rewards.isEmpty()) return;
 			assertSame(expected, connection); assertEquals(1, rewards.size()); calls.add("reward.preflight");
 		}
 		@Override public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
 				List<QuestAction.GrantReward> rewards) {
+			if (rewards.isEmpty()) return QuestTransactionParticipant.none();
 			assertSame(expected, connection); assertEquals(1, rewards.size()); calls.add("reward.apply");
 			return QuestTransactionParticipant.of(() -> calls.add("reward.commit"), () -> calls.add("reward.rollback"));
 		}
@@ -122,6 +269,29 @@ class CompositeQuestActionPortTest {
 				List<QuestAction> actions) {
 			assertSame(expected, connection); assertEquals(1, actions.size()); calls.add("craft.apply");
 			return QuestTransactionParticipant.of(() -> calls.add("craft.commit"), () -> calls.add("craft.rollback"));
+		}
+	}
+
+	private static final class RecordingEquipment implements QuestEquipmentPort {
+		private final Connection expected;
+		private final List<String> calls;
+		private RecordingEquipment(Connection expected, List<String> calls) {
+			this.expected = expected;
+			this.calls = calls;
+		}
+		@Override public void preflight(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.UnequipItem> unequips) {
+			assertSame(expected, connection);
+			assertEquals(List.of(new QuestAction.UnequipItem(140000003)), unequips);
+			calls.add("equipment.preflight");
+		}
+		@Override public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.UnequipItem> unequips) {
+			assertSame(expected, connection);
+			assertEquals(List.of(new QuestAction.UnequipItem(140000003)), unequips);
+			calls.add("equipment.apply");
+			return QuestTransactionParticipant.of(() -> calls.add("equipment.commit"),
+				() -> calls.add("equipment.rollback"));
 		}
 	}
 }

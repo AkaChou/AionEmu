@@ -74,6 +74,9 @@ public final class PlayerQuestPvpEventPort implements QuestPvpEventPort {
 			throw new IllegalArgumentException("PvP recipient is outside the quest credit range");
 		}
 		Set<String> zones = zoneResolver.apply(recipient);
+		if (zones == null) {
+			throw new IllegalStateException("PvP recipient zone facts are unavailable");
+		}
 		return new QuestPvpKillFacts(killer.getObjectId(), recipient.getObjectId(), victim.getObjectId(),
 			recipient.getLevel(), victim.getLevel(), victimRankId, worldId, creditSource, zones);
 	}
@@ -81,8 +84,11 @@ public final class PlayerQuestPvpEventPort implements QuestPvpEventPort {
 	private static boolean creditSelected(Player killer, Player recipient, QuestPvpCreditSource source) {
 		return switch (source) {
 			case SOLO -> killer.getObjectId().equals(recipient.getObjectId());
-			case GROUP -> killer.isInGroup2() && killer.getPlayerGroup2().getOnlineMembers().contains(recipient);
-			case ALLIANCE -> killer.isInAlliance2()
+			case GROUP -> killer.isInGroup2() && killer.getPlayerGroup2() != null
+				&& killer.getPlayerGroup2().getOnlineMembers() != null
+				&& killer.getPlayerGroup2().getOnlineMembers().contains(recipient);
+			case ALLIANCE -> killer.isInAlliance2() && killer.getPlayerAllianceGroup2() != null
+				&& killer.getPlayerAllianceGroup2().getOnlineMembers() != null
 				&& killer.getPlayerAllianceGroup2().getOnlineMembers().contains(recipient);
 		};
 	}
@@ -107,7 +113,7 @@ public final class PlayerQuestPvpEventPort implements QuestPvpEventPort {
 		}
 		Set<String> zones = new LinkedHashSet<>();
 		for (ZoneInstance zone : player.getPosition().getMapRegion().getZones(player)) {
-			if (zone.getZoneTemplate() != null && zone.getZoneTemplate().getName() != null) {
+			if (zone != null && zone.getZoneTemplate() != null && zone.getZoneTemplate().getName() != null) {
 				zones.add(zone.getZoneTemplate().getName().name());
 			}
 		}

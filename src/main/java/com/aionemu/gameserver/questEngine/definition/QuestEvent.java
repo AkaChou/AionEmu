@@ -290,7 +290,12 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 
 		public KillInWorld {
-			checkId(worldId, "worldId");
+			// world-id 0 is the typed-definition wildcard used by retail
+			// data-driven PVP quests. Runtime facts still carry a concrete
+			// positive world id and are validated by QuestPvpKillFacts.
+			if (worldId < 0) {
+				throw new IllegalArgumentException("worldId must not be negative");
+			}
 			if (facts != null && facts.worldId() != worldId) {
 				throw new IllegalArgumentException("runtime world does not match PvP facts");
 			}
@@ -582,7 +587,7 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 			return observed.rankId() >= expected.rankId();
 		}
 		if (definition instanceof KillInWorld expected && actual instanceof KillInWorld observed) {
-			return expected.worldId() == observed.worldId();
+			return expected.worldId() == 0 || expected.worldId() == observed.worldId();
 		}
 		if (definition instanceof KillNpcSet expected && actual instanceof KillNpc observed) {
 			return expected.npcIds().contains(observed.npcId());
@@ -642,7 +647,7 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 			return a.npcId() == b.npcId();
 		}
 		if (left instanceof KillInWorld a && right instanceof KillInWorld b) {
-			return a.worldId() == b.worldId();
+			return a.worldId() == 0 || b.worldId() == 0 || a.worldId() == b.worldId();
 		}
 		if (left instanceof KillNpcSet a && right instanceof KillNpcSet b) {
 			return !java.util.Collections.disjoint(a.npcIds(), b.npcIds());
@@ -654,6 +659,16 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 			return a.npcIds().contains(single.npcId());
 		}
 		return left.equals(right);
+	}
+
+	/**
+	 * Returns whether the runtime route index can order two overlapping events
+	 * without a transition priority. Exact world kills precede the retail
+	 * wildcard world route for the same owner.
+	 */
+	static boolean hasDeterministicPrecedence(QuestEvent left, QuestEvent right) {
+		return left instanceof KillInWorld a && right instanceof KillInWorld b
+			&& (a.worldId() == 0) != (b.worldId() == 0);
 	}
 
 	private static void checkId(int value, String field) {

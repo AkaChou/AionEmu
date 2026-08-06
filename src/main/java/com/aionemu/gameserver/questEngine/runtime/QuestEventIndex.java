@@ -46,7 +46,21 @@ public final class QuestEventIndex {
 	}
 
 	public List<Route> routesFor(QuestEvent event) {
-		return routes.getOrDefault(QuestEvent.routeKey(event), List.of());
+		QuestEvent key = QuestEvent.routeKey(event);
+		List<Route> exact = routes.getOrDefault(key, List.of());
+		if (!(event instanceof QuestEvent.KillInWorld kill) || kill.worldId() <= 0) {
+			return exact;
+		}
+		List<Route> wildcard = routes.getOrDefault(new QuestEvent.KillInWorld(0), List.of());
+		if (wildcard.isEmpty()) {
+			return exact;
+		}
+		List<Route> merged = new ArrayList<>(exact.size() + wildcard.size());
+		merged.addAll(exact);
+		merged.addAll(wildcard);
+		merged.sort(Comparator.comparingInt(Route::questId)
+			.thenComparing(route -> route.transition().priority(), Comparator.nullsLast(Integer::compareTo)));
+		return List.copyOf(merged);
 	}
 
 	public List<Route> routesFor(QuestEvent event, int questId) {

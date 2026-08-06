@@ -544,6 +544,9 @@ public final class QuestDefinitionXmlCompiler {
 				QuestMembershipPermission.fromWire(attribute(element, "permission")),
 				booleanOrDefault(element, "expected", true));
 			case "dp-at-max" -> new QuestCondition.DpAtMax();
+			case "complete-count-is" -> new QuestCondition.CompleteCountIs(integer(element, "value"),
+				booleanOrDefault(element, "expected", true));
+			case "event-active" -> new QuestCondition.EventActive(booleanOrDefault(element, "expected", true));
 			default -> fail("UNKNOWN_CONDITION", element.getTagName());
 		};
 	}
@@ -552,18 +555,29 @@ public final class QuestDefinitionXmlCompiler {
 		return switch (element.getTagName()) {
 			case "remove-item" -> new QuestAction.RemoveItem(integer(element, "item-id"), removalCount(element));
 			case "give-item" -> new QuestAction.GiveItem(integer(element, "item-id"), integer(element, "count"));
+			case "unequip-item" -> new QuestAction.UnequipItem(integer(element, "item-id"),
+				integerOrDefault(element, "remove-count", 0));
 			case "set-variable" -> new QuestAction.SetVariable(attribute(element, "field"), integer(element, "value"));
 			case "increment-variable" -> new QuestAction.IncrementVariable(attribute(element, "field"),
 				integer(element, "delta"));
 			case "block-default-item-use" -> new QuestAction.BlockDefaultItemUse();
 			case "set-status" -> new QuestAction.SetStatus(enumValue(QuestStatus.class, element, "status"));
 			case "grant-reward" -> parseGrantReward(element);
+			case "grant-selected-reward" -> new QuestAction.GrantSelectedReward(
+				integer(element, "reward-index"));
+			case "decrease-currency" -> new QuestAction.DecreaseCurrency(
+				QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
+			case "set-currency" -> new QuestAction.SetCurrency(
+				QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
+			case "reset-currency" -> new QuestAction.SetCurrency(
+				QuestRewardKind.fromWire(attribute(element, "kind")), 0);
 			case "complete-quest" -> new QuestAction.CompleteQuest(integer(element, "reward-index"));
 			case "learn-recipe" -> new QuestAction.LearnRecipe(integer(element, "recipe-id"),
 				enumValue(QuestRecipeOwnership.class, element, "ownership"));
 			case "forget-recipe" -> new QuestAction.ForgetRecipe(integer(element, "recipe-id"));
 			case "grant-craft-skill" -> new QuestAction.GrantCraftSkill(integer(element, "skill-id"),
 				integer(element, "target-level"), booleanOrDefault(element, "auto-learn-recipes", false));
+			case "abandon-quest" -> new QuestAction.AbandonQuest();
 			default -> fail("UNKNOWN_ACTION", element.getTagName());
 		};
 	}
@@ -613,6 +627,7 @@ public final class QuestDefinitionXmlCompiler {
 					QuestInstanceTarget.currentOrDefault(),
 					floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
 					byteValue(action, "heading")));
+			case "spawn-npc-random" -> parseRandomSpawn(action);
 			case "spawn-npc-fixed-instance" -> new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
 				integer(action, "template-id"), new QuestSpawnLocation.Fixed(integer(action, "world-id"),
 					QuestInstanceTarget.fixed(integer(action, "instance-id")),
@@ -628,11 +643,16 @@ public final class QuestDefinitionXmlCompiler {
 				integer(action, "npc-id"));
 			case "stop-follow" -> new AfterCommitAction.StopFollow(attribute(action, "slot"));
 			case "attack-target" -> new AfterCommitAction.AttackTarget(attribute(action, "slot"));
+			case "attack-npc-template" -> new AfterCommitAction.AttackNpcTemplate(attribute(action, "slot"),
+				integer(action, "template-id"));
 			case "start-walking" -> new AfterCommitAction.StartWalking(attribute(action, "slot"));
 			case "broadcast-npc-emotion" -> new AfterCommitAction.BroadcastNpcEmotion(
 				attribute(action, "slot"), enumValue(QuestNpcEmotion.class, action, "emotion"));
 			case "watch-follow-zone" -> new AfterCommitAction.WatchFollowZone(
 				attribute(action, "slot"), attribute(action, "zone"));
+			case "watch-follow-coordinate" -> new AfterCommitAction.WatchFollowCoordinate(
+				attribute(action, "slot"), floatValue(action, "x"), floatValue(action, "y"),
+				floatValue(action, "z"));
 			case "start-quest-timer" -> new AfterCommitAction.StartQuestTimer(
 				integer(action, "seconds"), parseTimerPolicy(action));
 			case "start-invisible-timer" -> new AfterCommitAction.StartInvisibleTimer(
@@ -640,8 +660,17 @@ public final class QuestDefinitionXmlCompiler {
 			case "cancel-quest-timer" -> new AfterCommitAction.CancelQuestTimer(
 				new QuestTimerPolicy.Identity(attribute(action, "timer-id"),
 					enumValue(QuestTimerPolicy.Scope.class, action, "scope")));
+			case "play-movie-random" -> parsePlayMovieRandom(action);
 			default -> fail("UNKNOWN_AFTER_COMMIT_ACTION", action.getTagName());
 		};
+	}
+
+	private static AfterCommitAction parsePlayMovieRandom(Element action) {
+		List<Integer> movieIds = new ArrayList<>();
+		for (Element variant : children(action, "variant")) {
+			movieIds.add(integer(variant, "movie-id"));
+		}
+		return new AfterCommitAction.PlayMovieRandom(movieIds);
 	}
 
 	private static AfterCommitAction parseSystemMessage(Element action) {
@@ -668,6 +697,18 @@ public final class QuestDefinitionXmlCompiler {
 		return new AfterCommitAction.SendSystemMessagePacket(new QuestSystemMessagePacket(
 			integer(action, "message-id"), target, booleanOrDefault(action, "npc-shout", false),
 			integerOrDefault(action, "text-color-id", 26), params));
+	}
+
+	private static AfterCommitAction parseRandomSpawn(Element action) {
+		List<QuestSpawnVariant> variants = new ArrayList<>();
+		for (Element variant : children(action, "variant")) {
+			variants.add(new QuestSpawnVariant(integer(variant, "template-id"),
+				new QuestSpawnLocation.Fixed(integer(variant, "world-id"), QuestInstanceTarget.currentOrDefault(),
+					floatValue(variant, "x"), floatValue(variant, "y"), floatValue(variant, "z"),
+					byteValue(variant, "heading"))));
+		}
+		return new AfterCommitAction.SpawnNpcRandom(attribute(action, "slot"), variants,
+			booleanOrDefault(action, "replace-existing", false));
 	}
 
 	private static QuestTimerPolicy parseTimerPolicy(Element action) {

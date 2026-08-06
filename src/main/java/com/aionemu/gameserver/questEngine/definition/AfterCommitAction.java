@@ -2,16 +2,19 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.model.PlayerClass;
 
+import java.util.List;
+import java.util.Objects;
+
 /** Closed set of best-effort actions allowed after a successful commit. */
 public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.ShowQuestDialog, AfterCommitAction.ShowQuestSelectionDialog,
 		AfterCommitAction.ShowDialogWindow,
 		AfterCommitAction.TeleportPlayer, AfterCommitAction.PlayMovie,
-		AfterCommitAction.SpawnNpc, AfterCommitAction.DespawnNpc, AfterCommitAction.StartFollow,
-		AfterCommitAction.StopFollow, AfterCommitAction.AttackTarget, AfterCommitAction.StartWalking,
+		AfterCommitAction.SpawnNpc, AfterCommitAction.SpawnNpcRandom, AfterCommitAction.DespawnNpc, AfterCommitAction.StartFollow,
+		AfterCommitAction.StopFollow, AfterCommitAction.AttackTarget, AfterCommitAction.AttackNpcTemplate, AfterCommitAction.StartWalking,
 		AfterCommitAction.StartFollowCurrentTargetToPoint, AfterCommitAction.StartFollowCurrentTargetToNpc,
 		AfterCommitAction.BroadcastNpcEmotion,
-		AfterCommitAction.WatchFollowZone,
+		AfterCommitAction.WatchFollowZone, AfterCommitAction.WatchFollowCoordinate,
 		AfterCommitAction.StartQuestTimer, AfterCommitAction.StartInvisibleTimer,
 		AfterCommitAction.CancelQuestTimer, AfterCommitAction.SyncQuestState,
 		AfterCommitAction.RefreshPlayerStats, AfterCommitAction.Morph,
@@ -23,7 +26,7 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.AbortNpcFactionQuest,
 		AfterCommitAction.AddNpcAggro, AfterCommitAction.DeleteInteractionNpc,
 		AfterCommitAction.DeleteWorldNpcs,
-		AfterCommitAction.BroadcastZoneMissionEnd {
+		AfterCommitAction.BroadcastZoneMissionEnd, AfterCommitAction.PlayMovieRandom {
 	record CloseDialog() implements AfterCommitAction {
 	}
 
@@ -104,6 +107,23 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 	}
 
 	/**
+	 * 从多个影片中等概率随机播放一个 (50% 各半的随机影片分支,如活动任务奖励影片)。
+	 * 影片结束仍由权威客户端 {@code MovieEnd(movieId)} 事件回调。
+	 * Plays one uniformly selected movie after commit.
+	 */
+	record PlayMovieRandom(List<Integer> movieIds) implements AfterCommitAction {
+		public PlayMovieRandom {
+			if (movieIds == null || movieIds.size() < 2) {
+				throw new IllegalArgumentException("movieIds must contain at least two entries");
+			}
+			movieIds = List.copyOf(movieIds);
+			if (movieIds.stream().anyMatch(id -> id == null || id <= 0)) {
+				throw new IllegalArgumentException("movieIds must be positive");
+			}
+		}
+	}
+
+	/**
 	 * 按 slot 在指定世界生成一次性任务 NPC。slot 是任务内编译期常量,despawn 通过
 	 * 它引用本事务 spawn 的权威 handle;禁止把 handle/实体状态编码进 quest_vars。
 	 * instanceId 由端口策略决定 (目标世界等于玩家当前世界时复用玩家实例,否则默认实例)。
@@ -125,6 +145,23 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 			}
 			if (location == null) {
 				throw new NullPointerException("location");
+			}
+		}
+	}
+
+	/** Spawns one uniformly selected authoritative variant; optionally replaces the slot handle. */
+	record SpawnNpcRandom(String slot, List<QuestSpawnVariant> variants, boolean replaceExisting)
+			implements AfterCommitAction {
+		public SpawnNpcRandom {
+			if (slot == null || slot.isBlank()) {
+				throw new IllegalArgumentException("slot must not be blank");
+			}
+			if (variants == null || variants.isEmpty()) {
+				throw new IllegalArgumentException("variants must not be empty");
+			}
+			variants = List.copyOf(variants);
+			if (variants.stream().anyMatch(Objects::isNull)) {
+				throw new IllegalArgumentException("variants must not contain null");
 			}
 		}
 	}
@@ -183,6 +220,18 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
+	/** Lets a task-owned NPC attack a named NPC template in the player's current world instance. */
+	record AttackNpcTemplate(String slot, int templateId) implements AfterCommitAction {
+		public AttackNpcTemplate {
+			if (slot == null || slot.isBlank()) {
+				throw new IllegalArgumentException("slot must not be blank");
+			}
+			if (templateId <= 0) {
+				throw new IllegalArgumentException("templateId must be positive");
+			}
+		}
+	}
+
 	/** 让 slot 的权威 NPC 开始巡逻行走。slot 必须已由本任务 SpawnNpc 注册。 */
 	record StartWalking(String slot) implements AfterCommitAction {
 		public StartWalking {
@@ -210,6 +259,18 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 			}
 			if (zone == null || zone.isBlank()) {
 				throw new IllegalArgumentException("zone must not be blank");
+			}
+		}
+	}
+
+	/** 监视 slot 的权威 NPC 到达指定坐标（半径由运行时坐标检查器定义）。 */
+	record WatchFollowCoordinate(String slot, float x, float y, float z) implements AfterCommitAction {
+		public WatchFollowCoordinate {
+			if (slot == null || slot.isBlank()) {
+				throw new IllegalArgumentException("slot must not be blank");
+			}
+			if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
+				throw new IllegalArgumentException("follow destination coordinates must be finite");
 			}
 		}
 	}

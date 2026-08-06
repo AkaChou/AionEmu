@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="36517" version="1">
+  <metadata name="[每日]德拉坎的宠物" display-name-id="1126103" min-level="55" max-level="55" category="FACTION" cannot-share="true" npc-faction-id="4">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="1621827"/>
+      <reward kind="ITEM" id="186000102" amount="2"/>
+      <reward kind="ITEM" id="188050737" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取/报告:Fortuneers 的 Odella (799837) / 派系 NPC (799838) 提供悬赏任务。start_npc_ids=0,DSL 按 36516/36503 先例用 end NPC 挂接取对话。 -->
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799837" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799837" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="799837" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="799837" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="799837" dialog-id="10000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799837" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799837" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799838" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799838" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="799838" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="799838" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="799838" dialog-id="10000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799838" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799838" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <!-- 进行中:与 Fortuneers NPC 对话查看任务详情。 -->
+    <transition source="started" target="started"><event><talk-to-npc npc-id="799837" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="799838" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <!-- 击杀任务刷出的怪 (216621) 1 只:var0 计数 0→1,priority 1 计数、0 完成进入奖励。刷怪由 spawner_object 700764 世界逻辑处理。 -->
+    <transition source="started" target="started" priority="1">
+      <event><kill-npc npc-id="216621"/></event>
+      <conditions><variable-below field="var0" value="1"/></conditions>
+      <actions><increment-variable field="var0" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event><kill-npc npc-id="216621"/></event>
+      <conditions><variable-at-least field="var0" value="1"/></conditions>
+      <actions><set-variable field="var0" value="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <!-- 奖励:向 Fortuneers NPC (799837/799838) 领取固定奖励。 -->
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="799837" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="799837" dialog-ids="8..23"/></event><actions><grant-reward kind="EXP" id="0" amount="1621827" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="186000102" amount="2"/><grant-reward kind="ITEM" id="188050737" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="799838" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="799838" dialog-ids="8..23"/></event><actions><grant-reward kind="EXP" id="0" amount="1621827" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="186000102" amount="2"/><grant-reward kind="ITEM" id="188050737" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+  </transitions>
+</quest-definition>

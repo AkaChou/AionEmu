@@ -11,6 +11,36 @@ public interface QuestCurrencyPort {
 	void preflight(Connection connection, QuestSnapshot snapshot,
 			List<QuestAction.GrantReward> rewards) throws SQLException;
 
+	default void preflightDebits(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.DecreaseCurrency> debits) throws SQLException {
+		if (!debits.isEmpty()) {
+			throw new SQLException("currency debit support is not composed");
+		}
+	}
+
+	default void preflightSets(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.SetCurrency> sets) throws SQLException {
+		if (!sets.isEmpty()) {
+			throw new SQLException("currency set support is not composed");
+		}
+	}
+
 	QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
 			List<QuestAction.GrantReward> rewards) throws SQLException;
+
+	default QuestTransactionParticipant applyDebits(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.DecreaseCurrency> debits) throws SQLException {
+		if (!debits.isEmpty()) {
+			throw new SQLException("currency debit support is not composed");
+		}
+		return QuestTransactionParticipant.none();
+	}
+
+	default QuestTransactionParticipant applySets(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.SetCurrency> sets) throws SQLException {
+		if (!sets.isEmpty()) {
+			throw new SQLException("currency set support is not composed");
+		}
+		return QuestTransactionParticipant.none();
+	}
 }

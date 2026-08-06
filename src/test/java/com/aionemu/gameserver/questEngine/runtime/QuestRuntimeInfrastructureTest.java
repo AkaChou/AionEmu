@@ -5,6 +5,7 @@ import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
@@ -114,6 +115,105 @@ class QuestRuntimeInfrastructureTest {
 	}
 
 	@Test
+	void dieRoutesUseTheSharedEventKey() {
+		CompiledQuestDefinition definition = quest(1563)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("recovered", project(QuestStatus.START, vars("var0", 1)))
+			.on(new QuestEvent.Die()).from("started").goTo("recovered")
+			.compile();
+
+		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)));
+
+		assertEquals(List.of(1563), index.routesFor(new QuestEvent.Die()).stream()
+			.map(QuestEventIndex.Route::questId).toList());
+	}
+
+	@Test
+	void attackRoutesUseTheNpcEventKey() {
+		CompiledQuestDefinition definition = quest(1564)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.AttackNpc(210319)).from("started").goTo("reward")
+			.compile();
+
+		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)));
+
+		assertEquals(List.of(1564), index.routesFor(new QuestEvent.AttackNpc(210319)).stream()
+			.map(QuestEventIndex.Route::questId).toList());
+	}
+
+	@Test
+	void movementRoutesUseTheirAuthoritativeEventKeys() {
+		CompiledQuestDefinition ring = quest(1565)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.PassFlyingRing("TEST_RING")).from("started").goTo("reward")
+			.compile();
+		CompiledQuestDefinition wind = quest(1566)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.EnterWindStream(405001)).from("started").goTo("reward")
+			.compile();
+		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(ring, wind)));
+
+		assertEquals(List.of(1565), index.routesFor(new QuestEvent.PassFlyingRing("TEST_RING")).stream()
+			.map(QuestEventIndex.Route::questId).toList());
+		assertEquals(List.of(1566), index.routesFor(new QuestEvent.EnterWindStream(405001)).stream()
+			.map(QuestEventIndex.Route::questId).toList());
+	}
+
+	@Test
+	void attackNpcHpThresholdUsesStrictAuthoritativeFacts() {
+		CompiledQuestDefinition definition = quest(1567)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.AttackNpc(211043)).from("started")
+			.when(QuestDsl.npcHpBelowPercent(211043, 50)).goTo("reward")
+			.compile();
+		var transition = definition.definition().transitions().get(0);
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1567, QuestStatus.START, 0, Map.of());
+
+		var below = new QuestEvent.AttackNpc(211043,
+			new com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts(
+				7, 20, 211043, 499, 1000, 210130000, 1));
+		var atBoundary = new QuestEvent.AttackNpc(211043,
+			new com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts(
+				7, 20, 211043, 500, 1000, 210130000, 1));
+
+		assertTrue(QuestMutationPlanner.plan(definition, snapshot, below, transition).isPresent());
+		assertTrue(QuestMutationPlanner.plan(definition, snapshot, atBoundary, transition).isEmpty());
+		assertTrue(QuestMutationPlanner.plan(definition, snapshot, new QuestEvent.AttackNpc(211043), transition).isEmpty());
+	}
+
+	@Test
+	void plannerRejectsCumulativeCurrencyDebitsWhenBalanceIsInsufficient() {
+		CompiledQuestDefinition definition = quest(1568)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(talkToNpc(211043)).from("started")
+				.then(new com.aionemu.gameserver.questEngine.definition.QuestAction.DecreaseCurrency(
+					QuestRewardKind.GOLD, 60))
+				.then(new com.aionemu.gameserver.questEngine.definition.QuestAction.DecreaseCurrency(
+					QuestRewardKind.KINAH, 60))
+				.goTo("reward").compile();
+		var transition = definition.definition().transitions().get(0);
+
+		QuestSnapshot enough = new QuestSnapshot(7, 1568, QuestStatus.START, 0, Map.of(),
+			Map.of(QuestRewardKind.GOLD, 120L));
+		QuestSnapshot shortBalance = new QuestSnapshot(7, 1568, QuestStatus.START, 0, Map.of(),
+			Map.of(QuestRewardKind.GOLD, 100L));
+
+		assertTrue(QuestMutationPlanner.plan(definition, enough, talkToNpc(211043), transition).isPresent());
+		assertTrue(QuestMutationPlanner.plan(definition, shortBalance, talkToNpc(211043), transition).isEmpty());
+	}
+
+	@Test
 	void rankedThresholdsShareOnePvpRoute() {
 		CompiledQuestDefinition rankThree = quest(3741)
 			.node("start", project(QuestStatus.START, Map.of()))
@@ -125,6 +225,55 @@ class QuestRuntimeInfrastructureTest {
 		List<QuestEventIndex.Route> routes = new QuestEventIndex(new ImmutableQuestCatalog(
 			List.of(rankThree, rankEight))).routesFor(new QuestEvent.KillRanked(12));
 		assertEquals(List.of(3741, 3742), routes.stream().map(QuestEventIndex.Route::questId).toList());
+	}
+
+	@Test
+	void anyWorldKillRoutesMatchConcreteRuntimeWorlds() {
+		CompiledQuestDefinition definition = quest(19690)
+			.node("start", project(QuestStatus.START, Map.of()))
+			.on(new QuestEvent.KillInWorld(0)).from("start").goTo("start").compile();
+		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)));
+
+		assertEquals(List.of(19690), index.routesFor(new QuestEvent.KillInWorld(210010000)).stream()
+			.map(QuestEventIndex.Route::questId).toList());
+	}
+
+	@Test
+	void concreteWorldKillRoutesAlsoIncludeWildcardOwners() {
+		CompiledQuestDefinition wildcard = quest(19690)
+			.node("start", project(QuestStatus.START, Map.of()))
+			.on(new QuestEvent.KillInWorld(0)).from("start").goTo("start").compile();
+		CompiledQuestDefinition exact = quest(19691)
+			.node("start", project(QuestStatus.START, Map.of()))
+			.on(new QuestEvent.KillInWorld(210010000)).from("start").goTo("start").compile();
+
+		List<Integer> owners = new QuestEventIndex(new ImmutableQuestCatalog(List.of(wildcard, exact)))
+			.routesFor(new QuestEvent.KillInWorld(210010000)).stream()
+			.map(QuestEventIndex.Route::questId).toList();
+
+		assertEquals(List.of(19690, 19691), owners);
+	}
+
+	@Test
+	void broadcastConcludesOneOwnerAcrossExactAndWildcardKillRoutes() {
+		var builder = quest(19692);
+		builder.node("start", project(QuestStatus.START, Map.of()));
+		builder.on(new QuestEvent.KillInWorld(210010000)).from("start").goTo("start");
+		builder.on(new QuestEvent.KillInWorld(0)).from("start").goTo("start");
+		CompiledQuestDefinition definition = builder.compile();
+		QuestEventRouter router = new QuestEventRouter(new QuestEventIndex(
+			new ImmutableQuestCatalog(List.of(definition))), ignored -> { }, new QuestRuntimeMetricsCollector());
+		AtomicInteger calls = new AtomicInteger();
+
+		QuestEventRouter.DispatchResult result = router.dispatch(new QuestEvent.KillInWorld(210010000),
+			QuestDispatchContract.BROADCAST, route -> {
+				calls.incrementAndGet();
+				return QuestRouteResult.HANDLED;
+			});
+
+		assertEquals(1, calls.get());
+		assertEquals(List.of(19692), result.owners().stream()
+			.map(QuestEventRouter.OwnerResult::questId).toList());
 	}
 
 	@Test

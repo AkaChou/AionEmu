@@ -77,6 +77,31 @@ class PlayerQuestAiPortTest {
 	}
 
 	@Test
+	void attackNpcTemplateResolvesTheCurrentWorldNpcAndIssuesDedicatedCommand() {
+		QuestSpawnRegistry registry = new QuestSpawnRegistry();
+		Npc guardian = npc(77);
+		Npc kimeia = npc(204044);
+		registry.register(snapshot(), "defense-mob", guardian);
+		Player player = player();
+		VisibleObject[] received = {null};
+		PlayerQuestAiPort.Command[] command = {null};
+		PlayerQuestAiPort port = new PlayerQuestAiPort(playerId -> player, registry,
+			(npc, p, target, issued, argument) -> {
+				received[0] = target;
+				command[0] = issued;
+				return true;
+			}, objectId -> null,
+			(p, npc, questId, zone) -> CompletableFuture.completedFuture(null),
+			(p, npc, questId, x, y, z) -> CompletableFuture.completedFuture(null),
+			(p, task) -> { }, (p, npc) -> { },
+			(p, templateId) -> templateId == 204044 ? kimeia : null);
+
+		assertTrue(port.attackNpcTemplate(snapshot(), plan(), "defense-mob", 204044));
+		assertSame(kimeia, received[0]);
+		assertEquals(PlayerQuestAiPort.Command.ATTACK_NPC_TEMPLATE, command[0]);
+	}
+
+	@Test
 	void emotionAndFollowZoneRouteToOwnedNpcAndCleanupCancelsWatcher() {
 		QuestSpawnRegistry registry = new QuestSpawnRegistry();
 		Npc guardian = npc();
@@ -123,6 +148,29 @@ class PlayerQuestAiPortTest {
 			plan(), 292.63895f, 489.47452f, 574.2429f));
 		assertEquals(List.of("NPC_INFO", "START_FOLLOW", "POINT:292.63895:489.47452:574.2429", "REGISTER"), calls);
 		assertFalse(watcher.isCancelled());
+	}
+
+	@Test
+	void taskOwnedNpcCanWatchFollowCoordinateAndCleanupCancelsWatcher() {
+		QuestSpawnRegistry registry = new QuestSpawnRegistry();
+		Npc survivor = npc(204830);
+		registry.register(snapshot(), "survivor", survivor);
+		List<String> calls = new ArrayList<>();
+		CompletableFuture<Void> watcher = new CompletableFuture<>();
+		PlayerQuestAiPort port = new PlayerQuestAiPort(playerId -> player(), registry,
+			(npc, player, target, command, argument) -> true, objectId -> null,
+			(player, npc, questId, zone) -> CompletableFuture.completedFuture(null),
+			(player, npc, questId, x, y, z) -> {
+				calls.add("POINT:" + x + ":" + y + ":" + z);
+				return watcher;
+			}, (player, task) -> calls.add("REGISTER"), (player, npc) -> { });
+
+		assertTrue(port.watchFollowCoordinate(snapshot(), plan(), "survivor",
+			213.177994f, 370.8797f, 503.3588f));
+		assertEquals(List.of("POINT:213.178:370.8797:503.3588"), calls);
+
+		registry.cleanup(PLAYER_ID, QUEST_ID);
+		assertTrue(watcher.isCancelled());
 	}
 
 	@Test

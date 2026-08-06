@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  80009 [Event] The Cake Is The Truth! (케이크는 진실이다!,, 活动任务)
+  Runtime: 与 798417 对话接取; START 状态 31 说明窗口 2375; SELECT_REWARD(1009) 扣收集物 182214007 x1 进 REWARD; REWARD 对话发奖完成; 事件不激活时 onLvlUp 弃任。
+  authority: 旧 handler _80009PieceOfCake.java; quest_data.xml:52806 (work item 182214007/rewards gold20000+exp10000+160010100x5+164002019x3/ASMODIANS/max_repeat 10); 真端 quest.xml (max_repeat_count 10, race pc_light); client_strings_quest.xml → nameId 1180009。
+  注: handler 的 targetId==0 接取分支（活动 UI 入口）在 typed DSL 用 NPC 1002 接取表达（与 80016 一致）; 1009 加 has-item 条件防 remove-item 事务回滚卡死（任务物品由活动发放, 正常流程恒足）。
+-->
+<quest-definition id="80009" version="1">
+  <metadata name="[Event] The Cake Is The Truth!" display-name-id="1180009" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <repeat max-repeat-count="10" cooldown-seconds="0" daily="false" weekly="false"/>
+    <work-items>
+      <item id="182214007" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="20000"/>
+      <reward kind="EXP" id="0" amount="10000"/>
+      <reward kind="ITEM" id="160010100" amount="5"/>
+      <reward kind="ITEM" id="164002019" amount="3"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 798417 接取（handler targetId==0 分支的活动 UI 接取以 NPC 对话表达） -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="798417" dialog-id="1002"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <talk-to-npc npc-id="798417" dialog-id="20000"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- START 状态说明对话 -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="798417" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <!-- SELECT_REWARD(1009)：扣收集物 1 个进 REWARD；不足提示 2716 -->
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="798417" dialog-id="1009"/>
+      </event>
+      <conditions>
+        <has-item item-id="182214007" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182214007" count="1"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="798417" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2716"/>
+      </after-commit>
+    </transition>
+    <!-- REWARD 完成 -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="798417" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="798417" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="20000" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="10000" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="160010100" amount="5"/>
+        <grant-reward kind="ITEM" id="164002019" amount="3"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- onLvlUp 弃任：事件不激活且已接取（回到未接取, 投影与 unaccepted 合并） -->
+    <transition source="started" target="unaccepted">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <event-active expected="false"/>
+      </conditions>
+      <actions>
+        <abandon-quest/>
+      </actions>
+    </transition>
+  </transitions>
+</quest-definition>

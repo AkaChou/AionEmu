@@ -3,9 +3,12 @@ package com.aionemu.gameserver.questEngine.definition;
 /** Closed set of required mutations in the quest transaction. */
 public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.SetVariable,
 		QuestAction.IncrementVariable, QuestAction.SetStatus, QuestAction.GrantReward,
+		QuestAction.GrantSelectedReward,
+		QuestAction.DecreaseCurrency,
+		QuestAction.SetCurrency,
 		QuestAction.LearnRecipe, QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill,
 		QuestAction.CompleteQuest, QuestAction.GiveItem, QuestAction.UnequipItem,
-		QuestAction.BlockDefaultItemUse {
+		QuestAction.BlockDefaultItemUse, QuestAction.AbandonQuest {
 	record RemoveItem(int itemId, int count) implements QuestAction {
 		/**
 		 * transition 需要移除当前完整堆叠时使用的哨兵数量。
@@ -102,6 +105,43 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
+	/**
+	 * Grants the authoritative reward entry at {@code rewardIndex} in quest metadata.
+	 * The planner lowers this declarative action to a concrete GrantReward before
+	 * any transactional port is called, so XML cannot duplicate retail reward data.
+	 */
+	record GrantSelectedReward(int rewardIndex) implements QuestAction {
+		public GrantSelectedReward {
+			if (rewardIndex < 0) {
+				throw new IllegalArgumentException("rewardIndex must be non-negative");
+			}
+		}
+	}
+
+	/** Atomically removes a positive amount of a supported quest currency. */
+	record DecreaseCurrency(QuestRewardKind kind, long amount) implements QuestAction {
+		public DecreaseCurrency {
+			if (kind == null || !kind.isCurrency()) {
+				throw new IllegalArgumentException("currency kind must be a supported currency");
+			}
+			if (amount <= 0) {
+				throw new IllegalArgumentException("currency decrease amount must be positive");
+			}
+		}
+	}
+
+	/** Sets a supported currency to an exact non-negative balance transactionally. */
+	record SetCurrency(QuestRewardKind kind, long amount) implements QuestAction {
+		public SetCurrency {
+			if (kind == null || !kind.isCurrency()) {
+				throw new IllegalArgumentException("currency kind must be a supported currency");
+			}
+			if (amount < 0) {
+				throw new IllegalArgumentException("currency balance must be non-negative");
+			}
+		}
+	}
+
 	/** Completes the quest and freezes completion count, reward index, and timestamps in the state transaction. */
 	record CompleteQuest(int rewardIndex) implements QuestAction {
 		public CompleteQuest {
@@ -139,5 +179,15 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 				throw new IllegalArgumentException("skillId and targetLevel must be positive");
 			}
 		}
+	}
+
+	/**
+	 * 服务端强制放弃任务,执行 {@code QuestService.abandonQuest} 的完整清理语义
+	 * (状态删除 + 任务物品清理)。区别于 {@code abandon} 事件 (玩家主动放弃) 与
+	 * {@code set-status NONE} (仅投影切换)。要求目标节点为 NONE 投影。
+	 * Server-forced quest abandon with full lifecycle cleanup; distinct from the
+	 * player-initiated {@code abandon} event and from a bare NONE projection.
+	 */
+	record AbandonQuest() implements QuestAction {
 	}
 }

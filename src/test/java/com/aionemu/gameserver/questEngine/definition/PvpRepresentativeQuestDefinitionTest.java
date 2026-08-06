@@ -76,6 +76,21 @@ class PvpRepresentativeQuestDefinitionTest {
 	}
 
 	@Test
+	void anyWorldPvpDefinitionAcceptsConcreteRetailKillFacts() {
+		CompiledQuestDefinition definition = quest(19690)
+			.node("start", project(QuestStatus.START, Map.of()))
+			.node("reward", project(QuestStatus.REWARD, Map.of()))
+			.on(killInWorld(0)).from("start").when(pvpVictimLevelDelta(-5, 9)).goTo("reward")
+			.compile();
+		QuestPvpKillFacts facts = facts(8, 9, 20, 50, 55, 3, 310010000, Set.of());
+
+		assertTrue(QuestMutationPlanner.plan(definition, snapshot(19690, QuestStatus.START, facts),
+			new QuestEvent.KillInWorld(310010000, facts), definition.definition().transitions().get(0)).isPresent());
+		assertFalse(QuestMutationPlanner.plan(definition, new QuestSnapshot(9, 19690, QuestStatus.START, 0, Map.of()),
+			new QuestEvent.KillInWorld(310010000), definition.definition().transitions().get(0)).isPresent());
+	}
+
+	@Test
 	void quest23851RequiresZoneAndLevelDelta() {
 		CompiledQuestDefinition definition = quest(23851)
 			.node("start", project(QuestStatus.START, Map.of()))

@@ -76,7 +76,18 @@ public class ProductionCatalogWhitelistVerificationTest {
 							&& !(t.event() instanceof QuestEvent.NpcLostTarget)
 							&& !(t.event() instanceof QuestEvent.ZoneMissionEnd)
 							&& !(t.event() instanceof QuestEvent.InvisibleTimerEnd)
-							&& !(t.event() instanceof QuestEvent.QuestDialog)) {
+							&& !(t.event() instanceof QuestEvent.FailCraft)
+							&& !(t.event() instanceof QuestEvent.EquipItem)
+							&& !(t.event() instanceof QuestEvent.Abandon)
+							&& !(t.event() instanceof QuestEvent.DredgionReward)
+							&& !(t.event() instanceof QuestEvent.HouseItemUse)
+							&& !(t.event() instanceof QuestEvent.KillInWorld)
+							&& !(t.event() instanceof QuestEvent.KillRanked)
+							&& !(t.event() instanceof QuestEvent.LeaveZone)
+							&& !(t.event() instanceof QuestEvent.QuestTimerEnd)
+							&& !(t.event() instanceof QuestEvent.UseSkill)
+							&& !(t.event() instanceof QuestEvent.QuestDialog)
+							&& !(t.event() instanceof QuestEvent.BonusApply)) {
 						violations.add(d.id() + ":" + t.event().type());
 					}
 				}

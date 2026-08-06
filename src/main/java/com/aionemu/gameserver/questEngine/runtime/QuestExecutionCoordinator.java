@@ -81,7 +81,8 @@ public final class QuestExecutionCoordinator {
 					.filter(action -> !(action instanceof QuestAction.SetVariable)
 						&& !(action instanceof QuestAction.SetStatus)
 						&& !(action instanceof QuestAction.CompleteQuest)
-						&& !(action instanceof QuestAction.BlockDefaultItemUse))
+						&& !(action instanceof QuestAction.BlockDefaultItemUse)
+						&& !(action instanceof QuestAction.AbandonQuest))
 					.toList();
 			boolean persistState = requiresStatePersistence(snapshot, resolved);
 			if (!durableActions.isEmpty()) {

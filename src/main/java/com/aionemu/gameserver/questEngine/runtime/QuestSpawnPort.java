@@ -2,6 +2,9 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
+import com.aionemu.gameserver.questEngine.definition.QuestSpawnVariant;
+
+import java.util.List;
 
 /** Typed boundary for the after-commit NPC spawn/despawn lifecycle. */
 public interface QuestSpawnPort {
@@ -15,6 +18,12 @@ public interface QuestSpawnPort {
 	 */
 	boolean spawnNpc(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, int templateId,
 		QuestSpawnLocation location);
+
+	/** Spawns one selected variant; implementations must keep slot ownership bounded. */
+	default boolean spawnNpcRandom(QuestSnapshot snapshot, QuestMutationPlan plan, String slot,
+		List<QuestSpawnVariant> variants, boolean replaceExisting) {
+		return false;
+	}
 
 	default boolean spawnNpc(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, int worldId,
 			int templateId, float x, float y, float z, byte heading) {

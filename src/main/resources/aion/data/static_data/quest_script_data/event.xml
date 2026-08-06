@@ -27,9 +27,6 @@
 	<!-- [Event/Daily] Cranky Grankers -->
 	<item_collecting start_npc_ids="831033 831039" id="51012"/>
 	<!-- [Event/Daily] Cutie-Wootie Choco Wuv -->
-    <monster_hunt start_npc_ids="202549" id="51019">
-        <monster var="0" npc_ids="217161" end_var="15"/>
-    </monster_hunt>
 	<!-- [Event/Daily] Chocolate, Extra-Bitter -->
 	<!-- [Event/Daily] Candypocalypse -->
 	<!-- [Event/Daily] Just Shove-l It -->
@@ -174,7 +171,6 @@
 	<!-- [Event] Icevest! Or, Invest In Ice -->
 	<!-- [Event] Trust The Shugo Broker -->
 	<!-- [Event] A Day To Rejoice -->
-	<item_collecting start_npc_ids="0" id="80467"/>
 	<!-- [Event] Unending Blessings! -->
 	<item_collecting start_npc_ids="0" id="80468"/>
 	<!-- [Event] Blessings From The Lords! -->

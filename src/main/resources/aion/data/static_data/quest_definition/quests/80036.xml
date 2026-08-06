@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  80036 [Event] Gambling with Grace (대길, 운명 개척!, LUNAR 事件任务)
+  Runtime: onLvlUp 背包收集物 164002018 >= 1 时活动系统自动接取; 与 799765 对话 CHECK_COLLECTED_ITEMS(39) 校验并扣除收集物进入 REWARD; LUNAR bonus 触发时保持状态; REWARD 对话发奖完成（quest_data rewards 为空，奖励由 LUNAR bonus 系统下发）。
+  authority: 旧 handler _80036EventGamblingWithGrace.java; quest_data.xml:53078 (collect 164002018x1/bonus LUNAR level 10/前置 80029/ELYOS); client_strings_quest.xml STR_QUEST_NAME_Q80036 → nameId 1180036。
+-->
+<quest-definition id="80036" version="1">
+  <metadata name="[Event] Gambling with Grace" display-name-id="1180036" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <items>
+      <item id="164002018" count="1"/>
+    </items>
+    <bonuses>
+      <bonus type="LUNAR" level="10"/>
+    </bonuses>
+    <start-conditions>
+      <condition type="finished" quest-id="80029"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted">
+      <project status="NONE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="started">
+      <project status="START">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="reward">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+    <node label="complete">
+      <project status="COMPLETE">
+        <vars>
+          <var name="var0" value="0"/>
+        </vars>
+      </project>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- onLvlUp 自动接取：背包收集物 >= 1 时活动系统启动任务 -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <has-item item-id="164002018" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 799765 对话（START 状态） -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="799765" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="799765" dialog-id="1002"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1003"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="799765" dialog-id="1008"/>
+      </event>
+      <after-commit>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- CHECK_COLLECTED_ITEMS：收集物齐全扣物进 REWARD；不足提示 2716 -->
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="799765" dialog-id="39"/>
+      </event>
+      <conditions>
+        <has-item item-id="164002018" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="164002018" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="799765" dialog-id="39"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2716"/>
+      </after-commit>
+    </transition>
+    <!-- REWARD 状态：USE_OBJECT(-1) 显示奖励对话框，8..23 完成（奖励由 LUNAR bonus 系统下发，quest_data rewards 为空） -->
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="799765" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <talk-to-npc npc-id="799765" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- LUNAR bonus：START 状态保持（旧 handler 对两状态消费 bonus；COMPLETE 保持被编译器拒绝，任务完成后 bonus 不再消费） -->
+    <transition source="started" target="started">
+      <event>
+        <bonus-apply bonus-type="LUNAR"/>
+      </event>
+    </transition>
+  </transitions>
+</quest-definition>

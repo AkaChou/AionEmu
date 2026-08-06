@@ -235,6 +235,50 @@ class TypedQuestAfterCommitPortTest {
 	}
 
 	@Test
+	void routesNpcFactionLifecycleToTheEffectPort() {
+		List<String> calls = new ArrayList<>();
+		QuestEffectPort effects = new QuestEffectPort() {
+			@Override
+			public boolean morph(QuestSnapshot snapshot, QuestMutationPlan plan, int ascensionId) {
+				return true;
+			}
+
+			@Override
+			public boolean flightTeleport(QuestSnapshot snapshot, QuestMutationPlan plan, int flightTeleportId) {
+				return true;
+			}
+
+			@Override
+			public boolean startNpcFactionQuest(QuestSnapshot snapshot, QuestMutationPlan plan, int npcFactionId) {
+				calls.add("start:" + npcFactionId);
+				return true;
+			}
+
+			@Override
+			public boolean completeNpcFactionQuest(QuestSnapshot snapshot, QuestMutationPlan plan, int npcFactionId) {
+				calls.add("complete:" + npcFactionId);
+				return true;
+			}
+
+			@Override
+			public boolean abortNpcFactionQuest(QuestSnapshot snapshot, QuestMutationPlan plan, int npcFactionId) {
+				calls.add("abort:" + npcFactionId);
+				return true;
+			}
+		};
+		TypedQuestAfterCommitPort port = new TypedQuestAfterCommitPort(dialogPort(), null, null, null, null,
+			null, null, null, effects, (snapshot, plan, scheduleRespawn) -> true);
+		QuestSnapshot snapshot = new QuestSnapshot(7, 36533, QuestStatus.START, 0, Map.of());
+		QuestMutationPlan plan = new QuestMutationPlan(36533, QuestStatus.START, 0, List.of(), List.of());
+
+		port.execute(new AfterCommitAction.StartNpcFactionQuest(7), snapshot, plan);
+		port.execute(new AfterCommitAction.CompleteNpcFactionQuest(7), snapshot, plan);
+		port.execute(new AfterCommitAction.AbortNpcFactionQuest(7), snapshot, plan);
+
+		assertEquals(List.of("start:7", "complete:7", "abort:7"), calls);
+	}
+
+	@Test
 	void routesModeledSystemMessageToTypedPort() {
 		List<QuestSystemMessage> calls = new ArrayList<>();
 		QuestEffectPort effects = new QuestEffectPort() {
@@ -352,6 +396,20 @@ class TypedQuestAfterCommitPortTest {
 	}
 
 	@Test
+	void routesOwnedCoordinateFollowToTypedAiPort() {
+		List<String> commands = new ArrayList<>();
+		TypedQuestAfterCommitPort port = new TypedQuestAfterCommitPort(dialogPort(), null, null, null,
+			new RecordingAiPort(commands), null);
+		QuestSnapshot snapshot = new QuestSnapshot(7, 2634, QuestStatus.START, 1, Map.of());
+		QuestMutationPlan plan = new QuestMutationPlan(2634, QuestStatus.START, 1, List.of(), List.of());
+
+		port.execute(new AfterCommitAction.WatchFollowCoordinate("survivor", 213.177994f, 370.8797f, 503.3588f),
+			snapshot, plan);
+
+		assertEquals(List.of("watch-point:survivor:213.178:370.8797:503.3588"), commands);
+	}
+
+	@Test
 	void fullyComposedPortRoutesMovieTimerAndEscortCapabilities() {
 		List<String> commands = new ArrayList<>();
 		QuestAiPort ai = new RecordingAiPort(commands);
@@ -443,6 +501,13 @@ class TypedQuestAfterCommitPortTest {
 		public boolean startFollowCurrentTargetToPoint(QuestSnapshot snapshot, QuestMutationPlan plan,
 				float x, float y, float z) {
 			commands.add("follow-point:" + x + ":" + y + ":" + z);
+			return true;
+		}
+
+		@Override
+		public boolean watchFollowCoordinate(QuestSnapshot snapshot, QuestMutationPlan plan, String slot,
+				float x, float y, float z) {
+			commands.add("watch-point:" + slot + ":" + x + ":" + y + ":" + z);
 			return true;
 		}
 

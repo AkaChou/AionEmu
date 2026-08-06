@@ -22,7 +22,7 @@ class Quest30314RetailAlignmentTest {
 					&& Integer.valueOf(10255).equals(talk.dialogId()))
 				.findFirst().orElseThrow();
 			assertEquals(List.of(new QuestCondition.HasItem(186000098, 100)), setReward.conditions());
-			assertEquals(List.of(new QuestAction.RemoveItem(186000098, QuestAction.RemoveItem.ALL)),
+			assertEquals(List.of(new QuestAction.RemoveItem(186000098, 100)),
 				setReward.actions());
 		}
 	}

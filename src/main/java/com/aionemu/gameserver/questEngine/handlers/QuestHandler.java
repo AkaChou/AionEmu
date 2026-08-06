@@ -448,7 +448,8 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 				return sendQuestEndDialog(env, rewardId);
 			}
 			Npc npc = (Npc) env.getVisibleObject();
-			if ("useitem".equals(npc.getAi2().getName())) {
+			if ("useitem".equals(npc.getAi2().getName())
+					|| "quest_use_item".equals(npc.getAi2().getName())) {
 				return closeDialogWindow(env);
 			} else {
 				return sendQuestSelectionDialog(env);

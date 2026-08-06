@@ -15,7 +15,6 @@
 		<monster var="0" npc_ids="219527 219528 219528 219530 219531" end_var="1000"/>
     </monster_hunt>
 	<!-- [Event] Spirited Thanks -->
-	<report_to id="80279" start_npc_ids="831117" end_npc_ids="831350"/>
 	<!-- [Event] Changing Of The Guard (Elyos Only) -->
 	<monster_hunt start_npc_ids="831117" id="80280">
         <monster var="0" npc_ids="219505 219506 219543 219544" end_var="45"/>

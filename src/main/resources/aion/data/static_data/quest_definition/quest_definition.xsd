@@ -11,7 +11,7 @@
   <xs:simpleType name="timer-persistence"><xs:restriction base="xs:string"><xs:enumeration value="SESSION"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="timer-overwrite"><xs:restriction base="xs:string"><xs:enumeration value="REPLACE"/><xs:enumeration value="KEEP_EXISTING"/><xs:enumeration value="FAIL_IF_RUNNING"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="timer-delivery"><xs:restriction base="xs:string"><xs:enumeration value="AT_MOST_ONCE"/></xs:restriction></xs:simpleType>
-  <xs:simpleType name="npc-emotion"><xs:restriction base="xs:string"><xs:enumeration value="START_EMOTE2"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="npc-emotion"><xs:restriction base="xs:string"><xs:enumeration value="START_EMOTE2"/><xs:enumeration value="NO"/><xs:enumeration value="PANIC"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="player-emotion"><xs:restriction base="xs:string"><xs:enumeration value="STAND"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="quest-system-message"><xs:restriction base="xs:string"><xs:enumeration value="QUEST_FAILED"/><xs:enumeration value="WAREHOUSE_FULL_INVENTORY"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="quest-system-message-target"><xs:restriction base="xs:string"><xs:enumeration value="NONE"/><xs:enumeration value="PLAYER"/></xs:restriction></xs:simpleType>
@@ -90,20 +90,28 @@
     <xs:element name="equipped-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" default="1"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="membership-permission"><xs:complexType><xs:attribute name="permission" type="xs:string" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="dp-at-max" type="empty-type"/>
+    <xs:element name="complete-count-is"><xs:complexType><xs:attribute name="value" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
+    <xs:element name="event-active"><xs:complexType><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
   </xs:choice></xs:complexType>
 
   <xs:complexType name="actions-type"><xs:choice minOccurs="0" maxOccurs="unbounded">
     <xs:element name="remove-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="give-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="unequip-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="remove-count" type="xs:int" default="0"/></xs:complexType></xs:element>
     <xs:element name="set-variable"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="value" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="increment-variable"><xs:complexType><xs:attribute name="field" type="xs:string" use="required"/><xs:attribute name="delta" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="block-default-item-use"><xs:complexType/></xs:element>
     <xs:element name="set-status"><xs:complexType><xs:attribute name="status" type="status" use="required"/></xs:complexType></xs:element>
 	<xs:element name="grant-reward"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/><xs:attribute name="amount-mode" type="reward-amount-mode" default="EXACT"/></xs:complexType></xs:element>
+	<xs:element name="grant-selected-reward"><xs:complexType><xs:attribute name="reward-index" type="xs:int" use="required"/></xs:complexType></xs:element>
+	<xs:element name="decrease-currency"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/></xs:complexType></xs:element>
+	<xs:element name="set-currency"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/></xs:complexType></xs:element>
+	<xs:element name="reset-currency"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/></xs:complexType></xs:element>
 	<xs:element name="complete-quest"><xs:complexType><xs:attribute name="reward-index" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="learn-recipe"><xs:complexType><xs:attribute name="recipe-id" type="xs:int" use="required"/><xs:attribute name="ownership" type="recipe-ownership" use="required"/></xs:complexType></xs:element>
     <xs:element name="forget-recipe"><xs:complexType><xs:attribute name="recipe-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="grant-craft-skill"><xs:complexType><xs:attribute name="skill-id" type="xs:int" use="required"/><xs:attribute name="target-level" type="xs:int" use="required"/><xs:attribute name="auto-learn-recipes" type="xs:boolean" use="required"/></xs:complexType></xs:element>
+    <xs:element name="abandon-quest" type="empty-type"/>
   </xs:choice></xs:complexType>
 
   <xs:complexType name="after-commit-type"><xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -127,6 +135,7 @@
     <xs:element name="flight-teleport"><xs:complexType><xs:attribute name="flight-teleport-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="broadcast-zone-mission-end"><xs:complexType><xs:attribute name="quest-ids" type="xs:string" use="required"/></xs:complexType></xs:element><xs:element name="delete-interaction-npc"><xs:complexType><xs:attribute name="schedule-respawn" type="xs:boolean" default="true"/></xs:complexType></xs:element><xs:element name="delete-world-npcs" type="empty-type"/>
     <xs:element name="spawn-npc-current-or-default"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="template-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
+	<xs:element name="spawn-npc-random"><xs:complexType><xs:sequence><xs:element name="variant" minOccurs="1" maxOccurs="32"><xs:complexType><xs:attribute name="template-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element></xs:sequence><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="replace-existing" type="xs:boolean" default="false"/></xs:complexType></xs:element>
     <xs:element name="spawn-npc-fixed-instance"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="template-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="instance-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="spawn-npc-at-player"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="template-id" type="xs:int" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="despawn-npc"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
@@ -135,12 +144,15 @@
     <xs:element name="start-follow-current-target-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="stop-follow"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="attack-target"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
+	<xs:element name="attack-npc-template"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="template-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="start-walking"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="broadcast-npc-emotion"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="emotion" type="npc-emotion" use="required"/></xs:complexType></xs:element>
     <xs:element name="watch-follow-zone"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="zone" type="xs:string" use="required"/></xs:complexType></xs:element>
+    <xs:element name="watch-follow-coordinate"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/></xs:complexType></xs:element>
     <xs:element name="start-quest-timer"><xs:complexType><xs:attribute name="seconds" type="xs:int" use="required"/><xs:attributeGroup ref="timer-policy-attributes"/></xs:complexType></xs:element>
     <xs:element name="start-invisible-timer"><xs:complexType><xs:attribute name="seconds" type="xs:int" use="required"/><xs:attributeGroup ref="timer-policy-attributes"/></xs:complexType></xs:element>
     <xs:element name="cancel-quest-timer"><xs:complexType><xs:attribute name="timer-id" type="xs:string" use="required"/><xs:attribute name="scope" type="timer-scope" use="required"/></xs:complexType></xs:element>
+    <xs:element name="play-movie-random"><xs:complexType><xs:sequence><xs:element name="variant" minOccurs="2" maxOccurs="unbounded"><xs:complexType><xs:attribute name="movie-id" type="xs:int" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
   </xs:choice></xs:complexType>
 
   <xs:element name="quest-definition">

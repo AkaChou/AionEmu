@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.NpcData;
+import com.aionemu.commons.utils.collections.IntArrayList;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
@@ -9,6 +10,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import com.aionemu.gameserver.questEngine.runtime.QuestSpawnRegistry;
+import com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestProximityEventPort;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestEventPort;
 import com.aionemu.gameserver.questEngine.runtime.TypedQuestAfterCommitPort;
@@ -133,6 +135,116 @@ class QuestEngineRuntimeCompositionTest {
 	}
 
 	@Test
+	void equipItemProductionEventIsAcceptedByTheCentralInstallationGate() throws ReflectiveOperationException {
+		QuestEngine engine = new QuestEngine();
+		var definition = QuestDsl.quest(990014)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("equipped", project(QuestStatus.START, vars("var0", 1)))
+			.on(new QuestEvent.EquipItem(140000003)).from("started").goTo("equipped")
+			.compile();
+
+		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(definition)));
+
+		var equipListeners = QuestEngine.class.getDeclaredField("questOnEquipItem");
+		equipListeners.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		Map<Integer, java.util.Set<Integer>> registrations =
+			(Map<Integer, java.util.Set<Integer>>) equipListeners.get(engine);
+		assertEquals(java.util.Set.of(990014), registrations.get(140000003));
+		assertTrue(engine.isHaveHandler(990014));
+	}
+
+	@Test
+	void dieProductionEventIsAcceptedByTheCentralInstallationGate() throws ReflectiveOperationException {
+		QuestEngine engine = new QuestEngine();
+		var definition = QuestDsl.quest(990005)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("recovered", project(QuestStatus.START, vars("var0", 1)))
+			.on(new QuestEvent.Die()).from("started").goTo("recovered")
+			.compile();
+
+		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(definition)));
+
+		var dieListeners = QuestEngine.class.getDeclaredField("questOnDie");
+		dieListeners.setAccessible(true);
+		assertTrue(((IntArrayList) dieListeners.get(engine)).contains(990005));
+		assertTrue(engine.isHaveHandler(990005));
+	}
+
+	@Test
+	void attackProductionEventRegistersNpcRouteAndPassesTheInstallationGate() {
+		QuestEngine engine = new QuestEngine();
+		var definition = QuestDsl.quest(990006)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.AttackNpc(210319)).from("started").goTo("reward")
+			.compile();
+
+		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(definition)));
+
+		assertEquals(java.util.List.of(990006), engine.getQuestNpc(210319).getOnAttackEvent());
+		assertTrue(engine.isHaveHandler(990006));
+	}
+
+	@Test
+	void movementProductionEventsPassTheInstallationGate() {
+		QuestEngine engine = new QuestEngine();
+		var ring = QuestDsl.quest(990011)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.PassFlyingRing("TEST_RING")).from("started").goTo("reward")
+			.compile();
+		var wind = QuestDsl.quest(990012)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.EnterWindStream(405001)).from("started").goTo("reward")
+			.compile();
+
+		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(ring, wind)));
+
+		assertTrue(engine.isHaveHandler(990011));
+		assertTrue(engine.isHaveHandler(990012));
+	}
+
+	@Test
+	void remainingCatalogEventsPassTheInstallationGateAndBuildRoutes() throws ReflectiveOperationException {
+		QuestEngine engine = new QuestEngine();
+		var definition = QuestDsl.quest(990015)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
+			.on(new QuestEvent.Abandon()).from("started").goTo("unaccepted")
+			.on(new QuestEvent.DredgionReward()).from("started").goTo("started")
+			.on(new QuestEvent.HouseItemUse(3420021)).from("started").goTo("started")
+			.on(new QuestEvent.KillInWorld(210010000)).from("started").goTo("started")
+			.on(new QuestEvent.KillRanked(4)).from("started").goTo("started")
+			.on(new QuestEvent.LeaveZone("TEST_ZONE")).from("started").goTo("started")
+			.on(new QuestEvent.QuestTimerEnd()).from("started").goTo("started")
+			.on(new QuestEvent.UseSkill(9832)).from("started").goTo("started")
+			.compile();
+
+		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(definition)));
+
+		var dispatcherField = QuestEngine.class.getDeclaredField("productionDispatcher");
+		dispatcherField.setAccessible(true);
+		QuestProductionDispatcher dispatcher = (QuestProductionDispatcher) dispatcherField.get(engine);
+		assertTrue(dispatcher.hasRoutes(new QuestEvent.Abandon()));
+		assertTrue(dispatcher.hasRoutes(new QuestEvent.DredgionReward()));
+		assertTrue(dispatcher.hasRoutes(new QuestEvent.HouseItemUse(3420021)));
+		assertTrue(dispatcher.hasRoutes(new QuestEvent.KillInWorld(210010000)));
+		assertTrue(dispatcher.hasRoutes(new QuestEvent.KillRanked(12)));
+		assertTrue(dispatcher.hasRoutes(new QuestEvent.LeaveZone("TEST_ZONE")));
+		assertTrue(dispatcher.hasRoutes(new QuestEvent.QuestTimerEnd()));
+		assertTrue(dispatcher.hasRoutes(new QuestEvent.UseSkill(9832)));
+		assertTrue(engine.isProductionOwner(990015));
+	}
+
+	@Test
 	void unsupportedProductionEventFailsBeforeRegisteringAnyNpcOwner() {
 		QuestEngine engine = new QuestEngine();
 		var talk = QuestDsl.quest(990001)
@@ -140,14 +252,14 @@ class QuestEngineRuntimeCompositionTest {
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start").goTo("start")
 			.compile();
-		var attack = QuestDsl.quest(990002)
+		var unsupported = QuestDsl.quest(990002)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
-			.on(new QuestEvent.AttackNpc(210133)).from("start").goTo("start")
+			.on(new QuestEvent.KamarReward()).from("start").goTo("start")
 			.compile();
 
 		assertThrows(IllegalStateException.class,
-			() -> engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(talk, attack))));
+			() -> engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(talk, unsupported))));
 
 		assertEquals(java.util.List.of(), engine.getQuestNpc(203057).getOnTalkEvent());
 		assertFalse(engine.isHaveHandler(990001));

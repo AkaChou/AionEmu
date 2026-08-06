@@ -7,16 +7,6 @@
 	<!-- [Growth] Training Camp Trouble -->
 	<!-- [Growth] Hearts Of Fire -->
 	<!-- [Growth] Aether Intervention -->
-	<monster_hunt id="80214" start_npc_ids="831030">
-		<monster var="0" npc_ids="204024 211014 211016 211017 211018 211019 211020 211033" end_var="100"/>
-		<monster var="0" npc_ids="211034 211035 211036 211037 211711 211775 211776 211777" end_var="100"/>
-		<monster var="0" npc_ids="211778 211779 211816 211817 211818 211819 211862 211863" end_var="100"/>
-		<monster var="0" npc_ids="211864 212019 212020 212021 212022 212023 212024 212025" end_var="100"/>
-		<monster var="0" npc_ids="212026 212027 212028 212029 212031 212032 212033 212034" end_var="100"/>
-		<monster var="0" npc_ids="212035 212036 212037 212038 212039 212040 212041 212042" end_var="100"/>
-		<monster var="0" npc_ids="212043 212044 212045 212046 212047 212048 212049 212050" end_var="100"/>
-		<monster var="0" npc_ids="212051 212052 212053 212054 212351 212998" end_var="100"/>
-	</monster_hunt>
 	<!-- [Growth] Bioweapon Interference -->
 	<!-- [Growth] Supress The Steel Rake -->
 	<!-- [Growth] To Dark Poeta! -->
@@ -26,13 +16,6 @@
 	<!-- [Growth] Nochsana Infiltration -->
 	<!-- [Growth] Heartburn -->
 	<!-- [Growth] Mist Mane Oww -->
-	<monster_hunt id="80223" start_npc_ids="831028">
-		<monster var="0" npc_ids="211615 212556 212724 212725 212726 212727" end_var="100"/>
-		<monster var="0" npc_ids="212728 212729 212730 212731 212732 212733" end_var="100"/> 
-		<monster var="0" npc_ids="212734 212735 212736 212737 212738 212739" end_var="100"/> 
-		<monster var="0" npc_ids="212740 212741 212742 212743 212744 212809" end_var="100"/>
-		<monster var="0" npc_ids="212865 212866 212867 212979" end_var="100"/>
-	</monster_hunt>
 	<!-- [Growth] Bad Bakarma -->
 	<!-- [Growth] Stop The Steel Rake -->
 	<!-- [Growth] A Test In Dark Poeta -->

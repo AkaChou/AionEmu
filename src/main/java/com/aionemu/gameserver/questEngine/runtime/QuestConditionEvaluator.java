@@ -57,6 +57,8 @@ public final class QuestConditionEvaluator {
 				case QuestCondition.EquippedItem equipped -> equippedItem(snapshot, equipped);
 				case QuestCondition.MembershipPermission permission -> membershipPermission(snapshot, permission);
 				case QuestCondition.DpAtMax ignored -> dpAtMax(snapshot);
+				case QuestCondition.CompleteCountIs count -> completeCountIs(snapshot, count);
+				case QuestCondition.EventActive active -> eventActive(snapshot, active);
 			};
 			if (!matched) {
 				return false;
@@ -228,5 +230,19 @@ public final class QuestConditionEvaluator {
 
 	private static boolean dpAtMax(QuestSnapshot snapshot) {
 		return snapshot.dpAtMax();
+	}
+
+	/** The completion count is always captured (zero when the quest was never completed). */
+	private static boolean completeCountIs(QuestSnapshot snapshot, QuestCondition.CompleteCountIs condition) {
+		return (snapshot.completeCount() == condition.value()) == condition.expected();
+	}
+
+	/**
+	 * 事件激活条件仅在快照已捕获活动事实时匹配;未知事实失败关闭。
+	 * Event-activity conditions match only captured facts; unknown facts fail closed.
+	 */
+	private static boolean eventActive(QuestSnapshot snapshot, QuestCondition.EventActive condition) {
+		Boolean actual = snapshot.eventActive();
+		return actual != null && actual == condition.expected();
 	}
 }

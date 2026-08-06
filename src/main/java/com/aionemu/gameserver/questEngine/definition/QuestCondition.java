@@ -19,7 +19,8 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		QuestCondition.WorldIs, QuestCondition.WorldNpcIs, QuestCondition.ZoneIs,
 		QuestCondition.NpcHpBelowPercent, QuestCondition.CurrencyAtLeast, QuestCondition.CurrencyBelow,
 		QuestCondition.QuestsFinished, QuestCondition.EquipmentSetEquipped, QuestCondition.EquippedItem,
-		QuestCondition.MembershipPermission, QuestCondition.DpAtMax {
+		QuestCondition.MembershipPermission, QuestCondition.DpAtMax, QuestCondition.CompleteCountIs,
+		QuestCondition.EventActive {
 	/** Matches a typed membership capability captured from the live account. */
 	record MembershipPermission(QuestMembershipPermission permission, boolean expected) implements QuestCondition {
 		public MembershipPermission {
@@ -178,6 +179,32 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 
 	/** Matches when the captured current DP equals the captured maximum DP. */
 	record DpAtMax() implements QuestCondition {
+	}
+
+	/**
+	 * Matches the number of times the quest has been completed so far
+	 * (for example the ninth completion unlocking an extra event reward).
+	 */
+	record CompleteCountIs(int value, boolean expected) implements QuestCondition {
+		public CompleteCountIs {
+			if (value < 0) {
+				throw new IllegalArgumentException("value must be non-negative");
+			}
+		}
+
+		public CompleteCountIs(int value) {
+			this(value, true);
+		}
+	}
+
+	/**
+	 * Matches whether the current game event still contains this quest,
+	 * mirroring {@code EventService.checkQuestIsActive}. Unknown facts fail closed.
+	 */
+	record EventActive(boolean expected) implements QuestCondition {
+		public EventActive() {
+			this(true);
+		}
 	}
 
 	/** Matches presence of an NPC template in the player's current world instance. */

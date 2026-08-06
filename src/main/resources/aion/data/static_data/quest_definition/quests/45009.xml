@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="45009" version="1">
+  <metadata name="[Daily] Oh The Entropy!" display-name-id="1128009" min-level="30" max-level="39" category="FACTION" cannot-share="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <rewards>
+      <reward kind="EXP" id="0" amount="203989"/>
+      <reward kind="ITEM" id="186000103" amount="1"/>
+      <reward kind="ITEM" id="188050559" amount="1"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="k1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="k2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="k3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <!-- 接取:FACTION 派系任务无 start NPC(start_npc_ids="0"),由 Field Warden NPC 799848 对话接取。 -->
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="799848" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="799848" dialog-id="1007"/></event>
+      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="799848" dialog-id="1002"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="799848" dialog-id="20000"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="799848" dialog-id="10000"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="799848" dialog-ids="1003 1004 20001"/></event>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="799848" dialog-id="1008"/></event>
+      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+
+    <!-- 猎杀熵之力结晶体 (700802) 3 个:计数推进 k1→k3,杀满后由 799848 报告。 -->
+    <transition source="started" target="k1">
+      <event><kill-npc npc-id="700802"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="k1" target="k2">
+      <event><kill-npc npc-id="700802"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="k2" target="k3">
+      <event><kill-npc npc-id="700802"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="k3" target="k3">
+      <event><talk-to-npc npc-id="799848" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+    </transition>
+    <transition source="k3" target="reward">
+      <event><talk-to-npc npc-id="799848" dialog-id="1009"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+
+    <!-- 奖励:799848 领取固定奖励 (exp/物品)。 -->
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="799848" dialog-ids="-1 1009"/></event>
+      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event><talk-to-npc npc-id="799848" dialog-ids="8..23"/></event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="203989"/>
+        <grant-reward kind="ITEM" id="186000103" amount="1"/>
+        <grant-reward kind="ITEM" id="188050559" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

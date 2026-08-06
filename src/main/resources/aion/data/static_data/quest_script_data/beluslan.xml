@@ -3,9 +3,4 @@
 <!--
     Quest Beluslan Make By (Encom)
  -->
-	<report_to id="2605" start_npc_ids="204732" end_npc_ids="204826"/>
-	<report_to id="2667" start_npc_ids="204814" end_npc_ids="204749" item_id="182204499"/>
-	<item_collecting id="2511" start_npc_ids="204711"/>
-	<item_collecting id="2585" start_npc_ids="204739" action_item_ids="700331"/>
-	<item_collecting id="2599" start_npc_ids="204725"/>
 </quest_scripts>

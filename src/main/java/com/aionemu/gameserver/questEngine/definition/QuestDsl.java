@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /** Typed Java DSL that lowers through the same compiler as XML. */
 public final class QuestDsl {
@@ -272,6 +273,18 @@ public final class QuestDsl {
 		return new QuestCondition.StartEligible();
 	}
 
+	public static QuestCondition questsFinished(Set<Integer> questIds) {
+		return new QuestCondition.QuestsFinished(questIds);
+	}
+
+	public static QuestCondition questsFinished(int... questIds) {
+		Set<Integer> ids = new java.util.LinkedHashSet<>();
+		for (int questId : questIds) {
+			ids.add(questId);
+		}
+		return new QuestCondition.QuestsFinished(ids);
+	}
+
 	public static QuestCondition advancedClassIs(PlayerClass playerClass) {
 		return new QuestCondition.AdvancedClassIs(playerClass);
 	}
@@ -292,6 +305,68 @@ public final class QuestDsl {
 		return new QuestCondition.ZoneIs(zone);
 	}
 
+	public static QuestCondition npcHpBelowPercent(int npcId, int percent) {
+		return new QuestCondition.NpcHpBelowPercent(npcId, percent);
+	}
+
+	public static QuestCondition currencyAtLeast(QuestRewardKind kind, long amount) {
+		return new QuestCondition.CurrencyAtLeast(kind, amount);
+	}
+
+	public static QuestCondition currencyBelow(QuestRewardKind kind, long amount) {
+		return new QuestCondition.CurrencyBelow(kind, amount);
+	}
+
+	public static QuestCondition equipmentSetEquipped(Set<Integer> setIds, int count) {
+		return new QuestCondition.EquipmentSetEquipped(setIds, count);
+	}
+
+	public static QuestCondition equipmentSetEquipped(Set<Integer> setIds, int count, boolean expected) {
+		return new QuestCondition.EquipmentSetEquipped(setIds, count, expected);
+	}
+
+	public static QuestCondition dpAtMax() {
+		return new QuestCondition.DpAtMax();
+	}
+
+	/** 已完成次数等于给定值 (如第 9 次完成解锁额外奖励)。 */
+	public static QuestCondition completeCountIs(int value) {
+		return new QuestCondition.CompleteCountIs(value);
+	}
+
+	public static QuestCondition completeCountIs(int value, boolean expected) {
+		return new QuestCondition.CompleteCountIs(value, expected);
+	}
+
+	/** 当前活动包含本任务 (EventService.checkQuestIsActive)。 */
+	public static QuestCondition eventActive() {
+		return new QuestCondition.EventActive();
+	}
+
+	public static QuestCondition eventActive(boolean expected) {
+		return new QuestCondition.EventActive(expected);
+	}
+
+	public static QuestCondition equippedItem(int itemId) {
+		return new QuestCondition.EquippedItem(itemId);
+	}
+
+	public static QuestCondition equippedItem(int itemId, int count) {
+		return new QuestCondition.EquippedItem(itemId, count);
+	}
+
+	public static QuestCondition equippedItem(int itemId, int count, boolean expected) {
+		return new QuestCondition.EquippedItem(itemId, count, expected);
+	}
+
+	public static QuestCondition membershipPermission(QuestMembershipPermission permission) {
+		return new QuestCondition.MembershipPermission(permission);
+	}
+
+	public static QuestCondition membershipPermission(QuestMembershipPermission permission, boolean expected) {
+		return new QuestCondition.MembershipPermission(permission, expected);
+	}
+
 	public static QuestAction giveItem(int itemId, int count) {
 		return new QuestAction.GiveItem(itemId, count);
 	}
@@ -306,6 +381,15 @@ public final class QuestDsl {
 	 */
 	public static QuestAction removeAllItem(int itemId) {
 		return new QuestAction.RemoveItem(itemId, QuestAction.RemoveItem.ALL);
+	}
+
+	public static QuestAction unequipItem(int itemId) {
+		return new QuestAction.UnequipItem(itemId);
+	}
+
+	/** Unequips the item and removes up to {@code count} copies returned to inventory. */
+	public static QuestAction unequipItemAndRemoveReturned(int itemId, int count) {
+		return new QuestAction.UnequipItem(itemId, count);
 	}
 
 	public static QuestAction setVariable(String field, int value) {
@@ -332,6 +416,24 @@ public final class QuestDsl {
 		return new QuestAction.GrantReward(kind, id, amount, QuestRewardAmountMode.QUEST_BASE);
 	}
 
+	public static QuestAction grantSelectedReward(int rewardIndex) {
+		return new QuestAction.GrantSelectedReward(rewardIndex);
+	}
+
+	public static QuestAction decreaseCurrency(QuestRewardKind kind, long amount) {
+		return new QuestAction.DecreaseCurrency(kind, amount);
+	}
+
+	/** Sets a supported currency to an exact non-negative balance in the same transaction. */
+	public static QuestAction setCurrency(QuestRewardKind kind, long amount) {
+		return new QuestAction.SetCurrency(kind, amount);
+	}
+
+	/** Resets a supported currency to zero in the same transaction. */
+	public static QuestAction resetCurrency(QuestRewardKind kind) {
+		return new QuestAction.SetCurrency(kind, 0);
+	}
+
 	public static QuestAction completeQuest(int rewardIndex) {
 		return new QuestAction.CompleteQuest(rewardIndex);
 	}
@@ -346,6 +448,11 @@ public final class QuestDsl {
 
 	public static QuestAction grantCraftSkill(int skillId, int targetLevel, boolean autoLearnRecipes) {
 		return new QuestAction.GrantCraftSkill(skillId, targetLevel, autoLearnRecipes);
+	}
+
+	/** 服务端强制放弃任务 (QuestService.abandonQuest 完整清理语义);要求目标节点为 NONE 投影。 */
+	public static QuestAction abandonQuest() {
+		return new QuestAction.AbandonQuest();
 	}
 
 	public static AfterCommitAction closeDialog() {
@@ -386,8 +493,18 @@ public final class QuestDsl {
 		return new AfterCommitAction.PlayMovie(movieId);
 	}
 
+	/** 从多个影片中等概率随机播放一个。 */
+	public static AfterCommitAction playMovieRandom(int... movieIds) {
+		return new AfterCommitAction.PlayMovieRandom(
+			java.util.Arrays.stream(movieIds).boxed().collect(java.util.stream.Collectors.toList()));
+	}
+
 	public static AfterCommitAction morph(int ascensionState) {
 		return new AfterCommitAction.Morph(ascensionState);
+	}
+
+	public static AfterCommitAction setPlayerClass(PlayerClass playerClass) {
+		return new AfterCommitAction.SetPlayerClass(playerClass);
 	}
 
 	public static AfterCommitAction applyEffect(int skillId, int durationMillis) {
@@ -437,6 +554,17 @@ public final class QuestDsl {
 		return spawnNpc(slot, templateId, new QuestSpawnLocation.PlayerPosition(heading));
 	}
 
+	public static QuestSpawnVariant spawnVariant(int templateId, int worldId, float x, float y, float z,
+		byte heading) {
+		return new QuestSpawnVariant(templateId, new QuestSpawnLocation.Fixed(worldId,
+			QuestInstanceTarget.currentOrDefault(), x, y, z, heading));
+	}
+
+	public static AfterCommitAction spawnNpcRandom(String slot, boolean replaceExisting,
+		QuestSpawnVariant... variants) {
+		return new AfterCommitAction.SpawnNpcRandom(slot, List.of(variants), replaceExisting);
+	}
+
 	public static AfterCommitAction despawnNpc(String slot) {
 		return new AfterCommitAction.DespawnNpc(slot);
 	}
@@ -461,6 +589,10 @@ public final class QuestDsl {
 		return new AfterCommitAction.AttackTarget(slot);
 	}
 
+	public static AfterCommitAction attackNpcTemplate(String slot, int templateId) {
+		return new AfterCommitAction.AttackNpcTemplate(slot, templateId);
+	}
+
 	public static AfterCommitAction startWalking(String slot) {
 		return new AfterCommitAction.StartWalking(slot);
 	}
@@ -471,6 +603,10 @@ public final class QuestDsl {
 
 	public static AfterCommitAction watchFollowZone(String slot, String zone) {
 		return new AfterCommitAction.WatchFollowZone(slot, zone);
+	}
+
+	public static AfterCommitAction watchFollowCoordinate(String slot, float x, float y, float z) {
+		return new AfterCommitAction.WatchFollowCoordinate(slot, x, y, z);
 	}
 
 	public static AfterCommitAction startQuestTimer(int seconds) {

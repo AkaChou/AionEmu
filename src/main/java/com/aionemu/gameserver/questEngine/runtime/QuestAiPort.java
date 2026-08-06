@@ -28,6 +28,12 @@ public interface QuestAiPort {
 	/** 让 slot 的权威 NPC 攻击事件快照中的 target (objectId 无法解析时跳过)。 */
 	boolean attackTarget(QuestSnapshot snapshot, QuestMutationPlan plan, String slot);
 
+	/** Makes a task-owned NPC attack the first matching template in the player's current world instance. */
+	default boolean attackNpcTemplate(QuestSnapshot snapshot, QuestMutationPlan plan, String slot,
+		int templateId) {
+		return false;
+	}
+
 	/** 让 slot 的权威 NPC 开始巡逻行走 (WalkManager.startWalking)。 */
 	boolean startWalking(QuestSnapshot snapshot, QuestMutationPlan plan, String slot);
 
@@ -36,4 +42,10 @@ public interface QuestAiPort {
 
 	/** Starts the quest follow checker for the authoritative slot and destination zone. */
 	boolean watchFollowZone(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, String zone);
+
+	/** Starts the quest follow checker for the authoritative slot and destination coordinate. */
+	default boolean watchFollowCoordinate(QuestSnapshot snapshot, QuestMutationPlan plan, String slot,
+			float x, float y, float z) {
+		return false;
+	}
 }

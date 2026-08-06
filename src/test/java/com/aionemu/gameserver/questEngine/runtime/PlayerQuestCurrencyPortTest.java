@@ -122,6 +122,15 @@ class PlayerQuestCurrencyPortTest {
 	}
 
 	@Test
+	void preflightSetsRejectsTargetAboveCapturedLiveMaximum() throws Exception {
+		PlayerQuestCurrencyPort port = port(playerId -> null, new RecordingInventoryDao(),
+			new RecordingAbyssRankDao(), new RecordingPlayerDao());
+
+		assertThrows(SQLException.class, () -> port.preflightSets(connection(), snapshotCaptured().withMaxDp(100),
+			List.of(new QuestAction.SetCurrency(QuestRewardKind.DP, 101))));
+	}
+
+	@Test
 	void applyGrantsKinahAndPersistsOnCallerConnection() throws Exception {
 		Player player = playerWithCurrency(0, 0, 0, 0);
 		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
@@ -229,7 +238,8 @@ class PlayerQuestCurrencyPortTest {
 			Map.of(), Map.of(QuestRewardKind.GOLD, 100L));
 
 		QuestTransactionParticipant participant = port.applyDebits(connection, snapshot,
-			List.of(new QuestAction.DecreaseCurrency(QuestRewardKind.KINAH, 40)));
+			List.of(new QuestAction.DecreaseCurrency(QuestRewardKind.GOLD, 10),
+				new QuestAction.DecreaseCurrency(QuestRewardKind.KINAH, 30)));
 
 		assertEquals(60, player.getInventory().getKinah());
 		assertEquals(1, inventoryDao.transactions.size());
@@ -241,6 +251,64 @@ class PlayerQuestCurrencyPortTest {
 		participant.afterRollback();
 		assertEquals(100, player.getInventory().getKinah());
 		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
+	}
+
+	@Test
+	void applyDebitsRestoresEveryLiveProjectionWhenALaterCurrencyDaoFails() throws Exception {
+		Player player = playerWithCurrency(10, 20, 30, 100);
+		PersistentState initialInventoryState = player.getInventory().getPersistentState();
+		PersistentState initialRankState = player.getAbyssRank().getPersistentState();
+		RecordingPlayerDao playerDao = new RecordingPlayerDao(true);
+		PlayerQuestCurrencyPort port = port(playerId -> player, new RecordingInventoryDao(),
+			new RecordingAbyssRankDao(), playerDao);
+		QuestSnapshot snapshot = new QuestSnapshot(PLAYER_ID, QUEST_ID, QuestStatus.START, 0, Map.of(),
+			Map.of(QuestRewardKind.GOLD, 100L, QuestRewardKind.AP, 10L,
+				QuestRewardKind.GP, 20L, QuestRewardKind.DP, 30L));
+
+		assertThrows(SQLException.class, () -> port.applyDebits(connection(), snapshot,
+			List.of(new QuestAction.DecreaseCurrency(QuestRewardKind.GOLD, 10),
+				new QuestAction.DecreaseCurrency(QuestRewardKind.AP, 2),
+				new QuestAction.DecreaseCurrency(QuestRewardKind.GP, 3),
+				new QuestAction.DecreaseCurrency(QuestRewardKind.DP, 4))));
+
+		assertEquals(100, player.getInventory().getKinah());
+		assertEquals(10, player.getAbyssRank().getAp());
+		assertEquals(20, player.getAbyssRank().getGp());
+		assertEquals(30, player.getCommonData().getDp());
+		assertEquals(initialInventoryState, player.getInventory().getPersistentState());
+		assertEquals(initialRankState, player.getAbyssRank().getPersistentState());
+	}
+
+	@Test
+	void applySetsPersistsOnCallerConnectionAndParticipantRollbackRestoresDp() throws Exception {
+		Player player = playerWithCurrency(0, 0, 40, 100);
+		RecordingPlayerDao playerDao = new RecordingPlayerDao();
+		PlayerQuestCurrencyPort port = port(playerId -> player, new RecordingInventoryDao(),
+			new RecordingAbyssRankDao(), playerDao);
+		Connection connection = connection();
+
+		QuestTransactionParticipant participant = port.applySets(connection, snapshotCaptured().withMaxDp(4000),
+			List.of(new QuestAction.SetCurrency(QuestRewardKind.DP, 0)));
+
+		assertEquals(0, player.getCommonData().getDp());
+		assertEquals(1, playerDao.calls.size());
+		assertSame(connection, playerDao.calls.get(0));
+		participant.afterRollback();
+		assertEquals(40, player.getCommonData().getDp());
+	}
+
+	@Test
+	void applySetsFailsClosedWhenLiveDpProjectionCannotReachExactTarget() throws Exception {
+		Player player = playerWithCurrency(0, 0, 40, 100);
+		setField(PlayerCommonData.class, player.getCommonData(), "playerClass", PlayerClass.WARRIOR);
+		RecordingPlayerDao playerDao = new RecordingPlayerDao();
+		PlayerQuestCurrencyPort port = port(playerId -> player, new RecordingInventoryDao(),
+			new RecordingAbyssRankDao(), playerDao);
+
+		assertThrows(SQLException.class, () -> port.applySets(connection(), snapshotCaptured().withMaxDp(4000),
+			List.of(new QuestAction.SetCurrency(QuestRewardKind.DP, 0))));
+		assertEquals(40, player.getCommonData().getDp());
+		assertTrue(playerDao.calls.isEmpty());
 	}
 
 	private static PlayerQuestCurrencyPort port(QuestPlayerPort players, InventoryDAO inventoryDao,
@@ -491,11 +559,23 @@ class PlayerQuestCurrencyPortTest {
 
 	private static final class RecordingPlayerDao extends PlayerDAO {
 		private final List<Connection> calls = new ArrayList<>();
+		private final boolean failOnStore;
 		private int lastPlayerId;
 		private PlayerCommonData lastPcd;
 
+		private RecordingPlayerDao() {
+			this(false);
+		}
+
+		private RecordingPlayerDao(boolean failOnStore) {
+			this.failOnStore = failOnStore;
+		}
+
 		@Override
-		public void storeInTransaction(Connection connection, int playerId, PlayerCommonData pcd) {
+		public void storeInTransaction(Connection connection, int playerId, PlayerCommonData pcd) throws SQLException {
+			if (failOnStore) {
+				throw new SQLException("recording player DAO failure");
+			}
 			calls.add(connection);
 			lastPlayerId = playerId;
 			lastPcd = pcd;

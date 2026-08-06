@@ -9,7 +9,9 @@ import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
+import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import org.junit.jupiter.api.AfterEach;
@@ -26,6 +28,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestEngineLegacyDispatchBoundaryTest {
@@ -68,6 +72,40 @@ class QuestEngineLegacyDispatchBoundaryTest {
 
 		assertTrue(engine.onEnterZone(new QuestEnv(null, player(), 0, 0), zone));
 		assertTrue(legacyCalled.get(), "a handled typed owner must not swallow another quest's legacy event");
+	}
+
+	@Test
+	void typedEntrypointsFailClosedForMissingEnvironmentOrRequiredActors() {
+		assertFalse(engine.onDialog(null));
+		assertFalse(engine.onKill(null));
+		assertFalse(engine.onAttack(null));
+		assertFalse(engine.onKillRanked(null, null));
+		assertFalse(engine.onKillInWorld(null, 210010000));
+		assertFalse(engine.onEnterZone(null, ZoneName.get("AKARIOS_VILLAGE_210010000")));
+		assertFalse(engine.onLeaveZone(null, ZoneName.get("AKARIOS_VILLAGE_210010000")));
+		assertFalse(engine.onMovieEnd(null, 1));
+		assertFalse(engine.onUseSkill(null, 1));
+		assertFalse(engine.onHouseItemUseEvent(null, 1));
+		assertEquals(HandlerResult.FAILED, engine.onItemUseEvent(null, null));
+		assertFalse(engine.onCanAct(null, 1, QuestActionType.ITEM_USE));
+		assertEquals(HandlerResult.FAILED, engine.onBonusApplyEvent(null, null, List.of()));
+
+		engine.onLvlUp(null);
+		engine.onEnterZoneMissionEnd(null);
+		engine.onDie(null);
+		engine.onLogOut(null);
+		engine.onNpcReachTarget(null);
+		engine.onNpcLostTarget(null);
+		engine.onPassFlyingRing(null, "RING");
+		engine.onEnterWorld(null);
+		engine.onItemGet(null, 1);
+		engine.onQuestTimerEnd(null);
+		engine.onInvisibleTimerEnd(null);
+		engine.onFailCraft(null, 1);
+		engine.onEquipItem(null, 1);
+		engine.onDredgionReward(null);
+		engine.onEnterWindStream(null, 1);
+		assertFalse(engine.onAtDistance(null));
 	}
 
 	private void setProductionDispatcher(QuestProductionDispatcher dispatcher) throws ReflectiveOperationException {

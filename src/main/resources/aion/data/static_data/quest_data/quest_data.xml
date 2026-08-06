@@ -3393,10 +3393,10 @@
       <collect_item item_id="182201820" count="1"/>
     </collect_items>
     <rewards gold="69360" exp="484471"/>
-    <rewards gold="9900" exp="581250 ">
+    <rewards gold="9900" exp="581250">
       <reward_item item_id="162000048" count="3"/>
     </rewards>
-    <rewards gold="6600" exp="581250 ">
+    <rewards gold="6600" exp="581250">
       <reward_item item_id="162000048" count="3"/>
     </rewards>
     <quest_drop npc_id="212084" item_id="182201818" chance="100" drop_each_member="1"/>
@@ -37349,6 +37349,42 @@
       <reward_item item_id="164000076" count="13"/>
     </rewards>
   </quest>
+  <quest id="21224" name="[组队]亚龙护卫兵的证物" nameId="1127127" minlevel_permitted="55" max_repeat_count="10" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+    <collect_items>
+      <collect_item item_id="182207879" count="10"/>
+    </collect_items>
+    <rewards exp="4562190" gold="0">
+      <selectable_reward_item item_id="121001001" count="1"/>
+      <selectable_reward_item item_id="121001002" count="1"/>
+      <reward_item item_id="186000019" count="2"/>
+      <reward_item item_id="188050948" count="1"/>
+    </rewards>
+    <quest_drop npc_id="216124" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216125" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216126" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216127" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216128" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216824" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216825" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216826" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216827" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216828" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216829" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216830" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216831" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216832" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216833" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216834" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216835" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216836" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216837" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216838" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216839" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216840" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216841" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216842" item_id="182207879" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216843" item_id="182207879" chance="100" drop_each_member="1"/>
+  </quest>
   <quest id="21237" name="Dealing With Luciferins" nameId="1127157" minlevel_permitted="52" max_repeat_count="20" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="10000" exp="4368661">
       <reward_item item_id="186000109" count="1"/>
@@ -42972,7 +43008,7 @@
     </rewards>
   </quest>
   <quest id="27511" name="The Avatars" nameId="1802762" minlevel_permitted="66" max_repeat_count="255" race_permitted="ASMODIANS" category="QUEST">
-    <rewards gold="150000" exp="19893600"/>
+    <rewards gold="150000" exp="51840000"/>
   </quest>
   <quest id="27525" name="[Instance Dungeon] Chilly Region" nameId="1803574" minlevel_permitted="66" maxlevel_permitted="82" max_repeat_count="1" race_permitted="ASMODIANS" category="SIGNIFICANT">
     <rewards gold="405720" exp="35349000">
@@ -48879,8 +48915,7 @@
     <rewards gold="897480" exp="6907092"/>
     <quest_drop npc_id="217298" item_id="182212510" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="217331" item_id="182212510" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="217291" item_id="182212510" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="217328" item_id="182212510" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="855889" item_id="182212510" chance="100" drop_each_member="1"/>
   </quest>
   <quest id="30564" name="[Group] Reians' Final Hope" nameId="1801110" minlevel_permitted="57" max_repeat_count="1" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards gold="598320" exp="5097837" title="222"/>
@@ -50249,8 +50284,8 @@
       <reward_item item_id="186000233" count="3"/>
       <reward_item item_id="188052287" count="1"/>
     </rewards>
-    <quest_drop npc_id="230505" item_id="182215280" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="230506" item_id="182215280" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="230505" item_id="182215280" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="230506" item_id="182215280" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="39612" name="[Daily] Crocodile Stew" nameId="1129768" minlevel_permitted="63" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="FACTION" npcfaction_id="15" repeat_cycle="ALL">
     <rewards exp="3251515">
@@ -51142,7 +51177,7 @@
       <collect_item item_id="182211029" count="1"/>
     </collect_items>
     <rewards exp="1213282">
-      <reward_item item_id="186000105" count="1"/>
+      <reward_item item_id="186000105" count="2"/>
       <reward_item item_id="188050738" count="1"/>
     </rewards>
     <quest_drop npc_id="217020" item_id="182211029" chance="100" drop_each_member="1"/>

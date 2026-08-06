@@ -30,7 +30,7 @@ class Quest30312RetailAlignmentTest {
 				.collect(java.util.stream.Collectors.toSet()));
 			for (QuestTransition turnIn : turnIns) {
 				assertEquals(List.of(new QuestCondition.HasItem(182209715, 20)), turnIn.conditions());
-				assertEquals(List.of(new QuestAction.RemoveItem(182209715, QuestAction.RemoveItem.ALL)),
+				assertEquals(List.of(new QuestAction.RemoveItem(182209715, 20)),
 					turnIn.actions());
 			}
 		}

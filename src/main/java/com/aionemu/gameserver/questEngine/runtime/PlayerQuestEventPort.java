@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.configs.main.CraftConfig;
+import com.aionemu.gameserver.configs.main.MembershipConfig;
+import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -8,6 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestMembershipPermission;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -97,7 +100,7 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			&& player.getAbyssRank() != null;
 		var target = player.getTarget();
 		boolean positionCaptured = player.getPosition() != null;
-		return new QuestSnapshot(player.getObjectId(), questId, status, packed,
+		QuestSnapshot snapshot = new QuestSnapshot(player.getObjectId(), questId, status, packed,
 			inventoryCaptured ? inventoryOf(player) : null,
 			currenciesCaptured ? currenciesOf(player) : null,
 			inventoryCaptured, currenciesCaptured, 0, target == null ? 0 : target.getObjectId(),
@@ -109,13 +112,88 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			positionCaptured ? player.getHeading() : (byte) 0,
 			craftFactsOf(player), null).withWorldFacts(worldFactsOf(player))
 			.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()))
+			.withCompletedQuestIds(completedQuestIdsOf(player))
 			.withCompleteCount(state == null ? 0 : state.getCompleteCount());
+		snapshot = snapshot.withEventActive(eventActiveOf(questId));
+		QuestEquipmentFacts equipmentFacts = equipmentFactsOf(player);
+		if (equipmentFacts != null) {
+			snapshot = snapshot.withEquipmentFacts(equipmentFacts);
+		}
+		Integer maxDp = maxDpOf(player);
+		if (maxDp != null) {
+			snapshot = snapshot.withMaxDp(maxDp);
+		}
+		QuestMembershipFacts membershipFacts = membershipFactsOf(player);
+		if (membershipFacts != null) {
+			snapshot = snapshot.withMembershipFacts(membershipFacts);
+		}
+		return snapshot;
+	}
+
+	/** Event data may be unavailable during partial startup or isolated tests; preserve unknown facts. */
+	private static Boolean eventActiveOf(int questId) {
+		try {
+			return GameEventServices.eventService().checkQuestIsActive(questId);
+		} catch (RuntimeException | LinkageError unavailable) {
+			return null;
+		}
+	}
+
+	/** Captures the equipment-set part counts used by equipment-dependent quests. */
+	private static QuestEquipmentFacts equipmentFactsOf(Player player) {
+		if (player.getEquipment() == null) {
+			return null;
+		}
+		Map<Integer, Integer> parts = new HashMap<>();
+		for (int setId : List.of(6, 7, 8, 9, 378)) {
+			parts.put(setId, player.getEquipment().itemSetPartsEquipped(setId));
+		}
+		Map<Integer, Integer> equippedItems = new HashMap<>();
+		for (Item item : player.getEquipment().getEquippedItems()) {
+			if (item != null && item.getItemId() > 0) {
+				equippedItems.merge(item.getItemId(), 1, Integer::sum);
+			}
+		}
+		return new QuestEquipmentFacts(parts, equippedItems);
+	}
+
+	/** Captures only permissions with a typed quest-runtime source. */
+	private static QuestMembershipFacts membershipFactsOf(Player player) {
+		if (player.getPlayerAccount() == null) {
+			return null;
+		}
+		Set<QuestMembershipPermission> granted = new HashSet<>();
+		if (player.havePermission(MembershipConfig.STIGMA_SLOT_QUEST)) {
+			granted.add(QuestMembershipPermission.STIGMA_SLOT_QUEST);
+		}
+		return new QuestMembershipFacts(granted);
+	}
+
+	/** Captures the live maximum DP when player stat projection is available. */
+	private static Integer maxDpOf(Player player) {
+		if (player.getGameStats() == null || player.getGameStats().getMaxDp() == null) {
+			return null;
+		}
+		int maxDp = player.getGameStats().getMaxDp().getCurrent();
+		return maxDp < 0 ? null : maxDp;
+	}
+
+	/** Captures only quest states that are explicitly COMPLETE; absent states are not completed. */
+	private static Set<Integer> completedQuestIdsOf(Player player) {
+		Set<Integer> completed = new HashSet<>();
+		for (QuestState questState : player.getQuestStateList().getAllFinishedQuests()) {
+			if (questState != null && questState.getQuestId() > 0) {
+				completed.add(questState.getQuestId());
+			}
+		}
+		return Set.copyOf(completed);
 	}
 
 	/** Captures NPC template presence in the player's current world instance. */
 	private static QuestWorldFacts worldFactsOf(Player player) {
 		var position = player.getPosition();
-		if (position == null || !position.isSpawned() || position.getWorldMapInstance() == null) {
+		if (position == null || !position.isSpawned() || position.getWorldMapInstance() == null
+				|| position.getMapRegion() == null) {
 			return null;
 		}
 		Set<Integer> npcTemplateIds = new HashSet<>();
@@ -126,6 +204,9 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		}
 		Set<String> zoneNames = new HashSet<>();
 		for (var zone : position.getMapRegion().getZones(player)) {
+			if (zone == null || zone.getAreaTemplate() == null) {
+				continue;
+			}
 			var zoneName = zone.getAreaTemplate().getZoneName();
 			if (zoneName != null) {
 				zoneNames.add(zoneName.name());

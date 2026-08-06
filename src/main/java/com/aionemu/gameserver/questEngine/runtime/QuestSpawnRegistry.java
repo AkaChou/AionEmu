@@ -73,6 +73,17 @@ public final class QuestSpawnRegistry {
 		return spawns.get(key(snapshot, slot));
 	}
 
+	/** Replaces one slot atomically and returns its previous authoritative handle, if any. */
+	public Npc replace(QuestSnapshot snapshot, String slot, Npc npc) {
+		Objects.requireNonNull(npc, "npc");
+		Key key = key(snapshot, slot);
+		Future<?> previousTask = followTasks.remove(key);
+		if (previousTask != null) {
+			previousTask.cancel(false);
+		}
+		return spawns.put(key, npc);
+	}
+
 	/** Replaces the follow checker associated with one authoritative spawn slot. */
 	public boolean registerFollowTask(QuestSnapshot snapshot, String slot, Future<?> task) {
 		Objects.requireNonNull(task, "task");

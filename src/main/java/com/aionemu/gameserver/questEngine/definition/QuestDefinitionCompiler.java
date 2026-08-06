@@ -84,6 +84,11 @@ public final class QuestDefinitionCompiler {
 				}
 			}
 			for (QuestAction action : transition.actions()) {
+				if (action instanceof QuestAction.GrantSelectedReward selected
+						&& selected.rewardIndex() >= definition.metadata().rewards().size()) {
+					fail("SELECTED_REWARD_INDEX_OUT_OF_RANGE",
+						"selected reward index " + selected.rewardIndex() + " is not present in quest metadata");
+				}
 				if (action instanceof QuestAction.SetVariable variable) {
 					if (definition.progressLayout().field(variable.field()) == null) {
 						fail("UNKNOWN_PROGRESS_FIELD", "action references unknown field: " + variable.field());
@@ -128,6 +133,12 @@ public final class QuestDefinitionCompiler {
 				fail("COMPLETE_QUEST_STATUS_MISMATCH",
 					"complete-quest action requires a COMPLETE projection");
 			}
+			boolean abandons = transition.actions().stream()
+				.anyMatch(QuestAction.AbandonQuest.class::isInstance);
+			if (abandons && effectiveStatus != QuestStatus.NONE) {
+				fail("ABANDON_QUEST_STATUS_MISMATCH",
+					"abandon-quest action requires a NONE projection");
+			}
 			List<AfterCommitAction.SyncQuestState> stateSyncs = transition.afterCommit().stream()
 				.filter(AfterCommitAction.SyncQuestState.class::isInstance)
 				.map(AfterCommitAction.SyncQuestState.class::cast).toList();
@@ -144,8 +155,9 @@ public final class QuestDefinitionCompiler {
 				fail("COMPLETE_QUEST_SYNC_STATUS_MISMATCH",
 					"COMPLETION quest-state sync requires a COMPLETE projection");
 			}
-			String source = sourceLabel(definition, transition);
-			outgoing.computeIfAbsent(source, ignored -> new HashSet<>()).add(transition.targetNode());
+			for (String source : sourceLabels(definition, transition)) {
+				outgoing.computeIfAbsent(source, ignored -> new HashSet<>()).add(transition.targetNode());
+			}
 		}
 		validateCraftLifecycle(definition, nodes);
 		Set<String> reached = new HashSet<>();
@@ -201,7 +213,9 @@ public final class QuestDefinitionCompiler {
 				if (!forgetsRecipe) {
 					continue;
 				}
-				if (transition.event() instanceof QuestEvent.Abandon) {
+				boolean abandonsQuest = transition.actions().stream()
+					.anyMatch(QuestAction.AbandonQuest.class::isInstance);
+				if (transition.event() instanceof QuestEvent.Abandon || abandonsQuest) {
 					abandonCleanup = true;
 				} else {
 					QuestStatus status = nodes.get(transition.targetNode()).projection().status();
@@ -215,9 +229,16 @@ public final class QuestDefinitionCompiler {
 		}
 	}
 
-	private static String sourceLabel(QuestDefinition definition, QuestTransition transition) {
+	/**
+	 * Returns the graph sources covered by a transition.  A transition without
+	 * an explicit source is a deliberate wildcard at runtime (the planner
+	 * matches its conditions against the current snapshot).  It is safe to
+	 * accept that form when a single status condition bounds the wildcard; the
+	 * bounded node set is enough for reachability and conflict analysis.
+	 */
+	private static Set<String> sourceLabels(QuestDefinition definition, QuestTransition transition) {
 		if (transition.sourceNode() != null) {
-			return transition.sourceNode();
+			return Set.of(transition.sourceNode());
 		}
 		Set<QuestStatus> statuses = new HashSet<>();
 		for (QuestCondition condition : transition.conditions()) {
@@ -227,17 +248,19 @@ public final class QuestDefinitionCompiler {
 		}
 		if (statuses.size() == 1) {
 			QuestStatus status = statuses.iterator().next();
-			List<QuestNode> matches = definition.nodes().stream()
-					.filter(node -> node.projection().status() == status).toList();
-			if (matches.size() == 1) {
-				return matches.get(0).label();
+			Set<String> matches = definition.nodes().stream()
+				.filter(node -> node.projection().status() == status)
+				.map(QuestNode::label)
+				.collect(java.util.stream.Collectors.toUnmodifiableSet());
+			if (!matches.isEmpty()) {
+				return matches;
 			}
 		}
 		if (definition.nodes().size() == 1) {
-			return definition.nodes().get(0).label();
+			return Set.of(definition.nodes().get(0).label());
 		}
-		fail("AMBIGUOUS_SOURCE", "transition source cannot be inferred; declare source explicitly");
-		return null;
+		fail("AMBIGUOUS_SOURCE", "transition source cannot be inferred; declare source explicitly or add one status-is condition");
+		return Set.of();
 	}
 
 	private static void validateTransitionConflicts(List<QuestTransition> transitions,
@@ -247,6 +270,9 @@ public final class QuestDefinitionCompiler {
 			for (int right = left + 1; right < transitions.size(); right++) {
 				QuestTransition b = transitions.get(right);
 				if (!QuestEvent.overlaps(a.event(), b.event())) {
+					continue;
+				}
+				if (QuestEvent.hasDeterministicPrecedence(a.event(), b.event())) {
 					continue;
 				}
 				if (sourceNodesAreMutuallyExclusive(a, b, nodes)) {
@@ -265,22 +291,84 @@ public final class QuestDefinitionCompiler {
 
 	private static boolean sourceNodesAreMutuallyExclusive(QuestTransition left, QuestTransition right,
 			Map<String, QuestNode> nodes) {
-		if (left.sourceNode() == null || right.sourceNode() == null
-				|| left.sourceNode().equals(right.sourceNode())) {
+		List<QuestNode> leftSources = sourceCandidates(left, nodes);
+		List<QuestNode> rightSources = sourceCandidates(right, nodes);
+		for (QuestNode leftSource : leftSources) {
+			for (QuestNode rightSource : rightSources) {
+				if (!sameProjection(leftSource.projection(), rightSource.projection())) {
+					continue;
+				}
+				if (conditionsCannotMatchNode(left.conditions(), leftSource)
+						|| conditionsCannotMatchNode(right.conditions(), rightSource)) {
+					continue;
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static List<QuestNode> sourceCandidates(QuestTransition transition, Map<String, QuestNode> nodes) {
+		if (transition.sourceNode() != null) {
+			return List.of(nodes.get(transition.sourceNode()));
+		}
+		Set<QuestStatus> statuses = new HashSet<>();
+		for (QuestCondition condition : transition.conditions()) {
+			if (condition instanceof QuestCondition.StatusIs status) {
+				statuses.add(status.status());
+			}
+		}
+		if (statuses.size() == 1) {
+			QuestStatus status = statuses.iterator().next();
+			return nodes.values().stream().filter(node -> node.projection().status() == status).toList();
+		}
+		return List.copyOf(nodes.values());
+	}
+
+	private static boolean sameProjection(NodeProjection left, NodeProjection right) {
+		if (left.status() != right.status()) {
 			return false;
 		}
-		NodeProjection leftProjection = nodes.get(left.sourceNode()).projection();
-		NodeProjection rightProjection = nodes.get(right.sourceNode()).projection();
-		if (leftProjection.status() != rightProjection.status()) {
-			return true;
-		}
-		for (Map.Entry<String, Integer> variable : leftProjection.variables().entrySet()) {
-			Integer rightValue = rightProjection.variables().get(variable.getKey());
-			if (rightValue != null && !variable.getValue().equals(rightValue)) {
+		Set<String> fields = new HashSet<>(left.variables().keySet());
+		fields.addAll(right.variables().keySet());
+		return fields.stream().allMatch(field -> left.variables().getOrDefault(field, 0)
+			.equals(right.variables().getOrDefault(field, 0)));
+	}
+
+	private static boolean conditionsCannotMatchNode(List<QuestCondition> conditions, QuestNode node) {
+		for (QuestCondition condition : conditions) {
+			Boolean matches = conditionMatchesNode(condition, node);
+			if (Boolean.FALSE.equals(matches)) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	/** Returns null when a condition depends on live facts rather than the quest projection. */
+	private static Boolean conditionMatchesNode(QuestCondition condition, QuestNode node) {
+		NodeProjection projection = node.projection();
+		if (condition instanceof QuestCondition.StatusIs status) {
+			return projection.status() == status.status();
+		}
+		if (condition instanceof QuestCondition.QuestVariableIs variable) {
+			return projection.variables().getOrDefault(variable.field(), 0) == variable.value();
+		}
+		if (condition instanceof QuestCondition.VariableAtLeast variable) {
+			return projection.variables().getOrDefault(variable.field(), 0) >= variable.value();
+		}
+		if (condition instanceof QuestCondition.VariableBelow variable) {
+			return projection.variables().getOrDefault(variable.field(), 0) < variable.value();
+		}
+		if (condition instanceof QuestCondition.VariableSumIs variable) {
+			int sum = variable.fields().stream().mapToInt(field -> projection.variables().getOrDefault(field, 0)).sum();
+			return sum == variable.value();
+		}
+		if (condition instanceof QuestCondition.VariableSumBelow variable) {
+			int sum = variable.fields().stream().mapToInt(field -> projection.variables().getOrDefault(field, 0)).sum();
+			return sum < variable.value();
+		}
+		return null;
 	}
 
 	private static boolean mutuallyExclusive(List<QuestCondition> left, List<QuestCondition> right) {
@@ -328,6 +416,9 @@ public final class QuestDefinitionCompiler {
 		if (left instanceof QuestCondition.PlayerInGroup a && right instanceof QuestCondition.PlayerInGroup b) {
 			return a.expected() != b.expected();
 		}
+		if (left instanceof QuestCondition.HasItem a && right instanceof QuestCondition.HasItem b) {
+			return a.itemId() == b.itemId() && a.count() == b.count() && a.expected() != b.expected();
+		}
 		if (left instanceof QuestCondition.GenderIs a && right instanceof QuestCondition.GenderIs b) {
 			return a.gender() != b.gender();
 		}
@@ -345,6 +436,24 @@ public final class QuestDefinitionCompiler {
 		}
 		if (left instanceof QuestCondition.ZoneIs a && right instanceof QuestCondition.ZoneIs b) {
 			return a.zone().equals(b.zone()) && a.expected() != b.expected();
+		}
+		if (left instanceof QuestCondition.EquipmentSetEquipped a
+				&& right instanceof QuestCondition.EquipmentSetEquipped b) {
+			return a.count() == b.count() && a.setIds().equals(b.setIds()) && a.expected() != b.expected();
+		}
+		if (left instanceof QuestCondition.EquippedItem a && right instanceof QuestCondition.EquippedItem b) {
+			return a.itemId() == b.itemId() && a.count() == b.count() && a.expected() != b.expected();
+		}
+		if (left instanceof QuestCondition.MembershipPermission a
+				&& right instanceof QuestCondition.MembershipPermission b) {
+			return a.permission() == b.permission() && a.expected() != b.expected();
+		}
+		if (left instanceof QuestCondition.CompleteCountIs a
+				&& right instanceof QuestCondition.CompleteCountIs b) {
+			return a.value() == b.value() && a.expected() != b.expected();
+		}
+		if (left instanceof QuestCondition.EventActive a && right instanceof QuestCondition.EventActive b) {
+			return a.expected() != b.expected();
 		}
 		return false;
 	}

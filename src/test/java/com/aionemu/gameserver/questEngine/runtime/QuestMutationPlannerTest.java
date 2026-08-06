@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
@@ -104,10 +105,11 @@ class QuestMutationPlannerTest {
 			"/aion/data/static_data/quest_definition/quests/2392.xml"))) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
+		// 真端 quest.xml: quest_2392a/b/c 各 1 个；remove 显式 count=1 与收集数量一致（404c5814b 起 XML 用精确数量而非 ALL）
 		List<QuestAction> cleanup = List.of(
-			new QuestAction.RemoveItem(182204159, QuestAction.RemoveItem.ALL),
-			new QuestAction.RemoveItem(182204160, QuestAction.RemoveItem.ALL),
-			new QuestAction.RemoveItem(182204161, QuestAction.RemoveItem.ALL));
+			new QuestAction.RemoveItem(182204159, 1),
+			new QuestAction.RemoveItem(182204160, 1),
+			new QuestAction.RemoveItem(182204161, 1));
 		var routes = definition.definition().transitions().stream()
 			.filter(transition -> Set.of("r1", "r2", "r3").contains(transition.sourceNode()))
 			.filter(transition -> transition.targetNode().equals("complete")
@@ -133,6 +135,62 @@ class QuestMutationPlannerTest {
 
 		assertTrue(completion.actions().contains(
 			new QuestAction.RemoveItem(182204453, QuestAction.RemoveItem.ALL)));
+	}
+
+	@Test
+	void abandonQuestLowersQuestWorkItemsToTransactionalRemoveAllActions() {
+		String xml = """
+				<quest-definition id="1302" version="1">
+				  <metadata name="abandon" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+				    <work-items><item id="182400003" count="1"/></work-items>
+				  </metadata>
+				  <nodes>
+				    <node label="started"><project status="START"/></node>
+				    <node label="unaccepted"><project status="NONE"/></node>
+				  </nodes>
+				  <transitions>
+				    <transition source="started" target="unaccepted">
+				      <event><abandon/></event>
+				      <actions><abandon-quest/></actions>
+				    </transition>
+				  </transitions>
+				</quest-definition>
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+		var transition = definition.definition().transitions().get(0);
+		var plan = QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 1302, QuestStatus.START, 0, Map.of(182400003, 2)),
+			new QuestEvent.Abandon(), transition).orElseThrow();
+
+		assertEquals(List.of(new QuestAction.AbandonQuest(),
+			new QuestAction.RemoveItem(182400003, QuestAction.RemoveItem.ALL)), plan.requiredActions());
+	}
+
+	@Test
+	void lowersSelectedMetadataRewardToQuestBaseCurrencyReward() {
+		String xml = """
+				<quest-definition id="1303" version="1">
+				  <metadata name="selected" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+				    <rewards><reward kind="AP" id="0" amount="300"/><reward kind="AP" id="0" amount="600"/></rewards>
+				  </metadata>
+				  <nodes><node label="started"><project status="START"/></node></nodes>
+				  <transitions><transition source="started" target="started">
+				    <event><talk-to-npc npc-id="700001"/></event>
+				    <actions><grant-selected-reward reward-index="1"/></actions>
+				  </transition></transitions>
+				</quest-definition>
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+		var transition = definition.definition().transitions().get(0);
+		var plan = QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 1303, QuestStatus.START, 0, Map.of(), Map.of()),
+			new QuestEvent.TalkToNpc(700001), transition).orElseThrow();
+
+		assertEquals(List.of(new QuestAction.GrantReward("AP", 0, 600,
+			com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE)),
+			plan.requiredActions());
 	}
 
 	@Test
@@ -166,6 +224,57 @@ class QuestMutationPlannerTest {
 		assertTrue(QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1305, QuestStatus.START, 0, Map.of(ITEM_ID, 1)),
 			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().get(0)).isEmpty());
+	}
+
+	@Test
+	void npcFactionLifecycleIsScheduledAroundTypedQuestStateTransitions() throws Exception {
+		CompiledQuestDefinition definition;
+		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
+			"/aion/data/static_data/quest_definition/quests/36539.xml"))) {
+			definition = QuestDefinitionXmlCompiler.compile(input);
+		}
+
+		var accept = definition.definition().transitions().stream()
+			.filter(transition -> "unaccepted".equals(transition.sourceNode())
+				&& "started".equals(transition.targetNode()))
+			.findFirst().orElseThrow();
+		var acceptPlan = QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 36539, QuestStatus.NONE, 0, Map.of())
+				.withStartEligibility(QuestStartEligibility.allowed()),
+			new QuestEvent.TalkToNpc(804952, 1002), accept).orElseThrow();
+		assertTrue(acceptPlan.afterCommit().get(0) instanceof AfterCommitAction.StartNpcFactionQuest);
+		assertEquals(4, ((AfterCommitAction.StartNpcFactionQuest) acceptPlan.afterCommit().get(0)).npcFactionId());
+
+		var completion = definition.definition().transitions().stream()
+			.filter(transition -> "reward".equals(transition.sourceNode())
+				&& "complete".equals(transition.targetNode()))
+			.findFirst().orElseThrow();
+		var completionPlan = QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 36539, QuestStatus.REWARD, 1, Map.of()),
+			new QuestEvent.TalkToNpc(804952, 8), completion).orElseThrow();
+		assertTrue(completionPlan.afterCommit().get(0) instanceof AfterCommitAction.CompleteNpcFactionQuest);
+		assertEquals(4, ((AfterCommitAction.CompleteNpcFactionQuest) completionPlan.afterCommit().get(0)).npcFactionId());
+	}
+
+	@Test
+	void timeBasedNpcFactionQuestDoesNotStartTheFactionLifecycle() throws Exception {
+		CompiledQuestDefinition definition;
+		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
+			"/aion/data/static_data/quest_definition/quests/36517.xml"))) {
+			definition = QuestDefinitionXmlCompiler.compile(input);
+		}
+
+		var accept = definition.definition().transitions().stream()
+			.filter(transition -> "unaccepted".equals(transition.sourceNode())
+				&& "started".equals(transition.targetNode()))
+			.findFirst().orElseThrow();
+		var acceptPlan = QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 36517, QuestStatus.NONE, 0, Map.of())
+				.withStartEligibility(QuestStartEligibility.allowed()),
+			new QuestEvent.TalkToNpc(799837, 1002), accept).orElseThrow();
+
+		assertFalse(acceptPlan.afterCommit().stream()
+			.anyMatch(AfterCommitAction.StartNpcFactionQuest.class::isInstance));
 	}
 
 	private static CompiledQuestDefinition definition() {

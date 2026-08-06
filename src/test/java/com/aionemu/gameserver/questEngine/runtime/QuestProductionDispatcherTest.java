@@ -242,6 +242,28 @@ class QuestProductionDispatcherTest {
 	}
 
 	@Test
+	void failCraftCommitsTheTypedRollbackRoute() {
+		CompiledQuestDefinition definition = QuestDsl.quest(19038)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("failed", project(QuestStatus.START, vars("var0", 2)))
+			.node("retry", project(QuestStatus.START, vars("var0", 1)))
+			.on(new QuestEvent.FailCraft(182206773)).from("failed")
+			.then(QuestDsl.setVariable("var0", 1)).goTo("retry")
+			.compile();
+		List<String> calls = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), calls,
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.START, 2, Map.of()));
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.FailCraft(182206773), 7, 0, QuestDispatchContract.BROADCAST);
+
+		assertTrue(result.consumed());
+		assertTrue(result.claimed());
+		assertEquals(List.of("setAutoCommit:false", "state", "commit", "publish", "close"), calls);
+	}
+
+	@Test
 	void sameNpcDifferentDialogIsUnknownAndFallsThroughToMatchingRoute() {
 		CompiledQuestDefinition definition = QuestDsl.quest(1108)
 			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))

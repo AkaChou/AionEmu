@@ -226,10 +226,258 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 		}
 	}
 
+	@Override
+	public void preflightDebits(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.DecreaseCurrency> debits) throws SQLException {
+		Objects.requireNonNull(connection, "connection");
+		Objects.requireNonNull(snapshot, "snapshot");
+		if (debits.isEmpty()) {
+			return;
+		}
+		if (!snapshot.currenciesCaptured()) {
+			throw new SQLException("currency facts are not captured for player " + snapshot.playerId());
+		}
+		Map<QuestRewardKind, Long> totals = new EnumMap<>(QuestRewardKind.class);
+		for (QuestAction.DecreaseCurrency debit : debits) {
+			if (!supported(debit.kind())) {
+				throw new SQLException("no transactional currency store for kind " + debit.kind());
+			}
+			QuestRewardKind balanceKind = canonicalCurrencyKind(debit.kind());
+			long total;
+			try {
+				total = totals.merge(balanceKind, debit.amount(), Math::addExact);
+			} catch (ArithmeticException overflow) {
+				throw new SQLException("currency debit amount overflow for player " + snapshot.playerId(), overflow);
+			}
+			if (snapshot.balance(balanceKind) < total) {
+				throw new SQLException("insufficient " + balanceKind + " for player " + snapshot.playerId());
+			}
+		}
+	}
+
+	@Override
+	public QuestTransactionParticipant applyDebits(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.DecreaseCurrency> debits) throws SQLException {
+		Objects.requireNonNull(connection, "connection");
+		Objects.requireNonNull(snapshot, "snapshot");
+		if (debits.isEmpty()) {
+			return QuestTransactionParticipant.none();
+		}
+		preflightDebits(connection, snapshot, debits);
+		long kinah;
+		int ap;
+		int gp;
+		int dp;
+		try {
+			kinah = 0;
+			ap = 0;
+			gp = 0;
+			dp = 0;
+			for (QuestAction.DecreaseCurrency debit : debits) {
+					if (!supported(debit.kind())) {
+						throw new SQLException("no transactional currency store for kind " + debit.kind());
+					}
+					switch (canonicalCurrencyKind(debit.kind())) {
+						case GOLD -> kinah = Math.addExact(kinah, debit.amount());
+						case AP -> ap = Math.addExact(ap, Math.toIntExact(debit.amount()));
+						case GP -> gp = Math.addExact(gp, Math.toIntExact(debit.amount()));
+						case DP -> dp = Math.addExact(dp, Math.toIntExact(debit.amount()));
+						default -> throw new SQLException("unsupported currency debit " + debit.kind());
+					}
+			}
+		} catch (ArithmeticException overflow) {
+			throw new SQLException("currency debit amount overflow for player " + snapshot.playerId(), overflow);
+		}
+		Player player = players.find(snapshot.playerId());
+		if (player == null) {
+			throw new SQLException("player is unavailable: " + snapshot.playerId());
+		}
+		if ((kinah > 0 && (player.getInventory() == null || player.getInventory().getKinahItem() == null))
+				|| ((ap > 0 || gp > 0) && player.getAbyssRank() == null)
+				|| (dp > 0 && player.getCommonData() == null)
+				|| (player.getInventory() != null && kinah > player.getInventory().getKinah())
+				|| (player.getAbyssRank() != null && (ap > player.getAbyssRank().getAp()
+					|| gp > player.getAbyssRank().getGp()))
+				|| (player.getCommonData() != null && dp > player.getCommonData().getDp())) {
+			throw new SQLException("live currency balance is insufficient for player " + snapshot.playerId());
+		}
+		var inventorySnapshot = kinah > 0 ? player.getInventory().transactionSnapshot() : null;
+		var rankSnapshot = ap > 0 || gp > 0 ? player.getAbyssRank().transactionSnapshot() : null;
+		var commonSnapshot = dp > 0 ? player.getCommonData().transactionSnapshot() : null;
+		Item kinahItem = kinah > 0 ? player.getInventory().getKinahItem() : null;
+		final boolean rankDebitChanged = ap > 0 || gp > 0;
+		final AbyssRankEnum oldRank = rankDebitChanged ? player.getAbyssRank().getRank() : null;
+		try {
+			if (kinah > 0 && kinahItem.decreaseItemCount(kinah) != 0) {
+				throw new SQLException("failed to decrease kinah for player " + snapshot.playerId());
+			}
+			if (kinah > 0) {
+				player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
+			}
+			if (ap > 0) {
+				// Mutate the rank projection directly; the service wrapper sends packets before
+				// the caller-owned JDBC transaction commits.
+				int expectedAp = player.getAbyssRank().getAp() - ap;
+				player.getAbyssRank().addAp(-ap, player);
+				if (player.getAbyssRank().getAp() != expectedAp) {
+					throw new SQLException("live AP debit was not applied exactly for player " + snapshot.playerId());
+				}
+			}
+			if (gp > 0) {
+				int expectedGp = player.getAbyssRank().getGp() - gp;
+				player.getAbyssRank().addGp(-gp);
+				if (player.getAbyssRank().getGp() != expectedGp) {
+					throw new SQLException("live GP debit was not applied exactly for player " + snapshot.playerId());
+				}
+			}
+			if (dp > 0) {
+				int expectedDp = player.getCommonData().getDp() - dp;
+				player.getCommonData().setDpSilently(expectedDp);
+				if (player.getCommonData().getDp() != expectedDp) {
+					throw new SQLException("live DP debit was not applied exactly for player " + snapshot.playerId());
+				}
+			}
+			List<Item> dirty = kinah > 0 ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
+			if (!dirty.isEmpty()) {
+				inventoryDao.storeInTransaction(connection, dirty, snapshot.playerId(), null, null);
+			}
+			if (ap > 0 || gp > 0) {
+				abyssRankDao.storeInTransaction(connection, player.getObjectId(), player.getAbyssRank());
+			}
+			if (dp > 0) {
+				playerDao.storeInTransaction(connection, player.getObjectId(), player.getCommonData());
+			}
+			final AbyssRankEnum newRank = rankDebitChanged ? player.getAbyssRank().getRank() : null;
+			final int debitedAp = ap;
+			final int debitedGp = gp;
+			return QuestTransactionParticipant.of(() -> {
+				if (!dirty.isEmpty()) {
+					inventoryDao.markStored(dirty);
+					player.markDirtyItemContainersStored();
+					if (kinahItem != null) {
+						ItemPacketService.sendItemPacket(player, player.getInventory().getStorageType(), kinahItem,
+							ItemUpdateType.DEC_KINAH_BUY);
+					}
+				}
+				if (rankDebitChanged) {
+					player.getAbyssRank().setPersistentState(PersistentState.UPDATED);
+					if (debitedAp > 0) {
+						PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300965, debitedAp));
+					}
+					if (debitedGp > 0) {
+						PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402219, debitedGp));
+					}
+					if (oldRank != newRank) {
+						AbyssPointsService.checkRankChanged(player, oldRank, newRank);
+					} else {
+						PacketSendUtility.sendPacket(player, new SM_ABYSS_RANK(player.getAbyssRank()));
+					}
+				}
+				if (commonSnapshot != null) {
+					player.getCommonData().publishDp();
+				}
+			}, () -> {
+				if (commonSnapshot != null) commonSnapshot.restore();
+				if (rankSnapshot != null) rankSnapshot.restore();
+				if (inventorySnapshot != null) inventorySnapshot.restore(itemReleaser);
+			});
+		} catch (SQLException | RuntimeException failure) {
+			try {
+				if (commonSnapshot != null) commonSnapshot.restore();
+				if (rankSnapshot != null) rankSnapshot.restore();
+				if (inventorySnapshot != null) inventorySnapshot.restore(itemReleaser);
+			} catch (RuntimeException restoreFailure) {
+				failure.addSuppressed(restoreFailure);
+			}
+			throw failure;
+		}
+	}
+
+	@Override
+	public void preflightSets(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.SetCurrency> sets) throws SQLException {
+		Objects.requireNonNull(connection, "connection");
+		Objects.requireNonNull(snapshot, "snapshot");
+		if (sets.isEmpty()) {
+			return;
+		}
+		if (!snapshot.currenciesCaptured()) {
+			throw new SQLException("currency facts are not captured for player " + snapshot.playerId());
+		}
+		Map<QuestRewardKind, Boolean> seen = new EnumMap<>(QuestRewardKind.class);
+		for (QuestAction.SetCurrency set : sets) {
+			validateSetTarget(snapshot, set);
+			if (seen.put(set.kind(), Boolean.TRUE) != null) {
+				throw new SQLException("multiple exact writes for " + set.kind() + " in one quest transition");
+			}
+			// Force the capture check without treating the balance as a fabricated zero.
+			snapshot.balance(set.kind());
+		}
+	}
+
+	@Override
+	public QuestTransactionParticipant applySets(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.SetCurrency> sets) throws SQLException {
+		Objects.requireNonNull(connection, "connection");
+		Objects.requireNonNull(snapshot, "snapshot");
+		if (sets.isEmpty()) {
+			return QuestTransactionParticipant.none();
+		}
+		preflightSets(connection, snapshot, sets);
+		Player player = players.find(snapshot.playerId());
+		if (player == null) {
+			throw new SQLException("player is unavailable: " + snapshot.playerId());
+		}
+		QuestAction.SetCurrency set = sets.get(0);
+		if (player.getCommonData() == null) {
+			throw new SQLException("player common data is unavailable: " + snapshot.playerId());
+		}
+		final int target;
+		try {
+			target = Math.toIntExact(set.amount());
+		} catch (ArithmeticException overflow) {
+			throw new SQLException("DP balance exceeds live integer range for player " + snapshot.playerId(), overflow);
+		}
+		if (player.getCommonData().getDp() == target) {
+			return QuestTransactionParticipant.none();
+		}
+		var commonSnapshot = player.getCommonData().transactionSnapshot();
+		try {
+			player.getCommonData().setDpSilently(target);
+			if (player.getCommonData().getDp() != target) {
+				throw new SQLException("live DP exact set was clamped or ignored for player " + snapshot.playerId());
+			}
+			playerDao.storeInTransaction(connection, player.getObjectId(), player.getCommonData());
+			return QuestTransactionParticipant.of(
+				player.getCommonData()::publishDp,
+				commonSnapshot::restore);
+		} catch (SQLException | RuntimeException failure) {
+			try {
+				commonSnapshot.restore();
+			} catch (RuntimeException restoreFailure) {
+				failure.addSuppressed(restoreFailure);
+			}
+			throw failure;
+		}
+	}
+
 	private static boolean supported(QuestRewardKind kind) {
 		return kind == QuestRewardKind.GOLD || kind == QuestRewardKind.KINAH
 			|| kind == QuestRewardKind.AP || kind == QuestRewardKind.GP
 			|| kind == QuestRewardKind.DP;
+	}
+
+	private static void validateSetTarget(QuestSnapshot snapshot, QuestAction.SetCurrency set) throws SQLException {
+		if (set.kind() != QuestRewardKind.DP) {
+			throw new SQLException("exact currency set is currently supported only for DP");
+		}
+		if (set.amount() < 0 || set.amount() > Integer.MAX_VALUE) {
+			throw new SQLException("DP balance exceeds live integer range for player " + snapshot.playerId());
+		}
+		Integer maxDp = snapshot.maxDp();
+		if (maxDp != null && set.amount() > maxDp) {
+			throw new SQLException("DP balance exceeds live maximum for player " + snapshot.playerId());
+		}
 	}
 
 	private static void validateGrantBalances(Player player, int playerId, long kinah, int ap, int gp, int dp)

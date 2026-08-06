@@ -177,12 +177,29 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireSuccess(moviePort.playMovie(snapshot, plan, movie.movieId()), action, snapshot);
 			return;
 		}
+		if (action instanceof AfterCommitAction.PlayMovieRandom randomMovie) {
+			if (moviePort == null) {
+				throw new IllegalArgumentException("playMovieRandom requires a movie port");
+			}
+			requireSuccess(moviePort.playMovie(snapshot, plan, randomMovie.movieIds().get(
+				java.util.concurrent.ThreadLocalRandom.current().nextInt(randomMovie.movieIds().size()))),
+				action, snapshot);
+			return;
+		}
 		if (action instanceof AfterCommitAction.SpawnNpc spawnAction) {
 			if (spawnPort == null) {
 				throw new IllegalArgumentException("spawnNpc requires a spawn port");
 			}
 			requireSuccess(spawnPort.spawnNpc(snapshot, plan, spawnAction.slot(), spawnAction.templateId(),
 				spawnAction.location()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.SpawnNpcRandom spawnAction) {
+			if (spawnPort == null) {
+				throw new IllegalArgumentException("spawnNpcRandom requires a spawn port");
+			}
+			requireSuccess(spawnPort.spawnNpcRandom(snapshot, plan, spawnAction.slot(), spawnAction.variants(),
+				spawnAction.replaceExisting()), action, snapshot);
 			return;
 		}
 		if (action instanceof AfterCommitAction.DespawnNpc despawnAction) {
@@ -218,6 +235,11 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireSuccess(aiPort.attackTarget(snapshot, plan, attack.slot()), action, snapshot);
 			return;
 		}
+		if (action instanceof AfterCommitAction.AttackNpcTemplate attack) {
+			requireAiPort();
+			requireSuccess(aiPort.attackNpcTemplate(snapshot, plan, attack.slot(), attack.templateId()), action, snapshot);
+			return;
+		}
 		if (action instanceof AfterCommitAction.StartWalking walking) {
 			requireAiPort();
 			requireSuccess(aiPort.startWalking(snapshot, plan, walking.slot()), action, snapshot);
@@ -231,6 +253,12 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 		if (action instanceof AfterCommitAction.WatchFollowZone followZone) {
 			requireAiPort();
 			requireSuccess(aiPort.watchFollowZone(snapshot, plan, followZone.slot(), followZone.zone()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.WatchFollowCoordinate followCoordinate) {
+			requireAiPort();
+			requireSuccess(aiPort.watchFollowCoordinate(snapshot, plan, followCoordinate.slot(),
+				followCoordinate.x(), followCoordinate.y(), followCoordinate.z()), action, snapshot);
 			return;
 		}
 		if (action instanceof AfterCommitAction.StartQuestTimer timer) {

@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
+import com.aionemu.gameserver.questEngine.definition.QuestSpawnVariant;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.WorldPosition;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -110,6 +112,31 @@ class PlayerQuestSpawnPortTest {
 		assertTrue(port.spawnNpc(snapshot(), plan(), "escort", TEMPLATE,
 			new QuestSpawnLocation.PlayerPosition((byte) 8)));
 		assertEquals(PLAYER_WORLD + ":5:10.0:20.0:30.0:8", captured[0]);
+	}
+
+	@Test
+	void randomSpawnSelectsVariantAndCanReplaceTheExistingSlot() {
+		QuestSpawnRegistry registry = new QuestSpawnRegistry();
+		Player player = player();
+		Npc first = npc(SPAWN_WORLD);
+		Npc second = npc(SPAWN_WORLD);
+		Npc[] handles = {first, second};
+		int[] next = {0};
+		PlayerQuestSpawnPort port = new PlayerQuestSpawnPort(playerId -> player, registry,
+			(worldId, instanceId, templateId, x, y, z, heading) -> handles[next[0]++], bound -> 1);
+		List<QuestSpawnVariant> variants = List.of(
+			new QuestSpawnVariant(213576, new QuestSpawnLocation.Fixed(SPAWN_WORLD,
+				com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget.currentOrDefault(),
+				1f, 2f, 3f, (byte) 95)),
+			new QuestSpawnVariant(213577, new QuestSpawnLocation.Fixed(SPAWN_WORLD,
+				com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget.currentOrDefault(),
+				4f, 5f, 6f, (byte) 95)));
+
+		assertTrue(port.spawnNpcRandom(snapshot(), plan(), "defense-mob", variants, false));
+		assertSame(first, registry.get(snapshot(), "defense-mob"));
+		assertTrue(port.spawnNpcRandom(snapshot(), plan(), "defense-mob", variants, true));
+		assertSame(second, registry.get(snapshot(), "defense-mob"));
+		assertEquals(2, next[0]);
 	}
 
 	@Test

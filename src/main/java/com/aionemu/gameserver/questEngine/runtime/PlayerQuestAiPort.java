@@ -2,11 +2,13 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
+import com.aionemu.gameserver.ai2.manager.EmoteManager;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
@@ -30,6 +32,7 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		START_FOLLOW,
 		STOP_FOLLOW,
 		ATTACK_TARGET,
+		ATTACK_NPC_TEMPLATE,
 		START_WALKING,
 		BROADCAST_START_EMOTE2
 	}
@@ -78,6 +81,11 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		void send(Player player, Npc npc);
 	}
 
+	@FunctionalInterface
+	public interface WorldNpcResolver {
+		Npc find(Player player, int templateId);
+	}
+
 	private final QuestPlayerPort players;
 	private final QuestSpawnRegistry registry;
 	private final AiCall ai;
@@ -88,6 +96,7 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 	private TargetNpcResolver targetNpcResolver;
 	private final FollowTaskRegistrar taskRegistrar;
 	private final NpcInfoCall npcInfo;
+	private WorldNpcResolver worldNpcResolver;
 
 	public PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry) {
 		this(players, registry, (npc, player, target, command, argument) -> switch (command) {
@@ -105,6 +114,17 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 				}
 				npc.setTarget(target);
 				npc.getMoveController().moveToTargetObject();
+				npc.getAi2().onGeneralEvent(AIEventType.ATTACK);
+				yield true;
+			}
+			case ATTACK_NPC_TEMPLATE -> {
+				if (!(target instanceof Creature creature)) {
+					yield false;
+				}
+				npc.setTarget(target);
+				npc.getMoveController().moveToTargetObject();
+				npc.getAggroList().addHate(creature, 1000);
+				EmoteManager.emoteStartAttacking(npc);
 				npc.getAi2().onGeneralEvent(AIEventType.ATTACK);
 				yield true;
 			}
@@ -162,6 +182,16 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 			: player.getPosition().getWorldMapInstance().getNpc(templateId);
 		this.taskRegistrar = Objects.requireNonNull(taskRegistrar, "taskRegistrar");
 		this.npcInfo = Objects.requireNonNull(npcInfo, "npcInfo");
+		this.worldNpcResolver = (player, templateId) -> player.getPosition() == null
+			|| player.getPosition().getWorldMapInstance() == null ? null
+			: player.getPosition().getWorldMapInstance().getNpc(templateId);
+	}
+
+	PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry, AiCall ai,
+		TargetResolver targets, FollowCall follow, CoordinateFollowCall coordinateFollow,
+		FollowTaskRegistrar taskRegistrar, NpcInfoCall npcInfo, WorldNpcResolver worldNpcResolver) {
+		this(players, registry, ai, targets, follow, coordinateFollow, taskRegistrar, npcInfo);
+		this.worldNpcResolver = Objects.requireNonNull(worldNpcResolver, "worldNpcResolver");
 	}
 
 	@Override
@@ -246,6 +276,25 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 	}
 
 	@Override
+	public boolean attackNpcTemplate(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, int templateId) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		if (templateId <= 0) {
+			throw new IllegalArgumentException("templateId must be positive");
+		}
+		if (slot == null || slot.isBlank()) {
+			throw new IllegalArgumentException("slot must not be blank");
+		}
+		Npc npc = registry.get(snapshot, slot);
+		Player player = players.find(snapshot.playerId());
+		if (npc == null || player == null) {
+			return false;
+		}
+		Npc target = worldNpcResolver.find(player, templateId);
+		return target != null && ai.apply(npc, player, target, Command.ATTACK_NPC_TEMPLATE,
+			Integer.toString(templateId));
+	}
+
+	@Override
 	public boolean startWalking(QuestSnapshot snapshot, QuestMutationPlan plan, String slot) {
 		return run(snapshot, slot, Command.START_WALKING, null);
 	}
@@ -272,6 +321,25 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 			return false;
 		}
 		Future<?> task = follow.start(player, npc, snapshot.questId(), zone);
+		if (task == null) {
+			return false;
+		}
+		return registry.registerFollowTask(snapshot, slot, task);
+	}
+
+	@Override
+	public boolean watchFollowCoordinate(QuestSnapshot snapshot, QuestMutationPlan plan, String slot,
+			float x, float y, float z) {
+		if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
+			throw new IllegalArgumentException("follow destination coordinates must be finite");
+		}
+		Objects.requireNonNull(snapshot, "snapshot");
+		Npc npc = registry.get(snapshot, slot);
+		Player player = players.find(snapshot.playerId());
+		if (npc == null || player == null) {
+			return false;
+		}
+		Future<?> task = coordinateFollow.start(player, npc, snapshot.questId(), x, y, z);
 		if (task == null) {
 			return false;
 		}
