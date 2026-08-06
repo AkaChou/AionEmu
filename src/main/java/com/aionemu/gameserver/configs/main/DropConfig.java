@@ -46,7 +46,7 @@ public class DropConfig {
 	 * 每个 NPC 允许的全局掉落数量上限。
 	 * Maximum global drop items allowed per NPC.
 	 */
-	@Property(key = "gameserver.drop.max.global.drops.per.npc", defaultValue = "10")
+	@Property(key = "gameserver.drop.max.global.drops.per.npc", defaultValue = "15")
 	public static int MAX_GLOBAL_DROPS_PER_NPC;
 
 	/** 校验掉落配置。 / Validates drop configuration. */
