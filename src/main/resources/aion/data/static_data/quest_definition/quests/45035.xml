@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45035" version="1">
-  <metadata name="[Daily] Blue Jaw Breaker" display-name-id="1128035" min-level="30" max-level="33" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Blue Jaw Breaker" display-name-id="1128035" min-level="30" max-level="33" category="FACTION" cannot-share="true" npc-faction-id="5">
     <races>
       <race id="ASMODIANS"/>
     </races>

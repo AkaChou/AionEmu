@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35032" version="1">
-  <metadata name="[Daily] Helping The Hungry" display-name-id="1126032" min-level="30" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Helping The Hungry" display-name-id="1126032" min-level="30" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="2">
     <races>
       <race id="ELYOS"/>
     </races>

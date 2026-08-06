@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35008" version="1">
-  <metadata name="[Daily] Documenting The Scraps" display-name-id="1126008" min-level="30" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Documenting The Scraps" display-name-id="1126008" min-level="30" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="2">
     <races>
       <race id="ELYOS"/>
     </races>

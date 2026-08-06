@@ -26,10 +26,6 @@ public final class QuestDefinitionCompiler {
 			fail("LIMITED_QUEST_START_UNSUPPORTED",
 				"limited quest quota acquisition is not part of the shared transaction");
 		}
-		if (definition.metadata().npcFactionId() != 0) {
-			fail("NPC_FACTION_START_UNSUPPORTED",
-				"NPC faction quest start has a transaction-external side effect");
-		}
 
 		Map<String, QuestNode> nodes = new HashMap<>();
 		Set<String> projections = new HashSet<>();

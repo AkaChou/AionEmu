@@ -104,7 +104,7 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 			return false;
 		}
 		NpcFaction faction = player.getNpcFactions().getNpcFactionById(npcFactionId);
-		if (faction == null || !faction.isActive()) {
+		if (faction == null || !faction.isActive() || faction.getQuestId() != snapshot.questId()) {
 			return false;
 		}
 		player.getNpcFactions().completeQuest(template);
@@ -121,7 +121,7 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 			return false;
 		}
 		NpcFaction faction = player.getNpcFactions().getNpcFactionById(npcFactionId);
-		if (faction == null || !faction.isActive()) {
+		if (faction == null || !faction.isActive() || faction.getQuestId() != snapshot.questId()) {
 			return false;
 		}
 		player.getNpcFactions().abortQuest(template);

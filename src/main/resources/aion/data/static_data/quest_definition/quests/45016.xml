@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45016" version="1">
-  <metadata name="[Daily] Control The Chaos" display-name-id="1128016" min-level="40" max-level="50" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Control The Chaos" display-name-id="1128016" min-level="40" max-level="50" category="FACTION" cannot-share="true" npc-faction-id="5">
     <races>
       <race id="ASMODIANS"/>
     </races>

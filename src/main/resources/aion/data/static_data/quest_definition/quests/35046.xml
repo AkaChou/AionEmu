@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35046" version="1">
-  <metadata name="[Daily] Caloric Alms" display-name-id="1126046" min-level="51" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Caloric Alms" display-name-id="1126046" min-level="51" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="2">
     <races>
       <race id="ELYOS"/>
     </races>

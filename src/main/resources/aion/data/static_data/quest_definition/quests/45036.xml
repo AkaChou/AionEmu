@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="45036" version="1">
-  <metadata name="[Daily] A Little Spriggle Room" display-name-id="1128036" min-level="34" max-level="36" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] A Little Spriggle Room" display-name-id="1128036" min-level="34" max-level="36" category="FACTION" cannot-share="true" npc-faction-id="5">
     <races>
       <race id="ASMODIANS"/>
     </races>
