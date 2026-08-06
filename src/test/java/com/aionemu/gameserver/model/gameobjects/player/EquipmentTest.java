@@ -96,6 +96,31 @@ class EquipmentTest {
 		assertEquals(List.of(bow), equipment.getEquippedItemsByItemId(3002));
 	}
 
+	@Test
+	void transactionSnapshotRestoresItemLocationAlongsideEquipmentState() throws Exception {
+		Player player = new ObjenesisStd().newInstance(Player.class);
+		Equipment equipment = new Equipment(player);
+		Item ring = new Item(3003, new TestAccessoryTemplate(), 1, true,
+			ItemSlot.RING_RIGHT.getSlotIdMask());
+		ring.setItemLocation(7);
+		Field field = Equipment.class.getDeclaredField("equipment");
+		field.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		SortedMap<Long, Item> slots = (SortedMap<Long, Item>) field.get(equipment);
+		slots.put(ItemSlot.RING_RIGHT.getSlotIdMask(), ring);
+		var snapshot = equipment.transactionSnapshot();
+
+		ring.setEquipped(false);
+		ring.setEquipmentSlot(0);
+		ring.setItemLocation(1);
+		slots.clear();
+		snapshot.restore();
+
+		assertEquals(true, ring.isEquipped());
+		assertEquals(ItemSlot.RING_RIGHT.getSlotIdMask(), ring.getEquipmentSlot());
+		assertEquals(7, ring.getItemLocation());
+	}
+
 	private static final class TestWeaponTemplate extends ItemTemplate {
 		private final int templateId;
 		private final boolean twoHandWeapon;

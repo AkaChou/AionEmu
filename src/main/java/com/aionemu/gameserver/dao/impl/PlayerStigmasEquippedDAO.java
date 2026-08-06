@@ -101,27 +101,10 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      */
     @Override
     public boolean storeItems(Player player) {
-        List<EquippedStigmasEntry> skillsActive = Lists.newArrayList(
-            player.getEquipedStigmaList().getAllItems()
-        );
-        skillsActive.addAll(Lists.newArrayList(player.getEquipedStigmaList().getDeletedItems()));
-        return store(player, skillsActive);
-    }
-
-    /**
-     * 在同一事务中按持久化状态分发增删改操作。
-     * Dispatches insert/update/delete operations by persistent state in one transaction.
-     *
-     * 玩家 / player
-     * @param skills 灵魂石条目列表 / stigma entry list
-     */
-    private boolean store(Player player, List<EquippedStigmasEntry> skills) {
         try (Connection con = DatabaseFactory.getConnection()) {
             con.setAutoCommit(false);
             try {
-                deleteItems(con, player, skills);
-                addItems(con, player, skills);
-                updateItems(con, player, skills);
+                storeItemsInTransaction(con, player);
                 con.commit();
             } catch (SQLException e) {
                 con.rollback();
@@ -131,11 +114,17 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
             log.error(I18n.get("log.6790b402b724", player.getObjectId(), e));
             return false;
         }
-
-        for (EquippedStigmasEntry skill : skills) {
-            skill.setPersistentState(PersistentState.UPDATED);
-        }
+        markStored(player);
         return true;
+    }
+
+    @Override
+    public void storeItemsInTransaction(Connection connection, Player player) throws SQLException {
+        List<EquippedStigmasEntry> skills = Lists.newArrayList(player.getEquipedStigmaList().getAllItems());
+        skills.addAll(Lists.newArrayList(player.getEquipedStigmaList().getDeletedItems()));
+        deleteItems(connection, player, skills);
+        addItems(connection, player, skills);
+        updateItems(connection, player, skills);
     }
 
     /**

@@ -42,4 +42,8 @@ public class EquippedStigmasEntry extends StigmaEntry {
 			this.persistentState = persistentState;
 		}
 	}
+
+	void restorePersistentState(PersistentState persistentState) {
+		this.persistentState = persistentState;
+	}
 }

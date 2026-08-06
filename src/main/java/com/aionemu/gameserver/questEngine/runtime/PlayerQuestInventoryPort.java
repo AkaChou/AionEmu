@@ -10,7 +10,9 @@ import com.aionemu.gameserver.services.item.ItemService;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
@@ -42,17 +44,53 @@ public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 	@Override
 	public void preflight(Connection connection, QuestSnapshot snapshot,
 			List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) throws SQLException {
+		preflight(connection, snapshot, removals, gives, List.of());
+	}
+
+	@Override
+	public void preflight(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives,
+			List<QuestAction.UnequipItem> unequips) throws SQLException {
 		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
-		for (QuestAction.RemoveItem removal : removals) {
-			int available;
+		Map<Integer, Integer> unequipped = new HashMap<>();
+		Map<Integer, Integer> returnedRemovals = new HashMap<>();
+		Map<Integer, Integer> plannedRemovals = new HashMap<>();
+		if (!unequips.isEmpty() && snapshot.equipmentFacts() == null) {
+			throw new SQLException("equipment facts are not captured for player " + snapshot.playerId());
+		}
+		for (QuestAction.UnequipItem unequip : unequips) {
+			int count = snapshot.equipmentFacts().equippedItemCount(unequip.itemId());
+			unequipped.put(unequip.itemId(), count);
 			try {
-				available = snapshot.itemCount(removal.itemId());
+				returnedRemovals.merge(unequip.itemId(), unequip.removeReturnedCount(), Math::addExact);
+			} catch (ArithmeticException overflow) {
+				throw new SQLException("returned item removal overflow for player " + snapshot.playerId(), overflow);
+			}
+		}
+		for (QuestAction.RemoveItem removal : removals) {
+			long available;
+			try {
+				available = Math.addExact(snapshot.itemCount(removal.itemId()),
+					unequipped.getOrDefault(removal.itemId(), 0));
+				long returned = Math.min(available, returnedRemovals.getOrDefault(removal.itemId(), 0));
+				long remaining = available - returned - plannedRemovals.getOrDefault(removal.itemId(), 0);
+				if (!removal.removeAll() && remaining < removal.count()) {
+					throw new SQLException("insufficient item " + removal.itemId() + " for player " + snapshot.playerId());
+				}
+			} catch (ArithmeticException overflow) {
+				throw new SQLException("inventory count overflow for player " + snapshot.playerId());
 			} catch (IllegalStateException unknownFacts) {
 				throw new SQLException("inventory facts are not captured for player " + snapshot.playerId());
 			}
-			if (!removal.removeAll() && available < removal.count()) {
-				throw new SQLException("insufficient item " + removal.itemId() + " for player " + snapshot.playerId());
+			try {
+				if (removal.removeAll()) {
+					plannedRemovals.put(removal.itemId(), Integer.MAX_VALUE);
+				} else {
+					plannedRemovals.merge(removal.itemId(), removal.count(), Math::addExact);
+				}
+			} catch (ArithmeticException overflow) {
+				throw new SQLException("inventory removal overflow for player " + snapshot.playerId(), overflow);
 			}
 		}
 		for (QuestAction.GiveItem give : gives) {
@@ -65,6 +103,13 @@ public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 	@Override
 	public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
 			List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) throws SQLException {
+		return apply(connection, snapshot, removals, gives, List.of());
+	}
+
+	@Override
+	public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+			List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives,
+			List<QuestAction.UnequipItem> unequips) throws SQLException {
 		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
 		Player player = players.find(snapshot.playerId());

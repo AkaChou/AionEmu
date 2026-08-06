@@ -126,6 +126,15 @@ public class StigmaService {
 	 * @return 是否允许卸下 / whether unequip is allowed
 	 */
 	public static boolean notifyUnequipAction(Player player, Item resultItem) {
+		return notifyUnequipAction(player, resultItem, true);
+	}
+
+	/** Applies unequip side effects without opening an independent stigma-list transaction. */
+	public static boolean notifyUnequipActionInTransaction(Player player, Item resultItem) {
+		return notifyUnequipAction(player, resultItem, false);
+	}
+
+	private static boolean notifyUnequipAction(Player player, Item resultItem, boolean storeStigmaListImmediately) {
 		if (player.getEquipment().isSlotEquipped(ItemSlot.STIGMA_SPECIAL.getSlotIdMask())
 				&& resultItem.getEquipmentSlot() != ItemSlot.STIGMA_SPECIAL.getSlotIdMask()) {
 			return false;
@@ -154,7 +163,11 @@ public class StigmaService {
 			}
 			// PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300403, new
 			// DescriptionId(resultItem.getNameId())));
-			player.getEquipedStigmaList().remove(player, itemId);
+			if (storeStigmaListImmediately) {
+				player.getEquipedStigmaList().remove(player, itemId);
+			} else {
+				player.getEquipedStigmaList().removeInTransaction(itemId);
+			}
 			if (player.getEquipment().getEquippedItemsAllStigma().size() <= 6 && player.getLinkedSkill() != 0) {
 				SkillTemplate linked = DataManager.SKILL_DATA.getSkillTemplate(player.getLinkedSkill());
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_DELETE_LINKED_SKILL(

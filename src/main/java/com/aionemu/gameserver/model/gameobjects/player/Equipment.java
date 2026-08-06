@@ -286,6 +286,20 @@ public class Equipment {
 		tryUpdateSummonStats();
 	}
 
+	/** Rebinds runtime equipment listeners after a caller-owned transaction rollback. */
+	public void restoreItemRuntimeState(Item item) {
+		if (item == null || !item.isEquipped()) {
+			return;
+		}
+		notifyItemEquipped(item);
+		if (owner.getLifeStats() != null) {
+			owner.getLifeStats().updateCurrentStats();
+		}
+		if (owner.getGameStats() != null) {
+			owner.getGameStats().updateStatsAndSpeedVisually();
+		}
+	}
+
 	private void notifyItemUnequip(Item item) {
 		ItemEquipmentListener.onItemUnequipment(item, owner);
 		owner.getObserveController().notifyItemUnEquip(item, owner);
@@ -303,6 +317,15 @@ public class Equipment {
 	 * 收到 CM_EQUIP_ITEM（action=1）时调用。 / Called when CM_EQUIP_ITEM packet arrives with action 1.
 	 */
 	public Item unEquipItem(int itemUniqueId, long slot) {
+		return unEquipItem(itemUniqueId, slot, false);
+	}
+
+	/** Unequips while deferring stigma-list persistence to the caller-owned transaction. */
+	public Item unEquipItemInTransaction(int itemUniqueId, long slot) {
+		return unEquipItem(itemUniqueId, slot, true);
+	}
+
+	private Item unEquipItem(int itemUniqueId, long slot, boolean callerOwnsTransaction) {
 		// 背包满时禁用卸装操作 / if inventory is full unequip action is disabled
 		if (owner.getInventory().isFull()) {
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_UI_INVENTORY_FULL);
@@ -340,7 +363,10 @@ public class Equipment {
 				PacketSendUtility.sendPacket(owner, new SM_EMOTION(owner, EmotionType.POWERSHARD_OFF, 0, 0));
 			}
 
-			if (!StigmaService.notifyUnequipAction(owner, itemToUnequip) && itemToUnequip.getItemTemplate().isStigma()) {
+			boolean unequipAllowed = callerOwnsTransaction
+				? StigmaService.notifyUnequipActionInTransaction(owner, itemToUnequip)
+				: StigmaService.notifyUnequipAction(owner, itemToUnequip);
+			if (!unequipAllowed && itemToUnequip.getItemTemplate().isStigma()) {
 				return null;
 			}
 			unEquip(itemToUnequip.getEquipmentSlot());
@@ -584,6 +610,75 @@ public class Equipment {
 			}
 		}
 		return equippedItemsById;
+	}
+
+	/** Captures the live equipment slots for caller-owned transaction rollback. */
+	public TransactionSnapshot transactionSnapshot() {
+		synchronized (equipment) {
+			return new TransactionSnapshot();
+		}
+	}
+
+	public final class TransactionSnapshot {
+		private final SortedMap<Long, Item> slots = new TreeMap<>();
+		private final List<EquipmentItemState> itemStates = new ArrayList<>();
+		private final PersistentState equipmentState = persistentState;
+		private boolean restored;
+
+		private TransactionSnapshot() {
+			slots.putAll(equipment);
+			Set<Item> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+			for (Item item : equipment.values()) {
+				if (item != null && seen.add(item)) {
+					itemStates.add(new EquipmentItemState(item));
+				}
+			}
+		}
+
+		/** Restores slot ownership and item equipment flags exactly once. */
+		public void restore() {
+			synchronized (equipment) {
+				if (restored) {
+					return;
+				}
+				restored = true;
+				equipment.clear();
+				equipment.putAll(slots);
+				for (EquipmentItemState state : itemStates) {
+					state.restore();
+				}
+				persistentState = equipmentState;
+			}
+			if (owner.getLifeStats() != null) {
+				owner.getLifeStats().updateCurrentStats();
+			}
+			if (owner.getGameStats() != null) {
+				owner.getGameStats().updateStatsAndSpeedVisually();
+			}
+		}
+	}
+
+	private static final class EquipmentItemState {
+		private final Item item;
+		private final boolean equipped;
+		private final long slot;
+		private final int location;
+		private final PersistentState persistentState;
+
+		private EquipmentItemState(Item item) {
+			this.item = item;
+			this.equipped = item.isEquipped();
+			this.slot = item.getEquipmentSlot();
+			this.location = item.getItemLocation();
+			this.persistentState = item.getPersistentState();
+		}
+
+		private void restore() {
+			item.setEquipped(equipped);
+			item.setEquipmentSlot(slot);
+			item.setItemLocation(location);
+			item.setPersistentState(persistentState);
+		}
 	}
 
 	/**

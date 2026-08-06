@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -97,6 +99,52 @@ public final class PlayerSkillList implements SkillList<Player> {
 	/** 返回 deleted skills / Returns the deleted skills */
 	public PlayerSkillEntry[] getDeletedSkills() {
 		return deletedSkills.toArray(new PlayerSkillEntry[deletedSkills.size()]);
+	}
+
+	/** Captures all mutable skill projections touched by transactional equipment changes. */
+	public synchronized TransactionSnapshot transactionSnapshot() {
+		return new TransactionSnapshot();
+	}
+
+	public final class TransactionSnapshot {
+		private final Map<Integer, PlayerSkillEntry> basic = new HashMap<>(basicSkills);
+		private final Map<Integer, PlayerSkillEntry> stigma = new HashMap<>(stigmaSkills);
+		private final Map<Integer, PlayerSkillEntry> linkedEntries = new HashMap<>(linkedSkills);
+		private final List<Integer> linkedIds = new ArrayList<>(linked);
+		private final List<PlayerSkillEntry> deleted = new ArrayList<>(deletedSkills);
+		private final Map<PlayerSkillEntry, PlayerSkillEntry.TransactionState> states = new IdentityHashMap<>();
+		private boolean restored;
+
+		private TransactionSnapshot() {
+			Set<PlayerSkillEntry> entries = java.util.Collections.newSetFromMap(new IdentityHashMap<>());
+			entries.addAll(basicSkills.values());
+			entries.addAll(stigmaSkills.values());
+			entries.addAll(linkedSkills.values());
+			entries.addAll(deletedSkills);
+			for (PlayerSkillEntry entry : entries) {
+				states.put(entry, entry.transactionState());
+			}
+		}
+
+		public void restore() {
+			synchronized (PlayerSkillList.this) {
+				if (restored) {
+					return;
+				}
+				restored = true;
+				basicSkills.clear();
+				basicSkills.putAll(basic);
+				stigmaSkills.clear();
+				stigmaSkills.putAll(stigma);
+				linkedSkills.clear();
+				linkedSkills.putAll(linkedEntries);
+				linked.clear();
+				linked.addAll(linkedIds);
+				deletedSkills.clear();
+				deletedSkills.addAll(deleted);
+				states.forEach(PlayerSkillEntry::restoreTransactionState);
+			}
+		}
 	}
 
 	/** 获取技能条目。 / Returns the skill entry. */

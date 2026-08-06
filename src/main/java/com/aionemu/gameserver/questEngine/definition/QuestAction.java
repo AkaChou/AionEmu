@@ -4,7 +4,8 @@ package com.aionemu.gameserver.questEngine.definition;
 public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.SetVariable,
 		QuestAction.IncrementVariable, QuestAction.SetStatus, QuestAction.GrantReward,
 		QuestAction.LearnRecipe, QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill,
-		QuestAction.CompleteQuest, QuestAction.GiveItem, QuestAction.BlockDefaultItemUse {
+		QuestAction.CompleteQuest, QuestAction.GiveItem, QuestAction.UnequipItem,
+		QuestAction.BlockDefaultItemUse {
 	record RemoveItem(int itemId, int count) implements QuestAction {
 		/**
 		 * transition 需要移除当前完整堆叠时使用的哨兵数量。
@@ -28,6 +29,24 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		public GiveItem {
 			if (itemId <= 0 || count <= 0) {
 				throw new IllegalArgumentException("item id and count must be positive");
+			}
+		}
+	}
+
+	/**
+	 * Unequips every currently equipped copy of the requested item before any
+	 * inventory removal in the same mutation plan. The optional removal count
+	 * consumes up to that many copies from the resulting inventory, including a
+	 * copy that was already unequipped before the event.
+	 */
+	record UnequipItem(int itemId, int removeReturnedCount) implements QuestAction {
+		public UnequipItem(int itemId) {
+			this(itemId, 0);
+		}
+
+		public UnequipItem {
+			if (itemId <= 0 || removeReturnedCount < 0) {
+				throw new IllegalArgumentException("item id must be positive and removeReturnedCount must be non-negative");
 			}
 		}
 	}

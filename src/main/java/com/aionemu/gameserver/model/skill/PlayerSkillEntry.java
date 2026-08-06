@@ -14,6 +14,9 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
  * @author ATracer
  */
 public class PlayerSkillEntry extends SkillEntry {
+	record TransactionState(int skillLevel, int skinId, Timestamp activeSkinTime, int expireTime,
+		boolean activated, int currentXp, PersistentState persistentState) {
+	}
 
 	private boolean isStigma;
 	private boolean isLinked;
@@ -198,5 +201,20 @@ public class PlayerSkillEntry extends SkillEntry {
 		default:
 			this.persistentState = persistentState;
 		}
+	}
+
+	TransactionState transactionState() {
+		return new TransactionState(skillLevel, skinId, activeSkinTime, expireTime, isActivated,
+			currentXp, persistentState);
+	}
+
+	void restoreTransactionState(TransactionState state) {
+		skillLevel = state.skillLevel();
+		skinId = state.skinId();
+		activeSkinTime = state.activeSkinTime();
+		expireTime = state.expireTime();
+		isActivated = state.activated();
+		currentXp = state.currentXp();
+		persistentState = state.persistentState();
 	}
 }

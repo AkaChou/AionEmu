@@ -135,6 +135,39 @@ class QuestMutationPlannerTest {
 			new QuestAction.RemoveItem(182204453, QuestAction.RemoveItem.ALL)));
 	}
 
+	@Test
+	void unequipRemoveCountIsConsumedBeforeASeparateInventoryRemoval() {
+		CompiledQuestDefinition definition = QuestDsl.quest(1304)
+			.node("started", project(QuestStatus.START, Map.of()))
+			.node("reward", project(QuestStatus.REWARD, Map.of()))
+			.on(new QuestEvent.TalkToNpc(700001)).from("started")
+			.then(new QuestAction.UnequipItem(ITEM_ID, 1))
+			.then(new QuestAction.RemoveItem(ITEM_ID, 1))
+			.goTo("reward")
+			.compile();
+		var snapshot = new QuestSnapshot(7, 1304, QuestStatus.START, 0, Map.of())
+			.withEquipmentFacts(new QuestEquipmentFacts(Map.of(), Map.of(ITEM_ID, 1)));
+
+		assertTrue(QuestMutationPlanner.plan(definition, snapshot,
+			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().get(0)).isEmpty());
+	}
+
+	@Test
+	void repeatedInventoryRemovalsAreValidatedCumulatively() {
+		CompiledQuestDefinition definition = QuestDsl.quest(1305)
+			.node("started", project(QuestStatus.START, Map.of()))
+			.node("reward", project(QuestStatus.REWARD, Map.of()))
+			.on(new QuestEvent.TalkToNpc(700001)).from("started")
+			.then(new QuestAction.RemoveItem(ITEM_ID, 1))
+			.then(new QuestAction.RemoveItem(ITEM_ID, 1))
+			.goTo("reward")
+			.compile();
+
+		assertTrue(QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 1305, QuestStatus.START, 0, Map.of(ITEM_ID, 1)),
+			new QuestEvent.TalkToNpc(700001), definition.definition().transitions().get(0)).isEmpty());
+	}
+
 	private static CompiledQuestDefinition definition() {
 		return QuestDsl.quest(QUEST_ID)
 			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))

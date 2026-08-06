@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.cp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +41,36 @@ public final class PlayerCPList implements CPList<Player> {
 	/** 返回基础创意点 / Returns the basic cp */
 	public PlayerCPEntry[] getBasicCP() {
 		return entry.values().toArray(new PlayerCPEntry[entry.size()]);
+	}
+
+	/** Captures the live creativity-point entries for caller-owned transaction rollback. */
+	public synchronized TransactionSnapshot transactionSnapshot() {
+		return new TransactionSnapshot();
+	}
+
+	public final class TransactionSnapshot {
+		private final Map<Integer, PlayerCPEntry> entries = new HashMap<>(entry);
+		private final Map<PlayerCPEntry, PersistentState> states = new IdentityHashMap<>();
+		private boolean restored;
+
+		private TransactionSnapshot() {
+			for (PlayerCPEntry value : entries.values()) {
+				states.put(value, value.getPersistentState());
+			}
+		}
+
+		/** Restores CP membership and persistence states exactly once. */
+		public void restore() {
+			synchronized (PlayerCPList.this) {
+				if (restored) {
+					return;
+				}
+				restored = true;
+				entry.clear();
+				entry.putAll(entries);
+				states.forEach(PlayerCPEntry::restorePersistentState);
+			}
+		}
 	}
 
 	/** 添加点。 / Adds point. */

@@ -62,10 +62,39 @@ public final class QuestMutationPlanner {
 		List<QuestAction> actions = new ArrayList<>(transition.actions());
 		appendFinalRepeatRewards(definition, snapshot, actions);
 		Map<String, Integer> variables = new LinkedHashMap<>(layout.unpack(snapshot.packedVariables()));
+		Map<Integer, Integer> unequippedItems = new LinkedHashMap<>();
+		Map<Integer, Integer> returnedItemRemovals = new LinkedHashMap<>();
+		Map<Integer, Integer> plannedRemovals = new LinkedHashMap<>();
+		for (QuestAction action : actions) {
+			if (action instanceof QuestAction.UnequipItem unequip && snapshot.equipmentFacts() != null) {
+				int count = snapshot.equipmentFacts().equippedItemCount(unequip.itemId());
+				unequippedItems.put(unequip.itemId(), count);
+				try {
+					returnedItemRemovals.merge(unequip.itemId(), unequip.removeReturnedCount(), Math::addExact);
+				} catch (ArithmeticException overflow) {
+					return Optional.empty();
+				}
+			}
+		}
 		for (QuestAction action : actions) {
 			switch (action) {
 				case QuestAction.RemoveItem remove -> {
-					if (!removalFeasible(snapshot, remove)) {
+					if (!removalFeasible(snapshot, remove, unequippedItems, returnedItemRemovals,
+						plannedRemovals)) {
+						return Optional.empty();
+					}
+					if (remove.removeAll()) {
+						plannedRemovals.put(remove.itemId(), Integer.MAX_VALUE);
+					} else {
+						try {
+							plannedRemovals.merge(remove.itemId(), remove.count(), Math::addExact);
+						} catch (ArithmeticException overflow) {
+							return Optional.empty();
+						}
+					}
+				}
+				case QuestAction.UnequipItem unequip -> {
+					if (snapshot.equipmentFacts() == null) {
 						return Optional.empty();
 					}
 				}
@@ -210,12 +239,20 @@ public final class QuestMutationPlanner {
 	 * facts. Unknown facts (player being logged out) never guess a zero balance:
 	 * the removal is treated as infeasible instead of inventing a matching plan.
 	 */
-	private static boolean removalFeasible(QuestSnapshot snapshot, QuestAction.RemoveItem remove) {
+	private static boolean removalFeasible(QuestSnapshot snapshot, QuestAction.RemoveItem remove,
+		Map<Integer, Integer> unequippedItems, Map<Integer, Integer> returnedItemRemovals,
+		Map<Integer, Integer> plannedRemovals) {
 		try {
-			int available = snapshot.itemCount(remove.itemId());
-			return remove.removeAll() || available >= remove.count();
-		} catch (IllegalStateException unknownFacts) {
+			long available = Math.addExact(snapshot.itemCount(remove.itemId()),
+				unequippedItems.getOrDefault(remove.itemId(), 0));
+			long returnedRemoval = Math.min(available,
+				returnedItemRemovals.getOrDefault(remove.itemId(), 0));
+			long alreadyRemoved = plannedRemovals.getOrDefault(remove.itemId(), 0);
+			long remaining = available - returnedRemoval - alreadyRemoved;
+			return remove.removeAll() || remaining >= remove.count();
+		} catch (IllegalStateException | ArithmeticException unknownFacts) {
 			return false;
 		}
 	}
+
 }

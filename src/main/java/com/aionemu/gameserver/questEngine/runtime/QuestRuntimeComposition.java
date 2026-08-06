@@ -168,7 +168,9 @@ public final class QuestRuntimeComposition {
 						new PlayerQuestRewardPort(players, inventoryDao, playerDao, ItemService::addQuestItems,
 							DAOManager.getDAO(PlayerTitleListDAO.class)),
 						new PlayerQuestCraftPort(players, DAOManager.getDAO(PlayerRecipesDAO.class),
-							DAOManager.getDAO(PlayerSkillListDAO.class)));
+							DAOManager.getDAO(PlayerSkillListDAO.class)),
+						new PlayerQuestEquipmentPort(players, inventoryDao,
+							DAOManager.getDAO(com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO.class)));
 				}
 				return delegate;
 			}

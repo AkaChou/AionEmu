@@ -42,4 +42,9 @@ public class PlayerCPEntry extends CPEntry {
 			this.persistentState = persistentState;
 		}
 	}
+
+	/** Restores a captured state without applying the normal state-transition rules. */
+	void restorePersistentState(PersistentState persistentState) {
+		this.persistentState = persistentState;
+	}
 }
