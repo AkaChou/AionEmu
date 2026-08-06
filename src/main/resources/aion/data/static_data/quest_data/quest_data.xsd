@@ -11,32 +11,32 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Quest">
-		<xs:sequence>
-			<xs:element name="collect_items" type="CollectItems" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="inventory_items" type="InventoryItems" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="rewards" type="Rewards" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="bonus" type="QuestBonuses" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="extended_rewards" type="Rewards" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="quest_drop" type="QuestDrop" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="quest_kill" type="QuestKill" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="start_conditions" type="QuestStartConditions" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="class_permitted" type="ClassListType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="gender_permitted" type="Gender" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="quest_work_items" type="QuestWorkItems" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="fighter_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="knight_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="ranger_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="assassin_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="wizard_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="elementalist_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="priest_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="chanter_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="collect_items" type="CollectItems"/>
+			<xs:element name="inventory_items" type="InventoryItems"/>
+			<xs:element name="rewards" type="Rewards"/>
+			<xs:element name="bonus" type="QuestBonuses"/>
+			<xs:element name="extended_rewards" type="Rewards"/>
+			<xs:element name="quest_drop" type="QuestDrop"/>
+			<xs:element name="quest_kill" type="QuestKill"/>
+			<xs:element name="start_conditions" type="QuestStartConditions"/>
+			<xs:element name="class_permitted" type="ClassListType"/>
+			<xs:element name="gender_permitted" type="Gender"/>
+			<xs:element name="quest_work_items" type="QuestWorkItems"/>
+			<xs:element name="fighter_selectable_reward" type="QuestItems"/>
+			<xs:element name="knight_selectable_reward" type="QuestItems"/>
+			<xs:element name="ranger_selectable_reward" type="QuestItems"/>
+			<xs:element name="assassin_selectable_reward" type="QuestItems"/>
+			<xs:element name="wizard_selectable_reward" type="QuestItems"/>
+			<xs:element name="elementalist_selectable_reward" type="QuestItems"/>
+			<xs:element name="priest_selectable_reward" type="QuestItems"/>
+			<xs:element name="chanter_selectable_reward" type="QuestItems"/>
 			<!-- News Class 4.3 -->
-			<xs:element name="gunslinger_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="songweaver_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="gunslinger_selectable_reward" type="QuestItems"/>
+			<xs:element name="songweaver_selectable_reward" type="QuestItems"/>
 			<!-- News Class 4.5 -->
-			<xs:element name="aethertech_selectable_reward" type="QuestItems" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
+			<xs:element name="aethertech_selectable_reward" type="QuestItems"/>
+		</xs:choice>
 		<xs:attribute name="id" type="xs:int" use="required"/>
 		<xs:attribute name="name" type="xs:string"/>
 		<xs:attribute name="nameId" type="xs:int"/>
@@ -50,7 +50,7 @@
 		<xs:attribute name="cannot_giveup" type="xs:boolean" default="false"/>
 		<xs:attribute name="bounty_reward" type="xs:boolean" default="false"/>
 		<xs:attribute name="use_class_reward" type="xs:int" default="0"/>
-		<xs:attribute name="race_permitted" type="Race"/>
+		<xs:attribute name="race_permitted" type="RaceListType"/>
 		<xs:attribute name="combineskill" type="xs:int"/>
 		<xs:attribute name="combine_skillpoint" type="xs:int"/>
 		<xs:attribute name="timer" type="xs:boolean" default="false"/>
@@ -149,6 +149,9 @@
 	</xs:simpleType>
 	<xs:simpleType name="ClassListType">
 		<xs:list itemType="playerClass"/>
+	</xs:simpleType>
+	<xs:simpleType name="RaceListType">
+		<xs:list itemType="Race"/>
 	</xs:simpleType>
 	<xs:complexType name="QuestStartConditions">
 		<xs:sequence>

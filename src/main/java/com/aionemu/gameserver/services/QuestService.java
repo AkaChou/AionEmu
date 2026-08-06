@@ -499,10 +499,8 @@ public final class QuestService {
 		if (template == null) {
 			return false;
 		}
-		if (template.getRacePermitted() != null) {
-			if (template.getRacePermitted() != player.getRace() && template.getRacePermitted() != Race.PC_ALL) {
-				return false;
-			}
+		if (!template.isRacePermitted(player.getRace())) {
+			return false;
 		}
         int levelDiff = template.getMinlevelPermitted() - player.getLevel();
         if (levelDiff > 0 && template.getMinlevelPermitted() != 999) {
@@ -719,7 +717,7 @@ public final class QuestService {
 		if (template == null) {
 			return false;
 		}
-		if (template.getRacePermitted() != null && template.getRacePermitted() != player.getRace()) {
+		if (!template.isRacePermitted(player.getRace())) {
 			return false;
 		}
 		if (template.getClassPermitted().size() != 0 && !template.getClassPermitted().contains(player.getCommonData().getPlayerClass())) {
@@ -780,10 +778,8 @@ public final class QuestService {
 		if (template.getMaxlevelPermitted() != 0 && player.getLevel() > template.getMaxlevelPermitted()) {
 			return false;
 		}
-		if (template.getRacePermitted() != null) {
-			if (template.getRacePermitted() != player.getRace() && template.getRacePermitted() != Race.PC_ALL) {
-				return false;
-			}
+		if (!template.isRacePermitted(player.getRace())) {
+			return false;
 		}
 		if (!template.getClassPermitted().isEmpty()) {
 			if (!template.getClassPermitted().contains(player.getCommonData().getPlayerClass())) {

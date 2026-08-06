@@ -147,10 +147,8 @@ public class EventService {
 
 			if (QuestService.checkLevelRequirement(questId, player.getCommonData().getLevel())) {
 				QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
-				if (template.getRacePermitted() != null) {
-					if (template.getRacePermitted().ordinal() != player.getCommonData().getRace().ordinal()) {
-						continue;
-					}
+				if (!template.isRacePermitted(player.getCommonData().getRace())) {
+					continue;
 				}
 
 				if (template.getClassPermitted().size() != 0) {

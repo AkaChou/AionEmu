@@ -109,8 +109,9 @@ public class QuestTemplate {
 	protected Boolean bountyReward;
 	@XmlAttribute(name = "use_class_reward")
 	protected Integer useClassReward;
+	@XmlList
 	@XmlAttribute(name = "race_permitted")
-	protected Race racePermitted;
+	protected List<Race> racePermitted;
 	@XmlAttribute(name = "combineskill")
 	protected Integer combineskill;
 	@XmlAttribute(name = "combine_skillpoint")
@@ -477,13 +478,21 @@ public class QuestTemplate {
 		return getMaxRepeatCount() > 1;
 	}
 
-	 /**
-	  * 获取 racePermitted 属性值。
-	  * Gets the value of the racePermitted property
-	  * @return possible object is {@link Race }
-	  */
-	public Race getRacePermitted() {
+	/**
+	 * 返回允许接取任务的种族列表。 / Returns the races allowed to acquire this quest.
+	 */
+	public List<Race> getRacePermitted() {
+		if (racePermitted == null) {
+			racePermitted = new ArrayList<Race>();
+		}
 		return racePermitted;
+	}
+
+	/**
+	 * 判断指定种族是否允许接取任务。 / Whether the given race may acquire this quest.
+	 */
+	public boolean isRacePermitted(Race race) {
+		return racePermitted == null || racePermitted.isEmpty() || racePermitted.contains(Race.PC_ALL) || racePermitted.contains(race);
 	}
 
 	 /**
