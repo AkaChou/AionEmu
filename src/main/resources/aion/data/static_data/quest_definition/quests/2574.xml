@@ -22,8 +22,8 @@
       <drop npc-id="213154" item-id="182204450" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="213155" item-id="182204451" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="213156" item-id="182204451" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213547" item-id="182204452" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213548" item-id="182204452" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="213547" item-id="182204452" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213548" item-id="182204452" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

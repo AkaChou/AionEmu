@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6127" version="1">
-  <metadata name="Barricade Supplies" display-name-id="1195069" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="270">
+  <metadata name="Barricade Supplies" display-name-id="1195069" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="270">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291068" count="16"/>
       <item id="182291259" count="48"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12128" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40003" type="TASK"/>
     </bonuses>

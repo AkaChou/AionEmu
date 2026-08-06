@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="10500" version="1">
-  <metadata name="Expedition Coalition" display-name-id="1800437" min-level="65" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="Expedition Coalition" display-name-id="1800437" min-level="55" max-level="2147483647" category="MISSION" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

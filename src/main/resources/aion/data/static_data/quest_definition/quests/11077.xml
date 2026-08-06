@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="11077" version="1">
-  <metadata name="A Weapon Of Worth" display-name-id="1125188" min-level="50" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="A Weapon Of Worth" display-name-id="1125188" min-level="50" max-level="2147483647" category="IMPORTANT" cannot-share="true" use-class-reward="1">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -21,23 +21,53 @@
       <reward kind="SELECTABLE_ITEM" id="102100640" amount="1"/>
     </rewards>
     <class-rewards>
-      <class id="WARRIOR">
-        <reward kind="ITEM" id="100900837" amount="1"/>
+      <class id="FIGHTER">
+        <reward kind="SELECTABLE_ITEM" id="100001101" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100100842" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100900837" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101300805" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101700880" amount="1"/>
       </class>
-      <class id="SCOUT">
-        <reward kind="ITEM" id="101700880" amount="1"/>
+      <class id="KNIGHT">
+        <reward kind="SELECTABLE_ITEM" id="100001101" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100100842" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100900837" amount="1"/>
       </class>
-      <class id="MAGE">
-        <reward kind="ITEM" id="100500856" amount="1"/>
+      <class id="RANGER">
+        <reward kind="SELECTABLE_ITEM" id="100200971" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100001101" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101700880" amount="1"/>
+      </class>
+      <class id="ASSASSIN">
+        <reward kind="SELECTABLE_ITEM" id="100200971" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100001101" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101700880" amount="1"/>
+      </class>
+      <class id="WIZARD">
+        <reward kind="SELECTABLE_ITEM" id="100600912" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100500856" amount="1"/>
+      </class>
+      <class id="ELEMENTALIST">
+        <reward kind="SELECTABLE_ITEM" id="100600912" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100500856" amount="1"/>
       </class>
       <class id="PRIEST">
-        <reward kind="ITEM" id="101500864" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100100842" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101500864" amount="1"/>
       </class>
-      <class id="TECHNIST">
-        <reward kind="ITEM" id="102100640" amount="1"/>
+      <class id="CHANTER">
+        <reward kind="SELECTABLE_ITEM" id="100100842" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101500864" amount="1"/>
       </class>
-      <class id="MUSE">
-        <reward kind="ITEM" id="102000765" amount="1"/>
+      <class id="GUNSLINGER">
+        <reward kind="SELECTABLE_ITEM" id="101800725" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101900731" amount="1"/>
+      </class>
+      <class id="SONGWEAVER">
+        <reward kind="SELECTABLE_ITEM" id="102000765" amount="1"/>
+      </class>
+      <class id="AETHERTECH">
+        <reward kind="SELECTABLE_ITEM" id="102100640" amount="1"/>
       </class>
     </class-rewards>
   </metadata>

@@ -601,8 +601,8 @@ public class Equipment {
 	 */
 	public List<Item> getEquippedItemsByItemId(int value) {
 		List<Item> equippedItemsById = new ArrayList<Item>();
+		Set<Item> seen = Collections.newSetFromMap(new IdentityHashMap<>());
 		synchronized (equipment) {
-			Set<Item> seen = Collections.newSetFromMap(new IdentityHashMap<>());
 			for (Item item : equipment.values()) {
 				if (item.getItemTemplate().getTemplateId() == value && seen.add(item)) {
 					equippedItemsById.add(item);

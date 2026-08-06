@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="50054" version="1">
-  <metadata name="[Event] Masterful Alchemy of Growth for Daevas" display-name-id="1802550" min-level="46" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Masterful Alchemy of Growth for Daevas" display-name-id="1802550" min-level="46" max-level="65" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

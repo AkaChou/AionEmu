@@ -11,6 +11,7 @@
       <item id="182204512" count="10"/>
     </items>
     <rewards>
+      <reward kind="AP" id="0" amount="200"/>
       <reward kind="EXP" id="0" amount="2897994"/>
       <reward kind="ITEM" id="188051194" amount="1"/>
       <reward kind="ITEM" id="186000469" amount="25"/>
@@ -204,6 +205,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2897994"/>
+        <grant-reward kind="AP" id="0" amount="200" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="188051194" amount="1"/>
         <grant-reward kind="ITEM" id="186000469" amount="25"/>
         <grant-reward kind="ITEM" id="114100804" amount="1"/>
@@ -221,6 +223,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2897994"/>
+        <grant-reward kind="AP" id="0" amount="200" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="188051194" amount="1"/>
         <grant-reward kind="ITEM" id="186000469" amount="25"/>
         <grant-reward kind="ITEM" id="114300814" amount="1"/>
@@ -238,6 +241,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2897994"/>
+        <grant-reward kind="AP" id="0" amount="200" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="188051194" amount="1"/>
         <grant-reward kind="ITEM" id="186000469" amount="25"/>
         <grant-reward kind="ITEM" id="114500776" amount="1"/>
@@ -255,6 +259,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2897994"/>
+        <grant-reward kind="AP" id="0" amount="200" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="188051194" amount="1"/>
         <grant-reward kind="ITEM" id="186000469" amount="25"/>
         <grant-reward kind="ITEM" id="114600735" amount="1"/>

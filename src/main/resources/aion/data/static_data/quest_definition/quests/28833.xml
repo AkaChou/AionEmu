@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="28833" version="1">
-  <metadata name="[Daily] Sprout, Sprout, Let It All Out" display-name-id="1136828" min-level="21" max-level="82" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="[Daily] Sprout, Sprout, Let It All Out" display-name-id="1136828" min-level="21" max-level="23" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

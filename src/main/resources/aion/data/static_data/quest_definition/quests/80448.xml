@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80448" version="1">
-  <metadata name="[Growth] Lords and Suspicions" display-name-id="1185645" min-level="46" max-level="82" category="EVENT">
+  <metadata name="[Growth] Lords and Suspicions" display-name-id="1185645" min-level="46" max-level="53" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -121,6 +121,14 @@
     <transition source="started" target="k1">
       <event>
         <kill-npc npc-id="214696"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="k1">
+      <event>
+        <kill-npc npc-id="214701"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

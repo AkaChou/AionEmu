@@ -4,7 +4,7 @@
     <races>
       <race id="PC_ALL"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="1" cooldown-seconds="0" daily="false" weekly="false"/>
     <rewards>
       <reward kind="ITEM" id="188600206" amount="1"/>
     </rewards>
@@ -30,14 +30,6 @@
         <vars>
           <var name="var0" value="0"/>
           <var name="var1" value="0"/>
-        </vars>
-      </project>
-    </node>
-    <node label="a0b1">
-      <project status="START">
-        <vars>
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
         </vars>
       </project>
     </node>
@@ -142,22 +134,6 @@
     <transition source="a0b0" target="a1b0">
       <event>
         <kill-npc npc-id="831572"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b1" target="a1b1">
-      <event>
-        <kill-npc npc-id="831572"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0" target="a0b1">
-      <event>
-        <kill-npc npc-id="233161"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

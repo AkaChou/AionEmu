@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80876" version="1">
-  <metadata name="[Luna] Holding Back the Epidemic" display-name-id="1802751" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Luna] Holding Back the Epidemic" display-name-id="1802751" min-level="10" max-level="75" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

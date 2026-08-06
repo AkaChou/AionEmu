@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19671" version="1">
-  <metadata name="_19671Reina_Welcome" display-name-id="1803386" min-level="10" max-level="2147483647" category="SIGNIFICANT">
+  <metadata name="_19671Reina_Welcome" display-name-id="1803386" min-level="10" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="2592000" daily="false" weekly="false"/>
     <rewards>
       <reward kind="EXP" id="0" amount="40000"/>
       <reward kind="ITEM" id="169650001" amount="1"/>

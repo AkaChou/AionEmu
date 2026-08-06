@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="39010" version="1">
-  <metadata name="War 2.0" display-name-id="1140021" min-level="60" max-level="2147483647" category="PUBLIC" cannot-share="true">
+  <metadata name="War 2.0" display-name-id="1140021" min-level="60" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

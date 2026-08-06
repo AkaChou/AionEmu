@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="25322" version="1">
-  <metadata name="[Infiltration] Through the Rift" display-name-id="1801500" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="[Infiltration] Through the Rift" display-name-id="1801500" min-level="65" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -9,6 +9,10 @@
       <reward kind="EXP" id="0" amount="3618881"/>
       <reward kind="ITEM" id="182215845" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="acquired" quest-id="25301"/>
+          <condition type="acquired" quest-id="25311"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="11" persistence="PERSISTENT" scope="LOCAL"/>

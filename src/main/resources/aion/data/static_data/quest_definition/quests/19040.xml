@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19040" version="1">
-  <metadata name="Leah's Loneliness" display-name-id="1124540" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="Leah's Loneliness" display-name-id="1124540" min-level="29" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

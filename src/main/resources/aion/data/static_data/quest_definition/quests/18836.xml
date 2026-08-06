@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18836" version="1">
-  <metadata name="[Daily] Compost Program" display-name-id="1136812" min-level="24" max-level="82" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="[Daily] Compost Program" display-name-id="1136812" min-level="24" max-level="26" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

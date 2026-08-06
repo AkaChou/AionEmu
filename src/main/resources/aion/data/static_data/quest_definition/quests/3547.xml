@@ -11,12 +11,19 @@
       <reward kind="EXP" id="0" amount="2222468"/>
       <reward kind="TITLE" id="23" amount="1"/>
     </rewards>
+
     <drops>
       <drop npc-id="211101" item-id="182215334" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="211131" item-id="182215334" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="211111" item-id="182215334" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="211126" item-id="182215334" chance="100" each-member="true" collecting-step="0"/>
     </drops>
+    <start-conditions>
+      <condition type="unfinished" quest-id="1500"/>
+      <condition type="unfinished" quest-id="1054"/>
+      <condition type="noacquired" quest-id="1500"/>
+      <condition type="noacquired" quest-id="1054"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

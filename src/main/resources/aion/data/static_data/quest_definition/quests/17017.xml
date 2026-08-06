@@ -117,15 +117,7 @@
     </transition>
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-id="260005"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="260010"/>
+        <kill-npc npc-ids="251825 251826 251827 251828 251829 251830 251831 251832 251833 251834 251835 251836 251837 251838 251839"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

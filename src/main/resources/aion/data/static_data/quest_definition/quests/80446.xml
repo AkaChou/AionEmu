@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80446" version="1">
-  <metadata name="[Growth] Palace Problems" display-name-id="1185643" min-level="46" max-level="82" category="EVENT">
+  <metadata name="[Growth] Palace Problems" display-name-id="1185643" min-level="46" max-level="53" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -277,9 +277,25 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="a0b0" target="a0b1">
+      <event>
+        <kill-npc npc-id="213374"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="a0b1" target="a0b2">
       <event>
         <kill-npc npc-id="213373"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b1" target="a0b2">
+      <event>
+        <kill-npc npc-id="213374"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -293,9 +309,25 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="a0b2" target="a0b3">
+      <event>
+        <kill-npc npc-id="213374"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="a1b0" target="a1b1">
       <event>
         <kill-npc npc-id="213373"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b0" target="a1b1">
+      <event>
+        <kill-npc npc-id="213374"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -309,9 +341,25 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="a1b1" target="a1b2">
+      <event>
+        <kill-npc npc-id="213374"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="a1b2" target="a1b3">
       <event>
         <kill-npc npc-id="213373"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b2" target="a1b3">
+      <event>
+        <kill-npc npc-id="213374"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -325,7 +373,31 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="a2b0" target="a2b1">
+      <event>
+        <kill-npc npc-id="213374"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="a2b1" target="a2b2">
+      <event>
+        <kill-npc npc-id="213373"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a2b1" target="a2b2">
+      <event>
+        <kill-npc npc-id="213374"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a2b2" target="a2b3">
       <event>
         <kill-npc npc-id="213373"/>
       </event>
@@ -335,7 +407,7 @@
     </transition>
     <transition source="a2b2" target="a2b3">
       <event>
-        <kill-npc npc-id="213373"/>
+        <kill-npc npc-id="213374"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

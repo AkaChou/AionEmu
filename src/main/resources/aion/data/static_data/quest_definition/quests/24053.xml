@@ -14,6 +14,10 @@
       <reward kind="SELECTABLE_ITEM" id="114501752" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="114601587" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="unfinished" quest-id="2061"/>
+      <condition type="noacquired" quest-id="2061"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
@@ -31,8 +35,8 @@
   <transitions>
     <!-- 自动接取：升级需完成 24050，区域任务结束需完成 24040。 -->
     <!-- Auto-accept: level-up requires 24050; zone-mission-end requires 24040. -->
-    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/><quests-finished quest-ids="24050"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/><quests-finished quest-ids="24040"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <!-- NPC 204787：var 0 起始对话 / 影片 252 / 推进到 var 1 -->
     <!-- NPC 204787: var 0 intro dialog / movie 252 / advance to var 1 -->
     <transition source="started" target="started"><event><talk-to-npc npc-id="204787" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>

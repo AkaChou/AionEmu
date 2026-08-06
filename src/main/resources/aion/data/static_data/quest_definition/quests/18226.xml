@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18226" version="1">
-  <metadata name="Ongoing Training" display-name-id="1802428" min-level="51" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="Ongoing Training" display-name-id="1802428" min-level="51" max-level="55" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1876" version="1">
-  <metadata name="New mission for the annihilation of the Asmodian soldiers" display-name-id="1104676" min-level="45" max-level="2147483647" category="PUBLIC">
+  <metadata name="New mission for the annihilation of the Asmodian soldiers" display-name-id="1104676" min-level="45" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23868" version="1">
-  <metadata name="[Alliance] Eliminate the Guardian General of the Kysis Fortress" display-name-id="1803028" min-level="66" max-level="2147483647" category="QUEST">
+  <metadata name="[Alliance] Eliminate the Guardian General of the Kysis Fortress" display-name-id="1803028" min-level="66" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ASMODIANS"/>
     </races>

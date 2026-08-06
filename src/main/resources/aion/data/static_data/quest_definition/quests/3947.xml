@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3947" version="1">
-  <metadata name="[Expert] Zest for Handicrafting" display-name-id="1103068" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Expert] Zest for Handicrafting" display-name-id="1103068" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" combine-skill="40008" combine-skill-point="399">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -16,6 +16,18 @@
       <condition type="finished" quest-id="1944"/>
       <condition type="finished" quest-id="1945"/>
       <condition type="finished" quest-id="1946"/>
+      <condition type="unfinished" quest-id="3941"/>
+      <condition type="unfinished" quest-id="3944"/>
+      <condition type="unfinished" quest-id="3950"/>
+      <condition type="unfinished" quest-id="3953"/>
+      <condition type="unfinished" quest-id="3956"/>
+      <condition type="unfinished" quest-id="1976"/>
+      <condition type="noacquired" quest-id="3941"/>
+      <condition type="noacquired" quest-id="3944"/>
+      <condition type="noacquired" quest-id="3950"/>
+      <condition type="noacquired" quest-id="3953"/>
+      <condition type="noacquired" quest-id="3956"/>
+      <condition type="noacquired" quest-id="1976"/>
     </start-conditions>
   </metadata>
   <progress>

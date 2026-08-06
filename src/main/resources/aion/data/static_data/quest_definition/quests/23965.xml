@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23965" version="1">
-  <metadata name="[Instanced Dungeon/above 24 players] A Fragment That Appeared At The Temple" display-name-id="1803254" min-level="66" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Instanced Dungeon/above 24 players] A Fragment That Appeared At The Temple" display-name-id="1803254" min-level="66" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

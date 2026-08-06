@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="24010" version="1">
-  <metadata name="Suthran's Orders" display-name-id="1129886" min-level="10" max-level="2147483647" category="MISSION">
+  <metadata name="Suthran's Orders" display-name-id="1129886" min-level="10" max-level="2147483647" category="MISSION" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -8,6 +8,10 @@
       <reward kind="GOLD" id="0" amount="2170"/>
       <reward kind="EXP" id="0" amount="25282"/>
     </rewards>
+    <start-conditions>
+      <condition type="unfinished" quest-id="2022"/>
+      <condition type="noacquired" quest-id="2022"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

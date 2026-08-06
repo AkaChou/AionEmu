@@ -11,15 +11,17 @@
     <rewards>
       <reward kind="GOLD" id="0" amount="25000"/>
       <reward kind="EXP" id="0" amount="1970708"/>
-    </rewards>
-    <extended-rewards>
-      <reward kind="GOLD" id="0" amount="40000"/>
+      <reward kind="RANDOM" id="10054" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111100868" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111300869" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111500859" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111600847" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111301528" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111501570" amount="1"/>
+    </rewards>
+    <extended-rewards>
+        <reward kind="GOLD" id="0" amount="40000"/>
+
     </extended-rewards>
     <drops>
       <drop npc-id="215048" item-id="182209106" chance="100" each-member="true" collecting-step="0"/>

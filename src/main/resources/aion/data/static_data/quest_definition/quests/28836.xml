@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="28836" version="1">
-  <metadata name="[Daily] Soiled Quest" display-name-id="1136831" min-level="24" max-level="82" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="[Daily] Soiled Quest" display-name-id="1136831" min-level="24" max-level="26" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -40,6 +40,7 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="830656" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="830656" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="830656" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <transition source="started" target="started"><event><collect-item item-id="182213210" count="5"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="830656" dialog-id="39"/></event><conditions>        <has-item item-id="182213207" count="50"/></conditions><actions>        <remove-item item-id="182213207" count="50"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="830656" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
     <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="830656" dialog-id="20002"/></event><conditions>        <has-item item-id="182213207" count="50"/></conditions><actions>        <remove-item item-id="182213207" count="50"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>

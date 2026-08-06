@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1134" version="1">
-  <metadata name="Polluted Fountainhead" display-name-id="1102304" min-level="11" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Polluted Fountainhead" display-name-id="1102304" min-level="11" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

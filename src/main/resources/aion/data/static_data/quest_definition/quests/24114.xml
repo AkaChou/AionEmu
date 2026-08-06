@@ -25,6 +25,12 @@
       <drop npc-id="210576" item-id="182215476" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="210578" item-id="182215476" chance="100" each-member="true" collecting-step="0"/>
     </drops>
+    <start-conditions>
+      <condition type="unfinished" quest-id="2200"/>
+      <condition type="unfinished" quest-id="2018"/>
+      <condition type="noacquired" quest-id="2200"/>
+      <condition type="noacquired" quest-id="2018"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

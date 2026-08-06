@@ -9,6 +9,7 @@
     </inventory-items>
     <rewards>
       <reward kind="EXP" id="0" amount="215550"/>
+      <reward kind="ITEM" id="161000003" amount="3"/>
       <reward kind="SELECTABLE_ITEM" id="111101067" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111301066" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111501051" amount="1"/>
@@ -138,6 +139,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="215550" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="161000003" amount="3"/>
         <grant-reward kind="ITEM" id="111101067" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -153,6 +155,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="215550" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="161000003" amount="3"/>
         <grant-reward kind="ITEM" id="111301066" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -168,6 +171,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="215550" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="161000003" amount="3"/>
         <grant-reward kind="ITEM" id="111501051" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -183,6 +187,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="215550" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="161000003" amount="3"/>
         <grant-reward kind="ITEM" id="111601041" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -198,6 +203,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="215550" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="161000003" amount="3"/>
         <grant-reward kind="ITEM" id="111501525" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>

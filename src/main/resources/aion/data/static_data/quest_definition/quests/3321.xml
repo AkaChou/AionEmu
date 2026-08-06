@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3321" version="1">
-  <metadata name="Sounds in The Night" display-name-id="1102618" min-level="24" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Sounds in The Night" display-name-id="1102618" min-level="24" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

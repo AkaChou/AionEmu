@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="28816" version="1">
-  <metadata name="Turn, Turn, Turn" display-name-id="1136618" min-level="50" max-level="82" category="SEEN_MARKER">
+  <metadata name="Turn, Turn, Turn" display-name-id="1136618" min-level="50" max-level="59" category="SEEN_MARKER">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -15,6 +15,13 @@
       <reward kind="EXP" id="0" amount="3773237"/>
       <reward kind="ITEM" id="187000069" amount="1"/>
     </rewards>
+
+    <drops>
+      <drop npc-id="218850" item-id="182006843" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="218851" item-id="182006844" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="218852" item-id="182006845" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="218853" item-id="182006846" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
@@ -34,6 +41,14 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="830436" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="830436" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="830436" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <transition source="started" target="started"><event><kill-npc npc-id="218853"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><kill-npc npc-id="218852"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><kill-npc npc-id="218851"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><kill-npc npc-id="218850"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><collect-item item-id="182006846" count="1"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><collect-item item-id="182006845" count="1"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><collect-item item-id="182006844" count="1"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><collect-item item-id="182006843" count="1"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="830436" dialog-id="39"/></event><conditions>        <has-item item-id="182006843" count="1"/>        <has-item item-id="182006844" count="1"/>        <has-item item-id="182006845" count="1"/>        <has-item item-id="182006846" count="1"/></conditions><actions>        <remove-item item-id="182006843" count="1"/>        <remove-item item-id="182006844" count="1"/>        <remove-item item-id="182006845" count="1"/>        <remove-item item-id="182006846" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="830436" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
     <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="830436" dialog-id="20002"/></event><conditions>        <has-item item-id="182006843" count="1"/>        <has-item item-id="182006844" count="1"/>        <has-item item-id="182006845" count="1"/>        <has-item item-id="182006846" count="1"/></conditions><actions>        <remove-item item-id="182006843" count="1"/>        <remove-item item-id="182006844" count="1"/>        <remove-item item-id="182006845" count="1"/>        <remove-item item-id="182006846" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>

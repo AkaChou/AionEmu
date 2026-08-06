@@ -102,7 +102,7 @@
     <!-- 地下要塞 (300070000) 内击杀计数，39 杀后进入结算。 Kill counting inside the underground fortress (300070000), reward after 39 kills. -->
     <transition source="hunting" target="hunting" priority="1">
       <event>
-        <kill-npc npc-ids="215447 214777 214773 214781 214784 700472 700474 700473"/>
+        <kill-npc npc-ids="214771 214772 214773 214774 214775 214776 214777 214778 214779 214780 214781 214782 214783 214784 214785 214786 214787 214788 214789 215445 215446 215447 215448 215449 215450"/>
       </event>
       <conditions>
         <world-is world-id="300070000"/>
@@ -117,7 +117,7 @@
     </transition>
     <transition source="hunting" target="reward" priority="0">
       <event>
-        <kill-npc npc-ids="215447 214777 214773 214781 214784 700472 700474 700473"/>
+        <kill-npc npc-ids="214771 214772 214773 214774 214775 214776 214777 214778 214779 214780 214781 214782 214783 214784 214785 214786 214787 214788 214789 215445 215446 215447 215448 215449 215450"/>
       </event>
       <conditions>
         <world-is world-id="300070000"/>

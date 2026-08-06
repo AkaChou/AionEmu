@@ -5,15 +5,37 @@
       <race id="ASMODIANS"/>
     </races>
     <items>
-      <item id="182216171" count="3"/>
-      <item id="182216172" count="1"/>
-      <item id="182216173" count="1"/>
-      <item id="182216174" count="1"/>
+      <item id="182216180" count="3"/>
+      <item id="182216181" count="1"/>
+      <item id="182216182" count="1"/>
+      <item id="182216183" count="1"/>
     </items>
     <rewards>
       <reward kind="EXP" id="0" amount="61295166"/>
       <reward kind="ITEM" id="188056784" amount="1"/>
     </rewards>
+    <drops>
+      <drop npc-id="703429" item-id="182216180" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="703430" item-id="182216181" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="246556" item-id="182216182" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="246855" item-id="182216182" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="246865" item-id="182216182" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="246875" item-id="182216182" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="246885" item-id="182216182" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="246895" item-id="182216182" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="246905" item-id="182216182" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="246920" item-id="182216182" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="246860" item-id="182216183" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="246870" item-id="182216183" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="246926" item-id="182216183" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="247113" item-id="182216183" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="246881" item-id="182216183" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="246851" item-id="182216183" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="246861" item-id="182216183" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="246927" item-id="182216183" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="246872" item-id="182216183" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="247115" item-id="182216183" chance="70" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
@@ -38,7 +60,7 @@
     <transition source="started" target="s1"><event><talk-to-npc npc-id="806592" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="s1" target="s1"><event><talk-to-npc npc-id="806593" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
     <transition source="s1" target="s1"><event><talk-to-npc npc-id="806593" dialog-id="1353"/></event><after-commit><show-quest-dialog dialog-id="1353"/></after-commit></transition>
-    <transition source="s1" target="s2"><event><talk-to-npc npc-id="806593" dialog-id="39"/></event><conditions><has-item item-id="182216171" count="3"/><has-item item-id="182216172" count="1"/><has-item item-id="182216173" count="1"/><has-item item-id="182216174" count="1"/></conditions><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="10000"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="806593" dialog-id="39"/></event><conditions><has-item item-id="182216180" count="3"/><has-item item-id="182216181" count="1"/><has-item item-id="182216182" count="1"/><has-item item-id="182216183" count="1"/></conditions><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="10000"/></after-commit></transition>
     <transition source="s2" target="s2"><event><talk-to-npc npc-id="806593" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1695"/></after-commit></transition>
     <transition source="s2" target="s2"><event><talk-to-npc npc-id="806593" dialog-id="1696"/></event><after-commit><show-quest-dialog dialog-id="1696"/></after-commit></transition>
     <transition source="s2" target="s3"><event><talk-to-npc npc-id="806593" dialog-id="10002"/></event><actions><set-variable field="var0" value="3"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
@@ -52,7 +74,7 @@
     <transition source="s4" target="s4"><event><talk-to-npc npc-id="731782" dialog-id="2377"/></event><after-commit><show-quest-dialog dialog-id="2377"/></after-commit></transition>
     <transition source="s4" target="s4"><event><talk-to-npc npc-id="731782" dialog-id="2378"/></event><after-commit><show-quest-dialog dialog-id="2378"/></after-commit></transition>
     <transition source="s4" target="s4"><event><talk-to-npc npc-id="731782" dialog-id="2461"/></event><after-commit><show-quest-dialog dialog-id="2461"/></after-commit></transition>
-    <transition source="s4" target="s5"><event><talk-to-npc npc-id="731782" dialog-id="10004"/></event><actions><set-variable field="var0" value="5"/><give-item item-id="182216175" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s4" target="s5"><event><talk-to-npc npc-id="731782" dialog-id="10004"/></event><actions><set-variable field="var0" value="5"/><give-item item-id="182216184" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="s5" target="s5"><event><talk-to-npc npc-id="806594" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
     <transition source="s5" target="s5"><event><talk-to-npc npc-id="806594" dialog-id="2717"/></event><after-commit><show-quest-dialog dialog-id="2717"/></after-commit></transition>
     <transition source="s5" target="reward"><event><talk-to-npc npc-id="806594" dialog-id="1009"/></event><actions><set-variable field="var0" value="6"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>

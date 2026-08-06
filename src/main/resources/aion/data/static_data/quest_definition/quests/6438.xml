@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6438" version="1">
-  <metadata name="Teleport Statue Repair" display-name-id="1195203" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="380">
+  <metadata name="Teleport Statue Repair" display-name-id="1195203" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="380">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291202" count="20"/>
       <item id="182291309" count="40"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12439" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40007" type="TASK"/>
     </bonuses>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80487" version="1">
-  <metadata name="[Growth] A Higher Calling, 1st Edition" display-name-id="1185670" min-level="5" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] A Higher Calling, 1st Edition" display-name-id="1185670" min-level="5" max-level="10" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

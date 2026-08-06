@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6404" version="1">
-  <metadata name="Sleeping Pill Supplies" display-name-id="1195169" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="40">
+  <metadata name="Sleeping Pill Supplies" display-name-id="1195169" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="40">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291168" count="8"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12405" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40007" type="TASK"/>
     </bonuses>

@@ -10,7 +10,7 @@
       <item id="182007150" count="1"/>
     </items>
     <rewards>
-
+      <reward kind="GP" id="0" amount="51"/>
     </rewards>
   </metadata>
   <progress>
@@ -196,6 +196,7 @@
       </event>
       <actions>
 
+        <grant-reward kind="GP" id="0" amount="51" amount-mode="QUEST_BASE"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

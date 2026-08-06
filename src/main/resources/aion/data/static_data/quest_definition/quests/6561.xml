@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6561" version="1">
-  <metadata name="Merchant's Tent Repair [200p]" display-name-id="1195267" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40010" combine-skill-point="200">
+  <metadata name="Merchant's Tent Repair [200p]" display-name-id="1195267" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40010" combine-skill-point="200">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291583" count="16"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12562" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40010" type="TASK"/>
     </bonuses>

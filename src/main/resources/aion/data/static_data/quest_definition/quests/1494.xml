@@ -24,27 +24,27 @@
     </rewards>
     <drops>
       <drop npc-id="211039" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211864" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211865" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211019" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211036" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211020" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211037" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211818" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211819" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212021" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212022" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211035" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212025" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212029" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212033" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212036" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212039" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212042" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212045" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212048" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212051" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212054" item-id="182201414" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211864" item-id="182201414" chance="10" each-member="true" collecting-step="0"/>
+      <drop npc-id="211865" item-id="182201414" chance="10" each-member="true" collecting-step="0"/>
+      <drop npc-id="211019" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="211036" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="211020" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="211037" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="211818" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="211819" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212021" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212022" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="211035" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212025" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212029" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212033" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212036" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212039" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212042" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212045" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212048" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212051" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
+      <drop npc-id="212054" item-id="182201414" chance="1" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

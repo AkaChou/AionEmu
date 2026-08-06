@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80393" version="1">
-  <metadata name="[Growth] Shulack Sad Sack" display-name-id="1185590" min-level="40" max-level="82" category="EVENT">
+  <metadata name="[Growth] Shulack Sad Sack" display-name-id="1185590" min-level="40" max-level="53" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -117,7 +117,7 @@
     </transition>
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-id="215080"/>
+        <kill-npc npc-id="215081"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

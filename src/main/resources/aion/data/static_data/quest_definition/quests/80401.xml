@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80401" version="1">
-  <metadata name="[Growth] Death to Nimbarka!" display-name-id="1185598" min-level="40" max-level="82" category="EVENT">
+  <metadata name="[Growth] Death to Nimbarka!" display-name-id="1185598" min-level="40" max-level="53" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

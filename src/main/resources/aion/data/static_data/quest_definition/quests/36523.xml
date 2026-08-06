@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36523" version="1">
-  <metadata name="[Daily] A Part Of Ricardo" display-name-id="1126116" min-level="53" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] A Part Of Ricardo" display-name-id="1126116" min-level="53" max-level="54" category="FACTION" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

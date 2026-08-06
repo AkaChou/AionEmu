@@ -16,10 +16,23 @@
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
     <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="25"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
+    <!-- 击杀 236100 236101 236102 236103 236104 236126 236127 236128 236129 236130 236105 236106 236107 236108 236112 236113 236114 236115 236119 236120 236121 236122 236131 236132 236133 236134 236138 236139 236140 236141 236145 236146 236147 236148 236109 236110 236111 236116 236117 236118 236123 236124 236125 236135 236136 236137 236142 236143 236144 236149 236150 236151 236152 236153 236154 236155 236156 236157 236158 236159 236160 236164 236165 236166 236167 236171 236172 236173 236174 236161 236162 236163 236168 236169 236170 236175 236176 236177 236178 236179 236180 236181 236182 236183 236184 236185 236186 236190 236191 236192 236193 236197 236198 236199 236200 236187 236188 236189 236194 236195 236196 236201 236202 236203 236204 236205 236206 236207 236208 236209 236210 236211 236212 236213 236214 236215 236216 236217 236218 236219 236220 25 只:var0 计数 0→25,priority 1 计数、0 完成。 -->
+    <transition source="started" target="started" priority="1">
+      <event><kill-npc npc-ids="236100 236101 236102 236103 236104 236126 236127 236128 236129 236130 236105 236106 236107 236108 236112 236113 236114 236115 236119 236120 236121 236122 236131 236132 236133 236134 236138 236139 236140 236141 236145 236146 236147 236148 236109 236110 236111 236116 236117 236118 236123 236124 236125 236135 236136 236137 236142 236143 236144 236149 236150 236151 236152 236153 236154 236155 236156 236157 236158 236159 236160 236164 236165 236166 236167 236171 236172 236173 236174 236161 236162 236163 236168 236169 236170 236175 236176 236177 236178 236179 236180 236181 236182 236183 236184 236185 236186 236190 236191 236192 236193 236197 236198 236199 236200 236187 236188 236189 236194 236195 236196 236201 236202 236203 236204 236205 236206 236207 236208 236209 236210 236211 236212 236213 236214 236215 236216 236217 236218 236219 236220"/></event>
+      <conditions><variable-below field="var0" value="25"/></conditions>
+      <actions><increment-variable field="var0" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event><kill-npc npc-ids="236100 236101 236102 236103 236104 236126 236127 236128 236129 236130 236105 236106 236107 236108 236112 236113 236114 236115 236119 236120 236121 236122 236131 236132 236133 236134 236138 236139 236140 236141 236145 236146 236147 236148 236109 236110 236111 236116 236117 236118 236123 236124 236125 236135 236136 236137 236142 236143 236144 236149 236150 236151 236152 236153 236154 236155 236156 236157 236158 236159 236160 236164 236165 236166 236167 236171 236172 236173 236174 236161 236162 236163 236168 236169 236170 236175 236176 236177 236178 236179 236180 236181 236182 236183 236184 236185 236186 236190 236191 236192 236193 236197 236198 236199 236200 236187 236188 236189 236194 236195 236196 236201 236202 236203 236204 236205 236206 236207 236208 236209 236210 236211 236212 236213 236214 236215 236216 236217 236218 236219 236220"/></event>
+      <conditions><variable-at-least field="var0" value="25"/></conditions>
+      <actions><set-variable field="var0" value="25"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="209678" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="209678" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="209678" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
@@ -28,7 +41,6 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="209678" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="209678" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="209678" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="209678" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="209678" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="209678" dialog-ids="8..23"/></event><actions>        <grant-reward kind="EXP" id="0" amount="3618881" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="188057002" amount="1"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="804711" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
@@ -39,7 +51,6 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="804711" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804711" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804711" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="804711" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="804711" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="804711" dialog-ids="8..23"/></event><actions>        <grant-reward kind="EXP" id="0" amount="3618881" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="188057002" amount="1"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
   </transitions>

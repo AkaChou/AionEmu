@@ -16,14 +16,14 @@
       <reward kind="SELECTABLE_ITEM" id="113600793" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="212498" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212496" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211523" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211539" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211540" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212500" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212638" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212636" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="212498" item-id="182204243" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="212496" item-id="182204243" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211523" item-id="182204243" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211539" item-id="182204243" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211540" item-id="182204243" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="212500" item-id="182204243" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="212638" item-id="182204243" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="212636" item-id="182204243" chance="80" each-member="true" collecting-step="0"/>
       <drop npc-id="211554" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="211555" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="212637" item-id="182204243" chance="100" each-member="true" collecting-step="0"/>

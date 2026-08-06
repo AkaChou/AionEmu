@@ -13,6 +13,12 @@
       <reward kind="ITEM" id="162000050" amount="8"/>
       <reward kind="ITEM" id="188050808" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="unfinished" quest-id="1300"/>
+      <condition type="noacquired" quest-id="1300"/>
+      <condition type="unfinished" quest-id="1039"/>
+      <condition type="noacquired" quest-id="1039"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -35,7 +41,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a0b1">
       <project status="START">
         <vars>
@@ -44,7 +49,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a0b2">
       <project status="START">
         <vars>
@@ -53,7 +57,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a0b3">
       <project status="START">
         <vars>
@@ -62,7 +65,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a1b0">
       <project status="START">
         <vars>
@@ -71,7 +73,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a1b1">
       <project status="START">
         <vars>
@@ -80,7 +81,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a1b2">
       <project status="START">
         <vars>
@@ -89,7 +89,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a1b3">
       <project status="START">
         <vars>
@@ -98,7 +97,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a2b0">
       <project status="START">
         <vars>
@@ -107,7 +105,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a2b1">
       <project status="START">
         <vars>
@@ -116,7 +113,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a2b2">
       <project status="START">
         <vars>
@@ -125,7 +121,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a2b3">
       <project status="START">
         <vars>
@@ -134,7 +129,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a3b0">
       <project status="START">
         <vars>
@@ -143,7 +137,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a3b1">
       <project status="START">
         <vars>
@@ -152,7 +145,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a3b2">
       <project status="START">
         <vars>
@@ -161,7 +153,6 @@
         </vars>
       </project>
     </node>
-
     <node label="a3b3">
       <project status="START">
         <vars>
@@ -170,7 +161,6 @@
         </vars>
       </project>
     </node>
-
     <node label="reward">
       <project status="REWARD">
         <vars>
@@ -197,7 +187,6 @@
         <show-quest-dialog dialog-id="1011"/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="unaccepted">
       <event>
         <talk-to-npc npc-id="203946" dialog-id="1007"/>
@@ -206,7 +195,6 @@
         <show-quest-dialog dialog-id="4"/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="a0b0">
       <event>
         <talk-to-npc npc-id="203946" dialog-id="1002"/>
@@ -216,7 +204,6 @@
         <show-quest-dialog dialog-id="1003"/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="a0b0">
       <event>
         <talk-to-npc npc-id="203946" dialog-id="20000"/>
@@ -226,7 +213,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="a0b0">
       <event>
         <talk-to-npc npc-id="203946" dialog-id="10000"/>
@@ -236,7 +222,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="unaccepted">
       <event>
         <talk-to-npc npc-id="203946" dialog-ids="1003 1004 20001"/>
@@ -245,7 +230,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="unaccepted">
       <event>
         <talk-to-npc npc-id="203946" dialog-id="1008"/>
@@ -254,7 +238,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-
     <transition source="a0b0" target="a1b0">
       <event>
         <kill-npc npc-id="210946"/>
@@ -263,7 +246,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b0" target="a1b0">
       <event>
         <kill-npc npc-id="210968"/>
@@ -272,7 +254,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b1" target="a1b1">
       <event>
         <kill-npc npc-id="210946"/>
@@ -281,7 +262,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b1" target="a1b1">
       <event>
         <kill-npc npc-id="210968"/>
@@ -290,7 +270,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b2" target="a1b2">
       <event>
         <kill-npc npc-id="210946"/>
@@ -299,7 +278,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b2" target="a1b2">
       <event>
         <kill-npc npc-id="210968"/>
@@ -308,7 +286,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b3" target="a1b3">
       <event>
         <kill-npc npc-id="210946"/>
@@ -317,7 +294,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b3" target="a1b3">
       <event>
         <kill-npc npc-id="210968"/>
@@ -326,7 +302,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b0" target="a2b0">
       <event>
         <kill-npc npc-id="210946"/>
@@ -335,7 +310,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b0" target="a2b0">
       <event>
         <kill-npc npc-id="210968"/>
@@ -344,7 +318,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b1" target="a2b1">
       <event>
         <kill-npc npc-id="210946"/>
@@ -353,7 +326,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b1" target="a2b1">
       <event>
         <kill-npc npc-id="210968"/>
@@ -362,7 +334,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b2" target="a2b2">
       <event>
         <kill-npc npc-id="210946"/>
@@ -371,7 +342,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b2" target="a2b2">
       <event>
         <kill-npc npc-id="210968"/>
@@ -380,7 +350,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b3" target="a2b3">
       <event>
         <kill-npc npc-id="210946"/>
@@ -389,7 +358,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b3" target="a2b3">
       <event>
         <kill-npc npc-id="210968"/>
@@ -398,7 +366,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b0" target="a3b0">
       <event>
         <kill-npc npc-id="210946"/>
@@ -407,7 +374,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b0" target="a3b0">
       <event>
         <kill-npc npc-id="210968"/>
@@ -416,7 +382,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b1" target="a3b1">
       <event>
         <kill-npc npc-id="210946"/>
@@ -425,7 +390,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b1" target="a3b1">
       <event>
         <kill-npc npc-id="210968"/>
@@ -434,7 +398,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b2" target="a3b2">
       <event>
         <kill-npc npc-id="210946"/>
@@ -443,7 +406,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b2" target="a3b2">
       <event>
         <kill-npc npc-id="210968"/>
@@ -452,7 +414,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b3" target="a3b3">
       <event>
         <kill-npc npc-id="210946"/>
@@ -461,7 +422,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b3" target="a3b3">
       <event>
         <kill-npc npc-id="210968"/>
@@ -470,7 +430,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b0" target="a0b1">
       <event>
         <kill-npc npc-id="210947"/>
@@ -479,7 +438,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b0" target="a0b1">
       <event>
         <kill-npc npc-id="210969"/>
@@ -488,7 +446,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b1" target="a0b2">
       <event>
         <kill-npc npc-id="210947"/>
@@ -497,7 +454,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b1" target="a0b2">
       <event>
         <kill-npc npc-id="210969"/>
@@ -506,7 +462,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b2" target="a0b3">
       <event>
         <kill-npc npc-id="210947"/>
@@ -515,7 +470,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b2" target="a0b3">
       <event>
         <kill-npc npc-id="210969"/>
@@ -524,7 +478,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b0" target="a1b1">
       <event>
         <kill-npc npc-id="210947"/>
@@ -533,7 +486,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b0" target="a1b1">
       <event>
         <kill-npc npc-id="210969"/>
@@ -542,7 +494,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b1" target="a1b2">
       <event>
         <kill-npc npc-id="210947"/>
@@ -551,7 +502,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b1" target="a1b2">
       <event>
         <kill-npc npc-id="210969"/>
@@ -560,7 +510,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b2" target="a1b3">
       <event>
         <kill-npc npc-id="210947"/>
@@ -569,7 +518,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b2" target="a1b3">
       <event>
         <kill-npc npc-id="210969"/>
@@ -578,7 +526,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b0" target="a2b1">
       <event>
         <kill-npc npc-id="210947"/>
@@ -587,7 +534,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b0" target="a2b1">
       <event>
         <kill-npc npc-id="210969"/>
@@ -596,7 +542,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b1" target="a2b2">
       <event>
         <kill-npc npc-id="210947"/>
@@ -605,7 +550,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b1" target="a2b2">
       <event>
         <kill-npc npc-id="210969"/>
@@ -614,7 +558,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b2" target="a2b3">
       <event>
         <kill-npc npc-id="210947"/>
@@ -623,7 +566,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b2" target="a2b3">
       <event>
         <kill-npc npc-id="210969"/>
@@ -632,7 +574,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b0" target="a3b1">
       <event>
         <kill-npc npc-id="210947"/>
@@ -641,7 +582,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b0" target="a3b1">
       <event>
         <kill-npc npc-id="210969"/>
@@ -650,7 +590,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b1" target="a3b2">
       <event>
         <kill-npc npc-id="210947"/>
@@ -659,7 +598,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b1" target="a3b2">
       <event>
         <kill-npc npc-id="210969"/>
@@ -668,7 +606,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b2" target="a3b3">
       <event>
         <kill-npc npc-id="210947"/>
@@ -677,7 +614,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b2" target="a3b3">
       <event>
         <kill-npc npc-id="210969"/>
@@ -686,7 +622,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b3" target="a3b3">
       <event>
         <talk-to-npc npc-id="203946" dialog-id="31"/>
@@ -695,7 +630,6 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-
     <transition source="a3b3" target="reward">
       <event>
         <talk-to-npc npc-id="203946" dialog-id="1009"/>
@@ -705,7 +639,6 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203946" dialog-ids="-1 1009"/>
@@ -714,7 +647,6 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203946" dialog-ids="8..23"/>
@@ -732,6 +664,5 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-
   </transitions>
 </quest-definition>

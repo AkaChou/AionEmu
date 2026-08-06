@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2454" version="1">
-  <metadata name="[Gathering] Kellan's request" display-name-id="1103654" min-level="20" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="[Gathering] Kellan's request" display-name-id="1103654" min-level="20" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <items>
-      <item id="152000552" count="10"/>
+      <item id="152000652" count="10"/>
     </items>
     <rewards>
       <reward kind="GOLD" id="0" amount="8280"/>
-      <reward kind="EXP" id="0" amount="100200"/>
+      <reward kind="EXP" id="0" amount="94800"/>
       <reward kind="ITEM" id="186000007" amount="1"/>
     </rewards>
   </metadata>
@@ -192,7 +192,7 @@
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="8280" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="100200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="94800" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="186000007" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>

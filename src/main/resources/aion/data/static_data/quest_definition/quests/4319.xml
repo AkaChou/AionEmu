@@ -17,6 +17,7 @@
     </rewards>
     <extended-rewards>
       <reward kind="ITEM" id="188050584" amount="3"/>
+      <reward kind="GOLD" id="0" amount="6400"/>
     </extended-rewards>
     <drops>
       <drop npc-id="700235" item-id="182204262" chance="100" each-member="true" collecting-step="0"/>

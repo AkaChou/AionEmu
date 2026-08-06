@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19636" version="1">
-  <metadata name="Final Stabilization" display-name-id="1800381" min-level="45" max-level="82" category="IMPORTANT">
+  <metadata name="Final Stabilization" display-name-id="1800381" min-level="45" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

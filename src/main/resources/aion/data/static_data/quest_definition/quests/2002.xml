@@ -19,6 +19,9 @@
       <reward kind="SELECTABLE_ITEM" id="101800505" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="102000522" amount="1"/>
     </rewards>
+    <drops>
+      <drop npc-id="700045" item-id="182203003" chance="100" each-member="true" collecting-step="11"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="7" min="0" max="99" persistence="PERSISTENT" scope="LOCAL"/>

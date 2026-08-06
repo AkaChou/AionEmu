@@ -4,11 +4,6 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <classes>
-      <class id="MAGE"/>
-      <class id="SORCERER"/>
-      <class id="SPIRIT_MASTER"/>
-    </classes>
     <items>
       <item id="100600758" count="1"/>
       <item id="186000095" count="1"/>

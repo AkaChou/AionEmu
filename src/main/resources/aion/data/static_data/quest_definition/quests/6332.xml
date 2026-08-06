@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6332" version="1">
-  <metadata name="Asvata Barricade Supplies" display-name-id="1195156" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40008" combine-skill-point="320">
+  <metadata name="Asvata Barricade Supplies" display-name-id="1195156" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40008" combine-skill-point="320">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291155" count="40"/>
       <item id="182291286" count="40"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12333" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40008" type="TASK"/>
     </bonuses>

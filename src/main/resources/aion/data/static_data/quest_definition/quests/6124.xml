@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6124" version="1">
-  <metadata name="Adamantium Sabatons Repair" display-name-id="1195066" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="240">
+  <metadata name="Adamantium Sabatons Repair" display-name-id="1195066" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="240">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291065" count="16"/>
       <item id="182291256" count="16"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12125" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40003" type="TASK"/>
     </bonuses>

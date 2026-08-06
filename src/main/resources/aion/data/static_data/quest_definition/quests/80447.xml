@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80447" version="1">
-  <metadata name="[Growth] Crush the Cellatu" display-name-id="1185644" min-level="46" max-level="82" category="EVENT">
+  <metadata name="[Growth] Crush the Cellatu" display-name-id="1185644" min-level="46" max-level="53" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -148,9 +148,25 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="started" target="k1">
+      <event>
+        <kill-npc npc-id="214726"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="k1" target="k2">
       <event>
         <kill-npc npc-id="214683"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="k2">
+      <event>
+        <kill-npc npc-id="214726"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -164,9 +180,25 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="k2" target="k3">
+      <event>
+        <kill-npc npc-id="214726"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="k3" target="k4">
       <event>
         <kill-npc npc-id="214683"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k3" target="k4">
+      <event>
+        <kill-npc npc-id="214726"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

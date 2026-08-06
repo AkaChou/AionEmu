@@ -9,9 +9,6 @@
       <reward kind="GOLD" id="0" amount="25400"/>
       <reward kind="EXP" id="0" amount="3663347"/>
       <reward kind="ITEM" id="186000019" amount="6"/>
-      <reward kind="ITEM" id="186000019" amount="3"/>
-      <reward kind="ITEM" id="186000019" amount="2"/>
-      <reward kind="ITEM" id="186000019" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -50,20 +47,6 @@
       <project status="REWARD">
         <vars>
           <var name="var0" value="0"/>
-        </vars>
-      </project>
-    </node>
-    <node label="r1">
-      <project status="REWARD">
-        <vars>
-          <var name="var0" value="1"/>
-        </vars>
-      </project>
-    </node>
-    <node label="r2">
-      <project status="REWARD">
-        <vars>
-          <var name="var0" value="2"/>
         </vars>
       </project>
     </node>
@@ -166,7 +149,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="s1" target="r1">
+    <transition source="s1" target="r0">
       <event>
         <kill-npc npc-id="215480"/>
       </event>
@@ -175,7 +158,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="s2" target="r2">
+    <transition source="s2" target="r0">
       <event>
         <kill-npc npc-id="215480"/>
       </event>
@@ -284,72 +267,6 @@
         <grant-reward kind="EXP" id="0" amount="3663347" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="186000019" amount="6"/>
         <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <!-- 奖励 var0=1：rewards[1] = 3 个币。 Reward var0=1: rewards[1] = 3 coins. -->
-    <transition source="r1" target="r1">
-      <event>
-        <talk-to-npc npc-id="799503" dialog-id="-1"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
-      </after-commit>
-    </transition>
-    <transition source="r1" target="r1">
-      <event>
-        <talk-to-npc npc-id="799503" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="6"/>
-      </after-commit>
-    </transition>
-    <transition source="r1" target="complete">
-      <event>
-        <talk-to-npc npc-id="799503" dialog-ids="8..23"/>
-      </event>
-      <actions>
-        <grant-reward kind="GOLD" id="0" amount="25400" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="3663347" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="186000019" amount="3"/>
-        <complete-quest reward-index="1"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <!-- 奖励 var0=2：rewards[2] = 2 个币。 Reward var0=2: rewards[2] = 2 coins. -->
-    <transition source="r2" target="r2">
-      <event>
-        <talk-to-npc npc-id="799503" dialog-id="-1"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
-      </after-commit>
-    </transition>
-    <transition source="r2" target="r2">
-      <event>
-        <talk-to-npc npc-id="799503" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="7"/>
-      </after-commit>
-    </transition>
-    <transition source="r2" target="complete">
-      <event>
-        <talk-to-npc npc-id="799503" dialog-ids="8..23"/>
-      </event>
-      <actions>
-        <grant-reward kind="GOLD" id="0" amount="25400" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="3663347" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="186000019" amount="2"/>
-        <complete-quest reward-index="2"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>

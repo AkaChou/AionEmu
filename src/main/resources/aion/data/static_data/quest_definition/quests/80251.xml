@@ -51,7 +51,7 @@
   <transitions>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="31"/>
+        <talk-to-npc npc-id="831155" dialog-id="31"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="1011"/>
@@ -59,7 +59,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="1007"/>
+        <talk-to-npc npc-id="831155" dialog-id="1007"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="4"/>
@@ -67,7 +67,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="1002"/>
+        <talk-to-npc npc-id="831155" dialog-id="1002"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -79,7 +79,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="20000"/>
+        <talk-to-npc npc-id="831155" dialog-id="20000"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -91,7 +91,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="10000"/>
+        <talk-to-npc npc-id="831155" dialog-id="10000"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -103,7 +103,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="831153" dialog-ids="1003 1004 20001"/>
+        <talk-to-npc npc-id="831155" dialog-ids="1003 1004 20001"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -111,7 +111,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="1008"/>
+        <talk-to-npc npc-id="831155" dialog-id="1008"/>
       </event>
       <after-commit>
         <show-quest-selection-dialog dialog-id="10"/>
@@ -119,7 +119,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="31"/>
+        <talk-to-npc npc-id="831155" dialog-id="31"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="2375"/>
@@ -127,7 +127,7 @@
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="39"/>
+        <talk-to-npc npc-id="831155" dialog-id="39"/>
       </event>
       <conditions>
         <has-item item-id="182006927" count="1"/>
@@ -142,7 +142,7 @@
     </transition>
     <transition source="started" target="started" priority="1">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="39"/>
+        <talk-to-npc npc-id="831155" dialog-id="39"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="2716"/>
@@ -150,7 +150,7 @@
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="20002"/>
+        <talk-to-npc npc-id="831155" dialog-id="20002"/>
       </event>
       <conditions>
         <has-item item-id="182006927" count="1"/>
@@ -165,7 +165,7 @@
     </transition>
     <transition source="started" target="started" priority="1">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="20002"/>
+        <talk-to-npc npc-id="831155" dialog-id="20002"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -173,7 +173,7 @@
     </transition>
     <transition source="started" target="reward">
       <event>
-        <talk-to-npc npc-id="831153" dialog-id="10255"/>
+        <talk-to-npc npc-id="831155" dialog-id="10255"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -182,7 +182,7 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="831153" dialog-ids="-1 1009"/>
+        <talk-to-npc npc-id="831155" dialog-ids="-1 1009"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="5"/>
@@ -190,7 +190,7 @@
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="831153" dialog-ids="8..23"/>
+        <talk-to-npc npc-id="831155" dialog-ids="8..23"/>
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="30000" amount-mode="QUEST_BASE"/>

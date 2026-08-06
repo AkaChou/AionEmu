@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6421" version="1">
-  <metadata name="Pain Ointment Supplies" display-name-id="1195186" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="210">
+  <metadata name="Pain Ointment Supplies" display-name-id="1195186" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="210">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291185" count="32"/>
       <item id="182291296" count="16"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12422" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40007" type="TASK"/>
     </bonuses>

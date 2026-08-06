@@ -50,10 +50,34 @@
 
     <!-- 击杀 217371 1 只:var0 计数 0→1;priority 1 计数、0 在其余两组已满时完成。 -->
     <transition source="started" target="started" priority="1">
+      <event><kill-npc npc-id="246131"/></event>
+      <conditions><variable-below field="var0" value="1"/></conditions>
+      <actions><increment-variable field="var0" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event><kill-npc npc-id="248077"/></event>
+      <conditions><variable-below field="var0" value="1"/></conditions>
+      <actions><increment-variable field="var0" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
       <event><kill-npc npc-id="217371"/></event>
       <conditions><variable-below field="var0" value="1"/></conditions>
       <actions><increment-variable field="var0" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event><kill-npc npc-id="246131"/></event>
+      <conditions><variable-at-least field="var1" value="1"/><variable-at-least field="var2" value="1"/></conditions>
+      <actions><increment-variable field="var0" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event><kill-npc npc-id="248077"/></event>
+      <conditions><variable-at-least field="var1" value="1"/><variable-at-least field="var2" value="1"/></conditions>
+      <actions><increment-variable field="var0" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
       <event><kill-npc npc-id="217371"/></event>
@@ -64,10 +88,34 @@
 
     <!-- 击杀 217373 1 只:var1 计数 0→1。 -->
     <transition source="started" target="started" priority="1">
+      <event><kill-npc npc-id="246132"/></event>
+      <conditions><variable-below field="var1" value="1"/></conditions>
+      <actions><increment-variable field="var1" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event><kill-npc npc-id="248078"/></event>
+      <conditions><variable-below field="var1" value="1"/></conditions>
+      <actions><increment-variable field="var1" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
       <event><kill-npc npc-id="217373"/></event>
       <conditions><variable-below field="var1" value="1"/></conditions>
       <actions><increment-variable field="var1" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event><kill-npc npc-id="246132"/></event>
+      <conditions><variable-at-least field="var0" value="1"/><variable-at-least field="var2" value="1"/></conditions>
+      <actions><increment-variable field="var1" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event><kill-npc npc-id="248078"/></event>
+      <conditions><variable-at-least field="var0" value="1"/><variable-at-least field="var2" value="1"/></conditions>
+      <actions><increment-variable field="var1" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
       <event><kill-npc npc-id="217373"/></event>
@@ -78,10 +126,34 @@
 
     <!-- 击杀 217376 1 只:var2 计数 0→1。 -->
     <transition source="started" target="started" priority="1">
+      <event><kill-npc npc-id="246133"/></event>
+      <conditions><variable-below field="var2" value="1"/></conditions>
+      <actions><increment-variable field="var2" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event><kill-npc npc-id="248079"/></event>
+      <conditions><variable-below field="var2" value="1"/></conditions>
+      <actions><increment-variable field="var2" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
       <event><kill-npc npc-id="217376"/></event>
       <conditions><variable-below field="var2" value="1"/></conditions>
       <actions><increment-variable field="var2" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event><kill-npc npc-id="246133"/></event>
+      <conditions><variable-at-least field="var0" value="1"/><variable-at-least field="var1" value="1"/></conditions>
+      <actions><increment-variable field="var2" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event><kill-npc npc-id="248079"/></event>
+      <conditions><variable-at-least field="var0" value="1"/><variable-at-least field="var1" value="1"/></conditions>
+      <actions><increment-variable field="var2" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
       <event><kill-npc npc-id="217376"/></event>

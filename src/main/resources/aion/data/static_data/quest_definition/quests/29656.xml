@@ -9,6 +9,9 @@
       <reward kind="EXP" id="0" amount="138125"/>
       <reward kind="ITEM" id="186000410" amount="2"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="29600"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -16,10 +19,13 @@
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
     <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="10"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
+    <transition source="started" target="started"><event><kill-npc npc-ids="211298 211305 211297 211304"/></event><conditions><variable-below field="var0" value="9"/></conditions><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="reward"><event><kill-npc npc-ids="211298 211305 211297 211304"/></event><conditions><variable-at-least field="var0" value="9"/></conditions><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="804662" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="804662" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="804662" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>

@@ -3,6 +3,7 @@
   <metadata name="Revenge Of The Elim" display-name-id="1102417" min-level="24" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
+      <race id="ASMODIANS"/>
     </races>
     <items>
       <item id="182201307" count="10"/>

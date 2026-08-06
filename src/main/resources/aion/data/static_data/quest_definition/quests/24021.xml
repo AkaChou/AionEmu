@@ -4,9 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <prerequisites>
-      <quest id="24020"/>
-    </prerequisites>
     <items>
       <item id="182215361" count="10"/>
       <item id="182215362" count="1"/>
@@ -26,6 +23,10 @@
       <drop npc-id="212419" item-id="182215361" chance="100" each-member="true" collecting-step="2"/>
       <drop npc-id="212649" item-id="182215362" chance="100" each-member="true" collecting-step="2"/>
     </drops>
+    <start-conditions>
+      <condition type="unfinished" quest-id="2041"/>
+      <condition type="noacquired" quest-id="2041"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>

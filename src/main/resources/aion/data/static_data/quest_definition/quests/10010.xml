@@ -14,6 +14,28 @@
       <reward kind="EXP" id="0" amount="61295166"/>
       <reward kind="ITEM" id="188056784" amount="1"/>
     </rewards>
+    <drops>
+      <drop npc-id="703429" item-id="182216171" chance="100" each-member="true" collecting-step="1"/>
+      <drop npc-id="703430" item-id="182216172" chance="100" each-member="true" collecting-step="1"/>
+      <drop npc-id="246556" item-id="182216173" chance="80" each-member="true" collecting-step="1"/>
+      <drop npc-id="246855" item-id="182216173" chance="80" each-member="true" collecting-step="1"/>
+      <drop npc-id="246865" item-id="182216173" chance="80" each-member="true" collecting-step="1"/>
+      <drop npc-id="246875" item-id="182216173" chance="80" each-member="true" collecting-step="1"/>
+      <drop npc-id="246885" item-id="182216173" chance="80" each-member="true" collecting-step="1"/>
+      <drop npc-id="246895" item-id="182216173" chance="80" each-member="true" collecting-step="1"/>
+      <drop npc-id="246905" item-id="182216173" chance="80" each-member="true" collecting-step="1"/>
+      <drop npc-id="246920" item-id="182216173" chance="80" each-member="true" collecting-step="1"/>
+      <drop npc-id="246860" item-id="182216174" chance="70" each-member="true" collecting-step="1"/>
+      <drop npc-id="246870" item-id="182216174" chance="70" each-member="true" collecting-step="1"/>
+      <drop npc-id="246926" item-id="182216174" chance="70" each-member="true" collecting-step="1"/>
+      <drop npc-id="247113" item-id="182216174" chance="70" each-member="true" collecting-step="1"/>
+      <drop npc-id="246881" item-id="182216174" chance="70" each-member="true" collecting-step="1"/>
+      <drop npc-id="246851" item-id="182216174" chance="70" each-member="true" collecting-step="1"/>
+      <drop npc-id="246861" item-id="182216174" chance="70" each-member="true" collecting-step="1"/>
+      <drop npc-id="246927" item-id="182216174" chance="70" each-member="true" collecting-step="1"/>
+      <drop npc-id="246872" item-id="182216174" chance="70" each-member="true" collecting-step="1"/>
+      <drop npc-id="247115" item-id="182216174" chance="70" each-member="true" collecting-step="1"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>

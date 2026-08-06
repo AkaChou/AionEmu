@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6116" version="1">
-  <metadata name="Titanium Water Pipe Supplies" display-name-id="1195058" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="160">
+  <metadata name="Titanium Water Pipe Supplies" display-name-id="1195058" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="160">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291057" count="12"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12117" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40003" type="TASK"/>
     </bonuses>

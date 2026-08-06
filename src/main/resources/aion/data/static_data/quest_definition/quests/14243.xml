@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14243" version="1">
   <metadata name="Golden Son, Gone" display-name-id="1800198" min-level="30" max-level="2147483647" category="IMPORTANT">
-<races>
+    <races>
       <race id="ELYOS"/>
     </races>
-<rewards>
+    <rewards>
       <reward kind="EXP" id="0" amount="1244918"/>
       <reward kind="ITEM" id="188053405" amount="10"/>
       <reward kind="SELECTABLE_ITEM" id="123001449" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="123001450" amount="1"/>
     </rewards>
-<start-conditions>
+    <start-conditions>
       <condition type="unfinished" quest-id="14275"/>
       <condition type="noacquired" quest-id="14275"/>
+      <condition type="unfinished" quest-id="1468"/>
+      <condition type="noacquired" quest-id="1468"/>
     </start-conditions>
   </metadata>
   <progress>

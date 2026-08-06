@@ -17,7 +17,8 @@
       <reward kind="ITEM" id="188050928" amount="1"/>
     </rewards>
     <start-conditions>
-      <condition type="finished" quest-id="24030"/>
+      <condition type="unfinished" quest-id="2096"/>
+      <condition type="noacquired" quest-id="2096"/>
     </start-conditions>
   </metadata>
   <progress>

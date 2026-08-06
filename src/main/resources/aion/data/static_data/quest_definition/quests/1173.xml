@@ -4,7 +4,7 @@
   Pure monster-hunt: kill 10 Slimes (210121/210122/210123), report to 203155 for reward.
 -->
 <quest-definition id="1173" version="1">
-  <metadata name="Slaying Slimes" display-name-id="1102343" min-level="15" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Slaying Slimes" display-name-id="1102343" min-level="15" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1178,17 +1178,17 @@
       <reward_item item_id="160000007" count="3"/>
     </rewards>
   </quest>
-  <quest id="1315" name="Scourge Of The Elim" nameId="1102415" minlevel_permitted="24" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
+  <quest id="1315" name="Scourge Of The Elim" nameId="1102415" minlevel_permitted="24" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS ASMODIANS" category="IMPORTANT">
     <rewards exp="432724">
       <reward_item item_id="188053405" count="2"/>
     </rewards>
   </quest>
-  <quest id="1316" name="Plague Of The Elim" nameId="1102416" minlevel_permitted="24" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
+  <quest id="1316" name="Plague Of The Elim" nameId="1102416" minlevel_permitted="24" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS ASMODIANS" category="IMPORTANT">
     <rewards exp="432724">
       <reward_item item_id="162000048" count="6"/>
     </rewards>
   </quest>
-  <quest id="1317" name="Revenge Of The Elim" nameId="1102417" minlevel_permitted="24" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
+  <quest id="1317" name="Revenge Of The Elim" nameId="1102417" minlevel_permitted="24" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS ASMODIANS" category="IMPORTANT">
     <collect_items>
       <collect_item item_id="182201307" count="10"/>
     </collect_items>
@@ -1198,7 +1198,7 @@
     <quest_drop npc_id="210774" item_id="182201307" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="210783" item_id="182201307" chance="100" drop_each_member="1"/>
   </quest>
-  <quest id="1318" name="Kerubian Horns" nameId="1102418" minlevel_permitted="22" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
+  <quest id="1318" name="Kerubian Horns" nameId="1102418" minlevel_permitted="22" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS ASMODIANS" category="QUEST">
     <collect_items>
       <collect_item item_id="182201352" count="10"/>
     </collect_items>
@@ -1218,12 +1218,12 @@
       <quest_work_item item_id="182201370" count="1"/>
     </quest_work_items>
   </quest>
-  <quest id="1320" name="Kurin Hunt" nameId="1102420" minlevel_permitted="24" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
+  <quest id="1320" name="Kurin Hunt" nameId="1102420" minlevel_permitted="24" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS ASMODIANS" category="IMPORTANT">
     <rewards exp="432724">
       <reward_item item_id="162000048" count="6"/>
     </rewards>
   </quest>
-  <quest id="1321" name="The Elim Tragedy" nameId="1102421" minlevel_permitted="22" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
+  <quest id="1321" name="The Elim Tragedy" nameId="1102421" minlevel_permitted="22" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS ASMODIANS" category="QUEST">
     <rewards exp="117433">
       <reward_item item_id="164000073" count="1"/>
     </rewards>
@@ -1613,6 +1613,7 @@
     </rewards>
     <start_conditions>
       <finished quest_id="14024"/>
+      <finished quest_id="1036"/>
     </start_conditions>
   </quest>
   <quest id="1366" name="Mabangtah's Second Test" nameId="1102466" minlevel_permitted="30" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
@@ -1959,8 +1960,8 @@
       <reward_item item_id="164000050" count="8"/>
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="210980" item_id="182201343" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210991" item_id="182201343" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210980" item_id="182201343" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210991" item_id="182201343" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1403" name="Heart Of The Mamut" nameId="1102503" minlevel_permitted="34" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -1990,10 +1991,10 @@
       <reward_item item_id="122000892" count="1"/>
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="211634" item_id="182201344" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211635" item_id="182201344" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210993" item_id="182201391" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211002" item_id="182201391" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211634" item_id="182201344" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211635" item_id="182201344" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210993" item_id="182201391" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211002" item_id="182201391" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1404"/>
     </start_conditions>
@@ -2020,10 +2021,10 @@
       <reward_item item_id="188050588" count="1"/>
     </rewards>
     <bonus level="30" type="MAGICAL"/>
-    <quest_drop npc_id="210978" item_id="182201345" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210988" item_id="182201345" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211656" item_id="182201346" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211657" item_id="182201346" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210978" item_id="182201345" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210988" item_id="182201345" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211656" item_id="182201346" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211657" item_id="182201346" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1420"/>
     </start_conditions>
@@ -2100,15 +2101,15 @@
     <rewards exp="2108696">
       <reward_item item_id="160001274" count="5"/>
     </rewards>
-    <quest_drop npc_id="211775" item_id="182201359" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211776" item_id="182201359" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212019" item_id="182201359" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212020" item_id="182201359" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212023" item_id="182201359" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212021" item_id="182201359" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212022" item_id="182201359" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212024" item_id="182201359" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212025" item_id="182201359" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211775" item_id="182201359" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211776" item_id="182201359" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212019" item_id="182201359" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212020" item_id="182201359" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212023" item_id="182201359" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212021" item_id="182201359" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212022" item_id="182201359" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212024" item_id="182201359" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212025" item_id="182201359" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1417" name="The Kaidan Report" nameId="1102517" minlevel_permitted="37" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="1496758">
@@ -2135,14 +2136,14 @@
     <rewards gold="26820" exp="50008">
       <reward_item item_id="186000002" count="1"/>
     </rewards>
-    <quest_drop npc_id="211684" item_id="182201355" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211685" item_id="182201355" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211682" item_id="182201355" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211683" item_id="182201355" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211680" item_id="182201355" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211686" item_id="182201355" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211681" item_id="182201355" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210342" item_id="182201355" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211684" item_id="182201355" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211685" item_id="182201355" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211682" item_id="182201355" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211683" item_id="182201355" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211680" item_id="182201355" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211686" item_id="182201355" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211681" item_id="182201355" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210342" item_id="182201355" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1420" name="Trespassers at The Observatory" nameId="1102520" minlevel_permitted="34" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -2152,10 +2153,10 @@
     <rewards gold="33860" exp="806224">
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="210978" item_id="182201356" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210988" item_id="182201356" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211656" item_id="182201357" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211657" item_id="182201357" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210978" item_id="182201356" chance="75" drop_each_member="1"/>
+    <quest_drop npc_id="210988" item_id="182201356" chance="75" drop_each_member="1"/>
+    <quest_drop npc_id="211656" item_id="182201357" chance="75" drop_each_member="1"/>
+    <quest_drop npc_id="211657" item_id="182201357" chance="75" drop_each_member="1"/>
   </quest>
   <quest id="1421" name="The Frillneck Threat" nameId="1102521" minlevel_permitted="22" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
     <rewards gold="23910" exp="224883">
@@ -2189,23 +2190,23 @@
       <selectable_reward_item item_id="113600748" count="1"/>
       <reward_item item_id="188100335" count="300"/>
     </rewards>
-    <quest_drop npc_id="211014" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212034" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212037" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212043" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212040" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211016" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211033" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211018" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211035" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212038" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212041" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212042" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212044" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212045" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212039" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212035" item_id="182201363" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212036" item_id="182201363" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211014" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212034" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212037" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212043" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212040" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211016" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211033" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211018" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211035" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212038" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212041" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212042" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212044" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212045" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212039" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212035" item_id="182201363" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212036" item_id="182201363" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1425" name="[Group] Odium Marks" nameId="1102525" minlevel_permitted="37" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -2215,21 +2216,21 @@
       <reward_item item_id="121000774" count="1"/>
       <reward_item item_id="164000087" count="3"/>
     </rewards>
-    <quest_drop npc_id="211778" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212046" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211779" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212052" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212049" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211019" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211036" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211020" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211037" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212047" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212048" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212050" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212051" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212053" item_id="182201364" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212054" item_id="182201364" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211778" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212046" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211779" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212052" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212049" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211019" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211036" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211020" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211037" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212047" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212048" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212050" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212051" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212053" item_id="182201364" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212054" item_id="182201364" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1426" name="[Group] Killing Kaidan Guards" nameId="1102526" minlevel_permitted="37" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -2239,12 +2240,12 @@
       <reward_item item_id="120000850" count="1"/>
       <reward_item item_id="184000042" count="1"/>
     </rewards>
-    <quest_drop npc_id="212026" item_id="182201365" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212027" item_id="182201365" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212028" item_id="182201365" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212029" item_id="182201365" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212032" item_id="182201365" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212033" item_id="182201365" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212026" item_id="182201365" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212027" item_id="182201365" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212028" item_id="182201365" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212029" item_id="182201365" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212032" item_id="182201365" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212033" item_id="182201365" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1427" name="Cleansing The Forest" nameId="1102527" minlevel_permitted="22" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
     <rewards gold="10150" exp="224883">
@@ -2390,9 +2391,9 @@
       <collect_item item_id="182201421" count="6"/>
     </collect_items>
     <rewards gold="31790" exp="484471"/>
-    <quest_drop npc_id="211849" item_id="182201420" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210943" item_id="182201421" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210965" item_id="182201421" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211849" item_id="182201420" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210943" item_id="182201421" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210965" item_id="182201421" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1449" name="Letter to Ophelos" nameId="1102549" minlevel_permitted="29" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="233824">
@@ -2488,8 +2489,8 @@
     <rewards gold="17340" exp="484471">
       <reward_item item_id="162000048" count="15"/>
     </rewards>
-    <quest_drop npc_id="211654" item_id="182201423" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211655" item_id="182201423" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211654" item_id="182201423" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211655" item_id="182201423" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1452"/>
     </start_conditions>
@@ -2629,10 +2630,10 @@
       <reward_item item_id="188100335" count="282"/>
       <reward_item item_id="186000469" count="4"/>
     </rewards>
-    <quest_drop npc_id="211562" item_id="182201387" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211588" item_id="182201387" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212721" item_id="182201387" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212723" item_id="182201387" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211562" item_id="182201387" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211588" item_id="182201387" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212721" item_id="182201387" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212723" item_id="182201387" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1474" name="[Group] Blood Feud" nameId="1102574" minlevel_permitted="38" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="2108696">
@@ -2661,8 +2662,8 @@
     <rewards gold="21180" exp="46500">
       <reward_item item_id="186000002" count="1"/>
     </rewards>
-    <quest_drop npc_id="211681" item_id="182201392" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211686" item_id="182201393" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211681" item_id="182201392" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211686" item_id="182201393" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1476" name="Violent Frillneck" nameId="1102576" minlevel_permitted="22" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
     <rewards gold="19440" exp="272769">
@@ -2684,10 +2685,10 @@
       <selectable_reward_item item_id="121001048" count="1"/>
       <reward_item item_id="186000002" count="6"/>
     </rewards>
-    <quest_drop npc_id="210779" item_id="182201394" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210792" item_id="182201394" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211646" item_id="182201395" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211647" item_id="182201395" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210779" item_id="182201394" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210792" item_id="182201394" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211646" item_id="182201395" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211647" item_id="182201395" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1479" name="Helping Memnes" nameId="1102579" minlevel_permitted="22" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards gold="14080" exp="112950">
@@ -2701,7 +2702,7 @@
     <rewards gold="29450" exp="122100">
       <reward_item item_id="186000002" count="1"/>
     </rewards>
-    <quest_drop npc_id="211732" item_id="182201396" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211732" item_id="182201396" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1479"/>
     </start_conditions>
@@ -2714,8 +2715,8 @@
       <reward_item item_id="162000048" count="10"/>
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="210979" item_id="182201397" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210990" item_id="182201397" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210979" item_id="182201397" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210990" item_id="182201397" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1480"/>
     </start_conditions>
@@ -2738,8 +2739,8 @@
       <selectable_reward_item item_id="102000538" count="1"/>
       <selectable_reward_item item_id="102100497" count="1"/>
     </rewards>
-    <quest_drop npc_id="210756" item_id="182201399" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="210761" item_id="182201399" chance="100" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="210756" item_id="182201399" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="210761" item_id="182201399" chance="80" drop_each_member="1" collecting_step="1"/>
     <start_conditions>
       <finished quest_id="1430"/>
     </start_conditions>
@@ -3078,8 +3079,8 @@
     <rewards gold="7080" exp="340413">
       <reward_item item_id="160000008" count="12"/>
     </rewards>
-    <quest_drop npc_id="211869" item_id="182201701" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211870" item_id="182201701" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211869" item_id="182201701" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211870" item_id="182201701" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1503" name="A Lost Memento" nameId="1102703" minlevel_permitted="30" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -3157,7 +3158,7 @@
       <collect_item item_id="182201706" count="5"/>
     </collect_items>
     <rewards gold="33320" exp="404557"/>
-    <quest_drop npc_id="211049" item_id="182201706" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211049" item_id="182201706" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1512" name="Stolen Relic" nameId="1102712" minlevel_permitted="31" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -3165,9 +3166,9 @@
       <collect_item item_id="182201708" count="1"/>
     </collect_items>
     <rewards gold="35080" exp="404557"/>
-    <quest_drop npc_id="211054" item_id="182201707" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210947" item_id="182201707" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211065" item_id="182201708" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211054" item_id="182201707" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210947" item_id="182201707" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211065" item_id="182201708" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1513" name="Suspicious Spice Pot" nameId="1102713" minlevel_permitted="31" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards gold="18410" exp="404557"/>
@@ -3248,16 +3249,16 @@
     <rewards exp="484471">
       <reward_item item_id="152011026" count="2"/>
     </rewards>
-    <quest_drop npc_id="211058" item_id="182201711" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211075" item_id="182201711" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211058" item_id="182201711" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211075" item_id="182201711" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1524" name="Clodworm is Close Enough" nameId="1102724" minlevel_permitted="32" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
       <collect_item item_id="182201712" count="10"/>
     </collect_items>
     <rewards gold="41610" exp="484471"/>
-    <quest_drop npc_id="211060" item_id="182201712" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211077" item_id="182201712" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211060" item_id="182201712" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211077" item_id="182201712" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1525" name="Agrint Aggro" nameId="1102725" minlevel_permitted="36" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="IMPORTANT">
     <rewards gold="37680" exp="1905262">
@@ -3328,8 +3329,8 @@
       <reward_item item_id="162000023" count="8"/>
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="211094" item_id="182201714" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211105" item_id="182201714" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211094" item_id="182201714" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211105" item_id="182201714" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1529"/>
     </start_conditions>
@@ -3349,10 +3350,10 @@
       <selectable_reward_item item_id="167000451" count="1"/>
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="211924" item_id="182201715" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211925" item_id="182201715" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211926" item_id="182201716" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211927" item_id="182201716" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211924" item_id="182201715" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211925" item_id="182201715" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211926" item_id="182201716" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211927" item_id="182201716" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1531"/>
     </start_conditions>
@@ -3380,8 +3381,8 @@
       <reward_item item_id="188050588" count="1"/>
     </rewards>
     <bonus level="30" type="MEDICINE"/>
-    <quest_drop npc_id="211060" item_id="182201787" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211077" item_id="182201787" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211060" item_id="182201787" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211077" item_id="182201787" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1524"/>
     </start_conditions>
@@ -3431,8 +3432,8 @@
     <rewards exp="633457">
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="210945" item_id="182201821" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210961" item_id="182201821" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210945" item_id="182201821" chance="55" drop_each_member="1"/>
+    <quest_drop npc_id="210961" item_id="182201821" chance="55" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1538"/>
     </start_conditions>
@@ -3460,7 +3461,7 @@
     <rewards exp="1301093">
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="211878" item_id="182201717" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211878" item_id="182201717" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1542" name="Outlaw Of The Jungle" nameId="1102742" minlevel_permitted="36" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards gold="40760" exp="1301093">
@@ -3490,8 +3491,8 @@
     <rewards gold="34990" exp="1301093">
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="211123" item_id="182201718" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211149" item_id="182201718" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211123" item_id="182201718" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211149" item_id="182201718" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1544" name="Sillen's Spirit Samples" nameId="1102744" minlevel_permitted="36" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -3500,8 +3501,8 @@
     <rewards exp="1301093">
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="211117" item_id="182201719" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211143" item_id="182201719" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211117" item_id="182201719" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211143" item_id="182201719" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1545" name="Collecting The Essence Of Earth" nameId="1102745" minlevel_permitted="36" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -3515,8 +3516,8 @@
       <selectable_reward_item item_id="110550972" count="1"/>
       <reward_item item_id="164000054" count="15"/>
     </rewards>
-    <quest_drop npc_id="211144" item_id="182201720" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211159" item_id="182201720" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211144" item_id="182201720" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211159" item_id="182201720" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1544"/>
     </start_conditions>
@@ -3539,14 +3540,14 @@
     <rewards exp="1496758">
       <reward_item item_id="186000004" count="3"/>
     </rewards>
-    <quest_drop npc_id="211145" item_id="182201721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211160" item_id="182201721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211146" item_id="182201722" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211161" item_id="182201722" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211118" item_id="182201723" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211147" item_id="182201723" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211119" item_id="182201724" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211148" item_id="182201724" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211145" item_id="182201721" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211160" item_id="182201721" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211146" item_id="182201722" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211161" item_id="182201722" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211118" item_id="182201723" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211147" item_id="182201723" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211119" item_id="182201724" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211148" item_id="182201724" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1548" name="Klaw Control" nameId="1102748" minlevel_permitted="37" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="1496758">
@@ -3599,11 +3600,11 @@
     <rewards gold="46240" exp="1807399">
       <reward_item item_id="186000004" count="3"/>
     </rewards>
-    <quest_drop npc_id="211887" item_id="182201726" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211889" item_id="182201726" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211890" item_id="182201726" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211891" item_id="182201726" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211892" item_id="182201726" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211887" item_id="182201726" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211889" item_id="182201726" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211890" item_id="182201726" chance="75" drop_each_member="1"/>
+    <quest_drop npc_id="211891" item_id="182201726" chance="75" drop_each_member="1"/>
+    <quest_drop npc_id="211892" item_id="182201726" chance="75" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1542"/>
     </start_conditions>
@@ -3724,10 +3725,10 @@
       <selectable_reward_item item_id="113601033" count="1"/>
       <selectable_reward_item item_id="113501548" count="1"/>
     </rewards>
-    <quest_drop npc_id="211133" item_id="182201732" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211154" item_id="182201732" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211931" item_id="182201733" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211932" item_id="182201733" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211133" item_id="182201732" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211154" item_id="182201732" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211931" item_id="182201733" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211932" item_id="182201733" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1565"/>
     </start_conditions>
@@ -3795,10 +3796,10 @@
     <rewards gold="44330" exp="987102">
       <reward_item item_id="186000003" count="2"/>
     </rewards>
-    <quest_drop npc_id="211948" item_id="182201737" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211949" item_id="182201737" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211112" item_id="182201737" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211127" item_id="182201737" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211948" item_id="182201737" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211949" item_id="182201737" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211112" item_id="182201737" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211127" item_id="182201737" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1577" name="Grey Fog Monsters" nameId="1102777" minlevel_permitted="35" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards gold="41830" exp="987102">
@@ -3829,10 +3830,10 @@
     <rewards exp="1496758">
       <reward_item item_id="186000004" count="3"/>
     </rewards>
-    <quest_drop npc_id="211936" item_id="182201739" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211969" item_id="182201739" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211939" item_id="182201739" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211971" item_id="182201739" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211936" item_id="182201739" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211969" item_id="182201739" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211939" item_id="182201739" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211971" item_id="182201739" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1581" name="Gellar" nameId="1102781" minlevel_permitted="39" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="1807399">
@@ -3908,8 +3909,8 @@
     <rewards exp="2815297">
       <reward_item item_id="188100335" count="89"/>
     </rewards>
-    <quest_drop npc_id="211247" item_id="182201741" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211266" item_id="182201741" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211247" item_id="182201741" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211266" item_id="182201741" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1588"/>
     </start_conditions>
@@ -3930,7 +3931,7 @@
     <rewards gold="98670" exp="1974220">
       <reward_item item_id="186000004" count="3"/>
     </rewards>
-    <quest_drop npc_id="212111" item_id="182201825" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212111" item_id="182201825" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1592" name="Sylphen Wing Soup" nameId="1102792" minlevel_permitted="38" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -3944,8 +3945,8 @@
       <selectable_reward_item item_id="167000487" count="1"/>
       <reward_item item_id="186000004" count="3"/>
     </rewards>
-    <quest_drop npc_id="211901" item_id="182201811" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211893" item_id="182201812" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211901" item_id="182201811" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211893" item_id="182201812" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1593" name="Kalione's Choice" nameId="1102793" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards gold="28330" exp="1974220">
@@ -3963,8 +3964,8 @@
       <reward_item item_id="162000048" count="5"/>
       <reward_item item_id="186000004" count="3"/>
     </rewards>
-    <quest_drop npc_id="211975" item_id="182201813" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211192" item_id="182201813" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211975" item_id="182201813" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211192" item_id="182201813" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="1595" name="Whip it Profitably" nameId="1102795" minlevel_permitted="40" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -3973,8 +3974,8 @@
     <rewards gold="52480" exp="2318396">
       <reward_item item_id="186000004" count="3"/>
     </rewards>
-    <quest_drop npc_id="211215" item_id="182201814" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211976" item_id="182201814" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211215" item_id="182201814" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211976" item_id="182201814" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="1594"/>
     </start_conditions>
@@ -6325,7 +6326,7 @@
     <rewards exp="8256">
       <reward_item item_id="122000869" count="1"/>
     </rewards>
-    <quest_drop npc_id="211755" item_id="182203005" chance="100" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="211755" item_id="182203005" chance="80" drop_each_member="1" collecting_step="1"/>
   </quest>
   <quest id="2005" name="Teaching a Lesson" nameId="1103105" minlevel_permitted="6" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="ASMODIANS" category="MISSION">
     <collect_items>
@@ -6503,8 +6504,8 @@
     <rewards exp="1705">
       <reward_item item_id="162000048" count="1"/>
     </rewards>
-    <quest_drop npc_id="210585" item_id="182203113" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210586" item_id="182203113" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210585" item_id="182203113" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="210586" item_id="182203113" chance="70" drop_each_member="1"/>
   </quest>
   <quest id="2114" name="The Insect Problem" nameId="1103214" minlevel_permitted="4" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="760" exp="2145">
@@ -6549,10 +6550,10 @@
     <rewards exp="2365">
       <reward_item item_id="160003002" count="4"/>
     </rewards>
-    <quest_drop npc_id="210735" item_id="182203116" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210737" item_id="182203116" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210736" item_id="182203116" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210738" item_id="182203116" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210735" item_id="182203116" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210737" item_id="182203116" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210736" item_id="182203116" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210738" item_id="182203116" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2119" name="Black Opal" nameId="1103219" minlevel_permitted="5" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -6609,8 +6610,8 @@
     <quest_drop npc_id="210386" item_id="182203123" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="210387" item_id="182203123" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="700128" item_id="182203122" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210391" item_id="182203121" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210392" item_id="182203121" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210391" item_id="182203121" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210392" item_id="182203121" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2124" name="The Captain's Secret" nameId="1103224" minlevel_permitted="6" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -6787,8 +6788,8 @@
       <collect_item item_id="182203203" count="5"/>
     </collect_items>
     <rewards gold="6180" exp="9315"/>
-    <quest_drop npc_id="210418" item_id="182203203" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210419" item_id="182203203" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210418" item_id="182203203" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210419" item_id="182203203" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2206" name="Slinking About" nameId="1103306" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -6797,8 +6798,8 @@
     <rewards exp="6015">
       <reward_item item_id="164000068" count="2"/>
     </rewards>
-    <quest_drop npc_id="210416" item_id="182203204" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210417" item_id="182203204" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210416" item_id="182203204" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210417" item_id="182203204" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2207" name="Conversing With a Skurv" nameId="1103307" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards exp="18809">
@@ -6840,9 +6841,9 @@
       <collect_item item_id="182203207" count="6"/>
     </collect_items>
     <rewards gold="8300" exp="11895"/>
-    <quest_drop npc_id="210425" item_id="182203207" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210426" item_id="182203207" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210427" item_id="182203207" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210425" item_id="182203207" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210426" item_id="182203207" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210427" item_id="182203207" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2211"/>
     </start_conditions>
@@ -6858,8 +6859,8 @@
       <collect_item item_id="182203209" count="5"/>
     </collect_items>
     <rewards gold="5770" exp="10335"/>
-    <quest_drop npc_id="210656" item_id="182203209" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210657" item_id="182203209" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210656" item_id="182203209" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210657" item_id="182203209" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2215" name="A Long-Lost Friend" nameId="1103315" minlevel_permitted="11" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="2490" exp="8355"/>
@@ -6889,12 +6890,12 @@
       <collect_item item_id="182203212" count="5"/>
     </collect_items>
     <rewards exp="15750"/>
-    <quest_drop npc_id="210467" item_id="182203212" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210468" item_id="182203212" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210469" item_id="182203212" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210570" item_id="182203212" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210571" item_id="182203212" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210572" item_id="182203212" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210467" item_id="182203212" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210468" item_id="182203212" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210469" item_id="182203212" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210570" item_id="182203212" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210571" item_id="182203212" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210572" item_id="182203212" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2213"/>
     </start_conditions>
@@ -6924,7 +6925,8 @@
     <quest_work_items>
       <quest_work_item item_id="182203215" count="1"/>
     </quest_work_items>
-  </quest>
+      <quest_drop npc_id="700214" item_id="182203215" chance="100" drop_each_member="1"/>
+</quest>
   <quest id="2222" name="Manir's Message" nameId="1103322" minlevel_permitted="12" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="3380" exp="13080"/>
     <start_conditions>
@@ -7086,8 +7088,8 @@
       <reward_item item_id="162000022" count="3"/>
       <reward_item item_id="186000006" count="1"/>
     </rewards>
-    <quest_drop npc_id="210482" item_id="182203228" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="210483" item_id="182203228" chance="100" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="210482" item_id="182203228" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="210483" item_id="182203228" chance="80" drop_each_member="1" collecting_step="1"/>
     <quest_work_items>
       <quest_work_item item_id="182203227" count="1"/>
     </quest_work_items>
@@ -7099,8 +7101,8 @@
     <rewards gold="6210" exp="19350">
       <reward_item item_id="186000006" count="1"/>
     </rewards>
-    <quest_drop npc_id="210484" item_id="182203229" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210485" item_id="182203229" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210484" item_id="182203229" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210485" item_id="182203229" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2242" name="A Nice Gesture" nameId="1103342" minlevel_permitted="13" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="5120" exp="16350">
@@ -7163,9 +7165,9 @@
     <rewards gold="3420" exp="21300">
       <reward_item item_id="160003503" count="8"/>
     </rewards>
-    <quest_drop npc_id="210486" item_id="182203233" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210487" item_id="182203233" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210489" item_id="182203233" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210486" item_id="182203233" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210487" item_id="182203233" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210489" item_id="182203233" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2250" name="[Gathering] Harvest Kandula herbs" nameId="1103350" minlevel_permitted="13" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -7180,7 +7182,7 @@
     <rewards gold="9120" exp="22350">
       <reward_item item_id="162000048" count="1"/>
     </rewards>
-    <quest_drop npc_id="212345" item_id="182203256" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212345" item_id="182203256" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2252" name="Chasing The Legend" nameId="1103352" minlevel_permitted="14" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="24900">
@@ -7209,10 +7211,10 @@
     <rewards exp="30720">
       <reward_item item_id="164000010" count="2"/>
     </rewards>
-    <quest_drop npc_id="210588" item_id="182203237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210722" item_id="182203237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210723" item_id="182203237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210724" item_id="182203237" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210588" item_id="182203237" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210722" item_id="182203237" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210723" item_id="182203237" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210724" item_id="182203237" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2255" name="Turbulent Mist Spirits" nameId="1103355" minlevel_permitted="16" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="4040" exp="14880"/>
@@ -7246,7 +7248,7 @@
     <rewards gold="6580" exp="36630">
       <reward_item item_id="162000048" count="1"/>
     </rewards>
-    <quest_drop npc_id="210547" item_id="182203240" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210547" item_id="182203240" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2260" name="Reconstruction Supplies" nameId="1103360" minlevel_permitted="16" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="6840" exp="51000"/>
@@ -7275,8 +7277,8 @@
       <reward_item item_id="162000048" count="1"/>
       <reward_item item_id="186000006" count="1"/>
     </rewards>
-    <quest_drop npc_id="210444" item_id="182203242" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210500" item_id="182203242" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210444" item_id="182203242" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210500" item_id="182203242" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2264" name="The Sting Of Poison" nameId="1103364" minlevel_permitted="14" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="6210" exp="15075">
@@ -7291,8 +7293,8 @@
       <reward_item item_id="160003511" count="5"/>
       <reward_item item_id="186000006" count="1"/>
     </rewards>
-    <quest_drop npc_id="210459" item_id="182203243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210460" item_id="182203243" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210459" item_id="182203243" chance="85" drop_each_member="1"/>
+    <quest_drop npc_id="210460" item_id="182203243" chance="85" drop_each_member="1"/>
   </quest>
   <quest id="2266" name="A Trustworthy Messenger" nameId="1103366" minlevel_permitted="16" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="5120" exp="27630"/>
@@ -7320,10 +7322,10 @@
     <rewards gold="6490" exp="25800">
       <reward_item item_id="169000005" count="75"/>
     </rewards>
-    <quest_drop npc_id="210528" item_id="182203246" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210529" item_id="182203246" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210530" item_id="182203246" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210531" item_id="182203246" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210528" item_id="182203246" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210529" item_id="182203246" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210530" item_id="182203246" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210531" item_id="182203246" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2269"/>
     </start_conditions>
@@ -7349,8 +7351,8 @@
       <collect_item item_id="182203252" count="3"/>
     </collect_items>
     <rewards gold="4440" exp="14220"/>
-    <quest_drop npc_id="210499" item_id="182203252" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210498" item_id="182203252" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="210499" item_id="182203252" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210498" item_id="182203252" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2272"/>
     </start_conditions>
@@ -7649,8 +7651,8 @@
     <rewards gold="16700" exp="70068">
       <reward_item item_id="188050584" count="3"/>
     </rewards>
-    <quest_drop npc_id="211314" item_id="182204111" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211320" item_id="182204111" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211314" item_id="182204111" chance="85" drop_each_member="1"/>
+    <quest_drop npc_id="211320" item_id="182204111" chance="85" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2311"/>
     </start_conditions>
@@ -7709,12 +7711,12 @@
     <rewards gold="35620" exp="449465">
       <reward_item item_id="161000003" count="5"/>
     </rewards>
-    <quest_drop npc_id="212414" item_id="182204116" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212415" item_id="182204116" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212416" item_id="182204117" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212417" item_id="182204117" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212418" item_id="182204118" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212419" item_id="182204118" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212414" item_id="182204116" chance="35" drop_each_member="1"/>
+    <quest_drop npc_id="212415" item_id="182204116" chance="35" drop_each_member="1"/>
+    <quest_drop npc_id="212416" item_id="182204117" chance="35" drop_each_member="1"/>
+    <quest_drop npc_id="212417" item_id="182204117" chance="35" drop_each_member="1"/>
+    <quest_drop npc_id="212418" item_id="182204118" chance="35" drop_each_member="1"/>
+    <quest_drop npc_id="212419" item_id="182204118" chance="35" drop_each_member="1"/>
   </quest>
   <quest id="2321" name="[Spy] The Spirit's Letter" nameId="1103521" minlevel_permitted="26" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="225900">
@@ -7751,16 +7753,16 @@
       <selectable_reward_item item_id="112600721" count="1"/>
       <reward_item item_id="186000007" count="1"/>
     </rewards>
-    <quest_drop npc_id="212402" item_id="182204120" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212403" item_id="182204120" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212404" item_id="182204120" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212632" item_id="182204120" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212405" item_id="182204121" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212406" item_id="182204121" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212407" item_id="182204121" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212423" item_id="182204121" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212410" item_id="182204122" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212411" item_id="182204122" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212402" item_id="182204120" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212403" item_id="182204120" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212404" item_id="182204120" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212632" item_id="182204120" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212405" item_id="182204121" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212406" item_id="182204121" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212407" item_id="182204121" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212423" item_id="182204121" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212410" item_id="182204122" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212411" item_id="182204122" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2324" name="The Spirit's Notebook" nameId="1103524" minlevel_permitted="24" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="117433">
@@ -7856,12 +7858,12 @@
     <rewards gold="4000" exp="57000">
       <reward_item item_id="186000007" count="1"/>
     </rewards>
-    <quest_drop npc_id="211356" item_id="182204127" chance="80"/>
-    <quest_drop npc_id="211378" item_id="182204127" chance="80"/>
-    <quest_drop npc_id="212390" item_id="182204128" chance="80"/>
-    <quest_drop npc_id="212391" item_id="182204128" chance="80"/>
-    <quest_drop npc_id="212396" item_id="182204129" chance="80"/>
-    <quest_drop npc_id="212397" item_id="182204129" chance="80"/>
+    <quest_drop npc_id="211356" item_id="182204127" chance="100"/>
+    <quest_drop npc_id="211378" item_id="182204127" chance="100"/>
+    <quest_drop npc_id="212390" item_id="182204128" chance="100"/>
+    <quest_drop npc_id="212391" item_id="182204128" chance="100"/>
+    <quest_drop npc_id="212396" item_id="182204129" chance="100"/>
+    <quest_drop npc_id="212397" item_id="182204129" chance="100"/>
   </quest>
   <quest id="2333" name="A Ribbit out Of Water" nameId="1103533" minlevel_permitted="27" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <collect_items>
@@ -7968,10 +7970,10 @@
     <extended_rewards>
       <reward_item item_id="188050584" count="3"/>
     </extended_rewards>
-    <quest_drop npc_id="212670" item_id="182204139" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212671" item_id="182204139" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212673" item_id="182204139" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212674" item_id="182204139" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212670" item_id="182204139" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212671" item_id="182204139" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212673" item_id="182204139" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212674" item_id="182204139" chance="80" drop_each_member="1"/>
     <quest_drop npc_id="700251" item_id="182204140"/>
   </quest>
   <quest id="2351" name="Swiftness for Hunters" nameId="1103551" minlevel_permitted="24" max_repeat_count="1" race_permitted="ASMODIANS" category="QUEST">
@@ -8020,8 +8022,8 @@
       <selectable_reward_item item_id="114301654" count="1"/>
       <reward_item item_id="186000008" count="1"/>
     </rewards>
-    <quest_drop npc_id="212444" item_id="182204142" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212451" item_id="182204142" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212444" item_id="182204142" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212451" item_id="182204142" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2357" name="Nosy Barghests" nameId="1103557" minlevel_permitted="29" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards gold="18980" exp="476911">
@@ -8068,9 +8070,9 @@
       <collect_item item_id="182204146" count="4"/>
     </collect_items>
     <rewards exp="961458"/>
-    <quest_drop npc_id="212460" item_id="182204145" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212461" item_id="182204145" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212462" item_id="182204146" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212460" item_id="182204145" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212461" item_id="182204145" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212462" item_id="182204146" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2363" name="Peace at The Last" nameId="1103563" minlevel_permitted="33" max_repeat_count="1" cannot_share="true" race_permitted="PC_ALL" category="IMPORTANT">
     <rewards exp="961458"/>
@@ -8126,23 +8128,23 @@
       <selectable_reward_item item_id="113600793" count="1"/>
       <reward_item item_id="188050589" count="1"/>
     </rewards>
-    <quest_drop npc_id="212498" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212496" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211523" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211539" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211540" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212500" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212638" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212636" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211554" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211555" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212637" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212499" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="213004" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212497" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="213003" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212501" item_id="182204243" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212639" item_id="182204243" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212498" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212496" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211523" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211539" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211540" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212500" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212638" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212636" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211554" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211555" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212637" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212499" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="213004" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212497" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="213003" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212501" item_id="182204243" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212639" item_id="182204243" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2370" name="The Bottom Of The Temple" nameId="1103570" minlevel_permitted="30" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards gold="44890" exp="593431">
@@ -8162,10 +8164,10 @@
       <collect_item item_id="182204149" count="1"/>
     </collect_items>
     <rewards gold="39590" exp="484471"/>
-    <quest_drop npc_id="212789" item_id="182204148" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212790" item_id="182204148" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212791" item_id="182204149" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212792" item_id="182204149" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212789" item_id="182204148" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212790" item_id="182204148" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212791" item_id="182204149" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212792" item_id="182204149" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="24023"/>
     </start_conditions>
@@ -8182,17 +8184,17 @@
       <selectable_reward_item item_id="114600730" count="1"/>
       <reward_item item_id="186000008" count="1"/>
     </rewards>
-    <quest_drop npc_id="210447" item_id="182204187" chance="100" drop_each_member="1" collecting_step="2"/>
-    <quest_drop npc_id="210754" item_id="182204187" chance="100" drop_each_member="1" collecting_step="2"/>
-    <quest_drop npc_id="253687" item_id="182204188" chance="100" drop_each_member="1" collecting_step="2"/>
-    <quest_drop npc_id="253688" item_id="182204188" chance="100" drop_each_member="1" collecting_step="2"/>
     <start_conditions>
       <finished quest_id="2367"/>
     </start_conditions>
     <quest_work_items>
       <quest_work_item item_id="182204189" count="1"/>
     </quest_work_items>
-  </quest>
+      <quest_drop npc_id="212463" item_id="182204187" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212464" item_id="182204187" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212452" item_id="182204188" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212453" item_id="182204188" chance="100" drop_each_member="1"/>
+</quest>
   <quest id="2373" name="[Instance/Group] The Ancient Weapon" nameId="1103573" minlevel_permitted="30" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <collect_items>
       <collect_item item_id="182204150" count="1"/>
@@ -8239,9 +8241,9 @@
       <selectable_reward_item item_id="120000877" count="1"/>
       <reward_item item_id="188050585" count="1"/>
     </rewards>
-    <quest_drop npc_id="214094" item_id="182204244" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="214095" item_id="182204244" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="214096" item_id="182204244" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="214094" item_id="182204244" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="214095" item_id="182204244" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="214096" item_id="182204244" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2373"/>
       <finished quest_id="2374"/>
@@ -8252,11 +8254,11 @@
       <collect_item item_id="182204245" count="25"/>
     </collect_items>
     <rewards gold="66420" exp="2108696"/>
-    <quest_drop npc_id="211611" item_id="182204245" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212730" item_id="182204245" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212744" item_id="182204245" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212979" item_id="182204245" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212725" item_id="182204245" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211611" item_id="182204245" chance="85" drop_each_member="1"/>
+    <quest_drop npc_id="212730" item_id="182204245" chance="85" drop_each_member="1"/>
+    <quest_drop npc_id="212744" item_id="182204245" chance="85" drop_each_member="1"/>
+    <quest_drop npc_id="212979" item_id="182204245" chance="85" drop_each_member="1"/>
+    <quest_drop npc_id="212725" item_id="182204245" chance="85" drop_each_member="1"/>
   </quest>
   <quest id="2380" name="[Group] Besting The Bodyguards" nameId="1103580" minlevel_permitted="39" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -8277,9 +8279,9 @@
       <selectable_reward_item item_id="102100516" count="1"/>
       <reward_item item_id="188051194" count="1"/>
     </rewards>
-    <quest_drop npc_id="212741" item_id="182204246" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212742" item_id="182204246" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212743" item_id="182204246" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212741" item_id="182204246" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212742" item_id="182204246" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212743" item_id="182204246" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2379"/>
     </start_conditions>
@@ -8335,8 +8337,8 @@
     <rewards gold="33610" exp="810738">
       <reward_item item_id="160002019" count="15"/>
     </rewards>
-    <quest_drop npc_id="211485" item_id="182204155" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211499" item_id="182204155" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211485" item_id="182204155" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211499" item_id="182204155" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2387" name="A Little Extra Cash" nameId="1103587" minlevel_permitted="32" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -8345,8 +8347,8 @@
     <rewards gold="23690" exp="484471">
       <reward_item item_id="186000008" count="2"/>
     </rewards>
-    <quest_drop npc_id="212471" item_id="182204156" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212472" item_id="182204156" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212471" item_id="182204156" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212472" item_id="182204156" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2388" name="Stopping The Klaw Expansion" nameId="1103588" minlevel_permitted="34" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards gold="39980" exp="1244918">
@@ -8360,9 +8362,9 @@
     <rewards gold="39590" exp="1244918">
       <reward_item item_id="186000008" count="2"/>
     </rewards>
-    <quest_drop npc_id="212487" item_id="182204157" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212488" item_id="182204157" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212489" item_id="182204157" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212487" item_id="182204157" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212488" item_id="182204157" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212489" item_id="182204157" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2390" name="The Tripeed Thief" nameId="1103590" minlevel_permitted="34" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards gold="27690" exp="1244918">
@@ -8376,8 +8378,8 @@
     <rewards gold="25700" exp="1244918">
       <reward_item item_id="186000008" count="2"/>
     </rewards>
-    <quest_drop npc_id="212482" item_id="182204158" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212483" item_id="182204158" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212482" item_id="182204158" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212483" item_id="182204158" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2392" name="Beautiful Feather" nameId="1103592" minlevel_permitted="34" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <collect_items>
@@ -8397,12 +8399,12 @@
       <reward_item item_id="162000048" count="4"/>
       <reward_item item_id="186000008" count="2"/>
     </rewards>
-    <quest_drop npc_id="211505" item_id="182204159" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211516" item_id="182204159" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212487" item_id="182204160" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212488" item_id="182204160" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212484" item_id="182204161" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212485" item_id="182204161" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211505" item_id="182204159" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211516" item_id="182204159" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212487" item_id="182204160" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212488" item_id="182204160" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212484" item_id="182204161" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212485" item_id="182204161" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2393" name="The Love Of a Father" nameId="1103593" minlevel_permitted="36" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="21490" exp="1496758">
@@ -8455,9 +8457,9 @@
     <rewards gold="33460" exp="987102">
       <reward_item item_id="186000008" count="2"/>
     </rewards>
-    <quest_drop npc_id="212526" item_id="182204247" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212527" item_id="182204247" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211514" item_id="182204248" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212526" item_id="182204247" chance="90" drop_each_member="1"/>
+    <quest_drop npc_id="212527" item_id="182204247" chance="90" drop_each_member="1"/>
+    <quest_drop npc_id="211514" item_id="182204248" chance="90" drop_each_member="1"/>
   </quest>
   <quest id="2401" name="Poisoned Weapons" nameId="1103601" minlevel_permitted="34" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -8557,12 +8559,12 @@
       <reward_item item_id="164000054" count="15"/>
       <reward_item item_id="186000008" count="2"/>
     </rewards>
-    <quest_drop npc_id="212513" item_id="182204170" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212514" item_id="182204170" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212515" item_id="182204171" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212516" item_id="182204171" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212517" item_id="182204172" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212518" item_id="182204172" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212513" item_id="182204170" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212514" item_id="182204170" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212515" item_id="182204171" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212516" item_id="182204171" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212517" item_id="182204172" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212518" item_id="182204172" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2411"/>
     </start_conditions>
@@ -8577,11 +8579,11 @@
       <reward_item item_id="164000058" count="15"/>
       <reward_item item_id="186000008" count="2"/>
     </rewards>
-    <quest_drop npc_id="212519" item_id="182204173" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212520" item_id="182204173" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212521" item_id="182204174" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212522" item_id="182204174" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212523" item_id="182204175" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212519" item_id="182204173" chance="90" drop_each_member="1"/>
+    <quest_drop npc_id="212520" item_id="182204173" chance="90" drop_each_member="1"/>
+    <quest_drop npc_id="212521" item_id="182204174" chance="90" drop_each_member="1"/>
+    <quest_drop npc_id="212522" item_id="182204174" chance="90" drop_each_member="1"/>
+    <quest_drop npc_id="212523" item_id="182204175" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2411"/>
     </start_conditions>
@@ -8611,10 +8613,10 @@
     <rewards gold="23410" exp="987102">
       <reward_item item_id="186000008" count="2"/>
     </rewards>
-    <quest_drop npc_id="212533" item_id="182204176" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212534" item_id="182204176" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212528" item_id="182204177" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212529" item_id="182204177" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212533" item_id="182204176" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212534" item_id="182204176" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212528" item_id="182204177" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212529" item_id="182204177" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2417" name="Abex Kebabs For The Soul" nameId="1103617" minlevel_permitted="35" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="20100" exp="1301093">
@@ -8652,6 +8654,15 @@
     <quest_drop npc_id="212963" item_id="182204249" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="212965" item_id="182204249" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="212967" item_id="182204249" chance="100" drop_each_member="1"/>
+  </quest>
+  <quest id="2421" name="Asgeirr's Request" nameId="1103621" minlevel_permitted="20" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+    <rewards gold="15880" exp="50008">
+      <reward_item item_id="186000007" count="1"/>
+    </rewards>
+    <quest_work_items>
+      <quest_work_item item_id="182204208" count="1"/>
+      <quest_work_item item_id="182204209" count="1"/>
+    </quest_work_items>
   </quest>
   <quest id="2422" name="[Spy] Liquor that Makes You Vanish" nameId="1103622" minlevel_permitted="19" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="7930" exp="120000" ap="100">
@@ -8768,8 +8779,8 @@
       <collect_item item_id="182204180" count="3"/>
     </collect_items>
     <rewards gold="19000" exp="1301093"/>
-    <quest_drop npc_id="211548" item_id="182204180" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211565" item_id="182204180" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211548" item_id="182204180" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211565" item_id="182204180" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2432" name="Chase Of The Mist Mane Mau" nameId="1103632" minlevel_permitted="36" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="42190" exp="1496758"/>
@@ -8798,8 +8809,8 @@
   </quest>
   <quest id="2435" name="The Blue Vine Necklace" nameId="1103635" minlevel_permitted="36" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="987102"/>
-    <quest_drop npc_id="212548" item_id="182204181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212549" item_id="182204181" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212548" item_id="182204181" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212549" item_id="182204181" chance="80" drop_each_member="1"/>
     <quest_work_items>
       <quest_work_item item_id="182204181" count="1"/>
     </quest_work_items>
@@ -8836,8 +8847,8 @@
     <rewards gold="49810" exp="1496758">
       <reward_item item_id="186000009" count="3"/>
     </rewards>
-    <quest_drop npc_id="211582" item_id="182204182" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211604" item_id="182204182" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211582" item_id="182204182" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="211604" item_id="182204182" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2442" name="[Group] Taisan's Request" nameId="1103642" minlevel_permitted="37" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -8919,13 +8930,21 @@
       <finished quest_id="2448"/>
     </start_conditions>
   </quest>
+  <quest id="2451" name="[Gathering] Ore for the Temple" nameId="1103651" minlevel_permitted="19" max_repeat_count="1" race_permitted="ASMODIANS" category="QUEST">
+    <collect_items>
+      <collect_item item_id="152000202" count="10"/>
+    </collect_items>
+    <rewards gold="12410" exp="100200">
+      <reward_item item_id="186000007" count="1"/>
+    </rewards>
+  </quest>
   <quest id="2452" name="Shoot That Poison Arrow" nameId="1103652" minlevel_permitted="36" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
       <collect_item item_id="182204236" count="10"/>
     </collect_items>
     <rewards gold="28100" exp="1301093"/>
-    <quest_drop npc_id="212551" item_id="182204236" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212552" item_id="182204236" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212551" item_id="182204236" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212552" item_id="182204236" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2431"/>
     </start_conditions>
@@ -8938,7 +8957,7 @@
       <reward_item item_id="186000007" count="1"/>
     </rewards>
   </quest>
-  <quest id="2454" name="[Gathering] Kellan's request" nameId="1103654" minlevel_permitted="20" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
+  <quest id="2454" name="[Gathering] Kellan's request" nameId="1103654" minlevel_permitted="20" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
       <collect_item item_id="152000552" count="10"/>
     </collect_items>
@@ -9034,22 +9053,22 @@
       <selectable_reward_item item_id="114301537" count="1"/>
       <selectable_reward_item item_id="114501631" count="1"/>
     </rewards>
-    <quest_drop npc_id="212956" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212865" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212866" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212867" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211574" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211599" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211575" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211601" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212724" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212729" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212734" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212735" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212738" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212739" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212741" item_id="182204237" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212742" item_id="182204237" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212956" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212865" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212866" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212867" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211574" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211599" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211575" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211601" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212724" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212729" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212734" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212735" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212738" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212739" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212741" item_id="182204237" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212742" item_id="182204237" chance="30" drop_each_member="1"/>
   </quest>
   <quest id="2464" name="[Group] A Step to Revenge" nameId="1103664" minlevel_permitted="37" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -9065,22 +9084,22 @@
       <selectable_reward_item item_id="111501603" count="1"/>
       <reward_item item_id="188100335" count="168"/>
     </rewards>
-    <quest_drop npc_id="212957" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212865" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212866" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212867" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211574" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211599" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211575" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211601" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212724" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212729" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212734" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212735" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212738" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212739" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212741" item_id="182204238" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212742" item_id="182204238" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212957" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212865" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212866" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212867" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211574" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211599" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211575" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211601" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212724" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212729" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212734" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212735" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212738" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212739" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212741" item_id="182204238" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212742" item_id="182204238" chance="30" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2463"/>
     </start_conditions>
@@ -9149,24 +9168,24 @@
       <selectable_reward_item item_id="112501544" count="1"/>
       <reward_item item_id="188051194" count="1"/>
     </rewards>
-    <quest_drop npc_id="212958" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212865" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212866" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212867" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211574" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211599" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211575" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211601" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212724" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212729" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212734" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212735" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212738" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212739" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212741" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212742" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211595" item_id="182204239" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211608" item_id="182204239" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212958" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212865" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212866" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212867" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211574" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211599" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211575" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211601" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212724" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212729" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212734" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212735" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212738" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212739" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212741" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="212742" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211595" item_id="182204239" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="211608" item_id="182204239" chance="30" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2464"/>
     </start_conditions>
@@ -9211,8 +9230,8 @@
     <rewards gold="21830" exp="688103">
       <reward_item item_id="186000008" count="1"/>
     </rewards>
-    <quest_drop npc_id="212469" item_id="182204211" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212470" item_id="182204211" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212469" item_id="182204211" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="212470" item_id="182204211" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2477" name="A Dish For Dukar" nameId="1103677" minlevel_permitted="29" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -9245,10 +9264,10 @@
       <selectable_reward_item item_id="111600769" count="1"/>
       <reward_item item_id="186000469" count="2"/>
     </rewards>
-    <quest_drop npc_id="211754" item_id="182204198" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210845" item_id="182204199" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210878" item_id="182204200" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="210898" item_id="182204200" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="211754" item_id="182204198" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210845" item_id="182204199" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210878" item_id="182204200" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="210898" item_id="182204200" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2477"/>
     </start_conditions>
@@ -9386,30 +9405,30 @@
       <selectable_reward_item item_id="113501622" count="1"/>
       <reward_item item_id="188051194" count="1"/>
     </rewards>
-    <quest_drop npc_id="212872" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212865" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212866" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212867" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211596" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211609" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211598" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211610" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212725" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212726" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211612" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212727" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212732" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212733" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212736" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212737" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212979" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212744" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211611" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212730" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212731" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212740" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212743" item_id="182204240" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212809" item_id="182204240" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212872" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212865" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212866" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212867" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="211596" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="211609" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="211598" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="211610" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212725" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212726" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="211612" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212727" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212732" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212733" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212736" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212737" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212979" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212744" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="211611" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212730" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212731" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212740" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212743" item_id="182204240" chance="20" drop_each_member="1"/>
+    <quest_drop npc_id="212809" item_id="182204240" chance="20" drop_each_member="1"/>
   </quest>
   <quest id="2491" name="[Group] Ungrateful Muhamurru" nameId="1103691" minlevel_permitted="38" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -9425,30 +9444,30 @@
       <selectable_reward_item item_id="110551046" count="1"/>
       <reward_item item_id="164000091" count="5"/>
     </rewards>
-    <quest_drop npc_id="212873" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212865" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212866" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212867" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211596" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211609" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211598" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211610" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212725" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212726" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211612" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212727" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212732" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212733" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212736" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212737" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212979" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212744" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="211611" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212730" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212731" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212740" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212743" item_id="182204241" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="212809" item_id="182204241" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="212873" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212865" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212866" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212867" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="211596" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="211609" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="211598" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="211610" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212725" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212726" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="211612" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212727" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212732" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212733" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212736" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212737" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212979" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212744" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="211611" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212730" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212731" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212740" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212743" item_id="182204241" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="212809" item_id="182204241" chance="10" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="2490"/>
     </start_conditions>
@@ -9478,9 +9497,9 @@
     <rewards exp="154050">
       <reward_item item_id="122000873" count="1"/>
     </rewards>
-    <quest_drop npc_id="213798" item_id="182204224" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="213799" item_id="182204225" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="213800" item_id="182204226" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="213798" item_id="182204224" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="213799" item_id="182204225" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="213800" item_id="182204226" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2495" name="Sprigg Nightlights" nameId="1103695" minlevel_permitted="24" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <collect_items>
@@ -9514,7 +9533,7 @@
     <rewards gold="10230" exp="100097">
       <reward_item item_id="186000007" count="1"/>
     </rewards>
-    <quest_drop npc_id="700321" item_id="182204231" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="700321" item_id="182204231" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="2498" name="The Sodden Scroll" nameId="1103698" minlevel_permitted="22" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="17840" exp="134338">
@@ -9628,6 +9647,24 @@
       <selectable_reward_item item_id="112501520" count="1"/>
       <reward_item item_id="164000092" count="5"/>
     </rewards>
+  </quest>
+  <quest id="2511" name="The Desire for Advancement" nameId="1103811" minlevel_permitted="34" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST" titleId="75">
+    <collect_items>
+      <collect_item item_id="182204407" count="1"/>
+      <collect_item item_id="182204408" count="1"/>
+      <collect_item item_id="182204409" count="1"/>
+      <collect_item item_id="182204410" count="1"/>
+    </collect_items>
+    <rewards gold="57000" exp="806224">
+      <reward_item item_id="186000008" count="2"/>
+    </rewards>
+    <quest_drop npc_id="213914" item_id="182204407" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="213915" item_id="182204408" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="213916" item_id="182204409" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="213917" item_id="182204410" chance="100" drop_each_member="1"/>
+    <start_conditions>
+      <finished quest_id="2528"/>
+    </start_conditions>
   </quest>
   <quest id="2512" name="Food for Remote Places" nameId="1103812" minlevel_permitted="35" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="26170" exp="1301093">
@@ -10326,6 +10363,20 @@
       <reward_item item_id="186000008" count="2"/>
     </rewards>
   </quest>
+  <quest id="2585" name="Valuable Coral" nameId="1103885" minlevel_permitted="42" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+    <collect_items>
+      <collect_item item_id="182204457" count="7"/>
+    </collect_items>
+    <rewards gold="32000" exp="2815297">
+      <reward_item item_id="162000025" count="18"/>
+      <reward_item item_id="186000010" count="1"/>
+    </rewards>
+    <quest_drop npc_id="700331" item_id="182204457" chance="100" drop_each_member="1"/>
+    <start_conditions>
+      <finished quest_id="2055"/>
+      <finished quest_id="4542"/>
+    </start_conditions>
+  </quest>
   <quest id="2586" name="[Group] Dangerous Sea Creature" nameId="1103886" minlevel_permitted="42" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
       <collect_item item_id="182204458" count="8"/>
@@ -10433,6 +10484,18 @@
     <quest_drop npc_id="213373" item_id="182204521" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="213374" item_id="182204521" chance="100" drop_each_member="1"/>
   </quest>
+  <quest id="2599" name="A Hood to Protect the Neck" nameId="1103899" minlevel_permitted="32" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+    <collect_items>
+      <collect_item item_id="182204526" count="1"/>
+      <collect_item item_id="182204527" count="1"/>
+    </collect_items>
+    <rewards gold="73690" exp="484471">
+      <reward_item item_id="186000008" count="2"/>
+    </rewards>
+    <quest_drop npc_id="213029" item_id="182204526" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="213030" item_id="182204526" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="213031" item_id="182204527" chance="80" drop_each_member="1"/>
+  </quest>
   <quest id="2600" name="Humongous Malek" nameId="1103900" minlevel_permitted="35" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
       <collect_item item_id="182204529" count="1"/>
@@ -10464,6 +10527,12 @@
       <finished quest_id="2601"/>
     </start_conditions>
   </quest>
+  <quest id="2605" name="The Revolutionary in the Remote House" nameId="1103905" minlevel_permitted="36" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+    <rewards gold="28990" exp="987102"/>
+    <start_conditions>
+      <finished quest_id="2513" reward="1"/>
+    </start_conditions>
+  </quest>
   <quest id="2606" name="A Ribbit in Need" nameId="1103906" minlevel_permitted="36" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="28990" exp="987102"/>
     <start_conditions>
@@ -10480,6 +10549,11 @@
     <rewards gold="9900" exp="564357">
       <reward_item item_id="162000023" count="5"/>
       <reward_item item_id="188050589" count="1"/>
+    </rewards>
+  </quest>
+  <quest id="2611" name="Consulting The Leaders" nameId="1103911" minlevel_permitted="42" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
+    <rewards exp="5220034">
+      <reward_item item_id="186000010" count="1"/>
     </rewards>
   </quest>
   <quest id="2612" name="A Tonic for Nargatal" nameId="1103912" minlevel_permitted="39" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
@@ -11031,6 +11105,18 @@
       <finished quest_id="2662"/>
     </start_conditions>
   </quest>
+  <quest id="2667" name="[Instance] Paeru's Father" nameId="1103967" minlevel_permitted="35" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+    <inventory_items>
+      <inventory_item item_id="169400109"/>
+    </inventory_items>
+    <rewards gold="28550" exp="738671">
+      <reward_item item_id="188100335" count="84"/>
+      <reward_item item_id="186000008" count="1"/>
+    </rewards>
+    <quest_work_items>
+      <quest_work_item item_id="182204499" count="1"/>
+    </quest_work_items>
+  </quest>
   <quest id="2668" name="[Group] Saving Atla" nameId="1103968" minlevel_permitted="35" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="2954681">
       <reward_item item_id="125001785" count="1"/>
@@ -11399,6 +11485,12 @@
   </quest>
   <quest id="2725" name="Gone Native" nameId="1104825" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="154080" exp="2193283" ap="100"/>
+  </quest>
+  <quest id="2727" name="Transparent Motives" nameId="1104827" minlevel_permitted="999" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+    <rewards gold="28680" exp="340413" ap="150"/>
+    <quest_work_items>
+      <quest_work_item item_id="182205655" count="1"/>
+    </quest_work_items>
   </quest>
   <quest id="2728" name="[Group] Killing Ladacus" nameId="1104828" minlevel_permitted="45" max_repeat_count="255" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -25326,24 +25418,24 @@
     </rewards>
     <quest_drop npc_id="703429" item_id="182216171" chance="100" drop_each_member="1" collecting_step="1"/>
     <quest_drop npc_id="703430" item_id="182216172" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246556" item_id="182216173" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246855" item_id="182216173" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246865" item_id="182216173" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246875" item_id="182216173" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246885" item_id="182216173" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246895" item_id="182216173" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246905" item_id="182216173" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246920" item_id="182216173" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246860" item_id="182216174" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246870" item_id="182216174" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246926" item_id="182216174" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="247113" item_id="182216174" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246881" item_id="182216174" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246851" item_id="182216174" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246861" item_id="182216174" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246927" item_id="182216174" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246872" item_id="182216174" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="247115" item_id="182216174" chance="100" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246556" item_id="182216173" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246855" item_id="182216173" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246865" item_id="182216173" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246875" item_id="182216173" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246885" item_id="182216173" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246895" item_id="182216173" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246905" item_id="182216173" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246920" item_id="182216173" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246860" item_id="182216174" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246870" item_id="182216174" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246926" item_id="182216174" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="247113" item_id="182216174" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246881" item_id="182216174" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246851" item_id="182216174" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246861" item_id="182216174" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246927" item_id="182216174" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246872" item_id="182216174" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="247115" item_id="182216174" chance="70" drop_each_member="1" collecting_step="1"/>
     <quest_work_items>
       <quest_work_item item_id="182216175"/>
     </quest_work_items>
@@ -25607,8 +25699,8 @@
     </rewards>
     <quest_drop npc_id="236258" item_id="182215609" chance="100" drop_each_member="1" collecting_step="2"/>
     <quest_drop npc_id="702672" item_id="182215610" chance="100" drop_each_member="1" collecting_step="2"/>
-    <quest_drop npc_id="236256" item_id="182215611" chance="100" drop_each_member="1" collecting_step="2"/>
-    <quest_drop npc_id="236257" item_id="182215611" chance="100" drop_each_member="1" collecting_step="2"/>
+    <quest_drop npc_id="236256" item_id="182215611" chance="80" drop_each_member="1" collecting_step="2"/>
+    <quest_drop npc_id="236257" item_id="182215611" chance="80" drop_each_member="1" collecting_step="2"/>
     <start_conditions>
       <finished quest_id="10504"/>
     </start_conditions>
@@ -25696,10 +25788,10 @@
       <reward_item item_id="188055375" count="1"/>
       <reward_item item_id="162000181" count="10"/>
     </rewards>
-    <quest_drop npc_id="241668" item_id="182216069" chance="100" drop_each_member="1" collecting_step="4"/>
-    <quest_drop npc_id="241669" item_id="182216069" chance="100" drop_each_member="1" collecting_step="4"/>
-    <quest_drop npc_id="241656" item_id="182216070" chance="100" drop_each_member="1" collecting_step="4"/>
-    <quest_drop npc_id="241657" item_id="182216070" chance="100" drop_each_member="1" collecting_step="4"/>
+    <quest_drop npc_id="241668" item_id="182216069" chance="80" drop_each_member="1" collecting_step="4"/>
+    <quest_drop npc_id="241669" item_id="182216069" chance="80" drop_each_member="1" collecting_step="4"/>
+    <quest_drop npc_id="241656" item_id="182216070" chance="80" drop_each_member="1" collecting_step="4"/>
+    <quest_drop npc_id="241657" item_id="182216070" chance="80" drop_each_member="1" collecting_step="4"/>
     <quest_drop npc_id="244101" item_id="182216071" chance="100" drop_each_member="1" collecting_step="4"/>
     <quest_work_items>
       <quest_work_item item_id="182216072" count="1"/>
@@ -25762,7 +25854,7 @@
       <reward_item item_id="162000181" count="30"/>
     </rewards>
     <quest_drop npc_id="244114" item_id="182216078" chance="100" drop_each_member="1" collecting_step="2"/>
-    <quest_drop npc_id="244115" item_id="182216079" chance="100" drop_each_member="1" collecting_step="2"/>
+    <quest_drop npc_id="244115" item_id="182216079" chance="70" drop_each_member="1" collecting_step="2"/>
     <quest_drop npc_id="244116" item_id="182216080" chance="100" drop_each_member="1" collecting_step="2"/>
     <start_conditions>
       <finished quest_id="10528"/>
@@ -25818,10 +25910,10 @@
       <selectable_reward_item item_id="164000073" count="10"/>
       <selectable_reward_item item_id="164000134" count="10"/>
     </rewards>
-    <quest_drop npc_id="215500" item_id="182206701" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215501" item_id="182206701" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215494" item_id="182206702" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215495" item_id="182206702" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215500" item_id="182206701" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215501" item_id="182206701" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215494" item_id="182206702" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215495" item_id="182206702" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11004" name="Alchemical Solution" nameId="1125004" minlevel_permitted="50" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -25928,8 +26020,8 @@
     <rewards gold="70920" exp="6454760">
       <reward_item item_id="186000018" count="6"/>
     </rewards>
-    <quest_drop npc_id="215492" item_id="182206717" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215493" item_id="182206717" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215492" item_id="182206717" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215493" item_id="182206717" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11025" name="Do Bocos Tell Bawk-bawk Jokes?" nameId="1125025" minlevel_permitted="50" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -25974,15 +26066,15 @@
       <selectable_reward_item item_id="121000987" count="1"/>
       <selectable_reward_item item_id="121000988" count="1"/>
     </extended_rewards>
-    <quest_drop npc_id="215510" item_id="182206720" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215511" item_id="182206720" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216649" item_id="182206720" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215512" item_id="182206721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215513" item_id="182206721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216650" item_id="182206721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215514" item_id="182206722" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215515" item_id="182206722" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216651" item_id="182206722" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215510" item_id="182206720" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215511" item_id="182206720" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="216649" item_id="182206720" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215512" item_id="182206721" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215513" item_id="182206721" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="216650" item_id="182206721" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215514" item_id="182206722" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215515" item_id="182206722" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="216651" item_id="182206722" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="11027"/>
     </start_conditions>
@@ -26008,8 +26100,8 @@
     <rewards gold="75130" exp="5980975">
       <reward_item item_id="186000018" count="6"/>
     </rewards>
-    <quest_drop npc_id="215534" item_id="182206723" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215535" item_id="182206723" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215534" item_id="182206723" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215535" item_id="182206723" chance="80" drop_each_member="1"/>
     <quest_work_items>
       <quest_work_item item_id="182206724" count="1"/>
     </quest_work_items>
@@ -26021,8 +26113,8 @@
     <rewards gold="97130" exp="5980975">
       <reward_item item_id="186000018" count="6"/>
     </rewards>
-    <quest_drop npc_id="215528" item_id="182206725" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215529" item_id="182206725" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215528" item_id="182206725" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215529" item_id="182206725" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="11031"/>
     </start_conditions>
@@ -26037,8 +26129,8 @@
     <rewards gold="145780" exp="6454760" title="107">
       <reward_item item_id="186000018" count="6"/>
     </rewards>
-    <quest_drop npc_id="215532" item_id="182206727" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215533" item_id="182206727" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215532" item_id="182206727" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215533" item_id="182206727" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="11032"/>
     </start_conditions>
@@ -26080,10 +26172,10 @@
       <reward_item item_id="160001274" count="15"/>
       <reward_item item_id="186000018" count="6"/>
     </rewards>
-    <quest_drop npc_id="215578" item_id="182206732" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215579" item_id="182206732" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215580" item_id="182206733" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215581" item_id="182206733" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215578" item_id="182206732" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215579" item_id="182206732" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215580" item_id="182206733" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215581" item_id="182206733" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="11036"/>
     </start_conditions>
@@ -26210,8 +26302,8 @@
       <selectable_reward_item item_id="112501484" count="1"/>
       <reward_item item_id="162000050" count="10"/>
     </rewards>
-    <quest_drop npc_id="215526" item_id="182206743" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215527" item_id="182206744" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215526" item_id="182206743" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215527" item_id="182206744" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="11043"/>
     </start_conditions>
@@ -26263,14 +26355,14 @@
       <selectable_reward_item item_id="112301500" count="1"/>
       <selectable_reward_item item_id="112501570" count="1"/>
     </extended_rewards>
-    <quest_drop npc_id="215660" item_id="182206836" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215661" item_id="182206836" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215662" item_id="182206836" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215663" item_id="182206836" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215664" item_id="182206836" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215665" item_id="182206836" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215666" item_id="182206836" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215667" item_id="182206836" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215660" item_id="182206836" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215661" item_id="182206836" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215662" item_id="182206836" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215663" item_id="182206836" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215664" item_id="182206836" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215665" item_id="182206836" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215666" item_id="182206836" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215667" item_id="182206836" chance="50" drop_each_member="1"/>
   </quest>
   <quest id="11052" name="Gloves And Glossy Beads" nameId="1125052" minlevel_permitted="53" max_repeat_count="30" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -26288,12 +26380,12 @@
       <selectable_reward_item item_id="111301559" count="1"/>
       <selectable_reward_item item_id="111501629" count="1"/>
     </extended_rewards>
-    <quest_drop npc_id="215595" item_id="182206837" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215596" item_id="182206837" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216721" item_id="182206837" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216722" item_id="182206837" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216153" item_id="182206837" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216154" item_id="182206837" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215595" item_id="182206837" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215596" item_id="182206837" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="216721" item_id="182206837" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="216722" item_id="182206837" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="216153" item_id="182206837" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="216154" item_id="182206837" chance="50" drop_each_member="1"/>
   </quest>
   <quest id="11053" name="These Shoes Are Made For Stalking" nameId="1125053" minlevel_permitted="53" max_repeat_count="30" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -26311,8 +26403,8 @@
       <selectable_reward_item item_id="114301625" count="1"/>
       <selectable_reward_item item_id="114501658" count="1"/>
     </extended_rewards>
-    <quest_drop npc_id="215758" item_id="182206838" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215870" item_id="182206838" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215758" item_id="182206838" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215870" item_id="182206838" chance="50" drop_each_member="1"/>
   </quest>
   <quest id="11054" name="[Group] Accounts about The Armor" nameId="1125054" minlevel_permitted="53" max_repeat_count="15" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -26511,9 +26603,9 @@
     <rewards gold="123800" exp="8615558">
       <reward_item item_id="162000050" count="9"/>
     </rewards>
-    <quest_drop npc_id="215585" item_id="182206748" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215586" item_id="182206749" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215587" item_id="182206749" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215585" item_id="182206748" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215586" item_id="182206749" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215587" item_id="182206749" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11102" name="Petrified Sampling" nameId="1125078" minlevel_permitted="52" max_repeat_count="1" cannot_share="true" use_class_reward="1" race_permitted="ELYOS" category="IMPORTANT">
     <rewards exp="8615558">
@@ -26548,12 +26640,12 @@
     <rewards gold="12230" exp="8615558">
       <reward_item item_id="162000050" count="18"/>
     </rewards>
-    <quest_drop npc_id="215591" item_id="182206751" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215592" item_id="182206751" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215597" item_id="182206777" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215598" item_id="182206777" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216723" item_id="182206777" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216724" item_id="182206777" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215591" item_id="182206751" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215592" item_id="182206751" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215597" item_id="182206777" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215598" item_id="182206777" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="216723" item_id="182206777" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="216724" item_id="182206777" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11105" name="A Jewel To Quiet Her" nameId="1125081" minlevel_permitted="52" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards gold="55440" exp="5647915"/>
@@ -26587,7 +26679,7 @@
       <selectable_reward_item item_id="164000066" count="18"/>
       <selectable_reward_item item_id="164000121" count="18"/>
     </rewards>
-    <quest_drop npc_id="215588" item_id="182206861" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215588" item_id="182206861" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11109" name="The Negotiators" nameId="1125085" minlevel_permitted="53" max_repeat_count="1" race_permitted="ELYOS" category="QUEST">
     <rewards gold="10350" exp="4020773"/>
@@ -26623,8 +26715,8 @@
       <collect_item item_id="182206785" count="10"/>
     </collect_items>
     <rewards gold="25200" exp="2599483"/>
-    <quest_drop npc_id="215601" item_id="182206785" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215602" item_id="182206785" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215601" item_id="182206785" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215602" item_id="182206785" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11114" name="Pixiebelle's Gold" nameId="1125090" minlevel_permitted="52" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -26646,8 +26738,8 @@
     <rewards gold="215910" exp="5989348">
       <reward_item item_id="162000050" count="9"/>
     </rewards>
-    <quest_drop npc_id="215609" item_id="182206788" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215607" item_id="182206789" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215609" item_id="182206788" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215607" item_id="182206789" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11116" name="Munching Mookie Pickles" nameId="1125092" minlevel_permitted="53" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -26656,8 +26748,8 @@
     <rewards exp="5989348">
       <reward_item item_id="169240002" count="8"/>
     </rewards>
-    <quest_drop npc_id="215578" item_id="182206790" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="215579" item_id="182206790" chance="100" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="215578" item_id="182206790" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="215579" item_id="182206790" chance="80" drop_each_member="1" collecting_step="1"/>
     <start_conditions>
       <finished quest_id="11037"/>
     </start_conditions>
@@ -26682,7 +26774,7 @@
     <rewards exp="6240944" title="108">
       <reward_item item_id="166100003" count="3"/>
     </rewards>
-    <quest_drop npc_id="215525" item_id="182206794" chance="100" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="215525" item_id="182206794" chance="80" drop_each_member="1" collecting_step="1"/>
     <start_conditions>
       <finished quest_id="11117"/>
     </start_conditions>
@@ -26716,12 +26808,12 @@
       <selectable_reward_item item_id="111301562" count="1"/>
       <selectable_reward_item item_id="111501630" count="1"/>
     </extended_rewards>
-    <quest_drop npc_id="215678" item_id="182206796" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215679" item_id="182206796" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216796" item_id="182206796" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215684" item_id="182206797" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215685" item_id="182206797" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216799" item_id="182206797" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215678" item_id="182206796" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215679" item_id="182206796" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="216796" item_id="182206796" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215684" item_id="182206797" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215685" item_id="182206797" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="216799" item_id="182206797" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="11120"/>
     </start_conditions>
@@ -26754,9 +26846,9 @@
     <rewards gold="146150" exp="8802718">
       <reward_item item_id="162000050" count="18"/>
     </rewards>
-    <quest_drop npc_id="215631" item_id="182206799" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215627" item_id="182206800" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215626" item_id="182206801" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215631" item_id="182206799" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215627" item_id="182206800" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215626" item_id="182206801" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11126" name="A Worthy Adversary" nameId="1125102" minlevel_permitted="53" max_repeat_count="1" race_permitted="ELYOS" category="QUEST">
     <rewards gold="151610" exp="5989348"/>
@@ -26766,8 +26858,8 @@
       <collect_item item_id="182206802" count="10"/>
     </collect_items>
     <rewards gold="158230" exp="5989348"/>
-    <quest_drop npc_id="215698" item_id="182206802" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215699" item_id="182206802" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215698" item_id="182206802" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215699" item_id="182206802" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11128" name="Dead In Three Breaths" nameId="1125104" minlevel_permitted="53" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -26841,8 +26933,8 @@
     <rewards gold="13130" exp="5989348">
       <reward_item item_id="188050590" count="1"/>
     </rewards>
-    <quest_drop npc_id="215604" item_id="182206864" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215608" item_id="182206865" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215604" item_id="182206864" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215608" item_id="182206865" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11143" name="Baby Shulack's Journey" nameId="1125119" minlevel_permitted="54" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="6240944">
@@ -26893,9 +26985,9 @@
       <reward_item item_id="162000027" count="9"/>
       <reward_item item_id="164000079" count="7"/>
     </rewards>
-    <quest_drop npc_id="215861" item_id="182206868" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215721" item_id="182206869" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215720" item_id="182206869" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215861" item_id="182206868" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215721" item_id="182206869" chance="80" drop_each_member="1"/>
+    <quest_drop npc_id="215720" item_id="182206869" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11149" name="The Lady's Layout" nameId="1125125" minlevel_permitted="53" max_repeat_count="1" race_permitted="ELYOS" category="QUEST">
     <rewards gold="6000" exp="6240944"/>
@@ -26932,7 +27024,7 @@
     <rewards gold="20550" exp="6517414">
       <reward_item item_id="162000050" count="5"/>
     </rewards>
-    <quest_drop npc_id="215734" item_id="182206809" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215734" item_id="182206809" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11204" name="For The Crater Good" nameId="1125130" minlevel_permitted="54" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -27023,7 +27115,7 @@
     <rewards gold="36000" exp="6517414">
       <reward_item item_id="162000050" count="9"/>
     </rewards>
-    <quest_drop npc_id="215874" item_id="182206870" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215874" item_id="182206870" chance="80" drop_each_member="1"/>
   </quest>
   <quest id="11224" name="Swords And Spectacles" nameId="1125150" minlevel_permitted="54" max_repeat_count="10" race_permitted="ELYOS" category="QUEST">
     <rewards gold="38100" exp="2814541"/>
@@ -27589,7 +27681,7 @@
       <collect_item item_id="186000108" count="1"/>
     </collect_items>
     <rewards exp="5233353"/>
-    <quest_drop npc_id="215527" item_id="182209502" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215527" item_id="182209502" chance="80" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="11453"/>
     </start_conditions>
@@ -32188,6 +32280,10 @@
     <rewards exp="4252148">
       <reward_item item_id="186000199" count="10"/>
     </rewards>
+    <start_conditions>
+      <unfinished>17012 17013</unfinished>
+      <noacquired>17012 17013</noacquired>
+    </start_conditions>
   </quest>
   <quest id="17015" name="[League] Lower Abyss Guardian" nameId="1140075" minlevel_permitted="55" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="CHALLENGE_TASK" target_type="UNION">
     <rewards exp="3693351">
@@ -35868,24 +35964,24 @@
     </rewards>
     <quest_drop npc_id="703429" item_id="182216180" chance="100" drop_each_member="1" collecting_step="1"/>
     <quest_drop npc_id="703430" item_id="182216181" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246556" item_id="182216182" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246855" item_id="182216182" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246865" item_id="182216182" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246875" item_id="182216182" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246885" item_id="182216182" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246895" item_id="182216182" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246905" item_id="182216182" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246920" item_id="182216182" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246860" item_id="182216183" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246870" item_id="182216183" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246926" item_id="182216183" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="247113" item_id="182216183" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246881" item_id="182216183" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246851" item_id="182216183" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246861" item_id="182216183" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246927" item_id="182216183" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="246872" item_id="182216183" chance="100" drop_each_member="1" collecting_step="1"/>
-    <quest_drop npc_id="247115" item_id="182216183" chance="100" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246556" item_id="182216182" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246855" item_id="182216182" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246865" item_id="182216182" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246875" item_id="182216182" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246885" item_id="182216182" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246895" item_id="182216182" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246905" item_id="182216182" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246920" item_id="182216182" chance="80" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246860" item_id="182216183" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246870" item_id="182216183" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246926" item_id="182216183" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="247113" item_id="182216183" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246881" item_id="182216183" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246851" item_id="182216183" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246861" item_id="182216183" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246927" item_id="182216183" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="246872" item_id="182216183" chance="70" drop_each_member="1" collecting_step="1"/>
+    <quest_drop npc_id="247115" item_id="182216183" chance="70" drop_each_member="1" collecting_step="1"/>
     <quest_work_items>
       <quest_work_item item_id="182216184" count="1"/>
     </quest_work_items>
@@ -36761,14 +36857,8 @@
       <selectable_reward_item item_id="110501023" count="1"/>
       <selectable_reward_item item_id="110601003" count="1"/>
       <selectable_reward_item item_id="110301623" count="1"/>
-      <selectable_reward_item item_id="110301623" count="1"/>
       <selectable_reward_item item_id="110551074" count="1"/>
     </extended_rewards>
-    <quest_drop npc_id="215798" item_id="182207843" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215837" item_id="182207844" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215839" item_id="182207844" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215840" item_id="182207844" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215838" item_id="182207844" chance="100" drop_each_member="1"/>
   </quest>
   <quest id="21064" name="Tricky Reinforcement Request" nameId="1127064" minlevel_permitted="51" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards gold="2310" exp="3501850">
@@ -36872,11 +36962,6 @@
       <selectable_reward_item item_id="114501620" count="1"/>
     </rewards>
     <rewards gold="55630" exp="5647915">
-      <selectable_reward_item item_id="114101135" count="1"/>
-      <selectable_reward_item item_id="114301145" count="1"/>
-      <selectable_reward_item item_id="114501094" count="1"/>
-      <selectable_reward_item item_id="114601048" count="1"/>
-      <selectable_reward_item item_id="114501620" count="1"/>
     </rewards>
     <start_conditions>
       <finished quest_id="21074"/>
@@ -37014,7 +37099,7 @@
     </rewards>
     <quest_drop npc_id="700725" item_id="182207856" chance="100" drop_each_member="1"/>
   </quest>
-  <quest id="21105" name="Cowering Refugee" nameId="1127073" minlevel_permitted="52" max_repeat_count="10" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
+  <quest id="21105" name="Cowering Refugee" nameId="1127073" minlevel_permitted="52" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards gold="15600" exp="8615558">
       <selectable_reward_item item_id="164000076" count="15"/>
       <selectable_reward_item item_id="164000073" count="15"/>
@@ -38092,13 +38177,10 @@
       <reward_item item_id="186000019" count="6"/>
     </rewards>
     <rewards gold="25400" exp="3663347">
-      <reward_item item_id="186000019" count="3"/>
     </rewards>
     <rewards gold="25400" exp="3663347">
-      <reward_item item_id="186000019" count="2"/>
     </rewards>
     <rewards gold="25400" exp="3663347">
-      <reward_item item_id="186000019" count="1"/>
     </rewards>
   </quest>
   <quest id="21468" name="The Struggle Within" nameId="1125534" minlevel_permitted="51" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
@@ -39127,8 +39209,12 @@
       <selectable_reward_item item_id="114501744" count="1"/>
       <selectable_reward_item item_id="114601583" count="1"/>
       <reward_item item_id="186000008" count="20"/>
-	  <reward_item item_id="190200000" count="10"/>
+      <reward_item item_id="190200000" count="10"/>
     </rewards>
+    <start_conditions>
+      <unfinished>2041</unfinished>
+      <noacquired>2041</noacquired>
+    </start_conditions>
     <class_permitted>GLADIATOR TEMPLAR ASSASSIN RANGER SORCERER SPIRIT_MASTER CHANTER CLERIC GUNSLINGER SONGWEAVER TECHNIST AETHERTECH</class_permitted>
   </quest>
   <quest id="24030" name="Showdown with Destiny" nameId="1129940" minlevel_permitted="50" max_repeat_count="1" cannot_share="true" cannot_giveup="true" race_permitted="ASMODIANS" category="MISSION">
@@ -42583,6 +42669,10 @@
     <rewards exp="4252148">
       <reward_item item_id="186000199" count="10"/>
     </rewards>
+    <start_conditions>
+      <unfinished>27012 27013</unfinished>
+      <noacquired>27012 27013</noacquired>
+    </start_conditions>
   </quest>
   <quest id="27015" name="[League] Base Dominion" nameId="1140095" minlevel_permitted="55" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="CHALLENGE_TASK" target_type="UNION">
     <rewards exp="3693351">
@@ -46437,22 +46527,22 @@
       <collect_item item_id="182209151" count="1"/>
     </collect_items>
     <rewards exp="5647915"/>
-    <quest_drop npc_id="215660" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215662" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215664" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215666" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215668" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215661" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215663" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215665" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215667" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215669" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215670" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215672" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215674" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215671" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215673" item_id="182209151" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215675" item_id="182209151" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215660" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215662" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215664" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215666" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215668" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215661" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215663" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215665" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215667" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215669" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215670" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215672" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215674" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215671" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215673" item_id="182209151" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="215675" item_id="182209151" chance="10" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="30001"/>
       <finished quest_id="30042"/>
@@ -46905,22 +46995,22 @@
       <collect_item item_id="182209181" count="1"/>
     </collect_items>
     <rewards exp="5647915"/>
-    <quest_drop npc_id="216049" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216050" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216051" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216052" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216053" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216054" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216415" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216416" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216417" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216418" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216419" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216420" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216421" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216422" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216423" item_id="182209181" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216424" item_id="182209181" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216049" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216050" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216051" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216052" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216053" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216054" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216415" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216416" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216417" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216418" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216419" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216420" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216421" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216422" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216423" item_id="182209181" chance="10" drop_each_member="1"/>
+    <quest_drop npc_id="216424" item_id="182209181" chance="10" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="30142"/>
       <finished quest_id="30101"/>
@@ -47471,9 +47561,9 @@
       <reward_item item_id="186000098" count="1"/>
       <reward_item item_id="164000106" count="5"/>
     </rewards>
-    <quest_drop npc_id="215730" item_id="182209613" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215733" item_id="182209613" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215734" item_id="182209613" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215730" item_id="182209613" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215733" item_id="182209613" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215734" item_id="182209613" chance="70" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="30209"/>
     </start_conditions>
@@ -47503,10 +47593,10 @@
       <reward_item item_id="186000098" count="1"/>
       <reward_item item_id="164000070" count="12"/>
     </rewards>
-    <quest_drop npc_id="215761" item_id="182209615" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215739" item_id="182209615" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215624" item_id="182209615" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215625" item_id="182209615" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215761" item_id="182209615" chance="45" drop_each_member="1"/>
+    <quest_drop npc_id="215739" item_id="182209615" chance="45" drop_each_member="1"/>
+    <quest_drop npc_id="215624" item_id="182209615" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="215625" item_id="182209615" chance="30" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="30211"/>
     </start_conditions>
@@ -47630,44 +47720,44 @@
     <rewards gold="27100" exp="5241977">
       <reward_item item_id="182216246" count="1"/>
     </rewards>
-    <quest_drop npc_id="216238" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216239" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216240" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216241" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216242" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216157" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216158" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216159" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216160" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216161" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216243" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216244" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216245" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216246" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216247" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216162" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216163" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216164" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216165" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216166" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216248" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216249" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216250" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216255" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216257" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216167" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216168" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216169" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216174" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216176" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216259" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216261" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216263" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216264" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216178" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216180" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216182" item_id="182209621" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216183" item_id="182209621" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216238" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216239" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216240" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216241" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216242" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216157" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216158" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216159" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216160" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216161" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216243" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216244" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216245" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216246" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216247" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216162" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216163" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216164" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216165" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216166" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216248" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216249" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216250" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216255" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216257" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216167" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216168" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216169" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216174" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216176" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216259" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216261" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216263" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216264" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216178" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216180" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216182" item_id="182209621" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216183" item_id="182209621" chance="30" drop_each_member="1"/>
   </quest>
   <quest id="30226" name="Priest Kailaus's New Nightmare" nameId="1114326" minlevel_permitted="53" max_repeat_count="1" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -47676,7 +47766,7 @@
     <rewards gold="103950" exp="6517414">
       <reward_item item_id="186000098" count="1"/>
     </rewards>
-    <quest_drop npc_id="215875" item_id="182209622" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215875" item_id="182209622" chance="70" drop_each_member="1"/>
   </quest>
   <quest id="30227" name="[Group] To Liberate Souls" nameId="1114327" minlevel_permitted="53" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="6517414">
@@ -47699,8 +47789,8 @@
       <reward_item item_id="186000098" count="1"/>
       <reward_item item_id="166100005" count="5"/>
     </rewards>
-    <quest_drop npc_id="215593" item_id="182209623" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215594" item_id="182209623" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215593" item_id="182209623" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215594" item_id="182209623" chance="70" drop_each_member="1"/>
   </quest>
   <quest id="30229" name="The Tricky Spirit" nameId="1114329" minlevel_permitted="53" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <collect_items>
@@ -47710,10 +47800,10 @@
       <reward_item item_id="186000098" count="1"/>
       <reward_item item_id="166100005" count="25"/>
     </rewards>
-    <quest_drop npc_id="215601" item_id="182209624" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215692" item_id="182209624" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215602" item_id="182209624" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215693" item_id="182209624" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215601" item_id="182209624" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215692" item_id="182209624" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215602" item_id="182209624" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215693" item_id="182209624" chance="70" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="30228"/>
     </start_conditions>
@@ -47726,8 +47816,8 @@
       <reward_item item_id="186000098" count="1"/>
       <reward_item item_id="166100005" count="25"/>
     </rewards>
-    <quest_drop npc_id="215622" item_id="182209625" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215623" item_id="182209625" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215622" item_id="182209625" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215623" item_id="182209625" chance="50" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="30229"/>
     </start_conditions>
@@ -47741,8 +47831,8 @@
       <reward_item item_id="185000091" count="1"/>
       <reward_item item_id="166100005" count="25"/>
     </rewards>
-    <quest_drop npc_id="215714" item_id="182209626" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215715" item_id="182209626" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215714" item_id="182209626" chance="35" drop_each_member="1"/>
+    <quest_drop npc_id="215715" item_id="182209626" chance="35" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="30230"/>
     </start_conditions>
@@ -47771,10 +47861,10 @@
       <reward_item item_id="185000091" count="1"/>
     </rewards>
     <bonus level="50" type="GOODS"/>
-    <quest_drop npc_id="215593" item_id="182209627" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215594" item_id="182209627" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215601" item_id="182209628" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215692" item_id="182209628" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215593" item_id="182209627" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215594" item_id="182209627" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215601" item_id="182209628" chance="50" drop_each_member="1"/>
+    <quest_drop npc_id="215692" item_id="182209628" chance="35" drop_each_member="1"/>
     <quest_drop npc_id="215602" item_id="182209628" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="215693" item_id="182209628" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="215622" item_id="182209629" chance="100" drop_each_member="1"/>
@@ -48135,10 +48225,10 @@
     <rewards gold="46800" exp="6517414">
       <reward_item item_id="186000098" count="1"/>
     </rewards>
-    <quest_drop npc_id="215990" item_id="182209709" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215991" item_id="182209709" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215997" item_id="182209709" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215994" item_id="182209709" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215990" item_id="182209709" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215991" item_id="182209709" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215997" item_id="182209709" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="215994" item_id="182209709" chance="70" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="30306"/>
     </start_conditions>
@@ -48329,44 +48419,44 @@
     <rewards gold="27100" exp="5241977">
       <reward_item item_id="182216246" count="1"/>
     </rewards>
-    <quest_drop npc_id="216238" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216239" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216240" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216241" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216242" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216157" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216158" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216159" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216160" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216161" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216243" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216244" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216245" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216246" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216247" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216162" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216163" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216164" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216165" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216166" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216248" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216249" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216250" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216255" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216257" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216167" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216168" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216169" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216174" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216176" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216259" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216261" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216263" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216264" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216178" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216180" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216182" item_id="182209721" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216183" item_id="182209721" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216238" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216239" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216240" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216241" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216242" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216157" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216158" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216159" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216160" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216161" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216243" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216244" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216245" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216246" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216247" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216162" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216163" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216164" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216165" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216166" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216248" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216249" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216250" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216255" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216257" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216167" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216168" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216169" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216174" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216176" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216259" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216261" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216263" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216264" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216178" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216180" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216182" item_id="182209721" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="216183" item_id="182209721" chance="30" drop_each_member="1"/>
   </quest>
   <quest id="30326" name="Dream A Little Dream" nameId="1114426" minlevel_permitted="53" max_repeat_count="1" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -48375,8 +48465,8 @@
     <rewards gold="103950" exp="6517414">
       <reward_item item_id="186000098" count="1"/>
     </rewards>
-    <quest_drop npc_id="215986" item_id="182209722" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215987" item_id="182209722" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215986" item_id="182209722" chance="60" drop_each_member="1"/>
+    <quest_drop npc_id="215987" item_id="182209722" chance="60" drop_each_member="1"/>
   </quest>
   <quest id="30327" name="[Group] Mired Souls" nameId="1114427" minlevel_permitted="53" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <rewards exp="7205248">
@@ -48399,8 +48489,8 @@
       <reward_item item_id="186000098" count="1"/>
       <reward_item item_id="166100005" count="5"/>
     </rewards>
-    <quest_drop npc_id="215999" item_id="182209723" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216000" item_id="182209723" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215999" item_id="182209723" chance="90" drop_each_member="1"/>
+    <quest_drop npc_id="216000" item_id="182209723" chance="50" drop_each_member="1"/>
     <quest_drop npc_id="216001" item_id="182209723" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="216002" item_id="182209723" chance="100" drop_each_member="1"/>
   </quest>
@@ -48412,10 +48502,10 @@
       <reward_item item_id="186000098" count="1"/>
       <reward_item item_id="166100005" count="25"/>
     </rewards>
-    <quest_drop npc_id="216026" item_id="182209724" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216028" item_id="182209724" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216027" item_id="182209724" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216029" item_id="182209724" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216026" item_id="182209724" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="216028" item_id="182209724" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="216027" item_id="182209724" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="216029" item_id="182209724" chance="70" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="30328"/>
     </start_conditions>
@@ -48445,8 +48535,8 @@
       <reward_item item_id="185000091" count="1"/>
       <reward_item item_id="166100005" count="25"/>
     </rewards>
-    <quest_drop npc_id="215929" item_id="182209726" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="215930" item_id="182209726" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215929" item_id="182209726" chance="30" drop_each_member="1"/>
+    <quest_drop npc_id="215930" item_id="182209726" chance="30" drop_each_member="1"/>
     <start_conditions>
       <finished quest_id="30330"/>
     </start_conditions>
@@ -48475,10 +48565,10 @@
       <reward_item item_id="185000091" count="1"/>
     </rewards>
     <bonus level="50" type="GOODS"/>
-    <quest_drop npc_id="215999" item_id="182209727" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216000" item_id="182209727" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="215999" item_id="182209727" chance="70" drop_each_member="1"/>
+    <quest_drop npc_id="216000" item_id="182209727" chance="70" drop_each_member="1"/>
     <quest_drop npc_id="216001" item_id="182209727" chance="100" drop_each_member="1"/>
-    <quest_drop npc_id="216002" item_id="182209727" chance="100" drop_each_member="1"/>
+    <quest_drop npc_id="216002" item_id="182209727" chance="30" drop_each_member="1"/>
     <quest_drop npc_id="216026" item_id="182209728" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="216028" item_id="182209728" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="216027" item_id="182209728" chance="100" drop_each_member="1"/>

@@ -15,9 +15,9 @@
       <reward kind="ITEM" id="164000079" amount="7"/>
     </rewards>
     <drops>
-      <drop npc-id="215861" item-id="182206868" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="215721" item-id="182206869" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="215720" item-id="182206869" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="215861" item-id="182206868" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="215721" item-id="182206869" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="215720" item-id="182206869" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

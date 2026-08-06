@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3003" version="1">
-  <metadata name="Kuomonerk's Side Job" display-name-id="1113002" min-level="20" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Kuomonerk's Side Job" display-name-id="1113002" min-level="20" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

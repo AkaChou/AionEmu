@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1919" version="1">
-  <metadata name="Welcome to the Artisan's Hall" display-name-id="1102919" min-level="10" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="Welcome to the Artisan's Hall" display-name-id="1102919" min-level="10" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -111,6 +111,22 @@
     </transition>
     <transition source="started" target="k1">
       <event>
+        <kill-npc npc-id="214668"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="k1">
+      <event>
+        <kill-npc npc-id="237116"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="k1">
+      <event>
         <kill-npc npc-id="237248"/>
       </event>
       <after-commit>

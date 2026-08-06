@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19685" version="1">
-  <metadata name="[Premium] Daeva Growth Support 2" display-name-id="1803400" min-level="20" max-level="2147483647" category="EVENT">
+  <metadata name="[Premium] Daeva Growth Support 2" display-name-id="1803400" min-level="20" max-level="29" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

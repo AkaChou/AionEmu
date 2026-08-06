@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="30512" version="1">
-  <metadata name="[Group] Pride Of The Elyos" display-name-id="1135505" min-level="57" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="[Group] Pride Of The Elyos" display-name-id="1135505" min-level="57" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -47,7 +47,6 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 接取:Rentus Base 的 Garnon (804879) 提供任务。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
         <talk-to-npc npc-id="804879" dialog-id="31"/>
@@ -97,10 +96,10 @@
       </after-commit>
     </transition>
 
-    <!-- 击杀德拉坎战将 (217290 217295 236267 236289) 15 只:var0 计数 0→15,priority 1 计数、0 完成进入奖励。 -->
+    <!-- 击杀德拉坎战将 20 种变体 15 只:var0 计数 0→15,priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-ids="217290 217295 236267 236289"/>
+        <kill-npc npc-ids="217290 217295 217318 217319 217326 217329 236282 855885 855887 855892 855894 236284 217296 236288 855891 855898 217297 236287 855890 855897"/>
       </event>
       <conditions>
         <variable-below field="var0" value="15"/>
@@ -114,7 +113,7 @@
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-ids="217290 217295 236267 236289"/>
+        <kill-npc npc-ids="217290 217295 217318 217319 217326 217329 236282 855885 855887 855892 855894 236284 217296 236288 855891 855898 217297 236287 855890 855897"/>
       </event>
       <conditions>
         <variable-at-least field="var0" value="15"/>
@@ -127,7 +126,6 @@
       </after-commit>
     </transition>
 
-    <!-- 奖励:Garnon (804879) 领取固定奖励 (exp/物品)。 -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="804879" dialog-ids="-1 1009"/>

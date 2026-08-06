@@ -6,7 +6,7 @@
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
     <rewards>
-      <reward kind="EXP" id="0" amount="36194960"/>
+      <reward kind="EXP" id="0" amount="80304192"/>
       <reward kind="ITEM" id="166000196" amount="1"/>
     </rewards>
     <start-conditions>
@@ -151,7 +151,7 @@
         <talk-to-npc npc-id="806149" dialog-ids="8..23"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="36194960" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="80304192" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="166000196" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>

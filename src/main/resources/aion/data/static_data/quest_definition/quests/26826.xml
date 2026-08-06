@@ -60,10 +60,10 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 击杀统治者堤丰后进入领奖。Killing Ruler Typhon enters reward. -->
+    <!-- 击杀蛇魔飞龙后进入领奖。Killing SnakeM_Fly enters reward. -->
     <transition source="started" target="reward">
       <event>
-        <kill-npc npc-id="220540"/>
+        <kill-npc npc-id="220593"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>

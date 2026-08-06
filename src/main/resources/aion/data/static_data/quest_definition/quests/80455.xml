@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80455" version="1">
-  <metadata name="[Growth] Doom Fungie" display-name-id="1185652" min-level="48" max-level="82" category="EVENT">
+  <metadata name="[Growth] Doom Fungie" display-name-id="1185652" min-level="48" max-level="55" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>

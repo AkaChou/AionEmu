@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6000" version="1">
-  <metadata name="Steel Chisel Supplies" display-name-id="1195001" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40002" combine-skill-point="1">
+  <metadata name="Steel Chisel Supplies" display-name-id="1195001" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40002" combine-skill-point="1">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291000" count="4"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12001" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40002" type="TASK"/>
     </bonuses>

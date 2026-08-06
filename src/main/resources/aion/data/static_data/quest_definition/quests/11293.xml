@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="11293" version="1">
-  <metadata name="[League] A New Spawning" display-name-id="1129622" min-level="55" max-level="2147483647" category="QUEST" target-type="UNION">
+  <metadata name="[League] A New Spawning" display-name-id="1129622" min-level="55" max-level="2147483647" category="QUEST" target-type="FORCE">
     <races>
       <race id="ELYOS"/>
     </races>

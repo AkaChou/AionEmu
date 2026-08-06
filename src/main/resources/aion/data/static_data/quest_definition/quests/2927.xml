@@ -14,15 +14,12 @@
       <reward kind="ITEM" id="186000469" amount="25"/>
     </rewards>
     <drops>
-      <drop npc-id="251002" item-id="182207058" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="251021" item-id="182207058" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="251018" item-id="182207058" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="251039" item-id="182207058" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="213444" item-id="182207059" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="213503" item-id="182207059" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="213445" item-id="182207059" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="213504" item-id="182207059" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="214018" item-id="182207060" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="235494" item-id="182207060" chance="100" each-member="true" collecting-step="0"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="2926"/>

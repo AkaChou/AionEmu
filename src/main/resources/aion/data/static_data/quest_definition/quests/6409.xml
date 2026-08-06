@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6409" version="1">
-  <metadata name="Molting Remedy Supplies" display-name-id="1195174" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="90">
+  <metadata name="Molting Remedy Supplies" display-name-id="1195174" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="90">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291173" count="8"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12410" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40007" type="TASK"/>
     </bonuses>

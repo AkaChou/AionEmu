@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="28843" version="1">
-  <metadata name="No One Under 21 Allowed" display-name-id="1136947" min-level="9" max-level="82" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="No One Under 21 Allowed" display-name-id="1136947" min-level="9" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

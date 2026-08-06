@@ -265,9 +265,9 @@
         <talk-to-npc npc-id="203075" dialog-id="23"/>
       </event>
       <actions>
-        <grant-reward kind="GOLD" id="0" amount="960" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="1595" amount-mode="QUEST_BASE"/>
-        <complete-quest reward-index="0"/>
+        <grant-reward kind="GOLD" id="0" amount="450" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="1150" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="1"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>

@@ -15,6 +15,9 @@
       <drop npc-id="231073" item-id="186000257" chance="100" each-member="true" collecting-step="0"/>
     </drops>
     <class-rewards>
+      <class id="FIGHTER">
+        <reward kind="ITEM" id="188052472" amount="1"/>
+      </class>
       <class id="WARRIOR">
         <reward kind="ITEM" id="188052471" amount="1"/>
       </class>
@@ -26,6 +29,9 @@
       </class>
       <class id="PRIEST">
         <reward kind="ITEM" id="188052475" amount="1"/>
+      </class>
+      <class id="GUNSLINGER">
+        <reward kind="ITEM" id="188052474" amount="1"/>
       </class>
       <class id="TECHNIST">
         <reward kind="ITEM" id="188052756" amount="1"/>

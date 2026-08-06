@@ -196,6 +196,14 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <transition source="a0b0c0d0" target="a0b0c0d0">
+      <event>
+        <enter-zone zone="IDSHIP_SENSORY_AREA_Q3211_300100000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="a0b0c0d0" target="a0b1c0d0">
       <event>
         <kill-npc npc-id="215069"/>

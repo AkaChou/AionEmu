@@ -4,9 +4,6 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <prerequisites>
-      <quest id="30714"/>
-    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="4049664"/>
       <reward kind="SELECTABLE_ITEM" id="160001338" amount="10"/>

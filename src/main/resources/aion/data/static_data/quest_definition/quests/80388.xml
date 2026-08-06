@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80388" version="1">
-  <metadata name="[Growth] Kralltumagna Kill Zone" display-name-id="1185585" min-level="41" max-level="82" category="EVENT">
+  <metadata name="[Growth] Kralltumagna Kill Zone" display-name-id="1185585" min-level="41" max-level="53" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -142,7 +142,7 @@
     </transition>
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-id="213994"/>
+        <kill-npc npc-id="214073"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -150,7 +150,7 @@
     </transition>
     <transition source="k1" target="k2">
       <event>
-        <kill-npc npc-id="213994"/>
+        <kill-npc npc-id="214073"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -158,7 +158,7 @@
     </transition>
     <transition source="k2" target="k3">
       <event>
-        <kill-npc npc-id="213994"/>
+        <kill-npc npc-id="214073"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -166,7 +166,7 @@
     </transition>
     <transition source="k3" target="k4">
       <event>
-        <kill-npc npc-id="213994"/>
+        <kill-npc npc-id="214073"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -174,7 +174,7 @@
     </transition>
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-id="213995"/>
+        <kill-npc npc-id="214074"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -182,7 +182,7 @@
     </transition>
     <transition source="k1" target="k2">
       <event>
-        <kill-npc npc-id="213995"/>
+        <kill-npc npc-id="214074"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -190,7 +190,7 @@
     </transition>
     <transition source="k2" target="k3">
       <event>
-        <kill-npc npc-id="213995"/>
+        <kill-npc npc-id="214074"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -198,7 +198,7 @@
     </transition>
     <transition source="k3" target="k4">
       <event>
-        <kill-npc npc-id="213995"/>
+        <kill-npc npc-id="214074"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

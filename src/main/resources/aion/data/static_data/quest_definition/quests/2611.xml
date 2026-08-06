@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2611" version="1">
-  <metadata name="Consulting The Leaders" display-name-id="1103911" min-level="42" max-level="2147483647" category="IMPORTANT">
+  <metadata name="Consulting The Leaders" display-name-id="1103911" min-level="42" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <rewards>
       <reward kind="EXP" id="0" amount="5220034"/>
-      <reward kind="ITEM" id="186000010" amount="20"/>
+      <reward kind="ITEM" id="186000010" amount="1"/>
     </rewards>
   </metadata>
   <progress>

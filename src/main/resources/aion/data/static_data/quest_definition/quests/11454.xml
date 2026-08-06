@@ -15,7 +15,7 @@
       <reward kind="EXP" id="0" amount="5233353"/>
     </rewards>
     <drops>
-      <drop npc-id="215527" item-id="182209502" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="215527" item-id="182209502" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>
@@ -120,7 +120,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    
+
     <transition source="started" target="started">
       <event>
         <talk-to-npc npc-id="799070" dialog-id="31"/>

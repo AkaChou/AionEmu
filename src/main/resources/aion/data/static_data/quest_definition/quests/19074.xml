@@ -4,6 +4,11 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <classes>
+      <class id="AETHERTECH"/>
+      <class id="GUNSLINGER"/>
+    </classes>
+
     <rewards>
       <reward kind="EXP" id="0" amount="633457"/>
       <reward kind="TITLE" id="38" amount="1"/>

@@ -25,6 +25,11 @@
       <reward kind="EXP" id="0" amount="299352"/>
       <reward kind="ITEM" id="101700216" amount="1"/>
     </rewards>
+
+    <drops>
+      <drop npc-id="833523" item-id="101700810" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="214621" item-id="101700810" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
@@ -136,6 +141,9 @@
         <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started"><event><kill-npc npc-id="214621"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><kill-npc npc-id="833523"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><collect-item item-id="101700810" count="1"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="started" target="reward" priority="0">
       <event>
         <talk-to-npc npc-id="205237" dialog-id="39"/>

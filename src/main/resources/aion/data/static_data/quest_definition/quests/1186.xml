@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 730012 接取，收集 5 个 182200552 后交回领奖。
      Single-NPC item-collecting quest: accept from 730012, collect 5x 182200552, turn in to the same NPC for reward. -->
 <quest-definition id="1186" version="1">
-  <metadata name="The Wriggot Menace" display-name-id="1102356" min-level="16" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="The Wriggot Menace" display-name-id="1102356" min-level="16" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

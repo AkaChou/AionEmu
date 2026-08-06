@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6114" version="1">
-  <metadata name="Cabinet Supplies" display-name-id="1195056" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="140">
+  <metadata name="Cabinet Supplies" display-name-id="1195056" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="140">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291055" count="24"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12115" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40003" type="TASK"/>
     </bonuses>

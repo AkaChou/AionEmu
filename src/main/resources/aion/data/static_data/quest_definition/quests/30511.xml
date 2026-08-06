@@ -5,6 +5,9 @@
       <race id="ELYOS"/>
     </races>
     <repeat max-repeat-count="15" cooldown-seconds="0" daily="false" weekly="false"/>
+    <items>
+      <item id="182212503" count="30"/>
+    </items>
     <rewards>
       <reward kind="EXP" id="0" amount="9178961"/>
       <reward kind="ITEM" id="188051598" amount="1"/>

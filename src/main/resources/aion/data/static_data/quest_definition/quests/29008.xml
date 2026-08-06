@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29008" version="1">
-  <metadata name="[Master] Weaponsmith's Potential" display-name-id="1124808" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Master] Weaponsmith's Potential" display-name-id="1124808" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" combine-skill="40002" combine-skill-point="499">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <items>
+      <item id="152206708" count="1"/>
+      <item id="152206709" count="1"/>
+      <item id="152029251" count="1"/>
       <item id="182207898" count="1"/>
     </items>
     <rewards>
@@ -13,6 +16,16 @@
     <start-conditions>
       <condition type="finished" quest-id="2931"/>
       <condition type="finished" quest-id="4947"/>
+      <condition type="unfinished" quest-id="29014"/>
+      <condition type="unfinished" quest-id="29020"/>
+      <condition type="unfinished" quest-id="29026"/>
+      <condition type="unfinished" quest-id="29032"/>
+      <condition type="unfinished" quest-id="29038"/>
+      <condition type="noacquired" quest-id="29014"/>
+      <condition type="noacquired" quest-id="29020"/>
+      <condition type="noacquired" quest-id="29026"/>
+      <condition type="noacquired" quest-id="29032"/>
+      <condition type="noacquired" quest-id="29038"/>
     </start-conditions>
   </metadata>
   <progress>

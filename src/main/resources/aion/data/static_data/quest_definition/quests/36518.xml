@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36518" version="1">
-  <metadata name="[Daily] 현상금 사냥 19" display-name-id="1126104" min-level="55" max-level="55" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] 현상금 사냥 19" display-name-id="1126104" min-level="999" max-level="999" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

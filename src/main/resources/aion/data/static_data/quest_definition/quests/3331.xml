@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3331" version="1">
-  <metadata name="Changing Career Paths" display-name-id="1135119" min-level="33" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Changing Career Paths" display-name-id="1135119" min-level="33" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -12,8 +12,8 @@
       <reward kind="ITEM" id="186000003" amount="3"/>
     </rewards>
     <drops>
-      <drop npc-id="211289" item-id="182201437" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211290" item-id="182201437" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211289" item-id="182201437" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211290" item-id="182201437" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

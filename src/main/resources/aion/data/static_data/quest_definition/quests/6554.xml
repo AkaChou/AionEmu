@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6554" version="1">
-  <metadata name="Bed with Fiber Blanket Supply [130p]" display-name-id="1195260" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40010" combine-skill-point="130">
+  <metadata name="Bed with Fiber Blanket Supply [130p]" display-name-id="1195260" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40010" combine-skill-point="130">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291576" count="12"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12555" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40010" type="TASK"/>
     </bonuses>

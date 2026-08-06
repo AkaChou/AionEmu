@@ -5,7 +5,7 @@
       <race id="ASMODIANS"/>
     </races>
     <rewards>
-      <reward kind="EXP" id="0" amount="10"/>
+      <reward kind="EXP" id="0" amount="510"/>
       <reward kind="SELECTABLE_ITEM" id="100000107" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="100200125" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="100100024" amount="1"/>
@@ -87,7 +87,7 @@
         <talk-to-npc npc-id="203516" dialog-id="8"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="10" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="100000107" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -102,7 +102,7 @@
         <talk-to-npc npc-id="203516" dialog-id="9"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="10" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="100200125" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -117,7 +117,7 @@
         <talk-to-npc npc-id="203516" dialog-id="10"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="10" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="100100024" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -132,7 +132,7 @@
         <talk-to-npc npc-id="203516" dialog-id="11"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="10" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="100600047" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -147,7 +147,7 @@
         <talk-to-npc npc-id="203516" dialog-id="12"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="10" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="115000024" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -162,7 +162,7 @@
         <talk-to-npc npc-id="203516" dialog-id="13"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="10" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="101800194" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -177,7 +177,7 @@
         <talk-to-npc npc-id="203516" dialog-id="14"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="10" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="102000207" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
@@ -192,7 +192,7 @@
         <talk-to-npc npc-id="203516" dialog-ids="15..23"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="10" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

@@ -4,10 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <classes>
-      <class id="TECHNIST"/>
-      <class id="AETHERTECH"/>
-    </classes>
     <items>
       <item id="102100561" count="1"/>
       <item id="186000095" count="1"/>

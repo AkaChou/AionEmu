@@ -50,19 +50,14 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 进入永恒摇篮副本自动接取。Auto-start on entering the Cradle of Eternity instance. -->
-    <transition source="unaccepted" target="started">
-      <event>
-        <enter-world/>
-      </event>
-      <conditions>
-        <world-is world-id="301550000"/>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
+    <!-- 接取:与 Stigeter 对话。Start via talking to Stigeter. -->
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806288" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806288" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806288" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806288" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806288" dialog-id="10000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806288" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806288" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <!-- 破坏隐藏的结界石后进入领奖。Destroying the hidden Kisk enters reward. -->
     <transition source="started" target="reward">
       <event>

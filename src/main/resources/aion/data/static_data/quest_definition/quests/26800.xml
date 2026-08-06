@@ -19,8 +19,16 @@
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started"><event><enter-zone zone="IDETERNITY_01_Q16800_301540000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><enter-zone zone="DF_TOWER_SENSORY_AREA_Q26800_220120000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <!-- 接取:DF6_Feregran_E (806079) 对话接取。Start via talking to DF6_Feregran_E. -->
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806079" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806079" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806079" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806079" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806079" dialog-id="10000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806079" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806079" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <!-- 第 3 步:进入 IDEternity_01_SensoryArea 播放过场 932。Step 3: entering the sensory area plays cutscene 932. -->
+    <transition source="started" target="started"><event><enter-zone zone="IDETERNITY_01_Q16800_301540000"/></event><after-commit><play-movie movie-id="932"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="806079" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="806079" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
     <transition source="started" target="reward"><event><talk-to-npc npc-id="806079" dialog-id="1009"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>

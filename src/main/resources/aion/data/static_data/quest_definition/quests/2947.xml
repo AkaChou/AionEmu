@@ -15,6 +15,9 @@
       <reward kind="GOLD" id="0" amount="4000"/>
       <reward kind="ITEM" id="167000497" amount="1"/>
     </rewards>
+    <drops>
+      <drop npc-id="700268" item-id="182207037" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="9" persistence="PERSISTENT" scope="LOCAL"/>

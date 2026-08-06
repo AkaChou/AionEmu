@@ -14,6 +14,9 @@
       <reward kind="EXP" id="0" amount="25849149"/>
       <reward kind="ITEM" id="188057225" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="20507"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="14" persistence="PERSISTENT" scope="LOCAL"/>

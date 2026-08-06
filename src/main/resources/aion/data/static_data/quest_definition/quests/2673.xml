@@ -9,16 +9,17 @@
       <item id="182204492" count="5"/>
     </items>
     <rewards>
+      <reward kind="AP" id="0" amount="200"/>
       <reward kind="GOLD" id="0" amount="73940"/>
       <reward kind="EXP" id="0" amount="4371150"/>
       <reward kind="ITEM" id="186000469" amount="25"/>
     </rewards>
     <drops>
-      <drop npc-id="214022" item-id="182204491" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="214023" item-id="182204491" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213996" item-id="182204492" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="214072" item-id="182204492" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213997" item-id="182204492" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="235500" item-id="182204491" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="235501" item-id="182204491" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="235504" item-id="182204492" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="235505" item-id="182204492" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="235506" item-id="182204492" chance="100" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>
@@ -205,6 +206,7 @@
       <actions>
         <grant-reward kind="GOLD" id="0" amount="73940"/>
         <grant-reward kind="EXP" id="0" amount="4371150"/>
+        <grant-reward kind="AP" id="0" amount="200" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="186000469" amount="25"/>
         <complete-quest reward-index="0"/>
       </actions>

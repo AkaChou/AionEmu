@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80229" version="1">
-  <metadata name="[Growth] Final Test In Dark Poeta" display-name-id="1180193" min-level="48" max-level="82" category="EVENT" cannot-share="true">
+  <metadata name="[Growth] Final Test In Dark Poeta" display-name-id="1180193" min-level="48" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

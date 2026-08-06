@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="11144" version="1">
-  <metadata name="Sueros's Headache" display-name-id="1125120" min-level="53" max-level="2147483647" category="QUEST">
+  <metadata name="Sueros's Headache" display-name-id="1125120" min-level="53" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

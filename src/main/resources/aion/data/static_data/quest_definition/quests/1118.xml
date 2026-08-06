@@ -76,6 +76,9 @@
       <conditions>
         <start-eligible/>
       </conditions>
+      <actions>
+        <give-item item-id="182200224" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <show-quest-dialog dialog-id="1003"/>
@@ -88,6 +91,9 @@
       <conditions>
         <start-eligible/>
       </conditions>
+      <actions>
+        <give-item item-id="182200224" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>

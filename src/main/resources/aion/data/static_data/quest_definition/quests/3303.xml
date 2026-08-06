@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3303" version="1">
-  <metadata name="Mysterious Water Source" display-name-id="1102600" min-level="37" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Mysterious Water Source" display-name-id="1102600" min-level="37" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -21,11 +21,11 @@
       <drop npc-id="211720" item-id="182201424" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="211723" item-id="182201424" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="211724" item-id="182201424" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211665" item-id="182201424" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211721" item-id="182201424" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211667" item-id="182201424" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211666" item-id="182201424" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211722" item-id="182201424" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211665" item-id="182201424" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211721" item-id="182201424" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211667" item-id="182201424" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211666" item-id="182201424" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211722" item-id="182201424" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

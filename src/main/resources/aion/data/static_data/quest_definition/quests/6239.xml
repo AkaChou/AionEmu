@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6239" version="1">
-  <metadata name="Centurion's Leather Belt Mend" display-name-id="1195122" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40004" combine-skill-point="390">
+  <metadata name="Centurion's Leather Belt Mend" display-name-id="1195122" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40004" combine-skill-point="390">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291121" count="20"/>
       <item id="182291278" count="40"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12240" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40004" type="TASK"/>
     </bonuses>

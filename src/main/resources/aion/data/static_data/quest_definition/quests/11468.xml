@@ -7,6 +7,8 @@
     <rewards>
       <reward kind="GOLD" id="0" amount="26830"/>
       <reward kind="EXP" id="0" amount="8614568"/>
+      <reward kind="SELECTABLE_ITEM" id="167000518" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167000555" amount="1"/>
     </rewards>
   </metadata>
   <progress>

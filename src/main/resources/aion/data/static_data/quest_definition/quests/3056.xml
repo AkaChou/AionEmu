@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3056" version="1">
-  <metadata name="In Search Of Zirius" display-name-id="1113055" min-level="49" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="In Search Of Zirius" display-name-id="1113055" min-level="49" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

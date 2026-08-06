@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36521" version="1">
-  <metadata name="[Daily] Das Spidona" display-name-id="1126114" min-level="50" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Das Spidona" display-name-id="1126114" min-level="50" max-level="52" category="FACTION" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

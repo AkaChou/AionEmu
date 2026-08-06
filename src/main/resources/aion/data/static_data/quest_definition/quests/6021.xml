@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6021" version="1">
-  <metadata name="Invader's Sword Repair" display-name-id="1195022" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40002" combine-skill-point="210">
+  <metadata name="Invader's Sword Repair" display-name-id="1195022" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40002" combine-skill-point="210">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291021" count="16"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12022" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40002" type="TASK"/>
     </bonuses>

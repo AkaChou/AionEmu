@@ -15,12 +15,13 @@
     </rewards>
     <extended-rewards>
       <reward kind="ITEM" id="188050584" amount="1"/>
+      <reward kind="GOLD" id="0" amount="8600"/>
     </extended-rewards>
     <drops>
-      <drop npc-id="213855" item-id="182209000" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213856" item-id="182209000" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213843" item-id="182209001" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213844" item-id="182209001" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="213855" item-id="182209000" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="213856" item-id="182209000" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="213843" item-id="182209001" chance="70" each-member="true" collecting-step="0"/>
+      <drop npc-id="213844" item-id="182209001" chance="70" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

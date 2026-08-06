@@ -4,13 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <classes>
-      <class id="WARRIOR"/>
-      <class id="SCOUT"/>
-      <class id="GLADIATOR"/>
-      <class id="ASSASSIN"/>
-      <class id="RANGER"/>
-    </classes>
     <inventory-items>
       <item id="100200810" count="1"/>
     </inventory-items>

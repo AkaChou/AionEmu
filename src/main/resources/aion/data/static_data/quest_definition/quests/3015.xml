@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3015" version="1">
-  <metadata name="A Hair-Raising Sound" display-name-id="1113014" min-level="23" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="A Hair-Raising Sound" display-name-id="1113014" min-level="23" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

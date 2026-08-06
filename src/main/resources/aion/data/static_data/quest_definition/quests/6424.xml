@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6424" version="1">
-  <metadata name="Invader's Spellbook Repair" display-name-id="1195189" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="240">
+  <metadata name="Invader's Spellbook Repair" display-name-id="1195189" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="240">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291188" count="16"/>
       <item id="182291298" count="48"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12425" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40007" type="TASK"/>
     </bonuses>

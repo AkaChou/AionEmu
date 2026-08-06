@@ -14,9 +14,10 @@
     </items>
     <rewards>
       <reward kind="EXP" id="0" amount="1225"/>
+      <reward kind="RANDOM" id="20501" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="214533" item-id="182207062" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="214533" item-id="182207062" chance="50" each-member="false" collecting-step="0"/>
     </drops>
     <bonuses>
       <bonus type="MOVIE"/>

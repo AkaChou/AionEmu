@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18649" version="1">
-  <metadata name="페렌토의 호출" display-name-id="1802757" min-level="66" max-level="2147483647" category="IMPORTANT">
+  <metadata name="페렌토의 호출" display-name-id="1802757" min-level="37" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

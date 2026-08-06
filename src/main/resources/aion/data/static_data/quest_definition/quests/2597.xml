@@ -8,6 +8,7 @@
       <item id="182204521" count="35"/>
     </items>
     <rewards>
+      <reward kind="RANDOM" id="10155" amount="1"/>
       <reward kind="EXP" id="0" amount="2068277"/>
       <reward kind="ITEM" id="188050590" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111100825" amount="1"/>
@@ -16,10 +17,10 @@
       <reward kind="SELECTABLE_ITEM" id="111600803" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="213361" item-id="182204521" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213362" item-id="182204521" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213373" item-id="182204521" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213374" item-id="182204521" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="213361" item-id="182204521" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213362" item-id="182204521" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213373" item-id="182204521" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213374" item-id="182204521" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>
@@ -201,6 +202,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2068277"/>
+        <grant-reward kind="RANDOM" id="10155" amount="1"/>
         <grant-reward kind="ITEM" id="188050590" amount="1"/>
         <grant-reward kind="ITEM" id="111100825" amount="1"/>
         <complete-quest reward-index="0"/>
@@ -217,6 +219,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2068277"/>
+        <grant-reward kind="RANDOM" id="10155" amount="1"/>
         <grant-reward kind="ITEM" id="188050590" amount="1"/>
         <grant-reward kind="ITEM" id="111300828" amount="1"/>
         <complete-quest reward-index="0"/>
@@ -233,6 +236,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2068277"/>
+        <grant-reward kind="RANDOM" id="10155" amount="1"/>
         <grant-reward kind="ITEM" id="188050590" amount="1"/>
         <grant-reward kind="ITEM" id="111500811" amount="1"/>
         <complete-quest reward-index="0"/>
@@ -249,6 +253,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2068277"/>
+        <grant-reward kind="RANDOM" id="10155" amount="1"/>
         <grant-reward kind="ITEM" id="188050590" amount="1"/>
         <grant-reward kind="ITEM" id="111600803" amount="1"/>
         <complete-quest reward-index="0"/>

@@ -3,6 +3,7 @@
   <metadata name="Plague Of The Elim" display-name-id="1102416" min-level="24" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
+      <race id="ASMODIANS"/>
     </races>
     <rewards>
       <reward kind="EXP" id="0" amount="432724"/>

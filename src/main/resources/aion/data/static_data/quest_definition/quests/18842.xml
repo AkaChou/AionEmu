@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18842" version="1">
-  <metadata name="Leaves Of Four Seasons" display-name-id="1136925" min-level="40" max-level="82" category="SEEN_MARKER">
+  <metadata name="Leaves Of Four Seasons" display-name-id="1136925" min-level="40" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ELYOS"/>
     </races>

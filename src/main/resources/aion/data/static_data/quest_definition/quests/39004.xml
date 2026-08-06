@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="39004" version="1">
-  <metadata name="Breakout" display-name-id="1140004" min-level="60" max-level="2147483647" category="PUBLIC" cannot-share="true" target-type="AREA">
+  <metadata name="Breakout" display-name-id="1140004" min-level="60" max-level="2147483647" category="QUEST" cannot-share="true" target-type="AREA">
     <races>
       <race id="ELYOS"/>
     </races>

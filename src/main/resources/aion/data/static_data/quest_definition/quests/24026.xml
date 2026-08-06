@@ -18,14 +18,6 @@
       <class id="TECHNIST"/>
       <class id="AETHERTECH"/>
     </classes>
-    <prerequisites>
-      <quest id="24020"/>
-      <quest id="24021"/>
-      <quest id="24022"/>
-      <quest id="24023"/>
-      <quest id="24024"/>
-      <quest id="24025"/>
-    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="3504765"/>
       <reward kind="TITLE" id="60" amount="1"/>
@@ -38,6 +30,10 @@
       <reward kind="ITEM" id="186000008" amount="20"/>
       <reward kind="ITEM" id="190200000" amount="10"/>
     </rewards>
+    <start-conditions>
+      <condition type="unfinished" quest-id="2041"/>
+      <condition type="noacquired" quest-id="2041"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
@@ -56,12 +52,12 @@
     <!-- The campaign starts only after all six preceding missions are complete. -->
     <transition source="unaccepted" target="started">
       <event><zone-mission-end/></event>
-      <conditions><start-eligible/><quests-finished quest-ids="24020 24021 24022 24023 24024 24025"/></conditions>
+      <conditions><start-eligible/></conditions>
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event><level-up/></event>
-      <conditions><start-eligible/><quests-finished quest-ids="24020 24021 24022 24023 24024 24025"/></conditions>
+      <conditions><start-eligible/></conditions>
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit>
     </transition>
 

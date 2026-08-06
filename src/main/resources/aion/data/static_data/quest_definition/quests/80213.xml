@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80213" version="1">
-  <metadata name="[Growth] Hearts Of Fire" display-name-id="1180177" min-level="27" max-level="82" category="EVENT" cannot-share="true">
+  <metadata name="[Growth] Hearts Of Fire" display-name-id="1180177" min-level="27" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

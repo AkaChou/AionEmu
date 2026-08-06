@@ -12,15 +12,15 @@
       <race id="ASMODIANS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="MON"/>
-    <prerequisites>
-      <quest id="25402"/>
-    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="79535250"/>
       <reward kind="AP" id="0" amount="60"/>
       <reward kind="ITEM" id="188056934" amount="1"/>
       <reward kind="ITEM" id="186000454" amount="2"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="25402"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

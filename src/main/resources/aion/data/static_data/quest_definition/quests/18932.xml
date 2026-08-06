@@ -8,6 +8,9 @@
     <rewards>
       <reward kind="EXP" id="0" amount="7911702"/>
       <reward kind="ITEM" id="188056947" amount="1"/>
+      <reward kind="ITEM" id="188056970" amount="1"/>
+      <reward kind="ITEM" id="166100011" amount="50"/>
+      <reward kind="ITEM" id="152012753" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -16,10 +19,16 @@
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
     <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
+    <!-- 击杀 IDDreadgion_04 德拉克卡忍者 (243953) 1 只:var0 0→1 进入奖励。 -->
+    <transition source="started" target="reward">
+      <event><kill-npc npc-id="243953"/></event>
+      <actions><set-variable field="var0" value="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806259" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806259" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806259" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
@@ -28,7 +37,6 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806259" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="806259" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="806259" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="806259" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="806259" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="806259" dialog-ids="8..23"/></event><actions>        <grant-reward kind="EXP" id="0" amount="7911702" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="188056947" amount="1"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806258" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
@@ -39,7 +47,6 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806258" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="806258" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="806258" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="806258" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="806258" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="806258" dialog-ids="8..23"/></event><actions>        <grant-reward kind="EXP" id="0" amount="7911702" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="188056947" amount="1"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
   </transitions>

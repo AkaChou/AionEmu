@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3106" version="1">
-  <metadata name="Insufficient Construction Materials" display-name-id="1113105" min-level="45" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Insufficient Construction Materials" display-name-id="1113105" min-level="45" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

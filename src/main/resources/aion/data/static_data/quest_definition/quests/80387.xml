@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80387" version="1">
-  <metadata name="[Growth] Kralltumagna Balaur Blues" display-name-id="1185584" min-level="41" max-level="82" category="EVENT">
+  <metadata name="[Growth] Kralltumagna Balaur Blues" display-name-id="1185584" min-level="41" max-level="53" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -584,7 +584,7 @@
     </transition>
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-id="219120"/>
+        <kill-npc npc-id="219103"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -592,7 +592,7 @@
     </transition>
     <transition source="k1" target="k2">
       <event>
-        <kill-npc npc-id="219120"/>
+        <kill-npc npc-id="219103"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -600,7 +600,7 @@
     </transition>
     <transition source="k2" target="k3">
       <event>
-        <kill-npc npc-id="219120"/>
+        <kill-npc npc-id="219103"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -608,7 +608,7 @@
     </transition>
     <transition source="k3" target="k4">
       <event>
-        <kill-npc npc-id="219120"/>
+        <kill-npc npc-id="219103"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -616,7 +616,7 @@
     </transition>
     <transition source="k4" target="k5">
       <event>
-        <kill-npc npc-id="219120"/>
+        <kill-npc npc-id="219103"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -624,7 +624,7 @@
     </transition>
     <transition source="k5" target="k6">
       <event>
-        <kill-npc npc-id="219120"/>
+        <kill-npc npc-id="219103"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -632,7 +632,7 @@
     </transition>
     <transition source="k6" target="k7">
       <event>
-        <kill-npc npc-id="219120"/>
+        <kill-npc npc-id="219103"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -640,7 +640,7 @@
     </transition>
     <transition source="k7" target="k8">
       <event>
-        <kill-npc npc-id="219120"/>
+        <kill-npc npc-id="219103"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -648,7 +648,7 @@
     </transition>
     <transition source="k8" target="k9">
       <event>
-        <kill-npc npc-id="219120"/>
+        <kill-npc npc-id="219103"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -656,7 +656,7 @@
     </transition>
     <transition source="k9" target="k10">
       <event>
-        <kill-npc npc-id="219120"/>
+        <kill-npc npc-id="219103"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -664,7 +664,7 @@
     </transition>
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-id="219121"/>
+        <kill-npc npc-id="219111"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -672,7 +672,7 @@
     </transition>
     <transition source="k1" target="k2">
       <event>
-        <kill-npc npc-id="219121"/>
+        <kill-npc npc-id="219111"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -680,7 +680,7 @@
     </transition>
     <transition source="k2" target="k3">
       <event>
-        <kill-npc npc-id="219121"/>
+        <kill-npc npc-id="219111"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -688,7 +688,7 @@
     </transition>
     <transition source="k3" target="k4">
       <event>
-        <kill-npc npc-id="219121"/>
+        <kill-npc npc-id="219111"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -696,7 +696,7 @@
     </transition>
     <transition source="k4" target="k5">
       <event>
-        <kill-npc npc-id="219121"/>
+        <kill-npc npc-id="219111"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -704,7 +704,7 @@
     </transition>
     <transition source="k5" target="k6">
       <event>
-        <kill-npc npc-id="219121"/>
+        <kill-npc npc-id="219111"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -712,7 +712,7 @@
     </transition>
     <transition source="k6" target="k7">
       <event>
-        <kill-npc npc-id="219121"/>
+        <kill-npc npc-id="219111"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -720,7 +720,7 @@
     </transition>
     <transition source="k7" target="k8">
       <event>
-        <kill-npc npc-id="219121"/>
+        <kill-npc npc-id="219111"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -728,7 +728,7 @@
     </transition>
     <transition source="k8" target="k9">
       <event>
-        <kill-npc npc-id="219121"/>
+        <kill-npc npc-id="219111"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -736,7 +736,7 @@
     </transition>
     <transition source="k9" target="k10">
       <event>
-        <kill-npc npc-id="219121"/>
+        <kill-npc npc-id="219111"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -744,7 +744,7 @@
     </transition>
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-id="219122"/>
+        <kill-npc npc-id="219112"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -752,7 +752,7 @@
     </transition>
     <transition source="k1" target="k2">
       <event>
-        <kill-npc npc-id="219122"/>
+        <kill-npc npc-id="219112"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -760,7 +760,7 @@
     </transition>
     <transition source="k2" target="k3">
       <event>
-        <kill-npc npc-id="219122"/>
+        <kill-npc npc-id="219112"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -768,7 +768,7 @@
     </transition>
     <transition source="k3" target="k4">
       <event>
-        <kill-npc npc-id="219122"/>
+        <kill-npc npc-id="219112"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -776,7 +776,7 @@
     </transition>
     <transition source="k4" target="k5">
       <event>
-        <kill-npc npc-id="219122"/>
+        <kill-npc npc-id="219112"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -784,7 +784,7 @@
     </transition>
     <transition source="k5" target="k6">
       <event>
-        <kill-npc npc-id="219122"/>
+        <kill-npc npc-id="219112"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -792,7 +792,7 @@
     </transition>
     <transition source="k6" target="k7">
       <event>
-        <kill-npc npc-id="219122"/>
+        <kill-npc npc-id="219112"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -800,7 +800,7 @@
     </transition>
     <transition source="k7" target="k8">
       <event>
-        <kill-npc npc-id="219122"/>
+        <kill-npc npc-id="219112"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -808,7 +808,7 @@
     </transition>
     <transition source="k8" target="k9">
       <event>
-        <kill-npc npc-id="219122"/>
+        <kill-npc npc-id="219112"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -816,7 +816,167 @@
     </transition>
     <transition source="k9" target="k10">
       <event>
-        <kill-npc npc-id="219122"/>
+        <kill-npc npc-id="219112"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="k1">
+      <event>
+        <kill-npc npc-id="219106"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="k2">
+      <event>
+        <kill-npc npc-id="219106"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k2" target="k3">
+      <event>
+        <kill-npc npc-id="219106"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k3" target="k4">
+      <event>
+        <kill-npc npc-id="219106"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k4" target="k5">
+      <event>
+        <kill-npc npc-id="219106"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k5" target="k6">
+      <event>
+        <kill-npc npc-id="219106"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k6" target="k7">
+      <event>
+        <kill-npc npc-id="219106"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k7" target="k8">
+      <event>
+        <kill-npc npc-id="219106"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k8" target="k9">
+      <event>
+        <kill-npc npc-id="219106"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k9" target="k10">
+      <event>
+        <kill-npc npc-id="219106"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="k1">
+      <event>
+        <kill-npc npc-id="219109"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="k2">
+      <event>
+        <kill-npc npc-id="219109"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k2" target="k3">
+      <event>
+        <kill-npc npc-id="219109"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k3" target="k4">
+      <event>
+        <kill-npc npc-id="219109"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k4" target="k5">
+      <event>
+        <kill-npc npc-id="219109"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k5" target="k6">
+      <event>
+        <kill-npc npc-id="219109"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k6" target="k7">
+      <event>
+        <kill-npc npc-id="219109"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k7" target="k8">
+      <event>
+        <kill-npc npc-id="219109"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k8" target="k9">
+      <event>
+        <kill-npc npc-id="219109"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k9" target="k10">
+      <event>
+        <kill-npc npc-id="219109"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

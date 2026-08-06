@@ -11345,7 +11345,7 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      
+
 
         <show-quest-dialog dialog-id="1003"/>
       </after-commit>
@@ -11359,7 +11359,7 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      
+
 
         <close-dialog/>
       </after-commit>
@@ -42122,7 +42122,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-      
+
 
         <show-quest-dialog dialog-id="5"/>
       </after-commit>

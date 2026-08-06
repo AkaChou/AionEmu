@@ -12,7 +12,7 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="4" min="0" max="10" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted">
@@ -32,14 +32,14 @@
     <node label="reward">
       <project status="REWARD">
         <vars>
-          <var name="var0" value="5"/>
+          <var name="var0" value="10"/>
         </vars>
       </project>
     </node>
     <node label="complete">
       <project status="COMPLETE">
         <vars>
-          <var name="var0" value="5"/>
+          <var name="var0" value="10"/>
         </vars>
       </project>
     </node>
@@ -118,17 +118,17 @@
       <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
     </transition>
 
-    <!-- 击杀修理工 (230349/233011) 5 只:var0 计数 0→5,priority 1 计数、0 完成进入奖励。 -->
+    <!-- 击杀伐木机械 (230359/233010) 10 只:var0 计数 0→5,priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-ids="230349 233011"/></event>
-      <conditions><variable-below field="var0" value="5"/></conditions>
+      <event><kill-npc npc-ids="230359 233010"/></event>
+      <conditions><variable-below field="var0" value="10"/></conditions>
       <actions><increment-variable field="var0" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
-      <event><kill-npc npc-ids="230349 233011"/></event>
-      <conditions><variable-at-least field="var0" value="5"/></conditions>
-      <actions><set-variable field="var0" value="5"/></actions>
+      <event><kill-npc npc-ids="230359 233010"/></event>
+      <conditions><variable-at-least field="var0" value="10"/></conditions>
+      <actions><set-variable field="var0" value="10"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
 

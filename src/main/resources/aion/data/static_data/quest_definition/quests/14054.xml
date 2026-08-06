@@ -17,6 +17,8 @@
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="14053"/>
+      <condition type="unfinished" quest-id="1063"/>
+      <condition type="noacquired" quest-id="1063"/>
     </start-conditions>
   </metadata>
   <progress>
@@ -83,7 +85,6 @@
     </node>
   </nodes>
   <transitions>
-    <!-- zone mission 结束时自动接取。 Auto-start on zone mission end. -->
     <transition source="unaccepted" target="started">
       <event>
         <zone-mission-end/>
@@ -95,7 +96,6 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 升级且前置 14053 完成时自动接取。 Auto-start on level-up once quest 14053 is finished. -->
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
@@ -166,7 +166,6 @@
         <show-quest-dialog dialog-id="1353"/>
       </after-commit>
     </transition>
-    <!-- 传送至魔族领地并推进。 Teleport to the Legion outpost and advance. -->
     <transition source="s1" target="s2">
       <event>
         <talk-to-npc npc-id="800413" dialog-id="10001"/>
@@ -220,7 +219,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 击杀 Krall 计数。 Kill Krall count. -->
     <transition source="s2" target="s2" priority="1">
       <event>
         <kill-npc npc-ids="214010 214013 214014 214015 235491 235492 235494 214022 214023 214082 214084 235484 235495 235498 235502"/>
@@ -236,7 +234,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀 Baranath Crusher 计数。 Kill Baranath Crusher count. -->
     <transition source="s2" target="s2" priority="1">
       <event>
         <kill-npc npc-id="702040"/>
@@ -252,7 +249,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀 Officer Vitusa 推进。 Kill Officer Vitusa to advance. -->
     <transition source="s3" target="s4">
       <event>
         <kill-npc npc-id="233861"/>
@@ -278,7 +274,6 @@
         <show-quest-dialog dialog-id="2716"/>
       </after-commit>
     </transition>
-    <!-- 传送并进入领奖阶段。 Teleport and enter reward stage. -->
     <transition source="s4" target="reward">
       <event>
         <talk-to-npc npc-id="802050" dialog-id="10005"/>

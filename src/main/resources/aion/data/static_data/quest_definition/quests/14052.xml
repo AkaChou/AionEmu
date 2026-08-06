@@ -31,6 +31,8 @@
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="14050"/>
+      <condition type="unfinished" quest-id="1063"/>
+      <condition type="noacquired" quest-id="1063"/>
     </start-conditions>
   </metadata>
   <progress>
@@ -93,7 +95,6 @@
     </node>
   </nodes>
   <transitions>
-    <!-- zone mission 结束时自动接取。 Auto-start on zone mission end. -->
     <transition source="unaccepted" target="started">
       <event>
         <zone-mission-end/>
@@ -105,7 +106,6 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 升级且前置 14050 完成时自动接取。 Auto-start on level-up once quest 14050 is finished. -->
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>

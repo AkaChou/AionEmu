@@ -8,6 +8,9 @@
     <items>
       <item id="188100255" count="100"/>
     </items>
+    <rewards>
+      <reward kind="RANDOM" id="24020" amount="1"/>
+    </rewards>
     <start-conditions>
       <condition type="finished" quest-id="80677"/>
     </start-conditions>
@@ -166,7 +169,7 @@
         <talk-to-npc npc-id="832969" dialog-ids="8..23"/>
       </event>
       <actions>
-        <complete-quest reward-index="0"/>
+        <grant-reward kind="RANDOM" id="24020" amount="1"/>        <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>

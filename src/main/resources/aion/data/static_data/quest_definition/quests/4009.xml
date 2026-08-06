@@ -11,9 +11,11 @@
     <rewards>
       <reward kind="GOLD" id="0" amount="6500"/>
       <reward kind="EXP" id="0" amount="86250"/>
+      <reward kind="RANDOM" id="15002" amount="1"/>
     </rewards>
     <extended-rewards>
       <reward kind="ITEM" id="188050588" amount="1"/>
+      <reward kind="GOLD" id="0" amount="11600"/>
     </extended-rewards>
   </metadata>
   <progress>

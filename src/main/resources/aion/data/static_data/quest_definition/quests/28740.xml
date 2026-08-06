@@ -5,10 +5,38 @@
       <race id="ASMODIANS"/>
     </races>
     <repeat max-repeat-count="10" cooldown-seconds="0" daily="false" weekly="false"/>
+    <items>
+      <item id="182215696" count="8"/>
+    </items>
     <rewards>
       <reward kind="EXP" id="0" amount="9492173"/>
       <reward kind="ITEM" id="186000231" amount="10"/>
     </rewards>
+
+    <drops>
+      <drop npc-id="236009" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236010" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236011" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236015" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236019" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236018" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236006" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236005" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236012" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236074" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236075" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236077" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236078" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236076" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236079" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236013" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236014" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236021" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236097" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236098" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236096" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="236020" item-id="182215696" chance="80" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
@@ -22,6 +50,7 @@
   <transitions>
     <transition source="unaccepted" target="started"><event><enter-zone zone="BOMIRE_VILLAGE_220080000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804732" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started" target="started"><event><collect-item item-id="182215696" count="8"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804732" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
     <transition source="started" target="reward"><event><talk-to-npc npc-id="804732" dialog-id="1009"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="804732" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>

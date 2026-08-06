@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3042" version="1">
-  <metadata name="A Sentinel's Predicament" display-name-id="1113041" min-level="46" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="A Sentinel's Predicament" display-name-id="1113041" min-level="46" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

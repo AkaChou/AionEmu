@@ -4,7 +4,8 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <prerequisites>
+    <prerequisites>      <quest id="2055"/>
+
       <quest id="4542"/>
     </prerequisites>
     <items>
@@ -18,10 +19,10 @@
       <reward kind="SELECTABLE_ITEM" id="120000843" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="213347" item-id="182204460" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213348" item-id="182204460" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213350" item-id="182204461" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213351" item-id="182204461" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="213347" item-id="182204460" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213348" item-id="182204460" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213350" item-id="182204461" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213351" item-id="182204461" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

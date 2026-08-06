@@ -12,38 +12,38 @@
       <reward kind="EXP" id="0" amount="874200"/>
     </rewards>
     <drops>
-      <drop npc-id="211386" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211478" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211488" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212439" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212441" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212444" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212449" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212450" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212451" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212452" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212453" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212454" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212455" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212456" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212457" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212458" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212459" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212988" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211419" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212460" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212461" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212462" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212463" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212464" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212465" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212466" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212467" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212468" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212469" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212470" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212619" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212662" item-id="182207065" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211386" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="211478" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="211488" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212439" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212441" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212444" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212449" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212450" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212451" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212452" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212453" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212454" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212455" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212456" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212457" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212458" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212459" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212988" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="211419" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212460" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212461" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212462" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212463" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212464" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212465" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212466" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212467" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212468" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212469" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212470" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212619" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="212662" item-id="182207065" chance="50" each-member="true" collecting-step="0"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="2989"/>

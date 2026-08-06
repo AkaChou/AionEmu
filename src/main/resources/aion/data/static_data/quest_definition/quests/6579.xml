@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6579" version="1">
-  <metadata name="Pandaemonium Display Cabinet Repair [380p]" display-name-id="1195285" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40010" combine-skill-point="380">
+  <metadata name="Pandaemonium Display Cabinet Repair [380p]" display-name-id="1195285" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40010" combine-skill-point="380">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291601" count="20"/>
       <item id="182291607" count="20"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12580" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40010" type="TASK"/>
     </bonuses>

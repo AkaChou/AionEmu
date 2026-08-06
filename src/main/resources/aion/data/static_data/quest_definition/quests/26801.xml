@@ -141,7 +141,7 @@
     <!-- 击杀图书馆管理员累积计数(共 30 个)。Killing librarians accumulates the kill count (30 total). -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-ids="220305 220308 220311 220314 220317 220323 220327 220329"/>
+        <kill-npc npc-ids="220305 220308 220311 220314 220317 220323 220326 220329"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -157,7 +157,7 @@
     <!-- 击杀满 30 个后进入领奖。Reaching 30 kills enters reward. -->
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-ids="220305 220308 220311 220314 220317 220323 220327 220329"/>
+        <kill-npc npc-ids="220305 220308 220311 220314 220317 220323 220326 220329"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>

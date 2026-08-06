@@ -6,6 +6,7 @@
     </races>
 <prerequisites>
       <quest id="14054"/>
+      <quest id="1062"/>
     </prerequisites>
     <items>
       <item id="182201810" count="10"/>
@@ -13,6 +14,7 @@
 <rewards>
       <reward kind="GOLD" id="0" amount="38500"/>
       <reward kind="EXP" id="0" amount="2719217"/>
+      <reward kind="RANDOM" id="10105" amount="1"/>
       <reward kind="ITEM" id="186000005" amount="1"/>
       <reward kind="ITEM" id="188050834" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="120000890" amount="1"/>
@@ -215,7 +217,8 @@
         <grant-reward kind="ITEM" id="186000005" amount="1"/>
         <grant-reward kind="ITEM" id="188050834" amount="1"/>
         <grant-reward kind="ITEM" id="120000890" amount="1"/>
-        <complete-quest reward-index="0"/>
+                <grant-reward kind="RANDOM" id="10105" amount="1"/>
+      <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>
@@ -233,7 +236,8 @@
         <grant-reward kind="ITEM" id="186000005" amount="1"/>
         <grant-reward kind="ITEM" id="188050834" amount="1"/>
         <grant-reward kind="ITEM" id="120000891" amount="1"/>
-        <complete-quest reward-index="0"/>
+                <grant-reward kind="RANDOM" id="10105" amount="1"/>
+      <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>

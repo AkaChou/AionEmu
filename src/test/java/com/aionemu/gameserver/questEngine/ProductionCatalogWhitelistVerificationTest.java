@@ -66,6 +66,7 @@ public class ProductionCatalogWhitelistVerificationTest {
 							&& !(t.event() instanceof QuestEvent.UseItem)
 							&& !(t.event() instanceof QuestEvent.ItemPlay)
 							&& !(t.event() instanceof QuestEvent.GetItem)
+							&& !(t.event() instanceof QuestEvent.CollectItem)
 							&& !(t.event() instanceof QuestEvent.PassFlyingRing)
 							&& !(t.event() instanceof QuestEvent.EnterWindStream)
 							&& !(t.event() instanceof QuestEvent.AtDistance)

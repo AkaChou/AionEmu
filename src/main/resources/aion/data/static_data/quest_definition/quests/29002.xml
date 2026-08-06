@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29002" version="1">
-  <metadata name="[Expert] Aethertapper's Test" display-name-id="1124802" min-level="40" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Expert] Aethertapper's Test" display-name-id="1124802" min-level="50" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" combine-skill="30003" combine-skill-point="399">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <items>
+      <item id="122001251" count="1"/>
       <item id="152003007" count="1"/>
       <item id="152003008" count="1"/>
     </items>
@@ -30,9 +31,9 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="204257" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="204257" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="204257" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="204257" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="204257" dialog-id="1009"/></event><conditions><has-item item-id="152003007" count="1"/><has-item item-id="152003008" count="1"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="204257" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204257" dialog-ids="8..23"/></event><actions>        <grant-reward kind="EXP" id="0" amount="5390338" amount-mode="QUEST_BASE"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204257" dialog-ids="8..23"/></event><actions>        <remove-item item-id="152003007" count="1"/>        <remove-item item-id="152003008" count="1"/>        <grant-reward kind="EXP" id="0" amount="5390338" amount-mode="QUEST_BASE"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="204099" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="204099" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="204099" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
@@ -41,8 +42,8 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="204099" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="204099" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="204099" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="204099" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="204099" dialog-id="1009"/></event><conditions><has-item item-id="152003007" count="1"/><has-item item-id="152003008" count="1"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="204099" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204099" dialog-ids="8..23"/></event><actions>        <grant-reward kind="EXP" id="0" amount="5390338" amount-mode="QUEST_BASE"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204099" dialog-ids="8..23"/></event><actions>        <remove-item item-id="152003007" count="1"/>        <remove-item item-id="152003008" count="1"/>        <grant-reward kind="EXP" id="0" amount="5390338" amount-mode="QUEST_BASE"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
   </transitions>
 </quest-definition>

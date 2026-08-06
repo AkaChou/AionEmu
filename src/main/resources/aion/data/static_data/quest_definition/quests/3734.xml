@@ -13,9 +13,14 @@
       <reward kind="SELECTABLE_ITEM" id="122001674" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="122001675" amount="1"/>
     </rewards>
+
     <drops>
-      <drop npc-id="700415" item-id="182202180" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="700415" item-id="182202180" chance="100" each-member="false" collecting-step="0"/>
     </drops>
+    <start-conditions>
+      <condition type="unfinished" quest-id="3704"/>
+      <condition type="noacquired" quest-id="3704"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

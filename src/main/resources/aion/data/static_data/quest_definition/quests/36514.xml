@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36514" version="1">
-  <metadata name="[Daily] Kill The Vicious Umbarnata" display-name-id="1126100" min-level="55" max-level="55" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Kill The Vicious Umbarnata" display-name-id="1126100" min-level="999" max-level="2147483647" category="FACTION" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

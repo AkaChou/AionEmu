@@ -8,6 +8,7 @@
       <item id="182204520" count="40"/>
     </items>
     <rewards>
+      <reward kind="RANDOM" id="10254" amount="1"/>
       <reward kind="EXP" id="0" amount="2068277"/>
       <reward kind="ITEM" id="188050590" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="123000909" amount="1"/>
@@ -15,10 +16,10 @@
     </rewards>
     <drops>
       <drop npc-id="213360" item-id="182204520" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213358" item-id="182204520" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213359" item-id="182204520" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213371" item-id="182204520" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213372" item-id="182204520" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="213358" item-id="182204520" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213359" item-id="182204520" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213371" item-id="182204520" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213372" item-id="182204520" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>
@@ -200,6 +201,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2068277"/>
+        <grant-reward kind="RANDOM" id="10254" amount="1"/>
         <grant-reward kind="ITEM" id="188050590" amount="1"/>
         <grant-reward kind="ITEM" id="123000909" amount="1"/>
         <complete-quest reward-index="0"/>
@@ -216,6 +218,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2068277"/>
+        <grant-reward kind="RANDOM" id="10254" amount="1"/>
         <grant-reward kind="ITEM" id="188050590" amount="1"/>
         <grant-reward kind="ITEM" id="123000910" amount="1"/>
         <complete-quest reward-index="0"/>

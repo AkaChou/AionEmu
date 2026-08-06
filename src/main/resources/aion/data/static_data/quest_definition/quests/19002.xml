@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19002" version="1">
-  <metadata name="[Expert] Aethertapper's Test" display-name-id="1124502" min-level="40" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Expert] Aethertapper's Test" display-name-id="1124502" min-level="40" max-level="2147483647" category="SIGNIFICANT" combine-skill="30003" combine-skill-point="399" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -8,6 +8,9 @@
       <item id="152003007" count="1"/>
       <item id="152003008" count="1"/>
     </items>
+    <work-items>
+      <item id="122001251" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="5390338"/>
     </rewards>
@@ -24,8 +27,8 @@
   <transitions>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203782" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203782" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203782" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203782" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203782" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="122001251" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203782" dialog-id="20000"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="122001251" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203782" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203782" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="203782" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>

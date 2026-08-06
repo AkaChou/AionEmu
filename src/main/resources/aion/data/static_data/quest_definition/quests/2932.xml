@@ -4,7 +4,7 @@
     <races><race id="ASMODIANS"/></races>
     <prerequisites><quest id="2975"/></prerequisites>
     <work-items><item id="182207021" count="1"/></work-items>
-    <rewards><reward kind="EXP" id="0" amount="291412"/><reward kind="ITEM" id="125001762" amount="1"/></rewards>
+    <rewards><reward kind="EXP" id="0" amount="291412"/><reward kind="SELECTABLE_ITEM" id="152205359" amount="1"/><reward kind="SELECTABLE_ITEM" id="152205365" amount="1"/><reward kind="SELECTABLE_ITEM" id="152205367" amount="1"/><reward kind="ITEM" id="125001762" amount="1"/></rewards>
   </metadata>
   <nodes><node label="unaccepted"><project status="NONE"/></node><node label="started"><project status="START"/></node><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
   <transitions>

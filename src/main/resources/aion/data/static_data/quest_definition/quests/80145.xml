@@ -10,6 +10,7 @@
     </work-items>
     <rewards>
       <reward kind="ITEM" id="164002053" amount="1"/>
+      <reward kind="RANDOM" id="24006" amount="1"/>
     </rewards>
     <bonuses>
       <bonus type="RIFT" level="10"/>
@@ -197,6 +198,7 @@
       </event>
       <actions>
         <grant-reward kind="ITEM" id="164002053" amount="1"/>
+        <grant-reward kind="RANDOM" id="24006" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

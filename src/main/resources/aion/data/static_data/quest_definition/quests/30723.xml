@@ -2,7 +2,7 @@
 <quest-definition id="30723" version="1">
   <metadata name="[Spy/Alliance] Sabat's Song" display-name-id="1800931" min-level="65" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
+      <race id="PC_ALL"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
     <work-items>

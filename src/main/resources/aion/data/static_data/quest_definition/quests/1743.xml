@@ -13,8 +13,8 @@
       <reward kind="AP" id="0" amount="100"/>
     </rewards>
     <drops>
-      <drop npc-id="252501" item-id="182202105" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="252502" item-id="182202105" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="252501" item-id="182202105" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="252502" item-id="182202105" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

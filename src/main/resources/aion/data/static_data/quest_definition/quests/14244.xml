@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14244" version="1">
   <metadata name="Eltnen Job" display-name-id="1800212" min-level="25" max-level="2147483647" category="IMPORTANT">
-<races>
+    <races>
       <race id="ELYOS"/>
     </races>
-<rewards>
+    <rewards>
       <reward kind="EXP" id="0" amount="285255"/>
       <reward kind="ITEM" id="162000048" amount="6"/>
       <reward kind="SELECTABLE_ITEM" id="114101699" amount="1"/>
@@ -14,9 +14,11 @@
       <reward kind="SELECTABLE_ITEM" id="114501735" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="114601578" amount="1"/>
     </rewards>
-<start-conditions>
+    <start-conditions>
       <condition type="unfinished" quest-id="3731"/>
       <condition type="noacquired" quest-id="3731"/>
+      <condition type="unfinished" quest-id="3701"/>
+      <condition type="noacquired" quest-id="3701"/>
     </start-conditions>
   </metadata>
   <progress>

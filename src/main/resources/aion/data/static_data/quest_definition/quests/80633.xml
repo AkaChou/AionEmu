@@ -9,7 +9,7 @@
       <item id="160010390" count="1"/>
     </items>
     <rewards>
-      <reward kind="ITEM" id="188053532" amount="1"/>
+      <reward kind="RANDOM" id="24009" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -190,7 +190,7 @@
         <talk-to-npc npc-id="832880" dialog-ids="8..23"/>
       </event>
       <actions>
-        <grant-reward kind="ITEM" id="188053532" amount="1"/>
+        <grant-reward kind="RANDOM" id="24009" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

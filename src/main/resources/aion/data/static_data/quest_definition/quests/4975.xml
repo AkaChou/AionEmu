@@ -13,6 +13,7 @@
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="4939"/>
+      <condition type="finished" quest-id="25352"/>
     </start-conditions>
   </metadata>
   <progress>

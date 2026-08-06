@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6536" version="1">
-  <metadata name="Morheim Natural Food Supplies" display-name-id="1195242" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40001" combine-skill-point="360">
+  <metadata name="Morheim Natural Food Supplies" display-name-id="1195242" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40001" combine-skill-point="360">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291241" count="20"/>
       <item id="182291313" count="20"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12537" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40001" type="TASK"/>
     </bonuses>

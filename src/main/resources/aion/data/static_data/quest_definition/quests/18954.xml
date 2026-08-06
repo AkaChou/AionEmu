@@ -4,6 +4,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <items>
+      <item id="182215754" count="1"/>
+    </items>
     <rewards>
       <reward kind="GOLD" id="0" amount="903960"/>
       <reward kind="EXP" id="0" amount="7927072"/>
@@ -24,6 +27,8 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="804711" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="804711" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="804711" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <!-- 使用 ITEM_QUEST_18954A (182215754) 接取。 -->
+    <transition source="unaccepted" target="started"><event><use-item item-id="182215754"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="804711" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="804711" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804711" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>

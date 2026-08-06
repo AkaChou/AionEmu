@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19052" version="1">
-  <metadata name="[Expert] Constructor's Test" display-name-id="1130009" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Expert] Constructor's Test" display-name-id="1130009" min-level="29" max-level="2147483647" category="SIGNIFICANT" combine-skill="40010" combine-skill-point="399" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

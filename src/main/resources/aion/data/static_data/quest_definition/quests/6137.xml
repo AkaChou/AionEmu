@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6137" version="1">
-  <metadata name="Executor's Sabatons Repair" display-name-id="1195079" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="370">
+  <metadata name="Executor's Sabatons Repair" display-name-id="1195079" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="370">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291078" count="20"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12138" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40003" type="TASK"/>
     </bonuses>

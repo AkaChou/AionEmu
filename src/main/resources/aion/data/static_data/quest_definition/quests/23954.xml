@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23954" version="1">
-  <metadata name="Weeping Daeva Soul" display-name-id="1803237" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="Weeping Daeva Soul" display-name-id="1803237" min-level="66" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

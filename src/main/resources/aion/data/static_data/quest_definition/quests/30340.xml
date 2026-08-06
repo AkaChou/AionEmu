@@ -4,11 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <classes>
-      <class id="MAGE"/>
-      <class id="SORCERER"/>
-      <class id="SPIRIT_MASTER"/>
-    </classes>
     <prerequisites>
       <quest id="30126"/>
     </prerequisites>

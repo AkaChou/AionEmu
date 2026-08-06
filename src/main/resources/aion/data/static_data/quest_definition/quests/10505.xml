@@ -27,8 +27,8 @@
     <drops>
       <drop npc-id="236258" item-id="182215609" chance="100" each-member="true" collecting-step="2"/>
       <drop npc-id="702672" item-id="182215610" chance="100" each-member="true" collecting-step="2"/>
-      <drop npc-id="236256" item-id="182215611" chance="100" each-member="true" collecting-step="2"/>
-      <drop npc-id="236257" item-id="182215611" chance="100" each-member="true" collecting-step="2"/>
+      <drop npc-id="236256" item-id="182215611" chance="80" each-member="true" collecting-step="2"/>
+      <drop npc-id="236257" item-id="182215611" chance="80" each-member="true" collecting-step="2"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="10504"/>

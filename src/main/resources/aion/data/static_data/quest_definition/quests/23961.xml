@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23961" version="1">
-  <metadata name="[Instanced Dungeon] Main Mission to Retrieve the Core Fragment" display-name-id="1803250" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="[Instanced Dungeon] Main Mission to Retrieve the Core Fragment" display-name-id="1803250" min-level="66" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

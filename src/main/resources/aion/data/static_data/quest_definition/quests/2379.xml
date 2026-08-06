@@ -12,11 +12,11 @@
       <reward kind="EXP" id="0" amount="2108696"/>
     </rewards>
     <drops>
-      <drop npc-id="211611" item-id="182204245" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212730" item-id="182204245" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212744" item-id="182204245" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212979" item-id="182204245" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212725" item-id="182204245" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211611" item-id="182204245" chance="85" each-member="true" collecting-step="0"/>
+      <drop npc-id="212730" item-id="182204245" chance="85" each-member="true" collecting-step="0"/>
+      <drop npc-id="212744" item-id="182204245" chance="85" each-member="true" collecting-step="0"/>
+      <drop npc-id="212979" item-id="182204245" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="212725" item-id="182204245" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29026" version="1">
-  <metadata name="[Master] Handicrafter's Potential" display-name-id="1124826" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Master] Handicrafter's Potential" display-name-id="1124826" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" combine-skill="40008" combine-skill-point="499">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <items>
       <item id="182207901" count="1"/>
-    </items>
+    <item id="152207051" count="1"/><item id="152207052" count="1"/><item id="152029250" count="1"/></items>
     <rewards>
       <reward kind="EXP" id="0" amount="291412"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="2933"/>
       <condition type="finished" quest-id="4953"/>
-    </start-conditions>
+    <condition type="unfinished" quest-id="29008"/><condition type="unfinished" quest-id="29014"/><condition type="unfinished" quest-id="29020"/><condition type="unfinished" quest-id="29032"/><condition type="unfinished" quest-id="29038"/><condition type="noacquired" quest-id="29008"/><condition type="noacquired" quest-id="29014"/><condition type="noacquired" quest-id="29020"/><condition type="noacquired" quest-id="29032"/><condition type="noacquired" quest-id="29038"/></start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

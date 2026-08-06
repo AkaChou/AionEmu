@@ -12,6 +12,7 @@
       <reward kind="GOLD" id="0" amount="51400"/>
       <reward kind="EXP" id="0" amount="6620429"/>
       <reward kind="ITEM" id="188050586" amount="1"/>
+      <reward kind="RANDOM" id="10254" amount="1"/>
     </rewards>
     <drops>
       <drop npc-id="214373" item-id="182209053" chance="100" each-member="true" collecting-step="0"/>

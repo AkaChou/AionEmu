@@ -14,10 +14,15 @@
       <reward kind="ITEM" id="188051336" amount="1"/>
       <reward kind="ITEM" id="164002020" amount="1"/>
     </rewards>
+    <extended-rewards>
+      <reward kind="SELECTABLE_ITEM" id="125040157" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="111000022" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114000017" amount="1"/>
+    </extended-rewards>
     <drops>
-      <drop npc-id="217699" item-id="182215077" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="217700" item-id="182215077" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="217704" item-id="182215077" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="217699" item-id="182215077" chance="40" each-member="true" collecting-step="0"/>
+      <drop npc-id="217700" item-id="182215077" chance="40" each-member="true" collecting-step="0"/>
+      <drop npc-id="217704" item-id="182215077" chance="50" each-member="true" collecting-step="0"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="80093"/>

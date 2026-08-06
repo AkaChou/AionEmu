@@ -35,6 +35,8 @@
       <condition type="finished" quest-id="14013"/>
       <condition type="finished" quest-id="14014"/>
       <condition type="finished" quest-id="14015"/>
+      <condition type="unfinished" quest-id="1020"/>
+      <condition type="noacquired" quest-id="1020"/>
     </start-conditions>
   </metadata>
   <progress>
@@ -85,7 +87,6 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 区域任务链结束自动接取（前置由 start-conditions 声明）。 Auto-start when the zone mission chain ends. -->
     <transition source="unaccepted" target="started">
       <event>
         <zone-mission-end/>
@@ -98,7 +99,6 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 升级自动接取（前置由 start-conditions 声明）。 Auto-start on level-up once prerequisites are met. -->
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
@@ -111,7 +111,6 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- Spatalos 对话起始页。 Spatalos start dialog. -->
     <transition source="started" target="started">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="31"/>
@@ -123,7 +122,6 @@
         <show-quest-dialog dialog-id="1011"/>
       </after-commit>
     </transition>
-    <!-- Spatalos 传送至贝尔特伦。 Spatalos sends the player to Verteron. -->
     <transition source="started" target="s1">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="10000"/>
@@ -140,7 +138,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 进入 AERDINA 区域推进到收集钥匙步骤。 Entering AERDINA advances to the key-collecting step. -->
     <transition source="s1" target="s2">
       <event>
         <enter-zone zone="AERDINA_310030000"/>
@@ -155,7 +152,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 使用守护石召唤 Balaur 并移除石头。 Use the guardian stone to summon the Balaur and remove the stone. -->
     <transition source="s2" target="s2">
       <event>
         <talk-to-npc npc-id="700142" dialog-id="-1"/>
@@ -167,7 +163,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 击杀 Balaur：已持有钥匙则跳过，避免重复发放。 Kill Balaur: skip when the key is already held. -->
     <transition source="s2" target="s2" priority="0">
       <event>
         <kill-npc npc-id="233873"/>
@@ -180,7 +175,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀 Balaur 获得钥匙。 Kill Balaur to obtain the key. -->
     <transition source="s2" target="s2" priority="1">
       <event>
         <kill-npc npc-id="233873"/>
@@ -195,7 +189,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 使用深渊之门消耗钥匙，播放动画并进入奖励。 Use the Abyss Gate to spend the key, play the movie and enter reward. -->
     <transition source="s2" target="reward">
       <event>
         <talk-to-npc npc-id="700141" dialog-id="-1"/>
@@ -211,7 +204,6 @@
         <play-movie movie-id="153"/>
       </after-commit>
     </transition>
-    <!-- 动画结束传送回贝尔特伦。 Movie end teleports back to Verteron. -->
     <transition source="reward" target="reward">
       <event>
         <movie-end movie-id="153"/>
@@ -220,7 +212,6 @@
         <teleport-player-current-or-default world-id="210030000" x="1702.7107" y="1493.9282" z="121.661995" heading="0"/>
       </after-commit>
     </transition>
-    <!-- 死亡时回退到收集前步骤并移除钥匙。 Die: revert to the pre-collect step and remove the key. -->
     <transition source="s2" target="s1">
       <event>
         <die/>
@@ -236,7 +227,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 重新进入区域时回退并移除钥匙。 Re-entering the zone reverts and removes the key. -->
     <transition source="s2" target="s1">
       <event>
         <enter-zone zone="AERDINA_310030000"/>
@@ -252,7 +242,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 奖励窗口：USE_OBJECT 显示奖励选择。 Reward window on USE_OBJECT. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="-1"/>
@@ -261,7 +250,6 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <!-- 奖励窗口：START_DIALOG 显示奖励选择。 Reward window on START_DIALOG. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="31"/>
@@ -270,7 +258,6 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <!-- 奖励窗口：SELECT_REWARD 显示奖励选择。 Reward window on SELECT_REWARD. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="1009"/>
@@ -279,7 +266,6 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 1。 Reward selection 1. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="8"/>
@@ -297,7 +283,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 2。 Reward selection 2. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="9"/>
@@ -315,7 +300,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 3。 Reward selection 3. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="10"/>
@@ -333,7 +317,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 4。 Reward selection 4. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="11"/>
@@ -351,7 +334,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 5。 Reward selection 5. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="12"/>
@@ -369,7 +351,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 6。 Reward selection 6. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="13"/>
@@ -387,7 +368,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 7。 Reward selection 7. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="14"/>
@@ -405,7 +385,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 8。 Reward selection 8. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="15"/>
@@ -423,7 +402,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 9。 Reward selection 9. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="16"/>
@@ -441,7 +419,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 10。 Reward selection 10. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="17"/>
@@ -459,7 +436,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 11。 Reward selection 11. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="18"/>
@@ -477,7 +453,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 12。 Reward selection 12. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="19"/>
@@ -495,7 +470,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 13。 Reward selection 13. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="20"/>

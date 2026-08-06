@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="11324" version="1">
-  <metadata name="[Daily/Spy] No Mo' Asmos" display-name-id="1801244" min-level="65" max-level="2147483647" category="PUBLIC" cannot-share="true">
+  <metadata name="[Daily/Spy] No Mo' Asmos" display-name-id="1801244" min-level="65" max-level="2147483647" category="PUBLIC">
     <races>
       <race id="ELYOS"/>
     </races>

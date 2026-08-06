@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203155 接取，收集 5 个 182200544 后交回领奖。
      Single-NPC item-collecting quest: accept from 203155, collect 5x 182200544, turn in to the same NPC for reward. -->
 <quest-definition id="1174" version="1">
-  <metadata name="Ribbit Blood" display-name-id="1102344" min-level="15" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Ribbit Blood" display-name-id="1102344" min-level="15" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

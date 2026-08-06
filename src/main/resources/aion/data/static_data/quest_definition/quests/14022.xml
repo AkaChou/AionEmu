@@ -12,6 +12,8 @@
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="14020"/>
+      <condition type="unfinished" quest-id="1043"/>
+      <condition type="noacquired" quest-id="1043"/>
     </start-conditions>
   </metadata>
   <progress>
@@ -97,7 +99,6 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 区域任务链结束自动接取（前置由 start-conditions 声明）。 Auto-start when the zone mission chain ends. -->
     <transition source="unaccepted" target="started">
       <event>
         <zone-mission-end/>
@@ -109,7 +110,6 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 升级自动接取（前置由 start-conditions 声明）。 Auto-start on level-up once prerequisites are met. -->
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
@@ -121,7 +121,6 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 诺伦对话起始页。 Noren start dialog. -->
     <transition source="started" target="started">
       <event>
         <talk-to-npc npc-id="203900" dialog-id="31"/>
@@ -133,7 +132,6 @@
         <show-quest-dialog dialog-id="1011"/>
       </after-commit>
     </transition>
-    <!-- 诺伦推进到下一对话者。 Noren advances to the next contact. -->
     <transition source="started" target="s1">
       <event>
         <talk-to-npc npc-id="203900" dialog-id="10000"/>
@@ -149,7 +147,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 对话者 203996 起始页（第 1 步）。 Contact 203996 start dialog at step 1. -->
     <transition source="s1" target="s1">
       <event>
         <talk-to-npc npc-id="203996" dialog-id="31"/>
@@ -161,7 +158,6 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <!-- 对话者 203996 推进到击杀收集步骤。 Contact 203996 advances to the kill step. -->
     <transition source="s1" target="s2">
       <event>
         <talk-to-npc npc-id="203996" dialog-id="10001"/>
@@ -177,7 +173,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 击杀第 1 只魔物推进。 Kill 1st fiend to advance. -->
     <transition source="s2" target="s3">
       <event>
         <kill-npc npc-ids="210808 210799"/>
@@ -192,7 +187,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀第 2 只魔物推进。 Kill 2nd fiend to advance. -->
     <transition source="s3" target="s4">
       <event>
         <kill-npc npc-ids="210808 210799"/>
@@ -207,7 +201,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀第 3 只魔物推进。 Kill 3rd fiend to advance. -->
     <transition source="s4" target="s5">
       <event>
         <kill-npc npc-ids="210808 210799"/>
@@ -222,7 +215,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀第 4 只魔物推进。 Kill 4th fiend to advance. -->
     <transition source="s5" target="s6">
       <event>
         <kill-npc npc-ids="210808 210799"/>
@@ -237,7 +229,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀第 5 只魔物推进。 Kill 5th fiend to advance. -->
     <transition source="s6" target="s7">
       <event>
         <kill-npc npc-ids="210808 210799"/>
@@ -252,7 +243,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀第 6 只魔物进入奖励状态。 Kill 6th fiend to enter reward state. -->
     <transition source="s7" target="reward">
       <event>
         <kill-npc npc-ids="210808 210799"/>
@@ -264,7 +254,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 对话者 203996 起始页（第 7 步）。 Contact 203996 start dialog at step 7. -->
     <transition source="s7" target="s7">
       <event>
         <talk-to-npc npc-id="203996" dialog-id="31"/>
@@ -276,7 +265,6 @@
         <show-quest-dialog dialog-id="2034"/>
       </after-commit>
     </transition>
-    <!-- 对话者 203996 进入奖励状态。 Contact 203996 enters reward state. -->
     <transition source="s7" target="reward">
       <event>
         <talk-to-npc npc-id="203996" dialog-id="10002"/>
@@ -289,7 +277,6 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <!-- 奖励窗口：START_DIALOG 显示任务提示。 Reward window on START_DIALOG. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203996" dialog-id="31"/>
@@ -298,7 +285,6 @@
         <show-quest-dialog dialog-id="2716"/>
       </after-commit>
     </transition>
-    <!-- 奖励窗口：USE_OBJECT 显示奖励选择。 Reward window on USE_OBJECT. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203996" dialog-id="-1"/>
@@ -307,7 +293,6 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <!-- 奖励窗口：SELECT_REWARD 显示奖励选择。 Reward window on SELECT_REWARD. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203996" dialog-id="1009"/>
@@ -316,7 +301,6 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 1。 Reward selection 1. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203996" dialog-id="8"/>
@@ -333,7 +317,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 2。 Reward selection 2. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203996" dialog-id="9"/>

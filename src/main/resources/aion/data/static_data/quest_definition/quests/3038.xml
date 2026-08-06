@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3038" version="1">
-  <metadata name="Ask Your Doctor About Ovisac" display-name-id="1113037" min-level="48" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Ask Your Doctor About Ovisac" display-name-id="1113037" min-level="48" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -14,8 +14,8 @@
       <reward kind="ITEM" id="188050589" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="214252" item-id="182208028" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="214253" item-id="182208028" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="214252" item-id="182208028" chance="85" each-member="true" collecting-step="0"/>
+      <drop npc-id="214253" item-id="182208028" chance="85" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

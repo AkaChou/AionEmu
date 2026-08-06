@@ -13,11 +13,12 @@
 <rewards>
       <reward kind="GOLD" id="0" amount="22900"/>
       <reward kind="EXP" id="0" amount="339130"/>
+      <reward kind="RANDOM" id="10003" amount="1"/>
       <reward kind="ITEM" id="188050588" amount="1"/>
     </rewards>
 <drops>
-      <drop npc-id="211060" item-id="182201787" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211077" item-id="182201787" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211060" item-id="182201787" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211077" item-id="182201787" chance="80" each-member="true" collecting-step="0"/>
     </drops>
 <bonuses>
       <bonus type="MEDICINE" level="30"/>
@@ -204,7 +205,8 @@
         <grant-reward kind="GOLD" id="0" amount="22900" amount-mode="QUEST_BASE"/>
         <grant-reward kind="EXP" id="0" amount="339130" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="188050588" amount="1"/>
-        <complete-quest reward-index="0"/>
+                <grant-reward kind="RANDOM" id="10003" amount="1"/>
+      <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
         <refresh-player-stats/>

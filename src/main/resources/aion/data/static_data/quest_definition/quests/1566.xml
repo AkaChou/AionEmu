@@ -18,10 +18,10 @@
       <reward kind="SELECTABLE_ITEM" id="113501548" amount="1"/>
     </rewards>
 <drops>
-      <drop npc-id="211133" item-id="182201732" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211154" item-id="182201732" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211931" item-id="182201733" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211932" item-id="182201733" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211133" item-id="182201732" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211154" item-id="182201732" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211931" item-id="182201733" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211932" item-id="182201733" chance="80" each-member="true" collecting-step="0"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="1565"/>

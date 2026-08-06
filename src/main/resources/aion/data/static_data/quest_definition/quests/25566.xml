@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="25566" version="1">
-  <metadata name="[Sky/Weekly] Onward to Iluma!" display-name-id="1802198" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="[Sky/Weekly] Onward to Iluma!" display-name-id="1802198" min-level="66" max-level="998" category="PUBLIC">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <reward kind="EXP" id="0" amount="54130050"/>
       <reward kind="ITEM" id="186000454" amount="3"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="25550"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>

@@ -4,7 +4,7 @@
   Item-collecting: collect 7 Potcrab shells (182200553), report to 203166 for reward; drops from 210331/210275.
 -->
 <quest-definition id="1189" version="1">
-  <metadata name="Potcrab The Headache" display-name-id="1102359" min-level="17" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Potcrab The Headache" display-name-id="1102359" min-level="17" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

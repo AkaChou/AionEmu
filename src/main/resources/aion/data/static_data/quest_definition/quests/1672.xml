@@ -55,7 +55,7 @@
   <transitions>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203784" dialog-id="31"/>
+        <talk-to-npc npc-id="204600" dialog-id="31"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="1011"/>
@@ -63,7 +63,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203784" dialog-id="1007"/>
+        <talk-to-npc npc-id="204600" dialog-id="1007"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="4"/>
@@ -71,7 +71,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="203784" dialog-id="1002"/>
+        <talk-to-npc npc-id="204600" dialog-id="1002"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -83,7 +83,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="203784" dialog-id="20000"/>
+        <talk-to-npc npc-id="204600" dialog-id="20000"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -95,7 +95,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="203784" dialog-id="10000"/>
+        <talk-to-npc npc-id="204600" dialog-id="10000"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -107,7 +107,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203784" dialog-ids="1003 1004 20001"/>
+        <talk-to-npc npc-id="204600" dialog-ids="1003 1004 20001"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -115,7 +115,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203784" dialog-id="1008"/>
+        <talk-to-npc npc-id="204600" dialog-id="1008"/>
       </event>
       <after-commit>
         <show-quest-selection-dialog dialog-id="10"/>

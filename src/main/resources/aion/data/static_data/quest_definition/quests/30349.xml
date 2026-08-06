@@ -4,10 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <classes>
-      <class id="MUSE"/>
-      <class id="SONGWEAVER"/>
-    </classes>
     <prerequisites>
       <quest id="30139"/>
     </prerequisites>

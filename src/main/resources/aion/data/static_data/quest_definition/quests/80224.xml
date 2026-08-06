@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80224" version="1">
-  <metadata name="[Growth] Bad Bakarma" display-name-id="1180188" min-level="39" max-level="82" category="EVENT" cannot-share="true">
+  <metadata name="[Growth] Bad Bakarma" display-name-id="1180188" min-level="39" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

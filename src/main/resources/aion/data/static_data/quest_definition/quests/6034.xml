@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6034" version="1">
-  <metadata name="Squad Leader's Polearm Repair" display-name-id="1195035" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40002" combine-skill-point="340">
+  <metadata name="Squad Leader's Polearm Repair" display-name-id="1195035" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40002" combine-skill-point="340">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291034" count="20"/>
       <item id="182291251" count="20"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12035" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40002" type="TASK"/>
     </bonuses>

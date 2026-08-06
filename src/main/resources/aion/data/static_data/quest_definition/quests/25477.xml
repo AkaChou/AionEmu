@@ -10,9 +10,6 @@
       <race id="ASMODIANS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="MON"/>
-    <prerequisites>
-      <quest id="25402"/>
-    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="53023500"/>
       <reward kind="AP" id="0" amount="3000"/>
@@ -21,6 +18,9 @@
       <reward kind="ABYSS_OP" id="0" amount="60"/>
       <reward kind="ITEM" id="188056936" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="25402"/>
+    </start-conditions>
   </metadata>
   <progress>
     <!-- var0: 阶段位，0=进行中，1=可领奖；第 8 次击杀后置 1。

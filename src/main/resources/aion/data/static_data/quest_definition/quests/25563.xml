@@ -4,7 +4,7 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="WED"/>
     <items><item id="182215977" count="1"/></items>
     <rewards>
       <reward kind="GOLD" id="0" amount="465480"/>
@@ -12,6 +12,9 @@
       <reward kind="GP" id="0" amount="300"/>
       <reward kind="ITEM" id="188100391" amount="100"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="25550"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

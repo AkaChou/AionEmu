@@ -19,7 +19,34 @@
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
     <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="k1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="k2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="k3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="k4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="k5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
+    <node label="k6"><project status="START"><vars><var name="var0" value="6"/></vars></project></node>
+    <node label="k7"><project status="START"><vars><var name="var0" value="7"/></vars></project></node>
+    <node label="k8"><project status="START"><vars><var name="var0" value="8"/></vars></project></node>
+    <node label="k9"><project status="START"><vars><var name="var0" value="9"/></vars></project></node>
+    <node label="k10"><project status="START"><vars><var name="var0" value="10"/></vars></project></node>
+    <node label="k11"><project status="START"><vars><var name="var0" value="11"/></vars></project></node>
+    <node label="k12"><project status="START"><vars><var name="var0" value="12"/></vars></project></node>
+    <node label="k13"><project status="START"><vars><var name="var0" value="13"/></vars></project></node>
+    <node label="k14"><project status="START"><vars><var name="var0" value="14"/></vars></project></node>
+    <node label="k15"><project status="START"><vars><var name="var0" value="15"/></vars></project></node>
+    <node label="k16"><project status="START"><vars><var name="var0" value="16"/></vars></project></node>
+    <node label="k17"><project status="START"><vars><var name="var0" value="17"/></vars></project></node>
+    <node label="k18"><project status="START"><vars><var name="var0" value="18"/></vars></project></node>
+    <node label="k19"><project status="START"><vars><var name="var0" value="19"/></vars></project></node>
+    <node label="k20"><project status="START"><vars><var name="var0" value="20"/></vars></project></node>
+    <node label="k21"><project status="START"><vars><var name="var0" value="21"/></vars></project></node>
+    <node label="k22"><project status="START"><vars><var name="var0" value="22"/></vars></project></node>
+    <node label="k23"><project status="START"><vars><var name="var0" value="23"/></vars></project></node>
+    <node label="k24"><project status="START"><vars><var name="var0" value="24"/></vars></project></node>
+    <node label="k25"><project status="START"><vars><var name="var0" value="25"/></vars></project></node>
+    <node label="k26"><project status="START"><vars><var name="var0" value="26"/></vars></project></node>
+    <node label="k27"><project status="START"><vars><var name="var0" value="27"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="27"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
@@ -31,7 +58,35 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="835070" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="835070" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="835070" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="835070" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+        <transition source="started" target="k1"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k1" target="k2"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k2" target="k3"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k3" target="k4"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k4" target="k5"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k5" target="k6"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k6" target="k7"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k7" target="k8"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k8" target="k9"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k9" target="k10"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k10" target="k11"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k11" target="k12"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k12" target="k13"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k13" target="k14"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k14" target="k15"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k15" target="k16"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k16" target="k17"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k17" target="k18"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k18" target="k19"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k19" target="k20"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k20" target="k21"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k21" target="k22"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k22" target="k23"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k23" target="k24"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k24" target="k25"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k25" target="k26"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k26" target="k27"><event><kill-npc npc-ids="240381 240383 240385 240387 240389 240391"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k27" target="k27"><event><talk-to-npc npc-id="835070" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="k27" target="reward"><event><talk-to-npc npc-id="835070" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="835070" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="835070" dialog-ids="8..23"/></event><actions>        <grant-reward kind="EXP" id="0" amount="16395024" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="188054912" amount="1"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
   </transitions>

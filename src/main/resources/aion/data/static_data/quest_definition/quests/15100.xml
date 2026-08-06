@@ -15,12 +15,14 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+<bit-field name="var1" offset="6" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+<bit-field name="var2" offset="12" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
     <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/><var name="var1" value="5"/><var name="var2" value="5"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/><var name="var1" value="0"/><var name="var2" value="0"/></vars></project></node>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="804711" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
@@ -31,9 +33,13 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="804711" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804711" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804711" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="804711" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="804711" dialog-id="1009"/></event><conditions><variable-at-least field="var1" value="5"/><variable-at-least field="var2" value="5"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="804711" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="804711" dialog-id="8"/></event><actions>        <grant-reward kind="GOLD" id="0" amount="150660" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="9981788" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="186000231" amount="4"/>        <grant-reward kind="ITEM" id="186000237" amount="30"/>        <grant-reward kind="ITEM" id="160003584" amount="12"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="804711" dialog-id="9"/></event><actions>        <grant-reward kind="GOLD" id="0" amount="150660" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="9981788" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="186000231" amount="4"/>        <grant-reward kind="ITEM" id="186000237" amount="30"/>        <grant-reward kind="ITEM" id="160003585" amount="12"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+      <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="235941 235942"/></event><conditions><variable-below field="var1" value="5"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="reward" priority="0"><event><kill-npc npc-ids="235941 235942"/></event><conditions><variable-at-least field="var1" value="4"/><variable-at-least field="var2" value="5"/></conditions><actions><set-variable field="var1" value="5"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="235946"/></event><conditions><variable-below field="var2" value="5"/></conditions><actions><increment-variable field="var2" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="reward" priority="0"><event><kill-npc npc-ids="235946"/></event><conditions><variable-at-least field="var2" value="4"/><variable-at-least field="var1" value="5"/></conditions><actions><set-variable field="var2" value="5"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
   </transitions>
 </quest-definition>

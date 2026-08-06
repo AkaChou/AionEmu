@@ -15,8 +15,8 @@
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
     <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="100"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="100"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="20"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="20"/></vars></project></node>
   </nodes>
   <transitions>
     <!-- 接取:圣天界生命之神庙的特拉希梅德斯 (203707) 提供任务。 -->
@@ -55,7 +55,7 @@
     <!-- 使用复活技能 (9912) 100 次:var0 计数 0→100。 -->
     <transition source="started" target="started">
       <event><use-skill skill-id="9912"/></event>
-      <conditions><variable-below field="var0" value="100"/></conditions>
+      <conditions><variable-below field="var0" value="20"/></conditions>
       <actions><increment-variable field="var0" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
@@ -63,7 +63,7 @@
     <!-- 报告:特拉希梅德斯 (203707) 验收 var0=100 后进入领奖。 -->
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="203707" dialog-id="10002"/></event>
-      <conditions><variable-at-least field="var0" value="100"/></conditions>
+      <conditions><variable-at-least field="var0" value="20"/></conditions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <transition source="started" target="started">

@@ -4,7 +4,7 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
     <items>
       <item id="182006984" count="1"/>
     </items>
@@ -121,6 +121,14 @@
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <collect-item item-id="182006984" count="1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">

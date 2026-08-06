@@ -5,6 +5,9 @@
       <race id="ASMODIANS"/>
     </races>
     <repeat max-repeat-count="100" cooldown-seconds="0" daily="false" weekly="false"/>
+    <work-items>
+      <item id="182207039" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="GOLD" id="0" amount="500"/>
       <reward kind="EXP" id="0" amount="150"/>

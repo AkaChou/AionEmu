@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23844" version="1">
-  <metadata name="[Urgent Order] Siel's Eastern Guardian" display-name-id="1803000" min-level="45" max-level="2147483647" category="QUEST">
+  <metadata name="[Urgent Order] Siel's Eastern Guardian" display-name-id="1803000" min-level="45" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3320" version="1">
-  <metadata name="An Ambitious Merchant" display-name-id="1102617" min-level="24" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="An Ambitious Merchant" display-name-id="1102617" min-level="24" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -18,7 +18,7 @@
       <reward kind="ITEM" id="188050584" amount="3"/>
     </extended-rewards>
     <drops>
-      <drop npc-id="211689" item-id="182201435" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211689" item-id="182201435" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

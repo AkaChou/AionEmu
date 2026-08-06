@@ -10,6 +10,11 @@
     <rewards>
       <reward kind="ITEM" id="190080012" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="2009"/>
+      <condition type="unfinished" quest-id="25545"/>
+      <condition type="noacquired" quest-id="25545"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

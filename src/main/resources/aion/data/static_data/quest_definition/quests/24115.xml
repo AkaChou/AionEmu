@@ -4,12 +4,21 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <work-items>
+      <item id="182215477" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="GOLD" id="0" amount="21600"/>
       <reward kind="EXP" id="0" amount="16066"/>
       <reward kind="ITEM" id="162000048" amount="6"/>
       <reward kind="ITEM" id="188053061" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="unfinished" quest-id="2200"/>
+      <condition type="unfinished" quest-id="2019"/>
+      <condition type="noacquired" quest-id="2200"/>
+      <condition type="noacquired" quest-id="2019"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -89,6 +98,9 @@
       <conditions>
         <start-eligible/>
       </conditions>
+      <actions>
+        <give-item item-id="182215477" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <show-quest-dialog dialog-id="1003"/>
@@ -101,6 +113,9 @@
       <conditions>
         <start-eligible/>
       </conditions>
+      <actions>
+        <give-item item-id="182215477" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>
@@ -194,6 +209,12 @@
       <event>
         <talk-to-npc npc-id="203673" dialog-id="1009"/>
       </event>
+      <conditions>
+        <has-item item-id="182215477" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215477" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <show-quest-dialog dialog-id="5"/>

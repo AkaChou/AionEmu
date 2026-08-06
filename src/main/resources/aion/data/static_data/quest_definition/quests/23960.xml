@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23960" version="1">
-  <metadata name="[Instanced Dungeon] Mission Support for Evergale Canyon" display-name-id="1803249" min-level="66" max-level="2147483647" category="IMPORTANT">
+  <metadata name="[Instanced Dungeon] Mission Support for Evergale Canyon" display-name-id="1803249" min-level="66" max-level="2147483647" category="SIGNIFICANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

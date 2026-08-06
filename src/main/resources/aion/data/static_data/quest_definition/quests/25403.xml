@@ -4,7 +4,7 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="MON"/>
     <items>
       <item id="182215915" count="10"/>
     </items>
@@ -13,11 +13,11 @@
       <reward kind="ITEM" id="186000237" amount="23"/>
     </rewards>
     <drops>
-      <drop npc-id="883279" item-id="182215915" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="883280" item-id="182215915" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="883281" item-id="182215915" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="883282" item-id="182215915" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="883283" item-id="182215915" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="883279" item-id="182215915" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="883280" item-id="182215915" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="883281" item-id="182215915" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="883282" item-id="182215915" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="883283" item-id="182215915" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     50021 [Event/Daily] Candygeddon (糖果大作战)
-    Runtime: kill 217161 x15 then report to 202549 for reward.
-    运行语义: 击杀 217161 共 15 次后向 202549 交付领取奖励。
+    Runtime: kill 217161 x3 then report to 202549 for reward.
+    运行语义: 击杀 217161 共 3 次后向 202549 交付领取奖励。
 -->
 <quest-definition id="50021" version="1">
   <metadata name="[Event/Daily] Candygeddon" display-name-id="1150064" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
@@ -66,102 +66,6 @@
       <project status="START">
         <vars>
           <var name="var0" value="3"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 4/15 / 4/15 kills -->
-    <node label="a4">
-      <project status="START">
-        <vars>
-          <var name="var0" value="4"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 5/15 / 5/15 kills -->
-    <node label="a5">
-      <project status="START">
-        <vars>
-          <var name="var0" value="5"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 6/15 / 6/15 kills -->
-    <node label="a6">
-      <project status="START">
-        <vars>
-          <var name="var0" value="6"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 7/15 / 7/15 kills -->
-    <node label="a7">
-      <project status="START">
-        <vars>
-          <var name="var0" value="7"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 8/15 / 8/15 kills -->
-    <node label="a8">
-      <project status="START">
-        <vars>
-          <var name="var0" value="8"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 9/15 / 9/15 kills -->
-    <node label="a9">
-      <project status="START">
-        <vars>
-          <var name="var0" value="9"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 10/15 / 10/15 kills -->
-    <node label="a10">
-      <project status="START">
-        <vars>
-          <var name="var0" value="10"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 11/15 / 11/15 kills -->
-    <node label="a11">
-      <project status="START">
-        <vars>
-          <var name="var0" value="11"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 12/15 / 12/15 kills -->
-    <node label="a12">
-      <project status="START">
-        <vars>
-          <var name="var0" value="12"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 13/15 / 13/15 kills -->
-    <node label="a13">
-      <project status="START">
-        <vars>
-          <var name="var0" value="13"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 14/15 / 14/15 kills -->
-    <node label="a14">
-      <project status="START">
-        <vars>
-          <var name="var0" value="14"/>
-        </vars>
-      </project>
-    </node>
-    <!-- 击杀 15/15 达成, 可交付 / 15/15 kills done, ready to turn in -->
-    <node label="a15">
-      <project status="START">
-        <vars>
-          <var name="var0" value="15"/>
         </vars>
       </project>
     </node>
@@ -272,116 +176,8 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀递增 3->4 / Kill increment 3->4 -->
-    <transition source="a3" target="a4">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 4->5 / Kill increment 4->5 -->
-    <transition source="a4" target="a5">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 5->6 / Kill increment 5->6 -->
-    <transition source="a5" target="a6">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 6->7 / Kill increment 6->7 -->
-    <transition source="a6" target="a7">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 7->8 / Kill increment 7->8 -->
-    <transition source="a7" target="a8">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 8->9 / Kill increment 8->9 -->
-    <transition source="a8" target="a9">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 9->10 / Kill increment 9->10 -->
-    <transition source="a9" target="a10">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 10->11 / Kill increment 10->11 -->
-    <transition source="a10" target="a11">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 11->12 / Kill increment 11->12 -->
-    <transition source="a11" target="a12">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 12->13 / Kill increment 12->13 -->
-    <transition source="a12" target="a13">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 13->14 / Kill increment 13->14 -->
-    <transition source="a13" target="a14">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀递增 14->15 / Kill increment 14->15 -->
-    <transition source="a14" target="a15">
-      <event>
-        <kill-npc npc-id="217161"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 已达 15/15: 查看说明 / 15/15 done: view info -->
-    <transition source="a15" target="a15">
+    <!-- 已达 3/3: 查看说明 / 3/3 done: view info -->
+    <transition source="a3" target="a3">
       <event>
         <talk-to-npc npc-id="202549" dialog-id="31"/>
       </event>
@@ -389,8 +185,8 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <!-- 已达 15/15: 申请交付 / 15/15 done: request reward -->
-    <transition source="a15" target="reward">
+    <!-- 已达 3/3: 申请交付 / 3/3 done: request reward -->
+    <transition source="a3" target="reward">
       <event>
         <talk-to-npc npc-id="202549" dialog-id="1009"/>
       </event>

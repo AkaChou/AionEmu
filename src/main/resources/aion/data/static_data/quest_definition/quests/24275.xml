@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="24275" version="1">
-  <metadata name="[Group] Retribution Resolution˜" display-name-id="1103726" min-level="30" max-level="2147483647" category="IMPORTANT">
+  <metadata name="[Group] Retribution Resolution˜" display-name-id="1103726" min-level="30" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -17,6 +17,7 @@
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="24121"/>
+      <condition type="finished" quest-id="24242"/>
     </start-conditions>
   </metadata>
   <progress>

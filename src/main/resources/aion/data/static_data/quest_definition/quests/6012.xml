@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6012" version="1">
-  <metadata name="Titanium Dagger Mount Supplies" display-name-id="1195013" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40002" combine-skill-point="120">
+  <metadata name="Titanium Dagger Mount Supplies" display-name-id="1195013" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40002" combine-skill-point="120">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291012" count="12"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12013" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40002" type="TASK"/>
     </bonuses>

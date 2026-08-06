@@ -5,7 +5,7 @@
       <race id="ASMODIANS"/>
     </races>
     <items>
-      <item id="152000902" count="1"/>
+      <item id="152000902" count="10"/>
     </items>
     <rewards>
       <reward kind="GOLD" id="0" amount="20090"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3052" version="1">
-  <metadata name="Oileus Hires a Ringer" display-name-id="1113051" min-level="48" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Oileus Hires a Ringer" display-name-id="1113051" min-level="48" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

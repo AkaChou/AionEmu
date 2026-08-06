@@ -4,6 +4,11 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <work-items>
+      <item id="182215378" count="1"/>
+      <item id="182215379" count="1"/>
+      <item id="182215380" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="10462313"/>
       <reward kind="ITEM" id="169000008" amount="500"/>
@@ -14,6 +19,10 @@
       <reward kind="SELECTABLE_ITEM" id="111501724" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="111601597" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="unfinished" quest-id="2061"/>
+      <condition type="noacquired" quest-id="2061"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

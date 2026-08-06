@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6324" version="1">
-  <metadata name="Hanging Shelf Supplies" display-name-id="1195148" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40008" combine-skill-point="240">
+  <metadata name="Hanging Shelf Supplies" display-name-id="1195148" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40008" combine-skill-point="240">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291147" count="32"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12325" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40008" type="TASK"/>
     </bonuses>

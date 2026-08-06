@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80529" version="1">
-  <metadata name="[Growth] Be A Better Daeva, 17th Edition" display-name-id="1185712" min-level="40" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] Be A Better Daeva, 17th Edition" display-name-id="1185712" min-level="40" max-level="45" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>

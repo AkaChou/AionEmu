@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80534" version="1">
-  <metadata name="[Growth] Be A Better Daeva, 22th Edition" display-name-id="1185717" min-level="50" max-level="2147483647" category="EVENT">
+  <metadata name="[Growth] Be A Better Daeva, 22th Edition" display-name-id="1185717" min-level="50" max-level="55" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>

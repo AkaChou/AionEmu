@@ -19,7 +19,7 @@
     </rewards>
     <drops>
       <drop npc-id="244114" item-id="182216078" chance="100" each-member="true" collecting-step="2"/>
-      <drop npc-id="244115" item-id="182216079" chance="100" each-member="true" collecting-step="2"/>
+      <drop npc-id="244115" item-id="182216079" chance="70" each-member="true" collecting-step="2"/>
       <drop npc-id="244116" item-id="182216080" chance="100" each-member="true" collecting-step="2"/>
     </drops>
     <start-conditions>

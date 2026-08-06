@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6430" version="1">
-  <metadata name="Beluslan Spellbook Repair" display-name-id="1195195" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="300">
+  <metadata name="Beluslan Spellbook Repair" display-name-id="1195195" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="300">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291194" count="20"/>
       <item id="182291304" count="60"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12431" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40007" type="TASK"/>
     </bonuses>

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29057" version="1">
-  <metadata name="[Master] Constructor's Potential" display-name-id="1130024" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Master] Constructor's Potential" display-name-id="1130024" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" combine-skill="40010" combine-skill-point="499">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <items>
+      <item id="152208541" count="1"/>
+      <item id="152208542" count="1"/>
       <item id="182207980" count="1"/>
     </items>
     <rewards>

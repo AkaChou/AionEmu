@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6337" version="1">
-  <metadata name="Priest's Headband Repair" display-name-id="1195161" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40008" combine-skill-point="370">
+  <metadata name="Priest's Headband Repair" display-name-id="1195161" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40008" combine-skill-point="370">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291160" count="20"/>
       <item id="182291288" count="40"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12338" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40008" type="TASK"/>
     </bonuses>

@@ -4,10 +4,6 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <classes>
-      <class id="TECHNIST"/>
-      <class id="GUNSLINGER"/>
-    </classes>
     <prerequisites>
       <quest id="30037"/>
     </prerequisites>

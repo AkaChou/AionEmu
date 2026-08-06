@@ -12,6 +12,7 @@
       <item id="182204505" count="8"/>
     </items>
     <rewards>
+      <reward kind="AP" id="0" amount="100"/>
       <reward kind="EXP" id="0" amount="3390150"/>
       <reward kind="ITEM" id="186000469" amount="25"/>
     </rewards>
@@ -203,6 +204,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3390150"/>
+        <grant-reward kind="AP" id="0" amount="100" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="186000469" amount="25"/>
         <complete-quest reward-index="0"/>
       </actions>

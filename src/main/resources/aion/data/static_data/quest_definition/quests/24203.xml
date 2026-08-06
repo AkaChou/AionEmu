@@ -7,14 +7,21 @@
     <items>
       <item id="182215466" count="3"/>
     </items>
+    <work-items>
+      <item id="182215467" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="3363034"/>
     </rewards>
     <drops>
-      <drop npc-id="213360" item-id="182215466" chance="100" each-member="true" collecting-step="2"/>
+      <drop npc-id="213360" item-id="182215466" chance="80" each-member="true" collecting-step="2"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="24202"/>
+      <condition type="unfinished" quest-id="2091"/>
+      <condition type="unfinished" quest-id="2094"/>
+      <condition type="noacquired" quest-id="2091"/>
+      <condition type="noacquired" quest-id="2094"/>
     </start-conditions>
   </metadata>
   <progress>

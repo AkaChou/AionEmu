@@ -22,8 +22,8 @@
       <reward kind="SELECTABLE_ITEM" id="112601655" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="218862" item-id="182215890" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="218865" item-id="182215891" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="237259" item-id="182215890" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="237260" item-id="182215891" chance="100" each-member="true" collecting-step="0"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="25302"/>

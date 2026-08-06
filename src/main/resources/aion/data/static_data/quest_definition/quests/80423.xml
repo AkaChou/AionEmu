@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80423" version="1">
-  <metadata name="[Growth] Cleansing the Lair" display-name-id="1185620" min-level="39" max-level="82" category="EVENT">
+  <metadata name="[Growth] Cleansing the Lair" display-name-id="1185620" min-level="39" max-level="53" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -497,86 +497,6 @@
     <transition source="k9" target="k10">
       <event>
         <kill-npc npc-id="233004"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="233005"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="k2">
-      <event>
-        <kill-npc npc-id="233005"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k2" target="k3">
-      <event>
-        <kill-npc npc-id="233005"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k3" target="k4">
-      <event>
-        <kill-npc npc-id="233005"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k4" target="k5">
-      <event>
-        <kill-npc npc-id="233005"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k5" target="k6">
-      <event>
-        <kill-npc npc-id="233005"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k6" target="k7">
-      <event>
-        <kill-npc npc-id="233005"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k7" target="k8">
-      <event>
-        <kill-npc npc-id="233005"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k8" target="k9">
-      <event>
-        <kill-npc npc-id="233005"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k9" target="k10">
-      <event>
-        <kill-npc npc-id="233005"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80316" version="1">
-  <metadata name="Befitting the Hero of the Guardians (for damage dealers)" display-name-id="1199915" min-level="25" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="Befitting the Hero of the Guardians (for damage dealers)" display-name-id="1199915" min-level="25" max-level="35" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

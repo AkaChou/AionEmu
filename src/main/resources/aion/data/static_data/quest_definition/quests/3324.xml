@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3324" version="1">
-  <metadata name="Terrors in The Night" display-name-id="1102621" min-level="31" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Terrors in The Night" display-name-id="1102621" min-level="31" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

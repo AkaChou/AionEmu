@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36525" version="1">
-  <metadata name="[Daily] A Tall Tail" display-name-id="1126118" min-level="53" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="4">
+  <metadata name="[Daily] A Tall Tail" display-name-id="1126118" min-level="53" max-level="54" category="FACTION" cannot-share="true" npc-faction-id="4">
     <races>
       <race id="ELYOS"/>
     </races>

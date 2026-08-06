@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6120" version="1">
-  <metadata name="Titanium Shield Repair" display-name-id="1195062" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="200">
+  <metadata name="Titanium Shield Repair" display-name-id="1195062" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="200">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291061" count="16"/>
       <item id="182291254" count="16"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12121" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40003" type="TASK"/>
     </bonuses>

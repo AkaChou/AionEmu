@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6315" version="1">
-  <metadata name="Wrud Tool Handle Repair" display-name-id="1195139" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40008" combine-skill-point="150">
+  <metadata name="Wrud Tool Handle Repair" display-name-id="1195139" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40008" combine-skill-point="150">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291138" count="48"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12316" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40008" type="TASK"/>
     </bonuses>

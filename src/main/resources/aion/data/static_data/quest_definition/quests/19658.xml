@@ -4,11 +4,15 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="2592000" daily="false" weekly="false"/>
     <rewards>
       <reward kind="EXP" id="0" amount="285255"/>
       <reward kind="ITEM" id="186000410" amount="2"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="19600"/>
+    </start-conditions>
+
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

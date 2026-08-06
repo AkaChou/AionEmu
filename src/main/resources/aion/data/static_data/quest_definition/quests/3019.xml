@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3019" version="1">
-  <metadata name="Wanted: Black Widow" display-name-id="1113018" min-level="23" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Wanted: Black Widow" display-name-id="1113018" min-level="23" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

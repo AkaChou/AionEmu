@@ -4,9 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <prerequisites>
-      <quest id="24010"/>
-    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="64809"/>
       <reward kind="SELECTABLE_ITEM" id="100001735" amount="1"/>
@@ -23,6 +20,10 @@
       <reward kind="SELECTABLE_ITEM" id="102001244" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="102101070" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="unfinished" quest-id="2022"/>
+      <condition type="noacquired" quest-id="2022"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>

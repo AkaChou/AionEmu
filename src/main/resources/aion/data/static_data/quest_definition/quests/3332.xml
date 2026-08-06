@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3332" version="1">
-  <metadata name="The Need for Sleep" display-name-id="1135120" min-level="33" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="The Need for Sleep" display-name-id="1135120" min-level="33" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

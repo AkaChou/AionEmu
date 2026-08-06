@@ -18,8 +18,8 @@
     <drops>
       <drop npc-id="213180" item-id="182204454" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="213194" item-id="182204454" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213184" item-id="182204455" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="213198" item-id="182204455" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="213184" item-id="182204455" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="213198" item-id="182204455" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

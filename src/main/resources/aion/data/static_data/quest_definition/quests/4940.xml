@@ -6,10 +6,10 @@
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
     <items>
-      <item id="182207117" count="1"/>
+      <item id="182207117" count="10"/>
       <item id="182207118" count="10"/>
-      <item id="182207119" count="1"/>
-      <item id="182207120" count="1"/>
+      <item id="182207119" count="10"/>
+      <item id="182207120" count="10"/>
     </items>
     <rewards>
       <reward kind="EXP" id="0" amount="3773237"/>

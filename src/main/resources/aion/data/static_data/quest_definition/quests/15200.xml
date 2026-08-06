@@ -9,7 +9,7 @@
       <item id="182215750" count="1"/>
     </work-items>
     <rewards>
-      <reward kind="EXP" id="0" amount="4825175"/>
+      <reward kind="EXP" id="0" amount="3618881"/>
       <reward kind="GP" id="0" amount="100"/>
     </rewards>
   </metadata>
@@ -105,7 +105,7 @@
         <talk-to-npc npc-id="804699" dialog-ids="8..23"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="4825175" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="3618881" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GP" id="0" amount="100" amount-mode="QUEST_BASE"/>
         <complete-quest reward-index="0"/>
       </actions>

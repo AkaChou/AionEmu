@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3310" version="1">
-  <metadata name="[Group] Marana's Worry" display-name-id="1102607" min-level="28" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Marana's Worry" display-name-id="1102607" min-level="28" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -15,12 +15,12 @@
       <reward kind="EXP" id="0" amount="340413"/>
     </rewards>
     <drops>
-      <drop npc-id="211736" item-id="182201425" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211756" item-id="182201426" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211743" item-id="182201427" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211744" item-id="182201427" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211804" item-id="182201427" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211781" item-id="182201428" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211736" item-id="182201425" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211756" item-id="182201426" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211743" item-id="182201427" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211744" item-id="182201427" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211804" item-id="182201427" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211781" item-id="182201428" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

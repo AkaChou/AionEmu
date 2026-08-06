@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6020" version="1">
-  <metadata name="Invader's Mace Repair" display-name-id="1195021" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40002" combine-skill-point="200">
+  <metadata name="Invader's Mace Repair" display-name-id="1195021" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40002" combine-skill-point="200">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291020" count="16"/>
       <item id="182291247" count="64"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12021" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40002" type="TASK"/>
     </bonuses>

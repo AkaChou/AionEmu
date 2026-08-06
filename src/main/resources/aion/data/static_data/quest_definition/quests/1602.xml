@@ -12,8 +12,8 @@
       <reward kind="ITEM" id="186000004" amount="3"/>
     </rewards>
     <drops>
-      <drop npc-id="211169" item-id="182201742" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211170" item-id="182201742" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211169" item-id="182201742" chance="85" each-member="true" collecting-step="0"/>
+      <drop npc-id="211170" item-id="182201742" chance="85" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

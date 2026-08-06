@@ -119,7 +119,7 @@
     </transition>
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-id="216156"/>
+        <kill-npc npc-ids="216156 246021"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

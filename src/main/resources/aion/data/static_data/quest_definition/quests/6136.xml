@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6136" version="1">
-  <metadata name="Fenris's Hauberk Repair" display-name-id="1195078" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="360">
+  <metadata name="Fenris's Hauberk Repair" display-name-id="1195078" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40003" combine-skill-point="360">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291077" count="20"/>
       <item id="182291266" count="40"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12137" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40003" type="TASK"/>
     </bonuses>

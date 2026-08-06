@@ -4,6 +4,9 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <work-items>
+      <item id="182207061" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="1238083"/>
       <reward kind="TITLE" id="92" amount="1"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6425" version="1">
-  <metadata name="Invader's Orb Repair" display-name-id="1195190" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="250">
+  <metadata name="Invader's Orb Repair" display-name-id="1195190" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40007" combine-skill-point="250">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291189" count="16"/>
       <item id="182291299" count="48"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12426" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40007" type="TASK"/>
     </bonuses>

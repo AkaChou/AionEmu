@@ -4,7 +4,7 @@
   Pure monster-hunt: kill 9 Poisoned Plumas (210344), report to 203156 for reward.
 -->
 <quest-definition id="1175" version="1">
-  <metadata name="Poisoned Plumas" display-name-id="1102345" min-level="15" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Poisoned Plumas" display-name-id="1102345" min-level="15" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

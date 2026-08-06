@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="28226" version="1">
-  <metadata name="Coliseum Training" display-name-id="1802430" min-level="51" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="Coliseum Training" display-name-id="1802430" min-level="51" max-level="55" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

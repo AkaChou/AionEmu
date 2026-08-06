@@ -4,6 +4,11 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <classes>
+      <class id="MUSE"/>
+      <class id="SONGWEAVER"/>
+    </classes>
+
     <rewards>
       <reward kind="EXP" id="0" amount="633457"/>
     </rewards>

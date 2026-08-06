@@ -8,6 +8,11 @@
       <reward kind="GOLD" id="0" amount="48150"/>
       <reward kind="EXP" id="0" amount="6937236"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="29601"/>
+      <condition type="unfinished" quest-id="29637"/>
+      <condition type="noacquired" quest-id="29637"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

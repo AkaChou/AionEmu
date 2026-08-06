@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3044" version="1">
-  <metadata name="Recruiting Announcement" display-name-id="1113043" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Recruiting Announcement" display-name-id="1113043" min-level="46" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

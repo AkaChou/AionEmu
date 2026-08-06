@@ -14,7 +14,7 @@
       <reward kind="ITEM" id="164002021" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="217716" item-id="182215085" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="217716" item-id="182215085" chance="30" each-member="false" collecting-step="0"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="80101"/>

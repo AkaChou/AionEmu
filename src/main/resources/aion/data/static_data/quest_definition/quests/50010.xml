@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  50010 [活动] 恋爱还是单身？：与 202549 对话接取并直接回报，奖励 1600 经验。无收集物品、无掉落。
-  Quest 50010 [Event] Lover or Loner?: talk to 202549 to start and report, rewarded 1600 EXP. No collect items, no drops.
+  50010 [活动] 恋爱还是单身？：与 202549 对话接取，选择情侣(HACTION_SETPRO1/dialog 10000)或单身(HACTION_SETPRO2/dialog 10001)阵营，回报 1600 经验。无收集物品、无掉落。
+  Quest 50010 [Event] Lover or Loner?: talk to 202549 to start, choose couple (HACTION_SETPRO1/dialog 10000) or single (HACTION_SETPRO2/dialog 10001) line, report for 1600 EXP. No collect items, no drops.
 -->
 <quest-definition id="50010" version="1">
   <metadata name="[Event] Lover or Loner?" display-name-id="1150018" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
@@ -30,10 +30,31 @@
         </vars>
       </project>
     </node>
-    <node label="reward">
+    <node label="v1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="v2">
+      <project status="START">
+        <vars>
+          <var name="var0" value="2"/>
+        </vars>
+      </project>
+    </node>
+    <node label="r1">
       <project status="REWARD">
         <vars>
-          <var name="var0" value="0"/>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <node label="r2">
+      <project status="REWARD">
+        <vars>
+          <var name="var0" value="2"/>
         </vars>
       </project>
     </node>
@@ -115,7 +136,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 交任务：直接回报（无收集物品）/ turn-in: report directly (no collect items) -->
+    <!-- 进行中：查看进度（未选择阵营）/ in-progress: view status (no faction chosen yet) -->
     <transition source="started" target="started">
       <event>
         <talk-to-npc npc-id="202549" dialog-id="31"/>
@@ -124,7 +145,43 @@
         <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- 分支：HACTION_SETPRO1 选择情侣线（dialog 10000）→ v1（var0=1） -->
+    <transition source="started" target="v1">
+      <event>
+        <talk-to-npc npc-id="202549" dialog-id="10000"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 分支：HACTION_SETPRO2 选择单身线（dialog 10001）→ v2（var0=2） -->
+    <transition source="started" target="v2">
+      <event>
+        <talk-to-npc npc-id="202549" dialog-id="10001"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 情侣线 v1：查看进度 / couple line: view status -->
+    <transition source="v1" target="v1">
+      <event>
+        <talk-to-npc npc-id="202549" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <!-- 情侣线 v1：回报 → r1 / couple line: report to reward -->
+    <transition source="v1" target="r1">
       <event>
         <talk-to-npc npc-id="202549" dialog-id="39"/>
       </event>
@@ -133,16 +190,16 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="v1" target="r1">
       <event>
         <talk-to-npc npc-id="202549" dialog-id="20002"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="v1" target="r1">
       <event>
         <talk-to-npc npc-id="202549" dialog-id="10255"/>
       </event>
@@ -151,8 +208,45 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 奖励：发放并完成 / reward: grant and complete -->
-    <transition source="reward" target="reward">
+    <!-- 单身线 v2：查看进度 / single line: view status -->
+    <transition source="v2" target="v2">
+      <event>
+        <talk-to-npc npc-id="202549" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <!-- 单身线 v2：回报 → r2 / single line: report to reward -->
+    <transition source="v2" target="r2">
+      <event>
+        <talk-to-npc npc-id="202549" dialog-id="39"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="v2" target="r2">
+      <event>
+        <talk-to-npc npc-id="202549" dialog-id="20002"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="v2" target="r2">
+      <event>
+        <talk-to-npc npc-id="202549" dialog-id="10255"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 情侣线奖励 r1：发放并完成 / couple reward: grant and complete -->
+    <transition source="r1" target="r1">
       <event>
         <talk-to-npc npc-id="202549" dialog-ids="-1 1009"/>
       </event>
@@ -160,7 +254,30 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="complete">
+    <transition source="r1" target="complete">
+      <event>
+        <talk-to-npc npc-id="202549" dialog-ids="8..23"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="1600" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+    <!-- 单身线奖励 r2：发放并完成 / single reward: grant and complete -->
+    <transition source="r2" target="r2">
+      <event>
+        <talk-to-npc npc-id="202549" dialog-ids="-1 1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="r2" target="complete">
       <event>
         <talk-to-npc npc-id="202549" dialog-ids="8..23"/>
       </event>

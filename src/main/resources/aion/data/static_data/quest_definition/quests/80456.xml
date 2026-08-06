@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80456" version="1">
-  <metadata name="[Growth] Infernal Machines" display-name-id="1185653" min-level="48" max-level="82" category="EVENT">
+  <metadata name="[Growth] Infernal Machines" display-name-id="1185653" min-level="48" max-level="55" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -253,9 +253,25 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="a0b0c0" target="a0b0c1">
+      <event>
+        <kill-npc npc-id="214894"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="a0b1c0" target="a0b1c1">
       <event>
         <kill-npc npc-id="214897"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b1c0" target="a0b1c1">
+      <event>
+        <kill-npc npc-id="214894"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -269,9 +285,25 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="a1b0c0" target="a1b0c1">
+      <event>
+        <kill-npc npc-id="214894"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="a1b1c0" target="a1b1c1">
       <event>
         <kill-npc npc-id="214897"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b1c0" target="a1b1c1">
+      <event>
+        <kill-npc npc-id="214894"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

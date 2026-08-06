@@ -121,13 +121,12 @@
         <show-quest-dialog dialog-id="1011"/>
       </after-commit>
     </transition>
-    <!-- 进入永恒摇篮副本后进入领奖。Entering the Cradle of Eternity instance reaches reward. -->
+    <!-- 第 3 步:进入感官区域后进入领奖。Step 3: entering the sensory area reaches reward. -->
     <transition source="s1" target="reward">
       <event>
-        <enter-world/>
+        <enter-zone zone="IDEternity_02_SensoryArea_Q16820a"/>
       </event>
       <conditions>
-        <world-is world-id="301550000"/>
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>

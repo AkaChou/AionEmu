@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19014" version="1">
-  <metadata name="[Master] Armorsmith's Potential" display-name-id="1124514" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Master] Armorsmith's Potential" display-name-id="1124514" min-level="29" max-level="2147483647" category="SIGNIFICANT" combine-skill="40003" combine-skill-point="499" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
     <items>
       <item id="182206765" count="1"/>
     </items>
+    <work-items>
+      <item id="152201806" count="1"/>
+      <item id="152201807" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="291412"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="1942"/>
+      <condition type="unfinished" quest-id="19008"/>
+      <condition type="noacquired" quest-id="19008"/>
       <condition type="finished" quest-id="3946"/>
+      <condition type="unfinished" quest-id="19020"/>
+      <condition type="noacquired" quest-id="19020"/>
+      <condition type="unfinished" quest-id="19026"/>
+      <condition type="noacquired" quest-id="19026"/>
+      <condition type="unfinished" quest-id="19032"/>
+      <condition type="noacquired" quest-id="19032"/>
+      <condition type="unfinished" quest-id="19038"/>
+      <condition type="noacquired" quest-id="19038"/>
     </start-conditions>
   </metadata>
   <progress>
@@ -27,8 +41,8 @@
   <transitions>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203790" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203790" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203790" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203790" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203790" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="152201806" count="1"/><give-item item-id="152201807" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203790" dialog-id="20000"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="152201806" count="1"/><give-item item-id="152201807" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203790" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203790" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="203790" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>

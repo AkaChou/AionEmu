@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80286" version="1">
-  <metadata name="[Event] Mithril Medal Deal" display-name-id="1199839" min-level="55" max-level="2147483647" category="EVENT" cannot-share="true">
+  <metadata name="[Event/Repeat] Mithril Medal Deal" display-name-id="1199839" min-level="55" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

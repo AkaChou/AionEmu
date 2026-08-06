@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203183 接取，收集 1 个 182200554 后交回领奖。
      Single-NPC item-collecting quest: accept from 203183, collect 1x 182200554, turn in to the same NPC for reward. -->
 <quest-definition id="1190" version="1">
-  <metadata name="Shipwreck Revolutionaries" display-name-id="1102360" min-level="17" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Shipwreck Revolutionaries" display-name-id="1102360" min-level="17" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

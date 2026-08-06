@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3334" version="1">
-  <metadata name="Dirt Dyed Whites" display-name-id="1135122" min-level="32" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Dirt Dyed Whites" display-name-id="1135122" min-level="32" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

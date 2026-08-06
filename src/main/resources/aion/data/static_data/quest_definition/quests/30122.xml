@@ -4,11 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <classes>
-      <class id="PRIEST"/>
-      <class id="CHANTER"/>
-      <class id="CLERIC"/>
-    </classes>
     <items>
       <item id="101500701" count="1"/>
       <item id="186000095" count="1"/>

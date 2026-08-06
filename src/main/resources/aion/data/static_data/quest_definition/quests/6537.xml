@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6537" version="1">
-  <metadata name="Beluslan Energizing Tea Supplies" display-name-id="1195243" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40001" combine-skill-point="370">
+  <metadata name="Beluslan Energizing Tea Supplies" display-name-id="1195243" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40001" combine-skill-point="370">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -12,6 +12,9 @@
       <item id="182291242" count="20"/>
       <item id="182291314" count="20"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12538" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40001" type="TASK"/>
     </bonuses>

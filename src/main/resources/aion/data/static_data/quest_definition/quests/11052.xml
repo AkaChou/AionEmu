@@ -20,12 +20,12 @@
       <reward kind="SELECTABLE_ITEM" id="111501629" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="215595" item-id="182206837" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="215596" item-id="182206837" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="216721" item-id="182206837" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="216722" item-id="182206837" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="216153" item-id="182206837" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="216154" item-id="182206837" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="215595" item-id="182206837" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="215596" item-id="182206837" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="216721" item-id="182206837" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="216722" item-id="182206837" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="216153" item-id="182206837" chance="50" each-member="true" collecting-step="0"/>
+      <drop npc-id="216154" item-id="182206837" chance="50" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

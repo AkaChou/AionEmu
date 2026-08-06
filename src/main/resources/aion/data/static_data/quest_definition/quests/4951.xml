@@ -15,7 +15,6 @@
       <condition type="finished" quest-id="2932"/>
       <condition type="finished" quest-id="2934"/>
       <condition type="finished" quest-id="2935"/>
-      <condition type="finished" quest-id="2936"/>
     </start-conditions>
   </metadata>
   <progress>

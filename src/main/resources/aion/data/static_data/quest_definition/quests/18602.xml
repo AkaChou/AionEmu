@@ -6,7 +6,7 @@
     </races>
     <rewards>
       <reward kind="GOLD" id="0" amount="3460"/>
-      <reward kind="EXP" id="0" amount="2352831"/>
+      <reward kind="EXP" id="0" amount="3921386"/>
       <reward kind="ITEM" id="188053405" amount="2"/>
       <reward kind="ITEM" id="186000004" amount="10"/>
       <reward kind="SELECTABLE_ITEM" id="123001457" amount="1"/>
@@ -288,7 +288,7 @@
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="3460" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="2352831" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="3921386" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="188053405" amount="2"/>
         <grant-reward kind="ITEM" id="186000004" amount="10"/>
         <grant-reward kind="SELECTABLE_ITEM" id="123001457" amount="1"/>
@@ -306,7 +306,7 @@
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="3460" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="2352831" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="3921386" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="188053405" amount="2"/>
         <grant-reward kind="ITEM" id="186000004" amount="10"/>
         <grant-reward kind="SELECTABLE_ITEM" id="123001458" amount="1"/>

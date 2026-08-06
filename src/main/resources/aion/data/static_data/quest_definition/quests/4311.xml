@@ -18,14 +18,14 @@
       <reward kind="EXP" id="0" amount="340413"/>
     </rewards>
     <drops>
-      <drop npc-id="212687" item-id="182204253" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212688" item-id="182204253" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212699" item-id="182204254" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212700" item-id="182204254" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212712" item-id="182204255" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="212713" item-id="182204255" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211471" item-id="182204256" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211487" item-id="182204256" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="212687" item-id="182204253" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="212688" item-id="182204253" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="212699" item-id="182204254" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="212700" item-id="182204254" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="212712" item-id="182204255" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="212713" item-id="182204255" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211471" item-id="182204256" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="211487" item-id="182204256" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

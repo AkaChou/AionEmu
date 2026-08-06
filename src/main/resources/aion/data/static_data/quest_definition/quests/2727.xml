@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2727" version="1">
-  <metadata name="Transparent Motives" display-name-id="1104827" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Transparent Motives" display-name-id="1104827" min-level="999" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <work-items>
+      <item id="182205655" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="28680"/>
+      <reward kind="EXP" id="0" amount="340413"/>
+      <reward kind="AP" id="0" amount="150"/>
+    </rewards>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="3" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>

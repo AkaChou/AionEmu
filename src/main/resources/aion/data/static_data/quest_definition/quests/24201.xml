@@ -14,6 +14,10 @@
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="24200"/>
+      <condition type="unfinished" quest-id="2091"/>
+      <condition type="unfinished" quest-id="2092"/>
+      <condition type="noacquired" quest-id="2091"/>
+      <condition type="noacquired" quest-id="2092"/>
     </start-conditions>
   </metadata>
   <progress>

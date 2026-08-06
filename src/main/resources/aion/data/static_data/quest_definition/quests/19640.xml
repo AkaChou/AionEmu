@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19640" version="1">
-  <metadata name="Flying through Four" display-name-id="1800385" min-level="50" max-level="82" category="IMPORTANT">
+  <metadata name="Flying through Four" display-name-id="1800385" min-level="50" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

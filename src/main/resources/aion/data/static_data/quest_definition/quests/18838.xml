@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18838" version="1">
-  <metadata name="[Daily] Bridgeside Compost" display-name-id="1136814" min-level="27" max-level="82" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="[Daily] Bridgeside Compost" display-name-id="1136814" min-level="27" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

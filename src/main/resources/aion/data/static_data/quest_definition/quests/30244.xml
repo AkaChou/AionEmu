@@ -90,40 +90,40 @@
 
     <!-- 击杀组 1 (8 种龙族):var0 计数 0→20。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-ids="216202 216283 216184 216265 216188 216268 216187 216185"/></event>
+      <event><kill-npc npc-ids="216184 216265 216185 216266 216186 216267 216187 216268 216188 216269"/></event>
       <conditions><variable-below field="var0" value="20"/></conditions>
       <actions><increment-variable field="var0" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <!-- 击杀组 2 (2 种龙族):var1 计数 0→10。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-ids="216215 216296"/></event>
+      <event><kill-npc npc-ids="216214 216295 216215 216296 216216 216297 216217 216298"/></event>
       <conditions><variable-below field="var1" value="10"/></conditions>
       <actions><increment-variable field="var1" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <!-- 击杀组 3 (8 种龙族):var2 计数 0→40。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-ids="216198 216279 216235 216233 216237 216234 216236 216317"/></event>
+      <event><kill-npc npc-ids="216233 216314 216234 216315 216235 216316 216236 216317 216237 216318"/></event>
       <conditions><variable-below field="var2" value="40"/></conditions>
       <actions><increment-variable field="var2" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <!-- 三组全部杀满:任意组的最后一击推进到奖励,条件为其余两组已满。 -->
     <transition source="started" target="reward" priority="0">
-      <event><kill-npc npc-ids="216202 216283 216184 216265 216188 216268 216187 216185"/></event>
+      <event><kill-npc npc-ids="216184 216265 216185 216266 216186 216267 216187 216268 216188 216269"/></event>
       <conditions><variable-is field="var0" value="19"/><variable-is field="var1" value="10"/><variable-is field="var2" value="40"/></conditions>
       <actions><set-variable field="var0" value="20"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
-      <event><kill-npc npc-ids="216215 216296"/></event>
+      <event><kill-npc npc-ids="216214 216295 216215 216296 216216 216297 216217 216298"/></event>
       <conditions><variable-is field="var1" value="9"/><variable-is field="var0" value="20"/><variable-is field="var2" value="40"/></conditions>
       <actions><set-variable field="var1" value="10"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
-      <event><kill-npc npc-ids="216198 216279 216235 216233 216237 216234 216236 216317"/></event>
+      <event><kill-npc npc-ids="216233 216314 216234 216315 216235 216316 216236 216317 216237 216318"/></event>
       <conditions><variable-is field="var2" value="39"/><variable-is field="var0" value="20"/><variable-is field="var1" value="10"/></conditions>
       <actions><set-variable field="var2" value="40"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>

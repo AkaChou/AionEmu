@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23952" version="1">
-  <metadata name="Harogen's Journal" display-name-id="1803235" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="Harogen's Journal" display-name-id="1803235" min-level="66" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

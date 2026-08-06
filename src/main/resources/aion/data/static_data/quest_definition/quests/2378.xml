@@ -18,9 +18,9 @@
       <reward kind="SELECTABLE_ITEM" id="120000877" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="214094" item-id="182204244" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="214095" item-id="182204244" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="214096" item-id="182204244" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="214094" item-id="182204244" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="214095" item-id="182204244" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="214096" item-id="182204244" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

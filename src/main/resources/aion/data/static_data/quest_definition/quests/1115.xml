@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1115" version="1">
-  <metadata name="The Elim's Message" display-name-id="1102215" min-level="4" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="The Elim's Message" display-name-id="1102215" min-level="4" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18816" version="1">
-  <metadata name="And The Leaves That Are Green" display-name-id="1136600" min-level="50" max-level="82" category="SEEN_MARKER">
+  <metadata name="And The Leaves That Are Green" display-name-id="1136600" min-level="50" max-level="59" category="SEEN_MARKER">
     <races>
       <race id="ELYOS"/>
     </races>

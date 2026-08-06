@@ -12,7 +12,6 @@
     <rewards>
       <reward kind="EXP" id="0" amount="8028623"/>
       <reward kind="GP" id="0" amount="150"/>
-      <reward kind="ITEM" id="188052938" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -160,7 +159,6 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="8028623" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GP" id="0" amount="150" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188052938" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

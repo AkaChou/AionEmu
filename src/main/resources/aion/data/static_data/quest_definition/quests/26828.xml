@@ -50,23 +50,18 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 进入永恒摇篮副本自动接取。Auto-start on entering the Cradle of Eternity instance. -->
-    <transition source="unaccepted" target="started">
-      <event>
-        <enter-world/>
-      </event>
-      <conditions>
-        <world-is world-id="301550000"/>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
+    <!-- 接取:与 Ubepe 对话。Start via talking to Ubepe. -->
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806287" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806287" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806287" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806287" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806287" dialog-id="10000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806287" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806287" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <!-- 击杀守卫累积计数。Killing guardians accumulates the kill count. -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-ids="220470 220471 220472 220594"/>
+        <kill-npc npc-ids="220470 220471 220472 220473 220594"/>
       </event>
       <conditions>
         <variable-below field="var1" value="4"/>
@@ -81,7 +76,7 @@
     <!-- 击杀满 5 个后进入领奖。Reaching 5 kills enters reward. -->
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-ids="220470 220471 220472 220594"/>
+        <kill-npc npc-ids="220470 220471 220472 220473 220594"/>
       </event>
       <conditions>
         <variable-at-least field="var1" value="4"/>

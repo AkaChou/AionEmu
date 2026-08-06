@@ -4,12 +4,19 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <items><item id="182206724" count="1"/></items>
+    <items>
+      <item id="182206723" count="10"/>
+      <item id="182206724" count="1"/>
+    </items>
     <rewards>
       <reward kind="GOLD" id="0" amount="75130"/>
       <reward kind="EXP" id="0" amount="5980975"/>
       <reward kind="ITEM" id="186000018" amount="6"/>
     </rewards>
+    <drops>
+      <drop npc-id="215534" item-id="182206723" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="215535" item-id="182206723" chance="80" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>

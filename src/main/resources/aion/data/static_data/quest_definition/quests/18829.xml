@@ -9,7 +9,7 @@
     </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="64755"/>
-      <reward kind="ITEM" id="170420021" amount="1"/>
+      <reward kind="ITEM" id="170420031" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -397,7 +397,7 @@
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="64755" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="170420021" amount="1"/>
+        <grant-reward kind="ITEM" id="170420031" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1143" version="1">
-  <metadata name="Nola's Request" display-name-id="1102313" min-level="13" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Nola's Request" display-name-id="1102313" min-level="13" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

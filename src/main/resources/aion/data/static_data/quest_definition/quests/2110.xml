@@ -4,9 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <work-items>
-      <item id="182203110" count="1"/>
-    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="2112"/>
       <reward kind="ITEM" id="160003503" amount="1"/>
@@ -69,9 +66,6 @@
       <conditions>
         <start-eligible/>
       </conditions>
-      <actions>
-        <give-item item-id="182203110" count="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <show-quest-dialog dialog-id="1003"/>
@@ -84,9 +78,6 @@
       <conditions>
         <start-eligible/>
       </conditions>
-      <actions>
-        <give-item item-id="182203110" count="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>
@@ -128,12 +119,6 @@
       <event>
         <talk-to-npc npc-id="203533" dialog-id="1009"/>
       </event>
-      <conditions>
-        <has-item item-id="182203110" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182203110" count="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-dialog dialog-id="5"/>

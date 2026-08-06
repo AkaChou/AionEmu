@@ -124,6 +124,14 @@
     </transition>
     <transition source="started" target="started">
       <event>
+        <talk-to-npc npc-id="805843" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1352"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
         <talk-to-npc npc-id="798331" dialog-id="31"/>
       </event>
       <after-commit>

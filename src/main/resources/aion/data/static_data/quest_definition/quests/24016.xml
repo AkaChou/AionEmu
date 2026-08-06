@@ -4,14 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <prerequisites>
-      <quest id="24010"/>
-      <quest id="24011"/>
-      <quest id="24012"/>
-      <quest id="24013"/>
-      <quest id="24014"/>
-      <quest id="24015"/>
-    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="457760"/>
       <reward kind="TITLE" id="57" amount="1"/>
@@ -30,6 +22,10 @@
       <reward kind="SELECTABLE_ITEM" id="102001246" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="102101072" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="unfinished" quest-id="2022"/>
+      <condition type="noacquired" quest-id="2022"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
@@ -45,8 +41,8 @@
     <node label="complete"><project status="COMPLETE"><vars/></project></node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/><quests-finished quest-ids="24010 24011 24012 24013 24014 24015"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/><quests-finished quest-ids="24010 24011 24012 24013 24014 24015"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="203557" dialog-id="31"/></event><conditions><variable-is field="var0" value="0"/></conditions><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="203557" dialog-id="1013"/></event><conditions><variable-is field="var0" value="0"/></conditions><after-commit><play-movie movie-id="66"/><show-quest-dialog dialog-id="1013"/></after-commit></transition>
     <transition source="started" target="s1"><event><talk-to-npc npc-id="203557" dialog-id="10000"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><teleport-player-current-or-default world-id="220030000" x="2453.1934" y="2555.148" z="316.267" heading="0"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>

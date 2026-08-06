@@ -15,6 +15,8 @@
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="14020"/>
+      <condition type="unfinished" quest-id="1043"/>
+      <condition type="noacquired" quest-id="1043"/>
     </start-conditions>
   </metadata>
   <progress>
@@ -114,7 +116,6 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 区域任务链结束自动接取（前置由 start-conditions 声明）。 Auto-start when the zone mission chain ends. -->
     <transition source="unaccepted" target="started">
       <event>
         <zone-mission-end/>
@@ -126,7 +127,6 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 升级自动接取（前置由 start-conditions 声明）。 Auto-start on level-up once prerequisites are met. -->
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
@@ -138,7 +138,6 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 领路人对话起始页。 Leader start dialog. -->
     <transition source="started" target="started">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="31"/>
@@ -150,7 +149,6 @@
         <show-quest-dialog dialog-id="1011"/>
       </after-commit>
     </transition>
-    <!-- 领路人推进到击杀收集步骤。 Leader advances to the kill step. -->
     <transition source="started" target="s1">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="10000"/>
@@ -166,7 +164,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 击杀第 1 只怨灵推进。 Kill 1st specter to advance. -->
     <transition source="s1" target="s2">
       <event>
         <kill-npc npc-ids="210771 210758 210763 210764 210759 210770"/>
@@ -181,7 +178,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀第 2 只怨灵推进。 Kill 2nd specter to advance. -->
     <transition source="s2" target="s3">
       <event>
         <kill-npc npc-ids="210771 210758 210763 210764 210759 210770"/>
@@ -196,7 +192,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀第 3 只怨灵推进。 Kill 3rd specter to advance. -->
     <transition source="s3" target="s4">
       <event>
         <kill-npc npc-ids="210771 210758 210763 210764 210759 210770"/>
@@ -211,7 +206,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀第 4 只怨灵推进。 Kill 4th specter to advance. -->
     <transition source="s4" target="s5">
       <event>
         <kill-npc npc-ids="210771 210758 210763 210764 210759 210770"/>
@@ -226,7 +220,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀第 5 只怨灵推进。 Kill 5th specter to advance. -->
     <transition source="s5" target="s6">
       <event>
         <kill-npc npc-ids="210771 210758 210763 210764 210759 210770"/>
@@ -241,7 +234,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀第 6 只怨灵推进。 Kill 6th specter to advance. -->
     <transition source="s6" target="s7">
       <event>
         <kill-npc npc-ids="210771 210758 210763 210764 210759 210770"/>
@@ -256,7 +248,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 净化石交互显示对话。 Purification stone interaction dialog. -->
     <transition source="s7" target="s7">
       <event>
         <talk-to-npc npc-id="700179" dialog-id="-1"/>
@@ -268,7 +259,6 @@
         <show-quest-dialog dialog-id="1693"/>
       </after-commit>
     </transition>
-    <!-- 净化石推进到下一对话者。 Purification stone advances to the next contact. -->
     <transition source="s7" target="s8">
       <event>
         <talk-to-npc npc-id="700179" dialog-id="10002"/>
@@ -284,7 +274,6 @@
         <show-quest-dialog dialog-id="0"/>
       </after-commit>
     </transition>
-    <!-- 对话者 204043 起始页。 Contact 204043 start dialog. -->
     <transition source="s8" target="s8">
       <event>
         <talk-to-npc npc-id="204043" dialog-id="31"/>
@@ -296,7 +285,6 @@
         <show-quest-dialog dialog-id="2034"/>
       </after-commit>
     </transition>
-    <!-- 对话者 204043 推进到下一个对话者。 Contact 204043 advances to the next contact. -->
     <transition source="s8" target="s9">
       <event>
         <talk-to-npc npc-id="204043" dialog-id="10003"/>
@@ -312,7 +300,6 @@
         <show-quest-dialog dialog-id="0"/>
       </after-commit>
     </transition>
-    <!-- 对话者 204030 起始页。 Contact 204030 start dialog. -->
     <transition source="s9" target="s9">
       <event>
         <talk-to-npc npc-id="204030" dialog-id="31"/>
@@ -324,7 +311,6 @@
         <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
-    <!-- 对话者 204030 进入奖励状态。 Contact 204030 enters reward state. -->
     <transition source="s9" target="reward">
       <event>
         <talk-to-npc npc-id="204030" dialog-id="10004"/>
@@ -337,7 +323,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 奖励窗口：START_DIALOG 显示任务提示。 Reward window on START_DIALOG. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="31"/>
@@ -346,7 +331,6 @@
         <show-quest-dialog dialog-id="3398"/>
       </after-commit>
     </transition>
-    <!-- 奖励窗口：USE_OBJECT 显示奖励选择。 Reward window on USE_OBJECT. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="-1"/>
@@ -355,7 +339,6 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <!-- 奖励窗口：SELECT_REWARD 显示奖励选择。 Reward window on SELECT_REWARD. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="1009"/>
@@ -364,7 +347,6 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 1。 Reward selection 1. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="8"/>
@@ -380,7 +362,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 2。 Reward selection 2. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="9"/>
@@ -396,7 +377,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 3。 Reward selection 3. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="10"/>
@@ -412,7 +392,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 4。 Reward selection 4. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="11"/>
@@ -428,7 +407,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 5。 Reward selection 5. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="12"/>
@@ -444,7 +422,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <!-- 奖励选择 6。 Reward selection 6. -->
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203902" dialog-id="13"/>

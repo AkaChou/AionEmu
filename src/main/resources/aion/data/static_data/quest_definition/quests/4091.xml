@@ -15,10 +15,10 @@
       <reward kind="ITEM" id="186000019" amount="6"/>
     </rewards>
     <drops>
-      <drop npc-id="214671" item-id="182209064" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="214731" item-id="182209064" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="214679" item-id="182209065" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="214722" item-id="182209065" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="214671" item-id="182209064" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="214731" item-id="182209064" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="214679" item-id="182209065" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="214722" item-id="182209065" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

@@ -2,7 +2,7 @@
 <!-- 清除荒原：从 798222 接取，击杀两组荒原怪物（var0 0→8、var1 0→7），到 798158 回报。
      Clearing The Barrens: accept from 798222, kill two groups of barrens mobs (var0 0→8, var1 0→7), report to 798158. -->
 <quest-definition id="3075" version="1">
-  <metadata name="Clearing The Barrens" display-name-id="1113074" min-level="44" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Clearing The Barrens" display-name-id="1113074" min-level="44" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

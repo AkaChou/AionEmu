@@ -4,14 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <classes>
-      <class id="WARRIOR"/>
-      <class id="SCOUT"/>
-      <class id="GLADIATOR"/>
-      <class id="TEMPLAR"/>
-      <class id="ASSASSIN"/>
-      <class id="RANGER"/>
-    </classes>
     <prerequisites>
       <quest id="30116"/>
     </prerequisites>

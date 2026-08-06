@@ -4,10 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <classes>
-      <class id="MUSE"/>
-      <class id="SONGWEAVER"/>
-    </classes>
     <inventory-items>
       <item id="102000664" count="1"/>
     </inventory-items>

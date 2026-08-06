@@ -4,7 +4,7 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="10" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false"/>
     <prerequisites>
       <quest id="18507"/>
     </prerequisites>
@@ -50,13 +50,13 @@
 
     <!-- 击杀副本怪物 65 只:var0 计数 0→65,priority 1 计数、0 完成。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-ids="216897 216898 216899 216901 216902 216903 216904 216905 216906 216907 216908 216909 216910 216911 216912 216915 216916 216919 216913 216914 216920 216921 216922 217025 217067 217108 282041 282042"/></event>
+      <event><kill-npc npc-ids="216897 216899 216900 216903 216904 857384 857385 857386 857387 857388 857389 857390 857391 857392 857393 216905 216906 217025 217108 216907 216908 216909 216910 216911 216912 216913 216914 216915 216916 216917 216918 216919 216920 216921 217065 217067 216922 216898 216901 216902"/></event>
       <conditions><variable-below field="var0" value="65"/></conditions>
       <actions><increment-variable field="var0" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
-      <event><kill-npc npc-ids="216897 216898 216899 216901 216902 216903 216904 216905 216906 216907 216908 216909 216910 216911 216912 216915 216916 216919 216913 216914 216920 216921 216922 217025 217067 217108 282041 282042"/></event>
+      <event><kill-npc npc-ids="216897 216899 216900 216903 216904 857384 857385 857386 857387 857388 857389 857390 857391 857392 857393 216905 216906 217025 217108 216907 216908 216909 216910 216911 216912 216913 216914 216915 216916 216917 216918 216919 216920 216921 217065 217067 216922 216898 216901 216902"/></event>
       <conditions><variable-at-least field="var0" value="65"/></conditions>
       <actions><set-variable field="var0" value="65"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>

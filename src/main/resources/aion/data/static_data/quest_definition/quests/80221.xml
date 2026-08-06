@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80221" version="1">
-  <metadata name="[Growth] Nochsana Infiltration" display-name-id="1180185" min-level="25" max-level="82" category="EVENT" cannot-share="true">
+  <metadata name="[Growth] Nochsana Infiltration" display-name-id="1180185" min-level="25" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

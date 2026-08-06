@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29032" version="1">
-  <metadata name="[Master] Alchemist's Potential" display-name-id="1124832" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Master] Alchemist's Potential" display-name-id="1124832" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" combine-skill="40007" combine-skill-point="499">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <items>
       <item id="182207902" count="1"/>
-    </items>
+    <item id="152207149" count="1"/><item id="152207150" count="1"/><item id="152029249" count="1"/></items>
     <rewards>
       <reward kind="EXP" id="0" amount="291412"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="2935"/>
       <condition type="finished" quest-id="4959"/>
-    </start-conditions>
+    <condition type="unfinished" quest-id="29008"/><condition type="unfinished" quest-id="29014"/><condition type="unfinished" quest-id="29020"/><condition type="unfinished" quest-id="29026"/><condition type="unfinished" quest-id="29038"/><condition type="noacquired" quest-id="29008"/><condition type="noacquired" quest-id="29014"/><condition type="noacquired" quest-id="29020"/><condition type="noacquired" quest-id="29026"/><condition type="noacquired" quest-id="29038"/></start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

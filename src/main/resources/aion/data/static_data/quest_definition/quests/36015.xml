@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="36015" version="1">
-  <metadata name="[Daily] A Taste For Adventure" display-name-id="1126081" min-level="50" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] A Taste For Adventure" display-name-id="1126081" min-level="50" max-level="55" category="FACTION" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

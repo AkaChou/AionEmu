@@ -11,13 +11,15 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="4" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted">
       <project status="NONE">
         <vars>
           <var name="var0" value="0"/>
+          <var name="var1" value="0"/>
         </vars>
       </project>
     </node>
@@ -35,24 +37,10 @@
         </vars>
       </project>
     </node>
-    <node label="k2">
-      <project status="START">
-        <vars>
-          <var name="var0" value="2"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k3">
-      <project status="START">
-        <vars>
-          <var name="var0" value="3"/>
-        </vars>
-      </project>
-    </node>
     <node label="reward">
       <project status="REWARD">
         <vars>
-          <var name="var0" value="3"/>
+          <var name="var0" value="1"/>
         </vars>
       </project>
     </node>
@@ -129,31 +117,37 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="started" target="k1">
+    <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-id="219501"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+        <variable-below field="var1" value="2"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="k1" target="k2">
+    <transition source="started" target="k1" priority="0">
       <event>
         <kill-npc npc-id="219501"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+        <variable-at-least field="var1" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="k2" target="k3">
-      <event>
-        <kill-npc npc-id="219501"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k3" target="k3">
+    <transition source="k1" target="k1">
       <event>
         <talk-to-npc npc-id="831209" dialog-id="31"/>
       </event>
@@ -161,7 +155,7 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="k3" target="reward">
+    <transition source="k1" target="reward">
       <event>
         <talk-to-npc npc-id="831209" dialog-id="1009"/>
       </event>

@@ -5,12 +5,14 @@
       <race id="ASMODIANS"/>
     </races>
     <prerequisites>
+      <quest id="2092"/>
       <quest id="24201"/>
     </prerequisites>
     <rewards>
       <reward kind="GOLD" id="0" amount="61400"/>
       <reward kind="EXP" id="0" amount="3115770"/>
       <reward kind="ITEM" id="188050586" amount="1"/>
+      <reward kind="RANDOM" id="10155" amount="1"/>
     </rewards>
   </metadata>
   <progress>

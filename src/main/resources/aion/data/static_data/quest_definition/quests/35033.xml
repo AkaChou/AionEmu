@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="35033" version="1">
-  <metadata name="[Daily] Holy Reconstruction!" display-name-id="1126033" min-level="30" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="2">
+  <metadata name="[Daily] Holy Reconstruction!" display-name-id="1126033" min-level="30" max-level="39" category="FACTION" cannot-share="true" npc-faction-id="2">
     <races>
       <race id="ELYOS"/>
     </races>

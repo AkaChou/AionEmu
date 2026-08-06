@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29001" version="1">
-  <metadata name="[Expert] Essencetapping Expert" display-name-id="1124801" min-level="40" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Expert] Essencetapping Expert" display-name-id="1124801" min-level="50" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <items>
+      <item id="182207141" count="1"/>
+    </items>
     <rewards>
       <reward kind="EXP" id="0" amount="1347585"/>
       <reward kind="ITEM" id="125010014" amount="1"/>

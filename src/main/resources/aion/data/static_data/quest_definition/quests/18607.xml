@@ -4,14 +4,15 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="10" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false"/>
     <items>
       <item id="182213003" count="15"/>
     </items>
     <rewards>
-      <reward kind="GOLD" id="0" amount="30700"/>
       <reward kind="EXP" id="0" amount="3921386"/>
       <reward kind="ITEM" id="186000004" amount="5"/>
+      <reward kind="SELECTABLE_ITEM" id="121001043" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="121001044" amount="1"/>
     </rewards>
     <drops>
       <drop npc-id="216989" item-id="182213003" chance="100" each-member="true" collecting-step="0"/>
@@ -198,7 +199,6 @@
         <talk-to-npc npc-id="205232" dialog-ids="8..23"/>
       </event>
       <actions>
-        <grant-reward kind="GOLD" id="0" amount="30700"/>
         <grant-reward kind="EXP" id="0" amount="3921386"/>
         <grant-reward kind="ITEM" id="186000004" amount="5"/>
         <complete-quest reward-index="0"/>

@@ -4,7 +4,7 @@
   Pure monster-hunt: kill 6 Unquiet Spirits (210080), report to 203178 for reward.
 -->
 <quest-definition id="1185" version="1">
-  <metadata name="Unquiet Spirits" display-name-id="1102355" min-level="16" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Unquiet Spirits" display-name-id="1102355" min-level="16" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

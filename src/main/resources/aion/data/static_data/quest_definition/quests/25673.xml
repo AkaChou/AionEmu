@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="25673" version="1">
-  <metadata name="[Weekly/Infiltration/Alliance] Astera Tower Fragment Retrieval Operation Cooperation" display-name-id="1803270" min-level="66" max-level="2147483647" category="QUEST">
+  <metadata name="[Weekly/Infiltration/Alliance] Astera Tower Fragment Retrieval Operation Cooperation" display-name-id="1803270" min-level="66" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="WED"/>
     <rewards>
       <reward kind="EXP" id="0" amount="67580742"/>
       <reward kind="AP" id="0" amount="5000"/>
       <reward kind="GP" id="0" amount="200"/>
       <reward kind="ITEM" id="188100391" amount="900"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="25550"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="12" persistence="PERSISTENT" scope="LOCAL"/>
@@ -51,5 +54,6 @@
     <transition source="k9" target="k10"><event><kill-in-world world-id="210100000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k10" target="k11"><event><kill-in-world world-id="210100000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k11" target="reward"><event><kill-in-world world-id="210100000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="k1"><event><enter-zone zone="LF6_SensoryArea_Q25673"/></event><conditions><variable-is field="var0" value="0"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
   </transitions>
 </quest-definition>

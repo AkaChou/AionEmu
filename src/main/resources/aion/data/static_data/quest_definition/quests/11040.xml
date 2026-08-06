@@ -6,15 +6,20 @@
     </races>
     <rewards>
       <reward kind="EXP" id="0" amount="5647915"/>
-      <reward kind="ITEM" id="100001037" amount="1"/>
-      <reward kind="ITEM" id="100100782" amount="1"/>
-      <reward kind="ITEM" id="100200917" amount="1"/>
-      <reward kind="ITEM" id="100900779" amount="1"/>
-      <reward kind="ITEM" id="101300751" amount="1"/>
-      <reward kind="ITEM" id="101700824" amount="1"/>
-      <reward kind="ITEM" id="100500802" amount="1"/>
-      <reward kind="ITEM" id="100600857" amount="1"/>
-      <reward kind="ITEM" id="101500807" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100001037" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100100782" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100200917" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100900779" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101300751" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101700824" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100500802" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="100600857" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101500807" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101800681" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="101900684" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="102000718" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="102100603" amount="1"/>
+      <reward kind="ITEM" id="162000062" amount="30"/>
     </rewards>
   </metadata>
   <progress>

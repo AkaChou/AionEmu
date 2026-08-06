@@ -4,10 +4,6 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <classes>
-      <class id="TECHNIST"/>
-      <class id="GUNSLINGER"/>
-    </classes>
     <prerequisites>
       <quest id="30135"/>
     </prerequisites>

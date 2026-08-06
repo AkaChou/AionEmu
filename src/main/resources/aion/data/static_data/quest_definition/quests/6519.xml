@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6519" version="1">
-  <metadata name="Rogen Rice Supplies" display-name-id="1195225" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40001" combine-skill-point="190">
+  <metadata name="Rogen Rice Supplies" display-name-id="1195225" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40001" combine-skill-point="190">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291224" count="12"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12520" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40001" type="TASK"/>
     </bonuses>

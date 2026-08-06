@@ -5,6 +5,10 @@
       <race id="ASMODIANS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <prerequisites>
+      <quest id="2876"/>
+      <quest id="2881"/>
+    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="3166358"/>
       <reward kind="ITEM" id="164000095" amount="5"/>

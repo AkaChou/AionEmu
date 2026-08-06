@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="6564" version="1">
-  <metadata name="Paisley Carpet Supply [230p]" display-name-id="1195270" min-level="9" max-level="82" category="TASK" cannot-share="true" combine-skill="40010" combine-skill-point="230">
+  <metadata name="Paisley Carpet Supply [230p]" display-name-id="1195270" min-level="9" max-level="2147483647" category="TASK" cannot-share="true" combine-skill="40010" combine-skill-point="230">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -11,6 +11,9 @@
     <work-items>
       <item id="182291586" count="16"/>
     </work-items>
+    <rewards>
+      <reward kind="RANDOM" id="12565" amount="1"/>
+    </rewards>
     <bonuses>
       <bonus  skill="40010" type="TASK"/>
     </bonuses>

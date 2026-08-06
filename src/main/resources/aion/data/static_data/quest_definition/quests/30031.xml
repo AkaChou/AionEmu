@@ -4,14 +4,6 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <classes>
-      <class id="WARRIOR"/>
-      <class id="PRIEST"/>
-      <class id="GLADIATOR"/>
-      <class id="TEMPLAR"/>
-      <class id="CHANTER"/>
-      <class id="CLERIC"/>
-    </classes>
     <inventory-items>
       <item id="100100679" count="1"/>
     </inventory-items>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3311" version="1">
-  <metadata name="[Group] Bumpy Ride" display-name-id="1102608" min-level="29" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Bumpy Ride" display-name-id="1102608" min-level="29" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

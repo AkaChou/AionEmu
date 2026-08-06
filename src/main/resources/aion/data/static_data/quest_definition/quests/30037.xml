@@ -4,10 +4,6 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <classes>
-      <class id="TECHNIST"/>
-      <class id="GUNSLINGER"/>
-    </classes>
     <items>
       <item id="101900629" count="1"/>
       <item id="186000095" count="1"/>

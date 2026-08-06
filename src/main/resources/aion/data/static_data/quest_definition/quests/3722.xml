@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3722" version="1">
-  <metadata name="[Group] My New Toy" display-name-id="1104719" min-level="51" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] My New Toy" display-name-id="1104719" min-level="51" max-level="55" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

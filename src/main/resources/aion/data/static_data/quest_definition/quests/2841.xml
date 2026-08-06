@@ -92,7 +92,7 @@
     <!-- Asteria Chamber (300050000) 内击杀计数,44 杀后进入结算。 Kill counting inside Asteria Chamber (300050000), reward after 44 kills. -->
     <transition source="hunting" target="hunting" priority="1">
       <event>
-        <kill-npc npc-ids="214762 214755 214752 214754 215441 214758 214766 214753 215444"/>
+        <kill-npc npc-ids="214752 214753 214754 214755 214756 214757 214758 214759 214760 214761 214762 214763 214764 214765 214766 214767 214768 214769 214770 215439 215440 215441 215442 215443 215444"/>
       </event>
       <conditions>
         <world-is world-id="300050000"/>
@@ -107,7 +107,7 @@
     </transition>
     <transition source="hunting" target="reward" priority="0">
       <event>
-        <kill-npc npc-ids="214762 214755 214752 214754 215441 214758 214766 214753 215444"/>
+        <kill-npc npc-ids="214752 214753 214754 214755 214756 214757 214758 214759 214760 214761 214762 214763 214764 214765 214766 214767 214768 214769 214770 215439 215440 215441 215442 215443 215444"/>
       </event>
       <conditions>
         <world-is world-id="300050000"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="19028" version="1">
-  <metadata name="[Master] Handicrafting Master" display-name-id="1124528" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="[Master] Handicrafting Master" display-name-id="1124528" min-level="29" max-level="2147483647" category="SIGNIFICANT" combine-skill="40008" combine-skill-point="500" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

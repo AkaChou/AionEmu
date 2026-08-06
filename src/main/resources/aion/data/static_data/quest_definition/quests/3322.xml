@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3322" version="1">
-  <metadata name="Sculpting a Vision" display-name-id="1102619" min-level="26" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Sculpting a Vision" display-name-id="1102619" min-level="26" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -16,8 +16,8 @@
       <reward kind="ITEM" id="188050584" amount="3"/>
     </extended-rewards>
     <drops>
-      <drop npc-id="210794" item-id="182201436" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="210802" item-id="182201436" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="210794" item-id="182201436" chance="80" each-member="true" collecting-step="0"/>
+      <drop npc-id="210802" item-id="182201436" chance="80" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>

@@ -5,6 +5,7 @@
   <metadata name="Kerubian Horns" display-name-id="1102418" min-level="22" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
+      <race id="ASMODIANS"/>
     </races>
     <prerequisites>
       <quest id="1317"/>

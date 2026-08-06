@@ -4,7 +4,7 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="10" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false"/>
     <items>
       <item id="182212020" count="1"/>
     </items>
@@ -35,6 +35,7 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799523" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799523" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="799523" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <transition source="started" target="started"><event><collect-item item-id="182212020" count="1"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="799523" dialog-id="39"/></event><conditions>        <has-item item-id="182212020" count="1"/></conditions><actions>        <remove-item item-id="182212020" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="799523" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
     <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="799523" dialog-id="20002"/></event><conditions>        <has-item item-id="182212020" count="1"/></conditions><actions>        <remove-item item-id="182212020" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>

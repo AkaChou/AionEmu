@@ -24,37 +24,37 @@
   <transitions>
     <!-- 接取:Reshanta 的 Vasha (268080) 提供任务。 -->
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="268080" dialog-id="31"/></event>
+      <event><talk-to-npc npc-id="805430" dialog-id="31"/></event>
       <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="268080" dialog-id="1007"/></event>
+      <event><talk-to-npc npc-id="805430" dialog-id="1007"/></event>
       <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="268080" dialog-id="1002"/></event>
+      <event><talk-to-npc npc-id="805430" dialog-id="1002"/></event>
       <conditions><start-eligible/></conditions>
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="268080" dialog-id="20000"/></event>
+      <event><talk-to-npc npc-id="805430" dialog-id="20000"/></event>
       <conditions><start-eligible/></conditions>
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="268080" dialog-ids="1003 1004 20001"/></event>
+      <event><talk-to-npc npc-id="805430" dialog-ids="1003 1004 20001"/></event>
       <after-commit><close-dialog/></after-commit>
     </transition>
 
     <!-- 击杀 Dukaki (215094) 80 只:var0 计数 0→80,priority 1 计数、0 完成。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-id="215094"/></event>
+      <event><kill-npc npc-ids="215094 215095 215096 215097 215098 215099 215100 215101 215102 215103 215104 215105 215106 215107 215108 215109 215110 215111 215112 215113 215114 215115 215116 215117 215118 215119 215120 215121 215122 215123 215124 215125 215126 215127 215128 215129 215130 215131 215132 215133 215135 215136 215285 215286 215287 215288 215289 215290 215291 215292 215293 215294 215295 215296 215297 215298 215299 215300 215301 215302 215303 215304 215305 215306 215307 215308 215309 215310 215311 215312 215313 215314 215315 215316 "/></event>
       <conditions><variable-below field="var0" value="80"/></conditions>
       <actions><increment-variable field="var0" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <transition source="started" target="m1" priority="0">
-      <event><kill-npc npc-id="215094"/></event>
+      <event><kill-npc npc-ids="215094 215095 215096 215097 215098 215099 215100 215101 215102 215103 215104 215105 215106 215107 215108 215109 215110 215111 215112 215113 215114 215115 215116 215117 215118 215119 215120 215121 215122 215123 215124 215125 215126 215127 215128 215129 215130 215131 215132 215133 215135 215136 215285 215286 215287 215288 215289 215290 215291 215292 215293 215294 215295 215296 215297 215298 215299 215300 215301 215302 215303 215304 215305 215306 215307 215308 215309 215310 215311 215312 215313 215314 215315 215316 "/></event>
       <conditions><variable-at-least field="var0" value="80"/></conditions>
       <actions><set-variable field="var0" value="80"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
@@ -76,11 +76,11 @@
 
     <!-- 奖励:Vasha (268080) 领取固定奖励 (exp/ap)。 -->
     <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="268080" dialog-ids="-1 1009"/></event>
+      <event><talk-to-npc npc-id="278502" dialog-ids="-1 1009"/></event>
       <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="268080" dialog-ids="8..23"/></event>
+      <event><talk-to-npc npc-id="278502" dialog-ids="8..23"/></event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="2103000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="AP" id="0" amount="1000" amount-mode="QUEST_BASE"/>
