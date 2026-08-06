@@ -272,7 +272,6 @@ public class NpcController extends CreatureController<Npc> {
 	@Override
 	public void doReward() {
 		super.doReward();
-		int kinahCount = 0;
 		AggroList list = getOwner().getAggroList();
 		Collection<AggroInfo> finalList = list.getFinalDamageList(true);
 		if (getOwner() instanceof SiegeNpc) {
@@ -364,114 +363,6 @@ public class NpcController extends CreatureController<Npc> {
 					}
 					if (attacker.equals(winner)) {
 						GameWorldServices.dropRegistrationService().registerDrop(getOwner(), player, player.getLevel(), null);
-					}
-					// 自动掉落基纳。 / Auto Drop Kinah.
-					if (CustomConfig.AUTO_KINAH_ENABLED) {
-						switch (player.getWorldId()) {
-						case 210010000: // Poeta.
-						case 220010000: // Ishalgen.
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 500) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-						case 210030000: // Verteron.
-						case 220030000: // Altgard.
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 1500) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-						case 210020000: // Eltnen.
-						case 220020000: // Morheim.
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 2000) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-						case 210040000: // Heiron.
-						case 220040000: // Beluslan.
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 2500) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-						case 210060000: // Theobomos.
-						case 220050000: // Brushtonin.
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 3000) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-							case 210050000: // Inggison.
-							case 210130000: // Inggison [Master Server].
-							case 220070000: // Gelkmaros.
-							case 220140000: // Gelkmaros [Master Server].
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 3500) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-						case 210070000: // Cygnea.
-						case 220080000: // Enshar.
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 4000) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-						case 400010000: // Reshanta.
-						case 400020000: // Belus.
-						case 400040000: // Aspida.
-						case 400050000: // Atanatos.
-						case 400060000: // Disillon.
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 4500) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-						case 600090000: // Kaldor.
-						case 600100000: // Levinshor.
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 5000) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-						case 210100000: // Iluma.
-						case 220110000: // Norsvold.
-						case 600040000: // Tiamaranta's Eye.
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 5500) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-						case 210090000: // Idian Depths E.
-						case 220100000: // Idian Depths A.
-							if (player.getLevel() < getOwner().getLevel() + 5) {
-								kinahCount = Rnd.get(100, 6000) * player.getLevel();
-							} else if (player.getLevel() > getOwner().getLevel() + 5) {
-								kinahCount = 1000;
-							}
-							break;
-						default:
-							kinahCount = 0;
-							break;
-						}
-						if (player.isInInstance() && player.getLevel() < getOwner().getLevel() + 5) {
-							kinahCount = Rnd.get(100, 1000) * player.getLevel();
-						} else if (player.isInInstance() && player.getLevel() > getOwner().getLevel() + 5) {
-							kinahCount = 1000;
-						}
-						player.getInventory().increaseKinah(kinahCount);
 					}
 					// 伯丁之星。 / Berdin's Star.
 					if (getOwner().getLevel() >= 10) {

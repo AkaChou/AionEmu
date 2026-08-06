@@ -30,20 +30,14 @@ import com.aionemu.gameserver.model.drop.NpcDrop;
 import com.aionemu.gameserver.model.gameobjects.DropNpc;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.items.ItemId;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.team2.common.legacy.LootGroupRules;
 import com.aionemu.gameserver.model.templates.event.EventDrop;
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
 import com.aionemu.gameserver.model.templates.globaldrops.GlobalDropItem;
-import com.aionemu.gameserver.model.templates.globaldrops.GlobalDropMap;
-import com.aionemu.gameserver.model.templates.globaldrops.GlobalDropRace;
-import com.aionemu.gameserver.model.templates.globaldrops.GlobalDropRating;
-import com.aionemu.gameserver.model.templates.globaldrops.GlobalDropTribe;
-import com.aionemu.gameserver.model.templates.globaldrops.GlobalDropWorld;
-import com.aionemu.gameserver.model.templates.globaldrops.GlobalDropZone;
 import com.aionemu.gameserver.model.templates.globaldrops.GlobalRule;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
-import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
 import com.aionemu.gameserver.model.templates.npc.NpcRating;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.pet.PetFunctionType;
@@ -175,137 +169,7 @@ public class DropRegistrationService {
 			}
 		}
 		if (DropConfig.ENABLE_GLOBAL_DROPS) {
-			boolean isNpcChest = npc.getAi2().getName().equals("chest");
-            if (isNpcChest) {
-            } else {
-			boolean stepCheck = false;
-			// 添加一个计数器来跟踪全局掉落添加的物品数量 | Add a counter to track the number of global drop items added
-			int globalDropCount = 0;
-			
-			int maxDropsAllowed = DropConfig.MAX_GLOBAL_DROPS_PER_NPC;
-			
-			if (!isNpcChest && npc.getLevel() > 1 && npc.getAbyssNpcType() == AbyssNpcType.NONE) {
-				GlobalDropData globalDrops = DataManager.GLOBAL_DROP_DATA;
-				List<GlobalRule> globalrules = globalDrops.getAllRules();
-				for (GlobalRule rule : globalrules) {
-					// 使用调整后的最大掉落数量限制 | Use adjusted maximum drop quantity limit
-					if (globalDropCount >= maxDropsAllowed) {
-						break;
-					}
-					
-					if (rule.getGlobalRuleItems() == null) {
-						continue;
-					}
-					float percent = dropModifiers.calculateDropChance(rule.getChance(), !rule.getNoReduction());
-					if (Rnd.get() * 100 > percent) {
-						continue;
-					}
-					if (rule.getRestrictionRace() != null) {
-						if (player.getRace() == Race.ASMODIANS && rule.getRestrictionRace() == GlobalRule.RestrictionRace.ELYOS) {
-							continue;
-						}
-						if (player.getRace() == Race.ELYOS && rule.getRestrictionRace() == GlobalRule.RestrictionRace.ASMODIANS) {
-							continue;
-						}
-					}
-					if (rule.getGlobalRuleMaps() != null) {
-						stepCheck = false;
-						for (GlobalDropMap gdMap : rule.getGlobalRuleMaps().getGlobalDropMaps()) {
-							if (gdMap.getMapId() == npc.getPosition().getMapId()) {
-								stepCheck = true;
-								break;
-							}
-						}
-						if (!stepCheck) {
-							continue;
-						}
-					}
-					if (rule.getGlobalRuleWorlds() != null) {
-						stepCheck = false;
-						for (GlobalDropWorld gdWorld : rule.getGlobalRuleWorlds().getGlobalDropWorlds()) {
-							if (gdWorld.getWorldDropType().equals(npc.getWorldDropType())) {
-								stepCheck = true;
-								break;
-							}
-						}
-						if (!stepCheck) {
-							continue;
-						}
-					}
-					if (rule.getGlobalRuleRatings() != null) {
-						stepCheck = false;
-						for (GlobalDropRating gdRating : rule.getGlobalRuleRatings().getGlobalDropRatings()) {
-							if (gdRating.getRating().equals(npc.getRating())) {
-								stepCheck = true;
-								break;
-							}
-						}
-						if (!stepCheck) {
-							continue;
-						}
-					}
-					if (rule.getGlobalRuleRaces() != null) {
-						stepCheck = false;
-						for (GlobalDropRace gdRace : rule.getGlobalRuleRaces().getGlobalDropRaces()) {
-							if (gdRace.getRace().equals(npc.getRace())) {
-								stepCheck = true;
-								break;
-							}
-						}
-						if (!stepCheck) {
-							continue;
-						}
-					}
-					if (rule.getGlobalRuleTribes() != null) {
-						stepCheck = false;
-						for (GlobalDropTribe gdTribe : rule.getGlobalRuleTribes().getGlobalDropTribes()) {
-							if (gdTribe.getTribe().equals(npc.getTribe())) {
-								stepCheck = true;
-								break;
-							}
-						}
-						if (!stepCheck) {
-							continue;
-						}
-					}
-					if (rule.getGlobalRuleZones() != null) {
-						stepCheck = false;
-						for (GlobalDropZone gdZone : rule.getGlobalRuleZones().getGlobalDropZones()) {
-							if (npc.isInsideZone(ZoneName.get(gdZone.getZone()))) {
-								stepCheck = true;
-								break;
-							}
-						}
-						if (!stepCheck) {
-							continue;
-						}
-					}
-					List<Integer> alloweditems = new ArrayList<Integer>();
-					for (GlobalDropItem globalItem : rule.getGlobalRuleItems().getGlobalDropItems()) {
-						int diff = npc.getLevel() - globalItem.getItemTemplate().getLevel();
-						if (diff >= rule.getMinDiff() && diff <= rule.getMaxDiff()) {
-							alloweditems.add(globalItem.getId());
-						}
-					}
-					if (alloweditems.size() == 0) {
-						continue;
-					}
-					int rndItemId = alloweditems.size() > 1 ? alloweditems.get(Rnd.get(0, alloweditems.size() - 1)) : alloweditems.get(0);
-					long count = 1;
-					if (rndItemId == 182400001) {
-						// 基纳掉落：直接使用规则中的最小/最大值 | Gold Drop: Use min/max from rules directly
-						count = rule.getMaxCount() > 1  ? Rnd.get((int) rule.getMinCount(), (int) rule.getMaxCount()) : rule.getMinCount();
-					} else {
-						// 其他物品：同样的随机逻辑 | Other Items: Same random logic
-						count = rule.getMaxCount() > 1 ? Rnd.get((int) rule.getMinCount(), (int) rule.getMaxCount()) : rule.getMinCount();
-					}
-					// 在添加掉落物品后增加计数器 | Increment counter after adding drop item
-					droppedItems.add(regDropItem(index++, winnerObj, npcObjId, rndItemId, count));
-					globalDropCount++;
-
-                    }
-				}
-			}
+			index = registerGlobalDrops(npc, player, winnerObj, droppedItems, index, dropModifiers);
 		}
 		if (npc.getPosition().isInstanceMap()) {
 			npc.getPosition().getWorldMapInstance().getInstanceHandler().onDropRegistered(npc);
@@ -367,6 +231,92 @@ public class DropRegistrationService {
 		modifiers.setBoostDropRate(calculateBoostDropRate(player, npc));
 		modifiers.setReductionDropRate(getReductionDropRate(npc.getLevel(), highestLevel, npc.getWorldId(), isChest));
 		return modifiers;
+	}
+
+	int registerGlobalDrops(Npc npc, Player player, int winnerObj, Set<DropItem> droppedItems, int index,
+			DropModifiers dropModifiers) {
+		GlobalDropData globalDrops = DataManager.GLOBAL_DROP_DATA;
+		if (globalDrops == null) {
+			return index;
+		}
+		int globalDropCount = 0;
+		boolean kinahRegistered = false;
+		for (GlobalRule rule : globalDrops.getAllRules()) {
+			if (globalDropCount >= DropConfig.MAX_GLOBAL_DROPS_PER_NPC) {
+				break;
+			}
+			if (rule.getGlobalRuleItems() == null || !matchesGlobalRule(rule, npc, player)) {
+				continue;
+			}
+			List<Integer> allowedItems = new ArrayList<>();
+			for (GlobalDropItem globalItem : rule.getGlobalRuleItems().getGlobalDropItems()) {
+				int diff = npc.getLevel() - globalItem.getItemTemplate().getLevel();
+				if (diff >= rule.getMinDiff() && diff <= rule.getMaxDiff()) {
+					allowedItems.add(globalItem.getId());
+				}
+			}
+			if (allowedItems.isEmpty()) {
+				continue;
+			}
+			int itemId = allowedItems.size() == 1 ? allowedItems.getFirst() : Rnd.get(allowedItems);
+			boolean isKinah = itemId == ItemId.KINAH.value();
+			if (isKinah && kinahRegistered) {
+				continue;
+			}
+			float chance = calculateGlobalDropChance(rule, itemId, dropModifiers);
+			if (Rnd.get() * 100 > chance) {
+				continue;
+			}
+			long count = randomRuleCount(rule, npc.getLevel());
+			if (isKinah) {
+				droppedItems.removeIf(item -> item.getDropTemplate().getItemId() == ItemId.KINAH.value());
+				count = dropModifiers.calculateKinahAmount(count, DropConfig.KINAH_RATE);
+				kinahRegistered = true;
+			}
+			droppedItems.add(regDropItem(index++, winnerObj, npc.getObjectId(), itemId, count));
+			globalDropCount++;
+		}
+		return index;
+	}
+
+	private boolean matchesGlobalRule(GlobalRule rule, Npc npc, Player player) {
+		if (rule.getRestrictionRace() == GlobalRule.RestrictionRace.ELYOS && player.getRace() == Race.ASMODIANS
+				|| rule.getRestrictionRace() == GlobalRule.RestrictionRace.ASMODIANS && player.getRace() == Race.ELYOS) {
+			return false;
+		}
+		if (rule.getGlobalRuleMaps() != null && rule.getGlobalRuleMaps().getGlobalDropMaps().stream()
+				.noneMatch(map -> map.getMapId() == npc.getPosition().getMapId())) {
+			return false;
+		}
+		if (rule.getGlobalRuleWorlds() != null && rule.getGlobalRuleWorlds().getGlobalDropWorlds().stream()
+				.noneMatch(world -> world.getWorldDropType().equals(npc.getWorldDropType()))) {
+			return false;
+		}
+		if (rule.getGlobalRuleRatings() != null && rule.getGlobalRuleRatings().getGlobalDropRatings().stream()
+				.noneMatch(rating -> rating.getRating().equals(npc.getRating()))) {
+			return false;
+		}
+		if (rule.getGlobalRuleRaces() != null && rule.getGlobalRuleRaces().getGlobalDropRaces().stream()
+				.noneMatch(race -> race.getRace().equals(npc.getRace()))) {
+			return false;
+		}
+		if (rule.getGlobalRuleTribes() != null && rule.getGlobalRuleTribes().getGlobalDropTribes().stream()
+				.noneMatch(tribe -> tribe.getTribe().equals(npc.getTribe()))) {
+			return false;
+		}
+		return rule.getGlobalRuleZones() == null || rule.getGlobalRuleZones().getGlobalDropZones().stream()
+				.anyMatch(zone -> npc.isInsideZone(ZoneName.get(zone.getZone())));
+	}
+
+	long randomRuleCount(GlobalRule rule, int npcLevel) {
+		long minCount = rule.getMinCountForNpcLevel(npcLevel);
+		long maxCount = rule.getMaxCountForNpcLevel(npcLevel);
+		return minCount == maxCount ? minCount : Rnd.get(Math.toIntExact(minCount), Math.toIntExact(maxCount));
+	}
+
+	float calculateGlobalDropChance(GlobalRule rule, int itemId, DropModifiers dropModifiers) {
+		return itemId == ItemId.KINAH.value() ? rule.getChance()
+				: dropModifiers.calculateDropChance(rule.getChance(), !rule.getNoReduction());
 	}
 
 	private Player initDropNpc(Player player, int npcObjId, List<Player> allowedLooters, Collection<Player> groupMembers) {

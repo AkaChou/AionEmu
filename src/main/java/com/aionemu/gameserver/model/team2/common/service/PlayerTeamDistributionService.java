@@ -48,7 +48,6 @@ public class PlayerTeamDistributionService {
 			return;
 		}
 		long expReward;
-		int kinahCount = 0;
 		if (filteredStats.players.size() + filteredStats.mentorCount == 1) {
 			expReward = (long) (StatFunctions.calculateSoloExperienceReward(filteredStats.players.get(0), owner));
 		} else {
@@ -79,114 +78,6 @@ public class PlayerTeamDistributionService {
 			// 阿特雷亚图鉴。 / Atreian Bestiary.
 			if (owner.getLevel() >= 66) {
 				GameFeatureServices.atreianBestiaryService().onKill(member, owner.getNpcId());
-			}
-			// 自动掉落基纳。 / Auto Drop Kinah.
-			if (CustomConfig.AUTO_KINAH_ENABLED) {
-				switch (member.getWorldId()) {
-				case 210010000: // Poeta.
-				case 220010000: // Ishalgen.
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 500) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				case 210030000: // Verteron.
-				case 220030000: // Altgard.
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 1500) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				case 210020000: // Eltnen.
-				case 220020000: // Morheim.
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 2000) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				case 210040000: // Heiron.
-				case 220040000: // Beluslan.
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 2500) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				case 210060000: // Theobomos.
-				case 220050000: // Brushtonin.
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 3000) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				case 210050000: // Inggison.
-				case 210130000: // Inggison [Master Server].
-				case 220070000: // Gelkmaros.
-				case 220140000: // Gelkmaros [Master Server].
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 3500) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				case 210070000: // Cygnea.
-				case 220080000: // Enshar.
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 4000) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				case 400010000: // Reshanta.
-				case 400020000: // Belus.
-				case 400040000: // Aspida.
-				case 400050000: // Atanatos.
-				case 400060000: // Disillon.
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 4500) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				case 600090000: // Kaldor.
-				case 600100000: // Levinshor.
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 5000) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				case 210100000: // Iluma.
-				case 220110000: // Norsvold.
-				case 600040000: // Tiamaranta's Eye.
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 5500) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				case 210090000: // Idian Depths E.
-				case 220100000: // Idian Depths A.
-					if (member.getLevel() < owner.getLevel() + 5) {
-						kinahCount = Rnd.get(100, 6000) * member.getLevel();
-					} else if (member.getLevel() > owner.getLevel() + 5) {
-						kinahCount = 1000;
-					}
-					break;
-				default:
-					kinahCount = 0;
-					break;
-				}
-				if (member.isInInstance() && member.getLevel() < owner.getLevel() + 5) {
-					kinahCount = Rnd.get(100, 1000) * member.getLevel();
-				} else if (member.isInInstance() && member.getLevel() > owner.getLevel() + 5) {
-					kinahCount = 1000;
-				}
-				member.getInventory().increaseKinah(kinahCount);
 			}
 			long rewardXp = (long) (expReward * bonus * member.getLevel()) / (filteredStats.partyLvlSum * 100);
 			int rewardDp = StatFunctions.calculateGroupDPReward(member, owner);

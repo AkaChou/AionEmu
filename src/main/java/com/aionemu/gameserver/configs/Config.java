@@ -218,6 +218,7 @@ public class Config {
 			ConfigurableProcessor.process(CraftConfig.class, mainProps);
 			ConfigurableProcessor.process(CustomConfig.class, mainProps);
 			ConfigurableProcessor.process(DropConfig.class, mainProps);
+			DropConfig.refresh();
 			ConfigurableProcessor.process(EnchantsConfig.class, mainProps);
 			ConfigurableProcessor.process(EventsConfig.class, mainProps);
 			ConfigurableProcessor.process(FallDamageConfig.class, mainProps);
@@ -309,6 +310,7 @@ public class Config {
 			ConfigurableProcessor.process(CraftConfig.class, mainProps);
 			ConfigurableProcessor.process(CustomConfig.class, mainProps);
 			ConfigurableProcessor.process(DropConfig.class, mainProps);
+			DropConfig.refresh();
 			ConfigurableProcessor.process(EnchantsConfig.class, mainProps);
 			ConfigurableProcessor.process(EventsConfig.class, mainProps);
 			ConfigurableProcessor.process(FallDamageConfig.class, mainProps);

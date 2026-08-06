@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.drop;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.StringReader;
 
@@ -66,5 +67,40 @@ class DropModifiersTest {
 		modifiers.setReductionDropRate(1f);
 
 		assertEquals(25f, group.calculateEffectiveChance(group.getDrop().getFirst(), modifiers));
+	}
+
+	@Test
+	void kinahCombinesDedicatedRateWithOnlyTheExtraOrdinaryBoost() {
+		DropModifiers modifiers = new DropModifiers();
+		modifiers.setReductionDropRate(0f);
+
+		modifiers.setBoostDropRate(1f);
+		assertEquals(1_000, modifiers.calculateKinahAmount(1_000, 1f));
+
+		modifiers.setBoostDropRate(2f);
+		assertEquals(31_000, modifiers.calculateKinahAmount(1_000, 30f));
+
+		modifiers.setBoostDropRate(30f);
+		assertEquals(30_000, modifiers.calculateKinahAmount(1_000, 1f));
+	}
+
+	@Test
+	void kinahRoundsBothSharesSeparatelyAndNeverSubtractsForRatesBelowOne() {
+		DropModifiers modifiers = new DropModifiers();
+		modifiers.setBoostDropRate(0.5f);
+		assertEquals(1_000, modifiers.calculateKinahAmount(1_000, 1f));
+
+		modifiers.setBoostDropRate(1.5f);
+		assertEquals(4, modifiers.calculateKinahAmount(3, 0.5f));
+	}
+
+	@Test
+	void rejectsInvalidDedicatedKinahRates() {
+		DropModifiers modifiers = new DropModifiers();
+		modifiers.setBoostDropRate(1f);
+
+		assertThrows(IllegalArgumentException.class, () -> modifiers.calculateKinahAmount(1_000, 0f));
+		assertThrows(IllegalArgumentException.class, () -> modifiers.calculateKinahAmount(1_000, -1f));
+		assertThrows(IllegalArgumentException.class, () -> modifiers.calculateKinahAmount(1_000, Float.NaN));
 	}
 }
