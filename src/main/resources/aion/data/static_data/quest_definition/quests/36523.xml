@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="36502" version="1">
-  <metadata name="[Daily] Going Shulack Hunting" display-name-id="1126088" min-level="50" max-level="52" category="FACTION" cannot-share="true">
+<quest-definition id="36523" version="1">
+  <metadata name="[Daily] A Part Of Ricardo" display-name-id="1126116" min-level="53" max-level="2147483647" category="FACTION" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" cycles="ALL"/>
     <rewards>
-      <reward kind="EXP" id="0" amount="1239645"/>
+      <reward kind="EXP" id="0" amount="1213282"/>
       <reward kind="ITEM" id="186000102" amount="2"/>
       <reward kind="ITEM" id="188050737" amount="1"/>
     </rewards>
@@ -52,6 +52,7 @@
     </node>
   </nodes>
   <transitions>
+    <!-- 接取 NPC 799837: 任务介绍。 Quest intro. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
         <talk-to-npc npc-id="799837" dialog-id="31"/>
@@ -120,6 +121,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <!-- 接取 NPC 799838: 任务介绍。 Quest intro. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
         <talk-to-npc npc-id="799838" dialog-id="31"/>
@@ -188,14 +190,16 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <!-- 击杀 217010 后进入交付状态。 Kill target then report. -->
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-id="216606"/>
+        <kill-npc npc-id="217010"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 进行中对话。 In-progress dialog. -->
     <transition source="started" target="started">
       <event>
         <talk-to-npc npc-id="799837" dialog-id="31"/>
@@ -228,6 +232,7 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
+    <!-- 交付: 799837/799838 报告。 Turn in at report NPC. -->
     <transition source="k1" target="reward">
       <event>
         <talk-to-npc npc-id="799837" dialog-id="1009"/>
@@ -246,6 +251,7 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
+    <!-- 结算奖励: 799837。 Claim rewards. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="799837" dialog-ids="-1 1009"/>
@@ -259,7 +265,7 @@
         <talk-to-npc npc-id="799837" dialog-ids="8..23"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="1239645"/>
+        <grant-reward kind="EXP" id="0" amount="1213282"/>
         <grant-reward kind="ITEM" id="186000102" amount="2"/>
         <grant-reward kind="ITEM" id="188050737" amount="1"/>
         <complete-quest reward-index="0"/>
@@ -270,6 +276,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <!-- 结算奖励: 799838。 Claim rewards. -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="799838" dialog-ids="-1 1009"/>
@@ -283,7 +290,7 @@
         <talk-to-npc npc-id="799838" dialog-ids="8..23"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="1239645"/>
+        <grant-reward kind="EXP" id="0" amount="1213282"/>
         <grant-reward kind="ITEM" id="186000102" amount="2"/>
         <grant-reward kind="ITEM" id="188050737" amount="1"/>
         <complete-quest reward-index="0"/>

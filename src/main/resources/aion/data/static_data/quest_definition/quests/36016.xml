@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="36502" version="1">
-  <metadata name="[Daily] Going Shulack Hunting" display-name-id="1126088" min-level="50" max-level="52" category="FACTION" cannot-share="true">
+<quest-definition id="36016" version="1">
+  <metadata name="[Daily] The Jeweled Box" display-name-id="1126082" min-level="50" max-level="2147483647" category="FACTION" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" cycles="ALL"/>
+    <items>
+      <item id="182210011" count="1"/>
+    </items>
     <rewards>
-      <reward kind="EXP" id="0" amount="1239645"/>
+      <reward kind="EXP" id="0" amount="991660"/>
       <reward kind="ITEM" id="186000102" amount="2"/>
       <reward kind="ITEM" id="188050737" amount="1"/>
     </rewards>
+    <drops>
+      <drop npc-id="700769" item-id="182210011" chance="100" each-member="true" collecting-step="0"/>
+    </drops>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
@@ -29,13 +35,6 @@
         </vars>
       </project>
     </node>
-    <node label="k1">
-      <project status="START">
-        <vars>
-          <var name="var0" value="1"/>
-        </vars>
-      </project>
-    </node>
     <node label="reward">
       <project status="REWARD">
         <vars>
@@ -52,6 +51,7 @@
     </node>
   </nodes>
   <transitions>
+    <!-- 接取/报告:Fortuneer's 派系军需官 799837。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
         <talk-to-npc npc-id="799837" dialog-id="31"/>
@@ -120,6 +120,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <!-- 接取/报告:Fortuneer's 派系军需官 799838。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
         <talk-to-npc npc-id="799838" dialog-id="31"/>
@@ -188,20 +189,13 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="216606"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <!-- 进行中:799837/799838 对话。 -->
     <transition source="started" target="started">
       <event>
         <talk-to-npc npc-id="799837" dialog-id="31"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -209,43 +203,122 @@
         <talk-to-npc npc-id="799838" dialog-id="31"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
-    <transition source="k1" target="k1">
+    <!-- 交付:799837 收集到 quest_36016b 后报告。 -->
+    <transition source="started" target="reward" priority="0">
       <event>
-        <talk-to-npc npc-id="799837" dialog-id="31"/>
+        <talk-to-npc npc-id="799837" dialog-id="39"/>
       </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="k1">
-      <event>
-        <talk-to-npc npc-id="799838" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="reward">
-      <event>
-        <talk-to-npc npc-id="799837" dialog-id="1009"/>
-      </event>
+      <conditions>
+        <has-item item-id="182210011" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182210011" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="k1" target="reward">
+    <transition source="started" target="started" priority="1">
       <event>
-        <talk-to-npc npc-id="799838" dialog-id="1009"/>
+        <talk-to-npc npc-id="799837" dialog-id="39"/>
       </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2716"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="799837" dialog-id="20002"/>
+      </event>
+      <conditions>
+        <has-item item-id="182210011" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182210011" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="799837" dialog-id="20002"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <talk-to-npc npc-id="799837" dialog-id="10255"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 交付:799838 收集到 quest_36016b 后报告。 -->
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="799838" dialog-id="39"/>
+      </event>
+      <conditions>
+        <has-item item-id="182210011" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182210011" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="799838" dialog-id="39"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2716"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <talk-to-npc npc-id="799838" dialog-id="20002"/>
+      </event>
+      <conditions>
+        <has-item item-id="182210011" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182210011" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <talk-to-npc npc-id="799838" dialog-id="20002"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <talk-to-npc npc-id="799838" dialog-id="10255"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 结算奖励:799837。 -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="799837" dialog-ids="-1 1009"/>
@@ -259,7 +332,7 @@
         <talk-to-npc npc-id="799837" dialog-ids="8..23"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="1239645"/>
+        <grant-reward kind="EXP" id="0" amount="991660" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="186000102" amount="2"/>
         <grant-reward kind="ITEM" id="188050737" amount="1"/>
         <complete-quest reward-index="0"/>
@@ -270,6 +343,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <!-- 结算奖励:799838。 -->
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="799838" dialog-ids="-1 1009"/>
@@ -283,7 +357,7 @@
         <talk-to-npc npc-id="799838" dialog-ids="8..23"/>
       </event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="1239645"/>
+        <grant-reward kind="EXP" id="0" amount="991660" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="186000102" amount="2"/>
         <grant-reward kind="ITEM" id="188050737" amount="1"/>
         <complete-quest reward-index="0"/>

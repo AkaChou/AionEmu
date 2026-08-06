@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="36504" version="1">
-  <metadata name="[Daily] The Avian Flew" display-name-id="1126090" min-level="50" max-level="52" category="FACTION" cannot-share="true">
+<quest-definition id="36508" version="1">
+  <metadata name="[Daily] No Time For Tricks" display-name-id="1126094" min-level="53" max-level="54" category="FACTION" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" cycles="ALL"/>
     <rewards>
-      <reward kind="EXP" id="0" amount="1239645"/>
+      <reward kind="EXP" id="0" amount="1213282"/>
       <reward kind="ITEM" id="186000102" amount="2"/>
       <reward kind="ITEM" id="188050737" amount="1"/>
     </rewards>
@@ -45,6 +45,7 @@
     </node>
   </nodes>
   <transitions>
+    <!-- 接取/报告 NPC:军团任务管理员 Rima (799837) 与 Socinus (799838)。start_npc_ids=0,旧引擎经军团面板接取;DSL 按 36500/35007 先例用 end NPC 挂接取对话。 -->
     <transition source="unaccepted" target="unaccepted">
       <event><talk-to-npc npc-id="799837" dialog-id="31"/></event>
       <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
@@ -108,6 +109,7 @@
       <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
     </transition>
 
+    <!-- 进行中:Rima (799837) / Socinus (799838) 对话查看任务详情。 -->
     <transition source="started" target="started">
       <event><talk-to-npc npc-id="799837" dialog-id="31"/></event>
       <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
@@ -117,19 +119,21 @@
       <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
     </transition>
 
+    <!-- 击杀 216612 1 只:var0 计数 0→1,priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-id="216608"/></event>
+      <event><kill-npc npc-id="216612"/></event>
       <conditions><variable-below field="var0" value="1"/></conditions>
       <actions><increment-variable field="var0" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
-      <event><kill-npc npc-id="216608"/></event>
+      <event><kill-npc npc-id="216612"/></event>
       <conditions><variable-at-least field="var0" value="1"/></conditions>
       <actions><set-variable field="var0" value="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
 
+    <!-- 奖励:Rima (799837) / Socinus (799838) 领取固定奖励 (exp/物品)。 -->
     <transition source="reward" target="reward">
       <event><talk-to-npc npc-id="799837" dialog-ids="-1 1009"/></event>
       <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
@@ -141,7 +145,7 @@
     <transition source="reward" target="complete">
       <event><talk-to-npc npc-id="799837" dialog-ids="8..23"/></event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="1239645"/>
+        <grant-reward kind="EXP" id="0" amount="1213282"/>
         <grant-reward kind="ITEM" id="186000102" amount="2"/>
         <grant-reward kind="ITEM" id="188050737" amount="1"/>
         <complete-quest reward-index="0"/>
@@ -155,7 +159,7 @@
     <transition source="reward" target="complete">
       <event><talk-to-npc npc-id="799838" dialog-ids="8..23"/></event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="1239645"/>
+        <grant-reward kind="EXP" id="0" amount="1213282"/>
         <grant-reward kind="ITEM" id="186000102" amount="2"/>
         <grant-reward kind="ITEM" id="188050737" amount="1"/>
         <complete-quest reward-index="0"/>

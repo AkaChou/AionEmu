@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quest-definition id="36504" version="1">
-  <metadata name="[Daily] The Avian Flew" display-name-id="1126090" min-level="50" max-level="52" category="FACTION" cannot-share="true">
+<quest-definition id="36512" version="1">
+  <metadata name="[Daily] Blackheart, Cold Hands" display-name-id="1126098" min-level="55" max-level="55" category="FACTION" cannot-share="true" npc-faction-id="4">
     <races>
       <race id="ELYOS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" cycles="ALL"/>
     <rewards>
-      <reward kind="EXP" id="0" amount="1239645"/>
+      <reward kind="EXP" id="0" amount="1621827"/>
       <reward kind="ITEM" id="186000102" amount="2"/>
       <reward kind="ITEM" id="188050737" amount="1"/>
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="2" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted">
@@ -29,17 +29,24 @@
         </vars>
       </project>
     </node>
+    <node label="s1">
+      <project status="START">
+        <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
     <node label="reward">
       <project status="REWARD">
         <vars>
-          <var name="var0" value="1"/>
+          <var name="var0" value="2"/>
         </vars>
       </project>
     </node>
     <node label="complete">
       <project status="COMPLETE">
         <vars>
-          <var name="var0" value="1"/>
+          <var name="var0" value="0"/>
         </vars>
       </project>
     </node>
@@ -117,16 +124,15 @@
       <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
     </transition>
 
-    <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-id="216608"/></event>
-      <conditions><variable-below field="var0" value="1"/></conditions>
-      <actions><increment-variable field="var0" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event><kill-npc npc-id="216608"/></event>
-      <conditions><variable-at-least field="var0" value="1"/></conditions>
+    <transition source="started" target="s1">
+      <event><can-act template-id="206136" action-type="ACTION_ITEM_USE"/></event>
       <actions><set-variable field="var0" value="1"/></actions>
+      <after-commit><spawn-npc-at-player slot="blackheart" template-id="216616" heading="0"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <transition source="s1" target="reward">
+      <event><kill-npc npc-id="216616"/></event>
+      <actions><set-variable field="var0" value="2"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
 
@@ -141,7 +147,7 @@
     <transition source="reward" target="complete">
       <event><talk-to-npc npc-id="799837" dialog-ids="8..23"/></event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="1239645"/>
+        <grant-reward kind="EXP" id="0" amount="1621827"/>
         <grant-reward kind="ITEM" id="186000102" amount="2"/>
         <grant-reward kind="ITEM" id="188050737" amount="1"/>
         <complete-quest reward-index="0"/>
@@ -155,7 +161,7 @@
     <transition source="reward" target="complete">
       <event><talk-to-npc npc-id="799838" dialog-ids="8..23"/></event>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="1239645"/>
+        <grant-reward kind="EXP" id="0" amount="1621827"/>
         <grant-reward kind="ITEM" id="186000102" amount="2"/>
         <grant-reward kind="ITEM" id="188050737" amount="1"/>
         <complete-quest reward-index="0"/>
