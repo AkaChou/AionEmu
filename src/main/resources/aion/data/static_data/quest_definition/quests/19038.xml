@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="19038" version="1">
+  <metadata name="[Master] Cook's Potential" display-name-id="1124538" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" combine-skill="40001" combine-skill-point="499">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+    <work-items>
+      <item id="152202200" count="1"/>
+      <item id="152202201" count="1"/>
+      <item id="152202202" count="1"/>
+      <item id="152202203" count="1"/>
+    </work-items>
+    <rewards>
+      <reward kind="EXP" id="0" amount="291412"/>
+    </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="1944"/>
+      <condition type="unfinished" quest-id="19008"/>
+      <condition type="noacquired" quest-id="19008"/>
+      <condition type="finished" quest-id="3952"/>
+      <condition type="unfinished" quest-id="19014"/>
+      <condition type="noacquired" quest-id="19014"/>
+      <condition type="unfinished" quest-id="19020"/>
+      <condition type="noacquired" quest-id="19020"/>
+      <condition type="unfinished" quest-id="19026"/>
+      <condition type="noacquired" quest-id="19026"/>
+      <condition type="unfinished" quest-id="19032"/>
+      <condition type="noacquired" quest-id="19032"/>
+    </start-conditions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="11" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="s3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="s4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="s5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
+    <node label="s6"><project status="START"><vars><var name="var0" value="6"/></vars></project></node>
+    <node label="s7"><project status="START"><vars><var name="var0" value="7"/></vars></project></node>
+    <node label="s8"><project status="START"><vars><var name="var0" value="8"/></vars></project></node>
+    <node label="s9"><project status="START"><vars><var name="var0" value="9"/></vars></project></node>
+    <node label="s10"><project status="START"><vars><var name="var0" value="10"/></vars></project></node>
+    <node label="s11"><project status="START"><vars><var name="var0" value="11"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="11"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+  </nodes>
+  <transitions>
+    <!-- Hestia 接取和任务选择菜单。 -->
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="203784" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="4762"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="203784" dialog-id="1007"/></event>
+      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="203784" dialog-id="1002"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><talk-to-npc npc-id="203784" dialog-id="20000"/></event>
+      <conditions><start-eligible/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="203784" dialog-ids="1003 1004 20001"/></event>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="203784" dialog-id="1008"/></event>
+      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event><talk-to-npc npc-id="203784" dialog-id="1008"/></event>
+      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+
+    <!-- Luelas：余额不足优先提示 4400；配方未学习时展示对应配方对话。 -->
+    <transition source="started" target="started" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="0"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s1" target="s1" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="1"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s3" target="s3" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="3"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s4" target="s4" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="4"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s6" target="s6" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="6"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s7" target="s7" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="7"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s9" target="s9" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="9"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s10" target="s10" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="10"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+
+    <transition source="started" target="started" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="0"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+    </transition>
+    <transition source="s3" target="s3" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="3"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+    </transition>
+    <transition source="s6" target="s6" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="6"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1693"/></after-commit>
+    </transition>
+    <transition source="s9" target="s9" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="9"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="2034"/></after-commit>
+    </transition>
+    <transition source="s1" target="s1" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="1"/><currency-at-least kind="GOLD" amount="6500"/><recipe-known recipe-id="155002239" expected="false"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4081"/></after-commit>
+    </transition>
+    <transition source="s4" target="s4" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="4"/><currency-at-least kind="GOLD" amount="6500"/><recipe-known recipe-id="155002240" expected="false"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4166"/></after-commit>
+    </transition>
+    <transition source="s7" target="s7" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="7"/><currency-at-least kind="GOLD" amount="6500"/><recipe-known recipe-id="155002241" expected="false"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4251"/></after-commit>
+    </transition>
+    <transition source="s10" target="s10" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="10"/><currency-at-least kind="GOLD" amount="6500"/><recipe-known recipe-id="155002242" expected="false"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4336"/></after-commit>
+    </transition>
+
+    <!-- Luelas 购买四组任务制作材料。 -->
+    <transition source="started" target="s2" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="10009"/></event>
+      <conditions><variable-is field="var0" value="0"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <actions><decrease-currency kind="GOLD" amount="6500"/><give-item item-id="152202200" count="1"/><set-variable field="var0" value="2"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="s1" target="s2" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="10009"/></event>
+      <conditions><variable-is field="var0" value="1"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <actions><decrease-currency kind="GOLD" amount="6500"/><give-item item-id="152202200" count="1"/><set-variable field="var0" value="2"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="10009"/></event>
+      <conditions><variable-is field="var0" value="0"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s1" target="s1" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="10009"/></event>
+      <conditions><variable-is field="var0" value="1"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+
+    <transition source="s3" target="s5" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="10019"/></event>
+      <conditions><variable-is field="var0" value="3"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <actions><decrease-currency kind="GOLD" amount="6500"/><give-item item-id="152202201" count="1"/><set-variable field="var0" value="5"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="s4" target="s5" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="10019"/></event>
+      <conditions><variable-is field="var0" value="4"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <actions><decrease-currency kind="GOLD" amount="6500"/><give-item item-id="152202201" count="1"/><set-variable field="var0" value="5"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="s3" target="s3" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="10019"/></event>
+      <conditions><variable-is field="var0" value="3"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s4" target="s4" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="10019"/></event>
+      <conditions><variable-is field="var0" value="4"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+
+    <transition source="s6" target="s8" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="10029"/></event>
+      <conditions><variable-is field="var0" value="6"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <actions><decrease-currency kind="GOLD" amount="6500"/><give-item item-id="152202202" count="1"/><set-variable field="var0" value="8"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="s7" target="s8" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="10029"/></event>
+      <conditions><variable-is field="var0" value="7"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <actions><decrease-currency kind="GOLD" amount="6500"/><give-item item-id="152202202" count="1"/><set-variable field="var0" value="8"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="s6" target="s6" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="10029"/></event>
+      <conditions><variable-is field="var0" value="6"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s7" target="s7" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="10029"/></event>
+      <conditions><variable-is field="var0" value="7"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+
+    <transition source="s9" target="s11" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="10039"/></event>
+      <conditions><variable-is field="var0" value="9"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <actions><decrease-currency kind="GOLD" amount="6500"/><give-item item-id="152202203" count="1"/><set-variable field="var0" value="11"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="s10" target="s11" priority="0">
+      <event><talk-to-npc npc-id="203785" dialog-id="10039"/></event>
+      <conditions><variable-is field="var0" value="10"/><currency-at-least kind="GOLD" amount="6500"/></conditions>
+      <actions><decrease-currency kind="GOLD" amount="6500"/><give-item item-id="152202203" count="1"/><set-variable field="var0" value="11"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="s9" target="s9" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="10039"/></event>
+      <conditions><variable-is field="var0" value="9"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+    <transition source="s10" target="s10" priority="1">
+      <event><talk-to-npc npc-id="203785" dialog-id="10039"/></event>
+      <conditions><variable-is field="var0" value="10"/><currency-below kind="GOLD" amount="6500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="4400"/></after-commit>
+    </transition>
+
+    <!-- Hestia：四次制作提交、缺料提示和制作失败回退。 -->
+    <transition source="s2" target="s2">
+      <event><talk-to-npc npc-id="203784" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="2"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1097"/></after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event><talk-to-npc npc-id="203784" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="5"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1438"/></after-commit>
+    </transition>
+    <transition source="s8" target="s8">
+      <event><talk-to-npc npc-id="203784" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="8"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1779"/></after-commit>
+    </transition>
+    <transition source="s11" target="s11">
+      <event><talk-to-npc npc-id="203784" dialog-id="31"/></event>
+      <conditions><variable-is field="var0" value="11"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="2120"/></after-commit>
+    </transition>
+
+    <transition source="s2" target="s3" priority="0">
+      <event><talk-to-npc npc-id="203784" dialog-id="10010"/></event>
+      <conditions><variable-is field="var0" value="2"/><has-item item-id="182206773" count="1"/></conditions>
+      <actions><remove-item item-id="182206773" count="1"/><set-variable field="var0" value="3"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="1182"/></after-commit>
+    </transition>
+    <transition source="s2" target="s2" priority="1">
+      <event><talk-to-npc npc-id="203784" dialog-id="10010"/></event>
+      <conditions><variable-is field="var0" value="2"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="2716"/></after-commit>
+    </transition>
+    <transition source="s5" target="s6" priority="0">
+      <event><talk-to-npc npc-id="203784" dialog-id="10020"/></event>
+      <conditions><variable-is field="var0" value="5"/><has-item item-id="182206774" count="1"/></conditions>
+      <actions><remove-item item-id="182206774" count="1"/><set-variable field="var0" value="6"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="1523"/></after-commit>
+    </transition>
+    <transition source="s5" target="s5" priority="1">
+      <event><talk-to-npc npc-id="203784" dialog-id="10020"/></event>
+      <conditions><variable-is field="var0" value="5"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="3057"/></after-commit>
+    </transition>
+    <transition source="s8" target="s9" priority="0">
+      <event><talk-to-npc npc-id="203784" dialog-id="10030"/></event>
+      <conditions><variable-is field="var0" value="8"/><has-item item-id="182206775" count="1"/></conditions>
+      <actions><remove-item item-id="182206775" count="1"/><set-variable field="var0" value="9"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="1864"/></after-commit>
+    </transition>
+    <transition source="s8" target="s8" priority="1">
+      <event><talk-to-npc npc-id="203784" dialog-id="10030"/></event>
+      <conditions><variable-is field="var0" value="8"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="3398"/></after-commit>
+    </transition>
+    <transition source="s11" target="reward" priority="0">
+      <event><talk-to-npc npc-id="203784" dialog-id="10040"/></event>
+      <conditions><variable-is field="var0" value="11"/><has-item item-id="182206776" count="1"/></conditions>
+      <actions><remove-item item-id="182206776" count="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+    <transition source="s11" target="s11" priority="1">
+      <event><talk-to-npc npc-id="203784" dialog-id="10040"/></event>
+      <conditions><variable-is field="var0" value="11"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="3057"/></after-commit>
+    </transition>
+
+    <transition source="s2" target="s1">
+      <event><fail-craft item-id="182206773"/></event>
+      <conditions><variable-is field="var0" value="2"/></conditions>
+      <actions><set-variable field="var0" value="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="s5" target="s4">
+      <event><fail-craft item-id="182206774"/></event>
+      <conditions><variable-is field="var0" value="5"/></conditions>
+      <actions><set-variable field="var0" value="4"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="s8" target="s7">
+      <event><fail-craft item-id="182206775"/></event>
+      <conditions><variable-is field="var0" value="8"/></conditions>
+      <actions><set-variable field="var0" value="7"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="s11" target="s10">
+      <event><fail-craft item-id="182206776"/></event>
+      <conditions><variable-is field="var0" value="11"/></conditions>
+      <actions><set-variable field="var0" value="10"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="203784" dialog-ids="-1 1009"/></event>
+      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event><talk-to-npc npc-id="203784" dialog-ids="8..23"/></event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="291412" amount-mode="QUEST_BASE"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

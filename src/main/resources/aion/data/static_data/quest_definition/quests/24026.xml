@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="24026" version="1">
+  <metadata name="A Hand from Each Side" display-name-id="1129899" min-level="35" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <classes>
+      <class id="GLADIATOR"/>
+      <class id="TEMPLAR"/>
+      <class id="ASSASSIN"/>
+      <class id="RANGER"/>
+      <class id="SORCERER"/>
+      <class id="SPIRIT_MASTER"/>
+      <class id="CHANTER"/>
+      <class id="CLERIC"/>
+      <class id="GUNSLINGER"/>
+      <class id="SONGWEAVER"/>
+      <class id="TECHNIST"/>
+      <class id="AETHERTECH"/>
+    </classes>
+    <prerequisites>
+      <quest id="24020"/>
+      <quest id="24021"/>
+      <quest id="24022"/>
+      <quest id="24023"/>
+      <quest id="24024"/>
+      <quest id="24025"/>
+    </prerequisites>
+    <rewards>
+      <reward kind="EXP" id="0" amount="3504765"/>
+      <reward kind="TITLE" id="60" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114101704" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114301833" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114301835" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114501742" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114501744" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114601583" amount="1"/>
+      <reward kind="ITEM" id="186000008" amount="20"/>
+      <reward kind="ITEM" id="190200000" amount="10"/>
+    </rewards>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="defense"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="defense-done"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="4"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <!-- The campaign starts only after all six preceding missions are complete. -->
+    <transition source="unaccepted" target="started">
+      <event><zone-mission-end/></event>
+      <conditions><start-eligible/><quests-finished quest-ids="24020 24021 24022 24023 24024 24025"/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event><level-up/></event>
+      <conditions><start-eligible/><quests-finished quest-ids="24020 24021 24022 24023 24024 24025"/></conditions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit>
+    </transition>
+
+    <transition source="started" target="started">
+      <event><talk-to-npc npc-id="204301" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+    </transition>
+    <transition source="started" target="s1">
+      <event><talk-to-npc npc-id="204301" dialog-id="10000"/></event>
+      <actions><give-item item-id="182215371" count="1"/></actions>
+      <after-commit><teleport-player-current-or-default world-id="220020000" x="2795.9" y="478.37" z="265.86" heading="51"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+
+    <transition source="s1" target="s1">
+      <event><talk-to-npc npc-id="204403" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+    </transition>
+    <transition source="s1" target="s2">
+      <event><talk-to-npc npc-id="204403" dialog-id="10001"/></event>
+      <actions><give-item item-id="182215372" count="1"/></actions>
+      <after-commit><teleport-player-current-or-default world-id="220020000" x="3025.54" y="868.31" z="363.22" heading="14"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+
+    <transition source="s2" target="s2">
+      <event><talk-to-npc npc-id="204432" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="1693"/></after-commit>
+    </transition>
+    <transition source="s2" target="defense">
+      <event><talk-to-npc npc-id="204432" dialog-id="10002"/></event>
+      <after-commit>
+        <start-quest-timer seconds="120" timer-id="24026-defense" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
+        <spawn-npc-random slot="defense-mob" replace-existing="true">
+          <variant template-id="213576" world-id="320040000" x="254.74" y="236.72" z="217.48" heading="95"/>
+          <variant template-id="213577" world-id="320040000" x="257.92" y="237.39" z="217.48" heading="95"/>
+          <variant template-id="213578" world-id="320040000" x="261.86" y="237.5" z="217.48" heading="95"/>
+        </spawn-npc-random>
+        <attack-npc-template slot="defense-mob" template-id="204432"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <!-- The legacy random range is 0..2; 213579 is intentionally not a variant. -->
+    <transition source="defense" target="defense">
+      <event><kill-npc npc-ids="213576 213577 213578 213579"/></event>
+      <after-commit>
+        <spawn-npc-random slot="defense-mob" replace-existing="true">
+          <variant template-id="213576" world-id="320040000" x="254.74" y="236.72" z="217.48" heading="95"/>
+          <variant template-id="213577" world-id="320040000" x="257.92" y="237.39" z="217.48" heading="95"/>
+          <variant template-id="213578" world-id="320040000" x="261.86" y="237.5" z="217.48" heading="95"/>
+        </spawn-npc-random>
+        <attack-npc-template slot="defense-mob" template-id="204432"/>
+      </after-commit>
+    </transition>
+    <transition source="defense" target="defense-done">
+      <event><quest-timer-end/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="defense" target="s2">
+      <event><die/></event>
+      <after-commit><cancel-quest-timer timer-id="24026-defense" scope="PLAYER_QUEST"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="defense" target="s2">
+      <event><log-out/></event>
+      <after-commit><cancel-quest-timer timer-id="24026-defense" scope="PLAYER_QUEST"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+
+    <transition source="defense-done" target="defense-done">
+      <event><talk-to-npc npc-id="204432" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="2034"/></after-commit>
+    </transition>
+    <transition source="defense-done" target="reward">
+      <event><talk-to-npc npc-id="204432" dialog-id="10003"/></event>
+      <actions><remove-item item-id="182215371" count="1"/></actions>
+      <after-commit><teleport-player-current-or-default world-id="220020000" x="248.52255" y="2398.9722" z="452.81012" heading="48"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="204301" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event><talk-to-npc npc-id="204301" dialog-ids="-1 1009"/></event>
+      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+    </transition>
+
+    <!-- Six selectable rewards are represented as six explicit durable ITEM branches. -->
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204301" dialog-id="8"/></event><actions><grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/><grant-reward kind="TITLE" id="60" amount="1"/><grant-reward kind="ITEM" id="114101704" amount="1"/><grant-reward kind="ITEM" id="186000008" amount="20"/><grant-reward kind="ITEM" id="190200000" amount="10"/><complete-quest reward-index="2"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204301" dialog-id="9"/></event><actions><grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/><grant-reward kind="TITLE" id="60" amount="1"/><grant-reward kind="ITEM" id="114301833" amount="1"/><grant-reward kind="ITEM" id="186000008" amount="20"/><grant-reward kind="ITEM" id="190200000" amount="10"/><complete-quest reward-index="3"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204301" dialog-id="10"/></event><actions><grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/><grant-reward kind="TITLE" id="60" amount="1"/><grant-reward kind="ITEM" id="114301835" amount="1"/><grant-reward kind="ITEM" id="186000008" amount="20"/><grant-reward kind="ITEM" id="190200000" amount="10"/><complete-quest reward-index="4"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204301" dialog-id="11"/></event><actions><grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/><grant-reward kind="TITLE" id="60" amount="1"/><grant-reward kind="ITEM" id="114501742" amount="1"/><grant-reward kind="ITEM" id="186000008" amount="20"/><grant-reward kind="ITEM" id="190200000" amount="10"/><complete-quest reward-index="5"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204301" dialog-id="12"/></event><actions><grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/><grant-reward kind="TITLE" id="60" amount="1"/><grant-reward kind="ITEM" id="114501744" amount="1"/><grant-reward kind="ITEM" id="186000008" amount="20"/><grant-reward kind="ITEM" id="190200000" amount="10"/><complete-quest reward-index="6"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204301" dialog-id="13"/></event><actions><grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/><grant-reward kind="TITLE" id="60" amount="1"/><grant-reward kind="ITEM" id="114601583" amount="1"/><grant-reward kind="ITEM" id="186000008" amount="20"/><grant-reward kind="ITEM" id="190200000" amount="10"/><complete-quest reward-index="7"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+  </transitions>
+</quest-definition>
