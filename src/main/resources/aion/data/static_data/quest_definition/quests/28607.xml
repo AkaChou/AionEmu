@@ -137,7 +137,7 @@
         <has-item item-id="182213007" count="15"/>
       </conditions>
       <actions>
-        <remove-item item-id="182213007" count="ALL"/>
+        <remove-item item-id="182213007" count="15"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -160,7 +160,7 @@
         <has-item item-id="182213007" count="15"/>
       </conditions>
       <actions>
-        <remove-item item-id="182213007" count="ALL"/>
+        <remove-item item-id="182213007" count="15"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

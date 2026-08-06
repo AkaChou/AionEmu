@@ -138,8 +138,8 @@
         <has-item item-id="182204553" count="6"/>
       </conditions>
       <actions>
-        <remove-item item-id="182204552" count="ALL"/>
-        <remove-item item-id="182204553" count="ALL"/>
+        <remove-item item-id="182204552" count="4"/>
+        <remove-item item-id="182204553" count="6"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -163,8 +163,8 @@
         <has-item item-id="182204553" count="6"/>
       </conditions>
       <actions>
-        <remove-item item-id="182204552" count="ALL"/>
-        <remove-item item-id="182204553" count="ALL"/>
+        <remove-item item-id="182204552" count="4"/>
+        <remove-item item-id="182204553" count="6"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
