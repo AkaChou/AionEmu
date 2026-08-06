@@ -12,6 +12,8 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
@@ -574,8 +576,9 @@ public class Equipment {
 	public List<Item> getEquippedItemsByItemId(int value) {
 		List<Item> equippedItemsById = new ArrayList<Item>();
 		synchronized (equipment) {
+			Set<Item> seen = Collections.newSetFromMap(new IdentityHashMap<>());
 			for (Item item : equipment.values()) {
-				if (item.getItemTemplate().getTemplateId() == value) {
+				if (item.getItemTemplate().getTemplateId() == value && seen.add(item)) {
 					equippedItemsById.add(item);
 				}
 			}

@@ -2,7 +2,12 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.SortedMap;
+
 import org.junit.jupiter.api.Test;
+import org.objenesis.ObjenesisStd;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.items.ItemSlot;
@@ -75,11 +80,38 @@ class EquipmentTest {
 		assertEquals(ItemSlot.POWER_SHARD_LEFT.getSlotIdMask(), slotMask);
 	}
 
+	@Test
+	void twoHandWeaponIsReturnedOnceWhenItOccupiesTwoSlots() throws Exception {
+		Player player = new ObjenesisStd().newInstance(Player.class);
+		Equipment equipment = new Equipment(player);
+		Item bow = new Item(3001, new TestWeaponTemplate(3002, true), 1, true,
+			ItemSlot.MAIN_OR_SUB.getSlotIdMask());
+		Field field = Equipment.class.getDeclaredField("equipment");
+		field.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		SortedMap<Long, Item> slots = (SortedMap<Long, Item>) field.get(equipment);
+		slots.put(ItemSlot.MAIN_HAND.getSlotIdMask(), bow);
+		slots.put(ItemSlot.SUB_HAND.getSlotIdMask(), bow);
+
+		assertEquals(List.of(bow), equipment.getEquippedItemsByItemId(3002));
+	}
+
 	private static final class TestWeaponTemplate extends ItemTemplate {
+		private final int templateId;
 		private final boolean twoHandWeapon;
 
 		private TestWeaponTemplate(boolean twoHandWeapon) {
+			this(0, twoHandWeapon);
+		}
+
+		private TestWeaponTemplate(int templateId, boolean twoHandWeapon) {
+			this.templateId = templateId;
 			this.twoHandWeapon = twoHandWeapon;
+		}
+
+		@Override
+		public int getTemplateId() {
+			return templateId;
 		}
 
 		@Override
