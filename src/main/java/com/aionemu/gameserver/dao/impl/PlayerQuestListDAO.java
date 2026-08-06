@@ -226,11 +226,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 			ps.setNull(6, Types.TIMESTAMP);
 		}
 
-		if (qs.getReward() == null) {
-			ps.setNull(7, Types.INTEGER);
-		} else {
-			ps.setInt(7, qs.getReward());
-		}
+		setRewardParameter(ps, 7, qs);
 
 		if (qs.getCompleteTime() == null) {
 			ps.setNull(8, Types.TIMESTAMP);
@@ -291,11 +287,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 			ps.setNull(4, Types.TIMESTAMP);
 		}
 
-		if (qs.getReward() == null) {
-			ps.setNull(5, Types.INTEGER);
-		} else {
-			ps.setInt(5, qs.getReward());
-		}
+		setRewardParameter(ps, 5, qs);
 
 		if (qs.getCompleteTime() == null) {
 			ps.setNull(6, Types.TIMESTAMP);
@@ -305,6 +297,15 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 
 		ps.setInt(7, playerId);
 		ps.setInt(8, qs.getQuestId());
+	}
+
+	static void setRewardParameter(PreparedStatement ps, int parameterIndex, QuestState qs) throws SQLException {
+		Integer reward = qs.getRewardOrNull();
+		if (reward == null) {
+			ps.setNull(parameterIndex, Types.INTEGER);
+		} else {
+			ps.setInt(parameterIndex, reward);
+		}
 	}
 
 	/**

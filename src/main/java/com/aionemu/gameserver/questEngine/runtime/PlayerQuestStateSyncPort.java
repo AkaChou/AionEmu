@@ -13,6 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
@@ -37,8 +38,10 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 		if (mode == QuestStateSyncMode.COMPLETION) {
 			sendCompletionAvailability(player, plan.questId());
 		}
-		PacketSendUtility.sendPacket(player,
-			new SM_QUEST_ACTION(plan.questId(), plan.nextStatus(), plan.nextPackedVariables()));
+		SM_QUEST_ACTION statePacket = addsQuestToClientList(snapshot.status(), plan.nextStatus())
+			? SM_QUEST_ACTION.addQuest(plan.questId(), plan.nextStatus(), plan.nextPackedVariables())
+			: SM_QUEST_ACTION.updateQuest(plan.questId(), plan.nextStatus(), plan.nextPackedVariables());
+		PacketSendUtility.sendPacket(player, statePacket);
 		VisibleObject interaction = snapshot.interactionObjectId() == 0 ? null
 			: GameWorldBootstrapServices.world().findVisibleObject(snapshot.interactionObjectId());
 		QuestEnv env = new QuestEnv(interaction, player, plan.questId(), 0);
@@ -63,6 +66,14 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 			npc.getAi2().onQuestFinished(player, plan.questId());
 		}
 		return true;
+	}
+
+	static boolean addsQuestToClientList(QuestStatus currentStatus, QuestStatus nextStatus) {
+		return !isVisibleInClientQuestList(currentStatus) && isVisibleInClientQuestList(nextStatus);
+	}
+
+	private static boolean isVisibleInClientQuestList(QuestStatus status) {
+		return status != QuestStatus.NONE && status != QuestStatus.COMPLETE;
 	}
 
 	private static void sendCompletionAvailability(Player player, int questId) {

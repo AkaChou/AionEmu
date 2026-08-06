@@ -22,6 +22,16 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 
 	}
 
+	/** Creates the protocol action that inserts an accepted quest into the client quest list. */
+	public static SM_QUEST_ACTION addQuest(int questId, QuestStatus status, int step) {
+		return new SM_QUEST_ACTION(questId, status.value(), step);
+	}
+
+	/** Creates the protocol action that updates a quest already known to the client. */
+	public static SM_QUEST_ACTION updateQuest(int questId, QuestStatus status, int step) {
+		return new SM_QUEST_ACTION(questId, status, step);
+	}
+
 	/**
 	 * 使用给定参数构造 SM_QUEST_ACTION 包。
 	 * Creates a SM_QUEST_ACTION packet with the given parameters.
