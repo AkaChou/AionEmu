@@ -10,8 +10,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 全局 Rule 模板（静态数据/XML）。
  * XML template.
- *
- * @author Wnkrz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GlobalRule")
@@ -63,6 +61,9 @@ public class GlobalRule {
 
 	@XmlAttribute(name = "no_reduction")
 	protected boolean noReduction;
+
+	@XmlAttribute(name = "count_per_npc_level")
+	protected boolean countPerNpcLevel;
 
 	/** 返回 global rule items / Returns the global rule items */
 	public GlobalDropItems getGlobalRuleItems() {
@@ -230,6 +231,30 @@ public class GlobalRule {
 	/** 设置 no reduction / Sets the no reduction */
 	public void setNoReduction(boolean value) {
 		this.noReduction = value;
+	}
+
+	/** 返回数量是否按 NPC 等级缩放。 / Returns whether counts scale with the NPC level. */
+	public boolean isCountPerNpcLevel() {
+		return countPerNpcLevel;
+	}
+
+	/** 设置数量是否按 NPC 等级缩放。 / Sets whether counts scale with the NPC level. */
+	public void setCountPerNpcLevel(boolean value) {
+		this.countPerNpcLevel = value;
+	}
+
+	/** 返回指定 NPC 等级下的最小数量。 / Returns the minimum count for the NPC level. */
+	public long getMinCountForNpcLevel(int npcLevel) {
+		return scaleCount(getMinCount(), npcLevel);
+	}
+
+	/** 返回指定 NPC 等级下的最大数量。 / Returns the maximum count for the NPC level. */
+	public long getMaxCountForNpcLevel(int npcLevel) {
+		return scaleCount(getMaxCount(), npcLevel);
+	}
+
+	private long scaleCount(long count, int npcLevel) {
+		return countPerNpcLevel ? Math.multiplyExact(count, Math.max(1, npcLevel)) : count;
 	}
 
 	@XmlType(name = "race_restriction")

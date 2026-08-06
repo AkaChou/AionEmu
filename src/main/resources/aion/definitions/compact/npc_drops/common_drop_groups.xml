@@ -27036,43 +27036,30 @@
     <drop item_id="188100335" chance="33.33" min_amount="483" max_amount="483" no_reduce="false" eachmember="false" name="assembly_matter_enchant_dust_01"/>
   </group>
   <group name="MATTER_OPTION_05A" use_category="true" race="PC_ALL">
-    <drop item_id="188054199" chance="45.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_10"/>
   </group>
   <group name="MATTER_OPTION_10A" use_category="true" race="PC_ALL">
-    <drop item_id="188054199" chance="45.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_10"/>
   </group>
   <group name="MATTER_OPTION_15A" use_category="true" race="PC_ALL">
-    <drop item_id="188054200" chance="85.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_20"/>
   </group>
   <group name="MATTER_OPTION_20A" use_category="true" race="PC_ALL">
-    <drop item_id="188054200" chance="85.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_20"/>
   </group>
   <group name="MATTER_OPTION_25A" use_category="true" race="PC_ALL">
-    <drop item_id="188054201" chance="91.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_30"/>
   </group>
   <group name="MATTER_OPTION_30A" use_category="true" race="PC_ALL">
-    <drop item_id="188054201" chance="91.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_30"/>
   </group>
   <group name="MATTER_OPTION_35A" use_category="true" race="PC_ALL">
-    <drop item_id="188054202" chance="84.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_40"/>
   </group>
   <group name="MATTER_OPTION_40A" use_category="true" race="PC_ALL">
-    <drop item_id="188054202" chance="84.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_40"/>
   </group>
   <group name="MATTER_OPTION_45A" use_category="true" race="PC_ALL">
-    <drop item_id="188054203" chance="84.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_50"/>
   </group>
   <group name="MATTER_OPTION_50A" use_category="true" race="PC_ALL">
-    <drop item_id="188054203" chance="84.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_50"/>
   </group>
   <group name="MATTER_OPTION_55A" use_category="true" race="PC_ALL">
-    <drop item_id="188054204" chance="40.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_60"/>
   </group>
   <group name="MATTER_OPTION_60A" use_category="true" race="PC_ALL">
-    <drop item_id="188054204" chance="40.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_60"/>
   </group>
   <group name="MATTER_OPTION_65A" use_category="true" race="PC_ALL">
-    <drop item_id="188054205" chance="1.40" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_matter_option_c_r_all_70"/>
   </group>
   <group name="MATTER_OPTION_65B" use_category="true" race="PC_ALL">
     <drop item_id="167000766" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="matter_option_r_hp_70"/>

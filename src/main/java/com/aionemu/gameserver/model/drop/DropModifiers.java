@@ -39,6 +39,11 @@ public class DropModifiers {
 		this.boostDropRate = boostDropRate;
 	}
 
+	/** 返回不小于零的完整普通掉落倍率。 / Returns the complete non-negative ordinary drop multiplier. */
+	public float getPositiveBoostDropRate() {
+		return Float.isFinite(boostDropRate) ? Math.max(0f, boostDropRate) : 0f;
+	}
+
 	/** 设置 reduction drop rate / Sets the reduction drop rate */
 	public void setReductionDropRate(Float reductionDropRate) {
 		this.reductionDropRate = reductionDropRate;
@@ -49,6 +54,22 @@ public class DropModifiers {
 		if (allowReductionDropRate && reductionDropRate != null) {
 			chance *= reductionDropRate;
 		}
-		return Math.min(chance * boostDropRate, 100f);
+		return Math.min(chance * getPositiveBoostDropRate(), 100f);
+	}
+
+	/**
+	 * 计算基纳数量。独立倍率覆盖基础份额，普通掉落倍率只贡献超过 1 倍的部分。
+	 * Calculates Kinah: the dedicated rate scales the base share, while ordinary drop boosts contribute only above 1x.
+	 */
+	public long calculateKinahAmount(long baseKinah, float kinahRate) {
+		if (!Float.isFinite(kinahRate) || kinahRate <= 0f) {
+			throw new IllegalArgumentException("Kinah rate must be finite and greater than zero");
+		}
+		long dedicatedAmount = Math.round(baseKinah * (double) kinahRate);
+		long ordinaryBoostAmount = Math.round(baseKinah * Math.max(0d, getPositiveBoostDropRate() - 1d));
+		long total = dedicatedAmount > Long.MAX_VALUE - ordinaryBoostAmount
+				? Long.MAX_VALUE
+				: dedicatedAmount + ordinaryBoostAmount;
+		return Math.max(1L, total);
 	}
 }

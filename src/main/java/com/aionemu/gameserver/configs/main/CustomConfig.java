@@ -275,13 +275,6 @@ public class CustomConfig {
 	@Property(key = "gameserver.rift.duration", defaultValue = "1")
 	public static int RIFT_DURATION;
 	/**
-	 * 是否启用自动基纳相关功能。
-	 * Whether auto-kinah feature is enabled.
-	 */
-	@Property(key = "gameserver.auto.kinah.enabled", defaultValue = "false")
-	public static boolean AUTO_KINAH_ENABLED;
-
-	/**
 	 * 是否启用玩家 AP 经验渐进倍率。
 	 * Whether progressive AP rate for players is enabled.
 	 */

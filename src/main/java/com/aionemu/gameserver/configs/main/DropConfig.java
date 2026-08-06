@@ -32,8 +32,15 @@ public class DropConfig {
 	 * 是否启用全局掉落。
 	 * Whether global drops are enabled.
 	 */
-	@Property(key = "gameserver.drop.enable.global.drops", defaultValue = "false")
+	@Property(key = "gameserver.drop.enable.global.drops", defaultValue = "true")
 	public static boolean ENABLE_GLOBAL_DROPS;
+
+	/**
+	 * 独立基纳掉落倍率。
+	 * Dedicated Kinah drop multiplier.
+	 */
+	@Property(key = "gameserver.drop.kinah.rate", defaultValue = "1.0")
+	public static float KINAH_RATE;
 
 	/**
 	 * 每个 NPC 允许的全局掉落数量上限。
@@ -41,4 +48,11 @@ public class DropConfig {
 	 */
 	@Property(key = "gameserver.drop.max.global.drops.per.npc", defaultValue = "10")
 	public static int MAX_GLOBAL_DROPS_PER_NPC;
+
+	/** 校验掉落配置。 / Validates drop configuration. */
+	public static void refresh() {
+		if (!Float.isFinite(KINAH_RATE) || KINAH_RATE <= 0f) {
+			throw new IllegalArgumentException("Kinah drop rate must be finite and greater than zero");
+		}
+	}
 }

@@ -40,6 +40,8 @@
 		<xs:attribute name="min_diff" type="xs:int" default="999" />
 		<xs:attribute name="max_diff" type="xs:int" default="999" />
 		<xs:attribute name="restriction_race" type="RestrictionRace" />
+		<xs:attribute name="no_reduction" type="xs:boolean" default="false" />
+		<xs:attribute name="count_per_npc_level" type="xs:boolean" default="false" />
 	</xs:complexType>
 	<xs:complexType name="GlobalDropItems">
 		<xs:sequence>

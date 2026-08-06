@@ -3,7 +3,7 @@
 <global_rules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="global_rules.xsd">
 	<gd_rules>
 		<!-- JUNK -->
-		<gd_rule rule_name="1" min_count="50" max_count="225" base_chance="10" min_diff="1" max_diff="83">
+		<gd_rule rule_name="KINAH_JUNK" min_count="1" max_count="3" base_chance="100" min_diff="-1" max_diff="127" no_reduction="true" count_per_npc_level="true">
 			<gd_items>
 				<gd_item id="182400001" name="Kinah"/>
 			</gd_items>
@@ -12,7 +12,7 @@
 			</gd_ratings>
 		</gd_rule>
 		<!-- NORMAL -->
-		<gd_rule rule_name="A" min_count="150" max_count="850" base_chance="10" min_diff="1" max_diff="83">
+		<gd_rule rule_name="KINAH_NORMAL" min_count="3" max_count="12" base_chance="100" min_diff="-1" max_diff="127" no_reduction="true" count_per_npc_level="true">
 			<gd_items>
 				<gd_item id="182400001" name="Kinah"/>
 			</gd_items>
@@ -21,7 +21,7 @@
 			</gd_ratings>
 		</gd_rule>
 		<!-- ELITE -->
-		<gd_rule rule_name="B" min_count="2500" max_count="5500" base_chance="15" min_diff="1" max_diff="83">
+		<gd_rule rule_name="KINAH_ELITE" min_count="35" max_count="80" base_chance="100" min_diff="-1" max_diff="127" no_reduction="true" count_per_npc_level="true">
 			<gd_items>
 				<gd_item id="182400001" name="Kinah"/>
 			</gd_items>
@@ -30,7 +30,7 @@
 			</gd_ratings>
 		</gd_rule>
 		<!-- HERO -->
-		<gd_rule rule_name="C" min_count="5500" max_count="17500" base_chance="25" min_diff="1" max_diff="83">
+		<gd_rule rule_name="KINAH_HERO" min_count="80" max_count="250" base_chance="100" min_diff="-1" max_diff="127" no_reduction="true" count_per_npc_level="true">
 			<gd_items>
 				<gd_item id="182400001" name="Kinah"/>
 			</gd_items>
@@ -39,7 +39,7 @@
 			</gd_ratings>
 		</gd_rule>
 		<!-- LEGENDARY -->
-		<gd_rule rule_name="D" min_count="17500" max_count="52255" base_chance="55" min_diff="1" max_diff="83">
+		<gd_rule rule_name="KINAH_LEGENDARY" min_count="250" max_count="750" base_chance="100" min_diff="-1" max_diff="127" no_reduction="true" count_per_npc_level="true">
 			<gd_items>
 				<gd_item id="182400001" name="Kinah"/>
 			</gd_items>

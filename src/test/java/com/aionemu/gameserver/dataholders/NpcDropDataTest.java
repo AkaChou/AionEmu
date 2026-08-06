@@ -14,8 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import jakarta.xml.bind.JAXBContext;
 
@@ -195,6 +198,26 @@ class NpcDropDataTest {
 				</npc_drop>
 				</npc_drops>
 				""")));
+	}
+
+	@Test
+	void ordinaryMatterOptionGroupsAreEmptyWhileSpecialSourcesRemain() throws Exception {
+		Path commonGroups = Path.of("src/main/resources/aion/definitions/compact/npc_drops/common_drop_groups.xml");
+		var document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(commonGroups.toFile());
+		var xpath = XPathFactory.newInstance().newXPath();
+
+		for (int level = 5; level <= 65; level += 5) {
+			String groupName = "MATTER_OPTION_%02dA".formatted(level);
+			double dropCount = (double) xpath.evaluate(
+					"count(/common_drop_groups/group[@name='" + groupName + "']/drop)", document, XPathConstants.NUMBER);
+			assertEquals(0d, dropCount, groupName);
+		}
+		assertEquals(1d, (double) xpath.evaluate(
+				"count(/common_drop_groups/group[@name='IDCROMEDE_MATTER_OPTION_R_40A']/drop)", document,
+				XPathConstants.NUMBER));
+		assertEquals(1d, (double) xpath.evaluate(
+				"count(/common_drop_groups/group[@name='IDNOVICE_BOX_MATTER_OPTION_A_20A']/drop)", document,
+				XPathConstants.NUMBER));
 	}
 
 	@Test
