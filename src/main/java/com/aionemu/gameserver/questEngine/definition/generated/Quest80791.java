@@ -78,7 +78,7 @@ public final class Quest80791 {
 
 	private static void addTransition0(QuestDsl.QuestBuilder builder) {
 		builder.on(new QuestEvent.TalkToNpc(833673, 31, 0)).from("unaccepted").goTo("unaccepted");
-		builder.afterCommit(new AfterCommitAction.ShowQuestDialog(1011));
+		builder.afterCommit(new AfterCommitAction.ShowQuestDialog(4762));
 	}
 
 	private static void addTransition1(QuestDsl.QuestBuilder builder) {
