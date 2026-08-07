@@ -52,47 +52,10 @@
   </nodes>
   <transitions>
     <npc-start npc-id="206361" source="unaccepted" target="started" selection-sources="unaccepted"/>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="233898"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="234990"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="234991"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="k1">
-      <event>
-        <talk-to-npc npc-id="802350" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="reward">
-      <event>
-        <talk-to-npc npc-id="802350" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="233898 234990 234991"/>
+    </counter-grid>
+    <npc-report npc-id="802350" source="k1" target="reward" page="1352"/>
     <npc-complete npc-id="802350" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

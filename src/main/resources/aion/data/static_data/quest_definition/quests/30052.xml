@@ -35,10 +35,7 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799033" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799033" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="799033" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
-    <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="799033" dialog-id="39"/></event><conditions>        <has-item item-id="182209221" count="20"/></conditions><actions>        <remove-item item-id="182209221" count="20"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="799033" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
-    <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="799033" dialog-id="20002"/></event><conditions>        <has-item item-id="182209221" count="20"/></conditions><actions>        <remove-item item-id="182209221" count="20"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="799033" dialog-id="20002"/></event><after-commit><close-dialog/></after-commit></transition>
+    <npc-item-report npc-id="799033" source="started" target="reward" item-id="182209221" required="20"/>
     <transition source="started" target="reward"><event><talk-to-npc npc-id="799033" dialog-id="10255"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <npc-complete npc-id="799033" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>

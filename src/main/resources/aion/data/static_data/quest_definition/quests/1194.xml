@@ -119,150 +119,15 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z1" target="z2">
-      <event>
-        <kill-npc npc-id="210185"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z1" target="z2">
-      <event>
-        <kill-npc npc-id="210186"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z2" target="z3">
-      <event>
-        <kill-npc npc-id="210185"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z2" target="z3">
-      <event>
-        <kill-npc npc-id="210186"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z3" target="z4">
-      <event>
-        <kill-npc npc-id="210185"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z3" target="z4">
-      <event>
-        <kill-npc npc-id="210186"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z4" target="z5">
-      <event>
-        <kill-npc npc-id="210185"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z4" target="z5">
-      <event>
-        <kill-npc npc-id="210186"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z5" target="z6">
-      <event>
-        <kill-npc npc-id="210185"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z5" target="z6">
-      <event>
-        <kill-npc npc-id="210186"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z6" target="z7">
-      <event>
-        <kill-npc npc-id="210185"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z6" target="z7">
-      <event>
-        <kill-npc npc-id="210186"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z7" target="z8">
-      <event>
-        <kill-npc npc-id="210185"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z7" target="z8">
-      <event>
-        <kill-npc npc-id="210186"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z8" target="z9">
-      <event>
-        <kill-npc npc-id="210185"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z8" target="z9">
-      <event>
-        <kill-npc npc-id="210186"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z9" target="reward">
-      <event>
-        <kill-npc npc-id="210185"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z9" target="reward">
-      <event>
-        <kill-npc npc-id="210186"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <kill-routes source="z1" target="z2" npc-ids="210185 210186"/>
+    <kill-routes source="z2" target="z3" npc-ids="210185 210186"/>
+    <kill-routes source="z3" target="z4" npc-ids="210185 210186"/>
+    <kill-routes source="z4" target="z5" npc-ids="210185 210186"/>
+    <kill-routes source="z5" target="z6" npc-ids="210185 210186"/>
+    <kill-routes source="z6" target="z7" npc-ids="210185 210186"/>
+    <kill-routes source="z7" target="z8" npc-ids="210185 210186"/>
+    <kill-routes source="z8" target="z9" npc-ids="210185 210186"/>
+    <kill-routes source="z9" target="reward" npc-ids="210185 210186"/>
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="203098" dialog-id="-1"/>

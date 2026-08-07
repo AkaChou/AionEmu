@@ -44,8 +44,7 @@
     <transition source="started" target="step1"><event><get-item item-id="182209161"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
 
     <!-- 步骤 1:Honeus (799029) 对话并交任务。 -->
-    <transition source="step1" target="step1"><event><talk-to-npc npc-id="799029" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
-    <transition source="step1" target="reward"><event><talk-to-npc npc-id="799029" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <npc-report npc-id="799029" source="step1" target="reward" page="2375"/>
 
     <!-- 奖励:Honeus (799029) 领取,移除任务物品 182209161。 -->
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="799029" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>

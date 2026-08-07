@@ -124,52 +124,7 @@
         <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <talk-to-npc npc-id="799763" dialog-id="39"/>
-      </event>
-      <conditions>
-        <has-item item-id="182215195" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215195" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <talk-to-npc npc-id="799763" dialog-id="39"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="2716"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <talk-to-npc npc-id="799763" dialog-id="20002"/>
-      </event>
-      <conditions>
-        <has-item item-id="182215195" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215195" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <talk-to-npc npc-id="799763" dialog-id="20002"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
+    <npc-item-report npc-id="799763" source="started" target="reward" item-id="182215195" required="1"/>
     <transition source="started" target="reward">
       <event>
         <talk-to-npc npc-id="799763" dialog-id="10255"/>

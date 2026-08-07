@@ -23,52 +23,7 @@
   <transitions>
     <npc-start npc-id="833743" source="unaccepted" target="started" selection-sources="unaccepted started"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="833743" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-        <transition source="started" target="reward" priority="0">
-      <event>
-        <talk-to-npc npc-id="833743" dialog-id="39"/>
-      </event>
-      <conditions>
-        <has-item item-id="186000344" count="100"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="186000344" count="100"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <talk-to-npc npc-id="833743" dialog-id="39"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="2716"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <talk-to-npc npc-id="833743" dialog-id="20002"/>
-      </event>
-      <conditions>
-        <has-item item-id="186000344" count="100"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="186000344" count="100"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <talk-to-npc npc-id="833743" dialog-id="20002"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
+        <npc-item-report npc-id="833743" source="started" target="reward" item-id="186000344" required="100"/>
     <transition source="started" target="reward">
       <event>
         <talk-to-npc npc-id="833743" dialog-id="10255"/>

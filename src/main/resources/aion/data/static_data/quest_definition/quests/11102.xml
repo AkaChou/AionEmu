@@ -234,23 +234,7 @@
     </transition>
 
     <!-- 报告:Esterra (798981) 确认三组击杀完成。 -->
-    <transition source="k3" target="k3">
-      <event>
-        <talk-to-npc npc-id="798981" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="k3" target="reward">
-      <event>
-        <talk-to-npc npc-id="798981" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="798981" source="k3" target="reward" page="1352"/>
     <transition source="k3" target="reward">
       <event>
         <talk-to-npc npc-id="798981" dialog-ids="8..23"/>

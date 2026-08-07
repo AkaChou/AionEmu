@@ -285,7 +285,7 @@ def expand_npc_item_report_ir(block: ET.Element) -> list[dict[str, Any]]:
 	target = block.get("target")
 	item_id = int(block.get("item-id"))
 	required = int(block.get("required"))
-	remove_count = block.get("remove-count") or str(required)
+	remove_count = (block.get("remove-count") or str(required)).upper()
 	has_item = [canon("has-item", **{"item-id": item_id, "count": required})]
 	remove_item = [canon("remove-item", **{"item-id": item_id, "count": remove_count})]
 	success_after = [canon("sync-quest-state", mode="PACKET_ONLY"),
@@ -644,13 +644,9 @@ def grid_transition_parts(element: ET.Element, statuses: dict[str, str],
 		"npc_id": int(event["attrs"]["npc-id"])}
 
 
-def build_counter_grid_match(elements: list[ET.Element], index: int, end: int,
+def build_counter_grid_match(records: list[dict[str, Any]], index: int,
 		statuses: dict[str, str], variables: dict[str, dict[str, int]], indent: str) -> Match | None:
-	records = [grid_transition_parts(element, statuses, variables)
-		for element in elements[index:end]]
-	if any(record is None for record in records):
-		return None
-	typed_records = [record for record in records if record is not None]
+	typed_records = records
 	fields: list[str] = []
 	seen_fields: set[str] = set()
 	last_field: str | None = None
@@ -664,6 +660,8 @@ def build_counter_grid_match(elements: list[ET.Element], index: int, end: int,
 			last_field = field
 	start_nodes = [label for label, status in statuses.items() if status == "START"]
 	if not fields or not start_nodes or any(set(variables.get(label, {})) != set(fields) for label in start_nodes):
+		return None
+	if any(field not in variables.get(label, {}) for label in start_nodes for field in fields):
 		return None
 	node_keys = {label: tuple(variables[label][field] for field in fields) for label in start_nodes}
 	if len(set(node_keys.values())) != len(node_keys):
@@ -730,31 +728,38 @@ def build_counter_grid_match(elements: list[ET.Element], index: int, end: int,
 			return None
 		dimensions.append({"field": field, "required": required, "npc_ids": npc_ids,
 			"source_order": source_order})
-	return Match(index, end, "counter-grid", render_counter_grid(dimensions, indent),
+	return Match(index, index + len(records), "counter-grid", render_counter_grid(dimensions, indent),
 		{"dimensions": dimensions})
 
 
 def match_counter_grid(elements: list[ET.Element], index: int, statuses: dict[str, str],
-		variables: dict[str, dict[str, int]], indent: str) -> Match | None:
-	if index >= len(elements) or grid_transition_parts(elements[index], statuses, variables) is None:
+		variables: dict[str, dict[str, int]], indent: str,
+		scan_ends: dict[int, int] | None = None) -> Match | None:
+	if index >= len(elements):
 		return None
 	first_record = grid_transition_parts(elements[index], statuses, variables)
-	assert first_record is not None
-	end = index
+	if first_record is None:
+		return None
+	records = [first_record]
 	last_field = first_record["field"]
 	candidate_ends: list[int] = []
-	while end < len(elements) and grid_transition_parts(elements[end], statuses, variables) is not None:
+	end = index + 1
+	while end < len(elements):
 		record = grid_transition_parts(elements[end], statuses, variables)
-		assert record is not None
+		if record is None:
+			break
 		if record["field"] != last_field:
-			candidate_ends.append(end)
+			candidate_ends.append(len(records))
 			last_field = record["field"]
+		records.append(record)
 		end += 1
-	candidate_ends.append(end)
+	if scan_ends is not None:
+		scan_ends[index] = end
+	candidate_ends.append(len(records))
 	for candidate_end in candidate_ends:
-		if candidate_end - index < 2:
+		if candidate_end < 2:
 			continue
-		match = build_counter_grid_match(elements, index, candidate_end, statuses, variables, indent)
+		match = build_counter_grid_match(records[:candidate_end], index, statuses, variables, indent)
 		if match is not None:
 			return match
 	return None
@@ -776,6 +781,8 @@ def match_kill_routes(elements: list[ET.Element], index: int, statuses: dict[str
 	npc_ids: list[int] = []
 	end = index
 	while end < len(elements):
+		if elements[end].tag != "transition":
+			break
 		parts = transition_parts(elements[end])
 		if (parts["source"] != source or parts["target"] != target or parts["priority"] is not None
 				or parts["conditions"] or parts["actions"] or not packet_only(parts)
@@ -803,7 +810,7 @@ def match_npc_item_report(elements: list[ET.Element], index: int, statuses: dict
 	third_talk = talk_info(third)
 	fourth_talk = talk_info(fourth)
 	if (first_talk is None or second_talk is None or third_talk is None or fourth_talk is None
-			or first_talk[0] != third_talk[0] or second_talk[0] != fourth_talk[0]
+			or len({first_talk[0], second_talk[0], third_talk[0], fourth_talk[0]}) != 1
 			or first_talk[1] != [39] or second_talk[1] != [39]
 			or third_talk[1] != [20002] or fourth_talk[1] != [20002]):
 		return None
@@ -831,12 +838,12 @@ def match_npc_item_report(elements: list[ET.Element], index: int, statuses: dict
 		return None
 	condition = first["conditions"][0]["attrs"]
 	action = first["actions"][0]["attrs"]
-	if condition.get("item-id") != action.get("item-id") or condition.get("count") != action.get("count"):
+	if condition.get("item-id") != action.get("item-id"):
 		return None
 	npc_id = first_talk[0]
 	item_id = int(condition["item-id"])
 	required = int(condition["count"])
-	remove_count = action["count"]
+	remove_count = action["count"].upper()
 	if remove_count not in {str(required), "ALL"}:
 		return None
 	return Match(index, index + 4, "npc-item-report",
@@ -931,6 +938,47 @@ def review_legacy_counter(elements: list[ET.Element], index: int) -> dict[str, A
 		return None
 	return {"source": left["source"], "target": right["target"], "field": field, "required": required,
 		"reason": "legacy threshold routes require a later event and may be locked by node projections"}
+
+
+def classify_nonstandard_protocol(elements: list[ET.Element], index: int,
+		statuses: dict[str, str], variables: dict[str, dict[str, int]]) -> set[str]:
+	"""Return explainable skip categories without broadening any matcher."""
+	categories: set[str] = set()
+	if index < len(elements) and grid_transition_parts(elements[index], statuses, variables) is not None:
+		categories.add("counter_grid_not_complete_or_not_contiguous")
+
+	if index + 2 <= len(elements) and all(item.tag == "transition" for item in elements[index:index + 2]):
+		preview, report = [transition_parts(item) for item in elements[index:index + 2]]
+		preview_talk = talk_info(preview)
+		report_talk = talk_info(report)
+		if (preview_talk is not None and report_talk is not None
+				and preview_talk[0] == report_talk[0]
+				and preview_talk[1] == [31] and report_talk[1] == [1009]):
+			categories.add("npc_report_nonstandard_protocol")
+			if (len(preview["after"]) == 1
+					and preview["after"][0]["tag"] == "show-quest-dialog"
+					and int(preview["after"][0]["attrs"].get("dialog-id", "-1"))
+					not in {1352, 2375, 10002}):
+				categories.add("npc_report_nonstandard_page")
+
+	if index + 4 <= len(elements) and all(item.tag == "transition" for item in elements[index:index + 4]):
+		parts = [transition_parts(item) for item in elements[index:index + 4]]
+		talks = [talk_info(item) for item in parts]
+		if (all(talk is not None for talk in talks)
+				and len({talk[0] for talk in talks if talk is not None}) == 1
+				and [talk[1] for talk in talks if talk is not None]
+				== [[39], [39], [20002], [20002]]):
+			categories.add("npc_item_report_nonstandard_protocol")
+			first_conditions = parts[0]["conditions"]
+			first_actions = parts[0]["actions"]
+			if (len(first_conditions) == 1 and len(first_actions) == 1
+					and first_conditions[0]["tag"] == "has-item"
+					and first_actions[0]["tag"] == "remove-item"
+					and first_conditions[0]["attrs"].get("count")
+					!= first_actions[0]["attrs"].get("count")):
+				categories.add("npc_item_report_remove_count_or_all")
+
+	return categories
 
 
 def expected_reward_index(action: dict[str, Any], rewards: list[dict[str, Any]], selectable: bool,
@@ -1057,7 +1105,8 @@ def whitespace_between(data: bytes, spans: list[Span], start: int, end: int) -> 
 
 def line_indent(data: bytes, position: int) -> str:
 	line_start = data.rfind(b"\n", 0, position) + 1
-	return data[line_start:position].decode("utf-8")
+	prefix = data[line_start:position]
+	return prefix.decode("utf-8") if prefix.strip() == b"" else ""
 
 
 def modified_paths() -> set[str]:
@@ -1085,7 +1134,11 @@ def analyze_file(path: Path, write: bool) -> tuple[dict[str, Any], list[dict[str
 	quest_id = int(root.get("id"))
 	transitions = child(root, "transitions")
 	if transitions is None:
-		return {"quest_id": quest_id, "path": str(path.relative_to(ROOT)), "classification": "no_transitions"}, []
+		before = semantic_summary(data)
+		return {"quest_id": quest_id, "path": str(path.relative_to(ROOT)),
+			"classification": "no_transitions", "skip_reasons": ["no_transitions"],
+			"nonstandard_protocols": [], "ir_checked": True,
+			"before_ir": before, "after_ir": before}, []
 	elements = children(transitions)
 	spans = direct_transition_spans(data)
 	if len(elements) != len(spans):
@@ -1094,16 +1147,21 @@ def analyze_file(path: Path, write: bool) -> tuple[dict[str, Any], list[dict[str
 	rewards = metadata_rewards(root)
 	matches: list[Match] = []
 	reviews: list[dict[str, Any]] = []
+	skip_reasons: set[str] = set()
+	nonstandard_protocols: set[str] = set()
+	grid_scan_ends: dict[int, int] = {}
 	index = 0
 	while index < len(elements):
 		review = review_legacy_counter(elements, index)
 		if review is not None:
 			reviews.append({"quest_id": quest_id, "path": str(path.relative_to(ROOT)), **review})
+			skip_reasons.add("legacy_counter_threshold_protocol")
+			nonstandard_protocols.add("legacy_counter_threshold")
 		indent = line_indent(data, spans[index].start)
 		matchers: list[Callable[[], Match | None]] = [
 			lambda: match_npc_start(elements, index, statuses, indent),
 			lambda: match_counter(elements, index, variables, fields, indent),
-			lambda: match_counter_grid(elements, index, statuses, variables, indent),
+			lambda: match_counter_grid(elements, index, statuses, variables, indent, grid_scan_ends),
 			lambda: match_kill_chain(elements, index, indent),
 			lambda: match_kill_routes(elements, index, statuses, indent),
 			lambda: match_npc_item_report(elements, index, statuses, indent),
@@ -1111,15 +1169,29 @@ def analyze_file(path: Path, write: bool) -> tuple[dict[str, Any], list[dict[str
 			lambda: match_npc_complete(elements, index, statuses, rewards, indent),
 		]
 		match = next((candidate for matcher in matchers if (candidate := matcher()) is not None), None)
-		if match is None or not whitespace_between(data, spans, match.start_index, match.end_index):
+		if match is None:
+			nonstandard_protocols.update(
+				classify_nonstandard_protocol(elements, index, statuses, variables))
+			if grid_scan_ends.get(index, index + 1) > index + 1:
+				index = grid_scan_ends[index]
+				continue
+			index += 1
+			continue
+		if not whitespace_between(data, spans, match.start_index, match.end_index):
+			skip_reasons.add("non_whitespace_between_transitions")
+			nonstandard_protocols.add(f"{match.block_type}_non_whitespace_between_transitions")
 			index += 1
 			continue
 		matches.append(match)
 		index = match.end_index
 	if not matches:
+		if not skip_reasons:
+			skip_reasons.add("no_strict_match")
 		return {"quest_id": quest_id, "path": str(path.relative_to(ROOT)),
 			"classification": "behavior_review" if reviews else "no_strict_match",
-			"behavior_review_count": len(reviews)}, reviews
+			"behavior_review_count": len(reviews), "skip_reasons": sorted(skip_reasons),
+			"nonstandard_protocols": sorted(nonstandard_protocols),
+			"ir_checked": False, "before_ir": None, "after_ir": None}, reviews
 	before = semantic_summary(data)
 	updated = data
 	for match in reversed(matches):
@@ -1130,12 +1202,18 @@ def analyze_file(path: Path, write: bool) -> tuple[dict[str, Any], list[dict[str
 	if before != after:
 		return {"quest_id": quest_id, "path": str(path.relative_to(ROOT)),
 			"classification": "ir_mismatch_rolled_back", "before_ir": before, "after_ir": after,
+			"skip_reasons": ["semantic_ir_changed"],
+			"nonstandard_protocols": [],
+			"ir_checked": True,
 			"replacements": [match.block_type for match in matches]}, reviews
 	if write:
 		path.write_bytes(updated)
 	return {"quest_id": quest_id, "path": str(path.relative_to(ROOT)),
 		"classification": "migrated" if write else "strict_match",
 		"before_ir": before, "after_ir": after,
+		"ir_checked": True,
+		"skip_reasons": sorted(skip_reasons),
+		"nonstandard_protocols": sorted(nonstandard_protocols),
 		"replacements": [{"type": match.block_type, **match.details} for match in matches]}, reviews
 
 
@@ -1157,7 +1235,9 @@ def main() -> int:
 	for path in sorted(QUEST_DIR.glob("*.xml")):
 		relative = str(path.relative_to(ROOT))
 		if relative in dirty and not include_dirty:
-			results.append({"path": relative, "classification": "dirty_skipped"})
+			results.append({"path": relative, "classification": "dirty_skipped",
+				"skip_reasons": ["dirty_worktree"], "nonstandard_protocols": [],
+				"ir_checked": False, "before_ir": None, "after_ir": None})
 			continue
 		try:
 			result, file_reviews = analyze_file(path, write)
@@ -1168,26 +1248,39 @@ def main() -> int:
 				"error": f"{type(error).__name__}: {error}"})
 	counts: dict[str, int] = {}
 	blocks: dict[str, int] = {}
+	skip_reason_counts: dict[str, int] = {}
+	nonstandard_protocol_counts: dict[str, int] = {}
 	for result in results:
 		classification = result["classification"]
 		counts[classification] = counts.get(classification, 0) + 1
+		for reason in result.get("skip_reasons", []):
+			skip_reason_counts[reason] = skip_reason_counts.get(reason, 0) + 1
+		for protocol in result.get("nonstandard_protocols", []):
+			nonstandard_protocol_counts[protocol] = nonstandard_protocol_counts.get(protocol, 0) + 1
 		for replacement in result.get("replacements", []):
 			block_type = replacement if isinstance(replacement, str) else replacement["type"]
 			blocks[block_type] = blocks.get(block_type, 0) + 1
+	dirty_quest_paths = sorted(path for path in dirty
+		if path.startswith(str(QUEST_DIR.relative_to(ROOT)) + "/"))
 	report = {
-		"schema_version": 1,
+		"schema_version": 2,
 		"mode": "write-including-dirty" if args.write_including_dirty else "write" if args.write else "report-only",
 		"quest_directory": str(QUEST_DIR.relative_to(ROOT)),
 		"scanned_files": len(results),
-		"dirty_paths_at_start": sorted(path for path in dirty if path.startswith(str(QUEST_DIR.relative_to(ROOT)))),
+		"dirty_paths_at_start": dirty_quest_paths,
+		"dirty_snapshot": {"paths": sorted(dirty), "quest_paths": dirty_quest_paths,
+			"count": len(dirty)},
 		"classification_counts": dict(sorted(counts.items())),
 		"block_counts": dict(sorted(blocks.items())),
+		"skip_reason_counts": dict(sorted(skip_reason_counts.items())),
+		"nonstandard_protocol_counts": dict(sorted(nonstandard_protocol_counts.items())),
 		"behavior_review": reviews,
-		"files": [result for result in results if result["classification"] not in {"no_strict_match", "no_transitions"}],
+		"files": results,
 	}
 	args.report.parent.mkdir(parents=True, exist_ok=True)
 	args.report.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-	print(json.dumps({key: report[key] for key in ("mode", "scanned_files", "classification_counts", "block_counts")},
+	print(json.dumps({key: report[key] for key in ("schema_version", "mode", "scanned_files",
+		"classification_counts", "block_counts", "skip_reason_counts")},
 		ensure_ascii=False, sort_keys=True))
 	return 1 if counts.get("analysis_error", 0) or counts.get("ir_mismatch_rolled_back", 0) else 0
 

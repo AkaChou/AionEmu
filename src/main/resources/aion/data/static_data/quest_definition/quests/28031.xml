@@ -81,38 +81,10 @@
     <!-- 接取：预览、拒绝与选择对话 / Accept: preview, decline and selection dialogs -->
     <npc-start npc-id="801047" source="unaccepted" target="a0b0" selection-sources="unaccepted a0b0"/>
     <!-- 击杀：var0（231178）与 var1（231179）各自递增 / kills: var0 (231178) and var1 (231179) each increment -->
-    <transition source="a0b0" target="a1b0">
-      <event>
-        <kill-npc npc-id="231178"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b1" target="a1b1">
-      <event>
-        <kill-npc npc-id="231178"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0" target="a0b1">
-      <event>
-        <kill-npc npc-id="231179"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b0" target="a1b1">
-      <event>
-        <kill-npc npc-id="231179"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="231178"/>
+      <dimension field="var1" required="1" npc-ids="231179"/>
+    </counter-grid>
     <!-- 终态：报告 / terminal: report to 801047 -->
     <transition source="a1b1" target="a1b1">
       <event>

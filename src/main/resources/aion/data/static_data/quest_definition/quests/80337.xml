@@ -84,23 +84,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="a1b1" target="a1b1">
-      <event>
-        <talk-to-npc npc-id="831541" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1" target="reward">
-      <event>
-        <talk-to-npc npc-id="831541" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="831541" source="a1b1" target="reward" page="1352"/>
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="831541" dialog-ids="-1 1009"/>
@@ -109,23 +93,7 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="a1b1" target="a1b1">
-      <event>
-        <talk-to-npc npc-id="831542" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1" target="reward">
-      <event>
-        <talk-to-npc npc-id="831542" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="831542" source="a1b1" target="reward" page="1352"/>
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="831542" dialog-ids="-1 1009"/>
@@ -134,23 +102,7 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="a1b1" target="a1b1">
-      <event>
-        <talk-to-npc npc-id="831543" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1" target="reward">
-      <event>
-        <talk-to-npc npc-id="831543" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="831543" source="a1b1" target="reward" page="1352"/>
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="831543" dialog-ids="-1 1009"/>
@@ -159,23 +111,7 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="a1b1" target="a1b1">
-      <event>
-        <talk-to-npc npc-id="831544" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1" target="reward">
-      <event>
-        <talk-to-npc npc-id="831544" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="831544" source="a1b1" target="reward" page="1352"/>
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="831544" dialog-ids="-1 1009"/>
@@ -184,23 +120,7 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="a1b1" target="a1b1">
-      <event>
-        <talk-to-npc npc-id="831545" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1" target="reward">
-      <event>
-        <talk-to-npc npc-id="831545" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="831545" source="a1b1" target="reward" page="1352"/>
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="831545" dialog-ids="-1 1009"/>
@@ -209,23 +129,7 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="a1b1" target="a1b1">
-      <event>
-        <talk-to-npc npc-id="831546" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1" target="reward">
-      <event>
-        <talk-to-npc npc-id="831546" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="831546" source="a1b1" target="reward" page="1352"/>
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="831546" dialog-ids="-1 1009"/>
@@ -234,23 +138,7 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="a1b1" target="a1b1">
-      <event>
-        <talk-to-npc npc-id="831547" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1" target="reward">
-      <event>
-        <talk-to-npc npc-id="831547" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="831547" source="a1b1" target="reward" page="1352"/>
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="831547" dialog-ids="-1 1009"/>
@@ -259,23 +147,7 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="a1b1" target="a1b1">
-      <event>
-        <talk-to-npc npc-id="831548" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1" target="reward">
-      <event>
-        <talk-to-npc npc-id="831548" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="831548" source="a1b1" target="reward" page="1352"/>
     <transition source="reward" target="reward">
       <event>
         <talk-to-npc npc-id="831548" dialog-ids="-1 1009"/>

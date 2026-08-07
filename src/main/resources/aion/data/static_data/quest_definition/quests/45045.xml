@@ -205,52 +205,7 @@
     </transition>
 
     <!-- 交付:rebbina (799842) 报告,持有 152000911×3 进入奖励。 -->
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <talk-to-npc npc-id="799842" dialog-id="39"/>
-      </event>
-      <conditions>
-        <has-item item-id="152000911" count="3"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="152000911" count="3"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <talk-to-npc npc-id="799842" dialog-id="39"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="2716"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <talk-to-npc npc-id="799842" dialog-id="20002"/>
-      </event>
-      <conditions>
-        <has-item item-id="152000911" count="3"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="152000911" count="3"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <talk-to-npc npc-id="799842" dialog-id="20002"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
+    <npc-item-report npc-id="799842" source="started" target="reward" item-id="152000911" required="3"/>
     <transition source="started" target="reward">
       <event>
         <talk-to-npc npc-id="799842" dialog-id="10255"/>
@@ -262,52 +217,7 @@
     </transition>
 
     <!-- 交付:wakir (799843) 报告,持有 152000911×3 进入奖励。 -->
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <talk-to-npc npc-id="799843" dialog-id="39"/>
-      </event>
-      <conditions>
-        <has-item item-id="152000911" count="3"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="152000911" count="3"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <talk-to-npc npc-id="799843" dialog-id="39"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="2716"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <talk-to-npc npc-id="799843" dialog-id="20002"/>
-      </event>
-      <conditions>
-        <has-item item-id="152000911" count="3"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="152000911" count="3"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <talk-to-npc npc-id="799843" dialog-id="20002"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
+    <npc-item-report npc-id="799843" source="started" target="reward" item-id="152000911" required="3"/>
     <transition source="started" target="reward">
       <event>
         <talk-to-npc npc-id="799843" dialog-id="10255"/>

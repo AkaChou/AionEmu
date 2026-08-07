@@ -27,8 +27,7 @@
     <transition source="unaccepted" target="unaccepted"><event><use-item item-id="182206036"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><quest-dialog dialog="ACCEPT_QUEST"/></event><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><quest-dialog dialog="REFUSE_QUEST"/></event><after-commit><close-dialog/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="278555" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="278555" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <npc-report npc-id="278555" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="278555" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

@@ -1260,23 +1260,7 @@
     <kill-chain nodes="a14b0 a14b1 a14b2 a14b3 a14b4 a14b5 a14b6 a14b7 a14b8">
       <event><kill-npc npc-id="210711" /></event>
     </kill-chain>
-    <transition source="a14b8" target="a14b8">
-      <event>
-        <talk-to-npc npc-id="203179" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a14b8" target="reward">
-      <event>
-        <talk-to-npc npc-id="203179" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="203179" source="a14b8" target="reward" page="1352"/>
     <npc-complete npc-id="203179" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

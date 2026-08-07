@@ -449,23 +449,7 @@
       </after-commit>
     </transition>
     <!-- 终态：报告 / terminal: report to 799229 -->
-    <transition source="a2b1c1" target="a2b1c1">
-      <event>
-        <talk-to-npc npc-id="799229" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a2b1c1" target="reward">
-      <event>
-        <talk-to-npc npc-id="799229" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="799229" source="a2b1c1" target="reward" page="1352"/>
     <!-- 奖励：发放并完成 / reward: grant and complete -->
     <npc-complete npc-id="799229" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>

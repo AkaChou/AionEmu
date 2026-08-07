@@ -33,8 +33,7 @@
   </nodes>
   <transitions>
     <npc-start npc-id="805327" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="805327" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="805327" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <npc-report npc-id="805327" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="805327" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="2"/>
       <choice dialog-id="9" reward-index="3"/>
@@ -45,8 +44,7 @@
       <choice dialog-id="14" reward-index="8"/>
     </npc-complete>
     <npc-start npc-id="805328" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="805328" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="805328" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <npc-report npc-id="805328" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="805328" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="2"/>
       <choice dialog-id="9" reward-index="3"/>

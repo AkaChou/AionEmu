@@ -76,55 +76,11 @@
   </nodes>
   <transitions>
     <npc-start npc-id="204041" source="unaccepted" target="a0b0" selection-sources="unaccepted"/>
-    <transition source="a0b0" target="a1b0">
-      <event>
-        <kill-npc npc-id="214790"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b1" target="a1b1">
-      <event>
-        <kill-npc npc-id="214790"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0" target="a0b1">
-      <event>
-        <kill-npc npc-id="214791"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b0" target="a1b1">
-      <event>
-        <kill-npc npc-id="214791"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1" target="a1b1">
-      <event>
-        <talk-to-npc npc-id="204041" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1" target="reward">
-      <event>
-        <talk-to-npc npc-id="204041" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="214790"/>
+      <dimension field="var1" required="1" npc-ids="214791"/>
+    </counter-grid>
+    <npc-report npc-id="204041" source="a1b1" target="reward" page="1352"/>
     <npc-complete npc-id="204041" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

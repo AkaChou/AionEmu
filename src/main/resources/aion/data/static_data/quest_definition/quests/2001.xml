@@ -198,86 +198,11 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="k1" target="k2">
-      <event>
-        <kill-npc npc-id="210369"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="k2">
-      <event>
-        <kill-npc npc-id="210368"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k2" target="k3">
-      <event>
-        <kill-npc npc-id="210369"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k2" target="k3">
-      <event>
-        <kill-npc npc-id="210368"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k3" target="k4">
-      <event>
-        <kill-npc npc-id="210369"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k3" target="k4">
-      <event>
-        <kill-npc npc-id="210368"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k4" target="k5">
-      <event>
-        <kill-npc npc-id="210369"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k4" target="k5">
-      <event>
-        <kill-npc npc-id="210368"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k5" target="k6">
-      <event>
-        <kill-npc npc-id="210369"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k5" target="k6">
-      <event>
-        <kill-npc npc-id="210368"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <kill-routes source="k1" target="k2" npc-ids="210369 210368"/>
+    <kill-routes source="k2" target="k3" npc-ids="210369 210368"/>
+    <kill-routes source="k3" target="k4" npc-ids="210369 210368"/>
+    <kill-routes source="k4" target="k5" npc-ids="210369 210368"/>
+    <kill-routes source="k5" target="k6" npc-ids="210369 210368"/>
     <transition source="k6" target="reward">
       <event>
         <kill-npc npc-id="210369"/>

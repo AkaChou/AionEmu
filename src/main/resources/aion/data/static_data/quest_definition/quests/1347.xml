@@ -89,8 +89,7 @@
     </kill-chain>
     <npc-start npc-id="203965" source="unaccepted" target="a0b0" selection-sources="unaccepted a0b0"/>
     <transition source="a0b0" target="a0b0"><event><talk-to-npc npc-id="203965" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="a7b3" target="a7b3"><event><talk-to-npc npc-id="203965" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="a7b3" target="reward"><event><talk-to-npc npc-id="203965" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <npc-report npc-id="203965" source="a7b3" target="reward" page="1352"/>
     <npc-complete npc-id="203965" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
 <npc-complete npc-id="203966" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>

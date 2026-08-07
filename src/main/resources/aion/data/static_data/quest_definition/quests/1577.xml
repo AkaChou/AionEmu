@@ -861,38 +861,8 @@
   </nodes>
   <transitions>
     <npc-start npc-id="204560" source="unaccepted" target="a0b0c0d0" selection-sources="unaccepted a0b0c0d0"/>
-    <transition source="a0b0c0d0" target="a1b0c0d0">
-      <event>
-        <kill-npc npc-id="211948"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0c0d0" target="a1b0c0d0">
-      <event>
-        <kill-npc npc-id="211949"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0c0d0" target="a0b1c0d0">
-      <event>
-        <kill-npc npc-id="211112"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0c0d0" target="a0b1c0d0">
-      <event>
-        <kill-npc npc-id="211127"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <kill-routes source="a0b0c0d0" target="a1b0c0d0" npc-ids="211948 211949"/>
+    <kill-routes source="a0b0c0d0" target="a0b1c0d0" npc-ids="211112 211127"/>
     <transition source="a0b0c0d0" target="a0b0c1d0">
       <event>
         <kill-npc npc-id="212099"/>
@@ -3885,23 +3855,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="a2b2c2d2" target="a2b2c2d2">
-      <event>
-        <talk-to-npc npc-id="204560" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a2b2c2d2" target="reward">
-      <event>
-        <talk-to-npc npc-id="204560" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="204560" source="a2b2c2d2" target="reward" page="1352"/>
     <npc-complete npc-id="204560" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

@@ -38,14 +38,7 @@
     </transition>
 
     <!-- 步骤 1:向 Drenia NPC (799333) 汇报并领取奖励。 -->
-    <transition source="step1" target="step1">
-      <event><talk-to-npc npc-id="799333" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
-    </transition>
-    <transition source="step1" target="reward">
-      <event><talk-to-npc npc-id="799333" dialog-id="1009"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
-    </transition>
+    <npc-report npc-id="799333" source="step1" target="reward" page="2375"/>
 
     <!-- 奖励:Drenia NPC (799333) 领取,扣除收集物品。 -->
     <transition source="reward" target="reward">

@@ -38,11 +38,11 @@
 
 transition 内部顺序固定：`event` → `conditions` → `actions` → `after-commit`。
 
-`<transitions>` 内可以按任意顺序混写普通 `<transition>` 和四种领域积木。任务文件继续使用 `version="1"`。
+`<transitions>` 内可以按任意顺序混写普通 `<transition>` 和八种领域积木。任务文件继续使用 `version="1"`。
 
 ### 3.3 编译期领域积木
 
-`npc-start`、`counter`、`kill-chain`、`npc-complete` 是严格的 XML 编写简写。XML 前端先把它们展开为普通 `QuestTransition`、`QuestAction`、`AfterCommitAction`，再交给 `QuestDefinitionCompiler`。它们不增加运行时状态、IR 类型、分发分支、继承、include、模板参数或表达式语言。
+`npc-start`、`counter`、`counter-grid`、`kill-chain`、`kill-routes`、`npc-item-report`、`npc-report`、`npc-complete` 是严格的 XML 编写简写。XML 前端先把它们展开为普通 `QuestTransition`、`QuestAction`、`AfterCommitAction`，再交给 `QuestDefinitionCompiler`。它们不增加运行时状态、IR 类型、分发分支、继承、include、模板参数或表达式语言。
 
 标准 NPC 接取：
 
@@ -114,6 +114,49 @@ transition 内部顺序固定：`event` → `conditions` → `actions` → `afte
 choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目降为具体 `ITEM` 奖励。preview、普通领取、choice、fallback 的 dialog ID 不能重复。source 必须投影为 `REWARD`，target 必须投影为 `COMPLETE`。每条完成路径的动作顺序固定为：固定奖励、可选的 choice 奖励、`complete-quest`；提交后始终执行 `refresh-player-stats`、`sync-quest-state mode="COMPLETION"`，最后按 `SELECTION_DIALOG`、`CLOSE_DIALOG`、`NONE` 三选一结束。预览路径固定显示 page 5。
 
 只有整个展开结果都正确时才使用积木。接取附加条件、非标准 dialog/page、领奖事务动作或额外 after-commit 副作用都必须写显式 `<transition>`。编译失败使用稳定的 `QuestCompilationException` code，并指出任务、积木和出错属性。
+
+标准多 NPC 击杀路由：
+
+```xml
+<kill-routes source="started" target="k1"
+             npc-ids="215468 215469 215470"/>
+```
+
+积木按 `npc-ids` 的书写顺序展开为多条独立的 `kill-npc` transition。每条边均无条件、无事务动作、无 priority，并在提交后发送 `sync-quest-state mode="PACKET_ONLY"`；每个 NPC 都是独立事件，不能合并为 `KillNpcSet`。source 和 target 只要求是已声明节点，因此允许 START 自环等已有合法投影。NPC ID 必须为至少两个互不重复的正整数。需要条件、额外动作、不同 after-commit 或非连续字节布局时继续写显式 transition。
+
+标准 NPC 报告：
+
+```xml
+<npc-report npc-id="203941"
+            source="started" target="reward" page="1352"/>
+```
+
+固定展开为两条边：dialog 31 在 START 节点自环并显示显式 `page`，dialog 1009 进入 REWARD，依次执行 `PACKET_ONLY` 同步和页面 5。`page` 只允许真端协议页面 `1352`、`2375`、`10002`；source 必须投影 START，target 必须投影 REWARD。成长任务中的 10000/10001、4762 或其他特殊页面协议不使用此积木。
+
+标准带物品报告：
+
+```xml
+<npc-item-report npc-id="800937"
+                 source="started" target="reward"
+                 item-id="182215285" required="1"
+                 remove-count="ALL"/>
+```
+
+固定展开为 dialog 39 和 20002 的成功/失败四条边。成功 priority 为 0，检查 `required` 数量、扣除相同数量或 `ALL`、进入 REWARD，随后依次同步 `PACKET_ONLY` 并显示页面 5；失败 priority 为 1，分别显示 2716 和关闭对话。`remove-count` 省略时等于 `required`，显式数字也必须相同，避免检查与扣除数量分离。source/target 必须分别投影 START/REWARD；额外条件、动作、页面或不同扣除协议继续使用显式 transition。成长任务的特殊页面不会被批量 matcher 捕获。
+
+多维计数网格：
+
+```xml
+<counter-grid>
+  <dimension field="var0" required="7"
+             npc-ids="212600 212601"/>
+  <dimension field="var1" required="7"
+             npc-ids="212603 212604"
+             source-order="VALUE_THEN_NODE"/>
+</counter-grid>
+```
+
+每个 dimension 按 NPC 声明顺序生成原有的无动作击杀边。matcher 只接受“恰好当前字段增加 1”的目标节点，并要求全部 START 节点恰好构成各 dimension `0..required` 的笛卡尔积；投影字段集合必须与 dimension 集合完全一致，NPC ID 在维度内及维度间不得重复。`source-order="NODE"`（默认）按 nodes 文档顺序展开；`VALUE_THEN_NODE` 先按字段值 `0..required-1`，再按 nodes 文档顺序展开，用于精确复现旧生成器顺序。字段必须存在且能表示 `0..required`，每条网格 transition 必须连续相邻且只有标准击杀协议。缺少投影、缺少唯一目标、网格不完整、注释/额外动作或复杂行为时保留显式 transition；本积木不删除节点，也不改变运行时状态。
 
 ### 3.4 完整示例：1138「A Mother's Worry」（真实任务，无 work item 的 report_to 模板）
 

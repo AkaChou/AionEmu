@@ -57,76 +57,19 @@
     <transition source="started" target="started"><event><talk-to-npc npc-id="800929" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
 
     <!-- 交付：800927 报告，持有 182215272×6 进入奖励。 -->
-    <transition source="started" target="reward" priority="0">
-      <event><talk-to-npc npc-id="800927" dialog-id="39"/></event>
-      <conditions><has-item item-id="182215272" count="6"/></conditions>
-      <actions><remove-item item-id="182215272" count="ALL"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event><talk-to-npc npc-id="800927" dialog-id="39"/></event>
-      <after-commit><show-quest-dialog dialog-id="2716"/></after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event><talk-to-npc npc-id="800927" dialog-id="20002"/></event>
-      <conditions><has-item item-id="182215272" count="6"/></conditions>
-      <actions><remove-item item-id="182215272" count="ALL"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event><talk-to-npc npc-id="800927" dialog-id="20002"/></event>
-      <after-commit><close-dialog/></after-commit>
-    </transition>
+    <npc-item-report npc-id="800927" source="started" target="reward" item-id="182215272" required="6" remove-count="ALL"/>
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="800927" dialog-id="10255"/></event>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
     </transition>
     <!-- 交付：800928 报告，持有 182215272×6 进入奖励。 -->
-    <transition source="started" target="reward" priority="0">
-      <event><talk-to-npc npc-id="800928" dialog-id="39"/></event>
-      <conditions><has-item item-id="182215272" count="6"/></conditions>
-      <actions><remove-item item-id="182215272" count="ALL"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event><talk-to-npc npc-id="800928" dialog-id="39"/></event>
-      <after-commit><show-quest-dialog dialog-id="2716"/></after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event><talk-to-npc npc-id="800928" dialog-id="20002"/></event>
-      <conditions><has-item item-id="182215272" count="6"/></conditions>
-      <actions><remove-item item-id="182215272" count="ALL"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event><talk-to-npc npc-id="800928" dialog-id="20002"/></event>
-      <after-commit><close-dialog/></after-commit>
-    </transition>
+    <npc-item-report npc-id="800928" source="started" target="reward" item-id="182215272" required="6" remove-count="ALL"/>
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="800928" dialog-id="10255"/></event>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
     </transition>
     <!-- 交付：800929 报告，持有 182215272×6 进入奖励。 -->
-    <transition source="started" target="reward" priority="0">
-      <event><talk-to-npc npc-id="800929" dialog-id="39"/></event>
-      <conditions><has-item item-id="182215272" count="6"/></conditions>
-      <actions><remove-item item-id="182215272" count="ALL"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event><talk-to-npc npc-id="800929" dialog-id="39"/></event>
-      <after-commit><show-quest-dialog dialog-id="2716"/></after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event><talk-to-npc npc-id="800929" dialog-id="20002"/></event>
-      <conditions><has-item item-id="182215272" count="6"/></conditions>
-      <actions><remove-item item-id="182215272" count="ALL"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event><talk-to-npc npc-id="800929" dialog-id="20002"/></event>
-      <after-commit><close-dialog/></after-commit>
-    </transition>
+    <npc-item-report npc-id="800929" source="started" target="reward" item-id="182215272" required="6" remove-count="ALL"/>
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="800929" dialog-id="10255"/></event>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>

@@ -43,8 +43,7 @@
     <transition source="k5" target="k6"><event><kill-in-world world-id="210100000"/></event><after-commit>        <sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k6" target="k7"><event><kill-in-world world-id="210100000"/></event><after-commit>        <sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k7" target="k8"><event><kill-in-world world-id="210100000"/></event><after-commit>        <sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k8" target="k8"><event><talk-to-npc npc-id="835067" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="k8" target="reward"><event><talk-to-npc npc-id="835067" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <npc-report npc-id="835067" source="k8" target="reward" page="1352"/>
     <npc-complete npc-id="835067" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

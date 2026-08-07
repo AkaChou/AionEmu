@@ -10001,23 +10001,7 @@
             <sync-quest-state mode="PACKET_ONLY"/>
           </after-commit>
         </transition>
-        <transition source="a4b4c2" target="a4b4c2">
-          <event>
-            <talk-to-npc npc-id="804599" dialog-id="31"/>
-          </event>
-          <after-commit>
-            <show-quest-dialog dialog-id="1352"/>
-          </after-commit>
-        </transition>
-        <transition source="a4b4c2" target="reward">
-          <event>
-            <talk-to-npc npc-id="804599" dialog-id="1009"/>
-          </event>
-          <after-commit>
-            <sync-quest-state mode="PACKET_ONLY"/>
-            <show-quest-dialog dialog-id="5"/>
-          </after-commit>
-        </transition>
+        <npc-report npc-id="804599" source="a4b4c2" target="reward" page="1352"/>
         <npc-complete npc-id="804599" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
 <transition source="a0b0c0" target="a1b0c0">
           <event>

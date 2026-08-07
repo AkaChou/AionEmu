@@ -209,23 +209,7 @@
       <event><kill-npc npc-id="217161" /></event>
     </kill-chain>
     <!-- 交任务：向 799767 报告 / turn-in: report to 799767 -->
-    <transition source="a12" target="a12">
-      <event>
-        <talk-to-npc npc-id="799767" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a12" target="reward">
-      <event>
-        <talk-to-npc npc-id="799767" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="799767" source="a12" target="reward" page="1352"/>
     <!-- 奖励：发放并完成 / reward: grant and complete -->
     <npc-complete npc-id="799767" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>

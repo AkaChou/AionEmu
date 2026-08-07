@@ -38,8 +38,7 @@
     <transition source="step1" target="step2"><event><talk-to-npc npc-id="278013" dialog-id="10001"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
 
     <!-- 步骤 2:278102。分支 D:var0==2 时 31→2375,dialog 1009→REWARD 并显示奖励框(5)。分支 E:REWARD 态 -1/1009→5,8..23→完成。 -->
-    <transition source="step2" target="step2"><event><talk-to-npc npc-id="278102" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
-    <transition source="step2" target="reward"><event><talk-to-npc npc-id="278102" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <npc-report npc-id="278102" source="step2" target="reward" page="2375"/>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="278102" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="278102" dialog-ids="8..23"/></event><actions><complete-quest reward-index="0"/></actions><after-commit><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
   </transitions>

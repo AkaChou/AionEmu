@@ -9523,23 +9523,7 @@
     <kill-chain nodes="a0b6c0 a0b6c1 a0b6c2 a0b6c3 a0b6c4 a0b6c5 a0b6c6 a0b6c7 a0b6c8 a0b6c9 a0b6c10 a0b6c11 a0b6c12 a0b6c13 a0b6c14 a0b6c15">
       <event><kill-npc npc-id="219245" /></event>
     </kill-chain>
-    <transition source="a0b6c15" target="a0b6c15">
-      <event>
-        <talk-to-npc npc-id="800327" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b6c15" target="reward">
-      <event>
-        <talk-to-npc npc-id="800327" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="800327" source="a0b6c15" target="reward" page="1352"/>
     <npc-complete npc-id="800327" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

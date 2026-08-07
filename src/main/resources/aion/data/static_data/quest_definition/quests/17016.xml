@@ -52,103 +52,10 @@
   </nodes>
   <transitions>
     <npc-start npc-id="800446" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="266306"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="266311"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="279447"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="279741"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="279643"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="279935"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="279545"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="279838"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="270806"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="270811"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="k1">
-      <event>
-        <talk-to-npc npc-id="800446" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="reward">
-      <event>
-        <talk-to-npc npc-id="800446" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="266306 266311 279447 279741 279643 279935 279545 279838 270806 270811"/>
+    </counter-grid>
+    <npc-report npc-id="800446" source="k1" target="reward" page="1352"/>
     <npc-complete npc-id="800446" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

@@ -89,45 +89,8 @@
       <choice dialog-id="19" reward-index="12"/>
       <choice dialog-id="20" reward-index="13"/>
     </npc-complete>
-    <transition source="started" target="k1"><event><kill-npc npc-id="215650"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started" target="k1"><event><kill-npc npc-id="215651"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started" target="k1"><event><kill-npc npc-id="215652"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started" target="k1"><event><kill-npc npc-id="215653"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k1" target="k2"><event><kill-npc npc-id="215650"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k1" target="k2"><event><kill-npc npc-id="215651"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k1" target="k2"><event><kill-npc npc-id="215652"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k1" target="k2"><event><kill-npc npc-id="215653"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k2" target="k3"><event><kill-npc npc-id="215650"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k2" target="k3"><event><kill-npc npc-id="215651"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k2" target="k3"><event><kill-npc npc-id="215652"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k2" target="k3"><event><kill-npc npc-id="215653"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k3" target="k4"><event><kill-npc npc-id="215650"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k3" target="k4"><event><kill-npc npc-id="215651"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k3" target="k4"><event><kill-npc npc-id="215652"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k3" target="k4"><event><kill-npc npc-id="215653"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k4" target="k5"><event><kill-npc npc-id="215650"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k4" target="k5"><event><kill-npc npc-id="215651"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k4" target="k5"><event><kill-npc npc-id="215652"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k4" target="k5"><event><kill-npc npc-id="215653"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k5" target="k6"><event><kill-npc npc-id="215650"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k5" target="k6"><event><kill-npc npc-id="215651"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k5" target="k6"><event><kill-npc npc-id="215652"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k5" target="k6"><event><kill-npc npc-id="215653"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k6" target="k7"><event><kill-npc npc-id="215650"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k6" target="k7"><event><kill-npc npc-id="215651"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k6" target="k7"><event><kill-npc npc-id="215652"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k6" target="k7"><event><kill-npc npc-id="215653"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k7" target="k8"><event><kill-npc npc-id="215650"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k7" target="k8"><event><kill-npc npc-id="215651"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k7" target="k8"><event><kill-npc npc-id="215652"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k7" target="k8"><event><kill-npc npc-id="215653"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k8" target="k9"><event><kill-npc npc-id="215650"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k8" target="k9"><event><kill-npc npc-id="215651"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k8" target="k9"><event><kill-npc npc-id="215652"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k8" target="k9"><event><kill-npc npc-id="215653"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k9" target="k10"><event><kill-npc npc-id="215650"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k9" target="k10"><event><kill-npc npc-id="215651"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k9" target="k10"><event><kill-npc npc-id="215652"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k9" target="k10"><event><kill-npc npc-id="215653"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <counter-grid>
+      <dimension field="var0" required="10" npc-ids="215650 215651 215652 215653"/>
+    </counter-grid>
   </transitions>
 </quest-definition>

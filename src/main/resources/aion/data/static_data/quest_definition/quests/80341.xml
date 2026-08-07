@@ -75,23 +75,7 @@
     </transition>
     <!-- 进行中：var0 恒为 0，START_DIALOG 显示 2375；SELECT_REWARD 打开奖励选择。
          In progress: var0 stays 0, START_DIALOG shows 2375; SELECT_REWARD opens reward selection. -->
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="831709" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <talk-to-npc npc-id="831709" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
+    <npc-report npc-id="831709" source="started" target="reward" page="2375"/>
     <!-- 奖励：任意普卡斯确认显示 5，选择 8..23 完成结算（无奖励数据，仅结算）。
          Reward: any Pucas confirms with 5, selecting 8..23 settles completion (no reward data, settle only). -->
     <npc-complete npc-id="831709" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>

@@ -38,11 +38,11 @@ Events are facts, conditions are tests, actions are state changes, after-commit 
 
 Transition child order is fixed: `event` → `conditions` → `actions` → `after-commit`.
 
-Inside `<transitions>`, ordinary `<transition>` elements and the four domain blocks can be mixed in any order. All task files remain `version="1"`.
+Inside `<transitions>`, ordinary `<transition>` elements and the eight domain blocks can be mixed in any order. All task files remain `version="1"`.
 
 ### 3.3 Compile-Time Domain Blocks
 
-`npc-start`, `counter`, `kill-chain`, and `npc-complete` are strict XML authoring shorthands. The XML front end expands them to ordinary `QuestTransition`, `QuestAction`, and `AfterCommitAction` values before `QuestDefinitionCompiler` runs. They add no runtime state, IR type, dispatch branch, inheritance, include, template parameter, or expression language.
+`npc-start`, `counter`, `counter-grid`, `kill-chain`, `kill-routes`, `npc-item-report`, `npc-report`, and `npc-complete` are strict XML authoring shorthands. The XML front end expands them to ordinary `QuestTransition`, `QuestAction`, and `AfterCommitAction` values before `QuestDefinitionCompiler` runs. They add no runtime state, IR type, dispatch branch, inheritance, include, template parameter, or expression language.
 
 Standard NPC acquisition:
 
@@ -114,6 +114,49 @@ Reward indices refer to the ordered `<metadata><rewards>` list. Fixed indices mu
 Choice indices must point to `SELECTABLE_ITEM`; the compiler lowers that metadata entry to the concrete `ITEM` reward. Dialog IDs must be unique across preview, generic, choice, and fallback routes. The source must project `REWARD`, the target `COMPLETE`. Every completion route orders actions as fixed rewards, optional choice reward, `complete-quest`; after commit it always runs `refresh-player-stats`, `sync-quest-state mode="COMPLETION"`, then exactly one finish policy: `SELECTION_DIALOG`, `CLOSE_DIALOG`, or `NONE`. Preview routes display page 5.
 
 Use these blocks only when the entire expansion is correct. Extra conditions on acquisition, nonstandard dialogs/pages, reward-side mutations, or any additional after-commit effect require explicit `<transition>` elements. Compiler failures use stable `QuestCompilationException` codes and identify the quest, block, and offending attribute.
+
+Standard multi-NPC kill routes:
+
+```xml
+<kill-routes source="started" target="k1"
+             npc-ids="215468 215469 215470"/>
+```
+
+The block emits independent `kill-npc` transitions in declared `npc-ids` order. Every edge has no conditions, transactional actions, or priority and sends `sync-quest-state mode="PACKET_ONLY"` after commit. Each NPC remains a separate event; the block never lowers to `KillNpcSet`. Source and target only need to be declared nodes, so legal projections such as a START self-loop remain possible. The list must contain at least two distinct positive NPC IDs. Keep explicit transitions when the route needs conditions, extra actions, different after-commit effects, or non-contiguous XML layout.
+
+Standard NPC report:
+
+```xml
+<npc-report npc-id="203941"
+            source="started" target="reward" page="1352"/>
+```
+
+This always emits two edges: dialog 31 self-loops at the START node and shows the explicit `page`; dialog 1009 enters REWARD, then sends `PACKET_ONLY` and shows page 5. `page` is restricted to the retail protocol pages `1352`, `2375`, and `10002`; source must project START and target must project REWARD. Growth quests using 10000/10001, 4762, or another special page protocol must remain explicit.
+
+Standard item-backed NPC report:
+
+```xml
+<npc-item-report npc-id="800937"
+                 source="started" target="reward"
+                 item-id="182215285" required="1"
+                 remove-count="ALL"/>
+```
+
+This emits the fixed four-route dialog 39/20002 success and failure protocol. Success has priority 0, checks `required`, removes the same count or `ALL`, enters REWARD, then synchronizes with `PACKET_ONLY` and shows page 5. Failure has priority 1 and respectively shows 2716 or closes the dialog. Omitting `remove-count` means `required`; an explicit number must match it so checking and removal cannot diverge. Source and target must project START and REWARD. Extra conditions, actions, pages, or removal behavior require explicit transitions; growth-quest special pages are excluded from the batch matcher.
+
+Multi-dimensional counter grid:
+
+```xml
+<counter-grid>
+  <dimension field="var0" required="7"
+             npc-ids="212600 212601"/>
+  <dimension field="var1" required="7"
+             npc-ids="212603 212604"
+             source-order="VALUE_THEN_NODE"/>
+</counter-grid>
+```
+
+Each dimension emits the existing action-free kill edges in declared NPC order. The matcher accepts only a target whose current field increases by exactly one, and requires all START nodes to form the complete Cartesian product across every dimension from `0..required`. Projected fields must equal the dimension fields exactly, and NPC IDs must be unique within and across dimensions. `source-order="NODE"` (the default) follows node document order; `VALUE_THEN_NODE` groups by field value `0..required-1` first and then follows node document order, allowing exact reproduction of legacy generator order. Fields must exist and represent `0..required`; each grid transition must be contiguous and use only the standard kill protocol. Missing projections, missing unique targets, incomplete products, comments/extra actions, or complex behavior stay explicit. The block does not delete nodes or change runtime state.
 
 ### 3.4 Full Example: 1138 "A Mother's Worry" (real quest, report_to template without work items)
 
