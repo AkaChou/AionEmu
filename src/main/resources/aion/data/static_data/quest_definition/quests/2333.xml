@@ -13,8 +13,8 @@
     </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="374894"/>
-      
-      
+      <reward kind="ITEM" id="121000752" amount="1"/>
+      <reward kind="ITEM" id="186000007" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="112101606" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="112301700" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="112301702" amount="1"/>

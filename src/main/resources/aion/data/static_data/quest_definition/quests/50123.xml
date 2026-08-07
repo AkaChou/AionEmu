@@ -10,7 +10,7 @@
     </items>
     <rewards>
       <reward kind="EXP" id="0" amount="1400000000"/>
-      
+      <reward kind="ITEM" id="188058607" amount="5"/>
     </rewards>
   </metadata>
   <progress>

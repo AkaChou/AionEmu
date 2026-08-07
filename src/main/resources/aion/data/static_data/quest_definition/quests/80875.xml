@@ -10,9 +10,7 @@
     </items>
     <rewards>
       <reward kind="ITEM" id="185000272" amount="1"/>
-            <reward kind="ITEM" id="169610359" amount="1"/>
-          
-    </rewards>
+      </rewards>
     <drops>
       <drop npc-id="703381" item-id="182216117" chance="100" each-member="true" collecting-step="0"/>
     </drops>

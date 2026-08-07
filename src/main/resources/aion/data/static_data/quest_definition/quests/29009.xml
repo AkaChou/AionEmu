@@ -2,16 +2,7 @@
 <quest-definition id="29009" version="1">
   <metadata name="[Master] Weaponsmithing Master" display-name-id="1124809" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
     <races><race id="ASMODIANS"/></races><prerequisites><quest id="29008"/></prerequisites><work-items><item id="182207143" count="1"/></work-items>
-    <rewards><reward kind="EXP" id="0" amount="291412"/><reward kind="ITEM" id="110900069" amount="1"/>      <reward kind="SELECTABLE_ITEM" id="152206698" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="152206699" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="152206700" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="152206701" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="152206702" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="152230511" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="152230512" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="152231544" amount="1"/>
-          <reward kind="ITEM" id="110900069" amount="1"/>
-    </rewards>
+    <rewards><reward kind="EXP" id="0" amount="291412"/><reward kind="ITEM" id="110900069" amount="1"/></rewards>
   </metadata>
   <nodes><node label="unaccepted"><project status="NONE"/></node><node label="started"><project status="START"/></node><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
   <transitions>

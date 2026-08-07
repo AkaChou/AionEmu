@@ -9,18 +9,6 @@
       <reward kind="ITEM" id="186000231" amount="25"/>
       <reward kind="ITEM" id="186000237" amount="60"/>
       <reward kind="ITEM" id="188057352" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="114101313" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="114301319" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="114301531" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="114501277" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="114501629" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="114601219" amount="1"/>
-          
-          
-          
-          
-          
-          
     </rewards>
   </metadata>
   <progress>

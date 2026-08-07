@@ -11,10 +11,6 @@
     <rewards>
       <reward kind="EXP" id="0" amount="3921386"/>
       <reward kind="ITEM" id="186000009" amount="5"/>
-          <reward kind="SELECTABLE_ITEM" id="121001043" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="121001044" amount="1"/>
-          
-          
     </rewards>
     <drops>
       <drop npc-id="216989" item-id="182213007" chance="100" each-member="true" collecting-step="0"/>

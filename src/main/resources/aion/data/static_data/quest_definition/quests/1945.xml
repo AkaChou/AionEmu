@@ -2,9 +2,7 @@
 <quest-definition id="1945" version="1">
   <metadata name="[Expert] Alchemy Expert" display-name-id="1102945" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
     <races><race id="ELYOS"/></races><prerequisites><quest id="1981"/></prerequisites><work-items><item id="182206013" count="1"/></work-items>
-    <rewards><reward kind="EXP" id="0" amount="58283"/><reward kind="ITEM" id="125001837" amount="1"/>      <reward kind="SELECTABLE_ITEM" id="152201292" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="152201293" amount="1"/>
-    </rewards>
+    <rewards><reward kind="EXP" id="0" amount="58283"/><reward kind="ITEM" id="125001837" amount="1"/></rewards>
   </metadata>
   <nodes><node label="unaccepted"><project status="NONE"/></node><node label="started"><project status="START"/></node><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
   <transitions>

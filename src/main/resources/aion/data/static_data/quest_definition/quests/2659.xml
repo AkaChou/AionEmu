@@ -10,10 +10,6 @@
       <reward kind="EXP" id="0" amount="3058650"/>
       <reward kind="ITEM" id="186000010" amount="1"/>
       <reward kind="ITEM" id="188050928" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="121000806" amount="1"/>
-          <reward kind="SELECTABLE_ITEM" id="121000807" amount="1"/>
-          
-          
     </rewards>
   </metadata>
   <progress>

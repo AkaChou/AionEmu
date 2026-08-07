@@ -28,12 +28,6 @@ public final class QuestDefinitionDirectoryLoader {
 	 * candidates that are not yet safe to install as live owners.
 	 */
 	public static QuestCatalog compile(ClassLoader loader) {
-		QuestCatalog xmlCatalog = compileXml(loader);
-		return QuestDefinitionCatalogMerger.javaOverridesXml(xmlCatalog, QuestDefinitionJavaCatalog.compile());
-	}
-
-	/** Compile only the retained XML source, without applying Java DSL ownership. */
-	static QuestCatalog compileXml(ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
 		URL directoryUrl = loader.getResource(QUEST_DIRECTORY);
 		if (directoryUrl == null) {
