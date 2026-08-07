@@ -2,7 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -41,21 +40,14 @@ public final class QuestDefinitionDirectoryLoader {
 		resources.sort(Comparator.comparingInt(QuestDefinitionDirectoryLoader::questId)
 			.thenComparing(Comparator.naturalOrder()));
 
-		List<CompiledQuestDefinition> definitions = new ArrayList<>(resources.size());
-		for (String resource : resources) {
-			try (InputStream input = loader.getResourceAsStream(resource)) {
-				if (input == null) {
-					fail("QUEST_RESOURCE_MISSING", resource);
-				}
-				CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(input);
-				int filenameId = questId(resource);
-				if (definition.id() != filenameId) {
-					fail("QUEST_FILENAME_ID_MISMATCH", resource + " expected=" + filenameId
-						+ " actual=" + definition.id());
-				}
-				definitions.add(definition);
-			} catch (IOException e) {
-				fail("QUEST_RESOURCE_READ_FAILED", resource);
+		List<CompiledQuestDefinition> definitions = QuestDefinitionCatalogManifest.compileResources(
+			resources, loader, "QUEST_RESOURCE_MISSING", "QUEST_RESOURCE_READ_FAILED");
+		for (int i = 0; i < resources.size(); i++) {
+			String resource = resources.get(i);
+			int filenameId = questId(resource);
+			if (definitions.get(i).id() != filenameId) {
+				fail("QUEST_FILENAME_ID_MISMATCH", resource + " expected=" + filenameId
+					+ " actual=" + definitions.get(i).id());
 			}
 		}
 		return new ImmutableQuestCatalog(definitions);

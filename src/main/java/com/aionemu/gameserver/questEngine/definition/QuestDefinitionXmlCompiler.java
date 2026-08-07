@@ -15,7 +15,9 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,23 +30,34 @@ import java.util.stream.Collectors;
 
 /** Strict XML front end for the canonical definition IR. */
 public final class QuestDefinitionXmlCompiler {
+	/** 类加载时编译一次 XSD，供所有任务共享；Schema 线程安全可并发解析。Compiled once per class load; Schemas are thread-safe. */
+	private static final Schema SCHEMA = buildSchema();
+
 	private QuestDefinitionXmlCompiler() {
 	}
 
-	public static CompiledQuestDefinition compile(InputStream input) {
+	private static Schema buildSchema() {
 		try (InputStream schemaStream = QuestDefinitionXmlCompiler.class.getResourceAsStream(
 				"/aion/data/static_data/quest_definition/quest_definition.xsd")) {
 			if (schemaStream == null) {
 				throw new QuestCompilationException("SCHEMA_MISSING", "quest definition schema is not packaged");
 			}
+			return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+					.newSchema(new StreamSource(schemaStream));
+		} catch (IOException | SAXException e) {
+			throw new QuestCompilationException("SCHEMA_MISSING", e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
+		}
+	}
+
+	public static CompiledQuestDefinition compile(InputStream input) {
+		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setNamespaceAware(false);
 			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-			factory.setSchema(SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-					.newSchema(new StreamSource(schemaStream)));
+			factory.setSchema(SCHEMA);
 			var builder = factory.newDocumentBuilder();
 			builder.setErrorHandler(new DefaultHandler() {
 				@Override

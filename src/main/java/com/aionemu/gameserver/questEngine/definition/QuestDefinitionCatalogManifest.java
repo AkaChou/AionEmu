@@ -12,13 +12,17 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /** Explicit production owner allow-list for definitions in the quests directory. */
 public final class QuestDefinitionCatalogManifest {
@@ -129,28 +133,62 @@ public final class QuestDefinitionCatalogManifest {
 	public static QuestCatalog compile(InputStream manifest, ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
 		QuestDefinitionCatalogManifest parsed = load(manifest);
-		List<CompiledQuestDefinition> definitions = new ArrayList<>();
-		for (Entry entry : parsed.entries) {
-			byte[] xml;
-			try (InputStream input = loader.getResourceAsStream(entry.resource())) {
-				if (input == null) {
-					fail("CATALOG_RESOURCE_MISSING", entry.resource());
-				}
-				xml = input.readAllBytes();
-			} catch (QuestCompilationException e) {
-				throw e;
-			} catch (Exception e) {
-				fail("CATALOG_RESOURCE_READ_FAILED", entry.resource());
-				return null;
-			}
-			CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(xml));
-			if (definition.id() != entry.id()) {
+		List<CompiledQuestDefinition> definitions = compileResources(
+			parsed.entries.stream().map(Entry::resource).toList(), loader,
+			"CATALOG_RESOURCE_MISSING", "CATALOG_RESOURCE_READ_FAILED");
+		for (int i = 0; i < parsed.entries.size(); i++) {
+			Entry entry = parsed.entries.get(i);
+			if (definitions.get(i).id() != entry.id()) {
 				fail("CATALOG_ID_MISMATCH", entry.resource() + " expected=" + entry.id()
-					+ " actual=" + definition.id());
+					+ " actual=" + definitions.get(i).id());
 			}
-			definitions.add(definition);
 		}
 		return new ImmutableQuestCatalog(definitions);
+	}
+
+	/**
+	 * 并行编译任务 XML 资源，按输入顺序返回结果。Compiles quest XML resources in parallel, preserving input order.
+	 * 编译管线无共享可变状态，Schema 静态化后线程安全。The compile pipeline has no shared mutable state,
+	 * and the shared Schema is thread-safe, so per-resource work can run concurrently.
+	 */
+	static List<CompiledQuestDefinition> compileResources(List<String> resources, ClassLoader loader,
+			String missingCode, String readFailedCode) {
+		int processors = java.lang.management.ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
+		ExecutorService pool = Executors.newFixedThreadPool(Math.min(processors, 8));
+		try {
+			List<Future<CompiledQuestDefinition>> futures = new ArrayList<>(resources.size());
+			for (String resource : resources) {
+				futures.add(pool.submit(() -> {
+					try (InputStream input = loader.getResourceAsStream(resource)) {
+						if (input == null) {
+							throw new QuestCompilationException(missingCode, resource);
+						}
+						return QuestDefinitionXmlCompiler.compile(input);
+					} catch (IOException e) {
+						throw new QuestCompilationException(readFailedCode, resource);
+					}
+				}));
+			}
+			List<CompiledQuestDefinition> definitions = new ArrayList<>(resources.size());
+			for (Future<CompiledQuestDefinition> future : futures) {
+				try {
+					definitions.add(future.get());
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					throw new QuestCompilationException("COMPILE_INTERRUPTED", e.getMessage());
+				} catch (ExecutionException e) {
+					Throwable cause = e.getCause();
+					if (cause instanceof QuestCompilationException qce) {
+						throw qce;
+					}
+					throw new QuestCompilationException("COMPILE_FAILED",
+						cause == null ? null : cause.getMessage());
+				}
+			}
+			return definitions;
+		} finally {
+			pool.shutdown();
+		}
 	}
 
 	public int version() {

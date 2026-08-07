@@ -2514,7 +2514,7 @@ public class QuestEngine implements GameEngine {
 				xmlQuest.register(this);
 			}
 			log.info(I18n.get("log.490b5f534bb2", questHandlers.size()));
-			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners()));
+			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners().size()));
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize quest handlers.", e);
 		} finally {
