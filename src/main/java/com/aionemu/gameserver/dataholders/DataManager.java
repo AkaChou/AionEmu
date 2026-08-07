@@ -59,6 +59,7 @@ public final class DataManager {
     public static StaticDoorData STATICDOOR_DATA;
     public static ItemSetData ITEM_SET_DATA;
     public static NpcFactionsData NPC_FACTIONS_DATA;
+    public static NpcFactionQuestData NPC_FACTIONS_QUEST_DATA;
     public static NpcSkillData NPC_SKILL_DATA;
     public static PetSkillData PET_SKILL_DATA;
     public static SiegeLocationData SIEGE_LOCATION_DATA;
@@ -242,6 +243,7 @@ public final class DataManager {
             STATICDOOR_DATA = data.staticDoorData;
             ITEM_SET_DATA = data.itemSetData;
             NPC_FACTIONS_DATA = data.npcFactionsData;
+            NPC_FACTIONS_QUEST_DATA = data.npcFactionQuestData;
             NPC_SKILL_DATA = data.npcSkillData;
             PET_SKILL_DATA = data.petSkillData;
             SIEGE_LOCATION_DATA = data.siegeLocationData;

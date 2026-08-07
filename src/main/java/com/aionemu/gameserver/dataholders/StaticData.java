@@ -87,6 +87,8 @@ public class StaticData {
 	public ItemSetData itemSetData;
 	@XmlElement(name = "npc_factions")
 	public NpcFactionsData npcFactionsData;
+	@XmlElement(name = "npc_faction_quests")
+	public NpcFactionQuestData npcFactionQuestData;
 	@XmlElement(name = "npc_skill_templates")
 	public NpcSkillData npcSkillData;
 	@XmlElement(name = "pet_skill_templates")

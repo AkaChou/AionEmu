@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="npc_faction_quests" type="NpcFactionQuests"/>
+	<xs:complexType name="NpcFactionQuests">
+		<xs:sequence>
+			<xs:element name="npc_faction_quest" type="NpcFactionQuest" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="NpcFactionQuest">
+		<xs:attribute name="quest_id" type="xs:int" use="required"/>
+		<xs:attribute name="faction_id" type="xs:int"/>
+		<xs:attribute name="mon" type="xs:boolean" default="false"/>
+		<xs:attribute name="tue" type="xs:boolean" default="false"/>
+		<xs:attribute name="wed" type="xs:boolean" default="false"/>
+		<xs:attribute name="thu" type="xs:boolean" default="false"/>
+		<xs:attribute name="fri" type="xs:boolean" default="false"/>
+		<xs:attribute name="sat" type="xs:boolean" default="false"/>
+		<xs:attribute name="sun" type="xs:boolean" default="false"/>
+	</xs:complexType>
+</xs:schema>

@@ -274,6 +274,12 @@ public class NpcFactions {
 				if (quests.isEmpty()) {
 					continue;
 				}
+				// 真端按星期位控制势力每日任务发放；当天不可发放的任务不进随机池，空池跳过不发。
+				int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+				quests.removeIf(q -> !DataManager.NPC_FACTIONS_QUEST_DATA.isActiveOn(q.getId(), today));
+				if (quests.isEmpty()) {
+					continue;
+				}
 				questId = quests.get(Rnd.get(quests.size())).getId();
 				faction.setQuestId(questId);
 				faction.setTime(getNextTime());
