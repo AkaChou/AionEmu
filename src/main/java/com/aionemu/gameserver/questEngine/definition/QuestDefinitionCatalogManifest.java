@@ -131,19 +131,8 @@ public final class QuestDefinitionCatalogManifest {
 		QuestDefinitionCatalogManifest parsed = load(manifest);
 		List<CompiledQuestDefinition> definitions = new ArrayList<>();
 		for (Entry entry : parsed.entries) {
-			byte[] xml;
-			try (InputStream input = loader.getResourceAsStream(entry.resource())) {
-				if (input == null) {
-					fail("CATALOG_RESOURCE_MISSING", entry.resource());
-				}
-				xml = input.readAllBytes();
-			} catch (QuestCompilationException e) {
-				throw e;
-			} catch (Exception e) {
-				fail("CATALOG_RESOURCE_READ_FAILED", entry.resource());
-				return null;
-			}
-			CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(xml));
+			CompiledQuestDefinition definition = QuestDefinitionJavaCatalog.find(entry.id())
+				.orElseGet(() -> compileXmlEntry(entry, loader));
 			if (definition.id() != entry.id()) {
 				fail("CATALOG_ID_MISMATCH", entry.resource() + " expected=" + entry.id()
 					+ " actual=" + definition.id());
@@ -151,6 +140,22 @@ public final class QuestDefinitionCatalogManifest {
 			definitions.add(definition);
 		}
 		return new ImmutableQuestCatalog(definitions);
+	}
+
+	private static CompiledQuestDefinition compileXmlEntry(Entry entry, ClassLoader loader) {
+		byte[] xml;
+		try (InputStream input = loader.getResourceAsStream(entry.resource())) {
+			if (input == null) {
+				fail("CATALOG_RESOURCE_MISSING", entry.resource());
+			}
+			xml = input.readAllBytes();
+		} catch (QuestCompilationException e) {
+			throw e;
+		} catch (Exception e) {
+			fail("CATALOG_RESOURCE_READ_FAILED", entry.resource());
+			return null;
+		}
+		return QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(xml));
 	}
 
 	public int version() {

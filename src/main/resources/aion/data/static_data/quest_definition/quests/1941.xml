@@ -13,6 +13,22 @@
     <rewards>
       <reward kind="EXP" id="0" amount="58283"/>
       <reward kind="ITEM" id="125001837" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152200129" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152200130" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152200131" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152200132" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152200133" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152220446" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152220447" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152221540" amount="1"/>
+          
+          
+          
+          
+          
+          
+          
+          
     </rewards>
   </metadata>
   <nodes>

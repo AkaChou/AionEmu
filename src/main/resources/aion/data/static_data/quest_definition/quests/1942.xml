@@ -7,6 +7,12 @@
     <rewards>
       <reward kind="EXP" id="0" amount="58283"/>
       <reward kind="ITEM" id="125001837" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152200362" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152200368" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152200370" amount="1"/>
+          
+          
+          
     </rewards>
   </metadata>
   <nodes>

@@ -458,6 +458,7 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 	/** 对若干目标任务广播 zone-mission-end 事件, 触发其启动/推进。 */
 	record BroadcastZoneMissionEnd(int[] questIds) implements AfterCommitAction {
 		public BroadcastZoneMissionEnd {
+			questIds = questIds == null ? null : questIds.clone();
 			if (questIds == null || questIds.length == 0) {
 				throw new IllegalArgumentException("questIds must not be empty");
 			}
@@ -466,6 +467,22 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 					throw new IllegalArgumentException("questIds must be positive");
 				}
 			}
+		}
+
+		@Override
+		public int[] questIds() {
+			return questIds.clone();
+		}
+
+		@Override
+		public boolean equals(Object other) {
+			return other instanceof BroadcastZoneMissionEnd action
+				&& java.util.Arrays.equals(questIds, action.questIds);
+		}
+
+		@Override
+		public int hashCode() {
+			return java.util.Arrays.hashCode(questIds);
 		}
 	}
 }

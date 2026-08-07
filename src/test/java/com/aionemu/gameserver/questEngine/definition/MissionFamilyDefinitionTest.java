@@ -198,7 +198,7 @@ class MissionFamilyDefinitionTest {
 	void requestOfTheElimCoversTheFullWorldEffectStateMachine() throws Exception {
 		CompiledQuestDefinition compiled = definition("1002.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
-		assertTrue(compiled.definition().metadata().prerequisites().contains(1100));
+		assertTrue(compiled.definition().metadata().prerequisites().isEmpty());
 
 		// Both accept entrances require start eligibility.
 		assertTrue(transitions.stream().anyMatch(t -> t.sourceNode().equals("unaccepted")

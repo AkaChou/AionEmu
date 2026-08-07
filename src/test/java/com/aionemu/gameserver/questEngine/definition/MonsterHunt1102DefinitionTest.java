@@ -64,7 +64,8 @@ class MonsterHunt1102DefinitionTest {
 	void acceptanceFailsClosedWithoutTheQuestTemplatePreconditions() throws Exception {
 		CompiledQuestDefinition compiled = definition();
 		QuestTransition accept = talk(compiled, "unaccepted", 1002);
-		QuestSnapshot snapshot = new QuestSnapshot(7, 1102, QuestStatus.NONE, 0, Map.of());
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1102, QuestStatus.NONE, 0, Map.of())
+			.withCompletedQuestIds(Set.of(1101));
 
 		assertTrue(QuestMutationPlanner.plan(compiled, snapshot, accept).isEmpty());
 		assertTrue(QuestMutationPlanner.plan(compiled,

@@ -2,7 +2,12 @@
 <quest-definition id="29021" version="1">
   <metadata name="[Master] Tailoring Master" display-name-id="1124821" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
     <races><race id="ASMODIANS"/></races><prerequisites><quest id="29020"/></prerequisites><work-items><item id="182207145" count="1"/></work-items>
-    <rewards><reward kind="EXP" id="0" amount="291412"/><reward kind="ITEM" id="110900069" amount="1"/></rewards>
+    <rewards><reward kind="EXP" id="0" amount="291412"/><reward kind="ITEM" id="110900069" amount="1"/>      <reward kind="SELECTABLE_ITEM" id="152206890" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152206892" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152206956" amount="1"/>
+          <reward kind="SELECTABLE_ITEM" id="152206958" amount="1"/>
+          <reward kind="ITEM" id="110900069" amount="1"/>
+    </rewards>
   </metadata>
   <nodes><node label="unaccepted"><project status="NONE"/></node><node label="started"><project status="START"/></node><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
   <transitions>
