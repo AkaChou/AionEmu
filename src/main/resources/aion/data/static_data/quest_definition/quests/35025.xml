@@ -123,7 +123,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="799800" dialog-id="2375"/>
+        <talk-to-npc npc-id="799800" dialog-id="31"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="2375"/>
@@ -131,7 +131,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="799801" dialog-id="2375"/>
+        <talk-to-npc npc-id="799801" dialog-id="31"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="2375"/>
