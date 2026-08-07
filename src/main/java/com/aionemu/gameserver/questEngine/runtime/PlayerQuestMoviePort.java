@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
+import com.aionemu.gameserver.questEngine.definition.QuestMovieType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
@@ -18,24 +19,41 @@ public final class PlayerQuestMoviePort implements QuestMoviePort {
 	}
 
 	private final QuestPlayerPort players;
-	private final MovieCall play;
+	@FunctionalInterface
+	public interface TypedMovieCall {
+		boolean play(Player player, int movieId, QuestMovieType type);
+	}
+
+	private final TypedMovieCall play;
 
 	public PlayerQuestMoviePort(QuestPlayerPort players) {
 		this(players, (player, movieId) -> {
-			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movieId));
+			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(QuestMovieType.CUTSCENE.wireValue(), movieId));
 			return true;
 		});
 	}
 
 	public PlayerQuestMoviePort(QuestPlayerPort players, MovieCall play) {
 		this.players = Objects.requireNonNull(players, "players");
+		MovieCall call = Objects.requireNonNull(play, "play");
+		this.play = (player, movieId, type) -> call.play(player, movieId);
+	}
+
+	public PlayerQuestMoviePort(QuestPlayerPort players, TypedMovieCall play) {
+		this.players = Objects.requireNonNull(players, "players");
 		this.play = Objects.requireNonNull(play, "play");
 	}
 
 	@Override
 	public boolean playMovie(QuestSnapshot snapshot, QuestMutationPlan plan, int movieId) {
+		return playMovie(snapshot, plan, movieId, QuestMovieType.CUTSCENE);
+	}
+
+	@Override
+	public boolean playMovie(QuestSnapshot snapshot, QuestMutationPlan plan, int movieId, QuestMovieType type) {
 		Objects.requireNonNull(snapshot, "snapshot");
 		Objects.requireNonNull(plan, "plan");
+		Objects.requireNonNull(type, "type");
 		if (movieId <= 0) {
 			throw new IllegalArgumentException("movieId must be positive");
 		}
@@ -44,6 +62,6 @@ public final class PlayerQuestMoviePort implements QuestMoviePort {
 			// 提交已成功但玩家已登出:无可发送对象,best-effort 跳过。
 			return false;
 		}
-		return play.play(player, movieId);
+		return play.play(player, movieId, type);
 	}
 }

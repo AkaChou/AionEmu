@@ -493,6 +493,10 @@ public final class QuestDsl {
 		return new AfterCommitAction.PlayMovie(movieId);
 	}
 
+	public static AfterCommitAction playMovie(int movieId, QuestMovieType type) {
+		return new AfterCommitAction.PlayMovie(movieId, type);
+	}
+
 	/** 从多个影片中等概率随机播放一个。 */
 	public static AfterCommitAction playMovieRandom(int... movieIds) {
 		return new AfterCommitAction.PlayMovieRandom(

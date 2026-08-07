@@ -471,6 +471,26 @@ class QuestDefinitionCompilerTest {
 	}
 
 	@Test
+	void playMovieParsesCutsceneMovieType() {
+		String xml = """
+				<quest-definition id="1001" version="1">
+				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+				  <nodes><node label="start"><project status="START"><vars/></project></node></nodes>
+				  <transitions><transition source="start" target="start"><event><talk-to-npc npc-id="700001"/></event>
+				    <after-commit><play-movie movie-id="30" type="CUTSCENE_MOVIE"/></after-commit>
+				  </transition></transitions>
+				</quest-definition>
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+
+		AfterCommitAction.PlayMovie movie = (AfterCommitAction.PlayMovie) definition.definition().transitions()
+				.get(0).afterCommit().get(0);
+		assertEquals(30, movie.movieId());
+		assertEquals(QuestMovieType.CUTSCENE_MOVIE, movie.type());
+	}
+
+	@Test
 	void spawnNpcCompilesIdenticallyThroughXmlAndDsl() {
 		CompiledQuestDefinition fromDsl = quest(1001)
 				.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))

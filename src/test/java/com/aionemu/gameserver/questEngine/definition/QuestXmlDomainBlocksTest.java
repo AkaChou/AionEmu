@@ -253,6 +253,172 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void killRoutesEqualsIndependentKillNpcTransitions() {
+		String block = """
+			<kill-routes source="started" target="k1" npc-ids="215468 215469 215470"/>
+			""";
+		String expanded = """
+			<transition source="started" target="k1"><event><kill-npc npc-id="215468"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+			<transition source="started" target="k1"><event><kill-npc npc-id="215469"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+			<transition source="started" target="k1"><event><kill-npc npc-id="215470"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+			""";
+
+		CompiledQuestDefinition definition = compile(killRoutesDefinition(block));
+		assertEquals(compile(killRoutesDefinition(expanded)).definition(), definition.definition());
+		assertEquals(List.of(215468, 215469, 215470), definition.definition().transitions().stream()
+			.map(transition -> assertInstanceOf(QuestEvent.KillNpc.class, transition.event()).npcId()).toList());
+		assertTrue(definition.definition().transitions().stream()
+			.allMatch(transition -> transition.event() instanceof QuestEvent.KillNpc));
+	}
+
+	@Test
+	void killRoutesRejectsBadNpcListsAndNodes() {
+		String valid = killRoutesDefinition(
+			"<kill-routes source=\"started\" target=\"k1\" npc-ids=\"215468 215469\"/>");
+		assertCode("KILL_ROUTES_TOO_SHORT", valid.replace("215468 215469", "215468"));
+		assertCode("KILL_ROUTES_DUPLICATE_NPC_ID", valid.replace("215468 215469", "215468 215468"));
+		assertCode("XML_BLOCK_BAD_NODE_REFERENCE", valid.replace("target=\"k1\"", "target=\"missing\""));
+		assertCode("XML_BLOCK_INVALID_POSITIVE_INTEGER", valid.replace("215468 215469", "215468 0"));
+	}
+
+	@Test
+	void npcReportEqualsSupportedPagesAndPreservesAfterCommitOrder() {
+		for (int page : List.of(1352, 2375, 10002)) {
+			String block = "<npc-report npc-id=\"203941\" source=\"started\" target=\"reward\" page=\""
+				+ page + "\"/>";
+			String expanded = """
+				<transition source="started" target="started"><event><talk-to-npc npc-id="203941" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="%d"/></after-commit></transition>
+				<transition source="started" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+				""".formatted(page);
+			assertEquals(compile(reportDefinition(block)).definition(), compile(reportDefinition(expanded)).definition());
+		}
+	}
+
+	@Test
+	void npcReportRejectsInvalidPagesAndStatuses() {
+		String valid = reportDefinition(
+			"<npc-report npc-id=\"203941\" source=\"started\" target=\"reward\" page=\"1352\"/>");
+		assertCode("NPC_REPORT_INVALID_PAGE", valid.replace("page=\"1352\"", "page=\"2716\""));
+		assertCode("NPC_REPORT_SOURCE_STATUS", valid.replace("label=\"started\"><project status=\"START\"",
+			"label=\"started\"><project status=\"REWARD\""));
+		assertCode("NPC_REPORT_TARGET_STATUS", valid.replace("label=\"reward\"><project status=\"REWARD\"",
+			"label=\"reward\"><project status=\"START\""));
+	}
+
+	@Test
+	void npcItemReportEqualsFourProtocolRoutesWithDefaultAndAllRemoval() {
+		String block = """
+			<npc-item-report npc-id="800937" source="started" target="reward"
+				item-id="182215285" required="1"/>
+			""";
+		String expanded = """
+			<transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="800937" dialog-id="39"/></event><conditions><has-item item-id="182215285" count="1"/></conditions><actions><remove-item item-id="182215285" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+			<transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="800937" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
+			<transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="800937" dialog-id="20002"/></event><conditions><has-item item-id="182215285" count="1"/></conditions><actions><remove-item item-id="182215285" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+			<transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="800937" dialog-id="20002"/></event><after-commit><close-dialog/></after-commit></transition>
+			""";
+		assertEquals(compile(itemReportDefinition(block)).definition(), compile(itemReportDefinition(expanded)).definition());
+
+		CompiledQuestDefinition all = compile(itemReportDefinition(block.replace("required=\"1\"/>",
+			"required=\"1\" remove-count=\"ALL\"/>")));
+		assertEquals(List.of(QuestAction.RemoveItem.ALL, QuestAction.RemoveItem.ALL), all.definition().transitions().stream()
+			.filter(transition -> transition.targetNode().equals("reward"))
+			.map(transition -> assertInstanceOf(QuestAction.RemoveItem.class, transition.actions().getFirst()).count())
+			.toList());
+	}
+
+	@Test
+	void npcItemReportRejectsBadStatusesAndRemovalCount() {
+		String valid = itemReportDefinition(
+			"<npc-item-report npc-id=\"800937\" source=\"started\" target=\"reward\" item-id=\"182215285\" required=\"2\"/>");
+		assertCode("NPC_ITEM_REPORT_SOURCE_STATUS", valid.replace("label=\"started\"><project status=\"START\"",
+			"label=\"started\"><project status=\"REWARD\""));
+		assertCode("NPC_ITEM_REPORT_TARGET_STATUS", valid.replace("label=\"reward\"><project status=\"REWARD\"",
+			"label=\"reward\"><project status=\"START\""));
+		assertCode("NPC_ITEM_REPORT_REMOVE_COUNT_MISMATCH", valid.replace("required=\"2\"/>",
+			"required=\"2\" remove-count=\"1\"/>"));
+	}
+
+	@Test
+	void counterGridEqualsOneDimensionalExpandedTransitions() {
+		String block = """
+			<counter-grid>
+			  <dimension field="var0" required="2" npc-ids="212600 212601"/>
+			</counter-grid>
+			""";
+		String expanded = """
+			<transition source="v0" target="v1"><event><kill-npc npc-id="212600"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+			<transition source="v0" target="v1"><event><kill-npc npc-id="212601"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+			<transition source="v1" target="v2"><event><kill-npc npc-id="212600"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+			<transition source="v1" target="v2"><event><kill-npc npc-id="212601"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+			""";
+		assertEquals(compile(counterGridDefinition(block)).definition(), compile(counterGridDefinition(expanded)).definition());
+	}
+
+	@Test
+	void counterGridSupportsNodeAndValueThenNodeOrdering() {
+		String nodeOrder = """
+			<counter-grid><dimension field="var0" required="1" npc-ids="212600 212601"/><dimension field="var1" required="1" npc-ids="212603 212604"/></counter-grid>
+			""";
+		String valueThenNode = """
+			<counter-grid><dimension field="var0" required="1" npc-ids="212600 212601" source-order="VALUE_THEN_NODE"/><dimension field="var1" required="1" npc-ids="212603 212604" source-order="VALUE_THEN_NODE"/></counter-grid>
+			""";
+		List<String> nodeOrderSources = compile(counterGrid2dDefinition(nodeOrder)).definition().transitions().stream()
+			.map(transition -> transition.sourceNode() + ">" + transition.targetNode() + ":"
+				+ assertInstanceOf(QuestEvent.KillNpc.class, transition.event()).npcId()).toList();
+		List<String> valueThenNodeSources = compile(counterGrid2dDefinition(valueThenNode)).definition().transitions().stream()
+			.map(transition -> transition.sourceNode() + ">" + transition.targetNode() + ":"
+				+ assertInstanceOf(QuestEvent.KillNpc.class, transition.event()).npcId()).toList();
+		assertEquals(List.of("v00>v10:212600", "v00>v10:212601", "v01>v11:212600", "v01>v11:212601",
+			"v00>v01:212603", "v00>v01:212604", "v10>v11:212603", "v10>v11:212604"), nodeOrderSources);
+		assertEquals(List.of("v00>v10:212600", "v00>v10:212601", "v01>v11:212600", "v01>v11:212601",
+			"v00>v01:212603", "v00>v01:212604", "v10>v11:212603", "v10>v11:212604"), valueThenNodeSources);
+	}
+
+	@Test
+	void counterGridRejectsStructuralAndNpcErrors() {
+		String valid = counterGrid2dDefinition(
+			"<counter-grid><dimension field=\"var0\" required=\"1\" npc-ids=\"212600 212601\"/><dimension field=\"var1\" required=\"1\" npc-ids=\"212603 212604\"/></counter-grid>");
+		assertCode("COUNTER_GRID_DUPLICATE_FIELD", valid.replace("field=\"var1\"", "field=\"var0\""));
+		assertCode("COUNTER_GRID_UNKNOWN_FIELD", valid.replace("field=\"var1\"", "field=\"missing\""));
+		assertCode("COUNTER_GRID_INVALID_REQUIRED", valid.replace("required=\"1\"", "required=\"0\""));
+		assertCode("COUNTER_GRID_FIELD_TOO_NARROW", valid.replace("required=\"1\"", "required=\"8\""));
+		assertCode("COUNTER_GRID_DUPLICATE_NPC_ID", valid.replace("212600 212601", "212600 212600"));
+		assertCode("COUNTER_GRID_OVERLAPPING_NPC_ID", valid.replace("212603 212604", "212600 212604"));
+		assertCode("COUNTER_GRID_NODE_FIELDS_MISMATCH", valid.replace(
+			"<var name=\"var0\" value=\"0\"/><var name=\"var1\" value=\"0\"/>",
+			"<var name=\"var0\" value=\"0\"/><var name=\"var1\" value=\"0\"/><var name=\"extra\" value=\"0\"/>"));
+		assertCode("COUNTER_GRID_NODE_VALUE_OUT_OF_RANGE", valid.replace("label=\"v11\"><project status=\"START\"><vars><var name=\"var0\" value=\"1\"/><var name=\"var1\" value=\"1\"/>",
+			"label=\"v11\"><project status=\"START\"><vars><var name=\"var0\" value=\"2\"/><var name=\"var1\" value=\"1\"/>"));
+		assertCode("COUNTER_GRID_INCOMPLETE_PRODUCT", valid.replace("<node label=\"v11\"><project status=\"START\"><vars><var name=\"var0\" value=\"1\"/><var name=\"var1\" value=\"1\"/></vars></project></node>", ""));
+	}
+
+	@Test
+	void newBlocksAndOrdinaryTransitionsKeepDocumentOrder() {
+		String xml = """
+			<quest-definition id="990067" version="1">
+			  <metadata name="mixed second-stage blocks" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+			  <progress><bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/></progress>
+			  <nodes>
+			    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+			    <node label="k1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+			    <node label="reward"><project status="REWARD"/></node>
+			  </nodes>
+			  <transitions>
+			    <kill-routes source="started" target="k1" npc-ids="215468 215469"/>
+			    <transition source="k1" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="1009"/></event></transition>
+			    <npc-report npc-id="203941" source="started" target="reward" page="1352"/>
+			  </transitions>
+			</quest-definition>
+			""";
+		List<QuestTransition> transitions = compile(xml).definition().transitions();
+		assertEquals(215468, assertInstanceOf(QuestEvent.KillNpc.class, transitions.getFirst().event()).npcId());
+		assertEquals(215469, assertInstanceOf(QuestEvent.KillNpc.class, transitions.get(1).event()).npcId());
+		assertEquals(203941, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(2).event()).npcId());
+		assertEquals(31, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(3).event()).dialogId());
+	}
+
+	@Test
 	void npcCompleteRejectsBadRewardsDialogsAndNodes() {
 		String valid = completionDefinition("""
 			<npc-complete npc-id="203123" source="reward" target="complete"
@@ -381,6 +547,80 @@ class QuestXmlDomainBlocksTest {
 			  <nodes>
 			    <node label="reward"><project status="REWARD"><vars><var name="var0" value="3"/></vars></project></node>
 			    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+			  </nodes>
+			  <transitions>%s</transitions>
+			</quest-definition>
+			""".formatted(transitions);
+	}
+
+	private static String killRoutesDefinition(String transitions) {
+		return """
+			<quest-definition id="990065" version="1">
+			  <metadata name="kill-routes-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+			  <progress><bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/></progress>
+			  <nodes>
+			    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+			    <node label="k1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+			  </nodes>
+			  <transitions>%s</transitions>
+			</quest-definition>
+			""".formatted(transitions);
+	}
+
+	private static String reportDefinition(String transitions) {
+		return """
+			<quest-definition id="990066" version="1">
+			  <metadata name="npc-report-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+			  <nodes>
+			    <node label="started"><project status="START"/></node>
+			    <node label="reward"><project status="REWARD"/></node>
+			  </nodes>
+			  <transitions>%s</transitions>
+			</quest-definition>
+			""".formatted(transitions);
+	}
+
+	private static String itemReportDefinition(String transitions) {
+		return """
+			<quest-definition id="990068" version="1">
+			  <metadata name="npc-item-report-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+			  <nodes>
+			    <node label="started"><project status="START"/></node>
+			    <node label="reward"><project status="REWARD"/></node>
+			  </nodes>
+			  <transitions>%s</transitions>
+			</quest-definition>
+			""".formatted(transitions);
+	}
+
+	private static String counterGridDefinition(String transitions) {
+		return """
+			<quest-definition id="990069" version="1">
+			  <metadata name="counter-grid-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+			  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
+			  <nodes>
+			    <node label="v0"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+			    <node label="v1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+			    <node label="v2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+			  </nodes>
+			  <transitions>%s</transitions>
+			</quest-definition>
+			""".formatted(transitions);
+	}
+
+	private static String counterGrid2dDefinition(String transitions) {
+		return """
+			<quest-definition id="990070" version="1">
+			  <metadata name="two-dimensional counter grid" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+			  <progress>
+			    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+			    <bit-field name="var1" offset="2" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+			  </progress>
+			  <nodes>
+			    <node label="v00"><project status="START"><vars><var name="var0" value="0"/><var name="var1" value="0"/></vars></project></node>
+			    <node label="v10"><project status="START"><vars><var name="var0" value="1"/><var name="var1" value="0"/></vars></project></node>
+			    <node label="v01"><project status="START"><vars><var name="var0" value="0"/><var name="var1" value="1"/></vars></project></node>
+			    <node label="v11"><project status="START"><vars><var name="var0" value="1"/><var name="var1" value="1"/></vars></project></node>
 			  </nodes>
 			  <transitions>%s</transitions>
 			</quest-definition>

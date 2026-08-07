@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -24,14 +25,18 @@ final class QuestXmlBlockExpander {
 		Context context = new Context(questId, metadata, progress, nodes);
 		List<QuestTransition> transitions = new ArrayList<>();
 		for (Element element : children(transitionsElement)) {
-			switch (element.getTagName()) {
-				case "transition" -> transitions.addAll(QuestDefinitionXmlCompiler.parseTransition(element));
-				case "npc-start" -> transitions.addAll(expandNpcStart(context, element));
-				case "counter" -> transitions.addAll(expandCounter(context, element));
-				case "kill-chain" -> transitions.addAll(expandKillChain(context, element));
-				case "npc-complete" -> transitions.addAll(expandNpcComplete(context, element));
-				default -> fail("UNKNOWN_XML_BLOCK", context, element.getTagName(), "element",
-					"unsupported transitions child");
+				switch (element.getTagName()) {
+					case "transition" -> transitions.addAll(QuestDefinitionXmlCompiler.parseTransition(element));
+					case "npc-start" -> transitions.addAll(expandNpcStart(context, element));
+					case "counter" -> transitions.addAll(expandCounter(context, element));
+					case "counter-grid" -> transitions.addAll(expandCounterGrid(context, element));
+					case "kill-chain" -> transitions.addAll(expandKillChain(context, element));
+					case "kill-routes" -> transitions.addAll(expandKillRoutes(context, element));
+					case "npc-item-report" -> transitions.addAll(expandNpcItemReport(context, element));
+					case "npc-report" -> transitions.addAll(expandNpcReport(context, element));
+					case "npc-complete" -> transitions.addAll(expandNpcComplete(context, element));
+					default -> fail("UNKNOWN_XML_BLOCK", context, element.getTagName(), "element",
+						"unsupported transitions child");
 			}
 		}
 		return List.copyOf(transitions);
@@ -91,6 +96,247 @@ final class QuestXmlBlockExpander {
 				List.of(new AfterCommitAction.ShowQuestSelectionDialog(10))));
 		}
 		return result;
+	}
+
+	private static List<QuestTransition> expandKillRoutes(Context context, Element block) {
+		String source = attribute(block, "source");
+		String target = attribute(block, "target");
+		requireNode(context, "kill-routes", "source", source);
+		requireNode(context, "kill-routes", "target", target);
+		List<Integer> npcIds = positiveIntegerTokens(context, block, "kill-routes", "npc-ids");
+		if (npcIds.size() < 2) {
+			return fail("KILL_ROUTES_TOO_SHORT", context, "kill-routes", "npc-ids",
+				"must contain at least two NPC ids");
+		}
+		Set<Integer> uniqueNpcIds = new LinkedHashSet<>();
+		for (int npcId : npcIds) {
+			if (!uniqueNpcIds.add(npcId)) {
+				return fail("KILL_ROUTES_DUPLICATE_NPC_ID", context, "kill-routes", "npc-ids",
+					"duplicate NPC id " + npcId);
+			}
+		}
+		List<QuestTransition> result = new ArrayList<>(npcIds.size());
+		for (int npcId : npcIds) {
+			result.add(new QuestTransition(new QuestEvent.KillNpc(npcId), List.of(), List.of(), target,
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)), null, source));
+		}
+		return result;
+	}
+
+	private static List<QuestTransition> expandNpcReport(Context context, Element block) {
+		String source = attribute(block, "source");
+		String target = attribute(block, "target");
+		QuestNode sourceNode = requireNode(context, "npc-report", "source", source);
+		QuestNode targetNode = requireNode(context, "npc-report", "target", target);
+		if (sourceNode.projection().status() != QuestStatus.START) {
+			fail("NPC_REPORT_SOURCE_STATUS", context, "npc-report", "source",
+				"node " + source + " must project START");
+		}
+		if (targetNode.projection().status() != QuestStatus.REWARD) {
+			fail("NPC_REPORT_TARGET_STATUS", context, "npc-report", "target",
+				"node " + target + " must project REWARD");
+		}
+		int npcId = positiveInteger(context, block, "npc-report", "npc-id");
+		int page = integer(context, block, "npc-report", "page");
+		if (!Set.of(1352, 2375, 10002).contains(page)) {
+			fail("NPC_REPORT_INVALID_PAGE", context, "npc-report", "page",
+				"must be one of 1352, 2375, or 10002");
+		}
+		return List.of(
+			talk(npcId, 31, List.of(), List.of(), source, source, null,
+				List.of(new AfterCommitAction.ShowQuestDialog(page))),
+			talk(npcId, 1009, List.of(), List.of(), source, target, null,
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+					new AfterCommitAction.ShowQuestDialog(5))));
+	}
+
+	private static List<QuestTransition> expandNpcItemReport(Context context, Element block) {
+		String source = attribute(block, "source");
+		String target = attribute(block, "target");
+		QuestNode sourceNode = requireNode(context, "npc-item-report", "source", source);
+		QuestNode targetNode = requireNode(context, "npc-item-report", "target", target);
+		if (sourceNode.projection().status() != QuestStatus.START) {
+			fail("NPC_ITEM_REPORT_SOURCE_STATUS", context, "npc-item-report", "source",
+				"node " + source + " must project START");
+		}
+		if (targetNode.projection().status() != QuestStatus.REWARD) {
+			fail("NPC_ITEM_REPORT_TARGET_STATUS", context, "npc-item-report", "target",
+				"node " + target + " must project REWARD");
+		}
+		int npcId = positiveInteger(context, block, "npc-item-report", "npc-id");
+		int itemId = positiveInteger(context, block, "npc-item-report", "item-id");
+		int required = positiveInteger(context, block, "npc-item-report", "required");
+		int removeCount = removeCount(context, block, required);
+		List<QuestCondition> hasItem = List.of(new QuestCondition.HasItem(itemId, required));
+		List<QuestAction> removeItem = List.of(new QuestAction.RemoveItem(itemId, removeCount));
+		List<AfterCommitAction> successAfterCommit = List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.ShowQuestDialog(5));
+		return List.of(
+			talk(npcId, 39, hasItem, removeItem, source, target, 0, successAfterCommit),
+			talk(npcId, 39, List.of(), List.of(), source, source, 1,
+				List.of(new AfterCommitAction.ShowQuestDialog(2716))),
+			talk(npcId, 20002, hasItem, removeItem, source, target, 0, successAfterCommit),
+			talk(npcId, 20002, List.of(), List.of(), source, source, 1,
+				List.of(new AfterCommitAction.CloseDialog())));
+	}
+
+	private static int removeCount(Context context, Element block, int required) {
+		if (!block.hasAttribute("remove-count") || block.getAttribute("remove-count").isBlank()) {
+			return required;
+		}
+		String value = block.getAttribute("remove-count");
+		if ("ALL".equalsIgnoreCase(value)) {
+			return QuestAction.RemoveItem.ALL;
+		}
+		int parsed = positiveInteger(context, block, "npc-item-report", "remove-count");
+		if (parsed != required) {
+			fail("NPC_ITEM_REPORT_REMOVE_COUNT_MISMATCH", context, "npc-item-report", "remove-count",
+				"must equal required or be ALL");
+		}
+		return parsed;
+	}
+
+	private static List<QuestTransition> expandCounterGrid(Context context, Element block) {
+		List<CounterGridDimension> dimensions = new ArrayList<>();
+		Set<String> fields = new LinkedHashSet<>();
+		Set<Integer> npcIds = new LinkedHashSet<>();
+		for (Element dimensionElement : children(block, "dimension")) {
+			String fieldName = attribute(dimensionElement, "field");
+			if (!fields.add(fieldName)) {
+				return fail("COUNTER_GRID_DUPLICATE_FIELD", context, "counter-grid", "field",
+					"duplicate field " + fieldName);
+			}
+			BitField field = context.progress().field(fieldName);
+			if (field == null) {
+				return fail("COUNTER_GRID_UNKNOWN_FIELD", context, "counter-grid", "field",
+					"unknown progress field " + fieldName);
+			}
+			int required = integer(context, dimensionElement, "counter-grid", "required");
+			if (required < 1) {
+				return fail("COUNTER_GRID_INVALID_REQUIRED", context, "counter-grid", "required",
+					"must be at least 1");
+			}
+			if (required > field.maxValue() || field.minValue() > 0) {
+				return fail("COUNTER_GRID_FIELD_TOO_NARROW", context, "counter-grid", "required",
+					"field " + fieldName + " cannot represent 0.." + required);
+			}
+			List<Integer> dimensionNpcIds = positiveIntegerTokens(context, dimensionElement,
+				"counter-grid", "npc-ids");
+			Set<Integer> dimensionUniqueNpcIds = new LinkedHashSet<>();
+			for (int npcId : dimensionNpcIds) {
+				if (!dimensionUniqueNpcIds.add(npcId)) {
+					return fail("COUNTER_GRID_DUPLICATE_NPC_ID", context, "counter-grid", "npc-ids",
+						"duplicate NPC id " + npcId + " within dimension " + fieldName);
+				}
+				if (!npcIds.add(npcId)) {
+					return fail("COUNTER_GRID_OVERLAPPING_NPC_ID", context, "counter-grid", "npc-ids",
+						"NPC id " + npcId + " is used by more than one dimension");
+				}
+			}
+			SourceOrder sourceOrder = sourceOrder(context, dimensionElement);
+			dimensions.add(new CounterGridDimension(fieldName, required, dimensionNpcIds, sourceOrder));
+		}
+
+		Set<String> expectedFields = Set.copyOf(fields);
+		List<QuestNode> startNodes = context.nodes().values().stream()
+			.filter(node -> node.projection().status() == QuestStatus.START).toList();
+		Map<CounterGridKey, List<QuestNode>> nodesByKey = new LinkedHashMap<>();
+		for (QuestNode node : startNodes) {
+			if (!node.projection().variables().keySet().equals(expectedFields)) {
+				return fail("COUNTER_GRID_NODE_FIELDS_MISMATCH", context, "counter-grid", "nodes",
+					"START node " + node.label() + " must project exactly " + expectedFields);
+			}
+			List<Integer> values = new ArrayList<>(dimensions.size());
+			for (CounterGridDimension dimension : dimensions) {
+				int value = node.projection().variables().get(dimension.field());
+				if (value < 0 || value > dimension.required()) {
+					return fail("COUNTER_GRID_NODE_VALUE_OUT_OF_RANGE", context, "counter-grid", "nodes",
+						"START node " + node.label() + " projects " + dimension.field() + "=" + value
+							+ " outside 0.." + dimension.required());
+				}
+				values.add(value);
+			}
+			CounterGridKey key = new CounterGridKey(values);
+			nodesByKey.computeIfAbsent(key, ignored -> new ArrayList<>()).add(node);
+		}
+
+		long expectedProduct = 1;
+		for (CounterGridDimension dimension : dimensions) {
+			expectedProduct *= dimension.required() + 1L;
+		}
+		if (startNodes.isEmpty() || expectedProduct != nodesByKey.size()
+			|| expectedProduct != startNodes.size()
+			|| nodesByKey.values().stream().anyMatch(nodes -> nodes.size() != 1)) {
+			return fail("COUNTER_GRID_INCOMPLETE_PRODUCT", context, "counter-grid", "nodes",
+				"START nodes must form the complete Cartesian product");
+		}
+
+		List<QuestTransition> result = new ArrayList<>();
+		List<AfterCommitAction> packetOnly = List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY));
+		for (CounterGridDimension dimension : dimensions) {
+			for (QuestNode source : orderedSources(startNodes, dimension)) {
+				CounterGridKey sourceKey = keyOf(source, dimensions);
+				int currentValue = sourceKey.values().get(fieldsIndex(dimensions, dimension.field()));
+				if (currentValue >= dimension.required()) {
+					continue;
+				}
+				CounterGridKey targetKey = sourceKey.increment(fieldsIndex(dimensions, dimension.field()));
+			List<QuestNode> targets = nodesByKey.getOrDefault(targetKey, List.of());
+				if (targets.size() != 1) {
+					return fail("COUNTER_GRID_TARGET_MISSING", context, "counter-grid", "nodes",
+						"source node " + source.label() + " has no unique target for " + dimension.field());
+				}
+				for (int npcId : dimension.npcIds()) {
+					result.add(new QuestTransition(new QuestEvent.KillNpc(npcId), List.of(), List.of(),
+						targets.getFirst().label(), packetOnly, null, source.label()));
+				}
+			}
+		}
+		return result;
+	}
+
+	private static SourceOrder sourceOrder(Context context, Element dimension) {
+		String value = dimension.hasAttribute("source-order") && !dimension.getAttribute("source-order").isBlank()
+			? dimension.getAttribute("source-order") : SourceOrder.NODE.name();
+		try {
+			return SourceOrder.valueOf(value);
+		} catch (IllegalArgumentException e) {
+			return fail("INVALID_XML", context, "counter-grid", "source-order", "unsupported value " + value);
+		}
+	}
+
+	private static List<QuestNode> orderedSources(List<QuestNode> startNodes, CounterGridDimension dimension) {
+		if (dimension.sourceOrder() == SourceOrder.NODE) {
+			return startNodes;
+		}
+		List<QuestNode> result = new ArrayList<>(startNodes.size());
+		for (int value = 0; value < dimension.required(); value++) {
+			for (QuestNode node : startNodes) {
+				if (node.projection().variables().get(dimension.field()) == value) {
+					result.add(node);
+				}
+			}
+		}
+		return result;
+	}
+
+	private static int fieldsIndex(List<CounterGridDimension> dimensions, String field) {
+		for (int index = 0; index < dimensions.size(); index++) {
+			if (dimensions.get(index).field().equals(field)) {
+				return index;
+			}
+		}
+		throw new IllegalStateException("unknown counter-grid field " + field);
+	}
+
+	private static CounterGridKey keyOf(QuestNode node, List<CounterGridDimension> dimensions) {
+		List<Integer> values = new ArrayList<>(dimensions.size());
+		for (CounterGridDimension dimension : dimensions) {
+			values.add(node.projection().variables().get(dimension.field()));
+		}
+		return new CounterGridKey(values);
 	}
 
 	private static List<QuestTransition> expandCounter(Context context, Element block) {
@@ -387,6 +633,27 @@ final class QuestXmlBlockExpander {
 		return List.copyOf(result);
 	}
 
+	private static List<Integer> positiveIntegerTokens(Context context, Element element, String block,
+			String attribute) {
+		List<String> values = tokens(context, element, block, attribute, true);
+		List<Integer> result = new ArrayList<>(values.size());
+		for (String value : values) {
+			int parsed;
+			try {
+				parsed = Integer.parseInt(value);
+			} catch (NumberFormatException e) {
+				return fail("XML_BLOCK_INVALID_INTEGER_SET", context, block, attribute,
+					"contains non-integer " + value);
+			}
+			if (parsed <= 0) {
+				return fail("XML_BLOCK_INVALID_POSITIVE_INTEGER", context, block, attribute,
+					"contains non-positive value " + value);
+			}
+			result.add(parsed);
+		}
+		return List.copyOf(result);
+	}
+
 	private static List<String> tokens(Context context, Element element, String block,
 			String attribute, boolean required) {
 		String raw = attribute(element, attribute).trim();
@@ -456,8 +723,32 @@ final class QuestXmlBlockExpander {
 			for (QuestNode node : nodes) {
 				result.putIfAbsent(node.label(), node);
 			}
-			return Map.copyOf(result);
+			return Collections.unmodifiableMap(result);
 		}
+	}
+
+	private record CounterGridDimension(String field, int required, List<Integer> npcIds,
+			SourceOrder sourceOrder) {
+		private CounterGridDimension {
+			npcIds = List.copyOf(npcIds);
+		}
+	}
+
+	private record CounterGridKey(List<Integer> values) {
+		private CounterGridKey {
+			values = List.copyOf(values);
+		}
+
+		private CounterGridKey increment(int index) {
+			List<Integer> next = new ArrayList<>(values);
+			next.set(index, next.get(index) + 1);
+			return new CounterGridKey(next);
+		}
+	}
+
+	private enum SourceOrder {
+		NODE,
+		VALUE_THEN_NODE
 	}
 
 	private record CompletionRoute(int dialogId, QuestAction choiceReward) {

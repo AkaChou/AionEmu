@@ -98,10 +98,17 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 	 * 播放过场影片 (SM_PLAY_MOVIE)。影片结束由权威客户端 {@code MovieEnd(movieId)} 事件回调,
 	 * 禁止用本地 sleep/估算 timer 代替。只在任务事务 commit 成功后执行; 玩家离线 best-effort 跳过。
 	 */
-	record PlayMovie(int movieId) implements AfterCommitAction {
+	record PlayMovie(int movieId, QuestMovieType type) implements AfterCommitAction {
+		public PlayMovie(int movieId) {
+			this(movieId, QuestMovieType.CUTSCENE);
+		}
+
 		public PlayMovie {
 			if (movieId <= 0) {
 				throw new IllegalArgumentException("movieId must be positive");
+			}
+			if (type == null) {
+				throw new NullPointerException("type");
 			}
 		}
 	}

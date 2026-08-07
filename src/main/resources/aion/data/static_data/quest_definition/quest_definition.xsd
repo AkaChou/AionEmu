@@ -20,6 +20,10 @@
   <xs:simpleType name="recipe-ownership"><xs:restriction base="xs:string"><xs:enumeration value="QUEST_OWNED"/><xs:enumeration value="PERMANENT"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="reward-amount-mode"><xs:restriction base="xs:string"><xs:enumeration value="EXACT"/><xs:enumeration value="QUEST_BASE"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="quest-state-sync-mode"><xs:restriction base="xs:string"><xs:enumeration value="PACKET_ONLY"/><xs:enumeration value="VISIBILITY_REFRESH"/><xs:enumeration value="LEVEL_AND_VISIBILITY_REFRESH"/><xs:enumeration value="COMPLETION"/></xs:restriction></xs:simpleType>
+  <!-- The compiler owns integer/positive validation so it can report block-specific stable codes. -->
+  <xs:simpleType name="positive-integer-list"><xs:restriction base="xs:string"><xs:minLength value="1"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="remove-count"><xs:restriction base="xs:string"><xs:minLength value="1"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="counter-grid-source-order"><xs:restriction base="xs:string"><xs:enumeration value="NODE"/><xs:enumeration value="VALUE_THEN_NODE"/></xs:restriction></xs:simpleType>
   <xs:complexType name="empty-type"/>
 
   <xs:attributeGroup name="timer-policy-attributes">
@@ -124,7 +128,7 @@
     <xs:element name="teleport-player-current-or-default"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="teleport-player-fixed-instance"><xs:complexType><xs:attribute name="instance-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
     <xs:element name="teleport-player-next-available-instance"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
-    <xs:element name="play-movie"><xs:complexType><xs:attribute name="movie-id" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="play-movie"><xs:complexType><xs:attribute name="movie-id" type="xs:int" use="required"/><xs:attribute name="type" type="quest-movie-type" default="CUTSCENE"/></xs:complexType></xs:element>
     <xs:element name="morph"><xs:complexType><xs:attribute name="ascension-id" type="ascension-state" use="required"/></xs:complexType></xs:element>
     <xs:element name="set-class"><xs:complexType><xs:attribute name="class" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="apply-effect"><xs:complexType><xs:attribute name="skill-id" type="xs:int" use="required"/><xs:attribute name="duration-ms" type="xs:int" use="required"/></xs:complexType></xs:element>
@@ -160,6 +164,13 @@
       <xs:enumeration value="SELECTION_DIALOG"/>
       <xs:enumeration value="CLOSE_DIALOG"/>
       <xs:enumeration value="NONE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="quest-movie-type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CUTSCENE"/>
+      <xs:enumeration value="CUTSCENE_MOVIE"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -202,6 +213,41 @@
       <xs:element name="conditions" type="conditions-type" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="nodes" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="kill-routes-type">
+    <xs:attribute name="source" use="required"/>
+    <xs:attribute name="target" use="required"/>
+    <xs:attribute name="npc-ids" type="positive-integer-list" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="npc-report-type">
+    <xs:attribute name="npc-id" type="xs:int" use="required"/>
+    <xs:attribute name="source" use="required"/>
+    <xs:attribute name="target" use="required"/>
+    <xs:attribute name="page" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="npc-item-report-type">
+    <xs:attribute name="npc-id" type="xs:int" use="required"/>
+    <xs:attribute name="source" use="required"/>
+    <xs:attribute name="target" use="required"/>
+    <xs:attribute name="item-id" type="xs:int" use="required"/>
+    <xs:attribute name="required" type="xs:int" use="required"/>
+    <xs:attribute name="remove-count" type="remove-count"/>
+  </xs:complexType>
+
+  <xs:complexType name="counter-grid-dimension-type">
+    <xs:attribute name="field" use="required"/>
+    <xs:attribute name="required" type="xs:int" use="required"/>
+    <xs:attribute name="npc-ids" type="positive-integer-list" use="required"/>
+    <xs:attribute name="source-order" type="counter-grid-source-order" default="NODE"/>
+  </xs:complexType>
+
+  <xs:complexType name="counter-grid-type">
+    <xs:sequence>
+      <xs:element name="dimension" type="counter-grid-dimension-type" minOccurs="1" maxOccurs="32"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="npc-complete-type">
@@ -256,7 +302,11 @@
               <xs:element name="transition" type="transition-type"/>
               <xs:element name="npc-start" type="npc-start-type"/>
               <xs:element name="counter" type="counter-type"/>
+              <xs:element name="counter-grid" type="counter-grid-type"/>
               <xs:element name="kill-chain" type="kill-chain-type"/>
+              <xs:element name="kill-routes" type="kill-routes-type"/>
+              <xs:element name="npc-item-report" type="npc-item-report-type"/>
+              <xs:element name="npc-report" type="npc-report-type"/>
               <xs:element name="npc-complete" type="npc-complete-type"/>
             </xs:choice>
           </xs:complexType>

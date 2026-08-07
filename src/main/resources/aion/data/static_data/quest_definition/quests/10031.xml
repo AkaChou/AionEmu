@@ -285,6 +285,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <play-movie movie-id="30" type="CUTSCENE_MOVIE"/>
         <close-dialog/>
       </after-commit>
     </transition>

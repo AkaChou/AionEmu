@@ -613,7 +613,8 @@ public final class QuestDefinitionXmlCompiler {
 				QuestInstanceTarget.nextAvailable(integer(action, "world-id")), integer(action, "world-id"),
 				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
 				byteValue(action, "heading"));
-			case "play-movie" -> new AfterCommitAction.PlayMovie(integer(action, "movie-id"));
+				case "play-movie" -> new AfterCommitAction.PlayMovie(integer(action, "movie-id"),
+					enumValueOrDefault(QuestMovieType.class, action, "type", QuestMovieType.CUTSCENE));
 			case "morph" -> new AfterCommitAction.Morph(integer(action, "ascension-id"));
 			case "set-class" -> new AfterCommitAction.SetPlayerClass(
 				enumValue(PlayerClass.class, action, "class"));

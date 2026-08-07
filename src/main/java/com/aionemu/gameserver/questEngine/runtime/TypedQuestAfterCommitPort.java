@@ -174,7 +174,7 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			if (moviePort == null) {
 				throw new IllegalArgumentException("playMovie requires a movie port");
 			}
-			requireSuccess(moviePort.playMovie(snapshot, plan, movie.movieId()), action, snapshot);
+			requireSuccess(moviePort.playMovie(snapshot, plan, movie.movieId(), movie.type()), action, snapshot);
 			return;
 		}
 		if (action instanceof AfterCommitAction.PlayMovieRandom randomMovie) {
