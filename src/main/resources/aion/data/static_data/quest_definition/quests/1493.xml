@@ -222,116 +222,14 @@
       </after-commit>
     </transition>
 
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="798151" dialog-ids="-1 1009"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="798151" dialog-id="8"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1807399" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188051194" amount="1"/>
-        <grant-reward kind="ITEM" id="112100738" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="798151" dialog-id="9"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1807399" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188051194" amount="1"/>
-        <grant-reward kind="ITEM" id="112300735" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="798151" dialog-id="10"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1807399" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188051194" amount="1"/>
-        <grant-reward kind="ITEM" id="112500723" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="798151" dialog-id="11"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1807399" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188051194" amount="1"/>
-        <grant-reward kind="ITEM" id="112600734" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="798151" dialog-id="12"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1807399" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188051194" amount="1"/>
-        <grant-reward kind="ITEM" id="112301406" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="798151" dialog-id="13"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1807399" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188051194" amount="1"/>
-        <grant-reward kind="ITEM" id="112501543" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="798151" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
+      <choice dialog-id="8" reward-index="2"/>
+      <choice dialog-id="9" reward-index="3"/>
+      <choice dialog-id="10" reward-index="4"/>
+      <choice dialog-id="11" reward-index="5"/>
+      <choice dialog-id="12" reward-index="6"/>
+      <choice dialog-id="13" reward-index="7"/>
+    </npc-complete>
 
   </transitions>
 </quest-definition>

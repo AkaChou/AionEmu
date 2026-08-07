@@ -34,7 +34,6 @@
     <transition source="started" target="started"><event><talk-to-npc npc-id="801214" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="801214" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="started" target="reward"><event><talk-to-npc npc-id="801214" dialog-id="10002"/></event><conditions><variable-at-least field="var1" value="10"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="801214" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="801214" dialog-ids="8..23"/></event><actions><grant-reward kind="EXP" id="0" amount="633457" amount-mode="QUEST_BASE"/><grant-reward kind="TITLE" id="38" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <npc-complete npc-id="801214" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

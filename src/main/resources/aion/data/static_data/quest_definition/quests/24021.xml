@@ -56,8 +56,9 @@
     <transition source="s3" target="s4"><event><talk-to-npc npc-id="802046" dialog-id="10003"/></event><conditions><variable-is field="var0" value="3"/></conditions><actions><give-item item-id="182215363" count="1"/><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="s4" target="reward"><event><use-item item-id="182215363"/></event><conditions><variable-is field="var0" value="4"/><zone-is zone="DF2_ITEMUSEAREA_Q2032"/></conditions><actions><remove-item item-id="182215363" count="1"/></actions><after-commit><play-movie movie-id="88"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="204329" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="204329" dialog-id="1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204329" dialog-id="8"/></event><actions><grant-reward kind="EXP" id="0" amount="805806" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="188053407" amount="1"/><grant-reward kind="ITEM" id="121001402" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204329" dialog-id="9"/></event><actions><grant-reward kind="EXP" id="0" amount="805806" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="188053407" amount="1"/><grant-reward kind="ITEM" id="121001403" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <npc-complete npc-id="204329" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG">
+      <choice dialog-id="8" reward-index="2"/>
+      <choice dialog-id="9" reward-index="3"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

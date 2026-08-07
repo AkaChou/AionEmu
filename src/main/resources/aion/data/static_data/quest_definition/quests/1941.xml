@@ -23,32 +23,7 @@
   </nodes>
   <transitions>
     <!-- 203788：接取对话。 -->
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="203788" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="203788" dialog-id="1007"/></event>
-      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="203788" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="203788" dialog-id="20000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="203788" dialog-ids="1003 1004 20001"/></event>
-      <after-commit><close-dialog/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="203788" dialog-id="1008"/></event>
-      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
-    </transition>
+    <npc-start npc-id="203788" source="unaccepted" target="started" selection-sources="unaccepted"/>
 
     <!-- 203700：进入制作技能奖励流程。 -->
     <transition source="started" target="started">

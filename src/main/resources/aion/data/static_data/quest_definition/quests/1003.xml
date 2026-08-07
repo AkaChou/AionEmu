@@ -603,30 +603,9 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="v8" target="v9">
-      <event>
-        <kill-npc npc-id="210160"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="v9" target="v10">
-      <event>
-        <kill-npc npc-id="210160"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="v10" target="reward">
-      <event>
-        <kill-npc npc-id="210160"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <kill-chain nodes="v8 v9 v10 reward">
+      <event><kill-npc npc-id="210160" /></event>
+    </kill-chain>
     <transition source="reward" target="complete">
       <event>
         <talk-to-npc npc-id="203081" dialog-id="8"/>

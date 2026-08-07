@@ -25,23 +25,21 @@
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203786" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203786" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203786" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions>        <give-item item-id="182290171" count="8"/>        <learn-recipe recipe-id="155004172" ownership="QUEST_OWNED"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203786" dialog-id="20000"/></event><conditions><start-eligible/></conditions><actions>        <give-item item-id="182290171" count="8"/>        <learn-recipe recipe-id="155004172" ownership="QUEST_OWNED"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203786" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203786" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="203786" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <npc-start npc-id="203786" source="unaccepted" target="started" selection-sources="unaccepted started">
+      <accept-actions>
+        <give-item item-id="182290171" count="8" />
+        <learn-recipe recipe-id="155004172" ownership="QUEST_OWNED" />
+      </accept-actions>
+    </npc-start>
     <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="203786" dialog-id="1009"/></event><conditions>        <has-item item-id="182290488" count="6"/></conditions><actions>        <remove-item item-id="182290171" count="ALL"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="started" target="started" priority="10"><event><talk-to-npc npc-id="203786" dialog-id="1009"/></event><after-commit><show-quest-dialog dialog-id="1779"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="203786" dialog-ids="8..23"/></event><actions>        <remove-item item-id="182290488" count="ALL"/>        <forget-recipe recipe-id="155004172"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="830054" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="830054" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="830054" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions>        <give-item item-id="182290171" count="8"/>        <learn-recipe recipe-id="155004172" ownership="QUEST_OWNED"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="830054" dialog-id="20000"/></event><conditions><start-eligible/></conditions><actions>        <give-item item-id="182290171" count="8"/>        <learn-recipe recipe-id="155004172" ownership="QUEST_OWNED"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="830054" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="830054" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="830054" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <npc-start npc-id="830054" source="unaccepted" target="started" selection-sources="unaccepted started">
+      <accept-actions>
+        <give-item item-id="182290171" count="8" />
+        <learn-recipe recipe-id="155004172" ownership="QUEST_OWNED" />
+      </accept-actions>
+    </npc-start>
     <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="830054" dialog-id="1009"/></event><conditions>        <has-item item-id="182290488" count="6"/></conditions><actions>        <remove-item item-id="182290171" count="ALL"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="started" target="started" priority="10"><event><talk-to-npc npc-id="830054" dialog-id="1009"/></event><after-commit><show-quest-dialog dialog-id="1779"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="830054" dialog-ids="8..23"/></event><actions>        <remove-item item-id="182290488" count="ALL"/>        <forget-recipe recipe-id="155004172"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>

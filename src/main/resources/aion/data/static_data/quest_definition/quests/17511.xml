@@ -39,13 +39,6 @@
     <transition source="s9" target="s10"><event><enter-zone zone="IDTRANSFORM_Q17511_C_302100000"/></event><conditions><variable-is field="var0" value="9"/></conditions><actions><set-variable field="var0" value="10"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="s10" target="reward"><event><kill-npc npc-ids="244490 244491 244492 244493 244494 244531 244532 244533 244534 244535 244572 244573 244574 244575 244576 244613 244614 244615 244616 244617 244654 244655 244656 244657 244658 244695 244696 244697 244698 244699 244736 244737 244738 244739 244740 244777 244778 244779 244780 244781 244818 244819 244820 244821 244822 244859 244860 244861 244862 244863"/></event><conditions><variable-is field="var0" value="10"/></conditions><actions><set-variable field="var0" value="11"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="806075" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="806075" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="806075" dialog-ids="8..23"/></event><actions>
-        <grant-reward kind="GOLD" id="0" amount="150000" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="51840000" amount-mode="QUEST_BASE"/>
-        <complete-quest reward-index="0"/></actions><after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <npc-complete npc-id="806075" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

@@ -25,28 +25,7 @@
   </nodes>
   <transitions>
     <!-- 接取:空中要塞 NPC (804820) 提供任务。 -->
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="804820" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="804820" dialog-id="1007"/></event>
-      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="804820" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="804820" dialog-id="20000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="804820" dialog-ids="1003 1004 20001"/></event>
-      <after-commit><close-dialog/></after-commit>
-    </transition>
+    <npc-start npc-id="804820" source="unaccepted" target="started"/>
 
     <!-- 击杀 217371 1 只:var0 计数 0→1;priority 1 计数、0 在其余两组已满时完成。 -->
     <transition source="started" target="started" priority="1">

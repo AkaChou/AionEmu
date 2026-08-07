@@ -98,126 +98,10 @@
     </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="800504" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="800504" dialog-id="1007"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="4"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <talk-to-npc npc-id="800504" dialog-id="1002"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <talk-to-npc npc-id="800504" dialog-id="20000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="800504" dialog-ids="1003 1004 20001"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="800504" dialog-id="1008"/>
-      </event>
-      <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="800504" dialog-id="1008"/>
-      </event>
-      <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="701490"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="k2">
-      <event>
-        <kill-npc npc-id="701490"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k2" target="k3">
-      <event>
-        <kill-npc npc-id="701490"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k3" target="k4">
-      <event>
-        <kill-npc npc-id="701490"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k4" target="k5">
-      <event>
-        <kill-npc npc-id="701490"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k5" target="k6">
-      <event>
-        <kill-npc npc-id="701490"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k6" target="k7">
-      <event>
-        <kill-npc npc-id="701490"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <npc-start npc-id="800504" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <kill-chain nodes="started k1 k2 k3 k4 k5 k6 k7">
+      <event><kill-npc npc-id="701490" /></event>
+    </kill-chain>
     <transition source="k7" target="k7">
       <event>
         <talk-to-npc npc-id="800500" dialog-id="31"/>
@@ -235,45 +119,9 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="800500" dialog-ids="-1 1009"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="800500" dialog-id="8"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="283476" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188051844" amount="1"/>
-        <grant-reward kind="ITEM" id="164000073" amount="5"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="800500" dialog-id="9"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="283476" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188051844" amount="1"/>
-        <grant-reward kind="ITEM" id="164000134" amount="5"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="800500" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
+      <choice dialog-id="8" reward-index="2"/>
+      <choice dialog-id="9" reward-index="3"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

@@ -54,36 +54,7 @@
   </nodes>
   <transitions>
     <!-- 接取:Morheim 的 Chaikata (204388) 提供任务;前置任务 2433。 -->
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204388" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204388" dialog-id="1007"/></event>
-      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="204388" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="204388" dialog-id="20000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204388" dialog-ids="1003 1004 20001"/></event>
-      <after-commit><close-dialog/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204388" dialog-id="1008"/></event>
-      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event><talk-to-npc npc-id="204388" dialog-id="1008"/></event>
-      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
-    </transition>
+    <npc-start npc-id="204388" source="unaccepted" target="started" selection-sources="unaccepted started"/>
     <!-- 击杀 var0 组 211595 211608 4 只(var0):未满则计数 +1;已满击杀无路由被忽略。 -->
     <transition source="started" target="started">
       <event><kill-npc npc-ids="211595 211608"/></event>
@@ -130,61 +101,11 @@
       <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <!-- 奖励:Chaikata (204388) 领取;4 选 1 鞋子 (114100801/114300811/114500773/114600732)。 -->
-    <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="204388" dialog-ids="-1 1009"/></event>
-      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="204388" dialog-id="8"/></event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1496758" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="114100801" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="204388" dialog-id="9"/></event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1496758" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="114300811" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="204388" dialog-id="10"/></event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1496758" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="114500773" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="204388" dialog-id="11"/></event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1496758" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="114600732" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="204388" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
+      <choice dialog-id="8" reward-index="1"/>
+      <choice dialog-id="9" reward-index="2"/>
+      <choice dialog-id="10" reward-index="3"/>
+      <choice dialog-id="11" reward-index="4"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

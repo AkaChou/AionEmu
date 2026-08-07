@@ -22,12 +22,7 @@
   </nodes>
   <transitions>
     <!-- 接取：Mist Mane Village 的 NPC (831028) 提供任务。 -->
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="831028" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="831028" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="831028" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="831028" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="831028" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="831028" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <npc-start npc-id="831028" source="unaccepted" target="started" selection-sources="unaccepted"/>
     <!-- 击杀 28 种怪累计 100 只：var0 计数 0→100，priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">
       <event><kill-npc npc-ids="211574 211575 211595 211596 211598 211599 211601 211608 211609 211610 211611 211612 212724 212725 212726 212727 212729 212730 212731 212732 212733 212734 212735 212736 212737 212738 212739 212740 212741 212742 212743 212744 212809 212979 212981 212982"/></event>
@@ -42,16 +37,9 @@
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
     <!-- 领奖：831028 发放经验与二选一可选奖励并完成。 -->
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="831028" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="831028" dialog-id="8"/></event>
-      <actions><grant-reward kind="EXP" id="0" amount="677000" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="186000047" amount="60"/><complete-quest reward-index="0"/></actions>
-      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="831028" dialog-id="9"/></event>
-      <actions><grant-reward kind="EXP" id="0" amount="677000" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="186000029" amount="30"/><complete-quest reward-index="0"/></actions>
-      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
-    </transition>
+    <npc-complete npc-id="831028" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
+      <choice dialog-id="8" reward-index="1"/>
+      <choice dialog-id="9" reward-index="2"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

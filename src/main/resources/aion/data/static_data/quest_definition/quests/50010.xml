@@ -246,50 +246,8 @@
       </after-commit>
     </transition>
     <!-- 情侣线奖励 r1：发放并完成 / couple reward: grant and complete -->
-    <transition source="r1" target="r1">
-      <event>
-        <talk-to-npc npc-id="202549" dialog-ids="-1 1009"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="r1" target="complete">
-      <event>
-        <talk-to-npc npc-id="202549" dialog-ids="8..23"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1600" amount-mode="QUEST_BASE"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="202549" source="r1" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
     <!-- 单身线奖励 r2：发放并完成 / single reward: grant and complete -->
-    <transition source="r2" target="r2">
-      <event>
-        <talk-to-npc npc-id="202549" dialog-ids="-1 1009"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="r2" target="complete">
-      <event>
-        <talk-to-npc npc-id="202549" dialog-ids="8..23"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1600" amount-mode="QUEST_BASE"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="202549" source="r2" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

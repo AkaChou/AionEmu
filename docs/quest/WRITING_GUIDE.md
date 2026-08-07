@@ -27,7 +27,7 @@ Events are facts, conditions are tests, actions are state changes, after-commit 
 
 ### 3.1 Steps
 
-1. Write `quests/<id>.xml` (fully expanded, never folded).
+1. Write `quests/<id>.xml`; use the domain blocks below only for their exact standard patterns, and write ordinary transitions for everything else.
 2. Register it in `quest_definition_catalog.xml`: `<definition id="<id>" resource="aion/data/static_data/quest_definition/quests/<id>.xml"/>` (each ID exactly once).
 3. Take static metadata from `src/main/resources/aion/data/static_data/quest_data/quest_data.xml` (name, nameId, minlevel_permitted, race_permitted, category, rewards, quest_work_items, start_conditions, quest_drop).
 4. Delete the old execution entry (`quest_script_data/*.xml` node / old Java handler) in the same change — one owner per quest.
@@ -38,7 +38,84 @@ Events are facts, conditions are tests, actions are state changes, after-commit 
 
 Transition child order is fixed: `event` → `conditions` → `actions` → `after-commit`.
 
-### 3.3 Full Example: 1138 "A Mother's Worry" (real quest, report_to template without work items)
+Inside `<transitions>`, ordinary `<transition>` elements and the four domain blocks can be mixed in any order. All task files remain `version="1"`.
+
+### 3.3 Compile-Time Domain Blocks
+
+`npc-start`, `counter`, `kill-chain`, and `npc-complete` are strict XML authoring shorthands. The XML front end expands them to ordinary `QuestTransition`, `QuestAction`, and `AfterCommitAction` values before `QuestDefinitionCompiler` runs. They add no runtime state, IR type, dispatch branch, inheritance, include, template parameter, or expression language.
+
+Standard NPC acquisition:
+
+```xml
+<npc-start npc-id="203110"
+           source="unaccepted"
+           target="started"
+           selection-sources="unaccepted started">
+  <accept-actions>
+    <give-item item-id="182400001" count="1"/>
+  </accept-actions>
+</npc-start>
+```
+
+This expands, in order, to dialog 31 (view), 1007 (story), 1002 and 20000 (accept with `start-eligible`), 1003/1004/20001 (close), then dialog 1008 for every label in `selection-sources`. `accept-actions` is optional and copied to both accept routes. `selection-sources` is optional; omit it when this NPC must not open the quest list. The source node must project `NONE`, the target must project `START`, and every named node must exist.
+
+Standard counter:
+
+```xml
+<counter source="started" target="reward" field="var0" required="80">
+  <event><kill-npc npc-ids="215094 215095"/></event>
+  <conditions><world-is world-id="210010000"/></conditions>
+</counter>
+```
+
+The block emits two routes with the same event and optional conditions:
+
+- priority 1 stays at `source` while `field < required - 1`, increments by one, and sends `PACKET_ONLY`;
+- priority 0 enters `target` when `field == required - 1`, also increments by one, and sends `PACKET_ONLY`.
+
+Therefore the Nth event completes the counter, not event N+1. The field must exist, fit `required`, and have room for `required - 1`. The source projection must omit the counter field so it does not lock or reset live progress. The target may omit it or project exactly `required`. Counters needing different deltas, actions, priorities, threshold semantics, or multiple coordinated fields must stay as explicit transitions.
+
+Linear kill-node chain:
+
+```xml
+<kill-chain nodes="v1 v2 v3 v4 v5 v6">
+  <event><kill-npc npc-id="210670"/></event>
+  <conditions><world-is world-id="210010000"/></conditions>
+</kill-chain>
+```
+
+The block emits one transition for each adjacent node pair in document order. Every route shares the same `kill-npc` event and optional conditions, has no transactional actions, and sends a fixed `PACKET_ONLY` sync after commit. `nodes` must contain at least three distinct declared labels, and the event must be `kill-npc`. This preserves explicit node projections while producing exactly the same transition IR as the handwritten linear chain. Split the chain or keep explicit transitions when any edge has different conditions, actions, priority, after-commit behavior, or branching.
+
+Standard NPC reward settlement:
+
+```xml
+<npc-complete npc-id="203123"
+              source="reward"
+              target="complete"
+              fixed-reward-indices="0 1"
+              dialog-ids="8..23"
+              complete-reward-index="0"
+              preview-dialog-ids="-1 1009"
+              finish="SELECTION_DIALOG"/>
+```
+
+Reward indices refer to the ordered `<metadata><rewards>` list. Fixed indices must not point to `SELECTABLE_ITEM`. For N-choose-1 rewards, omit `dialog-ids` and map each client choice explicitly; `fallback` completes with fixed rewards only:
+
+```xml
+<npc-complete npc-id="203123" source="reward" target="complete"
+              fixed-reward-indices="0 1" complete-reward-index="0"
+              preview-dialog-ids="-1 1009" finish="CLOSE_DIALOG">
+  <choice dialog-id="8" reward-index="2"/>
+  <choice dialog-id="9" reward-index="3"/>
+  <fallback dialog-ids="23"/>
+</npc-complete>
+```
+
+Choice indices must point to `SELECTABLE_ITEM`; the compiler lowers that metadata entry to the concrete `ITEM` reward. Dialog IDs must be unique across preview, generic, choice, and fallback routes. The source must project `REWARD`, the target `COMPLETE`. Every completion route orders actions as fixed rewards, optional choice reward, `complete-quest`; after commit it always runs `refresh-player-stats`, `sync-quest-state mode="COMPLETION"`, then exactly one finish policy: `SELECTION_DIALOG`, `CLOSE_DIALOG`, or `NONE`. Preview routes display page 5.
+
+Use these blocks only when the entire expansion is correct. Extra conditions on acquisition, nonstandard dialogs/pages, reward-side mutations, or any additional after-commit effect require explicit `<transition>` elements. Compiler failures use stable `QuestCompilationException` codes and identify the quest, block, and offending attribute.
+
+### 3.4 Full Example: 1138 "A Mother's Worry" (real quest, report_to template without work items)
 
 File `quests/1138.xml` (level-11 ELYOS quest, accept from NPC 203110, report to 203123, rewards 1440 gold + 5730 XP):
 
@@ -206,7 +283,7 @@ Key conventions:
 - **Reward settlement**: `grant-reward` must mirror the metadata `rewards` one-to-one; GOLD/EXP use `amount-mode="QUEST_BASE"` (amount scales with quest level), ITEM/TITLE use the default `EXACT`.
 - **`dialog-ids="8..23"`**: range shorthand, equivalent to listing 8 through 23 individually.
 
-### 3.4 Advanced Example: 1002 "Request Of The Elim" (real quest: selectable rewards + drops + prerequisites)
+### 3.5 Advanced Example: 1002 "Request Of The Elim" (real quest: selectable rewards + drops + prerequisites)
 
 Metadata from file `quests/1002.xml` (level-3 ELYOS MISSION, prerequisite 1100, collect 3 quest items 182200003, six selectable weapon rewards):
 
@@ -279,7 +356,7 @@ Metadata from file `quests/1002.xml` (level-3 ELYOS MISSION, prerequisite 1100, 
 
 (Nodes `sN` project var0=N; each kill transition is `source=sN target=sN+1`. 1002 also uses `can-act` interaction objects and `enter-world` + `world-is` conditions for the ascension `morph` — see comments in the file.)
 
-### 3.5 Quest Work Items
+### 3.6 Quest Work Items
 
 When `quest_data.xml` has `<quest_work_items>` (e.g. 1106):
 
@@ -358,7 +435,7 @@ Key points:
 
 | Pattern | Structure | Authoritative example |
 |---|---|---|
-| report_to (no work item) | see §3.3 | `quests/1138.xml` |
+| report_to (no work item) | see §3.4 | `quests/1138.xml` |
 | report_to (with work item) | give/has/remove-item + priority=1 rejection branch | `quests/1106.xml` |
 | monster_hunt (kill counter) | var0 advances step by step, one kill transition per NPC, `source=k{i} target=k{i+1}`, after-commit `sync PACKET_ONLY`; final report dialog 1009 → reward | `quests/1120.xml` (single group), `quests/1112.xml` (two groups, var0/var1 interleaved, offsets 0/6) |
 | item_collecting | end NPC dialog 39 turn-in check: has-item (per collect_item) + remove-item; priority=1 fallback `show-quest-dialog 2716` when items are missing; metadata must carry `drops` | `quests/1129.xml` |
@@ -378,7 +455,7 @@ Multi-NPC rule: every NPC in start_npc_ids gets its own accept transitions; ever
 5. `grant-reward` mirrors metadata rewards one-to-one (GOLD/EXP as QUEST_BASE).
 6. Quests with drops have a `<drops>` section; quests with work items have give/has/remove and the missing-item rejection branch.
 7. Consecutive duplicate actions (repeated refresh/sync/show-quest-selection-dialog) are an error unless the old logic explicitly required both.
-8. Reward settlement transitions end with `source="reward" target="complete"` + `complete-quest` + `refresh-player-stats` + `sync COMPLETION`.
+8. Reward settlement uses a valid `npc-complete` block or ends with `source="reward" target="complete"` + `complete-quest` + `refresh-player-stats` + `sync COMPLETION`.
 
 ## 7. Verification Commands
 

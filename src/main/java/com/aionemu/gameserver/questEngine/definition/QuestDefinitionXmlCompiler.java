@@ -81,7 +81,8 @@ public final class QuestDefinitionXmlCompiler {
 		QuestMetadata metadata = parseMetadata(metadataElement);
 		ProgressLayout progress = parseProgress(child(root, "progress"));
 		List<QuestNode> nodes = parseNodes(child(root, "nodes"));
-		List<QuestTransition> transitions = parseTransitions(child(root, "transitions"));
+		List<QuestTransition> transitions = QuestXmlBlockExpander.expand(id, metadata, progress, nodes,
+			child(root, "transitions"));
 		return new QuestDefinition(id, version, metadata, progress, nodes, transitions);
 	}
 
@@ -283,46 +284,41 @@ public final class QuestDefinitionXmlCompiler {
 		return nodes;
 	}
 
-	private static List<QuestTransition> parseTransitions(Element element) {
-		if (element == null) {
-			return List.of();
-		}
+	static List<QuestTransition> parseTransition(Element transition) {
 		List<QuestTransition> transitions = new ArrayList<>();
-		for (Element transition : children(element, "transition")) {
-			Element event = onlyChild(requiredChild(transition, "event"));
-			List<QuestEvent> parsedEvents = parseEvents(event);
-			List<QuestCondition> conditions = new ArrayList<>();
-			Element conditionsElement = child(transition, "conditions");
-			if (conditionsElement != null) {
-				for (Element condition : children(conditionsElement, null)) {
-					conditions.add(parseCondition(condition));
-				}
+		Element event = onlyChild(requiredChild(transition, "event"));
+		List<QuestEvent> parsedEvents = parseEvents(event);
+		List<QuestCondition> conditions = new ArrayList<>();
+		Element conditionsElement = child(transition, "conditions");
+		if (conditionsElement != null) {
+			for (Element condition : children(conditionsElement, null)) {
+				conditions.add(parseCondition(condition));
 			}
-			List<QuestAction> actions = new ArrayList<>();
-			Element actionsElement = child(transition, "actions");
-			if (actionsElement != null) {
-				for (Element action : children(actionsElement, null)) {
-					actions.add(parseAction(action));
-				}
+		}
+		List<QuestAction> actions = new ArrayList<>();
+		Element actionsElement = child(transition, "actions");
+		if (actionsElement != null) {
+			for (Element action : children(actionsElement, null)) {
+				actions.add(parseAction(action));
 			}
-			List<AfterCommitAction> afterCommit = new ArrayList<>();
-			Element afterElement = child(transition, "after-commit");
-			if (afterElement != null) {
-				for (Element action : children(afterElement, null)) {
-					afterCommit.add(parseAfterCommitAction(action));
-				}
+		}
+		List<AfterCommitAction> afterCommit = new ArrayList<>();
+		Element afterElement = child(transition, "after-commit");
+		if (afterElement != null) {
+			for (Element action : children(afterElement, null)) {
+				afterCommit.add(parseAfterCommitAction(action));
 			}
-			Integer priority = transition.hasAttribute("priority") ? integer(transition, "priority") : null;
-			String source = transition.hasAttribute("source") ? attribute(transition, "source") : null;
-			for (QuestEvent parsedEvent : parsedEvents) {
-				transitions.add(new QuestTransition(parsedEvent, conditions, actions, attribute(transition, "target"),
-					afterCommit, priority, source));
-			}
+		}
+		Integer priority = transition.hasAttribute("priority") ? integer(transition, "priority") : null;
+		String source = transition.hasAttribute("source") ? attribute(transition, "source") : null;
+		for (QuestEvent parsedEvent : parsedEvents) {
+			transitions.add(new QuestTransition(parsedEvent, conditions, actions, attribute(transition, "target"),
+				afterCommit, priority, source));
 		}
 		return transitions;
 	}
 
-	private static List<QuestEvent> parseEvents(Element element) {
+	static List<QuestEvent> parseEvents(Element element) {
 		if (!"talk-to-npc".equals(element.getTagName()) || !element.hasAttribute("dialog-ids")) {
 			return List.of(parseEvent(element));
 		}
@@ -492,7 +488,7 @@ public final class QuestDefinitionXmlCompiler {
 		return integer(element, "dialog-id");
 	}
 
-	private static QuestCondition parseCondition(Element element) {
+	static QuestCondition parseCondition(Element element) {
 		return switch (element.getTagName()) {
 			case "status-is" -> new QuestCondition.StatusIs(enumValue(QuestStatus.class, element, "status"));
 			case "has-item" -> new QuestCondition.HasItem(integer(element, "item-id"), integer(element, "count"),
@@ -551,7 +547,7 @@ public final class QuestDefinitionXmlCompiler {
 		};
 	}
 
-	private static QuestAction parseAction(Element element) {
+	static QuestAction parseAction(Element element) {
 		return switch (element.getTagName()) {
 			case "remove-item" -> new QuestAction.RemoveItem(integer(element, "item-id"), removalCount(element));
 			case "give-item" -> new QuestAction.GiveItem(integer(element, "item-id"), integer(element, "count"));

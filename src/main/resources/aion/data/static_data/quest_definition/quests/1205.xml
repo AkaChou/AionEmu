@@ -151,27 +151,7 @@
         <show-quest-dialog dialog-id="1011"/>
       </after-commit>
     </transition>
-    <transition source="reward1" target="reward1">
-      <event>
-        <talk-to-npc npc-id="203087" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="reward1" target="complete">
-      <event>
-        <talk-to-npc npc-id="203087" dialog-ids="8..23"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="203087" source="reward1" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="NONE"/>
 
     <transition source="reward2" target="reward2">
       <event>

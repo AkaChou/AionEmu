@@ -53,76 +53,11 @@
     </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="204075" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="204075" dialog-id="1007"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="4"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <talk-to-npc npc-id="204075" dialog-id="1002"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <actions>
-        <give-item item-id="182213240" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <talk-to-npc npc-id="204075" dialog-id="20000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <actions>
-        <give-item item-id="182213240" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="204075" dialog-ids="1003 1004 20001"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="204075" dialog-id="1008"/>
-      </event>
-      <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="204075" dialog-id="1008"/>
-      </event>
-      <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
+    <npc-start npc-id="204075" source="unaccepted" target="started" selection-sources="unaccepted started">
+      <accept-actions>
+        <give-item item-id="182213240" count="1" />
+      </accept-actions>
+    </npc-start>
     <transition source="started" target="started">
       <event>
         <talk-to-npc npc-id="204053" dialog-id="31"/>

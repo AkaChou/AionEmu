@@ -77,14 +77,6 @@
     <transition source="s13" target="s14"><event><talk-to-npc npc-id="806079" dialog-id="10013"/></event><conditions><variable-is field="var0" value="13"/></conditions><actions><remove-item item-id="182216106" count="1"/><give-item item-id="182216087" count="1"/><set-variable field="var0" value="14"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="s14" target="reward"><event><use-item item-id="182216087"/></event><conditions><variable-is field="var0" value="14"/></conditions><actions><remove-item item-id="182216087" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="806079" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="806079" dialog-id="1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="806079" dialog-ids="8..23"/></event><actions>
-        <grant-reward kind="EXP" id="0" amount="147934512" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="188055382" amount="1"/>
-        <grant-reward kind="ITEM" id="162000181" amount="20"/>
-        <complete-quest reward-index="0"/></actions><after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <npc-complete npc-id="806079" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

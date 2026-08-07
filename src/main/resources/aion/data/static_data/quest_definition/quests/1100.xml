@@ -74,118 +74,14 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="203067" dialog-ids="-1 1009"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="203067" dialog-id="8"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="100000095" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="203067" dialog-id="9"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="100200113" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="203067" dialog-id="10"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="100100012" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="203067" dialog-id="11"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="100600035" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="203067" dialog-id="12"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="115000011" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="203067" dialog-id="13"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="101800182" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="203067" dialog-id="14"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="510" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="102000195" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="203067" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
+      <choice dialog-id="8" reward-index="1"/>
+      <choice dialog-id="9" reward-index="2"/>
+      <choice dialog-id="10" reward-index="3"/>
+      <choice dialog-id="11" reward-index="4"/>
+      <choice dialog-id="12" reward-index="5"/>
+      <choice dialog-id="13" reward-index="6"/>
+      <choice dialog-id="14" reward-index="7"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

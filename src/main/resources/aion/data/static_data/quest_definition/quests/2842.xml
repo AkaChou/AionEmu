@@ -131,28 +131,6 @@
       </after-commit>
     </transition>
     <!-- 结算奖励。 Claim rewards. -->
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="266568" dialog-ids="-1 1009"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="266568" dialog-ids="8..23"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="2068277" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="AP" id="0" amount="700" amount-mode="QUEST_BASE"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="266568" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

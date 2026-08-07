@@ -120,70 +120,7 @@
     </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="730019" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="730019" dialog-id="1007"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="4"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="a0b0c0">
-      <event>
-        <talk-to-npc npc-id="730019" dialog-id="1002"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="a0b0c0">
-      <event>
-        <talk-to-npc npc-id="730019" dialog-id="20000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="730019" dialog-ids="1003 1004 20001"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="730019" dialog-id="1008"/>
-      </event>
-      <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0c0" target="a0b0c0">
-      <event>
-        <talk-to-npc npc-id="730019" dialog-id="1008"/>
-      </event>
-      <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
+    <npc-start npc-id="730019" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0"/>
     <transition source="a0b0c0" target="a1b0c0">
       <event>
         <kill-npc npc-id="213795"/>

@@ -27,7 +27,7 @@
 
 ### 3.1 步骤
 
-1. 写 `quests/<id>.xml`（完整展开，不折叠）。
+1. 写 `quests/<id>.xml`；仅在完全符合下述标准模式时使用领域积木，其他流程继续写普通 transition。
 2. 在 `quest_definition_catalog.xml` 注册一行 `<definition id="<id>" resource="aion/data/static_data/quest_definition/quests/<id>.xml"/>`（每个 ID 只注册一次）。
 3. 静态元数据以 `src/main/resources/aion/data/static_data/quest_data/quest_data.xml` 为准（name、nameId、minlevel_permitted、race_permitted、category、rewards、quest_work_items、start_conditions、quest_drop）。
 4. 删除旧执行入口（`quest_script_data/*.xml` 中对应节点 / 旧 Java handler），同一改动完成 owner 交接。
@@ -38,7 +38,84 @@
 
 transition 内部顺序固定：`event` → `conditions` → `actions` → `after-commit`。
 
-### 3.3 完整示例：1138「A Mother's Worry」（真实任务，无 work item 的 report_to 模板）
+`<transitions>` 内可以按任意顺序混写普通 `<transition>` 和四种领域积木。任务文件继续使用 `version="1"`。
+
+### 3.3 编译期领域积木
+
+`npc-start`、`counter`、`kill-chain`、`npc-complete` 是严格的 XML 编写简写。XML 前端先把它们展开为普通 `QuestTransition`、`QuestAction`、`AfterCommitAction`，再交给 `QuestDefinitionCompiler`。它们不增加运行时状态、IR 类型、分发分支、继承、include、模板参数或表达式语言。
+
+标准 NPC 接取：
+
+```xml
+<npc-start npc-id="203110"
+           source="unaccepted"
+           target="started"
+           selection-sources="unaccepted started">
+  <accept-actions>
+    <give-item item-id="182400001" count="1"/>
+  </accept-actions>
+</npc-start>
+```
+
+它按顺序展开为 dialog 31（查看）、1007（剧情）、1002/20000（带 `start-eligible` 的两种接受）、1003/1004/20001（关闭），最后为 `selection-sources` 中每个节点生成 dialog 1008 任务列表入口。`accept-actions` 可省略，提供时会复制到两条接受路径。`selection-sources` 也可省略，表示该 NPC 不提供任务列表入口。source 节点必须投影为 `NONE`，target 必须投影为 `START`，所有节点标签必须存在。
+
+标准计数器：
+
+```xml
+<counter source="started" target="reward" field="var0" required="80">
+  <event><kill-npc npc-ids="215094 215095"/></event>
+  <conditions><world-is world-id="210010000"/></conditions>
+</counter>
+```
+
+积木生成两条共享事件和可选条件的路径：
+
+- priority 1 在 `field < required - 1` 时留在 source，计数加一并发送 `PACKET_ONLY`；
+- priority 0 在 `field == required - 1` 时进入 target，同样计数加一并发送 `PACKET_ONLY`。
+
+因此第 N 次事件会立即完成，不需要第 N+1 次。字段必须存在，位域上限必须容纳 `required`，并允许 `required - 1`。source 投影必须省略计数字段，否则会锁死或重置实时计数；target 可以省略该字段，或明确投影为 `required`。需要不同 delta、动作、优先级、阈值语义或多个字段协同的计数流程必须继续写显式 transition。
+
+连续击杀节点链：
+
+```xml
+<kill-chain nodes="v1 v2 v3 v4 v5 v6">
+  <event><kill-npc npc-id="210670"/></event>
+  <conditions><world-is world-id="210010000"/></conditions>
+</kill-chain>
+```
+
+积木按 `nodes` 的书写顺序，为每对相邻节点生成一条 transition。每条路径共享同一个 `kill-npc` 事件和可选条件，不含事务动作，提交后固定发送 `PACKET_ONLY`。`nodes` 至少包含三个互不重复且已声明的标签；事件只允许 `kill-npc`。因此它适合保留显式节点投影的线性击杀链，并保证展开后的 transition IR 与手写链完全一致。任一边带有不同条件、动作、优先级、after-commit，或链中存在分叉时，应拆分为多个积木或继续写显式 transition。
+
+标准 NPC 领奖：
+
+```xml
+<npc-complete npc-id="203123"
+              source="reward"
+              target="complete"
+              fixed-reward-indices="0 1"
+              dialog-ids="8..23"
+              complete-reward-index="0"
+              preview-dialog-ids="-1 1009"
+              finish="SELECTION_DIALOG"/>
+```
+
+奖励索引对应 `<metadata><rewards>` 的顺序。固定奖励索引不得指向 `SELECTABLE_ITEM`。N 选 1 奖励应省略 `dialog-ids`，逐项声明客户端选择映射；`fallback` 表示只发固定奖励：
+
+```xml
+<npc-complete npc-id="203123" source="reward" target="complete"
+              fixed-reward-indices="0 1" complete-reward-index="0"
+              preview-dialog-ids="-1 1009" finish="CLOSE_DIALOG">
+  <choice dialog-id="8" reward-index="2"/>
+  <choice dialog-id="9" reward-index="3"/>
+  <fallback dialog-ids="23"/>
+</npc-complete>
+```
+
+choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目降为具体 `ITEM` 奖励。preview、普通领取、choice、fallback 的 dialog ID 不能重复。source 必须投影为 `REWARD`，target 必须投影为 `COMPLETE`。每条完成路径的动作顺序固定为：固定奖励、可选的 choice 奖励、`complete-quest`；提交后始终执行 `refresh-player-stats`、`sync-quest-state mode="COMPLETION"`，最后按 `SELECTION_DIALOG`、`CLOSE_DIALOG`、`NONE` 三选一结束。预览路径固定显示 page 5。
+
+只有整个展开结果都正确时才使用积木。接取附加条件、非标准 dialog/page、领奖事务动作或额外 after-commit 副作用都必须写显式 `<transition>`。编译失败使用稳定的 `QuestCompilationException` code，并指出任务、积木和出错属性。
+
+### 3.4 完整示例：1138「A Mother's Worry」（真实任务，无 work item 的 report_to 模板）
 
 文件 `quests/1138.xml`（11 级 ELYOS 任务，NPC 203110 接取、203123 报告，奖励 1440 金币 + 5730 经验）：
 
@@ -206,7 +283,7 @@ transition 内部顺序固定：`event` → `conditions` → `actions` → `afte
 - **奖励结算**：`grant-reward` 与 metadata `rewards` 一一对应；GOLD/EXP 用 `amount-mode="QUEST_BASE"`（金额受任务等级加成），ITEM/TITLE 用默认 `EXACT`。
 - **`dialog-ids="8..23"`**：区间写法，等于逐个列出 8 到 23。
 
-### 3.4 进阶示例：1002「Request Of The Elim」（真实任务，选择奖励 + drops + 前置）
+### 3.5 进阶示例：1002「Request Of The Elim」（真实任务，选择奖励 + drops + 前置）
 
 文件 `quests/1002.xml` 的 metadata（3 级 ELYOS MISSION，前置 1100，需收集 3 个任务物品 182200003，6 个可选武器奖励）：
 
@@ -279,7 +356,7 @@ transition 内部顺序固定：`event` → `conditions` → `actions` → `afte
 
 （节点 `sN` 的 var0=N；每个击杀过渡 `source=sN target=sN+1`。1002 中还用了 `can-act` 交互物、`enter-world` + `world-is` 条件做升天变形 `morph`，见文件注释。）
 
-### 3.5 work item 任务
+### 3.6 work item 任务
 
 `quest_data.xml` 有 `<quest_work_items>` 时（如 1106）：
 
@@ -357,7 +434,7 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 
 | 模式 | 结构 | 权威示例 |
 |---|---|---|
-| report_to（无 work item） | 见 §3.3 | `quests/1138.xml` |
+| report_to（无 work item） | 见 §3.4 | `quests/1138.xml` |
 | report_to（有 work item） | give/has/remove-item + priority=1 拒绝分支 | `quests/1106.xml` |
 | monster_hunt（击杀计数） | var0 逐级推进，每 NPC 一条 kill transition，`source=k{i} target=k{i+1}`，after-commit `sync PACKET_ONLY`；终态报告 dialog 1009 → reward | `quests/1120.xml`（单组）、`quests/1112.xml`（双组，var0/var1 交叉，offset 0/6） |
 | item_collecting | end NPC dialog 39 上交检查：has-item（每个 collect_item）+ remove-item；无物品时 priority=1 fallback `show-quest-dialog 2716`；metadata 必须有 drops | `quests/1129.xml` |
@@ -377,7 +454,7 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 5. `grant-reward` 与 metadata rewards 一一对应（GOLD/EXP 用 QUEST_BASE）。
 6. 有 drops 的任务 metadata 已写 `<drops>` 段；有 work item 的任务 give/has/remove 齐全且无物品拒绝分支存在。
 7. 连续重复动作（连续 refresh/sync/show-quest-selection-dialog）视为错误，除非旧逻辑明确要求。
-8. 奖励结算过渡保持 `source="reward" target="complete"` + `complete-quest` + `refresh-player-stats` + `sync COMPLETION` 结尾。
+8. 奖励结算使用合法 `npc-complete`，或保持 `source="reward" target="complete"` + `complete-quest` + `refresh-player-stats` + `sync COMPLETION` 结尾。
 
 ## 7. 校验命令
 

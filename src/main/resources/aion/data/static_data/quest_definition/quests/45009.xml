@@ -58,18 +58,9 @@
     </transition>
 
     <!-- 猎杀熵之力结晶体 (700802) 3 个:计数推进 k1→k3,杀满后由 799848 报告。 -->
-    <transition source="started" target="k1">
-      <event><kill-npc npc-id="700802"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
-    </transition>
-    <transition source="k1" target="k2">
-      <event><kill-npc npc-id="700802"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
-    </transition>
-    <transition source="k2" target="k3">
-      <event><kill-npc npc-id="700802"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
-    </transition>
+    <kill-chain nodes="started k1 k2 k3">
+      <event><kill-npc npc-id="700802" /></event>
+    </kill-chain>
     <transition source="k3" target="k3">
       <event><talk-to-npc npc-id="799848" dialog-id="31"/></event>
       <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>

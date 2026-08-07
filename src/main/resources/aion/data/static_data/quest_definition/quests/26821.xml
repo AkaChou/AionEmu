@@ -61,13 +61,6 @@
     <transition source="s4" target="s5"><event><enter-zone zone="IDETERNITY_02_Q16821_B_301550000"/></event><conditions><variable-is field="var0" value="4"/></conditions><actions><set-variable field="var0" value="5"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><play-movie movie-id="937"/></after-commit></transition>
     <transition source="s5" target="reward"><event><kill-npc npc-id="220526"/></event><conditions><variable-is field="var0" value="5"/></conditions><actions><set-variable field="var0" value="6"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="220587" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="220587" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="220587" dialog-ids="8..23"/></event><actions>
-        <grant-reward kind="GOLD" id="0" amount="371040" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="32354564" amount-mode="QUEST_BASE"/>
-        <complete-quest reward-index="0"/></actions><after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <npc-complete npc-id="220587" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

@@ -26,12 +26,7 @@
   </nodes>
   <transitions>
     <!-- 接取 NPC:278003。分支 A:START_DIALOG→1011,其余 dialog 走 sendQuestStartDialog(1007→4、1002→start+1003、20000→start+close、拒绝→close、1008→任务列表)。 -->
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278003" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278003" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="278003" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="278003" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278003" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="278003" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <npc-start npc-id="278003" source="unaccepted" target="started" selection-sources="unaccepted"/>
 
     <!-- 步骤 0:278000。分支 B:var0==0 时 31→1352,STEP_TO_1(10000)→var0+1 并关窗。 -->
     <transition source="started" target="started"><event><talk-to-npc npc-id="278000" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>

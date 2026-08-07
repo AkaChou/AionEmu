@@ -27,32 +27,7 @@
   </nodes>
   <transitions>
     <!-- 接取:Griffonix (204028)。START_DIALOG(31) 显示 1011,询问接受(1007)显示 4,接受(1002)接取并显示 1003。 -->
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204028" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204028" dialog-id="1007"/></event>
-      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="204028" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="204028" dialog-id="20000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204028" dialog-ids="1003 1004 20001"/></event>
-      <after-commit><close-dialog/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204028" dialog-id="1008"/></event>
-      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
-    </transition>
+    <npc-start npc-id="204028" source="unaccepted" target="started" selection-sources="unaccepted"/>
 
     <!-- 进行中:Griffonix (204028) START 任意步骤;START_DIALOG 显示 1693,SELECT_REWARD(1009) 直接进入奖励(var 无条件)。 -->
     <transition source="started" target="started">
