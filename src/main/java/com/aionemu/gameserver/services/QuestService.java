@@ -1444,9 +1444,6 @@ public final class QuestService {
 				player.getInventory().decreaseByItemId(workItem.itemId(), count);
 			}
 		}
-		for (int recipeId : questEngine.legacyQuestOwnedRecipes(questId)) {
-			player.getRecipeList().deleteRecipe(player, recipeId);
-		}
 		finishAbandon(player, questId);
 		return true;
 	}
