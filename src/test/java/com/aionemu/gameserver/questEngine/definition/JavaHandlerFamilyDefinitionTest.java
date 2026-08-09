@@ -248,6 +248,14 @@ class JavaHandlerFamilyDefinitionTest {
 			.flatMap(t -> t.actions().stream()).toList();
 		assertTrue(warriorComplete.contains(new QuestAction.GrantReward("EXP", 0, 275, QuestRewardAmountMode.QUEST_BASE)));
 		assertTrue(warriorComplete.contains(new QuestAction.CompleteQuest(0)));
+
+		Set<String> completionSources = transitions.stream()
+			.filter(t -> t.targetNode().equals("complete"))
+			.peek(t -> assertTrue(t.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)),
+				t.sourceNode() + " must leave the reward confirmation dialog after completion"))
+			.map(QuestTransition::sourceNode)
+			.collect(Collectors.toSet());
+		assertEquals(Set.of("reward1", "reward2", "reward3", "reward4", "reward5", "reward6"), completionSources);
 	}
 
 	private static QuestTransition startRoute(List<QuestTransition> transitions, int rewardNode) {

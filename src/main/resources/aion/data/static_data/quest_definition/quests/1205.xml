@@ -151,7 +151,7 @@
         <show-quest-dialog dialog-id="1011"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203087" source="reward1" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="NONE"/>
+    <npc-complete npc-id="203087" source="reward1" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
 
     <transition source="reward2" target="reward2">
       <event>
@@ -180,6 +180,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
 
@@ -210,6 +211,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
 
@@ -240,6 +242,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
 
@@ -270,6 +273,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
 
@@ -300,6 +304,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
   </transitions>
