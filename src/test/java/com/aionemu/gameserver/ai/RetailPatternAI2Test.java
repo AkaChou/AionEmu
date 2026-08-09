@@ -341,6 +341,26 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void bridgesOnlyStatelessQuestItemTalkBroadcasts() {
+		Operation broadcast = new Operation("broadcast_message", Map.of(
+			"message_type", "1103", "param1", "0", "param2", "0",
+			"range_as_meter", "15", "param_obj", "OBJI_TALKER"));
+		Pattern broadTalk = new Pattern("BroadTalk_SR", Map.of("on_talked_by_user",
+			List.of(new Rule(1, "PLANNED", List.of(), List.of(broadcast)))));
+		Pattern conditional = new Pattern("conditional", Map.of("on_talked_by_user",
+			List.of(new Rule(1, "PLANNED",
+				List.of(new Operation("set_flag_var", Map.of("flagvar_indicator", "FLAGVARI_ALPHA_1"))),
+				List.of(broadcast)))));
+		Pattern stateful = new Pattern("stateful", Map.of("on_talked_by_user",
+			List.of(new Rule(1, "PLANNED", List.of(),
+				List.of(new Operation("do_nothing", Map.of()))))));
+
+		assertTrue(RetailPatternAI2.supportsQuestItemTalk(broadTalk));
+		assertFalse(RetailPatternAI2.supportsQuestItemTalk(conditional));
+		assertFalse(RetailPatternAI2.supportsQuestItemTalk(stateful));
+	}
+
+	@Test
 	void acceptsOnlyDirectRetailNpcScores() {
 		assertTrue(RetailPatternAI2.supportsNpcScore(0, 0));
 		assertFalse(RetailPatternAI2.supportsNpcScore(1, 0));

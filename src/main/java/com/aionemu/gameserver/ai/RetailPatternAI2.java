@@ -457,6 +457,38 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			|| npc != null && npc.talkDelay() > 0;
 	}
 
+	static boolean supportsQuestItemTalk(Pattern pattern) {
+		if (pattern == null || pattern.event("on_talked_by_user").isEmpty()) {
+			return false;
+		}
+		return pattern.event("on_talked_by_user").stream().allMatch(rule -> rule.conditions().isEmpty()
+			&& !rule.actions().isEmpty() && rule.actions().stream().allMatch(action ->
+				action.type().equals("broadcast_message") && supportsAction("on_talked_by_user", action, false)));
+	}
+
+	static void runQuestItemTalkedByUser(Npc owner, Player player) {
+		Pattern retailPattern = owner == null || DataManager.RETAIL_AI_DATA == null ? null
+			: DataManager.RETAIL_AI_DATA.getPattern(owner.getNpcId());
+		if (player == null || !supportsQuestItemTalk(retailPattern)) {
+			return;
+		}
+		for (Operation action : retailPattern.event("on_talked_by_user").getFirst().actions()) {
+			Creature paramObject = resolveQuestItemTalkObject(owner, player, value(action, "param_obj"));
+			if (paramObject != null) {
+				broadcastMessage(owner, paramObject, action);
+			}
+		}
+	}
+
+	private static Creature resolveQuestItemTalkObject(Npc owner, Player player, String indicator) {
+		return switch (indicator) {
+			case "OBJI_SELF" -> owner;
+			case "OBJI_CUR_TARGET" -> owner.getTarget() instanceof Creature creature ? creature : null;
+			case "OBJI_EVENT_TARGET", "OBJI_TALKER" -> player;
+			default -> null;
+		};
+	}
+
 	static boolean hasCompleteWakeUpData(Pattern pattern, NpcTemplateType npcType) {
 		return pattern == null || Collections.disjoint(pattern.events().keySet(), WAKE_UP_EVENTS)
 			|| npcType == NpcTemplateType.MONSTER;
@@ -1519,12 +1551,20 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		if (paramObject == null) {
 			return;
 		}
+		broadcastMessage(getOwner(), paramObject, action);
+	}
+
+	private static void broadcastMessage(Npc owner, Creature paramObject, Operation action) {
+		var instance = owner.getPosition() == null ? null : owner.getPosition().getWorldMapInstance();
+		if (instance == null) {
+			return;
+		}
 		RetailMessage message = new RetailMessage(integer(action, "message_type"), integer(action, "param1"),
-			integer(action, "param2"), getOwner(), paramObject);
+			integer(action, "param2"), owner, paramObject);
 		int range = integer(action, "range_as_meter");
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			for (Npc npc : getPosition().getWorldMapInstance().getNpcs()) {
-				if (npc != getOwner() && npc.isSpawned() && MathUtil.isIn3dRange(getOwner(), npc, range)
+			for (Npc npc : instance.getNpcs()) {
+				if (npc != owner && npc.isSpawned() && MathUtil.isIn3dRange(owner, npc, range)
 					&& npc.getAi2() instanceof RetailPatternAI2 ai) {
 					ai.runEvent("on_message", null, message.paramObject(), message);
 				}

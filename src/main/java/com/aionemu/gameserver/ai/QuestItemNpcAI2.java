@@ -46,6 +46,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 			getObjectTemplate().getTemplateId(), QuestActionType.ACTION_ITEM_USE))) {
 			return;
 		}
+		RetailPatternAI2.runQuestItemTalkedByUser(getOwner(), player);
 		super.handleDialogStart(player);
 	}
 	
