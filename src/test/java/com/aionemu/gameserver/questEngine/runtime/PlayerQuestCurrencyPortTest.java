@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -14,6 +15,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Equipment;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
+import com.aionemu.gameserver.model.gameobjects.player.title.Title;
+import com.aionemu.gameserver.model.gameobjects.player.title.TitleList;
 import com.aionemu.gameserver.model.items.storage.ItemStorage;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.Storage;
@@ -33,9 +36,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -146,9 +151,88 @@ class PlayerQuestCurrencyPortTest {
 		assertSame(connection, inventoryDao.transactions.get(0).connection);
 		assertTrue(inventoryDao.transactions.get(0).items.stream()
 			.anyMatch(item -> item.getItemTemplate().isKinah()));
+		assertEquals(PersistentState.UPDATE_REQUIRED,
+			player.getInventory().getKinahItem().getPersistentState());
 		assertEquals(PersistentState.UPDATE_REQUIRED, player.getInventory().getPersistentState());
 		participant.afterCommit();
 		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
+	}
+
+	@Test
+	void firstKinahRowIsStagedAfterInsertAndRollbackRestoresNewState() throws Exception {
+		Player player = playerWithCurrency(0, 0, 0, 0);
+		player.getInventory().getKinahItem().setPersistentState(PersistentState.NEW);
+		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
+		PlayerQuestCurrencyPort port = port(playerId -> player, inventoryDao,
+			new RecordingAbyssRankDao(), new RecordingPlayerDao());
+
+		QuestTransactionParticipant participant = port.apply(
+			connection(), snapshotCaptured(), List.of(reward("GOLD", 500)));
+
+		assertEquals(1, inventoryDao.insertCount);
+		assertEquals(PersistentState.UPDATED, player.getInventory().getKinahItem().getPersistentState());
+		participant.afterRollback();
+		assertEquals(PersistentState.NEW, player.getInventory().getKinahItem().getPersistentState());
+		assertEquals(0, player.getInventory().getKinah());
+	}
+
+	@Test
+	void currencyAndDurableRewardsInsertEachNewInventoryRowOnlyOnce() throws Exception {
+		Player player = playerWithCurrency(0, 0, 0, 0);
+		Item kinahItem = player.getInventory().getKinahItem();
+		kinahItem.setPersistentState(PersistentState.NEW);
+		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
+		QuestPlayerPort players = playerId -> player;
+		PlayerQuestCurrencyPort currency = port(players, inventoryDao,
+			new RecordingAbyssRankDao(), new RecordingPlayerDao());
+		PlayerQuestRewardPort rewards = new PlayerQuestRewardPort(players, inventoryDao,
+			new RecordingPlayerDao(), (target, items) -> {
+				try {
+					target.getInventory().onLoadHandler(
+						ordinaryItem(77, items.get(0).getItemId(), PersistentState.NEW));
+					target.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
+					return true;
+				} catch (Exception e) {
+					throw new IllegalStateException("cannot add test reward item", e);
+				}
+			}, item -> { }, new NoOpTitleListDao(), poolId -> false, poolId -> null);
+		CompositeQuestActionPort composite = new CompositeQuestActionPort(
+			new PlayerQuestInventoryPort(players, inventoryDao, (target, items) -> true), currency, rewards);
+
+		QuestTransactionParticipant participant = composite.apply(connection(), snapshotCaptured(), List.of(
+			reward("GOLD", 500), new QuestAction.GrantReward("ITEM", 169001001, 1)));
+
+		assertEquals(2, inventoryDao.insertCount);
+		assertEquals(Set.of(1, 77), inventoryDao.insertedIds);
+		assertEquals(PersistentState.UPDATED, kinahItem.getPersistentState());
+		participant.afterRollback();
+		assertEquals(PersistentState.NEW, kinahItem.getPersistentState());
+		assertEquals(0, player.getInventory().getKinah());
+		assertEquals(0, player.getInventory().getItemCountByItemId(169001001));
+	}
+
+	@Test
+	void stagedNewItemIsUpdatedInsteadOfInsertedAgainByLaterActionPort() throws Exception {
+		Player player = emptyPlayer();
+		Item item = ordinaryItem(77, 169001001, PersistentState.NEW);
+		player.getInventory().onLoadHandler(item);
+		player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
+		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
+
+		QuestInventoryPersistenceStage first = QuestInventoryPersistenceStage.persist(
+			inventoryDao, connection(), player, player.getDirtyItemsToUpdate());
+		assertEquals(PersistentState.UPDATED, item.getPersistentState());
+		item.increaseItemCount(1);
+		assertEquals(PersistentState.UPDATE_REQUIRED, item.getPersistentState());
+
+		QuestInventoryPersistenceStage second = QuestInventoryPersistenceStage.persist(
+			inventoryDao, connection(), player, player.getDirtyItemsToUpdate());
+		assertEquals(1, inventoryDao.insertCount);
+		assertEquals(1, inventoryDao.updateCount);
+
+		second.afterRollback();
+		first.afterRollback();
+		assertEquals(PersistentState.NEW, item.getPersistentState());
 	}
 
 	@Test
@@ -369,6 +453,17 @@ class PlayerQuestCurrencyPortTest {
 		return item;
 	}
 
+	private static Item ordinaryItem(int objectId, int itemId, PersistentState state) throws Exception {
+		ItemTemplate template = new ObjenesisStd().newInstance(ItemTemplate.class);
+		setField(ItemTemplate.class, template, "itemId", itemId);
+		Item item = new ObjenesisStd().newInstance(Item.class);
+		setField(Item.class, item, "itemTemplate", template);
+		setField(Item.class, item, "itemCount", 1L);
+		setField(Item.class, item, "persistentState", state);
+		setField(AionObject.class, item, "objectId", objectId);
+		return item;
+	}
+
 	private static void setField(Class<?> declaringClass, Object target, String name, Object value) throws Exception {
 		Field field = declaringClass.getDeclaredField(name);
 		field.setAccessible(true);
@@ -421,11 +516,24 @@ class PlayerQuestCurrencyPortTest {
 		}
 
 		private final List<Transaction> transactions = new ArrayList<>();
+		private final Set<Integer> insertedIds = new HashSet<>();
+		private int insertCount;
+		private int updateCount;
 
 		@Override
 		public void storeInTransaction(Connection connection, List<Item> items, Integer playerId, Integer accountId,
-				Integer legionId) {
-			transactions.add(new Transaction(connection, items));
+				Integer legionId) throws SQLException {
+			transactions.add(new Transaction(connection, List.copyOf(items)));
+			for (Item item : items) {
+				if (item.getPersistentState() == PersistentState.NEW) {
+					if (!insertedIds.add(item.getObjectId())) {
+						throw new SQLException("duplicate insert " + item.getObjectId());
+					}
+					insertCount++;
+				} else if (item.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
+					updateCount++;
+				}
+			}
 		}
 
 		@Override
@@ -486,6 +594,33 @@ class PlayerQuestCurrencyPortTest {
 		@Override
 		public int[] getUsedIDs() {
 			return new int[0];
+		}
+	}
+
+	private static final class NoOpTitleListDao extends PlayerTitleListDAO {
+		@Override
+		public TitleList loadTitleList(int playerId) {
+			throw new AssertionError("unexpected loadTitleList");
+		}
+
+		@Override
+		public void storeInTransaction(Connection connection, int playerId, int titleId, int remaining) {
+			throw new AssertionError("unexpected storeInTransaction");
+		}
+
+		@Override
+		public boolean storeTitles(Player player, Title entry) {
+			throw new AssertionError("unexpected storeTitles");
+		}
+
+		@Override
+		public boolean removeTitle(int playerId, int titleId) {
+			throw new AssertionError("unexpected removeTitle");
+		}
+
+		@Override
+		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
+			return false;
 		}
 	}
 

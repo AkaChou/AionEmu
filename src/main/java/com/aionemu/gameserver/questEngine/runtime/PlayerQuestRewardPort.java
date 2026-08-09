@@ -130,6 +130,7 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 		List<Integer> grantedTitles = new ArrayList<>();
 		var inventorySnapshot = itemRewards ? player.getInventory().transactionSnapshot() : null;
 		var commonSnapshot = commonDataChanged ? player.getCommonData().transactionSnapshot() : null;
+		QuestInventoryPersistenceStage inventoryStage = QuestInventoryPersistenceStage.none();
 		try {
 			for (QuestAction.GrantReward reward : rewards) {
 				QuestRewardKind kind = reward.rewardKind();
@@ -163,18 +164,15 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 				}
 			}
 			List<Item> dirty = itemRewards ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
-			if (!dirty.isEmpty()) {
-				inventoryDao.storeInTransaction(connection, dirty, snapshot.playerId(), null, null);
-			}
+			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
 			if (commonDataChanged) {
 				playerDao.storeInTransaction(connection, snapshot.playerId(), player.getCommonData());
 			}
+			final QuestInventoryPersistenceStage committedInventoryStage = inventoryStage;
 			return QuestTransactionParticipant.of(() -> {
-				if (!dirty.isEmpty()) {
-					inventoryDao.markStored(dirty);
-					player.markDirtyItemContainersStored();
-				}
+				committedInventoryStage.afterCommit();
 			}, () -> {
+				committedInventoryStage.afterRollback();
 				rollbackTitles(player, grantedTitles);
 				if (commonSnapshot != null) {
 					commonSnapshot.restore();
@@ -185,6 +183,7 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 			});
 		} catch (SQLException | RuntimeException failure) {
 			try {
+				inventoryStage.afterRollback();
 				rollbackTitles(player, grantedTitles);
 				if (commonSnapshot != null) commonSnapshot.restore();
 				if (inventorySnapshot != null) inventorySnapshot.restore(itemReleaser);

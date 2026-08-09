@@ -136,6 +136,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 		final AbyssRankEnum oldRank = rankChanged ? player.getAbyssRank().getRank() : null;
 		Item rewardKinahItem = null;
 		boolean rewardKinahItemCreated = false;
+		QuestInventoryPersistenceStage inventoryStage = QuestInventoryPersistenceStage.none();
 		try {
 			if (kinah > 0) {
 				rewardKinahItemCreated = player.getInventory().getKinahItem() == null;
@@ -146,9 +147,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 				rewardKinahItem = player.getInventory().getKinahItem();
 			}
 			List<Item> dirty = kinah > 0 ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
-			if (!dirty.isEmpty()) {
-				inventoryDao.storeInTransaction(connection, dirty, snapshot.playerId(), null, null);
-			}
+			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
 			if (ap > 0) {
 				player.getAbyssRank().addAp(ap, player);
 			}
@@ -164,7 +163,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			}
 			final Item committedKinahItem = rewardKinahItem;
 			final boolean committedKinahItemCreated = rewardKinahItemCreated;
-			final List<Item> committedDirty = dirty;
+			final QuestInventoryPersistenceStage committedInventoryStage = inventoryStage;
 			final boolean committedRankChanged = rankChanged;
 			final var committedCommonSnapshot = commonSnapshot;
 			final int committedAp = ap;
@@ -172,9 +171,8 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			final AbyssRankEnum committedOldRank = oldRank;
 			final AbyssRankEnum committedNewRank = rankChanged ? player.getAbyssRank().getRank() : null;
 			return QuestTransactionParticipant.of(() -> {
-				if (!committedDirty.isEmpty()) {
-					inventoryDao.markStored(committedDirty);
-					player.markDirtyItemContainersStored();
+				if (!committedInventoryStage.isEmpty()) {
+					committedInventoryStage.afterCommit();
 					if (committedKinahItem != null) {
 						if (committedKinahItemCreated) {
 							ItemPacketService.sendStorageUpdatePacket(player, player.getInventory().getStorageType(),
@@ -204,6 +202,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 					player.getCommonData().publishDp();
 				}
 			}, () -> {
+				committedInventoryStage.afterRollback();
 				if (committedCommonSnapshot != null) {
 					committedCommonSnapshot.restore();
 				}
@@ -216,6 +215,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			});
 		} catch (SQLException | RuntimeException failure) {
 			try {
+				inventoryStage.afterRollback();
 				if (commonSnapshot != null) commonSnapshot.restore();
 				if (rankSnapshot != null) rankSnapshot.restore();
 				if (inventorySnapshot != null) inventorySnapshot.restore(itemReleaser);
@@ -307,6 +307,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 		Item kinahItem = kinah > 0 ? player.getInventory().getKinahItem() : null;
 		final boolean rankDebitChanged = ap > 0 || gp > 0;
 		final AbyssRankEnum oldRank = rankDebitChanged ? player.getAbyssRank().getRank() : null;
+		QuestInventoryPersistenceStage inventoryStage = QuestInventoryPersistenceStage.none();
 		try {
 			if (kinah > 0 && kinahItem.decreaseItemCount(kinah) != 0) {
 				throw new SQLException("failed to decrease kinah for player " + snapshot.playerId());
@@ -338,9 +339,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 				}
 			}
 			List<Item> dirty = kinah > 0 ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
-			if (!dirty.isEmpty()) {
-				inventoryDao.storeInTransaction(connection, dirty, snapshot.playerId(), null, null);
-			}
+			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
 			if (ap > 0 || gp > 0) {
 				abyssRankDao.storeInTransaction(connection, player.getObjectId(), player.getAbyssRank());
 			}
@@ -350,10 +349,10 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			final AbyssRankEnum newRank = rankDebitChanged ? player.getAbyssRank().getRank() : null;
 			final int debitedAp = ap;
 			final int debitedGp = gp;
+			final QuestInventoryPersistenceStage committedInventoryStage = inventoryStage;
 			return QuestTransactionParticipant.of(() -> {
-				if (!dirty.isEmpty()) {
-					inventoryDao.markStored(dirty);
-					player.markDirtyItemContainersStored();
+				if (!committedInventoryStage.isEmpty()) {
+					committedInventoryStage.afterCommit();
 					if (kinahItem != null) {
 						ItemPacketService.sendItemPacket(player, player.getInventory().getStorageType(), kinahItem,
 							ItemUpdateType.DEC_KINAH_BUY);
@@ -377,12 +376,14 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 					player.getCommonData().publishDp();
 				}
 			}, () -> {
+				committedInventoryStage.afterRollback();
 				if (commonSnapshot != null) commonSnapshot.restore();
 				if (rankSnapshot != null) rankSnapshot.restore();
 				if (inventorySnapshot != null) inventorySnapshot.restore(itemReleaser);
 			});
 		} catch (SQLException | RuntimeException failure) {
 			try {
+				inventoryStage.afterRollback();
 				if (commonSnapshot != null) commonSnapshot.restore();
 				if (rankSnapshot != null) rankSnapshot.restore();
 				if (inventorySnapshot != null) inventorySnapshot.restore(itemReleaser);

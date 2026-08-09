@@ -70,6 +70,7 @@ public final class PlayerQuestEquipmentPort implements QuestEquipmentPort {
 		int creativityPoint = player.getCreativityPoint();
 		boolean powerShard = player.isInState(CreatureState.POWERSHARD);
 		List<Item> originallyEquipped = List.copyOf(player.getEquipment().getEquippedItems());
+		QuestInventoryPersistenceStage inventoryStage = QuestInventoryPersistenceStage.none();
 		try {
 			for (QuestAction.UnequipItem unequip : unequips) {
 				for (Item item : List.copyOf(player.getEquipment().getEquippedItemsByItemId(unequip.itemId()))) {
@@ -93,23 +94,21 @@ public final class PlayerQuestEquipmentPort implements QuestEquipmentPort {
 				.filter(item -> !item.isEquipped())
 				.toList();
 			List<Item> dirty = List.copyOf(player.getDirtyItemsToUpdate());
-			if (!dirty.isEmpty()) {
-				inventoryDao.storeInTransaction(connection, dirty, snapshot.playerId(), null, null);
-			}
+			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
 			stigmaDao.storeItemsInTransaction(connection, player);
+			final QuestInventoryPersistenceStage committedInventoryStage = inventoryStage;
 			return QuestTransactionParticipant.of(() -> {
-				inventoryDao.markStored(dirty);
-				player.markDirtyItemContainersStored();
+				committedInventoryStage.afterCommit();
 				stigmaDao.markStored(player);
 			}, () -> restore(player, inventorySnapshot, equipmentSnapshot, skillSnapshot,
 				stigmaSnapshot, cpSnapshot, creativityPoint, powerShard, runtimeItemsToRestore,
-				linkedSkill, stigmaSet));
+				linkedSkill, stigmaSet, committedInventoryStage));
 		} catch (SQLException | RuntimeException failure) {
 			try {
 				restore(player, inventorySnapshot, equipmentSnapshot, skillSnapshot,
 					stigmaSnapshot, cpSnapshot, creativityPoint, powerShard, originallyEquipped.stream()
 						.filter(item -> !item.isEquipped())
-						.toList(), linkedSkill, stigmaSet);
+						.toList(), linkedSkill, stigmaSet, inventoryStage);
 			} catch (RuntimeException restoreFailure) {
 				failure.addSuppressed(restoreFailure);
 			}
@@ -124,7 +123,8 @@ public final class PlayerQuestEquipmentPort implements QuestEquipmentPort {
 		com.aionemu.gameserver.model.skill.linked_skill.PlayerEquippedStigmaList.TransactionSnapshot stigmaSnapshot,
 		PlayerCPList.TransactionSnapshot cpSnapshot, int creativityPoint, boolean powerShard,
 		List<Item> runtimeItemsToRestore,
-		int linkedSkill, int stigmaSet) {
+		int linkedSkill, int stigmaSet, QuestInventoryPersistenceStage inventoryStage) {
+		inventoryStage.afterRollback();
 		inventorySnapshot.restore();
 		equipmentSnapshot.restore();
 		stigmaSnapshot.restore();

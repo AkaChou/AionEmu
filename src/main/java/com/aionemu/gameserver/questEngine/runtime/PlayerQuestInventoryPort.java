@@ -120,6 +120,7 @@ public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 			return QuestTransactionParticipant.none();
 		}
 		var liveSnapshot = player.getInventory().transactionSnapshot();
+		QuestInventoryPersistenceStage inventoryStage = QuestInventoryPersistenceStage.none();
 		try {
 			for (QuestAction.RemoveItem removal : removals) {
 				int count = removal.removeAll()
@@ -137,15 +138,17 @@ public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 				throw new SQLException("failed to give quest work items for player " + snapshot.playerId());
 			}
 			List<Item> dirty = List.copyOf(player.getDirtyItemsToUpdate());
-			if (!dirty.isEmpty()) {
-				inventoryDao.storeInTransaction(connection, dirty, snapshot.playerId(), null, null);
-			}
+			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
+			final QuestInventoryPersistenceStage committedInventoryStage = inventoryStage;
 			return QuestTransactionParticipant.of(() -> {
-				inventoryDao.markStored(dirty);
-				player.markDirtyItemContainersStored();
-			}, liveSnapshot::restore);
+				committedInventoryStage.afterCommit();
+			}, () -> {
+				committedInventoryStage.afterRollback();
+				liveSnapshot.restore();
+			});
 		} catch (SQLException | RuntimeException failure) {
 			try {
+				inventoryStage.afterRollback();
 				liveSnapshot.restore();
 			} catch (RuntimeException restoreFailure) {
 				failure.addSuppressed(restoreFailure);
